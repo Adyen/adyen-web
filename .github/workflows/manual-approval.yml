@@ -16,12 +16,14 @@ jobs:
       needs: log-one
       runs-on: ubuntu-latest
       environment: test-manual-approval
+      continue-on-error: true
       steps:
         - name: Manual approval gate
           run: echo "Approved to proceed with next job."
 
     log-two:
       needs: manual-approval
+      if: ${{ needs.manual-approval.result == 'success' }}
       runs-on: ubuntu-latest
       steps:
         - name: Log second message
