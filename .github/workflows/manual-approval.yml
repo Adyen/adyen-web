@@ -1,7 +1,9 @@
 name: Manual Approval
 
 on:
-    workflow_dispatch:
+  push:
+    branches: [ feature/manual-approval-poc ]
+  workflow_dispatch:
 
 jobs:
     log-one:
