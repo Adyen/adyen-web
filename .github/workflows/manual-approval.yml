@@ -1,0 +1,26 @@
+name: Manual Approval
+
+on:
+    workflow_dispatch:
+
+jobs:
+    log-one:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Log first message
+            run: echo "Hello from first job"
+
+    manual-approval:
+      needs: log-one
+      runs-on: ubuntu-latest
+      environment: test-manual-approval
+      steps:
+        - name: Manual approval gate
+          run: echo "Approved to proceed with next job."
+
+    log-two:
+      needs: manual-approval
+      runs-on: ubuntu-latest
+      steps:
+        - name: Log second message
+          run: echo "Hello from second job"
