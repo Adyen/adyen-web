@@ -1,0 +1,118 @@
+@import '~/style';
+
+.adyen-checkout__await {
+    background: $color-white;
+    padding: 40px;
+    border: 1px solid $color-gray;
+    border-radius: $border-radius-large;
+    text-align: center;
+}
+
+.adyen-checkout__await--result {
+    padding: 100px;
+}
+
+.adyen-checkout__qr-loader--app {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
+.adyen-checkout__await__brand-logo {
+    width: 74px;
+    border-radius: 3px;
+}
+
+.adyen-checkout__await__subtitle,
+.adyen-checkout__await__indicator-text {
+    color: $color-black;
+    font-size: $font-size-medium;
+    line-height: 19px;
+    margin-top: 32px;
+}
+
+.adyen-checkout__await__indicator-holder .adyen-checkout__await__indicator-text {
+    margin-top: 6px;
+    margin-left: 10px;
+}
+
+.adyen-checkout__await__indicator-holder {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+    margin-bottom: 20px;
+}
+
+.adyen-checkout__await__subtitle--result {
+    margin-bottom: 32px;
+}
+
+.adyen-checkout__await__icon {
+    width: 88px;
+    height: 88px;
+}
+
+.adyen-checkout__await__progress {
+    height: 4px;
+    background: $color-gray;
+    border-radius: $border-radius-xlarge;
+    margin: 32px auto 12px auto;
+    width: 152px;
+}
+
+.adyen-checkout__await__percentage {
+    display: block;
+    height: 100%;
+    border-radius: $border-radius-xlarge;
+    background: $color-primary;
+}
+
+.adyen-checkout__await__countdown {
+    color: $color-gray-darker;
+    font-size: $font-size-small;
+}
+
+.adyen-checkout__await > .adyen-checkout__spinner__wrapper {
+    margin: 60px 0;
+}
+
+.adyen-checkout__await__app-link {
+    margin-top: 16px;
+    display: none;
+}
+
+.adyen-checkout__await__separator__label {
+    position: relative;
+    font-size: 13px;
+    color: $color-gray-darker;
+    overflow: hidden;
+    text-align: center;
+    z-index: 1;
+    display: block;
+}
+
+.adyen-checkout__await__separator__label:before,
+.adyen-checkout__await__separator__label:after {
+    position: absolute;
+    top: 51%;
+    overflow: hidden;
+    width: 50%;
+    height: 1px;
+    content: '\a0';
+    background-color: $color-gray-light;
+}
+
+.adyen-checkout__await__separator__label:before {
+    margin-left: -52%;
+    text-align: right;
+}
+
+.adyen-checkout__await__separator__label:after {
+    margin-left: 2%;
+}
+
+@media only screen and (max-device-width: 1200px) {
+    .adyen-checkout__await__app-link {
+        display: block;
+    }
+}

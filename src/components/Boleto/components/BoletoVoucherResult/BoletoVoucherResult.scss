@@ -1,0 +1,8 @@
+@import '~/style';
+
+.adyen-checkout__voucher-result--boletobancario .adyen-checkout__voucher-result__code {
+    font-size: $font-size-small;
+    line-height: 19px;
+    word-break: break-all;
+    padding: 24px;
+}

@@ -1,0 +1,48 @@
+@import '~/style';
+
+.adyen-checkout__spinner__wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adyen-checkout__spinner__wrapper--inline {
+    height: auto;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.adyen-checkout__spinner {
+    border: 3px solid $color-primary;
+    border-radius: 50%;
+    height: 43px;
+    width: 43px;
+    border-top-color: transparent;
+    animation: rotateSpinner 1.5s infinite linear;
+}
+
+.adyen-checkout__spinner--large {
+    height: 43px;
+    width: 43px;
+}
+
+.adyen-checkout__spinner--small {
+    height: 16px;
+    width: 16px;
+    border-width: 2px;
+}
+
+.adyen-checkout__spinner--medium {
+    height: 28px;
+    width: 28px;
+}
+
+@keyframes rotateSpinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

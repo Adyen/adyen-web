@@ -1,0 +1,17 @@
+.adyen-checkout__loading-input__form {
+    transition: opacity 0.25s ease-out;
+}
+
+.adyen-checkout__pm__holderName {
+    margin-bottom: 0;
+}
+
+.adyen-checkout__ach-sf__form {
+    margin-top: 16px;
+}
+
+.adyen-checkout__ach-input {
+    .adyen-checkout__fieldset--address {
+        margin-top: 16px;
+    }
+}

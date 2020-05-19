@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+
+*.log
+.env
+stats.json
+.DS_Store
+
+# IntelliJ
+.idea
+
+# Vagrant
+Vagrantfile
+.vagrant

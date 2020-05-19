@@ -1,0 +1,28 @@
+.adyen-checkout__boleto-input__field {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.adyen-checkout__boleto-input__field .adyen-checkout__fieldset--personalDetails {
+    padding-bottom: 0;
+}
+
+.adyen-checkout__boleto-input__field .adyen-checkout__fieldset--personalDetails + .adyen-checkout__fieldset--billingAddress {
+    padding-top: 24px;
+    padding-bottom: 0;
+}
+.adyen-checkout__fieldset--sendCopyToEmail {
+    margin-top: 16px;
+}
+/* Split some fields */
+/*
+.adyen-checkout__boleto-input__field .adyen-checkout__field--firstName,
+.adyen-checkout__boleto-input__field .adyen-checkout__field--lastName {
+    width: calc(50% - 8px);
+    min-width: 250px;
+    max-width: 100%;
+} */
+/*
+.adyen-checkout__boleto-input__field .adyen-checkout__field--firstName {
+    margin-right: 16px;
+} */

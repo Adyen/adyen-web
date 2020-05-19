@@ -1,0 +1,24 @@
+@import '~/style';
+
+.adyen-checkout__dropin,
+.adyen-checkout__dropin *,
+.adyen-checkout__dropin *:after,
+.adyen-checkout__dropin *:before {
+    box-sizing: border-box;
+}
+
+.adyen-checkout__payment-methods-list--loading {
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Forms */
+
+.adyen-checkout__link {
+    color: $color-primary;
+    text-decoration: none;
+}
+
+.adyen-checkout__link:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,208 @@
+@import '../src/style';
+
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+html,
+body {
+    font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    background: #fcfcfc;
+    overflow: auto;
+    margin: 0;
+    min-height: 100vh;
+}
+
+body {
+    padding-top: 36px;
+}
+
+@media screen and (min-width: 1240px) {
+    body {
+        padding: 0 0 0 320px;
+    }
+}
+
+header {
+    background: $color-white;
+    border-bottom: 1px solid $color-gray-light;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+@media screen and (min-width: 1240px) {
+    header {
+        position: fixed;
+        background: #f3f6f9;
+        height: 100%;
+        width: 320px;
+    }
+}
+
+h1 {
+    font-size: 1.4em;
+    font-weight: 200;
+    margin: 0;
+    padding: 12px;
+    width: 100%;
+}
+
+@media screen and (min-width: 1240px) {
+    h1 {
+        padding: 30px;
+    }
+}
+
+h1 span {
+    background: $color-primary;
+    border-radius: 3px;
+    color: $color-white;
+    font-size: 0.45em;
+    padding: 5px;
+    position: relative;
+    text-transform: uppercase;
+    top: -5px;
+}
+
+h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+nav {
+    display: none;
+    width: 100%;
+}
+
+@media screen and (min-width: 1240px) {
+    nav {
+        display: block;
+    }
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 30px;
+    width: 100%;
+}
+
+nav ul li {
+    margin: 20px 0;
+}
+
+nav ul li a {
+    border-right: 2px solid transparent;
+    color: $color-gray-darker;
+    display: block;
+    line-height: 1.7em;
+    text-decoration: none;
+    transition: all 0.15s ease-out;
+}
+
+nav ul li:hover a {
+    border-right-color: $color-primary;
+    color: $color-primary;
+}
+
+.info {
+    background: #f3f6f9;
+    border-left: 3px solid $color-primary;
+    color: $color-black;
+    font-size: 14px;
+    padding: 24px 36px;
+    margin: 30px auto;
+    max-width: 600px;
+    width: 100%;
+}
+
+.info h2 {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* stylelint-disable-next-line */
+.info a {
+    color: $color-primary;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.info a:hover {
+    text-decoration: underline;
+}
+
+p {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.merchant-checkout__form {
+    margin: 30px auto;
+    max-width: 600px;
+    width: 100%;
+}
+
+.merchant-checkout__payment-method {
+    background: $color-white;
+    border: 1px solid #edf0f3;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.merchant-checkout__payment-method--hidden {
+    display: none;
+}
+
+.merchant-checkout__payment-method__header {
+    align-items: center;
+    background: #f3f6f9;
+    border-radius: 12px 12px 0 0;
+    padding: 16px 24px;
+    position: relative;
+    width: 100%;
+}
+
+.merchant-checkout__payment-method__header h2 {
+    color: #00202e;
+    font-size: 0.81em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.merchant-checkout__payment-method__details {
+    padding: 24px;
+}
+
+.merchant-checkout__payment-method__details__content {
+    padding: 6px 0 24px;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: separate;
+    font-size: 13px;
+    margin: 8px 0 36px;
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px 24px 8px 0;
+    }
+
+    td {
+        border-spacing: 0;
+        border-top: 1px solid $color-gray-darker;
+
+        &:last-child {
+            padding-right: 0;
+        }
+    }
+}

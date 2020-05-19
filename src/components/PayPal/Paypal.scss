@@ -1,0 +1,44 @@
+@import '~/style';
+
+.adyen-checkout__paypal {
+    &__buttons {
+        position: relative;
+        z-index: 0;
+    }
+
+    &__button {
+        display: flex;
+        margin-bottom: $spacing-medium;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    &__status {
+        &--pending {
+            margin: $spacing-medium 0;
+        }
+
+        &--processing {
+            align-items: center;
+            display: flex;
+            font-size: 13px;
+            justify-content: center;
+            padding: $spacing-large 0;
+        }
+    }
+}
+
+// Dropin only
+.adyen-checkout__payment-method {
+    .adyen-checkout__paypal__status {
+        &--pending {
+            margin: -$spacing-medium 0 38px;
+        }
+
+        &--processing {
+            padding: 20px 0 65px;
+        }
+    }
+}

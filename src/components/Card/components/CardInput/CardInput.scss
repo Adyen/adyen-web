@@ -1,0 +1,110 @@
+.adyen-checkout__card-input__form {
+    transition: opacity 0.25s ease-out;
+}
+
+.adyen-checkout__card__cardNumber {
+    max-width: 400px;
+}
+
+.adyen-checkout__card__cardNumber__input {
+    padding: 5px 8px;
+}
+
+.adyen-checkout__card__exp-date__input--oneclick {
+    line-height: 30px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.adyen-checkout__field--storedCard,
+.adyen-checkout__field--expiryDate,
+.adyen-checkout__card__holderName {
+    margin-bottom: 0;
+}
+
+.adyen-checkout__card__holderName,
+.adyen-checkout__store-details,
+.adyen-checkout__card__kcp-authentication,
+.adyen-checkout__installments,
+.adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
+    margin-top: 16px;
+}
+
+/* Hide card brand icon when cardNumber is in an error state */
+.adyen-checkout__field--cardNumber .adyen-checkout__input--error .adyen-checkout__card__cardNumber__brandIcon {
+    display: none;
+}
+
+/* Hide checkmark when cardNumber is in a valid state (only show brand icon) */
+.adyen-checkout__field--cardNumber
+    .adyen-checkout__input--valid:not(.adyen-checkout__card__cardNumber__input--noBrand)
+    + .adyen-checkout-input__inline-validation--valid {
+    display: none;
+}
+
+.adyen-checkout__field--securityCode.adyen-checkout__field--error .adyen-checkout__card__cvc__hint,
+.adyen-checkout__field--securityCode.adyen-checkout__field--valid .adyen-checkout__card__cvc__hint {
+    opacity: 0;
+}
+
+@keyframes cvcIndicateLocation {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.3;
+    }
+}
+
+.adyen-checkout__label--focused .adyen-checkout__card__cvc__hint__location {
+    animation-duration: 1s;
+    animation-name: cvcIndicateLocation;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.adyen-checkout__card__cvc__hint__wrapper {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 27px;
+
+    display: flex;
+    align-items: center;
+
+    margin: 0 10px;
+
+    // Card Flip animation
+    transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    transform-origin: center;
+    transform-style: preserve-3d;
+    will-change: transform;
+    backface-visibility: visible;
+    transform: translate3d(0, 0, 0);
+}
+
+// Flip the card
+.adyen-checkout__field__cvc--front-hint.adyen-checkout__card__cvc__hint__wrapper {
+    transform: rotateY(180deg);
+}
+
+.adyen-checkout__card__cvc__hint {
+    backface-visibility: hidden;
+    position: absolute;
+    transition: opacity 0.1s linear;
+}
+
+// Front of the card is our back
+.adyen-checkout__card__cvc__hint--front {
+    transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .adyen-checkout__card__cvc__hint__wrapper {
+        transition: none;
+    }
+}

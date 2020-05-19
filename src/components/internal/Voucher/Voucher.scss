@@ -1,0 +1,237 @@
+@import '~/style';
+
+.adyen-checkout__voucher-result {
+    box-sizing: border-box;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+}
+
+.adyen-checkout__voucher-result__top,
+.adyen-checkout__voucher-result__bottom {
+    background: $color-white;
+    border: 1px solid $color-gray;
+}
+
+.adyen-checkout__voucher-result__top {
+    padding: 40px 0 24px;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 0;
+}
+
+.adyen-checkout__voucher-result__bottom {
+    border-top: 0;
+    border-radius: 0 0 12px 12px;
+}
+
+.adyen-checkout__voucher-result__separator {
+    background: $color-white;
+    position: relative;
+    width: calc(100% - 14px);
+    height: 13px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.adyen-checkout__voucher-result__separator::before,
+.adyen-checkout__voucher-result__separator::after {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNyIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDcgMTMiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgMEw1IDJMNi41IDZIN1YwSDBaTTAgMTNMNSAxMUw2LjUgN0g3VjEzSDBaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNi40MjMwOCA2LjVDNi40MjMwOCAzLjMxMjMyIDMuNzgzOSAwLjc1NTUyNyAwLjUgMC41MTgwMjFWMC41MTczODVDMy44ODYxOCAwLjc1Mzg4IDYuNSAzLjM3MjgzIDYuNSA2LjVDNi41IDkuNjI3MTcgMy44ODYxOCAxMi4yNDYxIDAuNSAxMi40ODI2VjEyLjQ4MkMzLjc4MzkgMTIuMjQ0NSA2LjQyMzA4IDkuNjg3NjcgNi40MjMwOCA2LjVaIiBzdHJva2U9IiNENEQ5REIiLz4KPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI0Q0RDlEQiIvPgo8cmVjdCB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI0Q0RDlEQiIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwIj4KPHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMTMiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==);
+}
+
+.adyen-checkout__voucher-result__separator::before {
+    background-position: 100%;
+    background-repeat: no-repeat;
+    content: '';
+    left: -7px;
+    top: 0;
+    position: absolute;
+    width: 7px;
+    height: 13px;
+}
+
+.adyen-checkout__voucher-result__separator::after {
+    background-position: 100%;
+    background-repeat: no-repeat;
+    content: '';
+    right: -7px;
+    top: 0;
+    position: absolute;
+    width: 7px;
+    height: 13px;
+    transform: rotate(-180deg);
+}
+
+.adyen-checkout__voucher-result__separator__inner {
+    width: 100%;
+    border-top: 1px solid $color-gray-light;
+}
+
+.adyen-checkout__voucher-result__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.adyen-checkout__voucher-result__image__wrapper {
+    display: block;
+    position: relative;
+    height: 48px;
+    margin: 0 24px;
+}
+
+.adyen-checkout__voucher-result__image__wrapper::after {
+    border: 1px solid rgba(0, 27, 43, 0.17);
+    border-radius: 3px;
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.adyen-checkout__voucher-result__image__wrapper:nth-child(2)::before {
+    border-left: 1px solid $color-gray;
+
+    content: '';
+    height: 64px;
+    left: -24.5px;
+    position: absolute;
+    top: -8px;
+    width: 1px;
+}
+
+.adyen-checkout__voucher-result__image__brand,
+.adyen-checkout__voucher-result__image__issuer {
+    height: 48px;
+    border-radius: 3px;
+}
+
+.adyen-checkout__voucher-result__introduction {
+    line-height: 19px;
+    font-size: $font-size-small;
+    text-align: center;
+    color: $color-black;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.adyen-checkout__voucher-result__amount {
+    margin: 24px auto 0;
+    font-size: $font-size-medium;
+    color: $color-black;
+    text-align: center;
+    font-weight: bold;
+}
+
+.adyen-checkout__voucher-result__surcharge {
+    font-size: $font-size-small;
+    line-height: 19px;
+    text-align: center;
+    color: $color-gray-darker;
+    display: block;
+    font-weight: normal;
+}
+
+.adyen-checkout__voucher-result__code__label {
+    position: absolute;
+    display: block;
+    font-weight: normal;
+    right: 0;
+    left: 0;
+    width: auto;
+    line-height: 19px;
+    top: -2px;
+    margin: 0 auto;
+    user-select: none;
+}
+
+.adyen-checkout__voucher-result__code__label::before {
+    content: '';
+    position: absolute;
+}
+
+.adyen-checkout__voucher-result__code__label__text {
+    font-size: 13px;
+    color: $color-black;
+    background: $color-white;
+    padding: 0 8px;
+    letter-spacing: normal;
+    line-height: 1;
+}
+
+.adyen-checkout__voucher-result__code__barcode {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 8px;
+    max-width: 100%;
+    height: 56px;
+    user-select: none;
+}
+
+.adyen-checkout__voucher-result__code {
+    position: relative;
+    font-size: $font-size-large;
+    text-align: center;
+    letter-spacing: 1px;
+    color: $color-black;
+    border-width: 1px 0;
+    padding: 16px 48px 16px;
+    display: inline-block;
+    margin: 0 auto 0;
+    width: 100%;
+    font-weight: bold;
+    user-select: all;
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+.adyen-checkout__voucher-result__details {
+    list-style: none;
+    padding: 0;
+    margin: -1px auto 0 auto;
+}
+
+.adyen-checkout__voucher-result__details__item {
+    display: flex;
+    justify-content: space-between;
+    font-size: $font-size-small;
+    color: $color-black;
+    padding: 16px 24px;
+    border-top: 1px solid $color-gray-light;
+    word-break: break-word;
+}
+
+.adyen-checkout__voucher-result__details__item:last-child {
+    margin-bottom: 0;
+}
+
+.adyen-checkout__voucher-result__details__label {
+    max-width: 50%;
+    text-align: left;
+}
+
+.adyen-checkout__voucher-result__details__value {
+    max-width: 50%;
+    text-align: right;
+    font-weight: bold;
+}
+
+.adyen-checkout__voucher-result__actions {
+    margin: 0 auto 32px;
+    max-width: 100%;
+    min-width: 200px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.adyen-checkout__voucher-result__actions__item {
+    margin: 0 4px;
+}

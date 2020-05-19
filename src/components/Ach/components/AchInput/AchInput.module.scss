@@ -1,0 +1,18 @@
+@import '~/style';
+
+.sf-input {
+    &__wrapper {
+        position: relative;
+    }
+
+    &__wrapper *,
+    &__wrapper *::before,
+    &__wrapper *::after {
+        box-sizing: border-box;
+    }
+}
+
+.adyen-checkout__input {
+    display: block;
+    max-height: 100px;
+}

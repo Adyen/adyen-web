@@ -1,0 +1,55 @@
+@import '~/style';
+
+.adyen-checkout__field {
+    display: block;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.adyen-checkout__field:last-of-type {
+    margin-bottom: 0;
+}
+
+.adyen-checkout__label {
+    display: block;
+}
+
+.adyen-checkout__label__text,
+.adyen-checkout__helper-text {
+    color: $color-black;
+    display: block;
+    font-size: $font-size-small;
+    font-weight: normal;
+    line-height: 13px;
+    padding-bottom: 5px;
+}
+
+.adyen-checkout__helper-text {
+    color: $color-gray-darker;
+}
+
+.adyen-checkout__label__text {
+    transition: color 0.1s ease-out;
+
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.adyen-checkout__label__text--error {
+    color: $color-alert;
+}
+
+.adyen-checkout__label--focused .adyen-checkout__label__text {
+    color: $color-primary;
+}
+
+.adyen-checkout__error-text {
+    display: flex;
+    color: $color-alert;
+    font-weight: normal;
+    margin-top: 4px;
+    font-size: $font-size-xsmall;
+    align-items: center;
+}

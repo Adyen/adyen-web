@@ -1,0 +1,43 @@
+@import '~/style';
+
+.adyen-checkout__open-invoice .adyen-checkout__field--gender .adyen-checkout__radio_group {
+    display: flex;
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__field--gender .adyen-checkout__radio_group > label {
+    margin-right: 20px;
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
+    padding-bottom: 8px;
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__fieldset--deliveryAddress {
+    margin-top: 24px;
+    padding-bottom: 8px;
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__input--separateDeliveryAddress {
+    margin-bottom: 0;
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__radio_group {
+    display: flex;
+    margin: 8px 0;
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__radio_group__input-wrapper {
+    margin-right: 16px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__field--consentCheckbox {
+    margin-top: 22px;
+}
+
+.adyen-checkout__input--separateDeliveryAddress + .adyen-checkout__checkbox__label {
+    margin-top: 16px;
+}

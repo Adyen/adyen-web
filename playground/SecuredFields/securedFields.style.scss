@@ -1,0 +1,413 @@
+.secured-fields {
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    padding: 24px;
+}
+.pm-image {
+    background-color: #ffffff;
+    border-radius: 4px;
+    -moz-boder-radius: 4px;
+    -webkit-border-radius: 4px;
+    float: right;
+    line-height: 0;
+    position: relative;
+    overflow: hidden;
+}
+.pm-form-label {
+    float: left;
+    padding-bottom: 1em;
+    position: relative;
+    width: 100%;
+}
+.pm-form-label--exp-date {
+    width: 40%;
+}
+.pm-form-label--exp-year {
+    width: 40%;
+    margin-left: 20px;
+}
+.pm-form-label--cvc {
+    float: right;
+    width: 40%;
+}
+.pm-form-label__text {
+    color: #00112c;
+    float: left;
+    font-size: 0.93333em;
+    padding-bottom: 6px;
+    position: relative;
+}
+.pm-input-field {
+    background: white;
+    border: 1px solid #d8d8d8;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    clear: left;
+    font-size: 0.93333333333em;
+    float: left;
+    padding: 8px;
+    position: relative;
+    width: 100%;
+    height: 35px;
+}
+
+.pm-form-label__error-text {
+    color: #ff7d00;
+    display: none;
+    float: left;
+    font-size: 13px;
+    padding-top: 0.4em;
+    position: relative;
+    width: 100%;
+}
+
+/* Set dynamically */
+.pm-input-field--error,
+.secured-fields-si.pm-input-field--error {
+    border: 1px solid #ff7d00;
+}
+
+.pm-input-field--focus {
+    border: 1px solid #969696;
+    outline: none;
+}
+.pm-input-field--error.pm-input-field--focus {
+    border: 1px solid #ff7d00;
+}
+
+.card-input__spinner__holder {
+    position: relative;
+    top: 40px;
+}
+
+.card-input__spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: none;
+}
+
+.card-input__spinner--active {
+    display: block;
+}
+
+/* Single input secured fields styling */
+.payment-method-si {
+    background: none;
+    border: none;
+}
+
+.secured-fields-si {
+    background-color: #fff;
+    position: relative;
+    left: 15px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    height: 35px;
+    width: 238px;
+    border: 1px solid #d8d8d8;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.pm-image-si {
+    top: 3px;
+    left: 4px;
+    position: absolute;
+}
+
+.pm-input-field-si {
+    background: white;
+    font-size: 0.93333333333em;
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 33px;
+}
+
+.pm-input-field-si.pan {
+    left: 52px;
+    width: 180px;
+}
+.pm-input-field-si.end-digits {
+    top: 10px;
+    left: 52px;
+    width: 41px;
+    line-height: 14px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: none;
+    background-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    display: none;
+}
+.pm-input-field-si.exp-date {
+    left: 98px;
+    width: 50px;
+    display: none;
+}
+.pm-input-field-si.cvc {
+    left: 151px;
+    width: 50px;
+    display: none;
+}
+
+/* Fancy secured fields styling  Aspect ratio 1.586 */
+.fancy-secured-fields-container {
+    border-radius: 15px;
+    overflow: hidden;
+    height: 220px;
+    max-width: 370px;
+    float: left;
+    position: relative;
+    width: 100%;
+    background-color: transparent;
+    perspective: 1000px;
+    transform: rotate3d(3, 1, 1, -50deg);
+}
+
+.fancy-input-field {
+    display: inline-block;
+    height: 20px;
+}
+
+.fancy-input-field--holdername {
+    background: transparent;
+    opacity: 1;
+    border: 0;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 400;
+    outline: 0px;
+    text-transform: uppercase;
+}
+
+.fancy-input-field--holdername::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Fakt', sans-serif;
+    font-weight: normal;
+}
+
+.fancy-card__field-container {
+    padding: 100px 25px 25px;
+}
+
+.fancy-card__chip {
+    /*background-image: url('./chip.svg');*/
+    position: absolute;
+    height: 35px;
+    width: 45px;
+    top: 40px;
+    left: 25px;
+    /*border-radius: 3px;*/
+    /*box-shadow: inset 0 -3px 2px 0 rgba(0, 0, 0, 0.2), inset 0 -3px 2px 0 rgba(0, 0, 0, 0.2), inset 1px 1px 2px 0px rgba(0, 0, 0, 0.3), -1px -1px 1px 0px #5f5344;*/
+    /*background-image: radial-gradient(ellipse at center center, transparent 39%, rgba(38, 38, 38, 0.7) 40%, rgba(38, 38, 38, 0.7) 40%, transparent 41%, transparent 69%, rgba(38, 38, 38, 0.7) 70%, transparent 72%), linear-gradient(-180deg, rgba(255,255,255,0.59) 0%, rgba(149,149,149,0.27) 28%, rgba(255,255,255,0.4) 76%, rgba(255,255,255,0.52) 100%);;*/
+}
+
+.fancy-card__strip {
+    background-image: linear-gradient(220deg, #d7e1ec 0%, #f0f0f0 100%);
+    opacity: 0.3;
+    width: 100%;
+    height: 40px;
+    margin-top: 30px;
+}
+
+.fancy-card__brand-icon {
+    border-radius: 5px;
+    overflow: hidden;
+    width: 40px;
+    height: 25px;
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+}
+
+.fancy-card__cvc-container {
+    background-color: rgba(255, 255, 255, 0.2);
+    display: block;
+    float: left;
+    position: relative;
+    height: 40px;
+    margin-top: 30px;
+    padding-top: 5px;
+    width: 70%;
+}
+
+.fancy-card__cvc {
+    margin-right: 20px;
+    margin-top: 5px;
+    float: right;
+    width: 20%;
+}
+
+.card-image {
+    height: 100%;
+    width: 100%;
+}
+
+.fancy-secured-fields {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/*.fancy-secured-fields::after {*/
+/*bottom: 0;*/
+/*content: '';*/
+/*left: 170px;*/
+/*position: absolute;*/
+/*top: 0;*/
+/*width: 5px;*/
+/*transform: rotateY(-90deg);*/
+/*transform-origin: 100% 50%;*/
+/*background-color: #000;*/
+/*}*/
+
+.fancy-secured-fields.rotated {
+    transform: rotateY(180deg);
+}
+
+.fancy-card__front,
+.fancy-card__back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+    /* Rectangle: */
+    /*background: #0abf53;*/
+    background-image: radial-gradient(circle at 90% -10%, #00a45c 0%, #003c4a 69%, #000000 100%, #000000 100%);
+    /*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c2c2c2', endColorstr='#757575', GradientType=1 );*/
+}
+
+.fancy-card__front {
+    color: black;
+    transform: translateZ(-1px);
+}
+
+.fancy-card__back {
+    background: #000f22;
+    color: white;
+    transform: rotateY(180deg) translateZ(-4px);
+    z-index: 1;
+}
+
+.fancy-card__flip-card,
+.fancy-card__flip-card-2 {
+    background: transparent;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: bold;
+    opacity: 0.5;
+    padding: 3px 8px;
+    position: absolute;
+    right: 20px;
+    transition: opacity 0.3s;
+    top: 100px;
+}
+
+.fancy-card__flip-card:hover,
+.fancy-card__flip-card-2:hover {
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+}
+
+/* Material */
+.pm-input-field-mat {
+    display: block;
+    height: 56px;
+    border: 1px solid #b9c4c9;
+    border-radius: 6px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.material-label {
+    float: left;
+    position: relative;
+}
+
+.material-secured-fields-container {
+    overflow: hidden;
+}
+
+.material-input-label {
+    top: 29px;
+    left: 10px;
+    position: absolute;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    color: #687282;
+    transition: font-size 0.1s ease-in, top 0.1s ease-in;
+}
+
+.material-input-label--error {
+    color: #d10244;
+}
+
+.material-input-label--focus,
+.material-input-label--valid,
+.material-input-label--error {
+    font-size: 13px;
+    top: 17px;
+}
+
+.pm-input-field-mat--focus {
+    border: 1px solid #0066ff;
+}
+
+.pm-input-field-mat--valid {
+    border: 1px solid #b9c4c9;
+    border-bottom: 1px solid #0abf53;
+}
+
+.pm-input-field-mat--error {
+    border: 1px solid #d10244;
+}
+
+.pm-input-field-mat .js-iframe {
+    padding-top: 17px;
+}
+
+.valid-icon,
+.error-icon {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 16px;
+}
+
+.valid-icon {
+    fill: #0abf53;
+}
+
+.error-icon {
+    fill: #d10244;
+}
+
+.pm-input-field-mat--valid .valid-icon {
+    display: block;
+}
+
+.pm-input-field-mat--error .error-icon {
+    display: block;
+}
