@@ -30,9 +30,8 @@ const createMaterialLabelListener = () => {
 getOriginKey().then(originKey => {
     window.checkout = new AdyenCheckout({
         originKey,
+        clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        // originKey: 'pub.v2.9415318998772385.aHR0cDovL2xvY2FsaG9zdDozMDIw.65CN9uV8MliJ619iJ5lOyP3z-atKUa5HAZm9g58WjxM',//beta, localhost:3020 - wrong endpoint: 500 Internal Server Error
-        // originKey: 'pub.v2.8714289145368445.aHR0cDovL2xvY2FsaG9zdDo0MDAx.VVEkQt9sJAQdtZnVJuhKGwbyLExbl7JQPyUe5-rGgxw',//test, localhost:4001 - wrong domain: iframes don't configure
         //        environment: 'http://localhost:8080/checkoutshopper/',
         environment: 'test',
         onChange: handleOnChange,
@@ -71,11 +70,11 @@ getOriginKey().then(originKey => {
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
     // COMMENT IN TO HIDE ADDITIONAL SF EXAMPLES
-    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
-    extraSFs.forEach(elem => {
-        elem.style.display = 'none';
-    });
-    return;
+//    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
+//    extraSFs.forEach(elem => {
+//        elem.style.display = 'none';
+//    });
+//    return;
     // - END
 
     window.securedFieldsSi = checkout
