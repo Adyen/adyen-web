@@ -9,6 +9,7 @@ stats.json
 
 # IntelliJ
 .idea
+/adyen-web.iml
 
 # Vagrant
 Vagrantfile
