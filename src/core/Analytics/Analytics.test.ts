@@ -3,7 +3,7 @@ import { default as collectId } from '../Services/collect-id';
 
 jest.mock('../Services/collect-id');
 
-const mockedCollectId = <jest.Mock<typeof collectId>>collectId;
+const mockedCollectId = <jest.Mock>collectId;
 
 describe('Analytics', () => {
     beforeEach(() => {

@@ -53,7 +53,7 @@ describe('getCurrencyCode', () => {
 describe('getLocalisedAmount', () => {
     test('should return a formatted amount', () => {
         expect(getLocalisedAmount(1000, 'en-US', 'EUR')).toBe('€10.00');
-        expect(getLocalisedAmount(43, 'nl-NL', 'EUR')).toBe('€ 0.43');
+        expect(getLocalisedAmount(43, 'nl-NL', 'EUR')).toBe('€ 0,43');
         expect(getLocalisedAmount(33025, 'en-US', 'USD')).toBe('$330.25');
     });
 
@@ -66,7 +66,7 @@ describe('getLocalisedAmount', () => {
     });
 
     test('should format correctly other currencies', () => {
-        expect(getLocalisedAmount(12345, 'en-US', 'MRU')).toBe('MRU123.45');
+        expect(getLocalisedAmount(12345, 'en-US', 'MRU')).toBe('MRU 123.45');
     });
 });
 

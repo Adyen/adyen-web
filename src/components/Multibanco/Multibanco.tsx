@@ -8,6 +8,10 @@ export class MultibancoElement extends UIElement {
     public static type = 'multibanco';
     public static defaultProps = { showPayButton: true };
 
+    constructor(props) {
+        super(props);
+    }
+
     get isValid() {
         return true;
     }
