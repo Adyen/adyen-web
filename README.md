@@ -1,6 +1,6 @@
 # Adyen Web
 
-With Adyen Web you can help your shoppers pay with a payment method of their choice, by providing you with the building blocks you need to create a checkout experience.
+With Adyen Web you can help your shoppers pay with a payment method of their choice. It provides you with the building blocks you need to create a checkout experience.
 
 You can integrate with Adyen in two ways, Drop-in and Components.
 
@@ -50,8 +50,8 @@ Follow these steps to run our development playground:
 
 * Clone this repository and navigate to the root of the project.
 * Create a `.env` file on your project's root folder following the example on `.env.default` and fill in the necessary environment variables.
-* Install all dependencies by running `npm install`.
-* Start the development playground by running `npm start`. This will start a local server on [http://localhost:3020](http://localhost:3020).
+* Install all dependencies by running either `npm install` or `yarn install`.
+* Start the development playground by running `npm start` or `yarn start`. This will start a local server on [http://localhost:3020](http://localhost:3020).
 
 ## Support
 
