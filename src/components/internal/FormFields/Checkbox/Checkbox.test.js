@@ -1,5 +1,5 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { mount } from 'enzyme';
 import Checkbox from './Checkbox';
 
 describe('Checkbox', () => {
@@ -18,7 +18,7 @@ describe('Checkbox', () => {
         const onChange = jest.fn();
         const wrapper = getWrapper({ name: 'name', value: 'value', onChange });
 
-        wrapper.find('label').simulate('click');
-        expect(onChange.mock.calls.length).toBe(1);
+        wrapper.find('label > input').simulate('change', {});
+        expect(onChange).toHaveBeenCalledTimes(1);
     });
 });

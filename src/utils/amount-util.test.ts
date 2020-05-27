@@ -51,22 +51,32 @@ describe('getCurrencyCode', () => {
 });
 
 describe('getLocalisedAmount', () => {
-    test('should return a formatted amount', () => {
-        expect(getLocalisedAmount(1000, 'en-US', 'EUR')).toBe('€10.00');
-        expect(getLocalisedAmount(43, 'nl-NL', 'EUR')).toBe('€ 0.43');
-        expect(getLocalisedAmount(33025, 'en-US', 'USD')).toBe('$330.25');
+    let spyOnToLocaleString;
+
+    beforeAll(() => {
+        spyOnToLocaleString = jest.spyOn(Number.prototype, 'toLocaleString');
+    });
+
+    afterEach(() => {
+        spyOnToLocaleString.mockClear();
+    });
+
+    afterAll(() => {
+        spyOnToLocaleString.mockRestore();
+    });
+
+    test('should return a formatted EUR amount', () => {
+        getLocalisedAmount(1000, 'nl-NL', 'EUR');
+        expect(spyOnToLocaleString).toHaveBeenCalledWith('nl-NL', { currency: 'EUR', currencyDisplay: 'symbol', style: 'currency' });
+    });
+
+    test('should return a formatted USD amount', () => {
+        getLocalisedAmount(1000, 'en-US', 'USD');
+        expect(spyOnToLocaleString).toHaveBeenCalledWith('en-US', { currency: 'USD', currencyDisplay: 'symbol', style: 'currency' });
     });
 
     test('should return an amount if no locale is passed', () => {
         expect(getLocalisedAmount(1000, 'undefined', 'undefined')).toBe('1000');
-    });
-
-    test('should not add decimals for zero decimal currencies', () => {
-        expect(getLocalisedAmount(1000, 'en-US', 'JPY')).toBe('¥1,000');
-    });
-
-    test('should format correctly other currencies', () => {
-        expect(getLocalisedAmount(12345, 'en-US', 'MRU')).toBe('MRU123.45');
     });
 });
 

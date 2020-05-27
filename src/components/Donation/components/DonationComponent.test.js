@@ -37,9 +37,9 @@ describe('DonationComponent', () => {
         wrapper
             .find('.adyen-checkout__button-group__input')
             .first()
-            .simulate('click');
-        const lastOnChange = onChangeMock.mock.calls.pop();
-        expect(lastOnChange[0].isValid).toBe(true);
+            .simulate('change');
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        expect(lastOnChangeCall[0].isValid).toBe(true);
     });
 
     test('Calls the onCancel event', () => {

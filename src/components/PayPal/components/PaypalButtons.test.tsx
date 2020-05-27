@@ -2,15 +2,15 @@ import { h } from 'preact';
 import { mount } from 'enzyme';
 import PaypalButtons from './PaypalButtons';
 
+const isEligible = jest.fn(() => true);
+const render = jest.fn(() => Promise.resolve());
+
 const paypalRefMock = {
     FUNDING: {
         PAYPAL: 'paypal',
         CREDIT: 'credit'
     },
-    Buttons: jest.fn(() => ({
-        isEligible: jest.fn(() => true),
-        render: jest.fn(() => Promise.resolve())
-    }))
+    Buttons: jest.fn(() => ({ isEligible, render }))
 };
 
 describe('PaypalButtons', () => {
