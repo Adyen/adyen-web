@@ -28,8 +28,7 @@ export default function DonationComponent(props) {
     const handleAmountSelected = ({ target }) => {
         const value = parseInt(target.value, 10);
         setIsValid(true);
-        setAmount({ ...amount, value });
-        props.onChange({ data: { amount }, isValid });
+        setAmount(amount => ({ ...amount, value }));
     };
 
     const handleDonate = () => {
