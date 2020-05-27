@@ -6,7 +6,7 @@
 
 Describe the changes proposed in this pull request.
 
-- What is the motivation of this change? 
+- What is the motivation for this change? 
 - What existing problem does this pull request solve?
 
 -->
