@@ -102,8 +102,7 @@ module.exports = merge(webpackConfig, {
                                 options: { config: { path: 'config/' } }
                             },
                             {
-                                loader: 'sass-loader',
-                                options: { modules: true }
+                                loader: 'sass-loader'
                             }
                         ]
                     },
