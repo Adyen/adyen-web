@@ -7,7 +7,7 @@ class DeviceFingerprint extends Component {
     constructor(props) {
         super(props);
 
-        const accessKey = props.clientKey ? props.clientKey : props.originKey;
+        const accessKey = props.clientKey || props.originKey;
         if (accessKey) {
             this.state = {
                 status: 'retrievingFingerPrint',

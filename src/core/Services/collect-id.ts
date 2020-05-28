@@ -11,7 +11,7 @@ const collectId = config => {
             'Content-Type': 'application/json'
         }
     };
-    const accessKey = config.clientKey ? config.clientKey : config.originKey;
+    const accessKey = config.clientKey || config.originKey;
     return fetch(`${config.loadingContext}v1/analytics/id?token=${accessKey}`, options)
         .then(response => {
             if (response.ok) return response.json();

@@ -26,7 +26,7 @@ const logTelemetry = config => event => {
         body: JSON.stringify(telemetryEvent)
     };
 
-    const accessKey = config.clientKey ? config.clientKey : config.originKey;
+    const accessKey = config.clientKey || config.originKey;
     return fetch(`${config.loadingContext}v1/analytics/log?token=${accessKey}`, options)
         .then(response => response.ok)
         .catch(() => {});
