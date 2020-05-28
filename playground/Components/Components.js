@@ -35,6 +35,18 @@ getOriginKey()
             // }
         });
 
+        // AmazonPay
+        window.amazonpay = checkout.create('amazonpay', {
+            //  amazonPayToken: '160583287597AMZN' // For Order flow only
+            currency: 'EUR',
+            environment: 'test',
+            locale: 'es-ES',
+            merchantId: 'abc',
+            placement: 'Product',
+            productType: 'PayOnly',
+            sessionUrl: 'https://pay-api.amazon.eu/test/1/checkoutSessions/'
+        }).mount('.amazonpay-field');
+
         // Adyen Giving
         window.donation = checkout
             .create('donation', {
