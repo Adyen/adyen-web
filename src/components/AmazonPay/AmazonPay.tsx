@@ -8,7 +8,7 @@ import './AmazonPay.scss';
 
 
 export class AmazonPayElement extends UIElement {
-    public static type = 'amazon';
+    public static type = 'amazonpay';
     protected static defaultProps = defaultProps as AmazonElementProps;
 
     constructor(props) {
