@@ -161,7 +161,8 @@ module.exports = merge(webpackConfig, {
                 parallel: true,
                 // Enable file caching
                 cache: true,
-                sourceMap: shouldUseSourceMap
+                sourceMap: shouldUseSourceMap,
+                extractComments: false
             })
             // new OptimizeCSSAssetsPlugin()
         ]
