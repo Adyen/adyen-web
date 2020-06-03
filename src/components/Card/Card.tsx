@@ -56,7 +56,7 @@ export class CardElement extends UIElement {
      */
     formatData(): CardElementData {
         const cardBrand = this.state.additionalSelectValue || this.props.brand;
-        console.log(cardBrand);
+
         return {
             paymentMethod: {
                 type: CardElement.type,
