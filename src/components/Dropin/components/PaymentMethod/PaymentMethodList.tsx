@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PaymentMethodItem from './PaymentMethodItem';
 import getProp from '~/utils/getProp';
 import styles from '../DropinComponent.module.scss';
-import UIElement from '~/components/UIElement';
+import UIElement from '../../../UIElement';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];

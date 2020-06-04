@@ -4,7 +4,7 @@ import useCoreContext from '~/core/Context/useCoreContext';
 import Field from '~/components/internal/FormFields/Field';
 import getImage from '~/utils/get-image';
 import { renderFormField } from '~/components/internal/FormFields';
-import { UIElementProps } from '~/components/UIElement';
+import { UIElementProps } from '../../UIElement';
 import './BlikInput.scss';
 
 interface BlikInputDataState {

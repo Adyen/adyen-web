@@ -4,7 +4,7 @@ import { createElements, createStoredElements } from '../elements';
 import { getCommonProps } from './utils';
 import Status from './status';
 import getProp from '~/utils/getProp';
-import UIElement from '~/components/UIElement';
+import UIElement from '../../UIElement';
 import './DropinComponent.scss';
 import Language from '~/language/Language';
 import { PaymentMethod, StoredPaymentMethod } from '~/types';

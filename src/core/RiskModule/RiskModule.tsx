@@ -16,6 +16,8 @@ export default class RiskElement extends BaseElement {
         }
     };
 
+    private nodeRiskContainer = null;
+
     constructor(props) {
         super(props);
 

@@ -9,7 +9,7 @@ const paymentMethod = {
         id: '123456',
         type: 'mytype'
     },
-    on: jest.fn(),
+    eventEmitter: jest.fn(),
     render: jest.fn()
 };
 
