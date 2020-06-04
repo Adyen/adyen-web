@@ -55,14 +55,15 @@ export class CardElement extends UIElement {
      * @return {object} props
      */
     formatData(): CardElementData {
+        const cardBrand = this.state.additionalSelectValue || this.props.brand;
+
         return {
             paymentMethod: {
                 type: CardElement.type,
                 ...this.state.data,
                 ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId }),
-                ...(this.props.brand && { brand: this.props.brand }),
-                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource }),
-                brand: this.state.additionalSelectValue
+                ...(cardBrand && { brand: cardBrand }),
+                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod }),
