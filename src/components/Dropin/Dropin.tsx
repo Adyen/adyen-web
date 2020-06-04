@@ -8,7 +8,7 @@ import { PaymentAction } from '~/types';
 class DropinElement extends UIElement {
     public static type = 'dropin';
     protected static defaultProps = defaultProps;
-    private dropinRef = null;
+    public dropinRef = null;
 
     constructor(props) {
         super(props);
