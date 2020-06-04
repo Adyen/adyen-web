@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import BaseElement from './BaseElement';
 import { PaymentAction } from '~/types';
 import getImage from '../utils/get-image';
@@ -118,9 +119,9 @@ export class UIElement extends BaseElement {
         return this.props.name || this.constructor['type'];
     }
 
-    payButton(props) {
+    public payButton = props => {
         return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
-    }
+    };
 }
 
 export default UIElement;
