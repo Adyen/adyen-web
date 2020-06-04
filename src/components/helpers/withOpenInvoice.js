@@ -31,7 +31,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
         }
 
         /**
-         * @private
          * Formats props on construction time
          * @return {object} props
          */
@@ -53,7 +52,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
         }
 
         /**
-         * @private
          * Formats the component data output
          * @return {object} props
          */

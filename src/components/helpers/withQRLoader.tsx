@@ -38,7 +38,6 @@ const withQRLoader = ({
         };
 
         /**
-         * @private
          * Formats props on construction time
          * @return {object} props
          */
@@ -52,7 +51,6 @@ const withQRLoader = ({
         }
 
         /**
-         * @private
          * Formats the component data output
          * @return {object} props
          */

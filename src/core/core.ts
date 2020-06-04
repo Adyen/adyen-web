@@ -7,7 +7,7 @@ import getComponentForAction from './ProcessResponse/PaymentAction';
 import resolveEnvironment from './Environment';
 import { version } from '../../package.json';
 import Analytics from './Analytics';
-import { PaymentAction } from '~/types';
+import { PaymentAction } from '../types';
 
 type PaymentMethods = typeof paymentMethods;
 type PaymentMethod<P extends keyof PaymentMethods> = Pick<PaymentMethods, P>;

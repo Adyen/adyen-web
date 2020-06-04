@@ -56,7 +56,6 @@ const withIssuerList = ({ type, showImage = true }): any => {
         };
 
         /**
-         * @private
          * Formats props on construction time
          * @return {object} props
          */
@@ -68,7 +67,6 @@ const withIssuerList = ({ type, showImage = true }): any => {
         }
 
         /**
-         * @private
          * Formats the component data output
          * @return {object} props
          */

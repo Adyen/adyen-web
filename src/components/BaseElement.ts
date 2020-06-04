@@ -5,8 +5,8 @@ import EventEmitter from './EventEmitter';
 abstract class BaseElement {
     public props;
     public _node;
-    protected state;
-    private _component;
+    public state;
+    public _component;
     public eventEmitter = new EventEmitter();
 
     protected constructor(props = {}) {

@@ -24,7 +24,7 @@ export interface UIElementProps {
 
 export class UIElement extends BaseElement {
     protected componentRef: any;
-    protected elementRef: any;
+    public elementRef: any;
     public props: UIElementProps;
 
     constructor(props: UIElementProps) {
