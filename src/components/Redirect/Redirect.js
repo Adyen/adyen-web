@@ -4,7 +4,6 @@ import getImage from '../../utils/get-image';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
-import withPayButton from '../helpers/withPayButton';
 
 /**
  * RedirectElement
@@ -26,7 +25,6 @@ class RedirectElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
      * @return {object} props
      */
@@ -74,4 +72,4 @@ class RedirectElement extends UIElement {
     }
 }
 
-export default withPayButton(RedirectElement);
+export default RedirectElement;

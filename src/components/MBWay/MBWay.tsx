@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement, { UIElementProps } from '../UIElement';
 import MBWayInput from './components/MBWayInput';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 import config from '~/components/MBWay/components/MBWayAwait/config';
 import Await from '~/components/internal/Await';
 
@@ -84,4 +83,4 @@ export class MBWayElement extends UIElement {
     }
 }
 
-export default withPayButton(MBWayElement);
+export default MBWayElement;

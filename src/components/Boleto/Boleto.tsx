@@ -4,7 +4,6 @@ import BoletoInput from './components/BoletoInput';
 import { cleanCPFCNPJ } from './components/BoletoInput/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 
 export class BoletoElement extends UIElement {
     public static type = 'boletobancario';
@@ -50,4 +49,4 @@ export class BoletoElement extends UIElement {
     }
 }
 
-export default withPayButton(BoletoElement);
+export default BoletoElement;
