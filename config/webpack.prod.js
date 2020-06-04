@@ -17,7 +17,7 @@ const DefinePluginConfig = new webpack.DefinePlugin({
     }
 });
 
-const shouldUseSourceMap = false;
+const shouldUseSourceMap = true;
 
 module.exports = merge(webpackConfig, {
     mode: 'production',

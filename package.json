@@ -9,6 +9,9 @@
         "components"
     ],
     "main": "dist/adyen.js",
+    "umd:main": "dist/adyen.js",
+    "types": "dist/src",
+    "typings": "dist/src",
     "version": "3.9.0",
     "license": "MIT",
     "homepage": "https://www.adyen.com/",
@@ -85,6 +88,8 @@
         "preact": "^10.2.1"
     },
     "files": [
-        "dist"
+        "dist",
+        "LICENSE",
+        "README"
     ]
 }
