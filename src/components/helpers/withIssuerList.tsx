@@ -4,7 +4,6 @@ import IssuerList from '../internal/IssuerList';
 import getIssuerImageUrl from '~/utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '~/core/config';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from './withPayButton';
 import Language from '~/language/Language';
 
 interface IssuerListProps {
@@ -31,7 +30,7 @@ interface IssuerListData {
  * IssuerListContainer: A higher order function which returns a different class based on issuerType
  * @extends UIElement
  */
-const withIssuerList = ({ type, showImage = true }) => {
+const withIssuerList = ({ type, showImage = true }): any => {
     class IssuerListContainer extends UIElement {
         public static type = type;
         public props: IssuerListProps;
@@ -108,7 +107,7 @@ const withIssuerList = ({ type, showImage = true }) => {
         }
     }
 
-    return withPayButton(IssuerListContainer);
+    return IssuerListContainer;
 };
 
 export default withIssuerList;

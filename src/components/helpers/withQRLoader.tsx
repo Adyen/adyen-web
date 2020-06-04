@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
-import withPayButton from './withPayButton';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -26,7 +25,7 @@ const withQRLoader = ({
     STATUS_INTERVAL,
     COUNTDOWN_MINUTES,
     shouldRedirectOnMobile = false
-}: WithQRLoaderProps) => {
+}: WithQRLoaderProps): any => {
     class QRLoaderContainer extends UIElement {
         public static type = type;
 
@@ -105,7 +104,7 @@ const withQRLoader = ({
         }
     }
 
-    return withPayButton(QRLoaderContainer);
+    return QRLoaderContainer;
 };
 
 export default withQRLoader;
