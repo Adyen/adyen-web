@@ -56,7 +56,7 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
 /**
  * @private
  */
-export const getLocalisedPercentage = (percent: number = 0, locale: string): string => {
+export const getLocalisedPercentage = (percent = 0, locale: string): string => {
     const decimalPercent = percent / 100 / 100;
     const localeOptions = {
         style: 'percent',
