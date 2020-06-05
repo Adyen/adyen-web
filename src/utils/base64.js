@@ -38,11 +38,7 @@ const base64 = {
             return false;
         }
 
-        try {
-            return checkedBtoa(checkedAtob(pDataStr)) === pDataStr;
-        } catch (err) {
-            throw err;
-        }
+        return checkedBtoa(checkedAtob(pDataStr)) === pDataStr;
     }
 };
 
