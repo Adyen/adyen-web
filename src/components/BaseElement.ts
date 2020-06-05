@@ -1,12 +1,13 @@
 import { render } from 'preact';
-import withEvents from './helpers/withEvents';
 import getProp from '~/utils/getProp';
+import EventEmitter from './EventEmitter';
 
 abstract class BaseElement {
     public props;
     public _node;
-    protected state;
-    private _component;
+    public state;
+    public _component;
+    public eventEmitter = new EventEmitter();
 
     protected constructor(props = {}) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
@@ -44,7 +45,7 @@ abstract class BaseElement {
      * Note: this does not ensure validity, check isValid first
      * @return {object} data
      */
-    get data() {
+    get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
         const conversionId = getProp(this.props, 'modules.analytics.conversionId');
 
@@ -114,4 +115,4 @@ abstract class BaseElement {
     }
 }
 
-export default withEvents(BaseElement);
+export default BaseElement;

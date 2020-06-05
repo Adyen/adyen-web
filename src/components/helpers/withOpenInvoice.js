@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import OpenInvoice from '../internal/OpenInvoice';
 import CoreProvider from '../../core/Context/CoreProvider';
-import withPayButton from './withPayButton';
 import { unformatDate } from '../internal/FormFields/InputDate/utils';
 
 /**
@@ -10,7 +9,7 @@ import { unformatDate } from '../internal/FormFields/InputDate/utils';
  * @extends UIElement
  */
 const withOpenInvoice = ({ type, consentCheckbox }) => {
-    class OpenInvoiceContainer extends UIElement {
+    return class OpenInvoiceContainer extends UIElement {
         static type = type;
 
         static defaultProps = {
@@ -32,7 +31,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
         }
 
         /**
-         * @private
          * Formats props on construction time
          * @return {object} props
          */
@@ -54,7 +52,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
         }
 
         /**
-         * @private
          * Formats the component data output
          * @return {object} props
          */
@@ -96,9 +93,7 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
                 </CoreProvider>
             );
         }
-    }
-
-    return withPayButton(OpenInvoiceContainer);
+    };
 };
 
 export default withOpenInvoice;

@@ -1,6 +1,8 @@
+import { h } from 'preact';
 import BaseElement from './BaseElement';
 import { PaymentAction } from '~/types';
 import getImage from '../utils/get-image';
+import PayButton from './internal/PayButton';
 
 export interface UIElementProps {
     onChange?: (state: any, element: UIElement) => void;
@@ -22,7 +24,7 @@ export interface UIElementProps {
 
 export class UIElement extends BaseElement {
     protected componentRef: any;
-    protected elementRef: any;
+    public elementRef: any;
     public props: UIElementProps;
 
     constructor(props: UIElementProps) {
@@ -116,6 +118,10 @@ export class UIElement extends BaseElement {
     get displayName() {
         return this.props.name || this.constructor['type'];
     }
+
+    public payButton = props => {
+        return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
+    };
 }
 
 export default UIElement;

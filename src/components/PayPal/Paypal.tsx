@@ -10,6 +10,9 @@ class PaypalElement extends UIElement {
     public static type = 'paypal';
     public static subtype = 'sdk';
     protected static defaultProps: PayPalElementProps = defaultProps;
+    private paymentData = null;
+    private resolve = null;
+    private reject = null;
 
     constructor(props) {
         super(props);

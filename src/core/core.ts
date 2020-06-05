@@ -7,7 +7,10 @@ import getComponentForAction from './ProcessResponse/PaymentAction';
 import resolveEnvironment from './Environment';
 import { version } from '../../package.json';
 import Analytics from './Analytics';
-import { PaymentAction } from '~/types';
+import { PaymentAction } from '../types';
+
+type PaymentMethods = typeof paymentMethods;
+type PaymentMethod<P extends keyof PaymentMethods> = Pick<PaymentMethods, P>;
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
@@ -40,7 +43,12 @@ class Core {
      * @param {object} options options that will be merged to the global Checkout props
      * @return {object} new UIElement
      */
-    public create(paymentMethod: UIElement | string, options = {}): UIElement {
+    public create<T extends keyof PaymentMethods>(
+        paymentMethod: T | string | UIElement,
+        options?: InstanceType<PaymentMethods[T]>['props']
+    ): InstanceType<PaymentMethods[T]>;
+    public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
+    public create(paymentMethod, options) {
         const props = this.getPropsForComponent(options);
         return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
     }

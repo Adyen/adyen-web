@@ -4,7 +4,6 @@ import CardInput from './components/CardInput';
 import CoreProvider from '~/core/Context/CoreProvider';
 import getImage from '~/utils/get-image';
 import collectBrowserInfo from '~/utils/browserInfo';
-import withPayButton from '../helpers/withPayButton';
 import fetchJSONData from '~/utils/fetch-json-data';
 
 export interface CardElementProps extends UIElementProps {
@@ -32,6 +31,7 @@ interface CardElementData {
 
 export class CardElement extends UIElement {
     public static type = 'scheme';
+    private currentRequestId;
 
     constructor(props: CardElementProps) {
         super(props);
@@ -83,7 +83,7 @@ export class CardElement extends UIElement {
     }
 
     public onBrand = event => {
-        this.emit('brand', { ...event, brand: event.brand === 'card' ? null : event.brand });
+        this.eventEmitter.emit('brand', { ...event, brand: event.brand === 'card' ? null : event.brand });
         if (this.props.onBrand) this.props.onBrand(event);
     };
 
@@ -192,4 +192,4 @@ export class CardElement extends UIElement {
     }
 }
 
-export default withPayButton(CardElement);
+export default CardElement;

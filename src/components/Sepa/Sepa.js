@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import IbanInput from './components/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 
 /**
  * SepaElement
@@ -62,4 +61,4 @@ class SepaElement extends UIElement {
     }
 }
 
-export default withPayButton(SepaElement);
+export default SepaElement;

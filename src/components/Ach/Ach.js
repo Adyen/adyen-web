@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import AchInput from './components/AchInput';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 
 export class AchElement extends UIElement {
     static type = 'ach';
@@ -74,4 +73,4 @@ export class AchElement extends UIElement {
     }
 }
 
-export default withPayButton(AchElement);
+export default AchElement;

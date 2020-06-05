@@ -1,5 +1,5 @@
 import { PaymentAmount } from '~/types';
-import UIElement from '~/components/UIElement';
+import UIElement from '../UIElement';
 
 declare global {
     interface Window {

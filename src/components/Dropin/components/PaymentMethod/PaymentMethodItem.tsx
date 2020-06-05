@@ -6,7 +6,7 @@ import DisableOneClickConfirmation from './DisableOneClickConfirmation';
 import styles from '../DropinComponent.module.scss';
 import './PaymentMethodItem.scss';
 import useCoreContext from '~/core/Context/useCoreContext';
-import UIElement from '~/components/UIElement';
+import UIElement from '../../../UIElement';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -53,13 +53,13 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     componentDidMount() {
-        this.props.paymentMethod.on('brand', e => {
+        this.props.paymentMethod.eventEmitter.on('brand', e => {
             this.setState({ activeBrand: e.brand });
         });
     }
 
     componentWillUnmount() {
-        this.props.paymentMethod.off('brand', e => {
+        this.props.paymentMethod.eventEmitter.off('brand', e => {
             this.setState({ activeBrand: e.brand });
         });
     }

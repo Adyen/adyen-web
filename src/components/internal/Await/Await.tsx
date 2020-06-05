@@ -8,7 +8,7 @@ import Spinner from '~/components/internal/Spinner';
 import Countdown from '~/components/internal/Countdown';
 import Button from '~/components/internal/Button';
 import useCoreContext from '~/core/Context/useCoreContext';
-import { UIElementProps } from '~/components/UIElement';
+import { UIElementProps } from '../../UIElement';
 
 interface StatusObjectProps {
     payload: string;
@@ -76,15 +76,13 @@ function Await(props: AwaitComponentProps) {
 
     const onError = (status: StatusObject): StatusObject => {
         setExpired(true);
-        props.onError(
-            {
-                status,
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
+        props.onError({
+            status,
+            data: {
+                details: { payload: status.props.payload },
+                paymentData: props.paymentData
             }
-        );
+        });
         return status;
     };
 

@@ -4,7 +4,6 @@ import GiftcardInput from './components/GiftcardInput';
 import GiftcardResult from './components/GiftcardResult';
 import CoreProvider from '~/core/Context/CoreProvider';
 import getImage from '~/utils/get-image';
-import withPayButton from '../helpers/withPayButton';
 
 export class GiftcardElement extends UIElement {
     static type = 'genericgiftcard';
@@ -64,4 +63,4 @@ export class GiftcardElement extends UIElement {
     }
 }
 
-export default withPayButton(GiftcardElement);
+export default GiftcardElement;

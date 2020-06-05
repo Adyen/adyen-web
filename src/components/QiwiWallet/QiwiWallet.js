@@ -3,7 +3,6 @@ import UIElement from '../UIElement';
 import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
-import withPayButton from '../helpers/withPayButton';
 import getProp from '../../utils/getProp';
 
 class QiwiWalletElement extends UIElement {
@@ -69,4 +68,4 @@ class QiwiWalletElement extends UIElement {
     }
 }
 
-export default withPayButton(QiwiWalletElement);
+export default QiwiWalletElement;
