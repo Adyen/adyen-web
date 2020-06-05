@@ -15,32 +15,20 @@ export default function processBinLookupResponse(binValueObject) {
         // 1) Multiple options found - add to the UI & inform SFP if appropriate
         if (binValueObject.brands.length > 1) {
             // --
-            let switchObj;
+            const switchObj = createCardVariantSwitcher(binValueObject.brands, 'brandSwitcher');
 
-            switch (binValueObject.issuingCountryCode) {
-                // --
-                case 'FR':
-                    switchObj = createCardVariantSwitcher(binValueObject.brands, 'brandSwitcher');
+            // Set properties on state to trigger a Select element in the UI
+            this.setState(switchObj.stateObject); // Don't need to call validateCardInput - this will be called by the brandChange from SFP
 
-                    // Set properties on state to trigger a Select element in the UI
-                    this.setState(switchObj.stateObject); // Don't need to call validateCardInput - this will be called by the brandChange from SFP
-
-                    // Pass an object through to SFP
-                    this.sfp.processBinLookupResponse({ brands: [switchObj.leadType] });
-                    break;
-
-                case 'BR':
-                    switchObj = createCardVariantSwitcher(binValueObject.brands, 'cardTypeSwitcher');
-                    this.setState(switchObj.stateObject, this.validateCardInput);
-                    break;
-
-                default:
-                    break;
-            }
+            // Pass an object through to SFP
+            this.sfp.processBinLookupResponse({ brands: [switchObj.leadType] });
 
             // 2) Single option found (binValueObject.brands.length === 1)
         } else {
             this.resetAdditionalSelectState(); // Reset UI
+
+            // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
+            this.setState({ additionalSelectValue: binValueObject.brands[0] });
 
             // Pass object through to SFP
             this.sfp.processBinLookupResponse(binValueObject);

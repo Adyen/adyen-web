@@ -110,7 +110,7 @@ CardType.cards.push({
         627780,
         636297,
         636368,
-        651653,
+        651653, // this, and those below, are not contained in regEx
         506728,
         509096,
         509083,
