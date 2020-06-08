@@ -7,6 +7,7 @@ CardType.cards = [];
 
 CardType.cards.push({
     cardType: 'mc',
+    displayName: 'Mastercard',
     startingRules: [51, 52, 53, 54, 55, 22, 23, 24, 25, 26, 27],
     permittedLengths: [16],
     pattern: /^(5[1-5][0-9]{0,14}|2[2-7][0-9]{0,14})$/,
