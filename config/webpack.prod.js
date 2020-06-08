@@ -1,19 +1,20 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const webpackConfig = require('./webpack.config');
-
-const FILENAME = 'adyen';
-
 const resolve = dir => path.resolve(__dirname, dir);
+const currentVersion = require('./version')();
+const FILENAME = 'adyen';
 
 const DefinePluginConfig = new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env': {
-        __LOCAL_BUILD__: JSON.stringify(false)
+        __LOCAL_BUILD__: JSON.stringify(false),
+        VERSION: JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
+        COMMIT_HASH: JSON.stringify(currentVersion.COMMIT_HASH),
+        COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH)
     }
 });
 
