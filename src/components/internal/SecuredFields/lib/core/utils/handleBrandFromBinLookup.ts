@@ -23,7 +23,7 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
         return;
     }
 
-    const passedBrand: string = brandsObj.brands[0];
+    const passedBrand: string = brandsObj.supportedBrands[0];
 
     const card: CardObject = cardType.getCardByBrand(passedBrand);
 

@@ -121,7 +121,7 @@ export class CardElement extends UIElement {
                 if (data && data.requestId === this.currentRequestId) {
                     // ...call processBinLookupResponse with the response object
                     // if it contains at least one brand (a failed lookup will just contain requestId)
-                    if (data.brands && data.brands.length) {
+                    if (data.supportedBrands && data.supportedBrands.length) {
                         this.processBinLookupResponse(data);
                     }
                 }

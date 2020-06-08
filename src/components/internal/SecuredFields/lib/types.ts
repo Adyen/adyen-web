@@ -229,5 +229,5 @@ export interface ShiftTabObject {
 export interface BinLookupObject {
     issuingCountryCode: string;
     requestId: string;
-    brands?: string[];
+    supportedBrands?: string[];
 }
