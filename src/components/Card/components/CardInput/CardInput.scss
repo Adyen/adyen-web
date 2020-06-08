@@ -108,3 +108,8 @@
         transition: none;
     }
 }
+
+.adyen-checkout__dropdown__element,
+.adyen-checkout__dropdown__button__text {
+    text-transform: capitalize;
+}
