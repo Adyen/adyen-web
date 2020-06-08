@@ -11,7 +11,6 @@ const FILENAME = 'adyen';
 const DefinePluginConfig = new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env': {
-        __LOCAL_BUILD__: JSON.stringify(false),
         VERSION: JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
         COMMIT_HASH: JSON.stringify(currentVersion.COMMIT_HASH),
         COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH)
