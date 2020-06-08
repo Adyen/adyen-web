@@ -46,7 +46,7 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
     // Pass brand to CardNumber SF
     this.sendBrandToCardSF(brandToSend);
 
-    // CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc
+    // CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)
     // Set the cvcRequired value on the relevant SecuredFields instance...
     if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_CVC_FIELD)) {
         this.state.securedFields[HOSTED_CVC_FIELD].cvcRequired = cvcRequired;
