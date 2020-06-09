@@ -9,7 +9,7 @@ interface CoreProviderProps {
 
 /**
  * CoreProvider Component
- * Wraps a component delaying the render after the i18n module is fully loaded
+ * Wraps a component delaying the render until after the i18n module is fully loaded
  */
 class CoreProvider extends Component<CoreProviderProps> {
     render({ children }: CoreProviderProps) {
