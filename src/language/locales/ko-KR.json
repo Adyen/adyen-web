@@ -13,6 +13,7 @@
     "creditCard.numberField.invalid": "유효하지 않은 카드 번호",
     "creditCard.expiryDateField.title": "만료일",
     "creditCard.expiryDateField.placeholder": "MM/YY",
+    "creditCard.expiryDateField.invalid": "유효하지 않은 만료일",
     "creditCard.expiryDateField.month": "월",
     "creditCard.expiryDateField.month.placeholder": "MM",
     "creditCard.expiryDateField.year.placeholder": "YY",
@@ -20,6 +21,9 @@
     "creditCard.cvcField.title": "CVC / CVV",
     "creditCard.cvcField.placeholder": "123",
     "creditCard.storeDetailsButton": "다음을 위해 저장",
+    "creditCard.oneClickVerification.invalidInput.title": "유효하지 않은 CVC/CVV 형식",
+    "creditCard.cvcField.placeholder.4digits": "4자리",
+    "creditCard.cvcField.placeholder.3digits": "3자리",
     "installments": "할부 개월 수",
     "sepaDirectDebit.ibanField.invalid": "유효하지 않은 계좌 번호",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
@@ -124,5 +128,9 @@
     "await.waitForConfirmation": "확인 대기중",
     "mbway.confirmPayment": "MB WAY 앱에서 결제를 확인하십시오",
     "shopperEmail.invalid": "유효하지 않은 이메일 주소",
-    "dateOfBirth.format": "DD(일)/MM(월)/YYYY(연도)"
+    "dateOfBirth.format": "DD(일)/MM(월)/YYYY(연도)",
+    "blik.confirmPayment": "뱅킹 앱을 열어서 결제를 확인하세요.",
+    "blik.invalid": "6자리 숫자 입력",
+    "blik.code": "6자리 코드",
+    "blik.help": "뱅킹 앱에서 코드를 가져오세요."
 }
