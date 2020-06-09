@@ -4,10 +4,9 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const webpackConfig = require('./webpack.config');
 const checkoutDevServer = require('../server');
-
+const currentVersion = require('./version')();
 const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || '3020';
-
 const resolve = dir => path.resolve(__dirname, dir);
 
 // NOTE: The first page in the array will be considered the index page.
@@ -50,7 +49,10 @@ module.exports = merge(webpackConfig, {
         new webpack.DefinePlugin({
             'process.env': {
                 __SF_ENV__: JSON.stringify(process.env.SF_ENV || 'build'),
-                __CLIENT_KEY__: JSON.stringify(process.env.CLIENT_KEY || null)
+                __CLIENT_KEY__: JSON.stringify(process.env.CLIENT_KEY || null),
+                VERSION: JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
+                COMMIT_HASH: JSON.stringify(currentVersion.COMMIT_HASH),
+                COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH)
             }
         })
     ],

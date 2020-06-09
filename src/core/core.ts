@@ -5,7 +5,6 @@ import paymentMethods, { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import resolveEnvironment from './Environment';
-import { version } from '../../package.json';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 
@@ -17,7 +16,11 @@ class Core {
     public readonly modules: any;
     public readonly options: any;
 
-    public static readonly version: string = version;
+    public static readonly version = {
+        version: process.env.VERSION,
+        revision: process.env.COMMIT_HASH,
+        branch: process.env.COMMIT_BRANCH
+    };
 
     constructor(options: any = {}) {
         this.options = {
