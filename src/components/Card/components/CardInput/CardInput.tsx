@@ -41,6 +41,10 @@ interface CardInputProps {
     showPayButton?: boolean;
     storedPaymentMethodId?: string;
     styles?: object;
+    onChange?: () => {};
+    onSubmit?: () => {};
+    onBrand?: () => {};
+    onBinValue?: () => {};
 }
 
 interface CardInputState {

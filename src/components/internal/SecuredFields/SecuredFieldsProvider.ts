@@ -40,7 +40,11 @@ export interface SFPState {
     billingAddress?: BillingAddress;
 }
 
-class SecuredFieldsProvider extends Component {
+/**
+ * SecuredFieldsProvider:
+ * Initialises & handles the client-side part of SecuredFields
+ */
+class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private originKeyErrorTimeout: number;
     private originKeyTimeoutMS: number;
     private numCharsInCVC: number;

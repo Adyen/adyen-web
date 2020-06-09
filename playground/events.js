@@ -20,6 +20,15 @@ export function handleChange(state, component) {
     console.groupEnd();
 }
 
+export function handleError(obj) {
+    // SecuredField related errors should not go straight to console.error
+    if (obj.type === 'card') {
+        console.log('### Card::onError:: obj=', obj);
+    } else {
+        console.error(obj);
+    }
+}
+
 export function handleSubmit(state, component) {
     component.setStatus('loading');
 
