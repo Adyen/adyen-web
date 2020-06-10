@@ -32,7 +32,8 @@
         "size": "npm run build && node ./scripts/size",
         "type-check": "tsc --noEmit",
         "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
-        "lint:fix": "npm run lint -- --fix"
+        "lint:fix": "npm run lint -- --fix",
+        "prepublishOnly": "npm run build"
     },
     "devDependencies": {
         "@types/jest": "^23.3.5",
