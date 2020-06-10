@@ -45,7 +45,7 @@ function BlikInput(props: UIElementProps) {
         <div className="adyen-checkout__blik">
             <p className="adyen-checkout__blik__helper">{i18n.get('blik.help')}</p>
             <Field
-                errorMessage={!!errors.blikCode && i18n.get('blikCode.invalid')}
+                errorMessage={!!errors.blikCode && i18n.get('blik.invalid')}
                 label={i18n.get('blik.code')}
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}
