@@ -53,6 +53,10 @@ Follow these steps to run our development playground:
 * Install all dependencies by running either `npm install` or `yarn install`.
 * Start the development playground by running `npm start` or `yarn start`. This will start a local server on [http://localhost:3020](http://localhost:3020).
 
+## Branch organization
+
+We merge every pull requests to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version at any moment.
+
 ## Support
 
 If you have any problems, questions or suggestions, create an issue here or send your inquiry to support@adyen.com.
