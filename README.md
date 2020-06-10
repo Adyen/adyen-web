@@ -55,7 +55,7 @@ Follow these steps to run our development playground:
 
 ## Branch organization
 
-We merge every pull requests to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version at any moment.
+We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
 
 ## Support
 
