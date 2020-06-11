@@ -48,10 +48,14 @@ You are free to customize any string you see in the interface of any of the lang
 
 Follow these steps to run our development playground:
 
-* Clone this repository and navigate to the root of the project.
+* Clone [this repository](https://github.com/Adyen/adyen-web) and navigate to the root of the project.
 * Create a `.env` file on your project's root folder following the example on `.env.default` and fill in the necessary environment variables.
 * Install all dependencies by running either `npm install` or `yarn install`.
 * Start the development playground by running `npm start` or `yarn start`. This will start a local server on [http://localhost:3020](http://localhost:3020).
+
+## Branch organization
+
+We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
 
 ## Support
 
