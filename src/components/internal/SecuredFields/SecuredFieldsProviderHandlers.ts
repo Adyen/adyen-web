@@ -1,5 +1,5 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE } from './constants';
+import { ENCRYPTED_SECURITY_CODE } from './lib/configuration/constants';
 import {
     CbObjOnError,
     CbObjOnFocus,

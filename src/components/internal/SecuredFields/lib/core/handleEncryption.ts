@@ -1,6 +1,6 @@
 import { makeCallbackObjectsEncryption } from './utils/callbackUtils';
 import { addEncryptedElements } from '../ui/encryptedElements';
-import { HOSTED_MONTH_FIELD, HOSTED_YEAR_FIELD, HOSTED_CVC_FIELD, HOSTED_NUMBER_FIELD } from '../configuration/constants';
+import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { processErrors } from './utils/processErrors';
 import { truthy } from '../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '~/components/internal/SecuredFields/lib/types';
@@ -16,11 +16,11 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
 
     // SET FOCUS ON OTHER INPUT - If user has just typed a correct expiryDate - set focus on the cvc field OR typed a correct expiryMonth - focus on year field
     if (this.config.autoFocus) {
-        if (pFeedbackObj.type === 'year' || fieldType === HOSTED_YEAR_FIELD) {
-            this.setFocusOnFrame(HOSTED_CVC_FIELD);
+        if (pFeedbackObj.type === 'year' || fieldType === ENCRYPTED_EXPIRY_YEAR) {
+            this.setFocusOnFrame(ENCRYPTED_SECURITY_CODE);
         }
-        if (fieldType === HOSTED_MONTH_FIELD) {
-            this.setFocusOnFrame(HOSTED_YEAR_FIELD);
+        if (fieldType === ENCRYPTED_EXPIRY_MONTH) {
+            this.setFocusOnFrame(ENCRYPTED_EXPIRY_YEAR);
         }
     }
     //--
@@ -53,7 +53,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     const callbackObjectsArr: CbObjOnFieldValid[] = makeCallbackObjectsEncryption(fieldType, this.state.type, this.props.rootNode, encryptedObjArr);
 
     // For number field - add the endDigits to the encryption object
-    if (fieldType === HOSTED_NUMBER_FIELD && truthy(pFeedbackObj.endDigits)) {
+    if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.endDigits)) {
         callbackObjectsArr[0].endDigits = pFeedbackObj.endDigits;
     }
 

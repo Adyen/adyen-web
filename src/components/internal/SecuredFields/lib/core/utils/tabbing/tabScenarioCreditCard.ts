@@ -1,4 +1,10 @@
-import { HOSTED_NUMBER_FIELD, HOSTED_CVC_FIELD, HOSTED_DATE_FIELD, HOSTED_MONTH_FIELD, HOSTED_YEAR_FIELD } from '../../../configuration/constants';
+import {
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR
+} from '../../../configuration/constants';
 import { getPreviousTabbableNonSFElement } from '../../../ui/domUtils';
 import { ShiftTabObject } from '~/components/internal/SecuredFields/lib/types';
 
@@ -8,29 +14,29 @@ export function shiftTabCreditCard(fieldType: string, rootNode: HTMLElement, has
     let fieldToFocus: string;
 
     switch (fieldType) {
-        case HOSTED_NUMBER_FIELD:
-            additionalField = getPreviousTabbableNonSFElement(HOSTED_NUMBER_FIELD, rootNode);
+        case ENCRYPTED_CARD_NUMBER:
+            additionalField = getPreviousTabbableNonSFElement(ENCRYPTED_CARD_NUMBER, rootNode);
             break;
 
-        case HOSTED_DATE_FIELD:
-            fieldToFocus = HOSTED_NUMBER_FIELD;
+        case ENCRYPTED_EXPIRY_DATE:
+            fieldToFocus = ENCRYPTED_CARD_NUMBER;
             break;
 
-        case HOSTED_MONTH_FIELD:
-            fieldToFocus = HOSTED_NUMBER_FIELD;
+        case ENCRYPTED_EXPIRY_MONTH:
+            fieldToFocus = ENCRYPTED_CARD_NUMBER;
             break;
 
-        case HOSTED_YEAR_FIELD:
-            fieldToFocus = HOSTED_MONTH_FIELD;
+        case ENCRYPTED_EXPIRY_YEAR:
+            fieldToFocus = ENCRYPTED_EXPIRY_MONTH;
             break;
 
-        case HOSTED_CVC_FIELD:
+        case ENCRYPTED_SECURITY_CODE:
             // Shifting focus away from securedFields
             if (numIframes === 1) {
-                additionalField = getPreviousTabbableNonSFElement(HOSTED_CVC_FIELD, rootNode);
+                additionalField = getPreviousTabbableNonSFElement(ENCRYPTED_SECURITY_CODE, rootNode);
             } else {
                 // Focus stays within securedFields
-                fieldToFocus = !hasSeparateDateFields ? HOSTED_DATE_FIELD : HOSTED_YEAR_FIELD;
+                fieldToFocus = !hasSeparateDateFields ? ENCRYPTED_EXPIRY_DATE : ENCRYPTED_EXPIRY_YEAR;
             }
             break;
 

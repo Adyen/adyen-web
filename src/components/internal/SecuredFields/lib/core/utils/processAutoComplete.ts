@@ -1,5 +1,5 @@
 import postMessageToIframe from './iframes/postMessageToIframe';
-import { HOSTED_DATE_FIELD, HOSTED_MONTH_FIELD, HOSTED_YEAR_FIELD } from '../../configuration/constants';
+import { ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR } from '../../configuration/constants';
 import { SFFeedbackObj, CbObjOnAutoComplete } from '~/components/internal/SecuredFields/lib/types';
 
 export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
@@ -23,37 +23,37 @@ export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
         const acYearVal: string = dateValArr[1].substr(2); // take last 2 digits of year
         const acDateVal = `${acMonthVal}/${acYearVal}`;
 
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_DATE_FIELD)) {
+        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
             const dataObj: object = {
                 txVariant: this.state.type,
-                fieldType: HOSTED_DATE_FIELD,
+                fieldType: ENCRYPTED_EXPIRY_DATE,
                 autoComplete: acDateVal,
-                numKey: this.state.securedFields[HOSTED_DATE_FIELD].numKey
+                numKey: this.state.securedFields[ENCRYPTED_EXPIRY_DATE].numKey
             };
-            postMessageToIframe(dataObj, this.getIframeContentWin(HOSTED_DATE_FIELD), this.config.loadingContext);
+            postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_DATE), this.config.loadingContext);
             return;
         }
 
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_MONTH_FIELD)) {
+        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_MONTH)) {
             const dataObj: object = {
                 txVariant: this.state.type,
-                fieldType: HOSTED_MONTH_FIELD,
+                fieldType: ENCRYPTED_EXPIRY_MONTH,
                 autoComplete: acMonthVal,
-                numKey: this.state.securedFields[HOSTED_MONTH_FIELD].numKey
+                numKey: this.state.securedFields[ENCRYPTED_EXPIRY_MONTH].numKey
             };
-            postMessageToIframe(dataObj, this.getIframeContentWin(HOSTED_MONTH_FIELD), this.config.loadingContext);
+            postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_MONTH), this.config.loadingContext);
         }
 
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_YEAR_FIELD)) {
+        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
             // Dirty! - Need to wait til next page draw if setting month and year at the same time, otherwise only year gets set
             setTimeout(() => {
                 const dataObj: object = {
                     txVariant: this.state.type,
-                    fieldType: HOSTED_YEAR_FIELD,
+                    fieldType: ENCRYPTED_EXPIRY_YEAR,
                     autoComplete: acYearVal,
-                    numKey: this.state.securedFields[HOSTED_YEAR_FIELD].numKey
+                    numKey: this.state.securedFields[ENCRYPTED_EXPIRY_YEAR].numKey
                 };
-                postMessageToIframe(dataObj, this.getIframeContentWin(HOSTED_YEAR_FIELD), this.config.loadingContext);
+                postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_YEAR), this.config.loadingContext);
             }, 0);
         }
     }

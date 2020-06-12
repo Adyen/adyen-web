@@ -8,7 +8,7 @@ import {
     getTranslatedErrors,
     resolvePlaceholders
 } from './utils';
-import { CSF_FIELDS_ARRAY } from './constants';
+import { CSF_FIELDS_ARRAY } from './lib/configuration/constants';
 import initCSF from './lib';
 import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
