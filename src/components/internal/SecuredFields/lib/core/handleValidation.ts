@@ -2,7 +2,7 @@ import { makeCallbackObjectsValidation } from './utils/callbackUtils';
 import { removeEncryptedElement } from '../ui/encryptedElements';
 import { processErrors } from './utils/processErrors';
 import { existy } from '../utilities/commonUtils';
-import { HOSTED_CVC_FIELD, HOSTED_NUMBER_FIELD } from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '~/components/internal/SecuredFields/lib/types';
 
 import * as logger from '../utilities/logger';
@@ -40,9 +40,9 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         this.state.type === 'card' &&
         Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcRequired') &&
         existy(pFeedbackObj.cvcRequired) &&
-        Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_CVC_FIELD)
+        Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
     ) {
-        this.state.securedFields[HOSTED_CVC_FIELD].cvcRequired = pFeedbackObj.cvcRequired;
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = pFeedbackObj.cvcRequired;
     }
 
     // PROCESS & BROADCAST ERRORS (OR LACK OF)
@@ -57,7 +57,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
 
         // Add the endDigits to the object we send to the onFieldValid callback
         // NOTE: in this case (validation) this will be an empty string
-        if (fieldType === HOSTED_NUMBER_FIELD) {
+        if (fieldType === ENCRYPTED_CARD_NUMBER) {
             callbackObjectsArr[0].endDigits = '';
         }
 

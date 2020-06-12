@@ -7,7 +7,7 @@ import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE
-} from './constants';
+} from './lib/configuration/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
 /**
