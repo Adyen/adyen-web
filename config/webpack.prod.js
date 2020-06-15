@@ -13,7 +13,8 @@ const DefinePluginConfig = new webpack.DefinePlugin({
     'process.env': {
         VERSION: JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
         COMMIT_HASH: JSON.stringify(currentVersion.COMMIT_HASH),
-        COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH)
+        COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH),
+        ADYEN_BUILD_ID: JSON.stringify(currentVersion.ADYEN_BUILD_ID)
     }
 });
 
