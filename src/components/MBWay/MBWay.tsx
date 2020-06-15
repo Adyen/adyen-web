@@ -11,7 +11,7 @@ export class MBWayElement extends UIElement {
     formatProps(props: UIElementProps): UIElementProps {
         if (props.data) {
             props.data.email = props.data.shopperEmail || props.data.email;
-            props.data.phoneNumber = props.data.telephoneNumber || props.data.telephoneNumber;
+            props.data.phoneNumber = props.data.telephoneNumber || props.data.phoneNumber;
         }
         return {
             ...props
