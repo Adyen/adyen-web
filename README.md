@@ -24,17 +24,6 @@ Follow these instructions to load Components in your project:
 
 > [Available Components](https://docs.adyen.com/checkout/supported-payment-methods)
 
-## Styling
-
-To modify the appearance of any component, overwrite the corresponding styles in CSS.
-For your convenience, we use the BEM methodology for naming the HTML and CSS structures. All checkout elements are prepended with "adyen-checkout", for example: `.adyen-checkout__label`
-
-## Localization
-
-You are free to customize any string you see in the interface of any of the languages we support out of the box. Additionally you can also add new language sets.
-
-> [Localizing Components](https://docs.adyen.com/checkout/components-web/localization-components/)
-
 ## See also
 
 -   [Complete Documentation](https://docs.adyen.com/checkout/)
@@ -50,8 +39,15 @@ Follow these steps to run our development playground:
 
 * Clone [this repository](https://github.com/Adyen/adyen-web) and navigate to the root of the project.
 * Create a `.env` file on your project's root folder following the example on `.env.default` and fill in the necessary environment variables.
-* Install all dependencies by running either `npm install` or `yarn install`.
-* Start the development playground by running `npm start` or `yarn start`. This will start a local server on [http://localhost:3020](http://localhost:3020).
+* Install all dependencies by running:
+```
+$ yarn install
+```
+
+* Start the development playground. This will start a local server on [http://localhost:3020](http://localhost:3020).
+```
+yarn start
+```
 
 ## Branch organization
 
@@ -59,8 +55,7 @@ We merge every pull request to the `master` branch. We aim to keep `master` in g
 
 ## Support
 
-If you have any problems, questions or suggestions, create an issue here or send your inquiry to support@adyen.com.
-
+If you have a feature request, or spotted a bug or a technical problem, create an issue here. For other questions, contact our [support team](https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420).
 
 ## License
 
