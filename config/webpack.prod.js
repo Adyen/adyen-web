@@ -17,6 +17,13 @@ const DefinePluginConfig = new webpack.DefinePlugin({
     }
 });
 
+if (process.env.CI !== 'true') {
+    console.warn(
+        '\x1b[33m%s\x1b[0m',
+        'Warning: Building custom bundle. We recommend using one of the official builds served by our servers or NPM. Check https://docs.adyen.com/checkout for more information.'
+    );
+}
+
 const shouldUseSourceMap = true;
 
 module.exports = merge(webpackConfig, {
