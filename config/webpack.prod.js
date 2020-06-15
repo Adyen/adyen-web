@@ -13,9 +13,17 @@ const DefinePluginConfig = new webpack.DefinePlugin({
     'process.env': {
         VERSION: JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
         COMMIT_HASH: JSON.stringify(currentVersion.COMMIT_HASH),
-        COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH)
+        COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH),
+        ADYEN_BUILD_ID: JSON.stringify(currentVersion.ADYEN_BUILD_ID)
     }
 });
+
+if (process.env.CI !== 'true') {
+    console.warn(
+        '\x1b[33m%s\x1b[0m',
+        'Warning: Building custom bundle. We recommend using one of the official builds served by our servers or NPM. Check https://docs.adyen.com/checkout for more information.'
+    );
+}
 
 const shouldUseSourceMap = true;
 
