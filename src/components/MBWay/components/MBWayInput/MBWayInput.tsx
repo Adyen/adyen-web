@@ -94,7 +94,7 @@ function MBWayInput(props: UIElementProps) {
                     value: data.email,
                     name: 'shopperEmail',
                     classNameModifiers: ['large'],
-                    placeholder: props.placeholders.email,
+                    placeholder: props.placeholders.shopperEmail,
                     spellcheck: false,
                     required: true,
                     autocorrect: 'off',
@@ -115,7 +115,7 @@ function MBWayInput(props: UIElementProps) {
                 {renderFormField('tel', {
                     value: data.phoneNumber,
                     className: `adyen-checkout__pm__phoneNumber__input ${styles['adyen-checkout__input']}`,
-                    placeholder: props.placeholders.phoneNumber,
+                    placeholder: props.placeholders.telephoneNumber,
                     required: true,
                     autoCorrect: 'off',
                     onInput: handleEventFor('phoneNumber', 'input')
@@ -128,7 +128,7 @@ function MBWayInput(props: UIElementProps) {
 }
 
 MBWayInput.defaultProps = {
-    placeholders: { email: 'shopper@domain.com', phoneNumber: '+351 932 123 456' }
+    placeholders: { shopperEmail: 'shopper@domain.com', telephoneNumber: '+351 932 123 456' }
 };
 
 export default MBWayInput;
