@@ -23,7 +23,7 @@ describe('Address', () => {
         expect(wrapper.find('ReadOnlyAddress')).toHaveLength(1);
     });
 
-    test('prefills the data', () => {
+    test('prefills the address fields from the passed data object', () => {
         const data = {
             street: 'Infinite Loop',
             postalCode: '95014',
@@ -33,12 +33,75 @@ describe('Address', () => {
             stateOrProvince: 'CA'
         };
 
+        const onChangeMock = jest.fn();
+        const wrapper = getWrapper({ data, onChange: onChangeMock });
+        wrapper.update();
+
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        expect(lastOnChangeCall[0].data).toMatchObject(data);
+    });
+
+    test('validates prefilled data', () => {
+        const data = {
+            street: 'Infinite Loop',
+            postalCode: '95014',
+            city: 'Cupertino',
+            houseNumberOrName: '1',
+            country: 'US',
+            stateOrProvince: 'CA'
+        };
+
+        const onChangeMock = jest.fn();
+        getWrapper({ data, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        expect(lastOnChangeCall[0].isValid).toBe(true);
+    });
+
+    test('validates prefilled data correctly when a country with no state or province field is used', () => {
+        const data = {
+            street: 'Simon Carmiggeltstraat',
+            postalCode: '1011DJ',
+            city: 'Amsterdam',
+            houseNumberOrName: '6-50',
+            country: 'NL',
+        };
+
+        const onChangeMock = jest.fn();
+        getWrapper({ data, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        expect(lastOnChangeCall[0].isValid).toBe(true);
+    });
+
+    test('sets not required fields as "N/A" except for the ones that are passed in the data object', () => {
+        const requiredFields = ['street'];
+
+        const data = {
+            country: 'NL'
+        };
+
+        const onChangeMock = jest.fn();
+        getWrapper({ data, requiredFields, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        expect(lastOnChangeCall[0].data.street).toBe('');
+        expect(lastOnChangeCall[0].data.postalCode).toBe('N/A');
+        expect(lastOnChangeCall[0].data.country).toBe(data.country);
+    });
+
+    test('sets the stateOrProvince field to "N/A" for countries with no state dataset', () => {
+        const data = {
+            country: 'NL'
+        };
+
         const wrapper = getWrapper({ data });
-        expect(wrapper.find('InputText[name="street"]').prop('value')).toBe(data.street);
-        expect(wrapper.find('InputText[name="postalCode"]').prop('value')).toBe(data.postalCode);
-        expect(wrapper.find('InputText[name="city"]').prop('value')).toBe(data.city);
-        expect(wrapper.find('InputText[name="houseNumberOrName"]').prop('value')).toBe(data.houseNumberOrName);
-        expect(wrapper.find('CountryField').prop('value')).toBe(data.country);
-        expect(wrapper.find('StateField').prop('value')).toBe(data.stateOrProvince);
+        expect(wrapper.find('StateField').prop('value')).toBe('N/A');
+    });
+
+    test('sets the stateOrProvince field as an empty string for countries with a state dataset', () => {
+        const data = {
+            country: 'US'
+        };
+
+        const wrapper = getWrapper({ data });
+        expect(wrapper.find('StateField').prop('value')).toBe('');
     });
 });

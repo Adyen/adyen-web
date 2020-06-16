@@ -26,7 +26,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from '~/components/internal/SecuredFields/lib/types';
-import { BillingAddress } from '~/components/internal/Address/Address';
+import { BillingAddress } from '~/components/internal/Address/types';
 
 export interface SFPState {
     status?: string;
