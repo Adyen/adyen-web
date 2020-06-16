@@ -10,33 +10,9 @@ import { addressValidationRules } from './validate';
 import Validator from '~/utils/Validator';
 import useCoreContext from '~/core/Context/useCoreContext';
 import { COUNTRIES_WITH_STATES_DATASET } from '~/components/internal/Address/constants';
+import { AddressObject, AddressProps } from './types';
 
 export type RtnType_ParamVoidFn = (e) => void;
-
-interface AddressObject {
-    city: string;
-    country: boolean | string;
-    houseNumberOrName: string;
-    postalCode: string;
-    street: string;
-    stateOrProvince: boolean | string;
-}
-
-export interface BillingAddress {
-    data: AddressObject;
-    isValid: boolean;
-}
-
-interface AddressProps {
-    allowedCountries?: string[];
-    countryCode?: string;
-    data?: object;
-    label?: string;
-    onChange: Function;
-    requiredFields?: string[];
-    ref?: any;
-    visibility?: string;
-}
 
 const addressSchema = ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'];
 
@@ -81,6 +57,15 @@ export default function Address(props: AddressProps) {
     };
 
     useEffect((): void => {
+        const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
+        const countryHasStatesDataset = data.country && COUNTRIES_WITH_STATES_DATASET.includes(data.country);
+        const addressShouldHaveState = stateFieldIsRequired && countryHasStatesDataset;
+        const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : 'N/A');
+
+        setData(data => ({ ...data, stateOrProvince }));
+    }, []);
+
+    useEffect((): void => {
         const isValid: boolean = requiredFields.every(field => validator.validate(field, 'blur')(data[field]));
 
         props.onChange({ data, isValid });
@@ -103,7 +88,7 @@ export default function Address(props: AddressProps) {
             {requiredFields.includes('street') && (
                 <Field
                     label={i18n.get('street')}
-                    classNameModifiers={[...(requiredFields.includes('houseNumberOrName') && ['col-70']), 'street']}
+                    classNameModifiers={[...(requiredFields.includes('houseNumberOrName') ? ['col-70'] : []), 'street']}
                     errorMessage={!!errors.street}
                 >
                     {renderFormField('text', {

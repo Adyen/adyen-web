@@ -25,7 +25,7 @@ function handleAddress(address): void {
         }
     });
 
-    this.setState(setAddress);
+    this.setState(setAddress, this.validateCardInput);
 }
 
 /**
