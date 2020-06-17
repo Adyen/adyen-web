@@ -26,8 +26,7 @@ getOriginKey().then(originKey => {
         amount: {
             currency: 'CNY',
             value: 1000
-        },
-        merchantAccount: 'TestMerchantCheckout'
+        }
     })
         .then(result => {
             if (result.action) {
@@ -66,8 +65,7 @@ getOriginKey().then(originKey => {
         amount: {
             currency: 'SEK',
             value: 1000
-        },
-        merchantAccount: 'TestMerchant'
+        }
     })
         .then(result => {
             if (result.action) {
