@@ -21,7 +21,7 @@
     },
     "scripts": {
         "start": "npm run dev-server",
-        "dev-server": "NODE_ENV=development webpack-dev-server --config config/webpack.dev.js",
+        "dev-server": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && webpack --config config/webpack.prod.js",
         "test": "BABEL_ENV=test jest --config config/jest.config.js",
@@ -41,6 +41,7 @@
         "@typescript-eslint/parser": "^2.34.0",
         "autoprefixer": "^9.8.0",
         "core-js": "^3.6.5",
+        "cross-env": "^7.0.2",
         "css-loader": "^3.5.3",
         "cssnano": "^4.1.10",
         "dotenv": "^8.2.0",
