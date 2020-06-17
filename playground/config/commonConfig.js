@@ -18,8 +18,6 @@ export default {
     countryCode,
     shopperLocale,
     channel: 'Web',
-    shopperReference: 'newshoppert',
-    merchantAccount: 'TestMerchant' // for localhost
-    // merchantAccount: 'TestMerchantCheckout' // for test
-    //    merchantAccount: 'TestMerchantCheckoutTEST' // for beta
+    shopperReference: 'newshoppert'
+    // merchantAccount: 'TestMerchant' // override merchantAccount
 };
