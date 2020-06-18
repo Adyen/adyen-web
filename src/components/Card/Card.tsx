@@ -14,7 +14,7 @@ export interface CardElementProps extends UIElementProps {
     groupTypes?: string[];
 
     brands?: string[];
-
+    enableStoreDetails?: boolean;
     hideCVC?: boolean;
     hasHolderName?: boolean;
     holderNameRequired?: boolean;
@@ -56,6 +56,7 @@ export class CardElement extends UIElement {
      */
     formatData(): CardElementData {
         const cardBrand = this.state.additionalSelectValue || this.props.brand;
+        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
             paymentMethod: {
@@ -66,7 +67,7 @@ export class CardElement extends UIElement {
                 ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
-            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod }),
+            ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
             ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
             browserInfo: this.browserInfo
         };

@@ -13,6 +13,18 @@ describe('Card', () => {
             card.setState({ data: { card: '123' }, isValid: true });
             expect(card.data.paymentMethod.card).toBe('123');
         });
+
+        test('should return storePaymentMethod if enableStoreDetails is enabled', () => {
+            const card = new CardElement({ enableStoreDetails: true });
+            card.setState({ storePaymentMethod: true });
+            expect(card.data.storePaymentMethod).toBe(true);
+        });
+
+        test('should not return storePaymentMethod if enableStoreDetails is disabled', () => {
+            const card = new CardElement({ enableStoreDetails: false });
+            card.setState({ storePaymentMethod: true });
+            expect(card.data.storePaymentMethod).not.toBeDefined();
+        });
     });
 
     describe('isValid', () => {
