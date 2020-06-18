@@ -15,13 +15,13 @@ describe('Card', () => {
         });
 
         test('should return storePaymentMethod if enableStoreDetails is enabled', () => {
-            const card = new CardElement({ enableStoreDetails: true, i18n: i18nMock, originKey: '' });
+            const card = new CardElement({ enableStoreDetails: true });
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).toBe(true);
         });
 
         test('should not return storePaymentMethod if enableStoreDetails is disabled', () => {
-            const card = new CardElement({ enableStoreDetails: false, i18n: i18nMock, originKey: '' });
+            const card = new CardElement({ enableStoreDetails: false });
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).not.toBeDefined();
         });
