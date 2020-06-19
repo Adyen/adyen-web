@@ -16,7 +16,7 @@ interface InstallmentOptions {
 interface InstallmentsProps {
     amount?: PaymentAmount;
     brand?: string;
-    onChange?: (PaymentAmount) => any;
+    onChange?: (installmentAmount: number) => void;
     installmentOptions: InstallmentOptions;
 }
 
