@@ -57,7 +57,7 @@ const actionTypes = {
             ...action,
             ...props,
             onComplete: props.onAdditionalDetails,
-            onError: props.onError,
+            onError: props.onAdditionalDetails,
             statusType: 'custom'
         });
     }
