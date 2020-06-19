@@ -76,13 +76,17 @@ function Await(props: AwaitComponentProps) {
 
     const onError = (status: StatusObject): StatusObject => {
         setExpired(true);
-        props.onError({
-            status,
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: props.paymentData
-            }
-        });
+        // Send error response to onAdditionalDetails
+        props.onComplete(
+            {
+                data: {
+                    details: { payload: status.props.payload },
+                    paymentData: props.paymentData
+                }
+            },
+            this
+        );
+
         return status;
     };
 
