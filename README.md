@@ -4,7 +4,10 @@ With Adyen Web you can help your shoppers pay with a payment method of their cho
 
 You can integrate with Adyen in two ways, Drop-in and Components.
 
-> [Getting Started](https://docs.adyen.com/checkout/)
+- [Getting Started](https://docs.adyen.com/checkout/get-started)
+
+> :warning:	**We do not support modifying and hosting your own Adyen Web JavaScript.** Please submit modifications you want to make as a pull request or create an issue.
+
 
 ## Drop-in
 
@@ -12,7 +15,7 @@ Drop-in is our all-in-one UI solution that you can add on your payments form so 
 
 The [Drop-in](https://docs.adyen.com/checkout/drop-in-web/) handles the presentation of available payment methods and the subsequent entry of a customer's payment details. It is initialized with the response of [`/paymentMethods`][apiexplorer.paymentmethods], and provides everything you need to make an API call to [`/payments`][apiexplorer.payments] and [`/payments/details`][apiexplorer.paymentsdetails].
 
-> [Drop-in Documentation](https://docs.adyen.com/checkout/drop-in-web/)
+- [Drop-in Documentation](https://docs.adyen.com/checkout/drop-in-web/)
 
 ## Components
 
@@ -20,9 +23,9 @@ We built separate Components per payment method that you can use to render UI fo
 
 Follow these instructions to load Components in your project:
 
-> [Components Documentation](https://docs.adyen.com/checkout/components-web/)
+- [Components Documentation](https://docs.adyen.com/checkout/components-web/)
 
-> [Available Components](https://docs.adyen.com/checkout/supported-payment-methods)
+- [Available Components](https://docs.adyen.com/checkout/supported-payment-methods)
 
 ## See also
 
