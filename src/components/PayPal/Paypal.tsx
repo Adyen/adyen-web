@@ -6,7 +6,7 @@ import { PaymentAction } from '~/types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
 
-class PaypalElement extends UIElement {
+class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
     public static subtype = 'sdk';
     protected static defaultProps: PayPalElementProps = defaultProps;
@@ -30,7 +30,7 @@ class PaypalElement extends UIElement {
      * Formats the component data output
      * @return {object} props
      */
-    formatData() {
+    protected formatData() {
         return {
             paymentMethod: {
                 type: PaypalElement.type,

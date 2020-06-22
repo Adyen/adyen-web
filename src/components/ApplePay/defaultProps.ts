@@ -4,12 +4,7 @@ const defaultProps: ApplePayElementProps = {
     version: 3,
 
     // Transaction Information
-    amount: 0,
-
-    /**
-     * The three-letter ISO 4217 currency code for the payment.
-     */
-    currencyCode: 'USD',
+    amount: { currency: 'USD', value: 0 },
 
     /**
      * The merchant’s two-letter ISO 3166 country code.

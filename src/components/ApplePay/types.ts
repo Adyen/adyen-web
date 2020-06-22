@@ -7,21 +7,31 @@ declare global {
 }
 
 export interface ApplePayElementProps {
-    version: number;
+    /**
+     * The Apple Pay version number your website supports.
+     * @default 3
+     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
+     */
+    version?: number;
 
-    amount: number | PaymentAmount;
+    amount: PaymentAmount;
 
     /**
-     * The three-letter ISO 4217 currency code for the payment.
+     * @deprecated since v3.10.0. Use {@link ApplePayElementProps.amount}.
+     * @description The three-letter ISO 4217 currency code for the payment.
      */
-    currencyCode: string;
+    currencyCode?: string;
 
     /**
      * The merchant’s two-letter ISO 3166 country code.
      */
     countryCode: string;
 
-    totalPriceStatus: string;
+    /**
+     * @default 'final'
+     */
+    totalPriceStatus?: ApplePayJS.ApplePayLineItemType;
+
     totalPriceLabel?: string;
 
     configuration: {
@@ -37,8 +47,10 @@ export interface ApplePayElementProps {
     /**
      * The payment capabilities supported by the merchant.
      * The value must at least contain ApplePayMerchantCapability.supports3DS.
+     * @default ['supports3DS']
+     * @typedef ApplePayJS.ApplePayMerchantCapability[]
      */
-    merchantCapabilities: ApplePayJS.ApplePayMerchantCapability[];
+    merchantCapabilities?: ApplePayJS.ApplePayMerchantCapability[];
 
     /**
      * A set of shipping method objects that describe the available shipping methods.

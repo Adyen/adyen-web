@@ -30,6 +30,8 @@ interface AwaitComponentProps extends UIElementProps {
     throttleInterval: number;
     paymentData: string;
     url?: string;
+    shouldRedirectOnMobile?: boolean;
+    classNameModifiers?: string[];
     originKey;
     clientKey;
     brandLogo;
@@ -125,7 +127,7 @@ function Await(props: AwaitComponentProps) {
 
     // didMount & willUnmount
     useEffect(() => {
-        const { shouldRedirectOnMobile, url }: UIElementProps = props;
+        const { shouldRedirectOnMobile, url } = props;
         const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
 
         if (shouldRedirectOnMobile && url && isMobile) {

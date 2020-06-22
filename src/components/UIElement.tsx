@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import BaseElement from './BaseElement';
-import { PaymentAction } from '~/types';
+import BaseElement, { BaseElementProps } from './BaseElement';
+import { PaymentAction, PaymentAmount } from '~/types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 
-export interface UIElementProps {
+export interface UIElementProps extends BaseElementProps {
     onChange?: (state: any, element: UIElement) => void;
     onValid?: (state: any, element: UIElement) => void;
     onSubmit?: (state: any, element: UIElement) => void;
@@ -15,19 +15,21 @@ export interface UIElementProps {
     createFromAction?: (action: PaymentAction, props: object) => UIElement;
     elementRef?: any;
 
+    /** Show/Hide pay button */
+    showPayButton?: boolean;
+    payButton?: (options) => any;
+
     loadingContext?: string;
 
     name?: string;
-
-    [key: string]: any;
+    amount?: PaymentAmount;
 }
 
-export class UIElement extends BaseElement {
+export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
     public elementRef: any;
-    public props: UIElementProps;
 
-    constructor(props: UIElementProps) {
+    constructor(props: P) {
         super(props);
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
@@ -111,11 +113,17 @@ export class UIElement extends BaseElement {
         return false;
     }
 
-    get icon() {
+    /**
+     * Get the element icon URL for the current environment
+     */
+    get icon(): string {
         return getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
     }
 
-    get displayName() {
+    /**
+     * Get the element displayable name
+     */
+    get displayName(): string {
         return this.props.name || this.constructor['type'];
     }
 

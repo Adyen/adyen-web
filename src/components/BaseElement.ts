@@ -1,21 +1,30 @@
 import { render } from 'preact';
 import getProp from '~/utils/getProp';
 import EventEmitter from './EventEmitter';
+import Analytics from '../core/Analytics';
+import RiskElement from '../core/RiskModule';
 
-abstract class BaseElement {
-    public props;
-    public _node;
+export interface BaseElementProps {
+    modules?: {
+        analytics: Analytics;
+        risk: RiskElement;
+    };
+    isDropin?: boolean;
+}
+
+abstract class BaseElement<P extends BaseElementProps> {
+    public props: P;
     public state;
-    public _component;
+    protected static defaultProps = {};
+    protected _node;
+    protected _component;
     public eventEmitter = new EventEmitter();
 
-    protected constructor(props = {}) {
+    protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
         this._node = null;
         this.state = {};
     }
-
-    protected static defaultProps = {};
 
     /**
      * Executed during creation of any payment element.
@@ -23,7 +32,7 @@ abstract class BaseElement {
      * @param {object} props
      * @return {object} formatted props
      */
-    protected formatProps(props) {
+    protected formatProps(props: P) {
         return props;
     }
 
@@ -63,10 +72,10 @@ abstract class BaseElement {
 
     /**
      * Mounts an element into the dom
-     * @param {HTMLElement|string} domNode (or selector) where we will mount the payment element
+     * @param domNode node or selector where we will mount the payment element
      * @return {BaseElement} this - the payment element instance we mounted
      */
-    public mount(domNode: HTMLElement | string): BaseElement {
+    public mount(domNode: HTMLElement | string): this {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
 
         if (!node) {
@@ -93,7 +102,7 @@ abstract class BaseElement {
         return this;
     }
 
-    public remount(component): BaseElement {
+    public remount(component): this {
         if (!this._node) {
             throw new Error('Component is not mounted.');
         }
