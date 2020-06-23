@@ -131,7 +131,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.billingAddress && prevState.billingAddress.country !== this.state.billingAddress.country) {
+        const { country: prevCountry, stateOrProvince: prevStateOrProvince } = prevState.billingAddress || {};
+        const { country, stateOrProvince } = this.state.billingAddress || {};
+
+        if (prevCountry !== country || prevStateOrProvince !== stateOrProvince) {
             this.validateCardInput();
         }
     }
