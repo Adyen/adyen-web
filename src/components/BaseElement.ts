@@ -12,12 +12,12 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
-abstract class BaseElement<P extends BaseElementProps> {
+class BaseElement<P extends BaseElementProps> {
     public props: P;
     public state;
     protected static defaultProps = {};
-    protected _node;
-    protected _component;
+    public _node;
+    public _component;
     public eventEmitter = new EventEmitter();
 
     protected constructor(props: P) {

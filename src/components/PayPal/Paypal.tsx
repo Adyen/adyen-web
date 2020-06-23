@@ -9,12 +9,12 @@ import './Paypal.scss';
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
     public static subtype = 'sdk';
-    protected static defaultProps: PayPalElementProps = defaultProps;
+    protected static defaultProps = defaultProps;
     private paymentData = null;
     private resolve = null;
     private reject = null;
 
-    constructor(props) {
+    constructor(props: PayPalElementProps) {
         super(props);
 
         this.handleAction = this.handleAction.bind(this);

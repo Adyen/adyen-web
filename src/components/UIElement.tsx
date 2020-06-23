@@ -3,6 +3,7 @@ import BaseElement, { BaseElementProps } from './BaseElement';
 import { PaymentAction, PaymentAmount } from '~/types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
+import Language from '../language/Language';
 
 export interface UIElementProps extends BaseElementProps {
     onChange?: (state: any, element: UIElement) => void;
@@ -12,17 +13,29 @@ export interface UIElementProps extends BaseElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
 
-    createFromAction?: (action: PaymentAction, props: object) => UIElement;
-    elementRef?: any;
-
-    /** Show/Hide pay button */
-    showPayButton?: boolean;
-    payButton?: (options) => any;
-
-    loadingContext?: string;
-
     name?: string;
     amount?: PaymentAmount;
+
+    /**
+     * Show/Hide pay button
+     * @default true
+     */
+    showPayButton?: boolean;
+
+    /** @internal */
+    payButton?: (options) => any;
+
+    /** @internal */
+    loadingContext?: string;
+
+    /** @internal */
+    createFromAction?: (action: PaymentAction, props: object) => UIElement;
+
+    /** @internal */
+    elementRef?: any;
+
+    /** @internal */
+    i18n?: Language;
 }
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {

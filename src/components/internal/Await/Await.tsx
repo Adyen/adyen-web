@@ -8,7 +8,6 @@ import Spinner from '~/components/internal/Spinner';
 import Countdown from '~/components/internal/Countdown';
 import Button from '~/components/internal/Button';
 import useCoreContext from '~/core/Context/useCoreContext';
-import { UIElementProps } from '../../UIElement';
 
 interface StatusObjectProps {
     payload: string;
@@ -21,7 +20,7 @@ interface StatusObject {
     props: StatusObjectProps;
 }
 
-interface AwaitComponentProps extends UIElementProps {
+interface AwaitComponentProps {
     type: string;
     delay: number;
     countdownTime: number;
@@ -32,6 +31,9 @@ interface AwaitComponentProps extends UIElementProps {
     url?: string;
     shouldRedirectOnMobile?: boolean;
     classNameModifiers?: string[];
+    onError;
+    onComplete;
+    loadingContext;
     originKey;
     clientKey;
     brandLogo;

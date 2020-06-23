@@ -1,4 +1,5 @@
 import { PaymentAmount } from '~/types';
+import { UIElementProps } from '../UIElement';
 
 declare global {
     interface Window {
@@ -6,7 +7,7 @@ declare global {
     }
 }
 
-export interface ApplePayElementProps {
+export interface ApplePayElementProps extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
      * @default 3

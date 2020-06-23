@@ -9,9 +9,9 @@ import { ApplePayElementProps, ApplePayElementData } from '~/components/ApplePay
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
-    protected static defaultProps: ApplePayElementProps = defaultProps;
+    protected static defaultProps = defaultProps;
 
-    constructor(props: ApplePayElementProps) {
+    constructor(props) {
         super(props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);

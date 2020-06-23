@@ -13,7 +13,7 @@ class SepaElement extends UIElement {
     /**
      * @private
      * Formats props on construction time
-     * @return {object} props
+     * @return {P} props
      */
     formatProps(props) {
         return {

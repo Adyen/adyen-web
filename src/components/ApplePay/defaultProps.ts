@@ -1,6 +1,4 @@
-import { ApplePayElementProps } from '~/components/ApplePay/types';
-
-const defaultProps: ApplePayElementProps = {
+const defaultProps = {
     version: 3,
 
     // Transaction Information
