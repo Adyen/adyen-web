@@ -7,6 +7,7 @@ import getComponentForAction from './ProcessResponse/PaymentAction';
 import resolveEnvironment from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
+import { CoreOptions } from './types';
 
 type PaymentMethods = typeof paymentMethods;
 type PaymentMethodOptions<P extends keyof PaymentMethods> = Partial<InstanceType<PaymentMethods[P]>['props']>;
@@ -23,7 +24,7 @@ class Core {
         buildId: process.env.ADYEN_BUILD_ID
     };
 
-    constructor(options: any = {}) {
+    constructor(options: CoreOptions = {}) {
         this.options = {
             ...options,
             loadingContext: resolveEnvironment(options.environment)
