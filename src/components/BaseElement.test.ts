@@ -4,7 +4,7 @@ describe('BaseElement', () => {
     let MyElement;
 
     beforeAll(() => {
-        MyElement = class extends BaseElement {};
+        MyElement = class extends BaseElement<{}> {};
     });
 
     describe('formatProps', () => {

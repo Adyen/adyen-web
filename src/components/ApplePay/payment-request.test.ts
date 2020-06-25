@@ -6,8 +6,7 @@ describe('preparePaymentRequest', () => {
         const paymentRequest = preparePaymentRequest({
             countryCode: 'NL',
             companyName: 'Company Name',
-            currencyCode: 'EUR',
-            amount: 115800,
+            amount: { value: 115800, currency: 'EUR' },
             supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
             totalPriceLabel: 'Amount'
         });
@@ -23,8 +22,7 @@ describe('preparePaymentRequest', () => {
         const paymentRequest = preparePaymentRequest({
             countryCode: 'NL',
             companyName: 'Company Name',
-            currencyCode: 'JPY',
-            amount: 115800,
+            amount: { value: 115800, currency: 'JPY' },
             totalPriceLabel: 'Amount'
         });
         expect(paymentRequest.total.amount).toBe('115800');
@@ -36,8 +34,7 @@ describe('preparePaymentRequest', () => {
     test('formats the payment object with BHD currency (three decimal amount)', () => {
         const paymentRequest = preparePaymentRequest({
             countryCode: 'NL',
-            currencyCode: 'BHD',
-            amount: 1158123,
+            amount: { value: 1158123, currency: 'BHD' },
             companyName: 'Test'
         });
 

@@ -1,5 +1,5 @@
 import { PaymentAmount } from '~/types';
-import UIElement from '../UIElement';
+import UIElement, { UIElementProps } from '../UIElement';
 
 declare global {
     interface Window {
@@ -28,7 +28,7 @@ interface PayPalCommonProps {
     onClick?: () => void;
 }
 
-export interface PayPalElementProps extends PayPalCommonProps {
+export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
