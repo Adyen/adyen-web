@@ -1,8 +1,20 @@
-import { ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, INTEGRATION_DATE, PAYPAL_JS_URL } from './config';
-import { PaypalSettingsProps, PaypalSettings } from './types';
+import { ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, INTEGRATION_DATE, PAYPAL_JS_URL, SUPPORTED_LOCALES } from './config';
+import { PaypalSettings, SupportedLocale, PayPalElementProps } from './types';
 
-const getPaypalSettings = ({ amount, countryCode, environment = '', intent, locale, merchantId }: PaypalSettingsProps): PaypalSettings => {
-    const shopperLocale: string = locale ? locale.replace('-', '_') : null;
+/**
+ * Returns either a locale supported by PayPal or null, in order to let the PayPal SDK auto-detect the shopper locale.
+ */
+const getSupportedLocale = (locale?: string): SupportedLocale => {
+    const formattedLocale = locale ? locale.replace('-', '_') : null;
+    const supportedLocale = SUPPORTED_LOCALES.includes(formattedLocale) ? formattedLocale : null;
+    return supportedLocale as SupportedLocale;
+};
+
+/**
+ * Returns an object of settings for the PayPal SDK
+ */
+const getPaypalSettings = ({ amount, countryCode, debug, environment = '', intent, locale, merchantId }: PayPalElementProps): PaypalSettings => {
+    const shopperLocale: SupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_TEST : ADYEN_CLIENTID_LIVE;
@@ -11,6 +23,7 @@ const getPaypalSettings = ({ amount, countryCode, environment = '', intent, loca
         ...(merchantId && { 'merchant-id': merchantId }),
         ...(shopperLocale && { locale: shopperLocale }),
         ...(countryCode && isTestEnvironment && { 'buyer-country': countryCode }),
+        ...(debug && isTestEnvironment && { debug }),
         ...(currency && { currency }),
         ...(intent && { intent }),
         'client-id': clientId,
@@ -19,20 +32,17 @@ const getPaypalSettings = ({ amount, countryCode, environment = '', intent, loca
     };
 };
 
-const getPayPalParams = props => {
+/**
+ * Returns the PayPal SDK script URL with query parameters
+ * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/}
+ */
+const getPaypalUrl = (props: PayPalElementProps): string => {
     const settings = getPaypalSettings(props);
-    const params = [];
-
-    Object.keys(settings).forEach(name => {
-        const value = decodeURIComponent(settings[name]);
-        params.push(`${name}=${value}`);
-    });
-
-    return params.join('&');
-};
-
-const getPaypalUrl = props => {
-    const params = getPayPalParams(props);
+    const params = decodeURIComponent(
+        Object.keys(settings)
+            .map(key => `${key}=${settings[key]}`)
+            .join('&')
+    );
     return `${PAYPAL_JS_URL}?${params}`;
 };
 
