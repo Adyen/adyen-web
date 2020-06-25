@@ -8,7 +8,6 @@ import Spinner from '~/components/internal/Spinner';
 import Countdown from '~/components/internal/Countdown';
 import Button from '~/components/internal/Button';
 import useCoreContext from '~/core/Context/useCoreContext';
-import { UIElementProps } from '../../UIElement';
 
 interface StatusObjectProps {
     payload: string;
@@ -21,7 +20,7 @@ interface StatusObject {
     props: StatusObjectProps;
 }
 
-interface AwaitComponentProps extends UIElementProps {
+interface AwaitComponentProps {
     type: string;
     delay: number;
     countdownTime: number;
@@ -30,6 +29,11 @@ interface AwaitComponentProps extends UIElementProps {
     throttleInterval: number;
     paymentData: string;
     url?: string;
+    shouldRedirectOnMobile?: boolean;
+    classNameModifiers?: string[];
+    onError;
+    onComplete;
+    loadingContext;
     originKey;
     clientKey;
     brandLogo;
@@ -125,7 +129,7 @@ function Await(props: AwaitComponentProps) {
 
     // didMount & willUnmount
     useEffect(() => {
-        const { shouldRedirectOnMobile, url }: UIElementProps = props;
+        const { shouldRedirectOnMobile, url } = props;
         const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
 
         if (shouldRedirectOnMobile && url && isMobile) {

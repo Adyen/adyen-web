@@ -3,41 +3,41 @@ import UIElement from '../UIElement';
 import ApplePayButton from './components/ApplePayButton';
 import ApplePayService from './ApplePayService';
 import { preparePaymentRequest } from './payment-request';
-import { normalizeAmount, normalizeCurrency } from './utils';
+import { normalizeAmount } from './utils';
 import defaultProps from './defaultProps';
 import { ApplePayElementProps, ApplePayElementData } from '~/components/ApplePay/types';
 
-class ApplePayElement extends UIElement {
-    public props: ApplePayElementProps;
+class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
-    protected static defaultProps: ApplePayElementProps = defaultProps;
+    protected static defaultProps = defaultProps;
 
-    constructor(props: ApplePayElementProps) {
+    constructor(props) {
         super(props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
     }
 
-    formatProps(props: ApplePayElementProps) {
+    /**
+     * @protected
+     * Formats the component props
+     */
+    protected formatProps(props) {
         const amount = normalizeAmount(props);
-        const currencyCode = normalizeCurrency(props);
 
         return {
             onAuthorized: resolve => resolve(),
             onValidateMerchant: (resolve, reject) => reject('onValidateMerchant event not implemented'),
             ...props,
             amount,
-            currencyCode,
             onCancel: event => props.onError(event)
         };
     }
 
     /**
-     * @private
+     * @protected
      * Formats the component data output
-     * @return {object} props
      */
-    formatData(): ApplePayElementData {
+    protected formatData(): ApplePayElementData {
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
@@ -54,7 +54,7 @@ class ApplePayElement extends UIElement {
         return Promise.resolve(this.startSession(this.props.onAuthorized));
     }
 
-    startSession(onPaymentAuthorized) {
+    private startSession(onPaymentAuthorized) {
         const {
             version,
             onValidateMerchant,

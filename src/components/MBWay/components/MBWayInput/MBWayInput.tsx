@@ -12,6 +12,12 @@ import { UIElementProps } from '../../../UIElement';
 
 type RtnTypeFnWithEvent = (e: Event) => void;
 
+interface MBWayInputProps extends UIElementProps {
+    data?: any;
+    placeholders?: any;
+    onChange: (e, component) => void;
+}
+
 interface MBWayDataObject {
     email: string;
     phoneNumber: string;
@@ -32,7 +38,7 @@ interface ValidationObj {
     isValid: boolean;
 }
 
-function MBWayInput(props: UIElementProps) {
+function MBWayInput(props: MBWayInputProps) {
     const { i18n } = useCoreContext();
 
     const validator: Validator = new Validator(mbwayValidationRules);

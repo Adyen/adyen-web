@@ -116,7 +116,7 @@ export interface ProcessedResponse {
 }
 
 /**
- * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v51/payments__resParam_action API Explorer /payments action}
+ * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v52/payments__reqParam_amount API Explorer /payments amount}
  */
 export interface PaymentAmount {
     value: number;

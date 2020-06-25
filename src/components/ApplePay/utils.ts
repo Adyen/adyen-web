@@ -1,25 +1,16 @@
+import { ApplePayElementProps } from '~/components/ApplePay/types';
+import { PaymentAmount } from '../../types';
+
 /**
  * @private
  * Gets an amount value from an amount object or defaults to an amount property.
  */
-import { ApplePayElementProps } from '~/components/ApplePay/types';
-
-export function normalizeAmount(props: ApplePayElementProps): number {
-    if (typeof props.amount === 'object' && {}.hasOwnProperty.call(props.amount, 'value')) {
-        return props.amount.value;
+export function normalizeAmount(props: ApplePayElementProps): PaymentAmount {
+    if (typeof props.amount?.value !== 'undefined' && props.amount?.currency) {
+        return props.amount;
+    } else if (typeof props.amount === 'number' && props.currencyCode) {
+        return { value: props.amount, currency: props.currencyCode };
     }
 
-    return props.amount as number;
-}
-
-/**
- * @private
- * Gets a currencyCode from an amount object or defaults to a currencyCode property.
- */
-export function normalizeCurrency(props: ApplePayElementProps): string {
-    if (typeof props.amount === 'object' && {}.hasOwnProperty.call(props.amount, 'currency')) {
-        return props.amount.currency;
-    }
-
-    return props.currencyCode;
+    return null;
 }
