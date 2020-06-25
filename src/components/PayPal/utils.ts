@@ -6,7 +6,7 @@ import { PaypalSettings, SupportedLocale, PayPalElementProps } from './types';
  */
 const getSupportedLocale = (locale?: string): SupportedLocale => {
     const formattedLocale = locale ? locale.replace('-', '_') : null;
-    const supportedLocale = SUPPORTED_LOCALES.includes(formattedLocale) ? formattedLocale : null;
+    const supportedLocale = SUPPORTED_LOCALES.includes(formattedLocale as SupportedLocale) ? formattedLocale : null;
     return supportedLocale as SupportedLocale;
 };
 

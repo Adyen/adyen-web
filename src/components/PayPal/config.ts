@@ -32,6 +32,6 @@ const SUPPORTED_LOCALES = [
     'sv_SE',
     'th_TH',
     'zh_TW'
-];
+] as const;
 
 export { INTEGRATION_DATE, PAYPAL_JS_URL, ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, SUPPORTED_LOCALES };

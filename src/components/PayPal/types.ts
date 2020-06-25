@@ -1,5 +1,6 @@
 import { PaymentAmount } from '~/types';
 import UIElement, { UIElementProps } from '../UIElement';
+import { SUPPORTED_LOCALES } from '~/components/PayPal/config';
 
 declare global {
     interface Window {
@@ -126,28 +127,4 @@ export interface PaypalSettings {
     components: string;
 }
 
-export type SupportedLocale =
-    | 'en_US'
-    | 'en_AU'
-    | 'en_GB'
-    | 'fr_CA'
-    | 'es_ES'
-    | 'it_IT'
-    | 'fr_FR'
-    | 'de_DE'
-    | 'pt_BR'
-    | 'zh_CN'
-    | 'da_DK'
-    | 'zh_HK'
-    | 'id_ID'
-    | 'he_IL'
-    | 'ja_JP'
-    | 'ko_KR'
-    | 'nl_NL'
-    | 'no_NO'
-    | 'pl_PL'
-    | 'pt_PT'
-    | 'ru_RU'
-    | 'sv_SE'
-    | 'th_TH'
-    | 'zh_TW';
+export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
