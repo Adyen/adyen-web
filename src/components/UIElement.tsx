@@ -18,7 +18,7 @@ export interface UIElementProps extends BaseElementProps {
 
     /**
      * Show/Hide pay button
-     * @default true
+     * @defaultValue true
      */
     showPayButton?: boolean;
 
