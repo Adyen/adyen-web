@@ -29,7 +29,7 @@ interface CardElementData {
     browserInfo: any;
 }
 
-export class CardElement extends UIElement {
+export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
     private currentRequestId;
 
@@ -144,7 +144,7 @@ export class CardElement extends UIElement {
         return getImage({ loadingContext: this.props.loadingContext })(this.brand);
     }
 
-    get brands(): string[] {
+    get brands(): { icon: any; name: string }[] {
         if (this.props.brands) {
             return this.props.brands.map(brand => ({
                 icon: getImage({ loadingContext: this.props.loadingContext })(brand),

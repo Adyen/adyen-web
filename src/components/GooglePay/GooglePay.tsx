@@ -56,6 +56,10 @@ class GooglePay extends UIElement {
         return this.loadPayment();
     };
 
+    public startPayment = () => {
+        return this.loadPayment();
+    };
+
     /**
      * Validation
      */

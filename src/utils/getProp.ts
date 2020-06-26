@@ -11,7 +11,7 @@
  *   getProp({}, 'x'); //=> undefined
  * ```
  */
-const getProp = (object: object, path: string): any => {
+const getProp = (object: any, path: string): any => {
     const splitPath = path.split('.');
     const reducer = (xs, x) => (xs && xs[x] ? xs[x] : undefined);
 

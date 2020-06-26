@@ -1,27 +1,36 @@
 import { render } from 'preact';
 import getProp from '~/utils/getProp';
 import EventEmitter from './EventEmitter';
+import Analytics from '../core/Analytics';
+import RiskElement from '../core/RiskModule';
 
-abstract class BaseElement {
-    public props;
-    public _node;
+export interface BaseElementProps {
+    modules?: {
+        analytics: Analytics;
+        risk: RiskElement;
+    };
+    isDropin?: boolean;
+}
+
+class BaseElement<P extends BaseElementProps> {
+    public props: P;
     public state;
+    protected static defaultProps = {};
+    public _node;
     public _component;
     public eventEmitter = new EventEmitter();
 
-    protected constructor(props = {}) {
+    protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
         this._node = null;
         this.state = {};
     }
 
-    protected static defaultProps = {};
-
     /**
      * Executed during creation of any payment element.
      * Gives a chance to any paymentMethod to format the props we're receiving.
      */
-    protected formatProps(props) {
+    protected formatProps(props: P) {
         return props;
     }
 
@@ -62,7 +71,7 @@ abstract class BaseElement {
      * @param domNode - Node (or selector) where we will mount the payment element
      * @returns this - the payment element instance we mounted
      */
-    public mount(domNode: HTMLElement | string): BaseElement {
+    public mount(domNode: HTMLElement | string): this {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
 
         if (!node) {
@@ -89,7 +98,7 @@ abstract class BaseElement {
         return this;
     }
 
-    public remount(component): BaseElement {
+    public remount(component): this {
         if (!this._node) {
             throw new Error('Component is not mounted.');
         }

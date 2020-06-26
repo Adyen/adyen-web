@@ -7,6 +7,10 @@ import { renderFormField } from '~/components/internal/FormFields';
 import { UIElementProps } from '../../UIElement';
 import './BlikInput.scss';
 
+interface BlikInputProps extends UIElementProps {
+    data?: BlikInputDataState;
+}
+
 interface BlikInputDataState {
     blikCode: string;
 }
@@ -19,7 +23,7 @@ interface BlikInputErrorState {
     blikCode: boolean;
 }
 
-function BlikInput(props: UIElementProps) {
+function BlikInput(props: BlikInputProps) {
     const { i18n, loadingContext } = useCoreContext();
 
     const [data, setData] = useState<BlikInputDataState>(props.data);
