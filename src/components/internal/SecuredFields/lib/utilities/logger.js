@@ -1,5 +1,5 @@
 /**
- * @private
+ * @internal
  * Utility class for logging messages/errors
  * Usage:
  * logger.log('Log message, always visible');
@@ -8,32 +8,34 @@
  * window._b$dl && logger.log('Log message only visible on dev env');
  *
  * Or just use a conditional:
+ * ```
  * if (window._b$dl) {
  *     logger.log('Log message only visible on dev env');
  * }
+ * ```
  */
 
 /**
- * @private
+ * @internal
  * Logs errors
  */
 export const error = window.console && window.console.error && window.console.error.bind(window.console);
 
 /**
- * @private
+ * @internal
  * Logs info
  */
 export const info = window.console && window.console.info && window.console.info.bind(window.console);
 
 /**
- * @private
+ * @internal
  * Logs
  * NOTE: changed to 'let' from 'const' for the purpose of running unit tests
  */
 export let log = window.console && window.console.log && window.console.log.bind(window.console); // eslint-disable-line
 
 /**
- * @private
+ * @internal
  * Logs warnings
  * NOTE: changed to 'let' from 'const' for the purpose of running unit tests
  */

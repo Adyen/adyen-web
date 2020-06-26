@@ -16,9 +16,9 @@ class GooglePayService {
      * Initialize a Google Pay API client
      *
      * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient|PaymentsClient constructor}
-     * @returns {google.payments.api.PaymentsClient} Google Pay API client
+     * @returns Google Pay API client
      */
-    getGooglePaymentsClient(environment) {
+    getGooglePaymentsClient(environment): google.payments.api.PaymentsClient {
         if (window.google && window.google.payments) {
             return new google.payments.api.PaymentsClient({ environment });
         }

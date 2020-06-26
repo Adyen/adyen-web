@@ -1,6 +1,5 @@
 /**
  * Returns either the date input is supported or not in the current browser
- * @return {boolean}
  */
 const checkDateInputSupport = (): boolean => {
     const input = document.createElement('input');
@@ -10,8 +9,7 @@ const checkDateInputSupport = (): boolean => {
 
 /**
  * Returns a formatted date
- * @param {string} value
- * @return {string}
+ * @param value -
  * @example
  * formatDate('22111990');
  * // '22/11/1990'
@@ -40,8 +38,7 @@ const formatDate = (value: string): string => {
 
 /**
  * Receives a formatted date and returns it as the API expects it
- * @param {string} value
- * @return {string}
+ * @param value -
  * @example
  * unformatDate('22/11/1990');
  * // '1990-11-22'

@@ -29,8 +29,6 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Executed during creation of any payment element.
      * Gives a chance to any paymentMethod to format the props we're receiving.
-     * @param {object} props
-     * @return {object} formatted props
      */
     protected formatProps(props: P) {
         return props;
@@ -39,7 +37,6 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
-     * @return {object} data output of the component
      */
     protected formatData() {
         return {};
@@ -52,7 +49,6 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
-     * @return {object} data
      */
     get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
@@ -72,8 +68,8 @@ class BaseElement<P extends BaseElementProps> {
 
     /**
      * Mounts an element into the dom
-     * @param domNode node or selector where we will mount the payment element
-     * @return {BaseElement} this - the payment element instance we mounted
+     * @param domNode - Node (or selector) where we will mount the payment element
+     * @returns this - the payment element instance we mounted
      */
     public mount(domNode: HTMLElement | string): this {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;

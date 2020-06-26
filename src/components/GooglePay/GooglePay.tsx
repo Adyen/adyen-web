@@ -10,9 +10,7 @@ class GooglePay extends UIElement {
     protected googlePay = new GooglePayService(this.props.environment);
 
     /**
-     * @private
      * Formats the component data input
-     * @return {object} props
      */
     formatProps(props) {
         return {
@@ -22,9 +20,7 @@ class GooglePay extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {

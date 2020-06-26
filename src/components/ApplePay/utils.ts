@@ -2,7 +2,7 @@ import { ApplePayElementProps } from '~/components/ApplePay/types';
 import { PaymentAmount } from '../../types';
 
 /**
- * @private
+ * @internal
  * Gets an amount value from an amount object or defaults to an amount property.
  */
 export function normalizeAmount(props: ApplePayElementProps): PaymentAmount {

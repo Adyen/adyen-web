@@ -42,8 +42,8 @@ class ApplePayService {
     /**
      * An event handler that is called when the payment sheet is displayed.
      * Use this attribute to request and return a merchant session.
-     * @param {object} event An ApplePayValidateMerchantEvent object (contains validationURL)
-     * @param {Promise} onValidateMerchant A promise implemented by the merchant that will resolve with the merchantSession
+     * @param event - An ApplePayValidateMerchantEvent object (contains validationURL)
+     * @param onValidateMerchant - A promise implemented by the merchant that will resolve with the merchantSession
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/providing_merchant_validation}
      */
     onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant) {
@@ -60,8 +60,8 @@ class ApplePayService {
     /**
      * An event handler that is called when the user has authorized the Apple Pay payment with Touch ID, Face ID, or passcode.
      * The onpaymentauthorized function must complete the payment and respond by calling completePayment before the 30 second timeout.
-     * @param {object} event The event parameter contains the payment (ApplePayPayment) attribute.
-     * @param {Promise} onPaymentAuthorized A promise that will complete the payment when resolved. Use this promise to process the payment.
+     * @param event - The event parameter contains the payment (ApplePayPayment) attribute.
+     * @param onPaymentAuthorized - A promise that will complete the payment when resolved. Use this promise to process the payment.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778020-onpaymentauthorized}
      */
     onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized) {
@@ -77,8 +77,8 @@ class ApplePayService {
     /**
      * An event handler that is called when a new payment method is selected.
      * The onpaymentmethodselected function must resolve before the 30 second timeout
-     * @param {object} event The event parameter contains the payment (ApplePayPayment) attribute.
-     * @param {Promise} onPaymentMethodSelected A promise that will complete the payment when resolved. Use this promise to process the payment.
+     * @param event - The event parameter contains the payment (ApplePayPayment) attribute.
+     * @param onPaymentMethodSelected - A promise that will complete the payment when resolved. Use this promise to process the payment.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected}
      */
     onpaymentmethodselected(event: ApplePayJS.ApplePayPaymentMethodSelectedEvent, onPaymentMethodSelected) {
@@ -94,8 +94,8 @@ class ApplePayService {
     /**
      * An event handler that is called when a new payment method is selected.
      * The onpaymentmethodselected function must resolve before the 30 second timeout
-     * @param {object} event The event parameter contains the shippingContact attribute.
-     * @param {Promise} onShippingContactSelected A promise that will complete the selection of a shipping contact with an update.
+     * @param event - The event parameter contains the shippingContact attribute.
+     * @param onShippingContactSelected - A promise that will complete the selection of a shipping contact with an update.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
      */
     onshippingcontactselected(event: ApplePayJS.ApplePayShippingContactSelectedEvent, onShippingContactSelected) {
@@ -111,8 +111,8 @@ class ApplePayService {
     /**
      * An event handler that is called when a new payment method is selected.
      * The onpaymentmethodselected function must resolve before the 30 second timeout
-     * @param {object} event The event parameter contains the shippingMethod attribute.
-     * @param {Promise} onShippingMethodSelected A promise that will complete the selection of a shipping method with an update.
+     * @param event - The event parameter contains the shippingMethod attribute.
+     * @param onShippingMethodSelected - A promise that will complete the selection of a shipping method with an update.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected}
      */
     onshippingmethodselected(event: ApplePayJS.ApplePayShippingMethodSelectedEvent, onShippingMethodSelected) {
@@ -128,8 +128,8 @@ class ApplePayService {
     /**
      * An event handler that is automatically called when the payment UI is dismissed.
      * This function can be called even after an onpaymentauthorized event has been dispatched.
-     * @param {object} event
-     * @param {function} onCancel
+     * @param event -
+     * @param onCancel -
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778029-oncancel}
      */
     oncancel(event: ApplePayJS.Event, onCancel) {

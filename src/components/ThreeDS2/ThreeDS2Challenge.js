@@ -4,7 +4,6 @@ import ThreeDS2Challenge from './components/Challenge';
 
 /**
  * ThreeDS2ChallengeElement
- * @extends UIElement
  */
 class ThreeDS2ChallengeElement extends UIElement {
     static type = 'threeDS2Challenge';

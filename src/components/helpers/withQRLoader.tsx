@@ -16,7 +16,6 @@ interface WithQRLoaderProps {
 
 /**
  * QRLoaderContainer: A higher order function which returns a different class based on issuerType
- * @extends UIElement
  */
 const withQRLoader = ({
     type,
@@ -39,7 +38,6 @@ const withQRLoader = ({
 
         /**
          * Formats props on construction time
-         * @return {object} props
          */
         formatProps(props) {
             const qrCodeImage = props.qrCodeData ? `${props.loadingContext}${QRCODE_URL}${props.qrCodeData}` : props.qrCodeImage;
@@ -52,7 +50,6 @@ const withQRLoader = ({
 
         /**
          * Formats the component data output
-         * @return {object} props
          */
         formatData() {
             return {
@@ -65,7 +62,6 @@ const withQRLoader = ({
 
         /**
          * Returns whether the component state is valid or not
-         * @return {boolean} isValid
          */
         get isValid() {
             return true;

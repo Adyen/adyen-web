@@ -26,9 +26,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     protected formatData() {
         return {
@@ -61,7 +59,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     /**
      * Dropin Validation
-     * @returns {Boolean} Paypal does not require any specific Dropin validation
+     *
+     * @remarks
+     * Paypal does not require any specific Dropin validation
      */
     get isValid() {
         return true;

@@ -4,8 +4,7 @@ const ADYEN_CLIENTID_TEST = 'AVzsPoGmjcm99YG02kq0iWL3KP3JedbMQJO2QUnVUc-t7aUzjkB
 const ADYEN_CLIENTID_LIVE = 'AU0Z-TP9t5_9196agaBN6ZD3UAwypdP1IX8ZYH3PcNNAQMXUTDQlChruXqQEhyI6-NKBKowN6ydkj477';
 
 /**
- * @private
- * @constant {SUPPORTED_LOCALES}
+ * @internal
  */
 const SUPPORTED_LOCALES = [
     'en_US',

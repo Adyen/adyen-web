@@ -7,7 +7,6 @@ import RedirectButton from '../internal/RedirectButton';
 
 /**
  * RedirectElement
- * @extends UIElement
  */
 class RedirectElement extends UIElement {
     static type = 'redirect';
@@ -26,7 +25,6 @@ class RedirectElement extends UIElement {
 
     /**
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -38,7 +36,6 @@ class RedirectElement extends UIElement {
 
     /**
      * Returns whether the component state is valid or not
-     * @return {boolean} isValid
      */
     get isValid() {
         return true;

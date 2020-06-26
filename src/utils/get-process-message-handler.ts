@@ -1,13 +1,11 @@
 /**
- * @desc - Centralised window.postMessage processing function used from Do3DS2Challenge, Get3DS2DeviceFingerprint and GetDevicefingerprint components
+ * Centralised window.postMessage processing function used in 3DS2 components
  *
- * @param domain {String} - expected domain for the postMesssage to have originated from
- * @param resolve {Function} - the resolve function from the Promise that called this function
- * @param reject {Function} - the reject function from the Promise that called this function
- * @param rejectObj {Object} - an object to reject the promise with if origins don't match
- * @param expectedType {String} - string to check that the passed data has the expected type
- *
- * @returns {function(*)}
+ * @param domain - expected domain for the postMesssage to have originated from
+ * @param resolve - the resolve function from the Promise that called this function
+ * @param reject - the reject function from the Promise that called this function
+ * @param rejectObj - an object to reject the promise with if origins don't match
+ * @param expectedType - string to check that the passed data has the expected type
  */
 const getProcessMessageHandler = (
     domain: string,

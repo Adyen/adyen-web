@@ -6,7 +6,6 @@ import { unformatDate } from '../internal/FormFields/InputDate/utils';
 
 /**
  * OpenInvoiceContainer: A higher order function which returns a different class based on issuerType
- * @extends UIElement
  */
 const withOpenInvoice = ({ type, consentCheckbox }) => {
     return class OpenInvoiceContainer extends UIElement {
@@ -24,7 +23,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
 
         /**
          * Returns whether the component state is valid or not
-         * @return {boolean} isValid
          */
         get isValid() {
             return !!this.state.isValid;
@@ -32,7 +30,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
 
         /**
          * Formats props on construction time
-         * @return {object} props
          */
         formatProps(props) {
             return {
@@ -53,7 +50,6 @@ const withOpenInvoice = ({ type, consentCheckbox }) => {
 
         /**
          * Formats the component data output
-         * @return {object} props
          */
         formatData() {
             const { data = {} } = this.state;

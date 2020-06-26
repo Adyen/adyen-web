@@ -13,9 +13,7 @@ export class GiftcardElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {

@@ -2,8 +2,7 @@ import { version } from '../../../package.json';
 
 /**
  * Log event to Adyen
- * @param {object} config
- * @return {function}
+ * @param config -
  */
 const logTelemetry = config => event => {
     const telemetryEvent = {

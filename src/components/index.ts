@@ -130,9 +130,9 @@ const componentsMap = {
 /**
  * Instantiates a new Component element either by class reference or by name
  * It also assigns a new uuid to each instance, so we can recognize it during the current session
- * @param {string|UIElement} componentType class or componentsMap's key
- * @param {object} props for the new Component element
- * @return {object} new PaymentMethod or null
+ * @param componentType - class or componentsMap's key
+ * @param props - for the new Component element
+ * @returns new PaymentMethod or null
  */
 export const getComponent = (componentType, props) => {
     const Component = componentsMap[componentType] || componentsMap.default;
@@ -141,9 +141,9 @@ export const getComponent = (componentType, props) => {
 
 /**
  * Gets the configuration for type from componentsConfig
- * @param {string} type component type
- * @param {object} componentsConfig global paymentMethodsConfiguration
- * @return {object} component configuration
+ * @param type - component type
+ * @param componentsConfig - global paymentMethodsConfiguration
+ * @returns component configuration
  */
 export const getComponentConfiguration = (type: string, componentsConfig = {}) => {
     const pmType = type === 'scheme' ? 'card' : type;

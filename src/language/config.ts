@@ -1,2 +1,4 @@
-/** @constant string FALLBACK_LOCALE */
+/**
+ * FALLBACK_LOCALE
+ */
 export const FALLBACK_LOCALE = 'en-US';

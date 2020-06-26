@@ -1,7 +1,5 @@
 /**
- * @private
- * @constant {CURRENCY_CODES}
- * @type {object}
+ * Currency Codes
  */
 const CURRENCY_CODES = {
     AED: 'د.إ',
