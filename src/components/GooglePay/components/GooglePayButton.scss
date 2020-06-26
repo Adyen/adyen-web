@@ -1,5 +1,6 @@
-.adyen-checkout__paywithgoogle .gpay-button.long {
-    width: 100%;
+.adyen-checkout__paywithgoogle > div > button,
+.adyen-checkout__paywithgoogle > div > button.long,
+.adyen-checkout__paywithgoogle > div > button.short {
     padding: 15px 24px 13px;
     height: 48px;
     transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
@@ -7,4 +8,8 @@
         box-shadow: 0 0 0 2px #99c2ff;
         outline: 0;
     }
+}
+
+.adyen-checkout__paywithgoogle > div > button.long {
+    width: 100%;
 }
