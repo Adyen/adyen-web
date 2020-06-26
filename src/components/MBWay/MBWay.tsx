@@ -19,9 +19,7 @@ export class MBWayElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData(): object {
         const paymentMethod: object = {

@@ -5,7 +5,6 @@ import DonationComponent from './components/DonationComponent';
 
 /**
  * DonationElement
- * @extends UIElement
  */
 class DonationElement extends UIElement {
     static type = 'donation';
@@ -22,7 +21,6 @@ class DonationElement extends UIElement {
 
     /**
      * Returns the component payment data ready to submit to the Checkout API
-     * @return {object} data
      */
     get data() {
         return this.state.data;
@@ -30,7 +28,6 @@ class DonationElement extends UIElement {
 
     /**
      * Returns whether the component state is valid or not
-     * @return {boolean} isValid
      */
     get isValid() {
         return this.state.isValid;

@@ -1,15 +1,15 @@
 import getProp from './getProp';
 
 /**
- * @function collectBrowserInfo
- *
- * @desc Collects available frontend browser info and store it in the properties dictated by the EMVCo spec
+ * Collects available frontend browser info and store it in the properties dictated by the EMVCo spec
  * (3DS_Spec_protocolAndCoreFny_v2-1_Oct2017.pdf)
  *
- * @example const browserInfo = collectBrowserInfo();
- * const userAgent = browserInfo.userAgent;
+ * @example
+ * ```js
+ * const browserInfo = collectBrowserInfo();
+ * ```
  *
- * @returns {Object} - browserInfo an object containing the retrieved browser properties
+ * @returns An object containing the retrieved browser properties
  */
 export default function collectBrowserInfo() {
     const colorDepth = getProp(window, 'screen.colorDepth') || '';

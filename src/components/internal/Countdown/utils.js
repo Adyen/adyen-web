@@ -1,8 +1,8 @@
 /**
  * Pads a given string or number with zeros.
  *
- * @param {any} value Value to zero-pad.
- * @param {number} [length=2] Amount of characters to pad.
+ * @param value - Value to zero-pad.
+ * @param length - Amount of characters to pad.
  * @returns Left-padded number/string.
  */
 export const zeroPad = (value, length = 2) => {
@@ -14,10 +14,10 @@ export const zeroPad = (value, length = 2) => {
 /**
  * Calculates the remaining time as a percentage
  *
- * @param {Date} start Start date
- * @param {Date} now Current date
- * @param {Date} end End date
- * @returns {Integer} Percentage of the remaining time
+ * @param start - Start date
+ * @param now - Current date
+ * @param end - End date
+ * @returns Percentage of the remaining time
  */
 export const getProgressPercentage = (start, now, end) => {
     const difference = end.getTime() - start.getTime();
@@ -27,8 +27,9 @@ export const getProgressPercentage = (start, now, end) => {
 /**
  * Calculates the difference in minutes and seconds from now to endDate
  *
- * @param {Date} endDate
- * @returns {object} Time difference
+ * @param startTime -
+ * @param endTime -
+ * @returns  Time difference
  */
 export const getTimeDifference = (startTime, endTime) => {
     const now = new Date();

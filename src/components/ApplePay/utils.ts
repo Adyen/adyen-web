@@ -1,5 +1,5 @@
 /**
- * @private
+ * @internal
  * Gets an amount value from an amount object or defaults to an amount property.
  */
 import { ApplePayElementProps } from '~/components/ApplePay/types';
@@ -13,7 +13,7 @@ export function normalizeAmount(props: ApplePayElementProps): number {
 }
 
 /**
- * @private
+ * @internal
  * Gets a currencyCode from an amount object or defaults to a currencyCode property.
  */
 export function normalizeCurrency(props: ApplePayElementProps): string {

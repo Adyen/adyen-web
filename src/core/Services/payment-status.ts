@@ -2,9 +2,9 @@ import { FALLBACK_CONTEXT } from '../config';
 
 /**
  * Submits data to Adyen
- * @param {string} initiationUrl Url where to make the callbacks
- * @param {object} data ready to be serialized and included in the body of request
- * @return {Promise} a promise containing the response of the call
+ * @param initiationUrl - Url where to make the callbacks
+ * @param data - ready to be serialized and included in the body of request
+ * @returns a promise containing the response of the call
  */
 const getStatus = (initiationUrl, data) => {
     const options = {
@@ -25,10 +25,10 @@ const getStatus = (initiationUrl, data) => {
 
 /**
  * Submits data to Adyen
- * @param {string} paymentData
- * @param {string} originKey
- * @param {string} loadingContext
- * @return {Promise} a promise containing the response of the call
+ * @param paymentData -
+ * @param accessKey -
+ * @param loadingContext -
+ * @returns a promise containing the response of the call
  */
 export const checkPaymentStatus = (paymentData, accessKey, loadingContext) => {
     if (!paymentData || !accessKey) {

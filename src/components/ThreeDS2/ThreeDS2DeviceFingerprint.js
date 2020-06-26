@@ -4,7 +4,6 @@ import ThreeDS2DeviceFingerprint from './components/DeviceFingerprint';
 
 /**
  * ThreeDS2DeviceFingerprintElement
- * @extends UIElement
  */
 class ThreeDS2DeviceFingerprintElement extends UIElement {
     static type = 'threeDS2Fingerprint';

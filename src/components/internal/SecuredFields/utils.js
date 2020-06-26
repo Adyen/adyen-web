@@ -40,7 +40,7 @@ export const validFieldsReducer = (acc, cur) => {
 /**
  *  If, visually, we're dealing with a single date field (expiryDate) remap the separate entries we have
  *  for the valid states of expiryMonth & expiryYear back to the single key we use to an store an error
- *  i.e "encryptedExpiryMonth" & "encryptedExpiryYear" => "encryptedExpiryDate"
+ *  i.e `"encryptedExpiryMonth" & "encryptedExpiryYear" => "encryptedExpiryDate"`
  */
 const mapDateFields = (field, numDateFields) => {
     const isDateField = field === ENCRYPTED_EXPIRY_MONTH || field === ENCRYPTED_EXPIRY_YEAR;
@@ -143,16 +143,17 @@ export const getTranslatedErrors = (i18n = {}) => ({
 // REGULAR "UTIL" UTILS
 /**
  * Checks if `prop` is classified as an `Array` primitive or object.
- * @private
- * @param {*} prop The value to check.
- * @return {boolean} Returns `true` if `prop` is correctly classified, else `false`.
+ * @internal
+ * @param prop - The value to check.
+ * @returns Returns `true` if `prop` is correctly classified, else `false`.
  * @example
- *
+ * ```
  * isArray([1, 2, 3]);
  * // => true
  *
  * isArray(1);
  * // => false
+ * ```
  */
 export function isArray(prop) {
     return typeof prop === 'object' && prop !== null && Object.prototype.toString.call(prop) === '[object Array]';

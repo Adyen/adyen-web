@@ -1,5 +1,5 @@
 /**
- * @private
+ * @internal
  * IBAN Countries, length, structure and examples
  */
 const countries = {

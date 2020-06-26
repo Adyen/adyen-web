@@ -18,9 +18,7 @@ export class AchElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         // Map holderName to ownerName

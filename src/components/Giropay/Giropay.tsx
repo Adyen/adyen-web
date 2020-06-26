@@ -7,9 +7,7 @@ class GiropayElement extends RedirectElement {
     public static type = 'giropay';
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {

@@ -50,9 +50,7 @@ export class CardElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData(): CardElementData {
         const cardBrand = this.state.additionalSelectValue || this.props.brand;

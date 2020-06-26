@@ -3,10 +3,9 @@ import { iso13616Prepare, iso7064Mod97_10, electronicFormat, regex, getIbanCount
 
 /**
  * Contains a validation status
- * @private
- * @param {string} status
- * @param {string} code
- * @returns {object}
+ * @internal
+ * @param status -
+ * @param code -
  */
 function ValidationStatus(status, code = null) {
     this.status = status;
@@ -15,9 +14,8 @@ function ValidationStatus(status, code = null) {
 
 /**
  * Validates the format of an iban
- * @private
- * @param {string} iban
- * @returns {boolean}
+ * @internal
+ * @param iban -
  */
 const checkIbanStructure = iban => {
     const countryCode = iban.slice(0, 2);
@@ -28,8 +26,7 @@ const checkIbanStructure = iban => {
 
 /**
  * Checks validity of an IBAN
- * @param {string} iban
- * @returns {boolean}
+ * @param iban -
  */
 export const isValidIBAN = iban => {
     const electronicFormatIban = electronicFormat(iban);
@@ -41,8 +38,7 @@ export const isValidIBAN = iban => {
 
 /**
  * Checkss the validity status of an IBAN
- * @param {string} iban
- * @returns {ValidationStatus}
+ * @param iban -
  */
 export const checkIbanStatus = iban => {
     const electronicFormatIban = electronicFormat(iban);
@@ -75,6 +71,6 @@ export const checkIbanStatus = iban => {
 
 /**
  * Checks validity of a holder name
- * @param {string} holder
+ * @param holder -
  */
 export const isValidHolder = holder => !!(holder && holder.length && holder.length > 0);

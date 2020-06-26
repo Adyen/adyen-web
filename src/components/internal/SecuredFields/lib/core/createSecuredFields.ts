@@ -135,7 +135,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
 // forEach detected holder for a securedField...
 export function setupSecuredField(pItem: HTMLElement): void {
     /**
-     * @fieldType possible values:
+     *  possible values:
      *  encryptedCardNumber
      *  encryptedExpiryDate
      *  encryptedExpiryMonth

@@ -2,14 +2,16 @@ import { FALLBACK_LOCALE } from './config';
 import defaultTranslation from './locales/en-US.json';
 import locales from './locales';
 
-// Convert to ISO 639-1
+/**
+ * Convert to ISO 639-1
+ */
 const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
 
 /**
  * Matches a string with one of the locales
- * @param {string} locale
- * @param {object[]} supportedLocales
- * @return {string}
+ * @param locale -
+ * @param supportedLocales -
+
  * @example
  * matchLocale('en-GB');
  * // 'en-US'
@@ -21,8 +23,8 @@ export function matchLocale(locale: string, supportedLocales: any): string {
 
 /**
  * Returns a locale with the proper format
- * @param {string} localeParam
- * @return {string}
+ * @param localeParam -
+ *
  * @example
  * formatLocale('En_us');
  * // 'en-US'
@@ -50,9 +52,8 @@ export function formatLocale(localeParam: string): string {
  * Checks the locale format.
  * Also checks if it's on the locales array.
  * If it is not, tries to match it with one.
- * @param {string} locale
- * @param {string[]} supportedLocales
- * @return {string}
+ * @param locale -
+ * @param supportedLocales -
  */
 export function parseLocale(locale: string, supportedLocales: string[] = []): string {
     if (!locale || locale.length < 1 || locale.length > 5) return FALLBACK_LOCALE;
@@ -67,9 +68,8 @@ export function parseLocale(locale: string, supportedLocales: string[] = []): st
 
 /**
  * Formats the locales inside the customTranslations object against the supportedLocales
- * @param {Object} customTranslations
- * @param {Array} supportedLocales
- * @return {Object}
+ * @param customTranslations -
+ * @param supportedLocales -
  */
 export function formatCustomTranslations(customTranslations: object = {}, supportedLocales: string[]): object {
     return Object.keys(customTranslations).reduce((acc, cur) => {
@@ -84,9 +84,10 @@ export function formatCustomTranslations(customTranslations: object = {}, suppor
 
 /**
  * Returns a translation string by key
- * @param {Object} translations
- * @param {string} key
- * @private
+ * @param translations -
+ * @param key -
+ *
+ * @internal
  */
 export const getTranslation = (translations: object, key: string): string => {
     if (Object.prototype.hasOwnProperty.call(translations, key)) {
@@ -98,9 +99,8 @@ export const getTranslation = (translations: object, key: string): string => {
 
 /**
  * Returns an array with all the locales
- * @param {string} locale The locale the user wants to use
- * @param {Object} customTranslations
- * @return {Promise<object>}
+ * @param locale - The locale the user wants to use
+ * @param customTranslations -
  */
 export const loadTranslations = (locale: string, customTranslations: object = {}) => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)

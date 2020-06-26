@@ -22,9 +22,9 @@ export class Language {
     public readonly customTranslations;
 
     /**
-     * Returns a translated string from a key and a locale
-     * @param {string} key
-     * @return {string}
+     * Returns a translated string from a key in the current {@link Language.locale}
+     * @param key - Translation key
+     * @returns Translated string
      */
     get(key: string): string {
         const translation = getTranslation(this.translations, key);
@@ -37,10 +37,9 @@ export class Language {
 
     /**
      * Returns a localized string for an amount
-     * @param {number} amount
-     * @param {string} currencyCode
-     * @param {object} options
-     * @return {string}
+     * @param amount - Amount to be converted
+     * @param currencyCode - Currency code of the amount
+     * @param options - Options for String.prototype.toLocaleString
      */
     amount(amount: number, currencyCode: string, options?: object): string {
         return getLocalisedAmount(amount, this.locale, currencyCode, options);
@@ -48,9 +47,8 @@ export class Language {
 
     /**
      * Returns a localized string for a date
-     * @param {string} date
-     * @param {object} options for [Date.prototype.toLocaleDateString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString)
-     * @return {string}
+     * @param date - Date to be localized
+     * @param options - Options for {@link Date.toLocaleDateString}
      */
     date(date: string, options: object = {}) {
         const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };

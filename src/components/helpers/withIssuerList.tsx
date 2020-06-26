@@ -28,7 +28,6 @@ interface IssuerListData {
 
 /**
  * IssuerListContainer: A higher order function which returns a different class based on issuerType
- * @extends UIElement
  */
 const withIssuerList = ({ type, showImage = true }): any => {
     class IssuerListContainer extends UIElement {
@@ -57,7 +56,6 @@ const withIssuerList = ({ type, showImage = true }): any => {
 
         /**
          * Formats props on construction time
-         * @return {object} props
          */
         formatProps(props) {
             return {
@@ -68,7 +66,6 @@ const withIssuerList = ({ type, showImage = true }): any => {
 
         /**
          * Formats the component data output
-         * @return {object} props
          */
         formatData(): IssuerListData {
             return {
@@ -81,7 +78,6 @@ const withIssuerList = ({ type, showImage = true }): any => {
 
         /**
          * Returns whether the component state is valid or not
-         * @return {boolean} isValid
          */
         get isValid() {
             return !!this.state && !!this.state.issuer;

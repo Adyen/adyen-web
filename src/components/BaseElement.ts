@@ -20,8 +20,6 @@ abstract class BaseElement {
     /**
      * Executed during creation of any payment element.
      * Gives a chance to any paymentMethod to format the props we're receiving.
-     * @param {object} props
-     * @return {object} formatted props
      */
     protected formatProps(props) {
         return props;
@@ -30,7 +28,6 @@ abstract class BaseElement {
     /**
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
-     * @return {object} data output of the component
      */
     protected formatData() {
         return {};
@@ -43,7 +40,6 @@ abstract class BaseElement {
     /**
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
-     * @return {object} data
      */
     get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
@@ -63,8 +59,8 @@ abstract class BaseElement {
 
     /**
      * Mounts an element into the dom
-     * @param {HTMLElement|string} domNode (or selector) where we will mount the payment element
-     * @return {BaseElement} this - the payment element instance we mounted
+     * @param domNode - Node (or selector) where we will mount the payment element
+     * @returns this - the payment element instance we mounted
      */
     public mount(domNode: HTMLElement | string): BaseElement {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;

@@ -5,7 +5,7 @@ import config from './config';
  * Configure your site's support for payment methods supported by the Google Pay API.
  *
  * @see {@link https://developers.google.com/pay/api/web/reference/object#IsReadyToPayRequest|isReadyToPayRequest}
- * @returns {object} Google Pay API version, payment methods supported by the site
+ * @returns Google Pay API version, payment methods supported by the site
  */
 export function isReadyToPayRequest({
     allowedAuthMethods,
@@ -36,7 +36,7 @@ export function isReadyToPayRequest({
  * Provide Google Pay API with a payment amount, currency, and amount status
  *
  * @see {@link https://developers.google.com/pay/api/web/reference/object#TransactionInfo|TransactionInfo}
- * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
+ * @returns transaction info, suitable for use as transactionInfo property of PaymentDataRequest
  */
 export function getTransactionInfo(
     currencyCode = 'USD',

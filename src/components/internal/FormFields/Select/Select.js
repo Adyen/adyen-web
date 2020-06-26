@@ -61,7 +61,7 @@ class SelectBox extends Component {
     /**
      * Handle keyDown events on the adyen-checkout__dropdown__element
      * Navigates through the list, or select an element, or close the menu.
-     * @param {Object} e KeyDownEvent
+     * @param e - KeyDownEvent
      */
     handleKeyDown(e) {
         switch (e.key) {
@@ -88,7 +88,7 @@ class SelectBox extends Component {
     /**
      * Handle keyDown events on the adyen-checkout__dropdown__button
      * Opens the dropdownList and focuses the first element if available
-     * @param {Object} e KeyDownEvent
+     * @param e - KeyDownEvent
      */
     handleButtonKeyDown(e) {
         switch (e.key) {

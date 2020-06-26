@@ -33,9 +33,7 @@ class ApplePayElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData(): ApplePayElementData {
         return {
@@ -92,7 +90,9 @@ class ApplePayElement extends UIElement {
 
     /**
      * Validation
-     * @returns {boolean} Apple Pay does not require any specific validation
+     *
+     * @remarks
+     * Apple Pay does not require any specific validation
      */
     get isValid(): boolean {
         return true;
@@ -100,7 +100,7 @@ class ApplePayElement extends UIElement {
 
     /**
      * Determine a shopper's ability to return a form of payment from Apple Pay.
-     * @returns {Promise} Resolve/Reject whether the shopper can use Apple Pay
+     * @returns Promise Resolve/Reject whether the shopper can use Apple Pay
      */
     isAvailable(): Promise<boolean> {
         if (document.location.protocol !== 'https:') {

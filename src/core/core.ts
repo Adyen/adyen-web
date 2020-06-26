@@ -43,9 +43,9 @@ class Core {
 
     /**
      * Instantiates a new UIElement component ready to be mounted
-     * @param {UIElement | string} paymentMethod name or class of the paymentMethod
-     * @param {object} options options that will be merged to the global Checkout props
-     * @return {object} new UIElement
+     * @param paymentMethod - name or class of the paymentMethod
+     * @param options - options that will be merged to the global Checkout props
+     * @returns new UIElement
      */
     public create<T extends keyof PaymentMethods>(
         paymentMethod: T | string | UIElement,
@@ -59,9 +59,9 @@ class Core {
 
     /**
      * Instantiates a new element component ready to be mounted from an action object
-     * @param {PaymentAction} action action defining the component with the component data
-     * @param {object} options options that will be merged to the global Checkout props
-     * @return {object} new UIElement
+     * @param action - action defining the component with the component data
+     * @param options - options that will be merged to the global Checkout props
+     * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (action.type) {
@@ -72,9 +72,8 @@ class Core {
     }
 
     /**
-     * @private
-     * @param {object} options options that will be merged to the global Checkout props
-     * @return {object} props for a new UIElement
+     * @param options - options that will be merged to the global Checkout props
+     * @returns props for a new UIElement
      */
     private getPropsForComponent(options) {
         return {
@@ -89,7 +88,7 @@ class Core {
     }
 
     /**
-     * @private
+     * @internal
      */
     private handleCreate(PaymentMethod, options: any = {}): UIElement {
         const isValidClass = PaymentMethod.prototype instanceof UIElement;
@@ -121,7 +120,7 @@ class Core {
     }
 
     /**
-     * @private
+     * @internal
      */
     private handleCreateError(paymentMethod?): never {
         const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';

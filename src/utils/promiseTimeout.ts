@@ -1,10 +1,9 @@
 /**
- * @desc Tests if a passed promise settles before a certain amount of time has elapsed
+ * Tests if a passed promise settles before a certain amount of time has elapsed
  *
- * @param {number} ms - number of milliseconds the passed promise has to settle
- * @param promise {Promise<object>} - the passed promise
- * @param timeOutObject{object} - the object that the promiseTimeout will reject with if the passed promise doesn't settle in time
- * @returns {Object}
+ * @param ms - number of milliseconds the passed promise has to settle
+ * @param promise - the passed promise
+ * @param timeOutObject - the object that the promiseTimeout will reject with if the passed promise doesn't settle in time
  */
 const promiseTimeout = (ms: number, promise: Promise<object>, timeOutObject: object) => {
     let timer;

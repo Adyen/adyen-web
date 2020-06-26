@@ -2,8 +2,8 @@ import { version } from '../../../package.json';
 
 /**
  * Log event to Adyen
- * @param {object} config ready to be serialized and included in the request
- * @return {function} A log event function
+ * @param config - ready to be serialized and included in the request
+ * @returns A log event function
  */
 const logEvent = config => event => {
     const params = {
