@@ -4,7 +4,7 @@ import defaultProps from './defaultProps';
 describe('Google Pay Requests', () => {
     describe('getTransactionInfo', () => {
         test('should transform a normal currency amount', () => {
-            const transactionInfo = getTransactionInfo('USD', '1234');
+            const transactionInfo = getTransactionInfo('USD', 1234);
 
             expect(transactionInfo.currencyCode).toBe('USD');
             expect(transactionInfo.totalPrice).toBe('12.34');
@@ -12,7 +12,7 @@ describe('Google Pay Requests', () => {
         });
 
         test('should transform a normal currency with amount ZERO', () => {
-            const transactionInfo = getTransactionInfo('EUR', '0');
+            const transactionInfo = getTransactionInfo('EUR', 0);
 
             expect(transactionInfo.currencyCode).toBe('EUR');
             expect(transactionInfo.totalPrice).toBe('0');
@@ -28,7 +28,7 @@ describe('Google Pay Requests', () => {
         });
 
         test('should transform a non decimal currency amount', () => {
-            const transactionInfo = getTransactionInfo('JPY', '1234');
+            const transactionInfo = getTransactionInfo('JPY', 1234);
 
             expect(transactionInfo.currencyCode).toBe('JPY');
             expect(transactionInfo.totalPrice).toBe('1234');
