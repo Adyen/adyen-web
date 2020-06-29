@@ -6,7 +6,7 @@ class GooglePayService {
 
     constructor(props) {
         const environment = resolveEnvironment(props.environment);
-        if (environment === 'TEST') {
+        if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
             console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');
         }
         this.paymentsClient = this.getGooglePaymentsClient({ environment, paymentDataCallbacks: props.paymentDataCallbacks });
