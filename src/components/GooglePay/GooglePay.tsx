@@ -84,8 +84,7 @@ class GooglePay extends UIElement<GooglePayProps> {
 
                 return true;
             })
-            .catch((error: Error) => {
-                console.error(error.message);
+            .catch(() => {
                 return false;
             });
     };

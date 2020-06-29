@@ -7,4 +7,36 @@ describe('GooglePay', () => {
             expect(gpay.data.paymentMethod.type).toBe('paywithgoogle');
         });
     });
+
+    describe('isAvailable', () => {
+        test('resolves if is available', () => {
+            const gpay = new GooglePay({});
+            gpay.isReadyToPay = jest.fn(() => {
+                return Promise.resolve({ result: true });
+            });
+            gpay.isAvailable().then(result => {
+                expect(result).toBe(true);
+            });
+        });
+
+        test('rejects if is not available', () => {
+            const gpay = new GooglePay({});
+            gpay.isReadyToPay = jest.fn(() => {
+                return Promise.resolve({ result: false });
+            });
+            gpay.isAvailable().then(result => {
+                expect(result).toBe(false);
+            });
+        });
+
+        test('checks paymentMethodPresent if present', () => {
+            const gpay = new GooglePay({});
+            gpay.isReadyToPay = jest.fn(() => {
+                return Promise.resolve({ result: true, paymentMethodPresent: false });
+            });
+            gpay.isAvailable().then(result => {
+                expect(result).toBe(false);
+            });
+        });
+    });
 });
