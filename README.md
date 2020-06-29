@@ -1,28 +1,36 @@
 # Adyen Web
 
+[![npm](https://img.shields.io/npm/v/@adyen/adyen-web.svg)](http://npm.im/@adyen/adyen-web)
+
+
 With Adyen Web you can help your shoppers pay with a payment method of their choice. It provides you with the building blocks you need to create a checkout experience.
 
 You can integrate with Adyen in two ways, Drop-in and Components.
 
-> [Getting Started](https://docs.adyen.com/checkout/)
+* [Getting Started](https://docs.adyen.com/checkout/)
+* [Drop-in Documentation](https://docs.adyen.com/checkout/drop-in-web/)
+* [Components Documentation](https://docs.adyen.com/checkout/components-web/)
 
-## Drop-in
+## Installation
 
-Drop-in is our all-in-one UI solution that you can add on your payments form so you can start accepting transactions for key payment methods using a single front-end implementation.
+### NPM
 
-The [Drop-in](https://docs.adyen.com/checkout/drop-in-web/) handles the presentation of available payment methods and the subsequent entry of a customer's payment details. It is initialized with the response of [`/paymentMethods`][apiexplorer.paymentmethods], and provides everything you need to make an API call to [`/payments`][apiexplorer.payments] and [`/payments/details`][apiexplorer.paymentsdetails].
+Install [NPM](https://www.npmjs.com/package/@adyen/adyen-web) package:
 
-> [Drop-in Documentation](https://docs.adyen.com/checkout/drop-in-web/)
+```sh
+npm install @adyen/adyen-web --save
+```
 
-## Components
+And import in your application:
 
-We built separate Components per payment method that you can use to render UI for collecting your shopper's payment details.
+```js
+import AdyenCheckout from '@adyen/adyen-web';
+import '@adyen/adyen-web/dist/adyen.css';
+```
 
-Follow these instructions to load Components in your project:
+### Script tag
 
-> [Components Documentation](https://docs.adyen.com/checkout/components-web/)
-
-> [Available Components](https://docs.adyen.com/checkout/supported-payment-methods)
+Adyen Web can also be imported with a `<script>` tag, refer to [the documentation](https://docs.adyen.com/checkout/components-web#step-2-add-components) for instructions.
 
 ## See also
 
@@ -41,7 +49,7 @@ Follow these steps to run our development playground:
 * Create a `.env` file on your project's root folder following the example on `.env.default` and fill in the necessary environment variables.
 * Install all dependencies by running:
 ```
-$ yarn install
+yarn install
 ```
 
 * Start the development playground. This will start a local server on [http://localhost:3020](http://localhost:3020).
@@ -49,7 +57,7 @@ $ yarn install
 yarn start
 ```
 
-## Branch organization
+### Branch organization
 
 We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
 
