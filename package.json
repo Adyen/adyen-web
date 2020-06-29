@@ -14,7 +14,7 @@
     "typings": "dist/src",
     "version": "3.9.5",
     "license": "MIT",
-    "homepage": "https://www.adyen.com/",
+    "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
     "bugs": {
         "url": "https://support.adyen.com/"
