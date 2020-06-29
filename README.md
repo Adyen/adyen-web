@@ -54,7 +54,7 @@ yarn install
 yarn start
 ```
 
-## Branch organization
+### Branch organization
 
 We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
 
