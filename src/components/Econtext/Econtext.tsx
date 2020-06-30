@@ -4,7 +4,6 @@ import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
-import withPayButton from '../helpers/withPayButton';
 
 export class EcontextElement extends UIElement {
     public static type = 'econtext';
@@ -14,9 +13,7 @@ export class EcontextElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -57,4 +54,4 @@ export class EcontextElement extends UIElement {
     }
 }
 
-export default withPayButton(EcontextElement);
+export default EcontextElement;

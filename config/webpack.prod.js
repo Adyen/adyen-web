@@ -1,23 +1,31 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const webpackConfig = require('./webpack.config');
-
-const FILENAME = 'adyen';
-
 const resolve = dir => path.resolve(__dirname, dir);
+const currentVersion = require('./version')();
+const FILENAME = 'adyen';
 
 const DefinePluginConfig = new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env': {
-        __LOCAL_BUILD__: JSON.stringify(false)
+        VERSION: JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
+        COMMIT_HASH: JSON.stringify(currentVersion.COMMIT_HASH),
+        COMMIT_BRANCH: JSON.stringify(currentVersion.COMMIT_BRANCH),
+        ADYEN_BUILD_ID: JSON.stringify(currentVersion.ADYEN_BUILD_ID)
     }
 });
 
-const shouldUseSourceMap = false;
+if (process.env.CI !== 'true') {
+    console.warn(
+        '\x1b[33m%s\x1b[0m',
+        'Warning: Building custom bundle. We recommend using one of the official builds served by our servers or NPM. Check https://docs.adyen.com/checkout for more information.'
+    );
+}
+
+const shouldUseSourceMap = true;
 
 module.exports = merge(webpackConfig, {
     mode: 'production',
@@ -102,8 +110,7 @@ module.exports = merge(webpackConfig, {
                                 options: { config: { path: 'config/' } }
                             },
                             {
-                                loader: 'sass-loader',
-                                options: { modules: true }
+                                loader: 'sass-loader'
                             }
                         ]
                     },
@@ -162,7 +169,8 @@ module.exports = merge(webpackConfig, {
                 parallel: true,
                 // Enable file caching
                 cache: true,
-                sourceMap: shouldUseSourceMap
+                sourceMap: shouldUseSourceMap,
+                extractComments: false
             })
             // new OptimizeCSSAssetsPlugin()
         ]

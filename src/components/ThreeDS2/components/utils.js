@@ -12,9 +12,9 @@ export const decodeAndParseToken = token => {
 };
 
 /**
- * @Object requires an object containing the result parameters
- * @param {string} type - either 'IdentifyShopper' or 'ChallengeShopper'
- * @returns {string} - encoded result
+ * @param value - requires an object containing the result parameters
+ * @param type - either 'IdentifyShopper' or 'ChallengeShopper'
+ * @returns encoded result
  */
 export const encodeResult = ({ threeDSCompInd = undefined, transStatus = undefined }, type) => {
     if (!threeDSCompInd && !transStatus) {
@@ -32,9 +32,9 @@ export const encodeResult = ({ threeDSCompInd = undefined, transStatus = undefin
 };
 
 /**
- * @desc Accepts a size string for the challenge window & returns it if it is valid else returns a default value
+ * Accepts a size string for the challenge window & returns it if it is valid else returns a default value
  * @param sizeStr - the size string to check the validity of
- * @returns {string} - a valid size string
+ * @returns a valid size string
  */
 export const validateChallengeWindowSize = sizeStr => {
     const sizeString = sizeStr.length === 1 ? `0${sizeStr}` : sizeStr;
@@ -43,19 +43,17 @@ export const validateChallengeWindowSize = sizeStr => {
 };
 
 /**
- * @desc Accepts a size string for the challenge window & returns the corresponding array of w/h values
- * @param sizeStr
- * @returns {*}
+ * Accepts a size string for the challenge window & returns the corresponding array of w/h values
+ * @param sizeStr -
  */
 export const getChallengeWindowSize = sizeStr => CHALLENGE_WINDOW_SIZES[validateChallengeWindowSize(sizeStr)];
 
 /**
  *  prepareChallengeData
- *  @Object requires an object containing the challenge parameters
- *  @param {string} challengeToken - challengeToken string received from payments call
- *  Containing acsTransID, acsURL, messageVerison, expected postMessage URL and threeDSServerTransID
- *  @param {number} size - one of five possible challenge window sizes
- *  @param {string} notificationURL - the URL notifications are expected to be postMessaged from
+ *  @param value - requires an object containing the challenge parameters
+ *  - challengeToken - challengeToken string received from payments call containing acsTransID, acsURL, messageVerison, expected postMessage URL and threeDSServerTransID
+ *  - size - one of five possible challenge window sizes
+ *  - notificationURL - the URL notifications are expected to be postMessaged from
  */
 export const prepareChallengeData = ({ challengeToken, size, notificationURL }) => {
     const decodedChallengeToken = decodeAndParseToken(challengeToken);
@@ -79,10 +77,10 @@ export const prepareChallengeData = ({ challengeToken, size, notificationURL }) 
 
 /**
  *  prepareFingerPrintData
- *  @Object requires an object containing the challenge parameters
- *  @param {string} fingerPrintToken - fingerPrintToken string received from payments call, containing
+ *   requires an object containing the challenge parameters
+ *  @param fingerPrintToken - fingerPrintToken string received from payments call, containing
  *  methodNotificationURL, methodURL and threeDSServerTransID
- *  @param {string} notificationURL - the URL notifications are expected to be postMessaged from
+ *  @param notificationURL - the URL notifications are expected to be postMessaged from
  */
 export const prepareFingerPrintData = ({ fingerPrintToken, notificationURL }) => {
     const decodedFingerPrintToken = decodeAndParseToken(fingerPrintToken);
@@ -112,18 +110,20 @@ export const handleErrorCode = errorCode => {
 };
 
 /**
- * @function encodeBase64URL
  *
- * @desc Takes a string and encodes it as a base64url string
+ * Takes a string and encodes it as a base64url string
  * (https://en.wikipedia.org/wiki/Base64#URL_applications)
  * (See also https://tools.ietf.org/html/rfc7515)
  *
- * @example const jsonStr = JSON.stringify( {name:'john', surname:'smith'} );
- *          const base64url = encodeBase64URL(jsonStr);
+ * @example
+ * ```
+ * const jsonStr = JSON.stringify( {name:'john', surname:'smith'} );
+ * const base64url = encodeBase64URL(jsonStr);
+ * ```
  *
- * @param {string} dataStr - data, as a string, to be encoded
+ * @param dataStr - data, as a string, to be encoded
  *
- * @returns {string} - base64URL - a base64url encoded string
+ * @returns base64URL - a base64url encoded string
  */
 export const encodeBase64URL = dataStr => {
     const base64Data = window.btoa(dataStr);

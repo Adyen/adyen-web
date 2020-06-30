@@ -2,8 +2,8 @@ import { PaymentResponse, ProcessedResponse } from '~/types';
 
 /**
  * Processes a complete response from Adyen by resultCode
- * @param {object} response to be processed
- * @return {object} a new object describing the response result (ready for onStatusChange)
+ * @param response - to be processed
+ * @returns a new object describing the response result (ready for onStatusChange)
  */
 const processCompleteResponse = (response: PaymentResponse): ProcessedResponse => {
     switch (response.resultCode.toLowerCase()) {
@@ -25,8 +25,8 @@ const processCompleteResponse = (response: PaymentResponse): ProcessedResponse =
 
 /**
  * Processes a response from Adyen by type
- * @param {object} response to be processed
- * @return {object} a new object describing the response result (ready for onStatusChange)
+ * @param response - to be processed
+ * @returns a new object describing the response result (ready for onStatusChange)
  */
 export const processResponse = (response: PaymentResponse): ProcessedResponse => {
     if (!response.type && response.resultCode) {

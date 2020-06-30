@@ -4,8 +4,12 @@ import useCoreContext from '~/core/Context/useCoreContext';
 import Field from '~/components/internal/FormFields/Field';
 import getImage from '~/utils/get-image';
 import { renderFormField } from '~/components/internal/FormFields';
-import { UIElementProps } from '~/components/UIElement';
+import { UIElementProps } from '../../UIElement';
 import './BlikInput.scss';
+
+interface BlikInputProps extends UIElementProps {
+    data?: BlikInputDataState;
+}
 
 interface BlikInputDataState {
     blikCode: string;
@@ -19,7 +23,7 @@ interface BlikInputErrorState {
     blikCode: boolean;
 }
 
-function BlikInput(props: UIElementProps) {
+function BlikInput(props: BlikInputProps) {
     const { i18n, loadingContext } = useCoreContext();
 
     const [data, setData] = useState<BlikInputDataState>(props.data);
@@ -45,7 +49,7 @@ function BlikInput(props: UIElementProps) {
         <div className="adyen-checkout__blik">
             <p className="adyen-checkout__blik__helper">{i18n.get('blik.help')}</p>
             <Field
-                errorMessage={!!errors.blikCode && i18n.get('blikCode.invalid')}
+                errorMessage={!!errors.blikCode && i18n.get('blik.invalid')}
                 label={i18n.get('blik.code')}
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}

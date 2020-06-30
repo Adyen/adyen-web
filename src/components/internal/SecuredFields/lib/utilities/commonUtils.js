@@ -1,22 +1,23 @@
 /**
  * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
- * @private
+ * @internal
  */
 const objToString = Object.prototype.toString;
 
 /**
  * Checks if `prop` is classified as an `Array` primitive or object.
- * @private
- * @param {*} prop The value to check.
- * @return {boolean} Returns `true` if `prop` is correctly classified, else `false`.
+ * @internal
+ * @param prop - The value to check.
+ * @returns Returns `true` if `prop` is correctly classified, else `false`.
  * @example
- *
+ * ```
  * isArray([1, 2, 3]);
  * // => true
  *
  * isArray(1);
  * // => false
+ * ```
  */
 function isArray(prop) {
     return typeof prop === 'object' && prop !== null && Object.prototype.toString.call(prop) === '[object Array]';
@@ -39,22 +40,25 @@ function generateRandomNumber() {
 }
 
 /**
- * @function wait
+ * wait
  *
- * @desc Generic, Promise based, setTimeout call
+ * Generic, Promise based, setTimeout call
  *
- * @param ms : Number - timeout value in milliseconds
+ * ms : Number - timeout value in milliseconds
  *
- * @example wait(5000).then(() => { runMyFunction() } ).catch(() => console.log('error with the timeout'));
+ * @example
+ * ```
+ * wait(5000).then(() => { runMyFunction() } ).catch(() => console.log('error with the timeout'));
+ * ```
  */
 // const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  * The function existy is meant to define the existence of something.
  * Using the loose inequality operator (!=), it is possible to distinguish between null, undefined, and everything else.
- * @private
- * @param {*} x
- * @return {boolean}
+ * @internal
+ * @param x -
+ * @returns
  */
 function existy(x) {
     return x != null;
@@ -62,12 +66,12 @@ function existy(x) {
 
 /**
  * Used to determine if something should be considered a synonym for true
- * NOTE: The number zero is considered “truthy” by design as is '' & {}.
+ * NOTE: The number zero is considered “truthy” by design as is '' & `{}`.
  * If you wish to retain the behavior where 0 is a synonym for false, then do not use truthy where you might expect 0
  * So - returns true if something is not false, undefined or null
- * @private
- * @param {*} x
- * @return {boolean}
+ * @internal
+ * @param x -
+ * @returns
  */
 function truthy(x) {
     return x !== false && existy(x);
@@ -76,23 +80,23 @@ function truthy(x) {
 /**
  * Checks if `value` is object-like.
  * (FROM lodash.3.10.1)
- * @private
- * @param {*} value The value to check.
- * @return {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @internal
+ * @param value - The value to check.
+ * @returns Returns `true` if `value` is object-like, else `false`.
  */
 function isObjectLike(value) {
     return !!value && typeof value === 'object';
 }
 
 /**
- * @private
+ * @internal
  * Checks if `value` is classified as a `Number` primitive or object.
  * NOTE: `Infinity`, `-Infinity`, and `NaN` are classified as numbers
  * (FROM lodash.3.10.1)
- * @param {*} value The value to check.
- * @return {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @param value - The value to check.
+ * @returns Returns `true` if `value` is correctly classified, else `false`.
  * @example
- *
+ * ```
  * isNumber(8.4);
  * // => true
  *
@@ -101,6 +105,7 @@ function isObjectLike(value) {
  *
  * isNumber('8.4');
  * // => false
+ * ```
  */
 function isNumber(value) {
     const numberTag = '[object Number]';
@@ -110,16 +115,17 @@ function isNumber(value) {
 /**
  * Checks if `value` is classified as a `String` primitive or object.
  * (FROM lodash.3.10.1)
- * @private
- * @param {*} value The value to check.
- * @return {boolean} Returns `true` if `value` is correctly classified, else `false`.
+ * @internal
+ * @param value - The value to check.
+ * @returns Returns `true` if `value` is correctly classified, else `false`.
  * @example
- *
+ * ```
  * isString('abc');
  * // => true
  *
  * isString(1);
  * // => false
+ * ```
  */
 function isString(value) {
     const stringTag = '[object String]';
@@ -129,9 +135,9 @@ function isString(value) {
 /**
  * Returns true if x is:
  * null, undefined, false, 0, NaN, empty object or array, empty string
- * @param {*} x
+ * @param x -
  * @example
- *
+ * ```
  * falsy(0) // => true
  * falsy('') // => true
  * falsy({}) // => true
@@ -146,6 +152,7 @@ function isString(value) {
  * falsy({type:"kin"}) // => false
  * falsy([6]) // => false
  * falsy(true) // => false
+ * ```
  */
 function falsy(x) {
     // Is null, undefined or false
@@ -175,8 +182,7 @@ function falsy(x) {
 
 /**
  * Inverse of falsy - returns true if x is NOT null, undefined, false, 0, NaN, empty object or array, empty string
- * @param x
- * @returns {boolean}
+ * @param x -
  */
 function notFalsy(x) {
     return !falsy(x);

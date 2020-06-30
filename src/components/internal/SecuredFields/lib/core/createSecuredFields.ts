@@ -1,5 +1,5 @@
 import { select, getAttribute } from '../utilities/dom';
-import { HOSTED_CVC_FIELD, HOSTED_YEAR_FIELD } from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR } from '../configuration/constants';
 import { existy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
 import { SFSetupObject } from '~/components/internal/SecuredFields/lib/core/AbstractSecuredField';
@@ -135,7 +135,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
 // forEach detected holder for a securedField...
 export function setupSecuredField(pItem: HTMLElement): void {
     /**
-     * @fieldType possible values:
+     *  possible values:
      *  encryptedCardNumber
      *  encryptedExpiryDate
      *  encryptedExpiryMonth
@@ -149,7 +149,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
      */
     const fieldType: string = getAttribute(pItem, this.encryptedAttrName);
 
-    if (fieldType === HOSTED_YEAR_FIELD) {
+    if (fieldType === ENCRYPTED_EXPIRY_YEAR) {
         this.state.hasSeparateDateFields = true;
     }
 
@@ -158,7 +158,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
     // CVC FIELD CHECKS
     // If we have a fieldType for CVC field AND it's a single branded card AND hideCVC is true...
     // ...then we are showing a CVC field when we shouldn't e.g. for a BCMC card - so don't make an iframe
-    if (fieldType === HOSTED_CVC_FIELD && this.isSingleBrandedCard && this.hideCVC) {
+    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && this.hideCVC) {
         // We have an unnecessary CVC field
         this.hasRedundantCVCField = true;
         return;

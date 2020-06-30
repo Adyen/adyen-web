@@ -4,7 +4,6 @@ import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
-import withPayButton from '../helpers/withPayButton';
 
 export class DokuElement extends UIElement {
     public static type = 'doku';
@@ -14,9 +13,7 @@ export class DokuElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -57,4 +54,4 @@ export class DokuElement extends UIElement {
     }
 }
 
-export default withPayButton(DokuElement);
+export default DokuElement;

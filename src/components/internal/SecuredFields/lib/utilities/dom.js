@@ -51,10 +51,10 @@ const off = (node, event, callback, useCapture) => {
 };
 
 /**
- * @private
+ * @internal
  * Removes all children elements of the given node.
  *
- * @param {HTMLElement} node
+ * @param node -
  */
 const removeAllChildren = node => {
     while (node.firstChild) {

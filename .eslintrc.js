@@ -1,6 +1,6 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['react', '@typescript-eslint', 'import'],
+    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
@@ -23,16 +23,14 @@ module.exports = {
     },
     settings: {
         react: {
-            pragma: 'h'
+            pragma: 'h',
+            version: '16.0'
         },
         'import/resolver': {
             webpack: {
                 config: 'config/webpack.dev.js'
             }
         }
-    },
-    globals: {
-        sleep: 1
     },
     rules: {
         'no-console': 0,
@@ -88,13 +86,26 @@ module.exports = {
         // Typescript Rules
         '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
-        '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'off', overrides: { properties: 'explicit' } }],
+        '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/indent': 'off',
+        '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }],
 
         // React Rules
         'react/prop-types': 'off',
-        'react/display-name': 'off'
-    }
+        'react/display-name': 'off',
+
+        // TSDoc
+        'tsdoc/syntax': 'warn'
+    },
+    overrides: [
+        {
+            // enable the rule specifically for TypeScript files
+            files: ['*.ts', '*.tsx'],
+            rules: {
+                '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'off', overrides: { properties: 'explicit' } }]
+            }
+        }
+    ]
 };

@@ -4,7 +4,6 @@ import CardInput from './components/CardInput';
 import CoreProvider from '~/core/Context/CoreProvider';
 import getImage from '~/utils/get-image';
 import collectBrowserInfo from '~/utils/browserInfo';
-import withPayButton from '../helpers/withPayButton';
 import fetchJSONData from '~/utils/fetch-json-data';
 
 export interface CardElementProps extends UIElementProps {
@@ -15,7 +14,7 @@ export interface CardElementProps extends UIElementProps {
     groupTypes?: string[];
 
     brands?: string[];
-
+    enableStoreDetails?: boolean;
     hideCVC?: boolean;
     hasHolderName?: boolean;
     holderNameRequired?: boolean;
@@ -30,8 +29,9 @@ interface CardElementData {
     browserInfo: any;
 }
 
-export class CardElement extends UIElement {
+export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
+    private currentRequestId;
 
     constructor(props: CardElementProps) {
         super(props);
@@ -50,22 +50,22 @@ export class CardElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData(): CardElementData {
+        const cardBrand = this.state.additionalSelectValue || this.props.brand;
+        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+
         return {
             paymentMethod: {
                 type: CardElement.type,
                 ...this.state.data,
                 ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId }),
-                ...(this.props.brand && { brand: this.props.brand }),
-                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource }),
-                brand: this.state.additionalSelectValue
+                ...(cardBrand && { brand: cardBrand }),
+                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
-            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod }),
+            ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
             ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
             browserInfo: this.browserInfo
         };
@@ -82,7 +82,7 @@ export class CardElement extends UIElement {
     }
 
     public onBrand = event => {
-        this.emit('brand', { ...event, brand: event.brand === 'card' ? null : event.brand });
+        this.eventEmitter.emit('brand', { ...event, brand: event.brand === 'card' ? null : event.brand });
         if (this.props.onBrand) this.props.onBrand(event);
     };
 
@@ -120,7 +120,7 @@ export class CardElement extends UIElement {
                 if (data && data.requestId === this.currentRequestId) {
                     // ...call processBinLookupResponse with the response object
                     // if it contains at least one brand (a failed lookup will just contain requestId)
-                    if (data.brands && data.brands.length) {
+                    if (data.supportedBrands && data.supportedBrands.length) {
                         this.processBinLookupResponse(data);
                     }
                 }
@@ -144,7 +144,7 @@ export class CardElement extends UIElement {
         return getImage({ loadingContext: this.props.loadingContext })(this.brand);
     }
 
-    get brands(): string[] {
+    get brands(): { icon: any; name: string }[] {
         if (this.props.brands) {
             return this.props.brands.map(brand => ({
                 icon: getImage({ loadingContext: this.props.loadingContext })(brand),
@@ -191,4 +191,4 @@ export class CardElement extends UIElement {
     }
 }
 
-export default withPayButton(CardElement);
+export default CardElement;

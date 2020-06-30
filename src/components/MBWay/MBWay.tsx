@@ -1,24 +1,25 @@
 import { h } from 'preact';
-import UIElement, { UIElementProps } from '../UIElement';
+import UIElement from '../UIElement';
 import MBWayInput from './components/MBWayInput';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 import config from '~/components/MBWay/components/MBWayAwait/config';
 import Await from '~/components/internal/Await';
 
 export class MBWayElement extends UIElement {
     private static type = 'mbway';
 
-    formatProps(props: UIElementProps): UIElementProps {
+    formatProps(props) {
+        if (props.data) {
+            props.data.email = props.data.shopperEmail || props.data.email;
+            props.data.phoneNumber = props.data.telephoneNumber || props.data.phoneNumber;
+        }
         return {
             ...props
         };
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData(): object {
         const paymentMethod: object = {
@@ -52,7 +53,7 @@ export class MBWayElement extends UIElement {
                         originKey={this.props.originKey}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
-                        onError={this.onError}
+                        onError={this.props.onError}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                         type={config.type}
@@ -84,4 +85,4 @@ export class MBWayElement extends UIElement {
     }
 }
 
-export default withPayButton(MBWayElement);
+export default MBWayElement;

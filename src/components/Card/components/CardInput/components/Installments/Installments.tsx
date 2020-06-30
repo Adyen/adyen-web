@@ -3,26 +3,47 @@ import { useState, useEffect } from 'preact/hooks';
 import { renderFormField } from '~/components/internal/FormFields';
 import Field from '~/components/internal/FormFields/Field';
 import useCoreContext from '~/core/Context/useCoreContext';
+import { PaymentAmount } from '~/types';
+
+interface InstallmentOptionValues {
+    values: number[];
+}
+
+interface InstallmentOptions {
+    [key: string]: InstallmentOptionValues;
+}
+
+interface InstallmentsProps {
+    amount?: PaymentAmount;
+    brand?: string;
+    onChange?: (installmentAmount: number) => void;
+    installmentOptions: InstallmentOptions;
+}
+
+interface InstallmentsItem {
+    id: number;
+    name: string;
+}
 
 /**
  * Installments generic dropdown
  */
-function Installments(props) {
+function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
     const { amount, brand, onChange } = props;
     const [installmentAmount, setInstallmentAmount] = useState(1);
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
 
-    const getPartialAmount = divider => i18n.amount(amount.value / divider, amount.currency);
+    const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
 
     const onSelectInstallment = e => {
         const selectedInstallments = e.currentTarget.getAttribute('data-value');
         setInstallmentAmount(Number(selectedInstallments));
     };
 
-    const installmentItemsMapper = value => ({
+    const installmentItemsMapper = (value: number): InstallmentsItem => ({
         id: value,
-        name: amount.value ? `${value}x ${getPartialAmount(value)}` : value
+        name: amount.value ? `${value}x ${getPartialAmount(value)}` : `${value}`
     });
 
     useEffect(() => {
@@ -50,5 +71,11 @@ function Installments(props) {
         </div>
     );
 }
+
+Installments.defaultProps = {
+    brand: '',
+    amount: {},
+    onChange: () => {}
+};
 
 export default Installments;

@@ -1,8 +1,8 @@
-export const HOSTED_NUMBER_FIELD = 'encryptedCardNumber';
-export const HOSTED_DATE_FIELD = 'encryptedExpiryDate';
-export const HOSTED_MONTH_FIELD = 'encryptedExpiryMonth';
-export const HOSTED_YEAR_FIELD = 'encryptedExpiryYear';
-export const HOSTED_CVC_FIELD = 'encryptedSecurityCode';
+export const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
+export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
+export const ENCRYPTED_EXPIRY_MONTH = 'encryptedExpiryMonth';
+export const ENCRYPTED_EXPIRY_YEAR = 'encryptedExpiryYear';
+export const ENCRYPTED_SECURITY_CODE = 'encryptedSecurityCode';
 
 export const ENCRYPTED_PWD_FIELD = 'encryptedPassword';
 export const ENCRYPTED_PIN_FIELD = 'encryptedPin';
@@ -17,3 +17,13 @@ export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 export const IFRAME_TITLE = 'Iframe for secured card data input field';
 
 export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', 'giftcard'];
+
+export const DEFAULT_ERROR = 'incomplete field';
+
+export const CSF_FIELDS_ARRAY = [
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_SECURITY_CODE
+];

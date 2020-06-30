@@ -3,7 +3,6 @@ import UIElement from '../UIElement';
 import DragonpayInput from './components/DragonpayInput';
 import DragonpayVoucherResult from './components/DragonpayVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 import { DragonpayElementProps } from './types';
 
 export class DragonpayElement extends UIElement {
@@ -15,9 +14,7 @@ export class DragonpayElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -62,4 +59,4 @@ export class DragonpayElement extends UIElement {
     }
 }
 
-export default withPayButton(DragonpayElement);
+export default DragonpayElement;

@@ -2,28 +2,26 @@ import CURRENCY_CODES from './constants/currency-codes';
 import CURRENCY_DECIMALS from './constants/currency-decimals';
 
 /**
- * @private
- * @param {string} currencyCode
- * @returns {number}
+ * @internal
+ * @param currencyCode -
  * Get divider amount
  */
 export const getDivider = (currencyCode: string): number => CURRENCY_DECIMALS[currencyCode] || 100;
 
 /**
- * @private
- * @param {string} currencyCode
- * @returns {boolean}
+ * @internal
+ * @param currencyCode -
  * Returns whether a CURRENCY CODE is valid
  */
 export const isValidCurrencyCode = (currencyCode: string): boolean => !!CURRENCY_CODES[currencyCode];
 
 /**
- * @private
+ * @internal
  */
 export const getCurrencyCode = (currencyCode: string): string => (isValidCurrencyCode(currencyCode) ? CURRENCY_CODES[currencyCode] : false);
 
 /**
- * @private
+ * @internal
  */
 export const getDecimalAmount = (amount: number | string, currencyCode: string): number => {
     const divider = getDivider(currencyCode);
@@ -31,7 +29,7 @@ export const getDecimalAmount = (amount: number | string, currencyCode: string):
 };
 
 /**
- * @private
+ * @internal
  */
 export const getLocalisedAmount = (amount: number, locale: string, currencyCode: string, options = {}): string => {
     const stringAmount = amount.toString(); // Changing amount to string to avoid 0-value from returning false
@@ -54,9 +52,9 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
 };
 
 /**
- * @private
+ * @internal
  */
-export const getLocalisedPercentage = (percent: number = 0, locale: string): string => {
+export const getLocalisedPercentage = (percent = 0, locale: string): string => {
     const decimalPercent = percent / 100 / 100;
     const localeOptions = {
         style: 'percent',

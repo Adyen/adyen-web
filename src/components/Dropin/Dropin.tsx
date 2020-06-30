@@ -4,10 +4,12 @@ import defaultProps from './defaultProps';
 import DropinComponent from '~/components/Dropin/components/DropinComponent';
 import CoreProvider from '~/core/Context/CoreProvider';
 import { PaymentAction } from '~/types';
+import { DropinElementProps } from './types';
 
-class DropinElement extends UIElement {
+class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
-    private static defaultProps = defaultProps;
+    protected static defaultProps = defaultProps;
+    public dropinRef = null;
 
     constructor(props) {
         super(props);

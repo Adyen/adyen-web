@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
-import withPayButton from './withPayButton';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -17,7 +16,6 @@ interface WithQRLoaderProps {
 
 /**
  * QRLoaderContainer: A higher order function which returns a different class based on issuerType
- * @extends UIElement
  */
 const withQRLoader = ({
     type,
@@ -26,7 +24,7 @@ const withQRLoader = ({
     STATUS_INTERVAL,
     COUNTDOWN_MINUTES,
     shouldRedirectOnMobile = false
-}: WithQRLoaderProps) => {
+}: WithQRLoaderProps): any => {
     class QRLoaderContainer extends UIElement {
         public static type = type;
 
@@ -39,9 +37,7 @@ const withQRLoader = ({
         };
 
         /**
-         * @private
          * Formats props on construction time
-         * @return {object} props
          */
         formatProps(props) {
             const qrCodeImage = props.qrCodeData ? `${props.loadingContext}${QRCODE_URL}${props.qrCodeData}` : props.qrCodeImage;
@@ -53,9 +49,7 @@ const withQRLoader = ({
         }
 
         /**
-         * @private
          * Formats the component data output
-         * @return {object} props
          */
         formatData() {
             return {
@@ -68,7 +62,6 @@ const withQRLoader = ({
 
         /**
          * Returns whether the component state is valid or not
-         * @return {boolean} isValid
          */
         get isValid() {
             return true;
@@ -105,7 +98,7 @@ const withQRLoader = ({
         }
     }
 
-    return withPayButton(QRLoaderContainer);
+    return QRLoaderContainer;
 };
 
 export default withQRLoader;

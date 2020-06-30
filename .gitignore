@@ -6,6 +6,7 @@ coverage
 .env
 stats.json
 .DS_Store
+/*.tgz
 
 # IntelliJ
 .idea

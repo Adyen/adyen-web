@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import OxxoVoucherResult from './components/OxxoVoucherResult';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 
 export class OxxoElement extends UIElement {
     public static type = 'oxxo';
@@ -19,9 +18,7 @@ export class OxxoElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -53,4 +50,4 @@ export class OxxoElement extends UIElement {
     }
 }
 
-export default withPayButton(OxxoElement);
+export default OxxoElement;

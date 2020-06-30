@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import MultibancoVoucherResult from './components/MultibancoVoucherResult';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 
 export class MultibancoElement extends UIElement {
     public static type = 'multibanco';
@@ -20,9 +19,7 @@ export class MultibancoElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -62,4 +59,4 @@ export class MultibancoElement extends UIElement {
     }
 }
 
-export default withPayButton(MultibancoElement);
+export default MultibancoElement;

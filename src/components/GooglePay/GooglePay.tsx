@@ -3,16 +3,15 @@ import UIElement from '../UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
+import { GooglePayProps } from './types';
 
-class GooglePay extends UIElement {
+class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
     public static defaultProps = defaultProps;
-    protected googlePay = new GooglePayService(this.props.environment);
+    protected googlePay = new GooglePayService(this.props);
 
     /**
-     * @private
      * Formats the component data input
-     * @return {object} props
      */
     formatProps(props) {
         return {
@@ -22,9 +21,7 @@ class GooglePay extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -60,6 +57,10 @@ class GooglePay extends UIElement {
         return this.loadPayment();
     };
 
+    public startPayment = () => {
+        return this.loadPayment();
+    };
+
     /**
      * Validation
      */
@@ -83,8 +84,7 @@ class GooglePay extends UIElement {
 
                 return true;
             })
-            .catch((error: Error) => {
-                console.error(error.message);
+            .catch(() => {
                 return false;
             });
     };
@@ -96,6 +96,9 @@ class GooglePay extends UIElement {
         return this.googlePay.isReadyToPay(this.props);
     };
 
+    /**
+     * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
+     */
     public prefetch = (): void => {
         return this.googlePay.prefetchPaymentData(this.props);
     };

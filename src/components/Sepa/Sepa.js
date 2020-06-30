@@ -2,19 +2,15 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import IbanInput from './components/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import withPayButton from '../helpers/withPayButton';
 
 /**
  * SepaElement
- * @extends UIElement
  */
 class SepaElement extends UIElement {
     static type = 'sepadirectdebit';
 
     /**
-     * @private
      * Formats props on construction time
-     * @return {object} props
      */
     formatProps(props) {
         return {
@@ -24,9 +20,7 @@ class SepaElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -39,7 +33,6 @@ class SepaElement extends UIElement {
 
     /**
      * Returns whether the component state is valid or not
-     * @return {boolean} isValid
      */
     get isValid() {
         return !!this.state.isValid;
@@ -62,4 +55,4 @@ class SepaElement extends UIElement {
     }
 }
 
-export default withPayButton(SepaElement);
+export default SepaElement;

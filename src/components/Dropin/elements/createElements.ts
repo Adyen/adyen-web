@@ -6,9 +6,9 @@ const FALLBACK_COMPONENT = 'redirect';
 
 /**
  * Returns a filtered (available) list of component Elements
- * @param {PaymentMethod[]} components
- * @param {object} props Props to be passed through to every component
- * @param {object} componentsConfig Specific config per payment method (where key is the name of the component)
+ * @param components -
+ * @param props - Props to be passed through to every component
+ * @param componentsConfig - Specific config per payment method (where key is the name of the component)
  */
 const createElements = (components: PaymentMethod[] = [], props, componentsConfig = {}) => {
     const createElement = component => {

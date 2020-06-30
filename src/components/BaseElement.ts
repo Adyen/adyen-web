@@ -1,35 +1,42 @@
 import { render } from 'preact';
-import withEvents from './helpers/withEvents';
 import getProp from '~/utils/getProp';
+import EventEmitter from './EventEmitter';
+import Analytics from '../core/Analytics';
+import RiskElement from '../core/RiskModule';
 
-abstract class BaseElement {
-    public props;
+export interface BaseElementProps {
+    modules?: {
+        analytics: Analytics;
+        risk: RiskElement;
+    };
+    isDropin?: boolean;
+}
+
+class BaseElement<P extends BaseElementProps> {
+    public props: P;
+    public state;
+    protected static defaultProps = {};
     public _node;
-    protected state;
-    private _component;
+    public _component;
+    public eventEmitter = new EventEmitter();
 
-    protected constructor(props = {}) {
+    protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
         this._node = null;
         this.state = {};
     }
 
-    protected static defaultProps = {};
-
     /**
      * Executed during creation of any payment element.
      * Gives a chance to any paymentMethod to format the props we're receiving.
-     * @param {object} props
-     * @return {object} formatted props
      */
-    protected formatProps(props) {
+    protected formatProps(props: P) {
         return props;
     }
 
     /**
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
-     * @return {object} data output of the component
      */
     protected formatData() {
         return {};
@@ -42,9 +49,8 @@ abstract class BaseElement {
     /**
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
-     * @return {object} data
      */
-    get data() {
+    get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
         const conversionId = getProp(this.props, 'modules.analytics.conversionId');
 
@@ -62,10 +68,10 @@ abstract class BaseElement {
 
     /**
      * Mounts an element into the dom
-     * @param {HTMLElement|string} domNode (or selector) where we will mount the payment element
-     * @return {BaseElement} this - the payment element instance we mounted
+     * @param domNode - Node (or selector) where we will mount the payment element
+     * @returns this - the payment element instance we mounted
      */
-    public mount(domNode: HTMLElement | string): BaseElement {
+    public mount(domNode: HTMLElement | string): this {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
 
         if (!node) {
@@ -92,7 +98,7 @@ abstract class BaseElement {
         return this;
     }
 
-    public remount(component): BaseElement {
+    public remount(component): this {
         if (!this._node) {
             throw new Error('Component is not mounted.');
         }
@@ -114,4 +120,4 @@ abstract class BaseElement {
     }
 }
 
-export default withEvents(BaseElement);
+export default BaseElement;

@@ -4,7 +4,6 @@ import IssuerList from '../internal/IssuerList';
 import getIssuerImageUrl from '~/utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '~/core/config';
 import CoreProvider from '~/core/Context/CoreProvider';
-import withPayButton from './withPayButton';
 import Language from '~/language/Language';
 
 interface IssuerListProps {
@@ -29,9 +28,8 @@ interface IssuerListData {
 
 /**
  * IssuerListContainer: A higher order function which returns a different class based on issuerType
- * @extends UIElement
  */
-const withIssuerList = ({ type, showImage = true }) => {
+const withIssuerList = ({ type, showImage = true }): any => {
     class IssuerListContainer extends UIElement {
         public static type = type;
         public props: IssuerListProps;
@@ -57,9 +55,7 @@ const withIssuerList = ({ type, showImage = true }) => {
         };
 
         /**
-         * @private
          * Formats props on construction time
-         * @return {object} props
          */
         formatProps(props) {
             return {
@@ -69,9 +65,7 @@ const withIssuerList = ({ type, showImage = true }) => {
         }
 
         /**
-         * @private
          * Formats the component data output
-         * @return {object} props
          */
         formatData(): IssuerListData {
             return {
@@ -84,7 +78,6 @@ const withIssuerList = ({ type, showImage = true }) => {
 
         /**
          * Returns whether the component state is valid or not
-         * @return {boolean} isValid
          */
         get isValid() {
             return !!this.state && !!this.state.issuer;
@@ -108,7 +101,7 @@ const withIssuerList = ({ type, showImage = true }) => {
         }
     }
 
-    return withPayButton(IssuerListContainer);
+    return IssuerListContainer;
 };
 
 export default withIssuerList;

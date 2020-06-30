@@ -6,12 +6,15 @@ import { PaymentAction } from '~/types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
 
-class PaypalElement extends UIElement {
+class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
     public static subtype = 'sdk';
-    protected static defaultProps: PayPalElementProps = defaultProps;
+    protected static defaultProps = defaultProps;
+    private paymentData = null;
+    private resolve = null;
+    private reject = null;
 
-    constructor(props) {
+    constructor(props: PayPalElementProps) {
         super(props);
 
         this.handleAction = this.handleAction.bind(this);
@@ -23,11 +26,9 @@ class PaypalElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
-    formatData() {
+    protected formatData() {
         return {
             paymentMethod: {
                 type: PaypalElement.type,
@@ -58,7 +59,9 @@ class PaypalElement extends UIElement {
 
     /**
      * Dropin Validation
-     * @returns {Boolean} Paypal does not require any specific Dropin validation
+     *
+     * @remarks
+     * Paypal does not require any specific Dropin validation
      */
     get isValid() {
         return true;

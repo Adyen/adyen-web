@@ -5,18 +5,26 @@ import paymentMethods, { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import resolveEnvironment from './Environment';
-import { version } from '../../package.json';
 import Analytics from './Analytics';
-import { PaymentAction } from '~/types';
+import { PaymentAction } from '../types';
+import { CoreOptions } from './types';
+
+type PaymentMethods = typeof paymentMethods;
+type PaymentMethodOptions<P extends keyof PaymentMethods> = Partial<InstanceType<PaymentMethods[P]>['props']>;
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
     public readonly modules: any;
     public readonly options: any;
 
-    public static readonly version: string = version;
+    public static readonly version = {
+        version: process.env.VERSION,
+        revision: process.env.COMMIT_HASH,
+        branch: process.env.COMMIT_BRANCH,
+        buildId: process.env.ADYEN_BUILD_ID
+    };
 
-    constructor(options: any = {}) {
+    constructor(options: CoreOptions = {}) {
         this.options = {
             ...options,
             loadingContext: resolveEnvironment(options.environment)
@@ -36,20 +44,22 @@ class Core {
 
     /**
      * Instantiates a new UIElement component ready to be mounted
-     * @param {UIElement | string} paymentMethod name or class of the paymentMethod
-     * @param {object} options options that will be merged to the global Checkout props
-     * @return {object} new UIElement
+     * @param paymentMethod - name or class of the paymentMethod
+     * @param options - options that will be merged to the global Checkout props
+     * @returns new UIElement
      */
-    public create(paymentMethod: UIElement | string, options = {}): UIElement {
+    public create<T extends keyof PaymentMethods>(paymentMethod: T | string, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
+    public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
+    public create(paymentMethod, options) {
         const props = this.getPropsForComponent(options);
         return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
     }
 
     /**
      * Instantiates a new element component ready to be mounted from an action object
-     * @param {PaymentAction} action action defining the component with the component data
-     * @param {object} options options that will be merged to the global Checkout props
-     * @return {object} new UIElement
+     * @param action - action defining the component with the component data
+     * @param options - options that will be merged to the global Checkout props
+     * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (action.type) {
@@ -60,9 +70,8 @@ class Core {
     }
 
     /**
-     * @private
-     * @param {object} options options that will be merged to the global Checkout props
-     * @return {object} props for a new UIElement
+     * @param options - options that will be merged to the global Checkout props
+     * @returns props for a new UIElement
      */
     private getPropsForComponent(options) {
         return {
@@ -77,7 +86,7 @@ class Core {
     }
 
     /**
-     * @private
+     * @internal
      */
     private handleCreate(PaymentMethod, options: any = {}): UIElement {
         const isValidClass = PaymentMethod.prototype instanceof UIElement;
@@ -109,7 +118,7 @@ class Core {
     }
 
     /**
-     * @private
+     * @internal
      */
     private handleCreateError(paymentMethod?): never {
         const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';

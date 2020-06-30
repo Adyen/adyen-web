@@ -1,5 +1,4 @@
 import { CardElement, CardElementProps } from './Card';
-import withPayButton from '~/components/helpers/withPayButton';
 
 class BancontactElement extends CardElement {
     constructor(props: CardElementProps) {
@@ -20,4 +19,4 @@ class BancontactElement extends CardElement {
     };
 }
 
-export default withPayButton(BancontactElement);
+export default BancontactElement;

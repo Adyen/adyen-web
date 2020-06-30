@@ -32,13 +32,11 @@ class CSF extends AbstractCSF {
 
         this.state = {
             /**
-             * @type
              *  For generic card will always be 'card'.
              *  For non-generic card will be hardcoded to a particular txVariant e.g. 'mc' or 'visa'
              */
             type: this.props.type,
             /**
-             * @brand
              *  For generic card will change as shopper types
              *  For non-generic card will be fixed
              */

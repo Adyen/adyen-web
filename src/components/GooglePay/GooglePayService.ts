@@ -4,23 +4,23 @@ import { resolveEnvironment } from './utils';
 class GooglePayService {
     public readonly paymentsClient: google.payments.api.PaymentsClient;
 
-    constructor(environment) {
-        const env = resolveEnvironment(environment);
-        if (env === 'TEST') {
+    constructor(props) {
+        const environment = resolveEnvironment(props.environment);
+        if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
             console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');
         }
-        this.paymentsClient = this.getGooglePaymentsClient(env);
+        this.paymentsClient = this.getGooglePaymentsClient({ environment, paymentDataCallbacks: props.paymentDataCallbacks });
     }
 
     /**
      * Initialize a Google Pay API client
      *
      * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient|PaymentsClient constructor}
-     * @returns {google.payments.api.PaymentsClient} Google Pay API client
+     * @returns Google Pay API client
      */
-    getGooglePaymentsClient(environment) {
+    getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): google.payments.api.PaymentsClient {
         if (window.google && window.google.payments) {
-            return new google.payments.api.PaymentsClient({ environment });
+            return new google.payments.api.PaymentsClient(paymentOptions);
         }
 
         return null;

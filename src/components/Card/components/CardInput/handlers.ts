@@ -25,7 +25,7 @@ function handleAddress(address): void {
         }
     });
 
-    this.setState(setAddress);
+    this.setState(setAddress, this.validateCardInput);
 }
 
 /**
@@ -126,7 +126,7 @@ function handleAdditionalDataSelection(e: Event): void {
 
     // Pass brand into SecuredFields
     if (this.state.additionalSelectType === 'brandSwitcher') {
-        this.sfp.processBinLookupResponse({ brands: [value] });
+        this.sfp.processBinLookupResponse({ supportedBrands: [value] });
     }
 }
 

@@ -1,9 +1,9 @@
 import {
-    HOSTED_NUMBER_FIELD,
-    HOSTED_CVC_FIELD,
-    HOSTED_DATE_FIELD,
-    HOSTED_MONTH_FIELD,
-    HOSTED_YEAR_FIELD,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_PIN_FIELD
 } from '../../../configuration/constants';
@@ -17,24 +17,24 @@ export function shiftTabKCP(fieldType: string, rootNode: HTMLElement, hasSeparat
     let fieldToFocus: string;
 
     switch (fieldType) {
-        case HOSTED_NUMBER_FIELD:
-            additionalField = getPreviousTabbableNonSFElement(HOSTED_NUMBER_FIELD, rootNode);
+        case ENCRYPTED_CARD_NUMBER:
+            additionalField = getPreviousTabbableNonSFElement(ENCRYPTED_CARD_NUMBER, rootNode);
             break;
 
-        case HOSTED_DATE_FIELD:
-            fieldToFocus = HOSTED_NUMBER_FIELD;
+        case ENCRYPTED_EXPIRY_DATE:
+            fieldToFocus = ENCRYPTED_CARD_NUMBER;
             break;
 
-        case HOSTED_MONTH_FIELD:
-            fieldToFocus = HOSTED_NUMBER_FIELD;
+        case ENCRYPTED_EXPIRY_MONTH:
+            fieldToFocus = ENCRYPTED_CARD_NUMBER;
             break;
 
-        case HOSTED_YEAR_FIELD:
-            fieldToFocus = HOSTED_MONTH_FIELD;
+        case ENCRYPTED_EXPIRY_YEAR:
+            fieldToFocus = ENCRYPTED_EXPIRY_MONTH;
             break;
 
-        case HOSTED_CVC_FIELD:
-            fieldToFocus = !hasSeparateDateFields ? HOSTED_DATE_FIELD : HOSTED_YEAR_FIELD;
+        case ENCRYPTED_SECURITY_CODE:
+            fieldToFocus = !hasSeparateDateFields ? ENCRYPTED_EXPIRY_DATE : ENCRYPTED_EXPIRY_YEAR;
             break;
 
         case ENCRYPTED_PWD_FIELD:

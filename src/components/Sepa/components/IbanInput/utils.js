@@ -5,10 +5,11 @@ import countries from './specifications';
  * A structure is composed of blocks of 3 characters (one letter and 2 digits). Each block represents
  * a logical group in the typical representation of the BBAN. For each group, the letter indicates which characters
  * are allowed in this group and the following 2-digits number tells the length of the group.
- * @private
- * @param {string} structure - the structure to parse
- * @param {string} countryCode - the countryCode to check format against
- * @returns {RegExp}
+ *
+ * @param structure - the structure to parse
+ * @param countryCode - the countryCode to check format against
+ *
+ * @internal
  */
 export const parseStructure = (structure, countryCode) => {
     if (countryCode === null || !countries[countryCode] || !countries[countryCode].structure) {
@@ -57,10 +58,7 @@ export const parseStructure = (structure, countryCode) => {
 };
 
 /**
- *
- * @private
- * @param iban
- * @returns {string}
+ * @internal
  */
 export const formatIban = iban =>
     iban
@@ -70,9 +68,8 @@ export const formatIban = iban =>
 
 /**
  * Returns any non alphanumeric characters and uppercases them
- * @private
- * @param iban
- * @returns {string}
+ *
+ * @internal
  */
 export const electronicFormat = iban => {
     const NON_ALPHANUM = /[^a-zA-Z0-9]/g;
@@ -81,16 +78,18 @@ export const electronicFormat = iban => {
 
 /**
  * Lazy-loaded regex (parse the structure and construct the regular expression the first time we need it for validation)
- * @private
+ *
+ * @internal
  */
 export const regex = (iban, countryCode) => parseStructure(iban, countryCode);
 
 /**
- * @private
  * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
  * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
- * @param {string} ibanInput the IBAN
- * @returns {string} the prepared IBAN
+ * @param ibanInput - The IBAN value
+ * @returns The prepared IBAN
+ *
+ * @internal
  */
 export const iso13616Prepare = ibanInput => {
     let iban = ibanInput;
@@ -116,10 +115,11 @@ export const iso13616Prepare = ibanInput => {
 };
 
 /**
- * @private
  * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
- * @param iban
- * @returns {number}
+ *
+ * @param iban -
+ *
+ * @internal
  */
 export const iso7064Mod97_10 = iban => {
     let remainder = iban;
@@ -134,9 +134,8 @@ export const iso7064Mod97_10 = iban => {
 };
 
 /**
- *  @public
- *  @param {string} countryCode
- *  @returns {string} - example of IBAN Number
+ *  @param countryCode -
+ *  @returns Example of IBAN Number
  */
 export const getIbanPlaceHolder = countryCode => {
     if (countryCode && countries[countryCode] && countries[countryCode].example) {
@@ -155,11 +154,10 @@ export const getIbanCountrySpecification = countryCode => {
 };
 
 /**
- *  @public
- *  @param {Number} cursor
- *  @param {string} iban
- *  @param {string} previousIban
- *  @returns {Number} - new cursor position
+ *  @param cursor -
+ *  @param iban -
+ *  @param previousIban -
+ *  @returns new cursor position
  */
 export const getNextCursorPosition = (cursor, iban, previousIban) => {
     if (cursor === 0 || !iban.length) return 0;

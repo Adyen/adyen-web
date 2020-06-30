@@ -2,7 +2,7 @@ import AdyenCheckout from '~';
 import '../../config/polyfills';
 import '../style.scss';
 import { getPaymentMethods, makePayment, makeDetailsCall, getOriginKey } from '../services';
-import { handleChange, handleSubmit, handleAdditionalDetails, handleResponse } from '../events';
+import { handleChange, handleSubmit, handleAdditionalDetails, handleError, handleResponse } from '../events';
 import { amount, countryCode, shopperLocale } from '../config/commonConfig';
 
 getOriginKey()
@@ -17,13 +17,23 @@ getOriginKey()
             clientKey: process.env.__CLIENT_KEY__,
             paymentMethodsResponse,
             locale: shopperLocale,
-            //            environment: 'http://localhost:8080/checkoutshopper/',
             environment: 'test',
             showPayButton: true,
             onChange: handleChange,
             onSubmit: handleSubmit,
             onAdditionalDetails: handleAdditionalDetails,
-            onError: console.error
+            onError: handleError,
+            risk: {
+                enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event. Also accessible via
+                // checkout.modules.risk.data
+                //                node: '.merchant-checkout__form', // Element that DF iframe is briefly added to (defaults to body)
+                //                onComplete: obj => {},
+                onError: console.error
+            }
+            //            analytics: {
+            //                conversion: true,
+            //                telemetry: true
+            //            }
         });
 
         // OneClick Card
@@ -36,8 +46,7 @@ getOriginKey()
         window.card = checkout
             .create('card', {
                 type: 'scheme',
-                // brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                brands: ['visa', 'mc'],
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 hasHolderName: false,
                 // holderNameRequired: true,
                 enableStoreDetails: false,

@@ -1,7 +1,6 @@
 import { h } from 'preact';
-import UIElement from '~/components/UIElement';
+import UIElement from '../UIElement';
 import BlikInput from '~/components/Blik/components/BlikInput';
-import withPayButton from '~/components/helpers/withPayButton';
 import Await from '../internal/Await';
 import CoreProvider from '~/core/Context/CoreProvider';
 import config from './config';
@@ -49,7 +48,7 @@ class BlikElement extends UIElement {
                         originKey={this.props.originKey}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
-                        onError={this.onError}
+                        onError={this.props.onError}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                         type={config.type}
@@ -93,4 +92,4 @@ class BlikElement extends UIElement {
     }
 }
 
-export default withPayButton(BlikElement);
+export default BlikElement;

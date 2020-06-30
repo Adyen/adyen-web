@@ -1,4 +1,4 @@
-import { HOSTED_NUMBER_FIELD, HOSTED_CVC_FIELD } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { existy } from '../../utilities/commonUtils';
 import { CbObjOnBrand, SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
@@ -66,7 +66,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
 
     const fieldType: string = pFeedbackObj.fieldType;
 
-    if (fieldType === HOSTED_NUMBER_FIELD) {
+    if (fieldType === ENCRYPTED_CARD_NUMBER) {
         // Check for new brand...
         const newBrand: string = checkForBrandChange(pFeedbackObj.brand, this.state.brand);
 
@@ -86,17 +86,17 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             };
 
             // Perform postMessage to send brand on specified (CVC) field
-            if (Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_CVC_FIELD)) {
+            if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
                 const dataObj: object = {
                     ...baseDataObj,
                     ...{
-                        fieldType: HOSTED_CVC_FIELD,
+                        fieldType: ENCRYPTED_SECURITY_CODE,
                         hideCVC: pFeedbackObj.hideCVC,
                         cvcRequired: pFeedbackObj.cvcRequired,
-                        numKey: this.state.securedFields[HOSTED_CVC_FIELD].numKey
+                        numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
                     }
                 };
-                postMessageToIframe(dataObj, this.getIframeContentWin(HOSTED_CVC_FIELD), this.config.loadingContext);
+                postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_SECURITY_CODE), this.config.loadingContext);
             }
         }
 

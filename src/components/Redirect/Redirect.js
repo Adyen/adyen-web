@@ -4,11 +4,9 @@ import getImage from '../../utils/get-image';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
-import withPayButton from '../helpers/withPayButton';
 
 /**
  * RedirectElement
- * @extends UIElement
  */
 class RedirectElement extends UIElement {
     static type = 'redirect';
@@ -26,9 +24,7 @@ class RedirectElement extends UIElement {
     }
 
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         return {
@@ -40,7 +36,6 @@ class RedirectElement extends UIElement {
 
     /**
      * Returns whether the component state is valid or not
-     * @return {boolean} isValid
      */
     get isValid() {
         return true;
@@ -74,4 +69,4 @@ class RedirectElement extends UIElement {
     }
 }
 
-export default withPayButton(RedirectElement);
+export default RedirectElement;

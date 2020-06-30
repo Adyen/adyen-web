@@ -7,6 +7,7 @@ CardType.cards = [];
 
 CardType.cards.push({
     cardType: 'mc',
+    displayName: 'Mastercard',
     startingRules: [51, 52, 53, 54, 55, 22, 23, 24, 25, 26, 27],
     permittedLengths: [16],
     pattern: /^(5[1-5][0-9]{0,14}|2[2-7][0-9]{0,14})$/,
@@ -110,7 +111,7 @@ CardType.cards.push({
         627780,
         636297,
         636368,
-        651653,
+        651653, // this, and those below, are not contained in regEx
         506728,
         509096,
         509083,

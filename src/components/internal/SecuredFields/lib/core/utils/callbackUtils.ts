@@ -1,4 +1,4 @@
-import { HOSTED_DATE_FIELD } from '../../configuration/constants';
+import { ENCRYPTED_EXPIRY_DATE } from '../../configuration/constants';
 import { CbObjOnFieldValid, EncryptionObj } from '~/components/internal/SecuredFields/lib/types';
 // import * as logger from '../../utilities/logger';
 
@@ -20,7 +20,7 @@ const makeCallbackObj = (
 
 export const makeCallbackObjectsValidation = (pFieldType: string, pTxVariant: string, pRootNode: HTMLElement): CbObjOnFieldValid[] => {
     // - create callback objects to report the changed valid state of the field
-    const isExpiryDateField: boolean = pFieldType === HOSTED_DATE_FIELD;
+    const isExpiryDateField: boolean = pFieldType === ENCRYPTED_EXPIRY_DATE;
 
     const callbackObjectsArr: CbObjOnFieldValid[] = [];
 

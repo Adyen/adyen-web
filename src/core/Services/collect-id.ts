@@ -1,7 +1,7 @@
 /**
  * Log event to Adyen
- * @param {object} config ready to be serialized and included in the body of request
- * @return {Promise} a promise containing the response of the call
+ * @param config - ready to be serialized and included in the body of request
+ * @returns a promise containing the response of the call
  */
 const collectId = config => {
     const options = {
@@ -11,8 +11,7 @@ const collectId = config => {
             'Content-Type': 'application/json'
         }
     };
-    const accessKey = config.originKey; // TODO use originKey until endpoint is ready for clientKey
-    // const accessKey = config.clientKey ? config.clientKey : config.originKey;
+    const accessKey = config.clientKey || config.originKey;
     return fetch(`${config.loadingContext}v1/analytics/id?token=${accessKey}`, options)
         .then(response => {
             if (response.ok) return response.json();

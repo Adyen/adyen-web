@@ -1,15 +1,8 @@
-import { ApplePayElementProps } from '~/components/ApplePay/types';
-
-const defaultProps: ApplePayElementProps = {
+const defaultProps = {
     version: 3,
 
     // Transaction Information
-    amount: 0,
-
-    /**
-     * The three-letter ISO 4217 currency code for the payment.
-     */
-    currencyCode: 'USD',
+    amount: { currency: 'USD', value: 0 },
 
     /**
      * The merchant’s two-letter ISO 3166 country code.
@@ -82,34 +75,12 @@ const defaultProps: ApplePayElementProps = {
     applicationData: undefined, // A Base64-encoded string used to contain your application-specific data.
 
     // Events
-
     onSubmit: () => {},
     onError: () => {},
     onAuthorized: resolve => resolve(),
     onValidateMerchant: (resolve, reject) => reject('onValidateMerchant event not implemented'),
-
-    /**
-     * https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected
-     * @param resolve(ApplePayPaymentMethodUpdate update) Completes the selection of a payment method with an update.
-     * @param reject() Completes the selection of a payment method with no update.
-     * @param event The event parameter contains the paymentMethod attribute.
-     */
     onPaymentMethodSelected: null,
-
-    /**
-     * https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778009-onshippingcontactselected
-     * @param resolve(ApplePayShippingContactUpdate update) Completes the selection of a shipping contact with an update.
-     * @param reject() Completes the selection of a shipping contact with no update.
-     * @param event The event parameter contains the shippingContact attribute.
-     */
     onShippingContactSelected: null,
-
-    /**
-     * https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778028-onshippingmethodselected
-     * @param resolve(ApplePayShippingMethodUpdate update) Completes the selection of a shipping method with an update.
-     * @param reject() Completes the selection of a shipping method with no update.
-     * @param event The event parameter contains the shippingMethod attribute.
-     */
     onShippingMethodSelected: null,
 
     // ButtonOptions

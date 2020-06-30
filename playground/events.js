@@ -2,7 +2,7 @@ import { makePayment, makeDetailsCall } from './services';
 
 export function handleResponse(response, component) {
     const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;
-    console.log(type, response);
+    console.log('type=', type, 'response=', response);
 
     if (response.action) {
         component.handleAction(response.action);
@@ -18,6 +18,15 @@ export function handleChange(state, component) {
     console.log('node', component._node);
     console.log('state', state);
     console.groupEnd();
+}
+
+export function handleError(obj) {
+    // SecuredField related errors should not go straight to console.error
+    if (obj.type === 'card') {
+        console.log('### Card::onError:: obj=', obj);
+    } else {
+        console.error(obj);
+    }
 }
 
 export function handleSubmit(state, component) {

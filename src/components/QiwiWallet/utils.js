@@ -1,9 +1,7 @@
 /**
  * Formats and returns the passed items, adds flag string
- * @param {object} item - prefix
- * @param {string} item.name - displayable name
- * @param {string} item.id - id required to be passed to back-end
- * @returns {object} item with added displayable name and image
+ * @param item - prefix
+ * @returns item with added displayable name and image
  */
 export const formatPrefixName = item => {
     if (!item) {
@@ -22,9 +20,9 @@ export const formatPrefixName = item => {
 };
 
 /** Finds id in list of items, returns it on match
- * @param {array} items - list of items
- * @param {string} countryCode - the item to select
- * @returns {string || boolean } - item or false
+ * @param items - list of items
+ * @param countryCode - the item to select
+ * @returns item or false
  */
 export const selectItem = (items, countryCode) => {
     if (items && countryCode) {

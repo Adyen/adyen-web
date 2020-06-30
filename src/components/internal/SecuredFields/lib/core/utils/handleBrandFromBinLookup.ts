@@ -1,18 +1,18 @@
-import { HOSTED_CVC_FIELD, HOSTED_NUMBER_FIELD } from '../../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../../utilities/cardType';
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { BinLookupObject, CardObject, SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
 
 export function sendBrandToCardSF(brand: string): void {
-    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_NUMBER_FIELD)) {
+    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
         const dataObj: object = {
             txVariant: this.state.type,
             brand,
-            fieldType: HOSTED_NUMBER_FIELD,
-            numKey: this.state.securedFields[HOSTED_NUMBER_FIELD].numKey
+            fieldType: ENCRYPTED_CARD_NUMBER,
+            numKey: this.state.securedFields[ENCRYPTED_CARD_NUMBER].numKey
         };
-        postMessageToIframe(dataObj, this.getIframeContentWin(HOSTED_NUMBER_FIELD), this.config.loadingContext);
+        postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_CARD_NUMBER), this.config.loadingContext);
     }
 }
 
@@ -23,7 +23,7 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
         return;
     }
 
-    const passedBrand: string = brandsObj.brands[0];
+    const passedBrand: string = brandsObj.supportedBrands[0];
 
     const card: CardObject = cardType.getCardByBrand(passedBrand);
 
@@ -38,7 +38,7 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
         brand: brandToSend,
         hideCVC: !existy(card) ? false : card.hideCVC === true, // If no card object: force to false
         cvcText: existy(card) && card.securityCode ? card.securityCode : 'Security code',
-        fieldType: HOSTED_NUMBER_FIELD
+        fieldType: ENCRYPTED_CARD_NUMBER
     };
 
     this.processBrand(brandObj as SFFeedbackObj);
@@ -46,10 +46,10 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
     // Pass brand to CardNumber SF
     this.sendBrandToCardSF(brandToSend);
 
-    // CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc
+    // CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)
     // Set the cvcRequired value on the relevant SecuredFields instance...
-    if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, HOSTED_CVC_FIELD)) {
-        this.state.securedFields[HOSTED_CVC_FIELD].cvcRequired = cvcRequired;
+    if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = cvcRequired;
     }
     // ... and re-check if all SecuredFields are valid
     this.assessFormValidity();

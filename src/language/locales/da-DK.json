@@ -21,7 +21,7 @@
     "creditCard.cvcField.title": "CVC / CVV",
     "creditCard.cvcField.placeholder": "123",
     "creditCard.storeDetailsButton": "Husk til næste gang",
-    "creditCard.oneClickVerification.invalidInput.title": "Ugyldigt format for CVC/CW",
+    "creditCard.oneClickVerification.invalidInput.title": "Ugyldigt format for CVC/CVV",
     "creditCard.cvcField.placeholder.4digits": "4 cifre",
     "creditCard.cvcField.placeholder.3digits": "3 cifre",
     "installments": "Antal rater",

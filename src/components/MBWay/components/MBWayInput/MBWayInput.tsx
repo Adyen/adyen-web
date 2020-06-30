@@ -8,9 +8,15 @@ import Field from '~/components/internal/FormFields/Field';
 import { renderFormField } from '~/components/internal/FormFields';
 import { mbwayValidationRules } from '~/components/MBWay/components/MBWayInput/validate';
 import Validator from '~/utils/Validator';
-import { UIElementProps } from '~/components/UIElement';
+import { UIElementProps } from '../../../UIElement';
 
 type RtnTypeFnWithEvent = (e: Event) => void;
+
+interface MBWayInputProps extends UIElementProps {
+    data?: any;
+    placeholders?: any;
+    onChange: (e, component) => void;
+}
 
 interface MBWayDataObject {
     email: string;
@@ -32,7 +38,7 @@ interface ValidationObj {
     isValid: boolean;
 }
 
-function MBWayInput(props: UIElementProps) {
+function MBWayInput(props: MBWayInputProps) {
     const { i18n } = useCoreContext();
 
     const validator: Validator = new Validator(mbwayValidationRules);
@@ -94,7 +100,7 @@ function MBWayInput(props: UIElementProps) {
                     value: data.email,
                     name: 'shopperEmail',
                     classNameModifiers: ['large'],
-                    placeholder: props.placeholders.email,
+                    placeholder: props.placeholders.shopperEmail,
                     spellcheck: false,
                     required: true,
                     autocorrect: 'off',
@@ -115,7 +121,7 @@ function MBWayInput(props: UIElementProps) {
                 {renderFormField('tel', {
                     value: data.phoneNumber,
                     className: `adyen-checkout__pm__phoneNumber__input ${styles['adyen-checkout__input']}`,
-                    placeholder: props.placeholders.phoneNumber,
+                    placeholder: props.placeholders.telephoneNumber,
                     required: true,
                     autoCorrect: 'off',
                     onInput: handleEventFor('phoneNumber', 'input')
@@ -128,7 +134,7 @@ function MBWayInput(props: UIElementProps) {
 }
 
 MBWayInput.defaultProps = {
-    placeholders: { email: 'shopper@domain.com', phoneNumber: '+351 932 123 456' }
+    placeholders: { shopperEmail: 'shopper@domain.com', telephoneNumber: '+351 932 123 456' }
 };
 
 export default MBWayInput;

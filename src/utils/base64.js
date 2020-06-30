@@ -12,7 +12,7 @@ const b64DecodeUnicode = str =>
     decodeURIComponent(Array.prototype.map.call(checkedAtob(str), c => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`).join(''));
 
 /**
- * @private
+ * @internal
  */
 const base64 = {
     decode: pData => {
@@ -38,11 +38,7 @@ const base64 = {
             return false;
         }
 
-        try {
-            return checkedBtoa(checkedAtob(pDataStr)) === pDataStr;
-        } catch (err) {
-            throw err;
-        }
+        return checkedBtoa(checkedAtob(pDataStr)) === pDataStr;
     }
 };
 

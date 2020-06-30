@@ -8,7 +8,7 @@ import {
     getTranslatedErrors,
     resolvePlaceholders
 } from './utils';
-import { CSF_FIELDS_ARRAY } from './constants';
+import { CSF_FIELDS_ARRAY } from './lib/configuration/constants';
 import initCSF from './lib';
 import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
@@ -26,7 +26,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from '~/components/internal/SecuredFields/lib/types';
-import { BillingAddress } from '~/components/internal/Address/Address';
+import { BillingAddress } from '~/components/internal/Address/types';
 
 export interface SFPState {
     status?: string;
@@ -40,7 +40,11 @@ export interface SFPState {
     billingAddress?: BillingAddress;
 }
 
-class SecuredFieldsProvider extends Component {
+/**
+ * SecuredFieldsProvider:
+ * Initialises & handles the client-side part of SecuredFields
+ */
+class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private originKeyErrorTimeout: number;
     private originKeyTimeoutMS: number;
     private numCharsInCVC: number;

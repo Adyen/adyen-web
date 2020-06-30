@@ -3,7 +3,7 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { HOSTED_CVC_FIELD, IFRAME_TITLE } from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, IFRAME_TITLE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
 import AbstractSecuredField, {
@@ -313,7 +313,7 @@ class SecuredField extends AbstractSecuredField {
     }
 
     get isValid(): boolean {
-        if (this.fieldType === HOSTED_CVC_FIELD) {
+        if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
             if (!this.cvcRequired) {
                 // If cvc is optional then the field is always valid UNLESS it has an error
                 return !this.hasError;
@@ -331,7 +331,7 @@ class SecuredField extends AbstractSecuredField {
     }
     set cvcRequired(value: boolean) {
         // Only set if this is a CVC field
-        if (this.fieldType !== HOSTED_CVC_FIELD) return;
+        if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
 
         // Only set if value has changed
         if (value === this.cvcRequired) return;

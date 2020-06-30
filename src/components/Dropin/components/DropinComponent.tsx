@@ -4,33 +4,9 @@ import { createElements, createStoredElements } from '../elements';
 import { getCommonProps } from './utils';
 import Status from './status';
 import getProp from '~/utils/getProp';
-import UIElement from '~/components/UIElement';
+import UIElement from '../../UIElement';
 import './DropinComponent.scss';
-import Language from '~/language/Language';
-import { PaymentMethod, StoredPaymentMethod } from '~/types';
-
-interface DropinComponentProps {
-    paymentMethodsConfiguration?: object;
-    paymentMethods?: PaymentMethod[];
-    storedPaymentMethods?: StoredPaymentMethod[];
-    showStoredPaymentMethods?: boolean;
-    showPaymentMethods?: boolean;
-    showRemovePaymentMethodButton?: boolean;
-    openFirstStoredPaymentMethod?: boolean;
-    openFirstPaymentMethod?: boolean;
-
-    // Events
-    onChange: (newState?: object) => void;
-    onSubmit: () => void;
-    onReady?: () => void;
-    onSelect?: (paymentMethod) => void;
-    onDisableStoredPaymentMethod?: (storedPaymentMethod, resolve, reject) => void;
-
-    // Core
-    modules?: { analytics?: { send?: (event) => {} } };
-    i18n?: Language;
-    loadingContext?: string;
-}
+import { DropinComponentProps } from '../types';
 
 interface DropinStatus {
     type: 'loading' | 'ready' | 'success' | 'error';
