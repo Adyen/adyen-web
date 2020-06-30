@@ -6,7 +6,6 @@ import AmazonPayComponent from '~/components/AmazonPay/components/AmazonPayCompo
 import { AmazonElementProps } from './types';
 import './AmazonPay.scss';
 
-
 export class AmazonPayElement extends UIElement {
     public static type = 'amazonpay';
     protected static defaultProps = defaultProps as AmazonElementProps;
@@ -28,11 +27,11 @@ export class AmazonPayElement extends UIElement {
      * @return {object} props
      */
     formatData() {
-        const { amazonPayToken } = this.props;
+        const { checkoutSessionId } = this.props;
         return {
             paymentMethod: {
                 type: AmazonPayElement.type,
-                ...(amazonPayToken && { amazonPayToken })
+                ...(checkoutSessionId && { checkoutSessionId })
             }
         };
     }
@@ -43,14 +42,12 @@ export class AmazonPayElement extends UIElement {
     get isValid() {
         return true;
     }
-    
+
     render() {
         if (!this.props.showButton) return null;
 
-        if (this.props.amazonPayToken) {
-            return (
-                this.payButton({ label: this.props.i18n.get('confirmPurchase') })
-            );
+        if (this.props.checkoutSessionId) {
+            return this.payButton({ label: this.props.i18n.get('confirmPurchase') });
         }
 
         return (
