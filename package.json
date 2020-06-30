@@ -54,7 +54,6 @@
         "eslint-plugin-react": "^7.20.0",
         "eslint-plugin-tsdoc": "^0.2.5",
         "express": "^4.17.1",
-        "file-loader": "^3.0.1",
         "filesize": "^6.1.0",
         "gzip-size": "^5.1.1",
         "html-webpack-plugin": "^4.3.0",
