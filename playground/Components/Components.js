@@ -3,7 +3,7 @@ import '../../config/polyfills';
 import '../style.scss';
 import { getPaymentMethods, getOriginKey } from '../services';
 import { handleChange, handleSubmit, handleAdditionalDetails } from '../events';
-import { amount, countryCode, shopperLocale } from '../config/commonConfig';
+import { amount, shopperLocale } from '../config/commonConfig';
 
 getOriginKey()
     .then(originKey => {
@@ -36,16 +36,47 @@ getOriginKey()
         });
 
         // AmazonPay
-        window.amazonpay = checkout.create('amazonpay', {
-            //  amazonPayToken: '160583287597AMZN' // For Order flow only
-            currency: 'EUR',
-            environment: 'test',
-            locale: 'es-ES',
-            merchantId: 'abc',
-            placement: 'Product',
-            productType: 'PayOnly',
-            sessionUrl: 'https://pay-api.amazon.eu/test/1/checkoutSessions/'
-        }).mount('.amazonpay-field');
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                currency: 'EUR',
+                environment: 'test',
+                locale: 'en-GB',
+                merchantId: 'A3SKIS53IXYBBU',
+                placement: 'Product',
+                productType: 'PayOnly',
+                region: 'EU',
+                publicKeyId: 'AFLWXJCSP5OEOU7NPOYGMGG7',
+
+                /**
+                 * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
+                 * which will create and return the signature.
+                 * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
+                 */
+                returnUrl: 'http://localhost:3020/components',
+                storeId: 'abc'
+            })
+            .mount('.amazonpay-field');
+
+        window.amazonpayorder = checkout
+            .create('amazonpay', {
+                /**
+                 * The merchant will receive the checkoutSessionId from the /getAmazonCheckoutSession endpoint from Adyen.
+                 * They need to then pass it to the component.
+                 */
+                checkoutSessionId: 'abc',
+
+                /**
+                 * To be used as checkoutResultReturnUrl
+                 */
+                returnUrl: 'http://localhost:3020/components', // to be used as checkoutReviewReturnUrl
+
+                /**
+                 * A payments request is done with the checkoutSessionId.
+                 * The Checkout API will use checkoutSessionId to get the amazonPayToken and complete the payment.
+                 */
+                onSubmit: handleSubmit
+            })
+            .mount('.amazonpayorder-field');
 
         // Adyen Giving
         window.donation = checkout
@@ -101,18 +132,6 @@ getOriginKey()
             })
             .mount('.ach-field');
 
-        // AFTERPAY
-        window.afterpay = checkout
-            .create('afterpay_default', {
-                countryCode: 'NL', // NL / BE
-                visibility: {
-                    personalDetails: 'editable', // editable [default] / readOnly / hidden
-                    billingAddress: 'editable',
-                    deliveryAddress: 'editable'
-                }
-            })
-            .mount('.afterpay-field');
-
         // SEPA Direct Debit
         window.sepa = checkout
             .create('sepadirectdebit', {
@@ -130,7 +149,7 @@ getOriginKey()
         // PAYPAL
         window.paypalButtons = checkout
             .create('paypal', {
-                // merchantId: '5RZKQX2FC48EA', // automatic ?
+                // merchantId: '5RZKQX2FC48EA',
                 // intent: 'capture', // 'capture' [Default] / 'authorize'
                 // commit: true, // true [Default] / false
                 // style: {},
