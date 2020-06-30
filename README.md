@@ -32,6 +32,18 @@ import '@adyen/adyen-web/dist/adyen.css';
 
 Adyen Web can also be imported with a `<script>` tag, refer to [the documentation](https://docs.adyen.com/checkout/components-web#step-2-add-components) for instructions.
 
+####Please note: 
+We only provide full support when using one of these methods of installation.
+Modifications to the code base should be made via a pull request or by creating an issue.
+
+## Rationale
+
+We have open-sourced Checkout for the following reasons:
+- Allowing developers to have easier access to the source code for quick and easy debugging
+- Supporting merchants that aren't allowed to have external dependencies
+- Allowing developers to freely raise bugs/issues/feature requests
+- Providing merchants with a way to be informed and updated whenever a new release is made available (i.e. "Watching" the repository)
+
 ## See also
 
 -   [Complete Documentation](https://docs.adyen.com/checkout/)
