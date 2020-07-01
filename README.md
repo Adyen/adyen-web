@@ -32,7 +32,7 @@ import '@adyen/adyen-web/dist/adyen.css';
 
 Adyen Web can also be imported with a `<script>` tag, refer to [the documentation](https://docs.adyen.com/checkout/components-web#step-2-add-components) for instructions.
 
-####Please note: 
+#### Please note: 
 We only provide full support when using one of these methods of installation.
 Modifications to the code base should be made via a pull request or by creating an issue.
 
