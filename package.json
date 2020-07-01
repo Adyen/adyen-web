@@ -63,7 +63,7 @@
         "node-sass": "^4.12.0",
         "postcss": "^7.0.21",
         "postcss-loader": "^3.0.0",
-        "postcss-reporter": "^1.4.1",
+        "postcss-reporter": "^6.0.1",
         "prettier": "^2.0.5",
         "promise": "^8.1.0",
         "request": "^2.81.0",
