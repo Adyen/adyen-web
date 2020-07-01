@@ -64,7 +64,7 @@
         "postcss": "^7.0.21",
         "postcss-loader": "^3.0.0",
         "postcss-reporter": "^1.4.1",
-        "prettier": "^1.19.1",
+        "prettier": "^2.0.5",
         "promise": "^8.1.0",
         "request": "^2.81.0",
         "sass-loader": "^8.0.2",
