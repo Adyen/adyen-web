@@ -38,7 +38,7 @@ Modifications to the code base should be made via a pull request or by creating 
 
 ## Rationale
 
-We have open-sourced Checkout for the following reasons:
+We have open-sourced Adyen Web for the following reasons:
 - Allowing developers to have easier access to the source code for quick and easy debugging
 - Allowing developers to freely raise bugs/issues/feature requests
 - Providing developers with a way to be informed and updated whenever a new release is made available (i.e. "Watching" the repository)
