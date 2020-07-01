@@ -40,9 +40,8 @@ Modifications to the code base should be made via a pull request or by creating 
 
 We have open-sourced Checkout for the following reasons:
 - Allowing developers to have easier access to the source code for quick and easy debugging
-- Supporting merchants that aren't allowed to have external dependencies
 - Allowing developers to freely raise bugs/issues/feature requests
-- Providing merchants with a way to be informed and updated whenever a new release is made available (i.e. "Watching" the repository)
+- Providing developers with a way to be informed and updated whenever a new release is made available (i.e. "Watching" the repository)
 
 ## See also
 
