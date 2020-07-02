@@ -1,6 +1,6 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc'],
+    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc', 'jsx-a11y'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
@@ -97,7 +97,10 @@ module.exports = {
         'react/display-name': 'off',
 
         // TSDoc
-        'tsdoc/syntax': 'warn'
+        'tsdoc/syntax': 'warn',
+
+        // a11y
+        'jsx-a11y/alt-text': 'error'
     },
     overrides: [
         {
