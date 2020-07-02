@@ -1,27 +1,47 @@
 import { h } from 'preact';
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
+import { getAmazonSignature, getCheckoutLocale, getPayloadJSON } from '../utils';
+import { AmazonPayButtonProps, AmazonPayButtonSettings, PayloadJSON } from '../types';
+import useCoreContext from '~/core/Context/useCoreContext';
 
-export default function AmazonPayButton(props) {
-    const { amazonRef, currency, environment, locale, merchantId, placement, productType, sessionUrl } = props;
+export default function AmazonPayButton(props: AmazonPayButtonProps) {
+    const { loadingContext } = useCoreContext();
+    const { amazonRef, currency, environment, locale, merchantId, placement, productType, publicKeyId, region } = props;
     const sandbox = environment && environment.toLowerCase() === 'test';
-    const amazonPayButtonRef = useRef(null);
+    const checkoutLanguage = getCheckoutLocale(locale, region);
 
-    useEffect(() => {
-        amazonRef.Pay.renderButton('#amazonPayButton', {
+    const renderAmazonPayButton = (payloadJSON: PayloadJSON, signature: string): void => {
+        const settings: AmazonPayButtonSettings = {
             merchantId,
             sandbox,
             productType,
             placement,
-            createCheckoutSession: {
-                url: sessionUrl
-            },
+            checkoutLanguage,
             ledgerCurrency: currency,
-            ...(locale && { checkoutLanguage: locale.replace('-', '_') })
+            createCheckoutSessionConfig: {
+                payloadJSON: JSON.stringify(payloadJSON),
+                signature,
+                publicKeyId
+            }
+        };
 
-        });
+        amazonRef.Pay.renderButton('#amazonPayButton', settings);
+    };
+
+    useEffect(() => {
+        const { clientKey, originKey, storeId, returnUrl, deliverySpecifications } = props;
+        const accessKey = clientKey || originKey;
+        const payloadJSON = getPayloadJSON(storeId, returnUrl, deliverySpecifications);
+
+        getAmazonSignature(loadingContext, payloadJSON, accessKey)
+            .then(signature => {
+                renderAmazonPayButton(payloadJSON, signature);
+            })
+            .catch(error => {
+                console.error(error);
+                if (props.onError) props.onError(error);
+            });
     }, []);
 
-    return (
-        <div className="adyen-checkout__amazonpay__button" id="amazonPayButton" ref={amazonPayButtonRef} />
-    );
+    return <div className="adyen-checkout__amazonpay__button" id="amazonPayButton" />;
 }
