@@ -143,7 +143,7 @@ class SelectBox extends Component {
                     title={active.name || placeholder}
                     aria-haspopup="listbox"
                     aria-expanded={toggleDropdown}
-                    aria-readonly={readonly}
+                    aria-disabled={readonly}
                     ref={ref => {
                         this.toggleButton = ref;
                     }}
