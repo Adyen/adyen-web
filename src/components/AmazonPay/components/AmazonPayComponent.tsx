@@ -3,8 +3,9 @@ import { useState, useEffect } from 'preact/hooks';
 import Spinner from '../../internal/Spinner';
 import AmazonPayButton from './AmazonPayButton';
 import { getAmazonPayUrl } from '../utils';
+import { AmazonPayComponentProps } from '../types';
 
-export default function AmazonPayComponent(props) {
+export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
 
     const handleLoad = () => {
@@ -29,8 +30,6 @@ export default function AmazonPayComponent(props) {
             </div>
         );
     }
-    
-    return (
-        <AmazonPayButton {...props} amazonRef={window.amazon} />
-    )
+
+    return <AmazonPayButton {...props} amazonRef={window.amazon} />;
 }

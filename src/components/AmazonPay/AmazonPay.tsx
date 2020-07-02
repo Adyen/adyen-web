@@ -1,30 +1,21 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
+import CoreProvider from '~/core/Context/CoreProvider';
 import defaultProps from './defaultProps';
-import withPayButton from '~/components/helpers/withPayButton';
-import AmazonPayComponent from '~/components/AmazonPay/components/AmazonPayComponent';
-import { AmazonElementProps } from './types';
+import AmazonPayComponent from './components/AmazonPayComponent';
+import { AmazonPayElementProps } from './types';
 import './AmazonPay.scss';
 
-export class AmazonPayElement extends UIElement {
+export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     public static type = 'amazonpay';
-    protected static defaultProps = defaultProps as AmazonElementProps;
+    protected static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
     }
 
-    formatProps(props) {
-        return {
-            ...props,
-            showButton: !!props.showPayButton
-        };
-    }
-
     /**
-     * @private
      * Formats the component data output
-     * @return {object} props
      */
     formatData() {
         const { checkoutSessionId } = this.props;
@@ -36,29 +27,28 @@ export class AmazonPayElement extends UIElement {
         };
     }
 
-    /**
-     * @returns {Boolean} AmazonPay does not require any validation
-     */
     get isValid() {
         return true;
     }
 
     render() {
-        if (!this.props.showButton) return null;
+        if (!this.props.showPayButton) return null;
 
         if (this.props.checkoutSessionId) {
             return this.payButton({ label: this.props.i18n.get('confirmPurchase') });
         }
 
         return (
-            <AmazonPayComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...this.props}
-            />
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <AmazonPayComponent
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    {...this.props}
+                />
+            </CoreProvider>
         );
     }
 }
 
-export default withPayButton(AmazonPayElement);
+export default AmazonPayElement;
