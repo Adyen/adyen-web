@@ -159,7 +159,7 @@ class QRLoader extends Component {
         if (loading) {
             return (
                 <div className="adyen-checkout__qr-loader">
-                    {brandLogo && <img src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />}
+                    {brandLogo && <img alt={type} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />}
                     <Spinner />
                 </div>
             );

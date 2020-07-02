@@ -198,7 +198,7 @@ function Await(props: AwaitComponentProps) {
     if (loading) {
         return (
             <div className="adyen-checkout__await">
-                {props.brandLogo && <img src={props.brandLogo} className="adyen-checkout__await__brand-logo" />}
+                {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
                 <Spinner inline={false} size="large" />
             </div>
         );

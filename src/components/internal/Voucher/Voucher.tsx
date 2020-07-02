@@ -16,13 +16,13 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                 <div className="adyen-checkout__voucher-result__image">
                     {!!props.imageUrl && (
                         <span className="adyen-checkout__voucher-result__image__wrapper">
-                            <img className="adyen-checkout__voucher-result__image__brand" src={props.imageUrl} />
+                            <img alt={props.paymentMethodType} className="adyen-checkout__voucher-result__image__brand" src={props.imageUrl} />
                         </span>
                     )}
 
                     {!!props.issuerImageUrl && (
                         <span className="adyen-checkout__voucher-result__image__wrapper">
-                            <img className="adyen-checkout__voucher-result__image__issuer" src={props.issuerImageUrl} />
+                            <img alt={props.paymentMethodType} className="adyen-checkout__voucher-result__image__issuer" src={props.issuerImageUrl} />
                         </span>
                     )}
                 </div>
