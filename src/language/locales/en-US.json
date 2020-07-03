@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 digits",
     "creditCard.cvcField.placeholder.3digits": "3 digits",
     "installments": "Number of installments",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Invalid account number",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Holder Name",
