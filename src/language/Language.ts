@@ -24,10 +24,11 @@ export class Language {
     /**
      * Returns a translated string from a key in the current {@link Language.locale}
      * @param key - Translation key
+     * @param options - Translation options
      * @returns Translated string
      */
-    get(key: string): string {
-        const translation = getTranslation(this.translations, key);
+    get(key: string, options?): string {
+        const translation = getTranslation(this.translations, key, options);
         if (translation !== null) {
             return translation;
         }

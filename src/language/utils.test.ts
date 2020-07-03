@@ -82,11 +82,37 @@ describe('formatLocale()', () => {
 });
 
 describe('getTranslation()', () => {
-    const translations = {
-        myTranslation: 'My translation'
-    };
+    const translations = { myTranslation: 'My translation', myTranslation__plural: 'My translations', myTranslation__2: 'My two translations' };
 
     test('should get a translation with a matching key', () => {
+        expect(getTranslation(translations, 'myTranslation')).toBe('My translation');
+    });
+
+    test('should get a translation with values', () => {
+        expect(getTranslation({ myTranslation: 'My %{type} translation' }, 'myTranslation', { values: { type: 'custom' } })).toBe(
+            'My custom translation'
+        );
+    });
+
+    test('should get a translation with empty values', () => {
+        expect(getTranslation({ myTranslation: 'My %{type} translation' }, 'myTranslation')).toBe('My  translation');
+    });
+
+    test('should get a plural translation if available', () => {
+        expect(getTranslation(translations, 'myTranslation', { count: 3 })).toBe('My translations');
+    });
+
+    test('should get a specific count translation if available', () => {
+        expect(getTranslation(translations, 'myTranslation', { count: 2 })).toBe('My two translations');
+    });
+
+    test('should get the default translation if count is not greater than 1', () => {
+        expect(getTranslation(translations, 'myTranslation', { count: 1 })).toBe('My translation');
+        expect(getTranslation(translations, 'myTranslation', { count: 0 })).toBe('My translation');
+        expect(getTranslation(translations, 'myTranslation', { count: -1 })).toBe('My translation');
+    });
+
+    test('should get the default translation if count is not provided', () => {
         expect(getTranslation(translations, 'myTranslation')).toBe('My translation');
     });
 });
