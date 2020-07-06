@@ -9,38 +9,58 @@ html,
 body {
     font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 400;
-    background: #fcfcfc;
-    overflow: auto;
+    overflow-x: hidden;
     margin: 0;
     min-height: 100vh;
 }
 
 body {
-    padding-top: 36px;
-}
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 52px;
+    position: relative;
+    transition: left 0.2s ease-out;
 
-@media screen and (min-width: 1240px) {
-    body {
-        padding: 0 0 0 320px;
+    @media screen and (min-width: 1240px) {
+        padding: 0 0 0 240px;
+    }
+
+    &.nav-open {
+        left: 240px;
+
+        @media screen and (min-width: 1240px) {
+            left: 0;
+        }
     }
 }
 
 header {
     background: $color-white;
     border-bottom: 1px solid $color-gray-light;
+    display: flex;
     left: 0;
     position: fixed;
     top: 0;
+    transition: left 0.2s ease-out;
     width: 100%;
     z-index: 1;
-}
 
-@media screen and (min-width: 1240px) {
-    header {
-        position: fixed;
+    @media screen and (min-width: 1240px) {
         background: #f3f6f9;
-        height: 100%;
-        width: 320px;
+        border-bottom: 0;
+        border-right: 1px solid #d2dae1;
+        flex-direction: column;
+        height: 100vh;
+        overflow-y: auto;
+        width: 240px;
+    }
+
+    .nav-open & {
+        left: 240px;
+
+        @media screen and (min-width: 1240px) {
+            left: 0;
+        }
     }
 }
 
@@ -50,23 +70,21 @@ h1 {
     margin: 0;
     padding: 12px;
     width: 100%;
-}
 
-@media screen and (min-width: 1240px) {
-    h1 {
+    @media screen and (min-width: 1240px) {
         padding: 30px;
     }
-}
 
-h1 span {
-    background: $color-primary;
-    border-radius: 3px;
-    color: $color-white;
-    font-size: 0.45em;
-    padding: 5px;
-    position: relative;
-    text-transform: uppercase;
-    top: -5px;
+    span {
+        background: $color-primary;
+        border-radius: 3px;
+        color: $color-white;
+        font-size: 0.45em;
+        padding: 5px;
+        position: relative;
+        text-transform: uppercase;
+        top: -5px;
+    }
 }
 
 h2 {
@@ -74,40 +92,134 @@ h2 {
     margin: 0;
 }
 
-nav {
-    display: none;
-    width: 100%;
-}
+.playground-nav-button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 12px;
+    transition: background-color 0.2s ease-out, opacity 0.2s ease-out;
 
-@media screen and (min-width: 1240px) {
-    nav {
-        display: block;
+    @media screen and (min-width: 1240px) {
+        display: none;
+    }
+
+    &:active {
+        background: $color-gray-lighter;
+    }
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    span {
+        position: relative;
+        top: -3px;
+
+        &,
+        &:before,
+        &:after {
+            background: $color-gray-darker;
+            border-radius: 2px;
+            display: inline-block;
+            height: 2px;
+            pointer-events: none;
+            position: relative;
+            transition: all 0.2s ease-out;
+            width: 24px;
+        }
+
+        &:before,
+        &:after {
+            content: '';
+            left: 0;
+            position: absolute;
+            top: 6px;
+            transform-origin: 2px center;
+        }
+
+        &:after {
+            top: -6px;
+        }
+    }
+
+    .nav-open & {
+        span {
+            background-color: transparent;
+
+            &:before,
+            &:after {
+                top: 0;
+                transform: rotate3d(0, 0, 1, 45deg);
+                transform-origin: 50% 50%;
+            }
+
+            &:after {
+                transform: rotate3d(0, 0, 1, -45deg);
+            }
+        }
     }
 }
 
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0 0 0 30px;
-    width: 100%;
-}
+.playground-nav {
+    background: #f3f6f9;
+    border-right: 1px solid #d2dae1;
+    height: 100vh;
+    left: -240px;
+    position: absolute;
+    width: 240px;
 
-nav ul li {
-    margin: 20px 0;
-}
+    @media screen and (min-width: 1240px) {
+        display: block;
+        border: 0;
+        height: auto;
+        position: static;
+        width: 100%;
+    }
 
-nav ul li a {
-    border-right: 2px solid transparent;
-    color: $color-gray-darker;
-    display: block;
-    line-height: 1.7em;
-    text-decoration: none;
-    transition: all 0.15s ease-out;
-}
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 0 30px;
+        width: 100%;
+    }
 
-nav ul li:hover a {
-    border-right-color: $color-primary;
-    color: $color-primary;
+    &__item {
+        margin: 20px 0;
+
+        &:hover .playground-nav__link {
+            color: $color-primary;
+        }
+
+        &--active .playground-nav__link {
+            border-right-color: $color-primary;
+            color: $color-primary;
+        }
+    }
+
+    &__link {
+        border-right: 4px solid transparent;
+        color: $color-gray-darker;
+        display: inline-block;
+        font-size: 15px;
+        padding: 2px;
+        text-decoration: none;
+        transition: all 0.2s ease-out;
+        width: 100%;
+
+        &:focus {
+            box-shadow: 0 0 0 1px $color-primary;
+            outline: 0;
+        }
+
+        &:active,
+        &:hover {
+            box-shadow: none;
+        }
+    }
 }
 
 .info {
