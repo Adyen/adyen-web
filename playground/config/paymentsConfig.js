@@ -1,11 +1,13 @@
 import commonConfiguration from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
+const { origin, search } = window.location;
+const localUrl = origin + search || 'http://localhost:3020';
 
 const paymentsConfig = {
     ...commonConfiguration,
-    origin: 'http://localhost:3020',
-    returnUrl: 'https://localhost:3020',
+    origin: localUrl,
+    returnUrl: localUrl,
     reference: `${identifier}-checkout-components-ref`,
     additionalData: {
         allow3DS2: true
@@ -17,13 +19,6 @@ const paymentsConfig = {
     // },
     channel: 'Web',
     browserInfo: {
-        // screenWidth: 1024,
-        // screenHeight: 500,
-        // colorDepth: 24,
-        // userAgent: 'Chrome',
-        // timeZoneOffset: 0,
-        // language: 'nl-NL',
-        // javaEnabled: true,
         acceptHeader: 'http'
     },
     lineItems: [
