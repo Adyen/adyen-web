@@ -83,9 +83,7 @@ export function formatCustomTranslations(customTranslations: object = {}, suppor
 }
 
 const replaceTranslationValues = (translation, values) => {
-    return translation.replace(/%{(\w+)}/g, function(_, k) {
-        return values[k] || '';
-    });
+    return translation.replace(/%{(\w+)}/g, (_, k) => values[k] || '');
 };
 
 /**
