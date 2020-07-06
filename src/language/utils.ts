@@ -82,16 +82,31 @@ export function formatCustomTranslations(customTranslations: object = {}, suppor
     }, {});
 }
 
+const replaceTranslationValues = (translation, values) => {
+    return translation.replace(/%{(\w+)}/g, (_, k) => values[k] || '');
+};
+
 /**
  * Returns a translation string by key
  * @param translations -
  * @param key -
+ * @param options -
  *
  * @internal
  */
-export const getTranslation = (translations: object, key: string): string => {
-    if (Object.prototype.hasOwnProperty.call(translations, key)) {
-        return translations[key];
+export const getTranslation = (translations: object, key: string, options: { [key: string]: any } = { values: {}, count: 0 }): string => {
+    const keyPlural = `${key}__plural`;
+    const keyForCount = count => `${key}__${count}`;
+
+    if (Object.prototype.hasOwnProperty.call(translations, keyForCount(options.count))) {
+        // Find key__count translation key
+        return replaceTranslationValues(translations[keyForCount(options.count)], options.values);
+    } else if (Object.prototype.hasOwnProperty.call(translations, keyPlural) && options.count > 1) {
+        // Find key__plural translation key, if count greater than 1 (e.g. myTranslation__plural)
+        return replaceTranslationValues(translations[keyPlural], options.values);
+    } else if (Object.prototype.hasOwnProperty.call(translations, key)) {
+        // Find key translation key (e.g. myTranslation)
+        return replaceTranslationValues(translations[key], options.values);
     }
 
     return null;
