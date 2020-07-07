@@ -2,7 +2,7 @@ import AdyenCheckout from '~';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods, getOriginKey } from '../../services';
-import { handleChange, handleSubmit, handleAdditionalDetails } from '../../events';
+import { handleChange, handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 
 getOriginKey()

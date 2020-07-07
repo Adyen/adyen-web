@@ -1,6 +1,6 @@
 import AdyenCheckout from '~';
 import { getPaymentMethods, makeDetailsCall } from '../../services';
-import { handleResponse, handleSubmit } from '../../events';
+import { handleResponse, handleSubmit } from '../../handlers';
 import { shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';

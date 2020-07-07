@@ -1,7 +1,7 @@
 import AdyenCheckout from '~';
-import { getPaymentMethods, makeDetailsCall } from '../../services';
-import { handleChange, handleSubmit } from '../../events';
-import { amount, countryCode, shopperLocale } from '../../config/commonConfig';
+import { getPaymentMethods } from '../../services';
+import { handleChange, handleSubmit } from '../../handlers';
+import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 
@@ -16,23 +16,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
         onSubmit: handleSubmit,
         onError: console.error,
         showPayButton: true,
-        amount, // Optional. Used to display the amount in the Pay Button.
-        onAdditionalDetails: (details, component) => {
-            component.setStatus('loading');
-
-            makeDetailsCall(details.data).then(response => {
-                handleResponse(response, component);
-                component.setStatus('ready');
-            });
-        }
-        // risk: {
-        //     node: '.merchant-checkout__form',
-        //     onComplete: riskData => {
-        //         console.log('handleOnRiskData riskData=', riskData);
-        //     },
-        //     onError: console.error,
-        //     enabled: true
-        // }
+        amount // Optional. Used to display the amount in the Pay Button.
     });
 
     // AFTERPAY
