@@ -1,200 +1,199 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
-    <title>Adyen Web | Secured Fields Pure</title>
-    <style>
-        h4{
-            margin-bottom: 5px;
-        }
-        .caveat{
-            margin: 5px auto;
-            width: 470px;
-            font-family: "Open Sans", sans-serif;
-            color: #0abf53;
-        }
-        .container{
-            width: 460px;
-            margin: 30px auto;
-        }
-        .payment-div{
-            position: relative;
-            font-family: "Open Sans", sans-serif;
-            font-size: 14px;
-            height: 220px;
-        }
-        .payment-div-extra{
-            border-top: #999 1px solid;
-        }
-        .payment-div-extra .pm-form-label{
-            margin-top: 10px;
-        }
-        .pm-details{
-            display: block;
-            box-sizing: border-box;
-            padding: 0px 20px 20px 20px;
-            width: 100%;
-        }
-        .pm-form{
-            position: relative;
-            width: 100%;
-            max-width: 420px;
-        }
-        .pm-image{
-            background-color: #ffffff;
-            border-radius: 4px;
-            -moz-boder-radius: 4px;
-            -webkit-border-radius: 4px;
-            float: right;
-            line-height: 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .pm-form-label{
-            float: left;
-            padding-bottom: 1em;
-            position: relative;
-            width: 100%;
-        }
-        .pm-form-label--exp-date{
-            width: 40%;
-        }
-        .pm-form-label--cvc{
-            float: right;
-            width: 40%;
-        }
-        .pm-form-label__text{
-            color: #00112c;
-            float: left;
-            font-size: 0.93333em;
-            padding-bottom: 6px;
-            position: relative;
-        }
-        .pm-input-field{
-            background: white;
-            border: 1px solid #d8d8d8;
-            -moz-border-radius: 4px;
-            -webkit-border-radius: 4px;
-            border-radius: 4px;
-            box-sizing: border-box;
-            clear: left;
-            font-size: 0.93333333333em;
-            float: left;
-            padding: 8px;
-            position: relative;
-            width: 100%;
-            height: 35px;
-        }
-        .pm-input-field-name:focus,
-        .pm-input-field-other:focus{
-            border: 1px solid #969696;
-            outline: none;
-        }
-        .pm-input-field--error{
-            border: 1px solid #ff7d00;
-        }
-        .pm-input-field--focus,
-        .sf-ios-additional-el-focus{
-            border: 1px solid #969696;
-            outline: none;
-        }
-        .pm-input-field--error.pm-input-field--focus{
-            border: 1px solid #ff7d00;
-        }
-        .pm-form-label__error-text{
-            color: #ff7d00;
-            display: none;
-            float: left;
-            font-size: 13px;
-            padding-top: .4em;
-            position: relative;
-            width: 100%;
-        }
-        .pm-button--submit{
-            background-color: #30c94a;
-            border: 0;
-            width:420px;
-            margin: 0px 20px 20px;
-            pointer-events:none;
-            opacity:0.3;
-            -moz-border-radius: 2px;
-            -webkit-border-radius: 2px;
-            border-radius: 2px;
-            color: white;
-            font-size: 1em;
-            font-weight: 500;
-            padding: 20px 0;
-            position: relative;
-        }
-        .pm-button--submit:hover{
-            background-color: #00914b;
-            cursor: auto;
-        }
-        .pm-button--submit:focus{
-            outline: none;
-        }
-        .is-ios *{
-            cursor: pointer;
-        }
-
-        .adyen-checkout__spinner__wrapper {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .adyen-checkout__spinner__wrapper--inline {
-            height: auto;
-            display: inline-block;
-            margin-right: 8px;
-        }
-
-        .adyen-checkout__spinner {
-            border: 3px solid #FFF;
-            border-radius: 50%;
-            height: 43px;
-            width: 43px;
-            border-top-color: transparent;
-            animation: rotateSpinner 1.5s infinite linear;
-        }
-
-        .adyen-checkout__spinner--large {
-            height: 43px;
-            width: 43px;
-        }
-
-        .adyen-checkout__spinner--small {
-            height: 16px;
-            width: 16px;
-            border-width: 2px;
-        }
-
-        .adyen-checkout__spinner--medium {
-            height: 28px;
-            width: 28px;
-        }
-
-        @keyframes rotateSpinner {
-            0% {
-                transform: rotate(0deg);
+<html class="no-js" lang="">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+        <title>Adyen Web | Secured Fields Pure</title>
+        <style>
+            h4 {
+                margin-bottom: 5px;
             }
-            100% {
-                transform: rotate(360deg);
+            .caveat {
+                margin: 5px auto;
+                width: 470px;
+                font-family: 'Open Sans', sans-serif;
+                color: #0abf53;
             }
-        }
-    </style>
+            .container {
+                width: 460px;
+                margin: 30px auto;
+            }
+            .payment-div {
+                position: relative;
+                font-family: 'Open Sans', sans-serif;
+                font-size: 14px;
+                height: 220px;
+            }
+            .payment-div-extra {
+                border-top: #999 1px solid;
+            }
+            .payment-div-extra .pm-form-label {
+                margin-top: 10px;
+            }
+            .pm-details {
+                display: block;
+                box-sizing: border-box;
+                padding: 0px 20px 20px 20px;
+                width: 100%;
+            }
+            .pm-form {
+                position: relative;
+                width: 100%;
+                max-width: 420px;
+            }
+            .pm-image {
+                background-color: #ffffff;
+                border-radius: 4px;
+                -moz-boder-radius: 4px;
+                -webkit-border-radius: 4px;
+                float: right;
+                line-height: 0;
+                position: relative;
+                overflow: hidden;
+            }
+            .pm-form-label {
+                float: left;
+                padding-bottom: 1em;
+                position: relative;
+                width: 100%;
+            }
+            .pm-form-label--exp-date {
+                width: 40%;
+            }
+            .pm-form-label--cvc {
+                float: right;
+                width: 40%;
+            }
+            .pm-form-label__text {
+                color: #00112c;
+                float: left;
+                font-size: 0.93333em;
+                padding-bottom: 6px;
+                position: relative;
+            }
+            .pm-input-field {
+                background: white;
+                border: 1px solid #d8d8d8;
+                -moz-border-radius: 4px;
+                -webkit-border-radius: 4px;
+                border-radius: 4px;
+                box-sizing: border-box;
+                clear: left;
+                font-size: 0.93333333333em;
+                float: left;
+                padding: 8px;
+                position: relative;
+                width: 100%;
+                height: 35px;
+            }
+            .pm-input-field-name:focus,
+            .pm-input-field-other:focus {
+                border: 1px solid #969696;
+                outline: none;
+            }
+            .pm-input-field--error {
+                border: 1px solid #ff7d00;
+            }
+            .pm-input-field--focus,
+            .sf-ios-additional-el-focus {
+                border: 1px solid #969696;
+                outline: none;
+            }
+            .pm-input-field--error.pm-input-field--focus {
+                border: 1px solid #ff7d00;
+            }
+            .pm-form-label__error-text {
+                color: #ff7d00;
+                display: none;
+                float: left;
+                font-size: 13px;
+                padding-top: 0.4em;
+                position: relative;
+                width: 100%;
+            }
+            .pm-button--submit {
+                background-color: #30c94a;
+                border: 0;
+                width: 420px;
+                margin: 0px 20px 20px;
+                pointer-events: none;
+                opacity: 0.3;
+                -moz-border-radius: 2px;
+                -webkit-border-radius: 2px;
+                border-radius: 2px;
+                color: white;
+                font-size: 1em;
+                font-weight: 500;
+                padding: 20px 0;
+                position: relative;
+            }
+            .pm-button--submit:hover {
+                background-color: #00914b;
+                cursor: auto;
+            }
+            .pm-button--submit:focus {
+                outline: none;
+            }
+            .is-ios * {
+                cursor: pointer;
+            }
 
-</head>
-<body style="max-width: 100%;">
-<header></header>
-<h5 class="caveat">For Internal Dev only (works only if you can host SecuredFields locally)</h5>
-<div class="container">
+            .adyen-checkout__spinner__wrapper {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
 
-    <!--<label class="pm-form-label">
+            .adyen-checkout__spinner__wrapper--inline {
+                height: auto;
+                display: inline-block;
+                margin-right: 8px;
+            }
+
+            .adyen-checkout__spinner {
+                border: 3px solid #fff;
+                border-radius: 50%;
+                height: 43px;
+                width: 43px;
+                border-top-color: transparent;
+                animation: rotateSpinner 1.5s infinite linear;
+            }
+
+            .adyen-checkout__spinner--large {
+                height: 43px;
+                width: 43px;
+            }
+
+            .adyen-checkout__spinner--small {
+                height: 16px;
+                width: 16px;
+                border-width: 2px;
+            }
+
+            .adyen-checkout__spinner--medium {
+                height: 28px;
+                width: 28px;
+            }
+
+            @keyframes rotateSpinner {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body style="max-width: 100%;">
+        <header></header>
+        <main>
+            <h5 class="caveat">For Internal Dev only (works only if you can host SecuredFields locally)</h5>
+            <div class="container">
+                <!--<label class="pm-form-label">
         <span class="pm-form-label__text">Holder name:</span>
         <input type="text" class="pm-input-field pm-input-field-name" aria-label="Credit or debit card holder name"/>
     </label>
@@ -216,16 +215,14 @@
         })
     </script>-->
 
-
-    <!--Initial:-->
-    <!--<div>
+                <!--Initial:-->
+                <!--<div>
         <label for="addressFields_firstName">Vorname</label>
         <input class="form__input&#45;&#45;error form__error&#45;&#45;show" title="Bitte geben Sie Ihren Vornamen ein." id="addressFields_firstName" type="text" name="addressFields_firstName" value="">
     </div>-->
 
-
-    <!--Field left with error:-->
-    <!--<div aria-live="assertive">
+                <!--Field left with error:-->
+                <!--<div aria-live="assertive">
         <label for="addressFields_firstName">Vorname</label>
         <input class="form__input&#45;&#45;error form__error&#45;&#45;show" title="Bitte geben Sie Ihren Vornamen ein." id="addressFields_firstName" type="text" name="addressFields_firstName" value="" aria-required="true" aria-invalid="true" aria-describedby="addressFields_firstName-error">
         <div class="form__error-message">
@@ -233,35 +230,32 @@
         </div>
     </div>-->
 
-
-    <!--Field left with success:-->
-    <!--<div aria-live="assertive">
+                <!--Field left with success:-->
+                <!--<div aria-live="assertive">
         <label for="addressFields_firstName">Vorname</label>
         <input class="form__input&#45;&#45;error form__error&#45;&#45;show" title="Bitte geben Sie Ihren Vornamen ein." id="addressFields_firstName" type="text" name="addressFields_firstName" value="" aria-required="true" aria-invalid="false">
         <div class="form__error-message"></div>
     </div>-->
 
-
-
-    <div id="adyenPaymentDivCard1" class="payment-div">
-        <h4>Card</h4>
-        <span class="pm-image">
-            <img id="pmImage" width="40" src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/card.svg" alt="">
-        </span>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">Holder name:</span>
-            <input type="text" class="pm-input-field pm-input-field-name" aria-label="Credit or debit card holder name"/>
-        </label>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">Card number:</span>
-            <span class="pm-input-field" data-cse="encryptedCardNumber"></span>
-<!--            <span class="pm-form-label__error-text"></span>-->
-        </label>
-        <label class="pm-form-label pm-form-label--exp-date">
-            <span class="pm-form-label__text">Expiry date:</span>
-            <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
-        </label>
-        <!--<label class="pm-form-label exp-month">
+                <div id="adyenPaymentDivCard1" class="payment-div">
+                    <h4>Card</h4>
+                    <span class="pm-image">
+                        <img id="pmImage" width="40" src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/card.svg" alt="" />
+                    </span>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">Holder name:</span>
+                        <input type="text" class="pm-input-field pm-input-field-name" aria-label="Credit or debit card holder name" />
+                    </label>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">Card number:</span>
+                        <span class="pm-input-field" data-cse="encryptedCardNumber"></span>
+                        <!--            <span class="pm-form-label__error-text"></span>-->
+                    </label>
+                    <label class="pm-form-label pm-form-label--exp-date">
+                        <span class="pm-form-label__text">Expiry date:</span>
+                        <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
+                    </label>
+                    <!--<label class="pm-form-label exp-month">
             <span class="pm-form-label__text">Expiry month:</span>
             <span class="pm-input-field" data-cse="encryptedExpiryMonth"></span>
         </label>
@@ -269,117 +263,121 @@
             <span class="pm-form-label__text">Expiry year:</span>
             <span class="pm-input-field" data-cse="encryptedExpiryYear"></span>
         </label>-->
-        <label class="pm-form-label pm-form-label--cvc">
-            <span class="pm-form-label__text">CVV/CVC:</span>
-            <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
-        </label>
-    </div>
-    <button id="payBtn-card" type="button" class="pm-button--submit" disabled onclick="initiateCardPayment();">Submit Card</button>
+                    <label class="pm-form-label pm-form-label--cvc">
+                        <span class="pm-form-label__text">CVV/CVC:</span>
+                        <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
+                    </label>
+                </div>
+                <button id="payBtn-card" type="button" class="pm-button--submit" disabled onclick="initiateCardPayment();">Submit Card</button>
 
+                <!-- KCP CARD -->
+                <div id="adyenPaymentDivCardKCP" class="payment-div payment-div-extra">
+                    <h4>KCP Card</h4>
+                    <span class="pm-image">
+                        <img id="pmImageKCP" width="40" src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/card.svg" alt="" />
+                    </span>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">Holder name:</span>
+                        <input type="text" class="pm-input-field pm-input-field-name" aria-label="Credit or debit card holder name" />
+                    </label>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">Card number:</span>
+                        <span class="pm-input-field" data-cse="encryptedCardNumber"></span>
+                    </label>
+                    <label class="pm-form-label pm-form-label--exp-date">
+                        <span class="pm-form-label__text">Expiry date:</span>
+                        <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
+                    </label>
+                    <label class="pm-form-label pm-form-label--cvc">
+                        <span class="pm-form-label__text">CVV/CVC:</span>
+                        <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
+                    </label>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">d.o.b/tax no.:</span>
+                        <input
+                            type="text"
+                            class="pm-input-field pm-input-field-other pm-input-dob-field"
+                            aria-label="Credit or debit card holder name"
+                        />
+                    </label>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">Pwd:</span>
+                        <span class="pm-input-field" data-cse="encryptedPassword" data-info='{"length":"2"}'></span>
+                    </label>
+                </div>
+                <button id="payBtn-kcp" type="button" class="pm-button--submit" disabled onclick="initiateCardPayment('KCP');">
+                    Submit KCP Card
+                </button>
 
-    <!-- KCP CARD -->
-    <div id="adyenPaymentDivCardKCP" class="payment-div payment-div-extra">
-        <h4>KCP Card</h4>
-        <span class="pm-image">
-            <img id="pmImageKCP" width="40" src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/card.svg" alt="">
-        </span>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">Holder name:</span>
-            <input type="text" class="pm-input-field pm-input-field-name" aria-label="Credit or debit card holder name"/>
-        </label>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">Card number:</span>
-            <span class="pm-input-field" data-cse="encryptedCardNumber"></span>
-        </label>
-        <label class="pm-form-label pm-form-label--exp-date">
-            <span class="pm-form-label__text">Expiry date:</span>
-            <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
-        </label>
-        <label class="pm-form-label pm-form-label--cvc">
-            <span class="pm-form-label__text">CVV/CVC:</span>
-            <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
-        </label>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">d.o.b/tax no.:</span>
-            <input type="text" class="pm-input-field pm-input-field-other pm-input-dob-field" aria-label="Credit or debit card holder name"/>
-        </label>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">Pwd:</span>
-            <span class="pm-input-field" data-cse="encryptedPassword" data-info='{"length":"2"}'></span>
-        </label>
-    </div>
-    <button id="payBtn-kcp" type="button" class="pm-button--submit" disabled onclick="initiateCardPayment('KCP');">Submit KCP Card</button>
+                <!-- STORED CARD -->
+                <div id="adyenPaymentDivCard2" class="payment-div payment-div-extra">
+                    <h4>Stored Card</h4>
+                    <span class="pm-image">
+                        <img id="pmImage2" width="40" src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/card.svg" alt="" />
+                    </span>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">Other field for testing FF shift-tabbing:</span>
+                        <input type="text" class="pm-input-field pm-input-field-other" aria-label="Credit or debit card holder name" />
+                    </label>
+                    <label class="pm-form-label pm-form-label--cvc">
+                        <span class="pm-form-label__text">CVV/CVC:</span>
+                        <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
+                    </label>
+                </div>
+                <button id="payBtn-card2" type="button" class="pm-button--submit" disabled onclick="initiateCardPayment();">Submit Card</button>
 
+                <!-- ACH -->
+                <div id="adyenPaymentDivACH" class="payment-div payment-div-extra">
+                    <h4>Ach</h4>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">Bank account number:</span>
+                        <span class="pm-input-field" data-cse="encryptedBankAccountNumber" data-info='{"length":"4-17", "maskInterval":6}'></span>
+                    </label>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">Bank routing code:</span>
+                        <span class="pm-input-field" data-cse="encryptedBankLocationId" data-info='{"length":9}'></span>
+                    </label>
+                </div>
+                <button id="payBtn-ach" type="button" class="pm-button--submit" disabled onclick="initiateACHPayment();">Submit ACH</button>
 
-    <!-- STORED CARD -->
-    <div id="adyenPaymentDivCard2" class="payment-div payment-div-extra">
-        <h4>Stored Card</h4>
-        <span class="pm-image">
-            <img id="pmImage2" width="40" src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/card.svg" alt="">
-        </span>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">Other field for testing FF shift-tabbing:</span>
-            <input type="text" class="pm-input-field pm-input-field-other" aria-label="Credit or debit card holder name"/>
-        </label>
-        <label class="pm-form-label pm-form-label--cvc">
-            <span class="pm-form-label__text">CVV/CVC:</span>
-            <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
-        </label>
-    </div>
-    <button id="payBtn-card2" type="button" class="pm-button--submit" disabled onclick="initiateCardPayment();">Submit Card</button>
+                <!-- GIFT CARD -->
+                <div id="adyenPaymentDivGiftCard" class="payment-div payment-div-extra">
+                    <h4>Gift card</h4>
+                    <label class="pm-form-label">
+                        <span class="pm-form-label__text">Other field for testing FF shift-tabbing:</span>
+                        <input type="text" class="pm-input-field pm-input-field-other" aria-label="Credit or debit card holder name" />
+                    </label>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">Gift card number:</span>
+                        <span class="pm-input-field" data-cse="encryptedCardNumber" data-info='{"length":"6", "maskInterval":4}'></span>
+                    </label>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">Gift card Pin:</span>
+                        <span class="pm-input-field" data-cse="encryptedSecurityCode" data-info='{"length":4}'></span>
+                    </label>
+                </div>
+                <button id="payBtn-giftcard" type="button" class="pm-button--submit" disabled onclick="initiateGiftCardPayment();">
+                    Submit Gift Card
+                </button>
 
-
-    <!-- ACH -->
-    <div id="adyenPaymentDivACH" class="payment-div payment-div-extra">
-        <h4>Ach</h4>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">Bank account number:</span>
-            <span class="pm-input-field" data-cse="encryptedBankAccountNumber" data-info='{"length":"4-17", "maskInterval":6}'></span>
-        </label>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">Bank routing code:</span>
-            <span class="pm-input-field" data-cse="encryptedBankLocationId" data-info='{"length":9}'></span>
-        </label>
-    </div>
-    <button id="payBtn-ach" type="button" class="pm-button--submit" disabled onclick="initiateACHPayment();">Submit ACH</button>
-
-
-    <!-- GIFT CARD -->
-    <div id="adyenPaymentDivGiftCard" class="payment-div payment-div-extra">
-        <h4>Gift card</h4>
-        <label class="pm-form-label">
-            <span class="pm-form-label__text">Other field for testing FF shift-tabbing:</span>
-            <input type="text" class="pm-input-field pm-input-field-other" aria-label="Credit or debit card holder name"/>
-        </label>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">Gift card number:</span>
-            <span class="pm-input-field" data-cse="encryptedCardNumber" data-info='{"length":"6", "maskInterval":4}'></span>
-        </label>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">Gift card Pin:</span>
-            <span class="pm-input-field" data-cse="encryptedSecurityCode" data-info='{"length":4}'></span>
-        </label>
-    </div>
-    <button id="payBtn-giftcard" type="button" class="pm-button--submit" disabled onclick="initiateGiftCardPayment();">Submit Gift Card</button>
-
-
-    <!-- SEPA -->
-    <div id="adyenPaymentDivSepa" class="payment-div payment-div-extra">
-        <h4>Sepa</h4>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">IBAN:</span>
-            <span class="pm-input-field" data-cse="encryptedIBAN"></span>
-        </label>
-        <label class="pm-form-label pm-form-label">
-            <span class="pm-form-label__text">Pin:</span>
-            <span class="pm-input-field" data-cse="encryptedPin" data-info='{"length":4}'></span>
-        </label>
-    </div>
-    <button id="payBtn-sepa" type="button" class="pm-button--submit" disabled onclick="initiateSepaPayment();">Submit Sepa</button>
-
-</div><!-- .container -->
-<script type="text/javascript">
-    window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
-</script>
-</body>
+                <!-- SEPA -->
+                <div id="adyenPaymentDivSepa" class="payment-div payment-div-extra">
+                    <h4>Sepa</h4>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">IBAN:</span>
+                        <span class="pm-input-field" data-cse="encryptedIBAN"></span>
+                    </label>
+                    <label class="pm-form-label pm-form-label">
+                        <span class="pm-form-label__text">Pin:</span>
+                        <span class="pm-input-field" data-cse="encryptedPin" data-info='{"length":4}'></span>
+                    </label>
+                </div>
+                <button id="payBtn-sepa" type="button" class="pm-button--submit" disabled onclick="initiateSepaPayment();">Submit Sepa</button>
+            </div>
+            <!-- .container -->
+        </main>
+        <script type="text/javascript">
+            window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
+        </script>
+    </body>
 </html>

@@ -1,46 +1,45 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>Adyen Web | Wallets</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    </head>
+    <body>
+        <header></header>
+        <main>
+            <form class="merchant-checkout__form" method="post">
+                <div class="merchant-checkout__payment-method">
+                    <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
+                    <div class="merchant-checkout__payment-method__header">
+                        <h2>Google Pay</h2>
+                    </div>
+                    <div class="merchant-checkout__payment-method__details">
+                        <div class="googlepay-field"></div>
+                    </div>
+                </div>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Adyen Web | Wallets</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
+                <div class="merchant-checkout__payment-method">
+                    <div class="merchant-checkout__payment-method__header">
+                        <h2>Paypal</h2>
+                    </div>
+                    <div class="merchant-checkout__payment-method__details">
+                        <div class="paypal-field"></div>
+                    </div>
+                </div>
 
-<body>
-    <header></header>
+                <div class="merchant-checkout__payment-method merchant-checkout__payment-method--hidden" id="applepay-field">
+                    <div class="merchant-checkout__payment-method__header">
+                        <h2>Apple Pay</h2>
+                    </div>
+                </div>
+            </form>
+        </main>
 
-    <form class="merchant-checkout__form" method="post">
-        <div class="merchant-checkout__payment-method">
-            <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
-            <div class="merchant-checkout__payment-method__header">
-                <h2>Google Pay</h2>
-            </div>
-            <div class="merchant-checkout__payment-method__details">
-                <div class="googlepay-field"></div>
-            </div>
-        </div>
-
-        <div class="merchant-checkout__payment-method">
-            <div class="merchant-checkout__payment-method__header">
-                <h2>Paypal</h2>
-            </div>
-            <div class="merchant-checkout__payment-method__details">
-                <div class="paypal-field"></div>
-            </div>
-        </div>
-
-        <div class="merchant-checkout__payment-method merchant-checkout__payment-method--hidden" id="applepay-field">
-            <div class="merchant-checkout__payment-method__header">
-                <h2>Apple Pay</h2>
-            </div>
-        </div>
-    </form>
-
-    <script type="text/javascript">
-        window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || ''%>;
-    </script>
-</body>
+        <script type="text/javascript">
+            window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || ''%>;
+        </script>
+    </body>
 </html>

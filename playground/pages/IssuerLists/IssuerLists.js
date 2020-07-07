@@ -35,7 +35,7 @@ getPaymentMethods().then(paymentMethodsData => {
     window.billdesk_wallet = checkout.create('billdesk_wallet').mount('.billdesk_wallet-field');
 
     // PayU CashCard
-    window.payu_cashcard = checkout.create('payu_IN_cashcard').mount('.payu_cashcard-field');
+    window.payu_cashcard = checkout.create('payu_IN_cashcard').mount('.payu_cc-field');
 
     //  PayU NetBanking
     window.payu_nb = checkout.create('payu_IN_nb').mount('.payu_nb-field');

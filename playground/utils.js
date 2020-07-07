@@ -63,11 +63,7 @@ const addEventListeners = () => {
     });
 };
 
-const init = () => {
+if (window.htmlPages) {
     insertHeader(window.htmlPages);
     addEventListeners();
-};
-
-if (window.htmlPages) {
-    document.onLoad = init();
 }
