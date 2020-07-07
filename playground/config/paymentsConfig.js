@@ -1,13 +1,13 @@
 import commonConfiguration from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
-const { origin, search } = window.location;
-const localUrl = origin + search || 'http://localhost:3020';
+const { origin = 'http://localhost:3020', search } = window.location;
+const returnUrl = origin + search;
 
 const paymentsConfig = {
     ...commonConfiguration,
-    origin: localUrl,
-    returnUrl: localUrl,
+    origin,
+    returnUrl,
     reference: `${identifier}-checkout-components-ref`,
     additionalData: {
         allow3DS2: true

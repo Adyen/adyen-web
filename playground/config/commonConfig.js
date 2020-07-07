@@ -20,5 +20,5 @@ export default {
     shopperLocale,
     channel: 'Web',
     shopperReference: 'newshoppert',
-    ...(merchantAccount && merchantAccount)
+    ...(merchantAccount && { merchantAccount })
 };
