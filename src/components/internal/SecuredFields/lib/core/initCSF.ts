@@ -22,17 +22,13 @@ const initCSF = (pSetupObj: SetupObject): CSFReturnObject => {
         return null;
     }
 
-    // TODO - enable once clientKey is documented & support/IM are aware of it
-    // if (falsy(setupObj.clientKey)) {
-    //     logger.warn(
-    //         'WARNING: Checkout configuration object is missing a "clientKey" property.\nFor a transition period the originKey will be accepted instead but this will eventually be deprecated'
-    //     );
-    // }
-
-    if (falsy(setupObj.originKey)) {
-        logger.error('ERROR: SecuredFields configuration object is missing an "originKey" property');
+    if (falsy(setupObj.clientKey) && falsy(setupObj.originKey)) {
+        logger.warn(
+            'WARNING: Checkout configuration object is missing a "clientKey" property.\nFor a transition period the originKey will be accepted instead but this will eventually be deprecated'
+        );
         return null;
     }
+
     //----------------------------------------------------------------------------
 
     // //////// 2. Find and store reference to the root DOM element //////////
