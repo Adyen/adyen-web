@@ -4,7 +4,7 @@ import './Img.scss';
 import { h } from 'preact';
 
 export default function Img(props) {
-    const { backgroundUrl = '', className = '', classNameModifiers = [], src = '', showOnError = false } = props;
+    const { backgroundUrl = '', className = '', classNameModifiers = [], src = '', alt = '', showOnError = false } = props;
     const [loaded, setLoaded] = useState(false);
     const imageRef = useRef(null);
 
@@ -34,5 +34,5 @@ export default function Img(props) {
         return <div style={{ backgroundUrl }} {...props} className={classNames} />;
     }
 
-    return <img {...props} ref={imageRef} className={classNames} onError={handleError} />;
+    return <img {...props} alt={alt} ref={imageRef} className={classNames} onError={handleError} />;
 }

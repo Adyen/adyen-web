@@ -44,6 +44,8 @@ export class CardElement extends UIElement<CardElementProps> {
             holderNameRequired: !props.hasHolderName ? false : props.holderNameRequired,
             // Special catch for recurring bcmc (i.e. card with no cvc field). Scenario?? - Dropin - One click with no details
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
+            // billingAddressRequired only available for non-stored cards
+            billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type
         };

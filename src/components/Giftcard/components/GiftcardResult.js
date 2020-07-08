@@ -9,7 +9,11 @@ class GiftcardResult extends Component {
                 <div className="adyen-checkout__giftcard-result__header">
                     <div className="adyen-checkout__giftcard-result__header__title">
                         <span className="adyen-checkout__payment-method__image__wrapper adyen-checkout__payment-method__image__wrapper--loaded">
-                            <img className="adyen-checkout__payment-method__image" src={getImage({ loadingContext })(paymentMethodType)} />
+                            <img
+                                alt={paymentMethodType}
+                                className="adyen-checkout__payment-method__image"
+                                src={getImage({ loadingContext })(paymentMethodType)}
+                            />
                         </span>
                         <span className="adyen-checkout__giftcard-result__name" aria-hidden="true">
                             •••• {props.lastFour}

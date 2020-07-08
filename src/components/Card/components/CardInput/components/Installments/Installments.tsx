@@ -43,7 +43,9 @@ function Installments(props: InstallmentsProps) {
 
     const installmentItemsMapper = (value: number): InstallmentsItem => ({
         id: value,
-        name: amount.value ? `${value}x ${getPartialAmount(value)}` : `${value}`
+        name: amount.value
+            ? i18n.get('installmentOption', { count: value, values: { times: value, partialValue: getPartialAmount(value) } })
+            : `${value}`
     });
 
     useEffect(() => {
