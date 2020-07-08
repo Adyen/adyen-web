@@ -1,4 +1,5 @@
 import Language from '~/language/Language';
+import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from '~/components/AmazonPay/config';
 
 declare global {
     interface Window {
@@ -10,7 +11,7 @@ type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
 type Currency = 'USD' | 'EUR' | 'GBP';
 export type Region = 'US' | 'EU' | 'UK';
-export type SupportedLocale = 'en_US' | 'en_GB' | 'de_DE' | 'fr_FR' | 'it_IT' | 'es_ES';
+export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
 export interface AmazonPayCommonProps {
     checkoutSessionId?: string;
