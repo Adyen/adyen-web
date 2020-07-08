@@ -33,7 +33,7 @@ class Button extends Component {
     render({ classNameModifiers = [], disabled, href, icon, secondary, inline, label, status }, { completed }) {
         const { i18n } = useCoreContext();
 
-        const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="Icon" aria-hidden="true" role="presentation" /> : '';
+        const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="" aria-hidden="true" /> : '';
 
         const modifiers = [
             ...classNameModifiers,
@@ -65,7 +65,7 @@ class Button extends Component {
 
         if (href) {
             return (
-                <a className={buttonClasses} href={href} disabled={disabled} target={this.props.target}>
+                <a className={buttonClasses} href={href} disabled={disabled} target={this.props.target} rel={this.props.rel}>
                     {buttonText}
                 </a>
             );
