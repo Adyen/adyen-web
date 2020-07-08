@@ -10,8 +10,12 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     public static type = 'amazonpay';
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    formatProps(props) {
+        return {
+            ...props,
+            locale: props.locale.replace('-', '_'),
+            region: props.region.toUpperCase()
+        };
     }
 
     /**
