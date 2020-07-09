@@ -27,10 +27,16 @@ interface IssuerListData {
     };
 }
 
+interface WithIssuerListOptions {
+    type: string;
+    placeholder?: string;
+    showImage?: boolean;
+}
+
 /**
  * IssuerListContainer: A higher order function which returns a different class based on issuerType
  */
-const withIssuerList = ({ type, placeholder = undefined, showImage = true }): any => {
+const withIssuerList = ({ type, placeholder, showImage = true }: WithIssuerListOptions): any => {
     class IssuerListContainer extends UIElement {
         public static type = type;
         public props: IssuerListProps;
