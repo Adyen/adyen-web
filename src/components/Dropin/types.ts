@@ -1,14 +1,9 @@
-import { PaymentMethod, StoredPaymentMethod } from '../../types';
+import { PaymentMethod, StoredPaymentMethod, PaymentMethods, PaymentMethodOptions } from '../../types';
 import { UIElementProps } from '../UIElement';
-import paymentMethods from '../index';
-
-type PaymentMethods = typeof paymentMethods;
-type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
 
 export interface DropinElementProps extends UIElementProps {
     /**
      * Configure each payment method displayed on the Drop-in
-     * @default {}
      */
     paymentMethodsConfiguration?: {
         [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
@@ -20,13 +15,13 @@ export interface DropinElementProps extends UIElementProps {
 
     /**
      * Show/Hide stored payment methods
-     * @default true
+     * @defaultValue true
      */
     showStoredPaymentMethods?: boolean;
 
     /**
      * Show/Hide regular (non-stored) payment methods
-     * @default true
+     * @defaultValue true
      */
     showPaymentMethods?: boolean;
 
@@ -39,7 +34,7 @@ export interface DropinElementProps extends UIElementProps {
     /**
      * Show/Hide the remove payment method button on stored payment methods
      * Requires {@link DropinElementProps.onDisableStoredPaymentMethod}
-     * @default false
+     * @defaultValue false
      */
     showRemovePaymentMethodButton?: boolean;
 
@@ -47,7 +42,7 @@ export interface DropinElementProps extends UIElementProps {
      * Called when a shopper clicks Remove on a stored payment method
      * Use this to call the {@link https://docs.adyen.com/api-explorer/#/Recurring/v49/post/disable /disable endpoint}
      * Call resolve() if the removal was successful, or call reject() if there was an error
-     * @default false
+     * @defaultValue false
      */
     onDisableStoredPaymentMethod?: (storedPaymentMethod, resolve, reject) => void;
 }

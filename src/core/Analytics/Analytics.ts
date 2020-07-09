@@ -3,6 +3,36 @@ import postTelemetry from '../Services/post-telemetry';
 import collectId from '../Services/collect-id';
 import EventsQueue from './EventsQueue';
 
+export interface AnalyticsOptions {
+    /**
+     * Enable/Disable all analytics
+     */
+    enabled?: boolean;
+
+    /**
+     * Enable/Disable telemetry data
+     */
+    telemetry?: boolean;
+
+    /**
+     * Enable/Disable conversion events
+     */
+    conversion?: boolean;
+
+    /**
+     * Reuse a previous conversionId from a previous page
+     */
+    conversionId?: string;
+}
+
+interface AnalyticsProps {
+    loadingContext: string;
+    locale?: string;
+    originKey?: string;
+    clientKey?: string;
+    analytics?: AnalyticsOptions;
+}
+
 class Analytics {
     private static defaultProps = {
         enabled: true,
@@ -17,7 +47,7 @@ class Analytics {
     private readonly logTelemetry;
     private readonly queue = new EventsQueue();
 
-    constructor({ loadingContext, locale, originKey, clientKey, analytics }) {
+    constructor({ loadingContext, locale, originKey, clientKey, analytics }: AnalyticsProps) {
         this.props = { ...Analytics.defaultProps, ...analytics };
         this.logEvent = logEvent({ loadingContext, locale });
         this.logTelemetry = postTelemetry({ loadingContext, locale, originKey, clientKey });
