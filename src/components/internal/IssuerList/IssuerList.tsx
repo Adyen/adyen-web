@@ -12,7 +12,7 @@ const payButtonLabel = ({ issuer, items }, i18n) => {
     return `${i18n.get('continueTo')} ${issuerName}`;
 };
 
-function IssuerList({ items, issuer = null, ...props }) {
+function IssuerList({ items, placeholder, issuer = null, ...props }) {
     const { i18n } = useCoreContext();
     const [selectedIssuer, setSelectedIssuer] = useState(issuer);
     const [errors, setErrors] = useState(false);
@@ -42,7 +42,7 @@ function IssuerList({ items, issuer = null, ...props }) {
                 {renderFormField('select', {
                     items,
                     selected: selectedIssuer,
-                    placeholder: i18n.get('idealIssuer.selectField.placeholder'),
+                    placeholder: i18n.get(placeholder),
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',
                     onChange: onSelectIssuer
@@ -55,7 +55,8 @@ function IssuerList({ items, issuer = null, ...props }) {
 }
 
 IssuerList.defaultProps = {
-    onChange: () => {}
+    onChange: () => {},
+    placeholder: 'idealIssuer.selectField.placeholder'
 };
 
 export default IssuerList;
