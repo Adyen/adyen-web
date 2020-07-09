@@ -106,7 +106,16 @@ module.exports = {
         'jsx-a11y/aria-unsupported-elements': 'error',
         'jsx-a11y/role-has-required-aria-props': 'error',
         'jsx-a11y/role-supports-aria-props': 'error',
-        'jsx-a11y/tabindex-no-positive': 'error'
+        'jsx-a11y/tabindex-no-positive': 'error',
+        'jsx-a11y/no-redundant-roles': 'error',
+        'jsx-a11y/anchor-has-content': 'error',
+        'jsx-a11y/anchor-is-valid': 'error',
+        'jsx-a11y/img-redundant-alt': 'error',
+        'jsx-a11y/interactive-supports-focus': 'error',
+        'jsx-a11y/autocomplete-valid': 'error',
+        'jsx-a11y/no-static-element-interactions': 'error',
+        'jsx-a11y/no-noninteractive-tabindex': 'error',
+        'jsx-a11y/mouse-events-have-key-events': 'error'
     },
     overrides: [
         {
