@@ -43,10 +43,15 @@ class Field extends Component {
     render({ className = '', classNameModifiers = [], children, errorMessage, helper, inputWrapperModifiers = [], isLoading, isValid, label }) {
         return (
             <div
-                className={classNames('adyen-checkout__field', className, classNameModifiers.map(m => `adyen-checkout__field--${m}`), {
-                    'adyen-checkout__field--error': errorMessage,
-                    'adyen-checkout__field--valid': isValid
-                })}
+                className={classNames(
+                    'adyen-checkout__field',
+                    className,
+                    classNameModifiers.map(m => `adyen-checkout__field--${m}`),
+                    {
+                        'adyen-checkout__field--error': errorMessage,
+                        'adyen-checkout__field--valid': isValid
+                    }
+                )}
             >
                 <label
                     onClick={this.props.onFocusField}
@@ -72,7 +77,7 @@ class Field extends Component {
 
                     {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
 
-                    <span
+                    <div
                         className={classNames([
                             'adyen-checkout__input-wrapper',
                             ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
@@ -100,7 +105,7 @@ class Field extends Component {
                                 <Icon type="field_error" />
                             </span>
                         )}
-                    </span>
+                    </div>
 
                     {errorMessage && errorMessage.length && <span className={'adyen-checkout__error-text'}>{errorMessage}</span>}
                 </label>

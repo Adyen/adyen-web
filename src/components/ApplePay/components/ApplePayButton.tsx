@@ -1,4 +1,5 @@
 import { Component, h } from 'preact';
+import cx from 'classnames';
 import styles from './ApplePayButton.module.scss';
 import './ApplePayButton.scss';
 
@@ -16,17 +17,21 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
     };
 
     render({ buttonColor, buttonType }) {
+        /* eslint-disable jsx-a11y/no-static-element-interactions */
         return (
             <div
-                className={`adyen-checkout__applepay__button
-                            adyen-checkout__applepay__button--${buttonColor}
-                            adyen-checkout__applepay__button--${buttonType}
-                            ${styles['apple-pay-button']}
-                            ${styles[`apple-pay-button-${buttonColor}`]}
-                            ${styles[`apple-pay-button--type-${buttonType}`]}`}
+                className={cx(
+                    'adyen-checkout__applepay__button',
+                    `adyen-checkout__applepay__button--${buttonColor}`,
+                    `adyen-checkout__applepay__button--${buttonType}`,
+                    [styles['apple-pay-button']],
+                    [styles[`apple-pay-button-${buttonColor}`]],
+                    [styles[`apple-pay-button--type-${buttonType}`]]
+                )}
                 onClick={this.props.onClick}
             />
         );
+        /* eslint-enable jsx-a11y/no-static-element-interactions */
     }
 }
 
