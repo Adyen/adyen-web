@@ -8,6 +8,7 @@ import Language from '~/language/Language';
 
 interface IssuerListProps {
     showImage?: boolean;
+    placeholder?: string;
     items?: IssuerItem[];
     details?: { key: string; items: IssuerItem[] };
     i18n: Language;
@@ -29,7 +30,7 @@ interface IssuerListData {
 /**
  * IssuerListContainer: A higher order function which returns a different class based on issuerType
  */
-const withIssuerList = ({ type, showImage = true }): any => {
+const withIssuerList = ({ type, placeholder = undefined, showImage = true }): any => {
     class IssuerListContainer extends UIElement {
         public static type = type;
         public props: IssuerListProps;
@@ -94,6 +95,7 @@ const withIssuerList = ({ type, showImage = true }): any => {
                         {...this.state}
                         onChange={this.setState}
                         onSubmit={this.submit}
+                        placeholder={placeholder}
                         payButton={this.payButton}
                     />
                 </CoreProvider>
