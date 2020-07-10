@@ -2,6 +2,7 @@ import { CustomTranslations, Locales } from '../language/types';
 import { PaymentAmount, PaymentMethods, PaymentMethodOptions } from '../types';
 import { AnalyticsOptions } from './Analytics/Analytics';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
+import { RiskModuleOptions } from './RiskModule/RiskModule';
 
 export interface CoreOptions {
     /**
@@ -66,6 +67,8 @@ export interface CoreOptions {
     removePaymentMethods?: string[];
 
     analytics?: AnalyticsOptions;
+
+    risk?: RiskModuleOptions;
 
     [key: string]: any;
 }
