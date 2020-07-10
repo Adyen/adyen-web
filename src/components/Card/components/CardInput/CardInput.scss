@@ -120,8 +120,10 @@
 
 .adyen-checkout__card__dual-branding__buttons2{
     display: flex;
+    // Just for testing
     position: relative;
-    //top: 35px;
+    z-index: 1000;
+    top: -20px;
 }
 
 .adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon:nth-child(1){
@@ -130,7 +132,7 @@
 
 .adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon{
     cursor: pointer;
-    opacity: 0.25;
+    opacity: 1;//0.25
 }
 
 .adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon--selected{

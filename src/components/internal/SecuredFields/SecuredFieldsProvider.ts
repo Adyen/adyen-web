@@ -179,6 +179,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public setFocusOn(frame: string): void {
+        console.log('### SecuredFieldsProvider::setFocusOn:: ');
         if (this.csf) this.csf.setFocusOnFrame(frame);
     }
 

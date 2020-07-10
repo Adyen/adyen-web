@@ -8,12 +8,18 @@ interface DualBrandingIconProps {
     onClick?: any;
     dataValue?: string;
     selected?: boolean;
+    onFocusField?: any;
 }
 
 const DualBrandingIcon = ({ brand, loadingContext, onClick, dataValue, selected }: DualBrandingIconProps) => {
     const imageName = brand === 'card' ? 'nocard' : brand;
     const onError = e => {
         e.target.style.cssText = 'display: none';
+    };
+
+    const onClickHandler = e => {
+        console.log('### DualBrandingIcon::onClick:: image click');
+        onClick(e);
     };
 
     return (
@@ -24,7 +30,7 @@ const DualBrandingIcon = ({ brand, loadingContext, onClick, dataValue, selected 
             onError={onError}
             alt={brand}
             src={getCardImageUrl(imageName, loadingContext)}
-            onClick={onClick}
+            onClick={onClickHandler}
             data-value={dataValue}
         />
     );
