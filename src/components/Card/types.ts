@@ -28,10 +28,21 @@ interface CardPaymentMethodData {
     encryptedSecurityCode?: string;
 }
 
+interface BrowserInfo {
+    acceptHeader: string;
+    colorDepth: string;
+    language: string;
+    javaEnabled: boolean;
+    screenHeight: string;
+    screenWidth: string;
+    userAgent: string;
+    timeZoneOffset: number;
+}
+
 export interface CardElementData {
     paymentMethod: CardPaymentMethodData;
     billingAddress?: Address;
     installments?: { value: number };
-    storePaymentMethod?: any;
-    browserInfo: any;
+    storePaymentMethod?: boolean;
+    browserInfo: BrowserInfo;
 }
