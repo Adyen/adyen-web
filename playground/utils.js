@@ -1,7 +1,4 @@
-export const TEST_URL = 'http://localhost:3024';
-
-const protocol = window.location.protocol;
-const host = window.location.host;
+const { host, protocol } = window.location;
 
 export const httpPost = (endpoint, data) =>
     fetch(`${protocol}//${host}/${endpoint}`, {
@@ -23,25 +20,50 @@ export const getSearchParameters = search =>
             return acc;
         }, {});
 
-const insertHeader = htmlPages => {
+const insertHeader = pages => {
     const container = document.querySelector('header');
-    const links = htmlPages.map(name => {
-        const url = name !== htmlPages[0] ? name.toLowerCase() : '';
+    const links = pages.map(({ name, id }, index) => {
+        const url = `/${index ? id.toLowerCase() : ''}`;
+        const isActivePage = window.location.pathname === url;
 
-        return `<li><a href="/${url}">${name}</a></li>`;
+        return `
+            <li class="playground-nav__item ${isActivePage ? 'playground-nav__item--active' : ''}">
+                <a href="${url}" class="playground-nav__link">${name}</a>
+            </li>
+        `;
     });
 
     const header = `
-        <h1>Checkout Components <span>Dev</span></h1>
+        <button type="button" class="playground-nav-button" aria-label="Toggle nav">
+            <span aria-hidden></span>
+        </button>
 
-        <nav class="main-nav">
-            <ul>${links.join('')}</ul>
+        <h1>Adyen Web <span>Dev</span></h1>
+
+        <nav class="playground-nav">
+            <ul class="playground-nav__list">${links.join('')}</ul>
         </nav>
     `;
 
     if (container) container.innerHTML = header;
 };
 
+const addEventListeners = () => {
+    document.querySelectorAll('.playground-nav__link').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const url = e.target.href + window.location.search;
+            window.location.assign(url);
+        });
+    });
+
+    document.querySelector('.playground-nav-button').addEventListener('click', e => {
+        e.target.classList.toggle('playground-nav-button--open');
+        document.body.classList.toggle('nav-open');
+    });
+};
+
 if (window.htmlPages) {
-    document.onLoad = insertHeader(window.htmlPages);
+    insertHeader(window.htmlPages);
+    addEventListeners();
 }

@@ -134,6 +134,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
                     {showRemovePaymentMethodButton && (
                         <button
+                            type="button"
                             className="adyen-checkout__button adyen-checkout__button--inline adyen-checkout__button--link"
                             onClick={this.toggleDisableConfirmation}
                             aria-expanded={this.state.showDisableStoredPaymentMethodConfirmation}

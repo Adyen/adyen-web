@@ -2,5 +2,6 @@ import withIssuerList from '../helpers/withIssuerList';
 
 export default withIssuerList({
     type: 'billdesk_wallet',
-    showImage: false
+    showImage: false,
+    placeholder: 'issuerList.wallet.placeholder'
 });

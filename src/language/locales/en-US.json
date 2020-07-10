@@ -41,6 +41,7 @@
     "error.message.unknown": "An unknown error occurred",
     "idealIssuer.selectField.title": "Bank",
     "idealIssuer.selectField.placeholder": "Select your bank",
+    "issuerList.wallet.placeholder": "Select your wallet",
     "creditCard.success": "Payment Successful",
     "loading": "Loading…",
     "continue": "Continue",
