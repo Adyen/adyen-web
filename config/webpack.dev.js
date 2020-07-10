@@ -11,40 +11,38 @@ const resolve = dir => path.resolve(__dirname, dir);
 
 // NOTE: The first page in the array will be considered the index page.
 const htmlPages = [
-    'Dropin',
-    'Card',
-    'Components',
-    'SecuredFields',
-    'SecuredFieldsPure',
-    'IssuerLists',
-    'Voucher',
-    'QRCode',
-    'Giftcards',
-    'OpenInvoice'
+    { name: 'Drop-in', id: 'Dropin' },
+    { name: 'Cards', id: 'Cards' },
+    { name: 'Components', id: 'Components' },
+    { name: 'Gift Cards', id: 'GiftCards' },
+    { name: 'Issuer Lists', id: 'IssuerLists' },
+    { name: 'Open Invoices', id: 'OpenInvoices' },
+    { name: 'QR Codes', id: 'QRCodes' },
+    { name: 'Secured Fields', id: 'SecuredFields' },
+    { name: 'Secured Fields Pure', id: 'SecuredFieldsPure' },
+    { name: 'Vouchers', id: 'Vouchers' },
+    { name: 'Wallets', id: 'Wallets' }
 ];
 
-const htmlPageGenerator = name =>
+const htmlPageGenerator = ({ id }, index) =>
     new HTMLWebpackPlugin({
-        filename: name === htmlPages[0] ? 'index.html' : `${name.toLowerCase()}/index.html`,
-        template: path.join(__dirname, `../playground/${name}/${name}.html`),
+        filename: `${index ? `${id.toLowerCase()}/` : ''}index.html`,
+        template: path.join(__dirname, `../playground/pages/${id}/${id}.html`),
         templateParameters: () => ({ htmlWebpackPlugin: { htmlPages } }),
         inject: 'body',
-        chunks: [`AdyenDemo${name}`],
+        chunks: [`AdyenDemo${id}`],
         chunksSortMode: 'manual'
     });
 
-const entriesReducer = (acc, cur) => {
-    acc[`AdyenDemo${cur}`] = path.join(__dirname, `../playground/${cur}/${cur}.js`);
+const entriesReducer = (acc, { id }) => {
+    acc[`AdyenDemo${id}`] = path.join(__dirname, `../playground/pages/${id}/${id}.js`);
     return acc;
 };
-
-const generatedPages = htmlPages.map(htmlPageGenerator);
-const generatedEntries = htmlPages.reduce(entriesReducer, {});
 
 module.exports = merge(webpackConfig, {
     mode: 'development',
     plugins: [
-        ...generatedPages,
+        ...htmlPages.map(htmlPageGenerator),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
@@ -58,7 +56,7 @@ module.exports = merge(webpackConfig, {
     ],
     devtool: 'cheap-module-source-map',
     entry: {
-        ...generatedEntries,
+        ...htmlPages.reduce(entriesReducer, {}),
         AdyenCheckout: path.join(__dirname, '../src/index.ts')
     },
     output: {
