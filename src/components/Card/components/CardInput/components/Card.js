@@ -4,6 +4,7 @@ import ExpirationDate from './ExpirationDate';
 import CardNumber from './CardNumber';
 //import Field from '~/components/internal/FormFields/Field';
 import cx from 'classnames';
+import DualBrandingIcon from '~/components/Card/components/CardInput/components/DualBrandingIcon';
 
 const Card = (
     {
@@ -57,40 +58,56 @@ const Card = (
 
         {dualBrandingElements && (
             <div className="adyen-checkout__card__dual-branding">
-                <span className="adyen-checkout__label__text">{i18n.get('creditCard.dualBrandSelector.label')}</span>
-                <span className="adyen-checkout__card__dual-branding__buttons">
-                    <button
-                        type="button"
-                        className={cx([
-                            'adyen-checkout__button',
-                            'adyen-checkout__button__dual-brand-selector',
-                            'adyen-checkout__label__text',
-                            {
-                                'adyen-checkout__button__dual-brand-selector--selected': dualBrandingSelected === dualBrandingElements[0].id
-                            }
-                        ])}
-                        aria-controls="encryptedCardNumber"
+                {/*<span className="adyen-checkout__label__text">{i18n.get('creditCard.dualBrandSelector.label')}</span>*/}
+                {/*<span className="adyen-checkout__card__dual-branding__buttons">*/}
+                {/*    <button*/}
+                {/*        type="button"*/}
+                {/*        className={cx([*/}
+                {/*            'adyen-checkout__button',*/}
+                {/*            'adyen-checkout__button__dual-brand-selector',*/}
+                {/*            'adyen-checkout__label__text',*/}
+                {/*            {*/}
+                {/*                'adyen-checkout__button__dual-brand-selector--selected': dualBrandingSelected === dualBrandingElements[0].id*/}
+                {/*            }*/}
+                {/*        ])}*/}
+                {/*        aria-controls="encryptedCardNumber"*/}
+                {/*        onClick={dualBrandingChangeHandler}*/}
+                {/*        data-value={dualBrandingElements[0].id}*/}
+                {/*    >*/}
+                {/*        {dualBrandingElements[0].name}*/}
+                {/*    </button>*/}
+                {/*    <button*/}
+                {/*        type="button"*/}
+                {/*        className={cx([*/}
+                {/*            'adyen-checkout__button',*/}
+                {/*            'adyen-checkout__button__dual-brand-selector',*/}
+                {/*            'adyen-checkout__label__text',*/}
+                {/*            {*/}
+                {/*                'adyen-checkout__button__dual-brand-selector--selected': dualBrandingSelected === dualBrandingElements[1].id*/}
+                {/*            }*/}
+                {/*        ])}*/}
+                {/*        aria-controls="encryptedCardNumber"*/}
+                {/*        onClick={dualBrandingChangeHandler}*/}
+                {/*        data-value={dualBrandingElements[1].id}*/}
+                {/*    >*/}
+                {/*        {dualBrandingElements[1].name}*/}
+                {/*    </button>*/}
+                {/*</span>*/}
+                <span className="adyen-checkout__card__dual-branding__buttons2">
+                    <DualBrandingIcon
+                        brand={dualBrandingElements[0].id}
+                        loadingContext={loadingContext}
                         onClick={dualBrandingChangeHandler}
-                        data-value={dualBrandingElements[0].id}
-                    >
-                        {dualBrandingElements[0].name}
-                    </button>
-                    <button
-                        type="button"
-                        className={cx([
-                            'adyen-checkout__button',
-                            'adyen-checkout__button__dual-brand-selector',
-                            'adyen-checkout__label__text',
-                            {
-                                'adyen-checkout__button__dual-brand-selector--selected': dualBrandingSelected === dualBrandingElements[1].id
-                            }
-                        ])}
-                        aria-controls="encryptedCardNumber"
+                        dataValue={dualBrandingElements[0].id}
+                        selected={dualBrandingSelected === dualBrandingElements[0].id}
+                    />
+                    <DualBrandingIcon
+                        brand={dualBrandingElements[1].id}
+                        loadingContext={loadingContext}
                         onClick={dualBrandingChangeHandler}
-                        data-value={dualBrandingElements[1].id}
-                    >
-                        {dualBrandingElements[1].name}
-                    </button>
+                        dataValue={dualBrandingElements[1].id}
+                        selected={dualBrandingSelected === dualBrandingElements[1].id}
+                    />
                 </span>
             </div>
         )}

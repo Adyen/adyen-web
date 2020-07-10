@@ -117,3 +117,22 @@
 .adyen-checkout__card__dual-branding__buttons{
     display: flex;
 }
+
+.adyen-checkout__card__dual-branding__buttons2{
+    display: flex;
+    position: relative;
+    //top: 35px;
+}
+
+.adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon:nth-child(1){
+    right: 40px;
+}
+
+.adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon{
+    cursor: pointer;
+    opacity: 0.25;
+}
+
+.adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon--selected{
+    opacity: 1;
+}
