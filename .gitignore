@@ -26,3 +26,6 @@ stats.json
 # Vagrant
 Vagrantfile
 .vagrant
+
+# package-lock
+package-lock.json
