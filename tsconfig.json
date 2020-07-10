@@ -22,10 +22,7 @@
 
         "importHelpers": true,
 
-        "baseUrl": "./",
-        "paths": {
-            "~/*": ["src/*"]
-        }
+        "baseUrl": "./"
     },
     "include": ["src/"],
     "exclude": ["node_modules", "**/*.test.*"]
