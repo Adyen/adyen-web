@@ -2,36 +2,7 @@ import logEvent from '../Services/log-event';
 import postTelemetry from '../Services/post-telemetry';
 import collectId from '../Services/collect-id';
 import EventsQueue from './EventsQueue';
-
-export interface AnalyticsOptions {
-    /**
-     * Enable/Disable all analytics
-     */
-    enabled?: boolean;
-
-    /**
-     * Enable/Disable telemetry data
-     */
-    telemetry?: boolean;
-
-    /**
-     * Enable/Disable conversion events
-     */
-    conversion?: boolean;
-
-    /**
-     * Reuse a previous conversionId from a previous page
-     */
-    conversionId?: string;
-}
-
-interface AnalyticsProps {
-    loadingContext: string;
-    locale?: string;
-    originKey?: string;
-    clientKey?: string;
-    analytics?: AnalyticsOptions;
-}
+import { AnalyticsProps } from './types';
 
 class Analytics {
     private static defaultProps = {

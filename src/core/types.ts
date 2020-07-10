@@ -1,6 +1,6 @@
 import { CustomTranslations, Locales } from '../language/types';
 import { PaymentAmount, PaymentMethods, PaymentMethodOptions } from '../types';
-import { AnalyticsOptions } from './Analytics/Analytics';
+import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 
