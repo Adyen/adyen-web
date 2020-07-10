@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import './GiftcardResult.scss';
-import getImage from '~/utils/get-image';
+import getImage from '../../../utils/get-image';
 
 class GiftcardResult extends Component {
     render({ i18n, loadingContext, paymentMethodType, ...props }) {

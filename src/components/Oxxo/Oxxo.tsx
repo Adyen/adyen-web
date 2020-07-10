@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import OxxoVoucherResult from './components/OxxoVoucherResult';
-import CoreProvider from '~/core/Context/CoreProvider';
+import CoreProvider from '../../core/Context/CoreProvider';
 
 export class OxxoElement extends UIElement {
     public static type = 'oxxo';

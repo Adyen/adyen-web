@@ -2,7 +2,7 @@ import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configurat
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../../utilities/cardType';
 import postMessageToIframe from './iframes/postMessageToIframe';
-import { BinLookupObject, CardObject, SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
+import { BinLookupObject, CardObject, SFFeedbackObj } from '../../types';
 
 export function sendBrandToCardSF(brand: string): void {
     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {

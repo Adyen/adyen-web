@@ -1,4 +1,4 @@
-import { PaymentAmount } from '~/types';
+import { PaymentAmount } from '../../types';
 
 export interface DokuVoucherResultProps {
     reference?: string;

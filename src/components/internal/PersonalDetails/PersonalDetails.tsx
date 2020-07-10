@@ -5,10 +5,10 @@ import Field from '../FormFields/Field';
 import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
 import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
-import Validator from '~/utils/Validator';
-import useCoreContext from '~/core/Context/useCoreContext';
+import Validator from '../../../utils/Validator';
+import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps, PersonalDetailsStructure } from './PersonalDetailsTypes';
-import { checkDateInputSupport } from '~/components/internal/FormFields/InputDate/utils';
+import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'telephoneNumber', 'shopperEmail'];
 

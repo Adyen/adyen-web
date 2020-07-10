@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import classNames from 'classnames';
-import Spinner from '~/components/internal/Spinner';
+import Spinner from '../../internal/Spinner';
 import styles from './LoadingWrapper.module.scss';
 
 const LoadingWrapper = ({ children, status }) => {

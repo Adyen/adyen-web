@@ -1,6 +1,6 @@
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR } from '../../configuration/constants';
-import { SFFeedbackObj, CbObjOnAutoComplete } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj, CbObjOnAutoComplete } from '../../types';
 
 export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
     // Specifically for cc-name (but no reason not to propagate all AC objects to the merchant)

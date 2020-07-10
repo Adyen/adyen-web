@@ -1,14 +1,14 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { renderFormField } from '~/components/internal/FormFields';
-import Field from '~/components/internal/FormFields/Field';
-import Address from '~/components/internal/Address';
-import Validator from '~/utils/Validator';
+import { renderFormField } from '../../../../components/internal/FormFields';
+import Field from '../../../../components/internal/FormFields/Field';
+import Address from '../../../../components/internal/Address';
+import Validator from '../../../../utils/Validator';
 import { boletoValidationRules } from './validate';
 import SendCopyToEmail from './SendCopyToEmail';
 import { formatCPFCNPJ } from './utils';
-import useCoreContext from '~/core/Context/useCoreContext';
-import { BoletoInputDataState, BoletoInputErrorState, BoletoInputValidState } from '~/components/Boleto/types';
+import useCoreContext from '../../../../core/Context/useCoreContext';
+import { BoletoInputDataState, BoletoInputErrorState, BoletoInputValidState } from '../../types';
 
 const validator = new Validator(boletoValidationRules);
 

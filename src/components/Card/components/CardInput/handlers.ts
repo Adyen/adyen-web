@@ -1,6 +1,6 @@
 import { validateHolderName } from './validate';
-import { CbObjOnFocus, CbObjOnBrand } from '~/components/internal/SecuredFields/lib/types';
-import { SFPState } from '~/components/internal/SecuredFields/SecuredFieldsProvider';
+import { CbObjOnFocus, CbObjOnBrand } from '../../../internal/SecuredFields/lib/types';
+import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 
 // Validate whole cardInput component i.e holderName + securedFields
 function validateCardInput(): void {

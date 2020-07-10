@@ -3,7 +3,7 @@ import { addEncryptedElements } from '../ui/encryptedElements';
 import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { processErrors } from './utils/processErrors';
 import { truthy } from '../utilities/commonUtils';
-import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../types';
 import * as logger from '../utilities/logger';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {

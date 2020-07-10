@@ -4,7 +4,7 @@ import { shiftTabCreditCard } from './tabScenarioCreditCard';
 import { shiftTabACH } from './tabScenarioACH';
 import { shiftTabGiftCard } from './tabScenarioGiftCard';
 import { shiftTabKCP } from './tabScenarioKCP';
-import { ShiftTabObject } from '~/components/internal/SecuredFields/lib/types';
+import { ShiftTabObject } from '../../../types';
 
 const logTab = false;
 

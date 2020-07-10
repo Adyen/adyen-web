@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import Voucher from '~/components/internal/Voucher';
-import getImage from '~/utils/get-image';
-import useCoreContext from '~/core/Context/useCoreContext';
+import Voucher from '../../../internal/Voucher';
+import getImage from '../../../../utils/get-image';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import { MultibancoVoucherResultProps } from '../../types';
-import { VoucherDetail } from '~/components/internal/Voucher/types';
+import { VoucherDetail } from '../../../internal/Voucher/types';
 
 const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
     const { i18n, loadingContext } = useCoreContext();

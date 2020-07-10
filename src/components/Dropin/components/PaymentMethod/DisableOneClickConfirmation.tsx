@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import classNames from 'classnames';
 import './DisableOneClickConfirmation.scss';
 

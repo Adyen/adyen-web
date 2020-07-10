@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
-import getIssuerImageUrl from '~/utils/get-issuer-image';
-import useCoreContext from '~/core/Context/useCoreContext';
+import getIssuerImageUrl from '../../../../utils/get-issuer-image';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import { DragonpayVoucherResultProps } from '../../types';
-import { VoucherDetail } from '~/components/internal/Voucher/types';
+import { VoucherDetail } from '../../../internal/Voucher/types';
 
 export default function DragonpayVoucherResult(props: DragonpayVoucherResultProps) {
     const { reference, totalAmount, surcharge, expiresAt, alternativeReference, instructionsUrl, icon, issuer, paymentMethodType } = props;

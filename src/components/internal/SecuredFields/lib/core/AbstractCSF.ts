@@ -1,11 +1,4 @@
-import {
-    SetupObject,
-    ConfigObject,
-    CallbacksConfig,
-    CSFStateObject,
-    BinLookupObject,
-    SFFeedbackObj
-} from '~/components/internal/SecuredFields/lib/types';
+import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, BinLookupObject, SFFeedbackObj } from '../types';
 
 abstract class AbstractCSF {
     // Set in CSF

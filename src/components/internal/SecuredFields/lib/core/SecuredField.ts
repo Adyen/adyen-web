@@ -5,16 +5,16 @@ import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
 import { ENCRYPTED_SECURITY_CODE, IFRAME_TITLE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
-import { SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
     SFSetupObject,
     IframeConfigObject,
     RtnType_noParamVoidFn,
     RtnType_postMessageListener,
     RtnType_callbackFn
-} from '~/components/internal/SecuredFields/lib/core/AbstractSecuredField';
-import { pick, reject } from '~/components/internal/SecuredFields/utils';
-import getProp from '~/utils/getProp';
+} from '../core/AbstractSecuredField';
+import { pick, reject } from '../../utils';
+import getProp from '../../../../../utils/getProp';
 
 const logPostMsg = false;
 const doLog = false;

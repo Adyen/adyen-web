@@ -1,4 +1,4 @@
-import AdyenCheckout from '~';
+import AdyenCheckout from '../../../src';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods, getOriginKey } from '../../services';

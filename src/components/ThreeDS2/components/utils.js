@@ -1,6 +1,6 @@
 import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES } from '../config';
-import { getOrigin } from '~/utils/getOrigin';
-import base64 from '~/utils/base64';
+import { getOrigin } from '../../../utils/getOrigin';
+import base64 from '../../../utils/base64';
 
 export const decodeAndParseToken = token => {
     const decodedToken = base64.decode(token);

@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import defaultProps from './defaultProps';
-import DropinComponent from '~/components/Dropin/components/DropinComponent';
-import CoreProvider from '~/core/Context/CoreProvider';
-import { PaymentAction } from '~/types';
+import DropinComponent from '../../components/Dropin/components/DropinComponent';
+import CoreProvider from '../../core/Context/CoreProvider';
+import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
 
 class DropinElement extends UIElement<DropinElementProps> {

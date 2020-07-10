@@ -1,7 +1,7 @@
 import { h } from 'preact';
-import BaseElement, { BaseElementProps } from '~/components/BaseElement';
+import BaseElement, { BaseElementProps } from '../../components/BaseElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
-import base64 from '~/utils/base64';
+import base64 from '../../utils/base64';
 import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';
 
 interface RiskModuleProps extends BaseElementProps {

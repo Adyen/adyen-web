@@ -1,5 +1,5 @@
-import { getComponent } from '~/components';
-import { PaymentAction } from '~/types';
+import { getComponent } from '../../../components';
+import { PaymentAction } from '../../../types';
 
 const actionTypes = {
     redirect: (action: PaymentAction, props) =>

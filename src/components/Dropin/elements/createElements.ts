@@ -1,6 +1,6 @@
 import { getComponent, getComponentConfiguration } from '../..';
 import { filterPresent, filterAvailable } from './filters';
-import { PaymentMethod } from '~/types';
+import { PaymentMethod } from '../../../types';
 
 const FALLBACK_COMPONENT = 'redirect';
 

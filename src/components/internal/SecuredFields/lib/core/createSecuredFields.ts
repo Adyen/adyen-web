@@ -2,9 +2,9 @@ import { select, getAttribute } from '../utilities/dom';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR } from '../configuration/constants';
 import { existy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
-import { SFSetupObject } from '~/components/internal/SecuredFields/lib/core/AbstractSecuredField';
+import { SFSetupObject } from './AbstractSecuredField';
 import SecuredField from './SecuredField';
-import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '~/components/internal/SecuredFields/lib/types';
+import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../types';
 import * as logger from '../utilities/logger';
 
 export function createSecuredFields(): number {

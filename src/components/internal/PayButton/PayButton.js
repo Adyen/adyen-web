@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import Button from '../Button';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
 const PayButton = ({ amount = {}, classNameModifiers = [], label, ...props }) => {
     const { i18n } = useCoreContext();
