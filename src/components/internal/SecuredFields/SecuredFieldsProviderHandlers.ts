@@ -1,5 +1,5 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE } from './lib/configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
 import {
     CbObjOnError,
     CbObjOnFocus,
@@ -45,17 +45,29 @@ function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
 /**
  * Emits the onAllValid event
  */
-function handleOnAllValid(status: CbObjOnAllValid): void {
+function handleOnAllValid(status: CbObjOnAllValid): boolean {
+    // Form cannot be valid whilst there is an unsupported card
+    if (this.state.hasUnsupportedCard) {
+        return false;
+    }
+
     this.setState({ isSfpValid: status.allValid }, () => {
         this.props.onAllValid(status); // Propagate onAllValid event
     });
+
+    return true;
 }
 
 /**
  * Saves a field value from CSF in the CardInput state
  * Emits the onFieldValid event
  */
-function handleOnFieldValid(field: CbObjOnFieldValid): void {
+function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
+    // A card number field cannot be valid whilst there is an unsupported card
+    if (this.state.hasUnsupportedCard && field.fieldType === ENCRYPTED_CARD_NUMBER) {
+        return false;
+    }
+
     const setValidFieldState = prevState => ({
         data: { ...prevState.data, [field.encryptedFieldName]: field.blob },
         valid: { ...prevState.valid, [field.encryptedFieldName]: field.valid },
@@ -69,6 +81,8 @@ function handleOnFieldValid(field: CbObjOnFieldValid): void {
         // Propagate onFieldValid event
         this.props.onFieldValid(field);
     });
+
+    return true;
 }
 
 /**
@@ -102,12 +116,20 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
 /**
  * Handles validation errors
  */
-function handleOnError(cbObj: CbObjOnError): void {
+function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null): boolean {
+    // If we're in an "unsupported card" state and a 'regular' card number error comes through - ignore it until the "unsupported card" state is cleared
+    if (this.state.hasUnsupportedCard && cbObj.fieldType === ENCRYPTED_CARD_NUMBER && hasUnsupportedCard === null) {
+        return false;
+    }
+
     this.setState(prevState => ({
-        errors: { ...prevState.errors, [cbObj.fieldType]: cbObj.error || false }
+        errors: { ...prevState.errors, [cbObj.fieldType]: cbObj.error || false },
+        hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
     }));
 
     this.props.onError(cbObj);
+
+    return true;
 }
 
 function handleFocus(cbObj: CbObjOnFocus): void {

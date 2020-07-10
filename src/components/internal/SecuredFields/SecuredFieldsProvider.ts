@@ -38,6 +38,7 @@ export interface SFPState {
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: BillingAddress;
+    hasUnsupportedCard?: boolean;
 }
 
 /**
@@ -57,7 +58,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnAllValid: (obj: CbObjOnAllValid) => void;
     private handleOnBrand: (obj: CbObjOnBrand) => void;
     private handleFocus: (obj: CbObjOnFocus) => void;
-    private handleOnError: (obj: CbObjOnError) => void;
+    private handleOnError: (obj: CbObjOnError, hasUnsupportedCard?: boolean) => void;
     private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
     private handleOnNoDataRequired: () => void;
     public state: SFPState;
@@ -98,6 +99,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         // Bindings for functions exposed to users of this component: SecuredFields & CardInput
         this.setFocusOn = this.setFocusOn.bind(this);
         this.updateStyles = this.updateStyles.bind(this);
+        this.handleUnsupportedCard = this.handleUnsupportedCard.bind(this);
         this.showValidation = this.showValidation.bind(this);
         this.destroy = this.destroy.bind(this);
     }
@@ -176,6 +178,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public getChildContext(): object {
         return { i18n: this.props.i18n };
+    }
+
+    public handleUnsupportedCard(errObj: CbObjOnError): boolean {
+        const hasUnsupportedCard = !!errObj.error;
+        this.handleOnError(errObj, hasUnsupportedCard);
+        return hasUnsupportedCard;
     }
 
     public setFocusOn(frame: string): void {

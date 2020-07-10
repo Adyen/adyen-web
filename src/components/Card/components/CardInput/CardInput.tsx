@@ -14,11 +14,8 @@ import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
 import getImage from '~/utils/get-image';
 import './CardInput.scss';
-import { renderFormField } from '~/components/internal/FormFields';
-import Field from '~/components/internal/FormFields/Field';
 import processBinLookupResponse from './processBinLookup';
 import Language from '~/language/Language';
-// import { CardElementProps } from '~/components/Card/Card';
 
 interface CardInputProps {
     amount?: object;
@@ -78,6 +75,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     public props;
     private setFocusOn;
     private updateStyles;
+    private handleUnsupportedCard;
     private sfp;
     private billingAddressRef;
     private kcpAuthenticationRef;
@@ -128,6 +126,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     public componentDidMount() {
         this.setFocusOn = this.sfp.setFocusOn;
         this.updateStyles = this.sfp.updateStyles;
+        this.handleUnsupportedCard = this.sfp.handleUnsupportedCard;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -190,7 +189,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.kcpAuthenticationRef = ref;
     };
 
-    render({ loadingContext, hasHolderName, hasCVC, i18n, installmentOptions, enableStoreDetails }, { status, hideCVCForBrand, focusedElement }) {
+    render({ loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails }, { status, hideCVCForBrand, focusedElement }) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
 
         let isOneClick: boolean = this.props.storedPaymentMethodId ? true : false;
@@ -234,23 +233,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
-                                {this.state.additionalSelectElements.length > 0 && (
-                                    <Field
-                                        label={i18n.get('Select variation')}
-                                        classNameModifiers={['txVariantAdditionalInfo']}
-                                        // errorMessage={props.errorMessage}
-                                    >
-                                        {renderFormField('select', {
-                                            name: 'selectAdditionalTXData',
-                                            onChange: this.handleAdditionalDataSelection,
-                                            selected: this.state.additionalSelectValue,
-                                            placeholder: i18n.get('Select variation'),
-                                            items: this.state.additionalSelectElements,
-                                            readonly: false
-                                        })}
-                                    </Field>
-                                )}
-
                                 <Card
                                     {...this.props}
                                     brand={sfpState.brand}
