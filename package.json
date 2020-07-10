@@ -80,7 +80,7 @@
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.9.0",
         "webpack-merge": "^4.2.2",
-        "whatwg-fetch": "^3.1.1"
+        "whatwg-fetch": "^3.2.0"
     },
     "dependencies": {
         "@types/applepayjs": "^3.0.0",
