@@ -1,10 +1,12 @@
-import { CustomTranslations, Locales } from '../language/types';
+import
+{
+    CustomTranslations, Locales } from '../language/types';
 
 export interface CoreOptions {
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration }live environments}.
      */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | string;
+    environment?: EnvironmentOptions | string;
 
     /**
      * A client-side key linked to your website, used to validate Adyen’s Web component library. Use the {@link https://docs.adyen.com/api-explorer/#/CheckoutUtility/v1/originKeys /originKeys} endpoint to generate one.
@@ -33,4 +35,11 @@ export interface CoreOptions {
     paymentMethodsResponse?: any;
 
     [key: string]: any;
+}
+
+export enum EnvironmentOptions {
+    TEST = 'test',
+    LIVE = 'live',
+    LIVE_US = 'live-us',
+    LIVE_AU = 'live-au',
 }
