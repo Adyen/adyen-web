@@ -7,6 +7,7 @@ class BancontactElement extends CardElement {
 
     formatProps(props: CardElementProps) {
         return {
+            brand: 'bcmc',
             ...super.formatProps(props),
             // Override only display brands (groupTypes are decided earlier on super.formatProps)
             brands: ['bcmc', 'maestro']
