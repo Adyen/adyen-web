@@ -109,7 +109,11 @@
     }
 }
 
-.adyen-checkout__field--txVariantAdditionalInfo .adyen-checkout__dropdown__element,
-.adyen-checkout__field--txVariantAdditionalInfo .adyen-checkout__dropdown__button__text {
-    text-transform: capitalize;
+.adyen-checkout__card__dual-branding{
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.adyen-checkout__card__dual-branding__buttons{
+    display: flex;
 }

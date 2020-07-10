@@ -14,8 +14,8 @@ import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
 import getImage from '~/utils/get-image';
 import './CardInput.scss';
-import { renderFormField } from '~/components/internal/FormFields';
-import Field from '~/components/internal/FormFields/Field';
+// import { renderFormField } from '~/components/internal/FormFields';
+// import Field from '~/components/internal/FormFields/Field';
 import processBinLookupResponse from './processBinLookup';
 import Language from '~/language/Language';
 // import { CardElementProps } from '~/components/Card/Card';
@@ -234,22 +234,18 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
-                                {this.state.additionalSelectElements.length > 0 && (
-                                    <Field
-                                        label={i18n.get('Select variation')}
-                                        classNameModifiers={['txVariantAdditionalInfo']}
-                                        // errorMessage={props.errorMessage}
-                                    >
-                                        {renderFormField('select', {
-                                            name: 'selectAdditionalTXData',
-                                            onChange: this.handleAdditionalDataSelection,
-                                            selected: this.state.additionalSelectValue,
-                                            placeholder: i18n.get('Select variation'),
-                                            items: this.state.additionalSelectElements,
-                                            readonly: false
-                                        })}
-                                    </Field>
-                                )}
+                                {/*{this.state.additionalSelectElements.length > 0 && (*/}
+                                {/*    <Field label={i18n.get('Select variation')} classNameModifiers={['txVariantAdditionalInfo']}>*/}
+                                {/*        {renderFormField('select', {*/}
+                                {/*            name: 'selectAdditionalTXData',*/}
+                                {/*            onChange: this.handleAdditionalDataSelection,*/}
+                                {/*            selected: this.state.additionalSelectValue,*/}
+                                {/*            placeholder: i18n.get('Select variation'),*/}
+                                {/*            items: this.state.additionalSelectElements,*/}
+                                {/*            readonly: false*/}
+                                {/*        })}*/}
+                                {/*    </Field>*/}
+                                {/*)}*/}
 
                                 <Card
                                     {...this.props}
@@ -261,6 +257,9 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
                                     cvcRequired={sfpState.cvcRequired}
+                                    dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
+                                    dualBrandingChangeHandler={this.handleAdditionalDataSelection}
+                                    dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
                                 {hasHolderName && (
