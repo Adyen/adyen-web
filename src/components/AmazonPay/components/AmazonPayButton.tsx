@@ -34,9 +34,9 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
         const payloadJSON = getPayloadJSON(storeId, returnUrl, deliverySpecifications);
 
         getAmazonSignature(loadingContext, payloadJSON, accessKey)
-            .then(signature => {
-                if (!signature) return console.error('Could not get AmazonPay signature');
-                renderAmazonPayButton(payloadJSON, signature);
+            .then(response => {
+                if (!response?.signature) return console.error('Could not get AmazonPay signature');
+                renderAmazonPayButton(payloadJSON, response.signature);
             })
             .catch(error => {
                 console.error(error);

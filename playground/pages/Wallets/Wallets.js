@@ -1,6 +1,6 @@
 import AdyenCheckout from '~';
 import { getPaymentMethods, getOriginKey } from '../../services';
-import { handleChange, handleSubmit, handleAdditionalDetails } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -20,14 +20,12 @@ getOriginKey()
             // environment: 'http://localhost:8080/checkoutshopper/',
             // environment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
             environment: 'test',
-            onChange: handleChange,
             onSubmit: handleSubmit,
             onAdditionalDetails: handleAdditionalDetails,
             onError: console.error,
             showPayButton: true
         });
 
-<<<<<<< HEAD:playground/Components/Components.js
         // AmazonPay
         window.amazonpay = checkout
             .create('amazonpay', {
@@ -46,7 +44,7 @@ getOriginKey()
                  * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
                  */
                 returnUrl: 'http://localhost:3020/components',
-                storeId: 'abc'
+                storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
             })
             .mount('.amazonpay-field');
 
@@ -71,76 +69,6 @@ getOriginKey()
             })
             .mount('.amazonpayorder-field');
 
-        // Adyen Giving
-        window.donation = checkout
-            .create('donation', {
-                onDonate: (state, component) => console.log({ state, component }),
-                url: 'https://example.org',
-                amounts: {
-                    currency: 'EUR',
-                    values: [300, 500, 1000]
-                },
-                backgroundUrl:
-                    'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
-                description: 'Lorem ipsum...',
-                logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
-                name: 'Test Charity'
-            })
-            .mount('.donation-field');
-
-        const ariaLabels = {
-            lang: 'en-GB',
-            encryptedBankAccountNumber: {
-                label: 'Custom aria bank accnt label',
-                iframeTitle: 'Iframe for bank accnt number',
-                error: 'Ongeldig kaartnummer'
-            }
-        };
-
-        // MBWay
-        window.mbway = checkout.create('mbway').mount('.mbway-field');
-
-        // ACH
-        window.ach = checkout
-            .create('ach', {
-                //                holderNameRequired: false,
-                //                hasHolderName: false,
-                ariaLabels,
-                onConfigSuccess: obj => {
-                    console.log('### Components::onConfigSuccess:: obj', obj);
-                },
-                //                billingAddressRequired: false,
-                //                billingAddressAllowedCountries: ['US', 'PR'],
-                data: {
-                    //                    holderName: 'B. Fish',
-                    billingAddress: {
-                        street: 'Infinite Loop',
-                        postalCode: '95014',
-                        city: 'Cupertino',
-                        houseNumberOrName: '1',
-                        country: 'US',
-                        stateOrProvince: 'CA'
-                    }
-                }
-            })
-            .mount('.ach-field');
-
-        // SEPA Direct Debit
-        window.sepa = checkout
-            .create('sepadirectdebit', {
-                countryCode: 'NL',
-                holderName: true
-            })
-            .mount('.sepa-field');
-
-        // Qiwi
-        window.qiwi = checkout.create('qiwiwallet', {}).mount('.qiwi-field');
-
-        // SEPA Direct Debit
-        window.vipps = checkout.create('vipps').mount('.vipps-field');
-
-=======
->>>>>>> master:playground/pages/Wallets/Wallets.js
         // PAYPAL
         window.paypalButtons = checkout
             .create('paypal', {
