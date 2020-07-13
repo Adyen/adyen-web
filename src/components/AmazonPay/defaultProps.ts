@@ -1,7 +1,8 @@
 export default {
-    region: 'EU',
+    environment: 'TEST',
     locale: 'en_GB',
     placement: 'Cart',
     productType: 'PayAndShip',
+    region: 'EU',
     showPayButton: true
 };
