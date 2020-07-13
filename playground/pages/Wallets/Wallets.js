@@ -29,21 +29,17 @@ getOriginKey()
         // AmazonPay
         window.amazonpay = checkout
             .create('amazonpay', {
-                currency: 'EUR',
+                currency: 'GBP',
                 environment: 'test',
-                locale: 'en-GB',
                 merchantId: 'A3SKIS53IXYBBU',
-                placement: 'Product',
-                productType: 'PayOnly',
-                region: 'EU',
-                publicKeyId: 'AFLWXJCSP5OEOU7NPOYGMGG7',
+                publicKeyId: 'AG2E5E2GPCSBMNTT65SH7RXX',
 
                 /**
                  * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
                  * which will create and return the signature.
                  * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
                  */
-                returnUrl: 'http://localhost:3020/components',
+                returnUrl: 'http://localhost:3020/wallets',
                 storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
             })
             .mount('.amazonpay-field');
@@ -51,15 +47,9 @@ getOriginKey()
         window.amazonpayorder = checkout
             .create('amazonpay', {
                 /**
-                 * The merchant will receive the checkoutSessionId from the /getAmazonCheckoutSession endpoint from Adyen.
-                 * They need to then pass it to the component.
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
-                checkoutSessionId: 'abc',
-
-                /**
-                 * To be used as checkoutResultReturnUrl
-                 */
-                returnUrl: 'http://localhost:3020/components', // to be used as checkoutReviewReturnUrl
+                amazonCheckoutSessionId: '71500c76-7d73-4147-9e6f-5c87702b64f8',
 
                 /**
                  * A payments request is done with the checkoutSessionId.
