@@ -1,5 +1,5 @@
-import { FALLBACK_CONTEXT } from '~/core/config';
-import useCoreContext from '~/core/Context/useCoreContext';
+import { FALLBACK_CONTEXT } from '../core/config';
+import useCoreContext from '../core/Context/useCoreContext';
 
 export default (name: string, { loadingContext = FALLBACK_CONTEXT }: { loadingContext: string }) => {
     const { i18n } = useCoreContext();

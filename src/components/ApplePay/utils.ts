@@ -1,4 +1,4 @@
-import { ApplePayElementProps } from '~/components/ApplePay/types';
+import { ApplePayElementProps } from './types';
 import { PaymentAmount } from '../../types';
 
 /**

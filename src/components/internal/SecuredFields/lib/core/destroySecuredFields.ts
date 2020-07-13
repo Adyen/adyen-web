@@ -1,4 +1,4 @@
-import SecuredField from '~/components/internal/SecuredFields/lib/core/SecuredField';
+import SecuredField from '../../../../../components/internal/SecuredFields/lib/core/SecuredField';
 
 export function destroySecuredFields(): void {
     // Tell all securedFields iframes: they will remove all event listeners including keyboard events

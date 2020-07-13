@@ -1,8 +1,8 @@
 import { h } from 'preact';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
 import styles from '../CardInput.module.scss';
-import { renderFormField } from '~/components/internal/FormFields';
-import Field from '~/components/internal/FormFields/Field';
+import { renderFormField } from '../../../../internal/FormFields';
+import Field from '../../../../internal/FormFields/Field';
 
 const CardHolderName = ({ onChange, placeholder, value, required, error = false, isValid }) => {
     const { i18n } = useCoreContext();

@@ -1,4 +1,4 @@
-import { PaymentResponse, ProcessedResponse } from '~/types';
+import { PaymentResponse, ProcessedResponse } from '../../types';
 
 /**
  * Processes a complete response from Adyen by resultCode

@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'preact/hooks';
 import classNames from 'classnames';
 import { h } from 'preact';
-import Field from '~/components/internal/FormFields/Field';
-import useCoreContext from '~/core/Context/useCoreContext';
-import { renderFormField } from '~/components/internal/FormFields';
+import Field from '../../../../../components/internal/FormFields/Field';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { renderFormField } from '../../../../../components/internal/FormFields';
 import styles from '../CardInput.module.scss';
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;

@@ -1,4 +1,4 @@
-import { SFFeedbackObj, CbObjOnFocus } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj, CbObjOnFocus } from '../../../types';
 
 // Call focus callback and store which field currently has focus
 export function handleFocus(pFeedbackObj: SFFeedbackObj): void {

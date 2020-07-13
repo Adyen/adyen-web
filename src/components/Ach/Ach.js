@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import AchInput from './components/AchInput';
-import CoreProvider from '~/core/Context/CoreProvider';
+import CoreProvider from '../../core/Context/CoreProvider';
 
 export class AchElement extends UIElement {
     static type = 'ach';

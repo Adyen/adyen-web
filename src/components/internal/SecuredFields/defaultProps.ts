@@ -1,4 +1,4 @@
-import { Language } from '~/language/Language';
+import { Language } from '../../../language/Language';
 
 export interface SFPProps {
     /**

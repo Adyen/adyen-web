@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../core/Context/useCoreContext';
 import './IssuerList.scss';
 
 const payButtonLabel = ({ issuer, items }, i18n) => {

@@ -1,5 +1,5 @@
-import { email, telephoneNumber } from '~/utils/regex';
-import { unformatDate } from '~/components/internal/FormFields/InputDate/utils';
+import { email, telephoneNumber } from '../../../utils/regex';
+import { unformatDate } from '../FormFields/InputDate/utils';
 
 export const personalDetailsValidationRules = {
     blur: {

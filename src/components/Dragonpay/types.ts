@@ -1,5 +1,5 @@
-import { PaymentAmount } from '~/types';
-import Language from '~/language/Language';
+import { PaymentAmount } from '../../types';
+import Language from '../../language/Language';
 
 export interface DragonpayInputIssuerItem {
     id?: string;

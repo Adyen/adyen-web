@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
 import getImage from '../../../../utils/get-image';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import { EcontextVoucherResultProps } from '../../types';
 
 const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {

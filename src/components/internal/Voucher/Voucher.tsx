@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import classNames from 'classnames';
 import Button from '../Button';
-import { copyToClipboard } from '~/utils/clipboard';
-import getImage from '~/utils/get-image';
-import useCoreContext from '~/core/Context/useCoreContext';
+import { copyToClipboard } from '../../../utils/clipboard';
+import getImage from '../../../utils/get-image';
+import useCoreContext from '../../../core/Context/useCoreContext';
 import './Voucher.scss';
 import { VoucherProps } from './types';
 

@@ -1,4 +1,4 @@
-import AdyenCheckout from '~';
+import AdyenCheckout from '../../../src';
 import { getPaymentMethods, getOriginKey } from '../../services';
 import { handleChange, handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';

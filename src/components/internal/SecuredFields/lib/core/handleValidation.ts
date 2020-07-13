@@ -3,7 +3,7 @@ import { removeEncryptedElement } from '../ui/encryptedElements';
 import { processErrors } from './utils/processErrors';
 import { existy } from '../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
-import { SFFeedbackObj, CbObjOnFieldValid } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
 
 import * as logger from '../utilities/logger';
 

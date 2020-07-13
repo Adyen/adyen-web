@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import getProp from '~/utils/getProp';
+import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';

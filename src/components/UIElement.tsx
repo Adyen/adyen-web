@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import BaseElement, { BaseElementProps } from './BaseElement';
-import { PaymentAction, PaymentAmount } from '~/types';
+import { PaymentAction, PaymentAmount } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import Language from '../language/Language';

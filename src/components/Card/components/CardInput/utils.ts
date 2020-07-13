@@ -1,5 +1,5 @@
-import { getImageUrl } from '~/utils/get-image';
-import cardType from '~/components/internal/SecuredFields/lib/utilities/cardType';
+import { getImageUrl } from '../../../../utils/get-image';
+import cardType from '../../../../components/internal/SecuredFields/lib/utilities/cardType';
 
 export const getCardImageUrl = (brand: string, loadingContext: string) => {
     const imageOptions = {

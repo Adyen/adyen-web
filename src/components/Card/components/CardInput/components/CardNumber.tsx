@@ -2,9 +2,9 @@ import classNames from 'classnames';
 import { h } from 'preact';
 import styles from '../CardInput.module.scss';
 import BrandIcon from './BrandIcon';
-import Field from '~/components/internal/FormFields/Field';
-import useCoreContext from '~/core/Context/useCoreContext';
-import DualBrandingIcon from '~/components/Card/components/CardInput/components/DualBrandingIcon';
+import Field from '../../../../../components/internal/FormFields/Field';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
+import DualBrandingIcon from '../../../../../components/Card/components/CardInput/components/DualBrandingIcon';
 
 interface CardNumberProps {
     label: string;

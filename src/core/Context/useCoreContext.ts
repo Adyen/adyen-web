@@ -1,5 +1,5 @@
 import { useContext } from 'preact/hooks';
-import { CoreContext } from '~/core/Context/CoreContext';
+import { CoreContext } from './CoreContext';
 
 function useCoreContext() {
     return useContext(CoreContext);

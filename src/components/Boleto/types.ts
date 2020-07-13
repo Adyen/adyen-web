@@ -1,5 +1,5 @@
-import Language from '~/language/Language';
-import { Address } from '~/types';
+import Language from '../../language/Language';
+import { Address } from '../../types';
 
 export interface BoletoElementProps {
     type: string;
