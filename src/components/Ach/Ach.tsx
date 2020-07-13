@@ -4,7 +4,7 @@ import AchInput from './components/AchInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 
 export class AchElement extends UIElement {
-    static type = 'ach';
+    public static type = 'ach';
 
     formatProps(props) {
         return {
