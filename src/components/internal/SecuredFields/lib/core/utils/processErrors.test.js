@@ -78,7 +78,7 @@ beforeEach(() => {
     callbackFnCalled = false;
 });
 
-describe('Tests for processError - fny to create error object for callback fn, store error refs, and throttle to only call callback fn when error has changed', () => {
+describe('A suite of tests for processError (errors sent from securedFields) - fny to create error object for callback fn, store error refs, and throttle to only call callback fn when error has changed', () => {
     // --
     test('Should do nothing since the passed object does not have an error property', () => {
         const dataObj = processErrors({ propA: 'a', propB: 'b' });
