@@ -1,8 +1,8 @@
 import { h } from 'preact';
-import Voucher from '~/components/internal/Voucher';
-import { VoucherDetail } from '~/components/internal/Voucher/types';
-import getImage from '~/utils/get-image';
-import useCoreContext from '~/core/Context/useCoreContext';
+import Voucher from '../../../../components/internal/Voucher';
+import { VoucherDetail } from '../../../internal/Voucher/types';
+import getImage from '../../../../utils/get-image';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import { OxxoVoucherResultProps } from '../../types';
 import './OxxoVoucherResult.scss';
 

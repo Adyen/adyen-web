@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import Img from '~/components/internal/Img';
+import Img from '../../../internal/Img';
 import classNames from 'classnames';
 import styles from '../DropinComponent.module.scss';
 

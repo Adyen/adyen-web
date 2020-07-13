@@ -1,4 +1,4 @@
-import { FALLBACK_CONTEXT } from '~/core/config';
+import { FALLBACK_CONTEXT } from '../core/config';
 
 export interface ImageOptions {
     extension?: string;

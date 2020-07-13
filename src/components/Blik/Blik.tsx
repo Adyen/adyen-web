@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import BlikInput from '~/components/Blik/components/BlikInput';
+import BlikInput from '../../components/Blik/components/BlikInput';
 import Await from '../internal/Await';
-import CoreProvider from '~/core/Context/CoreProvider';
+import CoreProvider from '../../core/Context/CoreProvider';
 import config from './config';
-import RedirectButton from '~/components/internal/RedirectButton';
+import RedirectButton from '../../components/internal/RedirectButton';
 
 interface BlikElementData {
     paymentMethod: {

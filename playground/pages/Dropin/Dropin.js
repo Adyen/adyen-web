@@ -1,8 +1,8 @@
-import AdyenCheckout from '~';
+import AdyenCheckout from '../../../src';
 import { makeDetailsCall, makePayment, getOriginKey, getPaymentMethods } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
-import '~/../config/polyfills';
+import '../../../config/polyfills';
 import '../../style.scss';
 
 const initCheckout = paymentMethodsResponse => {

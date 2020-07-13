@@ -1,4 +1,4 @@
-import { getDecimalAmount } from '~/utils/amount-util';
+import { getDecimalAmount } from '../../utils/amount-util';
 
 const formatAmount = amount => String(getDecimalAmount(amount.value, amount.currency));
 

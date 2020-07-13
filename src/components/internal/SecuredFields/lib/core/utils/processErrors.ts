@@ -1,5 +1,5 @@
-import { CbObjOnError, SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
-import SecuredField from '~/components/internal/SecuredFields/lib/core/SecuredField';
+import { CbObjOnError, SFFeedbackObj } from '../../types';
+import SecuredField from '../../../../../../components/internal/SecuredFields/lib/core/SecuredField';
 // import * as logger from '../../utilities/logger'
 
 type RtnType_callbackFn = (obj: CbObjOnError) => void;

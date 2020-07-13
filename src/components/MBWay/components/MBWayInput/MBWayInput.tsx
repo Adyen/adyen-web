@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import classNames from 'classnames';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './MBWayInput.module.scss';
 import './MBWayInput.scss';
-import Field from '~/components/internal/FormFields/Field';
-import { renderFormField } from '~/components/internal/FormFields';
-import { mbwayValidationRules } from '~/components/MBWay/components/MBWayInput/validate';
-import Validator from '~/utils/Validator';
+import Field from '../../../../components/internal/FormFields/Field';
+import { renderFormField } from '../../../../components/internal/FormFields';
+import { mbwayValidationRules } from './validate';
+import Validator from '../../../../utils/Validator';
 import { UIElementProps } from '../../../UIElement';
 
 type RtnTypeFnWithEvent = (e: Event) => void;

@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
-import CoreProvider from '~/core/Context/CoreProvider';
-import getImage from '~/utils/get-image';
-import collectBrowserInfo from '~/utils/browserInfo';
-import fetchJSONData from '~/utils/fetch-json-data';
+import CoreProvider from '../../core/Context/CoreProvider';
+import getImage from '../../utils/get-image';
+import collectBrowserInfo from '../../utils/browserInfo';
+import fetchJSONData from '../../utils/fetch-json-data';
 import { CardElementData, CardElementProps } from './types';
 
 export class CardElement extends UIElement<CardElementProps> {

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import CVC from './CVC';
-import Field from '~/components/internal/FormFields/Field';
+import Field from '../../../../internal/FormFields/Field';
 
 const OneClickCardInput = ({ brand, hasCVC, onFocusField, errors, valid, ...props }, { i18n }) => {
     // TODO create a translation key for "stored card ends in"

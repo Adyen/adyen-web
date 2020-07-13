@@ -1,4 +1,4 @@
-import { CallbacksConfig } from '~/components/internal/SecuredFields/lib/types';
+import { CallbacksConfig } from '../types';
 
 const noop = () => {};
 

@@ -1,6 +1,6 @@
 import { h, ComponentChildren } from 'preact';
 import cx from 'classnames';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import './Fieldset.scss';
 
 interface FieldsetProps {

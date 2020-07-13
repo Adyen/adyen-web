@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../core/Context/useCoreContext';
 import { useState } from 'preact/hooks';
 
 function RedirectButton({ payButton, onSubmit, amount = null, name, ...props }) {

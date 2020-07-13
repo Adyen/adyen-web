@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import BoletoInput from './components/BoletoInput';
 import { cleanCPFCNPJ } from './components/BoletoInput/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
-import CoreProvider from '~/core/Context/CoreProvider';
+import CoreProvider from '../../core/Context/CoreProvider';
 
 export class BoletoElement extends UIElement {
     public static type = 'boletobancario';

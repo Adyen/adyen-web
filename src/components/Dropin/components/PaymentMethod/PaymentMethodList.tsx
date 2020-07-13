@@ -1,7 +1,7 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
 import PaymentMethodItem from './PaymentMethodItem';
-import getProp from '~/utils/getProp';
+import getProp from '../../../../utils/getProp';
 import styles from '../DropinComponent.module.scss';
 import UIElement from '../../../UIElement';
 

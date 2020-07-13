@@ -1,4 +1,4 @@
-import AdyenCheckout from '~';
+import AdyenCheckout from '../../../src';
 import { handleChange, handleSubmit } from '../../handlers';
 import { getOriginKey } from '../../services';
 import '../../../config/polyfills';

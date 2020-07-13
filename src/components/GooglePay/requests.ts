@@ -1,4 +1,4 @@
-import { getDecimalAmount } from '~/utils/amount-util';
+import { getDecimalAmount } from '../../utils/amount-util';
 import config from './config';
 import { GooglePayProps } from './types';
 

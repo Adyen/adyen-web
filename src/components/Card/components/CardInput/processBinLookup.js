@@ -1,6 +1,6 @@
 // Based on values in binValueObject we might need to trigger additional markup
 // e.g. a selector for brands or to choose between credit/debit card variations
-import { createCardVariantSwitcher } from '~/components/Card/components/CardInput/utils';
+import { createCardVariantSwitcher } from './utils';
 
 export default function processBinLookupResponse(binValueObject) {
     // RESET: The number of digits in number field has dropped below threshold for BIN lookup - so reset the UI & inform SFP

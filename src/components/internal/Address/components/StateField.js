@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { useState, useLayoutEffect } from 'preact/hooks';
 import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
-import useCoreContext from '~/core/Context/useCoreContext';
-import fetchJSONData from '~/utils/fetch-json-data';
+import useCoreContext from '../../../../core/Context/useCoreContext';
+import fetchJSONData from '../../../../utils/fetch-json-data';
 import { COUNTRIES_WITH_STATES_DATASET } from '../constants';
 
 export default function StateField(props) {
