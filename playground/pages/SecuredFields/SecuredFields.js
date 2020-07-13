@@ -1,4 +1,4 @@
-import AdyenCheckout from '~';
+import AdyenCheckout from '../../../src';
 import { makePayment, makeDetailsCall, getOriginKey } from '../../services';
 import { styles, placeholders, ariaLabels, setCCErrors, setFocus, onBrand, onConfigSuccess } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';

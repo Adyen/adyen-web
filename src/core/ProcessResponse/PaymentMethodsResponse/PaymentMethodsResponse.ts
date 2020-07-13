@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentMethodsResponseInterface } from '~/types';
+import { PaymentMethod, PaymentMethodsResponseInterface } from '../../../types';
 
 import {
     filterAllowedPaymentMethods,

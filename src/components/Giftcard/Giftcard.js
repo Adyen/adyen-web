@@ -2,8 +2,8 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import GiftcardInput from './components/GiftcardInput';
 import GiftcardResult from './components/GiftcardResult';
-import CoreProvider from '~/core/Context/CoreProvider';
-import getImage from '~/utils/get-image';
+import CoreProvider from '../../core/Context/CoreProvider';
+import getImage from '../../utils/get-image';
 
 export class GiftcardElement extends UIElement {
     static type = 'genericgiftcard';

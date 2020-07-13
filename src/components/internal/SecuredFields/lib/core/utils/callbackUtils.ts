@@ -1,5 +1,5 @@
 import { ENCRYPTED_EXPIRY_DATE } from '../../configuration/constants';
-import { CbObjOnFieldValid, EncryptionObj } from '~/components/internal/SecuredFields/lib/types';
+import { CbObjOnFieldValid, EncryptionObj } from '../../types';
 // import * as logger from '../../utilities/logger';
 
 const makeCallbackObj = (

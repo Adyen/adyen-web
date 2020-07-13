@@ -1,4 +1,4 @@
-import { SFFeedbackObj, StylesObject } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj, StylesObject } from '../types';
 
 export type RtnType_noParamVoidFn = () => void;
 export type RtnType_postMessageListener = (event: Event) => void;

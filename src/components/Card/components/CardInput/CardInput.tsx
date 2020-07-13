@@ -1,10 +1,10 @@
 import { Component, h } from 'preact';
 import handlers from './handlers';
 import Card from './components/Card';
-import SecuredFieldsProvider from '~/components/internal/SecuredFields/SecuredFieldsProvider';
-import Address from '~/components/internal/Address';
+import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import Address from '../../../../components/internal/Address';
 import OneClickCard from './components/OneClickCard';
-import StoreDetails from '~/components/internal/StoreDetails';
+import StoreDetails from '../../../../components/internal/StoreDetails';
 import CardHolderName from './components/CardHolderName';
 import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import KCPAuthentication from './components/KCPAuthentication';
@@ -12,10 +12,13 @@ import Installments from './components/Installments';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
-import getImage from '~/utils/get-image';
+import getImage from '../../../../utils/get-image';
 import './CardInput.scss';
+import { renderFormField } from '../../../../components/internal/FormFields';
+import Field from '../../../../components/internal/FormFields/Field';
 import processBinLookupResponse from './processBinLookup';
-import Language from '~/language/Language';
+import Language from '../../../../language/Language';
+// import { CardElementProps } from '~/components/Card/Card';
 
 interface CardInputProps {
     amount?: object;

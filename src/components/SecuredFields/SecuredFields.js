@@ -2,8 +2,8 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import SecuredFields from '../internal/SecuredFields';
 import CoreProvider from '../../core/Context/CoreProvider';
-import collectBrowserInfo from '~/utils/browserInfo';
-import getImage from '~/utils/get-image';
+import collectBrowserInfo from '../../utils/browserInfo';
+import getImage from '../../utils/get-image';
 
 export class SecuredFieldsElement extends UIElement {
     static type = 'scheme';

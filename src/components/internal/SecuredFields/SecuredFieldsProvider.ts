@@ -25,8 +25,8 @@ import {
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
     CbObjOnLoad
-} from '~/components/internal/SecuredFields/lib/types';
-import { BillingAddress } from '~/components/internal/Address/types';
+} from './lib/types';
+import { BillingAddress } from '../Address/types';
 
 export interface SFPState {
     status?: string;

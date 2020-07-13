@@ -1,3 +1,5 @@
+import paymentMethods from '../components';
+
 /**
  * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v51/payments__resParam_action API Explorer /payments action}
  */
@@ -131,3 +133,13 @@ export interface Address {
     country?: string;
     stateOrProvince?: string;
 }
+
+/**
+ * Available components
+ */
+export type PaymentMethods = typeof paymentMethods;
+
+/**
+ * Options for a component
+ */
+export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];

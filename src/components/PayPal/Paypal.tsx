@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
-import { PaymentAction } from '~/types';
+import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
 

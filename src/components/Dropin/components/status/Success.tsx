@@ -1,7 +1,7 @@
 import { h } from 'preact';
-import { getImageUrl } from '~/utils/get-image';
-import Img from '~/components/internal/Img';
-import useCoreContext from '~/core/Context/useCoreContext';
+import { getImageUrl } from '../../../../utils/get-image';
+import Img from '../../../../components/internal/Img';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 const Success = ({ message }) => {
     const { i18n, loadingContext } = useCoreContext();

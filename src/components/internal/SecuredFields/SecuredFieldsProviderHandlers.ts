@@ -9,7 +9,7 @@ import {
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
     CbObjOnLoad
-} from '~/components/internal/SecuredFields/lib/types';
+} from './lib/types';
 
 /**
  * Emits the onConfigSuccess (ready) event

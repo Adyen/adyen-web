@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { h } from 'preact';
 import styles from '../CardInput.module.scss';
-import Spinner from '~/components/internal/Spinner';
+import Spinner from '../../../../internal/Spinner';
 
 interface CardSpinnerProps {
     status: string;

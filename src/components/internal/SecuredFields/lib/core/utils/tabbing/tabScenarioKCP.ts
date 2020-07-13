@@ -8,7 +8,7 @@ import {
     ENCRYPTED_PIN_FIELD
 } from '../../../configuration/constants';
 import { getPreviousTabbableNonSFElement } from '../../../ui/domUtils';
-import { ShiftTabObject } from '~/components/internal/SecuredFields/lib/types';
+import { ShiftTabObject } from '../../../types';
 
 // KCP scenario: Regular credit card but with additional fields -
 // an encrypted pin/password field preceded by a form field of a non-SF type (d.o.b/taxRefNum)

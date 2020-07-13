@@ -1,7 +1,7 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { existy } from '../../utilities/commonUtils';
-import { CbObjOnBrand, SFFeedbackObj } from '~/components/internal/SecuredFields/lib/types';
+import { CbObjOnBrand, SFFeedbackObj } from '../../types';
 import * as logger from '../../utilities/logger';
 
 interface BrandInfoObject {

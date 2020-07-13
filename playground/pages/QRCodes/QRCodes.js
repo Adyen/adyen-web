@@ -1,4 +1,4 @@
-import AdyenCheckout from '~';
+import AdyenCheckout from '../../../src';
 import { makePayment, getOriginKey } from '../../services';
 import { shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
