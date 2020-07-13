@@ -234,19 +234,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
-                                {/*{this.state.additionalSelectElements.length > 0 && (*/}
-                                {/*    <Field label={i18n.get('Select variation')} classNameModifiers={['txVariantAdditionalInfo']}>*/}
-                                {/*        {renderFormField('select', {*/}
-                                {/*            name: 'selectAdditionalTXData',*/}
-                                {/*            onChange: this.handleAdditionalDataSelection,*/}
-                                {/*            selected: this.state.additionalSelectValue,*/}
-                                {/*            placeholder: i18n.get('Select variation'),*/}
-                                {/*            items: this.state.additionalSelectElements,*/}
-                                {/*            readonly: false*/}
-                                {/*        })}*/}
-                                {/*    </Field>*/}
-                                {/*)}*/}
-
                                 <Card
                                     {...this.props}
                                     brand={sfpState.brand}

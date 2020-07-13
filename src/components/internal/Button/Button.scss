@@ -152,36 +152,4 @@
         border-color: $color-white;
         border-top-color: transparent;
     }
-
-    &.adyen-checkout__button__dual-brand-selector{
-        width: 50%;
-        margin-right: 8px;
-        height: 40px;
-        background: #fff;
-        border: 1px solid #b9c4c9;
-        border-radius: 6px;
-        padding: 5px 8px;
-
-        &:hover,
-        &:focus,
-        &:active,
-        &:active:hover {
-            background: rgba(0, 102, 255, 0.2);
-            box-shadow: 0 0 0 2px #99c2ff;
-            color: #06f;
-            border: 1px solid #06f;
-        }
-    }
-
-    &.adyen-checkout__button__dual-brand-selector:nth-child(2){
-        margin-right: 0;
-        margin-left: 8px;
-    }
-
-    &.adyen-checkout__button__dual-brand-selector--selected{
-        background: rgba(0, 102, 255, 0.2);
-        box-shadow: 0 0 0 2px #99c2ff;
-        color: #06f;
-        border: 1px solid #06f;
-    }
 }

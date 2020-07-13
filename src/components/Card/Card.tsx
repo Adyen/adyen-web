@@ -120,10 +120,6 @@ export class CardElement extends UIElement<CardElementProps> {
             ).then(data => {
                 // If response is the one we were waiting for...
                 if (data && data.requestId === this.currentRequestId) {
-                    // TODO
-                    data.supportedBrands = ['visa', 'cartebancaire'];
-                    // end TODO
-
                     // ...call processBinLookupResponse with the response object
                     // if it contains at least one brand (a failed lookup will just contain requestId)
                     if (data.supportedBrands && data.supportedBrands.length) {

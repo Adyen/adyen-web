@@ -61,8 +61,8 @@ const CardNumber = ({
             {dualBrandingElements && !error && (
                 <div
                     className={classNames([
-                        'adyen-checkout__card__dual-branding__buttons2',
-                        { 'adyen-checkout__card__dual-branding__buttons2--active': isValid }
+                        'adyen-checkout__card__dual-branding__buttons',
+                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
                     ])}
                 >
                     <DualBrandingIcon

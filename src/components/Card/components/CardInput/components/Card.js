@@ -39,61 +39,6 @@ const Card = (
             dualBrandingChangeHandler={dualBrandingChangeHandler}
             dualBrandingSelected={dualBrandingSelected}
         />
-        {/*{dualBrandingElements && (*/}
-        {/*    <div className="adyen-checkout__card__dual-branding">*/}
-        {/*        <span className="adyen-checkout__label__text">{i18n.get('creditCard.dualBrandSelector.label')}</span>*/}
-        {/*        <span className="adyen-checkout__card__dual-branding__buttons">*/}
-        {/*            <button*/}
-        {/*                type="button"*/}
-        {/*                className={cx([*/}
-        {/*                    'adyen-checkout__button',*/}
-        {/*                    'adyen-checkout__button__dual-brand-selector',*/}
-        {/*                    'adyen-checkout__label__text',*/}
-        {/*                    {*/}
-        {/*                        'adyen-checkout__button__dual-brand-selector--selected': dualBrandingSelected === dualBrandingElements[0].id*/}
-        {/*                    }*/}
-        {/*                ])}*/}
-        {/*                aria-controls="encryptedCardNumber"*/}
-        {/*                onClick={dualBrandingChangeHandler}*/}
-        {/*                data-value={dualBrandingElements[0].id}*/}
-        {/*            >*/}
-        {/*                {dualBrandingElements[0].name}*/}
-        {/*            </button>*/}
-        {/*            <button*/}
-        {/*                type="button"*/}
-        {/*                className={cx([*/}
-        {/*                    'adyen-checkout__button',*/}
-        {/*                    'adyen-checkout__button__dual-brand-selector',*/}
-        {/*                    'adyen-checkout__label__text',*/}
-        {/*                    {*/}
-        {/*                        'adyen-checkout__button__dual-brand-selector--selected': dualBrandingSelected === dualBrandingElements[1].id*/}
-        {/*                    }*/}
-        {/*                ])}*/}
-        {/*                aria-controls="encryptedCardNumber"*/}
-        {/*                onClick={dualBrandingChangeHandler}*/}
-        {/*                data-value={dualBrandingElements[1].id}*/}
-        {/*            >*/}
-        {/*                {dualBrandingElements[1].name}*/}
-        {/*            </button>*/}
-        {/*        </span>*/}
-        {/*    <span className="adyen-checkout__card__dual-branding__buttons2">*/}
-        {/*        <DualBrandingIcon*/}
-        {/*            brand={dualBrandingElements[0].id}*/}
-        {/*            loadingContext={loadingContext}*/}
-        {/*            onClick={dualBrandingChangeHandler}*/}
-        {/*            dataValue={dualBrandingElements[0].id}*/}
-        {/*            selected={dualBrandingSelected === dualBrandingElements[0].id}*/}
-        {/*        />*/}
-        {/*        <DualBrandingIcon*/}
-        {/*            brand={dualBrandingElements[1].id}*/}
-        {/*            loadingContext={loadingContext}*/}
-        {/*            onClick={dualBrandingChangeHandler}*/}
-        {/*            dataValue={dualBrandingElements[1].id}*/}
-        {/*            selected={dualBrandingSelected === dualBrandingElements[1].id}*/}
-        {/*        />*/}
-        {/*    </span>*/}
-        {/*</div>*/}
-        {/*)}*/}
 
         <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
             <ExpirationDate

@@ -121,7 +121,6 @@ function handleFocus(e: CbObjOnFocus): void {
 function handleAdditionalDataSelection(e: Event): void {
     const field: HTMLLIElement = e.currentTarget as HTMLLIElement;
     const value: string = field.getAttribute('data-value');
-    console.log('### handlers::handleAdditionalDataSelection:: value=', value);
 
     this.setState({ additionalSelectValue: value }, this.validateCardInput);
 

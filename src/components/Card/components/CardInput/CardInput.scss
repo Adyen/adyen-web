@@ -109,35 +109,26 @@
     }
 }
 
-.adyen-checkout__card__dual-branding{
-    margin-bottom: 16px;
-    width: 100%;
-}
-
 .adyen-checkout__card__dual-branding__buttons{
-    display: flex;
-}
-
-.adyen-checkout__card__dual-branding__buttons2{
     display: flex;
     opacity: 0.25;
     pointer-events: none;
 }
 
-.adyen-checkout__card__dual-branding__buttons2--active{
+.adyen-checkout__card__dual-branding__buttons--active{
     opacity: 1;
     pointer-events: auto;
 }
 
-.adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon:nth-child(1){
+.adyen-checkout__card__dual-branding__buttons .adyen-checkout__card__cardNumber__brandIcon:nth-child(1){
     right: 40px;
 }
 
-.adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon{
+.adyen-checkout__card__dual-branding__buttons .adyen-checkout__card__cardNumber__brandIcon{
     cursor: pointer;
     opacity: 1;
 }
 
-.adyen-checkout__card__dual-branding__buttons2 .adyen-checkout__card__cardNumber__brandIcon--not-selected{
+.adyen-checkout__card__dual-branding__buttons .adyen-checkout__card__cardNumber__brandIcon--not-selected{
     opacity: 0.25;
 }
