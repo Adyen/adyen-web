@@ -7,9 +7,9 @@ import StateField from './components/StateField';
 import CountryField from './components/CountryField';
 import { renderFormField } from '../FormFields';
 import { addressValidationRules } from './validate';
-import Validator from '~/utils/Validator';
-import useCoreContext from '~/core/Context/useCoreContext';
-import { COUNTRIES_WITH_STATES_DATASET } from '~/components/internal/Address/constants';
+import Validator from '../../../utils/Validator';
+import useCoreContext from '../../../core/Context/useCoreContext';
+import { COUNTRIES_WITH_STATES_DATASET } from './constants';
 import { AddressObject, AddressProps } from './types';
 
 export type RtnType_ParamVoidFn = (e) => void;

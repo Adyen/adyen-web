@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
 import getImage from '../../../../utils/get-image';
-import useCoreContext from '~/core/Context/useCoreContext';
-import { DokuVoucherResultProps } from '~/components/Doku/types';
+import useCoreContext from '../../../../core/Context/useCoreContext';
+import { DokuVoucherResultProps } from '../../types';
 
 const DokuVoucherResult = (props: DokuVoucherResultProps) => {
     const { reference, expiresAt, instructionsUrl, shopperName, merchantName, totalAmount, paymentMethodType } = props;

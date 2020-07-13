@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import MultibancoVoucherResult from './components/MultibancoVoucherResult';
-import CoreProvider from '~/core/Context/CoreProvider';
+import CoreProvider from '../../core/Context/CoreProvider';
 
 export class MultibancoElement extends UIElement {
     public static type = 'multibanco';

@@ -1,5 +1,5 @@
 import actionTypes from './actionTypes';
-import { PaymentAction } from '~/types';
+import { PaymentAction } from '../../../types';
 
 export function getComponentForAction(action: PaymentAction, props = {}) {
     const nextAction = actionTypes[action.type];

@@ -1,4 +1,4 @@
-import { SFFeedbackObj, CbObjOnBinValue } from '~/components/internal/SecuredFields/lib/types';
+import { SFFeedbackObj, CbObjOnBinValue } from '../../types';
 
 interface DestructuredFeedbackObj {
     binValue?: string;

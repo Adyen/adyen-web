@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import MBWayInput from './components/MBWayInput';
-import CoreProvider from '~/core/Context/CoreProvider';
-import config from '~/components/MBWay/components/MBWayAwait/config';
-import Await from '~/components/internal/Await';
+import CoreProvider from '../../core/Context/CoreProvider';
+import config from '../../components/MBWay/components/MBWayAwait/config';
+import Await from '../../components/internal/Await';
 
 export class MBWayElement extends UIElement {
     private static type = 'mbway';

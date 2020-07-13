@@ -1,6 +1,6 @@
-import { PaymentAmount } from '~/types';
+import { PaymentAmount } from '../../types';
 import UIElement, { UIElementProps } from '../UIElement';
-import { SUPPORTED_LOCALES } from '~/components/PayPal/config';
+import { SUPPORTED_LOCALES } from './config';
 
 declare global {
     interface Window {

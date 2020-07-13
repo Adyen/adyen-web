@@ -1,4 +1,4 @@
-import { PayPalElementProps } from '~/components/PayPal/types';
+import { PayPalElementProps } from './types';
 
 const defaultProps: PayPalElementProps = {
     environment: 'TEST',

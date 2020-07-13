@@ -4,8 +4,8 @@ import CampaignContainer from './CampaignContainer';
 import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
-import { getImageUrl } from '~/utils/get-image';
-import useCoreContext from '~/core/Context/useCoreContext';
+import { getImageUrl } from '../../../utils/get-image';
+import useCoreContext from '../../../core/Context/useCoreContext';
 import '../Donation.scss';
 
 export default function DonationComponent(props) {

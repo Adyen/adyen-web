@@ -1,4 +1,5 @@
-import { CardElement, CardElementProps } from './Card';
+import { CardElement } from './Card';
+import { CardElementProps } from './types';
 
 class BancontactElement extends CardElement {
     constructor(props: CardElementProps) {
@@ -7,6 +8,7 @@ class BancontactElement extends CardElement {
 
     formatProps(props: CardElementProps) {
         return {
+            brand: 'bcmc',
             ...super.formatProps(props),
             // Override only display brands (groupTypes are decided earlier on super.formatProps)
             brands: ['bcmc', 'maestro']

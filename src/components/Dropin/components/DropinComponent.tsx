@@ -3,7 +3,7 @@ import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import { createElements, createStoredElements } from '../elements';
 import { getCommonProps } from './utils';
 import Status from './status';
-import getProp from '~/utils/getProp';
+import getProp from '../../../utils/getProp';
 import UIElement from '../../UIElement';
 import './DropinComponent.scss';
 import { DropinComponentProps } from '../types';

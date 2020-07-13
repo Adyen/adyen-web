@@ -1,4 +1,4 @@
-import { CbObjOnAllValid } from '~/components/internal/SecuredFields/lib/types';
+import { CbObjOnAllValid } from '../../types';
 
 const checkFormIsValid = (pSecuredFields: object): boolean => {
     const securedFieldKeys: string[] = Object.keys(pSecuredFields);

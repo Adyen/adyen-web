@@ -5,7 +5,7 @@ import PaymentMethodIcon from './PaymentMethodIcon';
 import DisableOneClickConfirmation from './DisableOneClickConfirmation';
 import styles from '../DropinComponent.module.scss';
 import './PaymentMethodItem.scss';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import UIElement from '../../../UIElement';
 
 interface PaymentMethodItemProps {

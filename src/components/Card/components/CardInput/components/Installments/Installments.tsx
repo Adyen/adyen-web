@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { renderFormField } from '~/components/internal/FormFields';
-import Field from '~/components/internal/FormFields/Field';
-import useCoreContext from '~/core/Context/useCoreContext';
-import { PaymentAmount } from '~/types';
+import { renderFormField } from '../../../../../../components/internal/FormFields';
+import Field from '../../../../../../components/internal/FormFields/Field';
+import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { PaymentAmount } from '../../../../../../types';
 
 interface InstallmentOptionValues {
     values: number[];

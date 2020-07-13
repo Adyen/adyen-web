@@ -18,7 +18,7 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject } from '~/components/internal/SecuredFields/lib/types';
+import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject } from '../types';
 import * as logger from '../utilities/logger';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {

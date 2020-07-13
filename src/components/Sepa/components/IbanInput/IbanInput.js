@@ -1,7 +1,7 @@
 import { Component, h } from 'preact';
-import useCoreContext from '~/core/Context/useCoreContext';
-import { renderFormField } from '~/components/internal/FormFields';
-import Field from '~/components/internal/FormFields/Field';
+import useCoreContext from '../../../../core/Context/useCoreContext';
+import { renderFormField } from '../../../internal/FormFields';
+import Field from '../../../internal/FormFields/Field';
 import { isValidHolder, checkIbanStatus } from './validate';
 import { electronicFormat, formatIban, getIbanPlaceHolder, getNextCursorPosition } from './utils';
 import './IbanInput.scss';

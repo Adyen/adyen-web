@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
-import { PayPalButtonsProps } from '~/components/PayPal/types';
+import { PayPalButtonsProps } from '../types';
 
 export default function PaypalButtons(props: PayPalButtonsProps) {
     const { style, onInit, onComplete, onClick, onCancel, onError, onSubmit, paypalRef } = props;

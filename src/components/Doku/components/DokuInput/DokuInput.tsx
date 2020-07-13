@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import PersonalDetails from '~/components/internal/PersonalDetails/PersonalDetails';
-import useCoreContext from '~/core/Context/useCoreContext';
+import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 export default function DokuInput(props) {
     const [data, setData] = useState<any>({ ...props.data });
