@@ -1,5 +1,5 @@
 import createElements from './createElements';
-import { StoredPaymentMethod } from '~/types';
+import { StoredPaymentMethod } from '../../../types';
 
 /**
  *  Returns a filtered (available) list of oneClick paymentMethod Elements

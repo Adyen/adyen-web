@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { h } from 'preact';
-import Field from '~/components/internal/FormFields/Field';
+import Field from '../../../../internal/FormFields/Field';
 import styles from '../CardInput.module.scss';
 
 const ExpirationDate = ({ label, focused, filled, onFocusField, className = '', error = false, isValid = false }, { i18n }) => (

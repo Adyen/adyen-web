@@ -1,8 +1,8 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
-import SecuredFieldsProvider from '~/components/internal/SecuredFields/SecuredFieldsProvider';
-import useCoreContext from '~/core/Context/useCoreContext';
-import Field from '~/components/internal/FormFields/Field';
+import SecuredFieldsProvider from '../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import useCoreContext from '../../../core/Context/useCoreContext';
+import Field from '../../../components/internal/FormFields/Field';
 
 class Giftcard extends Component {
     state = {

@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { checkPaymentStatus } from '~/core/Services/payment-status';
-import processResponse from '~/core/ProcessResponse/process-response';
-import { getImageUrl } from '~/utils/get-image';
+import { checkPaymentStatus } from '../../../core/Services/payment-status';
+import processResponse from '../../../core/ProcessResponse/process-response';
+import { getImageUrl } from '../../../utils/get-image';
 import './Await.scss';
-import Spinner from '~/components/internal/Spinner';
-import Countdown from '~/components/internal/Countdown';
-import Button from '~/components/internal/Button';
-import useCoreContext from '~/core/Context/useCoreContext';
+import Spinner from '../../../components/internal/Spinner';
+import Countdown from '../../../components/internal/Countdown';
+import Button from '../../../components/internal/Button';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
 interface StatusObjectProps {
     payload: string;

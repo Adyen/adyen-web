@@ -1,4 +1,4 @@
-import csf from '~/components/internal/SecuredFields/lib/index';
+import csf from '../../../src/components/internal/SecuredFields/lib/index';
 import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';

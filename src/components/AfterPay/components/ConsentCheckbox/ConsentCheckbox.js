@@ -1,7 +1,7 @@
 import { h, Fragment } from 'preact';
 import getLinkUrl from './getLinkUrl';
-import Field from '~/components/internal/FormFields/Field';
-import Checkbox from '~/components/internal/FormFields/Checkbox';
+import Field from '../../../internal/FormFields/Field';
+import Checkbox from '../../../internal/FormFields/Checkbox';
 
 function ConsentCheckboxLabel({ countryCode, i18n }) {
     const languageCode = i18n.locale.toLowerCase().slice(0, 2);

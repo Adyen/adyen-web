@@ -1,21 +1,22 @@
 import { h } from 'preact';
-import BaseElement, { BaseElementProps } from '~/components/BaseElement';
+import BaseElement, { BaseElementProps } from '../../components/BaseElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
-import base64 from '~/utils/base64';
+import base64 from '../../utils/base64';
 import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';
 
+export interface RiskModuleOptions {
+    enabled: boolean;
+    onComplete: (data) => void;
+    onError: (error) => void;
+    node: string;
+}
+
 interface RiskModuleProps extends BaseElementProps {
-    risk: {
-        enabled: boolean;
-        onComplete: (data) => void;
-        onError: (error) => void;
-        node: string;
-    };
+    risk: RiskModuleOptions;
 }
 
 export default class RiskElement extends BaseElement<RiskModuleProps> {
     public static type = 'risk';
-
     public static defaultProps = {
         risk: {
             enabled: true,

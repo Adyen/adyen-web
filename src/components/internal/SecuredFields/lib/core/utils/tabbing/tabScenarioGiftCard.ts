@@ -1,6 +1,6 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../../configuration/constants';
 import { getPreviousTabbableNonSFElement } from '../../../ui/domUtils';
-import { ShiftTabObject } from '~/components/internal/SecuredFields/lib/types';
+import { ShiftTabObject } from '../../../types';
 
 // GIFT CARD scenario: SecurityCode preceded by CardNumber
 export function shiftTabGiftCard(fieldType: string, rootNode: HTMLElement): ShiftTabObject {

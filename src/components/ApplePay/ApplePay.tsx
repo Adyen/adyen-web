@@ -5,7 +5,7 @@ import ApplePayService from './ApplePayService';
 import { preparePaymentRequest } from './payment-request';
 import { normalizeAmount } from './utils';
 import defaultProps from './defaultProps';
-import { ApplePayElementProps, ApplePayElementData } from '~/components/ApplePay/types';
+import { ApplePayElementProps, ApplePayElementData } from './types';
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';

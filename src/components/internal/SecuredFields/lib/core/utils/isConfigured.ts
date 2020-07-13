@@ -1,6 +1,6 @@
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../../utilities/cardType';
-import { CardObject, CbObjOnConfigSuccess } from '~/components/internal/SecuredFields/lib/types';
+import { CardObject, CbObjOnConfigSuccess } from '../../types';
 import * as logger from '../../utilities/logger';
 
 export function isConfigured(): void {

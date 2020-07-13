@@ -1,6 +1,6 @@
 import { h } from 'preact';
-import useCoreContext from '~/core/Context/useCoreContext';
-import getImageUrl from '~/utils/get-image';
+import useCoreContext from '../../../core/Context/useCoreContext';
+import getImageUrl from '../../../utils/get-image';
 
 interface IconProps {
     type: string;

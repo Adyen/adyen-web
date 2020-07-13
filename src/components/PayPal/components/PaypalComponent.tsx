@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import PaypalButtons from './PaypalButtons';
 import Spinner from '../../internal/Spinner';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../core/Context/useCoreContext';
 import { getPaypalUrl } from '../utils';
 import { PayPalComponentProps } from '../types';
 

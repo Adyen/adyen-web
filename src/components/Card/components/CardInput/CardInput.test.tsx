@@ -1,9 +1,9 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import CardInput from './CardInput';
-import CSF from '~/components/internal/SecuredFields/lib';
+import CSF from '../../../internal/SecuredFields/lib';
 
-jest.mock('~/components/internal/SecuredFields/lib');
+jest.mock('../../../internal/SecuredFields/lib');
 const i18n = { get: key => key };
 
 describe('CardInput', () => {
