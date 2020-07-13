@@ -1,4 +1,5 @@
-import { CardElement, CardElementProps } from './Card';
+import { CardElement } from './Card';
+import { CardElementProps } from './types';
 
 class BancontactElement extends CardElement {
     constructor(props: CardElementProps) {
