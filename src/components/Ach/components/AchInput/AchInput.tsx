@@ -12,8 +12,9 @@ import defaultStyles from './defaultStyles';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './AchInput.module.scss';
 import './AchInput.scss';
+import { ACHInputStateError, ACHInputStateValid } from './types';
 
-function validateHolderName(holderName, holderNameRequired) {
+function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
         return !!holderName && typeof holderName === 'string' && holderName.trim().length > 0;
     }
@@ -25,8 +26,8 @@ function AchInput(props) {
 
     const holderNameIsValid = props.hasHolderName && (props.holderName || props.data.holderName);
 
-    const [errors, setErrors] = useState({});
-    const [valid, setValid] = useState({
+    const [errors, setErrors] = useState<ACHInputStateError>({});
+    const [valid, setValid] = useState<ACHInputStateValid>({
         ...(props.holderNameRequired && { holderName: holderNameIsValid })
     });
     const [data, setData] = useState({
@@ -157,8 +158,6 @@ function AchInput(props) {
 
                             {props.billingAddressRequired && (
                                 <Address
-                                    i18n={i18n}
-                                    loadingContext={props.loadingContext}
                                     label="billingAddress"
                                     data={billingAddress}
                                     onChange={handleAddress}
