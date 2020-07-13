@@ -14,11 +14,8 @@ import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
 import getImage from '../../../../utils/get-image';
 import './CardInput.scss';
-import { renderFormField } from '../../../../components/internal/FormFields';
-import Field from '../../../../components/internal/FormFields/Field';
 import processBinLookupResponse from './processBinLookup';
 import Language from '../../../../language/Language';
-// import { CardElementProps } from '~/components/Card/Card';
 
 interface CardInputProps {
     amount?: object;

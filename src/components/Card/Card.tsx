@@ -6,6 +6,7 @@ import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import fetchJSONData from '../../utils/fetch-json-data';
 import { CardElementData, CardElementProps } from './types';
+import { CbObjOnError } from '../internal/SecuredFields/lib/types';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
