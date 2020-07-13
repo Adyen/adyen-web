@@ -17,7 +17,7 @@ interface CardNumberProps {
     onFocusField: (field) => void;
     dualBrandingElements: any;
     dualBrandingChangeHandler: any;
-    dualBrandingSelected: boolean;
+    dualBrandingSelected: string;
 }
 
 const CardNumber = ({
@@ -40,6 +40,7 @@ const CardNumber = ({
             onFocusField={() => onFocusField('encryptedCardNumber')}
             errorMessage={error && i18n.get('creditCard.numberField.invalid')}
             isValid={isValid}
+            dualBrandingElements={dualBrandingElements}
         >
             <span
                 data-cse="encryptedCardNumber"
@@ -57,22 +58,26 @@ const CardNumber = ({
                 {props.showBrandIcon && !dualBrandingElements && <BrandIcon brand={props.brand} loadingContext={loadingContext} />}
             </span>
 
-            {/*{dualBrandingElements && !error && (*/}
-            {dualBrandingElements && (
-                <div className="adyen-checkout__card__dual-branding__buttons2">
+            {dualBrandingElements && !error && (
+                <div
+                    className={classNames([
+                        'adyen-checkout__card__dual-branding__buttons2',
+                        { 'adyen-checkout__card__dual-branding__buttons2--active': isValid }
+                    ])}
+                >
                     <DualBrandingIcon
                         brand={dualBrandingElements[0].id}
                         loadingContext={loadingContext}
                         onClick={dualBrandingChangeHandler}
                         dataValue={dualBrandingElements[0].id}
-                        selected={dualBrandingSelected === dualBrandingElements[0].id}
+                        notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== dualBrandingElements[0].id}
                     />
                     <DualBrandingIcon
                         brand={dualBrandingElements[1].id}
                         loadingContext={loadingContext}
                         onClick={dualBrandingChangeHandler}
                         dataValue={dualBrandingElements[1].id}
-                        selected={dualBrandingSelected === dualBrandingElements[1].id}
+                        notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== dualBrandingElements[1].id}
                     />
                 </div>
             )}

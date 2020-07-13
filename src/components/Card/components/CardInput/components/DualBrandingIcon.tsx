@@ -7,30 +7,25 @@ interface DualBrandingIconProps {
     loadingContext: string;
     onClick?: any;
     dataValue?: string;
-    selected?: boolean;
+    notSelected?: boolean;
     onFocusField?: any;
 }
 
-const DualBrandingIcon = ({ brand, loadingContext, onClick, dataValue, selected }: DualBrandingIconProps) => {
+const DualBrandingIcon = ({ brand, loadingContext, onClick, dataValue, notSelected }: DualBrandingIconProps) => {
     const imageName = brand === 'card' ? 'nocard' : brand;
     const onError = e => {
         e.target.style.cssText = 'display: none';
     };
 
-    const onClickHandler = e => {
-        console.log('### DualBrandingIcon::onClick:: image click');
-        onClick(e);
-    };
-
     return (
         <img
             className={`${styles['card-input__icon']} ${
-                selected ? 'adyen-checkout__card__cardNumber__brandIcon--selected' : ''
+                notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
             onError={onError}
             alt={brand}
             src={getCardImageUrl(imageName, loadingContext)}
-            onClick={onClickHandler}
+            onClick={onClick}
             data-value={dataValue}
         />
     );

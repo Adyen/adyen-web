@@ -31,7 +31,7 @@ export const createCardVariantSwitcher = (types: string[], switcherType: string)
                 { id: leadType, name: leadDisplayName },
                 { id: subType, name: subDisplayName }
             ],
-            additionalSelectValue: leadType,
+            // additionalSelectValue: leadType, // no initial selection
             additionalSelectType: switcherType
         },
         leadType
