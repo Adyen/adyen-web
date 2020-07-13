@@ -2,9 +2,6 @@ import { h } from 'preact';
 import CVC from './CVC';
 import ExpirationDate from './ExpirationDate';
 import CardNumber from './CardNumber';
-//import Field from '~/components/internal/FormFields/Field';
-import cx from 'classnames';
-import DualBrandingIcon from '~/components/Card/components/CardInput/components/DualBrandingIcon';
 
 const Card = (
     {

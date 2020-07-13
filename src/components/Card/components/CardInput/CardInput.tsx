@@ -16,7 +16,6 @@ import getImage from '../../../../utils/get-image';
 import './CardInput.scss';
 import processBinLookupResponse from './processBinLookup';
 import Language from '../../../../language/Language';
-// import { CardElementProps } from '~/components/Card/Card';
 
 interface CardInputProps {
     amount?: object;
@@ -188,7 +187,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.kcpAuthenticationRef = ref;
     };
 
-    render({ loadingContext, hasHolderName, hasCVC, i18n, installmentOptions, enableStoreDetails }, { status, hideCVCForBrand, focusedElement }) {
+    render({ loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails }, { status, hideCVCForBrand, focusedElement }) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
 
         let isOneClick: boolean = this.props.storedPaymentMethodId ? true : false;
