@@ -7,7 +7,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
  * SepaElement
  */
 class SepaElement extends UIElement {
-    static type = 'sepadirectdebit';
+    public static type = 'sepadirectdebit';
 
     /**
      * Formats props on construction time
