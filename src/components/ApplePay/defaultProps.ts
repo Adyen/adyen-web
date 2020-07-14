@@ -10,7 +10,7 @@ const defaultProps = {
     countryCode: 'US',
 
     totalPriceStatus: 'final',
-    totalPriceLabel: '',
+    totalPriceLabel: undefined,
 
     configuration: {
         merchantName: '',
