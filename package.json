@@ -12,7 +12,7 @@
     "umd:main": "dist/adyen.js",
     "types": "dist/src",
     "typings": "dist/src",
-    "version": "3.10.1",
+    "version": "3.11.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
