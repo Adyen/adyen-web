@@ -2,12 +2,12 @@ import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { getAmazonSignature, getCheckoutLocale, getPayloadJSON } from '../utils';
 import { AmazonPayButtonProps, AmazonPayButtonSettings, PayloadJSON } from '../types';
-import useCoreContext from '~/core/Context/useCoreContext';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();
     const { amazonRef, currency, environment, locale, merchantId, placement, productType, publicKeyId, region } = props;
-    const sandbox = environment && environment.toLowerCase() === 'test';
+    const sandbox = environment === 'TEST';
     const checkoutLanguage = getCheckoutLocale(locale, region);
 
     const renderAmazonPayButton = (payloadJSON: PayloadJSON, signature: string): void => {

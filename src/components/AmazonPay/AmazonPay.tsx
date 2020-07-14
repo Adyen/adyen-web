@@ -1,9 +1,10 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import CoreProvider from '~/core/Context/CoreProvider';
-import defaultProps from './defaultProps';
+import CoreProvider from '../../core/Context/CoreProvider';
+import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
-import { AmazonPayElementProps } from './types';
+import { AmazonPayElementData, AmazonPayElementProps } from './types';
+import defaultProps from './defaultProps';
 import './AmazonPay.scss';
 
 export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
@@ -13,6 +14,7 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     formatProps(props) {
         return {
             ...props,
+            environment: props.environment.toUpperCase(),
             locale: props.locale.replace('-', '_'),
             region: props.region.toUpperCase()
         };
@@ -21,13 +23,15 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     /**
      * Formats the component data output
      */
-    formatData() {
-        const { checkoutSessionId } = this.props;
+    formatData(): AmazonPayElementData {
+        const { amazonCheckoutSessionId, amazonPayToken } = this.props;
         return {
             paymentMethod: {
                 type: AmazonPayElement.type,
-                ...(checkoutSessionId && { checkoutSessionId })
-            }
+                ...(amazonCheckoutSessionId && { amazonCheckoutSessionId }),
+                ...(amazonPayToken && { amazonPayToken })
+            },
+            browserInfo: this.browserInfo
         };
     }
 
@@ -35,10 +39,14 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
         return true;
     }
 
+    get browserInfo() {
+        return collectBrowserInfo();
+    }
+
     render() {
         if (!this.props.showPayButton) return null;
 
-        if (this.props.checkoutSessionId) {
+        if (this.props.amazonCheckoutSessionId || this.props.amazonPayToken) {
             return this.payButton({ label: this.props.i18n.get('confirmPurchase') });
         }
 

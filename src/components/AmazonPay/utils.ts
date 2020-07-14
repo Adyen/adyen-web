@@ -1,5 +1,5 @@
-import fetchJSONData from '~/utils/fetch-json-data';
-import { DeliverySpecifications, PayloadJSON, Region, SupportedLocale } from '~/components/AmazonPay/types';
+import fetchJSONData from '../../utils/fetch-json-data';
+import { DeliverySpecifications, PayloadJSON, Region, SupportedLocale } from './types';
 import {
     AMAZONPAY_SIGNATURE_ENDPOINT,
     AMAZONPAY_URL_EU,
