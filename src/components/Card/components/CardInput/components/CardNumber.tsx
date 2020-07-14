@@ -15,6 +15,7 @@ interface CardNumberProps {
     showBrandIcon: boolean;
     brand: string;
     onFocusField: (field) => void;
+    loadingContext: string;
     dualBrandingElements: any;
     dualBrandingChangeHandler: any;
     dualBrandingSelected: string;
