@@ -1,5 +1,6 @@
-import Language from '~/language/Language';
-import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from '~/components/AmazonPay/config';
+import Language from '../../language/Language';
+import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
+import { BrowserInfo } from '../../types';
 
 declare global {
     interface Window {
@@ -14,7 +15,8 @@ export type Region = 'US' | 'EU' | 'UK';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
 export interface AmazonPayCommonProps {
-    checkoutSessionId?: string;
+    amazonCheckoutSessionId?: string;
+    amazonPayToken?: string;
     clientKey?: string;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
@@ -45,6 +47,14 @@ export interface AmazonPayButtonProps extends AmazonPayCommonProps {
 export interface AmazonPayElementProps extends AmazonPayCommonProps {
     i18n: Language;
     loadingContext: string;
+}
+
+export interface AmazonPayElementData {
+    paymentMethod: {
+        type: string;
+        amazonCheckoutSessionId?: string;
+    };
+    browserInfo: BrowserInfo;
 }
 
 export interface AmazonPayButtonSettings {
