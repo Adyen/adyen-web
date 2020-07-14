@@ -4,29 +4,40 @@ import SecuredFieldsProvider from '../../../components/internal/SecuredFields/Se
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../../components/internal/FormFields/Field';
 
-class Giftcard extends Component {
-    state = {
+interface GiftcardComponentProps {
+    onChange: (state) => void;
+    onFocus: (event) => void;
+    onBlur: (event) => void;
+
+    showPayButton?: boolean;
+    payButton: (config) => any;
+}
+
+class Giftcard extends Component<GiftcardComponentProps> {
+    public state = {
         status: 'ready',
         data: {},
         focusedElement: false,
         isValid: false
     };
 
-    static defaultProps = {
+    public static defaultProps = {
         pinRequired: true,
         onChange: () => {},
         onFocus: () => {},
         onBlur: () => {}
     };
 
-    onChange = sfpState => {
+    public sfp;
+
+    public onChange = sfpState => {
         this.props.onChange({
             data: sfpState.data,
             isValid: sfpState.isSfpValid
         });
     };
 
-    showValidation = () => {
+    public showValidation = () => {
         this.sfp.showValidation();
     };
 
@@ -34,7 +45,7 @@ class Giftcard extends Component {
         this.setState({ status });
     }
 
-    handleFocus = e => {
+    public handleFocus = e => {
         this.setState({ focusedElement: e.currentFocusObject });
 
         const isFocused = e.focus === true;
@@ -45,7 +56,7 @@ class Giftcard extends Component {
         }
     };
 
-    handleSecuredFieldsRef = ref => {
+    public handleSecuredFieldsRef = ref => {
         this.sfp = ref;
     };
 
