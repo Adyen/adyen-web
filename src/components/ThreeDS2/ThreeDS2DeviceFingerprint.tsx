@@ -6,9 +6,9 @@ import ThreeDS2DeviceFingerprint from './components/DeviceFingerprint';
  * ThreeDS2DeviceFingerprintElement
  */
 class ThreeDS2DeviceFingerprintElement extends UIElement {
-    static type = 'threeDS2Fingerprint';
+    public static type = 'threeDS2Fingerprint';
 
-    static defaultProps = {
+    public static defaultProps = {
         dataKey: 'threeds2.fingerprint',
         deviceFingerPrintContainer: null,
         type: 'IdentifyShopper',
