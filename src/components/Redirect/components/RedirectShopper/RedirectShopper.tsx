@@ -1,11 +1,20 @@
 import { Component, h } from 'preact';
 
-class Redirect extends Component {
-    static defaultProps = {
+interface RedirectShopperProps {
+    beforeRedirect: (resolve, reject, url) => Promise<any>;
+    url: string;
+    method: 'GET' | 'POST';
+    data?: any;
+}
+
+class RedirectShopper extends Component<RedirectShopperProps> {
+    public static defaultProps = {
         beforeRedirect: resolve => resolve(),
         method: 'GET',
         data: {}
     };
+
+    private postForm;
 
     componentDidMount() {
         const doRedirect = () => {
@@ -20,7 +29,7 @@ class Redirect extends Component {
         dispatchEvent.then(doRedirect).catch(() => {});
     }
 
-    render({ url, method, data }) {
+    render({ url, method, data = {} }) {
         if (method === 'POST') {
             return (
                 <form
@@ -42,4 +51,4 @@ class Redirect extends Component {
     }
 }
 
-export default Redirect;
+export default RedirectShopper;
