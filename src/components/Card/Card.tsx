@@ -64,12 +64,12 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     processBinLookupResponse(binLookupObject) {
-        if (this.componentRef && this.componentRef.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
         return this;
     }
 
     handleUnsupportedCard(errObj) {
-        if (this.componentRef && this.componentRef.handleUnsupportedCard) this.componentRef.handleUnsupportedCard(errObj);
+        if (this.componentRef?.handleUnsupportedCard) this.componentRef.handleUnsupportedCard(errObj);
         return this;
     }
 
@@ -106,7 +106,7 @@ export class CardElement extends UIElement<CardElementProps> {
                         return;
                     }
                     // If we get here then no supported brands were found
-                    if (data.detectedBrands && data.detectedBrands.length) {
+                    if (data.detectedBrands?.length) {
                         const errObj: CbObjOnError = {
                             type: 'card',
                             fieldType: 'encryptedCardNumber',
