@@ -1,6 +1,7 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import Redirect from './Redirect';
+import RedirectShopper from './components/RedirectShopper';
 
 describe('Redirect', () => {
     describe('isValid', () => {
@@ -14,7 +15,7 @@ describe('Redirect', () => {
         test('Accepts a POST redirect status', () => {
             window.HTMLFormElement.prototype.submit = jest.fn();
 
-            const wrapper = mount(<Redirect url="http://www.adyen.com" method="POST" data={{}} />);
+            const wrapper = mount(<RedirectShopper url="http://www.adyen.com" method="POST" data={{}} />);
 
             expect(wrapper.find('form')).toHaveLength(1);
             expect(wrapper.find('form').prop('action')).toBe('http://www.adyen.com');
