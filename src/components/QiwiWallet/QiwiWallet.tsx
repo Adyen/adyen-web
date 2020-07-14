@@ -6,7 +6,12 @@ import { formatPrefixName, selectItem } from './utils';
 import getProp from '../../utils/getProp';
 
 class QiwiWalletElement extends UIElement {
-    static type = 'qiwiwallet';
+    public static type = 'qiwiwallet';
+
+    public static defaultProps = {
+        items: [],
+        countryCode: null
+    };
 
     constructor(props) {
         super(props);
@@ -16,11 +21,6 @@ class QiwiWalletElement extends UIElement {
     get isValid() {
         return !!this.state.isValid;
     }
-
-    static defaultProps = {
-        items: [],
-        countryCode: null
-    };
 
     formatProps(props) {
         const items = getProp(props, 'details.0.items') || props.items;

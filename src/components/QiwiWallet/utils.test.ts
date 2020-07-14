@@ -154,7 +154,7 @@ describe('selectItem', () => {
     });
 
     test('Returns false when no item is passed', () => {
-        const noItem = selectItem(itemList);
+        const noItem = selectItem(itemList, null);
         expect(noItem).toBe(false);
     });
 });

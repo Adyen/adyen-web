@@ -6,7 +6,7 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import getImage from '../../utils/get-image';
 
 export class SecuredFieldsElement extends UIElement {
-    static type = 'scheme';
+    public static type = 'scheme';
 
     formatProps(props) {
         return {

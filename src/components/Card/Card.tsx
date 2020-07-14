@@ -6,6 +6,7 @@ import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import fetchJSONData from '../../utils/fetch-json-data';
 import { CardElementData, CardElementProps } from './types';
+import { CbObjOnError } from '../internal/SecuredFields/lib/types';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -63,7 +64,12 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     processBinLookupResponse(binLookupObject) {
-        if (this.componentRef && this.componentRef.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+        return this;
+    }
+
+    handleUnsupportedCard(errObj) {
+        if (this.componentRef?.handleUnsupportedCard) this.componentRef.handleUnsupportedCard(errObj);
         return this;
     }
 
@@ -94,11 +100,24 @@ export class CardElement extends UIElement<CardElementProps> {
             ).then(data => {
                 // If response is the one we were waiting for...
                 if (data && data.requestId === this.currentRequestId) {
-                    // ...call processBinLookupResponse with the response object
-                    // if it contains at least one brand (a failed lookup will just contain requestId)
+                    // ...call processBinLookupResponse with the response object if it contains at least one supported brand
                     if (data.supportedBrands && data.supportedBrands.length) {
                         this.processBinLookupResponse(data);
+                        return;
                     }
+                    // If we get here then no supported brands were found
+                    if (data.detectedBrands?.length) {
+                        const errObj: CbObjOnError = {
+                            type: 'card',
+                            fieldType: 'encryptedCardNumber',
+                            error: 'Unsupported card entered',
+                            binLookupBrands: data.detectedBrands
+                        };
+                        this.handleUnsupportedCard(errObj);
+                        return;
+                    }
+                    // A failed lookup will just contain requestId - we may still need to do something at this point
+                    // console.log('### Card::onBinValue:: binLookup response - no match found for request:', data.requestId);
                 }
             });
         } else if (this.currentRequestId) {
@@ -107,6 +126,14 @@ export class CardElement extends UIElement<CardElementProps> {
             this.processBinLookupResponse(null);
 
             this.currentRequestId = null; // Ignore any pending responses
+
+            // Reset any errors
+            const errObj: CbObjOnError = {
+                type: 'card',
+                fieldType: 'encryptedCardNumber',
+                error: ''
+            };
+            this.handleUnsupportedCard(errObj);
         }
 
         if (this.props.onBinValue) this.props.onBinValue(callbackObj);

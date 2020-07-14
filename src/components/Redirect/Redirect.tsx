@@ -9,9 +9,9 @@ import RedirectButton from '../internal/RedirectButton';
  * RedirectElement
  */
 class RedirectElement extends UIElement {
-    static type = 'redirect';
+    public static type = 'redirect';
 
-    static defaultProps = {
+    public static defaultProps = {
         type: RedirectElement.type,
         showPayButton: true
     };

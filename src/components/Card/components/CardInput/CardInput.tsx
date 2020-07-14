@@ -75,6 +75,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     public props;
     private setFocusOn;
     private updateStyles;
+    private handleUnsupportedCard;
     private sfp;
     private billingAddressRef;
     private kcpAuthenticationRef;
@@ -125,6 +126,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     public componentDidMount() {
         this.setFocusOn = this.sfp.setFocusOn;
         this.updateStyles = this.sfp.updateStyles;
+        this.handleUnsupportedCard = this.sfp.handleUnsupportedCard;
     }
 
     componentDidUpdate(prevProps, prevState) {
