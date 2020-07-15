@@ -1,7 +1,7 @@
 import { getImageUrl } from '../../../../utils/get-image';
 import cardType from '../../../../components/internal/SecuredFields/lib/utilities/cardType';
 
-export const getCardImageUrl = (brand: string, loadingContext: string) => {
+export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
         type: brand === 'card' ? 'nocard' : brand || 'nocard',
         extension: 'svg',

@@ -6,18 +6,18 @@ import Field from '../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 
 interface CardNumberProps {
-    label: string;
-    error: boolean;
-    isValid: boolean;
-    focused: boolean;
-    filled: boolean;
-    showBrandIcon: boolean;
     brand: string;
-    onFocusField: (field) => void;
+    error: boolean;
+    filled: boolean;
+    focused: boolean;
+    isValid: boolean;
+    label: string;
+    onFocusField: (fieldName: string) => void;
+    showBrandIcon: boolean;
 }
 
 const CardNumber = ({ error = false, isValid = false, onFocusField = () => {}, ...props }: CardNumberProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
 
     return (
         <Field
@@ -42,7 +42,7 @@ const CardNumber = ({ error = false, isValid = false, onFocusField = () => {}, .
                     'adyen-checkout__card__cardNumber__input--noBrand': !props.showBrandIcon
                 })}
             >
-                {props.showBrandIcon && <BrandIcon brand={props.brand} loadingContext={loadingContext} />}
+                {props.showBrandIcon && <BrandIcon brand={props.brand} />}
             </span>
         </Field>
     );

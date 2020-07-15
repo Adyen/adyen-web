@@ -5,12 +5,10 @@ import Field from '../../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../../../../types';
 
-interface InstallmentOptionValues {
-    values: number[];
-}
-
 interface InstallmentOptions {
-    [key: string]: InstallmentOptionValues;
+    [key: string]: {
+        values: number[];
+    };
 }
 
 interface InstallmentsProps {
