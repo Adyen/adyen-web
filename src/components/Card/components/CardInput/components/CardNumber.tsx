@@ -66,20 +66,16 @@ const CardNumber = ({
                         { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
                     ])}
                 >
-                    <DualBrandingIcon
-                        brand={dualBrandingElements[0].id}
-                        loadingContext={loadingContext}
-                        onClick={dualBrandingChangeHandler}
-                        dataValue={dualBrandingElements[0].id}
-                        notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== dualBrandingElements[0].id}
-                    />
-                    <DualBrandingIcon
-                        brand={dualBrandingElements[1].id}
-                        loadingContext={loadingContext}
-                        onClick={dualBrandingChangeHandler}
-                        dataValue={dualBrandingElements[1].id}
-                        notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== dualBrandingElements[1].id}
-                    />
+                    {dualBrandingElements.map(element => (
+                        <DualBrandingIcon
+                            key={element.id}
+                            brand={element.id}
+                            loadingContext={loadingContext}
+                            onClick={dualBrandingChangeHandler}
+                            dataValue={element.id}
+                            notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}
+                        />
+                    ))}
                 </div>
             )}
         </Field>
