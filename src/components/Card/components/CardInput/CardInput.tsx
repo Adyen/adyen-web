@@ -120,7 +120,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.handleOnStoreDetails = handlers.handleOnStoreDetails.bind(this);
         this.handleAdditionalDataSelection = handlers.handleAdditionalDataSelection.bind(this);
 
-        this.processBinLookup = processBinLookup;
+        this.processBinLookup = processBinLookup.bind(this);
     }
 
     public static defaultProps = defaultProps;
