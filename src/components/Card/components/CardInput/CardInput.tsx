@@ -264,6 +264,9 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
                                     cvcRequired={sfpState.cvcRequired}
+                                    dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
+                                    dualBrandingChangeHandler={this.handleAdditionalDataSelection}
+                                    dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
                                 {hasHolderName && (

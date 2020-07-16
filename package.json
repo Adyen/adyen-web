@@ -12,7 +12,7 @@
     "umd:main": "dist/adyen.js",
     "types": "dist/src",
     "typings": "dist/src",
-    "version": "3.10.1",
+    "version": "3.11.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -86,7 +86,7 @@
         "@types/applepayjs": "^3.0.0",
         "@types/googlepay": "^0.4.1",
         "classnames": "^2.2.6",
-        "preact": "^10.4.5"
+        "preact": "^10.4.6"
     },
     "files": [
         "dist",

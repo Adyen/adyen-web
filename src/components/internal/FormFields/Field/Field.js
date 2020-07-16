@@ -40,7 +40,18 @@ class Field extends Component {
         return null;
     }
 
-    render({ className = '', classNameModifiers = [], children, errorMessage, helper, inputWrapperModifiers = [], isLoading, isValid, label }) {
+    render({
+        className = '',
+        classNameModifiers = [],
+        children,
+        errorMessage,
+        helper,
+        inputWrapperModifiers = [],
+        isLoading,
+        isValid,
+        label,
+        dualBrandingElements
+    }) {
         return (
             <div
                 className={classNames(
@@ -94,7 +105,7 @@ class Field extends Component {
                             </span>
                         )}
 
-                        {isValid && (
+                        {isValid && !dualBrandingElements && (
                             <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
                                 <Icon type="checkmark" />
                             </span>
