@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import CoreProvider from '../../core/Context/CoreProvider';
-import RedirectElement from '../../components/Redirect';
+import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 
 class GiropayElement extends RedirectElement {

@@ -39,6 +39,7 @@ export interface CardInputState {
     isValid: boolean;
     status: string;
     valid?: object;
+    issuingCountryCode: string;
 }
 
 export interface BinValueObject {

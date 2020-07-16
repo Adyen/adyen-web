@@ -7,14 +7,14 @@ import DonationComponent from './components/DonationComponent';
  * DonationElement
  */
 class DonationElement extends UIElement {
-    static type = 'donation';
+    public static type = 'donation';
 
     constructor(props) {
         super(props);
         this.donate = this.donate.bind(this);
     }
 
-    static defaultProps = {
+    public static defaultProps = {
         onCancel: () => {},
         onDonate: () => {}
     };
@@ -42,7 +42,7 @@ class DonationElement extends UIElement {
         this.props.onDonate({ data, isValid }, this);
     }
 
-    handleRef = ref => {
+    public handleRef = ref => {
         this.componentRef = ref;
     };
 

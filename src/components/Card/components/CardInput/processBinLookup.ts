@@ -7,7 +7,7 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
     // RESET: The number of digits in number field has dropped below threshold for BIN lookup - so reset the UI & inform SFP
     if (!binValueObject) {
         this.resetAdditionalSelectState();
-        this.sfp.processBinLookupResponse(binValueObject);
+        this.sfp.current.processBinLookupResponse(binValueObject);
         return;
     }
 
@@ -22,7 +22,7 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
             this.setState(switchObj.stateObject); // Don't need to call validateCardInput - this will be called by the brandChange from SFP
 
             // Pass an object through to SFP
-            this.sfp.processBinLookupResponse({ supportedBrands: [switchObj.leadType] });
+            this.sfp.current.processBinLookupResponse({ supportedBrands: [switchObj.leadType] });
 
             // 2) Single option found (binValueObject.brands.length === 1)
         } else {
@@ -32,7 +32,7 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
             this.setState({ additionalSelectValue: binValueObject.supportedBrands[0] });
 
             // Pass object through to SFP
-            this.sfp.processBinLookupResponse(binValueObject);
+            this.sfp.current.processBinLookupResponse(binValueObject);
         }
     }
 }

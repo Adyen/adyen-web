@@ -111,6 +111,7 @@ getOriginKey()
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 koreanAuthenticationRequired: true
+                // countryCode: 'KR'
             })
             .mount('.card-kcp-field');
     });

@@ -1,13 +1,15 @@
 import { h } from 'preact';
 import classNames from 'classnames';
 import BrandIcon from './BrandIcon';
+import DualBrandingIcon from './DualBrandingIcon/DualBrandingIcon';
 import Field from '../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardNumberProps } from './types';
 import styles from '../CardInput.module.scss';
 
-export default function CardNumber({ error = false, isValid = false, onFocusField = () => {}, ...props }: CardNumberProps) {
+export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
+    const { error = false, isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
 
     return (
         <Field
@@ -18,6 +20,7 @@ export default function CardNumber({ error = false, isValid = false, onFocusFiel
             onFocusField={() => onFocusField('encryptedCardNumber')}
             errorMessage={error && i18n.get('creditCard.numberField.invalid')}
             isValid={isValid}
+            dualBrandingElements={dualBrandingElements}
         >
             <span
                 data-cse="encryptedCardNumber"
@@ -32,8 +35,27 @@ export default function CardNumber({ error = false, isValid = false, onFocusFiel
                     'adyen-checkout__card__cardNumber__input--noBrand': !props.showBrandIcon
                 })}
             >
-                {props.showBrandIcon && <BrandIcon brand={props.brand} />}
+                {props.showBrandIcon && !dualBrandingElements && <BrandIcon brand={props.brand} />}
             </span>
+
+            {dualBrandingElements && !error && (
+                <div
+                    className={classNames([
+                        'adyen-checkout__card__dual-branding__buttons',
+                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
+                    ])}
+                >
+                    {dualBrandingElements.map(element => (
+                        <DualBrandingIcon
+                            key={element.id}
+                            brand={element.id}
+                            onClick={dualBrandingChangeHandler}
+                            dataValue={element.id}
+                            notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}
+                        />
+                    ))}
+                </div>
+            )}
         </Field>
     );
 }

@@ -7,6 +7,9 @@ export interface BrandIconProps {
 export interface CardFieldsProps {
     brand?: string;
     cvcRequired?: any;
+    dualBrandingChangeHandler?: any;
+    dualBrandingElements?: any;
+    dualBrandingSelected?: string;
     errors?: any;
     focusedElement?: any;
     hasCVC?: any;
@@ -19,7 +22,7 @@ export interface CardFieldsProps {
 export interface CardHolderNameProps {
     error: boolean;
     isValid: boolean;
-    onChange: (event) => void;
+    onChange: (event: Event) => void;
     placeholder?: string;
     required?: boolean;
     value?: string;
@@ -27,12 +30,15 @@ export interface CardHolderNameProps {
 
 export interface CardNumberProps {
     brand: string;
+    dualBrandingChangeHandler?: any;
+    dualBrandingElements?: any;
+    dualBrandingSelected?: string;
     error: boolean;
     filled: boolean;
     focused: boolean;
     isValid: boolean;
     label: string;
-    onFocusField: (fieldName: string) => void;
+    onFocusField: (field: string) => void;
     showBrandIcon: boolean;
 }
 
@@ -52,6 +58,14 @@ export interface CVCProps {
 
 export interface CVCHintProps {
     frontCVC: boolean;
+}
+
+export interface DualBrandingIconProps {
+    brand: string;
+    onClick?: any;
+    dataValue?: string;
+    notSelected?: boolean;
+    onFocusField?: any;
 }
 
 export interface ExpirationDateProps {

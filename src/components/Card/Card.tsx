@@ -20,7 +20,8 @@ export class CardElement extends UIElement<CardElementProps> {
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
-            type: props.type === 'scheme' ? 'card' : props.type
+            type: props.type === 'scheme' ? 'card' : props.type,
+            countryCode: props.countryCode ? props.countryCode.toLowerCase() : null
         };
     }
 

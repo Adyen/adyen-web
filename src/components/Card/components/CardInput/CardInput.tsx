@@ -1,5 +1,4 @@
 import { Component, h, createRef } from 'preact';
-import { CardInputProps, CardInputState } from './types';
 import Address from '../../../../components/internal/Address';
 import CardFields from './components/CardFields';
 import CardHolderName from './components/CardHolderName';
@@ -13,8 +12,9 @@ import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import getImage from '../../../../utils/get-image';
 import handlers from './handlers';
-import processBinLookupResponse from './processBinLookup';
+import processBinLookup from './processBinLookup';
 import styles from './CardInput.module.scss';
+import { CardInputProps, CardInputState } from './types';
 import './CardInput.scss';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
@@ -28,7 +28,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly handleSecuredFieldsChange;
     private readonly handleOnStoreDetails;
     private readonly handleAdditionalDataSelection;
-    private readonly processBinLookupResponse;
+    // private readonly processBinLookupResponse;
+    private readonly processBinLookup;
 
     public state;
     public props;
@@ -63,7 +64,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             focusedElement: '',
             additionalSelectElements: [],
             additionalSelectValue: '',
-            additionalSelectType: ''
+            additionalSelectType: '',
+            issuingCountryCode: null
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
@@ -76,8 +78,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.handleSecuredFieldsChange = handlers.handleSecuredFieldsChange.bind(this);
         this.handleOnStoreDetails = handlers.handleOnStoreDetails.bind(this);
         this.handleAdditionalDataSelection = handlers.handleAdditionalDataSelection.bind(this);
-
-        this.processBinLookupResponse = processBinLookupResponse;
+        this.processBinLookup = processBinLookup.bind(this);
     }
 
     public static defaultProps = defaultProps;
@@ -136,11 +137,30 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (this.kcpAuthenticationRef) this.kcpAuthenticationRef.current.showValidation();
     }
 
-    render({ loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails }, { status, hideCVCForBrand, focusedElement }) {
+    public processBinLookupResponse(data) {
+        const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
+
+        this.setState({ issuingCountryCode }, () => {
+            this.processBinLookup(data);
+        });
+    }
+
+    render(
+        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails },
+        { status, hideCVCForBrand, focusedElement, issuingCountryCode }
+    ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
 
         // In the Drop-in the oneClick status may already have been decided, so give that priority
         const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
+
+        // If the merchant defined countryCode is 'KR'
+        let isKorea = countryCode === 'kr';
+
+        // Override the value if issuingCountryCode is set
+        if (issuingCountryCode !== null) {
+            isKorea = issuingCountryCode === 'kr';
+        }
 
         return (
             <SecuredFieldsProvider
@@ -190,6 +210,9 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
                                     cvcRequired={sfpState.cvcRequired}
+                                    dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
+                                    dualBrandingChangeHandler={this.handleAdditionalDataSelection}
+                                    dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
                                 {hasHolderName && (
@@ -203,7 +226,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     />
                                 )}
 
-                                {this.props.koreanAuthenticationRequired && (
+                                {this.props.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication
                                         onFocusField={setFocusOn}
                                         focusedElement={focusedElement}

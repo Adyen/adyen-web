@@ -5,8 +5,20 @@ import ExpirationDate from './ExpirationDate';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardFieldsProps } from './types';
 
-export default function CardFields(props: CardFieldsProps) {
-    const { brand, focusedElement, hasCVC, onFocusField, hideCVCForBrand, errors, valid, cvcRequired, showBrandIcon } = props;
+export default function CardFields({
+    brand,
+    cvcRequired,
+    dualBrandingElements,
+    dualBrandingChangeHandler,
+    dualBrandingSelected,
+    errors,
+    focusedElement,
+    hasCVC,
+    hideCVCForBrand,
+    onFocusField,
+    showBrandIcon,
+    valid
+}: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -20,6 +32,9 @@ export default function CardFields(props: CardFieldsProps) {
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedCardNumber || !!valid.encryptedCardNumber}
                 showBrandIcon={showBrandIcon}
+                dualBrandingElements={dualBrandingElements}
+                dualBrandingChangeHandler={dualBrandingChangeHandler}
+                dualBrandingSelected={dualBrandingSelected}
             />
 
             <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">

@@ -6,7 +6,7 @@ const amounts = {
     currency: 'EUR',
     values: [1000, 2000, 3000]
 };
-const createWrapper = props => mount(<DonationComponent amounts={amounts} {...props} />);
+const createWrapper = (props = {}) => mount(<DonationComponent amounts={amounts} {...props} />);
 
 describe('DonationComponent', () => {
     test('Renders the Donation Component', () => {

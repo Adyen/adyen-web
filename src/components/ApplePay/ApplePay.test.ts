@@ -21,6 +21,16 @@ describe('ApplePay', () => {
             expect(applepay.props.amount.value).toEqual(0);
             expect(applepay.props.amount.currency).toEqual('USD');
         });
+
+        test('uses merchantName if no totalPriceLabel was defined', () => {
+            const applepay = new ApplePay({ ...defaultProps, configuration: { merchantName: 'Test' } });
+            expect(applepay.props.totalPriceLabel).toEqual('Test');
+        });
+
+        test('can set totalPriceLabel', () => {
+            const applepay = new ApplePay({ ...defaultProps, configuration: { merchantName: 'Test' }, totalPriceLabel: 'Total' });
+            expect(applepay.props.totalPriceLabel).toEqual('Total');
+        });
     });
 
     describe('get data', () => {

@@ -27,6 +27,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onAuthorized: resolve => resolve(),
             onValidateMerchant: (resolve, reject) => reject('onValidateMerchant event not implemented'),
             ...props,
+            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
             amount,
             onCancel: event => props.onError(event)
         };

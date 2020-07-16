@@ -100,86 +100,6 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.state.errors.encryptedSecurityCode).not.toBe(false);
     });
 
-    /**
-     * UNSUPPORTED CARD TESTING
-     */
-    // #1
-    it('should generate an "unsupported card" error that propagates to the onError callback', () => {
-        expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
-        expect(onError).toHaveBeenCalledTimes(4);
-        expect(errorObj.error).toEqual('Unsupported card');
-    });
-    // #2
-    it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('Unsupported card');
-    });
-    // #3
-    it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
-        unsupportedCardErrObj.error = '';
-        expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(false);
-        expect(errorObj.error).toEqual('');
-    });
-    // #4
-    it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.hasUnsupportedCard).toBe(false);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
-    });
-    // #5
-    it('should re-generate an "unsupported card" error and then another "regular" error should be ignored', () => {
-        unsupportedCardErrObj.error = 'Unsupported card';
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
-
-        expect(wrapper.instance().handleOnError(regularErrObj)).toBe(false);
-
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('Unsupported card');
-    });
-    // #6
-    it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
-        unsupportedCardErrObj.error = '';
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-
-        expect(wrapper.instance().handleOnError(regularErrObj)).toBe(true);
-
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('number field incomplete');
-    });
-    // #7
-    it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', () => {
-        unsupportedCardErrObj.error = 'Unsupported card';
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
-
-        expect(wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber' })).toBe(false);
-        expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(false);
-    });
-    // #8
-    it('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', () => {
-        expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(false);
-        expect(wrapper.instance().state.isSfpValid).toBe(false);
-    });
-    // #9
-    it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', () => {
-        unsupportedCardErrObj.error = '';
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-
-        expect(
-            wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber', encryptedFieldName: 'encryptedCardNumber', valid: true })
-        ).toBe(true);
-
-        expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(true);
-    });
-    // #10
-    it('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', () => {
-        expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(true);
-
-        expect(wrapper.instance().state.isSfpValid).toBe(true);
-        console.log('### SecuredFieldsProvider.test::wrapper.instance().state:: ', wrapper.instance().state);
-    });
-    /**
-     * end UNSUPPORTED CARD TESTING
-     */
-
     it('should call the passed render function', () => {
         expect(renderFn).toHaveBeenCalled();
     });
@@ -191,7 +111,81 @@ describe('<SecuredFieldsProvider /> rendering', () => {
     it('should register the presence of 2 date field elements within the passed rootNode', () => {
         nodeHolder.innerHTML = mockNodeTwoDateFields;
 
-        wrapper = shallow(<SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} render={() => null} />);
+        wrapper = shallow(<SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} render={() => null} onError={onError} />);
         expect(wrapper.instance().numDateFields).toBe(2);
+    });
+});
+
+describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
+    it('should generate an "unsupported card" error that propagates to the onError callback', () => {
+        expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
+        expect(onError).toHaveBeenCalledTimes(4);
+        expect(errorObj.error).toEqual('Unsupported card');
+    });
+
+    it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
+        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('Unsupported card');
+    });
+
+    it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
+        unsupportedCardErrObj.error = '';
+        expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(false);
+        expect(errorObj.error).toEqual('');
+    });
+
+    it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
+        expect(wrapper.instance().state.hasUnsupportedCard).toBe(false);
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
+    });
+
+    it('should re-generate an "unsupported card" error and then another "regular" error should be ignored', () => {
+        unsupportedCardErrObj.error = 'Unsupported card';
+        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
+        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
+
+        expect(wrapper.instance().handleOnError(regularErrObj)).toBe(false);
+
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('Unsupported card');
+    });
+
+    it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
+        unsupportedCardErrObj.error = '';
+        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
+
+        expect(wrapper.instance().handleOnError(regularErrObj)).toBe(true);
+
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('number field incomplete');
+    });
+
+    it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', () => {
+        unsupportedCardErrObj.error = 'Unsupported card';
+        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
+        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
+
+        expect(wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber' })).toBe(false);
+        expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(false);
+    });
+
+    it('should see that the previously generated "unsupported card" error will cause a handleOnAllValid call to be ignored', () => {
+        expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(false);
+        expect(wrapper.instance().state.isSfpValid).toBe(false);
+    });
+
+    it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', () => {
+        unsupportedCardErrObj.error = '';
+        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
+
+        expect(
+            wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber', encryptedFieldName: 'encryptedCardNumber', valid: true })
+        ).toBe(true);
+
+        expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(true);
+    });
+
+    it('should see that because we have cleared the "unsupported card" error that a handleOnAllValid call is handled correctly', () => {
+        expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(true);
+
+        expect(wrapper.instance().state.isSfpValid).toBe(true);
     });
 });
