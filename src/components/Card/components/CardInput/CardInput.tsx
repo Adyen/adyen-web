@@ -154,13 +154,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // In the Drop-in the oneClick status may already have been decided, so give that priority
         const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
 
-        // If the merchant defined countryCode is 'KR'
-        let isKorea = countryCode === 'kr';
-
-        // Override the value if issuingCountryCode is set
-        if (issuingCountryCode !== null) {
-            isKorea = issuingCountryCode === 'kr';
-        }
+        // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
+        const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
 
         return (
             <SecuredFieldsProvider

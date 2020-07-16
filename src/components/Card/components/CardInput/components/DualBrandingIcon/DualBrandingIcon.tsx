@@ -8,7 +8,7 @@ import './DualBrandingIcon.scss';
 const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected }: DualBrandingIconProps) => {
     const { loadingContext } = useCoreContext();
     const imageName = brand === 'card' ? 'nocard' : brand;
-    const onError = e => {
+    const handleError = e => {
         e.target.style.cssText = 'display: none';
     };
 
@@ -17,7 +17,7 @@ const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected }: DualBrandi
             className={`${styles['card-input__icon']} ${
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
-            onError={onError}
+            onError={handleError}
             alt={brand}
             src={getCardImageUrl(imageName, loadingContext)}
             onClick={onClick}
