@@ -69,7 +69,7 @@ getOriginKey()
             .create('bcmc', {
                 type: 'bcmc',
                 hasHolderName: true,
-                //                holderNameRequired: true,
+                // holderNameRequired: true,
                 enableStoreDetails: false
             })
             .mount('.bancontact-field');
