@@ -106,7 +106,7 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
     });
 
     test('countryCode is KR but issuingCountryCode is not KR', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} countryCode="KR" />);
+        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} countryCode="kr" />);
         wrapper.setState({ issuingCountryCode: 'US' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
@@ -119,7 +119,7 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
 
     test('countryCode is not KR but issuingCountryCode is KR', () => {
         const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} />);
-        wrapper.setState({ issuingCountryCode: 'KR' });
+        wrapper.setState({ issuingCountryCode: 'kr' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
