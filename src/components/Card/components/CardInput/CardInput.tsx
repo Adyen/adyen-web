@@ -14,7 +14,7 @@ import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
 import getImage from '../../../../utils/get-image';
 import './CardInput.scss';
-import processBinLookupResponse from './processBinLookup';
+import processBinLookup from './processBinLookup';
 import Language from '../../../../language/Language';
 
 interface CardInputProps {
@@ -56,6 +56,7 @@ interface CardInputState {
     isValid: boolean;
     status: string;
     valid?: object;
+    issuingCountryCode: string;
 }
 
 class CardInput extends Component<CardInputProps, CardInputState> {
@@ -69,7 +70,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private handleSecuredFieldsChange;
     private handleOnStoreDetails;
     private handleAdditionalDataSelection;
-    private processBinLookupResponse;
+    private processBinLookup;
 
     public state;
     public props;
@@ -104,7 +105,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             focusedElement: '',
             additionalSelectElements: [],
             additionalSelectValue: '',
-            additionalSelectType: ''
+            additionalSelectType: '',
+            issuingCountryCode: null
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
@@ -118,7 +120,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.handleOnStoreDetails = handlers.handleOnStoreDetails.bind(this);
         this.handleAdditionalDataSelection = handlers.handleAdditionalDataSelection.bind(this);
 
-        this.processBinLookupResponse = processBinLookupResponse;
+        this.processBinLookup = processBinLookup.bind(this);
     }
 
     public static defaultProps = defaultProps;
@@ -177,6 +179,14 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (this.kcpAuthenticationRef) this.kcpAuthenticationRef.showValidation();
     }
 
+    public processBinLookupResponse(data) {
+        const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
+
+        this.setState({ issuingCountryCode }, () => {
+            this.processBinLookup(data);
+        });
+    }
+
     private handleSecuredFieldsRef = ref => {
         this.sfp = ref;
     };
@@ -189,11 +199,22 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.kcpAuthenticationRef = ref;
     };
 
-    render({ loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails }, { status, hideCVCForBrand, focusedElement }) {
+    render(
+        { loadingContext, hasHolderName, hasCVC, countryCode, installmentOptions, enableStoreDetails },
+        { status, hideCVCForBrand, focusedElement, issuingCountryCode }
+    ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
 
         let isOneClick: boolean = this.props.storedPaymentMethodId ? true : false;
         if (this.props.oneClick === true) isOneClick = true; // In the Drop-in the oneClick status may already have been decided, so give that priority
+
+        // If the merchant defined countryCode is 'KR'
+        let isKorea = countryCode === 'kr';
+
+        // Override the value if issuingCountryCode is set
+        if (issuingCountryCode !== null) {
+            isKorea = issuingCountryCode === 'kr';
+        }
 
         return (
             <SecuredFieldsProvider
@@ -259,7 +280,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     />
                                 )}
 
-                                {this.props.koreanAuthenticationRequired && (
+                                {this.props.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication
                                         onFocusField={setFocusOn}
                                         focusedElement={focusedElement}

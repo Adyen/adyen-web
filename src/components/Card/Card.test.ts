@@ -6,6 +6,11 @@ describe('Card', () => {
             const card = new CardElement({ billingAddressRequired: true, storedPaymentMethodId: 'test' });
             expect(card.props.billingAddressRequired).toBe(false);
         });
+
+        test('should format countryCode to lowerCase', () => {
+            const card = new CardElement({ countryCode: 'KR' });
+            expect(card.props.countryCode).toEqual('kr');
+        });
     });
 
     describe('get data', () => {
