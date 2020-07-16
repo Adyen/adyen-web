@@ -69,7 +69,7 @@ getOriginKey()
             .create('bcmc', {
                 type: 'bcmc',
                 hasHolderName: true,
-                // holderNameRequired: true,
+                //                holderNameRequired: true,
                 enableStoreDetails: false
             })
             .mount('.bancontact-field');
@@ -112,6 +112,7 @@ getOriginKey()
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 koreanAuthenticationRequired: true
+                //                countryCode: 'KR'
             })
             .mount('.card-kcp-field');
     });
