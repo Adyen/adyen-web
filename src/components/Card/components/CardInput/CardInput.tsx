@@ -28,7 +28,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly handleSecuredFieldsChange;
     private readonly handleOnStoreDetails;
     private readonly handleAdditionalDataSelection;
-    // private readonly processBinLookupResponse;
     private readonly processBinLookup;
 
     public state;

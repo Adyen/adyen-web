@@ -30,17 +30,17 @@ export class SecuredFieldsElement extends UIElement {
     }
 
     updateStyles(stylesObj) {
-        if (this.componentRef && this.componentRef.updateStyles) this.componentRef.updateStyles(stylesObj);
+        if (this.componentRef?.updateStyles) this.componentRef.updateStyles(stylesObj);
         return this;
     }
 
     setFocusOn(frame) {
-        if (this.componentRef && this.componentRef.setFocusOn) this.componentRef.setFocusOn(frame);
+        if (this.componentRef?.setFocusOn) this.componentRef.setFocusOn(frame);
         return this;
     }
 
     processBinLookupResponse(binLookupObject) {
-        if (this.componentRef && this.componentRef.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
         return this;
     }
 
