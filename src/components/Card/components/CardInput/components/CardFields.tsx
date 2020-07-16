@@ -41,7 +41,7 @@ export default function CardFields({
                 <ExpirationDate
                     error={!!errors.encryptedExpiryDate || !!errors.encryptedExpiryYear || !!errors.encryptedExpiryMonth}
                     focused={focusedElement === 'encryptedExpiryDate'}
-                    isValid={!!valid.encryptedExpiryYear && !!valid.encryptedExpiryYear}
+                    isValid={!!valid.encryptedExpiryDate && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
                     label={i18n.get('creditCard.expiryDateField.title')}
                     onFocusField={onFocusField}
