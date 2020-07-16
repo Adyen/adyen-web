@@ -180,7 +180,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     public processBinLookupResponse(data) {
-        const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode : null;
+        const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
 
         this.setState({ issuingCountryCode }, () => {
             this.processBinLookup(data);
@@ -209,11 +209,11 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (this.props.oneClick === true) isOneClick = true; // In the Drop-in the oneClick status may already have been decided, so give that priority
 
         // If the merchant defined countryCode is 'KR'
-        let isKorea = countryCode?.toLowerCase() === 'kr';
+        let isKorea = countryCode === 'kr';
 
         // Override the value if issuingCountryCode is set
         if (issuingCountryCode !== null) {
-            isKorea = issuingCountryCode.toLowerCase() === 'kr';
+            isKorea = issuingCountryCode === 'kr';
         }
 
         return (
