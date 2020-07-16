@@ -1,22 +1,12 @@
-import classNames from 'classnames';
 import { h } from 'preact';
-import styles from '../CardInput.module.scss';
+import classNames from 'classnames';
 import BrandIcon from './BrandIcon';
 import Field from '../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { CardNumberProps } from './types';
+import styles from '../CardInput.module.scss';
 
-interface CardNumberProps {
-    brand: string;
-    error: boolean;
-    filled: boolean;
-    focused: boolean;
-    isValid: boolean;
-    label: string;
-    onFocusField: (fieldName: string) => void;
-    showBrandIcon: boolean;
-}
-
-const CardNumber = ({ error = false, isValid = false, onFocusField = () => {}, ...props }: CardNumberProps) => {
+export default function CardNumber({ error = false, isValid = false, onFocusField = () => {}, ...props }: CardNumberProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -46,6 +36,4 @@ const CardNumber = ({ error = false, isValid = false, onFocusField = () => {}, .
             </span>
         </Field>
     );
-};
-
-export default CardNumber;
+}

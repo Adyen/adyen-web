@@ -3,25 +3,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { renderFormField } from '../../../../../../components/internal/FormFields';
 import Field from '../../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
-import { PaymentAmount } from '../../../../../../types';
-
-interface InstallmentOptions {
-    [key: string]: {
-        values: number[];
-    };
-}
-
-interface InstallmentsProps {
-    amount?: PaymentAmount;
-    brand?: string;
-    onChange?: (installmentAmount: number) => void;
-    installmentOptions: InstallmentOptions;
-}
-
-interface InstallmentsItem {
-    id: number;
-    name: string;
-}
+import { InstallmentsItem, InstallmentsProps } from '../types';
 
 /**
  * Installments generic dropdown

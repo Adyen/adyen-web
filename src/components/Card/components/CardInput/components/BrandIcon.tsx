@@ -1,13 +1,10 @@
 import { h } from 'preact';
 import { getCardImageUrl } from '../utils';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { BrandIconProps } from './types';
 import styles from '../CardInput.module.scss';
 
-interface BrandIconProps {
-    brand: string;
-}
-
-const BrandIcon = ({ brand }: BrandIconProps) => {
+export default function BrandIcon({ brand }: BrandIconProps) {
     const { loadingContext } = useCoreContext();
     const imageName = brand === 'card' ? 'nocard' : brand;
     const handleError = e => {
@@ -22,6 +19,4 @@ const BrandIcon = ({ brand }: BrandIconProps) => {
             src={getCardImageUrl(imageName, loadingContext)}
         />
     );
-};
-
-export default BrandIcon;
+}
