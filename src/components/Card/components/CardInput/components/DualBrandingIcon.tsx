@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import styles from '../CardInput.module.scss';
 import { getCardImageUrl } from '../utils';
+import './DualBrandingIcon.scss';
 
 interface DualBrandingIconProps {
     brand: string;
