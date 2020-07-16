@@ -1,8 +1,9 @@
+import { createCardVariantSwitcher } from './utils';
+import { BinValueObject } from './types';
+
 // Based on values in binValueObject we might need to trigger additional markup
 // e.g. a selector for brands or to choose between credit/debit card variations
-import { createCardVariantSwitcher } from './utils';
-
-export default function processBinLookupResponse(binValueObject) {
+export default function processBinLookupResponse(binValueObject: BinValueObject): void {
     // RESET: The number of digits in number field has dropped below threshold for BIN lookup - so reset the UI & inform SFP
     if (!binValueObject) {
         this.resetAdditionalSelectState();
@@ -11,7 +12,7 @@ export default function processBinLookupResponse(binValueObject) {
     }
 
     // RESULT: binLookup has found a result so proceed accordingly
-    if (binValueObject.supportedBrands && binValueObject.supportedBrands.length) {
+    if (binValueObject.supportedBrands?.length) {
         // 1) Multiple options found - add to the UI & inform SFP if appropriate
         if (binValueObject.supportedBrands.length > 1) {
             // --

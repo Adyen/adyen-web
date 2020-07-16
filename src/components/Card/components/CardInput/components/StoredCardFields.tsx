@@ -1,11 +1,13 @@
 import { h } from 'preact';
 import CVC from './CVC';
 import Field from '../../../../internal/FormFields/Field';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { StoredCardFieldsProps } from './types';
 
-const OneClickCardInput = ({ brand, hasCVC, onFocusField, errors, valid, ...props }, { i18n }) => {
-    // TODO create a translation key for "stored card ends in"
-    const ariaLabel = `stored card ends in ${props.lastFour}
-        ${i18n.get('creditCard.expiryDateField.title')} ${props.expiryMonth}/${props.expiryYear}`;
+export default function StoredCardFields({ brand, hasCVC, onFocusField, errors, valid, ...props }: StoredCardFieldsProps) {
+    const { i18n } = useCoreContext();
+    const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', props.lastFour);
+    const ariaLabel = `${storedCardDescription} ${i18n.get('creditCard.expiryDateField.title')} ${props.expiryMonth}/${props.expiryYear}`;
 
     return (
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick" aria-label={ariaLabel}>
@@ -39,6 +41,4 @@ const OneClickCardInput = ({ brand, hasCVC, onFocusField, errors, valid, ...prop
             </div>
         </div>
     );
-};
-
-export default OneClickCardInput;
+}
