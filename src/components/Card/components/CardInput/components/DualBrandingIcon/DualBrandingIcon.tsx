@@ -1,20 +1,14 @@
 import { h } from 'preact';
-import styles from '../CardInput.module.scss';
-import { getCardImageUrl } from '../utils';
+import styles from '../../CardInput.module.scss';
+import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { getCardImageUrl } from '../../utils';
+import { DualBrandingIconProps } from '../types';
 import './DualBrandingIcon.scss';
 
-interface DualBrandingIconProps {
-    brand: string;
-    loadingContext: string;
-    onClick?: any;
-    dataValue?: string;
-    notSelected?: boolean;
-    onFocusField?: any;
-}
-
-const DualBrandingIcon = ({ brand, loadingContext, onClick, dataValue, notSelected }: DualBrandingIconProps) => {
+const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected }: DualBrandingIconProps) => {
+    const { loadingContext } = useCoreContext();
     const imageName = brand === 'card' ? 'nocard' : brand;
-    const onError = e => {
+    const handleError = e => {
         e.target.style.cssText = 'display: none';
     };
 
@@ -23,7 +17,7 @@ const DualBrandingIcon = ({ brand, loadingContext, onClick, dataValue, notSelect
             className={`${styles['card-input__icon']} ${
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
-            onError={onError}
+            onError={handleError}
             alt={brand}
             src={getCardImageUrl(imageName, loadingContext)}
             onClick={onClick}

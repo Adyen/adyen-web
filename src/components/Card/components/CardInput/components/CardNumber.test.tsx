@@ -11,7 +11,6 @@ let wrapper = mount(
         filled={false}
         showBrandIcon={true}
         brand="card"
-        loadingContext=""
         onFocusField={() => {}}
         dualBrandingElements={null}
         dualBrandingChangeHandler={() => {}}

@@ -1,36 +1,15 @@
-import classNames from 'classnames';
 import { h } from 'preact';
-import styles from '../CardInput.module.scss';
+import classNames from 'classnames';
 import BrandIcon from './BrandIcon';
+import DualBrandingIcon from './DualBrandingIcon/DualBrandingIcon';
 import Field from '../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
-import DualBrandingIcon from '../../../../../components/Card/components/CardInput/components/DualBrandingIcon';
+import { CardNumberProps } from './types';
+import styles from '../CardInput.module.scss';
 
-interface CardNumberProps {
-    label: string;
-    error: boolean;
-    isValid: boolean;
-    focused: boolean;
-    filled: boolean;
-    showBrandIcon: boolean;
-    brand: string;
-    onFocusField: (field) => void;
-    loadingContext: string;
-    dualBrandingElements: any;
-    dualBrandingChangeHandler: any;
-    dualBrandingSelected: string;
-}
-
-const CardNumber = ({
-    error = false,
-    isValid = false,
-    onFocusField = () => {},
-    dualBrandingElements,
-    dualBrandingChangeHandler,
-    dualBrandingSelected,
-    ...props
-}: CardNumberProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+export default function CardNumber(props: CardNumberProps) {
+    const { i18n } = useCoreContext();
+    const { error = false, isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
 
     return (
         <Field
@@ -56,7 +35,7 @@ const CardNumber = ({
                     'adyen-checkout__card__cardNumber__input--noBrand': !props.showBrandIcon
                 })}
             >
-                {props.showBrandIcon && !dualBrandingElements && <BrandIcon brand={props.brand} loadingContext={loadingContext} />}
+                {props.showBrandIcon && !dualBrandingElements && <BrandIcon brand={props.brand} />}
             </span>
 
             {dualBrandingElements && !error && (
@@ -70,7 +49,6 @@ const CardNumber = ({
                         <DualBrandingIcon
                             key={element.id}
                             brand={element.id}
-                            loadingContext={loadingContext}
                             onClick={dualBrandingChangeHandler}
                             dataValue={element.id}
                             notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}
@@ -80,6 +58,4 @@ const CardNumber = ({
             )}
         </Field>
     );
-};
-
-export default CardNumber;
+}

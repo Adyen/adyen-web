@@ -1,85 +1,43 @@
-import { Component, h } from 'preact';
-import handlers from './handlers';
-import Card from './components/Card';
-import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import { Component, h, createRef } from 'preact';
 import Address from '../../../../components/internal/Address';
-import OneClickCard from './components/OneClickCard';
-import StoreDetails from '../../../../components/internal/StoreDetails';
+import CardFields from './components/CardFields';
 import CardHolderName from './components/CardHolderName';
-import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
-import KCPAuthentication from './components/KCPAuthentication';
 import Installments from './components/Installments';
+import KCPAuthentication from './components/KCPAuthentication';
+import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
+import StoredCardFields from './components/StoredCardFields';
+import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import StoreDetails from '../../../../components/internal/StoreDetails';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
-import styles from './CardInput.module.scss';
 import getImage from '../../../../utils/get-image';
-import './CardInput.scss';
+import handlers from './handlers';
 import processBinLookup from './processBinLookup';
-import Language from '../../../../language/Language';
-
-interface CardInputProps {
-    amount?: object;
-    billingAddressAllowedCountries?: string[];
-    billingAddressRequired?: boolean;
-    billingAddressRequiredFields?: string[];
-    brand?: string;
-    data?: object;
-    enableStoreDetails: boolean;
-    hasCVC: boolean;
-    hasHolderName: boolean;
-    holderName?: boolean;
-    holderNameRequired?: boolean;
-    i18n?: Language;
-    installmentOptions: object;
-    koreanAuthenticationRequired?: boolean;
-    loadingContext: string;
-    payButton?: () => {};
-    placeholders?: object;
-    showPayButton?: boolean;
-    storedPaymentMethodId?: string;
-    styles?: object;
-    onChange?: () => {};
-    onSubmit?: () => {};
-    onBrand?: () => {};
-    onBinValue?: () => {};
-}
-
-interface CardInputState {
-    additionalSelectElements: any[];
-    additionalSelectType: string;
-    additionalSelectValue: string;
-    billingAddress: object;
-    data?: object;
-    errors?: object;
-    focusedElement: string;
-    hideCVCForBrand: boolean;
-    isValid: boolean;
-    status: string;
-    valid?: object;
-    issuingCountryCode: string;
-}
+import styles from './CardInput.module.scss';
+import { CardInputProps, CardInputState } from './types';
+import './CardInput.scss';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
-    private validateCardInput;
-    private handleOnBrand;
-    private handleFocus;
-    private handleAddress;
-    private handleHolderName;
-    private handleInstallments;
-    private handleKCPAuthentication;
-    private handleSecuredFieldsChange;
-    private handleOnStoreDetails;
-    private handleAdditionalDataSelection;
-    private processBinLookup;
+    private readonly validateCardInput;
+    private readonly handleOnBrand;
+    private readonly handleFocus;
+    private readonly handleAddress;
+    private readonly handleHolderName;
+    private readonly handleInstallments;
+    private readonly handleKCPAuthentication;
+    private readonly handleSecuredFieldsChange;
+    private readonly handleOnStoreDetails;
+    private readonly handleAdditionalDataSelection;
+    private readonly processBinLookup;
 
     public state;
     public props;
     private setFocusOn;
     private updateStyles;
     private handleUnsupportedCard;
-    private sfp;
-    private billingAddressRef;
-    private kcpAuthenticationRef;
+    private sfp = createRef();
+    private billingAddressRef = createRef();
+    private kcpAuthenticationRef = createRef();
 
     constructor(props) {
         super(props);
@@ -119,16 +77,15 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.handleSecuredFieldsChange = handlers.handleSecuredFieldsChange.bind(this);
         this.handleOnStoreDetails = handlers.handleOnStoreDetails.bind(this);
         this.handleAdditionalDataSelection = handlers.handleAdditionalDataSelection.bind(this);
-
         this.processBinLookup = processBinLookup.bind(this);
     }
 
     public static defaultProps = defaultProps;
 
     public componentDidMount() {
-        this.setFocusOn = this.sfp.setFocusOn;
-        this.updateStyles = this.sfp.updateStyles;
-        this.handleUnsupportedCard = this.sfp.handleUnsupportedCard;
+        this.setFocusOn = this.sfp.current.setFocusOn;
+        this.updateStyles = this.sfp.current.updateStyles;
+        this.handleUnsupportedCard = this.sfp.current.handleUnsupportedCard;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -141,7 +98,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     public componentWillUnmount() {
-        this.sfp.destroy();
+        this.sfp.current.destroy();
         this.sfp = null;
     }
 
@@ -163,7 +120,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
     public showValidation() {
         // Validate SecuredFields
-        this.sfp.showValidation();
+        this.sfp.current.showValidation();
 
         // Validate holderName
         if (this.props.holderNameRequired && !this.state.valid.holderName) {
@@ -173,10 +130,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         }
 
         // Validate Address
-        if (this.billingAddressRef) this.billingAddressRef.showValidation();
+        if (this.billingAddressRef) this.billingAddressRef.current.showValidation();
 
         // Validate KCP authentication
-        if (this.kcpAuthenticationRef) this.kcpAuthenticationRef.showValidation();
+        if (this.kcpAuthenticationRef) this.kcpAuthenticationRef.current.showValidation();
     }
 
     public processBinLookupResponse(data) {
@@ -187,38 +144,21 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         });
     }
 
-    private handleSecuredFieldsRef = ref => {
-        this.sfp = ref;
-    };
-
-    private handleBillingAddressRef = ref => {
-        this.billingAddressRef = ref;
-    };
-
-    private handleKCPAuthenticationRef = ref => {
-        this.kcpAuthenticationRef = ref;
-    };
-
     render(
-        { loadingContext, hasHolderName, hasCVC, countryCode, installmentOptions, enableStoreDetails },
+        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails },
         { status, hideCVCForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
 
-        let isOneClick: boolean = this.props.storedPaymentMethodId ? true : false;
-        if (this.props.oneClick === true) isOneClick = true; // In the Drop-in the oneClick status may already have been decided, so give that priority
+        // In the Drop-in the oneClick status may already have been decided, so give that priority
+        const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
 
-        // If the merchant defined countryCode is 'KR'
-        let isKorea = countryCode === 'kr';
-
-        // Override the value if issuingCountryCode is set
-        if (issuingCountryCode !== null) {
-            isKorea = issuingCountryCode === 'kr';
-        }
+        // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
+        const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
 
         return (
             <SecuredFieldsProvider
-                ref={this.handleSecuredFieldsRef}
+                ref={this.sfp}
                 {...this.props}
                 styles={{ ...defaultStyles, ...this.props.styles }}
                 onChange={this.handleSecuredFieldsChange}
@@ -230,7 +170,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                     <div ref={setRootNode} className={`adyen-checkout__card-input ${styles['card-input__wrapper']}`}>
                         {this.props.storedPaymentMethodId ? (
                             <LoadingWrapper status={sfpState.status}>
-                                <OneClickCard
+                                <StoredCardFields
                                     {...this.props}
                                     cvcRequired={sfpState.cvcRequired}
                                     errors={sfpState.errors}
@@ -254,7 +194,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
-                                <Card
+                                <CardFields
                                     {...this.props}
                                     brand={sfpState.brand}
                                     focusedElement={focusedElement}
@@ -289,7 +229,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                             valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
                                             errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
                                         }}
-                                        ref={this.handleKCPAuthenticationRef}
+                                        ref={this.kcpAuthenticationRef}
                                         onChange={this.handleKCPAuthentication}
                                     />
                                 )}
@@ -312,7 +252,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         onChange={this.handleAddress}
                                         allowedCountries={this.props.billingAddressAllowedCountries}
                                         requiredFields={this.props.billingAddressRequiredFields}
-                                        ref={this.handleBillingAddressRef}
+                                        ref={this.billingAddressRef}
                                     />
                                 )}
                             </LoadingWrapper>

@@ -1,11 +1,8 @@
 import { h } from 'preact';
 import classNames from 'classnames';
+import { CVCHintProps } from './types';
 
-interface CVCHintProps {
-    frontCVC: boolean;
-}
-
-const CVCHint = ({ frontCVC = false }: CVCHintProps) => {
+export default function CVCHint({ frontCVC = false }: CVCHintProps) {
     const hintClassnames = classNames({
         'adyen-checkout__card__cvc__hint__wrapper': true,
         'adyen-checkout__field__cvc--front-hint': !!frontCVC,
@@ -58,6 +55,4 @@ const CVCHint = ({ frontCVC = false }: CVCHintProps) => {
         </div>
     );
     /* eslint-enable max-len */
-};
-
-export default CVCHint;
+}

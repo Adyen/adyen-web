@@ -1,11 +1,13 @@
-import classNames from 'classnames';
 import { h } from 'preact';
-import Field from '../../../../internal/FormFields/Field';
-import styles from '../CardInput.module.scss';
+import classNames from 'classnames';
 import CVCHint from './CVCHint';
+import Field from '../../../../internal/FormFields/Field';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { CVCProps } from './types';
+import styles from '../CardInput.module.scss';
 
-const CVC = (
-    {
+export default function CVC(props: CVCProps) {
+    const {
         label,
         onFocusField = () => {},
         error = false,
@@ -17,9 +19,9 @@ const CVC = (
         frontCVC = false,
         hideCVCForBrand = false,
         cvcRequired = true
-    },
-    { i18n }
-) => {
+    } = props;
+    const { i18n } = useCoreContext();
+
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
         [styles['adyen-checkout__card__cvc__input--hidden']]: hideCVCForBrand,
@@ -54,6 +56,4 @@ const CVC = (
             <CVCHint frontCVC={frontCVC} />
         </Field>
     );
-};
-
-export default CVC;
+}

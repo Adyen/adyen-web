@@ -1,10 +1,11 @@
 import { h } from 'preact';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
-import styles from '../CardInput.module.scss';
-import { renderFormField } from '../../../../internal/FormFields';
 import Field from '../../../../internal/FormFields/Field';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { renderFormField } from '../../../../internal/FormFields';
+import { CardHolderNameProps } from './types';
+import styles from '../CardInput.module.scss';
 
-const CardHolderName = ({ onChange, placeholder, value, required, error = false, isValid }) => {
+export default function CardHolderName({ onChange, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -23,6 +24,4 @@ const CardHolderName = ({ onChange, placeholder, value, required, error = false,
             })}
         </Field>
     );
-};
-
-export default CardHolderName;
+}
