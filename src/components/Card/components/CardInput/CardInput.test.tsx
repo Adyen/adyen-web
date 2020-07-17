@@ -50,6 +50,13 @@ describe('CardInput', () => {
         const wrapper = mount(<CardInput hasHolderName={true} i18n={i18n} />);
         expect(wrapper.state('valid').holderName).toBe(undefined);
     });
+
+    test('issuingCountryCode state var is converted to lowerCase', () => {
+        const wrapper = mount(<CardInput i18n={i18n} />);
+        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'KR' });
+        wrapper.update();
+        expect(wrapper.instance().state.issuingCountryCode).toEqual('kr');
+    });
 });
 
 describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is set to true', () => {
