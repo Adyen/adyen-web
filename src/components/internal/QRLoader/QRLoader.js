@@ -111,7 +111,12 @@ class QRLoader extends Component {
     onError(status) {
         clearInterval(this.interval);
         this.setState({ expired: true, loading: false });
-        this.props.onError(status);
+        this.props.onComplete({
+            data: {
+                details: { payload: status.props.payload },
+                paymentData: this.props.paymentData
+            }
+        });
         return status;
     }
 
