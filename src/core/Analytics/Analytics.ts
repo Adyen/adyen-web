@@ -7,7 +7,7 @@ import { AnalyticsProps } from './types';
 class Analytics {
     private static defaultProps = {
         enabled: true,
-        telemetry: false,
+        telemetry: true,
         conversion: false,
         conversionId: null
     };
