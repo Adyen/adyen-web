@@ -13,7 +13,7 @@ describe('Analytics', () => {
     test('Creates an Analytics module with defaultProps', () => {
         const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', originKey: '', clientKey: '' });
         expect(analytics.props.enabled).toBe(true);
-        expect(analytics.props.telemetry).toBe(false);
+        expect(analytics.props.telemetry).toBe(true);
         expect(analytics.props.conversion).toBe(false);
         expect(mockedCollectId.mock.calls).toHaveLength(0);
     });
