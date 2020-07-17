@@ -6,9 +6,9 @@ import ThreeDS2Challenge from './components/Challenge';
  * ThreeDS2ChallengeElement
  */
 class ThreeDS2ChallengeElement extends UIElement {
-    static type = 'threeDS2Challenge';
+    public static type = 'threeDS2Challenge';
 
-    static defaultProps = {
+    public static defaultProps = {
         dataKey: 'threeds2.challengeResult',
         challengeContainer: null,
         size: '01',

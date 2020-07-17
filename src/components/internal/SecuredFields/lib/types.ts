@@ -163,9 +163,10 @@ export interface CbObjOnBinValue {
 
 export interface CbObjOnError {
     fieldType: string;
-    rootNode: HTMLElement;
     error: string;
     type: string;
+    rootNode?: HTMLElement;
+    binLookupBrands?: string[];
 }
 
 export interface CbObjOnFocus {

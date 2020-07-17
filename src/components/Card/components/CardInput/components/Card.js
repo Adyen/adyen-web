@@ -3,7 +3,24 @@ import CVC from './CVC';
 import ExpirationDate from './ExpirationDate';
 import CardNumber from './CardNumber';
 
-const Card = ({ brand, focusedElement, hasCVC, onFocusField, hideCVCForBrand, errors, valid, cvcRequired, loadingContext, ...props }, { i18n }) => (
+const Card = (
+    {
+        brand,
+        focusedElement,
+        hasCVC,
+        onFocusField,
+        hideCVCForBrand,
+        errors,
+        valid,
+        cvcRequired,
+        loadingContext,
+        dualBrandingElements,
+        dualBrandingChangeHandler,
+        dualBrandingSelected,
+        ...props
+    },
+    { i18n }
+) => (
     <div className="adyen-checkout__card__form">
         <CardNumber
             brand={brand}
@@ -15,6 +32,9 @@ const Card = ({ brand, focusedElement, hasCVC, onFocusField, hideCVCForBrand, er
             filled={!!errors.encryptedCardNumber || !!valid.encryptedCardNumber}
             loadingContext={loadingContext}
             showBrandIcon={props.showBrandIcon}
+            dualBrandingElements={dualBrandingElements}
+            dualBrandingChangeHandler={dualBrandingChangeHandler}
+            dualBrandingSelected={dualBrandingSelected}
         />
 
         <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
