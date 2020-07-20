@@ -32,7 +32,7 @@ module.exports = merge(webpackConfig, {
     bail: true,
     devtool: shouldUseSourceMap ? 'source-map' : false,
     entry: {
-        AdyenCheckout: [path.join(__dirname, 'public-path.js'), path.join(__dirname, '../src/index.ts')]
+        AdyenCheckout: path.join(__dirname, '../src/index.ts')
     },
     output: {
         filename: `${FILENAME}.js`,
