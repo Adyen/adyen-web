@@ -457,7 +457,8 @@ const giftCardConfig = {
         onFocus
     }
 };
-// let myGiftCard;
+
+let myGiftCard;
 if (showGiftCard) {
     myGiftCard = new csf(giftCardConfig);
 } else {
