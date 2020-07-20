@@ -1,31 +1,46 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { getAmazonSignature, getCheckoutLocale, getPayloadJSON } from '../utils';
-import { AmazonPayButtonProps, AmazonPayButtonSettings, PayloadJSON } from '../types';
+import { AmazonPayButtonProps, AmazonPayButtonSettings, CheckoutSessionConfig, PayloadJSON } from '../types';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();
-    const { amazonRef, currency, environment, locale, merchantId, placement, productType, publicKeyId, region } = props;
+    const { amazonRef, buttonColor, currency, environment, locale, merchantId, placement, productType, publicKeyId, region, size } = props;
     const sandbox = environment === 'TEST';
     const checkoutLanguage = getCheckoutLocale(locale, region);
 
+    const handleOnClick = (amazonPayButton, createCheckoutSessionConfig) => {
+        new Promise(props.onClick)
+            .then(() => {
+                amazonPayButton.initCheckout({ createCheckoutSessionConfig });
+            })
+            .catch(console.error);
+    };
+
     const renderAmazonPayButton = (payloadJSON: PayloadJSON, signature: string): void => {
         const settings: AmazonPayButtonSettings = {
+            ...(buttonColor && { buttonColor }),
+            ...(size && { size }),
             merchantId,
             sandbox,
             productType,
             placement,
             checkoutLanguage,
-            ledgerCurrency: currency,
-            createCheckoutSessionConfig: {
-                payloadJSON: JSON.stringify(payloadJSON),
-                signature,
-                publicKeyId
-            }
+            ledgerCurrency: currency
         };
 
-        amazonRef.Pay.renderButton('#amazonPayButton', settings);
+        const checkoutSessionConfig: CheckoutSessionConfig = {
+            payloadJSON: JSON.stringify(payloadJSON),
+            signature,
+            publicKeyId
+        };
+
+        const amazonPayButton = amazonRef.Pay.renderButton('#amazonPayButton', settings);
+
+        amazonPayButton.onClick(() => {
+            handleOnClick(amazonPayButton, checkoutSessionConfig);
+        });
     };
 
     useEffect(() => {
