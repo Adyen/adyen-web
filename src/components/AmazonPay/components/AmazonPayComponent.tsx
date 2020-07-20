@@ -1,9 +1,12 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import Spinner from '../../internal/Spinner';
-import AmazonPayButton from './AmazonPayButton';
 import { getAmazonPayUrl } from '../utils';
 import { AmazonPayComponentProps } from '../types';
+import AmazonPayButton from './AmazonPayButton';
+import ChangePaymentDetailsButton from './ChangePaymentDetailsButton';
+import OrderButton from './OrderButton';
+import SignOutButton from './SignOutButton';
 
 export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
@@ -31,5 +34,25 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
         );
     }
 
-    return <AmazonPayButton {...props} amazonRef={window.amazon} />;
+    if (props.showSignOutButton) {
+        return <SignOutButton onSignOut={props.onSignOut} amazonRef={window.amazon} />;
+    }
+
+    if (props.amazonCheckoutSessionId) {
+        return (
+            <div className="adyen-checkout__amazonpay">
+                {props.showOrderButton && <OrderButton payButton={props.payButton} />}
+
+                {props.showChangePaymentDetailsButton && (
+                    <ChangePaymentDetailsButton amazonCheckoutSessionId={props.amazonCheckoutSessionId} amazonRef={window.amazon} />
+                )}
+            </div>
+        );
+    }
+
+    return (
+        <div className="adyen-checkout__amazonpay">
+            <AmazonPayButton {...props} amazonRef={window.amazon} />
+        </div>
+    );
 }
