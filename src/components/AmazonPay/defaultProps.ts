@@ -4,5 +4,10 @@ export default {
     placement: 'Cart',
     productType: 'PayAndShip',
     region: 'EU',
-    showPayButton: true
+    showOrderButton: true,
+    showChangePaymentDetailsButton: false,
+    showSignOutButton: false,
+    showPayButton: true,
+    onClick: resolve => resolve(),
+    onSignOut: resolve => resolve()
 };

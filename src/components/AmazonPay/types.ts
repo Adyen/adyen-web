@@ -8,6 +8,8 @@ declare global {
     }
 }
 
+type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
+type Size = 'small' | 'medium' | 'large' | 'x-large';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
 type Currency = 'USD' | 'EUR' | 'GBP';
@@ -16,7 +18,7 @@ export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPO
 
 export interface AmazonPayCommonProps {
     amazonCheckoutSessionId?: string;
-    amazonPayToken?: string;
+    buttonColor?: ButtonColor;
     clientKey?: string;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
@@ -25,14 +27,21 @@ export interface AmazonPayCommonProps {
     locale?: string;
     merchantId?: string;
     originKey?: string;
+    payButton?: any;
     placement?: Placement;
     productType?: ProductType;
     publicKeyId?: string;
     region?: Region;
     returnUrl?: string;
-    showPayButton?: boolean;
+    showOrderButton: boolean;
+    showChangePaymentDetailsButton: boolean;
+    showSignOutButton: boolean;
+    showPayButton: boolean;
     signature?: string;
+    size?: Size;
     storeId?: string;
+    onClick: (resolve, reject) => Promise<void>;
+    onSignOut: (resolve, reject) => Promise<void>;
     onError: (error) => void;
 }
 
@@ -58,6 +67,7 @@ export interface AmazonPayElementData {
 }
 
 export interface AmazonPayButtonSettings {
+    buttonColor: ButtonColor;
     /**
      * Amazon Pay merchant account identifier
      */
@@ -88,10 +98,7 @@ export interface AmazonPayButtonSettings {
      */
     ledgerCurrency: Currency;
 
-    /**
-     * Create Checkout Session configuration
-     */
-    createCheckoutSessionConfig: CreateCheckoutSessionConfig;
+    size?: Size;
 }
 
 export interface PayloadJSON {
@@ -102,7 +109,7 @@ export interface PayloadJSON {
     deliverySpecifications?: DeliverySpecifications;
 }
 
-interface CreateCheckoutSessionConfig {
+export interface CheckoutSessionConfig {
     payloadJSON: string;
     signature: string;
     publicKeyId: string;
