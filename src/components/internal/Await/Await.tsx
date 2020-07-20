@@ -5,8 +5,8 @@ import processResponse from '../../../core/ProcessResponse/process-response';
 import { getImageUrl } from '../../../utils/get-image';
 import './Await.scss';
 import Spinner from '../../../components/internal/Spinner';
-import Countdown from '../../../components/internal/Countdown';
-import Button from '../../../components/internal/Button';
+import Countdown from '../Countdown';
+import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
 interface StatusObjectProps {
@@ -242,7 +242,7 @@ function Await(props: AwaitComponentProps) {
             {props.url && (
                 <div className="adyen-checkout__await__app-link">
                     <span className="adyen-checkout__await__separator__label">{i18n.get('or')}</span>
-                    <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} i18n={i18n} label={i18n.get('openApp')} />
+                    <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} label={i18n.get('openApp')} />
                 </div>
             )}
         </div>

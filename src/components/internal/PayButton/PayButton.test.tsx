@@ -3,7 +3,7 @@ import { h } from 'preact';
 import PayButton from './PayButton';
 
 describe('PayButton', () => {
-    const getWrapper = props => mount(<PayButton {...props} />);
+    const getWrapper = (props?) => mount(<PayButton {...props} />);
 
     test('Renders a pay button', () => {
         const wrapper = getWrapper();

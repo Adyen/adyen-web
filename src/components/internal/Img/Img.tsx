@@ -2,8 +2,9 @@ import { useRef, useState, useEffect } from 'preact/hooks';
 import cx from 'classnames';
 import './Img.scss';
 import { h } from 'preact';
+import { ImgProps } from './types';
 
-export default function Img(props) {
+export default function Img(props: ImgProps) {
     const { backgroundUrl = '', className = '', classNameModifiers = [], src = '', alt = '', showOnError = false } = props;
     const [loaded, setLoaded] = useState(false);
     const imageRef = useRef(null);

@@ -3,9 +3,10 @@ import classNames from 'classnames';
 import Spinner from '../Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './Button.scss';
+import { ButtonProps, ButtonState } from './types';
 
-class Button extends Component {
-    static defaultProps = {
+class Button extends Component<ButtonProps, ButtonState> {
+    public static defaultProps = {
         status: 'default',
         disabled: false,
         label: '',
@@ -15,7 +16,7 @@ class Button extends Component {
         onClick: () => {}
     };
 
-    onClick = e => {
+    public onClick = e => {
         e.preventDefault();
 
         if (!this.props.disabled) {
@@ -23,7 +24,7 @@ class Button extends Component {
         }
     };
 
-    complete = (delay = 1000) => {
+    public complete = (delay = 1000) => {
         this.setState({ completed: true });
         setTimeout(() => {
             this.setState({ completed: false });

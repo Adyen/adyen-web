@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import PersonalDetails from '../../../components/internal/PersonalDetails';
-import Address from '../../../components/internal/Address';
+import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import './OpenInvoice.scss';
 
