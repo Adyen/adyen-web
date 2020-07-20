@@ -7,6 +7,7 @@ export interface ButtonProps {
 
     disabled?: boolean;
     label?: string;
+    icon?: string;
     secondary?: boolean;
     inline?: boolean;
     href?: string;
