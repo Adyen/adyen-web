@@ -136,5 +136,7 @@
     "blik.confirmPayment": "Open your banking app to confirm the payment.",
     "blik.invalid": "Enter 6 numbers",
     "blik.code": "6-digit code",
-    "blik.help": "Get the code from your banking app."
+    "blik.help": "Get the code from your banking app.",
+    "amazonpay.signout": "Sign out from Amazon",
+    "amazonpay.changePaymentDetails": "Change payment details"
 }
