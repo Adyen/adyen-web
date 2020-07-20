@@ -1,0 +1,24 @@
+import { h } from 'preact';
+import useCoreContext from '../../../core/Context/useCoreContext';
+
+export default function SignOutButton(props) {
+    const { i18n } = useCoreContext();
+
+    const handleClick = () => {
+        new Promise(props.onSignOut)
+            .then(() => {
+                props.amazonRef.Pay.signout();
+            })
+            .catch(console.error);
+    };
+
+    return (
+        <button
+            type="button"
+            className="adyen-checkout__button  adyen-checkout__button--ghost adyen-checkout__amazonpay__button--signOut"
+            onClick={handleClick}
+        >
+            {i18n.get('amazonpay.signout')}
+        </button>
+    );
+}
