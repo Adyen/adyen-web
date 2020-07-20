@@ -124,6 +124,6 @@ export const loadTranslations = (locale: string, customTranslations: object = {}
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)
         ...locales[localeToLoad], // Merge with our locale file of the locale they are loading
-        ...(customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
+        ...(!!customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
     };
 };
