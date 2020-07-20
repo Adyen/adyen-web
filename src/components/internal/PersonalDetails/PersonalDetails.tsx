@@ -26,9 +26,9 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         const key = name.split(`${namePrefix}.`).pop();
         const isValid = validator.validate(key, mode)(value);
 
-        setData(data => ({ ...data, [key]: value }));
-        setValid(valid => ({ ...valid, [key]: isValid }));
-        setErrors(errors => ({ ...errors, [key]: !isValid }));
+        setData(prevData => ({ ...prevData, [key]: value }));
+        setValid(prevValid => ({ ...prevValid, [key]: isValid }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: !isValid }));
     };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
