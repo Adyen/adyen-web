@@ -48,7 +48,7 @@ const paymentsURL = 'http://localhost:8011/payments';
 
 let globalType, globalRootNode;
 
-const startTime = new Date().getTime();
+// const startTime = new Date().getTime();
 
 let cardBrand = '';
 
