@@ -1,9 +1,14 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../../internal/Spinner';
 import styles from './LoadingWrapper.module.scss';
 
-const LoadingWrapper = ({ children, status }) => {
+interface LoadingWrapperProps {
+    status?: string;
+    children?: ComponentChildren;
+}
+
+const LoadingWrapper = ({ children, status }: LoadingWrapperProps) => {
     const wrapperClass = classNames('adyen-checkout__loading-input__form', styles['loading-input__form'], {
         [styles['loading-input__form--loading']]: status === 'loading'
     });

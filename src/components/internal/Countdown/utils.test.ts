@@ -30,13 +30,12 @@ describe('Countdown utils', () => {
 
     describe('getProgressPercentage', () => {
         const fixedDate = new Date('2018-02-28T09:39:59');
-        const originalDate = new Date();
+
         beforeAll(() => {
             Date.now = () => fixedDate.getTime();
         });
 
         afterAll(() => {
-            Date = originalDate;
             jest.restoreAllMocks();
         });
 

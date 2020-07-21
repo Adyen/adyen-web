@@ -1,7 +1,20 @@
 import { Component, h } from 'preact';
 import { getTimeDifference } from './utils';
 
-class Countdown extends Component {
+interface CountdownProps {
+    minutesFromNow: number;
+    onTick?: (time) => void;
+    onCompleted?: () => void;
+}
+
+interface CountdownState {
+    startTime: Date;
+    endTime: Date;
+    minutes: string;
+    seconds: string;
+}
+
+class Countdown extends Component<CountdownProps, CountdownState> {
     constructor(props) {
         super(props);
         const secondsFromNow = this.props.minutesFromNow * 60000;
@@ -14,10 +27,12 @@ class Countdown extends Component {
         };
     }
 
-    static defaultProps = {
+    public static defaultProps = {
         onTick: () => {},
         onCompleted: () => {}
     };
+
+    protected interval;
 
     tick() {
         const newTime = getTimeDifference(this.state.startTime, this.state.endTime);

@@ -1,5 +1,5 @@
 import { Component, h, createRef } from 'preact';
-import Address from '../../../../components/internal/Address';
+import Address from '../../../internal/Address';
 import CardFields from './components/CardFields';
 import CardHolderName from './components/CardHolderName';
 import Installments from './components/Installments';
@@ -7,7 +7,7 @@ import KCPAuthentication from './components/KCPAuthentication';
 import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import StoredCardFields from './components/StoredCardFields';
 import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
-import StoreDetails from '../../../../components/internal/StoreDetails';
+import StoreDetails from '../../../internal/StoreDetails';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import getImage from '../../../../utils/get-image';
