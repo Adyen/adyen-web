@@ -35,19 +35,19 @@ export default function OpenInvoice(props) {
     }, [data, valid, errors]);
 
     const handleFieldset = key => state => {
-        setData(data => ({ ...data, [key]: state.data }));
-        setValid(valid => ({ ...valid, [key]: state.isValid }));
+        setData(prevData => ({ ...prevData, [key]: state.data }));
+        setValid(prevValid => ({ ...prevValid, [key]: state.isValid }));
     };
 
     const handleSeparateDeliveryAddress = e => {
-        setData(data => ({ ...data, separateDeliveryAddress: e.target.checked }));
+        setData(prevData => ({ ...prevData, separateDeliveryAddress: e.target.checked }));
     };
 
     const handleConsentCheckbox = e => {
         const { checked } = e.target;
-        setData(data => ({ ...data, consentCheckbox: checked }));
-        setValid(valid => ({ ...valid, consentCheckbox: checked }));
-        setErrors(errors => ({ ...errors, consentCheckbox: !checked }));
+        setData(prevData => ({ ...prevData, consentCheckbox: checked }));
+        setValid(prevValid => ({ ...prevValid, consentCheckbox: checked }));
+        setErrors(prevErrors => ({ ...prevErrors, consentCheckbox: !checked }));
     };
 
     this.showValidation = () => {

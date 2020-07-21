@@ -4,7 +4,6 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
         <title>Adyen Web | Secured Fields Pure</title>
         <style>
             h4 {
@@ -193,50 +192,6 @@
         <main>
             <h5 class="caveat">For Internal Dev only (works only if you can host SecuredFields locally)</h5>
             <div class="container">
-                <!--<label class="pm-form-label">
-        <span class="pm-form-label__text">Holder name:</span>
-        <input type="text" class="pm-input-field pm-input-field-name" aria-label="Credit or debit card holder name"/>
-    </label>
-    <label for="pw">
-        Password
-    </label>
-    <input type="password" id="pw" aria-describedby="pw_desc">
-
-    <p id="pw_desc" aria-live="assertive">
-        Please enter a password you'll immediately forget.
-    </p>
-
-    <button id="testBtn">Change text</button>
-    <script type="application/javascript">
-        var btn = document.querySelector('#testBtn');
-        btn.addEventListener('click', function(){
-            var pwd = document.querySelector('#pw_desc');
-            pwd.innerText = 'some error information';
-        })
-    </script>-->
-
-                <!--Initial:-->
-                <!--<div>
-        <label for="addressFields_firstName">Vorname</label>
-        <input class="form__input&#45;&#45;error form__error&#45;&#45;show" title="Bitte geben Sie Ihren Vornamen ein." id="addressFields_firstName" type="text" name="addressFields_firstName" value="">
-    </div>-->
-
-                <!--Field left with error:-->
-                <!--<div aria-live="assertive">
-        <label for="addressFields_firstName">Vorname</label>
-        <input class="form__input&#45;&#45;error form__error&#45;&#45;show" title="Bitte geben Sie Ihren Vornamen ein." id="addressFields_firstName" type="text" name="addressFields_firstName" value="" aria-required="true" aria-invalid="true" aria-describedby="addressFields_firstName-error">
-        <div class="form__error-message">
-            <span id="addressFields_firstName-error" aria-role="alert">Bitte geben Sie Ihren Vornamen ein.</span>
-        </div>
-    </div>-->
-
-                <!--Field left with success:-->
-                <!--<div aria-live="assertive">
-        <label for="addressFields_firstName">Vorname</label>
-        <input class="form__input&#45;&#45;error form__error&#45;&#45;show" title="Bitte geben Sie Ihren Vornamen ein." id="addressFields_firstName" type="text" name="addressFields_firstName" value="" aria-required="true" aria-invalid="false">
-        <div class="form__error-message"></div>
-    </div>-->
-
                 <div id="adyenPaymentDivCard1" class="payment-div">
                     <h4>Card</h4>
                     <span class="pm-image">
@@ -255,14 +210,6 @@
                         <span class="pm-form-label__text">Expiry date:</span>
                         <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
                     </label>
-                    <!--<label class="pm-form-label exp-month">
-            <span class="pm-form-label__text">Expiry month:</span>
-            <span class="pm-input-field" data-cse="encryptedExpiryMonth"></span>
-        </label>
-        <label class="pm-form-label exp-year">
-            <span class="pm-form-label__text">Expiry year:</span>
-            <span class="pm-input-field" data-cse="encryptedExpiryYear"></span>
-        </label>-->
                     <label class="pm-form-label pm-form-label--cvc">
                         <span class="pm-form-label__text">CVV/CVC:</span>
                         <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>

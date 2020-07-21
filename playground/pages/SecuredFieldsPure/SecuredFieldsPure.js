@@ -48,7 +48,7 @@ const paymentsURL = 'http://localhost:8011/payments';
 
 let globalType, globalRootNode;
 
-const startTime = new Date().getTime();
+// const startTime = new Date().getTime();
 
 let cardBrand = '';
 
@@ -117,7 +117,7 @@ const ariaLabels = {
 };
 
 const onLoad = function(pCallbackObj) {
-    const elTime = new Date().getTime() - startTime;
+    // const elTime = new Date().getTime() - startTime;
     //            if(window.console && window.console.log){
     //                window.console.log('@@@ index::onLoad:: elapsedTime=',elTime);
     //                window.console.log( '\n@@@ index::onLoad:: iframes loaded - but not necessarily initiated pCallbackObj=',pCallbackObj );
@@ -125,7 +125,7 @@ const onLoad = function(pCallbackObj) {
 };
 
 const onConfigSuccess = function(pCallbackObj, pDebugRef) {
-    const elTime = new Date().getTime() - startTime;
+    // const elTime = new Date().getTime() - startTime;
     //            if(window.console && window.console.log){
     //                window.console.log('@@@ index::onConfigSuccess:: elapsedTime=',elTime);
     //                    window.console.log( '\n@@@ index::onConfigSuccess:: iframes loaded and ready! pCallbackObj=', pCallbackObj );
@@ -154,8 +154,8 @@ const onConfigSuccess = function(pCallbackObj, pDebugRef) {
 
         //                    pDebugRef( 'card', 'encryptedCardNumber', true );
 
-        const rootNode = document.querySelector('#adyenPaymentDivCard1');
-        const error = 'incomplete field';
+        // const rootNode = document.querySelector('#adyenPaymentDivCard1');
+        // const error = 'incomplete field';
 
         //                var errObj = {rootNode,
         //                    fieldType: 'encryptedCardNumber',
@@ -234,7 +234,7 @@ const onBrand = function(pCallbackObj) {
                 window.console.log('@@@ index::onBrand:: HIDE CVC FIELD!!!');
             }
 
-            const elem = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
+            // const elem = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
             //  elem.style.display = 'none';
         }
     }
@@ -248,7 +248,7 @@ const onBrand = function(pCallbackObj) {
             window.console.log('@@@ index::onBrand:: SHOW CVC FIELD!!!');
         }
 
-        const elem = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
+        // const elem = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
         // elem.style.display = 'block';
     }
 };
@@ -457,6 +457,7 @@ const giftCardConfig = {
         onFocus
     }
 };
+
 let myGiftCard;
 if (showGiftCard) {
     myGiftCard = new csf(giftCardConfig);
