@@ -58,8 +58,8 @@ getOriginKey()
             // onError: console.error,
 
             // Payment info
-            currencyCode: 'EUR',
-            amount: 10, // 0.1 EUR (minor units)
+            amount: { value: 10, currency: 'EUR' }, // 0.1 EUR (minor units)
+            countryCode: 'NL',
 
             // Merchant config (required)
             configuration: {

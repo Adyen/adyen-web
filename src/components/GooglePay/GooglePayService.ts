@@ -1,15 +1,21 @@
 import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
 import { resolveEnvironment } from './utils';
+import { loadScript } from '../../utils/loadScript';
+import config from './config';
 
 class GooglePayService {
-    public readonly paymentsClient: google.payments.api.PaymentsClient;
+    public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
     constructor(props) {
         const environment = resolveEnvironment(props.environment);
         if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
             console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');
         }
-        this.paymentsClient = this.getGooglePaymentsClient({ environment, paymentDataCallbacks: props.paymentDataCallbacks });
+
+        this.paymentsClient = this.getGooglePaymentsClient({
+            environment,
+            paymentDataCallbacks: props.paymentDataCallbacks
+        });
     }
 
     /**
@@ -18,12 +24,12 @@ class GooglePayService {
      * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient|PaymentsClient constructor}
      * @returns Google Pay API client
      */
-    getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): google.payments.api.PaymentsClient {
-        if (window.google && window.google.payments) {
-            return new google.payments.api.PaymentsClient(paymentOptions);
+    async getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): Promise<google.payments.api.PaymentsClient> {
+        if (!window.google?.payments) {
+            await loadScript(config.URL);
         }
 
-        return null;
+        return new google.payments.api.PaymentsClient(paymentOptions);
     }
 
     /**
@@ -33,14 +39,14 @@ class GooglePayService {
     isReadyToPay(props): Promise<google.payments.api.IsReadyToPayResponse> {
         if (!this.paymentsClient) return Promise.reject(new Error('Google Pay is not available'));
 
-        return this.paymentsClient.isReadyToPay(isReadyToPayRequest(props));
+        return this.paymentsClient.then(client => client.isReadyToPay(isReadyToPayRequest(props)));
     }
 
     prefetchPaymentData(props): void {
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
         const paymentDataRequest = initiatePaymentRequest(props);
-        return this.paymentsClient.prefetchPaymentData(paymentDataRequest);
+        this.paymentsClient.then(client => client.prefetchPaymentData(paymentDataRequest));
     }
 
     /**
@@ -52,7 +58,7 @@ class GooglePayService {
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
         const paymentDataRequest = initiatePaymentRequest(props);
-        return this.paymentsClient.loadPaymentData(paymentDataRequest);
+        return this.paymentsClient.then(client => client.loadPaymentData(paymentDataRequest));
     }
 }
 
