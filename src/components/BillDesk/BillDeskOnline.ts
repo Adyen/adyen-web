@@ -1,6 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'billdesk_online',
-    showImage: false
-});
+class BillDeskOnlineElement extends IssuerListContainer {
+    public static type = 'billdesk_online';
+}
+
+export default BillDeskOnlineElement;

@@ -1,6 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'eps',
-    showImage: false
-});
+class EPSElement extends IssuerListContainer {
+    public static type = 'eps';
+}
+
+export default EPSElement;
