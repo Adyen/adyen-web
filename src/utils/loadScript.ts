@@ -11,3 +11,5 @@ export const loadScript = (src, node = 'body') =>
 
         document.querySelector(node).appendChild(script);
     });
+
+export default loadScript;

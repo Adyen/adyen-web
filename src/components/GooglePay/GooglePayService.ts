@@ -1,6 +1,6 @@
 import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
 import { resolveEnvironment } from './utils';
-import { loadScript } from '../../utils/loadScript';
+import loadScript from '../../utils/loadScript';
 import config from './config';
 
 class GooglePayService {
