@@ -4,6 +4,10 @@
  * @returns a promise containing the response of the call
  */
 const collectId = config => {
+    if (!config.accessKey) {
+        return Promise.reject();
+    }
+
     const options = {
         method: 'POST',
         headers: {
@@ -11,8 +15,8 @@ const collectId = config => {
             'Content-Type': 'application/json'
         }
     };
-    const accessKey = config.clientKey || config.originKey;
-    return fetch(`${config.loadingContext}v1/analytics/id?token=${accessKey}`, options)
+
+    return fetch(`${config.loadingContext}v1/analytics/id?token=${config.accessKey}`, options)
         .then(response => {
             if (response.ok) return response.json();
             throw new Error('Collect ID not available');
