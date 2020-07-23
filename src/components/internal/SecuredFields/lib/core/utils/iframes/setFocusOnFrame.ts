@@ -8,11 +8,11 @@ export function setFocusOnFrame(pFieldType: string, doLog?: boolean): void {
     if (process.env.NODE_ENV === 'development' && doLog) console.log('\n### setFocusOnFrame:: (SHIFT_TAB) place focus on:', pFieldType);
 
     // Don't set focus on cvc field if it doesn't exist OR is optional
-    if (pFieldType === ENCRYPTED_SECURITY_CODE) {
-        if (!Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType) || !this.state.securedFields[pFieldType].cvcRequired) {
-            return;
-        }
-    }
+    // if (pFieldType === ENCRYPTED_SECURITY_CODE) {
+    // if (!Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
+    //     return;
+    // }
+    // }
 
     const dataObj: object = {
         txVariant: this.state.type,
