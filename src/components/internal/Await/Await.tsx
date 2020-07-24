@@ -1,49 +1,18 @@
 import { h } from 'preact';
+import classnames from 'classnames';
 import { useState, useEffect } from 'preact/hooks';
 import { checkPaymentStatus } from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse/process-response';
 import { getImageUrl } from '../../../utils/get-image';
-import './Await.scss';
-import Spinner from '../../../components/internal/Spinner';
+import Spinner from '../../internal/Spinner';
 import Countdown from '../Countdown';
 import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
-
-interface StatusObjectProps {
-    payload: string;
-    resultCode: string;
-    type: string;
-}
-
-interface StatusObject {
-    type: string;
-    props: StatusObjectProps;
-}
-
-interface AwaitComponentProps {
-    type: string;
-    delay: number;
-    countdownTime: number;
-    throttleTime: number;
-    showCountdownTimer: boolean;
-    throttleInterval: number;
-    paymentData: string;
-    url?: string;
-    shouldRedirectOnMobile?: boolean;
-    classNameModifiers?: string[];
-    onError;
-    onComplete;
-    loadingContext;
-    originKey;
-    clientKey;
-    brandLogo;
-    messageText;
-    awaitText;
-    ref;
-}
+import { AwaitComponentProps, StatusObject } from './types';
+import './Await.scss';
 
 function Await(props: AwaitComponentProps) {
-    const { i18n } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
 
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
@@ -57,77 +26,71 @@ function Await(props: AwaitComponentProps) {
     const onTimeUp = (): void => {
         setExpired(true);
         clearTimeout(storedTimeout);
-        props.onError({ type: 'error', props: { errorMessage: 'Payment Expired' } });
+        const error = { type: 'error', props: { errorMessage: 'Payment Expired' } };
+        props.onError(error, this);
     };
 
     const onTick = (time): void => {
         setPercentage(time.percentage);
     };
 
-    const onComplete = (status: StatusObject): StatusObject => {
+    const onComplete = (status: StatusObject): void => {
         setCompleted(true);
-        props.onComplete(
-            {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            },
-            this
-        );
-        return status;
+        const state = {
+            data: {
+                details: { payload: status.props.payload },
+                paymentData: props.paymentData
+            }
+        };
+
+        props.onComplete(state, this);
     };
 
-    const onError = (status: StatusObject): StatusObject => {
+    const onError = (status: StatusObject): void => {
         setExpired(true);
-        // Send error response to onAdditionalDetails
-        props.onComplete(
-            {
-                data: {
-                    details: { payload: status.props.payload },
-                    paymentData: props.paymentData
-                }
-            },
-            this
-        );
+        const state = {
+            data: {
+                details: { payload: status.props.payload },
+                paymentData: props.paymentData
+            }
+        };
 
-        return status;
+        // Send error response to onAdditionalDetails
+        props.onComplete(state, this);
     };
 
-    const checkStatus = (): Promise<any> => {
-        const { paymentData, originKey, clientKey, loadingContext } = props;
+    const checkStatus = (): void => {
+        const { paymentData, accessKey } = props;
 
-        const accessKey = clientKey ? clientKey : originKey;
-        return checkPaymentStatus(paymentData, accessKey, loadingContext)
+        checkPaymentStatus(paymentData, accessKey, loadingContext)
             .then(processResponse)
             .catch(response => ({ type: 'network-error', props: response }))
-            .then(
-                (status: StatusObject): StatusObject => {
-                    switch (status.type) {
-                        case 'success':
-                            return onComplete(status as StatusObject);
+            .then((status: StatusObject) => {
+                switch (status.type) {
+                    case 'success':
+                        onComplete(status);
+                        break;
 
-                        case 'error':
-                            return onError(status as StatusObject);
+                    case 'error':
+                        onError(status);
+                        break;
 
-                        default:
-                            setLoading(false);
-                    }
-                    return status as StatusObject;
+                    default:
+                        setLoading(false);
                 }
-            );
+            });
     };
 
     const redirectToApp = (url, fallback = (): void => {}): void => {
         setTimeout((): void => {
             // Redirect to the APP failed
-            props.onError(`${props.type} App was not found`);
+            const error = `${props.type} App was not found`;
+            props.onError(error, this);
             fallback();
         }, 25);
         window.location.assign(url);
     };
 
-    // didMount & willUnmount
     useEffect(() => {
         const { shouldRedirectOnMobile, url } = props;
         const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
@@ -143,18 +106,10 @@ function Await(props: AwaitComponentProps) {
         };
     }, []);
 
-    // didUpdate
     useEffect(() => {
-        // --
-        if (expired) {
-            clearTimeout(storedTimeout);
-            return;
-        }
+        if (expired) return clearTimeout(storedTimeout);
 
-        if (completed) {
-            clearTimeout(storedTimeout);
-            return;
-        }
+        if (completed) return clearTimeout(storedTimeout);
 
         if (!loading) {
             // Retry until getting a complete response from the server OR it times out
@@ -167,7 +122,6 @@ function Await(props: AwaitComponentProps) {
 
                 if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
                     setDelay(props.throttleInterval);
-                    //                    console.log('### AwaitHooks::statusInterval:: setting delay=', props.throttleInterval);
                     setHasAdjustedTime(true);
                 }
             };
@@ -180,7 +134,7 @@ function Await(props: AwaitComponentProps) {
         <div className="adyen-checkout__await adyen-checkout__await--result">
             <img
                 className="adyen-checkout__await__icon adyen-checkout__await__icon--result"
-                src={getImageUrl({ loadingContext: props.loadingContext, imageFolder: 'components/' })(image)}
+                src={getImageUrl({ loadingContext, imageFolder: 'components/' })(image)}
                 alt={i18n.get(message)}
             />
             <div className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</div>
@@ -208,11 +162,11 @@ function Await(props: AwaitComponentProps) {
 
     return (
         <div
-            className={`
-                    adyen-checkout__await
-                    adyen-checkout__await--${props.type}
-                    ${props.classNameModifiers.map(m => `adyen-checkout__await--${m}`)}
-                `}
+            className={classnames(
+                'adyen-checkout__await',
+                `adyen-checkout__await--${props.type}`,
+                props.classNameModifiers.map(m => `adyen-checkout__await--${m}`)
+            )}
         >
             {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
 
