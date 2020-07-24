@@ -10,7 +10,7 @@ const initCheckout = paymentMethodsResponse => {
         amount, // Optional. Used to display the amount in the Pay Button.
         countryCode,
         originKey,
-        clientKey: process.env.__CLIENT_KEY__,
+        // clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: 'test',
