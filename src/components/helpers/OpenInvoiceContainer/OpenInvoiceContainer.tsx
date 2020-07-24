@@ -73,7 +73,7 @@ export default class OpenInvoiceContainer extends UIElement {
                     }}
                     {...this.props}
                     {...this.state}
-                    consentCheckbox={this.props.constructor['consentCheckbox']}
+                    consentCheckbox={this.props.consentCheckbox}
                     onChange={this.setState}
                     onSubmit={this.submit}
                     payButton={this.payButton}
