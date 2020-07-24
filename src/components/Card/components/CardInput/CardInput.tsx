@@ -130,10 +130,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         }
 
         // Validate Address
-        if (this.billingAddressRef) this.billingAddressRef.current.showValidation();
+        if (this.billingAddressRef?.current) this.billingAddressRef.current.showValidation();
 
         // Validate KCP authentication
-        if (this.kcpAuthenticationRef) this.kcpAuthenticationRef.current.showValidation();
+        if (this.kcpAuthenticationRef?.current) this.kcpAuthenticationRef.current.showValidation();
     }
 
     public processBinLookupResponse(data) {
