@@ -1,5 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'openbanking_UK'
-});
+class OpenBankingUKElement extends IssuerListContainer {
+    public static type = 'openbanking_UK';
+}
+
+export default OpenBankingUKElement;

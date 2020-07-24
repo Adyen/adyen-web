@@ -1,5 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'ideal'
-});
+class IdealElement extends IssuerListContainer {
+    public static type = 'ideal';
+}
+
+export default IdealElement;
