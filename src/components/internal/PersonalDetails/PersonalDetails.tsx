@@ -7,8 +7,9 @@ import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { PersonalDetailsProps, PersonalDetailsStructure } from './PersonalDetailsTypes';
+import { PersonalDetailsProps, PersonalDetailsStateError, PersonalDetailsStateValid } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
+import { PersonalDetailsSchema } from '../../../types';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'telephoneNumber', 'shopperEmail'];
 
@@ -16,9 +17,9 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const { label = '', namePrefix, requiredFields, visibility } = props;
     const { i18n } = useCoreContext();
     const validator = new Validator(personalDetailsValidationRules);
-    const [data, setData] = useState<PersonalDetailsStructure>(props.data);
-    const [errors, setErrors] = useState<PersonalDetailsStructure>({});
-    const [valid, setValid] = useState<PersonalDetailsStructure>({});
+    const [data, setData] = useState<PersonalDetailsSchema>(props.data);
+    const [errors, setErrors] = useState<PersonalDetailsStateError>({});
+    const [valid, setValid] = useState<PersonalDetailsStateValid>({});
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
 
     const eventHandler = (mode: string): Function => (e: Event): void => {

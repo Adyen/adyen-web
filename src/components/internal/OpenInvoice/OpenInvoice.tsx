@@ -1,24 +1,30 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import PersonalDetails from '../../../components/internal/PersonalDetails';
+import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
+import { OpenInvoiceProps, OpenInvoiceStateData, OpenInvoiceStateError, OpenInvoiceStateValid } from './types';
 import './OpenInvoice.scss';
 
-export default function OpenInvoice(props) {
+export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
+    const { i18n } = useCoreContext();
     const showPersonalDetails = visibility.personalDetails !== 'hidden';
     const showBillingAddress = visibility.billingAddress !== 'hidden';
     const showDeliveryAddress = visibility.deliveryAddress !== 'hidden';
-    const { i18n } = useCoreContext();
 
-    const [data, setData] = useState({
+    const [data, setData] = useState<OpenInvoiceStateData>({
         ...props.data,
         ...(props.consentCheckbox && { consentCheckbox: false })
     });
-    const [errors, setErrors] = useState({});
-    const [valid, setValid] = useState({});
+    const [errors, setErrors] = useState<OpenInvoiceStateError>({});
+    const [valid, setValid] = useState<OpenInvoiceStateValid>({});
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
 
     const personalDetailsRef = useRef(null);
     const billingAddressRef = useRef(null);
@@ -27,11 +33,17 @@ export default function OpenInvoice(props) {
     useEffect(() => {
         const personalDetailsValid = showPersonalDetails ? !!valid.personalDetails : true;
         const billingAddressValid = showBillingAddress ? !!valid.billingAddress : true;
-        const deliveryAddressValid = showDeliveryAddress && !!data.separateDeliveryAddress ? !!valid.deliveryAddress : true;
+        const includeDeliveryAddress = showDeliveryAddress && !!data.separateDeliveryAddress;
+        const deliveryAddressValid = includeDeliveryAddress ? !!valid.deliveryAddress : true;
         const consentCheckboxValid = props.consentCheckbox ? !!valid.consentCheckbox : true;
         const isValid = personalDetailsValid && billingAddressValid && deliveryAddressValid && consentCheckboxValid;
+        const newData = {
+            ...(showPersonalDetails && { personalDetails: data.personalDetails }),
+            ...(showBillingAddress && { billingAddress: data.billingAddress }),
+            ...(includeDeliveryAddress && { deliveryAddress: data.deliveryAddress })
+        };
 
-        props.onChange({ data, isValid });
+        props.onChange({ data: newData, isValid });
     }, [data, valid, errors]);
 
     const handleFieldset = key => state => {
@@ -110,7 +122,7 @@ export default function OpenInvoice(props) {
             {props.consentCheckbox &&
                 props.consentCheckbox({ countryCode, data, i18n, errorMessage: !!errors.consentCheckbox, onChange: handleConsentCheckbox })}
 
-            {props.showPayButton && props.payButton({ label: i18n.get('confirmPurchase') })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }
