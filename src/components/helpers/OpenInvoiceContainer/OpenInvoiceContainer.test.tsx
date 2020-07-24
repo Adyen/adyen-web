@@ -4,7 +4,7 @@ describe('OpenInvoiceContainer', () => {
     const getWrapper = (props?) => new OpenInvoiceContainer({ ...props });
 
     test('should use the passed countryCode in the address fieldsets', () => {
-        const countryCode = 'NL';
+        const countryCode = 'US';
         const wrapper = getWrapper({ countryCode });
         expect(wrapper.props?.data?.billingAddress?.country).toBe(countryCode);
     });
