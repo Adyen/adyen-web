@@ -1,0 +1,55 @@
+import { h } from 'preact';
+import { shallow } from 'enzyme';
+import OpenInvoice from './OpenInvoice';
+
+const defaultProps = {
+    onChange: () => {},
+    data: { personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
+    visibility: {
+        personalDetails: 'editable',
+        billingAddress: 'editable',
+        deliveryAddress: 'editable'
+    }
+};
+
+describe('OpenInvoice', () => {
+    const getWrapper = (props?) => shallow(<OpenInvoice {...defaultProps} {...props} />);
+
+    test('should not display fieldsets set to hidden', () => {
+        const visibility = { personalDetails: 'hidden' };
+        const wrapper = getWrapper({ visibility });
+        expect(wrapper.find('PersonalDetails')).toHaveLength(0);
+    });
+
+    test('should hide the delivery address by default', () => {
+        const wrapper = getWrapper();
+        expect(wrapper.find('Address')).toHaveLength(1);
+    });
+
+    test('should not show the separate delivery checkbox if the delivery address is set to hidden', () => {
+        const visibility = { deliveryAddress: 'hidden' };
+        const wrapper = getWrapper({ visibility });
+        expect(wrapper.find('Checkbox')).toHaveLength(0);
+    });
+
+    test('should render a consent checkbox if passed as a prop', () => {
+        const ConsentCheckbox = () => <div />;
+        const wrapper = getWrapper({ consentCheckbox: () => <ConsentCheckbox /> });
+        expect(wrapper.find('ConsentCheckbox')).toHaveLength(1);
+    });
+
+    test('should call the onChange', () => {
+        const onChange = jest.fn();
+        getWrapper({ onChange });
+        expect(onChange.mock.calls.length).toBe(1);
+    });
+
+    test('should be possible to change the status', () => {
+        const payButton = jest.fn();
+        const wrapper = getWrapper({ showPayButton: true, payButton });
+        const status = 'loading';
+        wrapper.instance().setStatus(status);
+        wrapper.update();
+        expect(payButton).toHaveBeenCalledWith(jasmine.objectContaining({ status }));
+    });
+});
