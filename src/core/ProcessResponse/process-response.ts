@@ -1,4 +1,5 @@
 import { PaymentResponse, ProcessedResponse } from '../../types';
+import useCoreContext from '../Context/useCoreContext';
 
 /**
  * Processes a complete response from Adyen by resultCode
@@ -6,13 +7,15 @@ import { PaymentResponse, ProcessedResponse } from '../../types';
  * @returns a new object describing the response result (ready for onStatusChange)
  */
 const processCompleteResponse = (response: PaymentResponse): ProcessedResponse => {
+    const { i18n } = useCoreContext();
+
     switch (response.resultCode.toLowerCase()) {
         case 'refused':
         case 'error':
         case 'cancelled':
-            return { type: 'error', props: { ...response, message: 'error.subtitle.refused' } };
+            return { type: 'error', props: { ...response, message: i18n.get('error.subtitle.refused') } };
         case 'unknown':
-            return { type: 'error', props: { ...response, message: 'error.message.unknown' } };
+            return { type: 'error', props: { ...response, message: i18n.get('error.message.unknown') } };
         case 'pending':
         case 'received':
             return { type: response.resultCode.toLowerCase(), props: response };
