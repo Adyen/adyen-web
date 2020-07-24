@@ -26,7 +26,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from './lib/types';
-import { BillingAddress } from '../Address/types';
+import { AddressSchema } from '../../../types';
 
 export interface SFPState {
     status?: string;
@@ -37,7 +37,7 @@ export interface SFPState {
     cvcRequired?: boolean;
     isSfpValid?: boolean;
     autoCompleteName?: string;
-    billingAddress?: BillingAddress;
+    billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
 }
 

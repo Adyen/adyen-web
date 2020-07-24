@@ -125,13 +125,22 @@ export interface PaymentAmount {
     currency: string;
 }
 
-export interface Address {
+export interface AddressSchema {
     street?: string;
     houseNumberOrName?: string;
     postalCode?: string;
     city?: string;
     country?: string;
     stateOrProvince?: string;
+}
+
+export interface PersonalDetailsSchema {
+    firstName?: string;
+    lastName?: string;
+    gender?: string;
+    dateOfBirth?: string;
+    telephoneNumber?: string;
+    shopperEmail?: string;
 }
 
 /**
@@ -143,3 +152,8 @@ export type PaymentMethods = typeof paymentMethods;
  * Options for a component
  */
 export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
+
+/**
+ * Visibility options for a fieldset
+ */
+export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';

@@ -1,5 +1,5 @@
 import Language from '../../language/Language';
-import { Address } from '../../types';
+import { AddressSchema } from '../../types';
 
 export interface BoletoElementProps {
     type: string;
@@ -13,7 +13,7 @@ export interface BoletoInputDataState {
     lastName?: string;
     shopperEmail?: string;
     socialSecurityNumber?: string;
-    billingAddress?: Address;
+    billingAddress?: AddressSchema;
 }
 
 export interface BoletoInputValidState {
