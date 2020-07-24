@@ -6,6 +6,7 @@ import { checkPaymentStatus } from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';
+const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component {
     constructor(props) {
@@ -30,6 +31,7 @@ class QRLoader extends Component {
     }
 
     static defaultProps = {
+        delay: 2000,
         countdownTime: 15,
         onError: () => {},
         onComplete: () => {},
@@ -141,7 +143,9 @@ class QRLoader extends Component {
             });
     }
 
-    render({ amount = {}, url, brandLogo, classNameModifiers = [], countdownTime, i18n, qrCodeImage, type }, { expired, completed, loading }) {
+    render({ amount = {}, url, brandLogo, classNameModifiers = [], countdownTime, i18n, type }, { expired, completed, loading }) {
+        const qrCodeImage = this.props.qrCodeData ? `${this.props.loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
+
         const finalState = (image, message) => (
             <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
                 <img
