@@ -1,8 +1,8 @@
 import { h } from 'preact';
-import classnames from 'classnames';
 import { useState, useEffect } from 'preact/hooks';
+import classnames from 'classnames';
 import { checkPaymentStatus } from '../../../core/Services/payment-status';
-import processResponse from '../../../core/ProcessResponse/process-response';
+import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import Spinner from '../../internal/Spinner';
 import Countdown from '../Countdown';
@@ -64,7 +64,13 @@ function Await(props: AwaitComponentProps) {
 
         checkPaymentStatus(paymentData, accessKey, loadingContext)
             .then(processResponse)
-            .catch(response => ({ type: 'network-error', props: response }))
+            .catch(({ message, ...response }) => ({
+                type: 'network-error',
+                props: {
+                    ...(message && { message: this.props.i18n.get(message) }),
+                    ...response
+                }
+            }))
             .then((status: StatusObject) => {
                 switch (status.type) {
                     case 'success':
