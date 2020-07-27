@@ -6,8 +6,8 @@ class SwishElement extends QRLoaderContainer {
     formatProps(props) {
         return {
             shouldRedirectOnMobile: true,
-            STATUS_INTERVAL: 2000, // ms
-            COUNTDOWN_MINUTES: 3, // min
+            delay: 2000, // ms
+            countdownTime: 15, // min
             ...super.formatProps(props)
         };
     }
