@@ -8,8 +8,8 @@ class BCMCMobileElement extends QRLoaderContainer {
         const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
 
         return {
-            STATUS_INTERVAL,
-            COUNTDOWN_MINUTES,
+            delay: STATUS_INTERVAL,
+            countdownTime: COUNTDOWN_MINUTES,
             shouldRedirectOnMobile: true,
             buttonLabel: isMobile ? 'openApp' : 'generateQRCode',
             ...super.formatProps(props)
