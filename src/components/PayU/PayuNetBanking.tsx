@@ -1,7 +1,7 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
 
-class EPSElement extends IssuerListContainer {
-    public static type = 'eps';
+class PayuNetBankingElement extends IssuerListContainer {
+    public static type = 'payu_IN_nb';
 
     formatProps(props) {
         return {
@@ -11,4 +11,4 @@ class EPSElement extends IssuerListContainer {
     }
 }
 
-export default EPSElement;
+export default PayuNetBankingElement;

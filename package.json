@@ -36,7 +36,7 @@
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.5",
+        "@types/jest": "^26.0.7",
         "@typescript-eslint/eslint-plugin": "^2.34.0",
         "@typescript-eslint/parser": "^2.34.0",
         "autoprefixer": "^9.8.5",
@@ -75,7 +75,7 @@
         "ts-loader": "^8.0.1",
         "tslib": "^2.0.0",
         "typescript": "^3.9.7",
-        "webpack": "^4.43.0",
+        "webpack": "^4.44.0",
         "webpack-bundle-analyzer": "^3.8.0",
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.9.0",

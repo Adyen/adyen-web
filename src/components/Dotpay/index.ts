@@ -1,5 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'dotpay'
-});
+class DotpayElement extends IssuerListContainer {
+    public static type = 'dotpay';
+}
+
+export default DotpayElement;

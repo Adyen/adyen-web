@@ -5,6 +5,10 @@ import { version } from '../../../package.json';
  * @param config -
  */
 const logTelemetry = config => event => {
+    if (!config.accessKey) {
+        return Promise.reject();
+    }
+
     const telemetryEvent = {
         version,
         platform: 'web',
@@ -25,8 +29,7 @@ const logTelemetry = config => event => {
         body: JSON.stringify(telemetryEvent)
     };
 
-    const accessKey = config.clientKey || config.originKey;
-    return fetch(`${config.loadingContext}v1/analytics/log?token=${accessKey}`, options)
+    return fetch(`${config.loadingContext}v1/analytics/log?token=${config.accessKey}`, options)
         .then(response => response.ok)
         .catch(() => {});
 };

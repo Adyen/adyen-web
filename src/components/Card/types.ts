@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement';
-import { Address } from '../../types';
+import { AddressSchema } from '../../types';
 
 export interface CardElementProps extends UIElementProps {
     type?: string;
@@ -41,7 +41,7 @@ interface BrowserInfo {
 
 export interface CardElementData {
     paymentMethod: CardPaymentMethodData;
-    billingAddress?: Address;
+    billingAddress?: AddressSchema;
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;

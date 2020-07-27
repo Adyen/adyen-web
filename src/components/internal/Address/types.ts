@@ -1,24 +1,28 @@
-export interface AddressObject {
-    city: string;
-    country: boolean | string;
-    houseNumberOrName: string;
-    postalCode: string;
-    street: string;
-    stateOrProvince: boolean | string;
-}
-
-export interface BillingAddress {
-    data: AddressObject;
-    isValid: boolean;
-}
-
 export interface AddressProps {
     allowedCountries?: string[];
     countryCode?: string;
     data?: object;
     label?: string;
-    onChange: Function;
+    onChange: (newState) => void;
     requiredFields?: string[];
     ref?: any;
     visibility?: string;
+}
+
+export interface AddressStateError {
+    street?: boolean;
+    houseNumberOrName?: boolean;
+    postalCode?: boolean;
+    city?: boolean;
+    country?: boolean;
+    stateOrProvince?: boolean;
+}
+
+export interface AddressStateValid {
+    street?: boolean;
+    houseNumberOrName?: boolean;
+    postalCode?: boolean;
+    city?: boolean;
+    country?: boolean;
+    stateOrProvince?: boolean;
 }
