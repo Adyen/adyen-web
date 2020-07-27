@@ -83,6 +83,12 @@ function AchInput(props) {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
 
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
+
     this.showValidation = () => {
         // Validate SecuredFields
         sfp.current.showValidation();
@@ -170,7 +176,7 @@ function AchInput(props) {
                     </div>
                 )}
             />
-            {props.showPayButton && props.payButton({ status: 'ready', label: i18n.get('confirmPurchase') })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

@@ -19,6 +19,12 @@ export default function EcontextInput(props) {
         setIsValid(state.isValid);
     };
 
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
+
     this.showValidation = () => {
         if (personalDetailsRef.current) personalDetailsRef.current.showValidation();
     };
@@ -33,7 +39,7 @@ export default function EcontextInput(props) {
                 ref={personalDetailsRef}
             />
 
-            {props.showPayButton && props.payButton({ label: i18n.get('confirmPurchase') })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

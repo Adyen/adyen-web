@@ -67,6 +67,12 @@ function BoletoInput(props) {
         setValid({ ...valid, billingAddress: address.isValid });
     };
 
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
+
     this.showValidation = () => {
         setErrors({
             ...(showingEmail && { shopperEmail: !validator.validate('shopperEmail')(data.shopperEmail) }),
@@ -166,7 +172,7 @@ function BoletoInput(props) {
                 />
             )}
 
-            {props.showPayButton && props.payButton({ label: i18n.get('boletobancario.btnLabel'), classNameModifiers: buttonModifiers })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('boletobancario.btnLabel'), classNameModifiers: buttonModifiers })}
         </div>
     );
 }

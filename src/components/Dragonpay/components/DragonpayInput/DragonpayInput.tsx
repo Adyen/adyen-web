@@ -61,6 +61,12 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         props.onChange({ isValid, data, errors });
     }, [isValid, data, errors]);
 
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
+
     this.showValidation = () => {
         setErrors({
             shopperEmail: !isValidEmail(data.shopperEmail),
@@ -94,7 +100,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                 </Field>
             )}
 
-            {props.showPayButton && props.payButton({ label: i18n.get('confirmPurchase') })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

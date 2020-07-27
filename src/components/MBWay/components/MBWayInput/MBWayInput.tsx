@@ -50,6 +50,12 @@ function MBWayInput(props: MBWayInputProps) {
     const getIsValidEmail = (): boolean => validator.validate('email', 'blur')(data['email']).isValid;
     const getIsValidPhoneNumber = (): boolean => validator.validate('phoneNumber', 'blur')(data['phoneNumber']).isValid;
 
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
+
     this.showValidation = (): void => {
         setErrors({ ...errors, email: !getIsValidEmail(), phoneNumber: !getIsValidPhoneNumber() });
     };
@@ -128,7 +134,7 @@ function MBWayInput(props: MBWayInputProps) {
                     // onChange: handleEventFor('phoneNumber', 'blur')
                 })}
             </Field>
-            {props.showPayButton && props.payButton({ status: 'ready', label: i18n.get('confirmPurchase') })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }
