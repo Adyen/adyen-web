@@ -2,6 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import MultibancoVoucherResult from './components/MultibancoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
+import RedirectButton from '../internal/RedirectButton';
 
 export class MultibancoElement extends UIElement {
     public static type = 'multibanco';
@@ -45,12 +46,15 @@ export class MultibancoElement extends UIElement {
         if (this.props.showPayButton) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                    {this.payButton({
-                        ...this.props,
-                        classNameModifiers: ['standalone'],
-                        label: `${this.props.i18n.get('continueTo')} ${this.props.name}`,
-                        onClick: this.submit
-                    })}
+                    <RedirectButton
+                        name={this.displayName}
+                        amount={this.props.amount}
+                        payButton={this.payButton}
+                        onSubmit={this.submit}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
                 </CoreProvider>
             );
         }

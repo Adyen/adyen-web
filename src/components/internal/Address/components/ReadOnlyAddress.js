@@ -6,7 +6,7 @@ const ReadOnlyAddress = ({ data, label }) => {
 
     return (
         <Fieldset classNameModifiers={[label]} label={label} readonly>
-            {street && street}
+            {!!street && street}
             {houseNumberOrName && `, ${houseNumberOrName},`}
             <br />
             {postalCode && `${postalCode}`}

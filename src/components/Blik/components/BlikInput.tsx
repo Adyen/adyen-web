@@ -45,6 +45,12 @@ function BlikInput(props: BlikInputProps) {
         props.onChange({ data, isValid: valid.blikCode }, this);
     }, [data, valid, errors]);
 
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
+
     return (
         <div className="adyen-checkout__blik">
             <p className="adyen-checkout__blik__helper">{i18n.get('blik.help')}</p>
@@ -66,7 +72,7 @@ function BlikInput(props: BlikInputProps) {
                 })}
             </Field>
 
-            {props.showPayButton && props.payButton({ status: 'ready', icon: getImage({ loadingContext, imageFolder: 'components/' })('lock') })}
+            {props.showPayButton && props.payButton({ status, icon: getImage({ loadingContext, imageFolder: 'components/' })('lock') })}
         </div>
     );
 }
