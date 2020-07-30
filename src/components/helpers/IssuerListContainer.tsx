@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement, { UIElementProps } from '../UIElement';
 import IssuerList from '../internal/IssuerList';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
 
-interface IssuerListProps {
+interface IssuerListProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     items?: IssuerItem[];
