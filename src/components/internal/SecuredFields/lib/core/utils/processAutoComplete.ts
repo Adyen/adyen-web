@@ -13,7 +13,9 @@ export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
 
     // Send date info to relevant secured fields
     if (pFeedbackObj.name === 'cc-exp') {
-        const dateValArr: string[] = pFeedbackObj.value.split('/');
+        const splittableDateVal = pFeedbackObj.value.replace(/[^0-9]/gi, '/'); // Replace any non-digits with a fwd-slash so we can always split it
+
+        const dateValArr: string[] = splittableDateVal.split('/');
 
         if (dateValArr.length !== 2) return; // To avoid bug in some versions of Safari where date doesn't come through as expected
 
