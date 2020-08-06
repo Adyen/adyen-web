@@ -17,7 +17,8 @@ export default {
 
         // https://developers.google.com/pay/api/web/reference/object#MerchantInfo
         merchantIdentifier: '', // E.g 039484839309
-        merchantName: '' // E.g Example Merchant
+        merchantId: '',
+        merchantName: '' // E.g Example Merchant,
     },
 
     // Payment
@@ -47,5 +48,6 @@ export default {
     shippingAddressRequired: false,
     shippingAddressParameters: undefined, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
     shippingOptionRequired: false,
-    shippingOptionParameters: undefined
+    shippingOptionParameters: undefined,
+    paymentMethods: []
 };

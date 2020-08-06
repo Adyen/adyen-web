@@ -76,6 +76,11 @@ export interface PaymentMethod {
      * All input details to be provided to complete the payment with this payment method.
      */
     details?: object;
+
+    /**
+     * Configuration props as set by the merchant in the CA and received in the PM object in the /paymentMethods response
+     */
+    configuration?: object;
 }
 
 export interface StoredPaymentMethod extends PaymentMethod {

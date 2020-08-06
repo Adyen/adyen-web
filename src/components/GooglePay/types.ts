@@ -1,4 +1,5 @@
 import { UIElementProps } from '../UIElement';
+import { PaymentMethod } from '../../types';
 
 export interface GooglePayPropsConfiguration {
     /**
@@ -15,6 +16,12 @@ export interface GooglePayPropsConfiguration {
     merchantIdentifier: string;
 
     /**
+     * A Google merchant identifier as received via the paymentMethod's configuration object (in the /paymentMethods response)
+     * Will be used in preference to any merchantIdentifier created when the merchant configures the GooglePay component
+     */
+    merchantId: string;
+
+    /**
      * Merchant name is rendered in the payment sheet.
      * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
      */
@@ -24,6 +31,7 @@ export interface GooglePayPropsConfiguration {
 export interface GooglePayProps extends UIElementProps {
     environment?: google.payments.api.Environment | string;
     configuration?: GooglePayPropsConfiguration;
+    paymentMethods?: PaymentMethod[];
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#IsReadyToPayRequest

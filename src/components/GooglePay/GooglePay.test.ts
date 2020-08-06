@@ -39,4 +39,31 @@ describe('GooglePay', () => {
             });
         });
     });
+
+    describe('Process CA based configuration data', () => {
+        test('Retrieves default merchantId', () => {
+            const gpay = new GooglePay({});
+            expect(gpay.props.configuration.merchantId).toEqual('');
+        });
+
+        test('Correctly extracts passed merchantId', () => {
+            const gpay = new GooglePay({
+                paymentMethods: [
+                    { type: 'paywithgoogle', name: 'GooglePay', configuration: { merchantId: '12345' } },
+                    { type: 'paypal', name: 'PayPal', configuration: { merchantId: '54321' } }
+                ]
+            });
+            expect(gpay.props.configuration.merchantId).toEqual('12345');
+        });
+
+        test('Correctly extracts passed merchantId regardless of order', () => {
+            const gpay = new GooglePay({
+                paymentMethods: [
+                    { type: 'paypal', name: 'PayPal', configuration: { merchantId: '54321' } },
+                    { type: 'paywithgoogle', name: 'GooglePay', configuration: { merchantId: '12345' } }
+                ]
+            });
+            expect(gpay.props.configuration.merchantId).toEqual('12345');
+        });
+    });
 });
