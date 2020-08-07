@@ -16,11 +16,8 @@ class GooglePay extends UIElement<GooglePayProps> {
      */
     formatProps(props) {
         // props.paymentMethods[11].configuration = { merchantId: '0123455' }; // TODO For Testing
-        // props.paymentMethods.reverse(); // TODO For Testing
 
         const pmConfigData: object = getPMConfigurationData(props.paymentMethods, GooglePay.type);
-
-        console.log('### GooglePay::formatProps:: pmConfigData', pmConfigData);
 
         return {
             ...props,
