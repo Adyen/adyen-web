@@ -13,12 +13,6 @@ export interface GooglePayPropsConfiguration {
      * Required when PaymentsClient is initialized with an environment property of PRODUCTION.
      * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
      */
-    merchantIdentifier: string;
-
-    /**
-     * A Google merchant identifier as received via the paymentMethod's configuration object (in the /paymentMethods response)
-     * Will be used in preference to any merchantIdentifier created when the merchant configures the GooglePay component
-     */
     merchantId: string;
 
     /**

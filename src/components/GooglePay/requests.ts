@@ -56,16 +56,15 @@ export function getTransactionInfo(
 }
 
 export function initiatePaymentRequest({ configuration, ...props }: GooglePayProps): google.payments.api.PaymentDataRequest {
-    // Use the identifier defined in the CA in preference to the one defined in the component's config object
-    const mID = configuration.merchantId || configuration.merchantIdentifier;
-    console.log('### requests::initiatePaymentRequest:: mID', mID);
+    console.log('### requests::initiatePaymentRequest:: props', props);
+    console.log('### requests::initiatePaymentRequest:: configuration.merchantId', configuration.merchantId);
 
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
         transactionInfo: getTransactionInfo(props.amount.currency, props.amount.value, props.totalPriceStatus, props.countryCode),
         merchantInfo: {
-            merchantId: configuration.merchantIdentifier,
+            merchantId: configuration.merchantId,
             merchantName: configuration.merchantName
         },
         allowedPaymentMethods: [

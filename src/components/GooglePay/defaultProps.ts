@@ -16,8 +16,7 @@ export default {
         gatewayMerchantId: '', // E.g TestMerchant
 
         // https://developers.google.com/pay/api/web/reference/object#MerchantInfo
-        merchantIdentifier: '', // E.g 039484839309
-        merchantId: '',
+        merchantId: '', // E.g 039484839309
         merchantName: '' // E.g Example Merchant,
     },
 

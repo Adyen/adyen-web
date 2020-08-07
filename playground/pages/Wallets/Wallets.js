@@ -65,7 +65,7 @@ getOriginKey()
             configuration: {
                 gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
                 merchantName: 'Adyen Test merchant', // Name to be displayed
-                merchantIdentifier: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
+                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
             },
 
             // Shopper info (optional)
