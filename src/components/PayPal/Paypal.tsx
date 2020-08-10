@@ -27,8 +27,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     formatProps(props) {
-        props.paymentMethods[1].configuration = { merchantId: '5RZKQX2FC48EA', intent: 'capture' }; // TODO For Testing
-
         const pmConfigData: object = getPMConfigurationData(props.paymentMethods, PaypalElement.type);
 
         return {
