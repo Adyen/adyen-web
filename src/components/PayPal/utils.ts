@@ -13,11 +13,13 @@ const getSupportedLocale = (locale?: string): SupportedLocale => {
 /**
  * Returns an object of settings for the PayPal SDK
  */
-const getPaypalSettings = ({ amount, countryCode, debug, environment = '', intent, locale, merchantId }: PayPalElementProps): PaypalSettings => {
+const getPaypalSettings = ({ amount, countryCode, debug, environment = '', locale, configuration }: PayPalElementProps): PaypalSettings => {
     const shopperLocale: SupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_TEST : ADYEN_CLIENTID_LIVE;
+
+    const { merchantId, intent } = configuration;
 
     return {
         ...(merchantId && { 'merchant-id': merchantId }),

@@ -5,6 +5,7 @@ import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
+import getPMConfigurationData from '../../utils/getPMConfigurationData';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -23,6 +24,20 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleComplete = this.handleComplete.bind(this);
         this.handleError = this.handleError.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    formatProps(props) {
+        props.paymentMethods[1].configuration = { merchantId: '5RZKQX2FC48EA', intent: 'capture' }; // TODO For Testing
+
+        const pmConfigData: object = getPMConfigurationData(props.paymentMethods, PaypalElement.type);
+
+        return {
+            ...props,
+            // Create a final configuration object...
+            // ...takes merchantId & intent first fromm the props, then overrides them if they are present in props.configuration, then overrides them
+            // again if they are present in the configuration data from the PM object
+            configuration: { merchantId: props.merchantId, intent: props.intent, ...props.configuration, ...pmConfigData }
+        };
     }
 
     /**

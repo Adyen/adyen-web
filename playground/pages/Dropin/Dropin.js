@@ -64,7 +64,14 @@ const initDropin = () => {
                     onAuthorized: console.info
                 },
                 paypal: {
-                    // merchantId: '5RZKQX2FC48EA', // automatic ?
+                    // USE either separate merchantId & intent props...
+                    merchantId: '5RZKQX2FC48EA',
+                    intent: 'capture',
+                    // ...OR, preferably, wrap them in a configuration object
+                    configuration: {
+                        merchantId: '5RZKQX2FC48EA',
+                        intent: 'capture'
+                    },
                     // style: {},
                     // Events
                     onError: (error, component) => {
