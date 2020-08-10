@@ -6,11 +6,16 @@ import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { CardElementData, CardElementProps } from './types';
 import handleBinLookUp from './handleBinLookUp';
+import getPMConfigurationData from '../../utils/getPMConfigurationData';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     formatProps(props: CardElementProps) {
+        // props.paymentMethods[0].configuration = { koreanAuthenticationRequired: true }; // TODO For Testing
+
+        const pmConfigData: object = getPMConfigurationData(props.paymentMethods, CardElement.type);
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -21,7 +26,11 @@ export class CardElement extends UIElement<CardElementProps> {
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type,
-            countryCode: props.countryCode ? props.countryCode.toLowerCase() : null
+            countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
+            // Create a configuration object...
+            // ...takes values from props first, then overrides them if they are present in props.configuration, with ultimate
+            // precedence being given to the configuration data from the PM object
+            configuration: { koreanAuthenticationRequired: props.koreanAuthenticationRequired, ...props.configuration, ...pmConfigData }
         };
     }
 
