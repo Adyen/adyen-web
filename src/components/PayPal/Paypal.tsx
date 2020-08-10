@@ -31,9 +31,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
         return {
             ...props,
-            // Create a final configuration object...
-            // ...takes merchantId & intent first fromm the props, then overrides them if they are present in props.configuration, then overrides them
-            // again if they are present in the configuration data from the PM object
+            // Create a configuration object...
+            // ...takes values from props first, then overrides them if they are present in props.configuration, with ultimate
+            // precedence being given to the configuration data from the PM object
             configuration: { merchantId: props.merchantId, intent: props.intent, ...props.configuration, ...pmConfigData }
         };
     }
