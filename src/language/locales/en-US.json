@@ -89,6 +89,7 @@
     "voucher.introduction.econtext": "Thank you for your purchase, please use the following information to complete your payment.",
     "voucher.telephoneNumber": "Phone Number",
     "voucher.shopperReference": "Shopper Reference",
+    "voucher.collectionInstitutionNumber": "Collection Institution Number",
     "boletobancario.btnLabel": "Generate Boleto",
     "boleto.sendCopyToEmail": "Send a copy to my email",
     "button.copy": "Copy",

@@ -87,6 +87,7 @@
     "voucher.introduction.econtext": "お買い上げありがとうございます。以下の情報を使用して、お支払いを完了してください。",
     "voucher.telephoneNumber": "電話番号",
     "voucher.shopperReference": "購入者向け参考情報",
+    "voucher.collectionInstitutionNumber": "収納機関番号",
     "boletobancario.btnLabel": "Boletoを生成する",
     "boleto.sendCopyToEmail": "自分のメールアドレスにコピーを送信する",
     "button.copy": "コピー",
