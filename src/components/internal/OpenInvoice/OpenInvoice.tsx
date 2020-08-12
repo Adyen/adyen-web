@@ -77,6 +77,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             {showPersonalDetails && (
                 <PersonalDetails
                     data={data.personalDetails}
+                    requiredFields={props.personalDetailsRequiredFields}
                     label="personalDetails"
                     onChange={handleFieldset('personalDetails')}
                     ref={personalDetailsRef}
@@ -92,7 +93,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     label="billingAddress"
                     onChange={handleFieldset('billingAddress')}
                     ref={billingAddressRef}
-                    requiredFields={['street', 'houseNumberOrName', 'postalCode', 'city', 'country']}
                     visibility={visibility.billingAddress}
                 />
             )}
@@ -114,7 +114,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     label="deliveryAddress"
                     onChange={handleFieldset('deliveryAddress')}
                     ref={deliveryAddressRef}
-                    requiredFields={['street', 'houseNumberOrName', 'postalCode', 'city', 'country']}
                     visibility={visibility.deliveryAddress}
                 />
             )}

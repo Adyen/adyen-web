@@ -16,6 +16,7 @@ export interface OpenInvoiceProps {
         billingAddress?: FieldsetVisibility;
         deliveryAddress?: FieldsetVisibility;
     };
+    personalDetailsRequiredFields?: string[];
 }
 
 export interface OpenInvoiceStateData {
