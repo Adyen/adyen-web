@@ -8,22 +8,18 @@ import CountryField from './components/CountryField';
 import { renderFormField } from '../FormFields';
 import { addressValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
+import { getInitialData } from './utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { COUNTRIES_WITH_STATES_DATASET } from './constants';
+import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET } from './constants';
 import { AddressProps, AddressStateError, AddressStateValid } from './types';
 import { AddressSchema } from '../../../types';
 
-const addressSchema = ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'];
-
 export default function Address(props: AddressProps) {
-    const { i18n } = useCoreContext();
     const { label = '', requiredFields, visibility } = props;
     const validator = new Validator(addressValidationRules);
-    const addressReducer = (acc, cur: string) => {
-        acc[cur] = props.data[cur] || (requiredFields.includes(cur) ? '' : 'N/A');
-        return acc;
-    };
-    const [data, setData] = useState<AddressSchema>(addressSchema.reduce(addressReducer, {}));
+
+    const { i18n } = useCoreContext();
+    const [data, setData] = useState<AddressSchema>(getInitialData(props.data, requiredFields));
     const [errors, setErrors] = useState<AddressStateError>({});
     const [valid, setValid] = useState<AddressStateValid>({});
 
@@ -66,6 +62,14 @@ export default function Address(props: AddressProps) {
 
     useEffect((): void => {
         const isValid: boolean = requiredFields.every(field => validator.validate(field, 'blur')(data[field]));
+        // const newData: AddressSchema = Object.keys(data)
+        //     .filter(a => !!data[a])
+        //     .reduce((acc, cur) => {
+        //         acc[cur] = data[cur];
+        //         return acc;
+        //     }, {});
+
+        // console.log({ newData });
 
         props.onChange({ data, isValid });
     }, [data, valid, errors]);
@@ -163,6 +167,6 @@ Address.defaultProps = {
     data: {},
     onChange: () => {},
     visibility: 'editable',
-    requiredFields: addressSchema,
+    requiredFields: ADDRESS_SCHEMA,
     countryCode: null
 };
