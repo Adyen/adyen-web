@@ -46,8 +46,14 @@ describe('GooglePay', () => {
             expect(gpay.props.configuration.merchantId).toEqual('');
         });
 
-        test('Correctly extracts passed merchantId', () => {
+        test('Retrieves configuration defined merchantId', () => {
+            const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
+            expect(gpay.props.configuration.merchantId).toEqual('abcdef');
+        });
+
+        test('Retrieves PM.configuration defined merchantId', () => {
             const gpay = new GooglePay({
+                configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' },
                 paymentMethods: [
                     { type: 'paywithgoogle', name: 'GooglePay', configuration: { merchantId: '12345' } },
                     { type: 'paypal', name: 'PayPal', configuration: { merchantId: '54321' } }
