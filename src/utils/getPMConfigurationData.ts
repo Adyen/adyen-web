@@ -8,7 +8,7 @@ const getPMConfigurationData = function(paymentMethods: PaymentMethod[], pmType:
         return acc;
     }
 
-    return paymentMethods.reduce(getConfigData, {});
+    return paymentMethods ? paymentMethods.reduce(getConfigData, {}) : {};
 };
 
 export default getPMConfigurationData;
