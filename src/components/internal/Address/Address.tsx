@@ -62,14 +62,6 @@ export default function Address(props: AddressProps) {
 
     useEffect((): void => {
         const isValid: boolean = requiredFields.every(field => validator.validate(field, 'blur')(data[field]));
-        // const newData: AddressSchema = Object.keys(data)
-        //     .filter(a => !!data[a])
-        //     .reduce((acc, cur) => {
-        //         acc[cur] = data[cur];
-        //         return acc;
-        //     }, {});
-
-        // console.log({ newData });
 
         props.onChange({ data, isValid });
     }, [data, valid, errors]);
