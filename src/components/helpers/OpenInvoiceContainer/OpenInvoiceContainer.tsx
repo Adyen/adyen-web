@@ -54,13 +54,17 @@ export default class OpenInvoiceContainer extends UIElement {
             paymentMethod: {
                 type: this.constructor['type']
             },
-            shopperName: { firstName, lastName, gender },
-            dateOfBirth: unformatDate(dateOfBirth),
-            telephoneNumber,
-            shopperEmail,
+            shopperName: {
+                ...(firstName && { firstName }),
+                ...(lastName && { lastName }),
+                ...(gender && { gender })
+            },
+            ...(dateOfBirth && { dateOfBirth: unformatDate(dateOfBirth) }),
+            ...(telephoneNumber && { telephoneNumber }),
+            ...(shopperEmail && { shopperEmail }),
+            ...(billingAddress?.country && { countryCode: billingAddress.country }),
             billingAddress,
-            deliveryAddress: deliveryAddress || billingAddress,
-            countryCode: billingAddress?.country
+            deliveryAddress: deliveryAddress || billingAddress
         };
     }
 
