@@ -1,4 +1,5 @@
 import Language from '../../../../language/Language';
+import { CardConfiguration } from '../../types';
 
 export interface CardInputProps {
     amount?: object;
@@ -6,7 +7,7 @@ export interface CardInputProps {
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
-    configuration?: object;
+    configuration?: CardConfiguration;
     data?: object;
     enableStoreDetails: boolean;
     hasCVC: boolean;

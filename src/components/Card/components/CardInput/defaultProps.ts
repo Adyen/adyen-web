@@ -13,7 +13,6 @@ export default {
     showBrandIcon: true,
     billingAddressRequired: false,
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
-    koreanAuthenticationRequired: false,
     installmentOptions: {},
     configuration: {},
 

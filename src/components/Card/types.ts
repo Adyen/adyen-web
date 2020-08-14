@@ -13,7 +13,12 @@ export interface CardElementProps extends UIElementProps {
     hideCVC?: boolean;
     hasHolderName?: boolean;
     holderNameRequired?: boolean;
+    configuration?: CardConfiguration;
     [key: string]: any;
+}
+
+export interface CardConfiguration {
+    koreanAuthenticationRequired: boolean;
 }
 
 interface CardPaymentMethodData {
