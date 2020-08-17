@@ -8,9 +8,9 @@ import '../../style.scss';
 const initCheckout = paymentMethodsResponse => {
     console.log('### Dropin::initCheckout:: paymentMethodsResponse', paymentMethodsResponse);
 
-    paymentMethodsResponse.paymentMethods[0].configuration = { koreanAuthenticationRequired: true }; // TODO - for Testing
-    paymentMethodsResponse.paymentMethods[1].configuration = { merchantId: 'zebadee', intent: 'authorize' }; // TODO - for Testing
-    paymentMethodsResponse.paymentMethods[11].configuration = { merchantId: 'florence' }; // TODO - for Testing
+    //    paymentMethodsResponse.paymentMethods[0].configuration = { koreanAuthenticationRequired: true }; // TODO - for Testing
+    //    paymentMethodsResponse.paymentMethods[1].configuration = { merchantId: 'zebadee', intent: 'authorize' }; // TODO - for Testing
+    //    paymentMethodsResponse.paymentMethods[11].configuration = { merchantId: 'florence' }; // TODO - for Testing
 
     window.checkout = new AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
@@ -47,6 +47,9 @@ const initDropin = () => {
                     hasHolderName: true,
                     holderNameRequired: true,
                     // holderName: 'J. Smith',
+                    //                    configuration: {
+                    //                        koreanAuthenticationRequired: false
+                    //                    },
                     countryCode: 'kr'
                 },
                 boletobancario_santander: {
@@ -76,7 +79,7 @@ const initDropin = () => {
                     //                    intent: 'capture',
                     //                    // ...OR, preferably, wrap them in a configuration object
                     //                    configuration: {
-                    //                        merchantId: '5RZKQX2FC48EAxxx',
+                    //                        merchantId: '5RZKQX2FC48EA',
                     //                        intent: 'capture'
                     //                    },
                     // style: {},

@@ -18,7 +18,7 @@ export interface CardElementProps extends UIElementProps {
 }
 
 export interface CardConfiguration {
-    koreanAuthenticationRequired: boolean;
+    koreanAuthenticationRequired?: boolean;
 }
 
 interface CardPaymentMethodData {

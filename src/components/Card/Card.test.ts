@@ -54,26 +54,12 @@ describe('Card', () => {
 
     describe('Test setting of configuration prop: koreanAuthenticationRequired', () => {
         test('Returns default value', () => {
-            const card = new CardElement({});
+            const card = new CardElement({ configuration: {} });
             expect(card.props.configuration.koreanAuthenticationRequired).toBe(undefined);
         });
 
-        test('Returns props defined value', () => {
-            const card = new CardElement({ koreanAuthenticationRequired: false });
-            expect(card.props.configuration.koreanAuthenticationRequired).toBe(false);
-        });
-
         test('Returns configuration defined value', () => {
-            const card = new CardElement({ koreanAuthenticationRequired: false, configuration: { koreanAuthenticationRequired: true } });
-            expect(card.props.configuration.koreanAuthenticationRequired).toBe(true);
-        });
-
-        test('Returns PM.configuration defined value', () => {
-            const card = new CardElement({
-                koreanAuthenticationRequired: false,
-                configuration: { koreanAuthenticationRequired: false },
-                paymentMethods: [{ type: 'scheme', configuration: { koreanAuthenticationRequired: true } }]
-            });
+            const card = new CardElement({ configuration: { koreanAuthenticationRequired: true } });
             expect(card.props.configuration.koreanAuthenticationRequired).toBe(true);
         });
     });
