@@ -58,8 +58,23 @@ describe('Card', () => {
             expect(card.props.configuration.koreanAuthenticationRequired).toBe(undefined);
         });
 
+        test('Returns undefined value for props.koreanAuthenticationRequired', () => {
+            const card = new CardElement({ configuration: {} });
+            expect(card.props.koreanAuthenticationRequired).toBe(undefined);
+        });
+
         test('Returns configuration defined value', () => {
             const card = new CardElement({ configuration: { koreanAuthenticationRequired: true } });
+            expect(card.props.configuration.koreanAuthenticationRequired).toBe(true);
+        });
+
+        test('Element has configuration object but value direct from props is given precedence', () => {
+            const card = new CardElement({ configuration: { koreanAuthenticationRequired: true }, koreanAuthenticationRequired: false });
+            expect(card.props.configuration.koreanAuthenticationRequired).toBe(false);
+        });
+
+        test('Element has configuration object but value direct from props is given precedence, inverse of last test', () => {
+            const card = new CardElement({ configuration: { koreanAuthenticationRequired: false }, koreanAuthenticationRequired: true });
             expect(card.props.configuration.koreanAuthenticationRequired).toBe(true);
         });
     });
