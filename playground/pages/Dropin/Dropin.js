@@ -6,6 +6,12 @@ import '../../../config/polyfills';
 import '../../style.scss';
 
 const initCheckout = paymentMethodsResponse => {
+    console.log('### Dropin::initCheckout:: paymentMethodsResponse', paymentMethodsResponse);
+
+    paymentMethodsResponse.paymentMethods[0].configuration = { koreanAuthenticationRequired: true };
+    paymentMethodsResponse.paymentMethods[1].configuration = { merchantId: 'zebadee', intent: 'authorize' };
+    paymentMethodsResponse.paymentMethods[11].configuration = { merchantId: 'florence' };
+
     window.checkout = new AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         countryCode,
@@ -39,8 +45,9 @@ const initDropin = () => {
                     // name: 'Debit Card'
                     enableStoreDetails: false,
                     hasHolderName: true,
-                    holderNameRequired: true
+                    holderNameRequired: true,
                     // holderName: 'J. Smith',
+                    countryCode: 'kr'
                 },
                 boletobancario_santander: {
                     data: {
@@ -57,21 +64,21 @@ const initDropin = () => {
                 },
                 paywithgoogle: {
                     countryCode: 'NL',
-                    configuration: {
-                        gatewayMerchantId: 'TestMerchantCheckout', // name of MerchantAccount
-                        merchantName: 'Adyen Test merchant' // Name to be displayed
-                    },
+                    //                    configuration: {
+                    //                        gatewayMerchantId: 'TestMerchantCheckout', // name of MerchantAccount
+                    //                        merchantName: 'Adyen Test merchant' // Name to be displayed
+                    //                    },
                     onAuthorized: console.info
                 },
                 paypal: {
                     // USE either separate merchantId & intent props...
-                    merchantId: '5RZKQX2FC48EA',
-                    intent: 'capture',
-                    // ...OR, preferably, wrap them in a configuration object
-                    configuration: {
-                        merchantId: '5RZKQX2FC48EA',
-                        intent: 'capture'
-                    },
+                    //                    merchantId: '5RZKQX2FC48EA',
+                    //                    intent: 'capture',
+                    //                    // ...OR, preferably, wrap them in a configuration object
+                    //                    configuration: {
+                    //                        merchantId: '5RZKQX2FC48EAxxx',
+                    //                        intent: 'capture'
+                    //                    },
                     // style: {},
                     // Events
                     onError: (error, component) => {

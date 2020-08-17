@@ -56,6 +56,7 @@ export function getTransactionInfo(
 }
 
 export function initiatePaymentRequest({ configuration, ...props }: GooglePayProps): google.payments.api.PaymentDataRequest {
+    console.log('### requests::initiatePaymentRequest:: configuration.merchantId', configuration.merchantId);
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,

@@ -18,24 +18,14 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     constructor(props: PayPalElementProps) {
         super(props);
 
+        console.log('### Paypal::constructor:: this.props.configuration', this.props.configuration);
+
         this.handleAction = this.handleAction.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleComplete = this.handleComplete.bind(this);
         this.handleError = this.handleError.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    formatProps(props) {
-        const pmConfigData: object = getPMConfigurationData(props.paymentMethods, PaypalElement.type);
-
-        return {
-            ...props,
-            // Create a configuration object...
-            // ...takes values from props first, then overrides them if they are present in props.configuration, with ultimate
-            // precedence being given to the configuration data from the PM object
-            configuration: { merchantId: props.merchantId, intent: props.intent, ...props.configuration, ...pmConfigData }
-        };
     }
 
     /**

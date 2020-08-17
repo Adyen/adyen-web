@@ -4,7 +4,6 @@ import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
-import getPMConfigurationData from '../../utils/getPMConfigurationData';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -15,11 +14,10 @@ class GooglePay extends UIElement<GooglePayProps> {
      * Formats the component data input
      */
     formatProps(props) {
-        const pmConfigData: object = getPMConfigurationData(props.paymentMethods, GooglePay.type);
+        console.log('### GooglePay::formatProps:: props.configuration', props.configuration);
 
         return {
             ...props,
-            configuration: { ...props.configuration, ...pmConfigData },
             showButton: props.showPayButton === true
         };
     }

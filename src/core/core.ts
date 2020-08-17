@@ -95,7 +95,15 @@ class Core {
             return new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
         }
 
+        // const configObject = this.paymentMethodsResponse; //.find(PaymentMethod);
+        // console.log('### core::handleCreate:: configObject', configObject);
+
         if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
+            console.log('\n### core::handleCreate:: here1 PaymentMethod=', PaymentMethod);
+            console.log('### core::handleCreate:: this.paymentMethodsResponse', this.paymentMethodsResponse);
+
+            const pm = PaymentMethod !== 'card' ? PaymentMethod : 'scheme';
+            console.log('### core::handleCreate:: this.paymentMethodsResponse.find(PaymentMethod)', this.paymentMethodsResponse.find(pm));
             return this.handleCreate(paymentMethods[PaymentMethod], options);
         }
 
@@ -104,6 +112,7 @@ class Core {
             this.paymentMethodsResponse.has(PaymentMethod) &&
             !this.paymentMethodsResponse.find(PaymentMethod).details
         ) {
+            console.log('### core::handleCreate:: here');
             const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, options.paymentMethodsConfiguration);
             return this.handleCreate(paymentMethods.redirect, {
                 ...this.paymentMethodsResponse.find(PaymentMethod),
