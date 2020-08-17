@@ -20,6 +20,7 @@ interface QRLoaderContainerProps extends UIElementProps {
     shouldRedirectOnMobile?: boolean;
     qrCodeImage?: string;
     paymentData?: string;
+    instructions?: string;
 }
 
 class QRLoaderContainer extends UIElement<QRLoaderContainerProps> {
@@ -59,6 +60,7 @@ class QRLoaderContainer extends UIElement<QRLoaderContainerProps> {
                         delay={this.props.delay}
                         onComplete={this.onComplete}
                         countdownTime={this.props.countdownTime}
+                        instructions={this.props.instructions}
                     />
                 </CoreProvider>
             );
