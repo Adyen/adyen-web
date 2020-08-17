@@ -5,7 +5,6 @@ import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
-import getPMConfigurationData from '../../utils/getPMConfigurationData';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
