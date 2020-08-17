@@ -15,7 +15,6 @@ export function getCommonProps(props) {
         onSubmit: props.onSubmit,
         originKey: props.originKey,
         clientKey: props.clientKey,
-        showPayButton: props.showPayButton,
-        paymentMethods: props.paymentMethods
+        showPayButton: props.showPayButton
     };
 }
