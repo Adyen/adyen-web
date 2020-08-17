@@ -110,10 +110,12 @@ getOriginKey()
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                // Wrap it in a configuration object
-                //                configuration: {
-                //                    koreanAuthenticationRequired: false
-                //                },
+                // USE either separate koreanAuthenticationRequired prop...
+                koreanAuthenticationRequired: true,
+                // ...OR, preferably, wrap it in a configuration object
+                configuration: {
+                    koreanAuthenticationRequired: true
+                },
                 countryCode: 'KR'
             })
             .mount('.card-kcp-field');

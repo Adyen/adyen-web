@@ -39,12 +39,13 @@ const initDropin = () => {
                     // name: 'Debit Card'
                     enableStoreDetails: false,
                     hasHolderName: true,
-                    holderNameRequired: true,
+                    holderNameRequired: true
                     // holderName: 'J. Smith',
+                    //                    koreanAuthenticationRequired: false,
                     //                    configuration: {
                     //                        koreanAuthenticationRequired: false
                     //                    },
-                    countryCode: 'kr'
+                    //                    countryCode: 'kr'
                 },
                 boletobancario_santander: {
                     data: {
@@ -73,8 +74,8 @@ const initDropin = () => {
                     //                    intent: 'capture',
                     //                    // ...OR, preferably, wrap them in a configuration object
                     //                    configuration: {
-                    //                        merchantId: '5RZKQX2FC48EA',
-                    //                        intent: 'capture'
+                    //                        merchantId: '5RZKQX2FC48EAxxx',
+                    //                        intent: 'sale'
                     //                    },
                     // style: {},
                     // Events
