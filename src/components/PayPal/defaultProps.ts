@@ -13,7 +13,7 @@ const defaultProps: PayPalElementProps = {
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
-    intent: 'capture',
+    intent: '',
 
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
@@ -26,8 +26,14 @@ const defaultProps: PayPalElementProps = {
     },
 
     configuration: {
+        /**
+         * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
+         */
         merchantId: '',
-        intent: 'capture'
+        /**
+         * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
+         */
+        intent: ''
     },
 
     // Events

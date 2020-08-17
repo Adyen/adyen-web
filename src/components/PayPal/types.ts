@@ -12,7 +12,7 @@ declare global {
  * The intent for the transaction. This determines whether the funds are captured immediately, or later.
  * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
  */
-type Intent = 'sale' | 'capture' | 'authorize' | 'order';
+type Intent = 'sale' | 'capture' | 'authorize' | 'order' | '';
 
 interface PayPalStyles {
     /**
@@ -95,7 +95,13 @@ interface PayPalCommonProps {
 }
 
 export interface PayPalConfig {
+    /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
+     */
     merchantId: string;
+    /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
+     */
     intent?: Intent;
 }
 
