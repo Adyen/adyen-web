@@ -11,7 +11,7 @@ getOriginKey()
     })
     .then(() => getPaymentMethods({ amount, shopperLocale }))
     .then(paymentMethodsResponse => {
-        paymentMethodsResponse.paymentMethods[0].configuration = { koreanAuthenticationRequired: true };
+        paymentMethodsResponse.paymentMethods[0].configuration = { koreanAuthenticationRequired: true }; // TODO - for Testing
 
         window.checkout = new AdyenCheckout({
             amount, // Optional. Used to display the amount in the Pay Button.

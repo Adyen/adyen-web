@@ -11,6 +11,9 @@ getOriginKey()
     })
     .then(() => getPaymentMethods({ amount, shopperLocale }))
     .then(paymentMethodsResponse => {
+        paymentMethodsResponse.paymentMethods[1].configuration = { merchantId: 'zebadee', intent: 'authorize' }; // TODO - for Testing
+        paymentMethodsResponse.paymentMethods[11].configuration = { merchantId: 'florence' }; // TODO - for Testing
+
         window.checkout = new AdyenCheckout({
             amount, // Optional. Used to display the amount in the Pay Button.
             originKey,
@@ -62,11 +65,11 @@ getOriginKey()
             countryCode: 'NL',
 
             // Merchant config (required)
-            configuration: {
-                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
-                merchantName: 'Adyen Test merchant', // Name to be displayed
-                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
-            },
+            //            configuration: {
+            //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
+            //                merchantName: 'Adyen Test merchant', // Name to be displayed
+            //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
+            //            },
 
             // Shopper info (optional)
             emailRequired: true,

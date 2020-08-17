@@ -25,6 +25,11 @@ const defaultProps: PayPalElementProps = {
         height: 48
     },
 
+    configuration: {
+        merchantId: '',
+        intent: 'capture'
+    },
+
     // Events
     onSubmit: () => {},
     onAdditionalDetails: () => {},

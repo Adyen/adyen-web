@@ -15,6 +15,7 @@ class GooglePay extends UIElement<GooglePayProps> {
      */
     formatProps(props) {
         console.log('### GooglePay::formatProps:: props.configuration', props.configuration);
+        console.log('### GooglePay::formatProps:: props.paymentMethods', props.paymentMethods);
 
         return {
             ...props,

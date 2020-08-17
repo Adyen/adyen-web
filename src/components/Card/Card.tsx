@@ -6,6 +6,7 @@ import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { CardElementData, CardElementProps } from './types';
 import handleBinLookUp from './handleBinLookUp';
+
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
