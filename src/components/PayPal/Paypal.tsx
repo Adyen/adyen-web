@@ -17,8 +17,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     constructor(props: PayPalElementProps) {
         super(props);
 
-        console.log('### Paypal::constructor:: this.props.configuration', this.props.configuration);
-
         this.handleAction = this.handleAction.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);
         this.handleCancel = this.handleCancel.bind(this);

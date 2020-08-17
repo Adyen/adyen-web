@@ -21,9 +21,6 @@ const getPaypalSettings = ({ amount, countryCode, debug, environment = '', local
 
     const { merchantId, intent } = configuration;
 
-    console.log('### utils::getPaypalSettings:: merchantId', merchantId);
-    console.log('### utils::getPaypalSettings:: intent', intent);
-
     return {
         ...(merchantId && { 'merchant-id': merchantId }),
         ...(shopperLocale && { locale: shopperLocale }),

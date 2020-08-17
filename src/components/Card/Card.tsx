@@ -11,7 +11,6 @@ export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     formatProps(props: CardElementProps) {
-        console.log('### Card::formatProps:: props.configuration', props.configuration);
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid

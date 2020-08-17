@@ -6,12 +6,6 @@ import '../../../config/polyfills';
 import '../../style.scss';
 
 const initCheckout = paymentMethodsResponse => {
-    console.log('### Dropin::initCheckout:: paymentMethodsResponse', paymentMethodsResponse);
-
-    //    paymentMethodsResponse.paymentMethods[0].configuration = { koreanAuthenticationRequired: true }; // TODO - for Testing
-    //    paymentMethodsResponse.paymentMethods[1].configuration = { merchantId: 'zebadee', intent: 'authorize' }; // TODO - for Testing
-    //    paymentMethodsResponse.paymentMethods[11].configuration = { merchantId: 'florence' }; // TODO - for Testing
-
     window.checkout = new AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         countryCode,

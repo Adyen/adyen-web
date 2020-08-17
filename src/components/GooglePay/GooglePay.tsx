@@ -14,8 +14,6 @@ class GooglePay extends UIElement<GooglePayProps> {
      * Formats the component data input
      */
     formatProps(props) {
-        console.log('\n### GooglePay::formatProps:: props.configuration', props.configuration);
-
         return {
             ...props,
             showButton: props.showPayButton === true
