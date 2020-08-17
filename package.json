@@ -36,7 +36,7 @@
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.9",
+        "@types/jest": "^26.0.10",
         "@typescript-eslint/eslint-plugin": "^2.34.0",
         "@typescript-eslint/parser": "^2.34.0",
         "autoprefixer": "^9.8.6",
@@ -46,7 +46,7 @@
         "cssnano": "^4.1.10",
         "dotenv": "^8.2.0",
         "enzyme": "^3.11.0",
-        "enzyme-adapter-preact-pure": "^2.2.2",
+        "enzyme-adapter-preact-pure": "^2.2.3",
         "eslint": "^6.8.0",
         "eslint-import-resolver-webpack": "^0.12.2",
         "eslint-loader": "^4.0.2",
