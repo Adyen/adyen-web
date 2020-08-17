@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4桁",
     "creditCard.cvcField.placeholder.3digits": "3桁",
     "installments": "分割回数",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "口座番号の入力間違い",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "名義",
@@ -133,5 +134,6 @@
     "blik.confirmPayment": "バンキングアプリを開いて、支払を確認してください。",
     "blik.invalid": "6つの数字を入力してください",
     "blik.code": "6桁のコード",
-    "blik.help": "バンキングアプリからコードを取得してください。"
+    "blik.help": "バンキングアプリからコードを取得してください。",
+    "swish.pendingMessage": "スキャン後、ステータスは最大10分間保留状態になります。この間に再度お支払いいただこうとすると、複数の請求が発生する場合があります。"
 }

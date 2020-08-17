@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 lukua",
     "creditCard.cvcField.placeholder.3digits": "3 lukua",
     "installments": "Asennusten määrä",
+    "installmentOption": "% {kertaa} x% {osittainenarvo}",
     "sepaDirectDebit.ibanField.invalid": "Väärä tilin numero",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Haltijan nimi",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Kiitos hankinnastasi, käytä seuraavia tietoja päättääksesi maksusi.",
     "voucher.telephoneNumber": "Puhelinnumero",
     "voucher.shopperReference": "Ostajan viite",
+    "voucher.collectionInstitutionNumber": "Keräävän laitoksen numero",
     "boletobancario.btnLabel": "Luo Boleto",
     "boleto.sendCopyToEmail": "Lähetä kopio sähköpostiini",
     "button.copy": "Kopio",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Avaa pankkisovelluksesi vahvistaaksesi maksun.",
     "blik.invalid": "Syötä 6 lukua",
     "blik.code": "6-numeroinen koodi",
-    "blik.help": "Hanki koodi pankkisovelluksestasi."
+    "blik.help": "Hanki koodi pankkisovelluksestasi.",
+    "swish.pendingMessage": "Skannattuasi, tila voi odottaa jopa 10 minuuttia. Yritys maksaa uudelleen tässä ajassa voi tuottaa moninkertaisia maksuja."
 }

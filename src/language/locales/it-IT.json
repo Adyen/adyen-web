@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 cifre",
     "creditCard.cvcField.placeholder.3digits": "3 cifre",
     "installments": "Numero di rate",
+    "installmentOption": "%{partialValue} x%{times}",
     "sepaDirectDebit.ibanField.invalid": "Numero di conto non valido",
     "sepaDirectDebit.nameField.placeholder": "A. Bianchi",
     "sepa.ownerName": "Nome Intestatario Conto",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Grazie per il tuo acquisto, utilizza i seguenti dati per completare il pagamento.",
     "voucher.telephoneNumber": "Numero di telefono",
     "voucher.shopperReference": "Riferimento dell'acquirente",
+    "voucher.collectionInstitutionNumber": "Codice identificativo del negozio",
     "boletobancario.btnLabel": "Genera Boleto",
     "boleto.sendCopyToEmail": "Invia una copia alla mia e-mail",
     "button.copy": "Copia",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Apri l'app della tua banca per confermare il pagamento.",
     "blik.invalid": "Inserisci 6 numeri",
     "blik.code": "Codice a 6 cifre",
-    "blik.help": "Ottieni il codice dalla app della tua banca."
+    "blik.help": "Ottieni il codice dalla app della tua banca.",
+    "swish.pendingMessage": "In seguito alla scansione, lo stato della transazione può rimanere in sospeso per un massimo di 10 minuti. Un nuovo tentativo di pagamento durante questo lasso di tempo può comportare pagamenti multipli."
 }

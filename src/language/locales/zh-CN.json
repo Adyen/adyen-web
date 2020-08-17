@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 位数",
     "creditCard.cvcField.placeholder.3digits": "3 位数",
     "installments": "分期付款期数",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "无效的账号",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "持卡人姓名",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "感谢您的购买，请使用以下信息完成支付。",
     "voucher.telephoneNumber": "电话号码",
     "voucher.shopperReference": "顾客参考",
+    "voucher.collectionInstitutionNumber": "收款机构编号",
     "boletobancario.btnLabel": "生成 Boleto",
     "boleto.sendCopyToEmail": "将副本发送到我的电子邮箱",
     "button.copy": "复制",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "打开您的银行应用以确认支付。",
     "blik.invalid": "输入 6 位数",
     "blik.code": "6 位数代码",
-    "blik.help": "从您的银行应用中获取代码。"
+    "blik.help": "从您的银行应用中获取代码。",
+    "swish.pendingMessage": "扫描后，状态可能会保持最多 10 分钟。在此时间内再次尝试付款可能会导致多次收费。"
 }

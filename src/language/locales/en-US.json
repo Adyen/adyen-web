@@ -102,7 +102,7 @@
     "thanksForYourSupport": "Thanks for your support!",
     "preauthorizeWith": "Preauthorize with",
     "confirmPreauthorization": "Confirm preauthorization",
-    "confirmPurchase": "Confirm Purchase",
+    "confirmPurchase": "Confirm purchase",
     "applyGiftcard": "Apply Giftcard",
     "creditCard.pin.title": "Pin",
     "creditCard.encryptedPassword.label": "First 2 digits of card password",
@@ -137,5 +137,6 @@
     "blik.confirmPayment": "Open your banking app to confirm the payment.",
     "blik.invalid": "Enter 6 numbers",
     "blik.code": "6-digit code",
-    "blik.help": "Get the code from your banking app."
+    "blik.help": "Get the code from your banking app.",
+    "swish.pendingMessage": "After you scan, the status can be pending for up to 10 minutes. Attempting to pay again within this time may result in multiple charges."
 }

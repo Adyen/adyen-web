@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 cifre",
     "creditCard.cvcField.placeholder.3digits": "3 cifre",
     "installments": "Antal rater",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Ugyldigt kontonummer",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Kontohavernavn",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Tak for dit køb. Brug følgende oplysninger til at gennemføre din betaling.",
     "voucher.telephoneNumber": "Telefonnummer",
     "voucher.shopperReference": "Købers reference",
+    "voucher.collectionInstitutionNumber": "Id-nummer til opkrævningsinstitution",
     "boletobancario.btnLabel": "Generér Boleto",
     "boleto.sendCopyToEmail": "Send en kopi til min e-mail",
     "button.copy": "Kopiér",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Åbn din bankapp for at bekræfte betalingen.",
     "blik.invalid": "Indtast 6 tal",
     "blik.code": "6-cifret kode",
-    "blik.help": "Få koden fra din bankapp."
+    "blik.help": "Få koden fra din bankapp.",
+    "swish.pendingMessage": "Visning af status kan tage op til 10 minutter efter scanning. Et nyt forsøg på betaling inden for dette tidsrum kan muligvis medføre flere gebyrer."
 }
