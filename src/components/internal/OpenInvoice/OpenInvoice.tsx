@@ -87,7 +87,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {showBillingAddress && (
                 <Address
-                    allowedCountries={[countryCode]}
+                    allowedCountries={props.allowedCountries}
                     countryCode={countryCode}
                     data={data.billingAddress}
                     label="billingAddress"
@@ -108,7 +108,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {showDeliveryAddress && data.separateDeliveryAddress && (
                 <Address
-                    allowedCountries={[countryCode]}
+                    allowedCountries={props.allowedCountries}
                     countryCode={countryCode}
                     data={data.deliveryAddress}
                     label="deliveryAddress"
