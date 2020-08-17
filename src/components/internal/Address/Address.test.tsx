@@ -63,7 +63,7 @@ describe('Address', () => {
             postalCode: '1011DJ',
             city: 'Amsterdam',
             houseNumberOrName: '6-50',
-            country: 'NL',
+            country: 'NL'
         };
 
         const onChangeMock = jest.fn();
@@ -74,33 +74,42 @@ describe('Address', () => {
 
     test('sets not required fields as "N/A" except for the ones that are passed in the data object', () => {
         const requiredFields = ['street'];
-
-        const data = {
-            country: 'NL'
-        };
-
+        const data = { country: 'NL' };
         const onChangeMock = jest.fn();
+
         getWrapper({ data, requiredFields, onChange: onChangeMock });
         const lastOnChangeCall = onChangeMock.mock.calls.pop();
-        expect(lastOnChangeCall[0].data.street).toBe('');
-        expect(lastOnChangeCall[0].data.postalCode).toBe('N/A');
-        expect(lastOnChangeCall[0].data.country).toBe(data.country);
+        const receivedData = lastOnChangeCall[0].data;
+        expect(receivedData.street).toBe(undefined);
+        expect(receivedData.postalCode).toBe('N/A');
+        expect(receivedData.city).toBe('N/A');
+        expect(receivedData.houseNumberOrName).toBe('N/A');
+        expect(receivedData.country).toBe(data.country);
+    });
+
+    test('does not include fields without a value in the data object', () => {
+        const data = { country: 'NL' };
+        const onChangeMock = jest.fn();
+
+        getWrapper({ data, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        const receivedData = lastOnChangeCall[0].data;
+
+        expect(receivedData.street).toBe(undefined);
+        expect(receivedData.postalCode).toBe(undefined);
+        expect(receivedData.city).toBe(undefined);
+        expect(receivedData.houseNumberOrName).toBe(undefined);
+        expect(receivedData.country).toBe(data.country);
     });
 
     test('sets the stateOrProvince field to "N/A" for countries with no state dataset', () => {
-        const data = {
-            country: 'NL'
-        };
-
+        const data = { country: 'NL' };
         const wrapper = getWrapper({ data });
         expect(wrapper.find('StateField').prop('value')).toBe('N/A');
     });
 
     test('sets the stateOrProvince field as an empty string for countries with a state dataset', () => {
-        const data = {
-            country: 'US'
-        };
-
+        const data = { country: 'US' };
         const wrapper = getWrapper({ data });
         expect(wrapper.find('StateField').prop('value')).toBe('');
     });
