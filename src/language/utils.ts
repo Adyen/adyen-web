@@ -112,6 +112,22 @@ export const getTranslation = (translations: object, key: string, options: { [ke
     return null;
 };
 
+// Check passed language file has keys and that they are the correct ones i.e. they have an equivalent in the default language file
+const isValidLanguageFile = (langFile: object): boolean => {
+    let isValidLangFile = !!Object.keys(langFile).length;
+
+    if (isValidLangFile) {
+        for (const prop in langFile) {
+            if (!defaultTranslation[prop]) {
+                isValidLangFile = false;
+                break;
+            }
+        }
+    }
+
+    return isValidLangFile;
+};
+
 /**
  * Returns an array with all the locales
  * @param locale - The locale the user wants to use
@@ -124,12 +140,12 @@ export const loadTranslations = (locale: string, customTranslations: object = {}
     console.log('### utils::loadTranslations:: localeToLoad', localeToLoad);
     // console.log('### utils::loadTranslations:: localeToLoad parsed', locales[localeToLoad]);
 
-    const localesObj = Object.keys(langFile).length ? langFile : {}; // = locales[localeToLoad];
+    const localesObj = isValidLanguageFile(langFile) ? langFile : {};
 
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)
         // ...locales[localeToLoad], // Merge with our locale file of the locale they are loading
-        ...localesObj, // Merge with our locale file of the locale they are loading
+        ...localesObj, // Merge with our default file the language file they have passed
         ...(!!customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
     };
 };
