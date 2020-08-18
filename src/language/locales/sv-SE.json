@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 siffror",
     "creditCard.cvcField.placeholder.3digits": "3 siffror",
     "installments": "Number of installments",
+    "installmentOption": "%{times} x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Ogiltigt kontonummer",
     "sepaDirectDebit.nameField.placeholder": "J. Johansson",
     "sepa.ownerName": "Känt av kontoinnehavaren",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Tack för ditt köp, vänligen använd följande information för att slutföra din betalning.",
     "voucher.telephoneNumber": "Telefonnummer",
     "voucher.shopperReference": "Köparreferens",
+    "voucher.collectionInstitutionNumber": "Nummer på upphämtningsplats",
     "boletobancario.btnLabel": "Generera Boleto",
     "boleto.sendCopyToEmail": "Skicka en kopia till min e-post",
     "button.copy": "Kopiera",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Öppna din bankapp för att bekräfta betalningen.",
     "blik.invalid": "Ange 6 siffror",
     "blik.code": "Sexsiffrig kod",
-    "blik.help": "Hämta koden från din bankapp."
+    "blik.help": "Hämta koden från din bankapp.",
+    "swish.pendingMessage": "När du har skannat kan statusen vara väntande i upp till tio minuter. Att försöka betala igen inom denna tid kan leda till flera debiteringar."
 }

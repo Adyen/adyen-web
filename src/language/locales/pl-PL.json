@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 cyfry",
     "creditCard.cvcField.placeholder.3digits": "3 cyfry",
     "installments": "Liczba rat",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Nieprawidłowy numer rachunku",
     "sepaDirectDebit.nameField.placeholder": "J. Kowalski",
     "sepa.ownerName": "Imię i nazwisko posiadacza karty",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Dziękujemy za zakup. Dokończ płatność przy użyciu poniższych informacji.",
     "voucher.telephoneNumber": "Numer telefonu",
     "voucher.shopperReference": "Dane referencyjne kupujących",
+    "voucher.collectionInstitutionNumber": "Numer instytucji pobierającej opłatę",
     "boletobancario.btnLabel": "Wygeneruj płatność Boleto",
     "boleto.sendCopyToEmail": "Wyślij kopię na mój e-mail",
     "button.copy": "Kopiuj",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Otwórz aplikację bankową, aby potwierdzić płatność.",
     "blik.invalid": "Wpisz 6 cyfr",
     "blik.code": "6-cyfrowy kod",
-    "blik.help": "Uzyskaj kod ze swojej aplikacji bankowej."
+    "blik.help": "Uzyskaj kod ze swojej aplikacji bankowej.",
+    "swish.pendingMessage": "Po zeskanowaniu transakcja może mieć status „Oczekująca” do 10 minut. Próba ponownego dokonania płatności w tym czasie może spowodować wielokrotne naliczenie opłaty."
 }

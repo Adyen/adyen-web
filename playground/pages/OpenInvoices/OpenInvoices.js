@@ -40,6 +40,34 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
         })
         .mount('.afterpay-field');
 
+    // AFFIRM
+    window.affirm = checkout
+        .create('affirm', {
+            countryCode: 'US', // 'US' / 'CA'
+            visibility: {
+                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                billingAddress: 'editable',
+                deliveryAddress: 'editable'
+            },
+            data: {
+                personalDetails: {
+                    firstName: 'Jan',
+                    lastName: 'Jansen',
+                    shopperEmail: 'shopper@testemail.com',
+                    telephoneNumber: '+17203977880'
+                },
+                billingAddress: {
+                    city: 'Boulder',
+                    country: 'US',
+                    houseNumberOrName: '242',
+                    postalCode: '80302',
+                    stateOrProvince: 'CO',
+                    street: 'Silver Cloud Lane'
+                }
+            }
+        })
+        .mount('.affirm-field');
+
     // FACILYPAY_3x
     window.facilypay_3x = checkout
         .create('facilypay_3x', {

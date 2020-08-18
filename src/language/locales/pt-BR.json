@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 dígitos",
     "creditCard.cvcField.placeholder.3digits": "3 dígitos",
     "installments": "Opções de Parcelamento",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Número de conta inválido",
     "sepaDirectDebit.nameField.placeholder": "J. Silva",
     "sepa.ownerName": "Nome do titular da conta bancária",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Obrigado pela sua compra, use a informação a seguir para concluir o seu pagamento.",
     "voucher.telephoneNumber": "Número de telefone",
     "voucher.shopperReference": "Referência do consumidor",
+    "voucher.collectionInstitutionNumber": "Número da instituição de cobrança",
     "boletobancario.btnLabel": "Gerar Boleto",
     "boleto.sendCopyToEmail": "Enviar uma cópia por e-mail",
     "button.copy": "Copiar",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Abra o aplicativo do seu banco para confirmar o pagamento.",
     "blik.invalid": "Digite 6 números",
     "blik.code": "Código de 6 dígitos",
-    "blik.help": "Obtenha o código no aplicativo do seu banco."
+    "blik.help": "Obtenha o código no aplicativo do seu banco.",
+    "swish.pendingMessage": "Depois de escanear o QR, o status pode ficar pendente por até 10 minutos. Não tente refazer o pagamento antes desse período para evitar cobrança duplicada."
 }

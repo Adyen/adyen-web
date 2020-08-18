@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 siffer",
     "creditCard.cvcField.placeholder.3digits": "3 siffer",
     "installments": "Antall avdrag",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Ugyldig kontonummer",
     "sepaDirectDebit.nameField.placeholder": "O. Nordmann",
     "sepa.ownerName": "Kortholders navn",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Takk for ditt kjøp, vennligst bruk den følgende informasjonen for å fullføre betalingen.",
     "voucher.telephoneNumber": "Telefonnummer",
     "voucher.shopperReference": "Kundereferanse",
+    "voucher.collectionInstitutionNumber": "Innbetalingslokasjonsnummer",
     "boletobancario.btnLabel": "Generer Boleto",
     "boleto.sendCopyToEmail": "Send meg en kopi på e-post",
     "button.copy": "Kopier",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Åpne bank-appen din for å bekrefte betalingen.",
     "blik.invalid": "Tast inn 6 tall",
     "blik.code": "6-sifret kode",
-    "blik.help": "Hent koden fra bank-appen din."
+    "blik.help": "Hent koden fra bank-appen din.",
+    "swish.pendingMessage": "Etter at du har skannet koden kan det ta opptil 10 minutter før betalingen vises som bekreftet. Forsøk på å betale igjen kan føre til flere innbetalinger."
 }
