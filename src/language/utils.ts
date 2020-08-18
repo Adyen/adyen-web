@@ -117,13 +117,23 @@ export const getTranslation = (translations: object, key: string, options: { [ke
  * @param locale - The locale the user wants to use
  * @param customTranslations -
  */
-export const loadTranslations = (locale: string, customTranslations: object = {}) => {
+export const loadTranslations = (locale: string, customTranslations: object = {}, langFile: object = {}) => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
     const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
 
+    console.log('### utils::loadTranslations:: localeToLoad', localeToLoad);
+    // console.log('### utils::loadTranslations:: localeToLoad parsed', locales[localeToLoad]);
+
+    let localesObj = {}; // = locales[localeToLoad];
+
+    if (Object.keys(langFile).length) {
+        localesObj = langFile;
+    }
+
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)
-        ...locales[localeToLoad], // Merge with our locale file of the locale they are loading
+        // ...locales[localeToLoad], // Merge with our locale file of the locale they are loading
+        ...localesObj, // Merge with our locale file of the locale they are loading
         ...(!!customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
     };
 };

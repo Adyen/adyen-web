@@ -31,7 +31,7 @@ class Core {
         this.modules = {
             risk: new RiskModule(this.options),
             analytics: new Analytics(this.options),
-            i18n: new Language(options.locale, options.translations)
+            i18n: new Language(options.locale, options.translations, options.langFile)
         };
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(options.paymentMethodsResponse, options);

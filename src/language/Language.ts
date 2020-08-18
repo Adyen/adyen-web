@@ -5,7 +5,7 @@ import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
 
 export class Language {
-    constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
+    constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}, langFile: object = {}) {
         const defaultLocales = Object.keys(locales);
         this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
 
@@ -13,7 +13,7 @@ export class Language {
         this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
 
-        this.translations = loadTranslations(this.locale, this.customTranslations);
+        this.translations = loadTranslations(this.locale, this.customTranslations, langFile);
     }
 
     public readonly locale: string;
