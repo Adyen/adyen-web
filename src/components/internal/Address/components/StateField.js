@@ -20,7 +20,7 @@ export default function StateField(props) {
         }
 
         fetchJSONData({
-            path: `datasets/states/${country}/${useCoreContext().locale}.json`,
+            path: `datasets/states/${country}/${i18n.locale}.json`,
             loadingContext
         })
             .then(response => {

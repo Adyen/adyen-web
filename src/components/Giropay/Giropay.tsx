@@ -22,19 +22,23 @@ class GiropayElement extends RedirectElement {
     }
 
     render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <RedirectButton
-                    {...this.props}
-                    name={this.displayName}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                />
-            </CoreProvider>
-        );
+        if (this.props.showButton) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                    <RedirectButton
+                        {...this.props}
+                        name={this.displayName}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
+                </CoreProvider>
+            );
+        }
+
+        return null;
     }
 }
 
