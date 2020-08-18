@@ -1,6 +1,7 @@
 import { AddressSchema, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 
 export interface OpenInvoiceProps {
+    allowedCountries?: string[];
     consentCheckbox: any;
     countryCode: string;
     data: {
@@ -16,6 +17,7 @@ export interface OpenInvoiceProps {
         billingAddress?: FieldsetVisibility;
         deliveryAddress?: FieldsetVisibility;
     };
+    personalDetailsRequiredFields?: string[];
 }
 
 export interface OpenInvoiceStateData {

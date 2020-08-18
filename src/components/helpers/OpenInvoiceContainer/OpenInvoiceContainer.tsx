@@ -26,17 +26,20 @@ export default class OpenInvoiceContainer extends UIElement {
      * Formats props on construction time
      */
     formatProps(props) {
+        const country = props.countryCode || props.data?.billingAddress?.countryCode;
+
         return {
             ...props,
+            allowedCountries: [country],
             data: {
                 ...props.data,
                 billingAddress: {
                     ...props.data.billingAddress,
-                    country: props.countryCode || props.data.billingAddress.countryCode
+                    country
                 },
                 deliveryAddress: {
                     ...props.data.deliveryAddress,
-                    country: props.countryCode || props.data.deliveryAddress.countryCode
+                    country
                 }
             }
         };
