@@ -157,7 +157,7 @@ getOriginKey()
             originKey,
             clientKey: process.env.__CLIENT_KEY__,
             paymentMethodsResponse,
-            locale: shopperLocale,
+            locale: 'no-NO', //shopperLocale,
             langFile: lang,
             environment: 'test',
             showPayButton: true,
@@ -170,6 +170,11 @@ getOriginKey()
                 //                node: '.merchant-checkout__form', // Element that DF iframe is briefly added to (defaults to body)
                 //                onComplete: obj => {},
                 onError: console.error
+            },
+            translations: {
+                'no-NO': {
+                    'creditCard.numberField.title': 'Kård nømber'
+                }
             }
             //            analytics: {
             //                conversion: true,
@@ -252,8 +257,8 @@ getOriginKey()
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                koreanAuthenticationRequired: true
-                // countryCode: 'KR'
+                koreanAuthenticationRequired: true,
+                countryCode: 'KR'
             })
             .mount('.card-kcp-field');
     });

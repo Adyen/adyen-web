@@ -10,7 +10,10 @@ export class Language {
         this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
 
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
-        this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
+
+        // Create array of our locales + validated custom locales - ensuring there is only one of each
+        this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i);
+
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
 
         this.translations = loadTranslations(this.locale, this.customTranslations, langFile);

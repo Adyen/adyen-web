@@ -124,11 +124,7 @@ export const loadTranslations = (locale: string, customTranslations: object = {}
     console.log('### utils::loadTranslations:: localeToLoad', localeToLoad);
     // console.log('### utils::loadTranslations:: localeToLoad parsed', locales[localeToLoad]);
 
-    let localesObj = {}; // = locales[localeToLoad];
-
-    if (Object.keys(langFile).length) {
-        localesObj = langFile;
-    }
+    const localesObj = Object.keys(langFile).length ? langFile : {}; // = locales[localeToLoad];
 
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)

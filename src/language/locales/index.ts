@@ -16,22 +16,42 @@
 // import zhCN from './zh-CN.json';
 // import zhTW from './zh-TW.json';
 
+// export default {
+// 'da-DK': daDK,
+// 'de-DE': deDE,
+// 'en-US': enUS,
+// 'es-ES': esES,
+// 'fi-FI': fiFI,
+// 'fr-FR': frFR,
+// 'it-IT': itIT,
+// 'ja-JP': jaJP,
+// 'ko-KR': koKR,
+// 'nl-NL': nlNL,
+// 'no-NO': noNO,
+// 'pl-PL': plPL,
+// 'pt-BR': ptBR,
+// 'ru-RU': ruRU,
+// 'sv-SE': svSE,
+// 'zh-CN': zhCN,
+// 'zh-TW': zhTW
+// };
+
 export default {
-    // 'da-DK': daDK,
-    // 'de-DE': deDE,
-    // 'en-US': enUS
-    // 'es-ES': esES,
-    // 'fi-FI': fiFI,
-    // 'fr-FR': frFR,
-    // 'it-IT': itIT,
-    // 'ja-JP': jaJP,
-    // 'ko-KR': koKR,
-    // 'nl-NL': nlNL,
-    // 'no-NO': noNO,
-    // 'pl-PL': plPL,
-    // 'pt-BR': ptBR,
-    // 'ru-RU': ruRU,
-    // 'sv-SE': svSE,
-    // 'zh-CN': zhCN,
-    // 'zh-TW': zhTW
+    'da-DK': '',
+    'de-DE': '',
+    'en-US': '',
+    'es-ES': '',
+    'fi-FI': '',
+    'fr-FR': '',
+    'it-IT': '',
+    'ja-JP': '',
+    'ko-KR': '',
+    'nl-NL': '',
+    'no-NO': '',
+    'pl-PL': '',
+    'pt-BR': '',
+    'ru-RU': '',
+    'sv-SE': '',
+    'zh-CN': '',
+    'zh-TW': ''
 };
