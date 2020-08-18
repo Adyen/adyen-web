@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 цифры",
     "creditCard.cvcField.placeholder.3digits": "3 цифры",
     "installments": "Количество платежей",
+    "installmentOption": "%{times}× %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Недействительный номер счета",
     "sepaDirectDebit.nameField.placeholder": "И. Петров",
     "sepa.ownerName": "Имя владельца",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Благодарим за покупку. Для завершения оплаты используйте следующие сведения.",
     "voucher.telephoneNumber": "Номер телефона",
     "voucher.shopperReference": "Справочник покупателя",
+    "voucher.collectionInstitutionNumber": "Номер получателя средств",
     "boletobancario.btnLabel": "Создать Boleto",
     "boleto.sendCopyToEmail": "Отправить мне копию на эл. почту",
     "button.copy": "Копия",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Для подтверждения оплаты откройте приложение банка.",
     "blik.invalid": "Введите 6 цифр",
     "blik.code": "6-значный код",
-    "blik.help": "Получите код из банковского приложения."
+    "blik.help": "Получите код из банковского приложения.",
+    "swish.pendingMessage": "Обработка оплаты после сканирования может занять 10 минут. Попытка провести оплату повторно в течение указанного времени может привести к нескольким списаниям со счета."
 }

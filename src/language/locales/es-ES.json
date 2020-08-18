@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 dígitos",
     "creditCard.cvcField.placeholder.3digits": "3 dígitos",
     "installments": "Número de plazos",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Número de cuenta no válido",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Nombre del titular de cuenta",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Gracias por su compra. Use la información siguiente para completar su pago.",
     "voucher.telephoneNumber": "Número de teléfono",
     "voucher.shopperReference": "Referencia cliente",
+    "voucher.collectionInstitutionNumber": "Número de institución de cobranza",
     "boletobancario.btnLabel": "Generar Boleto",
     "boleto.sendCopyToEmail": "Enviar copia a mi correo electrónico",
     "button.copy": "Copiar",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Abra la aplicación de su banco para confirmar el pago.",
     "blik.invalid": "Introduzca 6 dígitos",
     "blik.code": "Código de 6 dígitos",
-    "blik.help": "Consiga el código en la aplicación de su banco."
+    "blik.help": "Consiga el código en la aplicación de su banco.",
+    "swish.pendingMessage": "Tras escanearlo, su estado puede seguir en pendiente hasta 10 minutos. Podrían realizarse varios cargos si se intenta pagar de nuevo durante este periodo."
 }

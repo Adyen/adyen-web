@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 Stellen",
     "creditCard.cvcField.placeholder.3digits": "3 Stellen",
     "installments": "Anzahl der Raten",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Ungültige Kontonummer",
     "sepaDirectDebit.nameField.placeholder": "L. Schmidt",
     "sepa.ownerName": "Name des Kontoinhabers",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Vielen Dank für Ihren Kauf. Bitte schließen Sie Ihre Zahlung unter Verwendung der folgenden Informationen ab.",
     "voucher.telephoneNumber": "Telefonnummer",
     "voucher.shopperReference": "Kundenreferenz",
+    "voucher.collectionInstitutionNumber": "Nummer der Zahlungsannahmestelle",
     "boletobancario.btnLabel": "Boleto generieren",
     "boleto.sendCopyToEmail": "Eine Kopie an meine E-Mail-Adresse senden",
     "button.copy": "Kopieren",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Öffnen Sie Ihre Banking-App, um die Zahlung zu bestätigen.",
     "blik.invalid": "6 Zahlen eingeben",
     "blik.code": "6-stelliger Code",
-    "blik.help": "Rufen Sie den Code über Ihre Banking-App ab."
+    "blik.help": "Rufen Sie den Code über Ihre Banking-App ab.",
+    "swish.pendingMessage": "Es kann sein, dass der Status bis zu 10 Minuten nach dem Scan „ausstehend“ lautet. Wenn Sie währenddessen einen neuen Zahlungsversuch unternehmen, kann es sein, dass Ihnen mehrere Beträge in Rechnung gestellt werden."
 }

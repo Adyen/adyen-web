@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 cijfers",
     "creditCard.cvcField.placeholder.3digits": "3 cijfers",
     "installments": "Aantal termijnen",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Ongeldig rekeningnummer",
     "sepaDirectDebit.nameField.placeholder": "P. de Ridder",
     "sepa.ownerName": "Ten name van",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Bedankt voor uw aankoop. Gebruik de volgende informatie om uw betaling te voltooien.",
     "voucher.telephoneNumber": "Telefoonnummer",
     "voucher.shopperReference": "Klant referentie",
+    "voucher.collectionInstitutionNumber": "Nummer ophaallocatie",
     "boletobancario.btnLabel": "Boleto genereren",
     "boleto.sendCopyToEmail": "Stuur een kopie naar mijn e-mailadres",
     "button.copy": "Kopiëren",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Open uw bankapp om de betaling te bevestigen.",
     "blik.invalid": "Voer 6 cijfers in",
     "blik.code": "6-cijferige code",
-    "blik.help": "Haal de code op in uw bankapp."
+    "blik.help": "Haal de code op in uw bankapp.",
+    "swish.pendingMessage": "Nadat u hebt gescand, kan de status maximaal 10 minuten in behandeling zijn. Als u binnen deze periode opnieuw probeert te betalen, kunnen er meerdere keren kosten in rekening worden gebracht."
 }

@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 chiffres",
     "creditCard.cvcField.placeholder.3digits": "3 chiffres",
     "installments": "Nombre de versements",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "Numéro de compte non valide",
     "sepaDirectDebit.nameField.placeholder": "N. Bernard",
     "sepa.ownerName": "Au nom de",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "Nous vous remercions de votre achat. Veuillez finaliser votre paiement à l'aide des informations suivantes.",
     "voucher.telephoneNumber": "Numéro de téléphone",
     "voucher.shopperReference": "Référence client",
+    "voucher.collectionInstitutionNumber": "Numéro du point de paiement",
     "boletobancario.btnLabel": "Générer un Boleto",
     "boleto.sendCopyToEmail": "Envoyer une copie à mon adresse e-mail",
     "button.copy": "Copier",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "Ouvrez votre application bancaire pour confirmer le paiement.",
     "blik.invalid": "Saisissez les 6 chiffres",
     "blik.code": "Code à 6 chiffres",
-    "blik.help": "Ouvrez votre application bancaire pour obtenir le code."
+    "blik.help": "Ouvrez votre application bancaire pour obtenir le code.",
+    "swish.pendingMessage": "Après avoir scanné le code QR, la mise à jour du statut de paiement peut prendre jusqu'à 10 minutes. Si vous effectuez une nouvelle tentative de paiement dans ce délai, cela pourrait occasionner plusieurs débits."
 }

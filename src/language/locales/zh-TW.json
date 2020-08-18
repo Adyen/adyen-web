@@ -25,6 +25,7 @@
     "creditCard.cvcField.placeholder.4digits": "4 位數",
     "creditCard.cvcField.placeholder.3digits": "3 位數",
     "installments": "分期付款的期數",
+    "installmentOption": "%{times}x %{partialValue}",
     "sepaDirectDebit.ibanField.invalid": "帳戶號碼無效",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "持有人名稱",
@@ -87,6 +88,7 @@
     "voucher.introduction.econtext": "多謝惠顧，請使用以下資訊完成付款。",
     "voucher.telephoneNumber": "電話號碼",
     "voucher.shopperReference": "購物者參考",
+    "voucher.collectionInstitutionNumber": "收款機構編號",
     "boletobancario.btnLabel": "產生 Boleto",
     "boleto.sendCopyToEmail": "將複本傳送至我的電子郵件",
     "button.copy": "複製",
@@ -132,5 +134,6 @@
     "blik.confirmPayment": "開啟您的銀行應用程式以確認付款。",
     "blik.invalid": "輸入 6 個數字",
     "blik.code": "6 位數代碼",
-    "blik.help": "從您的銀行應用程式中獲取代碼。"
+    "blik.help": "從您的銀行應用程式中獲取代碼。",
+    "swish.pendingMessage": "掃描後，該待完成狀態可能持續長達 10 分鐘。試圖在這段時間內再次付款可能會導致多重收費。"
 }
