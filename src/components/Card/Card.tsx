@@ -5,7 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { CardElementData, CardElementProps } from './types';
-import handleBinLookUp from './handleBinLookUp';
+import triggerBinLookUp from './triggerBinLookUp';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -78,7 +78,7 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
-    public onBinValue = handleBinLookUp.bind(this);
+    public onBinValue = triggerBinLookUp.bind(this);
 
     get isValid() {
         return !!this.state.isValid;
