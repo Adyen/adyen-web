@@ -138,7 +138,6 @@ export const loadTranslations = (locale: string, customTranslations: object = {}
     const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
 
     console.log('### utils::loadTranslations:: localeToLoad', localeToLoad);
-    // console.log('### utils::loadTranslations:: localeToLoad parsed', locales[localeToLoad]);
 
     const localesObj = isValidLanguageFile(langFile) ? langFile : {};
 

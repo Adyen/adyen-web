@@ -173,7 +173,7 @@ getOriginKey()
             },
             translations: {
                 'no-NO': {
-                    'creditCard.numberField.title': 'Kård nømber'
+                    'creditCard.numberField.title': 'Kård nømber (custom tran)'
                 }
             }
             //            analytics: {
