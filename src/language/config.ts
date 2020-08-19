@@ -1,4 +1,10 @@
+import defaultTranslation from './locales/en-US.json';
+
 /**
- * FALLBACK_LOCALE
+ * FALLBACK_LOCALE - **MUST** match the locale string in the above import
  */
 export const FALLBACK_LOCALE = 'en-US';
+
+export function getDefaultTranslation() {
+    return defaultTranslation;
+}

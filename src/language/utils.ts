@@ -1,6 +1,7 @@
-import { FALLBACK_LOCALE } from './config';
-import defaultTranslation from './locales/en-US.json';
+import { FALLBACK_LOCALE, getDefaultTranslation } from './config';
 import locales from './locales';
+
+const defaultTranslation = getDefaultTranslation();
 
 /**
  * Convert to ISO 639-1
@@ -137,13 +138,12 @@ export const loadTranslations = (locale: string, customTranslations: object = {}
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
     const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
 
-    console.log('### utils::loadTranslations:: localeToLoad', localeToLoad);
+    console.log('### utils::loadTranslations:: localeToLoad', localeToLoad); //locales[localeToLoad]
 
     const localesObj = isValidLanguageFile(langFile) ? langFile : {};
 
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)
-        // ...locales[localeToLoad], // Merge with our locale file of the locale they are loading
         ...localesObj, // Merge the language file they have passed with our default file
         ...(!!customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
     };
