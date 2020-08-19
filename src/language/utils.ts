@@ -151,9 +151,8 @@ const isValidLanguageFile = (langFile: any): object => {
  */
 export const loadTranslations = (locale: string, customTranslations: object = {}, langFile: object = {}) => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
-    const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
-
-    console.log('### utils::loadTranslations:: localeToLoad', localeToLoad); //locales[localeToLoad]
+    // const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
+    // console.log('### utils::loadTranslations:: localeToLoad', localeToLoad);
 
     const localesObj = isValidLanguageFile(langFile);
 

@@ -36,6 +36,7 @@
 // 'zh-TW': zhTW
 // };
 
+// TODO - make array (will need to fix CoreOptions / Locales type)
 export default {
     'da-DK': '',
     'de-DE': '',
