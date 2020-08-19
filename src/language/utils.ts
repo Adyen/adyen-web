@@ -113,20 +113,35 @@ export const getTranslation = (translations: object, key: string, options: { [ke
     return null;
 };
 
-// Check passed language file has keys and that they are the correct ones i.e. they have an equivalent in the default language file
-const isValidLanguageFile = (langFile: object): boolean => {
-    let isValidLangFile = !!Object.keys(langFile).length;
+// Parse & validate passed language object
+const isValidLanguageFile = (langFile: any): object => {
+    let langObj = {};
 
+    // Parse JSON, if necessary
+    try {
+        langObj = JSON.parse(langFile);
+    } catch (e) {
+        // Already an object
+        if (langFile instanceof Object) {
+            langObj = langFile;
+        }
+    }
+
+    // Does the object have keys
+    let isValidLangFile = !!Object.keys(langObj).length;
+
+    // Are the keys the correct ones i.e. they have an equivalent in the default language file
     if (isValidLangFile) {
-        for (const prop in langFile) {
+        for (const prop in langObj) {
             if (!defaultTranslation[prop]) {
                 isValidLangFile = false;
+                console.error('Error: The language object you are passing contains invalid keys');
                 break;
             }
         }
     }
 
-    return isValidLangFile;
+    return isValidLangFile ? langObj : {};
 };
 
 /**
@@ -140,7 +155,7 @@ export const loadTranslations = (locale: string, customTranslations: object = {}
 
     console.log('### utils::loadTranslations:: localeToLoad', localeToLoad); //locales[localeToLoad]
 
-    const localesObj = isValidLanguageFile(langFile) ? langFile : {};
+    const localesObj = isValidLanguageFile(langFile);
 
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)

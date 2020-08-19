@@ -142,9 +142,12 @@ const lang = {
     'blik.invalid': 'Tast inn 6 tall',
     'blik.code': '6-sifret kode',
     'blik.help': 'Hent koden fra bank-appen din.',
+    //    'blik.helpxxx': 'Hent koden fra bank-appen din.',// Invalid key
     'swish.pendingMessage':
         'Etter at du har skannet koden kan det ta opptil 10 minutter før betalingen vises som bekreftet. Forsøk på å betale igjen kan føre til flere innbetalinger.'
 };
+
+const langJSON = JSON.stringify(lang);
 
 getOriginKey()
     .then(originKey => {
