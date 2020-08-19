@@ -15,6 +15,9 @@ export interface GooglePayPropsConfiguration {
      */
     merchantId: string;
 
+    // Kept for legacy reasons
+    merchantIdentifier?: string;
+
     /**
      * Merchant name is rendered in the payment sheet.
      * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
