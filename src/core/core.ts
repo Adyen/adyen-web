@@ -28,8 +28,6 @@ class Core {
             loadingContext: resolveEnvironment(options.environment)
         };
 
-        console.log('### core::constructor:: options.locale', options.locale);
-
         this.modules = {
             risk: new RiskModule(this.options),
             analytics: new Analytics(this.options),
