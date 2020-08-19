@@ -13,7 +13,7 @@ export interface GooglePayPropsConfiguration {
      * Required when PaymentsClient is initialized with an environment property of PRODUCTION.
      * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
      */
-    merchantId: string;
+    merchantId?: string;
 
     // Kept for legacy reasons
     merchantIdentifier?: string;

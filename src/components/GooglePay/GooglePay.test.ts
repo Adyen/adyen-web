@@ -52,7 +52,7 @@ describe('GooglePay', () => {
         });
 
         test('Maps legacy merchantIdentifier from configuration to merchantId', () => {
-            const gpay = new GooglePay({ configuration: { merchantIdentifier: '123456', gatewayMerchantId: 'TestMerchant', merchantId: 'xyz' } });
+            const gpay = new GooglePay({ configuration: { merchantIdentifier: '123456', gatewayMerchantId: 'TestMerchant' } });
             expect(gpay.props.configuration.merchantId).toEqual('123456');
         });
     });
