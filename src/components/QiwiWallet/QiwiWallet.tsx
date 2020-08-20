@@ -4,6 +4,7 @@ import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
 import getProp from '../../utils/getProp';
+import COUNTRIES from './country';
 
 class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
@@ -15,7 +16,7 @@ class QiwiWalletElement extends UIElement {
 
     constructor(props) {
         super(props);
-        this.props.items = this.props.items.map(formatPrefixName).filter(item => item !== false);
+        this.props.items = COUNTRIES.map(formatPrefixName).filter(item => item !== false);
     }
 
     get isValid() {
