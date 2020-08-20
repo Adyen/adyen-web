@@ -37,9 +37,6 @@ class PhoneInput extends Component<PhoneInputComponentProps, PhoneInputState> {
         const isPhoneNumberValid = validatePhoneNumber(this.state.data.phoneNumber, this.props.minLength);
         const isValid = isPrefixValid && isPhoneNumberValid;
 
-        /** To mutate the state , use the setState function and pass the property to be updated.
-         * short hand operator { isValid: isValid }
-         * */
         this.setState({ isValid }, () => {
             this.props.onChange(this.state);
         });
