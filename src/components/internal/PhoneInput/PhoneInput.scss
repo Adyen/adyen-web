@@ -1,0 +1,56 @@
+.adyen-checkout__phone-input {
+    .adyen-checkout__input-wrapper {
+        width: 100%;
+
+        .adyen-checkout__input {
+            padding: 0;
+
+            &:focus {
+                border: none;
+                box-shadow: none;
+            }
+        }
+
+        .adyen-checkout__dropdown__button {
+            width: auto;
+            border: 0;
+            height: 38px;
+
+            &:after {
+                left: 40px;
+                box-sizing: revert;
+            }
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        .adyen-checkout__input--phoneNumber {
+            width: 75%;
+            margin-left: 8px;
+            height: 35px;
+            border: 0;
+        }
+
+        .adyen-checkout__input-wrapper--phoneInput {
+            display: flex;
+            align-items: center;
+        }
+
+        .phoneNumber {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 65px;
+        }
+
+        .adyen-checkout__dropdown__button--active {
+            box-shadow: none;
+
+            &:hover {
+                box-shadow: none;
+            }
+        }
+    }
+}
