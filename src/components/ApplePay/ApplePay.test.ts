@@ -1,6 +1,10 @@
 import ApplePay from '.';
 import defaultProps from './defaultProps';
 
+(global as any).ApplePaySession = {
+    supportsVersion: jest.fn(version => true)
+};
+
 describe('ApplePay', () => {
     describe('formatProps', () => {
         test('normalizes an amount in a legacy format', () => {
