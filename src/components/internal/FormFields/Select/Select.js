@@ -148,7 +148,7 @@ class SelectBox extends Component {
                         this.toggleButton = ref;
                     }}
                 >
-                    <span className="adyen-checkout__dropdown__button__text">{active.name || placeholder}</span>
+                    <span className="adyen-checkout__dropdown__button__text">{active.displayName || active.name || placeholder}</span>
                     {active.icon && (
                         <img className="adyen-checkout__dropdown__button__icon" src={active.icon} alt={active.name} onError={this.handleOnError} />
                     )}
@@ -181,7 +181,10 @@ class SelectBox extends Component {
                             onClick={this.select}
                             onKeyDown={this.handleKeyDown}
                         >
-                            <span>{item.name}</span>
+                            <span>
+                                <span className="adyen-checkout__dropdown__element__flag">{item.flag}</span>
+                                {item.name}
+                            </span>
                             {item.icon && (
                                 <img
                                     className="adyen-checkout__dropdown__element__icon"
