@@ -4,38 +4,7 @@ import Field from '../FormFields/Field';
 import { renderFormField } from '../FormFields';
 import { validatePhoneNumber } from './validate';
 import './PhoneInput.scss';
-import Language from '../../../language/Language';
-
-interface PhoneInputComponentProps {
-    onChange: (state) => void;
-    onValid: () => void;
-    payButton: () => void;
-
-    selected: string;
-    items: [];
-    minLength: number;
-    prefixName: string;
-    phoneName: string;
-    showPayButton: boolean;
-    isValid: boolean;
-    i18n?: Language;
-    data?: {
-        phonePrefix: string;
-        phoneNumber: string;
-    };
-}
-
-interface PhoneInputState {
-    data?: {
-        phonePrefix: string;
-        phoneNumber: string;
-    };
-    errors?: {
-        phoneNumber?: boolean;
-        phonePrefix?: boolean;
-    };
-    isValid?: boolean;
-}
+import { PhoneInputComponentProps, PhoneInputState } from './types';
 
 class PhoneInput extends Component<PhoneInputComponentProps, PhoneInputState> {
     constructor(props) {
@@ -130,8 +99,8 @@ class PhoneInput extends Component<PhoneInputComponentProps, PhoneInputState> {
                     })}
                     inputWrapperModifiers={['phoneInput']}
                 >
-                    <div class="adyen-checkout__input-wrapper">
-                        <div class="adyen-checkout__input">
+                    <div className="adyen-checkout__input-wrapper">
+                        <div className="adyen-checkout__input">
                             {!!showPrefix && (
                                 <Field inputWrapperModifiers={['phoneInput']}>
                                     {renderFormField('select', {

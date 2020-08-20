@@ -1,5 +1,5 @@
 const COUNTRIES = [
-    { id: '+7', name: 'Russian Federation"', code: 'RU' },
+    { id: '+7', name: 'Russian Federation', code: 'RU' },
     { id: '+9955', name: 'Georgia', code: 'GE' },
     { id: '+507', name: 'Panama', code: 'PA' },
     { id: '+44', name: 'United Kingdom', code: 'GB' },
