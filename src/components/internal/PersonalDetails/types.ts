@@ -39,6 +39,6 @@ export interface ReadOnlyPersonalDetailsProps {
 }
 
 export interface ValidationResult {
-    messageOnInvalid: string;
+    errorMessage: string;
     isValid: boolean;
 }

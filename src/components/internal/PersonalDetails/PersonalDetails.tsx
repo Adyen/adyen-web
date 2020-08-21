@@ -24,11 +24,11 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const eventHandler = (mode: string): Function => (e: Event): void => {
         const { name, value } = e.target as HTMLInputElement;
         const key = name.split(`${namePrefix}.`).pop();
-        const { isValid, messageOnInvalid }: ValidationResult = validator.validate(key, mode)(value);
+        const { isValid, errorMessage }: ValidationResult = validator.validate(key, mode)(value);
 
         setData(prevData => ({ ...prevData, [key]: value }));
         setValid(prevValid => ({ ...prevValid, [key]: isValid }));
-        setErrors(prevErrors => ({ ...prevErrors, [key]: isValid ? '' : messageOnInvalid }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: !isValid && errorMessage }));
     };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
@@ -40,8 +40,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     this.showValidation = () => {
         const errorsReducer = (acc, field) => {
-            const { isValid, messageOnInvalid }: ValidationResult = validator.validate(field, 'blur')(data[field]);
-            acc[field] = isValid ? '' : messageOnInvalid;
+            const { isValid, errorMessage }: ValidationResult = validator.validate(field, 'blur')(data[field]);
+            acc[field] = !isValid && errorMessage;
             return acc;
         };
 
