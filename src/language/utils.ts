@@ -141,6 +141,10 @@ const isValidLanguageFile = (langFile: any): object => {
         }
     }
 
+    if (!isValidLangFile) {
+        console.log('Not a valid language file - using default:', FALLBACK_LOCALE);
+    }
+
     return isValidLangFile ? langObj : {};
 };
 
