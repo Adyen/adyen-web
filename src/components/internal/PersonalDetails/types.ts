@@ -1,4 +1,5 @@
 import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
+import Validator from '../../../utils/Validator';
 
 export interface PersonalDetailsProps {
     label?: string;
@@ -9,14 +10,15 @@ export interface PersonalDetailsProps {
     onChange: (newState: object) => void;
     readonly?: boolean;
     ref?: any;
+    validator?: Validator;
 }
 
 export interface PersonalDetailsStateError {
     firstName?: boolean;
     lastName?: boolean;
     gender?: boolean;
-    dateOfBirth?: boolean;
-    telephoneNumber?: boolean;
+    dateOfBirth?: string | boolean;
+    telephoneNumber?: string | boolean;
     shopperEmail?: boolean;
 }
 
@@ -34,4 +36,9 @@ export interface ReadOnlyPersonalDetailsProps {
     lastName?: string;
     shopperEmail?: string;
     telephoneNumber?: string;
+}
+
+export interface ValidationResult {
+    messageOnInvalid: string;
+    isValid: boolean;
 }
