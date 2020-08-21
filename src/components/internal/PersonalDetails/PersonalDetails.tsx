@@ -40,7 +40,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     this.showValidation = () => {
         const errorsReducer = (acc, field) => {
-            acc[field] = validator.validate(field, 'blur')(data[field]).messageOnInvalid;
+            const { isValid, messageOnInvalid }: ValidationResult = validator.validate(field, 'blur')(data[field]);
+            acc[field] = isValid ? '' : messageOnInvalid;
             return acc;
         };
 
