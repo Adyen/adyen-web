@@ -20,10 +20,10 @@ const LOCALES = [
     'zh-TW'
 ];
 
-const localesEntries = LOCALES.reduce((acc, locale) => {
+const localesReducer = (acc, locale) => {
     acc[locale] = path.join(__dirname, `../src/language/locales/${locale}.js`);
     return acc;
-}, {});
+};
 
 module.exports = [
     {
@@ -31,11 +31,11 @@ module.exports = [
         bail: true,
         devtool: false,
         entry: {
-            ...localesEntries,
+            ...LOCALES.reduce(localesReducer, {}),
             all: path.join(__dirname, `../src/language/locales/index.ts`)
         },
         output: {
-            filename: path => (path.chunk.name === 'all' ? 'locales/all.js' : 'locales/[name].js'),
+            filename: path => `locales/${path.chunk.name}.js`,
             path: path.join(__dirname, '../dist'),
             library: ['AdyenCheckoutLocales', '[name]'],
             libraryTarget: 'umd',
