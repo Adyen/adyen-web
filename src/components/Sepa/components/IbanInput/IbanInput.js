@@ -13,8 +13,8 @@ class IbanInput extends Component {
         this.state = {
             status: 'ready',
             data: {
-                'sepa.ownerName': props.ownerName ? props.ownerName : '',
-                'sepa.ibanNumber': props.ibanNumber ? props.ibanNumber : ''
+                'sepa.ownerName': props?.data?.ownerName || '',
+                'sepa.ibanNumber': props?.data?.ibanNumber || ''
             },
             isValid: false,
             cursor: 0,
