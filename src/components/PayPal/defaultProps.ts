@@ -13,7 +13,7 @@ const defaultProps: PayPalElementProps = {
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
-    intent: '',
+    intent: null,
 
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
@@ -33,7 +33,7 @@ const defaultProps: PayPalElementProps = {
         /**
          * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
          */
-        intent: ''
+        intent: null
     },
 
     // Events
