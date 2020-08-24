@@ -1,20 +1,20 @@
-import daDK from './da-DK.json';
-import deDE from './de-DE.json';
-import enUS from './en-US.json';
-import esES from './es-ES.json';
-import fiFI from './fi-FI.json';
-import frFR from './fr-FR.json';
-import itIT from './it-IT.json';
-import jaJP from './ja-JP.json';
-import koKR from './ko-KR.json';
-import nlNL from './nl-NL.json';
-import noNO from './no-NO.json';
-import plPL from './pl-PL.json';
-import ptBR from './pt-BR.json';
-import ruRU from './ru-RU.json';
-import svSE from './sv-SE.json';
-import zhCN from './zh-CN.json';
-import zhTW from './zh-TW.json';
+import daDK from './da-DK';
+import deDE from './de-DE';
+import enUS from './en-US';
+import esES from './es-ES';
+import fiFI from './fi-FI';
+import frFR from './fr-FR';
+import itIT from './it-IT';
+import jaJP from './ja-JP';
+import koKR from './ko-KR';
+import nlNL from './nl-NL';
+import noNO from './no-NO';
+import plPL from './pl-PL';
+import ptBR from './pt-BR';
+import ruRU from './ru-RU';
+import svSE from './sv-SE';
+import zhCN from './zh-CN';
+import zhTW from './zh-TW';
 
 export default {
     'da-DK': daDK,
