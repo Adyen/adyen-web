@@ -13,14 +13,29 @@ class IbanInput extends Component {
         this.state = {
             status: 'ready',
             data: {
-                'sepa.ownerName': '',
-                'sepa.ibanNumber': ''
+                'sepa.ownerName': props.ownerName ? props.ownerName : '',
+                'sepa.ibanNumber': props.ibanNumber ? props.ibanNumber : ''
             },
             isValid: false,
             cursor: 0,
             errors: {},
             valid: {}
         };
+
+        if (this.state.data['sepa.ibanNumber']) {
+            const electronicFormatIban = electronicFormat(this.state.data['sepa.ibanNumber']); // example: NL13TEST0123456789
+            const iban = formatIban(electronicFormatIban); // example: NL13 TEST 0123 4567 89
+            this.state.data['sepa.ibanNumber'] = iban;
+        }
+
+        if(this.state.data['sepa.ibanNumber'] || this.state.data['sepa.ownerName']){
+            const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['sepa.ownerName']) : '';
+            const ibanValid = this.state.data['sepa.ibanNumber'] ? checkIbanStatus(this.state.data['sepa.ibanNumber']).status === 'valid' : '';
+            const isValid = ibanValid && holderNameValid;
+            const data = { data: this.state.data, isValid };
+    
+            this.props.onChange(data);
+        }
 
         this.ibanNumber = {};
     }
