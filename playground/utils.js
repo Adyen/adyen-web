@@ -1,3 +1,7 @@
+import translations from '../src/language/locales/';
+
+window.AdyenCheckoutLocales = translations;
+
 const { host, protocol } = window.location;
 
 export const httpPost = (endpoint, data) =>
