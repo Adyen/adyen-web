@@ -58,7 +58,7 @@ class BaseElement<P extends BaseElementProps> {
             ...(clientData && { riskData: { clientData } }),
             ...(conversionId && { conversionId }),
             ...this.formatData(),
-            clientDataIndicator: true
+            clientStateDataIndicator: true
         };
     }
 
