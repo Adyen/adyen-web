@@ -25,13 +25,13 @@ describe('BaseElement', () => {
     describe('get data', () => {
         test('returns an empty object by default', () => {
             const baseElement = new MyElement();
-            expect(baseElement.data).toEqual({});
+            expect(baseElement.data).toEqual({ clientDataIndicator: true });
         });
 
         test('calls formatData to get the specific component output', () => {
             const baseElement = new MyElement();
             const spy = jest.spyOn(baseElement, 'formatData');
-            expect(baseElement.data).toEqual({});
+            expect(baseElement.data).toEqual({ clientDataIndicator: true });
             expect(spy).toHaveBeenCalled();
         });
     });
