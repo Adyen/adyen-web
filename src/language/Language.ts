@@ -1,19 +1,27 @@
-import defaultTranslation from './locales/en-US.json';
+import defaultTranslation from './locales/en-US';
 import { formatCustomTranslations, formatLocale, getTranslation, loadTranslations, parseLocale } from './utils';
 import { FALLBACK_LOCALE } from './config';
-import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
+
+declare global {
+    interface Window {
+        AdyenCheckoutLocales: any;
+    }
+}
 
 export class Language {
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
-        const defaultLocales = Object.keys(locales);
-        this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
+        const { AdyenCheckoutLocales = {} } = window;
+        const detectedTranslations = AdyenCheckoutLocales.all || AdyenCheckoutLocales;
+        const defaultTranslations = { ...detectedTranslations, [FALLBACK_LOCALE]: defaultTranslation };
+        const localesFromDefaultTranslations: string[] = Object.keys(defaultTranslations);
 
-        const localesFromCustomTranslations = Object.keys(this.customTranslations);
-        this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
+        this.customTranslations = formatCustomTranslations(customTranslations, localesFromDefaultTranslations);
+        const localesFromCustomTranslations: string[] = Object.keys(this.customTranslations);
+
+        this.supportedLocales = [...localesFromCustomTranslations, ...localesFromDefaultTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
-
-        this.translations = loadTranslations(this.locale, this.customTranslations);
+        this.translations = loadTranslations(this.locale, defaultTranslations, this.customTranslations);
     }
 
     public readonly locale: string;
