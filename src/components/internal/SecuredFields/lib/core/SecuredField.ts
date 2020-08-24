@@ -57,7 +57,7 @@ class SecuredField extends AbstractSecuredField {
     }
 
     init(): SecuredField {
-        const iframeTitle: string = getProp(this.config, `pmConfig.ariaLabels.${this.fieldType}.iframeTitle`) || IFRAME_TITLE;
+        const iframeTitle: string = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}.iframeTitle`) || IFRAME_TITLE;
 
         const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, iframeTitle);
 
