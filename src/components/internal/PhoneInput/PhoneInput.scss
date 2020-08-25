@@ -14,7 +14,7 @@
         .adyen-checkout__dropdown__button {
             width: auto;
             border: 0;
-            height: 38px;
+            height: 35px;
 
             &:after {
                 left: 40px;
@@ -27,10 +27,9 @@
         }
 
         .adyen-checkout__input--phoneNumber {
-            width: 75%;
             margin-left: 8px;
-            height: 35px;
             border: 0;
+            height: 35px;
         }
 
         .adyen-checkout__input-wrapper--phoneInput {
@@ -38,11 +37,15 @@
             align-items: center;
         }
 
-        .phoneNumber {
+        .adyen-checkout__phoneNumber {
             display: flex;
             align-items: center;
+            margin-left: 65px;
+            width: 100%;
+        }
+
+        .adyen-checkout__countryFlag {
             position: absolute;
-            left: 65px;
         }
 
         .adyen-checkout__dropdown__button--active {

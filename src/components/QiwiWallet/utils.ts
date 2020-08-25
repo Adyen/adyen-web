@@ -15,9 +15,8 @@ export const formatPrefixName = item => {
     const flag = item.code.toUpperCase().replace(/./g, char => (String.fromCodePoint ? String.fromCodePoint(char.charCodeAt(0) + 127397) : ''));
     return {
         ...item,
-        name: `${item.name} (${item.id})`,
-        displayName: flag,
-        flag
+        name: `${flag} ${item.name} (${item.id})`,
+        selectedOptionName: flag
     };
 };
 
@@ -28,7 +27,7 @@ export const formatPrefixName = item => {
  */
 export const selectItem = (items, countryCode) => {
     if (items && countryCode) {
-        const item = items.find(i => i.name === countryCode);
+        const item = items.find(i => i.code === countryCode);
         if (item) {
             return item.id;
         }

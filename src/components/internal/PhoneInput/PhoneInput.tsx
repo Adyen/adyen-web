@@ -101,7 +101,7 @@ class PhoneInput extends Component<PhoneInputComponentProps, PhoneInputState> {
                             {!!showPrefix && (
                                 <Field inputWrapperModifiers={['phoneInput']}>
                                     {renderFormField('select', {
-                                        className: 'adyen-checkout__dropdown--small',
+                                        className: 'adyen-checkout__dropdown--small adyen-checkout__countryFlag',
                                         items: this.props.items,
                                         name: this.props.prefixName,
                                         onChange: this.handlePrefixChange,
@@ -109,7 +109,7 @@ class PhoneInput extends Component<PhoneInputComponentProps, PhoneInputState> {
                                         selected: this.state.data.phonePrefix
                                     })}
 
-                                    <div className="phoneNumber">
+                                    <div className="adyen-checkout__phoneNumber">
                                         <div>{this.state.data.phonePrefix}</div>
 
                                         <input
