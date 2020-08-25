@@ -1,9 +1,8 @@
 import { email, telephoneNumber } from '../../utils/regex';
-const NON_REQUIRED_ERROR_MESSAGE = ' ';
 export const econtextValidationRules = {
     blur: {
         default: value => {
-            return { isValid: value && value.length > 0, errorMessage: NON_REQUIRED_ERROR_MESSAGE };
+            return { isValid: value && value.length > 0, errorMessage: true };
         },
         telephoneNumber: value => {
             return {
@@ -14,7 +13,7 @@ export const econtextValidationRules = {
         shopperEmail: value => {
             return {
                 isValid: email.test(value),
-                errorMessage: NON_REQUIRED_ERROR_MESSAGE
+                errorMessage: true
             };
         }
     }

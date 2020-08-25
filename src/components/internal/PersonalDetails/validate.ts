@@ -9,22 +9,20 @@ const isDateOfBirthValid = value => {
     return age >= 18;
 };
 
-const NON_REQUIRED_ERROR_MESSAGE = ' ';
-
 export const personalDetailsValidationRules = {
     blur: {
         default: value => {
             const isValid: boolean = value && value.length > 0;
-            return { isValid: isValid, errorMessage: NON_REQUIRED_ERROR_MESSAGE };
+            return { isValid: isValid, errorMessage: true };
         },
         dateOfBirth: value => {
             return { isValid: isDateOfBirthValid(value), errorMessage: 'dateOfBirth.invalid' };
         },
         telephoneNumber: value => {
-            return { isValid: telephoneNumber.test(value), errorMessage: NON_REQUIRED_ERROR_MESSAGE };
+            return { isValid: telephoneNumber.test(value), errorMessage: true };
         },
         shopperEmail: value => {
-            return { isValid: email.test(value), errorMessage: NON_REQUIRED_ERROR_MESSAGE };
+            return { isValid: email.test(value), errorMessage: true };
         }
     }
 };
