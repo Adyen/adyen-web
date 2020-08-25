@@ -6,6 +6,7 @@ import {
     validFieldsReducer,
     addTranslationsToObject,
     getTranslatedErrors,
+    processDefaultAriaObjects,
     resolvePlaceholders
 } from './utils';
 import { CSF_FIELDS_ARRAY } from './lib/configuration/constants';
@@ -157,7 +158,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     ...resolvePlaceholders(this.props.i18n),
                     ...this.props.placeholders
                 },
-                ariaLabels: addTranslationsToObject(this.props.ariaLabels, CSF_FIELDS_ARRAY, 'error', getTranslatedErrors(this.props.i18n))
+                // ariaLabels: addTranslationsToObject(this.props.ariaLabels, CSF_FIELDS_ARRAY, 'error', getTranslatedErrors(this.props.i18n))
+                ariaLabels: processDefaultAriaObjects(this.props.ariaLabels, this.props.i18n)
             },
             callbacks: {
                 onLoad: this.handleOnLoad,

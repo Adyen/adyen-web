@@ -10,7 +10,7 @@ export const ENCRYPTED_PIN_FIELD = 'encryptedPin';
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.2.4';
+export const SF_VERSION = '3.2.5';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 

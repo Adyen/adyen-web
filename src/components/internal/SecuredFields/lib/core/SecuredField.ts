@@ -57,7 +57,17 @@ class SecuredField extends AbstractSecuredField {
     }
 
     init(): SecuredField {
-        const iframeTitle: string = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}.iframeTitle`) || IFRAME_TITLE;
+        // const iframeTitle: string = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}.iframeTitle`) || IFRAME_TITLE;
+
+        // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property
+        const iframeTitle: string = IFRAME_TITLE;
+        const ariaConfig = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}`);
+        if (ariaConfig) {
+            ariaConfig.iframeTitle = ariaConfig.iframeTitle || IFRAME_TITLE; // If object already has a title set use it - else set default
+        } else {
+            this.config.iframeUIConfig.ariaLabels[this.fieldType] = { iframeTitle }; // No aria config for this field - so create one
+        }
+        console.log('### SecuredField::init:: new config=', getProp(this.config, `iframeUIConfig.ariaLabels`));
 
         const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, iframeTitle);
 

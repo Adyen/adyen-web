@@ -6,7 +6,8 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE
+    ENCRYPTED_SECURITY_CODE,
+    CSF_FIELDS_ARRAY
 } from './lib/configuration/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
@@ -84,9 +85,22 @@ export const getErrorObject = (fieldType, rootNode, state) => ({
 
 // USED BY SecuredFieldsProvider WHEN CREATING SETUP OBJECT FOR CSF
 /**
- * Adds a new, translated, property e.g. "error" to the specified keys within an object
+ * Used by SecuredFieldsProvider when creating setup object for csf AND also by handler for SecuredFieldComponent aka CustomCardComponent
+ */
+export const getTranslatedErrors = (i18n = {}) => ({
+    [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.invalid'),
+    [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
+    [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
+    [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
+    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.oneClickVerification.invalidInput.title'),
+    defaultError: 'error.title'
+});
+
+/**
+ * Adds a new, translated, property e.g. "error" to the specified keys within an object, unless it already exists
  * @param originalObject - object we want to duplicate and enhance
  * @param fieldNamesList - list of keys on the original object that we want to add the new property to
+ * @param propName - the property we wanted to add, in translated form, if it doesn't already exist on the object
  * @param translationsArr - an array containing translations stored under the same keys as used in the original object
  * @returns a duplicate of the original object with a new property e.g. "error" added under the specified keys
  */
@@ -101,8 +115,14 @@ export const addTranslationsToObject = (originalObject, fieldNamesList, propName
             nuObj[key][propName] = !nuObj[key][propName] ? translationsArr[key] : nuObj[key][propName];
             return null;
         });
-
+    console.log('\n### utils::addTranslationsToObject:: nuObj', nuObj);
     return nuObj;
+};
+
+// TODO Ensure every secured Field has a corresponding ariaConfig object, creating them if necessary
+//  and ensure these objects have, at minimum, an iframeTitle and (translated) error property
+export const processDefaultAriaObjects = (originalObject, i18n) => {
+    return addTranslationsToObject(originalObject, CSF_FIELDS_ARRAY, 'error', getTranslatedErrors(i18n));
 };
 
 export const resolvePlaceholders = (i18n = {}) => ({
@@ -127,18 +147,6 @@ export const getCardImageUrl = (brand, loadingContext) => {
 
     return getImageUrl(imageOptions)(type);
 };
-
-/**
- * Used by SecuredFieldsProvider when creating setup object for csf AND also by handler for SecuredFieldComponent aka CustomCardComponent
- */
-export const getTranslatedErrors = (i18n = {}) => ({
-    [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.invalid'),
-    [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.oneClickVerification.invalidInput.title'),
-    defaultError: 'error.title'
-});
 
 // REGULAR "UTIL" UTILS
 /**
