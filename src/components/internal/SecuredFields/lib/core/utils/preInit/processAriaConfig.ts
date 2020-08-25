@@ -10,21 +10,24 @@ export function processAriaConfig(configObj, fieldType) {
     let iframeTitle: string = IFRAME_TITLE;
     const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
 
+    let newAriaFieldConfigObj: AriaConfigObject;
     let ariaFieldConfigWithTranslation: AriaConfigObject;
-    // console.log('### SecuredField::init:: initial ariaFieldConfig', ariaFieldConfig);
 
     if (ariaFieldConfig) {
-        // If object already has a title, use it - else set default
-        ariaFieldConfig.iframeTitle = ariaFieldConfig.iframeTitle || iframeTitle;
+        newAriaFieldConfigObj = {
+            ...ariaFieldConfig,
+            // If object already has a title, use it - else set default
+            iframeTitle: ariaFieldConfig.iframeTitle || iframeTitle
+        };
 
         // Set iframeTitle to value from config object
-        iframeTitle = ariaFieldConfig.iframeTitle;
+        iframeTitle = newAriaFieldConfigObj.iframeTitle;
 
         // Add error translation
-        ariaFieldConfigWithTranslation = addErrorTranslationToObject(ariaFieldConfig, fieldType, i18n, CSF_FIELDS_ARRAY);
+        ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
     } else {
         // Create a new object with the default title
-        const newAriaFieldConfigObj: AriaConfigObject = { iframeTitle };
+        newAriaFieldConfigObj = { iframeTitle };
         // Add error translation
         ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
     }
