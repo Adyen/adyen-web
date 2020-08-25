@@ -28,26 +28,26 @@ export interface IframeConfigObject extends SFInternalConfig {
     fieldType: string;
     cvcRequired: boolean;
     numKey: number;
-    pmConfig?: any; // TODO - only needed until latest version of 3.2.2 is on test
 }
 
 interface IframeUIConfigObject {
     sfStyles?: StylesObject;
     placeholders?: PlaceholdersObject;
-    ariaLabels?: AriaLabels;
+    ariaConfig?: AriaConfig;
+    ariaLabels?: AriaConfig; // TODO - only needed until latest version of SF 3.2.5 is on test
 }
 
 interface PlaceholdersObject {
     [key: string]: string; // e.g. encryptedExpiryDate: 'MM/YY'
 }
 
-type AriaLabels = {
+type AriaConfig = {
     lang?: string;
 } & {
-    [key: string]: AriaLabelsObject; // e.g. encryptedCardNumber: {...}
+    [key: string]: AriaConfigObject; // e.g. encryptedCardNumber: {...}
 };
 
-interface AriaLabelsObject {
+interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
     error?: string;

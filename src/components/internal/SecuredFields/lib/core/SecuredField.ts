@@ -64,9 +64,9 @@ class SecuredField extends AbstractSecuredField {
         // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
         const processesAriaConfig = processAriaConfig(this.config, this.fieldType);
         // Set result back onto config object
-        this.config.iframeUIConfig.ariaLabels = processesAriaConfig.ariaLabels;
+        this.config.iframeUIConfig.ariaConfig = processesAriaConfig.ariaConfig;
 
-        console.log('### SecuredField::init:: new ariaLabels=', this.config.iframeUIConfig.ariaLabels);
+        console.log('### SecuredField::init:: new ariaConfig=', this.config.iframeUIConfig.ariaConfig);
 
         //
         const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processesAriaConfig.iframeTitle);
@@ -103,6 +103,9 @@ class SecuredField extends AbstractSecuredField {
         // Add general listener for 'message' EVENT - the event that 'powers' postMessage
         on(window, 'message', this.postMessageListener, false);
 
+        // TODO - only needed until latest version of 3.2.5 is on test
+        this.config.iframeUIConfig.ariaLabels = this.config.iframeUIConfig.ariaConfig;
+
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
@@ -112,7 +115,6 @@ class SecuredField extends AbstractSecuredField {
             extraFieldData: this.config.extraFieldData,
             cardGroupTypes: this.config.cardGroupTypes,
             iframeUIConfig: this.config.iframeUIConfig,
-            pmConfig: this.config.iframeUIConfig, // TODO - only needed until latest version of 3.2.2 is on test
             sfLogAtStart: this.config.sfLogAtStart,
             showWarnings: this.config.showWarnings,
             trimTrailingSeparator: this.config.trimTrailingSeparator,

@@ -152,7 +152,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     ...resolvePlaceholders(this.props.i18n),
                     ...this.props.placeholders
                 },
-                ariaLabels: this.props.ariaLabels
+                ariaConfig: this.props.ariaLabels
             },
             callbacks: {
                 onLoad: this.handleOnLoad,

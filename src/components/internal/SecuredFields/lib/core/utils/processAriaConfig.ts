@@ -7,7 +7,7 @@ import { addErrorTranslationToObject } from '../../../utils';
 export function processAriaConfig(configObj, fieldType) {
     const { i18n } = useCoreContext();
     let iframeTitle: string = IFRAME_TITLE;
-    const ariaFieldConfig = getProp(configObj, `iframeUIConfig.ariaLabels.${fieldType}`);
+    const ariaFieldConfig = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
 
     let ariaFieldConfigWithTranslation;
     // console.log('### SecuredField::init:: initial ariaFieldConfig', ariaFieldConfig);
@@ -31,8 +31,8 @@ export function processAriaConfig(configObj, fieldType) {
     return {
         // Create a new aria config object keeping the old entries and adding a new one for this field
         // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
-        ariaLabels: {
-            ...configObj.iframeUIConfig.ariaLabels,
+        ariaConfig: {
+            ...configObj.iframeUIConfig.ariaConfig,
             [fieldType]: ariaFieldConfigWithTranslation
         },
         // Either default title or one retrieved from the config object
