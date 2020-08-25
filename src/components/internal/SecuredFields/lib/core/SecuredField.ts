@@ -3,7 +3,7 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { ENCRYPTED_SECURITY_CODE, IFRAME_TITLE, CSF_FIELDS_ARRAY } from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
@@ -13,9 +13,8 @@ import AbstractSecuredField, {
     RtnType_postMessageListener,
     RtnType_callbackFn
 } from '../core/AbstractSecuredField';
-import { pick, reject, addErrorTranslationToObject } from '../../utils';
-import getProp from '../../../../../utils/getProp';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { pick, reject } from '../../utils';
+import { processAriaConfig } from './utils/processAriaConfig';
 
 const logPostMsg = false;
 const doLog = false;
@@ -63,37 +62,14 @@ class SecuredField extends AbstractSecuredField {
         console.log('\n### SecuredField::init:: this.fieldType', this.fieldType);
 
         // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
-        const { i18n } = useCoreContext();
-        const iframeTitle: string = IFRAME_TITLE;
-        const ariaFieldConfig = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}`);
-
-        let ariaFieldConfigWithTranslation;
-        console.log('### SecuredField::init:: initial ariaFieldConfig', ariaFieldConfig);
-
-        if (ariaFieldConfig) {
-            // If object already has a title, use it - else set default
-            ariaFieldConfig.iframeTitle = ariaFieldConfig.iframeTitle || iframeTitle;
-
-            // Add error translation
-            ariaFieldConfigWithTranslation = addErrorTranslationToObject(ariaFieldConfig, this.fieldType, i18n, CSF_FIELDS_ARRAY);
-        } else {
-            // Create a new object with the default title
-            const newAriaFieldConfigObj = { iframeTitle };
-            // Add error translation
-            ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, this.fieldType, i18n, CSF_FIELDS_ARRAY);
-        }
-
-        // Create a new aria config object keeping the old entries and adding a new one for this field
-        // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
-        this.config.iframeUIConfig.ariaLabels = {
-            ...this.config.iframeUIConfig.ariaLabels,
-            [this.fieldType]: ariaFieldConfigWithTranslation
-        };
+        const processesAriaConfig = processAriaConfig(this.config, this.fieldType);
+        // Set result back onto config object
+        this.config.iframeUIConfig.ariaLabels = processesAriaConfig.ariaLabels;
 
         console.log('### SecuredField::init:: new ariaLabels=', this.config.iframeUIConfig.ariaLabels);
 
         //
-        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, iframeTitle);
+        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processesAriaConfig.iframeTitle);
 
         // Place the iframe into the holder
         this.holderEl.appendChild(iframeEl);
