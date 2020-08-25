@@ -28,7 +28,6 @@ export interface GooglePayPropsConfiguration {
 export interface GooglePayProps extends UIElementProps {
     environment?: google.payments.api.Environment | string;
     configuration?: GooglePayPropsConfiguration;
-    paymentMethods?: PaymentMethod[];
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#IsReadyToPayRequest
