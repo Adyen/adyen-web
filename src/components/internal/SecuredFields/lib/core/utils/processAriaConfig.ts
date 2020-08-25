@@ -2,14 +2,15 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { CSF_FIELDS_ARRAY, IFRAME_TITLE } from '../../configuration/constants';
 import getProp from '../../../../../../utils/getProp';
 import { addErrorTranslationToObject } from '../../../utils';
+import { AriaConfigObject, ProcessedAriaConfigObject } from '../AbstractSecuredField';
 
 // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
 export function processAriaConfig(configObj, fieldType) {
     const { i18n } = useCoreContext();
     let iframeTitle: string = IFRAME_TITLE;
-    const ariaFieldConfig = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
+    const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
 
-    let ariaFieldConfigWithTranslation;
+    let ariaFieldConfigWithTranslation: AriaConfigObject;
     // console.log('### SecuredField::init:: initial ariaFieldConfig', ariaFieldConfig);
 
     if (ariaFieldConfig) {
@@ -23,7 +24,7 @@ export function processAriaConfig(configObj, fieldType) {
         ariaFieldConfigWithTranslation = addErrorTranslationToObject(ariaFieldConfig, fieldType, i18n, CSF_FIELDS_ARRAY);
     } else {
         // Create a new object with the default title
-        const newAriaFieldConfigObj = { iframeTitle };
+        const newAriaFieldConfigObj: AriaConfigObject = { iframeTitle };
         // Add error translation
         ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
     }
@@ -37,5 +38,5 @@ export function processAriaConfig(configObj, fieldType) {
         },
         // Either default title or one retrieved from the config object
         iframeTitle
-    };
+    } as ProcessedAriaConfigObject;
 }

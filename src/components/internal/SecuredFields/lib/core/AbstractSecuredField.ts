@@ -47,10 +47,15 @@ type AriaConfig = {
     [key: string]: AriaConfigObject; // e.g. encryptedCardNumber: {...}
 };
 
-interface AriaConfigObject {
+export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
     error?: string;
+}
+
+export interface ProcessedAriaConfigObject {
+    ariaConfig: AriaConfig;
+    iframeTitle: string;
 }
 
 abstract class AbstractSecuredField {

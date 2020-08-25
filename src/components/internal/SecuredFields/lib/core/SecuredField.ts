@@ -11,7 +11,8 @@ import AbstractSecuredField, {
     IframeConfigObject,
     RtnType_noParamVoidFn,
     RtnType_postMessageListener,
-    RtnType_callbackFn
+    RtnType_callbackFn,
+    ProcessedAriaConfigObject
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
@@ -62,7 +63,7 @@ class SecuredField extends AbstractSecuredField {
         console.log('\n### SecuredField::init:: this.fieldType', this.fieldType);
 
         // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
-        const processesAriaConfig = processAriaConfig(this.config, this.fieldType);
+        const processesAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType);
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processesAriaConfig.ariaConfig;
 
