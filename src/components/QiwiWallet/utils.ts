@@ -12,7 +12,7 @@ export const formatPrefixName = item => {
         return false;
     }
 
-    const flag = item.name.toUpperCase().replace(/./g, char => (String.fromCodePoint ? String.fromCodePoint(char.charCodeAt(0) + 127397) : ''));
+    const flag = item.code.toUpperCase().replace(/./g, char => (String.fromCodePoint ? String.fromCodePoint(char.charCodeAt(0) + 127397) : ''));
     return {
         ...item,
         name: `${item.name} (${item.id})`,
