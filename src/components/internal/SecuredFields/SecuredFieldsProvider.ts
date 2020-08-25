@@ -1,15 +1,5 @@
 import { Component } from 'preact';
-import {
-    getErrorObject,
-    getFields,
-    getErrorReducer,
-    validFieldsReducer,
-    addTranslationsToObject,
-    getTranslatedErrors,
-    processDefaultAriaObjects,
-    resolvePlaceholders
-} from './utils';
-import { CSF_FIELDS_ARRAY } from './lib/configuration/constants';
+import { getErrorObject, getFields, getErrorReducer, validFieldsReducer, resolvePlaceholders } from './utils';
 import initCSF from './lib';
 import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
@@ -140,6 +130,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             loadingContext = process.env.__SF_ENV__;
         }
 
+        console.log('\n#################################################');
+        console.log('### SecuredFieldsProvider::initializeCSF:: this.props.type', this.props.type);
+        console.log('### SecuredFieldsProvider::initializeCSF:: this.props.ariaLabels', this.props.ariaLabels);
+
         const csfSetupObj: SetupObject = {
             rootNode: root,
             type: this.props.type,
@@ -158,8 +152,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     ...resolvePlaceholders(this.props.i18n),
                     ...this.props.placeholders
                 },
-                // ariaLabels: addTranslationsToObject(this.props.ariaLabels, CSF_FIELDS_ARRAY, 'error', getTranslatedErrors(this.props.i18n))
-                ariaLabels: processDefaultAriaObjects(this.props.ariaLabels, this.props.i18n)
+                ariaLabels: this.props.ariaLabels
             },
             callbacks: {
                 onLoad: this.handleOnLoad,

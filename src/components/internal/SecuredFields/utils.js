@@ -6,8 +6,7 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE,
-    CSF_FIELDS_ARRAY
+    ENCRYPTED_SECURITY_CODE
 } from './lib/configuration/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
@@ -115,14 +114,8 @@ export const addTranslationsToObject = (originalObject, fieldNamesList, propName
             nuObj[key][propName] = !nuObj[key][propName] ? translationsArr[key] : nuObj[key][propName];
             return null;
         });
-    console.log('\n### utils::addTranslationsToObject:: nuObj', nuObj);
-    return nuObj;
-};
 
-// TODO Ensure every secured Field has a corresponding ariaConfig object, creating them if necessary
-//  and ensure these objects have, at minimum, an iframeTitle and (translated) error property
-export const processDefaultAriaObjects = (originalObject, i18n) => {
-    return addTranslationsToObject(originalObject, CSF_FIELDS_ARRAY, 'error', getTranslatedErrors(i18n));
+    return nuObj;
 };
 
 export const resolvePlaceholders = (i18n = {}) => ({
