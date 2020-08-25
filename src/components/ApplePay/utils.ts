@@ -21,5 +21,5 @@ export function resolveSupportedVersion(latestVersion) {
         versions.push(i);
     }
 
-    return versions.find(v => v && ApplePaySession.supportsVersion(v));
+    return versions.find(v => v && window.ApplePaySession && ApplePaySession.supportsVersion(v));
 }

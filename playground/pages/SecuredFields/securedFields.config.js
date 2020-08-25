@@ -25,9 +25,8 @@ export const placeholders = {
 export const ariaLabels = {
     lang: 'en-GB',
     encryptedCardNumber: {
-        label: 'Credit or debit card number field'
-        //        iframeTitle: 'Iframe for credit card number field',
-        //        placeholder: 'enter credit card number',
+        label: 'Credit or debit card number field',
+        iframeTitle: 'Iframe for credit card number field'
         //        error: "credit card number is in error"
     },
     encryptedExpiryDate: {
