@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
-import COUNTRIES from './country';
+import COUNTRIES from './countries';
 
 class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
