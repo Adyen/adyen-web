@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import { getErrorObject, getFields, getErrorReducer, validFieldsReducer, resolvePlaceholders } from './utils';
+import { getErrorObject, getFields, getErrorReducer, validFieldsReducer } from './utils';
 import initCSF from './lib';
 import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
@@ -148,10 +148,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             showWarnings: this.props.showWarnings,
             iframeUIConfig: {
                 sfStyles: this.props.styles,
-                placeholders: {
-                    ...resolvePlaceholders(this.props.i18n),
-                    ...this.props.placeholders
-                },
+                placeholders: this.props.placeholders,
                 ariaConfig: this.props.ariaLabels
             },
             callbacks: {

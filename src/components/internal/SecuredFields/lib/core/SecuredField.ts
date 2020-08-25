@@ -12,10 +12,12 @@ import AbstractSecuredField, {
     RtnType_noParamVoidFn,
     RtnType_postMessageListener,
     RtnType_callbackFn,
-    ProcessedAriaConfigObject
+    ProcessedAriaConfigObject,
+    PlaceholdersObject
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
-import { processAriaConfig } from './utils/processAriaConfig';
+import { processAriaConfig } from './utils/preInit/processAriaConfig';
+import { processPlaceholders } from './utils/preInit/processPlaceholders';
 
 const logPostMsg = false;
 const doLog = false;
@@ -58,19 +60,25 @@ class SecuredField extends AbstractSecuredField {
     }
 
     init(): SecuredField {
-        // const iframeTitle: string = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}.iframeTitle`) || IFRAME_TITLE;
-
         console.log('\n### SecuredField::init:: this.fieldType', this.fieldType);
 
         // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
-        const processesAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType);
+        const processedAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType);
         // Set result back onto config object
-        this.config.iframeUIConfig.ariaConfig = processesAriaConfig.ariaConfig;
+        this.config.iframeUIConfig.ariaConfig = processedAriaConfig.ariaConfig;
 
         console.log('### SecuredField::init:: new ariaConfig=', this.config.iframeUIConfig.ariaConfig);
+        //
+
+        // Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
+        console.log('### SecuredField::init:: initial placeholders', this.config.iframeUIConfig.placeholders);
+        const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType);
+        // Set result back onto config object
+        this.config.iframeUIConfig.placeholders = processedPlaceholders;
+        console.log('### SecuredField::init:: new Placeholders', this.config.iframeUIConfig.placeholders);
 
         //
-        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processesAriaConfig.iframeTitle);
+        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig.iframeTitle);
 
         // Place the iframe into the holder
         this.holderEl.appendChild(iframeEl);

@@ -37,7 +37,7 @@ interface IframeUIConfigObject {
     ariaLabels?: AriaConfig; // TODO - only needed until latest version of SF 3.2.5 is on test
 }
 
-interface PlaceholdersObject {
+export interface PlaceholdersObject {
     [key: string]: string; // e.g. encryptedExpiryDate: 'MM/YY'
 }
 

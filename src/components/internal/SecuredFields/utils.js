@@ -83,9 +83,8 @@ export const getErrorObject = (fieldType, rootNode, state) => ({
 });
 // -- end ROUTINES USED IN SecuredFieldsProvider.showValidation -----------------------
 
-// USED BY SecuredFieldsProvider WHEN CREATING SETUP OBJECT FOR CSF
 /**
- * Used by SecuredFieldsProvider when creating setup object for csf AND also by handler for SecuredFieldComponent aka CustomCardComponent
+ * Used below in addErrorTranslationToObject (called from SecuredField.ts) AND also by handler for SecuredFieldComponent aka CustomCardComponent
  */
 export const getTranslatedErrors = (i18n = {}) => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.invalid'),
@@ -120,7 +119,6 @@ export const resolvePlaceholders = (i18n = {}) => ({
     [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'),
     [ENCRYPTED_PWD_FIELD]: i18n.get && i18n.get('creditCard.encryptedPassword.placeholder')
 });
-// -- end USED BY SecuredFieldsProvider WHEN CREATING SETUP OBJECT FOR CSF
 
 /**
  * Used by SecuredFieldsProviderHandlers
