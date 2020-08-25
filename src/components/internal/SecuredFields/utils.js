@@ -6,7 +6,8 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_PWD_FIELD
 } from './lib/configuration/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
@@ -96,33 +97,28 @@ export const getTranslatedErrors = (i18n = {}) => ({
 });
 
 /**
- * Adds a new, translated, property e.g. "error" to the specified keys within an object, unless it already exists
+ * Adds a new, translated, error property to an object, unless it already exists
  * @param originalObject - object we want to duplicate and enhance
- * @param fieldNamesList - list of keys on the original object that we want to add the new property to
- * @param propName - the property we wanted to add, in translated form, if it doesn't already exist on the object
- * @param translationsArr - an array containing translations stored under the same keys as used in the original object
- * @returns a duplicate of the original object with a new property e.g. "error" added under the specified keys
+ * @param key - fieldID eg. "encryptedCardNumber", id under which we expect a translation to exist
+ * @param i18n - an i18n object to use to get translations
+ * @param fieldNamesList - list of keys (fieldIDs) we want to add translations for
+ * @returns a duplicate of the original object with a new property: "error" whose value is a translation extracted from the i18n object
  */
-export const addTranslationsToObject = (originalObject, fieldNamesList, propName, translationsArr) => {
-    const originalKeys = Object.keys(originalObject);
-
-    const nuObj = { ...originalObject };
-
-    originalKeys
-        .filter(key => fieldNamesList.includes(key))
-        .map(key => {
-            nuObj[key][propName] = !nuObj[key][propName] ? translationsArr[key] : nuObj[key][propName];
-            return null;
-        });
-
-    return nuObj;
+export const addErrorTranslationToObject = (originalObj, key, i18n, fieldNamesList) => {
+    if (fieldNamesList.includes(key)) {
+        const nuObj = { ...originalObj };
+        const translatedErrors = getTranslatedErrors(i18n);
+        nuObj.error = !nuObj.error ? translatedErrors[key] : nuObj.error;
+        return nuObj;
+    }
+    return originalObj;
 };
 
 export const resolvePlaceholders = (i18n = {}) => ({
-    encryptedCardNumber: i18n.get && i18n.get('creditCard.numberField.placeholder'),
-    encryptedExpiryDate: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
-    encryptedSecurityCode: i18n.get && i18n.get('creditCard.cvcField.placeholder'),
-    encryptedPassword: i18n.get && i18n.get('creditCard.encryptedPassword.placeholder')
+    [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
+    [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
+    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'),
+    [ENCRYPTED_PWD_FIELD]: i18n.get && i18n.get('creditCard.encryptedPassword.placeholder')
 });
 // -- end USED BY SecuredFieldsProvider WHEN CREATING SETUP OBJECT FOR CSF
 
