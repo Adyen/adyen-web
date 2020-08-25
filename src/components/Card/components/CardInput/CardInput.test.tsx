@@ -5,6 +5,8 @@ import CardInput from './CardInput';
 jest.mock('../../../internal/SecuredFields/lib');
 const i18n = { get: key => key };
 
+const configuration = { koreanAuthenticationRequired: true };
+
 describe('CardInput', () => {
     test('Renders a normal Card form', () => {
         const wrapper = mount(<CardInput i18n={i18n} />);
@@ -61,38 +63,38 @@ describe('CardInput', () => {
 
 describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is set to true', () => {
     test('Renders a card form with kcp fields since countryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={true} countryCode="kr" />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
 
     test('Renders a card form with kcp fields since countryCode is kr & issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={true} countryCode="kr" />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         wrapper.setState({ issuingCountryCode: 'kr' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
 
     test('Renders a card form with no kcp fields since countryCode is kr but issuingCountryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={true} countryCode="kr" />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         wrapper.setState({ issuingCountryCode: 'us' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('Renders a card form with no kcp fields since countryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={true} />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('Renders a card form with kcp fields since countryCode is not kr but issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={true} />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
         wrapper.setState({ issuingCountryCode: 'kr' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
 
     test('Renders a card form with no kcp fields since countryCode is not kr & issuingCountryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={true} />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
         wrapper.setState({ issuingCountryCode: 'us' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
@@ -101,38 +103,39 @@ describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is 
 
 describe('CardInput never shows KCP fields when koreanAuthenticationRequired is set to false', () => {
     test('countryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} countryCode="kr" />);
+        configuration.koreanAuthenticationRequired = false;
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('countryCode is kr & issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} countryCode="kr" />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         wrapper.setState({ issuingCountryCode: 'kr' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('countryCode is kr but issuingCountryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} countryCode="kr" />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         wrapper.setState({ issuingCountryCode: 'us' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('countryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('countryCode is not kr but issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
         wrapper.setState({ issuingCountryCode: 'kr' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('countryCode is not kr & issuingCountryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} koreanAuthenticationRequired={false} />);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
         wrapper.setState({ issuingCountryCode: 'us' });
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);

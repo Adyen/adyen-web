@@ -89,16 +89,34 @@ class Core {
     private handleCreate(PaymentMethod, options: any = {}): UIElement {
         const isValidClass = PaymentMethod.prototype instanceof UIElement;
 
+        /**
+         * Once we receive a valid class for a Component - create a new instance of it
+         */
         if (isValidClass) {
             const paymentMethodsDetails = !options.supportedShopperInteractions ? this.paymentMethodsResponse.find(PaymentMethod.type) : [];
+
+            // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at top level, in the config object set when a
+            // new AdyenCheckout is initialised.
             const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, options.paymentMethodsConfiguration);
+
+            // Merge:
+            // 1. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
+            // 2. the combined props of checkout & the configuration object defined on this particular component
+            // 3. a paymentMethodsConfiguration object, if defined at top level
             return new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
         }
 
+        /**
+         * Most common use case. Usual initial point of entry to this function.
+         * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
+         */
         if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
             return this.handleCreate(paymentMethods[PaymentMethod], options);
         }
 
+        /**
+         * If we are trying to create a payment method that is in the paymentMethodsResponse & it doesn't require any details - treat it as a redirect
+         */
         if (
             typeof PaymentMethod === 'string' &&
             this.paymentMethodsResponse.has(PaymentMethod) &&

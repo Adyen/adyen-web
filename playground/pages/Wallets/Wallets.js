@@ -32,6 +32,10 @@ getOriginKey()
             .create('paypal', {
                 // merchantId: '5RZKQX2FC48EA', // automatic ?
                 // intent: 'capture', // 'capture' [Default] / 'authorize'
+                //                configuration: {
+                //                    merchantId: '5RZKQX2FC48EA',
+                //                    intent: 'capture'
+                //                },
                 // commit: true, // true [Default] / false
                 // style: {},
 
@@ -62,11 +66,11 @@ getOriginKey()
             countryCode: 'NL',
 
             // Merchant config (required)
-            configuration: {
-                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
-                merchantName: 'Adyen Test merchant', // Name to be displayed
-                merchantIdentifier: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
-            },
+            //            configuration: {
+            //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
+            //                merchantName: 'Adyen Test merchant', // Name to be displayed
+            //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
+            //            },
 
             // Shopper info (optional)
             emailRequired: true,

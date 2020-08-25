@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { PaymentAmount, PaymentMethod } from '../../types';
 import UIElement, { UIElementProps } from '../UIElement';
 import { SUPPORTED_LOCALES } from './config';
 
@@ -94,12 +94,25 @@ interface PayPalCommonProps {
     onClick?: () => void;
 }
 
+export interface PayPalConfig {
+    /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
+     */
+    merchantId: string;
+    /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
+     */
+    intent?: Intent;
+}
+
 export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element: UIElement) => void;
+    paymentMethods?: PaymentMethod[];
+    configuration?: PayPalConfig;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {

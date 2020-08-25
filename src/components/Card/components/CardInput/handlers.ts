@@ -7,7 +7,7 @@ function validateCardInput(): void {
     const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
     const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
-    const koreanAuthentication: boolean = this.props.koreanAuthenticationRequired ? this.state.valid.taxNumber : true;
+    const koreanAuthentication: boolean = this.props.configuration.koreanAuthenticationRequired ? this.state.valid.taxNumber : true;
     const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
 
     this.setState({ isValid }, () => {
