@@ -67,7 +67,6 @@ class SecuredField extends AbstractSecuredField {
         const processedAriaConfig: AriaConfig = processAriaConfig(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
-        console.log('### SecuredField::init:: new ariaConfig=', this.config.iframeUIConfig.ariaConfig);
 
         /**
          * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
@@ -75,7 +74,6 @@ class SecuredField extends AbstractSecuredField {
         const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
-        console.log('### SecuredField::init:: new placeholder=', this.config.iframeUIConfig.placeholders);
 
         /**
          * Create & reference iframe and add load listener

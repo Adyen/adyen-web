@@ -130,10 +130,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             loadingContext = process.env.__SF_ENV__;
         }
 
-        console.log('\n#################################################');
-        console.log('### SecuredFieldsProvider::initializeCSF:: this.props.type', this.props.type);
-        console.log('### SecuredFieldsProvider::initializeCSF:: this.props.ariaLabels', this.props.ariaLabels);
-
         const csfSetupObj: SetupObject = {
             rootNode: root,
             type: this.props.type,
