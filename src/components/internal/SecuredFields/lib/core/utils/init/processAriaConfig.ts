@@ -1,12 +1,10 @@
-import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import { CSF_FIELDS_ARRAY, IFRAME_TITLE } from '../../../configuration/constants';
 import getProp from '../../../../../../../utils/getProp';
 import { addErrorTranslationToObject } from '../../../../utils';
 import { AriaConfigObject, ProcessedAriaConfigObject } from '../../AbstractSecuredField';
 
 // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
-export function processAriaConfig(configObj, fieldType) {
-    const { i18n } = useCoreContext();
+export function processAriaConfig(configObj, fieldType, i18n) {
     let iframeTitle: string = IFRAME_TITLE;
     const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
 

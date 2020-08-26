@@ -59,13 +59,6 @@ getOriginKey()
                     visa: {
                         values: [1, 2, 3, 4]
                     }
-                },
-                ariaLabels: {
-                    encryptedCardNumber: {
-                        label: 'Credit or debit card number field',
-                        //                        iframeTitle: 'bibble',
-                        error: 'something is wrong'
-                    }
                 }
             })
             .mount('.card-field');

@@ -18,13 +18,14 @@ import AbstractSecuredField, {
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
 import { processPlaceholders } from './utils/init/processPlaceholders';
+import Language from '../../../../../language/Language';
 
 const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
     // --
-    constructor(pSetupObj: SFSetupObject) {
+    constructor(pSetupObj: SFSetupObject, i18n: Language) {
         super();
 
         // List of props from setup object not needed for iframe config
@@ -56,23 +57,29 @@ class SecuredField extends AbstractSecuredField {
             logger.log('\n');
         }
 
-        return this.init();
+        return this.init(i18n);
     }
 
-    init(): SecuredField {
-        // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
-        const processedAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType);
+    init(i18n: Language): SecuredField {
+        /**
+         * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
+         */
+        const processedAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processedAriaConfig.ariaConfig;
         console.log('### SecuredField::init:: new ariaConfig=', this.config.iframeUIConfig.ariaConfig);
 
-        // Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
-        const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType);
+        /**
+         * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
+         */
+        const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
         console.log('### SecuredField::init:: new placeholder=', this.config.iframeUIConfig.placeholders);
 
-        // Create iframe
+        /**
+         * Create & reference iframe and add load listener
+         */
         const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig.iframeTitle);
 
         // Place the iframe into the holder
