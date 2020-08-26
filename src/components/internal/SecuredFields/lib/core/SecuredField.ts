@@ -16,8 +16,8 @@ import AbstractSecuredField, {
     PlaceholdersObject
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
-import { processAriaConfig } from './utils/preInit/processAriaConfig';
-import { processPlaceholders } from './utils/preInit/processPlaceholders';
+import { processAriaConfig } from './utils/init/processAriaConfig';
+import { processPlaceholders } from './utils/init/processPlaceholders';
 
 const logPostMsg = false;
 const doLog = false;
@@ -60,24 +60,19 @@ class SecuredField extends AbstractSecuredField {
     }
 
     init(): SecuredField {
-        console.log('\n### SecuredField::init:: this.fieldType', this.fieldType);
-
         // Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
         const processedAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType);
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processedAriaConfig.ariaConfig;
-
         console.log('### SecuredField::init:: new ariaConfig=', this.config.iframeUIConfig.ariaConfig);
-        //
 
         // Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
-        console.log('### SecuredField::init:: initial placeholders', this.config.iframeUIConfig.placeholders);
         const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType);
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
-        console.log('### SecuredField::init:: new Placeholders', this.config.iframeUIConfig.placeholders);
+        console.log('### SecuredField::init:: new placeholder=', this.config.iframeUIConfig.placeholders);
 
-        //
+        // Create iframe
         const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig.iframeTitle);
 
         // Place the iframe into the holder
