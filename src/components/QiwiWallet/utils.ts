@@ -8,7 +8,7 @@ export const formatPrefixName = item => {
         throw new Error('No item passed');
     }
 
-    if (!item.name || !item.id) {
+    if (!item.code || !item.id) {
         return false;
     }
 
