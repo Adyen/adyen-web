@@ -5,7 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { CardElementData, CardElementProps } from './types';
-import handleBinLookUp from './handleBinLookUp';
+import triggerBinLookUp from './triggerBinLookUp';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -21,7 +21,13 @@ export class CardElement extends UIElement<CardElementProps> {
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type,
-            countryCode: props.countryCode ? props.countryCode.toLowerCase() : null
+            countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
+            // Required for transition period (until configuration object becomes the norm)
+            // - if merchant has defined value directly in props, use this instead
+            configuration: {
+                ...props.configuration,
+                ...(props.koreanAuthenticationRequired !== undefined && { koreanAuthenticationRequired: props.koreanAuthenticationRequired })
+            }
         };
     }
 
@@ -72,7 +78,7 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
-    public onBinValue = handleBinLookUp.bind(this);
+    public onBinValue = triggerBinLookUp.bind(this);
 
     get isValid() {
         return !!this.state.isValid;

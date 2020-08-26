@@ -1,7 +1,7 @@
 import fetchJSONData from '../../utils/fetch-json-data';
 import { CbObjOnError } from '../internal/SecuredFields/lib/types';
 
-export default function handleBinLookUp(callbackObj) {
+export default function triggerBinLookUp(callbackObj) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
     if (this.props.doBinLookup === false) {
         if (this.props.onBinValue) this.props.onBinValue(callbackObj);

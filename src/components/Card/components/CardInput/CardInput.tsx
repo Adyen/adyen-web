@@ -220,7 +220,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     />
                                 )}
 
-                                {this.props.koreanAuthenticationRequired && isKorea && (
+                                {this.props.configuration.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication
                                         onFocusField={setFocusOn}
                                         focusedElement={focusedElement}

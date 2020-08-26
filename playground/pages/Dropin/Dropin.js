@@ -41,6 +41,11 @@ const initDropin = () => {
                     hasHolderName: true,
                     holderNameRequired: true
                     // holderName: 'J. Smith',
+                    //                    koreanAuthenticationRequired: false,
+                    //                    configuration: {
+                    //                        koreanAuthenticationRequired: false
+                    //                    },
+                    //                    countryCode: 'kr'
                 },
                 boletobancario_santander: {
                     data: {
@@ -57,14 +62,21 @@ const initDropin = () => {
                 },
                 paywithgoogle: {
                     countryCode: 'NL',
-                    configuration: {
-                        gatewayMerchantId: 'TestMerchantCheckout', // name of MerchantAccount
-                        merchantName: 'Adyen Test merchant' // Name to be displayed
-                    },
+                    //                    configuration: {
+                    //                        gatewayMerchantId: 'TestMerchantCheckout', // name of MerchantAccount
+                    //                        merchantName: 'Adyen Test merchant' // Name to be displayed
+                    //                    },
                     onAuthorized: console.info
                 },
                 paypal: {
-                    // merchantId: '5RZKQX2FC48EA', // automatic ?
+                    // USE either separate merchantId & intent props...
+                    //                    merchantId: '5RZKQX2FC48EA',
+                    //                    intent: 'capture',
+                    //                    // ...OR, preferably, wrap them in a configuration object
+                    //                    configuration: {
+                    //                        merchantId: '5RZKQX2FC48EAxxx',
+                    //                        intent: 'sale'
+                    //                    },
                     // style: {},
                     // Events
                     onError: (error, component) => {
