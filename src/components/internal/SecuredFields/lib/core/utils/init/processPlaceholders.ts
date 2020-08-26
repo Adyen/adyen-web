@@ -2,7 +2,9 @@ import getProp from '../../../../../../../utils/getProp';
 import { resolvePlaceholders } from '../../../../utils';
 import { PlaceholdersObject } from '../../AbstractSecuredField';
 
-// Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
+/**
+ * Checks if the merchant has defined an placeholder config object and if not create one with a value from the relevant translation file
+ */
 export function processPlaceholders(configObj, fieldType, i18n) {
     let placeholderFieldValue: string = getProp(configObj, `iframeUIConfig.placeholders.${fieldType}`);
 

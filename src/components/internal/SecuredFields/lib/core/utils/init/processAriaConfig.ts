@@ -1,15 +1,20 @@
 import { CSF_FIELDS_ARRAY, IFRAME_TITLE } from '../../../configuration/constants';
 import getProp from '../../../../../../../utils/getProp';
 import { addErrorTranslationToObject } from '../../../../utils';
-import { AriaConfigObject, ProcessedAriaConfigObject } from '../../AbstractSecuredField';
+import { AriaConfigObject, AriaConfig } from '../../AbstractSecuredField';
 
-// Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
+/**
+ * Checks if the merchant has defined an ariaConfig object and if so enhances it with a iframeTitle and error property, if they don't already exist
+ * If the ariaConfig object doesn't exist then creates one with the default properties
+ * In both cases where the error property doesn't exist we extract the correct translation for the field and use that
+ */
 export function processAriaConfig(configObj, fieldType, i18n) {
-    let iframeTitle: string = IFRAME_TITLE;
-    const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
-
+    const iframeTitle: string = IFRAME_TITLE;
     let newAriaFieldConfigObj: AriaConfigObject;
     let ariaFieldConfigWithTranslation: AriaConfigObject;
+
+    // Check for a pre-existing, merchant defined object
+    const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
 
     if (ariaFieldConfig) {
         newAriaFieldConfigObj = {
@@ -17,9 +22,6 @@ export function processAriaConfig(configObj, fieldType, i18n) {
             // If object already has a title, use it - else set default
             iframeTitle: ariaFieldConfig.iframeTitle || iframeTitle
         };
-
-        // Set iframeTitle to value from config object
-        iframeTitle = newAriaFieldConfigObj.iframeTitle;
 
         // Add error translation
         ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
@@ -30,14 +32,10 @@ export function processAriaConfig(configObj, fieldType, i18n) {
         ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
     }
 
+    // Create a new aria config object keeping the old entries and adding a new one for this field
+    // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
     return {
-        // Create a new aria config object keeping the old entries and adding a new one for this field
-        // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
-        ariaConfig: {
-            ...configObj.iframeUIConfig.ariaConfig,
-            [fieldType]: ariaFieldConfigWithTranslation
-        },
-        // Either default title or one retrieved from the config object
-        iframeTitle
-    } as ProcessedAriaConfigObject;
+        ...configObj.iframeUIConfig.ariaConfig,
+        [fieldType]: ariaFieldConfigWithTranslation
+    } as AriaConfig;
 }

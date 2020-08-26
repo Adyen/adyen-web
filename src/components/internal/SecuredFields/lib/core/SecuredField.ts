@@ -12,7 +12,7 @@ import AbstractSecuredField, {
     RtnType_noParamVoidFn,
     RtnType_postMessageListener,
     RtnType_callbackFn,
-    ProcessedAriaConfigObject,
+    AriaConfig,
     PlaceholdersObject
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
@@ -64,9 +64,9 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
          */
-        const processedAriaConfig: ProcessedAriaConfigObject = processAriaConfig(this.config, this.fieldType, i18n);
+        const processedAriaConfig: AriaConfig = processAriaConfig(this.config, this.fieldType, i18n);
         // Set result back onto config object
-        this.config.iframeUIConfig.ariaConfig = processedAriaConfig.ariaConfig;
+        this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
         console.log('### SecuredField::init:: new ariaConfig=', this.config.iframeUIConfig.ariaConfig);
 
         /**
@@ -80,7 +80,7 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Create & reference iframe and add load listener
          */
-        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig.iframeTitle);
+        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig[this.fieldType].iframeTitle);
 
         // Place the iframe into the holder
         this.holderEl.appendChild(iframeEl);

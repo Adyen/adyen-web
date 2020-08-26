@@ -41,7 +41,7 @@ export interface PlaceholdersObject {
     [key: string]: string; // e.g. encryptedExpiryDate: 'MM/YY'
 }
 
-type AriaConfig = {
+export type AriaConfig = {
     lang?: string;
 } & {
     [key: string]: AriaConfigObject; // e.g. encryptedCardNumber: {...}
@@ -51,11 +51,6 @@ export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
     error?: string;
-}
-
-export interface ProcessedAriaConfigObject {
-    ariaConfig: AriaConfig;
-    iframeTitle: string;
 }
 
 abstract class AbstractSecuredField {
