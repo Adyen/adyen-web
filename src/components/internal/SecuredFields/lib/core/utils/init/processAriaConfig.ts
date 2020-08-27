@@ -11,7 +11,6 @@ import { AriaConfigObject, AriaConfig } from '../../AbstractSecuredField';
 export function processAriaConfig(configObj, fieldType, i18n) {
     const iframeTitle: string = IFRAME_TITLE;
     let newAriaFieldConfigObj: AriaConfigObject;
-    let ariaFieldConfigWithTranslation: AriaConfigObject;
 
     // Check for a pre-existing, merchant defined object
     const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
@@ -22,15 +21,13 @@ export function processAriaConfig(configObj, fieldType, i18n) {
             // If object already has a title, use it - else set default
             iframeTitle: ariaFieldConfig.iframeTitle || iframeTitle
         };
-
-        // Add error translation
-        ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
     } else {
         // Create a new object with the default title
         newAriaFieldConfigObj = { iframeTitle };
-        // Add error translation
-        ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
     }
+
+    // Add error translation
+    const ariaFieldConfigWithTranslation = addErrorTranslationToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
 
     // Create a new aria config object keeping the old entries and adding a new one for this field
     // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
