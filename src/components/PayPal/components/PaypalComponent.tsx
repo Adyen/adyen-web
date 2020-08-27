@@ -5,6 +5,7 @@ import Spinner from '../../internal/Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { getPaypalUrl } from '../utils';
 import { PayPalComponentProps } from '../types';
+import Script from '../../../utils/Script';
 
 export default function PaypalComponent(props: PayPalComponentProps) {
     const { i18n } = useCoreContext();
@@ -24,12 +25,13 @@ export default function PaypalComponent(props: PayPalComponentProps) {
     };
 
     useEffect(() => {
-        const script = document.createElement('script');
-        const paypalUrl = getPaypalUrl(props);
-        script.async = true;
-        script.onload = handlePaypalLoad;
-        script.src = paypalUrl;
-        document.body.appendChild(script);
+        const src = getPaypalUrl(props);
+        const script = new Script(src);
+        script.load().then(handlePaypalLoad);
+
+        return () => {
+            script.remove();
+        };
     }, []);
 
     if (status === 'pending') {
