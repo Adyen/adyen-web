@@ -27,7 +27,7 @@ export const ariaLabels = {
     encryptedCardNumber: {
         label: 'Credit or debit card number field',
         iframeTitle: 'Iframe for credit card number field'
-        //        error: "credit card number is in error"
+        //        error: 'credit card number is in error'
     },
     encryptedExpiryDate: {
         label: 'Credit or debit card expiration date field'

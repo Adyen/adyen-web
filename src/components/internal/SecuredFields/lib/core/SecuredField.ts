@@ -3,7 +3,7 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { ENCRYPTED_SECURITY_CODE, IFRAME_TITLE } from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
@@ -11,17 +11,21 @@ import AbstractSecuredField, {
     IframeConfigObject,
     RtnType_noParamVoidFn,
     RtnType_postMessageListener,
-    RtnType_callbackFn
+    RtnType_callbackFn,
+    AriaConfig,
+    PlaceholdersObject
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
-import getProp from '../../../../../utils/getProp';
+import { processAriaConfig } from './utils/init/processAriaConfig';
+import { processPlaceholders } from './utils/init/processPlaceholders';
+import Language from '../../../../../language/Language';
 
 const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
     // --
-    constructor(pSetupObj: SFSetupObject) {
+    constructor(pSetupObj: SFSetupObject, i18n: Language) {
         super();
 
         // List of props from setup object not needed for iframe config
@@ -53,13 +57,28 @@ class SecuredField extends AbstractSecuredField {
             logger.log('\n');
         }
 
-        return this.init();
+        return this.init(i18n);
     }
 
-    init(): SecuredField {
-        const iframeTitle: string = getProp(this.config, `iframeUIConfig.ariaLabels.${this.fieldType}.iframeTitle`) || IFRAME_TITLE;
+    init(i18n: Language): SecuredField {
+        /**
+         * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
+         */
+        const processedAriaConfig: AriaConfig = processAriaConfig(this.config, this.fieldType, i18n);
+        // Set result back onto config object
+        this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
 
-        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, iframeTitle);
+        /**
+         * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
+         */
+        const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
+        // Set result back onto config object
+        this.config.iframeUIConfig.placeholders = processedPlaceholders;
+
+        /**
+         * Create & reference iframe and add load listener
+         */
+        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig[this.fieldType].iframeTitle);
 
         // Place the iframe into the holder
         this.holderEl.appendChild(iframeEl);
@@ -93,6 +112,9 @@ class SecuredField extends AbstractSecuredField {
         // Add general listener for 'message' EVENT - the event that 'powers' postMessage
         on(window, 'message', this.postMessageListener, false);
 
+        // TODO - only needed until latest version of 3.2.5 is on test
+        this.config.iframeUIConfig.ariaLabels = this.config.iframeUIConfig.ariaConfig;
+
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
@@ -102,7 +124,6 @@ class SecuredField extends AbstractSecuredField {
             extraFieldData: this.config.extraFieldData,
             cardGroupTypes: this.config.cardGroupTypes,
             iframeUIConfig: this.config.iframeUIConfig,
-            pmConfig: this.config.iframeUIConfig, // TODO - only needed until latest version of 3.2.2 is on test
             sfLogAtStart: this.config.sfLogAtStart,
             showWarnings: this.config.showWarnings,
             trimTrailingSeparator: this.config.trimTrailingSeparator,

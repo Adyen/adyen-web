@@ -1,3 +1,5 @@
+import Language from '../../../../language/Language';
+
 declare global {
     interface Window {
         _b$dl: boolean;
@@ -33,6 +35,7 @@ export interface SetupObject extends CSFCommonProps {
     clientKey: string;
     rootNode: string | HTMLElement;
     callbacks?: object;
+    i18n?: Language;
 }
 
 export interface ConfigObject extends CSFCommonProps {
