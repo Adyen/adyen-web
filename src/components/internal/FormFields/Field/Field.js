@@ -118,7 +118,11 @@ class Field extends Component {
                         )}
                     </div>
 
-                    {errorMessage && errorMessage.length && <span className={'adyen-checkout__error-text'}>{errorMessage}</span>}
+                    {errorMessage && errorMessage.length && (
+                        <span className={'adyen-checkout__error-text'} aria-live="polite">
+                            {errorMessage}
+                        </span>
+                    )}
                 </label>
             </div>
         );

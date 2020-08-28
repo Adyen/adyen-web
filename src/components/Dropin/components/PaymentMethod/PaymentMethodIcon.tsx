@@ -9,12 +9,14 @@ const PaymentMethodIcon = ({ src, name, disabled = false }) => {
             className={classNames('adyen-checkout__payment-method__image__wrapper', styles['adyen-checkout__payment-method__image__wrapper'], {
                 'adyen-checkout__payment-method__image__wrapper--disabled': !!disabled
             })}
+            aria-hidden="true"
         >
             <Img
                 className={`adyen-checkout__payment-method__image ${styles['adyen-checkout__payment-method__image']}`}
                 src={src}
                 alt={name}
                 aria-label={name}
+                focusable="false"
             />
         </span>
     );
