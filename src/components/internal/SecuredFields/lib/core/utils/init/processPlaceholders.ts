@@ -1,4 +1,3 @@
-import getProp from '../../../../../../../utils/getProp';
 import { resolvePlaceholders } from '../../../../utils';
 import { PlaceholdersObject } from '../../AbstractSecuredField';
 
@@ -6,10 +5,11 @@ import { PlaceholdersObject } from '../../AbstractSecuredField';
  * Checks if the merchant has defined an placeholder config object and if not create one with a value from the relevant translation file
  */
 export function processPlaceholders(configObj, fieldType, i18n) {
-    let placeholderFieldValue: string = getProp(configObj, `iframeUIConfig.placeholders.${fieldType}`);
+    // Use the merchant defined value - even if an empty string or null
+    let placeholderFieldValue: string = configObj.iframeUIConfig.placeholders ? configObj.iframeUIConfig.placeholders[fieldType] : undefined;
 
-    // If no value set by merchant - get translated one
-    if (!placeholderFieldValue) {
+    // Only if the value is truly "undefined" then get a translated one
+    if (typeof placeholderFieldValue === 'undefined') {
         placeholderFieldValue = resolvePlaceholders(i18n)[fieldType];
     }
 
