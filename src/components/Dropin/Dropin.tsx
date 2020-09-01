@@ -59,18 +59,20 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         this.activePaymentMethod
             .startPayment()
-            .then(() => {
-                const { data, isValid } = this.activePaymentMethod;
-
-                if (!isValid) {
-                    this.showValidation();
-                    return false;
-                }
-
-                return this.props.onSubmit({ data, isValid }, this);
-            })
+            .then(this.handleSubmit)
             .catch(error => this.props.onError(error));
     }
+
+    protected handleSubmit = () => {
+        const { data, isValid } = this.activePaymentMethod;
+
+        if (!isValid) {
+            this.showValidation();
+            return false;
+        }
+
+        return this.props.onSubmit({ data, isValid }, this);
+    };
 
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
@@ -97,7 +99,7 @@ class DropinElement extends UIElement<DropinElementProps> {
                 <DropinComponent
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.submit}
+                    onSubmit={this.handleSubmit}
                     ref={dropinRef => {
                         this.dropinRef = dropinRef;
                     }}
