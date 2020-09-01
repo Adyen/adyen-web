@@ -64,6 +64,9 @@ const setupObj = {
     holderEl: nodeHolder
 };
 
+/**
+ * AriaConfig
+ */
 describe('SecuredField handling ariaConfig object - should set defaults', () => {
     //
     test('Card number field with no defined ariaConfig should get default title & translated error props', () => {
@@ -123,6 +126,9 @@ describe('SecuredField handling ariaConfig object - should set defaults only whe
     });
 });
 
+/**
+ * Placeholders
+ */
 describe('SecuredField handling placeholders config object - should set defaults', () => {
     //
     test('Card number field with no defined placeholders config should get default value from translation field', () => {
@@ -144,6 +150,50 @@ describe('SecuredField handling placeholders config object - should set defaults
 
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toEqual(TRANSLATED_CVC_PLACEHOLDER);
+    });
+});
+
+describe('SecuredField handling undefined placeholders config object - should set defaults', () => {
+    //
+    test('Card number field with no defined placeholders config should get default value from translation field', () => {
+        setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual(TRANSLATED_NUMBER_PLACEHOLDER);
+    });
+
+    test('Date field with no defined placeholders config should get default value from translation field', () => {
+        setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toEqual(TRANSLATED_DATE_PLACEHOLDER);
+    });
+
+    test('CVC field with no defined placeholders config should get default value from translation field', () => {
+        setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toEqual(TRANSLATED_CVC_PLACEHOLDER);
+    });
+});
+
+describe('SecuredField handling placeholders config object that is set to null or {} - should set defaults', () => {
+    //
+    test('Card number field with a placeholders config set to null should get default value from translation field', () => {
+        setupObj.iframeUIConfig.placeholders = null;
+
+        setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual(TRANSLATED_NUMBER_PLACEHOLDER);
+    });
+
+    test('Date field with a placeholders config set to an empty object should get default value from translation field', () => {
+        setupObj.iframeUIConfig.placeholders = {};
+        setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toEqual(TRANSLATED_DATE_PLACEHOLDER);
     });
 });
 
@@ -169,5 +219,21 @@ describe('SecuredField handling placeholders config object - defined placeholder
 
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toEqual(mockPlaceholders[ENCRYPTED_SECURITY_CODE]);
+    });
+
+    // Setting empty placeholder
+    test('Card number field with defined placeholders set to an empty string should keep that value', () => {
+        setupObj.iframeUIConfig.placeholders.encryptedCardNumber = '';
+        setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('');
+    });
+
+    test('Card number field with defined placeholders set to null should keep that value', () => {
+        setupObj.iframeUIConfig.placeholders.encryptedCardNumber = null;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual(null);
     });
 });
