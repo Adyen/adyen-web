@@ -3,9 +3,10 @@ import UIElement from '../UIElement';
 import ApplePayButton from './components/ApplePayButton';
 import ApplePayService from './ApplePayService';
 import { preparePaymentRequest } from './payment-request';
-import { normalizeAmount } from './utils';
+import { normalizeAmount, resolveSupportedVersion } from './utils';
 import defaultProps from './defaultProps';
 import { ApplePayElementProps, ApplePayElementData } from './types';
+const latestSupportedVersion = 10;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
@@ -22,11 +23,12 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     protected formatProps(props) {
         const amount = normalizeAmount(props);
-
+        const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         return {
             onAuthorized: resolve => resolve(),
             onValidateMerchant: (resolve, reject) => reject('onValidateMerchant event not implemented'),
             ...props,
+            version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
             amount,
             onCancel: event => props.onError(event)

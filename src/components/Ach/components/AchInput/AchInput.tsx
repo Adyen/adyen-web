@@ -3,10 +3,10 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import AchSecuredFields from './components/AchSecuredFields';
 import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
-import Address from '../../../../components/internal/Address';
+import Address from '../../../internal/Address';
 import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../../components/internal/FormFields/Field';
-import LoadingWrapper from '../../../../components/internal/LoadingWrapper/LoadingWrapper';
+import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import useCoreContext from '../../../../core/Context/useCoreContext';
@@ -82,6 +82,12 @@ function AchInput(props) {
     // Refs
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
+
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
+    };
 
     this.showValidation = () => {
         // Validate SecuredFields
@@ -170,7 +176,7 @@ function AchInput(props) {
                     </div>
                 )}
             />
-            {props.showPayButton && props.payButton({ status: 'ready', label: i18n.get('confirmPurchase') })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
     );
 }

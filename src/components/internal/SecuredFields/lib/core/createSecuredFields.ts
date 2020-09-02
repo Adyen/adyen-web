@@ -181,7 +181,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         holderEl: pItem
     };
 
-    const sf: SecuredField = new SecuredField(setupObj)
+    const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)
         .onIframeLoaded((): void => {
             // Count
             this.state.iframeCount += 1;

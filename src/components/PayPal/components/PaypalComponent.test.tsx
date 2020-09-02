@@ -6,7 +6,7 @@ describe('PaypalComponent', () => {
     const getWrapper = (props?: object) => mount(<PaypalComponent {...props} />);
 
     test('Renders a loading spinner', async () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper({ configuration: {} });
         expect(wrapper.find('.adyen-checkout__spinner')).toHaveLength(1);
     });
 });

@@ -7,40 +7,41 @@ import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { PersonalDetailsProps, PersonalDetailsStructure } from './PersonalDetailsTypes';
+import { PersonalDetailsProps, PersonalDetailsStateError, PersonalDetailsStateValid, ValidationResult } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
+import { PersonalDetailsSchema } from '../../../types';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'telephoneNumber', 'shopperEmail'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
-    const { label = '', namePrefix, requiredFields, visibility } = props;
+    const { label = '', namePrefix, requiredFields, visibility, validator } = props;
     const { i18n } = useCoreContext();
-    const validator = new Validator(personalDetailsValidationRules);
-    const [data, setData] = useState<PersonalDetailsStructure>(props.data);
-    const [errors, setErrors] = useState<PersonalDetailsStructure>({});
-    const [valid, setValid] = useState<PersonalDetailsStructure>({});
+    const [data, setData] = useState<PersonalDetailsSchema>(props.data);
+    const [errors, setErrors] = useState<PersonalDetailsStateError>({});
+    const [valid, setValid] = useState<PersonalDetailsStateValid>({});
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
 
     const eventHandler = (mode: string): Function => (e: Event): void => {
         const { name, value } = e.target as HTMLInputElement;
         const key = name.split(`${namePrefix}.`).pop();
-        const isValid = validator.validate(key, mode)(value);
+        const { isValid, errorMessage }: ValidationResult = validator.validate(key, mode)(value);
 
-        setData(data => ({ ...data, [key]: value }));
-        setValid(valid => ({ ...valid, [key]: isValid }));
-        setErrors(errors => ({ ...errors, [key]: !isValid }));
+        setData(prevData => ({ ...prevData, [key]: value }));
+        setValid(prevValid => ({ ...prevValid, [key]: isValid }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: !isValid && errorMessage }));
     };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
     useEffect(() => {
-        const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]));
+        const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]).isValid);
         props.onChange({ data, isValid });
     }, [data, valid, errors]);
 
     this.showValidation = () => {
         const errorsReducer = (acc, field) => {
-            acc[field] = !validator.validate(field, 'blur')(data[field]);
+            const { isValid, errorMessage }: ValidationResult = validator.validate(field, 'blur')(data[field]);
+            acc[field] = !isValid && errorMessage;
             return acc;
         };
 
@@ -99,7 +100,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('dateOfBirth')}
                     classNameModifiers={['col-50', 'lastName']}
-                    errorMessage={!!errors.dateOfBirth}
+                    errorMessage={errors.dateOfBirth && i18n.get(errors.dateOfBirth.toString())}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                 >
                     {renderFormField('date', {
@@ -113,7 +114,11 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             )}
 
             {requiredFields.includes('telephoneNumber') && (
-                <Field label={i18n.get('telephoneNumber')} classNameModifiers={['telephoneNumber']} errorMessage={!!errors.telephoneNumber}>
+                <Field
+                    label={i18n.get('telephoneNumber')}
+                    classNameModifiers={['telephoneNumber']}
+                    errorMessage={errors.telephoneNumber && i18n.get(errors.telephoneNumber.toString())}
+                >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),
                         value: data.telephoneNumber,
@@ -143,5 +148,6 @@ PersonalDetails.defaultProps = {
     data: {},
     onChange: () => {},
     visibility: 'editable',
-    requiredFields: personalDetailsSchema
+    requiredFields: personalDetailsSchema,
+    validator: new Validator(personalDetailsValidationRules)
 };

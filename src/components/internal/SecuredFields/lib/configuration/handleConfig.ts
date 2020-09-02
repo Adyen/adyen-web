@@ -59,7 +59,9 @@ export function handleConfig(): void {
 
     // During the transition period accept clientKey & originKey, giving clientKey preference
     const accessKey: string = this.props.clientKey ? this.props.clientKey : this.props.originKey;
-    this.config.iframeSrc = `${this.config.loadingContext}securedfields/${accessKey}/${SF_VERSION}/securedFields.html?type=${sfBundleType}`;
+    // Add a hash of the origin to ensure urls are different across domains
+    const d = btoa(window.location.origin);
+    this.config.iframeSrc = `${this.config.loadingContext}securedfields/${accessKey}/${SF_VERSION}/securedFields.html?type=${sfBundleType}&d=${d}`;
 
     // TODO###### FOR QUICK LOCAL TESTING of sf
     if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {

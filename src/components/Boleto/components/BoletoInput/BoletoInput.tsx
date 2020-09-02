@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { renderFormField } from '../../../../components/internal/FormFields';
 import Field from '../../../../components/internal/FormFields/Field';
-import Address from '../../../../components/internal/Address';
+import Address from '../../../internal/Address';
 import Validator from '../../../../utils/Validator';
 import { boletoValidationRules } from './validate';
 import SendCopyToEmail from './SendCopyToEmail';
@@ -65,6 +65,12 @@ function BoletoInput(props) {
     const handleAddress = address => {
         setData({ ...data, billingAddress: address.data });
         setValid({ ...valid, billingAddress: address.isValid });
+    };
+
+    const [status, setStatus] = useState('ready');
+
+    this.setStatus = newStatus => {
+        setStatus(newStatus);
     };
 
     this.showValidation = () => {
@@ -166,7 +172,7 @@ function BoletoInput(props) {
                 />
             )}
 
-            {props.showPayButton && props.payButton({ label: i18n.get('boletobancario.btnLabel'), classNameModifiers: buttonModifiers })}
+            {props.showPayButton && props.payButton({ status, label: i18n.get('boletobancario.btnLabel'), classNameModifiers: buttonModifiers })}
         </div>
     );
 }

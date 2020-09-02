@@ -7,7 +7,7 @@ import { AnalyticsProps } from './types';
 class Analytics {
     private static defaultProps = {
         enabled: true,
-        telemetry: false,
+        telemetry: true,
         conversion: false,
         conversionId: null
     };
@@ -20,8 +20,9 @@ class Analytics {
 
     constructor({ loadingContext, locale, originKey, clientKey, analytics }: AnalyticsProps) {
         this.props = { ...Analytics.defaultProps, ...analytics };
+        const accessKey = clientKey || originKey;
         this.logEvent = logEvent({ loadingContext, locale });
-        this.logTelemetry = postTelemetry({ loadingContext, locale, originKey, clientKey });
+        this.logTelemetry = postTelemetry({ loadingContext, locale, accessKey });
 
         const { conversion, enabled } = this.props;
 
@@ -31,7 +32,7 @@ class Analytics {
                 this.queue.run(this.conversionId);
             } else {
                 // If no conversionId is provided, fetch a new one
-                collectId({ loadingContext, originKey, clientKey })
+                collectId({ loadingContext, accessKey })
                     .then(conversionId => {
                         this.conversionId = conversionId;
                         this.queue.run(this.conversionId);
@@ -48,7 +49,7 @@ class Analytics {
 
         if (enabled === true) {
             if (telemetry === true) {
-                const telemetryTask = conversionId => this.logTelemetry({ ...event, conversionId });
+                const telemetryTask = conversionId => this.logTelemetry({ ...event, conversionId }).catch(() => {});
                 this.queue.add(telemetryTask);
 
                 // Not waiting for conversionId

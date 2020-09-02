@@ -6,6 +6,7 @@ import { checkPaymentStatus } from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';
+const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component {
     constructor(props) {
@@ -30,6 +31,7 @@ class QRLoader extends Component {
     }
 
     static defaultProps = {
+        delay: 2000,
         countdownTime: 15,
         onError: () => {},
         onComplete: () => {},
@@ -111,7 +113,12 @@ class QRLoader extends Component {
     onError(status) {
         clearInterval(this.interval);
         this.setState({ expired: true, loading: false });
-        this.props.onError(status);
+        this.props.onComplete({
+            data: {
+                details: { payload: status.props.payload },
+                paymentData: this.props.paymentData
+            }
+        });
         return status;
     }
 
@@ -136,12 +143,17 @@ class QRLoader extends Component {
             });
     }
 
-    render({ amount = {}, url, brandLogo, classNameModifiers = [], countdownTime, i18n, qrCodeImage, type }, { expired, completed, loading }) {
+    render(
+        { amount = {}, url, brandLogo, classNameModifiers = [], countdownTime, i18n, instructions, loadingContext, type },
+        { expired, completed, loading }
+    ) {
+        const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
+
         const finalState = (image, message) => (
             <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
                 <img
                     className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                    src={getImageUrl({ loadingContext: this.props.loadingContext, imageFolder: 'components/' })(image)}
+                    src={getImageUrl({ loadingContext, imageFolder: 'components/' })(image)}
                     alt={i18n.get(message)}
                 />
                 <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{i18n.get(message)}</div>
@@ -194,6 +206,8 @@ class QRLoader extends Component {
                     <Countdown minutesFromNow={countdownTime} onTick={this.onTick} onCompleted={this.onTimeUp} />
                     &nbsp;{timeToPayString[1]}
                 </div>
+
+                {instructions && <div className="adyen-checkout__qr-loader__instructions">{i18n.get(instructions)}</div>}
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">

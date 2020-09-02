@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement';
-import { Address, BrowserInfo } from '../../types';
+import { AddressSchema, BrowserInfo } from '../../types';
 
 export interface CardElementProps extends UIElementProps {
     type?: string;
@@ -13,7 +13,12 @@ export interface CardElementProps extends UIElementProps {
     hideCVC?: boolean;
     hasHolderName?: boolean;
     holderNameRequired?: boolean;
+    configuration?: CardConfiguration;
     [key: string]: any;
+}
+
+export interface CardConfiguration {
+    koreanAuthenticationRequired?: boolean;
 }
 
 interface CardPaymentMethodData {
@@ -30,7 +35,7 @@ interface CardPaymentMethodData {
 
 export interface CardElementData {
     paymentMethod: CardPaymentMethodData;
-    billingAddress?: Address;
+    billingAddress?: AddressSchema;
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;

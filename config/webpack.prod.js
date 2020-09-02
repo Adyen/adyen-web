@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
@@ -32,7 +32,7 @@ module.exports = merge(webpackConfig, {
     bail: true,
     devtool: shouldUseSourceMap ? 'source-map' : false,
     entry: {
-        AdyenCheckout: [path.join(__dirname, 'public-path.js'), path.join(__dirname, '../src/index.ts')]
+        AdyenCheckout: path.join(__dirname, '../src/index.ts')
     },
     output: {
         filename: `${FILENAME}.js`,

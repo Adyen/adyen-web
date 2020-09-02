@@ -61,7 +61,7 @@ export function initiatePaymentRequest({ configuration, ...props }: GooglePayPro
         apiVersionMinor: config.API_VERSION_MINOR,
         transactionInfo: getTransactionInfo(props.amount.currency, props.amount.value, props.totalPriceStatus, props.countryCode),
         merchantInfo: {
-            merchantId: configuration.merchantIdentifier,
+            merchantId: configuration.merchantId,
             merchantName: configuration.merchantName
         },
         allowedPaymentMethods: [

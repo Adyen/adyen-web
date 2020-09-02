@@ -1,5 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'entercash'
-});
+class EntercashElement extends IssuerListContainer {
+    public static type = 'entercash';
+}
+
+export default EntercashElement;

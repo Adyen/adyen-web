@@ -8,52 +8,47 @@ import CountryField from './components/CountryField';
 import { renderFormField } from '../FormFields';
 import { addressValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
+import { getInitialData } from './utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { COUNTRIES_WITH_STATES_DATASET } from './constants';
-import { AddressObject, AddressProps } from './types';
-
-export type RtnType_ParamVoidFn = (e) => void;
-
-const addressSchema = ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'];
+import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET } from './constants';
+import { AddressProps, AddressStateError, AddressStateValid } from './types';
+import { AddressSchema } from '../../../types';
 
 export default function Address(props: AddressProps) {
-    const { i18n } = useCoreContext();
     const { label = '', requiredFields, visibility } = props;
     const validator = new Validator(addressValidationRules);
-    const addressReducer = (acc, cur: string) => {
-        acc[cur] = props.data[cur] || (requiredFields.includes(cur) ? '' : 'N/A');
-        return acc;
-    };
-    const [data, setData] = useState(addressSchema.reduce(addressReducer, {}));
-    const [errors, setErrors] = useState(({} as any) as AddressObject);
-    const [valid, setValid] = useState({});
 
-    const handleChange: RtnType_ParamVoidFn = (e: Event): void => {
+    const { i18n } = useCoreContext();
+    const [data, setData] = useState<AddressSchema>(getInitialData(props.data, requiredFields));
+    const [errors, setErrors] = useState<AddressStateError>({});
+    const [valid, setValid] = useState<AddressStateValid>({});
+
+    const handleChange = (e: Event): void => {
         const { name, value } = e.target as HTMLInputElement;
         const isValid = validator.validate(name, 'blur')(value);
 
-        setData(data => ({ ...data, [name]: value }));
-        setValid(valid => ({ ...valid, [name]: isValid }));
-        setErrors(errors => ({ ...errors, [name]: !isValid }));
+        setData(prevData => ({ ...prevData, [name]: value }));
+        setValid(prevValid => ({ ...prevValid, [name]: isValid }));
+        setErrors(prevErrors => ({ ...prevErrors, [name]: !isValid }));
     };
 
-    const handleStateChange: RtnType_ParamVoidFn = (e: Event): void => {
+    const handleStateChange = (e: Event): void => {
         const field = e.currentTarget as HTMLInputElement;
         const value = field.getAttribute('data-value');
 
-        setData(data => ({ ...data, stateOrProvince: value }));
-        setValid(valid => ({ ...valid, stateOrProvince: !!value }));
-        setErrors(errors => ({ ...errors, stateOrProvince: !value }));
+        setData(prevData => ({ ...prevData, stateOrProvince: value }));
+        setValid(prevValid => ({ ...prevValid, stateOrProvince: !!value }));
+        setErrors(prevErrors => ({ ...prevErrors, stateOrProvince: !value }));
     };
 
-    const handleCountryChange: RtnType_ParamVoidFn = (e: Event): void => {
+    const handleCountryChange = (e: Event): void => {
         const field = e.currentTarget as HTMLInputElement;
         const value = field.getAttribute('data-value');
         const stateOrProvince = COUNTRIES_WITH_STATES_DATASET.includes(value) ? '' : 'N/A';
 
-        setData(data => ({ ...data, stateOrProvince, country: value }));
-        setValid(valid => ({ ...valid, country: !!value }));
-        setErrors(errors => ({ ...errors, country: !value }));
+        setData(prevData => ({ ...prevData, stateOrProvince, country: value }));
+        setValid(prevValid => ({ ...prevValid, country: !!value }));
+        setErrors(prevErrors => ({ ...prevErrors, country: !value }));
     };
 
     useEffect((): void => {
@@ -62,7 +57,7 @@ export default function Address(props: AddressProps) {
         const addressShouldHaveState = stateFieldIsRequired && countryHasStatesDataset;
         const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : 'N/A');
 
-        setData(data => ({ ...data, stateOrProvince }));
+        setData(prevData => ({ ...prevData, stateOrProvince }));
     }, []);
 
     useEffect((): void => {
@@ -164,6 +159,6 @@ Address.defaultProps = {
     data: {},
     onChange: () => {},
     visibility: 'editable',
-    requiredFields: addressSchema,
+    requiredFields: ADDRESS_SCHEMA,
     countryCode: null
 };

@@ -1,6 +1,6 @@
 /* global expect, describe, jest, beforeEach */
 
-import { falsy, notFalsy, generateRandomNumber, contains, addPropToObject } from './commonUtils';
+import { falsy, notFalsy, generateRandomNumber } from './commonUtils';
 
 beforeEach(() => {
     console.error = jest.fn(error => {

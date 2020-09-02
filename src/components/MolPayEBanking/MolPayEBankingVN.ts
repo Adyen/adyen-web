@@ -1,5 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'molpay_ebanking_VN'
-});
+class MolPayEbankingVNElement extends IssuerListContainer {
+    public static type = 'molpay_ebanking_VN';
+}
+
+export default MolPayEbankingVNElement;

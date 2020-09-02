@@ -28,33 +28,33 @@ export interface IframeConfigObject extends SFInternalConfig {
     fieldType: string;
     cvcRequired: boolean;
     numKey: number;
-    pmConfig?: any; // TODO - only needed until latest version of 3.2.2 is on test
 }
 
 interface IframeUIConfigObject {
     sfStyles?: StylesObject;
     placeholders?: PlaceholdersObject;
-    ariaLabels?: AriaLabels;
+    ariaConfig?: AriaConfig;
+    ariaLabels?: AriaConfig; // TODO - only needed until latest version of SF 3.2.5 is on test
 }
 
-interface PlaceholdersObject {
+export interface PlaceholdersObject {
     [key: string]: string; // e.g. encryptedExpiryDate: 'MM/YY'
 }
 
-type AriaLabels = {
+export type AriaConfig = {
     lang?: string;
 } & {
-    [key: string]: AriaLabelsObject; // e.g. encryptedCardNumber: {...}
+    [key: string]: AriaConfigObject; // e.g. encryptedCardNumber: {...}
 };
 
-interface AriaLabelsObject {
+export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
     error?: string;
 }
 
 abstract class AbstractSecuredField {
-    protected config: SFInternalConfig;
+    public config: SFInternalConfig; // could be protected but needs to be public for tests to run
     protected fieldType: string;
     protected cvcRequired: boolean;
     protected iframeSrc: string;

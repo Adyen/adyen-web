@@ -1,5 +1,7 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'molpay_ebanking_fpx_MY'
-});
+class MolPayEBankingMYElement extends IssuerListContainer {
+    public static type = 'molpay_ebanking_fpx_MY';
+}
+
+export default MolPayEBankingMYElement;

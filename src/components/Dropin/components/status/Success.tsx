@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { getImageUrl } from '../../../../utils/get-image';
-import Img from '../../../../components/internal/Img';
+import Img from '../../../internal/Img';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
 const Success = ({ message }) => {

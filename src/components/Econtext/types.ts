@@ -8,6 +8,7 @@ export interface EcontextVoucherResultProps {
     maskedTelephoneNumber?: string;
     instructionsUrl?: string;
     ref?: any;
+    collectionInstitutionNumber?: string;
 }
 
 export interface EcontextInputSchema {

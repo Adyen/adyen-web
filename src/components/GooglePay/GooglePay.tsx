@@ -12,11 +12,19 @@ class GooglePay extends UIElement<GooglePayProps> {
 
     /**
      * Formats the component data input
+     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
      */
     formatProps(props) {
+        const { configuration } = props;
+        const { merchantIdentifier } = configuration;
+
         return {
             ...props,
-            showButton: props.showPayButton === true
+            showButton: props.showPayButton === true,
+            configuration: {
+                ...configuration,
+                ...(merchantIdentifier && { merchantId: merchantIdentifier })
+            }
         };
     }
 

@@ -159,20 +159,20 @@ window.econtextInput = checkout
             telephoneNumber: '06210987654321'
         }
     })
-    .mount('#econtext-input-container');
+    .mount('#econtext-stores-input-container');
 
 // Econtext Result
 window.econtextResult = checkout
     .createFromAction({
+        paymentMethodType: 'econtext_stores',
         expiresAt: '2019-07-19T23:24:00',
         initialAmount: {
             currency: 'JPY',
             value: 1000
         },
-        instructionsUrl:
-            'https://checkoutshopper-test.adyen.com/checkoutshopper/voucherInstructions.shtml?txVariant=econtext_stores&shopperLocale=en-US',
+        instructionsUrl:'https://www.econtext.jp/support/cvs/8brand.html',
+        maskedTelephoneNumber: '98******10',    
         merchantName: 'Adyen Demo Shop',
-        paymentMethodType: 'econtext_stores',
         reference: '458535',
         totalAmount: {
             currency: 'JPY',
@@ -180,8 +180,42 @@ window.econtextResult = checkout
         },
         type: 'voucher'
     })
-    .mount('#econtext-result-container');
+    .mount('#econtext-stores-result-container');
 
+// Econtext ATM Input
+window.econtextInput = checkout
+    .create('econtext_atm', {
+        data: {
+            firstName: 'Joe',
+            lastName: 'Smith',
+            shopperEmail: 'test@email.com',
+            telephoneNumber: '06210987654321'
+        }
+    })
+    .mount('#econtext-atm-input-container');
+
+// Econtext ATM Result
+window.econtextResult = checkout
+    .createFromAction({
+        paymentMethodType: 'econtext_atm',
+        collectionInstitutionNumber: '58091',
+        expiresAt: '2019-07-19T23:24:00',
+        initialAmount: {
+            currency: 'JPY',
+            value: 1000
+        },
+        instructionsUrl:'https://www.econtext.jp/support/atm/index.html',
+        maskedTelephoneNumber: '98******10',    
+        merchantName: 'Adyen Demo Shop',
+        reference: '458535',
+        totalAmount: {
+            currency: 'JPY',
+            value: 1000
+        },
+        type: 'voucher'
+    })
+    .mount('#econtext-atm-result-container');
+    
 // Econtext 7 11 input
 window.econtext711Input = checkout.create('econtext_seven_eleven').mount('#econtext-seven-eleven-input-container');
 

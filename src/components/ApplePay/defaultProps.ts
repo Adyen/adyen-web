@@ -1,6 +1,4 @@
 const defaultProps = {
-    version: 3,
-
     // Transaction Information
     amount: { currency: 'USD', value: 0 },
 

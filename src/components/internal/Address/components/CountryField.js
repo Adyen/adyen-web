@@ -14,7 +14,7 @@ export default function CountryField(props) {
 
     useLayoutEffect(() => {
         fetchJSONData({
-            path: `datasets/countries/${useCoreContext().locale}.json`,
+            path: `datasets/countries/${i18n.locale}.json`,
             loadingContext
         })
             .then(response => {

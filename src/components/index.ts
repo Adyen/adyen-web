@@ -38,6 +38,7 @@ import Ach from './Ach';
 import MBWay from './MBWay';
 import Blik from './Blik';
 import uuid from '../utils/uuid';
+import Affirm from './Affirm';
 
 /**
  * Maps each component with a Component element.
@@ -126,6 +127,7 @@ const componentsMap = {
     giftcard: Giftcard,
     vipps: Vipps,
     swish: Swish,
+    affirm: Affirm,
     default: null
 };
 

@@ -1,6 +1,6 @@
 import AdyenCheckout from '../../../src';
 import { getPaymentMethods, getOriginKey } from '../../services';
-import { handleChange, handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -19,7 +19,6 @@ getOriginKey()
             locale: shopperLocale,
             environment: 'test',
             showPayButton: true,
-            onChange: handleChange,
             onSubmit: handleSubmit,
             onAdditionalDetails: handleAdditionalDetails,
             onError: handleError,
@@ -36,10 +35,10 @@ getOriginKey()
             //            }
         });
 
-        // OneClick Card
+        // Stored Card
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            const oneClickData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
-            window.oneClickCard = checkout.create('card', oneClickData).mount('.oneclick-field');
+            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
+            window.storedCard = checkout.create('card', storedCardData).mount('.storedcard-field');
         }
 
         // Credit card with installments
@@ -111,8 +110,13 @@ getOriginKey()
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                koreanAuthenticationRequired: true
-                // countryCode: 'KR'
+                // USE either separate koreanAuthenticationRequired prop...
+                koreanAuthenticationRequired: true,
+                // ...OR, preferably, wrap it in a configuration object
+                configuration: {
+                    koreanAuthenticationRequired: true
+                },
+                countryCode: 'KR'
             })
             .mount('.card-kcp-field');
     });

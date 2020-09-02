@@ -1,7 +1,15 @@
-import withIssuerList from '../helpers/withIssuerList';
+import IssuerListContainer from '../helpers/IssuerListContainer';
 
-export default withIssuerList({
-    type: 'billdesk_wallet',
-    showImage: false,
-    placeholder: 'issuerList.wallet.placeholder'
-});
+class BillDeskWalletElement extends IssuerListContainer {
+    public static type = 'billdesk_wallet';
+
+    formatProps(props) {
+        return {
+            ...super.formatProps(props),
+            showImage: false,
+            placeholder: 'issuerList.wallet.placeholder'
+        };
+    }
+}
+
+export default BillDeskWalletElement;

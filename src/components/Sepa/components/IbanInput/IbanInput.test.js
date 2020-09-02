@@ -63,4 +63,36 @@ describe('IbanInput', () => {
             expect(wrapper.find('input[name="sepa.ownerName"]').prop('placeholder')).toBe('test');
         });
     });
+
+    describe('Send values from outside', () => {
+
+        test('Set ibanNumber', () => {
+            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789'} });
+            setTimeout(()=>{
+                expect(wrapper.find('input[name="sepa.ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
+            });
+        });
+
+        test('Set ibanNumber formatted', () => {
+            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13 TEST 0123 4567 89'} });
+            setTimeout(()=>{
+                expect(wrapper.find('input[name="sepa.ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
+            });
+        });
+
+        test('Set ownerName', () => {
+            const wrapper = createWrapper({ data: { 'sepa.ownerName': 'Hello World'} });
+            setTimeout(()=>{
+                expect(wrapper.find('input[name="sepa.ownerName"]').text()).toBe('Hello World');
+            });
+        });
+
+        test('Set ibanNumber and ownerName', () => {
+            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789', 'sepa.ownerName': 'Hello World'} });
+            setTimeout(()=>{
+                expect(wrapper.find('input[name="sepa.ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
+                expect(wrapper.find('input[name="sepa.ownerName"]').text()).toBe('Hello World');
+            });
+        });
+    });
 });

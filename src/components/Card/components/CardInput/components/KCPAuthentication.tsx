@@ -1,35 +1,13 @@
-import { useState, useEffect, useMemo } from 'preact/hooks';
-import classNames from 'classnames';
 import { h } from 'preact';
+import { useState, useEffect, useMemo } from 'preact/hooks';
+import { renderFormField } from '../../../../../components/internal/FormFields';
+import classNames from 'classnames';
 import Field from '../../../../../components/internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
-import { renderFormField } from '../../../../../components/internal/FormFields';
+import { KCPErrors, KCPProps, RtnType_ParamBooleanFn, RtnType_ParamVoidFn } from './types';
 import styles from '../CardInput.module.scss';
 
-export type RtnType_ParamBooleanFn = (tn) => boolean;
-export type RtnType_ParamVoidFn = (e) => void;
-
-interface KCPErrors {
-    taxNumber: boolean | string;
-}
-
-interface PwdState {
-    data: string;
-    valid: boolean;
-    errors: boolean | string;
-}
-
-interface KCPProps {
-    encryptedPasswordState: PwdState;
-    filled?: boolean;
-    focusedElement;
-    onFocusField: (str: string) => {};
-    onChange: (data: object, valid: object) => {};
-    ref: any;
-    taxNumber?: string;
-}
-
-function KCPAuthentication(props: KCPProps) {
+export default function KCPAuthentication(props: KCPProps) {
     const { i18n } = useCoreContext();
 
     const isTaxNumberValid: RtnType_ParamBooleanFn = (taxNumber = ''): boolean => taxNumber.length === 6 || taxNumber.length === 10;
@@ -38,7 +16,7 @@ function KCPAuthentication(props: KCPProps) {
     const [errors, setErrors] = useState(({} as any) as KCPErrors);
 
     const taxNumberLabel = useMemo((): string => {
-        if (data.taxNumber && data.taxNumber.length > 6) return i18n.get('creditCard.taxNumber.labelAlt');
+        if (data.taxNumber?.length > 6) return i18n.get('creditCard.taxNumber.labelAlt');
 
         return i18n.get('creditCard.taxNumber.label');
     }, [data.taxNumber]);
@@ -103,5 +81,3 @@ function KCPAuthentication(props: KCPProps) {
         </div>
     );
 }
-
-export default KCPAuthentication;

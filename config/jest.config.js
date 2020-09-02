@@ -11,7 +11,7 @@ module.exports = {
         '\\.scss$': '<rootDir>/config/testMocks/styleMock.js',
         '~(.*)$': '<rootDir>/src$1'
     },
-    verbose: true,
+    verbose: false,
     globals: {
         NODE_ENV: 'test'
     },

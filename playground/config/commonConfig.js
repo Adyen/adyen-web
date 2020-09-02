@@ -1,4 +1,4 @@
-import getCurrency from './currencies';
+import getCurrency from './getCurrency';
 import { getSearchParameters } from '../utils';
 
 const DEFAULT_LOCALE = 'en-US';
