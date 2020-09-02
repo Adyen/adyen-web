@@ -170,6 +170,7 @@ export interface CbObjOnError {
     type: string;
     rootNode?: HTMLElement;
     binLookupBrands?: string[];
+    code: string;
 }
 
 export interface CbObjOnFocus {
@@ -197,6 +198,7 @@ export interface SFFeedbackObj {
     numKey: number;
     brand?: string;
     hideCVC?: boolean;
+    code?: string;
     cvcText?: string;
     cvcRequired?: boolean;
     maxLength?: number;
