@@ -13,7 +13,7 @@ export default ({ path, loadingContext = FALLBACK_CONTEXT, method = 'GET', conte
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
         body: JSON.stringify(dataObj)
-    };
+    } as RequestInit;
 
     const url = `${loadingContext}${path}`;
 
