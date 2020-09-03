@@ -40,6 +40,16 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
         })
         .mount('.afterpay-field');
 
+    // AFTERPAY B2B
+    window.afterpayb2b = checkout
+        .create('afterpay_b2b', {
+            countryCode: 'NL', // 'NL' / 'BE'
+            visibility: {
+                companyDetails: 'editable' // editable [default] / readOnly / hidden
+            }
+        })
+        .mount('.afterpayb2b-field');
+
     // AFFIRM
     window.affirm = checkout
         .create('affirm', {
