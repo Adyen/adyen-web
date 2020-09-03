@@ -1,7 +1,8 @@
 import fetchJSONData from '../../utils/fetch-json-data';
 import { DeliverySpecifications, PayloadJSON, Region, SupportedLocale } from './types';
 import {
-    AMAZONPAY_SIGNATURE_ENDPOINT,
+    AMAZONPAY_SIGN_STRING_ENDPOINT,
+    AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT,
     AMAZONPAY_URL_EU,
     AMAZONPAY_URL_US,
     FALLBACK_LOCALE_EU,
@@ -39,22 +40,39 @@ export function getSupportedLocales(region: Region): SupportedLocale[] {
 }
 
 /**
- * Makes a call to the Amazon Signature endpoint, passing the PayloadJSON string.
+ * Makes a call to the Sign String endpoint to the PayloadJSON string.
  * @param loadingContext - Loading context to be used in the call
- * @param payloadJSON - Object to be signed
  * @param accessKey - Access key to be used as a public token
+ * @param payloadJSON - Object to be signed
  * @returns A promise containing the response of the call
  */
-export function getAmazonSignature(loadingContext: string, payloadJSON: PayloadJSON, accessKey: string): Promise<any> {
+export function getAmazonSignature(loadingContext: string, accessKey: string, payloadJSON: PayloadJSON): Promise<any> {
     const options = {
         loadingContext,
         method: 'POST',
-        path: `${AMAZONPAY_SIGNATURE_ENDPOINT}?token=${accessKey}`
+        path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?token=${accessKey}`
     };
 
     const request = { stringToSign: JSON.stringify(payloadJSON) };
 
     return fetchJSONData(options, request);
+}
+
+/**
+ * Makes a call to the Update Checkout Session endpoint to create an order.
+ * @param loadingContext - Loading context to be used in the call
+ * @param accessKey - Access key to be used as a public token
+ * @param data -
+ * @returns A promise containing the response of the call
+ */
+export function updateAmazonCheckoutSession(loadingContext: string, accessKey: string, data): Promise<any> {
+    const options = {
+        loadingContext,
+        method: 'POST',
+        path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?token=${accessKey}`
+    };
+
+    return fetchJSONData(options, data);
 }
 
 /**

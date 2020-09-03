@@ -1,4 +1,5 @@
-const AMAZONPAY_SIGNATURE_ENDPOINT = 'v1/AmazonPayUtility/signString';
+const AMAZONPAY_SIGN_STRING_ENDPOINT = 'v1/AmazonPayUtility/signString';
+const AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT = 'v1/AmazonPayUtility/updateCheckoutSession';
 
 const AMAZONPAY_URL_EU = 'https://static-eu.payments-amazon.com/checkout.js';
 const AMAZONPAY_URL_US = 'https://static-na.payments-amazon.com/checkout.js';
@@ -10,7 +11,8 @@ const SUPPORTED_LOCALES_EU = ['en_GB', 'de_DE', 'fr_FR', 'it_IT', 'es_ES'] as co
 const SUPPORTED_LOCALES_US = ['en_US'] as const;
 
 export {
-    AMAZONPAY_SIGNATURE_ENDPOINT,
+    AMAZONPAY_SIGN_STRING_ENDPOINT,
+    AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT,
     AMAZONPAY_URL_EU,
     AMAZONPAY_URL_US,
     FALLBACK_LOCALE_EU,
