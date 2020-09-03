@@ -26,48 +26,51 @@ getOriginKey()
             showPayButton: true
         });
 
+        // AMAZON PAY
         // Demo only
-        const amazonCheckoutSessionId = new URLSearchParams(window.location.search).get('amazonCheckoutSessionId');
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
+        const amazonPayToken = urlSearchParams.get('amazonPayToken');
 
-        // AmazonPay
-        window.amazonpay = checkout
-            .create('amazonpay', {
-                // AmazonPay button flow
-                ...(!amazonCheckoutSessionId && {
+        // Initial state
+        if (!amazonCheckoutSessionId && !amazonPayToken) {
+            window.amazonpay = checkout.create('amazonpay', {
+                currency: 'GBP',
+                environment: 'test',
+                merchantId: 'A3SKIS53IXYBBU',
+                publicKeyId: 'AG2E5E2GPCSBMNTT65SH7RXX',
+
+                /**
+                 * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
+                 * which will create and return the signature.
+                 * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
+                 */
+                returnUrl: 'http://localhost:3020/wallets',
+                storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
+            });
+        } else if (amazonCheckoutSessionId) {
+            window.amazonpay = checkout.create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                returnUrl: 'http://localhost:3020/wallets',
+                amount: {
                     currency: 'GBP',
-                    environment: 'test',
-                    merchantId: 'A3SKIS53IXYBBU',
-                    publicKeyId: 'AG2E5E2GPCSBMNTT65SH7RXX',
+                    value: 4700
+                }
+            });
+        } else if (amazonPayToken) {
+            window.amazonpay = checkout.create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonPayToken attached in the return URL.
+                 * A payments request is done with the amazonPayToken.
+                 */
+                amazonPayToken
+            });
+        }
 
-                    /**
-                     * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
-                     * which will create and return the signature.
-                     * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
-                     */
-                    returnUrl: 'http://localhost:3020/wallets',
-                    storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
-                }),
-
-                // Order button flow
-                ...(amazonCheckoutSessionId && {
-                    showChangePaymentDetailsButton: true,
-                    /**
-                     * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-                     */
-                    amazonCheckoutSessionId,
-
-                    /**
-                     * A payments request is done with the checkoutSessionId.
-                     * The Checkout API will use checkoutSessionId to get the amazonPayToken and complete the payment.
-                     */
-                    onSubmit: handleSubmit
-                })
-
-                // Post checkout flow (sign out)
-                // showSignOutButton: true,
-                // onSignOut: console.log
-            })
-            .mount('.amazonpay-field');
+        window.amazonpay.mount('.amazonpay-field');
 
         // PAYPAL
         window.paypalButtons = checkout
