@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
@@ -10,6 +11,7 @@ import './OpenInvoice.scss';
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
+    const showCompanyDetails = visibility.companyDetails !== 'hidden';
     const showPersonalDetails = visibility.personalDetails !== 'hidden';
     const showBillingAddress = visibility.billingAddress !== 'hidden';
     const showDeliveryAddress = visibility.deliveryAddress !== 'hidden';
@@ -31,13 +33,15 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const deliveryAddressRef = useRef(null);
 
     useEffect(() => {
+        const companyDetailsValid = showCompanyDetails ? !!valid.companyDetails : true;
         const personalDetailsValid = showPersonalDetails ? !!valid.personalDetails : true;
         const billingAddressValid = showBillingAddress ? !!valid.billingAddress : true;
         const includeDeliveryAddress = showDeliveryAddress && !!data.separateDeliveryAddress;
         const deliveryAddressValid = includeDeliveryAddress ? !!valid.deliveryAddress : true;
         const consentCheckboxValid = props.consentCheckbox ? !!valid.consentCheckbox : true;
-        const isValid = personalDetailsValid && billingAddressValid && deliveryAddressValid && consentCheckboxValid;
+        const isValid = companyDetailsValid && personalDetailsValid && billingAddressValid && deliveryAddressValid && consentCheckboxValid;
         const newData = {
+            ...(showCompanyDetails && { companyDetails: data.companyDetails }),
             ...(showPersonalDetails && { personalDetails: data.personalDetails }),
             ...(showBillingAddress && { billingAddress: data.billingAddress }),
             ...(includeDeliveryAddress && { deliveryAddress: data.deliveryAddress })
@@ -74,6 +78,16 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
     return (
         <div className="adyen-checkout__open-invoice">
+            {showCompanyDetails && (
+                <CompanyDetails
+                    data={data.companyDetails}
+                    label="companyDetails"
+                    onChange={handleFieldset('companyDetails')}
+                    ref={personalDetailsRef}
+                    visibility={visibility.companyDetails}
+                />
+            )}
+
             {showPersonalDetails && (
                 <PersonalDetails
                     data={data.personalDetails}
