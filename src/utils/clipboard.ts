@@ -1,10 +1,10 @@
 export function copyToClipboard(value) {
-    function createInput(text) {
+    function createInput(text): HTMLInputElement {
         const textArea = document.createElement('textArea');
-        textArea.readOnly = true;
-        textArea.value = text;
+        (textArea as HTMLInputElement).readOnly = true;
+        (textArea as HTMLInputElement).value = text;
         document.body.appendChild(textArea);
-        return textArea;
+        return textArea as HTMLInputElement;
     }
 
     const copyInput = createInput(value);
