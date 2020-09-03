@@ -7,8 +7,7 @@ import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_PWD_FIELD,
-    ERROR_CODES
+    ENCRYPTED_PWD_FIELD
 } from './lib/configuration/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
@@ -78,14 +77,13 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
  */
 export const getErrorObject = (fieldType, rootNode, state) => {
     const error = getProp(state, `errors.${fieldType}`) || DEFAULT_ERROR;
-    console.log('### utils::getErrorObject:: error =', error);
+    console.log('\n### utils::getErrorObject:: error =', error);
 
     return {
         rootNode,
         fieldType,
         error,
-        type: 'card',
-        code: ERROR_CODES[error]
+        type: 'card'
     };
 };
 // -- end ROUTINES USED IN SecuredFieldsProvider.showValidation -----------------------

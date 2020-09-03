@@ -1,5 +1,5 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER, getError } from './lib/configuration/constants';
 import {
     CbObjOnError,
     CbObjOnFocus,
@@ -121,11 +121,15 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     if (this.state.hasUnsupportedCard && cbObj.fieldType === ENCRYPTED_CARD_NUMBER && hasUnsupportedCard === null) {
         return false;
     }
+    console.log('### SecuredFieldsProviderHandlers::handleOnError:: cbObj', cbObj);
+    console.log('### SecuredFieldsProviderHandlers::handleOnError:: error explained:', getError(cbObj.error));
 
     this.setState(prevState => ({
         errors: { ...prevState.errors, [cbObj.fieldType]: cbObj.error || false },
         hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
     }));
+
+    cbObj.errorText = this.props.i18n.get(cbObj.error);
 
     this.props.onError(cbObj);
 

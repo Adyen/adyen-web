@@ -33,7 +33,7 @@ export interface CardNumberProps {
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
-    error: boolean;
+    error: string;
     filled: boolean;
     focused: boolean;
     isValid: boolean;

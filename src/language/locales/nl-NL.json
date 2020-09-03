@@ -134,5 +134,11 @@
     "blik.invalid": "Voer 6 cijfers in",
     "blik.code": "6-cijferige code",
     "blik.help": "Haal de code op in uw bankapp.",
-    "swish.pendingMessage": "Nadat u hebt gescand, kan de status maximaal 10 minuten in behandeling zijn. Als u binnen deze periode opnieuw probeert te betalen, kunnen er meerdere keren kosten in rekening worden gebracht."
+    "swish.pendingMessage": "Nadat u hebt gescand, kan de status maximaal 10 minuten in behandeling zijn. Als u binnen deze periode opnieuw probeert te betalen, kunnen er meerdere keren kosten in rekening worden gebracht.",
+    "error.ve.gen.01": "Veld is onvolledig",
+    "error.ve.cc-num.02": "Ongeldig kaartnummer",
+    "error.ve.cc-num.03": "Het getypte kaartnummer komt niet overeen met het kaarttype",
+    "error.ve.cc-dat.04": "Kaart te oud",
+    "error.ve.cc-dat.05": "Datum te ver in de toekomst",
+    "error.ve.cc-num.06": "Niet-ondersteunde kaart ingevoerd"
 }

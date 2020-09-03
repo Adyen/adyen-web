@@ -13,15 +13,14 @@ export const processErrors = (
 ): CbObjOnError => {
     if (!Object.prototype.hasOwnProperty.call(pFeedbackObj, 'error')) return null;
 
-    console.log('### processErrors::processErrors:: !!!');
+    console.log('\n### processErrors::processErrors:: !!!');
 
     const fieldType: string = pFeedbackObj.fieldType;
-    const code: string = pFeedbackObj.code;
 
     const field: SecuredField = securedField;
 
     // Initialise error callback object
-    const dataObj: CbObjOnError = { rootNode, fieldType, error: null, type: null, code };
+    const dataObj: CbObjOnError = { rootNode, fieldType, error: null, type: null };
 
     const isError: boolean = pFeedbackObj.error !== '';
 
@@ -30,7 +29,7 @@ export const processErrors = (
     // if the field wasn't already in error
     if (!isError && !field.hasError) return null;
 
-    dataObj.error = isError ? pFeedbackObj.error : '';
+    dataObj.error = isError ? pFeedbackObj.code : '';
     dataObj.type = type;
 
     // Set error state & type on securedField instance

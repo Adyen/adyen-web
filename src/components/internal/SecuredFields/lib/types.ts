@@ -170,7 +170,7 @@ export interface CbObjOnError {
     type: string;
     rootNode?: HTMLElement;
     binLookupBrands?: string[];
-    code: string;
+    errorText?: string;
 }
 
 export interface CbObjOnFocus {

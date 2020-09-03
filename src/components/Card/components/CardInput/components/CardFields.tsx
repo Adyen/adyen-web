@@ -25,7 +25,8 @@ export default function CardFields({
         <div className="adyen-checkout__card__form">
             <CardNumber
                 brand={brand}
-                error={!!errors.encryptedCardNumber}
+                // error={!!errors.encryptedCardNumber}
+                error={errors.encryptedCardNumber}
                 focused={focusedElement === 'encryptedCardNumber'}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.numberField.title')}

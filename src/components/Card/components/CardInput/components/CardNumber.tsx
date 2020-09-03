@@ -18,7 +18,8 @@ export default function CardNumber(props: CardNumberProps) {
             filled={props.filled}
             classNameModifiers={['cardNumber']}
             onFocusField={() => onFocusField('encryptedCardNumber')}
-            errorMessage={error && i18n.get('creditCard.numberField.invalid')}
+            // errorMessage={error && i18n.get('creditCard.numberField.invalid')}
+            errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dualBrandingElements={dualBrandingElements}
         >

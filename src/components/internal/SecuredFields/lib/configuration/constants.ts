@@ -33,21 +33,40 @@ export const ERROR_MSG_INCOMPLETE_FIELD = 'incomplete field';
 export const ERROR_MSG_LUHN_CHECK_FAILED = 'luhn check failed';
 export const ERROR_MSG_UNSUPPORTED_CARD_ENTERED = 'Unsupported card entered';
 
-export const DEFAULT_ERROR = ERROR_MSG_INCOMPLETE_FIELD;
-
 /**
- * @example
- * co:sf:ve:06 =
- * [Where the error is detected (components)]
- * :[What the error applies to (securedFields)]
- * :[what sort of error (validation error)]
- * :[error type (unsupported card entered)]
+ * Error Codes
+ * @example error.ve.cc-num.02
+ * =
+ * error
+ * .validation error
+ * .field description
+ * .error type (luhn check failed)]
  */
 export const ERROR_CODES = {
-    [ERROR_MSG_INCOMPLETE_FIELD]: 'sf:sf:ve:01',
-    [ERROR_MSG_LUHN_CHECK_FAILED]: 'sf:sf:ve:02',
-    [ERROR_MSG_CARD_NUMBER_MISMATCH]: 'sf:sf:ve:03',
-    [ERROR_MSG_CARD_TOO_OLD]: 'sf:sf:ve:04',
-    [ERROR_MSG_CARD_TOO_FAR_IN_FUTURE]: 'sf:sf:ve:05',
-    [ERROR_MSG_UNSUPPORTED_CARD_ENTERED]: 'co:sf:ve:06'
+    [ERROR_MSG_INCOMPLETE_FIELD]: 'error.ve.gen.01',
+    [ERROR_MSG_LUHN_CHECK_FAILED]: 'error.ve.cc-num.02',
+    [ERROR_MSG_CARD_NUMBER_MISMATCH]: 'error.ve.cc-num.03',
+    [ERROR_MSG_CARD_TOO_OLD]: 'error.ve.cc-dat.04',
+    [ERROR_MSG_CARD_TOO_FAR_IN_FUTURE]: 'error.ve.cc-dat.05',
+    [ERROR_MSG_UNSUPPORTED_CARD_ENTERED]: 'error.ve.cc-num.06'
+};
+
+export const DEFAULT_ERROR = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
+
+/**
+ * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
+ * or by sending in the value - in which case you get the key
+ * @param keyOrValue - key (or value) by which to retrieve the corresponding value (or key)
+ */
+export const getError = (keyOrValue: string): string => {
+    // Retrieve value
+    let rtnVal = ERROR_CODES[keyOrValue];
+    if (rtnVal) return rtnVal;
+
+    // Retrieve key
+    rtnVal = Object.keys(ERROR_CODES).find(key => ERROR_CODES[key] === keyOrValue);
+    if (rtnVal) return rtnVal;
+
+    // Neither exist
+    return null;
 };
