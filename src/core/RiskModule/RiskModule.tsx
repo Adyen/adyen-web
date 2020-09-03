@@ -13,6 +13,7 @@ export interface RiskModuleOptions {
 
 interface RiskModuleProps extends BaseElementProps {
     risk: RiskModuleOptions;
+    loadingContext: string;
 }
 
 export default class RiskElement extends BaseElement<RiskModuleProps> {
@@ -93,6 +94,6 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
     }
 
     render() {
-        return <DeviceFingerprint {...this.props} onComplete={this.onComplete} onError={this.onError} />;
+        return <DeviceFingerprint {...this.props} loadingContext={this.props.loadingContext} onComplete={this.onComplete} onError={this.onError} />;
     }
 }
