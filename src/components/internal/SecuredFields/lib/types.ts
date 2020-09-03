@@ -170,6 +170,7 @@ export interface CbObjOnError {
     type: string;
     rootNode?: HTMLElement;
     binLookupBrands?: string[];
+    errorI18n?: string;
     errorText?: string;
 }
 

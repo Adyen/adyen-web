@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import handlers from './handlers';
+//import handlers from './handlers';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 
 class SecuredFields extends Component {
@@ -7,7 +7,7 @@ class SecuredFields extends Component {
         super(props);
 
         // Add as a prop when declaring SecuredFieldsProvider
-        this.handleOnError = handlers.handleOnError.bind(this);
+        //        this.handleOnError = handlers.handleOnError.bind(this);
     }
 
     static defaultProps = {
@@ -49,7 +49,7 @@ class SecuredFields extends Component {
                 ref={this.handleSecuredFieldsRef}
                 {...this.props}
                 onChange={this.handleSecuredFieldsChange}
-                onError={this.handleOnError}
+                //                onError={this.handleOnError}
                 render={() => null}
             />
         );

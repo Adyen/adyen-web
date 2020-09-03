@@ -122,14 +122,14 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
         return false;
     }
     console.log('### SecuredFieldsProviderHandlers::handleOnError:: cbObj', cbObj);
-    console.log('### SecuredFieldsProviderHandlers::handleOnError:: error explained:', getError(cbObj.error));
 
     this.setState(prevState => ({
         errors: { ...prevState.errors, [cbObj.fieldType]: cbObj.error || false },
         hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
     }));
 
-    cbObj.errorText = this.props.i18n.get(cbObj.error);
+    cbObj.errorI18n = this.props.i18n.get(cbObj.error); // Add translation
+    cbObj.errorText = getError(cbObj.error); // Add internal explanation
 
     this.props.onError(cbObj);
 

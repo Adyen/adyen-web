@@ -77,7 +77,7 @@ export function setCCErrors(pCallbackObj) {
 
     if (pCallbackObj.error !== '') {
         errorNode.style.display = 'block';
-        errorNode.innerText = pCallbackObj.i18n;
+        errorNode.innerText = pCallbackObj.errorI18n;
 
         // Add error classes
         setErrorClasses(sfNode, true);
