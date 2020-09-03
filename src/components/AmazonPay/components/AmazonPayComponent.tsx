@@ -41,7 +41,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     if (props.amazonCheckoutSessionId) {
         return (
             <div className="adyen-checkout__amazonpay">
-                {props.showOrderButton && <OrderButton payButton={props.payButton} />}
+                {props.showOrderButton && <OrderButton {...props} payButton={props.payButton} />}
 
                 {props.showChangePaymentDetailsButton && (
                     <ChangePaymentDetailsButton amazonCheckoutSessionId={props.amazonCheckoutSessionId} amazonRef={window.amazon} />

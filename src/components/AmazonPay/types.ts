@@ -17,6 +17,7 @@ export type Region = 'US' | 'EU' | 'UK';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
 export interface AmazonPayCommonProps {
+    amazonPayToken?: string;
     amazonCheckoutSessionId?: string;
     buttonColor?: ButtonColor;
     clientKey?: string;
