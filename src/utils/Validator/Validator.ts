@@ -1,11 +1,11 @@
 import defaultRules from './defaultRules';
 
 class Validator {
-    constructor(rules) {
+    constructor(rules = {}) {
         this.setRules(rules);
     }
 
-    rules = defaultRules;
+    public rules = defaultRules;
 
     setRules(newRules) {
         this.rules = {
