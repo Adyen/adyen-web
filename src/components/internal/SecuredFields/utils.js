@@ -1,7 +1,6 @@
 import getProp from '../../../utils/getProp';
 import { getImageUrl } from '../../../utils/get-image';
 import {
-    DEFAULT_ERROR,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -9,6 +8,7 @@ import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD
 } from './lib/configuration/constants';
+import { DEFAULT_ERROR } from '../../../core/Errors/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
 /**

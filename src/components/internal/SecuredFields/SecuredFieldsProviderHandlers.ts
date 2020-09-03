@@ -1,5 +1,6 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER, getError } from './lib/configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
+import { getError } from '../../../core/Errors/utils';
 import {
     CbObjOnError,
     CbObjOnFocus,
