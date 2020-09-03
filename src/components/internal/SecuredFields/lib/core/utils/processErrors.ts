@@ -29,7 +29,7 @@ export const processErrors = (
     // if the field wasn't already in error
     if (!isError && !field.hasError) return null;
 
-    dataObj.error = isError ? pFeedbackObj.code : '';
+    dataObj.error = isError ? pFeedbackObj.error : '';
     dataObj.type = type;
 
     // Set error state & type on securedField instance
