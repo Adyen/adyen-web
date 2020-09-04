@@ -14,7 +14,6 @@ export function processPlaceholders(configObj, fieldType, i18n) {
     }
 
     return {
-        ...configObj.iframeUIConfig.placeholders,
         [fieldType]: placeholderFieldValue
     } as PlaceholdersObject;
 }

@@ -12,7 +12,9 @@ export function processAriaConfig(configObj, fieldType, i18n) {
     const iframeTitle: string = IFRAME_TITLE;
     let newAriaFieldConfigObj: AriaConfigObject;
 
-    // Check for a pre-existing, merchant defined object
+    // Check for a pre-existing, merchant defined object and extract properties
+    const lang = getProp(configObj, `iframeUIConfig.ariaConfig.lang`);
+
     const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
 
     if (ariaFieldConfig) {
@@ -26,13 +28,15 @@ export function processAriaConfig(configObj, fieldType, i18n) {
         newAriaFieldConfigObj = { iframeTitle };
     }
 
-    // Add error translation
+    console.log('### processAriaConfig::processAriaConfig:: ariaConfig for this field=', ariaFieldConfig);
+
+    // Add error translations object
     const ariaFieldConfigWithTranslation = addErrorTranslationsToObject(newAriaFieldConfigObj, i18n);
 
     // Create a new aria config object keeping the old entries and adding a new one for this field
     // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
     return {
-        ...configObj.iframeUIConfig.ariaConfig,
+        ...(lang && { lang }),
         [fieldType]: ariaFieldConfigWithTranslation
     } as AriaConfig;
 }

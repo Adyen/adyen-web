@@ -31,9 +31,11 @@ class SecuredField extends AbstractSecuredField {
         // List of props from setup object not needed for iframe config
         const deltaPropsArr: string[] = ['fieldType', 'cvcRequired', 'iframeSrc', 'loadingContext', 'holderEl'];
 
-        // Copy passed setup object values to this.config
+        // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
-        this.config = { ...this.config, ...configVarsFromSetUpObj };
+
+        // ...breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
+        this.config = { ...this.config, ...configVarsFromSetUpObj, iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig } };
 
         // Copy passed setup object values to this
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
@@ -43,6 +45,10 @@ class SecuredField extends AbstractSecuredField {
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
+
+        console.log('\n### SecuredField::constructor:: this.fieldType', this.fieldType);
+        console.log('### SecuredField::constructor:: this.config.iframeUIConfig.ariaConfig', this.config.iframeUIConfig.ariaConfig);
+        console.log('### SecuredField::constructor:: this.config.iframeUIConfig.placeholders', this.config.iframeUIConfig.placeholders);
 
         // Initiate values through setters
         this.isValid = false;
@@ -62,13 +68,13 @@ class SecuredField extends AbstractSecuredField {
 
     init(i18n: Language): SecuredField {
         /**
-         * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
+         * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
         const processedAriaConfig: AriaConfig = processAriaConfig(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
 
-        console.log('### SecuredField::init:: new this.config.iframeUIConfig.ariaConfig=', this.config.iframeUIConfig.ariaConfig);
+        console.log('### SecuredField::init:: new specific this.config.iframeUIConfig.ariaConfig=', this.config.iframeUIConfig.ariaConfig);
 
         /**
          * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
@@ -76,6 +82,8 @@ class SecuredField extends AbstractSecuredField {
         const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
+
+        console.log('### SecuredField::init:: new specific this.config.iframeUIConfig.placeholders=', this.config.iframeUIConfig.placeholders);
 
         /**
          * Create & reference iframe and add load listener
