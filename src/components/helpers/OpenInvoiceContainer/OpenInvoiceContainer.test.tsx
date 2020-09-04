@@ -12,6 +12,13 @@ describe('OpenInvoiceContainer', () => {
     test('should not use return a fieldset which is not visible', () => {
         const visibility = { deliveryAddress: 'hidden' };
         const wrapper = getWrapper({ visibility });
-        expect(wrapper.data?.billingAddress).toBe(undefined);
+        expect(wrapper.props.visibility.personalDetails).toBe('editable');
+        expect(wrapper.props.visibility.deliveryAddress).toBe('hidden');
+    });
+
+    test('should not return include the company details by default', () => {
+        const wrapper = getWrapper({});
+        expect(wrapper.props.visibility.companyDetails).toBe('hidden');
+        expect(wrapper.props.visibility.personalDetails).toBe('editable');
     });
 });
