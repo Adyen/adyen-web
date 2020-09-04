@@ -1,4 +1,4 @@
-import { CSF_FIELDS_ARRAY, IFRAME_TITLE } from '../../../configuration/constants';
+import { IFRAME_TITLE } from '../../../configuration/constants';
 import getProp from '../../../../../../../utils/getProp';
 import { addErrorTranslationsToObject } from '../../../../../../../core/Errors/utils';
 import { AriaConfigObject, AriaConfig } from '../../AbstractSecuredField';
@@ -27,7 +27,7 @@ export function processAriaConfig(configObj, fieldType, i18n) {
     }
 
     // Add error translation
-    const ariaFieldConfigWithTranslation = addErrorTranslationsToObject(newAriaFieldConfigObj, fieldType, i18n, CSF_FIELDS_ARRAY);
+    const ariaFieldConfigWithTranslation = addErrorTranslationsToObject(newAriaFieldConfigObj, i18n);
 
     // Create a new aria config object keeping the old entries and adding a new one for this field
     // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object

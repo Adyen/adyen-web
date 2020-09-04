@@ -71,7 +71,9 @@ const regularErrObj = {
 const nodeHolder = document.createElement('div');
 nodeHolder.innerHTML = mockNode;
 
-wrapper = shallow(<SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} styles={styles} render={renderFn} onError={onError} />);
+wrapper = shallow(
+    <SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} styles={styles} render={renderFn} onError={onError} i18n={i18n} />
+);
 
 describe('<SecuredFieldsProvider /> rendering', () => {
     test('Loading state', () => {
@@ -118,6 +120,18 @@ describe('<SecuredFieldsProvider /> rendering', () => {
 
 describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     it('should generate an "unsupported card" error that propagates to the onError callback', () => {
+        nodeHolder.innerHTML = mockNode;
+        wrapper = shallow(
+            <SecuredFieldsProvider
+                ref={handleSecuredFieldsRef}
+                rootNode={nodeHolder}
+                styles={styles}
+                render={renderFn}
+                onError={onError}
+                i18n={i18n}
+            />
+        );
+
         expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
         expect(onError).toHaveBeenCalledTimes(4);
         expect(errorObj.error).toEqual('Unsupported card');

@@ -9,7 +9,6 @@ import {
     ENCRYPTED_PWD_FIELD
 } from './lib/configuration/constants';
 import { DEFAULT_ERROR } from '../../../core/Errors/constants';
-import { addAriaErrorTranslationsObject } from '../../../core/Errors/utils';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
 /**
@@ -92,14 +91,14 @@ export const getErrorObject = (fieldType, rootNode, state) => {
 /**
  * Used below in addErrorTranslationToObject (called from SecuredField.ts) AND also by handler for SecuredFieldComponent aka CustomCardComponent
  */
-export const getTranslatedErrors = (i18n = {}) => ({
-    [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.invalid'),
-    [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.oneClickVerification.invalidInput.title'),
-    defaultError: 'error.title'
-});
+//export const getTranslatedErrors = (i18n = {}) => ({
+//    [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.invalid'),
+//    [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
+//    [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
+//    [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
+//    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.oneClickVerification.invalidInput.title'),
+//    defaultError: 'error.title'
+//});
 
 /**
  * Adds a new, translated, error property to an object, unless it already exists
@@ -109,15 +108,15 @@ export const getTranslatedErrors = (i18n = {}) => ({
  * @param fieldNamesList - list of keys (fieldIDs) we want to add translations for
  * @returns a duplicate of the original object with a new property: "error" whose value is a translation extracted from the i18n object
  */
-export const addErrorTranslationToObject = (originalObj, key, i18n, fieldNamesList) => {
-    if (fieldNamesList.includes(key)) {
-        const nuObj = { ...originalObj };
-        const translatedErrors = getTranslatedErrors(i18n);
-        nuObj.error = !nuObj.error ? translatedErrors[key] : nuObj.error;
-        return nuObj;
-    }
-    return originalObj;
-};
+//export const addErrorTranslationToObject = (originalObj, key, i18n, fieldNamesList) => {
+//    if (fieldNamesList.includes(key)) {
+//        const nuObj = { ...originalObj };
+//        const translatedErrors = getTranslatedErrors(i18n);
+//        nuObj.error = !nuObj.error ? translatedErrors[key] : nuObj.error;
+//        return nuObj;
+//    }
+//    return originalObj;
+//};
 
 export const resolvePlaceholders = (i18n = {}) => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
