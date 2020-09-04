@@ -2,8 +2,9 @@ import { Component, h } from 'preact';
 import GetDeviceFingerprint from './GetDeviceFingerprint';
 import handleErrorCode from './utils';
 import { DF_VERSION } from '../../constants';
+import { DeviceFingerprintProps, DeviceFingerprintState } from './types';
 
-class DeviceFingerprint extends Component {
+class DeviceFingerprint extends Component<DeviceFingerprintProps, DeviceFingerprintState> {
     constructor(props) {
         super(props);
 
@@ -16,7 +17,7 @@ class DeviceFingerprint extends Component {
         }
     }
 
-    static defaultProps = {
+    public static defaultProps = {
         onComplete: () => {},
         onError: () => {}
     };

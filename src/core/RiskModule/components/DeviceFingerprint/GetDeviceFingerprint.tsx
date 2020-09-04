@@ -4,18 +4,23 @@ import promiseTimeout from '../../../../utils/promiseTimeout';
 import { DEVICE_FINGERPRINT, DF_TIMEOUT, FAILED_DFP_RESOLVE_OBJECT, FAILED_DFP_RESOLVE_OBJECT_TIMEOUT } from '../../constants';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { getOrigin } from '../../../../utils/getOrigin';
+import { GetDeviceFingerprintProps } from './types';
 
 const iframeName = 'dfIframe';
 const allowProperties = 'geolocation; microphone; camera;';
 
-class GetDeviceFingerprint extends Component {
+class GetDeviceFingerprint extends Component<GetDeviceFingerprintProps> {
+    public postMessageDomain;
+    public processMessageHandler;
+    public deviceFingerPrintPromise;
+
     constructor(props) {
         super(props);
 
         this.postMessageDomain = getOrigin(this.props.loadingContext) || this.props.loadingContext;
     }
 
-    getDfpPromise() {
+    getDfpPromise(): Promise<any> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url

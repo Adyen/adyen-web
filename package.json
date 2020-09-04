@@ -36,7 +36,7 @@
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.12",
+        "@types/jest": "^26.0.13",
         "@typescript-eslint/eslint-plugin": "^2.34.0",
         "@typescript-eslint/parser": "^2.34.0",
         "autoprefixer": "^9.8.6",
@@ -66,7 +66,7 @@
         "prettier": "^1.19.1",
         "promise": "^8.1.0",
         "request": "^2.81.0",
-        "sass-loader": "^10.0.1",
+        "sass-loader": "^10.0.2",
         "style-loader": "^1.2.1",
         "stylelint": "^13.7.0",
         "stylelint-config-recommended": "^3.0.0",
