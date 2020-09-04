@@ -68,6 +68,8 @@ class SecuredField extends AbstractSecuredField {
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
 
+        console.log('### SecuredField::init:: new this.config.iframeUIConfig.ariaConfig=', this.config.iframeUIConfig.ariaConfig);
+
         /**
          * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
          */

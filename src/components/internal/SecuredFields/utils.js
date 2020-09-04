@@ -9,6 +9,7 @@ import {
     ENCRYPTED_PWD_FIELD
 } from './lib/configuration/constants';
 import { DEFAULT_ERROR } from '../../../core/Errors/constants';
+import { addAriaErrorTranslationsObject } from '../../../core/Errors/utils';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
 /**
