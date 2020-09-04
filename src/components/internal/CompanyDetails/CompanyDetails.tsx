@@ -8,6 +8,7 @@ import { companyDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsStateError, CompanyDetailsStateValid } from './types';
+import './CompanyDetails.scss';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
 
