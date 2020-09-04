@@ -114,9 +114,6 @@ class SecuredField extends AbstractSecuredField {
         // Add general listener for 'message' EVENT - the event that 'powers' postMessage
         on(window, 'message', this.postMessageListener, false);
 
-        // TODO - only needed until latest version of 3.2.5 is on test
-        this.config.iframeUIConfig.ariaLabels = this.config.iframeUIConfig.ariaConfig;
-
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
