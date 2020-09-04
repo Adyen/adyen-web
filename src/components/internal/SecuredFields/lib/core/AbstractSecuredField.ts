@@ -34,7 +34,6 @@ interface IframeUIConfigObject {
     sfStyles?: StylesObject;
     placeholders?: PlaceholdersObject;
     ariaConfig?: AriaConfig;
-    ariaLabels?: AriaConfig; // TODO - only needed until latest version of SF 3.2.5 is on test
 }
 
 export interface PlaceholdersObject {
