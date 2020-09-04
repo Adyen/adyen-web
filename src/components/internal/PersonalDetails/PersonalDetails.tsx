@@ -100,7 +100,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('dateOfBirth')}
                     classNameModifiers={['col-50', 'lastName']}
-                    errorMessage={errors.dateOfBirth && i18n.get(errors.dateOfBirth.toString())}
+                    errorMessage={typeof errors.dateOfBirth === 'string' ? i18n.get(errors.dateOfBirth) : errors.dateOfBirth}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                 >
                     {renderFormField('date', {
@@ -117,7 +117,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('telephoneNumber')}
                     classNameModifiers={['telephoneNumber']}
-                    errorMessage={errors.telephoneNumber && i18n.get(errors.telephoneNumber.toString())}
+                    errorMessage={typeof errors.telephoneNumber === 'string' ? i18n.get(errors.telephoneNumber) : errors.telephoneNumber}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),
