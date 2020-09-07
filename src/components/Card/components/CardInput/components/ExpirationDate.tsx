@@ -6,7 +6,7 @@ import { ExpirationDateProps } from './types';
 import styles from '../CardInput.module.scss';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
-    const { label, focused, filled, onFocusField, className = '', error = false, isValid = false } = props;
+    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false } = props;
     const { i18n } = useCoreContext();
 
     return (
@@ -17,7 +17,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             focused={focused}
             filled={filled}
             onFocusField={() => onFocusField('encryptedExpiryDate')}
-            errorMessage={error && i18n.get('creditCard.expiryDateField.invalid')}
+            errorMessage={error && i18n.get(error)}
             isValid={isValid}
         >
             <span
