@@ -4,6 +4,7 @@ export const ERROR_MSG_CARD_NUMBER_MISMATCH = "Typed card number doesn't match c
 export const ERROR_MSG_INCOMPLETE_FIELD = 'incomplete field';
 export const ERROR_MSG_LUHN_CHECK_FAILED = 'luhn check failed';
 export const ERROR_MSG_UNSUPPORTED_CARD_ENTERED = 'Unsupported card entered';
+export const ERROR_MSG_INVALID_FIELD = 'field not valid';
 export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
 
 /**
@@ -17,6 +18,7 @@ export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
  */
 export const ERROR_CODES = {
     [ERROR_MSG_INCOMPLETE_FIELD]: 'error.va.gen.01',
+    [ERROR_MSG_INVALID_FIELD]: 'error.va.gen.02',
     [ERROR_MSG_LUHN_CHECK_FAILED]: 'error.va.sf-cc-num.01',
     [ERROR_MSG_CARD_NUMBER_MISMATCH]: 'error.va.sf-cc-num.02',
     [ERROR_MSG_CARD_TOO_OLD]: 'error.va.sf-cc-dat.01',

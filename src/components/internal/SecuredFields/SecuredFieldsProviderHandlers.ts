@@ -1,6 +1,6 @@
 import { getCardImageUrl } from './utils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
-import { getError } from '../../../core/Errors/utils';
+import { getError, getVerifiedErrorCode } from '../../../core/Errors/utils';
 import {
     CbObjOnError,
     CbObjOnFocus,
@@ -124,13 +124,16 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     }
     console.log('### SecuredFieldsProviderHandlers::handleOnError:: cbObj', cbObj);
 
+    const verifiedErrorCode = getVerifiedErrorCode(cbObj.fieldType, cbObj.error, this.props.i18n);
+    console.log('### SecuredFieldsProviderHandlers::handleOnError:: verifiedErrorCode', verifiedErrorCode);
+
     this.setState(prevState => ({
-        errors: { ...prevState.errors, [cbObj.fieldType]: cbObj.error || false },
+        errors: { ...prevState.errors, [cbObj.fieldType]: verifiedErrorCode || false },
         hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
     }));
 
-    cbObj.errorI18n = this.props.i18n.get(cbObj.error); // Add translation
-    cbObj.errorText = getError(cbObj.error); // Add internal explanation
+    cbObj.errorI18n = this.props.i18n.get(verifiedErrorCode); // Add translation
+    cbObj.errorText = getError(verifiedErrorCode); // Add internal explanation
 
     this.props.onError(cbObj);
 

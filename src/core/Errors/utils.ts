@@ -1,4 +1,12 @@
-import { ERROR_CODES } from './constants';
+import { ERROR_CODES, ERROR_MSG_INVALID_FIELD } from './constants';
+import Language from '../../language/Language';
+import {
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_SECURITY_CODE
+} from '../../components/internal/SecuredFields/lib/configuration/constants';
 
 /**
  * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
@@ -15,7 +23,35 @@ export const getError = (keyOrValue: string): string => {
     if (rtnVal) return rtnVal;
 
     // Neither exist
-    return null;
+    return keyOrValue;
+};
+
+const getDefaultErrorCode = fieldType => {
+    switch (fieldType) {
+        case ENCRYPTED_CARD_NUMBER:
+            return 'creditCard.numberField.invalid';
+        case ENCRYPTED_EXPIRY_DATE:
+            return 'creditCard.expiryDateField.invalid';
+        case ENCRYPTED_EXPIRY_MONTH:
+            return 'creditCard.expiryDateField.invalid';
+        case ENCRYPTED_EXPIRY_YEAR:
+            return 'creditCard.expiryDateField.invalid';
+        case ENCRYPTED_SECURITY_CODE:
+            return 'creditCard.oneClickVerification.invalidInput.title';
+        default:
+            return getError(ERROR_MSG_INVALID_FIELD);
+    }
+};
+
+/**
+ * If error translation exists then error (code) is usable, else return a default error code
+ * @param error
+ * @param i18n
+ */
+export const getVerifiedErrorCode = (fieldType: string, error: string, i18n: Language): string => {
+    // Will return the error code straight back if a translation doesn't exist
+    const translatedError = i18n.get(error);
+    return translatedError !== error ? error : getDefaultErrorCode(fieldType);
 };
 
 export const addAriaErrorTranslationsObject = i18n => {
@@ -25,7 +61,6 @@ export const addAriaErrorTranslationsObject = i18n => {
         const value = ERROR_CODES[item];
         // Limit to sf related errors
         if (value.indexOf('sf-') > -1 || value.indexOf('gen.01') > -1) {
-            // acc[`"${value}"`] = i18n.get(value);
             acc[value] = i18n.get(value);
         }
         return acc;
