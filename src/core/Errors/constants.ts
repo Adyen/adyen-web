@@ -16,13 +16,12 @@ export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
  * .error type (luhn check failed)]
  */
 export const ERROR_CODES = {
-    [ERROR_MSG_INCOMPLETE_FIELD]: 'error.ve.gen.01',
-    [ERROR_MSG_LUHN_CHECK_FAILED]: 'error.ve.sf-cc-num.02',
-    [ERROR_MSG_CARD_NUMBER_MISMATCH]: 'error.ve.sf-cc-num.03',
-    [ERROR_MSG_CARD_TOO_OLD]: 'error.ve.sf-cc-dat.04',
-    [ERROR_MSG_CARD_TOO_FAR_IN_FUTURE]: 'error.ve.sf-cc-dat.05',
-    [ERROR_MSG_UNSUPPORTED_CARD_ENTERED]: 'error.ve.sf-cc-num.06',
-    [ERROR_MSG_MBWAY_EMAIL_INVALID]: 'error.ve.mbway-email.01'
+    [ERROR_MSG_INCOMPLETE_FIELD]: 'error.va.gen.01',
+    [ERROR_MSG_LUHN_CHECK_FAILED]: 'error.va.sf-cc-num.01',
+    [ERROR_MSG_CARD_NUMBER_MISMATCH]: 'error.va.sf-cc-num.02',
+    [ERROR_MSG_CARD_TOO_OLD]: 'error.va.sf-cc-dat.01',
+    [ERROR_MSG_CARD_TOO_FAR_IN_FUTURE]: 'error.va.sf-cc-dat.02',
+    [ERROR_MSG_UNSUPPORTED_CARD_ENTERED]: 'error.va.sf-cc-num.03' // Triggered in Components
 };
 
 export const DEFAULT_ERROR = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];

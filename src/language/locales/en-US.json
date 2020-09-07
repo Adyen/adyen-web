@@ -137,10 +137,10 @@
     "blik.code": "6-digit code",
     "blik.help": "Get the code from your banking app.",
     "swish.pendingMessage": "After you scan, the status can be pending for up to 10 minutes. Attempting to pay again within this time may result in multiple charges.",
-    "error.ve.gen.01": "Incomplete field",
-    "error.ve.sf-cc-num.02": "Invalid card number",
-    "error.ve.sf-cc-num.03": "Typed card number doesn't match card type",
-    "error.ve.sf-cc-dat.04": "Card too old",
-    "error.ve.sf-cc-dat.05": "Date too far in the future",
-    "error.ve.sf-cc-num.06": "Unsupported card entered"
+    "error.va.gen.01": "Incomplete field",
+    "error.va.sf-cc-num.01": "Invalid card number",
+    "error.va.sf-cc-num.02": "Typed card number doesn't match card type",
+    "error.va.sf-cc-dat.01": "Card too old",
+    "error.va.sf-cc-dat.02": "Date too far in the future",
+    "error.va.sf-cc-num.03": "Unsupported card entered"
 }
