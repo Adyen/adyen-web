@@ -77,7 +77,7 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
  */
 export const getErrorObject = (fieldType, rootNode, state) => {
     const error = getProp(state, `errors.${fieldType}`) || DEFAULT_ERROR;
-    console.log('\n### utils::getErrorObject:: error =', error);
+    //    console.log('\n### utils::getErrorObject:: error =', error);
 
     return {
         rootNode,

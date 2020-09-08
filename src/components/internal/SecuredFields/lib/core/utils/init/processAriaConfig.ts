@@ -28,7 +28,7 @@ export function processAriaConfig(configObj, fieldType, i18n) {
         newAriaFieldConfigObj = { iframeTitle };
     }
 
-    console.log('### processAriaConfig::processAriaConfig:: ariaConfig for this field=', ariaFieldConfig);
+    // console.log('### processAriaConfig::processAriaConfig:: ariaConfig for this field=', ariaFieldConfig);
 
     // Add error translations object
     const ariaFieldConfigWithTranslation = addErrorTranslationsToObject(newAriaFieldConfigObj, i18n);
