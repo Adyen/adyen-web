@@ -138,7 +138,7 @@
     "error.va.gen.01": "Veld is onvolledig",
     "error.va.gen.02": "Veld niet geldig",
     "error.va.sf-cc-num.01": "Ongeldig kaartnummer",
-    "error.va.sf-cc-num.02": "Het getypte kaartnummer komt niet overeen met het kaarttype",
+    "error.va.sf-cc-num.02": "Het getypte kaartnummer komt niet overeen met het kaartmerk",
     "error.va.sf-cc-num.03": "Niet-ondersteunde kaart ingevoerd",
     "error.va.sf-cc-dat.01": "Kaart te oud",
     "error.va.sf-cc-dat.02": "Datum te ver in de toekomst"
