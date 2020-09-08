@@ -5,6 +5,7 @@ export const ERROR_MSG_INCOMPLETE_FIELD = 'incomplete field';
 export const ERROR_MSG_LUHN_CHECK_FAILED = 'luhn check failed';
 export const ERROR_MSG_UNSUPPORTED_CARD_ENTERED = 'Unsupported card entered';
 export const ERROR_MSG_INVALID_FIELD = 'field not valid';
+export const ERROR_MSG_CLEARED = 'error was cleared';
 export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
 
 /**
