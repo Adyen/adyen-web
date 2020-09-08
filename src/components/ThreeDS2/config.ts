@@ -1,14 +1,16 @@
+import { ChallengeObject } from './types';
+
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT = {
+export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT: ChallengeObject = {
     result: {
         transStatus: 'U'
     },
     type: 'challengeResult'
 };
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT = {
+export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT: ChallengeObject = {
     result: {
         transStatus: 'U'
     },
@@ -16,14 +18,14 @@ export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT = {
     errorCode: 'timeout'
 };
 
-export const FAILED_METHOD_STATUS_RESOLVE_OBJECT = {
+export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ChallengeObject = {
     result: {
         threeDSCompInd: 'N'
     },
     type: 'fingerPrintResult'
 };
 
-export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT = {
+export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ChallengeObject = {
     result: {
         threeDSCompInd: 'N'
     },

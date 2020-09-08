@@ -7,15 +7,20 @@ import getProcessMessageHandler from '../../../../utils/get-process-message-hand
 import { encodeBase64URL } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import { CHALLENGE_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT } from '../../config';
+import { Do3DS2ChallengeProps, Do3DS2ChallengeState } from './types';
 
 const iframeName = 'threeDSIframe';
 
-class Do3DS2Challenge extends Component {
+class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeState> {
+    private readonly iframeCallback;
+    private processMessageHandler;
+    private challengePromise: { cancel: () => void; promise: Promise<any> };
+
     constructor(props) {
         super(props);
 
         this.iframeCallback = () => {
-            this.setState({ status: 'iframeLoaded' });
+            this.state = { status: 'iframeLoaded' };
         };
 
         /**
@@ -26,7 +31,7 @@ class Do3DS2Challenge extends Component {
         this.state = { base64URLencodedData };
     }
 
-    get3DS2ChallengePromise() {
+    private get3DS2ChallengePromise(): Promise<any> {
         return new Promise((resolve, reject) => {
             /**
              * Listen for postMessage responses from the notification url

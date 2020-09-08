@@ -4,7 +4,7 @@ import { h } from 'preact';
 import ThreeDS2Form from './ThreeDS2Form';
 
 const submitMock = jest.fn();
-global.HTMLFormElement.prototype.submit = () => submitMock;
+(global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 let wrapper;
 

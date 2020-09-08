@@ -1,11 +1,26 @@
 import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES } from '../config';
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
+import { ChallengeData, ChallengeToken, FingerPrintData, ResultObject } from '../types';
 
-export const decodeAndParseToken = token => {
+interface ResolveData {
+    data: {
+        details: {
+            [key: string]: string;
+        };
+        paymentData: string;
+    };
+}
+
+interface ErrorCode {
+    errorCode?: string;
+    message?: string;
+}
+
+export const decodeAndParseToken = (token: string): ChallengeToken => {
     const decodedToken = base64.decode(token);
     try {
-        return JSON.parse(decodedToken);
+        if (decodedToken) return JSON.parse(decodedToken);
     } catch (e) {
         throw new Error('Could not decode token');
     }
@@ -16,7 +31,8 @@ export const decodeAndParseToken = token => {
  * @param type - either 'IdentifyShopper' or 'ChallengeShopper'
  * @returns encoded result
  */
-export const encodeResult = ({ threeDSCompInd = undefined, transStatus = undefined }, type) => {
+export const encodeResult = (result: ResultObject, type: string): string => {
+    const { threeDSCompInd, transStatus } = result;
     if (!threeDSCompInd && !transStatus) {
         throw new Error('No threeDS2 request details found');
     }
@@ -36,7 +52,7 @@ export const encodeResult = ({ threeDSCompInd = undefined, transStatus = undefin
  * @param sizeStr - the size string to check the validity of
  * @returns a valid size string
  */
-export const validateChallengeWindowSize = sizeStr => {
+export const validateChallengeWindowSize = (sizeStr: string): string => {
     const sizeString = sizeStr.length === 1 ? `0${sizeStr}` : sizeStr;
     const hasSize = Object.prototype.hasOwnProperty.call(CHALLENGE_WINDOW_SIZES, sizeString);
     return hasSize ? sizeString : '01';
@@ -46,7 +62,7 @@ export const validateChallengeWindowSize = sizeStr => {
  * Accepts a size string for the challenge window & returns the corresponding array of w/h values
  * @param sizeStr -
  */
-export const getChallengeWindowSize = sizeStr => CHALLENGE_WINDOW_SIZES[validateChallengeWindowSize(sizeStr)];
+export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_WINDOW_SIZES[validateChallengeWindowSize(sizeStr)];
 
 /**
  *  prepareChallengeData
@@ -55,7 +71,7 @@ export const getChallengeWindowSize = sizeStr => CHALLENGE_WINDOW_SIZES[validate
  *  - size - one of five possible challenge window sizes
  *  - notificationURL - the URL notifications are expected to be postMessaged from
  */
-export const prepareChallengeData = ({ challengeToken, size, notificationURL }) => {
+export const prepareChallengeData = ({ challengeToken, size, notificationURL }): ChallengeData => {
     const decodedChallengeToken = decodeAndParseToken(challengeToken);
     const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken;
     const receivedNotificationURL = notificationURL || threeDSNotificationURL;
@@ -77,13 +93,13 @@ export const prepareChallengeData = ({ challengeToken, size, notificationURL }) 
 
 /**
  *  prepareFingerPrintData
- *   requires an object containing the challenge parameters
- *  @param fingerPrintToken - fingerPrintToken string received from payments call, containing
+ *   requires an object containing the challenge pfarameters
+ *  @param fingerprintToken - fingerprintToken string received from payments call, containing
  *  methodNotificationURL, methodURL and threeDSServerTransID
  *  @param notificationURL - the URL notifications are expected to be postMessaged from
  */
-export const prepareFingerPrintData = ({ fingerPrintToken, notificationURL }) => {
-    const decodedFingerPrintToken = decodeAndParseToken(fingerPrintToken);
+export const prepareFingerPrintData = ({ fingerprintToken, notificationURL }): FingerPrintData => {
+    const decodedFingerPrintToken = decodeAndParseToken(fingerprintToken);
     const { threeDSMethodNotificationURL, threeDSMethodUrl, threeDSServerTransID } = decodedFingerPrintToken;
     const receivedNotificationURL = notificationURL || threeDSMethodNotificationURL;
     const notificationURLOrigin = getOrigin(receivedNotificationURL);
@@ -96,14 +112,14 @@ export const prepareFingerPrintData = ({ fingerPrintToken, notificationURL }) =>
     };
 };
 
-export const createResolveData = (dataKey, result, paymentData) => ({
+export const createResolveData = (dataKey: string, result: string, paymentData: string): ResolveData => ({
     data: {
         details: { [dataKey]: result },
         paymentData
     }
 });
 
-export const handleErrorCode = errorCode => {
+export const handleErrorCode = (errorCode: string): ErrorCode => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
     const message = ERROR_MESSAGES[errorCode] || unknownMessage;
     return { errorCode, message };
@@ -125,7 +141,7 @@ export const handleErrorCode = errorCode => {
  *
  * @returns base64URL - a base64url encoded string
  */
-export const encodeBase64URL = dataStr => {
+export const encodeBase64URL = (dataStr: string): string => {
     const base64Data = window.btoa(dataStr);
     let base64url = base64Data.split('=')[0]; // Remove any trailing '='s
 
