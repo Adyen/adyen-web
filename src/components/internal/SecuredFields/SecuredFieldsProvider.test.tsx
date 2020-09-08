@@ -239,7 +239,7 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
         expect(errorObj.errorI18n).toEqual(i18n.get(errorCode));
     });
 
-    it("should handle an error with a code it doesn't recognise and set the relevant state and props accordingly", () => {
+    it("should handle an error with a code it doesn't recognise and set the relevant state and props based on a default code", () => {
         regularErrObj.error = 'some.strange.code';
 
         wrapper.instance().handleOnError(regularErrObj);
