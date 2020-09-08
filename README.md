@@ -78,8 +78,8 @@ If you have a feature request, or spotted a bug or a technical problem, create a
 
 ## License
 
-This repository is open source and available under the MIT license. For more information, see the LICENSE file.
 
 [apiexplorer.paymentmethods]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v49/paymentMethods
 [apiexplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v49/payments
 [apiexplorer.paymentsdetails]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v49/paymentsDetails
+This repository is available under the [MIT license](LICENSE).
