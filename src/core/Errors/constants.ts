@@ -10,7 +10,7 @@ export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
 
 /**
  * Error Codes
- * @example error.ve.cc-num.02
+ * @example error.va.sf-cc-num.01
  * =
  * error
  * .validation error
