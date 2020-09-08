@@ -26,7 +26,7 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./coverage/lcov.info # optional (default value)
+        path-to-lcov: ./packages/lib/coverage/lcov.info # optional (default value)
 
     - name: Coveralls Finished
       uses: coverallsapp/github-action@master
