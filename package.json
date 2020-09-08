@@ -14,8 +14,7 @@
     ],
     "scripts": {
         "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
-        "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
-        "build": "rm -rf dist/ && webpack --config config/webpack.prod.js",
+        "build": "yarn workspace @adyen/adyen-web build",
         "test": "BABEL_ENV=test cd packages/adyen-web && yarn test",
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage"
