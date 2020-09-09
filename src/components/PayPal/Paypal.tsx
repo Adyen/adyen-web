@@ -34,7 +34,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
             configuration: {
                 ...configuration,
                 ...(intent && { intent }),
-                ...(commit && { commit }),
+                ...{ commit },
                 ...(merchantId && { merchantId })
             }
         };

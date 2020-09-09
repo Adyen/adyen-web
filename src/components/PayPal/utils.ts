@@ -28,7 +28,7 @@ const getPaypalSettings = ({ amount, countryCode, debug, environment = '', local
         ...(debug && isTestEnvironment && { debug }),
         ...(currency && { currency }),
         ...(intent && { intent }),
-        ...(commit && { commit }),
+        ...{ commit },
         'client-id': clientId,
         'integration-date': INTEGRATION_DATE,
         components: 'buttons,funding-eligibility'
