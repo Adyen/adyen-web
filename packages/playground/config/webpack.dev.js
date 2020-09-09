@@ -125,7 +125,7 @@ module.exports = merge(webpackConfig, {
         // src/node_modules is not ignored to support absolute imports
         // https://github.com/facebook/create-react-app/issues/1065
         watchOptions: {
-            ignore: /node_modules([\\]+|\/)+(?!@adyen\/adyen-web)/,
+            ignore: /node_modules\/(?!(@adyen\/adyen-web)\/).*/,
             aggregateTimeout: 200,
             poll: 500
         },
