@@ -123,10 +123,8 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     if (this.state.hasUnsupportedCard && cbObj.fieldType === ENCRYPTED_CARD_NUMBER && hasUnsupportedCard === null) {
         return false;
     }
-    // console.log('### SecuredFieldsProviderHandlers::handleOnError:: cbObj.error', cbObj.error);
 
     const verifiedErrorCode = getVerifiedErrorCode(cbObj.fieldType, cbObj.error, this.props.i18n);
-    // console.log('### SecuredFieldsProviderHandlers::handleOnError:: verifiedErrorCode', verifiedErrorCode);
 
     this.setState(prevState => ({
         errors: { ...prevState.errors, [cbObj.fieldType]: verifiedErrorCode || false },
@@ -137,8 +135,6 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
 
     const errorExplained = getError(verifiedErrorCode);
     cbObj.errorText = errorExplained !== '' ? errorExplained : ERROR_MSG_CLEARED; // Add internal explanation
-
-    // console.log('### SecuredFieldsProviderHandlers::handleOnError:: cbObj', cbObj);
 
     this.props.onError(cbObj);
 

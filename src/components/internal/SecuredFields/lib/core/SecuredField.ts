@@ -46,10 +46,6 @@ class SecuredField extends AbstractSecuredField {
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
 
-        // console.log('\n### SecuredField::constructor:: this.fieldType', this.fieldType);
-        // console.log('### SecuredField::constructor:: this.config.iframeUIConfig.ariaConfig', this.config.iframeUIConfig.ariaConfig);
-        // console.log('### SecuredField::constructor:: this.config.iframeUIConfig.placeholders', this.config.iframeUIConfig.placeholders);
-
         // Initiate values through setters
         this.isValid = false;
         this.iframeContentWindow = null;
@@ -74,16 +70,12 @@ class SecuredField extends AbstractSecuredField {
         // Set result back onto config object
         this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
 
-        // console.log('### SecuredField::init:: new specific this.config.iframeUIConfig.ariaConfig=', this.config.iframeUIConfig.ariaConfig);
-
         /**
          * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
          */
         const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
-
-        // console.log('### SecuredField::init:: new specific this.config.iframeUIConfig.placeholders=', this.config.iframeUIConfig.placeholders);
 
         /**
          * Create & reference iframe and add load listener
