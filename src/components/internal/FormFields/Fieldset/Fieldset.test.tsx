@@ -14,7 +14,7 @@ describe('Fieldset', () => {
     });
 
     test('shows no label', () => {
-        const wrapper = getWrapper();
+        const wrapper = getWrapper({});
         expect(wrapper.find('.adyen-checkout__fieldset__title')).toHaveLength(0);
     });
 });

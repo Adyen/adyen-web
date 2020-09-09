@@ -20,5 +20,5 @@ export default function InputDate(props: InputDateProps) {
         return <InputBase {...props} type="date" />;
     }
 
-    return <InputBase {...props} onInput={handleInput} maxLength="10" />;
+    return <InputBase {...props} onInput={handleInput} maxLength={10} />;
 }

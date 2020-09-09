@@ -1,8 +1,9 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import './RadioGroup.scss';
+import { RadioGroupProps } from './types';
 
-export default function RadioGroup(props) {
+export default function RadioGroup(props: RadioGroupProps) {
     const { items, i18n, onChange, value, isInvalid } = props;
 
     return (
