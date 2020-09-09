@@ -38,13 +38,6 @@ We only provide full support when you use one of these methods of installation.
 Modifications to the code base should be made via a pull request or by creating an issue.
 You can also import Adyen Web using a `<script>` tag, as shown in the [Web Components integration guide](https://docs.adyen.com/checkout/components-web#step-2-add-components).
 
-## Rationale
-
-We have open-sourced Adyen Web for the following reasons:
-- Allowing developers to have easier access to the source code for quick and easy debugging
-- Allowing developers to freely raise bugs/issues/feature requests
-- Providing developers with a way to be informed and updated whenever a new release is made available (i.e. "Watching" the repository)
-
 
 
 ## Development environment
@@ -67,6 +60,7 @@ yarn start
 ## See also
 
 We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
+- [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 - [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
 - [API Explorer](https://docs.adyen.com/api-explorer/)
 - [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
