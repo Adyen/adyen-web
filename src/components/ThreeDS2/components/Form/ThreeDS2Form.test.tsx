@@ -1,15 +1,22 @@
 import { shallow } from 'enzyme';
-
 import { h } from 'preact';
 import ThreeDS2Form from './ThreeDS2Form';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
+const propsMock = {
+    name: '',
+    action: '',
+    target: '',
+    inputName: '',
+    inputValue: ''
+};
+
 let wrapper;
 
 beforeEach(() => {
-    wrapper = shallow(<ThreeDS2Form />);
+    wrapper = shallow(<ThreeDS2Form {...propsMock} />);
 });
 
 describe('<ThreeDS2Form /> rendering', () => {
