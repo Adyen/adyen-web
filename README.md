@@ -35,7 +35,6 @@ We only provide full support when you use one of these methods of installation.
 
 ### Using a <script> tag
 
-Modifications to the code base should be made via a pull request or by creating an issue.
 You can also import Adyen Web using a `<script>` tag, as shown in the [Web Components integration guide](https://docs.adyen.com/checkout/components-web#step-2-add-components).
 
 ## Development
@@ -53,13 +52,14 @@ To run the development environment:
   yarn start
   ```
 
+## Contributing
 
+We merge every pull request into the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
 
+Have a look at our [contributing guidelines](https://github.com/Adyen/.github/blob/master/CONTRIBUTING.md) to find out how to raise a pull request.
 
-### Branch organization
 ## See also
 
-We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
 - [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 - [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
 - [API Explorer](https://docs.adyen.com/api-explorer/)
