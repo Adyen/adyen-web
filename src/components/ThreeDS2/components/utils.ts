@@ -93,7 +93,7 @@ export const prepareChallengeData = ({ challengeToken, size, notificationURL }):
 
 /**
  *  prepareFingerPrintData
- *   requires an object containing the challenge pfarameters
+ *   requires an object containing the challenge parameters
  *  @param fingerprintToken - fingerprintToken string received from payments call, containing
  *  methodNotificationURL, methodURL and threeDSServerTransID
  *  @param notificationURL - the URL notifications are expected to be postMessaged from
