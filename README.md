@@ -63,6 +63,7 @@ Have a look at our [contributing guidelines](https://github.com/Adyen/.github/bl
 - [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 - [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
 - [API Explorer](https://docs.adyen.com/api-explorer/)
+- [Example integrations](https://github.com/adyen-examples)
 - [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
 
 ## Support
