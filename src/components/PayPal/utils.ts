@@ -19,7 +19,7 @@ const getPaypalSettings = ({ amount, countryCode, debug, environment = '', local
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_TEST : ADYEN_CLIENTID_LIVE;
 
-    const { merchantId, intent } = configuration;
+    const { merchantId, intent, commit } = configuration;
 
     return {
         ...(merchantId && { 'merchant-id': merchantId }),
@@ -28,6 +28,7 @@ const getPaypalSettings = ({ amount, countryCode, debug, environment = '', local
         ...(debug && isTestEnvironment && { debug }),
         ...(currency && { currency }),
         ...(intent && { intent }),
+        ...(commit && { commit }),
         'client-id': clientId,
         'integration-date': INTEGRATION_DATE,
         components: 'buttons,funding-eligibility'

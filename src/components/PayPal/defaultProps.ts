@@ -16,6 +16,11 @@ const defaultProps: PayPalElementProps = {
     intent: null,
 
     /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
+     */
+    commit: true,
+
+    /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
      */
     style: {
@@ -33,7 +38,11 @@ const defaultProps: PayPalElementProps = {
         /**
          * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
          */
-        intent: null
+        intent: null,
+        /**
+         * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
+         */
+        commit: true
     },
 
     // Events

@@ -28,12 +28,13 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     // Required for transition period (until configuration object becomes the norm)
     // - if merchant has defined properties directly in props, use these instead
     protected formatProps(props) {
-        const { configuration, intent, merchantId } = props;
+        const { configuration, intent, commit, merchantId } = props;
         return {
             ...props,
             configuration: {
                 ...configuration,
                 ...(intent && { intent }),
+                ...(commit && { commit }),
                 ...(merchantId && { merchantId })
             }
         };
