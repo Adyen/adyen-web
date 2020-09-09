@@ -11,7 +11,7 @@
     "main": "dist/adyen.js",
     "umd:main": "dist/adyen.js",
     "types": "dist/src",
-    "typings": "dist/src",
+    "typings": "dist/packages/lib/src",
     "version": "3.13.1",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
