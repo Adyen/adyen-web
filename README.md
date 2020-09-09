@@ -16,28 +16,27 @@ You can integrate with Adyen Web in two ways:
 
 ## Installation
 
-### NPM
+We only provide full support when you use one of these methods of installation.
 
-Install [NPM](https://www.npmjs.com/package/@adyen/adyen-web) package:
+### Node package manager
 
-```sh
-npm install @adyen/adyen-web --save
-```
+1. Install the [Adyen Web Node package](https://www.npmjs.com/package/@adyen/adyen-web):
 
-And import in your application:
+  ```sh
+  npm install @adyen/adyen-web --save
+  ```
 
-```js
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
-```
+2. Import Adyen Web into your application:
 
-### Script tag
+  ```js
+  import AdyenCheckout from '@adyen/adyen-web';
+  import '@adyen/adyen-web/dist/adyen.css';
+  ```
 
-Adyen Web can also be imported with a `<script>` tag, refer to [the documentation](https://docs.adyen.com/checkout/components-web#step-2-add-components) for instructions.
+### Using a <script> tag
 
-#### Please note: 
-We only provide full support when using one of these methods of installation.
 Modifications to the code base should be made via a pull request or by creating an issue.
+You can also import Adyen Web using a `<script>` tag, as shown in the [Web Components integration guide](https://docs.adyen.com/checkout/components-web#step-2-add-components).
 
 ## Rationale
 
