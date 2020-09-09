@@ -38,23 +38,23 @@ We only provide full support when you use one of these methods of installation.
 Modifications to the code base should be made via a pull request or by creating an issue.
 You can also import Adyen Web using a `<script>` tag, as shown in the [Web Components integration guide](https://docs.adyen.com/checkout/components-web#step-2-add-components).
 
+## Development
+
+To run the development environment:
+
+1. Clone [this repository](https://github.com/Adyen/adyen-web).
+2. Create a `.env` file on your project's root folder following the example in [`env.default`](env.default) and fill in the environment variables.
+3. Install the dependencies by running:
+  ```sh
+  yarn install
+  ```
+4. Run the development environment, which starts a server listening on [http://localhost:3020](http://localhost:3020):
+  ```sh
+  yarn start
+  ```
 
 
-## Development environment
 
-Follow these steps to run our development playground:
-
-* Clone [this repository](https://github.com/Adyen/adyen-web) and navigate to the root of the project.
-* Create a `.env` file on your project's root folder following the example on `.env.default` and fill in the necessary environment variables.
-* Install all dependencies by running:
-```
-yarn install
-```
-
-* Start the development playground. This will start a local server on [http://localhost:3020](http://localhost:3020).
-```
-yarn start
-```
 
 ### Branch organization
 ## See also
