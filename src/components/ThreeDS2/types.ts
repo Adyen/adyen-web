@@ -1,4 +1,9 @@
-export type ResultValue = 'Y' | 'N' | 'U';
+/**
+ * See
+ * https://docs.adyen.com/checkout/3d-secure/api-reference#threeds2result
+ * Indicates whether a transaction was authenticated, or whether additional verification is required.
+ */
+export type ResultValue = 'Y' | 'N' | 'U' | 'A' | 'C' | 'R';
 
 export interface ChallengeData {
     acsURL: string;
