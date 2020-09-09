@@ -45,13 +45,6 @@ We have open-sourced Adyen Web for the following reasons:
 - Allowing developers to freely raise bugs/issues/feature requests
 - Providing developers with a way to be informed and updated whenever a new release is made available (i.e. "Watching" the repository)
 
-## See also
-
--   [Complete Documentation](https://docs.adyen.com/checkout/)
-
--   [API Explorer](https://docs.adyen.com/api-explorer/)
-
--   [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
 
 
 ## Development environment
@@ -71,8 +64,12 @@ yarn start
 ```
 
 ### Branch organization
+## See also
 
 We merge every pull request to the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
+- [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
+- [API Explorer](https://docs.adyen.com/api-explorer/)
+- [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
 
 ## Support
 
