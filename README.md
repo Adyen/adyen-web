@@ -8,7 +8,11 @@ You can integrate with Adyen Web in two ways:
 * [Web Drop-in](https://docs.adyen.com/checkout/drop-in-web/): an all-in-one solution, the quickest way to accept payments on your website.
 * [Web Components](https://docs.adyen.com/checkout/components-web/): one Component per payment method and combine with your own payments form logic.
 
+## Prerequisites
 
+* [Adyen test account](https://www.adyen.com/signup)
+* [API key](https://docs.adyen.com/development-resources/how-to-get-the-api-key)
+* [Client key](https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key)
 
 ## Installation
 
