@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { renderFormField } from '../../../../components/internal/FormFields';
-import Field from '../../../../components/internal/FormFields/Field';
+import { renderFormField } from '../../../internal/FormFields';
+import Field from '../../../internal/FormFields/Field';
 import Address from '../../../internal/Address';
 import Validator from '../../../../utils/Validator';
 import { boletoValidationRules } from './validate';

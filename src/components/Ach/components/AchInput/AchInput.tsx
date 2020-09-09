@@ -5,7 +5,7 @@ import AchSecuredFields from './components/AchSecuredFields';
 import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
 import Address from '../../../internal/Address';
 import { renderFormField } from '../../../internal/FormFields';
-import Field from '../../../../components/internal/FormFields/Field';
+import Field from '../../../internal/FormFields/Field';
 import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
