@@ -2,14 +2,13 @@
 
 [![npm](https://img.shields.io/npm/v/@adyen/adyen-web.svg)](http://npm.im/@adyen/adyen-web)
 
+Adyen Web provides you with the building blocks to create a checkout experience for your shoppers, allowing them to pay using the payment method of their choice.
 
-With Adyen Web you can help your shoppers pay with a payment method of their choice. It provides you with the building blocks you need to create a checkout experience.
+You can integrate with Adyen Web in two ways:
+* [Web Drop-in](https://docs.adyen.com/checkout/drop-in-web/): an all-in-one solution, the quickest way to accept payments on your website.
+* [Web Components](https://docs.adyen.com/checkout/components-web/): one Component per payment method and combine with your own payments form logic.
 
-You can integrate with Adyen in two ways, Drop-in and Components.
 
-* [Getting Started](https://docs.adyen.com/checkout/)
-* [Drop-in Documentation](https://docs.adyen.com/checkout/drop-in-web/)
-* [Components Documentation](https://docs.adyen.com/checkout/components-web/)
 
 ## Installation
 
