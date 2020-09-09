@@ -20,7 +20,7 @@ interface ErrorCode {
 export const decodeAndParseToken = (token: string): ChallengeToken => {
     const decodedToken = base64.decode(token);
     try {
-        if (decodedToken) return JSON.parse(decodedToken);
+        return decodedToken && JSON.parse(decodedToken);
     } catch (e) {
         throw new Error('Could not decode token');
     }
