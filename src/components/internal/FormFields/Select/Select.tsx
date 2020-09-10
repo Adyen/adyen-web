@@ -2,9 +2,9 @@ import { Component, h } from 'preact';
 import cx from 'classnames';
 import styles from './Select.module.scss';
 import './Select.scss';
-import { SelectBoxProps, SelectBoxState } from './types';
+import { SelectProps, SelectState } from './types';
 
-class SelectBox extends Component<SelectBoxProps, SelectBoxState> {
+class Select extends Component<SelectProps, SelectState> {
     private selectContainer;
     private toggleButton;
     private dropdownList;
@@ -203,4 +203,4 @@ class SelectBox extends Component<SelectBoxProps, SelectBoxState> {
     }
 }
 
-export default SelectBox;
+export default Select;

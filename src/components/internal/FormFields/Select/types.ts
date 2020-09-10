@@ -4,7 +4,7 @@ interface SelectItem {
     icon?: string;
 }
 
-export interface SelectBoxProps {
+export interface SelectProps {
     className: string;
     classNameModifiers: string[];
     isInvalid: boolean;
@@ -15,6 +15,6 @@ export interface SelectBoxProps {
     selected: string;
 }
 
-export interface SelectBoxState {
+export interface SelectState {
     toggleDropdown: boolean;
 }
