@@ -1,5 +1,3 @@
-import { version } from '../../../package.json';
-
 /**
  * Log event to Adyen
  * @param config - ready to be serialized and included in the request
@@ -7,7 +5,7 @@ import { version } from '../../../package.json';
  */
 const logEvent = config => event => {
     const params = {
-        version,
+        version: process.env.VERSION,
         payload_version: 1,
         platform: 'web',
         locale: config.locale,

@@ -1,5 +1,3 @@
-import { version } from '../../../package.json';
-
 /**
  * Log event to Adyen
  * @param config -
@@ -10,7 +8,7 @@ const logTelemetry = config => event => {
     }
 
     const telemetryEvent = {
-        version,
+        version: process.env.VERSION,
         platform: 'web',
         locale: config.locale,
         flavor: 'components',
