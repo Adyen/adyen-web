@@ -1,10 +1,11 @@
-import { Component, cloneElement, toChildArray, h } from 'preact';
+import { Component, cloneElement, toChildArray, h, ComponentChild, VNode } from 'preact';
 import classNames from 'classnames';
 import './Field.scss';
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
+import { FieldProps, FieldState } from './types';
 
-class Field extends Component {
+class Field extends Component<FieldProps, FieldState> {
     constructor(props) {
         super(props);
 
@@ -94,10 +95,12 @@ class Field extends Component {
                             ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
                         ])}
                     >
-                        {toChildArray(children).map(child => {
-                            const props = { isValid, onFocus: this.onFocus, onBlur: this.onBlur, isInvalid: !!errorMessage };
-                            return cloneElement(child, props);
-                        })}
+                        {toChildArray(children).map(
+                            (child: ComponentChild): ComponentChild => {
+                                const childProps = { isValid, onFocus: this.onFocus, onBlur: this.onBlur, isInvalid: !!errorMessage };
+                                return cloneElement(child as VNode, childProps);
+                            }
+                        )}
 
                         {isLoading && (
                             <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--loading">

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { renderFormField } from '../../../../../../components/internal/FormFields';
-import Field from '../../../../../../components/internal/FormFields/Field';
+import { renderFormField } from '../../../../../internal/FormFields';
+import Field from '../../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 

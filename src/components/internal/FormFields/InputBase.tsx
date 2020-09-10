@@ -2,7 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 
 export default function InputBase(props) {
-    const { isInvalid, isValid, classNameModifiers, readonly, spellCheck, type, validation } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type } = props;
 
     const inputClassNames = classNames(
         'adyen-checkout__input',
@@ -15,22 +15,10 @@ export default function InputBase(props) {
         classNameModifiers.map(m => `adyen-checkout__input--${m}`)
     );
 
-    return (
-        <input
-            {...props}
-            {...validation}
-            type={type}
-            className={inputClassNames}
-            readOnly={readonly || null}
-            spellCheck={spellCheck}
-            autoCorrect={spellCheck}
-        />
-    );
+    return <input {...props} type={type} className={inputClassNames} readOnly={readonly} spellCheck={spellCheck} autoCorrect={autoCorrect} />;
 }
 
 InputBase.defaultProps = {
     type: 'text',
-    className: '',
-    classNameModifiers: [],
-    validation: {}
+    classNameModifiers: []
 };
