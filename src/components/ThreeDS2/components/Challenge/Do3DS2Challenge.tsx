@@ -12,16 +12,11 @@ import { Do3DS2ChallengeProps, Do3DS2ChallengeState } from './types';
 const iframeName = 'threeDSIframe';
 
 class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeState> {
-    private readonly iframeCallback;
     private processMessageHandler;
     private challengePromise: { cancel: () => void; promise: Promise<any> };
 
     constructor(props) {
         super(props);
-
-        this.iframeCallback = () => {
-            this.state = { status: 'iframeLoaded' };
-        };
 
         /**
          * Create and Base64Url encode a JSON object containing the serverTransactionID & threeDSMethodNotificationURL
@@ -29,6 +24,10 @@ class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeSta
         const jsonStr = JSON.stringify(this.props.cReqData);
         const base64URLencodedData = encodeBase64URL(jsonStr);
         this.state = { base64URLencodedData };
+    }
+
+    private iframeCallback() {
+        this.setState({ status: 'iframeLoaded' });
     }
 
     private get3DS2ChallengePromise(): Promise<any> {
