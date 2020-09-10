@@ -5,7 +5,7 @@ import CardNumber from './CardNumber';
 let wrapper = mount(
     <CardNumber
         label="Card number"
-        error={false}
+        error=""
         isValid={false}
         focused={true}
         filled={false}

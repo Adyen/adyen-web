@@ -135,7 +135,7 @@ class CSF extends AbstractCSF {
             },
             // For component based implementation - if showValidation function is called on the component use this
             // function as a way to notify the CSF that a field is in error
-            isValidated: (pFieldType: string): CSFReturnObject => {
+            isValidated: (pFieldType: string, code: string): CSFReturnObject => {
                 if (this.state.isConfigured) {
                     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
                         this.state.securedFields[pFieldType].hasError = true;
@@ -152,6 +152,7 @@ class CSF extends AbstractCSF {
                             txVariant: this.state.type,
                             fieldType: pFieldType,
                             externalValidation: true,
+                            code,
                             numKey: this.state.securedFields[pFieldType].numKey
                         };
                         postMessageToIframe(dataObj, this.getIframeContentWin(pFieldType), this.config.loadingContext);

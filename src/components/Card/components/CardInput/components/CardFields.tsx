@@ -25,7 +25,7 @@ export default function CardFields({
         <div className="adyen-checkout__card__form">
             <CardNumber
                 brand={brand}
-                error={!!errors.encryptedCardNumber}
+                error={errors.encryptedCardNumber}
                 focused={focusedElement === 'encryptedCardNumber'}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.numberField.title')}
@@ -39,7 +39,7 @@ export default function CardFields({
 
             <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
                 <ExpirationDate
-                    error={!!errors.encryptedExpiryDate || !!errors.encryptedExpiryYear || !!errors.encryptedExpiryMonth}
+                    error={errors.encryptedExpiryDate || errors.encryptedExpiryYear || errors.encryptedExpiryMonth}
                     focused={focusedElement === 'encryptedExpiryDate'}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
@@ -51,7 +51,7 @@ export default function CardFields({
                 {hasCVC && (
                     <CVC
                         cvcRequired={cvcRequired}
-                        error={!!errors.encryptedSecurityCode}
+                        error={errors.encryptedSecurityCode}
                         focused={focusedElement === 'encryptedSecurityCode'}
                         hideCVCForBrand={hideCVCForBrand}
                         isValid={!!valid.encryptedSecurityCode}

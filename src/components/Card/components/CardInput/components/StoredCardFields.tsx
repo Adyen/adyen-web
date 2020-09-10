@@ -26,7 +26,7 @@ export default function StoredCardFields({ brand, hasCVC, onFocusField, errors, 
                 {hasCVC && (
                     <CVC
                         cvcRequired={props.cvcRequired}
-                        error={!!errors.encryptedSecurityCode}
+                        error={errors.encryptedSecurityCode}
                         focused={props.focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
                         hideCVCForBrand={props.hideCVCForBrand}

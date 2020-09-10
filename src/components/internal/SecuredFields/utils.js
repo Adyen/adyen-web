@@ -1,7 +1,6 @@
 import getProp from '../../../utils/getProp';
 import { getImageUrl } from '../../../utils/get-image';
 import {
-    DEFAULT_ERROR,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -9,6 +8,7 @@ import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD
 } from './lib/configuration/constants';
+import { DEFAULT_ERROR } from '../../../core/Errors/constants';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
 /**
@@ -75,43 +75,17 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
 /**
  * Create an object suitable for sending to our handleOnError function
  */
-export const getErrorObject = (fieldType, rootNode, state) => ({
-    rootNode,
-    fieldType,
-    error: getProp(state, `errors.${fieldType}`) || DEFAULT_ERROR,
-    type: 'card'
-});
-// -- end ROUTINES USED IN SecuredFieldsProvider.showValidation -----------------------
+export const getErrorObject = (fieldType, rootNode, state) => {
+    const error = getProp(state, `errors.${fieldType}`) || DEFAULT_ERROR;
 
-/**
- * Used below in addErrorTranslationToObject (called from SecuredField.ts) AND also by handler for SecuredFieldComponent aka CustomCardComponent
- */
-export const getTranslatedErrors = (i18n = {}) => ({
-    [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.invalid'),
-    [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.invalid'),
-    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.oneClickVerification.invalidInput.title'),
-    defaultError: 'error.title'
-});
-
-/**
- * Adds a new, translated, error property to an object, unless it already exists
- * @param originalObject - object we want to duplicate and enhance
- * @param key - fieldID eg. "encryptedCardNumber", id under which we expect a translation to exist
- * @param i18n - an i18n object to use to get translations
- * @param fieldNamesList - list of keys (fieldIDs) we want to add translations for
- * @returns a duplicate of the original object with a new property: "error" whose value is a translation extracted from the i18n object
- */
-export const addErrorTranslationToObject = (originalObj, key, i18n, fieldNamesList) => {
-    if (fieldNamesList.includes(key)) {
-        const nuObj = { ...originalObj };
-        const translatedErrors = getTranslatedErrors(i18n);
-        nuObj.error = !nuObj.error ? translatedErrors[key] : nuObj.error;
-        return nuObj;
-    }
-    return originalObj;
+    return {
+        rootNode,
+        fieldType,
+        error,
+        type: 'card'
+    };
 };
+// -- end ROUTINES USED IN SecuredFieldsProvider.showValidation -----------------------
 
 export const resolvePlaceholders = (i18n = {}) => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),

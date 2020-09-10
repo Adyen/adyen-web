@@ -10,7 +10,7 @@ export default function CVC(props: CVCProps) {
     const {
         label,
         onFocusField = () => {},
-        error = false,
+        error = '',
         className = '',
         classNameModifiers = [],
         focused,
@@ -48,7 +48,7 @@ export default function CVC(props: CVCProps) {
             classNameModifiers={[...classNameModifiers, 'securityCode']}
             onFocusField={() => onFocusField('encryptedSecurityCode')}
             className={fieldClassnames}
-            errorMessage={!!error && i18n.get('creditCard.oneClickVerification.invalidInput.title')}
+            errorMessage={error && i18n.get(error)}
             isValid={isValid}
         >
             <span className={cvcClassnames} data-cse="encryptedSecurityCode" />

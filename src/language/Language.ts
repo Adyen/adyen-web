@@ -1,6 +1,5 @@
-import defaultTranslation from './locales/en-US.json';
 import { formatCustomTranslations, formatLocale, getTranslation, loadTranslations, parseLocale } from './utils';
-import { FALLBACK_LOCALE } from './config';
+import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
 

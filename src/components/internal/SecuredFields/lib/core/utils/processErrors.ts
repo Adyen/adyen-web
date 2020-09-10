@@ -23,7 +23,8 @@ export const processErrors = (
     const isError: boolean = pFeedbackObj.error !== '';
 
     // Error is empty string && field is not already in error - do nothing
-    // This situation arises when we encrypt a field and trigger an "error clearing" event
+    // This situation arises when we encrypt a field and trigger an "error clearing" event - however we don't need to propagate this non-error
+    // if the field wasn't already in error
     if (!isError && !field.hasError) return null;
 
     dataObj.error = isError ? pFeedbackObj.error : '';

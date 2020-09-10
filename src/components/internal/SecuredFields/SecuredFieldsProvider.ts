@@ -194,10 +194,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .reduce(getErrorReducer(numDateFields, state), [])
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
-                this.handleOnError(getErrorObject(field, props.rootNode, state));
+                const errorObj: CbObjOnError = getErrorObject(field, props.rootNode, state);
+                this.handleOnError(errorObj);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
-                    this.csf.isValidated(field);
+                    this.csf.isValidated(field, errorObj.error);
                 }
             });
     }

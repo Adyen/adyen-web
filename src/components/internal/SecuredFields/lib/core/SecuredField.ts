@@ -31,9 +31,11 @@ class SecuredField extends AbstractSecuredField {
         // List of props from setup object not needed for iframe config
         const deltaPropsArr: string[] = ['fieldType', 'cvcRequired', 'iframeSrc', 'loadingContext', 'holderEl'];
 
-        // Copy passed setup object values to this.config
+        // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
-        this.config = { ...this.config, ...configVarsFromSetUpObj };
+
+        // ...breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
+        this.config = { ...this.config, ...configVarsFromSetUpObj, iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig } };
 
         // Copy passed setup object values to this
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
@@ -62,7 +64,7 @@ class SecuredField extends AbstractSecuredField {
 
     init(i18n: Language): SecuredField {
         /**
-         * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) error
+         * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
         const processedAriaConfig: AriaConfig = processAriaConfig(this.config, this.fieldType, i18n);
         // Set result back onto config object
@@ -111,9 +113,6 @@ class SecuredField extends AbstractSecuredField {
 
         // Add general listener for 'message' EVENT - the event that 'powers' postMessage
         on(window, 'message', this.postMessageListener, false);
-
-        // TODO - only needed until latest version of 3.2.5 is on test
-        this.config.iframeUIConfig.ariaLabels = this.config.iframeUIConfig.ariaConfig;
 
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
