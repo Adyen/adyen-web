@@ -1,4 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web';
+import '@adyen/adyen-web/dist/adyen.css';
 import { handleChange, handleSubmit } from '../../handlers';
 import { getOriginKey } from '../../services';
 import '../../../config/polyfills';
