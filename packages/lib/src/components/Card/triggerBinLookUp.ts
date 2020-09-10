@@ -30,12 +30,17 @@ export default function triggerBinLookUp(callbackObj) {
         ).then(data => {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
-                // ...call processBinLookupResponse with the response object if it contains at least one supported brand
+                /**
+                 * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
+                 */
                 if (data.supportedBrands?.length) {
+                    // ...call processBinLookupResponse with the response object if it contains at least one supported brand
                     this.processBinLookupResponse(data);
                     return;
                 }
-                // If we get here then no supported brands were found
+                /**
+                 * detectedBrands = no brands the merchant supports were found; what we did detect the shopper to be entering was this brand; error!
+                 */
                 if (data.detectedBrands?.length) {
                     const errObj: CbObjOnError = {
                         type: 'card',
