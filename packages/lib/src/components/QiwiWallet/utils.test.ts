@@ -9,12 +9,12 @@ describe('formatPrefixName', () => {
 
     const noIdItem = {
         id: undefined,
-        name: 'test'
+        code: 'test'
     };
 
     const noNameItem = {
         id: '22',
-        name: undefined
+        code: undefined
     };
 
     test('Returns formatted name as string when passed with an item without ID ', () => {
@@ -29,12 +29,13 @@ describe('formatPrefixName', () => {
 
     const item = {
         id: '+31',
-        name: 'nl'
+        code: 'NL',
+        name: 'Netherlands'
     };
 
     test('Formats items and adjusts the name', () => {
         const returnedItem = formatPrefixName(item);
-        expect(returnedItem.name).toContain('nl (+31)');
+        expect(returnedItem.name).toContain('Netherlands (+31)');
     });
 });
 
@@ -42,107 +43,107 @@ describe('selectItem', () => {
     const itemList = [
         {
             id: '+7',
-            name: 'RU'
+            code: 'RU'
         },
         {
             id: '+9955',
-            name: 'GE'
+            code: 'GE'
         },
         {
             id: '+507',
-            name: 'PA'
+            code: 'PA'
         },
         {
             id: '+44',
-            name: 'GB'
+            code: 'GB'
         },
         {
             id: '+992',
-            name: 'TJ'
+            code: 'TJ'
         },
         {
             id: '+370',
-            name: 'LT'
+            code: 'LT'
         },
         {
             id: '+972',
-            name: 'IL'
+            code: 'IL'
         },
         {
             id: '+996',
-            name: 'KG'
+            code: 'KG'
         },
         {
             id: '+380',
-            name: 'UA'
+            code: 'UA'
         },
         {
             id: '+84',
-            name: 'VN'
+            code: 'VN'
         },
         {
             id: '+90',
-            name: 'TR'
+            code: 'TR'
         },
         {
             id: '+994',
-            name: 'AZ'
+            code: 'AZ'
         },
         {
             id: '+374',
-            name: 'AM'
+            code: 'AM'
         },
         {
             id: '+371',
-            name: 'LV'
+            code: 'LV'
         },
         {
             id: '+91',
-            name: 'IN'
+            code: 'IN'
         },
         {
             id: '+66',
-            name: 'TH'
+            code: 'TH'
         },
         {
             id: '+373',
-            name: 'MD'
+            code: 'MD'
         },
         {
             id: '+1',
-            name: 'US'
+            code: 'US'
         },
         {
             id: '+81',
-            name: 'JP'
+            code: 'JP'
         },
         {
             id: '+998',
-            name: 'UZ'
+            code: 'UZ'
         },
         {
             id: '+77',
-            name: 'KZ'
+            code: 'KZ'
         },
         {
             id: '+375',
-            name: 'BY'
+            code: 'BY'
         },
         {
             id: '+372',
-            name: 'EE'
+            code: 'EE'
         },
         {
             id: '+40',
-            name: 'RO'
+            code: 'RO'
         },
         {
             id: '+82',
-            name: 'KR'
+            code: 'KR'
         }
     ];
 
-    test('returns item based on matching id and name', () => {
+    test('returns item based on matching id and code', () => {
         const selectedItemKR = selectItem(itemList, 'KR');
         expect(selectedItemKR).toBe('+82');
 

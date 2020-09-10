@@ -8,14 +8,15 @@ export const formatPrefixName = item => {
         throw new Error('No item passed');
     }
 
-    if (!item.name || !item.id) {
+    if (!item.code || !item.id) {
         return false;
     }
 
-    const flag = item.name.toUpperCase().replace(/./g, char => (String.fromCodePoint ? String.fromCodePoint(char.charCodeAt(0) + 127397) : ''));
+    const flag = item.code.toUpperCase().replace(/./g, char => (String.fromCodePoint ? String.fromCodePoint(char.charCodeAt(0) + 127397) : ''));
     return {
         ...item,
-        name: `${flag} ${item.name} (${item.id})`
+        name: `${flag} ${item.name} (${item.id})`,
+        selectedOptionName: flag
     };
 };
 
@@ -26,7 +27,7 @@ export const formatPrefixName = item => {
  */
 export const selectItem = (items, countryCode) => {
     if (items && countryCode) {
-        const item = items.find(i => i.name === countryCode);
+        const item = items.find(i => i.code === countryCode);
         if (item) {
             return item.id;
         }

@@ -3,35 +3,27 @@ import UIElement from '../UIElement';
 import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
-import getProp from '../../utils/getProp';
+import COUNTRIES from './countries';
 
 class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
 
     public static defaultProps = {
-        items: [],
-        countryCode: null
+        items: COUNTRIES.map(formatPrefixName).filter(item => item !== false),
+        countryCode: null,
+        prefixName: 'qiwiwallet.telephoneNumberPrefix',
+        phoneName: 'qiwiwallet.telephoneNumber'
     };
-
-    constructor(props) {
-        super(props);
-        this.props.items = this.props.items.map(formatPrefixName).filter(item => item !== false);
-    }
 
     get isValid() {
         return !!this.state.isValid;
     }
 
     formatProps(props) {
-        const items = getProp(props, 'details.0.items') || props.items;
-
         return {
             onValid: () => {},
             ...props,
-            prefixName: getProp(props, 'details.0.key') || 'qiwiwallet.telephoneNumberPrefix',
-            phoneName: getProp(props, 'details.1.key') || 'qiwiwallet.telephoneNumber',
-            selected: selectItem(items, props.countryCode),
-            items
+            selected: selectItem(props.items, props.countryCode)
         };
     }
 
