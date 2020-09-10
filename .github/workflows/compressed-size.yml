@@ -12,4 +12,5 @@ jobs:
       - uses: preactjs/compressed-size-action@v2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          pattern: "**/dist/**/*.js"
           exclude: "{**/*.map,**/node_modules/**,**/src}"
