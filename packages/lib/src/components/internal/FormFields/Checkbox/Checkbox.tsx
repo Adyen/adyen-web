@@ -1,8 +1,19 @@
-import { h } from 'preact';
+import { ComponentChild, h } from 'preact';
 import cx from 'classnames';
 import './Checkbox.scss';
 
-export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, ...props }) {
+interface CheckboxProps {
+    classNameModifiers?: string[];
+    label: string | ComponentChild;
+    name?: string;
+    isInvalid?: boolean;
+    onChange?;
+    onInput?;
+    className?: string;
+    value?: string;
+}
+
+export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, ...props }: CheckboxProps) {
     return (
         <label className="adyen-checkout__checkbox">
             <input

@@ -6,8 +6,6 @@ import InputEmail from './InputEmail';
 import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import Select from './Select';
-import SelectList from './SelectList';
-
 import './FormFields.scss';
 
 export const renderFormField = (type, props) => {
@@ -17,7 +15,6 @@ export const renderFormField = (type, props) => {
         emailAddress: InputEmail,
         radio: RadioGroup,
         select: Select,
-        selectList: SelectList,
         tel: InputTelephone,
         text: InputText,
         default: InputText

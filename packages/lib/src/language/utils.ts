@@ -1,5 +1,4 @@
-import { FALLBACK_LOCALE } from './config';
-import defaultTranslation from './locales/en-US.json';
+import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
 
 /**

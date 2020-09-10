@@ -2,8 +2,19 @@ import { Component, h } from 'preact';
 import cx from 'classnames';
 import styles from './Select.module.scss';
 import './Select.scss';
+import { SelectProps, SelectState } from './types';
 
-class SelectBox extends Component {
+class Select extends Component<SelectProps, SelectState> {
+    private selectContainer;
+    private toggleButton;
+    private dropdownList;
+
+    public static defaultProps = {
+        items: [],
+        readonly: false,
+        onChange: () => {}
+    };
+
     constructor(props) {
         super(props);
 
@@ -19,12 +30,6 @@ class SelectBox extends Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleOnError = this.handleOnError.bind(this);
     }
-
-    static defaultProps = {
-        items: [],
-        readonly: false,
-        onChange: () => {}
-    };
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, false);
@@ -98,7 +103,7 @@ class SelectBox extends Component {
             case 'Enter':
                 e.preventDefault();
                 this.setState({ toggleDropdown: true });
-                if (this.dropdownList && this.dropdownList.firstElementChild) {
+                if (this.dropdownList?.firstElementChild) {
                     this.dropdownList.firstElementChild.focus();
                 }
                 break;
@@ -139,7 +144,7 @@ class SelectBox extends Component {
                     ])}
                     onClick={!readonly ? this.toggle : undefined}
                     onKeyDown={!readonly ? this.handleButtonKeyDown : undefined}
-                    tabIndex="0"
+                    tabIndex={0}
                     title={active.name || placeholder}
                     aria-haspopup="listbox"
                     aria-expanded={toggleDropdown}
@@ -170,7 +175,7 @@ class SelectBox extends Component {
                         <li
                             key={item.id}
                             role="option"
-                            tabIndex="-1"
+                            tabIndex={-1}
                             aria-selected={item.id === active.id}
                             className={cx([
                                 'adyen-checkout__dropdown__element',
@@ -198,4 +203,4 @@ class SelectBox extends Component {
     }
 }
 
-export default SelectBox;
+export default Select;

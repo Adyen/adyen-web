@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import classNames from 'classnames';
 import SecuredFieldsProvider from '../../../components/internal/SecuredFields/SecuredFieldsProvider';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import Field from '../../../components/internal/FormFields/Field';
+import Field from '../../internal/FormFields/Field';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;

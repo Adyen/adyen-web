@@ -1,10 +1,7 @@
-const { CHECKOUT_API_KEY, CHECKOUT_URL, MERCHANT_ACCOUNT } = require('./config');
+const { CHECKOUT_API_KEY, CHECKOUT_URL } = require('./config');
 
 module.exports = (endpoint, request) => {
-    const body = JSON.stringify({
-        merchantAccount: MERCHANT_ACCOUNT,
-        ...request
-    });
+    const body = JSON.stringify(request);
 
     return {
         body,

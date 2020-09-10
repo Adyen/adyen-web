@@ -1,12 +1,15 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
+import Language from '../../../language/Language';
+import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
+import { getError, getDefaultErrorCode } from '../../../core/Errors/utils';
 
 jest.mock('./lib', () => {
     return () => true;
 });
 
-const i18n = { get: key => key };
+const i18n = new Language('en-US', {});
 
 let wrapper;
 let sfp;
@@ -58,12 +61,12 @@ const styles = {
 const unsupportedCardErrObj = {
     type: 'card',
     fieldType: 'encryptedCardNumber',
-    error: 'Unsupported card',
+    error: ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED],
     binLookupBrands: ['cartebancaire']
 };
 
 const regularErrObj = {
-    error: 'number field incomplete',
+    error: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD],
     fieldType: 'encryptedCardNumber',
     type: 'card'
 };
@@ -71,8 +74,13 @@ const regularErrObj = {
 const nodeHolder = document.createElement('div');
 nodeHolder.innerHTML = mockNode;
 
-wrapper = shallow(<SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} styles={styles} render={renderFn} onError={onError} />);
+wrapper = shallow(
+    <SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} styles={styles} render={renderFn} onError={onError} i18n={i18n} />
+);
 
+/**
+ * Rendering
+ */
 describe('<SecuredFieldsProvider /> rendering', () => {
     test('Loading state', () => {
         expect(wrapper.instance().state.status).toBe('loading');
@@ -116,16 +124,31 @@ describe('<SecuredFieldsProvider /> rendering', () => {
     });
 });
 
+/**
+ * Unsupported cards (including related errors)
+ */
 describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     it('should generate an "unsupported card" error that propagates to the onError callback', () => {
+        nodeHolder.innerHTML = mockNode;
+        wrapper = shallow(
+            <SecuredFieldsProvider
+                ref={handleSecuredFieldsRef}
+                rootNode={nodeHolder}
+                styles={styles}
+                render={renderFn}
+                onError={onError}
+                i18n={i18n}
+            />
+        );
+
         expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
         expect(onError).toHaveBeenCalledTimes(4);
-        expect(errorObj.error).toEqual('Unsupported card');
+        expect(errorObj.error).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
     });
 
     it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
         expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('Unsupported card');
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
     });
 
     it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
@@ -140,13 +163,13 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     });
 
     it('should re-generate an "unsupported card" error and then another "regular" error should be ignored', () => {
-        unsupportedCardErrObj.error = 'Unsupported card';
+        unsupportedCardErrObj.error = ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED];
         wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
         expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
 
         expect(wrapper.instance().handleOnError(regularErrObj)).toBe(false);
 
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('Unsupported card');
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
     });
 
     it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
@@ -155,7 +178,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
         expect(wrapper.instance().handleOnError(regularErrObj)).toBe(true);
 
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual('number field incomplete');
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]);
     });
 
     it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', () => {
@@ -187,5 +210,57 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(true);
 
         expect(wrapper.instance().state.isSfpValid).toBe(true);
+    });
+});
+
+/**
+ * Error handling
+ */
+describe('<SecuredFieldsProvider /> handling error codes', () => {
+    it("should handle an error and set the appropriate 'errorText' and translated, 'errorI18n' props onto the error object", () => {
+        nodeHolder.innerHTML = mockNode;
+        wrapper = shallow(
+            <SecuredFieldsProvider
+                ref={handleSecuredFieldsRef}
+                rootNode={nodeHolder}
+                styles={styles}
+                render={renderFn}
+                onError={onError}
+                i18n={i18n}
+            />
+        );
+
+        wrapper.instance().handleOnError(regularErrObj);
+
+        const errorCode = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
+
+        expect(errorObj.error).toEqual(errorCode);
+        expect(errorObj.errorText).toEqual(getError(errorCode));
+        expect(errorObj.errorI18n).toEqual(i18n.get(errorCode));
+    });
+
+    it("should handle an error with a code it doesn't recognise and set the relevant state and props based on a default code", () => {
+        regularErrObj.error = 'some.strange.code';
+
+        wrapper.instance().handleOnError(regularErrObj);
+
+        expect(errorObj.error).toEqual('some.strange.code');
+
+        const defaultErrorCode = getDefaultErrorCode(regularErrObj.fieldType);
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(defaultErrorCode);
+
+        expect(errorObj.errorText).toEqual(defaultErrorCode);
+        expect(errorObj.errorI18n).toEqual(i18n.get(defaultErrorCode));
+    });
+
+    it('should clear the previous error', () => {
+        regularErrObj.error = '';
+
+        wrapper.instance().handleOnError(regularErrObj);
+
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(false);
+
+        expect(errorObj.errorText).toEqual(ERROR_MSG_CLEARED);
+        expect(errorObj.errorI18n).toEqual('');
     });
 });

@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
-import { renderFormField } from '../../../../components/internal/FormFields';
+import { renderFormField } from '../../../internal/FormFields';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import Field from '../../../../components/internal/FormFields/Field';
+import Field from '../../../internal/FormFields/Field';
 
 export default function SendCopyToEmail(props) {
     const { errors, value, onInput, onChange } = props;

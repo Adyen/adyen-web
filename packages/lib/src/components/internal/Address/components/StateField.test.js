@@ -49,11 +49,11 @@ describe('StateField', () => {
         const value = 'CA';
         const wrapper = await getWrapper({ country: 'US', value });
         wrapper.update();
-        expect(wrapper.find('SelectBox').prop('selected')).toBe(value);
+        expect(wrapper.find('Select').prop('selected')).toBe(value);
     });
 
     test('should not load the dropdown if no states were loaded', async () => {
         const wrapper = getWrapper({ country: 'AR' });
-        expect(wrapper.find('SelectBox')).toHaveLength(0);
+        expect(wrapper.find('Select')).toHaveLength(0);
     });
 });

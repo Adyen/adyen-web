@@ -33,7 +33,7 @@ export interface CardNumberProps {
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
-    error: boolean;
+    error: string;
     filled: boolean;
     focused: boolean;
     isValid: boolean;
@@ -46,7 +46,7 @@ export interface CVCProps {
     className?: string;
     classNameModifiers?: string[];
     cvcRequired: boolean;
-    error?: boolean;
+    error?: string;
     filled?: any;
     focused?: any;
     frontCVC?: boolean;
@@ -70,7 +70,7 @@ export interface DualBrandingIconProps {
 
 export interface ExpirationDateProps {
     className?: string;
-    error?: boolean;
+    error?: string;
     filled?: boolean;
     focused?: boolean;
     isValid?: boolean;

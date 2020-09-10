@@ -1,5 +1,7 @@
 import fetchJSONData from '../../utils/fetch-json-data';
 import { CbObjOnError } from '../internal/SecuredFields/lib/types';
+import { getError } from '../../core/Errors/utils';
+import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
 
 export default function triggerBinLookUp(callbackObj) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -38,7 +40,7 @@ export default function triggerBinLookUp(callbackObj) {
                     const errObj: CbObjOnError = {
                         type: 'card',
                         fieldType: 'encryptedCardNumber',
-                        error: 'Unsupported card entered',
+                        error: getError(ERROR_MSG_UNSUPPORTED_CARD_ENTERED),
                         binLookupBrands: data.detectedBrands
                     };
                     this.handleUnsupportedCard(errObj);
@@ -60,6 +62,7 @@ export default function triggerBinLookUp(callbackObj) {
             type: 'card',
             fieldType: 'encryptedCardNumber',
             error: ''
+            // code: undefined
         };
         this.handleUnsupportedCard(errObj);
     }

@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import { useState, useEffect, useMemo } from 'preact/hooks';
-import { renderFormField } from '../../../../../components/internal/FormFields';
+import { renderFormField } from '../../../../internal/FormFields';
 import classNames from 'classnames';
-import Field from '../../../../../components/internal/FormFields/Field';
+import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { KCPErrors, KCPProps, RtnType_ParamBooleanFn, RtnType_ParamVoidFn } from './types';
 import styles from '../CardInput.module.scss';

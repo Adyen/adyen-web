@@ -50,7 +50,7 @@ describe('CountryField', () => {
         const value = 'NL';
         const wrapper = await getWrapper({ value });
         wrapper.update();
-        expect(wrapper.find('SelectBox').prop('selected')).toBe(value);
+        expect(wrapper.find('Select').prop('selected')).toBe(value);
     });
 
     test('should be read only if there is only one item', async () => {
@@ -58,6 +58,6 @@ describe('CountryField', () => {
         const value = 'NL';
         const wrapper = await getWrapper({ value, allowedCountries });
         wrapper.update();
-        expect(wrapper.find('SelectBox').prop('readonly')).toBe(true);
+        expect(wrapper.find('Select').prop('readonly')).toBe(true);
     });
 });
