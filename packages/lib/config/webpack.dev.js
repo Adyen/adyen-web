@@ -2,13 +2,13 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
+require('dotenv').config({ path: path.resolve('../../', '.env') });
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpackConfig = require('./webpack.config');
 const currentVersion = require('./version')();
-const host = process.env.HOST || '0.0.0.0';
-const port = process.env.PORT || '3020';
 const resolve = dir => path.resolve(__dirname, dir);
 const shouldUseSourceMap = true;
+
 module.exports = merge(webpackConfig, {
     mode: 'development',
     plugins: [

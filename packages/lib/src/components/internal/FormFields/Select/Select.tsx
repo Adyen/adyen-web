@@ -153,7 +153,7 @@ class Select extends Component<SelectProps, SelectState> {
                         this.toggleButton = ref;
                     }}
                 >
-                    <span className="adyen-checkout__dropdown__button__text">{active.name || placeholder}</span>
+                    <span className="adyen-checkout__dropdown__button__text">{active.selectedOptionName || active.name || placeholder}</span>
                     {active.icon && (
                         <img className="adyen-checkout__dropdown__button__icon" src={active.icon} alt={active.name} onError={this.handleOnError} />
                     )}
@@ -187,6 +187,7 @@ class Select extends Component<SelectProps, SelectState> {
                             onKeyDown={this.handleKeyDown}
                         >
                             <span>{item.name}</span>
+
                             {item.icon && (
                                 <img
                                     className="adyen-checkout__dropdown__element__icon"
