@@ -14,8 +14,6 @@ import * as logger from '../../components/internal/SecuredFields/lib/utilities/l
 export function errorHandler(errorObj) {
     console.log('### ErrorHandler::errorHandler:: errorObj', errorObj);
 
-    console.log('### ErrorHandler::errorHandler:: this=', this);
-
     const code = errorObj.error;
 
     if (code.indexOf(VALIDATION_ERROR) > -1) {

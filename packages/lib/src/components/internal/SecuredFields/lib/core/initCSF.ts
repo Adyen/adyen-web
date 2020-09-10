@@ -22,13 +22,6 @@ const initCSF = (pSetupObj: SetupObject, highLevelErrorHandler): CSFReturnObject
     // //////// 2. Find and store reference to the root DOM element //////////
     const rootNode: HTMLElement = findRootNode(setupObj.rootNode);
 
-    if (!rootNode) {
-        if (window.console && window.console.error) {
-            window.console.error('ERROR: SecuredFields cannot find a valid rootNode element for', setupObj.type);
-        }
-        return null;
-    }
-
     setupObj.rootNode = rootNode; // Overwrite with actual node (in case we were sent a string)
 
     const myCSF: CSF = new CSF(setupObj);
