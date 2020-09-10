@@ -126,6 +126,8 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
 
     const verifiedErrorCode = getVerifiedErrorCode(cbObj.fieldType, cbObj.error, this.props.i18n);
 
+    console.log('### SecuredFieldsProviderHandlers::handleOnError:: verifiedErrorCode', verifiedErrorCode);
+
     this.setState(prevState => ({
         errors: { ...prevState.errors, [cbObj.fieldType]: verifiedErrorCode || false },
         hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
@@ -135,6 +137,8 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
 
     const errorExplained = getError(verifiedErrorCode);
     cbObj.errorText = errorExplained !== '' ? errorExplained : ERROR_MSG_CLEARED; // Add internal explanation
+
+    console.log('### SecuredFieldsProviderHandlers::handleOnError:: cbObj', cbObj);
 
     this.props.onError(cbObj);
 

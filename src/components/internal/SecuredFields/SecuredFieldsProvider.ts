@@ -162,7 +162,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             isKCP: this.props.koreanAuthenticationRequired === true
         };
 
-        this.csf = initCSF(csfSetupObj);
+        this.csf = initCSF(csfSetupObj, this.props.onError);
     }
 
     public getChildContext(): object {

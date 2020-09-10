@@ -126,6 +126,7 @@ export class CardElement extends UIElement<CardElementProps> {
                     {...this.state}
                     onChange={this.setState}
                     onSubmit={this.submit}
+                    onError={this.onError}
                     payButton={this.payButton}
                     onBrand={this.onBrand}
                     onBinValue={this.onBinValue}

@@ -3,6 +3,13 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
+import {
+    ERROR_CODES,
+    ERROR_MSG_NO_ROOT_NODE,
+    ERROR_MSG_COMP_ALREADY_MOUNTED,
+    ERROR_MSG_COMP_NOT_MOUNTED,
+    ERROR_MSG_NO_RENDER_METHOD
+} from '../core/Errors/constants';
 
 export interface BaseElementProps {
     modules?: {
@@ -46,6 +53,10 @@ class BaseElement<P extends BaseElementProps> {
         this.state = { ...this.state, ...newState };
     }
 
+    public onError(error) {
+        return error;
+    }
+
     /**
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
@@ -64,7 +75,7 @@ class BaseElement<P extends BaseElementProps> {
 
     protected render() {
         // render() not implemented in the element
-        throw new Error('Payment method cannot be rendered.');
+        this.onError({ error: ERROR_CODES[ERROR_MSG_NO_RENDER_METHOD] });
     }
 
     /**
@@ -76,11 +87,11 @@ class BaseElement<P extends BaseElementProps> {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
 
         if (!node) {
-            throw new Error('Component could not mount. Root node was not found.');
+            this.onError({ error: ERROR_CODES[ERROR_MSG_NO_ROOT_NODE] });
         }
 
         if (this._node) {
-            throw new Error('Component is already mounted.');
+            this.onError({ error: ERROR_CODES[ERROR_MSG_COMP_ALREADY_MOUNTED] });
         }
 
         this._node = node;
@@ -101,7 +112,7 @@ class BaseElement<P extends BaseElementProps> {
 
     public remount(component): this {
         if (!this._node) {
-            throw new Error('Component is not mounted.');
+            this.onError({ error: ERROR_CODES[ERROR_MSG_COMP_NOT_MOUNTED] });
         }
 
         const newComponent = component || this.render();

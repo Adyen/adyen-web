@@ -166,102 +166,116 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 onFocus={this.handleFocus}
                 type={this.props.brand}
                 oneClick={isOneClick}
-                render={({ setRootNode, setFocusOn }, sfpState) => (
-                    <div ref={setRootNode} className={`adyen-checkout__card-input ${styles['card-input__wrapper']}`}>
-                        {this.props.storedPaymentMethodId ? (
-                            <LoadingWrapper status={sfpState.status}>
-                                <StoredCardFields
-                                    {...this.props}
-                                    cvcRequired={sfpState.cvcRequired}
-                                    errors={sfpState.errors}
-                                    brand={sfpState.brand}
-                                    hasCVC={hasCVC}
-                                    hideCVCForBrand={hideCVCForBrand}
-                                    onFocusField={setFocusOn}
-                                    focusedElement={focusedElement}
-                                    status={sfpState.status}
-                                    valid={sfpState.valid}
-                                />
+                render={({ setRootNode, setFocusOn }, sfpState) => {
+                    if (status === 'ready') {
+                        return (
+                            <div ref={setRootNode} className={`adyen-checkout__card-input ${styles['card-input__wrapper']}`}>
+                                {this.props.storedPaymentMethodId ? (
+                                    <LoadingWrapper status={sfpState.status}>
+                                        <StoredCardFields
+                                            {...this.props}
+                                            cvcRequired={sfpState.cvcRequired}
+                                            errors={sfpState.errors}
+                                            brand={sfpState.brand}
+                                            hasCVC={hasCVC}
+                                            hideCVCForBrand={hideCVCForBrand}
+                                            onFocusField={setFocusOn}
+                                            focusedElement={focusedElement}
+                                            status={sfpState.status}
+                                            valid={sfpState.valid}
+                                        />
 
-                                {hasInstallments && (
-                                    <Installments
-                                        amount={this.props.amount}
-                                        brand={sfpState.brand}
-                                        installmentOptions={installmentOptions}
-                                        onChange={this.handleInstallments}
-                                    />
+                                        {hasInstallments && (
+                                            <Installments
+                                                amount={this.props.amount}
+                                                brand={sfpState.brand}
+                                                installmentOptions={installmentOptions}
+                                                onChange={this.handleInstallments}
+                                            />
+                                        )}
+                                    </LoadingWrapper>
+                                ) : (
+                                    <LoadingWrapper status={sfpState.status}>
+                                        <CardFields
+                                            {...this.props}
+                                            brand={sfpState.brand}
+                                            focusedElement={focusedElement}
+                                            onFocusField={setFocusOn}
+                                            hasCVC={hasCVC}
+                                            hideCVCForBrand={hideCVCForBrand}
+                                            errors={sfpState.errors}
+                                            valid={sfpState.valid}
+                                            cvcRequired={sfpState.cvcRequired}
+                                            dualBrandingElements={
+                                                this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements
+                                            }
+                                            dualBrandingChangeHandler={this.handleAdditionalDataSelection}
+                                            dualBrandingSelected={this.state.additionalSelectValue}
+                                        />
+
+                                        {hasHolderName && (
+                                            <CardHolderName
+                                                required={this.props.holderNameRequired}
+                                                placeholder={this.props.placeholders.holderName}
+                                                value={this.state.data.holderName}
+                                                error={!!this.state.errors.holderName}
+                                                isValid={!!this.state.valid.holderName}
+                                                onChange={this.handleHolderName}
+                                            />
+                                        )}
+
+                                        {this.props.configuration.koreanAuthenticationRequired && isKorea && (
+                                            <KCPAuthentication
+                                                onFocusField={setFocusOn}
+                                                focusedElement={focusedElement}
+                                                encryptedPasswordState={{
+                                                    data: sfpState.encryptedPassword,
+                                                    valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
+                                                    errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
+                                                }}
+                                                ref={this.kcpAuthenticationRef}
+                                                onChange={this.handleKCPAuthentication}
+                                            />
+                                        )}
+
+                                        {enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
+
+                                        {hasInstallments && (
+                                            <Installments
+                                                amount={this.props.amount}
+                                                brand={sfpState.brand}
+                                                installmentOptions={installmentOptions}
+                                                onChange={this.handleInstallments}
+                                            />
+                                        )}
+
+                                        {this.props.billingAddressRequired && (
+                                            <Address
+                                                label="billingAddress"
+                                                data={this.state.billingAddress}
+                                                onChange={this.handleAddress}
+                                                allowedCountries={this.props.billingAddressAllowedCountries}
+                                                requiredFields={this.props.billingAddressRequiredFields}
+                                                ref={this.billingAddressRef}
+                                            />
+                                        )}
+                                    </LoadingWrapper>
                                 )}
-                            </LoadingWrapper>
-                        ) : (
-                            <LoadingWrapper status={sfpState.status}>
-                                <CardFields
-                                    {...this.props}
-                                    brand={sfpState.brand}
-                                    focusedElement={focusedElement}
-                                    onFocusField={setFocusOn}
-                                    hasCVC={hasCVC}
-                                    hideCVCForBrand={hideCVCForBrand}
-                                    errors={sfpState.errors}
-                                    valid={sfpState.valid}
-                                    cvcRequired={sfpState.cvcRequired}
-                                    dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
-                                    dualBrandingChangeHandler={this.handleAdditionalDataSelection}
-                                    dualBrandingSelected={this.state.additionalSelectValue}
-                                />
 
-                                {hasHolderName && (
-                                    <CardHolderName
-                                        required={this.props.holderNameRequired}
-                                        placeholder={this.props.placeholders.holderName}
-                                        value={this.state.data.holderName}
-                                        error={!!this.state.errors.holderName}
-                                        isValid={!!this.state.valid.holderName}
-                                        onChange={this.handleHolderName}
-                                    />
-                                )}
+                                {this.props.showPayButton &&
+                                    this.props.payButton({ status, icon: getImage({ loadingContext, imageFolder: 'components/' })('lock') })}
+                            </div>
+                        );
+                    }
 
-                                {this.props.configuration.koreanAuthenticationRequired && isKorea && (
-                                    <KCPAuthentication
-                                        onFocusField={setFocusOn}
-                                        focusedElement={focusedElement}
-                                        encryptedPasswordState={{
-                                            data: sfpState.encryptedPassword,
-                                            valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
-                                            errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
-                                        }}
-                                        ref={this.kcpAuthenticationRef}
-                                        onChange={this.handleKCPAuthentication}
-                                    />
-                                )}
-
-                                {enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
-
-                                {hasInstallments && (
-                                    <Installments
-                                        amount={this.props.amount}
-                                        brand={sfpState.brand}
-                                        installmentOptions={installmentOptions}
-                                        onChange={this.handleInstallments}
-                                    />
-                                )}
-
-                                {this.props.billingAddressRequired && (
-                                    <Address
-                                        label="billingAddress"
-                                        data={this.state.billingAddress}
-                                        onChange={this.handleAddress}
-                                        allowedCountries={this.props.billingAddressAllowedCountries}
-                                        requiredFields={this.props.billingAddressRequiredFields}
-                                        ref={this.billingAddressRef}
-                                    />
-                                )}
-                            </LoadingWrapper>
-                        )}
-
-                        {this.props.showPayButton &&
-                            this.props.payButton({ status, icon: getImage({ loadingContext, imageFolder: 'components/' })('lock') })}
-                    </div>
-                )}
+                    if (status === 'keyError') {
+                        return (
+                            <div ref={setRootNode} className={`adyen-checkout__card-input ${styles['card-input__wrapper']}`}>
+                                <span>Configuration Error: a clientKey (or originKey) has not been defined (see console)</span>
+                            </div>
+                        );
+                    }
+                }}
             />
         );
     }

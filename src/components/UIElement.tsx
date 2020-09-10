@@ -4,6 +4,7 @@ import { PaymentAction, PaymentAmount } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import Language from '../language/Language';
+import { errorHandler } from '../core/Errors/ErrorHandler';
 
 export interface UIElementProps extends BaseElementProps {
     onChange?: (state: any, element: UIElement) => void;
@@ -49,6 +50,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
+        this.onError = errorHandler.bind(this);
         this.elementRef = (props && props.elementRef) || this;
     }
 

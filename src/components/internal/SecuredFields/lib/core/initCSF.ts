@@ -1,31 +1,19 @@
 import CSF from './CSF';
 import cardType from '../utilities/cardType';
-import * as logger from '../utilities/logger';
 import { falsy } from '../utilities/commonUtils';
 import { findRootNode } from '../ui/domUtils';
 import { CSFReturnObject, SetupObject } from '../types';
+import { ERROR_CODES, ERROR_MSG_NO_KEYS } from '../../../../../core/Errors/constants';
 
-const initCSF = (pSetupObj: SetupObject): CSFReturnObject => {
-    if (!pSetupObj) {
-        throw new Error('No securedFields configuration object defined');
-    }
-
+const initCSF = (pSetupObj: SetupObject, highLevelErrorHandler): CSFReturnObject => {
     const setupObj: SetupObject = { ...pSetupObj };
 
     // Ensure there is always a default type & map the generic types (e.g. 'card', 'scheme') to 'card'
     const isGenericCardType: boolean = cardType.isGenericCardType(setupObj.type);
     setupObj.type = isGenericCardType ? 'card' : setupObj.type;
 
-    // //////// 1. Check passed config object has minimum expected properties //////////
-    if (!Object.prototype.hasOwnProperty.call(setupObj, 'rootNode')) {
-        logger.error('ERROR: SecuredFields configuration object is missing a "rootNode" property');
-        return null;
-    }
-
     if (falsy(setupObj.clientKey) && falsy(setupObj.originKey)) {
-        logger.warn(
-            'WARNING: Checkout configuration object is missing a "clientKey" property.\nFor a transition period the originKey will be accepted instead but this will eventually be deprecated'
-        );
+        highLevelErrorHandler({ error: ERROR_CODES[ERROR_MSG_NO_KEYS] });
         return null;
     }
 
