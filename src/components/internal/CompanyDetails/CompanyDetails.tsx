@@ -8,7 +8,6 @@ import { companyDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsStateError, CompanyDetailsStateValid } from './types';
-import './CompanyDetails.scss';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
 
@@ -52,7 +51,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     return (
         <Fieldset classNameModifiers={[label]} label={label}>
             {requiredFields.includes('name') && (
-                <Field label={i18n.get('companyDetails.name')} classNameModifiers={['col-50', 'name']} errorMessage={!!errors.name}>
+                <Field label={i18n.get('companyDetails.name')} classNameModifiers={['name']} errorMessage={!!errors.name}>
                     {renderFormField('text', {
                         name: generateFieldName('name'),
                         value: data.name,
@@ -67,7 +66,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
             {requiredFields.includes('registrationNumber') && (
                 <Field
                     label={i18n.get('companyDetails.registrationNumber')}
-                    classNameModifiers={['col-50', 'registrationNumber']}
+                    classNameModifiers={['registrationNumber']}
                     errorMessage={!!errors.registrationNumber}
                 >
                     {renderFormField('text', {
