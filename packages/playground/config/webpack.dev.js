@@ -18,7 +18,6 @@ const htmlPages = [
     { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'QR Codes', id: 'QRCodes' },
     { name: 'Secured Fields', id: 'SecuredFields' },
-    // { name: 'Secured Fields Pure', id: 'SecuredFieldsPure' },
     { name: 'Vouchers', id: 'Vouchers' },
     { name: 'Wallets', id: 'Wallets' }
 ];
