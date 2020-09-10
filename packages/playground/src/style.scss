@@ -1,0 +1,331 @@
+@import './style/index';
+
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+html,
+body {
+    font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body {
+    padding-top: 52px;
+
+    @media screen and (min-width: 1240px) {
+        padding: 0 0 0 240px;
+    }
+}
+
+header {
+    background: $color-white;
+    border-bottom: 1px solid $color-gray-light;
+    display: flex;
+    left: 0;
+    position: fixed;
+    top: 0;
+    transition: transform 0.2s ease-out;
+    width: 100%;
+    z-index: 5;
+
+    @media screen and (min-width: 1240px) {
+        background: #f3f6f9;
+        border-bottom: 0;
+        border-right: 1px solid #d2dae1;
+        flex-direction: column;
+        height: 100vh;
+        overflow-y: auto;
+        width: 240px;
+    }
+
+    .nav-open & {
+        transform: translateX(240px);
+
+        @media screen and (min-width: 1240px) {
+            transform: translateX(0);
+        }
+    }
+}
+
+main {
+    position: relative;
+    padding: 0 15px;
+    transition: transform 0.2s ease-out;
+
+    @media screen and (min-width: 1240px) {
+        padding: 0;
+    }
+
+    .nav-open & {
+        transform: translateX(240px);
+
+        @media screen and (min-width: 1240px) {
+            transform: translateX(0);
+        }
+    }
+}
+
+h1 {
+    font-size: 1.4em;
+    font-weight: 200;
+    margin: 0;
+    padding: 12px;
+    width: 100%;
+
+    @media screen and (min-width: 1240px) {
+        padding: 30px;
+    }
+
+    span {
+        background: $color-primary;
+        border-radius: 3px;
+        color: $color-white;
+        font-size: 0.45em;
+        padding: 5px;
+        position: relative;
+        text-transform: uppercase;
+        top: -5px;
+    }
+}
+
+h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.playground-nav-button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 12px;
+    transition: background-color 0.3s ease-out, opacity 0.3s ease-out;
+
+    @media screen and (min-width: 1240px) {
+        display: none;
+    }
+
+    &:active {
+        background: $color-gray-lighter;
+    }
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    span {
+        position: relative;
+        top: -3px;
+
+        &,
+        &:before,
+        &:after {
+            background: $color-gray-darker;
+            border-radius: 2px;
+            display: inline-block;
+            height: 2px;
+            pointer-events: none;
+            position: relative;
+            transition: all 0.2s ease-out;
+            width: 24px;
+        }
+
+        &:before,
+        &:after {
+            content: '';
+            left: 0;
+            position: absolute;
+            top: 6px;
+            transform-origin: 2px center;
+        }
+
+        &:after {
+            top: -6px;
+        }
+    }
+
+    .nav-open & {
+        span {
+            background-color: transparent;
+
+            &:before,
+            &:after {
+                top: 0;
+                transform: rotate3d(0, 0, 1, 45deg);
+                transform-origin: 50% 50%;
+            }
+
+            &:after {
+                transform: rotate3d(0, 0, 1, -45deg);
+            }
+        }
+    }
+}
+
+.playground-nav {
+    background: #f3f6f9;
+    border-right: 1px solid #d2dae1;
+    height: 100vh;
+    left: -240px;
+    position: absolute;
+    width: 240px;
+
+    @media screen and (min-width: 1240px) {
+        display: block;
+        border: 0;
+        height: auto;
+        position: static;
+        width: 100%;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 0 30px;
+        width: 100%;
+    }
+
+    &__item {
+        margin: 20px 0;
+
+        &:hover .playground-nav__link {
+            color: $color-primary;
+        }
+
+        &--active .playground-nav__link {
+            border-right-color: $color-primary;
+            color: $color-primary;
+        }
+    }
+
+    &__link {
+        border-right: 4px solid transparent;
+        color: $color-gray-darker;
+        display: inline-block;
+        font-size: 15px;
+        padding: 2px;
+        text-decoration: none;
+        transition: all 0.2s ease-out;
+        width: 100%;
+
+        &:focus {
+            box-shadow: 0 0 0 1px $color-primary;
+            outline: 0;
+        }
+
+        &:active,
+        &:hover {
+            box-shadow: none;
+        }
+    }
+}
+
+.info {
+    background: #f3f6f9;
+    border-left: 3px solid $color-primary;
+    color: $color-black;
+    font-size: 14px;
+    margin: 30px auto;
+    max-width: 600px;
+    overflow-x: auto;
+    padding: 24px 36px;
+    width: 100%;
+}
+
+.info h2 {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* stylelint-disable-next-line */
+.info a {
+    color: $color-primary;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.info a:hover {
+    text-decoration: underline;
+}
+
+p {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.merchant-checkout__form {
+    margin: 30px auto;
+    max-width: 600px;
+    width: 100%;
+}
+
+.merchant-checkout__payment-method {
+    background: $color-white;
+    border: 1px solid #edf0f3;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.merchant-checkout__payment-method--hidden {
+    display: none;
+}
+
+.merchant-checkout__payment-method__header {
+    align-items: center;
+    background: #f3f6f9;
+    border-radius: 12px 12px 0 0;
+    padding: 16px 24px;
+    position: relative;
+    width: 100%;
+}
+
+.merchant-checkout__payment-method__header h2 {
+    color: #00202e;
+    font-size: 0.81em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.merchant-checkout__payment-method__details {
+    padding: 24px;
+}
+
+.merchant-checkout__payment-method__details__content {
+    padding: 6px 0 24px;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: separate;
+    font-size: 13px;
+    margin: 8px 0 36px;
+
+    caption {
+        display: none;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px 24px 8px 0;
+    }
+
+    td {
+        border-spacing: 0;
+        border-top: 1px solid $color-gray;
+
+        &:last-child {
+            padding-right: 0;
+        }
+    }
+}
