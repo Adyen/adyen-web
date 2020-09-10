@@ -4,10 +4,11 @@
 
         .adyen-checkout__input {
             padding: 0;
+            height: auto;
 
             &:focus {
-                border: none;
-                box-shadow: none;
+                border: 1px solid #06f;
+                box-shadow: 0 0 0 2px #99c2ff;
             }
         }
 
@@ -20,10 +21,6 @@
                 left: 40px;
                 box-sizing: revert;
             }
-
-            &:focus {
-                box-shadow: none;
-            }
         }
 
         .adyen-checkout__input--phoneNumber {
@@ -35,6 +32,11 @@
         .adyen-checkout__input-wrapper--phoneInput {
             display: flex;
             align-items: center;
+
+            &:focus {
+                border: 1px solid #06f;
+                box-shadow: 0 0 0 2px #99c2ff;
+            }
         }
 
         .adyen-checkout__phoneNumber {

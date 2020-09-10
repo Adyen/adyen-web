@@ -8,7 +8,7 @@ const COUNTRIES = [
     { id: '+972', name: 'Israel', code: 'IL' },
     { id: '+996', name: 'Kyrgyzstan', code: 'KG' },
     { id: '+380', name: 'Ukraine', code: 'UA' },
-    { id: '+84', name: 'Viet Nam"', code: 'VN' },
+    { id: '+84', name: 'Viet Nam', code: 'VN' },
     { id: '+90', name: 'Turkey', code: 'TR' },
     { id: '+994', name: 'Azerbaijan', code: 'AZ' },
     { id: '+374', name: 'Armenia', code: 'AM' },
