@@ -9,7 +9,7 @@ export function getComponentForAction(action: PaymentAction, props = {}) {
         return nextAction(action, props);
     }
 
-    props['errorHandlerService']({ error: ERROR_CODES[ERROR_MSG_INVALID_ACTION] });
+    props['onError']({ error: ERROR_CODES[ERROR_MSG_INVALID_ACTION] });
 }
 
 export default getComponentForAction;

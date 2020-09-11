@@ -27,7 +27,7 @@ export function errorHandler(errorObj) {
     const info = errorObj.info;
 
     if (code.indexOf(VALIDATION_ERROR) > -1) {
-        this.propsOnErrorRef(errorObj);
+        this.props.onErrorRef(errorObj);
         return;
     }
 

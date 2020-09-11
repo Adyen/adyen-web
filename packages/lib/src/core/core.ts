@@ -27,7 +27,8 @@ class Core {
     constructor(options: CoreOptions = {}) {
         this.options = {
             ...options,
-            errorHandlerService: errorHandler,
+            onErrorRef: options.onError, // Store ref to merchant define callback
+            onError: errorHandler, // Overwrite prop with reference to central handler
             loadingContext: resolveEnvironment(options.environment)
         };
 
@@ -143,7 +144,7 @@ class Core {
         const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : `The passed payment method "${paymentMethod}"`;
         const errorCode = paymentMethod ? ERROR_CODES[ERROR_MSG_INVALID_PM_NAME] : ERROR_CODES[ERROR_MSG_INVALID_COMP];
 
-        this.options.errorHandlerService({ error: errorCode, info: paymentMethodName });
+        this.options.onError({ error: errorCode, info: paymentMethodName });
     }
 }
 

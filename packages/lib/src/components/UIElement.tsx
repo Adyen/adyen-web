@@ -12,7 +12,7 @@ export interface UIElementProps extends BaseElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
-    errorHandlerService?: (obj) => void;
+    onErrorRef?: (obj) => void;
 
     name?: string;
     amount?: PaymentAmount;
@@ -42,7 +42,6 @@ export interface UIElementProps extends BaseElementProps {
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
     public elementRef: any;
-    protected propsOnErrorRef: (obj) => void;
 
     constructor(props: P) {
         super(props);
@@ -53,8 +52,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.handleAction = this.handleAction.bind(this);
         this.elementRef = (props && props.elementRef) || this;
 
-        this.propsOnErrorRef = this.props.onError; // Store ref to merchant define callback
-        this.props.onError = this.props.errorHandlerService.bind(this); // Overwrite prop with reference to central handler
+        this.props.onError = this.props.onError.bind(this);
     }
 
     setState(newState: object): void {
@@ -95,7 +93,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                 return onSubmit({ data, isValid }, this);
             })
             .catch(error => {
-                return this.propsOnErrorRef(error);
+                return this.props.onErrorRef(error);
             });
     }
 
@@ -114,7 +112,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     handleAction(action: PaymentAction) {
-        if (!action || !action.type) this.props.errorHandlerService({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] });
+        if (!action || !action.type) this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] });
 
         const paymentAction = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
