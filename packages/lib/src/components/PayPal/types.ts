@@ -72,6 +72,11 @@ interface PayPalCommonProps {
     intent?: Intent;
 
     /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
+     */
+    commit?: boolean;
+
+    /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#locale}
      */
     locale?: string;
@@ -103,6 +108,10 @@ export interface PayPalConfig {
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
     intent?: Intent;
+    /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
+     */
+    commit?: boolean;
 }
 
 export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
@@ -135,6 +144,7 @@ export interface PaypalSettings {
     currency?: string;
     debug?: boolean;
     intent?: Intent;
+    commit?: boolean;
     'client-id': string;
     'integration-date': string;
     components: string;
