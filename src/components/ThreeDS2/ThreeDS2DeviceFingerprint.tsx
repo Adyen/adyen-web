@@ -1,14 +1,15 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
+import { ErrorObject } from './components/utils';
 
-interface ThreeDS2DeviceFingerprintElementProps {
+export interface ThreeDS2DeviceFingerprintElementProps {
     dataKey: string;
     fingerprintToken: string;
     notificationURL: string;
-    onError: (error?: string | object) => void;
+    onError: (error?: string | ErrorObject) => void;
     paymentData: string;
-    showSpinner?: boolean;
+    showSpinner: boolean;
     type: string;
 }
 
@@ -17,8 +18,7 @@ class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerpri
 
     public static defaultProps = {
         dataKey: 'threeds2.fingerprint',
-        type: 'IdentifyShopper',
-        onComplete: () => {}
+        type: 'IdentifyShopper'
     };
 
     render() {

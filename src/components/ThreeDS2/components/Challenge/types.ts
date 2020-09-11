@@ -1,13 +1,10 @@
-import { ChallengeData, ChallengeObject, CReqData } from '../../types';
-import { ErrorObject, ResolveData } from '../utils';
+import { ChallengeData, ChallengeObject } from '../../types';
+import { ResolveData } from '../utils';
+import { ThreeDS2ChallengeElementProps } from '../../ThreeDS2Challenge';
 
-export interface Do3DS2ChallengeProps {
-    acsURL: string;
-    cReqData: CReqData;
-    iframeSizeArr: string[];
+export interface Do3DS2ChallengeProps extends ChallengeData {
     onCompleteChallenge: (resolveObject: ChallengeObject) => void;
     onErrorChallenge: (rejectObject: ChallengeObject) => void;
-    postMessageDomain: string;
 }
 
 export interface Do3DS2ChallengeState {
@@ -15,15 +12,8 @@ export interface Do3DS2ChallengeState {
     status?: string;
 }
 
-export interface ThreeDS2ChallengeProps {
-    challengeToken?: string;
-    dataKey?: string;
-    notificationURL?: string;
+export interface ThreeDS2ChallengeProps extends ThreeDS2ChallengeElementProps {
     onComplete?: (data: ResolveData) => void;
-    onError?: (error: string | ErrorObject) => void;
-    paymentData?: string;
-    size?: string;
-    type?: string;
 }
 
 export interface ThreeDS2ChallengeState {
