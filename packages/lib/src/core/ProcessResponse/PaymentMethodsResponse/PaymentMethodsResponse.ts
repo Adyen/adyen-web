@@ -1,4 +1,5 @@
 import { PaymentMethod, PaymentMethodsResponseInterface } from '../../../types';
+import { ERROR_CODES, ERROR_MSG_INCORRECT_PMR } from '../../Errors/constants';
 
 import {
     filterAllowedPaymentMethods,
@@ -40,13 +41,10 @@ export const processStoredPaymentMethods = (
 class PaymentMethodsResponse {
     public paymentMethods: PaymentMethod[] = [];
     public storedPaymentMethods: PaymentMethod[] = [];
-
     constructor(response, options = {}) {
         if (typeof response === 'string') {
-            throw new Error(
-                `paymentMethodsResponse was provided but of an incorrect type (should be an object but a string was provided).
-                Try JSON.parse("{...}") your paymentMethodsResponse.`
-            );
+            // TODO fix [] access with TS
+            options['onError']({ error: ERROR_CODES[ERROR_MSG_INCORRECT_PMR] });
         }
 
         this.paymentMethods = response ? processPaymentMethods(response, options) : [];

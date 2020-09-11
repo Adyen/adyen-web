@@ -22,6 +22,7 @@ export const ERROR_MSG_COMP_ALREADY_MOUNTED = 'Component is already mounted';
 export const ERROR_MSG_COMP_NOT_MOUNTED = 'Component is not mounted, so cannot be remounted';
 export const ERROR_MSG_INVALID_PM_NAME = 'not a valid Checkout Component';
 export const ERROR_MSG_INVALID_COMP = 'No Payment Method component was passed';
+export const ERROR_MSG_INCORRECT_PMR = 'paymentMethodsResponse was provided but of an incorrect type';
 
 // Developer errors
 export const ERROR_MSG_NO_RENDER_METHOD = 'No render method';
@@ -57,6 +58,7 @@ export const ERROR_CODES = {
     [ERROR_MSG_COMP_NOT_MOUNTED]: `${CONFIGURATION_ERROR}.mount.03`,
     [ERROR_MSG_INVALID_PM_NAME]: `${CONFIGURATION_ERROR}.create.01`,
     [ERROR_MSG_INVALID_COMP]: `${CONFIGURATION_ERROR}.create.02`,
+    [ERROR_MSG_INCORRECT_PMR]: `${CONFIGURATION_ERROR}.pmr.01`,
 
     [ERROR_MSG_NO_RENDER_METHOD]: `${DEV_ERROR}.render.01`,
 

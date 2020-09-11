@@ -38,7 +38,7 @@ class Core {
             i18n: new Language(options.locale, options.translations)
         };
 
-        this.paymentMethodsResponse = new PaymentMethodsResponse(options.paymentMethodsResponse, options);
+        this.paymentMethodsResponse = new PaymentMethodsResponse(options.paymentMethodsResponse, this.options);
 
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);

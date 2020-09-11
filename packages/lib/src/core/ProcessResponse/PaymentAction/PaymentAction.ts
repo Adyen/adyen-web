@@ -9,6 +9,7 @@ export function getComponentForAction(action: PaymentAction, props = {}) {
         return nextAction(action, props);
     }
 
+    // TODO fix [] access with TS
     props['onError']({ error: ERROR_CODES[ERROR_MSG_INVALID_ACTION] });
 }
 

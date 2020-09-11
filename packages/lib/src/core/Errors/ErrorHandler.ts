@@ -12,7 +12,8 @@ import {
     ERROR_MSG_INVALID_COMP,
     ERROR_MSG_NO_RENDER_METHOD,
     ERROR_MSG_INVALID_ACTION,
-    ERROR_MSG_NO_ACTION
+    ERROR_MSG_NO_ACTION,
+    ERROR_MSG_INCORRECT_PMR
 } from './constants';
 import * as logger from '../../components/internal/SecuredFields/lib/utilities/logger';
 
@@ -26,11 +27,17 @@ export function errorHandler(errorObj) {
     const code = errorObj.error;
     const info = errorObj.info;
 
+    /**
+     * Validation errors
+     */
     if (code.indexOf(VALIDATION_ERROR) > -1) {
         this.props.onErrorRef(errorObj);
         return;
     }
 
+    /**
+     * Configuration errors
+     */
     if (code.indexOf(CONFIGURATION_ERROR) > -1) {
         switch (code) {
             case ERROR_CODES[ERROR_MSG_NO_KEYS]:
@@ -60,10 +67,19 @@ export function errorHandler(errorObj) {
             case ERROR_CODES[ERROR_MSG_INVALID_COMP]:
                 throw new Error(`${ERROR_MSG_INVALID_COMP}.`);
                 break;
+
+            case ERROR_CODES[ERROR_MSG_INCORRECT_PMR]:
+                throw new Error(
+                    `${ERROR_MSG_INCORRECT_PMR} (should be an object but a string was provided). Try JSON.parse("{...}") your paymentMethodsResponse.`
+                );
+                break;
         }
         return;
     }
 
+    /**
+     * Developer errors
+     */
     if (code.indexOf(DEV_ERROR) > -1) {
         switch (code) {
             case ERROR_CODES[ERROR_MSG_NO_RENDER_METHOD]:
@@ -73,6 +89,9 @@ export function errorHandler(errorObj) {
         return;
     }
 
+    /**
+     * Application errors
+     */
     if (code.indexOf(APP_ERROR) > -1) {
         switch (code) {
             case ERROR_CODES[ERROR_MSG_INVALID_ACTION]:
