@@ -1,0 +1,51 @@
+{
+    "name": "@adyen/adyen-web-playground",
+    "private": true,
+    "keywords": [
+        "adyen",
+        "adyen-web",
+        "checkout",
+        "payment",
+        "payments",
+        "components"
+    ],
+    "version": "1.0.0",
+    "license": "MIT",
+    "homepage": "https://docs.adyen.com/checkout",
+    "repository": "github:Adyen/adyen-web",
+    "bugs": {
+        "url": "https://support.adyen.com/"
+    },
+    "scripts": {
+        "start": "npm run dev-server",
+        "dev-server": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.js"
+    },
+    "devDependencies": {
+        "@adyen/adyen-web-server": "1.0.0",
+        "autoprefixer": "^9.8.6",
+        "core-js": "^3.6.5",
+        "cross-env": "^7.0.2",
+        "css-loader": "^4.2.2",
+        "dotenv": "^8.2.0",
+        "html-webpack-plugin": "^4.4.1",
+        "node-sass": "^4.12.0",
+        "postcss": "^7.0.21",
+        "postcss-loader": "^3.0.0",
+        "prettier": "^1.19.1",
+        "promise": "^8.1.0",
+        "sass-loader": "^10.0.1",
+        "style-loader": "^1.2.1",
+        "ts-jest": "^25.2.0",
+        "ts-loader": "^8.0.3",
+        "typescript": "^3.9.7",
+        "webpack": "^4.44.1",
+        "webpack-bundle-analyzer": "^3.8.0",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.9.0",
+        "webpack-merge": "^5.1.4",
+        "whatwg-fetch": "^3.4.0"
+    },
+    "dependencies": {
+        "@adyen/adyen-web": "3.13.1"
+    }
+}
