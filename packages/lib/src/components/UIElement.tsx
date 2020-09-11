@@ -4,7 +4,7 @@ import { PaymentAction, PaymentAmount } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import Language from '../language/Language';
-import { errorHandler } from '../core/Errors/ErrorHandler';
+import { ERROR_CODES, ERROR_MSG_NO_ACTION } from '../core/Errors/constants';
 
 export interface UIElementProps extends BaseElementProps {
     onChange?: (state: any, element: UIElement) => void;
@@ -12,7 +12,7 @@ export interface UIElementProps extends BaseElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
-    onError?: (error, element?: UIElement) => void;
+    errorHandlerService?: (obj) => void;
 
     name?: string;
     amount?: PaymentAmount;
@@ -42,6 +42,7 @@ export interface UIElementProps extends BaseElementProps {
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
     public elementRef: any;
+    protected propsOnErrorRef: (obj) => void;
 
     constructor(props: P) {
         super(props);
@@ -50,8 +51,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
-        this.onError = errorHandler.bind(this);
         this.elementRef = (props && props.elementRef) || this;
+
+        this.propsOnErrorRef = this.props.onError; // Store ref to merchant define callback
+        this.props.onError = this.props.errorHandlerService.bind(this); // Overwrite prop with reference to central handler
     }
 
     setState(newState: object): void {
@@ -91,7 +94,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
                 return onSubmit({ data, isValid }, this);
             })
-            .catch(error => onError(error));
+            .catch(error => {
+                console.log('### UIElement:: submit::catch error=', error);
+                return onError(error);
+            });
     }
 
     onComplete(state): void {
@@ -109,7 +115,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     handleAction(action: PaymentAction) {
-        if (!action || !action.type) throw new Error('Invalid Action');
+        // if (!action || !action.type) throw new Error('Invalid Action 2');
+
+        // if (action || !action.type) this.props.errorHandlerService({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] });
+        if (action || !action.type) throw new Error(ERROR_CODES[ERROR_MSG_NO_ACTION]); // Throw an actual Error because the catch in the submit function will pass it to the errorHandler
 
         const paymentAction = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)

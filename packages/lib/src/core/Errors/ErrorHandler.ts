@@ -2,22 +2,32 @@ import {
     VALIDATION_ERROR,
     CONFIGURATION_ERROR,
     DEV_ERROR,
+    APP_ERROR,
     ERROR_CODES,
     ERROR_MSG_NO_KEYS,
     ERROR_MSG_NO_ROOT_NODE,
     ERROR_MSG_COMP_ALREADY_MOUNTED,
     ERROR_MSG_COMP_NOT_MOUNTED,
-    ERROR_MSG_NO_RENDER_METHOD
+    ERROR_MSG_NO_RENDER_METHOD,
+    ERROR_MSG_INVALID_ACTION,
+    ERROR_MSG_NO_ACTION
 } from './constants';
 import * as logger from '../../components/internal/SecuredFields/lib/utilities/logger';
 
 export function errorHandler(errorObj) {
     console.log('### ErrorHandler::errorHandler:: errorObj', errorObj);
+    console.log('### ErrorHandler::errorHandler:: typeof errorObj', typeof errorObj);
+
+    if (errorObj instanceof Error) {
+        console.log('### ErrorHandler::errorHandler:: is an Error Error');
+        throw errorObj;
+        return;
+    }
 
     const code = errorObj.error;
 
     if (code.indexOf(VALIDATION_ERROR) > -1) {
-        this.props.onError(errorObj);
+        this.propsOnErrorRef(errorObj);
         return;
     }
 
@@ -53,5 +63,16 @@ export function errorHandler(errorObj) {
                 break;
         }
         return;
+    }
+
+    if (code.indexOf(APP_ERROR) > -1) {
+        switch (code) {
+            case ERROR_CODES[ERROR_MSG_INVALID_ACTION]:
+                throw new Error(`${ERROR_MSG_INVALID_ACTION}.`);
+                break;
+            case ERROR_CODES[ERROR_MSG_NO_ACTION]:
+                throw new Error(`${ERROR_MSG_NO_ACTION}.`);
+                break;
+        }
     }
 }

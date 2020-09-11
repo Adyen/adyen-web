@@ -1,5 +1,6 @@
 import actionTypes from './actionTypes';
 import { PaymentAction } from '../../../types';
+import { ERROR_CODES, ERROR_MSG_INVALID_ACTION } from '../../Errors/constants';
 
 export function getComponentForAction(action: PaymentAction, props = {}) {
     const nextAction = actionTypes[action.type];
@@ -8,7 +9,7 @@ export function getComponentForAction(action: PaymentAction, props = {}) {
         return nextAction(action, props);
     }
 
-    throw new Error('Invalid Action');
+    props['errorHandlerService']({ error: ERROR_CODES[ERROR_MSG_INVALID_ACTION] });
 }
 
 export default getComponentForAction;

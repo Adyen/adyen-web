@@ -9,6 +9,7 @@ import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
+import { errorHandler } from './Errors/ErrorHandler';
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
@@ -25,6 +26,7 @@ class Core {
     constructor(options: CoreOptions = {}) {
         this.options = {
             ...options,
+            errorHandlerService: errorHandler,
             loadingContext: resolveEnvironment(options.environment)
         };
 

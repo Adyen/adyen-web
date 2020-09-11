@@ -38,6 +38,7 @@ export function handleSubmit(state, component) {
             handleResponse(response, component);
         })
         .catch(error => {
+            console.log('### handlers::merchant defined handleSubmit handler:: ');
             throw Error(error);
         });
 }
