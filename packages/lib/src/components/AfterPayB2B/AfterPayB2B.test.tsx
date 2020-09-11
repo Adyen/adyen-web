@@ -10,4 +10,10 @@ describe('AfterPay B2B', () => {
         const afterPay = new AfterPayB2B({});
         expect(afterPay.data.paymentMethod.type).toBe('afterpay_b2b');
     });
+
+    test('should show the company details as editable by default', () => {
+        const afterPay = new AfterPayB2B({});
+        console.log(afterPay.props.visibility.companyDetails);
+        expect(afterPay.props.visibility.companyDetails).toBe('editable');
+    });
 });
