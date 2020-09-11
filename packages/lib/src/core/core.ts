@@ -10,6 +10,7 @@ import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { errorHandler } from './Errors/ErrorHandler';
+import { ERROR_CODES, ERROR_MSG_INVALID_PM_NAME, ERROR_MSG_INVALID_COMP } from './Errors/constants';
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
@@ -138,11 +139,11 @@ class Core {
     /**
      * @internal
      */
-    private handleCreateError(paymentMethod?): never {
-        const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';
-        const errorMessage = paymentMethod ? `${paymentMethodName} is not a valid Checkout Component` : 'No Payment Method component was passed';
+    private handleCreateError(paymentMethod?): any {
+        const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : `The passed payment method "${paymentMethod}"`;
+        const errorCode = paymentMethod ? ERROR_CODES[ERROR_MSG_INVALID_PM_NAME] : ERROR_CODES[ERROR_MSG_INVALID_COMP];
 
-        throw new Error(errorMessage);
+        this.options.errorHandlerService({ error: errorCode, info: paymentMethodName });
     }
 }
 

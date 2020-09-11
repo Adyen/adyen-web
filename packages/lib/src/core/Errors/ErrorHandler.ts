@@ -8,6 +8,8 @@ import {
     ERROR_MSG_NO_ROOT_NODE,
     ERROR_MSG_COMP_ALREADY_MOUNTED,
     ERROR_MSG_COMP_NOT_MOUNTED,
+    ERROR_MSG_INVALID_PM_NAME,
+    ERROR_MSG_INVALID_COMP,
     ERROR_MSG_NO_RENDER_METHOD,
     ERROR_MSG_INVALID_ACTION,
     ERROR_MSG_NO_ACTION
@@ -22,6 +24,7 @@ export function errorHandler(errorObj) {
     }
 
     const code = errorObj.error;
+    const info = errorObj.info;
 
     if (code.indexOf(VALIDATION_ERROR) > -1) {
         this.propsOnErrorRef(errorObj);
@@ -48,6 +51,14 @@ export function errorHandler(errorObj) {
 
             case ERROR_CODES[ERROR_MSG_COMP_NOT_MOUNTED]:
                 throw new Error(`${ERROR_MSG_COMP_NOT_MOUNTED}.`);
+                break;
+
+            case ERROR_CODES[ERROR_MSG_INVALID_PM_NAME]:
+                throw new Error(`${info} is ${ERROR_MSG_INVALID_PM_NAME}.`);
+                break;
+
+            case ERROR_CODES[ERROR_MSG_INVALID_COMP]:
+                throw new Error(`${ERROR_MSG_INVALID_COMP}.`);
                 break;
         }
         return;

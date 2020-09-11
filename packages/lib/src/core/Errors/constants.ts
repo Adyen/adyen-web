@@ -4,7 +4,7 @@ export const DEV_ERROR = 'error.de';
 export const APP_ERROR = 'error.ap';
 
 /**
- * @start Errors list
+ * start: Errors list
  */
 // Validation errors
 export const ERROR_MSG_CARD_TOO_OLD = 'Card too old';
@@ -20,6 +20,8 @@ export const ERROR_MSG_NO_KEYS = 'No client or origin keys set';
 export const ERROR_MSG_NO_ROOT_NODE = 'Component could not mount';
 export const ERROR_MSG_COMP_ALREADY_MOUNTED = 'Component is already mounted';
 export const ERROR_MSG_COMP_NOT_MOUNTED = 'Component is not mounted, so cannot be remounted';
+export const ERROR_MSG_INVALID_PM_NAME = 'not a valid Checkout Component';
+export const ERROR_MSG_INVALID_COMP = 'No Payment Method component was passed';
 
 // Developer errors
 export const ERROR_MSG_NO_RENDER_METHOD = 'No render method';
@@ -28,7 +30,7 @@ export const ERROR_MSG_NO_RENDER_METHOD = 'No render method';
 export const ERROR_MSG_INVALID_ACTION = 'Invalid action';
 export const ERROR_MSG_NO_ACTION = 'No action exists';
 /**
- * @end Errors list
+ * end: Errors list
  */
 
 /**
@@ -53,6 +55,8 @@ export const ERROR_CODES = {
     [ERROR_MSG_NO_ROOT_NODE]: `${CONFIGURATION_ERROR}.mount.01`,
     [ERROR_MSG_COMP_ALREADY_MOUNTED]: `${CONFIGURATION_ERROR}.mount.02`,
     [ERROR_MSG_COMP_NOT_MOUNTED]: `${CONFIGURATION_ERROR}.mount.03`,
+    [ERROR_MSG_INVALID_PM_NAME]: `${CONFIGURATION_ERROR}.create.01`,
+    [ERROR_MSG_INVALID_COMP]: `${CONFIGURATION_ERROR}.create.02`,
 
     [ERROR_MSG_NO_RENDER_METHOD]: `${DEV_ERROR}.render.01`,
 
