@@ -3,7 +3,7 @@ import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ChallengeToken, FingerPrintData, ResultObject } from '../types';
 
-interface ResolveData {
+export interface ResolveData {
     data: {
         details: {
             [key: string]: string;
@@ -12,9 +12,9 @@ interface ResolveData {
     };
 }
 
-interface ErrorCode {
-    errorCode?: string;
-    message?: string;
+export interface ErrorObject {
+    errorCode: string;
+    message: string;
 }
 
 export const decodeAndParseToken = (token: string): ChallengeToken => {
@@ -119,7 +119,7 @@ export const createResolveData = (dataKey: string, result: string, paymentData: 
     }
 });
 
-export const handleErrorCode = (errorCode: string): ErrorCode => {
+export const handleErrorCode = (errorCode: string): ErrorObject => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
     const message = ERROR_MESSAGES[errorCode] || unknownMessage;
     return { errorCode, message };

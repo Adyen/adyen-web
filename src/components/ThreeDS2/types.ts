@@ -5,15 +5,17 @@
  */
 export type ResultValue = 'Y' | 'N' | 'U' | 'A' | 'C' | 'R';
 
+export interface CReqData {
+    acsTransID: string;
+    messageVersion: string;
+    threeDSServerTransID: string;
+    messageType: string;
+    challengeWindowSize: string;
+}
+
 export interface ChallengeData {
     acsURL: string;
-    cReqData: {
-        acsTransID: string;
-        messageVersion: string;
-        threeDSServerTransID: string;
-        messageType: string;
-        challengeWindowSize: string;
-    };
+    cReqData: CReqData;
     iframeSizeArr: string[];
     postMessageDomain: string;
 }
