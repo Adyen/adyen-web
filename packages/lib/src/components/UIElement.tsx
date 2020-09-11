@@ -82,7 +82,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     submit(): void {
-        const { onError = () => {}, onSubmit = () => {} } = this.props;
+        const { onSubmit = () => {} } = this.props;
         this.startPayment()
             .then(() => {
                 const { data, isValid } = this;
@@ -95,8 +95,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                 return onSubmit({ data, isValid }, this);
             })
             .catch(error => {
-                console.log('### UIElement:: submit::catch error=', error);
-                return onError(error);
+                return this.propsOnErrorRef(error);
             });
     }
 
@@ -115,10 +114,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     handleAction(action: PaymentAction) {
-        // if (!action || !action.type) throw new Error('Invalid Action 2');
-
-        // if (action || !action.type) this.props.errorHandlerService({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] });
-        if (action || !action.type) throw new Error(ERROR_CODES[ERROR_MSG_NO_ACTION]); // Throw an actual Error because the catch in the submit function will pass it to the errorHandler
+        if (!action || !action.type) this.props.errorHandlerService({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] });
 
         const paymentAction = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
