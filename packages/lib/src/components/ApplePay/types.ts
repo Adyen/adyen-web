@@ -1,6 +1,7 @@
 import { PaymentAmount } from '../../types';
 import { UIElementProps } from '../UIElement';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
     interface Window {
         ApplePaySession: ApplePaySession;
