@@ -13,7 +13,8 @@ import {
     ERROR_MSG_NO_RENDER_METHOD,
     ERROR_MSG_INVALID_ACTION,
     ERROR_MSG_NO_ACTION,
-    ERROR_MSG_INCORRECT_PMR
+    ERROR_MSG_INCORRECT_PMR,
+    ERROR_MSG_NO_PAYPAL_TOKEN
 } from './constants';
 import * as logger from '../../components/internal/SecuredFields/lib/utilities/logger';
 
@@ -107,6 +108,10 @@ export function errorHandler(errorObj, compRef) {
 
             case ERROR_CODES[ERROR_MSG_NO_ACTION]:
                 throw new Error(`${ERROR_MSG_NO_ACTION}.`);
+                break;
+
+            case ERROR_CODES[ERROR_MSG_NO_PAYPAL_TOKEN]:
+                return new Error(`${ERROR_MSG_NO_PAYPAL_TOKEN}.`);
                 break;
         }
         return;

@@ -5,7 +5,7 @@ import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
-import { ERROR_CODES, ERROR_MSG_INVALID_ACTION } from '../../core/Errors/constants';
+import { ERROR_CODES, ERROR_MSG_INVALID_ACTION, ERROR_MSG_NO_PAYPAL_TOKEN } from '../../core/Errors/constants';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -75,7 +75,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         if (action.sdkData && action.sdkData.token) {
             this.resolve(action.sdkData.token);
         } else {
-            this.reject(new Error('No token was provided'));
+            this.reject(this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_PAYPAL_TOKEN] }, this));
         }
 
         return null;

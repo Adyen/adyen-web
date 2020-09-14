@@ -41,6 +41,7 @@ export const processStoredPaymentMethods = (
 class PaymentMethodsResponse {
     public paymentMethods: PaymentMethod[] = [];
     public storedPaymentMethods: PaymentMethod[] = [];
+
     constructor(response, options = {}) {
         if (typeof response === 'string') {
             // TODO fix [] access with TS
