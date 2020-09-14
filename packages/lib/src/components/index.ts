@@ -1,5 +1,4 @@
-import AfterPay from './AfterPay';
-import AfterPayB2B from './AfterPayB2B';
+import { AfterPay, AfterPayB2B } from './AfterPay';
 import ApplePay from './ApplePay';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
