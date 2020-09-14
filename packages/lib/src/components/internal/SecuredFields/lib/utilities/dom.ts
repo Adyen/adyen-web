@@ -26,7 +26,7 @@ const getAttribute = (node, attribute) => {
     return node.getAttribute(attribute);
 };
 
-const on = (node, event, callback, useCapture) => {
+const on = (node, event, callback, useCapture?) => {
     if (typeof node.addEventListener === 'function') {
         node.addEventListener(event, callback, useCapture);
         return;
@@ -40,7 +40,7 @@ const on = (node, event, callback, useCapture) => {
     throw new Error(`: Unable to bind ${event}-event`);
 };
 
-const off = (node, event, callback, useCapture) => {
+const off = (node, event, callback, useCapture?) => {
     if (typeof node.addEventListener === 'function') {
         node.removeEventListener(event, callback, useCapture);
     } else if (node.attachEvent) {

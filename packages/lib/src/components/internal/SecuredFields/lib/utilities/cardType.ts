@@ -1,17 +1,10 @@
+import { CardObject } from '../types';
+
 let shortestPermittedCardLength;
 
 interface CardType {
     __NO_BRAND?: string;
-    cards?: {
-        cardType?: string;
-        displayName?: string;
-        startingRules?: number[];
-        permittedLengths?: number[];
-        pattern?: RegExp;
-        securityCode?: string;
-        cvcRequired?: boolean;
-        hideCVC?: boolean;
-    }[];
+    cards?: CardObject[];
 }
 
 const CardType: CardType = {};
