@@ -6,9 +6,12 @@ import { checkPaymentStatus } from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';
+import { QRLoaderProps, QRLoaderState } from './types';
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
-class QRLoader extends Component {
+class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
+    private interval;
+
     constructor(props) {
         super(props);
 
@@ -36,6 +39,7 @@ class QRLoader extends Component {
         onError: () => {},
         onComplete: () => {},
         throttleTime: 60000,
+        classNameModifiers: [],
         throttledInterval: 10000
     };
 
@@ -143,10 +147,7 @@ class QRLoader extends Component {
             });
     }
 
-    render(
-        { amount = {}, url, brandLogo, classNameModifiers = [], countdownTime, i18n, instructions, loadingContext, type },
-        { expired, completed, loading }
-    ) {
+    render({ amount, url, brandLogo, countdownTime, i18n, loadingContext, type }: QRLoaderProps, { expired, completed, loading }) {
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
         const finalState = (image, message) => (
@@ -184,7 +185,7 @@ class QRLoader extends Component {
                 className={`
                     adyen-checkout__qr-loader
                     adyen-checkout__qr-loader--${type}
-                    ${classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`)}
+                    ${this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`)}
                 `}
             >
                 {brandLogo && <img src={brandLogo} alt={type} className="adyen-checkout__qr-loader__brand-logo" />}
@@ -207,12 +208,12 @@ class QRLoader extends Component {
                     &nbsp;{timeToPayString[1]}
                 </div>
 
-                {instructions && <div className="adyen-checkout__qr-loader__instructions">{i18n.get(instructions)}</div>}
+                {this.props.instructions && <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>}
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
                         <span className="adyen-checkout__qr-loader__separator__label">{i18n.get('or')}</span>
-                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} i18n={i18n} label={i18n.get('openApp')} />
+                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get('openApp')} />
                     </div>
                 )}
             </div>

@@ -20,7 +20,7 @@ describe('WeChat', () => {
         test('checkStatus processes a pending response', () => {
             // Mock the checkPaymentStatusValue with a pending response
             const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
-            checkPaymentStatus.mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
+            (checkPaymentStatus as jest.Mock).mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
 
             const qrloader = mount(<QRLoader i18n={i18n} />);
             qrloader
@@ -36,7 +36,7 @@ describe('WeChat', () => {
         test('checkStatus processes a authorised response', () => {
             // Mock the checkPaymentStatusValue with an authorised response
             const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'authorised', type: 'complete' };
-            checkPaymentStatus.mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
+            (checkPaymentStatus as jest.Mock).mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
 
             const onCompleteMock = jest.fn();
             const onErrorMock = jest.fn();
@@ -67,7 +67,7 @@ describe('WeChat', () => {
         test('checkStatus processes an error response', () => {
             // Mock the checkPaymentStatusValue with an error
             const checkPaymentStatusValue = { error: 'Unkown error' };
-            checkPaymentStatus.mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
+            (checkPaymentStatus as jest.Mock).mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
 
             const onCompleteMock = jest.fn();
             const onErrorMock = jest.fn();
