@@ -1,7 +1,19 @@
 import { Component, h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
+import Language from '../../../language/Language';
 
-class SecuredFields extends Component {
+interface SecuredFieldsProps {
+    onChange: (data) => void;
+    i18n: Language;
+}
+
+class SecuredFields extends Component<SecuredFieldsProps> {
+    private setFocusOn: any;
+    private updateStyles: any;
+    private showValidation: any;
+    private processBinLookupResponse: any;
+    private sfp: any;
+
     constructor(props) {
         super(props);
     }

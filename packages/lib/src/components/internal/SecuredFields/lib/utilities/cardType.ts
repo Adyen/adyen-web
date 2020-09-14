@@ -1,6 +1,20 @@
 let shortestPermittedCardLength;
 
-const CardType = {};
+interface CardType {
+    __NO_BRAND?: string;
+    cards?: {
+        cardType?: string;
+        displayName?: string;
+        startingRules?: number[];
+        permittedLengths?: number[];
+        pattern?: RegExp;
+        securityCode?: string;
+        cvcRequired?: boolean;
+        hideCVC?: boolean;
+    }[];
+}
+
+const CardType: CardType = {};
 CardType.__NO_BRAND = 'noBrand';
 
 CardType.cards = [];
@@ -213,7 +227,7 @@ CardType.cards.push({
     pattern: /^(40[1,8]|413|43[4,5]|44[1,2,3,4,6,7]|45[5,8]|46[0,1,3,6]|47[1,9]|48[2,3,7])[0-9]{0,16}$/ // ^(4[0-1|3-8][0-9]{1,17})$
 });
 
-const detectCard = (pCardNumber, pAvailableCards) => {
+const detectCard = (pCardNumber, pAvailableCards?) => {
     let matchedCards;
     let i;
     let len;
@@ -241,9 +255,7 @@ const detectCard = (pCardNumber, pAvailableCards) => {
             }
 
             // Based on each matched cards longest rule - find the card with the longest one!
-            const cardWithLongestRule = matchedCards.reduce((a, b) => (a.longestRule >= b.longestRule ? a : b));
-
-            return cardWithLongestRule;
+            return matchedCards.reduce((a, b) => (a.longestRule >= b.longestRule ? a : b));
         }
 
         return { cardType: CardType.__NO_BRAND };
