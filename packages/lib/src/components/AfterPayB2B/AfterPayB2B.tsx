@@ -20,7 +20,6 @@ export default class AfterPayB2B extends OpenInvoiceContainer {
         return {
             ...super.formatProps(props),
             consentCheckboxLabel: <ConsentCheckboxLabel />
-            // consentCheckbox: props => <ConsentCheckbox {...props} />
         };
     }
 }
