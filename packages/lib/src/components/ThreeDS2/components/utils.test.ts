@@ -12,19 +12,16 @@ describe('decodeAndParseToken', () => {
 
     test('should return false if the token is incorrect', () => {
         expect(decodeAndParseToken('124343434')).toBe(false);
-        expect(decodeAndParseToken()).toBe(false);
-        expect(decodeAndParseToken(true)).toBe(false);
-        expect(decodeAndParseToken(123)).toBe(false);
     });
 });
 
 describe('encodeResult', () => {
     test('should throw if wrong parameters are passed', () => {
-        expect(() => encodeResult()).toThrow();
+        expect(() => encodeResult(undefined, undefined)).toThrow();
     });
 
     test('should throw if no type is passed', () => {
-        expect(() => encodeResult({ threeDSCompInd: 'ABC' })).toThrow();
+        expect(() => encodeResult({ threeDSCompInd: 'Y' }, null)).toThrow();
     });
 
     test('should throw if the type is wrong', () => {
@@ -32,8 +29,8 @@ describe('encodeResult', () => {
     });
 
     test('should return a string if everything is passed correctly', () => {
-        expect(typeof encodeResult({ threeDSCompInd: 'ABC' }, 'IdentifyShopper')).toBe('string');
-        expect(typeof encodeResult({ transStatus: 'ABC' }, 'ChallengeShopper')).toBe('string');
+        expect(typeof encodeResult({ threeDSCompInd: 'Y' }, 'IdentifyShopper')).toBe('string');
+        expect(typeof encodeResult({ transStatus: 'Y' }, 'ChallengeShopper')).toBe('string');
     });
 });
 
@@ -44,13 +41,13 @@ describe('handleErrorCode', () => {
     };
 
     const errorCodeUnknown = {
-        errorCode: 100,
+        errorCode: '100',
         message: 'An unknown error occurred'
     };
 
     test('should return an object containing unknown when pased with no errorCode or unknown error code', () => {
-        expect(handleErrorCode()).toEqual(errorCodeResultEmpty);
-        expect(handleErrorCode(100)).toEqual(errorCodeUnknown);
+        expect(handleErrorCode(undefined)).toEqual(errorCodeResultEmpty);
+        expect(handleErrorCode('100')).toEqual(errorCodeUnknown);
     });
 
     const errorCodeTimeout = {
