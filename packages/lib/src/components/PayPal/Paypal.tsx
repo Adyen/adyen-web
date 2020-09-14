@@ -5,6 +5,7 @@ import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
+import { ERROR_CODES, ERROR_MSG_INVALID_ACTION } from '../../core/Errors/constants';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -56,7 +57,16 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     updateWithAction(action: PaymentAction) {
-        if (action.paymentMethodType !== this.data.paymentMethod.type) throw new Error('Invalid Action');
+        if (action.paymentMethodType !== this.data.paymentMethod.type) {
+            this.props.onError(
+                {
+                    error: ERROR_CODES[ERROR_MSG_INVALID_ACTION],
+                    info: `Should be a paypal action but got a ${action.paymentMethodType} action`
+                },
+                this
+            );
+            return null;
+        }
 
         if (action.paymentData) {
             this.paymentData = action.paymentData;
