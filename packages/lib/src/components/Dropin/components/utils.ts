@@ -12,6 +12,7 @@ export function getCommonProps(props) {
         onCancel: props.onCancel,
         onChange: props.onChange,
         onError: props.onError,
+        onErrorRef: props.onErrorRef,
         onSubmit: props.onSubmit,
         originKey: props.originKey,
         clientKey: props.clientKey,

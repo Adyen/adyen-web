@@ -112,7 +112,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     handleAction(action: PaymentAction) {
-        if (!action || !action.type) this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] });
+        if (!action || !action.type) this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] }, this);
 
         const paymentAction = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)

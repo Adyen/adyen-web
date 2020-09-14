@@ -5,6 +5,7 @@ import DropinComponent from '../../components/Dropin/components/DropinComponent'
 import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
+import { ERROR_CODES, ERROR_MSG_NO_ACTION } from '../../core/Errors/constants';
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -60,7 +61,7 @@ class DropinElement extends UIElement<DropinElementProps> {
         this.activePaymentMethod
             .startPayment()
             .then(this.handleSubmit)
-            .catch(error => this.props.onError(error));
+            .catch(error => this.props.onErrorRef(error));
     }
 
     protected handleSubmit = () => {
@@ -75,7 +76,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     };
 
     handleAction(action: PaymentAction) {
-        if (!action || !action.type) throw new Error('Invalid Action');
+        if (!action || !action.type) this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] }, this);
 
         if (this.activePaymentMethod.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);

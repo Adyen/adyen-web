@@ -17,7 +17,7 @@ export interface BaseElementProps {
         risk: RiskElement;
     };
     isDropin?: boolean;
-    onError?: (error) => void;
+    onError?: (error, component?) => void;
 }
 
 class BaseElement<P extends BaseElementProps> {
@@ -72,7 +72,7 @@ class BaseElement<P extends BaseElementProps> {
 
     protected render() {
         // render() not implemented in the element
-        this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_RENDER_METHOD] });
+        this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_RENDER_METHOD] }, this);
     }
 
     /**
@@ -84,11 +84,11 @@ class BaseElement<P extends BaseElementProps> {
         const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
 
         if (!node) {
-            this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ROOT_NODE] });
+            this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ROOT_NODE] }, this);
         }
 
         if (this._node) {
-            this.props.onError({ error: ERROR_CODES[ERROR_MSG_COMP_ALREADY_MOUNTED] });
+            this.props.onError({ error: ERROR_CODES[ERROR_MSG_COMP_ALREADY_MOUNTED] }, this);
         }
 
         this._node = node;
@@ -109,7 +109,7 @@ class BaseElement<P extends BaseElementProps> {
 
     public remount(component): this {
         if (!this._node) {
-            this.props.onError({ error: ERROR_CODES[ERROR_MSG_COMP_NOT_MOUNTED] });
+            this.props.onError({ error: ERROR_CODES[ERROR_MSG_COMP_NOT_MOUNTED] }, this);
         }
 
         const newComponent = component || this.render();

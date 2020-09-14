@@ -146,7 +146,7 @@ class Core {
         const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : `The passed payment method "${paymentMethod}"`;
         const errorCode = paymentMethod ? ERROR_CODES[ERROR_MSG_INVALID_PM_NAME] : ERROR_CODES[ERROR_MSG_INVALID_COMP];
 
-        this.options.onError({ error: errorCode, info: paymentMethodName });
+        this.options.onError({ error: errorCode, info: paymentMethodName }, this);
     }
 }
 

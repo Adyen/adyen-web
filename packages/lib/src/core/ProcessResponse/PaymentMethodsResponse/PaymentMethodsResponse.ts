@@ -44,7 +44,7 @@ class PaymentMethodsResponse {
     constructor(response, options = {}) {
         if (typeof response === 'string') {
             // TODO fix [] access with TS
-            options['onError']({ error: ERROR_CODES[ERROR_MSG_INCORRECT_PMR] });
+            options['onError']({ error: ERROR_CODES[ERROR_MSG_INCORRECT_PMR] }, this);
         }
 
         this.paymentMethods = response ? processPaymentMethods(response, options) : [];
