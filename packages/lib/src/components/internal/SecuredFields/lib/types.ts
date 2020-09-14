@@ -1,5 +1,6 @@
 import Language from '../../../../language/Language';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
     interface Window {
         _b$dl: boolean;

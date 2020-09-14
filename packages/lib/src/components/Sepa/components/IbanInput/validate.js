@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/camelcase: 0 */
 import { iso13616Prepare, iso7064Mod97_10, electronicFormat, regex, getIbanCountrySpecification } from './utils';
 
 /**

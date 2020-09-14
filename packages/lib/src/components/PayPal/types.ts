@@ -2,6 +2,7 @@ import { PaymentAmount, PaymentMethod } from '../../types';
 import UIElement, { UIElementProps } from '../UIElement';
 import { SUPPORTED_LOCALES } from './config';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
     interface Window {
         paypal: object;
