@@ -137,7 +137,7 @@ export const iso7064Mod97_10 = iban => {
  *  @param countryCode -
  *  @returns Example of IBAN Number
  */
-export const getIbanPlaceHolder = countryCode => {
+export const getIbanPlaceHolder = (countryCode?) => {
     if (countryCode && countries[countryCode] && countries[countryCode].example) {
         return formatIban(countries[countryCode].example);
     }

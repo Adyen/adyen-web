@@ -1,12 +1,31 @@
-import { Component, h } from 'preact';
+import { Component, h, RefObject } from 'preact';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../internal/FormFields/Field';
-import { isValidHolder, checkIbanStatus } from './validate';
+import { checkIbanStatus, isValidHolder } from './validate';
 import { electronicFormat, formatIban, getIbanPlaceHolder, getNextCursorPosition } from './utils';
 import './IbanInput.scss';
 
-class IbanInput extends Component {
+interface IbanInputProps {
+    holderName?: string;
+    placeholders?: any;
+    countryCode?: string;
+    showPayButton?: any;
+    payButton?: any;
+    onChange: (data) => void;
+}
+
+interface IbanInputState {
+    data: any;
+    errors: any;
+    valid: any;
+    status: string;
+    isValid: boolean;
+    cursor: number;
+}
+class IbanInput extends Component<IbanInputProps, IbanInputState> {
+    private ibanNumber: RefObject<any>;
+
     constructor(props) {
         super(props);
 
@@ -24,20 +43,17 @@ class IbanInput extends Component {
 
         if (this.state.data['sepa.ibanNumber']) {
             const electronicFormatIban = electronicFormat(this.state.data['sepa.ibanNumber']); // example: NL13TEST0123456789
-            const iban = formatIban(electronicFormatIban); // example: NL13 TEST 0123 4567 89
-            this.state.data['sepa.ibanNumber'] = iban;
+            this.state.data['sepa.ibanNumber'] = formatIban(electronicFormatIban); // example: NL13 TEST 0123 4567 89
         }
 
-        if(this.state.data['sepa.ibanNumber'] || this.state.data['sepa.ownerName']){
+        if (this.state.data['sepa.ibanNumber'] || this.state.data['sepa.ownerName']) {
             const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['sepa.ownerName']) : '';
             const ibanValid = this.state.data['sepa.ibanNumber'] ? checkIbanStatus(this.state.data['sepa.ibanNumber']).status === 'valid' : '';
             const isValid = ibanValid && holderNameValid;
             const data = { data: this.state.data, isValid };
-    
+
             this.props.onChange(data);
         }
-
-        this.ibanNumber = {};
     }
 
     static defaultProps = {
@@ -60,15 +76,15 @@ class IbanInput extends Component {
         this.props.onChange(data);
     }
 
-    setData = (key, value, cb) => {
+    setData = (key, value, cb?) => {
         this.setState(prevState => ({ data: { ...prevState.data, [key]: value } }), cb);
     };
 
-    setError = (key, value, cb) => {
+    setError = (key, value, cb?) => {
         this.setState(prevState => ({ errors: { ...prevState.errors, [key]: value } }), cb);
     };
 
-    setValid = (key, value, cb) => {
+    setValid = (key, value, cb?) => {
         this.setState(prevState => ({ valid: { ...prevState.valid, [key]: value } }), cb);
     };
 
@@ -122,7 +138,7 @@ class IbanInput extends Component {
         this.setError('holder', !holderStatus ? true : null);
     }
 
-    render({ placeholders, countryCode }, { data, errors, valid }) {
+    render({ placeholders, countryCode }: IbanInputProps, { data, errors, valid }) {
         const { i18n } = useCoreContext();
         return (
             <div className="adyen-checkout__iban-input">

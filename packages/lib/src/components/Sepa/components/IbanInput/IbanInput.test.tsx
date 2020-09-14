@@ -4,7 +4,7 @@ import IbanInput from './IbanInput';
 
 const i18n = { get: key => key };
 
-const createWrapper = props => mount(<IbanInput i18n={i18n} {...props} />);
+const createWrapper = (props?) => mount(<IbanInput i18n={i18n} {...props} />);
 
 describe('IbanInput', () => {
     test('Renders two fields', () => {
@@ -65,31 +65,30 @@ describe('IbanInput', () => {
     });
 
     describe('Send values from outside', () => {
-
         test('Set ibanNumber', () => {
-            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789'} });
-            setTimeout(()=>{
+            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789' } });
+            setTimeout(() => {
                 expect(wrapper.find('input[name="sepa.ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
             });
         });
 
         test('Set ibanNumber formatted', () => {
-            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13 TEST 0123 4567 89'} });
-            setTimeout(()=>{
+            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13 TEST 0123 4567 89' } });
+            setTimeout(() => {
                 expect(wrapper.find('input[name="sepa.ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
             });
         });
 
         test('Set ownerName', () => {
-            const wrapper = createWrapper({ data: { 'sepa.ownerName': 'Hello World'} });
-            setTimeout(()=>{
+            const wrapper = createWrapper({ data: { 'sepa.ownerName': 'Hello World' } });
+            setTimeout(() => {
                 expect(wrapper.find('input[name="sepa.ownerName"]').text()).toBe('Hello World');
             });
         });
 
         test('Set ibanNumber and ownerName', () => {
-            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789', 'sepa.ownerName': 'Hello World'} });
-            setTimeout(()=>{
+            const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789', 'sepa.ownerName': 'Hello World' } });
+            setTimeout(() => {
                 expect(wrapper.find('input[name="sepa.ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
                 expect(wrapper.find('input[name="sepa.ownerName"]').text()).toBe('Hello World');
             });
