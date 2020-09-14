@@ -22,7 +22,7 @@ const statesMock = [
 getDataset.mockImplementation(jest.fn(() => Promise.resolve(statesMock)));
 
 describe('StateField', () => {
-    const getWrapper = props => mount(<StateField {...props} />);
+    const getWrapper = (props?) => mount(<StateField {...props} />);
 
     test('does not call getDataset when no country is passed', () => {
         const wrapper = getWrapper();
