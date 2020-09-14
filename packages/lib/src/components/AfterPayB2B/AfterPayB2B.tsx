@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-import ConsentCheckbox from './components/ConsentCheckbox';
+import ConsentCheckboxLabel from './components/ConsentCheckboxLabel';
 
 export default class AfterPayB2B extends OpenInvoiceContainer {
     public static type = 'afterpay_b2b';
@@ -19,7 +19,8 @@ export default class AfterPayB2B extends OpenInvoiceContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            consentCheckbox: props => <ConsentCheckbox {...props} />
+            consentCheckboxLabel: <ConsentCheckboxLabel />
+            // consentCheckbox: props => <ConsentCheckbox {...props} />
         };
     }
 }

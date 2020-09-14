@@ -3,7 +3,7 @@ import { CompanyDetailsSchema } from '../CompanyDetails/types';
 
 export interface OpenInvoiceProps {
     allowedCountries?: string[];
-    consentCheckbox: any;
+    consentCheckboxLabel: any;
     countryCode: string;
     data: {
         companyDetails?: CompanyDetailsSchema;

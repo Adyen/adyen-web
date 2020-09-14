@@ -13,7 +13,6 @@ describe('AfterPay B2B', () => {
 
     test('should show the company details as editable by default', () => {
         const afterPay = new AfterPayB2B({});
-        console.log(afterPay.props.visibility.companyDetails);
         expect(afterPay.props.visibility.companyDetails).toBe('editable');
     });
 });
