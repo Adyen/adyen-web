@@ -33,7 +33,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         this.checkStatus = this.checkStatus.bind(this);
     }
 
-    static defaultProps = {
+    public static defaultProps = {
         delay: 2000,
         countdownTime: 15,
         onError: () => {},
@@ -45,7 +45,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     // Retry until getting a complete response from the server or it times out\
     // Changes interval time to 10 seconds after 1 minute (60 seconds)
-    statusInterval = () => {
+    public statusInterval = () => {
         this.checkStatus();
 
         this.setState({ timePassed: this.state.timePassed + this.props.delay });
@@ -70,7 +70,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         }
     }
 
-    redirectToApp = (url, fallback = () => {}) => {
+    public redirectToApp = (url, fallback = () => {}) => {
         setTimeout(() => {
             // Redirect to the APP failed
             this.props.onError(`${this.props.type} App was not found`);
