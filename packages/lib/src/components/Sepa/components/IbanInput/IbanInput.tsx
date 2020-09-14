@@ -56,7 +56,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         }
     }
 
-    static defaultProps = {
+    public static defaultProps = {
         onChange: () => {},
         countryCode: null,
         holderName: true,
@@ -76,19 +76,19 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         this.props.onChange(data);
     }
 
-    setData = (key, value, cb?) => {
+    public setData = (key, value, cb?) => {
         this.setState(prevState => ({ data: { ...prevState.data, [key]: value } }), cb);
     };
 
-    setError = (key, value, cb?) => {
+    public setError = (key, value, cb?) => {
         this.setState(prevState => ({ errors: { ...prevState.errors, [key]: value } }), cb);
     };
 
-    setValid = (key, value, cb?) => {
+    public setValid = (key, value, cb?) => {
         this.setState(prevState => ({ valid: { ...prevState.valid, [key]: value } }), cb);
     };
 
-    handleHolderInput = holder => {
+    public handleHolderInput = holder => {
         this.setState(
             prevState => ({ data: { ...prevState.data, 'sepa.ownerName': holder } }),
             () => {
@@ -98,7 +98,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         );
     };
 
-    handleIbanInput = e => {
+    public handleIbanInput = e => {
         const inputValue = e.target.value;
         const electronicFormatIban = electronicFormat(inputValue); // example: NL13TEST0123456789
         const iban = formatIban(electronicFormatIban); // example: NL13 TEST 0123 4567 89
@@ -122,7 +122,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         );
     };
 
-    handleIbanBlur = e => {
+    public handleIbanBlur = e => {
         const currentIban = e.target.value;
 
         if (currentIban.length > 0) {

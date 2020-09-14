@@ -18,7 +18,7 @@ class SecuredFields extends Component<SecuredFieldsProps> {
         super(props);
     }
 
-    static defaultProps = {
+    public static defaultProps = {
         onChange: () => {},
         onError: () => {}
     };
@@ -43,11 +43,11 @@ class SecuredFields extends Component<SecuredFieldsProps> {
         return { i18n: this.props.i18n };
     }
 
-    handleSecuredFieldsRef = ref => {
+    public handleSecuredFieldsRef = ref => {
         this.sfp = ref;
     };
 
-    handleSecuredFieldsChange = sfpState => {
+    public handleSecuredFieldsChange = sfpState => {
         this.setState({ ...sfpState, isValid: sfpState.isSfpValid });
     };
 
