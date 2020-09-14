@@ -1,21 +1,25 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import ThreeDS2Challenge from './components/Challenge';
+import { ErrorObject } from './components/utils';
 
-/**
- * ThreeDS2ChallengeElement
- */
-class ThreeDS2ChallengeElement extends UIElement {
+export interface ThreeDS2ChallengeElementProps {
+    challengeToken?: string;
+    dataKey?: string;
+    notificationURL?: string;
+    onError?: (error: string | ErrorObject) => void;
+    paymentData?: string;
+    size?: string;
+    type?: string;
+}
+
+class ThreeDS2ChallengeElement extends UIElement<ThreeDS2ChallengeElementProps> {
     public static type = 'threeDS2Challenge';
 
     public static defaultProps = {
         dataKey: 'threeds2.challengeResult',
-        challengeContainer: null,
         size: '01',
-        notificationURL: null,
-        challengeToken: null,
-        type: 'ChallengeShopper',
-        onComplete: () => {}
+        type: 'ChallengeShopper'
     };
 
     render() {

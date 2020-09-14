@@ -1,9 +1,16 @@
 import { Component, h } from 'preact';
 import Do3DS2Challenge from './Do3DS2Challenge';
 import { createResolveData, handleErrorCode, encodeResult, prepareChallengeData } from '../utils';
+import { ThreeDS2ChallengeProps, ThreeDS2ChallengeState } from './types';
+import { ChallengeObject } from '../../types';
 import '../../ThreeDS2.scss';
 
-class ThreeDS2Challenge extends Component {
+class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2ChallengeState> {
+    public static defaultProps = {
+        onComplete: () => {},
+        onError: () => {}
+    };
+
     constructor(props) {
         super(props);
 
@@ -24,11 +31,6 @@ class ThreeDS2Challenge extends Component {
         }
     }
 
-    static defaultProps = {
-        onComplete: () => {},
-        onError: () => {}
-    };
-
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
             const paymentData = this.props.paymentData;
@@ -42,10 +44,10 @@ class ThreeDS2Challenge extends Component {
         if (this.state.status === 'retrievingChallengeToken') {
             return (
                 <Do3DS2Challenge
-                    onCompleteChallenge={challenge => {
+                    onCompleteChallenge={(challenge: ChallengeObject) => {
                         this.setStatusComplete(challenge.result);
                     }}
-                    onErrorChallenge={challenge => {
+                    onErrorChallenge={(challenge: ChallengeObject) => {
                         const errorObject = handleErrorCode(challenge.errorCode);
                         this.props.onError(errorObject);
                         this.setStatusComplete(challenge.result);

@@ -10,7 +10,11 @@ const fingerPrintToken = {
 };
 
 const threeDS2FingerPrintToken = JSON.stringify(fingerPrintToken);
-const base64FingerPrintToken = {
+const propsMock = {
+    dataKey: '',
+    notificationURL: '',
+    paymentData: '',
+    type: '',
     fingerprintToken: btoa(threeDS2FingerPrintToken)
 };
 
@@ -22,13 +26,10 @@ describe('ThreeDS2DeviceFingerprint', () => {
             <html>
                 <body>
                     <script>
-                    var type = 'fingerPrintResult';
-                    var data = {
-                        result: {
-                            threeDSCompInd: 'Y'
-                        },
-                        type: type
-                    };
+                    var data = {};
+                    data.result = {};
+                    data.result.threeDSCompInd = 'Y';
+                    data.type = 'fingerPrintResult';
 
                     var result = JSON.stringify(data);
                     window.parent.postMessage(result, 'http://localhost:8011');
@@ -39,7 +40,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
         HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
 
-        mount(<ThreeDS2DeviceFingerprint {...base64FingerPrintToken} onError={errorFunction} onComplete={completeFunction} />);
+        mount(<ThreeDS2DeviceFingerprint {...propsMock} onError={errorFunction} onComplete={completeFunction} />);
         expect(errorFunction.mock.calls.length).toBe(0);
     });
 });

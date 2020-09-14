@@ -1,7 +1,17 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
 
-export default class ThreeDS2Form extends Component {
+interface ThreeDS2FormProps {
+    name: string;
+    action: string;
+    target: string;
+    inputName: string;
+    inputValue: string;
+}
+
+export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
+    protected formEl;
+
     componentDidMount() {
         this.formEl.submit();
     }
