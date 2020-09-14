@@ -3,10 +3,11 @@ import { h } from 'preact';
 import QRLoader from './QRLoader';
 
 import { checkPaymentStatus } from '../../../core/Services/payment-status';
+import Language from '../../../language/Language';
 
 jest.mock('../../../core/Services/payment-status');
 
-const i18n = { get: key => key };
+const i18n = { get: key => key } as Language;
 
 describe('WeChat', () => {
     beforeAll(() => {
