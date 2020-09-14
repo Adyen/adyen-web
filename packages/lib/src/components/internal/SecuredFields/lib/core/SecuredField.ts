@@ -41,10 +41,12 @@ class SecuredField extends AbstractSecuredField {
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
 
         this.fieldType = thisVarsFromSetupObj.fieldType;
-        this.cvcRequired = thisVarsFromSetupObj.cvcRequired;
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
+
+        // Use setter
+        this.cvcRequired = thisVarsFromSetupObj.cvcRequired;
 
         // Initiate values through setters
         this.isValid = false;
