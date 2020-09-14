@@ -1,9 +1,9 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import CountryField from './CountryField';
-import getDataset from '~/utils/fetch-json-data';
+import getDataset from '../../../../utils/fetch-json-data';
 
-jest.mock('~/utils/fetch-json-data');
+jest.mock('../../../../utils/fetch-json-data');
 const countriesMock = [
     {
         id: 'BR',
@@ -23,10 +23,10 @@ const countriesMock = [
     }
 ];
 
-getDataset.mockImplementation(jest.fn(() => Promise.resolve(countriesMock)));
+(getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(countriesMock)));
 
 describe('CountryField', () => {
-    const getWrapper = props => mount(<CountryField {...props} />);
+    const getWrapper = (props?) => mount(<CountryField {...props} />);
 
     test('calls getDataset', () => {
         const wrapper = getWrapper();
