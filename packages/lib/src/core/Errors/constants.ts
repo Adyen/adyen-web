@@ -1,6 +1,6 @@
 export const VALIDATION_ERROR = 'error.va';
 export const CONFIGURATION_ERROR = 'error.co';
-export const DEV_ERROR = 'error.de';
+export const DEV_ERROR = 'error.dev';
 export const APP_ERROR = 'error.ap';
 
 /**

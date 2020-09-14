@@ -12,11 +12,22 @@ const FALLBACK_COMPONENT = 'redirect';
  */
 const createElements = (components: PaymentMethod[] = [], props, componentsConfig = {}) => {
     const createElement = component => {
+        const pmConfigOptions = getComponentConfiguration(component.type, componentsConfig);
+
         // Merge:
         // 1. props defined on the PaymentMethod in the response object
         // 2. the high level (Checkout) props
         // 3. specific config for this element (as defined in the paymentMethodsConfiguration object when checkout.create('dropin') is called)
-        const componentProps = { ...component, ...props, ...getComponentConfiguration(component.type, componentsConfig), isDropin: true };
+        const componentProps = {
+            ...component,
+            ...props,
+            ...pmConfigOptions,
+            onErrorRef: pmConfigOptions.onError ? pmConfigOptions.onError : props.onErrorRef, // Update onErrorRef in case the merchant has defined one in the paymentMethodsConfiguration object
+            onError: props.onError, // Overwrite prop with reference to central handler
+            isDropin: true
+        };
+
+        // console.log('### createElements::createElement:: componentProps', componentProps);
 
         let componentInstance = getComponent(component.type, componentProps);
 

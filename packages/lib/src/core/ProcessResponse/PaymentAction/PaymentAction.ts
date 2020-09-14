@@ -10,7 +10,7 @@ export function getComponentForAction(action: PaymentAction, props = {}) {
     }
 
     // TODO fix [] access with TS
-    props['onError']({ error: ERROR_CODES[ERROR_MSG_INVALID_ACTION] });
+    props['onError']({ error: ERROR_CODES[ERROR_MSG_INVALID_ACTION], info: `type=${action.type}` });
 }
 
 export default getComponentForAction;

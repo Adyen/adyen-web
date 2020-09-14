@@ -27,7 +27,7 @@ class Core {
     constructor(options: CoreOptions = {}) {
         this.options = {
             ...options,
-            onErrorRef: options.onError, // Store ref to merchant define callback
+            onErrorRef: options.onError, // Store ref to merchant defined callback (from checkout options)
             onError: errorHandler, // Overwrite prop with reference to central handler
             loadingContext: resolveEnvironment(options.environment)
         };
@@ -81,6 +81,8 @@ class Core {
             storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
             ...this.options,
             ...options,
+            onErrorRef: options?.onError ? options.onError : this.options.onErrorRef, // Update onErrorRef in case the merchant has defined one in the component options
+            onError: this.options.onError, // Overwrite prop with already created reference to central handler
             i18n: this.modules.i18n,
             modules: this.modules,
             createFromAction: this.createFromAction
