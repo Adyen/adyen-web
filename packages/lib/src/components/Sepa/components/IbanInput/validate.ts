@@ -20,7 +20,7 @@ const checkIbanStructure = iban => {
     const countryCode = iban.slice(0, 2);
     const ibanRegex = regex(iban, countryCode);
 
-    return (ibanRegex.test && ibanRegex.test(iban.slice(4))) || false;
+    return ((ibanRegex as RegExp).test && (ibanRegex as RegExp).test(iban.slice(4))) || false;
 };
 
 /**
