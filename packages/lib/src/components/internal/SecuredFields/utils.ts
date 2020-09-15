@@ -1,4 +1,5 @@
 import getProp from '../../../utils/getProp';
+import Language from '../../../language/Language';
 import { getImageUrl } from '../../../utils/get-image';
 import {
     ENCRYPTED_CARD_NUMBER,
@@ -87,7 +88,7 @@ export const getErrorObject = (fieldType, rootNode, state) => {
 };
 // -- end ROUTINES USED IN SecuredFieldsProvider.showValidation -----------------------
 
-export const resolvePlaceholders = (i18n = {}) => ({
+export const resolvePlaceholders = (i18n?: Language) => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
     [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
     [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'),

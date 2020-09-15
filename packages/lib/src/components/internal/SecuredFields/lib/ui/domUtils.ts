@@ -1,7 +1,5 @@
 import { selectOne, select } from '../utilities/dom';
 
-// import * as logger from '../utilities/logger';
-
 const getPreviousTabbableEl = (matchEl, getPrevious = true) => {
     const selStr =
         '*[data-cse], a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), ' +

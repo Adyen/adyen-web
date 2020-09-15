@@ -42,7 +42,7 @@ describe('Tests for commonUtils', () => {
     });
 
     test('Should test generateRandomNumber mocking window.crypto', () => {
-        window.crypto = {
+        (window as any).crypto = {
             getRandomValues: () => 42
         };
 
