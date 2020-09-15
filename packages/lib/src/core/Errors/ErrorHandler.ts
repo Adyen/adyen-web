@@ -16,7 +16,6 @@ import {
     ERROR_MSG_INCORRECT_PMR,
     ERROR_MSG_NO_PAYPAL_TOKEN
 } from './constants';
-import * as logger from '../../components/internal/SecuredFields/lib/utilities/logger';
 
 export function errorHandler(errorObj, compRef) {
     console.log('### ErrorHandler::errorHandler:: errorObj', errorObj);
@@ -45,7 +44,7 @@ export function errorHandler(errorObj, compRef) {
     if (code.indexOf(CONFIGURATION_ERROR) > -1) {
         switch (code) {
             case ERROR_CODES[ERROR_MSG_NO_KEYS]:
-                logger.warn(
+                console.warn(
                     'WARNING: Checkout configuration object is missing a "clientKey" or an "originKey" property. \nAn originKey will be accepted but this will eventually be deprecated'
                 );
                 // Show a "configuration error" message in the component - see CardInput.tsx for example
