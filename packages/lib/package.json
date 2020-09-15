@@ -37,8 +37,8 @@
     },
     "devDependencies": {
         "@types/jest": "^26.0.13",
-        "@typescript-eslint/eslint-plugin": "^4.1.0",
-        "@typescript-eslint/parser": "^4.1.0",
+        "@typescript-eslint/eslint-plugin": "^4.1.1",
+        "@typescript-eslint/parser": "^4.1.1",
         "autoprefixer": "^9.8.6",
         "clean-webpack-plugin": "^3.0.0",
         "core-js": "^3.6.5",

@@ -32,9 +32,8 @@ describe('OpenInvoice', () => {
         expect(wrapper.find('Checkbox')).toHaveLength(0);
     });
 
-    test('should render a consent checkbox if passed as a prop', () => {
-        const ConsentCheckbox = () => <div />;
-        const wrapper = getWrapper({ consentCheckbox: () => <ConsentCheckbox /> });
+    test('should render a consent checkbox if a consentCheckboxLabel is passed as a prop', () => {
+        const wrapper = getWrapper({ consentCheckboxLabel: 'TEST' });
         expect(wrapper.find('ConsentCheckbox')).toHaveLength(1);
     });
 

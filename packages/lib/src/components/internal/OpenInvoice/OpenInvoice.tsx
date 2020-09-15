@@ -1,22 +1,26 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
+import ConsentCheckbox from '../FormFields/ConsentCheckbox';
 import { OpenInvoiceProps, OpenInvoiceStateData, OpenInvoiceStateError, OpenInvoiceStateValid } from './types';
 import './OpenInvoice.scss';
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
+    const showCompanyDetails = visibility.companyDetails !== 'hidden';
     const showPersonalDetails = visibility.personalDetails !== 'hidden';
     const showBillingAddress = visibility.billingAddress !== 'hidden';
     const showDeliveryAddress = visibility.deliveryAddress !== 'hidden';
+    const showConsentCheckbox = !!props.consentCheckboxLabel;
 
     const [data, setData] = useState<OpenInvoiceStateData>({
         ...props.data,
-        ...(props.consentCheckbox && { consentCheckbox: false })
+        ...(showConsentCheckbox && { consentCheckbox: false })
     });
     const [errors, setErrors] = useState<OpenInvoiceStateError>({});
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
@@ -31,13 +35,15 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const deliveryAddressRef = useRef(null);
 
     useEffect(() => {
+        const companyDetailsValid = showCompanyDetails ? !!valid.companyDetails : true;
         const personalDetailsValid = showPersonalDetails ? !!valid.personalDetails : true;
         const billingAddressValid = showBillingAddress ? !!valid.billingAddress : true;
         const includeDeliveryAddress = showDeliveryAddress && !!data.separateDeliveryAddress;
         const deliveryAddressValid = includeDeliveryAddress ? !!valid.deliveryAddress : true;
-        const consentCheckboxValid = props.consentCheckbox ? !!valid.consentCheckbox : true;
-        const isValid = personalDetailsValid && billingAddressValid && deliveryAddressValid && consentCheckboxValid;
+        const consentCheckboxValid = showConsentCheckbox ? !!valid.consentCheckbox : true;
+        const isValid = companyDetailsValid && personalDetailsValid && billingAddressValid && deliveryAddressValid && consentCheckboxValid;
         const newData = {
+            ...(showCompanyDetails && { companyDetails: data.companyDetails }),
             ...(showPersonalDetails && { personalDetails: data.personalDetails }),
             ...(showBillingAddress && { billingAddress: data.billingAddress }),
             ...(includeDeliveryAddress && { deliveryAddress: data.deliveryAddress })
@@ -68,12 +74,22 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         if (showDeliveryAddress && deliveryAddressRef.current) deliveryAddressRef.current.showValidation();
 
         setErrors({
-            ...(props.consentCheckbox && { consentCheckbox: !data.consentCheckbox })
+            ...(showConsentCheckbox && { consentCheckbox: !data.consentCheckbox })
         });
     };
 
     return (
         <div className="adyen-checkout__open-invoice">
+            {showCompanyDetails && (
+                <CompanyDetails
+                    data={data.companyDetails}
+                    label="companyDetails"
+                    onChange={handleFieldset('companyDetails')}
+                    ref={personalDetailsRef}
+                    visibility={visibility.companyDetails}
+                />
+            )}
+
             {showPersonalDetails && (
                 <PersonalDetails
                     data={data.personalDetails}
@@ -118,8 +134,14 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                 />
             )}
 
-            {props.consentCheckbox &&
-                props.consentCheckbox({ countryCode, data, i18n, errorMessage: !!errors.consentCheckbox, onChange: handleConsentCheckbox })}
+            {showConsentCheckbox && (
+                <ConsentCheckbox
+                    data={data}
+                    errorMessage={!!errors.consentCheckbox}
+                    label={props.consentCheckboxLabel}
+                    onChange={handleConsentCheckbox}
+                />
+            )}
 
             {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>

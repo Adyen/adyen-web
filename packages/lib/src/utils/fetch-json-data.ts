@@ -1,6 +1,6 @@
 import { FALLBACK_CONTEXT } from '../core/config';
 
-export default ({ path, loadingContext = FALLBACK_CONTEXT, method = 'GET', contentType = 'text/plain' }, dataObj) => {
+export default ({ path, loadingContext = FALLBACK_CONTEXT, method = 'GET', contentType = 'text/plain' }, dataObj?) => {
     const options = {
         method,
         mode: 'cors',

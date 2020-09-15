@@ -26,9 +26,9 @@ class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeSta
         this.state = { base64URLencodedData };
     }
 
-    private iframeCallback() {
+    private iframeCallback = () => {
         this.setState({ status: 'iframeLoaded' });
-    }
+    };
 
     private get3DS2ChallengePromise(): Promise<any> {
         return new Promise((resolve, reject) => {

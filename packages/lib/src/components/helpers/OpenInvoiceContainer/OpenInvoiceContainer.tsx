@@ -7,8 +7,9 @@ import { unformatDate } from '../../internal/FormFields/InputDate/utils';
 export default class OpenInvoiceContainer extends UIElement {
     protected static defaultProps = {
         onChange: () => {},
-        data: { personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
+        data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
         visibility: {
+            companyDetails: 'hidden',
             personalDetails: 'editable',
             billingAddress: 'editable',
             deliveryAddress: 'editable'
@@ -31,6 +32,10 @@ export default class OpenInvoiceContainer extends UIElement {
         return {
             ...props,
             allowedCountries: [country],
+            visibility: {
+                ...OpenInvoiceContainer.defaultProps.visibility,
+                ...props.visibility
+            },
             data: {
                 ...props.data,
                 billingAddress: {
@@ -50,13 +55,20 @@ export default class OpenInvoiceContainer extends UIElement {
      */
     formatData() {
         const { data = {} } = this.state;
-        const { personalDetails = {}, billingAddress, deliveryAddress } = data;
+        const { companyDetails = {}, personalDetails = {}, billingAddress, deliveryAddress } = data;
+        const { name, registrationNumber } = companyDetails;
         const { firstName, lastName, gender = 'UNKNOWN', telephoneNumber, shopperEmail, dateOfBirth } = personalDetails;
 
         return {
             paymentMethod: {
                 type: this.constructor['type']
             },
+            ...((name || registrationNumber) && {
+                company: {
+                    ...(name && { name }),
+                    ...(registrationNumber && { registrationNumber })
+                }
+            }),
             shopperName: {
                 ...(firstName && { firstName }),
                 ...(lastName && { lastName }),
