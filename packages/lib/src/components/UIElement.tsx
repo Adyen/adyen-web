@@ -115,7 +115,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         if (!action || !action.type) this.props.onError({ error: ERROR_CODES[ERROR_MSG_NO_ACTION] }, this);
 
         const paymentAction = this.props.createFromAction(action, {
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
+            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
+            // Maintain onErrorRef so if the merchant has defined onError in the component options it doesn't get lost as we re-render the component
+            onError: this.props.onErrorRef
         });
 
         if (paymentAction) {

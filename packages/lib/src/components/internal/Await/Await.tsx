@@ -10,6 +10,7 @@ import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
+import { ERROR_CODES, ERROR_MSG_PAYMENT_EXPIRED } from '../../../core/Errors/constants';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -26,8 +27,7 @@ function Await(props: AwaitComponentProps) {
     const onTimeUp = (): void => {
         setExpired(true);
         clearTimeout(storedTimeout);
-        const error = { type: 'error', props: { errorMessage: 'Payment Expired' } };
-        props.onError(error, this);
+        props.onError({ error: ERROR_CODES[ERROR_MSG_PAYMENT_EXPIRED] }, this);
     };
 
     const onTick = (time): void => {

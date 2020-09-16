@@ -53,6 +53,7 @@ export class MBWayElement extends UIElement {
                         accessKey={accessKey}
                         paymentData={this.props.paymentData}
                         onError={this.props.onError}
+                        onErrorRef={this.props.onErrorRef}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                         type={config.type}

@@ -6,6 +6,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
 import { ERROR_CODES, ERROR_MSG_NO_ACTION } from '../../core/Errors/constants';
+import { getComponentConfiguration } from '../index';
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -82,9 +83,16 @@ class DropinElement extends UIElement<DropinElementProps> {
             return this.activePaymentMethod.updateWithAction(action);
         }
 
-        const paymentAction = this.props.createFromAction(action, {
+        // Extract desired props that we need to pass on from the pmConfiguration for this particular PM
+        const pmConfig = getComponentConfiguration(action.paymentMethodType, this.props.paymentMethodsConfiguration);
+
+        const paymentAction: UIElement = this.props.createFromAction(action, {
             isDropin: true,
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this)
+            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this),
+            // Maintain onErrorRef so if the merchant has defined onError in the component options it doesn't get lost as we re-render the component
+            onError: this.props.onErrorRef,
+            // Overwrite ref if the merchant has defined onError in the pmConfig options
+            ...(pmConfig?.onError && { onError: pmConfig.onError })
         });
 
         if (paymentAction) {

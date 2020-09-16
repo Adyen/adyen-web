@@ -31,6 +31,7 @@ export const ERROR_MSG_NO_RENDER_METHOD = 'No render method';
 export const ERROR_MSG_INVALID_ACTION = 'Invalid action';
 export const ERROR_MSG_NO_ACTION = 'No action exists';
 export const ERROR_MSG_NO_PAYPAL_TOKEN = 'No sdkData token provided for PayPal';
+export const ERROR_MSG_PAYMENT_EXPIRED = 'Payment Expired';
 /**
  * end: Errors list
  */
@@ -65,7 +66,8 @@ export const ERROR_CODES = {
 
     [ERROR_MSG_INVALID_ACTION]: `${APP_ERROR}.act.01`,
     [ERROR_MSG_NO_ACTION]: `${APP_ERROR}.act.02`,
-    [ERROR_MSG_NO_PAYPAL_TOKEN]: `${APP_ERROR}.pp-sdk-tok.01`
+    [ERROR_MSG_NO_PAYPAL_TOKEN]: `${APP_ERROR}.pp-sdk-tok.01`,
+    [ERROR_MSG_PAYMENT_EXPIRED]: `${APP_ERROR}.await.01`
 };
 
 export const DEFAULT_ERROR = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];

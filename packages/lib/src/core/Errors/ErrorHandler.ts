@@ -14,7 +14,8 @@ import {
     ERROR_MSG_INVALID_ACTION,
     ERROR_MSG_NO_ACTION,
     ERROR_MSG_INCORRECT_PMR,
-    ERROR_MSG_NO_PAYPAL_TOKEN
+    ERROR_MSG_NO_PAYPAL_TOKEN,
+    ERROR_MSG_PAYMENT_EXPIRED
 } from './constants';
 
 export function errorHandler(errorObj, compRef) {
@@ -111,6 +112,10 @@ export function errorHandler(errorObj, compRef) {
 
             case ERROR_CODES[ERROR_MSG_NO_PAYPAL_TOKEN]:
                 return new Error(`${ERROR_MSG_NO_PAYPAL_TOKEN}.`);
+                break;
+
+            case ERROR_CODES[ERROR_MSG_PAYMENT_EXPIRED]:
+                compRef.props.onErrorRef({ error: ERROR_MSG_PAYMENT_EXPIRED });
                 break;
         }
         return;
