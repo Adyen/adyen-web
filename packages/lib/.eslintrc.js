@@ -84,13 +84,13 @@ module.exports = {
         'no-useless-constructor': 'off',
 
         // Typescript Rules
-        '@typescript-eslint/camelcase': 'off',
-        '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+        '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, vars: 'local' }],
         '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/indent': 'off',
         '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }],
+        '@typescript-eslint/ban-types': 'off', // TODO
 
         // React Rules
         'react/prop-types': 'off',

@@ -55,7 +55,6 @@ export interface AriaConfigObject {
 abstract class AbstractSecuredField {
     public config: SFInternalConfig; // could be protected but needs to be public for tests to run
     protected fieldType: string;
-    protected cvcRequired: boolean;
     protected iframeSrc: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;

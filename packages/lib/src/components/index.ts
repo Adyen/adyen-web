@@ -1,4 +1,4 @@
-import AfterPay from './AfterPay';
+import { AfterPay, AfterPayB2B } from './AfterPay';
 import AmazonPay from './AmazonPay';
 import ApplePay from './ApplePay';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
@@ -48,6 +48,7 @@ const componentsMap = {
     ach: Ach,
     afterpay: AfterPay,
     afterpay_default: AfterPay,
+    afterpay_b2b: AfterPayB2B,
     amazonpay: AmazonPay,
     amex: Card,
     applepay: ApplePay,
