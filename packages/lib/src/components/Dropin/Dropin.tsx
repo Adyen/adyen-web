@@ -89,7 +89,7 @@ class DropinElement extends UIElement<DropinElementProps> {
             isDropin: true,
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this),
             onError: this.props.onError, // Add ref to onError in case the merchant has defined one in the component options
-            ...(pmConfig?.onError && { onError: pmConfig.onError }) // Add ref to onError in case the merchant has defined one in the pmConfig options
+            ...(pmConfig?.onError && { onError: pmConfig.onError }) // Overwrite ref to onError in case the merchant has defined one in the pmConfig options
         });
 
         if (paymentAction) {
