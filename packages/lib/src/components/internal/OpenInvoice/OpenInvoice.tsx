@@ -30,17 +30,18 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setStatus(newStatus);
     };
 
+    const companyDetailsRef = useRef(null);
     const personalDetailsRef = useRef(null);
     const billingAddressRef = useRef(null);
     const deliveryAddressRef = useRef(null);
 
     useEffect(() => {
-        const companyDetailsValid = showCompanyDetails ? !!valid.companyDetails : true;
-        const personalDetailsValid = showPersonalDetails ? !!valid.personalDetails : true;
-        const billingAddressValid = showBillingAddress ? !!valid.billingAddress : true;
+        const companyDetailsValid = !showCompanyDetails || !!valid.companyDetails;
+        const personalDetailsValid = !showPersonalDetails || !!valid.personalDetails;
+        const billingAddressValid = !showBillingAddress || !!valid.billingAddress;
         const includeDeliveryAddress = showDeliveryAddress && !!data.separateDeliveryAddress;
-        const deliveryAddressValid = includeDeliveryAddress ? !!valid.deliveryAddress : true;
-        const consentCheckboxValid = showConsentCheckbox ? !!valid.consentCheckbox : true;
+        const deliveryAddressValid = !includeDeliveryAddress || !!valid.deliveryAddress;
+        const consentCheckboxValid = !showConsentCheckbox || !!valid.consentCheckbox;
         const isValid = companyDetailsValid && personalDetailsValid && billingAddressValid && deliveryAddressValid && consentCheckboxValid;
         const newData = {
             ...(showCompanyDetails && { companyDetails: data.companyDetails }),
@@ -69,6 +70,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     };
 
     this.showValidation = () => {
+        if (showCompanyDetails && companyDetailsRef.current) companyDetailsRef.current.showValidation();
         if (showPersonalDetails && personalDetailsRef.current) personalDetailsRef.current.showValidation();
         if (showBillingAddress && billingAddressRef.current) billingAddressRef.current.showValidation();
         if (showDeliveryAddress && deliveryAddressRef.current) deliveryAddressRef.current.showValidation();
@@ -85,7 +87,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     data={data.companyDetails}
                     label="companyDetails"
                     onChange={handleFieldset('companyDetails')}
-                    ref={personalDetailsRef}
+                    ref={companyDetailsRef}
                     visibility={visibility.companyDetails}
                 />
             )}
