@@ -1,8 +1,10 @@
 import { convertFullToHalf } from './utils';
 
 describe('convertFullToHalf util', () => {
-    test('convert full width characters to half width characters', () => {
-        expect(convertFullToHalf('ｔｅｓｔ１２３＠ｅｍａｉｌ．com')).toBe('test123@email.com');
+    test('convert full width characters to half width characters while not changing the half width characters', () => {
+        expect(convertFullToHalf('test123')).toBe('test123');
+        expect(convertFullToHalf('ｔｅｓｔ１２３')).toBe('test123');
+        expect(convertFullToHalf('ｔｅｓｔ＠email１２３.com')).toBe('test@email123.com');
     });
 
     test('does not convert other characters', () => {
