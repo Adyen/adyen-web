@@ -156,6 +156,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
         const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
 
+        const showInstallmentAmounts = Object.prototype.hasOwnProperty.call(installmentOptions, 'showInstallmentAmounts')
+            ? installmentOptions.showInstallmentAmounts
+            : true;
+
         return (
             <SecuredFieldsProvider
                 ref={this.sfp}
@@ -189,6 +193,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         brand={sfpState.brand}
                                         installmentOptions={installmentOptions}
                                         onChange={this.handleInstallments}
+                                        type={showInstallmentAmounts ? 'amount' : 'months'}
                                     />
                                 )}
                             </LoadingWrapper>
@@ -242,6 +247,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         brand={sfpState.brand}
                                         installmentOptions={installmentOptions}
                                         onChange={this.handleInstallments}
+                                        type={showInstallmentAmounts ? 'amount' : 'months'}
                                     />
                                 )}
 

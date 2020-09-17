@@ -83,11 +83,13 @@ export interface InstallmentsProps {
     brand?: string;
     onChange?: (installmentAmount: number) => void;
     installmentOptions: InstallmentOptions;
+    type?: string;
 }
 
 interface InstallmentOptions {
     [key: string]: {
         values: number[];
+        plans?: string[];
     };
 }
 

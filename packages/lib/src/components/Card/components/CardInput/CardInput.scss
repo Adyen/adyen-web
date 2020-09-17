@@ -108,3 +108,29 @@
         transition: none;
     }
 }
+
+.adyen-checkout__fieldset--revolving-plan{
+    .adyen-checkout__radio_group{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.adyen-checkout__fieldset--revolving-plan{
+    .adyen-checkout__radio_group__input-wrapper{
+        margin-top: 20px
+    }
+}
+
+.adyen-checkout__field--revolving-plan-installments{
+    position: relative;
+    top: 42px;
+    right: 37%;
+    width: 30%;
+}
+
+/* TODO should be in CardInput.module.scss*/
+.adyen-checkout__field--revolving-plan-installments.adyen-checkout__field--disabled{
+    pointer-events: none;
+    opacity: 0.4;
+}
