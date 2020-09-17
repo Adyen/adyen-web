@@ -128,9 +128,3 @@
     right: 37%;
     width: 30%;
 }
-
-/* TODO should be in CardInput.module.scss*/
-.adyen-checkout__field--revolving-plan-installments.adyen-checkout__field--disabled{
-    pointer-events: none;
-    opacity: 0.4;
-}

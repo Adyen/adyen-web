@@ -6,6 +6,7 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
+import styles from '../../CardInput.module.scss';
 
 /**
  * Installments generic dropdown
@@ -79,11 +80,12 @@ function Installments(props: InstallmentsProps) {
                     />
 
                     <Field
-                        classNameModifiers={[
-                            'installments',
-                            'revolving-plan-installments',
-                            ...(revolvingRadioBtnValue !== 'installments' ? ['disabled'] : [''])
-                        ]}
+                        className={
+                            revolvingRadioBtnValue !== 'installments'
+                                ? `${styles['revolving-plan-installments__disabled']}`
+                                : `${styles['revolving-plan-installments']}`
+                        }
+                        classNameModifiers={['revolving-plan-installments']}
                     >
                         {renderFormField('select', {
                             items: installmentOptions.values.map(installmentItemsMapper),
