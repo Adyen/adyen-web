@@ -4,8 +4,8 @@ import { PaymentAction } from '../../../types';
 const actionTypes = {
     redirect: (action: PaymentAction, props) =>
         getComponent('redirect', {
-            ...action,
             ...props,
+            ...action,
             statusType: 'redirect'
         }),
 
