@@ -19,7 +19,7 @@ function Installments(props: InstallmentsProps) {
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
 
     const hasRevolvingPlan = installmentOptions?.plans && installmentOptions.plans.includes('revolving');
-    console.log('### Installments::Installments:: hasRevolvingPlan', hasRevolvingPlan);
+    // console.log('### Installments::Installments:: hasRevolvingPlan', hasRevolvingPlan);
 
     const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
 
