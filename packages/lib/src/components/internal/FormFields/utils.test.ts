@@ -12,7 +12,7 @@ describe('convertFullToHalf util', () => {
         const hangul = '훈민정음';
 
         expect(convertFullToHalf(katakana)).toBe(katakana);
-        expect(convertFullToHalf(hiragana)).toBe(kanji);
+        expect(convertFullToHalf(hiragana)).toBe(hiragana);
         expect(convertFullToHalf(kanji)).toBe(kanji);
         expect(convertFullToHalf(hangul)).toBe(hangul);
     });
