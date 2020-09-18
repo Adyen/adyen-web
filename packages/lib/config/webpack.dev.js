@@ -6,14 +6,12 @@ require('dotenv').config({ path: path.resolve('../../', '.env') });
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpackConfig = require('./webpack.config');
 const currentVersion = require('./version')();
-const resolve = dir => path.resolve(__dirname, dir);
-const shouldUseSourceMap = true;
 
 module.exports = merge(webpackConfig, {
     mode: 'development',
+    devtool: 'cheap-module-source-map',
     plugins: [
         new CleanWebpackPlugin(),
-        // new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 __SF_ENV__: JSON.stringify(process.env.SF_ENV || 'build'),
@@ -27,97 +25,6 @@ module.exports = merge(webpackConfig, {
             filename: `adyen.css`
         })
     ],
-    devtool: 'cheap-module-source-map',
-
-    entry: {
-        AdyenCheckout: path.join(__dirname, '../src/index.ts')
-    },
-    output: {
-        pathinfo: true,
-        filename: `adyen.js`,
-        path: path.join(__dirname, '../dist'),
-        library: '[name]',
-        libraryTarget: 'umd',
-        libraryExport: 'default'
-    },
-    module: {
-        rules: [
-            {
-                // "oneOf" will traverse all following loaders until one will
-                // match the requirements. When no loader matches it will fall
-                // back to the "file" loader at the end of the loader list.
-                oneOf: [
-                    // "url" loader works just like "file" loader but it also embeds
-                    // assets smaller than specified size as data URLs to avoid requests.
-                    {
-                        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                        loader: 'url-loader',
-                        options: {
-                            limit: 10000,
-                            name: 'static/media/[name].[hash:8].[ext]'
-                        }
-                    },
-                    {
-                        test: [/\.js?$/, /\.jsx?$/, /\.ts?$/, /\.tsx?$/],
-                        include: [resolve('../src')],
-                        exclude: /node_modules/,
-                        use: [
-                            {
-                                loader: 'ts-loader',
-                                options: { configFile: resolve('../tsconfig.json') }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.scss$/,
-                        exclude: /\.module.scss$/,
-                        resolve: { extensions: ['.scss'] },
-                        use: [
-                            {
-                                loader: MiniCssExtractPlugin.loader
-                            },
-                            {
-                                loader: 'css-loader',
-                                options: { sourceMap: shouldUseSourceMap }
-                            },
-                            {
-                                loader: 'postcss-loader',
-                                options: {
-                                    postcssOptions: { config: 'config/' },
-                                    sourceMap: shouldUseSourceMap
-                                }
-                            },
-                            {
-                                loader: 'sass-loader',
-                                options: { sourceMap: shouldUseSourceMap }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.module.scss$/,
-                        resolve: { extensions: ['.scss'] },
-                        use: [
-                            {
-                                loader: MiniCssExtractPlugin.loader
-                            },
-                            {
-                                loader: 'css-loader',
-                                options: { modules: true }
-                            },
-                            {
-                                loader: 'postcss-loader',
-                                options: { postcssOptions: { config: 'config/' } }
-                            },
-                            {
-                                loader: 'sass-loader'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-
     watch: true,
     // Reportedly, this avoids CPU overload on some systems.
     // https://github.com/facebook/create-react-app/issues/293
