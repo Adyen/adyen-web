@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpackConfig = require('./webpack.config');
 const currentVersion = require('./version')();
