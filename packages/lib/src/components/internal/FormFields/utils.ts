@@ -1,25 +1,3 @@
-/**
- * Reference: https://html.spec.whatwg.org/multipage/form-control-infrastructure.html
- * @private
- */
-const AUTOCOMPLETE_VALUES = {
-    city: 'address-level2',
-    country: 'country',
-    dateOfBirth: 'bday',
-    firstName: 'given-name',
-    gender: 'sex',
-    holderName: 'cc-name',
-    houseNumberOrName: 'address-line2',
-    infix: 'additional-name',
-    lastName: 'family-name',
-    postalCode: 'postal-code',
-    shopperEmail: 'email',
-    stateOrProvince: 'address-level1',
-    street: 'address-line1',
-    telephoneNumber: 'tel'
-};
+const convertFullToHalf = str => str.replace(/[！-～]/g, r => String.fromCharCode(r.charCodeAt(0) - 0xfee0));
 
-/**
- * @private
- */
-export const returnAutoComplete = key => AUTOCOMPLETE_VALUES[key] || 'on';
+export { convertFullToHalf };

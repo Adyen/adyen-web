@@ -68,6 +68,7 @@ function BlikInput(props: BlikInputProps) {
                     autocorrect: 'off',
                     onInput: handleBlikCode('input'),
                     onChange: handleBlikCode('blur'),
+                    placeholder: '123456',
                     maxLength: 6
                 })}
             </Field>
