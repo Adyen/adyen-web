@@ -119,9 +119,18 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
  * Handles validation errors
  */
 function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null): boolean {
+    console.log('\n### SecuredFieldsProviderHandlers::handleOnError:: this.state.hasUnsupportedCard', this.state.hasUnsupportedCard);
+    console.log('### SecuredFieldsProviderHandlers::handleOnError:: hasUnsupportedCard', hasUnsupportedCard);
+
     // If we're in an "unsupported card" state and a 'regular' card number error comes through - ignore it until the "unsupported card" state is cleared
     if (this.state.hasUnsupportedCard && cbObj.fieldType === ENCRYPTED_CARD_NUMBER && hasUnsupportedCard === null) {
-        return false;
+        console.log('### SecuredFieldsProviderHandlers::handleOnError:: IN UNSUPPORTED CARD STATE');
+        // return false;
+
+        // Temporary - for testing in development
+        if (process.env.NODE_ENV === 'development') {
+            throw new Error('SecuredFieldsProviderHandlers::handleOnError:: IN UNSUPPORTED CARD STATE');
+        }
     }
 
     const verifiedErrorCode = getVerifiedErrorCode(cbObj.fieldType, cbObj.error, this.props.i18n);
