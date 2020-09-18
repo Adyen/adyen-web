@@ -13,13 +13,14 @@ import styles from '../../CardInput.module.scss';
  */
 function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
+
     const { amount, brand, onChange, type } = props;
     const [installmentAmount, setInstallmentAmount] = useState(1);
-    const [revolvingRadioBtnValue, setRevolvingRadioBtnValue] = useState('onetime');
+    const [radioBtnValue, setRadioBtnValue] = useState('onetime');
+
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
 
     const hasRevolvingPlan = installmentOptions?.plans && installmentOptions.plans.includes('revolving');
-    // console.log('### Installments::Installments:: hasRevolvingPlan', hasRevolvingPlan);
 
     const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
 
@@ -30,7 +31,7 @@ function Installments(props: InstallmentsProps) {
 
     const onRadioSelect = e => {
         const selectedBtn = e.currentTarget.getAttribute('value');
-        setRevolvingRadioBtnValue(selectedBtn);
+        setRadioBtnValue(selectedBtn);
     };
 
     const installmentItemsMapper = (value: number): InstallmentsItem => {
@@ -57,8 +58,8 @@ function Installments(props: InstallmentsProps) {
     }, [brand]);
 
     useEffect(() => {
-        onChange(installmentOptions ? installmentAmount : null);
-    }, [installmentAmount, installmentOptions]);
+        onChange(installmentOptions ? { value: installmentAmount, plan: radioBtnValue, hasRevolvingPlan } : { value: null });
+    }, [installmentAmount, installmentOptions, radioBtnValue]);
 
     if (!installmentOptions) return null;
     if (amount.value === 0) return null;
@@ -76,12 +77,12 @@ function Installments(props: InstallmentsProps) {
                         ]}
                         i18n={i18n}
                         onChange={onRadioSelect}
-                        value={revolvingRadioBtnValue}
+                        value={radioBtnValue}
                     />
 
                     <Field
                         className={
-                            revolvingRadioBtnValue !== 'installments'
+                            radioBtnValue !== 'installments'
                                 ? `${styles['revolving-plan-installments__disabled']}`
                                 : `${styles['revolving-plan-installments']}`
                         }
