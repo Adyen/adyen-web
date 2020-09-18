@@ -5,7 +5,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpackConfig = require('./webpack.config');
-const resolve = dir => path.resolve(__dirname, dir);
 const currentVersion = require('./version')();
 const FILENAME = 'adyen';
 
