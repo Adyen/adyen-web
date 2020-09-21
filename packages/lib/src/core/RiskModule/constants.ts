@@ -2,7 +2,7 @@ export const RISK_DATA_VERSION = '1.0.0';
 export const DF_VERSION = '1.0.0';
 
 export const DEVICE_FINGERPRINT = 'deviceFingerprint';
-export const DF_TIMEOUT = 10000;
+export const DF_TIMEOUT = 20000;
 
 export const FAILED_DFP_RESOLVE_OBJECT_TIMEOUT = {
     result: {
