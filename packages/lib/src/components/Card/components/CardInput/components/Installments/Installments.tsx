@@ -59,23 +59,11 @@ function Installments(props: InstallmentsProps) {
     }, [brand]);
 
     useEffect(() => {
-        let stateObj: any = {};
-
-        if (hasRevolvingPlan) {
-            switch (radioBtnValue) {
-                case 'revolving':
-                    stateObj.plan = 'revolving';
-                    break;
-                case 'onetime':
-                    stateObj.value = 1;
-                    break;
-                default:
-                    stateObj.value = installmentAmount;
-            }
-        } else {
-            // no radio button interface
-            stateObj.value = installmentAmount;
-        }
+        let stateObj: any = {
+            value: installmentAmount, // No radio button interface or "installments" radio button selected
+            ...(hasRevolvingPlan && radioBtnValue === 'revolving' && { plan: radioBtnValue, value: 1 }),
+            ...(hasRevolvingPlan && radioBtnValue === 'onetime' && { value: 1 })
+        };
 
         onChange(installmentOptions ? stateObj : { value: null });
     }, [installmentAmount, installmentOptions, radioBtnValue]);
