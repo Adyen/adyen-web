@@ -20,6 +20,7 @@ function Installments(props: InstallmentsProps) {
 
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
 
+    // hasRevolvingPlan determines if we have 3 radio buttons in the UI ('onetime', 'installments' and 'revolving')
     const hasRevolvingPlan = installmentOptions?.plans && installmentOptions.plans.includes('revolving');
 
     const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
@@ -58,7 +59,25 @@ function Installments(props: InstallmentsProps) {
     }, [brand]);
 
     useEffect(() => {
-        onChange(installmentOptions ? { value: installmentAmount, plan: radioBtnValue, hasRevolvingPlan } : { value: null });
+        let stateObj: any = {};
+
+        if (hasRevolvingPlan) {
+            switch (radioBtnValue) {
+                case 'revolving':
+                    stateObj.plan = 'revolving';
+                    break;
+                case 'onetime':
+                    stateObj.value = 1;
+                    break;
+                default:
+                    stateObj.value = installmentAmount;
+            }
+        } else {
+            // no radio button interface
+            stateObj.value = installmentAmount;
+        }
+
+        onChange(installmentOptions ? stateObj : { value: null });
     }, [installmentAmount, installmentOptions, radioBtnValue]);
 
     if (!installmentOptions) return null;

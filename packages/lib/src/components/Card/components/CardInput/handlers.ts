@@ -63,27 +63,8 @@ function handleHolderName(e: Event): void {
     this.setState(setHolderName, this.validateCardInput);
 }
 
-function handleInstallments(installmentObject): void {
-    let stateObj: any = {};
-
-    // hasRevolvingPlan indicates 3 radio buttons in the UI ('onetime', 'installments' and 'revolving')
-    if (installmentObject.hasRevolvingPlan) {
-        switch (installmentObject.plan) {
-            case 'revolving':
-                stateObj.plan = 'revolving';
-                break;
-            case 'onetime':
-                stateObj.value = 1;
-                break;
-            default:
-                stateObj.value = installmentObject.value;
-        }
-    } else {
-        // no radio button interface or no installments
-        stateObj.value = installmentObject.value;
-    }
-
-    this.setState({ installments: stateObj }, this.validateCardInput);
+function handleInstallments(installments): void {
+    this.setState({ installments }, this.validateCardInput);
 
     // setTimeout(() => {
     //     console.log('### handlers::handleInstallments:: this.state.installments=', this.state.installments);
