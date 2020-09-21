@@ -106,6 +106,7 @@ class DropinElement extends UIElement<DropinElementProps> {
                     {...this.props}
                     onChange={this.setState}
                     onSubmit={this.handleSubmit}
+                    elementRef={this.elementRef}
                     ref={dropinRef => {
                         this.dropinRef = dropinRef;
                     }}
