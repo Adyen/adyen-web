@@ -48,8 +48,7 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
-            ...(this.state.installments &&
-                (this.state.installments.value || this.state.installments.plan) && { installments: this.state.installments }),
+            ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
             browserInfo: this.browserInfo
         };
     }
