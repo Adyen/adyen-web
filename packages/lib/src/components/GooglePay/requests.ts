@@ -11,7 +11,7 @@ import { GooglePayProps } from './types';
 export function isReadyToPayRequest({
     allowedAuthMethods,
     allowedCardNetworks,
-    existingPaymentMethodRequired = true
+    existingPaymentMethodRequired = false
 }): google.payments.api.IsReadyToPayRequest {
     return {
         apiVersion: config.API_VERSION,
