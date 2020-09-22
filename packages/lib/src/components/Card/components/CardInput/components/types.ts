@@ -86,7 +86,7 @@ export interface InstallmentsProps {
     type?: string;
 }
 
-interface InstallmentOptions {
+export interface InstallmentOptions {
     [key: string]: {
         values: number[];
         plans?: string[];

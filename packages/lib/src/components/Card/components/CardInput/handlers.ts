@@ -65,10 +65,6 @@ function handleHolderName(e: Event): void {
 
 function handleInstallments(installments): void {
     this.setState({ installments }, this.validateCardInput);
-
-    // setTimeout(() => {
-    //     console.log('### handlers::handleInstallments:: this.state.installments=', this.state.installments);
-    // }, 1000);
 }
 
 function handleSecuredFieldsChange(newState: SFPState): void {
