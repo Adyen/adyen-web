@@ -20,8 +20,8 @@ function Installments(props: InstallmentsProps) {
 
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
 
-    // hasRevolvingPlan determines if we have 3 radio buttons in the UI ('onetime', 'installments' and 'revolving')
-    const hasRevolvingPlan = installmentOptions?.plans && installmentOptions.plans.includes('revolving');
+    // hasRadioButtonUI determines if we have 3 radio buttons in the UI ('onetime', 'installments' and 'revolving')
+    const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving');
 
     const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
 
@@ -61,8 +61,8 @@ function Installments(props: InstallmentsProps) {
     useEffect(() => {
         let stateObj: any = {
             value: installmentAmount, // No radio button interface or "installments" radio button selected
-            ...(hasRevolvingPlan && radioBtnValue === 'revolving' && { plan: radioBtnValue, value: 1 }),
-            ...(hasRevolvingPlan && radioBtnValue === 'onetime' && { value: 1 })
+            ...(hasRadioButtonUI && radioBtnValue === 'revolving' && { plan: radioBtnValue, value: 1 }),
+            ...(hasRadioButtonUI && radioBtnValue === 'onetime' && { value: 1 })
         };
 
         onChange(installmentOptions ? stateObj : { value: null });
@@ -72,7 +72,7 @@ function Installments(props: InstallmentsProps) {
     if (amount.value === 0) return null;
 
     // Alternate interface for installments with the possibility of a "revolving" plan
-    if (hasRevolvingPlan) {
+    if (hasRadioButtonUI) {
         return (
             <div className="adyen-checkout__installments">
                 <Fieldset classNameModifiers={['revolving-plan']} label={''}>
