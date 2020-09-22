@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import Installments from './Installments';
-import { InstallmentOptions, InstallmentsItem, InstallmentsProps } from '../types';
+import { InstallmentOptions } from '../types';
 
 const installmentOptions = {
     card: {
