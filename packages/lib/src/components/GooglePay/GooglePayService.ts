@@ -2,7 +2,6 @@ import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
 import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
-import wait from '../../utils/wait';
 
 class GooglePayService {
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
@@ -29,7 +28,6 @@ class GooglePayService {
         if (!window.google?.payments) {
             const script = new Script(config.URL);
             await script.load();
-            await wait(100);
         }
 
         return new google.payments.api.PaymentsClient(paymentOptions);
