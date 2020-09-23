@@ -59,7 +59,7 @@ function Installments(props: InstallmentsProps) {
     }, [brand]);
 
     useEffect(() => {
-        let stateObj: any = {
+        const stateObj: any = {
             value: installmentAmount, // No radio button interface or "installments" radio button selected
             ...(hasRadioButtonUI && radioBtnValue === 'revolving' && { plan: radioBtnValue, value: 1 }),
             ...(hasRadioButtonUI && radioBtnValue === 'onetime' && { value: 1 })

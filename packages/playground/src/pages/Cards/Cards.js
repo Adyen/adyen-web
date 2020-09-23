@@ -62,28 +62,10 @@ getOriginKey()
                         plans: ['regular', 'revolving']
                     },
                     showInstallmentAmounts: false
-                },
-                //                countryCode: 'JP',
-                ariaLabels: {
-                    lang: 'en-GB',
-                    encryptedCardNumber: {
-                        label: 'Credit or debit card number field',
-                        iframeTitle: 'bibble'
-                        //                        error: { 'error.ve.gen.01': 'something is wrong', 'error.ve.sf-cc-num.02': 'oh wallie wallie wallie' }
-                    },
-                    encryptedExpiryDate: {
-                        label: 'put your date in here'
-                    }
-                },
-                onError: objdobj => {
-                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
                 }
-                //                placeholders: {
-                //                    encryptedSecurityCode: '8888'
-                //                }
             })
             .mount('.card-field');
-        return;
+
         // Bancontact card
         window.bancontact = checkout
             .create('bcmc', {
