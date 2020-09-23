@@ -109,15 +109,13 @@
     }
 }
 
-.adyen-checkout__fieldset--revolving-plan{
-    .adyen-checkout__radio_group{
+.adyen-checkout__fieldset--revolving-plan {
+    .adyen-checkout__radio_group {
         display: flex;
         flex-direction: column;
     }
-}
 
-.adyen-checkout__fieldset--revolving-plan{
-    .adyen-checkout__radio_group__input-wrapper{
+    .adyen-checkout__radio_group__input-wrapper {
         margin-top: 20px
     }
 }
