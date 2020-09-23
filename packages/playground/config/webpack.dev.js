@@ -88,7 +88,7 @@ module.exports = merge(webpackConfig, {
                             },
                             {
                                 loader: 'postcss-loader',
-                                options: { config: { path: 'config/' } }
+                                options: { postcssOptions: { config: 'config/' } }
                             },
                             {
                                 loader: 'sass-loader'
@@ -104,7 +104,6 @@ module.exports = merge(webpackConfig, {
         port,
         host,
         https: false,
-        // publicPath: '/',
         inline: true,
 
         // Enable hot reloading server. It will provide /sockjs-node/ endpoint
@@ -121,6 +120,10 @@ module.exports = merge(webpackConfig, {
         // It will still show compile warnings and errors with this setting.
         clientLogLevel: 'none',
 
+        // Tells dev-server to suppress messages like the webpack bundle information.
+        // Errors and warnings will still be shown.
+        noInfo: true,
+
         // By default files from `contentBase` will not trigger a page reload.
         watchContentBase: false,
 
@@ -129,7 +132,7 @@ module.exports = merge(webpackConfig, {
         // src/node_modules is not ignored to support absolute imports
         // https://github.com/facebook/create-react-app/issues/1065
         watchOptions: {
-            ignore: /node_modules\/(?!(@adyen\/adyen-web)\/).*/,
+            ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
             aggregateTimeout: 200,
             poll: 500
         },

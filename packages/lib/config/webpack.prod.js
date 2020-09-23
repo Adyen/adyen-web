@@ -2,10 +2,8 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpackConfig = require('./webpack.config');
-const resolve = dir => path.resolve(__dirname, dir);
 const currentVersion = require('./version')();
 const FILENAME = 'adyen';
 
@@ -30,96 +28,15 @@ const shouldUseSourceMap = true;
 
 module.exports = merge(webpackConfig, {
     mode: 'production',
-    bail: true,
     devtool: shouldUseSourceMap ? 'source-map' : false,
-    entry: {
-        AdyenCheckout: path.join(__dirname, '../src/index.ts')
-    },
-    output: {
-        filename: `${FILENAME}.js`,
-        path: path.join(__dirname, '../dist'),
-        library: '[name]',
-        libraryTarget: 'umd',
-        libraryExport: 'default'
-    },
-    module: {
-        rules: [
-            {
-                // "oneOf" will traverse all following loaders until one will
-                // match the requirements. When no loader matches it will fall
-                // back to the "file" loader at the end of the loader list.
-                oneOf: [
-                    // "url" loader works just like "file" loader but it also embeds
-                    // assets smaller than specified size as data URLs to avoid requests.
-                    {
-                        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                        loader: 'url-loader',
-                        options: {
-                            limit: 10000,
-                            name: 'static/media/[name].[hash:8].[ext]'
-                        }
-                    },
-                    {
-                        test: [/\.js?$/, /\.jsx?$/, /\.ts?$/, /\.tsx?$/],
-                        include: [resolve('../src')],
-                        exclude: /node_modules/,
-                        use: [
-                            {
-                                loader: 'ts-loader',
-                                options: { configFile: resolve('../tsconfig.json') }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.scss$/,
-                        exclude: /\.module.scss$/,
-                        resolve: { extensions: ['.scss'] },
-                        use: [
-                            {
-                                loader: MiniCssExtractPlugin.loader
-                            },
-                            {
-                                loader: 'css-loader',
-                                options: { sourceMap: shouldUseSourceMap }
-                            },
-                            {
-                                loader: 'postcss-loader',
-                                options: {
-                                    config: { path: 'config/' },
-                                    sourceMap: shouldUseSourceMap
-                                }
-                            },
-                            {
-                                loader: 'sass-loader',
-                                options: { sourceMap: shouldUseSourceMap }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.module.scss$/,
-                        resolve: { extensions: ['.scss'] },
-                        use: [
-                            {
-                                loader: MiniCssExtractPlugin.loader
-                            },
-                            {
-                                loader: 'css-loader',
-                                options: { modules: true }
-                            },
-                            {
-                                loader: 'postcss-loader',
-                                options: { config: { path: 'config/' } }
-                            },
-                            {
-                                loader: 'sass-loader'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    },
-
+    bail: true,
+    plugins: [
+        new CleanWebpackPlugin(),
+        DefinePluginConfig,
+        new MiniCssExtractPlugin({
+            filename: `${FILENAME}.css`
+        })
+    ],
     optimization: {
         minimizer: [
             new TerserPlugin({
@@ -160,13 +77,5 @@ module.exports = merge(webpackConfig, {
             })
             // new OptimizeCSSAssetsPlugin()
         ]
-    },
-
-    plugins: [
-        new CleanWebpackPlugin(),
-        DefinePluginConfig,
-        new MiniCssExtractPlugin({
-            filename: `${FILENAME}.css`
-        })
-    ]
+    }
 });

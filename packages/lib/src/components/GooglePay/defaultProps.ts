@@ -2,7 +2,7 @@ export default {
     environment: 'TEST',
 
     // isReadyToPayRequest
-    existingPaymentMethodRequired: true,
+    existingPaymentMethodRequired: false,
 
     // ButtonOptions
     // https://developers.google.com/pay/api/web/reference/object#ButtonOptions

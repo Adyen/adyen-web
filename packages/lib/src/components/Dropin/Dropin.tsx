@@ -5,6 +5,7 @@ import DropinComponent from '../../components/Dropin/components/DropinComponent'
 import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
+import { getComponentConfiguration } from '../index';
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -81,9 +82,14 @@ class DropinElement extends UIElement<DropinElementProps> {
             return this.activePaymentMethod.updateWithAction(action);
         }
 
-        const paymentAction = this.props.createFromAction(action, {
+        // Extract desired props that we need to pass on from the pmConfiguration for this particular PM
+        const pmConfig = getComponentConfiguration(action.paymentMethodType, this.props.paymentMethodsConfiguration);
+
+        const paymentAction: UIElement = this.props.createFromAction(action, {
             isDropin: true,
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this)
+            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this),
+            onError: this.props.onError, // Add ref to onError in case the merchant has defined one in the component options
+            ...(pmConfig?.onError && { onError: pmConfig.onError }) // Overwrite ref to onError in case the merchant has defined one in the pmConfig options
         });
 
         if (paymentAction) {
@@ -100,6 +106,7 @@ class DropinElement extends UIElement<DropinElementProps> {
                     {...this.props}
                     onChange={this.setState}
                     onSubmit={this.handleSubmit}
+                    elementRef={this.elementRef}
                     ref={dropinRef => {
                         this.dropinRef = dropinRef;
                     }}
