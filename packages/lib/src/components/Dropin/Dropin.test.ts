@@ -24,4 +24,15 @@ describe('Dropin', () => {
             expect(() => dropin.submit()).toThrow();
         });
     });
+
+    describe('closeActivePaymentMethod', () => {
+        test('should close active payment method', () => {
+            const dropin = new Dropin({});
+            mount(dropin.render());
+            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+
+            dropin.closeActivePaymentMethod();
+            expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+        });
+    })
 });

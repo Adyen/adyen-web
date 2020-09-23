@@ -98,6 +98,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             });
     };
 
+    closeActivePaymentMethod() {
+        this.setState({ activePaymentMethod: null });
+    }
+
     render(props, { elements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
