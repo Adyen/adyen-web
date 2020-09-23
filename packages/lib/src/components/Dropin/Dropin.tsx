@@ -99,8 +99,8 @@ class DropinElement extends UIElement<DropinElementProps> {
         return null;
     }
 
-    resetActivePaymentMethod() {
-        this.dropinRef.resetActivePaymentMethod();
+    closeActivePaymentMethod() {
+        this.dropinRef.closeActivePaymentMethod();
     }
 
     render() {

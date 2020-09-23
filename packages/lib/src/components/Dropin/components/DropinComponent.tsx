@@ -98,7 +98,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             });
     };
 
-    resetActivePaymentMethod() {
+    closeActivePaymentMethod() {
         this.setState({ activePaymentMethod: null });
     }
 
