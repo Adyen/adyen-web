@@ -16,6 +16,7 @@ import processBinLookup from './processBinLookup';
 import styles from './CardInput.module.scss';
 import { CardInputProps, CardInputState } from './types';
 import './CardInput.scss';
+import { existy } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
@@ -145,7 +146,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     render(
-        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails },
+        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts },
         { status, hideCVCForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
@@ -156,9 +157,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
         const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
 
-        const showInstallmentAmounts = Object.prototype.hasOwnProperty.call(installmentOptions, 'showInstallmentAmounts')
-            ? installmentOptions.showInstallmentAmounts
-            : true;
+        const showAmountsInInstallments = existy(showInstallmentAmounts) ? showInstallmentAmounts : true;
 
         return (
             <SecuredFieldsProvider
@@ -193,7 +192,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         brand={sfpState.brand}
                                         installmentOptions={installmentOptions}
                                         onChange={this.handleInstallments}
-                                        type={showInstallmentAmounts ? 'amount' : 'months'}
+                                        type={showAmountsInInstallments ? 'amount' : 'months'}
                                     />
                                 )}
                             </LoadingWrapper>
@@ -247,7 +246,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         brand={sfpState.brand}
                                         installmentOptions={installmentOptions}
                                         onChange={this.handleInstallments}
-                                        type={showInstallmentAmounts ? 'amount' : 'months'}
+                                        type={showAmountsInInstallments ? 'amount' : 'months'}
                                     />
                                 )}
 
