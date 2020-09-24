@@ -1,6 +1,8 @@
 import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import Validator from '../../../utils/Validator';
 
+type PersonalDetailsPlaceholders = Omit<PersonalDetailsSchema, 'gender'>;
+
 export interface PersonalDetailsProps {
     label?: string;
     namePrefix?: string;
@@ -8,6 +10,7 @@ export interface PersonalDetailsProps {
     visibility?: FieldsetVisibility;
     data: PersonalDetailsSchema;
     onChange: (newState: object) => void;
+    placeholders?: PersonalDetailsPlaceholders;
     readonly?: boolean;
     ref?: any;
     validator?: Validator;
@@ -18,8 +21,8 @@ export interface PersonalDetailsStateError {
     lastName?: boolean;
     gender?: boolean;
     dateOfBirth?: string | boolean;
-    telephoneNumber?: string | boolean;
     shopperEmail?: boolean;
+    telephoneNumber?: string | boolean;
 }
 
 export interface PersonalDetailsStateValid {
@@ -27,8 +30,8 @@ export interface PersonalDetailsStateValid {
     lastName?: boolean;
     gender?: boolean;
     dateOfBirth?: boolean;
-    telephoneNumber?: boolean;
     shopperEmail?: boolean;
+    telephoneNumber?: boolean;
 }
 
 export interface ReadOnlyPersonalDetailsProps {

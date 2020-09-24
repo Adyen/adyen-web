@@ -11,10 +11,10 @@ import { PersonalDetailsProps, PersonalDetailsStateError, PersonalDetailsStateVa
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
 
-const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'telephoneNumber', 'shopperEmail'];
+const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
-    const { label = '', namePrefix, requiredFields, visibility, validator } = props;
+    const { label = '', namePrefix, placeholders, requiredFields, visibility, validator } = props;
     const { i18n } = useCoreContext();
     const [data, setData] = useState<PersonalDetailsSchema>(props.data);
     const [errors, setErrors] = useState<PersonalDetailsStateError>({});
@@ -32,6 +32,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
+    const getErrorMessage = error => (typeof error === 'string' ? i18n.get(error) : error);
 
     useEffect(() => {
         const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]).isValid);
@@ -61,6 +62,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['firstName'],
                         onInput: eventHandler('input'),
                         onChange: eventHandler('blur'),
+                        placeholder: placeholders.firstName,
                         spellCheck: false
                     })}
                 </Field>
@@ -74,6 +76,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['lastName'],
                         onInput: eventHandler('input'),
                         onChange: eventHandler('blur'),
+                        placeholder: placeholders.lastName,
                         spellCheck: false
                     })}
                 </Field>
@@ -100,7 +103,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('dateOfBirth')}
                     classNameModifiers={['col-50', 'lastName']}
-                    errorMessage={typeof errors.dateOfBirth === 'string' ? i18n.get(errors.dateOfBirth) : errors.dateOfBirth}
+                    errorMessage={getErrorMessage(errors.dateOfBirth)}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                 >
                     {renderFormField('date', {
@@ -108,7 +111,21 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         value: data.dateOfBirth,
                         classNameModifiers: ['dateOfBirth'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur')
+                        onChange: eventHandler('blur'),
+                        placeholder: placeholders.dateOfBirth
+                    })}
+                </Field>
+            )}
+
+            {requiredFields.includes('shopperEmail') && (
+                <Field label={i18n.get('shopperEmail')} classNameModifiers={['shopperEmail']} errorMessage={getErrorMessage(errors.shopperEmail)}>
+                    {renderFormField('emailAddress', {
+                        name: generateFieldName('shopperEmail'),
+                        value: data.shopperEmail,
+                        classNameModifiers: ['shopperEmail'],
+                        onInput: eventHandler('input'),
+                        onChange: eventHandler('blur'),
+                        placeholder: placeholders.shopperEmail
                     })}
                 </Field>
             )}
@@ -117,26 +134,15 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('telephoneNumber')}
                     classNameModifiers={['telephoneNumber']}
-                    errorMessage={typeof errors.telephoneNumber === 'string' ? i18n.get(errors.telephoneNumber) : errors.telephoneNumber}
+                    errorMessage={getErrorMessage(errors.telephoneNumber)}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),
                         value: data.telephoneNumber,
                         classNameModifiers: ['telephoneNumber'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur')
-                    })}
-                </Field>
-            )}
-
-            {requiredFields.includes('shopperEmail') && (
-                <Field label={i18n.get('shopperEmail')} classNameModifiers={['shopperEmail']} errorMessage={!!errors.shopperEmail}>
-                    {renderFormField('emailAddress', {
-                        name: generateFieldName('shopperEmail'),
-                        value: data.shopperEmail,
-                        classNameModifiers: ['shopperEmail'],
-                        onInput: eventHandler('input'),
-                        onChange: eventHandler('blur')
+                        onChange: eventHandler('blur'),
+                        placeholder: placeholders.telephoneNumber
                     })}
                 </Field>
             )}
@@ -147,7 +153,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 PersonalDetails.defaultProps = {
     data: {},
     onChange: () => {},
-    visibility: 'editable',
+    placeholders: {},
     requiredFields: personalDetailsSchema,
-    validator: new Validator(personalDetailsValidationRules)
+    validator: new Validator(personalDetailsValidationRules),
+    visibility: 'editable'
 };
