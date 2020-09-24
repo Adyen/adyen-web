@@ -168,16 +168,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
     });
 
-    // it('should re-generate an "unsupported card" error and then another "regular" error should be ignored', () => {
-    //     unsupportedCardErrObj.error = ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED];
-    //     wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-    //     expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
-    //
-    //     expect(wrapper.instance().handleOnError(regularErrObj)).toBe(false);
-    //
-    //     expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
-    // });
-
     it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
         unsupportedCardErrObj.error = '';
         wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
