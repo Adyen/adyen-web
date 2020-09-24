@@ -99,6 +99,10 @@ class DropinElement extends UIElement<DropinElementProps> {
         return null;
     }
 
+    closeActivePaymentMethod() {
+        this.dropinRef.closeActivePaymentMethod();
+    }
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
@@ -106,6 +110,7 @@ class DropinElement extends UIElement<DropinElementProps> {
                     {...this.props}
                     onChange={this.setState}
                     onSubmit={this.handleSubmit}
+                    elementRef={this.elementRef}
                     ref={dropinRef => {
                         this.dropinRef = dropinRef;
                     }}

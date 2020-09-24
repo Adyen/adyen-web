@@ -54,7 +54,7 @@ describe('Google Pay Requests', () => {
             expect(readyToPayRequest.allowedPaymentMethods.length).toBeGreaterThan(0);
             expect(readyToPayRequest.apiVersion).toBeDefined();
             expect(readyToPayRequest.apiVersionMinor).toBeDefined();
-            expect(readyToPayRequest.existingPaymentMethodRequired).toBe(true);
+            expect(readyToPayRequest.existingPaymentMethodRequired).toBe(false);
         });
     });
 });
