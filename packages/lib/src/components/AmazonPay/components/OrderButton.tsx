@@ -2,8 +2,9 @@ import { h } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Button from '../../internal/Button';
 import { updateAmazonCheckoutSession } from '../utils';
+import { OrderButtonProps } from '../types';
 
-export default function OrderButton(props) {
+export default function OrderButton(props: OrderButtonProps) {
     const { i18n, loadingContext } = useCoreContext();
 
     const createOrder = () => {

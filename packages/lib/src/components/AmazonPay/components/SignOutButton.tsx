@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import { SignOutButtonProps } from '../types';
 
-export default function SignOutButton(props) {
+export default function SignOutButton(props: SignOutButtonProps) {
     const { i18n } = useCoreContext();
 
     const handleClick = () => {

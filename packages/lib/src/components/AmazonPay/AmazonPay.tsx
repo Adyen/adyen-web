@@ -24,11 +24,11 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
      * Formats the component data output
      */
     formatData(): AmazonPayElementData {
-        const { amazonPayToken } = this.props;
+        const { amazonCheckoutSessionId: checkoutSessionId } = this.props;
         return {
             paymentMethod: {
                 type: AmazonPayElement.type,
-                ...(amazonPayToken && { amazonPayToken })
+                ...(checkoutSessionId && { checkoutSessionId })
             },
             browserInfo: this.browserInfo
         };
@@ -52,7 +52,6 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
-                    payButton={this.payButton}
                 />
             </CoreProvider>
         );

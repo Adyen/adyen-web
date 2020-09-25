@@ -7,6 +7,7 @@ import AmazonPayButton from './AmazonPayButton';
 import ChangePaymentDetailsButton from './ChangePaymentDetailsButton';
 import OrderButton from './OrderButton';
 import SignOutButton from './SignOutButton';
+import { PaymentAmount } from '../../../types';
 
 export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
@@ -35,13 +36,22 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     }
 
     if (props.showSignOutButton) {
-        return <SignOutButton onSignOut={props.onSignOut} amazonRef={window.amazon} />;
+        return <SignOutButton amazonRef={window.amazon} onSignOut={props.onSignOut} />;
     }
 
     if (props.amazonCheckoutSessionId) {
         return (
             <div className="adyen-checkout__amazonpay">
-                {props.showOrderButton && <OrderButton {...props} payButton={props.payButton} />}
+                {props.showOrderButton && (
+                    <OrderButton
+                        amazonCheckoutSessionId={props.amazonCheckoutSessionId}
+                        amount={props.amount}
+                        clientKey={props.clientKey}
+                        originKey={props.originKey}
+                        onError={props.onError}
+                        returnUrl={props.returnUrl}
+                    />
+                )}
 
                 {props.showChangePaymentDetailsButton && (
                     <ChangePaymentDetailsButton amazonCheckoutSessionId={props.amazonCheckoutSessionId} amazonRef={window.amazon} />
