@@ -11,7 +11,7 @@ export class AchElement extends UIElement {
             ...props,
             // Fix mismatch between passed hasHolderName & holderNameRequired props
             // (when holderNameRequired = true, but hasHolderName = false - which means component will never be valid)
-            holderNameRequired: props.hasHolderName === false ? false : props.holderNameRequired
+            holderNameRequired: props.hasHolderName ?? props.holderNameRequired
             // TODO - if it turns out that hasHolderName & holderNameRequired are not configurable by the merchant
             //  then we will need to force these properties to true
         };
@@ -25,7 +25,7 @@ export class AchElement extends UIElement {
         const paymentMethod = {
             type: AchElement.type,
             ...this.state.data,
-            ownerName: this.state.data.holderName
+            ownerName: this.state.data?.holderName
         };
 
         delete paymentMethod.holderName;
