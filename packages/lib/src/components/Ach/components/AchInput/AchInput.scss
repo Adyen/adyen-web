@@ -6,6 +6,10 @@
     margin-bottom: 0;
 }
 
+.adyen-checkout__fieldset__title + .adyen-checkout__ach-sf__form {
+    margin-top: 0;
+}
+
 .adyen-checkout__ach-sf__form {
     margin-top: 16px;
 }
