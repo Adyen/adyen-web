@@ -9,12 +9,16 @@ export class MBWayElement extends UIElement {
     private static type = 'mbway';
 
     formatProps(props) {
-        if (props.data) {
-            props.data.email = props.data.shopperEmail || props.data.email;
-            props.data.phoneNumber = props.data.telephoneNumber || props.data.phoneNumber;
-        }
+        const { data = {}, placeholders = {} } = props;
+
         return {
-            ...props
+            ...props,
+            data: {
+                telephoneNumber: data.telephoneNumber || data.phoneNumber || ''
+            },
+            placeholders: {
+                telephoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '+351 932 123 456'
+            }
         };
     }
 
@@ -22,14 +26,11 @@ export class MBWayElement extends UIElement {
      * Formats the component data output
      */
     formatData(): object {
-        const paymentMethod: object = {
-            type: MBWayElement.type,
-            shopperEmail: this.state.data ? this.state.data.email : '',
-            telephoneNumber: this.state.data ? this.state.data.phoneNumber : ''
-        };
-
         return {
-            paymentMethod
+            paymentMethod: {
+                type: MBWayElement.type,
+                ...(this.state.data?.telephoneNumber && { telephoneNumber: this.state.data.telephoneNumber })
+            }
         };
     }
 
