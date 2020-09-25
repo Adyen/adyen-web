@@ -1,6 +1,6 @@
 import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import { BrowserInfo } from '../../types';
+import { BrowserInfo, PaymentAmount } from '../../types';
 
 declare global {
     interface Window {
@@ -16,14 +16,16 @@ type Currency = 'USD' | 'EUR' | 'GBP';
 export type Region = 'US' | 'EU' | 'UK';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
-export interface AmazonPayCommonProps {
+export interface AmazonPayElementProps {
     amazonPayToken?: string;
     amazonCheckoutSessionId?: string;
+    amount: PaymentAmount;
     buttonColor?: ButtonColor;
     clientKey?: string;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
+    i18n: Language;
     loadingContext?: string;
     locale?: string;
     merchantId?: string;
@@ -46,23 +48,54 @@ export interface AmazonPayCommonProps {
     onError: (error) => void;
 }
 
-export interface AmazonPayComponentProps extends AmazonPayCommonProps {
+export interface AmazonPayComponentProps extends AmazonPayElementProps {
     ref: any;
 }
 
-export interface AmazonPayButtonProps extends AmazonPayCommonProps {
+export interface AmazonPayButtonProps {
+    amazonRef: any;
+    buttonColor?: ButtonColor;
+    clientKey?: string;
+    currency?: Currency;
+    deliverySpecifications?: DeliverySpecifications;
+    environment?: string;
+    locale?: string;
+    merchantId?: string;
+    originKey?: string;
+    onClick: (resolve, reject) => Promise<void>;
+    onError: (error) => void;
+    placement?: Placement;
+    productType?: ProductType;
+    publicKeyId?: string;
+    region?: Region;
+    returnUrl?: string;
+    size?: Size;
+    storeId?: string;
+}
+
+export interface SignOutButtonProps {
+    amazonRef: any;
+    onSignOut: (resolve, reject) => Promise<void>;
+}
+
+export interface ChangePaymentDetailsButtonProps {
+    amazonCheckoutSessionId: string;
     amazonRef: any;
 }
 
-export interface AmazonPayElementProps extends AmazonPayCommonProps {
-    i18n: Language;
-    loadingContext: string;
+export interface OrderButtonProps {
+    amazonCheckoutSessionId: string;
+    amount: PaymentAmount;
+    clientKey: string;
+    originKey: string;
+    onError: (error) => void;
+    returnUrl: string;
 }
 
 export interface AmazonPayElementData {
     paymentMethod: {
         type: string;
-        amazonCheckoutSessionId?: string;
+        checkoutSessionId?: string;
     };
     browserInfo: BrowserInfo;
 }
