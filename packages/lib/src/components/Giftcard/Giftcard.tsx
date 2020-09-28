@@ -18,7 +18,7 @@ export class GiftcardElement extends UIElement {
     formatData() {
         return {
             paymentMethod: {
-                type: this.props.type,
+                type: this.props.brand,
                 ...this.state.data
             }
         };
@@ -29,7 +29,7 @@ export class GiftcardElement extends UIElement {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return getImage({ loadingContext: this.props.loadingContext })(this.props.brand);
     }
 
     get displayName() {
