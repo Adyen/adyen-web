@@ -35,7 +35,7 @@ class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerpri
         return;
         // TODO --
 
-        // Handle call to new endpoint
+        // Handle call to new endpoint: perhaps called /submitThreeDS2Fingerprint
         fetchJSONData(
             {
                 // https://checkoutshopper-test.adyen.com/checkoutshopper/v1/[NEW_ENDPOINT_FOR_DETAILS_TYPE_CALL_WITHOUT_CREDENTIALS]?token=test_Q3STEQGHDNHB7F6LJQWENOGQ4Q4ZPWZ3

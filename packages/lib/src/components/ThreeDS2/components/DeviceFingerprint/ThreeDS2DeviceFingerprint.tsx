@@ -39,8 +39,8 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
             return;
         }
 
-        // If no methodURL - don't render component. Instead exit with threeDSCompInd: 'U'
-        if (!this.state.fingerPrintData.methodURL || !this.state.fingerPrintData.methodURL.length) {
+        // If no threeDSMethodURL - don't render component. Instead exit with threeDSCompInd: 'U'
+        if (!this.state.fingerPrintData.threeDSMethodURL || !this.state.fingerPrintData.threeDSMethodURL.length) {
             this.setStatusComplete({ threeDSCompInd: 'U' });
             return;
         }
