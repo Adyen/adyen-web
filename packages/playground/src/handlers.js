@@ -36,7 +36,7 @@ export function handleResponse(response, component) {
                     threeDSAuthenticationOnly: false
                 }
             };
-            handleAdditionalDetails(detailsObj, component, false);
+            handleAdditionalDetails(detailsObj, component);
         }
     }
 }
