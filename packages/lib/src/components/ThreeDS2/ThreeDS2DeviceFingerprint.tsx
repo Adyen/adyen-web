@@ -46,6 +46,10 @@ class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerpri
             },
             {
                 ...state.data
+                // ...which is:
+                // details: { threeds.fingerprint: "eyJ0aHJlZURTQ29tcEluZCI6IlkifQ==" }, // encoded {"threeDSCompInd":"Y"}
+                // paymentData: blob,
+                // threeDSAuthenticationOnly: true
             }
         ).then(data => {
             /**
