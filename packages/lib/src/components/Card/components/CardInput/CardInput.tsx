@@ -157,7 +157,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
         const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
 
-        const showAmountsInInstallments = existy(showInstallmentAmounts) ? showInstallmentAmounts : true;
+        const showAmountsInInstallments = showInstallmentAmounts ?? true;
 
         return (
             <SecuredFieldsProvider
