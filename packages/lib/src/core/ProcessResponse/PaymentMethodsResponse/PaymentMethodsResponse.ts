@@ -1,53 +1,12 @@
-import { PaymentMethod, PaymentMethodsResponseInterface } from '../../../types';
-
-import {
-    filterAllowedPaymentMethods,
-    filterRemovedPaymentMethods,
-    filterEcomStoredPaymentMethods,
-    filterSupportedStoredPaymentMethods
-} from './filters';
-
-function processStoredPaymentMethod(pm): PaymentMethod {
-    return {
-        ...pm,
-        storedPaymentMethodId: pm.id
-    };
-}
-
-export const processPaymentMethods = (
-    paymentMethodsResponse: PaymentMethodsResponseInterface,
-    { allowPaymentMethods = [], removePaymentMethods = [] }
-): PaymentMethod[] => {
-    const { paymentMethods = [] } = paymentMethodsResponse;
-
-    return paymentMethods.filter(filterAllowedPaymentMethods, allowPaymentMethods).filter(filterRemovedPaymentMethods, removePaymentMethods);
-};
-
-export const processStoredPaymentMethods = (
-    paymentMethodsResponse: any = {},
-    { allowPaymentMethods = [], removePaymentMethods = [] }
-): PaymentMethod[] => {
-    const { storedPaymentMethods = [] } = paymentMethodsResponse;
-
-    return storedPaymentMethods
-        .filter(filterSupportedStoredPaymentMethods) // only display supported stored payment methods
-        .filter(filterAllowedPaymentMethods, allowPaymentMethods)
-        .filter(filterRemovedPaymentMethods, removePaymentMethods)
-        .filter(filterEcomStoredPaymentMethods) // Only accept Ecommerce shopper interactions
-        .map(processStoredPaymentMethod);
-};
+import { PaymentMethod } from '../../../types';
+import { checkPaymentMethodsResponse, processPaymentMethods, processStoredPaymentMethods } from './utils';
 
 class PaymentMethodsResponse {
     public paymentMethods: PaymentMethod[] = [];
     public storedPaymentMethods: PaymentMethod[] = [];
 
     constructor(response, options = {}) {
-        if (typeof response === 'string') {
-            throw new Error(
-                `paymentMethodsResponse was provided but of an incorrect type (should be an object but a string was provided).
-                Try JSON.parse("{...}") your paymentMethodsResponse.`
-            );
-        }
+        checkPaymentMethodsResponse(response);
 
         this.paymentMethods = response ? processPaymentMethods(response, options) : [];
         this.storedPaymentMethods = response ? processStoredPaymentMethods(response, options) : [];
