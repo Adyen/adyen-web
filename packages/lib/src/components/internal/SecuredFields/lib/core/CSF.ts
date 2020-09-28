@@ -169,9 +169,6 @@ class CSF extends AbstractCSF {
                         this.state.securedFields[pFieldType].hasError = !!code;
                         this.state.securedFields[pFieldType].errorType = code;
 
-                        console.log('### CSF::hasUnsupportedCard:: hasError', !!code);
-                        console.log('### CSF::hasUnsupportedCard:: errorType', code);
-
                         // Inform iframe
                         const dataObj: object = {
                             txVariant: this.state.type,
