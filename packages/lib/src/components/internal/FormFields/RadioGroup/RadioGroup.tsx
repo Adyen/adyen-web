@@ -11,7 +11,6 @@ export default function RadioGroup(props: RadioGroupProps) {
             {items.map(item => (
                 <label key={item.id} className="adyen-checkout__radio_group__input-wrapper">
                     <input
-                        {...props}
                         type="radio"
                         checked={value === item.id}
                         className="adyen-checkout__radio_group__input"
