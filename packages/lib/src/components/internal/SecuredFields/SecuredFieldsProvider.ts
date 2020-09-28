@@ -18,6 +18,7 @@ import {
     CbObjOnLoad
 } from './lib/types';
 import { AddressSchema } from '../../../types';
+import { ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
 
 export interface SFPState {
     status?: string;
@@ -172,6 +173,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     public handleUnsupportedCard(errObj: CbObjOnError): boolean {
         const hasUnsupportedCard = !!errObj.error;
         this.handleOnError(errObj, hasUnsupportedCard);
+        // Inform CSF that the number field has an unsupportedCard error
+        if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, errObj.error);
         return hasUnsupportedCard;
     }
 
@@ -204,6 +207,16 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public processBinLookupResponse(binValueObject: BinLookupObject): void {
+        // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
+        // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
+        if (this.state.hasUnsupportedCard) {
+            this.setState(prevState => ({
+                errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: false },
+                hasUnsupportedCard: false
+            }));
+            if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
+        }
+
         // Scenarios:
         // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup
         // RESULT (binValueObject.brands.length === 1): binLookup has found a result so inform CSF

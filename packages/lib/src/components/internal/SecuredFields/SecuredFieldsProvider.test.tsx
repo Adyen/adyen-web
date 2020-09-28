@@ -74,6 +74,10 @@ const regularErrObj = {
 const nodeHolder = document.createElement('div');
 nodeHolder.innerHTML = mockNode;
 
+const mockCSF = {
+    hasUnsupportedCard: () => {}
+};
+
 wrapper = shallow(
     <SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} styles={styles} render={renderFn} onError={onError} i18n={i18n} />
 );
@@ -141,6 +145,8 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
             />
         );
 
+        wrapper.instance().csf = mockCSF;
+
         expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
         expect(onError).toHaveBeenCalledTimes(4);
         expect(errorObj.error).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
@@ -160,16 +166,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
         expect(wrapper.instance().state.hasUnsupportedCard).toBe(false);
         expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
-    });
-
-    it('should re-generate an "unsupported card" error and then another "regular" error should be ignored', () => {
-        unsupportedCardErrObj.error = ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED];
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-        expect(wrapper.instance().state.hasUnsupportedCard).toBe(true);
-
-        expect(wrapper.instance().handleOnError(regularErrObj)).toBe(false);
-
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
     });
 
     it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {

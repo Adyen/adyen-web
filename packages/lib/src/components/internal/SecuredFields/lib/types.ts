@@ -16,6 +16,7 @@ export interface CSFReturnObject {
     isValidated: any;
     destroy: any;
     brandsFromBinLookup: any;
+    hasUnsupportedCard: any;
 }
 
 interface CSFCommonProps {
