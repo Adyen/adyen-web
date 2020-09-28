@@ -16,7 +16,6 @@ import processBinLookup from './processBinLookup';
 import styles from './CardInput.module.scss';
 import { CardInputProps, CardInputState } from './types';
 import './CardInput.scss';
-import { existy } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
