@@ -162,6 +162,28 @@ class CSF extends AbstractCSF {
                 }
                 return returnObj;
             },
+            hasUnsupportedCard: (pFieldType: string, code: string): CSFReturnObject => {
+                if (this.state.isConfigured) {
+                    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
+                        //
+                        this.state.securedFields[pFieldType].hasError = !!code;
+                        this.state.securedFields[pFieldType].errorType = code;
+
+                        // Inform iframe
+                        const dataObj: object = {
+                            txVariant: this.state.type,
+                            fieldType: pFieldType,
+                            unsupportedCard: !!code,
+                            code,
+                            numKey: this.state.securedFields[pFieldType].numKey
+                        };
+                        postMessageToIframe(dataObj, this.getIframeContentWin(pFieldType), this.config.loadingContext);
+                    }
+                } else {
+                    notConfiguredWarning('You cannot set hasUnsupportedCard on any secured field');
+                }
+                return returnObj;
+            },
             destroy: (): CSFReturnObject => {
                 if (this.state.isConfigured) {
                     this.destroySecuredFields();
