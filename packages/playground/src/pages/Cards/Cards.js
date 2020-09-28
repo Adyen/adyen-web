@@ -58,9 +58,28 @@ getOriginKey()
                         values: [1, 2, 3]
                     },
                     visa: {
-                        values: [1, 2, 3, 4]
+                        values: [1, 2, 3, 4],
+                        plans: ['regular', 'revolving']
+                    }
+                },
+                showInstallmentAmounts: true,
+                ariaLabels: {
+                    lang: 'en-GB',
+                    encryptedCardNumber: {
+                        label: 'Credit or debit card number field',
+                        iframeTitle: 'cc number field iframe'
+                        //                        error: { 'error.ve.gen.01': 'something is wrong', 'error.ve.sf-cc-num.02': 'another error' }
+                    },
+                    encryptedExpiryDate: {
+                        label: 'put your date in here'
                     }
                 }
+                //                placeholders: {
+                //                    encryptedSecurityCode: '8888'
+                //                }
+                //                onError: objdobj => {
+                //                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+                //                }
             })
             .mount('.card-field');
 
@@ -102,6 +121,9 @@ getOriginKey()
                         country: 'US',
                         stateOrProvince: 'CA'
                     }
+                },
+                onError: objdobj => {
+                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
                 }
             })
             .mount('.card-avs-field');
@@ -121,3 +143,6 @@ getOriginKey()
             })
             .mount('.card-kcp-field');
     });
+//    .catch(error => {
+//        console.error('### Cards::CATCH:: error=', error);
+//    });

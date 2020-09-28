@@ -81,13 +81,15 @@ export interface ExpirationDateProps {
 export interface InstallmentsProps {
     amount?: PaymentAmount;
     brand?: string;
-    onChange?: (installmentAmount: number) => void;
+    onChange?: (installmentObject: object) => void;
     installmentOptions: InstallmentOptions;
+    type?: string;
 }
 
-interface InstallmentOptions {
+export interface InstallmentOptions {
     [key: string]: {
         values: number[];
+        plans?: string[];
     };
 }
 

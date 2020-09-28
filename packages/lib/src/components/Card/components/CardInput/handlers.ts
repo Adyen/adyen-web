@@ -63,8 +63,8 @@ function handleHolderName(e: Event): void {
     this.setState(setHolderName, this.validateCardInput);
 }
 
-function handleInstallments(value): void {
-    this.setState({ installments: { value } }, this.validateCardInput);
+function handleInstallments(installments): void {
+    this.setState({ installments }, this.validateCardInput);
 }
 
 function handleSecuredFieldsChange(newState: SFPState): void {
