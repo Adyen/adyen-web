@@ -101,14 +101,14 @@ export const prepareChallengeData = ({ challengeToken, size, notificationURL }):
  */
 export const prepareFingerPrintData = ({ fingerprintToken, notificationURL }): FingerPrintData => {
     const decodedFingerPrintToken = decodeAndParseToken(fingerprintToken);
-    const { threeDSMethodNotificationURL, threeDSMethodUrl, threeDSServerTransID } = decodedFingerPrintToken;
+    const { threeDSMethodNotificationURL, threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken;
     const receivedNotificationURL = notificationURL || threeDSMethodNotificationURL;
     const notificationURLOrigin = getOrigin(receivedNotificationURL);
 
     return {
-        serverTransactionID: threeDSServerTransID,
-        methodURL: threeDSMethodUrl,
-        threedsMethodNotificationURL: receivedNotificationURL,
+        threeDSServerTransID,
+        threeDSMethodURL,
+        threeDSMethodNotificationURL: receivedNotificationURL,
         postMessageDomain: notificationURLOrigin
     };
 };

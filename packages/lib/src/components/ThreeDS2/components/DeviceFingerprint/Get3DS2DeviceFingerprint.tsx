@@ -32,12 +32,12 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
         /**
          * Create and Base64URL encode a JSON object
          */
-        const dataObj = {
-            threeDSServerTransID: this.props.serverTransactionID,
-            threeDSMethodNotificationURL: this.props.threedsMethodNotificationURL
-        };
+        const { threeDSServerTransID, threeDSMethodNotificationURL } = this.props;
 
-        const jsonStr = JSON.stringify(dataObj);
+        const jsonStr = JSON.stringify({
+            threeDSServerTransID,
+            threeDSMethodNotificationURL
+        });
         const base64URLencodedData = encodeBase64URL(jsonStr);
         this.state = { base64URLencodedData };
     }
@@ -79,7 +79,7 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ methodURL }, { base64URLencodedData }) {
+    render({ threeDSMethodURL }, { base64URLencodedData }) {
         return (
             <div className="adyen-checkout__3ds2-device-fingerprint">
                 {this.props.showSpinner && <Spinner />}
@@ -87,7 +87,7 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
                     <Iframe name={iframeName} />
                     <ThreeDS2Form
                         name={'threeDSMethodForm'}
-                        action={methodURL}
+                        action={threeDSMethodURL}
                         target={iframeName}
                         inputName={'threeDSMethodData'}
                         inputValue={base64URLencodedData}

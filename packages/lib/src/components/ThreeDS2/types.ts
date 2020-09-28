@@ -39,12 +39,12 @@ export interface ThreeDS2Token {
     threeDSNotificationURL?: string;
     threeDSServerTransID?: string;
     threeDSMethodNotificationURL?: string;
-    threeDSMethodUrl?: string;
+    threeDSMethodURL?: string;
 }
 
 export interface FingerPrintData {
-    serverTransactionID: string;
-    methodURL: string;
-    threedsMethodNotificationURL: string;
+    threeDSServerTransID: string;
+    threeDSMethodURL: string;
+    threeDSMethodNotificationURL: string;
     postMessageDomain: string;
 }
