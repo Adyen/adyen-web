@@ -51,9 +51,10 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
 
     setStatusComplete(resultObj: ResultObject) {
         this.setState({ status: 'complete' }, () => {
+            console.log('### ThreeDS2DeviceFingerprint::resultObj:: ', resultObj);
             const paymentData = this.props.paymentData;
             const result = encodeResult(resultObj, this.props.type);
-            const data = createResolveData(this.props.dataKey, result, paymentData);
+            const data = createResolveData(this.props.dataKey, result, paymentData, true);
             this.props.onComplete(data);
         });
     }

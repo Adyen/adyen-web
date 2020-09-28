@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES } from '../config';
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
-import { ChallengeData, ChallengeToken, FingerPrintData, ResultObject } from '../types';
+import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
 
 export interface ResolveData {
     data: {
@@ -9,6 +9,7 @@ export interface ResolveData {
             [key: string]: string;
         };
         paymentData: string;
+        threeDSAuthenticationOnly: boolean;
     };
 }
 
@@ -17,7 +18,7 @@ export interface ErrorObject {
     message: string;
 }
 
-export const decodeAndParseToken = (token: string): ChallengeToken => {
+export const decodeAndParseToken = (token: string): ThreeDS2Token => {
     const decodedToken = base64.decode(token);
     try {
         return decodedToken && JSON.parse(decodedToken);
@@ -112,10 +113,11 @@ export const prepareFingerPrintData = ({ fingerprintToken, notificationURL }): F
     };
 };
 
-export const createResolveData = (dataKey: string, result: string, paymentData: string): ResolveData => ({
+export const createResolveData = (dataKey: string, result: string, paymentData: string, authenticateOnly: boolean): ResolveData => ({
     data: {
         details: { [dataKey]: result },
-        paymentData
+        paymentData,
+        threeDSAuthenticationOnly: authenticateOnly // needed if going to /details and not new endpoint
     }
 });
 

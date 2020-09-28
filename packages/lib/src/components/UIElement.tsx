@@ -109,7 +109,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        const paymentAction = this.props.createFromAction(action, {
+        const paymentAction: UIElement = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
             onError: this.props.onError // Add ref to onError in case the merchant has defined one in the component options
         });

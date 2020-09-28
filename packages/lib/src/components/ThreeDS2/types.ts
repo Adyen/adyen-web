@@ -31,7 +31,8 @@ export interface ChallengeObject {
     errorCode?: string;
 }
 
-export interface ChallengeToken {
+// One token fits all - Fingerprint & Challenge
+export interface ThreeDS2Token {
     acsTransID?: string;
     acsURL?: string;
     messageVersion?: string;

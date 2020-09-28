@@ -35,7 +35,7 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
         this.setState({ status: 'complete' }, () => {
             const paymentData = this.props.paymentData;
             const result = encodeResult(resultObj, this.props.type);
-            const data = createResolveData(this.props.dataKey, result, paymentData);
+            const data = createResolveData(this.props.dataKey, result, paymentData, false);
             this.props.onComplete(data);
         });
     }
