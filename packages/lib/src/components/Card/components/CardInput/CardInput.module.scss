@@ -53,3 +53,10 @@
 .adyen-checkout__card__cvc__input--hidden {
     display: none;
 }
+
+.revolving-plan-installments{
+    &__disabled{
+        pointer-events: none;
+        opacity: 0.4;
+    }
+}

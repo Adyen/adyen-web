@@ -47,3 +47,17 @@ export interface OpenInvoiceStateValid {
     deliveryAddress?: boolean;
     personalDetails?: boolean;
 }
+
+export interface ActiveFieldsets {
+    companyDetails: boolean;
+    personalDetails: boolean;
+    billingAddress: boolean;
+    deliveryAddress: boolean;
+}
+
+export interface FieldsetsRefs {
+    companyDetails?;
+    personalDetails?;
+    billingAddress?;
+    deliveryAddress?;
+}

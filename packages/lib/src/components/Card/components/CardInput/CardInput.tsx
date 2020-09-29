@@ -145,7 +145,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     render(
-        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails },
+        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts },
         { status, hideCVCForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
@@ -155,6 +155,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
         const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
+
+        const showAmountsInInstallments = showInstallmentAmounts ?? true;
 
         return (
             <SecuredFieldsProvider
@@ -189,6 +191,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         brand={sfpState.brand}
                                         installmentOptions={installmentOptions}
                                         onChange={this.handleInstallments}
+                                        type={showAmountsInInstallments ? 'amount' : 'months'}
                                     />
                                 )}
                             </LoadingWrapper>
@@ -242,6 +245,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         brand={sfpState.brand}
                                         installmentOptions={installmentOptions}
                                         onChange={this.handleInstallments}
+                                        type={showAmountsInInstallments ? 'amount' : 'months'}
                                     />
                                 )}
 

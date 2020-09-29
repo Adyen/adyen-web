@@ -144,8 +144,8 @@ export interface PersonalDetailsSchema {
     lastName?: string;
     gender?: string;
     dateOfBirth?: string;
-    telephoneNumber?: string;
     shopperEmail?: string;
+    telephoneNumber?: string;
 }
 
 /**

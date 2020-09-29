@@ -67,7 +67,6 @@ export default function triggerBinLookUp(callbackObj) {
             type: 'card',
             fieldType: 'encryptedCardNumber',
             error: ''
-            // code: undefined
         };
         this.handleUnsupportedCard(errObj);
     }
