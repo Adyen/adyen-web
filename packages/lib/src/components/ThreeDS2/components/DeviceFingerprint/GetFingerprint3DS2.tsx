@@ -6,7 +6,7 @@ import promiseTimeout from '../../../../utils/promiseTimeout';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { FAILED_METHOD_STATUS_RESOLVE_OBJECT, THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT } from '../../config';
 import { encodeBase64URL } from '../utils';
-import { Get3DS2DeviceFingerprintProps, Get3DS2DeviceFingerprintState } from './types';
+import { GetFingerprint3DS2Props, GetFingerprint3DS2State } from './types';
 
 const iframeName = 'threeDSMethodIframe';
 
@@ -19,7 +19,7 @@ const iframeName = 'threeDSMethodIframe';
  * The callbacks exist in the parent component: ThreeDS2DeviceFingerprint where they ultimately call the onComplete
  * function passed as a prop when checkout.create('threeDS2DeviceFingerprint') is called.
  */
-class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, Get3DS2DeviceFingerprintState> {
+class GetFingerprint3DS2 extends Component<GetFingerprint3DS2Props, GetFingerprint3DS2State> {
     private processMessageHandler;
     private fingerPrintPromise: any;
     public static defaultProps = {
@@ -98,4 +98,4 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
     }
 }
 
-export default Get3DS2DeviceFingerprint;
+export default GetFingerprint3DS2;

@@ -1,10 +1,10 @@
 import { Component, h } from 'preact';
-import Get3DS2DeviceFingerprint from './Get3DS2DeviceFingerprint';
+import GetFingerprint3DS2 from './GetFingerprint3DS2';
 import { createResolveData, encodeResult, handleErrorCode, prepareFingerPrintData } from '../utils';
-import { ThreeDS2DeviceFingerprintProps, ThreeDS2DeviceFingerprintState } from './types';
+import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { ResultObject } from '../../types';
 
-class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps, ThreeDS2DeviceFingerprintState> {
+class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
 
     constructor(props) {
@@ -56,7 +56,7 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
     render(props, { fingerPrintData }) {
         if (this.state.status === 'retrievingFingerPrint') {
             return (
-                <Get3DS2DeviceFingerprint
+                <GetFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
                         this.setStatusComplete(fingerprint.result);
                     }}
@@ -75,4 +75,4 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
     }
 }
 
-export default ThreeDS2DeviceFingerprint;
+export default PrepareFingerprint3DS2;
