@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import Challenge from './components/Challenge';
 import { ErrorObject } from './components/utils';
 
-export interface ThreeDS2ChallengeElementProps {
+export interface ThreeDS2ChallengeProps {
     challengeToken?: string;
     dataKey?: string;
     notificationURL?: string;
@@ -13,7 +13,7 @@ export interface ThreeDS2ChallengeElementProps {
     type?: string;
 }
 
-class ThreeDS2ChallengeElement extends UIElement<ThreeDS2ChallengeElementProps> {
+class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     public static type = 'threeDS2Challenge';
 
     public static defaultProps = {
@@ -27,4 +27,4 @@ class ThreeDS2ChallengeElement extends UIElement<ThreeDS2ChallengeElementProps> 
     }
 }
 
-export default ThreeDS2ChallengeElement;
+export default ThreeDS2Challenge;
