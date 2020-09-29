@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import ThreeDS2Challenge from './components/Challenge';
+import Challenge from './components/Challenge';
 import { ErrorObject } from './components/utils';
 
 export interface ThreeDS2ChallengeElementProps {
@@ -23,7 +23,7 @@ class ThreeDS2ChallengeElement extends UIElement<ThreeDS2ChallengeElementProps> 
     };
 
     render() {
-        return <ThreeDS2Challenge {...this.props} onComplete={this.onComplete} />;
+        return <Challenge {...this.props} onComplete={this.onComplete} />;
     }
 }
 

@@ -1,11 +1,11 @@
 import { Component, h } from 'preact';
-import Do3DS2Challenge from './Do3DS2Challenge';
+import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createResolveData, handleErrorCode, encodeResult, prepareChallengeData } from '../utils';
-import { ThreeDS2ChallengeProps, ThreeDS2ChallengeState } from './types';
+import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeObject } from '../../types';
 import '../../ThreeDS2.scss';
 
-class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2ChallengeState> {
+class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
         onComplete: () => {},
         onError: () => {}
@@ -43,7 +43,7 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
     render(props, { challengeData }) {
         if (this.state.status === 'retrievingChallengeToken') {
             return (
-                <Do3DS2Challenge
+                <DoChallenge3DS2
                     onCompleteChallenge={(challenge: ChallengeObject) => {
                         this.setStatusComplete(challenge.result);
                     }}
@@ -61,4 +61,4 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
     }
 }
 
-export default ThreeDS2Challenge;
+export default PrepareChallenge3DS2;
