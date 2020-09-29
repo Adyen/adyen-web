@@ -82,7 +82,7 @@ class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerpri
                 // Actual code
                 // this.handleAction(data.action);
 
-                // TODO mock code - first need to make a genuine /details call. Then halt the process and paste the token and paymentData below. Then redo the payment
+                // TODO mock code - first need to make a genuine /details call after fingerprinting. Then halt the process and paste the token and paymentData from the response, below. Then redo the payment.
                 const mockActionResponse = {
                     type: 'threeDS2Challenge',
                     token:
@@ -93,6 +93,15 @@ class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerpri
 
                 this.handleAction(mockActionResponse);
                 //--
+
+                return;
+            }
+
+            /**
+             * Redirect (thought we could do 3DS2 but we can't)
+             */
+            if (data.resultCode === 'RedirectShopper') {
+                this.handleAction(data.action);
             }
         });
     }
