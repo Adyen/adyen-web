@@ -81,7 +81,7 @@
         "@types/applepayjs": "^3.0.0",
         "@types/googlepay": "^0.5.0",
         "classnames": "^2.2.6",
-        "preact": "^10.5.2"
+        "preact": "^10.5.3"
     },
     "files": [
         "dist",
