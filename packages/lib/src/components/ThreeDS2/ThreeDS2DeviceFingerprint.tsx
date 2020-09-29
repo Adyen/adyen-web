@@ -5,7 +5,7 @@ import { ErrorObject } from './components/utils';
 import fetchJSONData from '../../utils/fetch-json-data';
 import { PaymentAction } from '../../types';
 
-export interface ThreeDS2DeviceFingerprintElementProps {
+export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
     fingerprintToken: string;
     notificationURL: string;
@@ -18,7 +18,7 @@ export interface ThreeDS2DeviceFingerprintElementProps {
     clientKey?: string;
 }
 
-class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerprintElementProps> {
+class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
     public static type = 'threeDS2Fingerprint';
 
     public static defaultProps = {
@@ -111,4 +111,4 @@ class ThreeDS2DeviceFingerprintElement extends UIElement<ThreeDS2DeviceFingerpri
     }
 }
 
-export default ThreeDS2DeviceFingerprintElement;
+export default ThreeDS2DeviceFingerprint;

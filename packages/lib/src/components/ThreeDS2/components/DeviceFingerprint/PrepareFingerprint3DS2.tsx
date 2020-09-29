@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import GetFingerprint3DS2 from './GetFingerprint3DS2';
+import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createResolveData, encodeResult, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { ResultObject } from '../../types';
@@ -56,7 +56,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     render(props, { fingerPrintData }) {
         if (this.state.status === 'retrievingFingerPrint') {
             return (
-                <GetFingerprint3DS2
+                <DoFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
                         this.setStatusComplete(fingerprint.result);
                     }}
