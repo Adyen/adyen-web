@@ -43,8 +43,6 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     }
 
     render() {
-        if (this.props.amazonPayToken) return this.submit();
-
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <AmazonPayComponent
