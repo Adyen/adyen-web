@@ -46,3 +46,14 @@ export const checkBalance = data => {
         })
         .catch(err => console.error(err));
 };
+
+export const createOrder = data => {
+    return httpPost('orders', data)
+        .then(response => {
+            if (response.error) {
+                throw 'Orders call failed';
+            }
+            return response;
+        })
+        .catch(err => console.error(err));
+};

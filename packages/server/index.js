@@ -6,6 +6,7 @@ const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
 const getOriginKeys = require('./api/originKeys');
 const makePayment = require('./api/payments');
 const postDetails = require('./api/details');
+const createOrder = require('./api/orders');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -26,6 +27,8 @@ module.exports = (app = express(), options = {}) => {
     app.all('/payments', (req, res) => makePayment(res, req.body));
 
     app.all('/details', (req, res) => postDetails(res, req.body));
+
+    app.all('/orders', (req, res) => createOrder(res, req.body));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;
