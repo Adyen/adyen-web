@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Flere betalingsmetoder",
     "payButton": "Betal",
     "payButton.redirecting": "Omdirigerer...",
     "storeDetails": "Lagre til min neste betaling",
-    "payment.redirecting": "Du vil bli videresendt...",
-    "payment.processing": "Betalingen din behandles",
     "creditCard.holderName": "Navn på kortet",
     "creditCard.holderName.placeholder": "O. Nordmann",
     "creditCard.holderName.invalid": "Ugyldig navn på kortholder",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 siffer",
     "installments": "Antall avdrag",
     "installmentOption": "%{times}x %{partialValue}",
+    "installmentOptionMonths": "%{times} måneder",
+    "installments.oneTime": "Engangsbetaling",
+    "installments.installments": "Avdragsbetaling",
+    "installments.revolving": "Gjentakende betaling",
     "sepaDirectDebit.ibanField.invalid": "Ugyldig kontonummer",
     "sepaDirectDebit.nameField.placeholder": "O. Nordmann",
     "sepa.ownerName": "Kortholders navn",
@@ -137,5 +138,12 @@
     "blik.invalid": "Tast inn 6 tall",
     "blik.code": "6-sifret kode",
     "blik.help": "Hent koden fra bank-appen din.",
-    "swish.pendingMessage": "Etter at du har skannet koden kan det ta opptil 10 minutter før betalingen vises som bekreftet. Forsøk på å betale igjen kan føre til flere innbetalinger."
+    "swish.pendingMessage": "Etter at du har skannet koden kan det ta opptil 10 minutter før betalingen vises som bekreftet. Forsøk på å betale igjen kan føre til flere innbetalinger.",
+    "error.va.gen.01": "Ufullstendig felt",
+    "error.va.gen.02": "Feltet er ikke gyldig",
+    "error.va.sf-cc-num.01": "Ugyldig kortnummer",
+    "error.va.sf-cc-num.02": "Det angitte kortnummeret stemmer ikke med kortmerket",
+    "error.va.sf-cc-num.03": "Det angitte kortet støttes ikke",
+    "error.va.sf-cc-dat.01": "Kortet er for gammelt",
+    "error.va.sf-cc-dat.02": "Datoen er for langt inn i fremtiden"
 }

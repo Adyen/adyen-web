@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Altri metodi di pagamento",
     "payButton": "Paga",
     "payButton.redirecting": "Reindirizzamento...",
     "storeDetails": "Salva per il prossimo pagamento",
-    "payment.redirecting": "Verrai reindirizzato…",
-    "payment.processing": "Il tuo pagamento è in fase di elaborazione",
     "creditCard.holderName": "Nome sulla carta",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Nome del titolare della carta non valido",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 cifre",
     "installments": "Numero di rate",
     "installmentOption": "%{partialValue} x%{times}",
+    "installmentOptionMonths": "%{times} mesi",
+    "installments.oneTime": "Pagamento una tantum",
+    "installments.installments": "Pagamento rateale",
+    "installments.revolving": "Pagamento ricorrente",
     "sepaDirectDebit.ibanField.invalid": "Numero di conto non valido",
     "sepaDirectDebit.nameField.placeholder": "A. Bianchi",
     "sepa.ownerName": "Nome Intestatario Conto",
@@ -137,5 +138,12 @@
     "blik.invalid": "Inserisci 6 numeri",
     "blik.code": "Codice a 6 cifre",
     "blik.help": "Ottieni il codice dalla app della tua banca.",
-    "swish.pendingMessage": "In seguito alla scansione, lo stato della transazione può rimanere in sospeso per un massimo di 10 minuti. Un nuovo tentativo di pagamento durante questo lasso di tempo può comportare pagamenti multipli."
+    "swish.pendingMessage": "In seguito alla scansione, lo stato della transazione può rimanere in sospeso per un massimo di 10 minuti. Un nuovo tentativo di pagamento durante questo lasso di tempo può comportare pagamenti multipli.",
+    "error.va.gen.01": "Campo incompleto",
+    "error.va.gen.02": "Campo non valido",
+    "error.va.sf-cc-num.01": "Numero carta non valido",
+    "error.va.sf-cc-num.02": "Il numero di carta digitato non corrisponde alla marca della carta",
+    "error.va.sf-cc-num.03": "Tipo di carta non supportato",
+    "error.va.sf-cc-dat.01": "Carta troppo vecchia",
+    "error.va.sf-cc-dat.02": "Data troppo avanti nel futuro"
 }
