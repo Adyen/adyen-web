@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Plus de méthodes de paiement",
     "payButton": "Payer",
     "payButton.redirecting": "Redirection...",
     "storeDetails": "Sauvegarder pour mon prochain paiement",
-    "payment.redirecting": "Vous allez être redirigé…",
-    "payment.processing": "Votre paiement est en cours de traitement",
     "creditCard.holderName": "Nom sur la carte",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Nom du porteur de carte incorrect",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 chiffres",
     "installments": "Nombre de versements",
     "installmentOption": "%{times}x %{partialValue}",
+    "installmentOptionMonths": "%{times} mois",
+    "installments.oneTime": "Paiement unique",
+    "installments.installments": "Paiement échelonné",
+    "installments.revolving": "Paiement en plusieurs fois",
     "sepaDirectDebit.ibanField.invalid": "Numéro de compte non valide",
     "sepaDirectDebit.nameField.placeholder": "N. Bernard",
     "sepa.ownerName": "Au nom de",
@@ -137,5 +138,12 @@
     "blik.invalid": "Saisissez les 6 chiffres",
     "blik.code": "Code à 6 chiffres",
     "blik.help": "Ouvrez votre application bancaire pour obtenir le code.",
-    "swish.pendingMessage": "Après avoir scanné le code QR, la mise à jour du statut de paiement peut prendre jusqu'à 10 minutes. Si vous effectuez une nouvelle tentative de paiement dans ce délai, cela pourrait occasionner plusieurs débits."
+    "swish.pendingMessage": "Après avoir scanné le code QR, la mise à jour du statut de paiement peut prendre jusqu'à 10 minutes. Si vous effectuez une nouvelle tentative de paiement dans ce délai, cela pourrait occasionner plusieurs débits.",
+    "error.va.gen.01": "Champ incomplet",
+    "error.va.gen.02": "Champ non valide",
+    "error.va.sf-cc-num.01": "Numéro de carte non valide",
+    "error.va.sf-cc-num.02": "Le numéro de carte saisi ne correspond pas à la marque de la carte",
+    "error.va.sf-cc-num.03": "Carte insérée non prise en charge",
+    "error.va.sf-cc-dat.01": "Carte trop ancienne",
+    "error.va.sf-cc-dat.02": "La date doit être plus proche"
 }

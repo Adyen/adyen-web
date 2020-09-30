@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Lisää maksutapoja",
     "payButton": "Maksa",
     "payButton.redirecting": "Uudelleenohjataan ...",
     "storeDetails": "Tallenna seuraavaa maksuani varten",
-    "payment.redirecting": "Sinut ohjataan uudelleen",
-    "payment.processing": "Maksuasi käsitellään",
     "creditCard.holderName": "Nimi kortilla",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Ei-kelvollinen kortinhaltijan nimi",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 lukua",
     "installments": "Asennusten määrä",
     "installmentOption": "% {kertaa} x% {osittainenarvo}",
+    "installmentOptionMonths": "% {kertaa} kuukautta",
+    "installments.oneTime": "Kertamaksu",
+    "installments.installments": "Erämaksu",
+    "installments.revolving": "Toistuva maksu",
     "sepaDirectDebit.ibanField.invalid": "Väärä tilin numero",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Haltijan nimi",
@@ -137,5 +138,12 @@
     "blik.invalid": "Syötä 6 lukua",
     "blik.code": "6-numeroinen koodi",
     "blik.help": "Hanki koodi pankkisovelluksestasi.",
-    "swish.pendingMessage": "Skannattuasi, tila voi odottaa jopa 10 minuuttia. Yritys maksaa uudelleen tässä ajassa voi tuottaa moninkertaisia maksuja."
+    "swish.pendingMessage": "Skannattuasi, tila voi odottaa jopa 10 minuuttia. Yritys maksaa uudelleen tässä ajassa voi tuottaa moninkertaisia maksuja.",
+    "error.va.gen.01": "Täydentämätön kenttä",
+    "error.va.gen.02": "Kenttä ei kelpaa",
+    "error.va.sf-cc-num.01": "Väärä kortin numero",
+    "error.va.sf-cc-num.02": "Kirjoitettu kortin numero ei vastaa kortin brändiä",
+    "error.va.sf-cc-num.03": "Ei-tuettu kortti asetettu",
+    "error.va.sf-cc-dat.01": "Kortti on liian vanha",
+    "error.va.sf-cc-dat.02": "Päivämäärä liian kaukana tulevaisuudessa"
 }

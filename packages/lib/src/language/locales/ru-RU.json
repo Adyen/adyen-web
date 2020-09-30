@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Другие способы оплаты",
     "payButton": "Заплатить",
     "payButton.redirecting": "Перенаправление...",
     "storeDetails": "Сохранить для следующего платежа",
-    "payment.redirecting": "Вы будете перенаправлены…",
-    "payment.processing": "Ваш платеж обрабатывается",
     "creditCard.holderName": "Имя на карте",
     "creditCard.holderName.placeholder": "И. Петров",
     "creditCard.holderName.invalid": "Неверное имя владельца карты",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 цифры",
     "installments": "Количество платежей",
     "installmentOption": "%{times}× %{partialValue}",
+    "installmentOptionMonths": "%{times} мес.",
+    "installments.oneTime": "Одноразовый платеж",
+    "installments.installments": "Рассрочка",
+    "installments.revolving": "Повторяющаяся оплата",
     "sepaDirectDebit.ibanField.invalid": "Недействительный номер счета",
     "sepaDirectDebit.nameField.placeholder": "И. Петров",
     "sepa.ownerName": "Имя владельца",
@@ -137,5 +138,12 @@
     "blik.invalid": "Введите 6 цифр",
     "blik.code": "6-значный код",
     "blik.help": "Получите код из банковского приложения.",
-    "swish.pendingMessage": "Обработка оплаты после сканирования может занять 10 минут. Попытка провести оплату повторно в течение указанного времени может привести к нескольким списаниям со счета."
+    "swish.pendingMessage": "Обработка оплаты после сканирования может занять 10 минут. Попытка провести оплату повторно в течение указанного времени может привести к нескольким списаниям со счета.",
+    "error.va.gen.01": "Незаполненное поле",
+    "error.va.gen.02": "Недействительное поле",
+    "error.va.sf-cc-num.01": "Недействительный номер карты",
+    "error.va.sf-cc-num.02": "Введенный номер карты не соответствует платежной системе",
+    "error.va.sf-cc-num.03": "Введена неподдерживаемая карта",
+    "error.va.sf-cc-dat.01": "Устаревшая карта",
+    "error.va.sf-cc-dat.02": "Дата слишком далеко в будущем"
 }
