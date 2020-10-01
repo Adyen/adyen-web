@@ -9,14 +9,14 @@ export const mbwayValidationRules: object = {
             // Validate
             const isValid: boolean = phoneNumberRegEx.test(formattedVal) && formattedVal && formattedVal.length >= 7;
 
-            return { isValid, value: formattedVal };
+            return { isValid, value: formattedVal, showError: false };
         },
         default: (value): boolean => value && value.length > 0
     },
     blur: {
         telephoneNumber: (num): object => {
             // Just validate
-            return { isValid: phoneNumberRegEx.test(num) && num && num.length >= 7, value: num };
+            return { isValid: phoneNumberRegEx.test(num) && num && num.length >= 7, value: num, showError: true };
         },
         default: (value): boolean => value && value.length > 0
     }

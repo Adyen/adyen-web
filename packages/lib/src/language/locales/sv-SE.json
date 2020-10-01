@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Fler betalningssätt",
     "payButton": "Betala",
     "payButton.redirecting": "Omdirigerar…",
     "storeDetails": "Spara till min nästa betalning",
-    "payment.redirecting": "Du kommer att omdirigeras…",
-    "payment.processing": "Din betalning bearbetas",
     "creditCard.holderName": "Namn på kort",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Kortinnehavarens namn är ogiltigt",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 siffror",
     "installments": "Number of installments",
     "installmentOption": "%{times} x %{partialValue}",
+    "installmentOptionMonths": "%{times} månader",
+    "installments.oneTime": "Engångsbetalning",
+    "installments.installments": "Delbetalningar",
+    "installments.revolving": "Uppdelad betalning",
     "sepaDirectDebit.ibanField.invalid": "Ogiltigt kontonummer",
     "sepaDirectDebit.nameField.placeholder": "J. Johansson",
     "sepa.ownerName": "Känt av kontoinnehavaren",
@@ -137,5 +138,12 @@
     "blik.invalid": "Ange 6 siffror",
     "blik.code": "Sexsiffrig kod",
     "blik.help": "Hämta koden från din bankapp.",
-    "swish.pendingMessage": "När du har skannat kan statusen vara väntande i upp till tio minuter. Att försöka betala igen inom denna tid kan leda till flera debiteringar."
+    "swish.pendingMessage": "När du har skannat kan statusen vara väntande i upp till tio minuter. Att försöka betala igen inom denna tid kan leda till flera debiteringar.",
+    "error.va.gen.01": "Ofullständigt fält",
+    "error.va.gen.02": "Fältet ogiltigt",
+    "error.va.sf-cc-num.01": "Ogiltigt kortnummer",
+    "error.va.sf-cc-num.02": "Det angivna kortnumret stämmer inte överens med kortutgivaren",
+    "error.va.sf-cc-num.03": "Det angivna kortet stöds inte",
+    "error.va.sf-cc-dat.01": "Kortet är för gammalt",
+    "error.va.sf-cc-dat.02": "Datumet ligger för långt fram i framtiden"
 }

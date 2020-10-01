@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Więcej metod płatności",
     "payButton": "Zapłać",
     "payButton.redirecting": "Przekierowywanie...",
     "storeDetails": "Zapisz na potrzeby następnej płatności",
-    "payment.redirecting": "Użytkownik zostanie przekierowany…",
-    "payment.processing": "Płatność jest przetwarzana",
     "creditCard.holderName": "Imię i nazwisko na karcie",
     "creditCard.holderName.placeholder": "J. Kowalski",
     "creditCard.holderName.invalid": "Nieprawidłowe imię i nazwisko posiadacza karty",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 cyfry",
     "installments": "Liczba rat",
     "installmentOption": "%{times}x %{partialValue}",
+    "installmentOptionMonths": "%{times} miesięcy",
+    "installments.oneTime": "Płatność jednorazowa",
+    "installments.installments": "Płatność ratalna",
+    "installments.revolving": "Płatność odnawialna",
     "sepaDirectDebit.ibanField.invalid": "Nieprawidłowy numer rachunku",
     "sepaDirectDebit.nameField.placeholder": "J. Kowalski",
     "sepa.ownerName": "Imię i nazwisko posiadacza karty",
@@ -137,5 +138,12 @@
     "blik.invalid": "Wpisz 6 cyfr",
     "blik.code": "6-cyfrowy kod",
     "blik.help": "Uzyskaj kod ze swojej aplikacji bankowej.",
-    "swish.pendingMessage": "Po zeskanowaniu transakcja może mieć status „Oczekująca” do 10 minut. Próba ponownego dokonania płatności w tym czasie może spowodować wielokrotne naliczenie opłaty."
+    "swish.pendingMessage": "Po zeskanowaniu transakcja może mieć status „Oczekująca” do 10 minut. Próba ponownego dokonania płatności w tym czasie może spowodować wielokrotne naliczenie opłaty.",
+    "error.va.gen.01": "Niekompletne dane w polu",
+    "error.va.gen.02": "Dane w polu są nieprawidłowe",
+    "error.va.sf-cc-num.01": "Nieprawidłowy numer karty",
+    "error.va.sf-cc-num.02": "Wpisany numer karty nie pasuje do marki karty",
+    "error.va.sf-cc-num.03": "Wprowadzono nieobsługiwaną kartę",
+    "error.va.sf-cc-dat.01": "Termin ważności karty minął",
+    "error.va.sf-cc-dat.02": "Data w zbyt odległej przyszłości"
 }

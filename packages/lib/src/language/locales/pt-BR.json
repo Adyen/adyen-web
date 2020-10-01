@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Mais métodos de pagamento",
     "payButton": "Pagar",
     "payButton.redirecting": "Redirecionando...",
     "storeDetails": "Salvar para meu próximo pagamento",
-    "payment.redirecting": "Você será redirecionado…",
-    "payment.processing": "Seu pagamento está sendo processado",
     "creditCard.holderName": "Nome no cartão",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Nome do titular do cartão inválido",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 dígitos",
     "installments": "Opções de Parcelamento",
     "installmentOption": "%{times}x %{partialValue}",
+    "installmentOptionMonths": "%{times} meses",
+    "installments.oneTime": "Pagamento à vista",
+    "installments.installments": "Pagamento parcelado",
+    "installments.revolving": "Pagamento rotativo",
     "sepaDirectDebit.ibanField.invalid": "Número de conta inválido",
     "sepaDirectDebit.nameField.placeholder": "J. Silva",
     "sepa.ownerName": "Nome do titular da conta bancária",
@@ -137,5 +138,12 @@
     "blik.invalid": "Digite 6 números",
     "blik.code": "Código de 6 dígitos",
     "blik.help": "Obtenha o código no aplicativo do seu banco.",
-    "swish.pendingMessage": "Depois de escanear o QR, o status pode ficar pendente por até 10 minutos. Não tente refazer o pagamento antes desse período para evitar cobrança duplicada."
+    "swish.pendingMessage": "Depois de escanear o QR, o status pode ficar pendente por até 10 minutos. Não tente refazer o pagamento antes desse período para evitar cobrança duplicada.",
+    "error.va.gen.01": "Campo incompleto",
+    "error.va.gen.02": "Campo inválido",
+    "error.va.sf-cc-num.01": "Número de cartão inválido",
+    "error.va.sf-cc-num.02": "O número digitado do cartão não corresponde à bandeira",
+    "error.va.sf-cc-num.03": "O cartão inserido não é aceito",
+    "error.va.sf-cc-dat.01": "Cartão muito antigo",
+    "error.va.sf-cc-dat.02": "Data muito distante"
 }
