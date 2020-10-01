@@ -6,7 +6,7 @@ import Field from '../../../internal/FormFields/Field';
 import { renderFormField } from '../../../internal/FormFields';
 import { mbwayValidationRules } from './validate';
 import Validator from '../../../../utils/Validator';
-import { MBWayDataState, MBWayErrorsState, MBWayInputProps, MBWayValidState, ValidationObj } from './types';
+import { MBWayDataState, MBWayErrorsState, MBWayInputProps, MBWayValidState, ValidationObject } from './types';
 import './MBWayInput.scss';
 
 function MBWayInput(props: MBWayInputProps) {
@@ -32,10 +32,10 @@ function MBWayInput(props: MBWayInputProps) {
 
     const handleEventFor = (key: string, mode: string) => (e: Event): void => {
         const val: string = (e.target as HTMLInputElement).value;
-        const { value, isValid }: ValidationObj = validator.validate('telephoneNumber', mode)(val);
+        const { value, isValid, showError }: ValidationObject = validator.validate('telephoneNumber', mode)(val);
 
         setData({ ...data, telephoneNumber: value });
-        setErrors({ ...errors, telephoneNumber: !isValid });
+        setErrors({ ...errors, telephoneNumber: !isValid && showError });
         setValid({ ...valid, telephoneNumber: isValid });
     };
 

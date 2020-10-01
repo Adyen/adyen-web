@@ -22,7 +22,8 @@ export interface MBWayValidState {
     telephoneNumber?: boolean;
 }
 
-export interface ValidationObj {
+export interface ValidationObject {
     value: string;
     isValid: boolean;
+    showError: boolean;
 }
