@@ -6,6 +6,9 @@ import { preparePaymentRequest } from './payment-request';
 import { normalizeAmount, resolveSupportedVersion } from './utils';
 import defaultProps from './defaultProps';
 import { ApplePayElementProps, ApplePayElementData } from './types';
+import fetchJsonData from '../../utils/fetch-json-data';
+import { APPLEPAY_SESSION_ENDPOINT } from './config';
+
 const latestSupportedVersion = 10;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
@@ -16,6 +19,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         super(props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
+        this.validateMerchant = this.validateMerchant.bind(this);
     }
 
     /**
@@ -26,7 +30,6 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         return {
             onAuthorized: resolve => resolve(),
-            onValidateMerchant: (resolve, reject) => reject('onValidateMerchant event not implemented'),
             ...props,
             version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
@@ -73,11 +76,11 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
 
         const session = new ApplePayService(paymentRequest, {
             version,
-            onValidateMerchant,
             onCancel,
             onPaymentMethodSelected,
             onShippingMethodSelected,
             onShippingContactSelected,
+            onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 if (!!event.payment.token && !!event.payment.token.paymentData) {
                     this.setState({ 'applepay.token': btoa(JSON.stringify(event.payment.token.paymentData)) });
@@ -89,6 +92,19 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         });
 
         session.begin();
+    }
+
+    private validateMerchant(resolve, reject) {
+        const { hostname: domainName } = window.location;
+        const { clientKey, configuration, loadingContext, initiative } = this.props;
+        const { merchantName: displayName, merchantIdentifier } = configuration;
+        const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
+        const options = { loadingContext, path, method: 'post' };
+        const request = { displayName, domainName, initiative, merchantIdentifier };
+
+        return fetchJsonData(options, request)
+            .then(resolve)
+            .catch(reject);
     }
 
     /**
@@ -110,8 +126,8 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             return Promise.reject(new Error('Trying to start an Apple Pay session from an insecure document'));
         }
 
-        if (!this.props.onValidateMerchant) {
-            return Promise.reject(new Error('onValidateMerchant event was not provided'));
+        if (!this.props.onValidateMerchant && !this.props.clientKey) {
+            return Promise.reject(new Error('clientKey was not provided'));
         }
 
         if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {

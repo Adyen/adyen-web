@@ -41,6 +41,9 @@ export interface ApplePayElementProps extends UIElementProps {
         merchantIdentifier: string;
     };
 
+    clientKey?: string;
+    initiative?: 'web' | 'messaging';
+
     /**
      * A set of line items that explain recurring payments and/or additional charges.
      */
