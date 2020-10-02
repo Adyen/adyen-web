@@ -13,7 +13,7 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
 
     // RESULT: binLookup has found a result so proceed accordingly
     if (binValueObject.supportedBrands?.length) {
-        // 1) Multiple options found - add to the UI & inform SFP if appropriate
+        // 1) Multiple options found - add to the UI & inform SFP
         if (binValueObject.supportedBrands.length > 1) {
             // --
             const switchObj = createCardVariantSwitcher(binValueObject.supportedBrands, 'brandSwitcher');
@@ -29,7 +29,8 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
             this.resetAdditionalSelectState(); // Reset UI
 
             // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
-            this.setState({ additionalSelectValue: binValueObject.supportedBrands[0] });
+            // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
+            this.setState({ additionalSelectValue: binValueObject.supportedBrands[0] }, this.validateCardInput());
 
             // Pass object through to SFP
             this.sfp.current.processBinLookupResponse(binValueObject);
