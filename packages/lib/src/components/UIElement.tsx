@@ -12,6 +12,7 @@ export interface UIElementProps extends BaseElementProps {
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
+    challengeWindowSize?: string;
 
     name?: string;
     amount?: PaymentAmount;
@@ -111,7 +112,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
         const paymentAction: UIElement = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
-            onError: this.props.onError // Add ref to onError in case the merchant has defined one in the component options
+            // Add ref to onError in case the merchant has defined one in the component options
+            onError: this.props.onError,
+            // Allow merchant option to set challenge iframe size
+            ...(action.type === 'threeDS2Challenge' && this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize })
         });
 
         if (paymentAction) {

@@ -10,6 +10,7 @@ export interface ThreeDS2ChallengeProps {
     onError?: (error: string | ErrorObject) => void;
     paymentData?: string;
     size?: string;
+    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
     type?: string;
 }
 

@@ -17,7 +17,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         if (this.props.challengeToken) {
             const challengeData = prepareChallengeData({
                 challengeToken: this.props.challengeToken,
-                size: this.props.size,
+                size: this.props.challengeWindowSize || this.props.size,
                 notificationURL: this.props.notificationURL
             });
 
