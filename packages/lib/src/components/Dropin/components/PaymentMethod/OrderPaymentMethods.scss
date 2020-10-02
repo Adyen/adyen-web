@@ -1,0 +1,54 @@
+@import '../../../../style';
+
+.adyen-checkout__order-payment-methods-list {
+    list-style: none;
+    margin: 0 auto 16px;
+    padding: 0;
+}
+
+.adyen-checkout__order-payment-method {
+    position: relative;
+    background: #fff;
+    border: 1px solid #e6e9eb;
+    margin-top: -1px;
+    width: 100%;
+}
+
+.adyen-checkout__order-payment-method:first-child {
+    border-top-left-radius: $border-radius-large;
+    border-top-right-radius: $border-radius-large;
+}
+
+.adyen-checkout__order-payment-method:last-child {
+    border-bottom-left-radius: $border-radius-large;
+    border-bottom-right-radius: $border-radius-large;
+}
+
+.adyen-checkout__order-payment-method__header {
+    align-items: center;
+    color: $color-black;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    font-weight: 400;
+    font-size: $font-size-medium;
+    padding: 16px;
+    position: relative;
+    transition: background .1s ease-out;
+    width: 100%;
+}
+
+.adyen-checkout__order-remaining-amount {
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    color: #7F4A00;
+    background: #FFEACC;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: $font-size-small;
+
+    strong {
+        font-weight: bold;
+    }
+}
