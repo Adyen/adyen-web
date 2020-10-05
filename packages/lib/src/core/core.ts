@@ -23,6 +23,10 @@ class Core {
     };
 
     constructor(options: CoreOptions = {}) {
+        this.setPaymentMethodsResponse = this.setPaymentMethodsResponse.bind(this);
+        this.create = this.create.bind(this);
+        this.createFromAction = this.createFromAction.bind(this);
+
         this.options = {
             ...options,
             loadingContext: resolveEnvironment(options.environment)
@@ -34,10 +38,7 @@ class Core {
             i18n: new Language(options.locale, options.translations)
         };
 
-        this.paymentMethodsResponse = new PaymentMethodsResponse(options.paymentMethodsResponse, options);
-
-        this.create = this.create.bind(this);
-        this.createFromAction = this.createFromAction.bind(this);
+        this.setPaymentMethodsResponse(options.paymentMethodsResponse);
     }
 
     /**
@@ -81,6 +82,11 @@ class Core {
             modules: this.modules,
             createFromAction: this.createFromAction
         };
+    }
+
+    public setPaymentMethodsResponse(paymentMethodsResponse) {
+        this.paymentMethodsResponse = new PaymentMethodsResponse(paymentMethodsResponse, this.options);
+        return this;
     }
 
     /**

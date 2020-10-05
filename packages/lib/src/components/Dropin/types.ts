@@ -1,4 +1,4 @@
-import { PaymentMethod, StoredPaymentMethod, PaymentMethods, PaymentMethodOptions } from '../../types';
+import { PaymentMethod, StoredPaymentMethod, PaymentMethods, PaymentMethodOptions, Order } from '../../types';
 import { UIElementProps } from '../UIElement';
 
 export interface DropinElementProps extends UIElementProps {
@@ -12,6 +12,8 @@ export interface DropinElementProps extends UIElementProps {
     paymentMethods?: PaymentMethod[];
 
     storedPaymentMethods?: StoredPaymentMethod[];
+
+    order: Order;
 
     /**
      * Show/Hide stored payment methods

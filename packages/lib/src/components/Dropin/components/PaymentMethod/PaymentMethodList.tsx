@@ -1,14 +1,17 @@
-import { Component, h } from 'preact';
+import { Component, Fragment, h } from 'preact';
 import classNames from 'classnames';
 import PaymentMethodItem from './PaymentMethodItem';
 import getProp from '../../../../utils/getProp';
 import styles from '../DropinComponent.module.scss';
 import UIElement from '../../../UIElement';
+import { OrderStatus } from '../../../../types';
+import OrderPaymentMethods from './OrderPaymentMethods';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
+    orderStatus: OrderStatus;
 
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
@@ -26,6 +29,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
         paymentMethods: [],
         activePaymentMethod: null,
         cachedPaymentMethods: {},
+        orderStatus: null,
         onSelect: () => {},
         onDisableStoredPaymentMethod: () => {},
         isDisabling: false,
@@ -55,32 +59,36 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
         });
 
         return (
-            <ul className={paymentMethodListClassnames}>
-                {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
-                    const isSelected = activePaymentMethod && activePaymentMethod.props.id === paymentMethod.props.id;
-                    const isLoaded = paymentMethod.props.id in cachedPaymentMethods;
-                    const isNextOneSelected =
-                        activePaymentMethod &&
-                        paymentMethodsCollection[index + 1] &&
-                        activePaymentMethod.props.id === paymentMethodsCollection[index + 1].props.id;
+            <Fragment>
+                {this.props.orderStatus && <OrderPaymentMethods orderStatus={this.props.orderStatus} />}
 
-                    return (
-                        <PaymentMethodItem
-                            className={classNames({ 'adyen-checkout__payment-method--next-selected': isNextOneSelected })}
-                            standalone={paymentMethods.length === 1}
-                            paymentMethod={paymentMethod}
-                            isSelected={isSelected}
-                            isDisabling={isSelected && this.props.isDisabling}
-                            isLoaded={isLoaded}
-                            isLoading={isLoading}
-                            onSelect={this.onSelect(paymentMethod)}
-                            key={paymentMethod.props.id}
-                            showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
-                            onDisableStoredPaymentMethod={this.props.onDisableStoredPaymentMethod}
-                        />
-                    );
-                })}
-            </ul>
+                <ul className={paymentMethodListClassnames}>
+                    {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
+                        const isSelected = activePaymentMethod && activePaymentMethod.props.id === paymentMethod.props.id;
+                        const isLoaded = paymentMethod.props.id in cachedPaymentMethods;
+                        const isNextOneSelected =
+                            activePaymentMethod &&
+                            paymentMethodsCollection[index + 1] &&
+                            activePaymentMethod.props.id === paymentMethodsCollection[index + 1].props.id;
+
+                        return (
+                            <PaymentMethodItem
+                                className={classNames({ 'adyen-checkout__payment-method--next-selected': isNextOneSelected })}
+                                standalone={paymentMethods.length === 1}
+                                paymentMethod={paymentMethod}
+                                isSelected={isSelected}
+                                isDisabling={isSelected && this.props.isDisabling}
+                                isLoaded={isLoaded}
+                                isLoading={isLoading}
+                                onSelect={this.onSelect(paymentMethod)}
+                                key={paymentMethod.props.id}
+                                showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
+                                onDisableStoredPaymentMethod={this.props.onDisableStoredPaymentMethod}
+                            />
+                        );
+                    })}
+                </ul>
+            </Fragment>
         );
     }
 }

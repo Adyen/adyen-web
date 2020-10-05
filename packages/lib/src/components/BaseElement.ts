@@ -3,8 +3,10 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
+import { Order } from '../types';
 
 export interface BaseElementProps {
+    order?: Order;
     modules?: {
         analytics: Analytics;
         risk: RiskElement;
@@ -53,10 +55,12 @@ class BaseElement<P extends BaseElementProps> {
     get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
         const conversionId = getProp(this.props, 'modules.analytics.conversionId');
+        const order = this.state.order || this.props.order;
 
         return {
             ...(clientData && { riskData: { clientData } }),
             ...(conversionId && { conversionId }),
+            ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
             ...this.formatData(),
             clientStateDataIndicator: true
         };

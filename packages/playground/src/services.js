@@ -13,11 +13,9 @@ export const getPaymentMethods = configuration =>
 export const makePayment = (data, config = {}) => {
     // NOTE: Merging data object. DO NOT do this in production.
     const paymentRequest = { ...paymentsConfig, ...config, ...data };
-
     return httpPost('payments', paymentRequest)
         .then(response => {
             if (response.error) throw 'Payment initiation failed';
-
             return response;
         })
         .catch(console.error);
@@ -26,9 +24,7 @@ export const makePayment = (data, config = {}) => {
 export const makeDetailsCall = data =>
     httpPost('details', data)
         .then(response => {
-            if (response.error) {
-                throw 'Details call failed';
-            }
+            if (response.error) throw 'Details call failed';
             return response;
         })
         .catch(err => console.error(err));
@@ -39,20 +35,18 @@ export const getOriginKey = (originKeyOrigin = document.location.origin) =>
 export const checkBalance = data => {
     return httpPost('paymentMethods/balance', data)
         .then(response => {
-            if (response.error) {
-                throw 'Balance call failed';
-            }
+            if (response.error) throw 'Balance call failed';
             return response;
         })
         .catch(err => console.error(err));
 };
 
 export const createOrder = data => {
-    return httpPost('orders', data)
+    const reference = `order-reference-${Date.now()}`;
+
+    return httpPost('orders', { reference, ...data })
         .then(response => {
-            if (response.error) {
-                throw 'Orders call failed';
-            }
+            if (response.error) throw 'Orders call failed';
             return response;
         })
         .catch(err => console.error(err));
