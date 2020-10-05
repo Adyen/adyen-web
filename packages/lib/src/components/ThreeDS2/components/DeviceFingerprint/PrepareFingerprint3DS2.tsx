@@ -10,10 +10,10 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     constructor(props) {
         super(props);
 
-        const { fingerprintToken, notificationURL } = this.props;
+        const { token, notificationURL } = this.props;
 
-        if (fingerprintToken) {
-            const fingerPrintData = prepareFingerPrintData({ fingerprintToken, notificationURL });
+        if (token) {
+            const fingerPrintData = prepareFingerPrintData({ token, notificationURL });
 
             this.state = {
                 status: 'init',

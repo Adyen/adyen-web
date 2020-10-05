@@ -12,7 +12,7 @@ const actionTypes = {
     threeDS2Fingerprint: (action: PaymentAction, props) =>
         getComponent('threeDS2DeviceFingerprint', {
             createFromAction: props.createFromAction,
-            fingerprintToken: action.token,
+            token: action.token,
             paymentData: action.paymentData,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
@@ -25,7 +25,7 @@ const actionTypes = {
     threeDS2Challenge: (action: PaymentAction, props) =>
         getComponent('threeDS2Challenge', {
             ...props,
-            challengeToken: action.token,
+            token: action.token,
             paymentData: action.paymentData,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,

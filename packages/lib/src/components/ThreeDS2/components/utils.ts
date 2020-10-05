@@ -68,12 +68,12 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
 /**
  *  prepareChallengeData
  *  @param value - requires an object containing the challenge parameters
- *  - challengeToken - challengeToken string received from payments call containing acsTransID, acsURL, messageVerison, expected postMessage URL and threeDSServerTransID
+ *  - token - challengeToken string received from payments call containing acsTransID, acsURL, messageVerison, expected postMessage URL and threeDSServerTransID
  *  - size - one of five possible challenge window sizes
  *  - notificationURL - the URL notifications are expected to be postMessaged from
  */
-export const prepareChallengeData = ({ challengeToken, size, notificationURL }): ChallengeData => {
-    const decodedChallengeToken = decodeAndParseToken(challengeToken);
+export const prepareChallengeData = ({ token, size, notificationURL }): ChallengeData => {
+    const decodedChallengeToken = decodeAndParseToken(token);
     const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken;
     const receivedNotificationURL = notificationURL || threeDSNotificationURL;
     const notificationURLOrigin = getOrigin(receivedNotificationURL);
@@ -95,12 +95,12 @@ export const prepareChallengeData = ({ challengeToken, size, notificationURL }):
 /**
  *  prepareFingerPrintData
  *   requires an object containing the challenge parameters
- *  @param fingerprintToken - fingerprintToken string received from payments call, containing
+ *  @param token - fingerprintToken string received from payments call, containing
  *  methodNotificationURL, methodURL and threeDSServerTransID
  *  @param notificationURL - the URL notifications are expected to be postMessaged from
  */
-export const prepareFingerPrintData = ({ fingerprintToken, notificationURL }): FingerPrintData => {
-    const decodedFingerPrintToken = decodeAndParseToken(fingerprintToken);
+export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintData => {
+    const decodedFingerPrintToken = decodeAndParseToken(token);
     const { threeDSMethodNotificationURL, threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken;
     const receivedNotificationURL = notificationURL || threeDSMethodNotificationURL;
     const notificationURLOrigin = getOrigin(receivedNotificationURL);

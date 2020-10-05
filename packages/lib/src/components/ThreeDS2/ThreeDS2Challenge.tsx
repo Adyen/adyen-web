@@ -4,7 +4,7 @@ import Challenge from './components/Challenge';
 import { ErrorObject } from './components/utils';
 
 export interface ThreeDS2ChallengeProps {
-    challengeToken?: string;
+    token?: string;
     dataKey?: string;
     notificationURL?: string;
     onError?: (error: string | ErrorObject) => void;

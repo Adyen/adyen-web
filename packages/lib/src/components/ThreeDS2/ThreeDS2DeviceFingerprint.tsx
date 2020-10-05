@@ -7,7 +7,7 @@ import { PaymentAction } from '../../types';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
-    fingerprintToken: string;
+    token: string;
     notificationURL: string;
     onError: (error?: string | ErrorObject) => void;
     paymentData: string;
