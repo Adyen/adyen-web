@@ -177,11 +177,13 @@ export const get3DS2Props = (actionSubtype, props) => {
     if (isFingerprint) {
         rtnObj = pick('createFromAction').from(props);
         rtnObj.showSpinner = !props.isDropin;
+        rtnObj.statusType = 'loading';
     }
 
     if (!isFingerprint) {
         rtnObj = pick('challengeWindowSize').from(props);
         rtnObj.size = '05';
+        rtnObj.statusType = 'custom';
     }
 
     return rtnObj;

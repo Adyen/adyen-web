@@ -36,10 +36,7 @@ const actionTypes = {
         }),
 
     threeDS2: (action: PaymentAction, props) => {
-        const isFingerprint = action.subtype === 'fingerprint';
-
-        const componentType = isFingerprint ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
-        const statusType = isFingerprint ? 'loading' : 'custom';
+        const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
 
         const config = {
             token: action.token,
@@ -50,7 +47,6 @@ const actionTypes = {
             notificationURL: props.notificationURL,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
-            statusType,
             ...get3DS2Props(action.subtype, props)
         };
 
