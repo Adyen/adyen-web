@@ -1,5 +1,6 @@
 import { getComponent } from '../../../components';
 import { PaymentAction } from '../../../types';
+import { get3DS2Props } from '../../../components/ThreeDS2/components/utils';
 
 const actionTypes = {
     redirect: (action: PaymentAction, props) =>
@@ -33,6 +34,28 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             statusType: 'custom'
         }),
+
+    threeDS2: (action: PaymentAction, props) => {
+        const isFingerprint = action.subtype === 'fingerprint';
+
+        const componentType = isFingerprint ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
+        const statusType = isFingerprint ? 'loading' : 'custom';
+
+        const config = {
+            token: action.token,
+            paymentData: action.paymentData,
+            onComplete: props.onAdditionalDetails,
+            onError: props.onError,
+            isDropin: !!props.isDropin,
+            notificationURL: props.notificationURL,
+            loadingContext: props.loadingContext,
+            clientKey: props.clientKey,
+            statusType,
+            ...get3DS2Props(action.subtype, props)
+        };
+
+        return getComponent(componentType, config);
+    },
 
     voucher: (action: PaymentAction, props) =>
         getComponent(action.paymentMethodType, {

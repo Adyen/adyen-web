@@ -2,6 +2,7 @@ import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES } from '../config';
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
+import { pick } from '../../internal/SecuredFields/utils';
 
 export interface ResolveData {
     data: {
@@ -151,4 +152,37 @@ export const encodeBase64URL = (dataStr: string): string => {
     base64url = base64url.replace(/\//g, '_'); // 63rd char of encoding
 
     return base64url;
+};
+
+// const fingerprintSpecificProps = ['createFromAction'];
+//
+// const challengeSpecificProps = ['challengeWindowSize'];
+//
+// export const getSpecificProps = (props, subsetArray) => {
+//     return subsetArray.reduce((acc, item) => {
+//         // return { ...acc, ...(props[item] && { [item]: props[item] }) }; // exclude prop if not defined
+//         acc[item] = props[item]; // include prop but with undefined value, if not defined
+//         return acc;
+//     }, {});
+// };
+
+export const get3DS2Props = (actionSubtype, props) => {
+    const isFingerprint = actionSubtype === 'fingerprint';
+
+    // const propsArray = isFingerprint ? fingerprintSpecificProps : challengeSpecificProps;
+    // const rtnObj = getSpecificProps(props, propsArray);
+
+    let rtnObj;
+
+    if (isFingerprint) {
+        rtnObj = pick('createFromAction').from(props);
+        rtnObj.showSpinner = !props.isDropin;
+    }
+
+    if (!isFingerprint) {
+        rtnObj = pick('challengeWindowSize').from(props);
+        rtnObj.size = '05';
+    }
+
+    return rtnObj;
 };
