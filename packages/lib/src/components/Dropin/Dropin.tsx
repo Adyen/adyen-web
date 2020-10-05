@@ -85,11 +85,18 @@ class DropinElement extends UIElement<DropinElementProps> {
         // Extract desired props that we need to pass on from the pmConfiguration for this particular PM
         const pmConfig = getComponentConfiguration(action.paymentMethodType, this.props.paymentMethodsConfiguration);
 
+        // Allow merchant option to set challenge iframe size
+        let challengeWindowSize;
+        if (action.type === 'threeDS2Challenge') {
+            challengeWindowSize = pmConfig.challengeWindowSize || this.props.challengeWindowSize;
+        }
+
         const paymentAction: UIElement = this.props.createFromAction(action, {
             isDropin: true,
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this),
             onError: this.props.onError, // Add ref to onError in case the merchant has defined one in the component options
-            ...(pmConfig?.onError && { onError: pmConfig.onError }) // Overwrite ref to onError in case the merchant has defined one in the pmConfig options
+            ...(pmConfig?.onError && { onError: pmConfig.onError }), // Overwrite ref to onError in case the merchant has defined one in the pmConfig options
+            ...(challengeWindowSize && { challengeWindowSize })
         });
 
         if (paymentAction) {
