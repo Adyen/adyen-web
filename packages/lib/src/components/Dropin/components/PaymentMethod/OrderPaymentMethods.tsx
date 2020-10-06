@@ -10,8 +10,8 @@ export const OrderPaymentMethods = ({ orderStatus }) => {
     return (
         <div>
             <ul className={'adyen-checkout__order-payment-methods-list'}>
-                {orderStatus?.paymentMethods?.map(orderPaymentMethod => (
-                    <li className="adyen-checkout__order-payment-method">
+                {orderStatus?.paymentMethods?.map((orderPaymentMethod, index) => (
+                    <li key={`${orderPaymentMethod.type}-${index}`} className="adyen-checkout__order-payment-method">
                         <div className="adyen-checkout__order-payment-method__header">
                             <div className="adyen-checkout__payment-method__header__title">
                                 <PaymentMethodIcon name={orderPaymentMethod.type} src={getImage({ loadingContext })(orderPaymentMethod.type)} />
