@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "更多付款方式",
     "payButton": "支付",
     "payButton.redirecting": "重新導向中......",
     "storeDetails": "儲存以供下次付款使用",
-    "payment.redirecting": "將重新導向至…",
-    "payment.processing": "正在處理您的付款",
     "creditCard.holderName": "信用卡上的姓名",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "持卡人姓名無效",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 位數",
     "installments": "分期付款的期數",
     "installmentOption": "%{times}x %{partialValue}",
+    "installmentOptionMonths": "％{times} 個月",
+    "installments.oneTime": "一次性付款",
+    "installments.installments": "分期付款",
+    "installments.revolving": "延期付款",
     "sepaDirectDebit.ibanField.invalid": "帳戶號碼無效",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "持有人名稱",
@@ -137,5 +138,12 @@
     "blik.invalid": "輸入 6 個數字",
     "blik.code": "6 位數代碼",
     "blik.help": "從您的銀行應用程式中獲取代碼。",
-    "swish.pendingMessage": "掃描後，該待完成狀態可能持續長達 10 分鐘。試圖在這段時間內再次付款可能會導致多重收費。"
+    "swish.pendingMessage": "掃描後，該待完成狀態可能持續長達 10 分鐘。試圖在這段時間內再次付款可能會導致多重收費。",
+    "error.va.gen.01": "不完整欄位",
+    "error.va.gen.02": "欄位無效",
+    "error.va.sf-cc-num.01": "信用卡號碼無效",
+    "error.va.sf-cc-num.02": "鍵入的卡號與卡片品牌不符",
+    "error.va.sf-cc-num.03": "輸入了不支援的卡",
+    "error.va.sf-cc-dat.01": "卡太舊",
+    "error.va.sf-cc-dat.02": "未來日期距今太久"
 }
