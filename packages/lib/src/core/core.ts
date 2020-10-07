@@ -101,7 +101,7 @@ class Core {
         paymentMethodsResponse && this.setPaymentMethodsResponse(paymentMethodsResponse);
         locale && (this.modules.i18n = new Language(locale, this.options.translations));
 
-        this.components.map(c => c.update(this.getPropsForComponent(this.options)));
+        this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
 
         return this;
     };
