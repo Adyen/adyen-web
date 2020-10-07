@@ -6,7 +6,7 @@ import RiskElement from '../core/RiskModule';
 import { Order } from '../types';
 
 export interface BaseElementProps {
-    _parentInstance: any;
+    _parentInstance?: any;
     order?: Order;
     modules?: {
         analytics: Analytics;
