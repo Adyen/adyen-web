@@ -25,26 +25,20 @@ const initCheckout = paymentMethodsResponse => {
 
             // handle actions
             if (result.action) {
-                if (result.action.paymentData) {
-                    // demo only - store paymentData
-                    localStorage.setItem('storedPaymentData', result.action.paymentData);
-                }
+                // demo only - store paymentData & order
+                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
 
                 component.handleAction(result.action);
             } else if (result.order && result.order?.remainingAmount?.value > 0) {
                 // handle orders
-                component.unmount();
-                const orderPaymentMethods = await getPaymentMethods({
-                    order: {
-                        orderData: result.order.orderData,
-                        pspReference: result.order.pspReference
-                    }
-                });
+                const order = {
+                    orderData: result.order.orderData,
+                    pspReference: result.order.pspReference
+                };
+                if (order) localStorage.setItem('storedOrder', JSON.stringify(order));
+                const orderPaymentMethods = await getPaymentMethods({ order });
 
-                checkout
-                    .setPaymentMethodsResponse(orderPaymentMethods)
-                    .create('dropin', { order: result.order })
-                    .mount('#dropin-container');
+                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
             } else {
                 handleFinalState(result.resultCode, component);
             }
@@ -65,23 +59,14 @@ const initCheckout = paymentMethodsResponse => {
         onOrderRequest: async (resolve, reject) => {
             resolve(await createOrder({ amount }));
         },
-
         onError: error => {
             console.log('dropin onError', error);
         },
-
         paymentMethodsConfiguration: {
             card: {
-                // name: 'Debit Card'
                 enableStoreDetails: false,
                 hasHolderName: true,
                 holderNameRequired: true
-                // holderName: 'J. Smith',
-                //                    koreanAuthenticationRequired: false,
-                //                    configuration: {
-                //                        koreanAuthenticationRequired: false
-                //                    },
-                //                    countryCode: 'kr'
             },
             boletobancario_santander: {
                 data: {
@@ -98,23 +83,9 @@ const initCheckout = paymentMethodsResponse => {
             },
             paywithgoogle: {
                 countryCode: 'NL',
-                //                    configuration: {
-                //                        gatewayMerchantId: 'TestMerchantCheckout', // name of MerchantAccount
-                //                        merchantName: 'Adyen Test merchant' // Name to be displayed
-                //                    },
                 onAuthorized: console.info
             },
             paypal: {
-                // USE either separate merchantId & intent props...
-                //                    merchantId: '5RZKQX2FC48EA',
-                //                    intent: 'capture',
-                //                    // ...OR, preferably, wrap them in a configuration object
-                //                    configuration: {
-                //                        merchantId: '5RZKQX2FC48EAxxx',
-                //                        intent: 'sale'
-                //                    },
-                // style: {},
-                // Events
                 onError: (error, component) => {
                     component.setStatus('ready');
                     console.log('paypal onError', error);
@@ -130,21 +101,7 @@ const initCheckout = paymentMethodsResponse => {
 };
 
 const initDropin = () => {
-    window.dropin = checkout
-        .create('dropin', {
-            showRemovePaymentMethodButton: true,
-            onDisableStoredPaymentMethod: (storedPaymentMethodId, resolve, reject) => {
-                // call disable endpoint and resolve()
-            },
-
-            // Options
-            openFirstPaymentMethod: true, // defaults to true
-            openFirstStoredPaymentMethod: true, // defaults to true
-            showStoredPaymentMethods: true, // defaults to true,
-            showPaymentMethods: true, // defaults to true
-            showPayButton: true // defaults to true
-        })
-        .mount('#dropin-container');
+    window.dropin = checkout.create('dropin').mount('#dropin-container');
 };
 
 function handleFinalState(resultCode, dropin) {
@@ -159,11 +116,13 @@ function handleFinalState(resultCode, dropin) {
 
 function handleRedirectResult() {
     const storedPaymentData = localStorage.getItem('storedPaymentData');
+    const storedOrder = JSON.parse(localStorage.getItem('storedOrder'));
     const { redirectResult, payload } = getSearchParameters(window.location.search);
 
     if (storedPaymentData && (redirectResult || payload)) {
         return makeDetailsCall({
             paymentData: storedPaymentData,
+            ...(storedOrder && { order: storedOrder }),
             details: {
                 ...(redirectResult && { redirectResult }),
                 ...(payload && { payload })

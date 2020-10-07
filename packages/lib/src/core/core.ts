@@ -13,7 +13,8 @@ import { PaymentMethods, PaymentMethodOptions } from '../types';
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
     public readonly modules: any;
-    public readonly options: any;
+    public options: any;
+    public components = [];
 
     public static readonly version = {
         version: process.env.VERSION,
@@ -23,7 +24,6 @@ class Core {
     };
 
     constructor(options: CoreOptions = {}) {
-        this.setPaymentMethodsResponse = this.setPaymentMethodsResponse.bind(this);
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 
@@ -80,14 +80,42 @@ class Core {
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
-            createFromAction: this.createFromAction
+            createFromAction: this.createFromAction,
+            _parentInstance: this
         };
     }
 
-    public setPaymentMethodsResponse(paymentMethodsResponse) {
+    public setPaymentMethodsResponse = paymentMethodsResponse => {
         this.paymentMethodsResponse = new PaymentMethodsResponse(paymentMethodsResponse, this.options);
         return this;
-    }
+    };
+
+    /**
+     * Updates global configurations, resets the internal state and remounts each element.
+     * @param options - props to update
+     * @returns this - the element instance
+     */
+    public update = (options): this => {
+        const { paymentMethodsResponse = null, locale, ...props } = options;
+        this.options = { ...this.options, ...props };
+        paymentMethodsResponse && this.setPaymentMethodsResponse(paymentMethodsResponse);
+        locale && (this.modules.i18n = new Language(locale, this.options.translations));
+
+        this.components.map(c => c.update(this.getPropsForComponent(this.options)));
+
+        return this;
+    };
+
+    /**
+     * Updates global configurations, resets the internal state and remounts each element.
+     * @param component - reference to the component to be removed
+     * @returns this - the element instance
+     */
+    public remove = (component): this => {
+        this.components = this.components.filter(c => c.props.id !== component.props.id);
+
+        return this;
+    };
 
     /**
      * @internal
@@ -109,7 +137,9 @@ class Core {
             // 1. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
             // 2. the combined props of checkout & the configuration object defined on this particular component
             // 3. a paymentMethodsConfiguration object, if defined at top level
-            return new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
+            const component = new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
+            this.components.push(component);
+            return component;
         }
 
         /**

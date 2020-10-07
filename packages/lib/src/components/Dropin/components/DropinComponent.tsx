@@ -34,6 +34,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     };
 
     componentDidMount() {
+        this.prepareDropinData();
+    }
+
+    prepareDropinData = () => {
         const { paymentMethodsConfiguration, paymentMethods, storedPaymentMethods, order, clientKey, loadingContext } = this.props;
         const commonProps = getCommonProps(this.props);
 
@@ -56,7 +60,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 });
             }
         });
-    }
+    };
 
     private setStatus = status => {
         this.setState({ status });

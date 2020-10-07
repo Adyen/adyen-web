@@ -6,6 +6,7 @@ import RiskElement from '../core/RiskModule';
 import { Order } from '../types';
 
 export interface BaseElementProps {
+    _parentInstance: any;
     order?: Order;
     modules?: {
         analytics: Analytics;
@@ -21,9 +22,11 @@ class BaseElement<P extends BaseElementProps> {
     public _node;
     public _component;
     public eventEmitter = new EventEmitter();
+    private _parentInstance;
 
     protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
+        this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};
     }
@@ -103,7 +106,19 @@ class BaseElement<P extends BaseElementProps> {
         return this;
     }
 
-    public remount(component): this {
+    /**
+     * Updates props, resets the internal state and remounts the element.
+     * @param props - props to update
+     * @returns this - the element instance
+     */
+    public update(props: P): this {
+        this.props = this.formatProps({ ...this.props, ...props });
+        this.state = {};
+
+        return this.unmount().remount();
+    }
+
+    public remount(component?): this {
         if (!this._node) {
             throw new Error('Component is not mounted.');
         }
@@ -118,9 +133,18 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Unmounts a payment element from the DOM
      */
-    public unmount(): void {
+    public unmount(): this {
         if (this._node) {
             render(null, this._node);
+        }
+
+        return this;
+    }
+
+    public remove() {
+        if (this._parentInstance) {
+            this.unmount();
+            this._parentInstance.remove(this);
         }
     }
 }
