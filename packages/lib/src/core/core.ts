@@ -113,7 +113,6 @@ class Core {
      */
     public remove = (component): this => {
         this.components = this.components.filter(c => c.props.id !== component.props.id);
-
         return this;
     };
 

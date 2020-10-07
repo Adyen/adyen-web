@@ -37,7 +37,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.prepareDropinData();
     }
 
-    prepareDropinData = () => {
+    public prepareDropinData = () => {
         const { paymentMethodsConfiguration, paymentMethods, storedPaymentMethods, order, clientKey, loadingContext } = this.props;
         const commonProps = getCommonProps(this.props);
 
