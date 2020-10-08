@@ -115,7 +115,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             // Add ref to onError in case the merchant has defined one in the component options
             onError: this.props.onError,
             // Allow merchant option to set challenge iframe size
-            ...(action.type === 'threeDS2Challenge' && this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize })
+            ...(action.type === 'threeDS2' && this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize })
         });
 
         if (paymentAction) {

@@ -44,7 +44,6 @@ const actionTypes = {
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
             isDropin: !!props.isDropin,
-            notificationURL: props.notificationURL,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
             ...get3DS2Props(action.subtype, props)

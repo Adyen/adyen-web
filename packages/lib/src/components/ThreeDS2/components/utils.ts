@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES } from '../config';
+import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../config';
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
@@ -57,7 +57,7 @@ export const encodeResult = (result: ResultObject, type: string): string => {
 export const validateChallengeWindowSize = (sizeStr: string): string => {
     const sizeString = sizeStr.length === 1 ? `0${sizeStr}` : sizeStr;
     const hasSize = Object.prototype.hasOwnProperty.call(CHALLENGE_WINDOW_SIZES, sizeString);
-    return hasSize ? sizeString : '01';
+    return hasSize ? sizeString : DEFAULT_CHALLENGE_WINDOW_SIZE;
 };
 
 /**
@@ -154,11 +154,6 @@ export const encodeBase64URL = (dataStr: string): string => {
     return base64url;
 };
 
-// const fingerprintSpecificProps = ['createFromAction'];
-//
-// const challengeSpecificProps = ['challengeWindowSize'];
-//
-
 /**
  * Take an object and return a new object only containing the requested key:value pairs from the original object - with the option to either
  * exclude them if the requested properties don't exist on the original object or to include that property but with an undefined value
@@ -173,20 +168,23 @@ export const encodeBase64URL = (dataStr: string): string => {
 //     }, {});
 // };
 
+const fingerprintProps = ['createFromAction', 'onAdditionalDetails', 'challengeWindowSize', 'notificationURL'];
+const challengeProps = ['challengeWindowSize', 'notificationURL'];
+
 export const get3DS2Props = (actionSubtype, props) => {
     const isFingerprint = actionSubtype === 'fingerprint';
 
     let rtnObj;
 
     if (isFingerprint) {
-        rtnObj = pick('createFromAction', 'onAdditionalDetails').from(props); // onAdditionalDetails needed for when we have a 2nd, 'challenge', threeDS2 action
+        rtnObj = pick(fingerprintProps).from(props); // config object create for the first action needs to contain everything needed for a 2nd, 'challenge', action
         rtnObj.showSpinner = !props.isDropin;
         rtnObj.statusType = 'loading';
     }
 
     if (!isFingerprint) {
-        rtnObj = pick('challengeWindowSize').from(props);
-        rtnObj.size = '05';
+        rtnObj = pick(challengeProps).from(props);
+
         rtnObj.statusType = 'custom';
     }
 
