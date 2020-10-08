@@ -141,11 +141,9 @@ export function isArray(prop) {
  */
 export function pick(...args) {
     const myArgs = isArray(args[0]) ? args[0] : args;
-
     return {
         from: obj => {
             // eslint-disable-line
-
             return myArgs
                 .map(k => (k in obj ? { [k]: obj[k] } : {})) // eslint-disable-line
                 .reduce((res, o) => ({ ...res, ...o }), {});
@@ -165,11 +163,9 @@ export function pick(...args) {
  */
 export function reject(...args) {
     const myArgs = isArray(args[0]) ? args[0] : args;
-
     return {
         from: obj => {
             const vkeys = Object.keys(obj).filter(k => !myArgs.includes(k));
-
             return pick(...vkeys).from(obj);
         }
     };

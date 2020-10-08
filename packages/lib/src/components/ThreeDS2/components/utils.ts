@@ -158,10 +158,17 @@ export const encodeBase64URL = (dataStr: string): string => {
 //
 // const challengeSpecificProps = ['challengeWindowSize'];
 //
-// export const getSpecificProps = (props, subsetArray) => {
-//     return subsetArray.reduce((acc, item) => {
-//         // return { ...acc, ...(props[item] && { [item]: props[item] }) }; // exclude prop if not defined
-//         acc[item] = props[item]; // include prop but with undefined value, if not defined
+
+/**
+ * Take an object and return a new object only containing the requested key:value pairs from the original object - with the option to either
+ * exclude them if the requested properties don't exist on the original object or to include that property but with an undefined value
+ *
+ * @example const strippedObj = getSpecificProps(originalObj, requestedProps, true);
+ */
+// export const getSpecificProps = (originalObj, requestedProps, exclude = true) => {
+//     return requestedProps.reduce((acc, item) => {
+//         if (exclude) return { ...acc, ...(originalObj[item] && { [item]: originalObj[item] }) }; // exclude prop if not defined
+//         acc[item] = originalObj[item]; // include prop but with undefined value, if not defined
 //         return acc;
 //     }, {});
 // };
@@ -169,13 +176,10 @@ export const encodeBase64URL = (dataStr: string): string => {
 export const get3DS2Props = (actionSubtype, props) => {
     const isFingerprint = actionSubtype === 'fingerprint';
 
-    // const propsArray = isFingerprint ? fingerprintSpecificProps : challengeSpecificProps;
-    // const rtnObj = getSpecificProps(props, propsArray);
-
     let rtnObj;
 
     if (isFingerprint) {
-        rtnObj = pick('createFromAction').from(props);
+        rtnObj = pick('createFromAction', 'onAdditionalDetails').from(props); // onAdditionalDetails needed for when we have a 2nd, 'challenge', threeDS2 action
         rtnObj.showSpinner = !props.isDropin;
         rtnObj.statusType = 'loading';
     }
