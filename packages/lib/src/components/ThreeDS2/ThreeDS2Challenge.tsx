@@ -2,6 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import Challenge from './components/Challenge';
 import { ErrorObject } from './components/utils';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -19,7 +20,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
 
     public static defaultProps = {
         dataKey: 'threeds2.challengeResult',
-        size: '01',
+        size: DEFAULT_CHALLENGE_WINDOW_SIZE,
         type: 'ChallengeShopper'
     };
 
