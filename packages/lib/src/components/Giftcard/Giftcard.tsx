@@ -58,6 +58,9 @@ export class GiftcardElement extends UIElement {
                 this.componentRef.setBalance(balance);
 
                 if (this.props.amount.value > balance.value) {
+                    if (this.props.order) {
+                        return this.submit();
+                    }
                     return this.onOrderRequest(this.data);
                 }
             })
