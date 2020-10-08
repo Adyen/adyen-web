@@ -23,7 +23,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
                                     type="button"
                                     className="adyen-checkout__button adyen-checkout__button--inline adyen-checkout__button--link"
                                     onClick={() => {
-                                        onOrderCancel(order);
+                                        onOrderCancel({ order });
                                     }}
                                 >
                                     {i18n.get('storedPaymentMethod.disable.button')}
