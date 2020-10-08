@@ -11,7 +11,7 @@ interface PaymentMethodListProps {
     paymentMethods: UIElement[];
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
-    order: Order;
+    order?: Order;
     orderStatus: OrderStatus;
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
