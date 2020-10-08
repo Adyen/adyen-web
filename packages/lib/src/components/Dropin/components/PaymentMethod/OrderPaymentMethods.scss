@@ -24,13 +24,15 @@
     border-bottom-right-radius: $border-radius-large;
 }
 
+
+// Order payment method header
 .adyen-checkout__order-payment-method__header {
     align-items: center;
     color: $color-black;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    font-weight: 400;
+    font-weight: 500;
     font-size: $font-size-medium;
     padding: 16px;
     position: relative;
@@ -38,6 +40,28 @@
     width: 100%;
 }
 
+
+// Order payment method content
+.adyen-checkout__order-payment-method__details {
+    padding: 0 16px 16px;
+}
+
+.adyen-checkout__order-payment-method__deducted-amount {
+    display: flex;
+    justify-content: space-between;
+    line-height: $font-size-medium;
+    font-size: $font-size-medium;
+}
+
+.adyen-checkout__order-payment-method__deducted-amount__label {
+    font-size: $font-size-small;
+}
+
+.adyen-checkout__order-payment-method__deducted-amount__value {
+    font-weight: 500;
+}
+
+// Remaining amount warning message
 .adyen-checkout__order-remaining-amount {
     display: block;
     width: 100%;

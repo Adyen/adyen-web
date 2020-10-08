@@ -18,6 +18,14 @@ export const OrderPaymentMethods = ({ orderStatus }) => {
                                 •••• {orderPaymentMethod.lastFour}
                             </div>
                         </div>
+                        <div className="adyen-checkout__order-payment-method__details">
+                            <div className="adyen-checkout__order-payment-method__deducted-amount">
+                                <div className="adyen-checkout__order-payment-method__deducted-amount__label">{i18n.get('deductedBalance')}</div>
+                                <div className="adyen-checkout__order-payment-method__deducted-amount__value">
+                                    {i18n.amount(orderPaymentMethod.amount.value, orderPaymentMethod.amount.currency)}
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 ))}
             </ul>
