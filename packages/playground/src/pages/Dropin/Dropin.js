@@ -1,6 +1,6 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
-import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder } from '../../services';
+import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder, cancelOrder } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
@@ -57,6 +57,11 @@ const initCheckout = paymentMethodsResponse => {
         },
         onOrderRequest: async (resolve, reject) => {
             resolve(await createOrder({ amount }));
+        },
+        onOrderCancel: async order => {
+            await cancelOrder(order);
+
+            checkout.update({ paymentMethodsResponse: await getPaymentMethods(), order: null, amount });
         },
         onError: error => {
             console.log('dropin onError', error);

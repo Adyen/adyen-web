@@ -51,3 +51,12 @@ export const createOrder = data => {
         })
         .catch(err => console.error(err));
 };
+
+export const cancelOrder = data => {
+    return httpPost('orders/cancel', data)
+        .then(response => {
+            if (response.error) throw 'Orders call failed';
+            return response;
+        })
+        .catch(err => console.error(err));
+};
