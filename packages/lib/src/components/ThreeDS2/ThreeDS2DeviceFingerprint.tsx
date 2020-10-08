@@ -16,6 +16,7 @@ export interface ThreeDS2DeviceFingerprintProps {
 
     loadingContext?: string;
     clientKey?: string;
+    elementRef?: UIElement;
 }
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
@@ -49,7 +50,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
                 paymentData: state.data.paymentData
             }
         ).then(data => {
-            console.log('\n### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint:: data', data);
+            console.log('\n### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: data', data);
             /**
              * Frictionless (no challenge) flow
              */
@@ -77,10 +78,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
              * Challenge flow
              */
             if (data.action?.subtype === 'challenge') {
-                // Actual code
-                console.log('### ThreeDS2DeviceFingerprint::challenge flow:: this=', this);
-                console.log('### ThreeDS2DeviceFingerprint::challenge flow:: this.props=', this.props);
-                this.handleAction(data.action);
+                console.log('### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: challenge flow:: this=', this);
+                console.log('### ThreeDS2DeviceFingerprint::handle response:: challenge flow:: this.props=', this.props);
+
+                // this.handleAction(data.action);
+                this.props.elementRef.handleAction(data.action);
                 return;
             }
 
@@ -95,8 +97,6 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     render() {
         console.log('\n### ThreeDS2DeviceFingerprint::render:: this.props=', this.props);
-        console.log('### ThreeDS2DeviceFingerprint::render:: this.props.onComplete=', this.props['onComplete']);
-        console.log('### ThreeDS2DeviceFingerprint::render:: this.props.onAdditionalDetails=', this.props['onAdditionalDetails']);
         return <DeviceFingerprint {...this.props} onComplete={this.onComplete} />;
     }
 }

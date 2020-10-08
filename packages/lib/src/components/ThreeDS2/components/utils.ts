@@ -168,7 +168,7 @@ export const encodeBase64URL = (dataStr: string): string => {
 //     }, {});
 // };
 
-const fingerprintProps = ['createFromAction', 'onAdditionalDetails', 'challengeWindowSize', 'notificationURL'];
+const fingerprintProps = ['elementRef', 'notificationURL']; //'createFromAction', 'onAdditionalDetails', 'challengeWindowSize', 'notificationURL'];
 const challengeProps = ['challengeWindowSize', 'notificationURL'];
 
 export const get3DS2Props = (actionSubtype, props) => {

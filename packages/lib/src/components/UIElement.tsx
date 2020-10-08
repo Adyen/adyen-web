@@ -110,12 +110,23 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
+        console.log('\n### UIElement::handleAction:: this=', this);
+        console.log('### UIElement::handleAction:: action.type=', action.type, 'subtype=', action.subtype);
+        console.log('### UIElement::handleAction:: this.props=', this.props);
+
+        const threeDS2Options =
+            action.type === 'threeDS2'
+                ? {
+                      elementRef: this.elementRef,
+                      ...(this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize })
+                  }
+                : null;
+
         const paymentAction: UIElement = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
             // Add ref to onError in case the merchant has defined one in the component options
             onError: this.props.onError,
-            // Allow merchant option to set challenge iframe size
-            ...(action.type === 'threeDS2' && this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize })
+            ...threeDS2Options
         });
 
         if (paymentAction) {
