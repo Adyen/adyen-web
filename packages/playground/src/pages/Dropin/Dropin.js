@@ -35,9 +35,8 @@ const initCheckout = paymentMethodsResponse => {
                     orderData: result.order.orderData,
                     pspReference: result.order.pspReference
                 };
-                if (order) localStorage.setItem('storedOrder', JSON.stringify(order));
-                const orderPaymentMethods = await getPaymentMethods({ order });
 
+                const orderPaymentMethods = await getPaymentMethods({ order });
                 checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
             } else {
                 handleFinalState(result.resultCode, component);
@@ -116,13 +115,12 @@ function handleFinalState(resultCode, dropin) {
 
 function handleRedirectResult() {
     const storedPaymentData = localStorage.getItem('storedPaymentData');
-    const storedOrder = JSON.parse(localStorage.getItem('storedOrder'));
     const { redirectResult, payload } = getSearchParameters(window.location.search);
 
     if (storedPaymentData && (redirectResult || payload)) {
+        dropin.setStatus('loading');
         return makeDetailsCall({
             paymentData: storedPaymentData,
-            ...(storedOrder && { order: storedOrder }),
             details: {
                 ...(redirectResult && { redirectResult }),
                 ...(payload && { payload })
