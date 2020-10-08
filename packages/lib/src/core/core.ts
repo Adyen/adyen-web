@@ -12,7 +12,7 @@ import { PaymentMethods, PaymentMethodOptions } from '../types';
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
-    public readonly modules: any;
+    public modules: any;
     public options: any;
     public components = [];
 
@@ -27,18 +27,7 @@ class Core {
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 
-        this.options = {
-            ...options,
-            loadingContext: resolveEnvironment(options.environment)
-        };
-
-        this.modules = {
-            risk: new RiskModule(this.options),
-            analytics: new Analytics(this.options),
-            i18n: new Language(options.locale, options.translations)
-        };
-
-        this.setPaymentMethodsResponse(options.paymentMethodsResponse);
+        this.setOptions(options);
     }
 
     /**
@@ -69,6 +58,56 @@ class Core {
     }
 
     /**
+     * Updates global configurations, resets the internal state and remounts each element.
+     * @param options - props to update
+     * @returns this - the element instance
+     */
+    public update = (options: CoreOptions = {}): this => {
+        this.setOptions(options);
+
+        // Update each component under this instance
+        this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
+
+        return this;
+    };
+
+    /**
+     * Remove the reference of a component
+     * @param component - reference to the component to be removed
+     * @returns this - the element instance
+     */
+    public remove = (component): this => {
+        this.components = this.components.filter(c => c._id !== component._id);
+        component.unmount();
+
+        return this;
+    };
+
+    /**
+     * @internal
+     * (Re)Initializes core options (i18n, paymentMethodsResponse, etc...)
+     * @param options
+     * @returns this
+     */
+    private setOptions = (options): this => {
+        this.options = { ...this.options, ...options };
+        this.options.loadingContext = resolveEnvironment(this.options.environment);
+
+        this.modules = {
+            risk: new RiskModule(this.options),
+            analytics: new Analytics(this.options),
+            i18n: new Language(this.options.locale, this.options.translations)
+        };
+
+        if (this.options.paymentMethodsResponse) {
+            this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
+        }
+
+        return this;
+    };
+
+    /**
+     * @internal
      * @param options - options that will be merged to the global Checkout props
      * @returns props for a new UIElement
      */
@@ -84,37 +123,6 @@ class Core {
             _parentInstance: this
         };
     }
-
-    public setPaymentMethodsResponse = paymentMethodsResponse => {
-        this.paymentMethodsResponse = new PaymentMethodsResponse(paymentMethodsResponse, this.options);
-        return this;
-    };
-
-    /**
-     * Updates global configurations, resets the internal state and remounts each element.
-     * @param options - props to update
-     * @returns this - the element instance
-     */
-    public update = (options): this => {
-        const { paymentMethodsResponse = null, locale, ...props } = options;
-        this.options = { ...this.options, ...props };
-        paymentMethodsResponse && this.setPaymentMethodsResponse(paymentMethodsResponse);
-        locale && (this.modules.i18n = new Language(locale, this.options.translations));
-
-        this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
-
-        return this;
-    };
-
-    /**
-     * Updates global configurations, resets the internal state and remounts each element.
-     * @param component - reference to the component to be removed
-     * @returns this - the element instance
-     */
-    public remove = (component): this => {
-        this.components = this.components.filter(c => c.props.id !== component.props.id);
-        return this;
-    };
 
     /**
      * @internal

@@ -4,6 +4,7 @@ import EventEmitter from './EventEmitter';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { Order } from '../types';
+import uuid from '../utils/uuid';
 
 export interface BaseElementProps {
     _parentInstance?: any;
@@ -16,6 +17,7 @@ export interface BaseElementProps {
 }
 
 class BaseElement<P extends BaseElementProps> {
+    public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public props: P;
     public state;
     protected static defaultProps = {};
