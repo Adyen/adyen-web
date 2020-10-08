@@ -4,21 +4,22 @@ import PaymentMethodItem from './PaymentMethodItem';
 import getProp from '../../../../utils/getProp';
 import styles from '../DropinComponent.module.scss';
 import UIElement from '../../../UIElement';
-import { OrderStatus } from '../../../../types';
+import { Order, OrderStatus } from '../../../../types';
 import OrderPaymentMethods from './OrderPaymentMethods';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
+    order: Order;
     orderStatus: OrderStatus;
-
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
     showRemovePaymentMethodButton?: boolean;
 
     onSelect: (paymentMethod) => void;
     onDisableStoredPaymentMethod: (storedPaymentMethod) => void;
+    onOrderCancel?: (order) => void;
 
     isDisabling: boolean;
     isLoading: boolean;
@@ -60,7 +61,9 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
 
         return (
             <Fragment>
-                {this.props.orderStatus && <OrderPaymentMethods orderStatus={this.props.orderStatus} />}
+                {this.props.orderStatus && (
+                    <OrderPaymentMethods order={this.props.order} orderStatus={this.props.orderStatus} onOrderCancel={this.props.onOrderCancel} />
+                )}
 
                 <ul className={paymentMethodListClassnames}>
                     {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {

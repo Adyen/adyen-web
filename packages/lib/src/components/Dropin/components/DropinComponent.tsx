@@ -137,7 +137,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 paymentMethods={elements}
                                 activePaymentMethod={activePaymentMethod}
                                 cachedPaymentMethods={cachedPaymentMethods}
+                                order={this.props.order}
                                 orderStatus={this.state.orderStatus}
+                                onOrderCancel={this.props.onOrderCancel}
                                 onSelect={this.handleOnSelectPaymentMethod}
                                 openFirstPaymentMethod={this.props.openFirstPaymentMethod}
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}

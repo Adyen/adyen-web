@@ -51,4 +51,5 @@ export interface DropinElementProps extends UIElementProps {
 
 export interface DropinComponentProps extends DropinElementProps {
     onChange: (newState?: object) => void;
+    onOrderCancel?: (order: Order) => void;
 }
