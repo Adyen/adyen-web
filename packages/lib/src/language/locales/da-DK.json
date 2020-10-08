@@ -1,10 +1,7 @@
 {
-    "paymentMethods.moreMethodsButton": "Flere betalingsmåder",
     "payButton": "Betal",
     "payButton.redirecting": "Omdirigerer ...",
     "storeDetails": "Gem til min næste betaling",
-    "payment.redirecting": "Du omstilles…",
-    "payment.processing": "Din betaling behandles",
     "creditCard.holderName": "Navn på kort",
     "creditCard.holderName.placeholder": "J. Hansen",
     "creditCard.holderName.invalid": "Ugyldigt kortholdernavn",
@@ -26,6 +23,10 @@
     "creditCard.cvcField.placeholder.3digits": "3 cifre",
     "installments": "Antal rater",
     "installmentOption": "%{times}x %{partialValue}",
+    "installmentOptionMonths": "%{times} måneder",
+    "installments.oneTime": "Engangsbetaling",
+    "installments.installments": "Afdragsbetaling",
+    "installments.revolving": "Løbende betaling",
     "sepaDirectDebit.ibanField.invalid": "Ugyldigt kontonummer",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Kontohavernavn",
@@ -137,5 +138,12 @@
     "blik.invalid": "Indtast 6 tal",
     "blik.code": "6-cifret kode",
     "blik.help": "Få koden fra din bankapp.",
-    "swish.pendingMessage": "Visning af status kan tage op til 10 minutter efter scanning. Et nyt forsøg på betaling inden for dette tidsrum kan muligvis medføre flere gebyrer."
+    "swish.pendingMessage": "Visning af status kan tage op til 10 minutter efter scanning. Et nyt forsøg på betaling inden for dette tidsrum kan muligvis medføre flere gebyrer.",
+    "error.va.gen.01": "Felt ikke udfyldt",
+    "error.va.gen.02": "Ugyldigt felt",
+    "error.va.sf-cc-num.01": "Ugyldigt kortnummer",
+    "error.va.sf-cc-num.02": "Indtastet kortnummer matcher ikke kortmærke",
+    "error.va.sf-cc-num.03": "Ikke-understøttet kort indtastet",
+    "error.va.sf-cc-dat.01": "Kort for gammelt",
+    "error.va.sf-cc-dat.02": "Dato for langt ude i fremtiden"
 }
