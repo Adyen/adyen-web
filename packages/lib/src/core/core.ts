@@ -99,9 +99,7 @@ class Core {
             i18n: new Language(this.options.locale, this.options.translations)
         };
 
-        if (this.options.paymentMethodsResponse) {
-            this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
-        }
+        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
 
         return this;
     };
