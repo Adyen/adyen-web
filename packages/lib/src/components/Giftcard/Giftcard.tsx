@@ -64,8 +64,9 @@ export class GiftcardElement extends UIElement {
                     return this.onOrderRequest(this.data);
                 }
             })
-            .catch(() => {
+            .catch(error => {
                 this.setStatus('ready');
+                if (this.props.onError) this.props.onError(error);
             });
     };
 
