@@ -109,7 +109,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                 <Field
                                     label={i18n.get('creditCard.pin.title')}
                                     classNameModifiers={['pin', '30']}
-                                    errorMessage={sfpState.errors.encryptedSecurityCode}
+                                    errorMessage={sfpState.errors.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
                                     focused={focusedElement === 'encryptedSecurityCode'}
                                     onFocusField={() => setFocusOn('encryptedSecurityCode')}
                                 >
