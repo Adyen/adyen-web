@@ -154,36 +154,28 @@ export const encodeBase64URL = (dataStr: string): string => {
     return base64url;
 };
 
+const fingerprintFlowProps = ['elementRef', 'notificationURL'];
+const challengeFlowProps = ['challengeWindowSize', 'notificationURL'];
+
 /**
- * Take an object and return a new object only containing the requested key:value pairs from the original object - with the option to either
- * exclude them if the requested properties don't exist on the original object or to include that property but with an undefined value
+ * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
  *
- * @example const strippedObj = getSpecificProps(originalObj, requestedProps, true);
+ * @param actionSubtype - 3DS2 flow type: fingerprint or challenge
+ * @param props - object from which to extract particular properties
  */
-// export const getSpecificProps = (originalObj, requestedProps, exclude = true) => {
-//     return requestedProps.reduce((acc, item) => {
-//         if (exclude) return { ...acc, ...(originalObj[item] && { [item]: originalObj[item] }) }; // exclude prop if not defined
-//         acc[item] = originalObj[item]; // include prop but with undefined value, if not defined
-//         return acc;
-//     }, {});
-// };
-
-const fingerprintProps = ['elementRef', 'notificationURL']; //'createFromAction', 'onAdditionalDetails', 'challengeWindowSize', 'notificationURL'];
-const challengeProps = ['challengeWindowSize', 'notificationURL'];
-
-export const get3DS2Props = (actionSubtype, props) => {
+export const get3DS2FlowProps = (actionSubtype, props) => {
     const isFingerprint = actionSubtype === 'fingerprint';
 
     let rtnObj;
 
     if (isFingerprint) {
-        rtnObj = pick(fingerprintProps).from(props); // config object create for the first action needs to contain everything needed for a 2nd, 'challenge', action
+        rtnObj = pick(fingerprintFlowProps).from(props);
         rtnObj.showSpinner = !props.isDropin;
         rtnObj.statusType = 'loading';
     }
 
     if (!isFingerprint) {
-        rtnObj = pick(challengeProps).from(props);
+        rtnObj = pick(challengeFlowProps).from(props);
 
         rtnObj.statusType = 'custom';
     }

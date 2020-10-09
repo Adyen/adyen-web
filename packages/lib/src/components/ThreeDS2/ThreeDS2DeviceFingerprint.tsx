@@ -81,7 +81,6 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
                 console.log('### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: challenge flow:: this=', this);
                 console.log('### ThreeDS2DeviceFingerprint::handle response:: challenge flow:: this.props=', this.props);
 
-                // this.handleAction(data.action);
                 this.props.elementRef.handleAction(data.action);
                 return;
             }

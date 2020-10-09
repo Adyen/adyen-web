@@ -1,6 +1,6 @@
 import { getComponent } from '../../../components';
 import { PaymentAction } from '../../../types';
-import { get3DS2Props } from '../../../components/ThreeDS2/components/utils';
+import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 
 const actionTypes = {
     redirect: (action: PaymentAction, props) =>
@@ -46,7 +46,7 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
-            ...get3DS2Props(action.subtype, props)
+            ...get3DS2FlowProps(action.subtype, props)
         };
 
         return getComponent(componentType, config);
