@@ -15,6 +15,8 @@ const defaultProps = {
         merchantIdentifier: ''
     },
 
+    initiative: 'web',
+
     /**
      * https://developer.apple.com/documentation/apple_pay_on_the_web/applepaypaymentrequest/1916120-lineitems
      * A set of line items that explain recurring payments and additional charges and discounts.
@@ -76,7 +78,6 @@ const defaultProps = {
     onSubmit: () => {},
     onError: () => {},
     onAuthorized: resolve => resolve(),
-    onValidateMerchant: (resolve, reject) => reject('onValidateMerchant event not implemented'),
     onPaymentMethodSelected: null,
     onShippingContactSelected: null,
     onShippingMethodSelected: null,
