@@ -95,7 +95,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         session.begin();
     }
 
-    private validateMerchant(resolve, reject) {
+    private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName: displayName, merchantIdentifier } = configuration;
@@ -103,18 +103,15 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         const options = { loadingContext, path, method: 'post' };
         const request: ApplePaySessionRequest = { displayName, domainName, initiative, merchantIdentifier };
 
-        return fetchJsonData(options, request)
-            .then(response => {
-                try {
-                    const decodedData = base64.decode(response.data);
-                    if (!decodedData) reject('Could not decode Apple Pay session');
-                    const session = JSON.parse(decodedData as string);
-                    resolve(session);
-                } catch (e) {
-                    reject('Could not parse Apple Pay session');
-                }
-            })
-            .catch(reject);
+        try {
+            const response = await fetchJsonData(options, request);
+            const decodedData = base64.decode(response.data);
+            if (!decodedData) reject('Could not decode Apple Pay session');
+            const session = JSON.parse(decodedData as string);
+            resolve(session);
+        } catch (e) {
+            reject('Could not get Apple Pay session');
+        }
     }
 
     /**
