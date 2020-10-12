@@ -8,6 +8,8 @@ declare global {
     }
 }
 
+type Initiative = 'web' | 'messaging';
+
 export interface ApplePayElementProps extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
@@ -42,7 +44,7 @@ export interface ApplePayElementProps extends UIElementProps {
     };
 
     clientKey?: string;
-    initiative?: 'web' | 'messaging';
+    initiative?: Initiative;
 
     /**
      * A set of line items that explain recurring payments and/or additional charges.
@@ -152,4 +154,11 @@ export interface ApplePayElementData {
         type: string;
         ['applepay.token']: string;
     };
+}
+
+export interface ApplePaySessionRequest {
+    displayName: string;
+    domainName: string;
+    initiative: Initiative;
+    merchantIdentifier: string;
 }
