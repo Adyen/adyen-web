@@ -49,7 +49,7 @@ export const checkPaymentMethodsResponse = response => {
         );
     }
 
-    if (!response?.paymentMethods?.length && !response?.storePaymentMethods?.length) {
+    if (response && !response?.paymentMethods?.length && !response?.storePaymentMethods?.length) {
         console.warn('paymentMethodsResponse was provided but no payment methods were found.');
     }
 };
