@@ -104,6 +104,8 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     render() {
+        if (!this.props.showPayButton) return null;
+
         return (
             <PaypalComponent
                 ref={ref => {
