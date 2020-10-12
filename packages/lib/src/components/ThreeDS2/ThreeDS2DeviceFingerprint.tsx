@@ -51,25 +51,22 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
             }
         ).then(data => {
             console.log('\n### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: data', data);
+            console.log('### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: this=', this);
+            console.log('### ThreeDS2DeviceFingerprint::handle response:: this.props=', this.props);
             /**
              * Frictionless (no challenge) flow
              */
-            if (data.resultCode === 'AuthenticationFinished') {
+            if (data.action?.type === 'authenticationFinished') {
                 const detailsObj = {
                     data: {
-                        // All below, work:
-                        //                    details: { 'threeds2.challengeResult': btoa('{"transStatus":"Y"}') }, // needs to be an object with both key & value in inverted commas
-                        //                    details: response.threeDS2Result.authenticationValue,
-                        //                    details: btoa('transStatus: Y'),
-                        //                    details: '',
-                        //                    details: { 'threeds2.challengeResult': 'eyJ0cmFuc1N0YXR1cyI6IlkifQ==' },// encoded {"transStatus":"Y"}
-                        // Sending no details property also works
-
-                        // Actual code
-                        paymentData: data.paymentData,
+                        // Sending no details property should work - BUT currently doesn't in the new flow
+                        details: { 'threeds2.challengeResult': btoa('{"transStatus":"Y"}') },
+                        paymentData: data.action.paymentData,
                         threeDSAuthenticationOnly: false
                     }
                 };
+
+                console.log('### ThreeDS2DeviceFingerprint::authenticationFinished FLOW:: detailsObj=', detailsObj);
 
                 return super.onComplete(detailsObj);
             }
@@ -77,19 +74,35 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
             /**
              * Challenge flow
              */
-            if (data.action?.subtype === 'challenge') {
-                console.log('### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: challenge flow:: this=', this);
-                console.log('### ThreeDS2DeviceFingerprint::handle response:: challenge flow:: this.props=', this.props);
-
+            if (data.action?.type === 'threeDS2') {
+                console.log('### ThreeDS2DeviceFingerprint::submitThreeDS2Fingerprint::response:: challenge FLOW:: data.action=', data.action);
                 this.props.elementRef.handleAction(data.action);
                 return;
             }
 
             /**
-             * Redirect (we thought we could do 3DS2 but it turns out we can't)
+             * Redirect (usecase: we thought we could do 3DS2 but it turns out we can't)
              */
-            if (data.resultCode === 'RedirectShopper') {
-                this.handleAction(data.action);
+            if (data.action?.type === 'redirect') {
+                // const mockResp = {
+                //     action: {
+                //         url: 'http://localhost:8080/hpp/3d/validate.shtml',
+                //         data: {
+                //             MD:
+                //                 'RE5acFVpOTNPZVk1V21HSXhJaTdlQT09IXM600f1RvNxlbrdXIfa7OcUrPlLGGjiCiQrrZ_d36mJcOyPTs4uFMJ-D8flYNkBEMmpp79ivNxUgnQ9TZZXwGfQnhv6J1Lz5uoZ_rmjcLvdfDZumz6gEH1RT5IBLHxIbxJoAVLmqIj1LErwukD6osuMSY8pb6w9WKlEYERve0H1irhkVjYVl7ElhmEncSZG5CLOGZc1DarkCz8M4NlSlgGuaY5fif75WxraCkyv7JwXmi6XymqSU9ZOjzXQ1SEd6YrScGYICkF_gL9pq_dvyGKiNbiVPRBc6B9LNxdDFwrn8oqWL3L_RtK6XJM9EDPXnkEsLftdkMNUQhaE5nr0ulyZ9rdwaoOt',
+                //             PaReq:
+                //                 'eNpVUttygjAQ/RXrB7AhoBZmzUyqztQHrVp87jBhp2ILaICi/fomCLXN0549ez0bjA6aaP5KqtYkcEVlGb/TIE2mwzAIvDHj3J+MPBYE48VQ4Ebu6Czwi3SZFrlwHeZwhB6adK0OcV4JjNX5abkWPne55yN0EDPSy7mIqKw2WSbVuU41aalUUecVwo3FPM5I7OWbnD2ENrSvitAy2EbrqxjxR4QeYK0/xaGqTiFA0zROnFwpd1SRAYKlEO7DbWprlabUJU3ES/TxvT7K6+q49dbRqjGY77bSvimCjcAkrkhwxpnLWDBweeiPQo8htH6MMzuDWOx3hmIO88y+NxeebCd5A4az1F8XGtU15eoqgondpUdIl1ORk4kw6v7aCPfBZ89WY1UZvfzAnYzNYP2zareErZIaaby2bwcQbCp0h4Tu4Mb69xF+AOaLrzY=',
+                //             TermUrl: 'http://localhost:3020/cards/'
+                //         },
+                //         method: 'POST',
+                //         type: 'redirect',
+                //         paymentMethodType: 'scheme'
+                //     }
+                // };
+                // this.props.elementRef.handleAction(mockResp.action);
+
+                data.action.paymentMethodType = 'scheme';
+                this.props.elementRef.handleAction(data.action);
             }
         });
     }
