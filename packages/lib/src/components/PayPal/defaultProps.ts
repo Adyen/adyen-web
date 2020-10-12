@@ -3,6 +3,7 @@ import { PayPalElementProps } from './types';
 const defaultProps: PayPalElementProps = {
     environment: 'TEST',
     status: 'loading',
+    showPayButton: true,
 
     // Config
     /**
@@ -19,6 +20,11 @@ const defaultProps: PayPalElementProps = {
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
      */
     commit: true,
+
+    /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#vault}
+     */
+    vault: false,
 
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
@@ -38,11 +44,7 @@ const defaultProps: PayPalElementProps = {
         /**
          * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
          */
-        intent: null,
-        /**
-         * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
-         */
-        commit: true
+        intent: null
     },
 
     // Events
