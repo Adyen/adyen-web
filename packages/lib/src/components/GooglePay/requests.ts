@@ -39,19 +39,21 @@ export function isReadyToPayRequest({
  * @see {@link https://developers.google.com/pay/api/web/reference/object#TransactionInfo|TransactionInfo}
  * @returns transaction info, suitable for use as transactionInfo property of PaymentDataRequest
  */
-export function getTransactionInfo(
+export function getTransactionInfo({
     currencyCode = 'USD',
     totalPrice = 0,
-    totalPriceStatus: google.payments.api.TotalPriceStatus = 'FINAL',
-    countryCode = 'US'
-): google.payments.api.TransactionInfo {
+    countryCode = 'US',
+    totalPriceStatus = 'FINAL',
+    ...props
+}): google.payments.api.TransactionInfo {
     const formattedPrice = String(getDecimalAmount(totalPrice, currencyCode));
 
     return {
         countryCode,
         currencyCode,
         totalPrice: formattedPrice,
-        totalPriceStatus // Price will not change
+        totalPriceStatus: totalPriceStatus as google.payments.api.TotalPriceStatus,
+        ...props.transactionInfo
     };
 }
 
@@ -59,7 +61,7 @@ export function initiatePaymentRequest({ configuration, ...props }: GooglePayPro
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
-        transactionInfo: getTransactionInfo(props.amount.currency, props.amount.value, props.totalPriceStatus, props.countryCode),
+        transactionInfo: getTransactionInfo(props),
         merchantInfo: {
             merchantId: configuration.merchantId,
             merchantName: configuration.merchantName

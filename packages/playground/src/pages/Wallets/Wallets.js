@@ -107,7 +107,7 @@ getOriginKey()
             // Merchant config (required)
             configuration: {
                 merchantName: 'Adyen Test merchant', // Name to be displayed
-                merchantIdentifier: '06946223745213860250' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
+                merchantIdentifier: '000000000200001' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
             },
 
             // Button config (optional)
@@ -118,8 +118,11 @@ getOriginKey()
         applepay
             .isAvailable()
             .then(isAvailable => {
+                // Demo only
+                if (isAvailable) document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
+
                 // If Available mount it in the dom
-                if (isAvailable) applepay.mount('#applepay-field');
+                if (isAvailable) applepay.mount('.applepay-field');
             })
             .catch(e => {
                 console.warn(e);
