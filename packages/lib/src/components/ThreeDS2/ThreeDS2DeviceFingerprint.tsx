@@ -89,10 +89,10 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
                 //         url: 'http://localhost:8080/hpp/3d/validate.shtml',
                 //         data: {
                 //             MD:
-                //                 'RE5acFVpOTNPZVk1V21HSXhJaTdlQT09IXM600f1RvNxlbrdXIfa7OcUrPlLGGjiCiQrrZ_d36mJcOyPTs4uFMJ-D8flYNkBEMmpp79ivNxUgnQ9TZZXwGfQnhv6J1Lz5uoZ_rmjcLvdfDZumz6gEH1RT5IBLHxIbxJoAVLmqIj1LErwukD6osuMSY8pb6w9WKlEYERve0H1irhkVjYVl7ElhmEncSZG5CLOGZc1DarkCz8M4NlSlgGuaY5fif75WxraCkyv7JwXmi6XymqSU9ZOjzXQ1SEd6YrScGYICkF_gL9pq_dvyGKiNbiVPRBc6B9LNxdDFwrn8oqWL3L_RtK6XJM9EDPXnkEsLftdkMNUQhaE5nr0ulyZ9rdwaoOt',
+                //                 'cjB2TkVqMExNYW15YllEbENPVkdLUT09Ib1P567557ierPQNrQvJ3gIiGFE5E-R45_r5U-POj8psyfwnao9T-8iKxbFDpj7KNS06wDc380xxQsK-cuip5ANhkKuFyw9WHtX0GzLdf0cbbqRcG8JuFgQqz7bruyPOb5o2U2TBBjgykRQB4Etkn3HHe8aBadteXmlkjYQUagQO-x5wkaXoU-xpX3zFdbyPSp4yM4zeRNaIwnzxT6RerlTcXwfE9Sgn3qLpYPxYLuHTY4WVLraCKBdUe3zceSJPM5dsJHd4XSdqHQVX_NVwPOsB7GTqalU7YzKlz8A_l89v6bL-t8M1uOZmwhHFfP7KutlBHEx0VE2pjWoxswreuqqKn3JdB-jHOQ',
                 //             PaReq:
-                //                 'eNpVUttygjAQ/RXrB7AhoBZmzUyqztQHrVp87jBhp2ILaICi/fomCLXN0549ez0bjA6aaP5KqtYkcEVlGb/TIE2mwzAIvDHj3J+MPBYE48VQ4Ebu6Czwi3SZFrlwHeZwhB6adK0OcV4JjNX5abkWPne55yN0EDPSy7mIqKw2WSbVuU41aalUUecVwo3FPM5I7OWbnD2ENrSvitAy2EbrqxjxR4QeYK0/xaGqTiFA0zROnFwpd1SRAYKlEO7DbWprlabUJU3ES/TxvT7K6+q49dbRqjGY77bSvimCjcAkrkhwxpnLWDBweeiPQo8htH6MMzuDWOx3hmIO88y+NxeebCd5A4az1F8XGtU15eoqgondpUdIl1ORk4kw6v7aCPfBZ89WY1UZvfzAnYzNYP2zareErZIaaby2bwcQbCp0h4Tu4Mb69xF+AOaLrzY=',
-                //             TermUrl: 'http://localhost:3020/cards/'
+                //                 'eNpVUttygjAQ/RXbDyAXQIVZM5NKZ+qD1rH43GHCjlILaIAqfn0TBG3ztGfPXs8G4r1GjD5QNRoFLLGqkh2OsnT2HAaBO6bcCwKfUnfqR88C1nKDJwE/qKusLARzqMOBDNCka7VPilpAok4vi5XwOOOuB6SHkKNeRCLGql7nuVSnJtOopVJlU9RAbiwUSY5iKz/l/Cm0oUNVIB0DXbRuhc+nQAYAjf4W+7o+hoScz2cnSVssHFXmBIilgDyGWzfWqkypS5aK9/hwXX3JdhUd/FUsz8vrjm1k92ZAbASkSY2CU04ZZXzEaOj5IaVAOj8kuZ1BvG43I8apQ12z780FR9tJ3oDhLPXXBUZ1jYVqRTCxuwwI8HIsCzQRRt27DeQx+PzNaqxqo5cXsMmY0fuzaneErZIZadyubw+A2FTSH5L0BzfWv4/wC9DcryI=',
+                //             TermUrl: 'http://localhost:8080/checkoutshopper/demo/dropin.shtml'
                 //         },
                 //         method: 'POST',
                 //         type: 'redirect',
