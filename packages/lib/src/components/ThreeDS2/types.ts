@@ -25,7 +25,7 @@ export interface ResultObject {
     threeDSCompInd?: ResultValue;
 }
 
-export interface ChallengeObject {
+export interface ThreeDS2FlowObject {
     result: ResultObject;
     type: 'ChallengeShopper' | 'IdentifyShopper' | 'challengeResult' | 'fingerPrintResult';
     errorCode?: string;

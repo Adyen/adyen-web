@@ -1,9 +1,9 @@
-import { ChallengeObject, FingerPrintData } from '../../types';
+import { ThreeDS2FlowObject, FingerPrintData } from '../../types';
 import { ThreeDS2DeviceFingerprintProps } from '../../ThreeDS2DeviceFingerprint';
 
 export interface DoFingerprint3DS2Props extends FingerPrintData {
-    onCompleteFingerprint: (resolveObject: ChallengeObject) => void;
-    onErrorFingerprint: (rejectObject: ChallengeObject) => void;
+    onCompleteFingerprint: (resolveObject: ThreeDS2FlowObject) => void;
+    onErrorFingerprint: (rejectObject: ThreeDS2FlowObject) => void;
     showSpinner: boolean;
 }
 

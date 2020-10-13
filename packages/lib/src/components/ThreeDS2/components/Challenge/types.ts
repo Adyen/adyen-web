@@ -1,10 +1,10 @@
-import { ChallengeData, ChallengeObject } from '../../types';
+import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import { ResolveData } from '../utils';
 import { ThreeDS2ChallengeProps } from '../../ThreeDS2Challenge';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
-    onCompleteChallenge: (resolveObject: ChallengeObject) => void;
-    onErrorChallenge: (rejectObject: ChallengeObject) => void;
+    onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
+    onErrorChallenge: (rejectObject: ThreeDS2FlowObject) => void;
 }
 
 export interface DoChallenge3DS2State {
