@@ -78,10 +78,6 @@ class DropinElement extends UIElement<DropinElementProps> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        console.log('\n### Dropin::handleAction:: this=', this);
-        console.log('### Dropin::handleAction:: action.type=', action.type, 'subtype=', action.subtype);
-        console.log('### Dropin::handleAction:: this.props=', this.props);
-
         if (this.activePaymentMethod.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
         }

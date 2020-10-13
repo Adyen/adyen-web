@@ -110,10 +110,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        console.log('\n### UIElement::handleAction:: this=', this);
-        console.log('### UIElement::handleAction:: action.type=', action.type, 'subtype=', action.subtype);
-        console.log('### UIElement::handleAction:: this.props=', this.props);
-
         const threeDS2Options =
             action.type === 'threeDS2'
                 ? {
