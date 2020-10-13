@@ -110,6 +110,10 @@
 }
 
 .adyen-checkout__fieldset--revolving-plan {
+    .adyen-checkout__fieldset__fields {
+        justify-content: left;
+    }
+
     .adyen-checkout__radio_group {
         display: flex;
         flex-direction: column;
@@ -123,6 +127,6 @@
 .adyen-checkout__field--revolving-plan-installments{
     position: relative;
     top: 42px;
-    right: 37%;
     width: 30%;
+    margin-left: 15px;
 }
