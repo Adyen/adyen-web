@@ -13,7 +13,16 @@ const getSupportedLocale = (locale?: string): SupportedLocale => {
 /**
  * Returns an object of settings for the PayPal SDK
  */
-const getPaypalSettings = ({ amount, countryCode, debug, environment = '', locale, configuration }: PayPalElementProps): PaypalSettings => {
+const getPaypalSettings = ({
+    amount,
+    countryCode,
+    debug,
+    environment = '',
+    locale,
+    configuration,
+    commit,
+    vault
+}: PayPalElementProps): PaypalSettings => {
     const shopperLocale: SupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
@@ -28,6 +37,8 @@ const getPaypalSettings = ({ amount, countryCode, debug, environment = '', local
         ...(debug && isTestEnvironment && { debug }),
         ...(currency && { currency }),
         ...(intent && { intent }),
+        commit,
+        vault,
         'client-id': clientId,
         'integration-date': INTEGRATION_DATE,
         components: 'buttons,funding-eligibility'
