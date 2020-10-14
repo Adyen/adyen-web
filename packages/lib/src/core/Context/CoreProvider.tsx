@@ -12,12 +12,26 @@ interface CoreProviderProps {
  * Wraps a component delaying the render until after the i18n module is fully loaded
  */
 class CoreProvider extends Component<CoreProviderProps> {
+    public state = {
+        loaded: false
+    };
+
+    componentDidMount() {
+        this.props.i18n.loaded.then(() => {
+            this.setState({ loaded: true });
+        });
+    }
+
     render({ children }: CoreProviderProps) {
-        return (
-            <CoreContext.Provider value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext }}>
-                {toChildArray(children)}
-            </CoreContext.Provider>
-        );
+        if (this.state.loaded) {
+            return (
+                <CoreContext.Provider value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext }}>
+                    {toChildArray(children)}
+                </CoreContext.Provider>
+            );
+        }
+
+        return null;
     }
 }
 

@@ -1,5 +1,6 @@
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
+import wait from '../utils/wait';
 
 /**
  * Convert to ISO 639-1
@@ -116,7 +117,7 @@ export const getTranslation = (translations: object, key: string, options: { [ke
  * @param locale - The locale the user wants to use
  * @param customTranslations -
  */
-export const loadTranslations = (locale: string, customTranslations: object = {}) => {
+export const loadTranslations = async (locale: string, customTranslations: object = {}) => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
     const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
 
