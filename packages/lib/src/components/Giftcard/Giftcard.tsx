@@ -20,7 +20,6 @@ export class GiftcardElement extends UIElement {
             paymentMethod: {
                 type: this.props.brand,
                 brand: this.props.brand,
-                holderName: 'BALANCE EUR 10000', // TODO Remove
                 ...this.state.data
             }
         };

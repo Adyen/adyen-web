@@ -6,14 +6,16 @@ import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
 import '../../style.scss';
 
-const initCheckout = paymentMethodsResponse => {
+const initCheckout = async () => {
+    const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
+
     window.checkout = new AdyenCheckout({
-        amount, // Optional. Used to display the amount in the Pay Button.
+        amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        environment: 'http://localhost:8080/checkoutshopper/', //'test', // TODO
+        environment: 'test',
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
@@ -27,7 +29,6 @@ const initCheckout = paymentMethodsResponse => {
             if (result.action) {
                 // demo only - store paymentData & order
                 if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-
                 component.handleAction(result.action);
             } else if (result.order && result.order?.remainingAmount?.value > 0) {
                 // handle orders
@@ -36,7 +37,7 @@ const initCheckout = paymentMethodsResponse => {
                     pspReference: result.order.pspReference
                 };
 
-                const orderPaymentMethods = await getPaymentMethods({ order });
+                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
                 checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
             } else {
                 handleFinalState(result.resultCode, component);
@@ -51,7 +52,6 @@ const initCheckout = paymentMethodsResponse => {
                 handleFinalState(result.resultCode, component);
             }
         },
-
         onBalanceCheck: async (resolve, reject, data) => {
             resolve(await checkBalance(data));
         },
@@ -60,8 +60,7 @@ const initCheckout = paymentMethodsResponse => {
         },
         onOrderCancel: async order => {
             await cancelOrder(order);
-
-            checkout.update({ paymentMethodsResponse: await getPaymentMethods(), order: null, amount });
+            checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
         },
         onError: error => {
             console.log('dropin onError', error);
@@ -102,9 +101,7 @@ const initCheckout = paymentMethodsResponse => {
             }
         }
     });
-};
 
-const initDropin = () => {
     window.dropin = checkout.create('dropin').mount('#dropin-container');
 };
 
@@ -144,7 +141,4 @@ function handleRedirectResult() {
     return Promise.resolve(true);
 }
 
-getPaymentMethods({ amount, shopperLocale })
-    .then(initCheckout)
-    .then(initDropin)
-    .then(handleRedirectResult);
+initCheckout().then(handleRedirectResult);

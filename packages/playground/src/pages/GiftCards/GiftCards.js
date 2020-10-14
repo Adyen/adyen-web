@@ -10,7 +10,7 @@ import '../../style.scss';
 window.checkout = new AdyenCheckout({
     locale: shopperLocale,
     countryCode,
-    environment: 'http://localhost:8080/checkoutshopper/', //'test', // TODO
+    environment: 'test',
     clientKey: process.env.__CLIENT_KEY__,
     onChange: handleChange,
     onSubmit: handleSubmit,
