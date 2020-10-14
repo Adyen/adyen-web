@@ -41,8 +41,14 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const fieldsetsAreValid = checkFieldsets();
         const consentCheckboxValid = !hasConsentCheckbox || !!valid.consentCheckbox;
         const isValid = fieldsetsAreValid && consentCheckboxValid;
+        const newData = Object.keys(data)
+            .filter(fieldset => activeFieldsets[fieldset])
+            .reduce((acc, cur) => {
+                acc[cur] = data[cur];
+                return acc;
+            }, {});
 
-        props.onChange({ data, isValid });
+        props.onChange({ data: newData, isValid });
     }, [data, valid, errors]);
 
     const handleFieldset = key => state => {
