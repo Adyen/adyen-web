@@ -10,6 +10,7 @@ export interface RadioGroupProps {
     isInvalid?: boolean;
     items: RadioGroupItem[];
     i18n: Language;
+    name?: string;
     onChange: (e) => void;
     value?: string;
 }
