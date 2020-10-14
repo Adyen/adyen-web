@@ -78,6 +78,11 @@ interface PayPalCommonProps {
     commit?: boolean;
 
     /**
+     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#vault}
+     */
+    vault?: boolean;
+
+    /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#locale}
      */
     locale?: string;
@@ -109,10 +114,6 @@ export interface PayPalConfig {
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
     intent?: Intent;
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
-     */
-    commit?: boolean;
 }
 
 export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
@@ -123,6 +124,7 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onError?: (state: any, element?: UIElement) => void;
     paymentMethods?: PaymentMethod[];
     configuration?: PayPalConfig;
+    showPayButton?: boolean;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {
@@ -146,6 +148,7 @@ export interface PaypalSettings {
     debug?: boolean;
     intent?: Intent;
     commit?: boolean;
+    vault?: boolean;
     'client-id': string;
     'integration-date': string;
     components: string;
