@@ -39,6 +39,7 @@ const actionTypes = {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
 
         const config = {
+            // Props common to both flows
             token: action.token,
             paymentData: action.paymentData,
             onComplete: props.onAdditionalDetails,
@@ -46,6 +47,7 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
+            // Props unique to a particular flow
             ...get3DS2FlowProps(action.subtype, props)
         };
 

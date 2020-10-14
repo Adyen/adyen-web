@@ -87,8 +87,9 @@ class DropinElement extends UIElement<DropinElementProps> {
         // Extract desired props that we need to pass on from the pmConfiguration for this particular PM
         const pmConfig = getComponentConfiguration(pmType, this.props.paymentMethodsConfiguration);
 
+        // action.type === 'threeDS2Fingerprint' creates backwards compatibility with old API versions
         const threeDS2Options =
-            action.type === 'threeDS2'
+            action.type === 'threeDS2' || action.type === 'threeDS2Fingerprint'
                 ? {
                       elementRef: this.elementRef,
                       ...(this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize }),

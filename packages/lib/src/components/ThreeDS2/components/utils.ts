@@ -68,16 +68,15 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
 
 /**
  *  prepareChallengeData
- *  @param value - requires an object containing the challenge parameters
- *  - token - challengeToken string received from payments call containing acsTransID, acsURL, messageVerison, expected postMessage URL and threeDSServerTransID
- *  - size - one of five possible challenge window sizes
- *  - notificationURL - the URL notifications are expected to be postMessaged from
+ *
+ *  Requires an object containing the challenge parameters:
+ *  @token - challengeToken string received from /submitThreeDS2Fingerprint, /details or /payments call: contains acsTransID, acsURL, messageVersion, threeDSNotificationURL and threeDSServerTransID
+ *  @size - one of five possible challenge window sizes
  */
-export const prepareChallengeData = ({ token, size, notificationURL }): ChallengeData => {
+export const prepareChallengeData = ({ token, size }): ChallengeData => {
     const decodedChallengeToken = decodeAndParseToken(token);
     const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken;
-    const receivedNotificationURL = notificationURL || threeDSNotificationURL;
-    const notificationURLOrigin = getOrigin(receivedNotificationURL);
+    const notificationURLOrigin = getOrigin(threeDSNotificationURL);
 
     return {
         acsURL,
@@ -95,10 +94,15 @@ export const prepareChallengeData = ({ token, size, notificationURL }): Challeng
 
 /**
  *  prepareFingerPrintData
- *   requires an object containing the challenge parameters
- *  @param token - fingerprintToken string received from payments call, containing
- *  methodNotificationURL, methodURL and threeDSServerTransID
- *  @param notificationURL - the URL notifications are expected to be postMessaged from
+ *
+ *  Requires an object containing the fingerprint parameters:
+ *  @param token - fingerprintToken string received from /payments call: contains threeDSMethodNotificationURL, threeDSMethodUrl and threeDSServerTransID
+ *  @param notificationURL - the URL that the final notification is expected to be postMessaged from.
+ *
+ *  NOTE: we don't expect merchants to alter the default by passing in a notificationURL of their own via props;
+ *  and if 3DS2 is being done via createFromAction or handleAction we won't accept it.
+ *  But if the merchant is using checkout.create('threeDS2DeviceFingerprint') we still support the fact that they might want to set their own
+ *  notificationURL (aka threeDSMethodNotificationURL)
  */
 export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintData => {
     const decodedFingerPrintToken = decodeAndParseToken(token);
@@ -154,8 +158,10 @@ export const encodeBase64URL = (dataStr: string): string => {
     return base64url;
 };
 
-const fingerprintFlowProps = ['elementRef', 'notificationURL'];
-const challengeFlowProps = ['challengeWindowSize', 'notificationURL'];
+const fingerprintFlowPropsDropin = ['elementRef'];
+const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails', 'challengeWindowSize'];
+
+const challengeFlowProps = ['challengeWindowSize'];
 
 /**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
@@ -169,14 +175,15 @@ export const get3DS2FlowProps = (actionSubtype, props) => {
     let rtnObj;
 
     if (isFingerprint) {
-        rtnObj = pick(fingerprintFlowProps).from(props);
+        // elementRef exists when the fingerprint component is created from the Dropin
+        const fingerprintProps = props.elementRef ? fingerprintFlowPropsDropin : fingerprintFlowProps;
+        rtnObj = pick(fingerprintProps).from(props);
         rtnObj.showSpinner = !props.isDropin;
         rtnObj.statusType = 'loading';
     }
 
     if (!isFingerprint) {
         rtnObj = pick(challengeFlowProps).from(props);
-
         rtnObj.statusType = 'custom';
     }
 

@@ -63,7 +63,9 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
              * Challenge flow
              */
             if (data.action?.type === 'threeDS2') {
-                return this.props.elementRef.handleAction(data.action);
+                // There will not be an elementRef if checkout.createFromAction was used (as opposed to component.handleAction)
+                const actionHandler = this.props.elementRef ?? this;
+                return actionHandler.handleAction(data.action);
             }
 
             /**

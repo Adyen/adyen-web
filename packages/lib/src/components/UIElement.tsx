@@ -111,12 +111,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         if (!action || !action.type) throw new Error('Invalid Action');
 
         const threeDS2Options =
-            action.type === 'threeDS2'
-                ? {
-                      elementRef: this.elementRef,
-                      ...(this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize })
-                  }
-                : null;
+            action.type === 'threeDS2' ? { ...(this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize }) } : null;
 
         const paymentAction: UIElement = this.props.createFromAction(action, {
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
