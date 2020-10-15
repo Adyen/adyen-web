@@ -1,6 +1,5 @@
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
-import wait from '../utils/wait';
 
 /**
  * Convert to ISO 639-1
