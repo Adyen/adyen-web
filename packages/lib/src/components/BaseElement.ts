@@ -120,6 +120,9 @@ class BaseElement<P extends BaseElementProps> {
         return this.unmount().remount();
     }
 
+    /**
+     * Unmounts an element and mounts it again on the same node
+     */
     public remount(component?): this {
         if (!this._node) {
             throw new Error('Component is not mounted.');
@@ -143,9 +146,13 @@ class BaseElement<P extends BaseElementProps> {
         return this;
     }
 
+    /**
+     * Unmounts an element and removes it from the parent instance
+     */
     public remove() {
+        this.unmount();
+
         if (this._parentInstance) {
-            this.unmount();
             this._parentInstance.remove(this);
         }
     }
