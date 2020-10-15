@@ -17,9 +17,13 @@ class CoreProvider extends Component<CoreProviderProps> {
     };
 
     componentDidMount() {
-        this.props.i18n.loaded.then(() => {
+        if (this.props.i18n) {
+            this.props.i18n.loaded.then(() => {
+                this.setState({ loaded: true });
+            });
+        } else {
             this.setState({ loaded: true });
-        });
+        }
     }
 
     render({ children }: CoreProviderProps) {

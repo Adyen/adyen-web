@@ -21,7 +21,7 @@ export class Language {
     private readonly supportedLocales: string[];
     public translations: object = defaultTranslation;
     public readonly customTranslations;
-    private loaded: any;
+    public loaded: Promise<any>;
 
     /**
      * Returns a translated string from a key in the current {@link Language.locale}
