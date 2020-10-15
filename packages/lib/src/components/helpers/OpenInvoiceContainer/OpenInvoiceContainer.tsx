@@ -78,8 +78,8 @@ export default class OpenInvoiceContainer extends UIElement {
             ...(telephoneNumber && { telephoneNumber }),
             ...(shopperEmail && { shopperEmail }),
             ...(billingAddress?.country && { countryCode: billingAddress.country }),
-            billingAddress,
-            deliveryAddress: deliveryAddress || billingAddress
+            ...(billingAddress && { billingAddress }),
+            ...((deliveryAddress || billingAddress) && { deliveryAddress: deliveryAddress || billingAddress })
         };
     }
 

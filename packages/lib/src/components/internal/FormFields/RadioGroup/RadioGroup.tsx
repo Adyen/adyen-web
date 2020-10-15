@@ -4,7 +4,7 @@ import './RadioGroup.scss';
 import { RadioGroupProps } from './types';
 
 export default function RadioGroup(props: RadioGroupProps) {
-    const { items, i18n, onChange, value, isInvalid } = props;
+    const { items, i18n, name, onChange, value, isInvalid } = props;
 
     return (
         <div className="adyen-checkout__radio_group">
@@ -14,6 +14,7 @@ export default function RadioGroup(props: RadioGroupProps) {
                         type="radio"
                         checked={value === item.id}
                         className="adyen-checkout__radio_group__input"
+                        name={name}
                         onChange={onChange}
                         onClick={onChange}
                         value={item.id}
