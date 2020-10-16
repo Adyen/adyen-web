@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
 import { ErrorObject } from './components/utils';
-import fetchJSONData from '../../utils/fetch-json-data';
+import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
@@ -26,60 +26,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
         type: 'IdentifyShopper'
     };
 
-    /**
-     * Fingerprint, onComplete, calls a new endpoint which behaves like the /details endpoint but doesn't require the same credentials
-     */
-    onComplete(state): void {
-        fetchJSONData(
-            {
-                path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,
-                loadingContext: this.props.loadingContext,
-                method: 'POST',
-                contentType: 'application/json'
-            },
-            {
-                fingerprintResult: state.data.details[this.props.dataKey],
-                clientKey: this.props.clientKey,
-                paymentData: state.data.paymentData
-            }
-        ).then(data => {
-            /**
-             * Frictionless (no challenge) flow
-             */
-            if (data.action?.type === 'authenticationFinished') {
-                const detailsObj = {
-                    data: {
-                        // Sending no details property should work - BUT currently doesn't in the new flow
-                        details: { 'threeds2.challengeResult': btoa('{"transStatus":"Y"}') },
-                        paymentData: data.action.paymentData,
-                        threeDSAuthenticationOnly: false
-                    }
-                };
-
-                return super.onComplete(detailsObj);
-            }
-
-            /**
-             * Challenge flow
-             */
-            if (data.action?.type === 'threeDS2') {
-                // There will not be an elementRef if checkout.createFromAction was used (as opposed to component.handleAction)
-                const actionHandler = this.props.elementRef ?? this;
-                return actionHandler.handleAction(data.action);
-            }
-
-            /**
-             * Redirect (usecase: we thought we could do 3DS2 but it turns out we can't)
-             */
-            if (data.action?.type === 'redirect') {
-                data.action.paymentMethodType = 'scheme';
-                return this.props.elementRef.handleAction(data.action);
-            }
-        });
-    }
+    private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this);
 
     render() {
-        return <DeviceFingerprint {...this.props} onComplete={this.onComplete} />;
+        console.log('\n### ThreeDS2DeviceFingerprint::render:: this.props=', this.props);
+        return <DeviceFingerprint {...this.props} onComplete={this.callSubmit3DS2Fingerprint} />;
     }
 }
 
