@@ -200,38 +200,38 @@ describe('formatCustomTranslations()', () => {
 
 describe('loadTranslations()', () => {
     test('should accept customTranslations without a countryCode for default defaultSupportedLocales', () => {
-        const translations = loadTranslations('es-ES', {
+        loadTranslations('es-ES', {
             'es-ES': {
                 'creditCard.numberField.title': 'es string'
             },
             'es-AR': {
                 'creditCard.numberField.title': 'es-AR'
             }
+        }).then(translations => {
+            expect(translations['creditCard.numberField.title']).toBe('es string');
         });
-
-        expect(translations['creditCard.numberField.title']).toBe('es string');
     });
 
     test('should return the passed locale if formatted properly', () => {
-        const translations = loadTranslations('ca-CA', {
+        loadTranslations('ca-CA', {
             'es-ES': {
                 'creditCard.numberField.title': 'es'
             },
             'ca-CA': {
                 'creditCard.numberField.title': 'ca'
             }
+        }).then(translations => {
+            expect(translations['creditCard.numberField.title']).toBe('ca');
         });
-
-        expect(translations['creditCard.numberField.title']).toBe('ca');
     });
 
     test('should return the passed locale if formatted properly', () => {
-        const translations = loadTranslations('ca-CA', {
+        loadTranslations('ca-CA', {
             'ca-CA': {
                 'creditCard.numberField.title': 'ca-CA'
             }
+        }).then(translations => {
+            expect(translations['creditCard.numberField.title']).toBe('ca-CA');
         });
-
-        expect(translations['creditCard.numberField.title']).toBe('ca-CA');
     });
 });

@@ -76,7 +76,9 @@ describe('Language', () => {
                 }
             });
 
-            expect(lang.get('test')).toBe('');
+            lang.loaded.then(i18n => {
+                expect(i18n.get('test')).toBe('');
+            });
         });
     });
 });

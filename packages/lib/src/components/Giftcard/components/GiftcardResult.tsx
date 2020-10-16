@@ -1,38 +1,34 @@
 import { h } from 'preact';
 import './GiftcardResult.scss';
-import getImage from '../../../utils/get-image';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
-function GiftcardResult({ i18n, loadingContext, paymentMethodType, ...props }) {
+function GiftcardResult({ brand, amount, balance, ...props }) {
+    const { i18n } = useCoreContext();
+    const remainingBalance = balance.value - amount.value;
+
     return (
         <div className="adyen-checkout__giftcard-result">
-            <div className="adyen-checkout__giftcard-result__header">
-                <div className="adyen-checkout__giftcard-result__header__title">
-                    <span className="adyen-checkout__payment-method__image__wrapper adyen-checkout__payment-method__image__wrapper--loaded">
-                        <img
-                            alt={paymentMethodType}
-                            className="adyen-checkout__payment-method__image"
-                            src={getImage({ loadingContext })(paymentMethodType)}
-                        />
-                    </span>
-                    <span className="adyen-checkout__giftcard-result__name" aria-hidden="true">
-                        •••• {props.lastFour}
-                    </span>
-                </div>
-            </div>
             <ul className="adyen-checkout__giftcard-result__balance">
                 <li className="adyen-checkout__giftcard-result__balance__item">
-                    <span className="adyen-checkout__giftcard-result__balance__title">Deducted amount:</span>
+                    <span className="adyen-checkout__giftcard-result__balance__title">{i18n.get('giftcardBalance')}</span>
                     <span className="adyen-checkout__giftcard-result__balance__value adyen-checkout__giftcard-result__balance__value--amount">
-                        {i18n.amount(props.deductedAmount.value, props.deductedAmount.currencyCode)}
-                    </span>
-                </li>
-                <li className="adyen-checkout__giftcard-result__balance__item adyen-checkout__giftcard-result__balance__item--remaining-balance">
-                    <span className="adyen-checkout__giftcard-result__balance__title">Remaining balance:</span>
-                    <span className="adyen-checkout__giftcard-result__balance__value">
-                        {i18n.amount(props.remainingBalance.value, props.remainingBalance.currencyCode)}
+                        {i18n.amount(balance.value, balance.currency)}
                     </span>
                 </li>
             </ul>
+
+            {this.props.showPayButton &&
+                this.props.payButton({
+                    amount: this.props.amount,
+                    status: props.status,
+                    onClick: props.onSubmit
+                })}
+
+            <p className="adyen-checkout__giftcard-result__remaining-balance">
+                {i18n.get('partialPayment.remainingBalance', {
+                    values: { amount: i18n.amount(remainingBalance, balance.currency) }
+                })}
+            </p>
         </div>
     );
 }

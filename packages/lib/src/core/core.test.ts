@@ -38,4 +38,15 @@ describe('Core', () => {
             expect(paymentAction.constructor['type']).toBe('redirect');
         });
     });
+
+    describe('update', () => {
+        test('Should update all components under main instance', () => {
+            const checkout = new Core({});
+            const component = checkout.create('dropin').mount('body');
+            const spy = jest.spyOn(component, 'update');
+            checkout.update();
+
+            expect(spy).toHaveBeenCalled();
+        });
+    });
 });

@@ -153,6 +153,28 @@ export interface PersonalDetailsSchema {
     telephoneNumber?: string;
 }
 
+export interface Order {
+    /**
+     * The encrypted order data.
+     */
+    orderData: string;
+
+    /**
+     * The pspReference that belongs to the order.
+     */
+    pspReference: string;
+}
+export interface OrderStatus {
+    expiresAt: string;
+    paymentMethods: {
+        lastFour: string;
+        type: string;
+    }[];
+    pspReference: string;
+    reference: string;
+    remainingAmount: PaymentAmount;
+}
+
 /**
  * Available components
  */
