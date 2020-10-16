@@ -6,7 +6,7 @@ import getImage from '../../utils/get-image';
 import PayButton from '../internal/PayButton';
 
 export class GiftcardElement extends UIElement {
-    public static type = 'genericgiftcard';
+    public static type = 'giftcard';
 
     formatProps(props) {
         return props;
@@ -18,7 +18,7 @@ export class GiftcardElement extends UIElement {
     formatData() {
         return {
             paymentMethod: {
-                type: this.props.brand,
+                type: this.constructor['type'],
                 brand: this.props.brand,
                 ...this.state.data
             }
