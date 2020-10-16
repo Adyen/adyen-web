@@ -2,10 +2,9 @@ import { makePayment, makeDetailsCall } from './services';
 
 export function handleResponse(response, component) {
     const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;
-    console.log('type=', type, 'response=', response);
+    console.log('\ntype=', type, 'response=', response);
 
     if (response.action) {
-        storedPaymentData = response.paymentData; // for when response.resultCode: 'AuthenticationNotRequired'
         component.handleAction(response.action);
     } else if (response.resultCode) {
         alert(response.resultCode);
