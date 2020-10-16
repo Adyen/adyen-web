@@ -32,6 +32,9 @@ export interface UIElementProps extends BaseElementProps {
     createFromAction?: (action: PaymentAction, props: object) => UIElement;
 
     /** @internal */
+    clientKey?: string;
+
+    /** @internal */
     elementRef?: any;
 
     /** @internal */

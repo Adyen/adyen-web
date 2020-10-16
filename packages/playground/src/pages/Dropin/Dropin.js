@@ -1,150 +1,108 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
-import { makeDetailsCall, makePayment, getOriginKey, getPaymentMethods } from '../../services';
+import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder, cancelOrder } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
 import '../../style.scss';
 
-const initCheckout = paymentMethodsResponse => {
+const initCheckout = async () => {
+    const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
+
     window.checkout = new AdyenCheckout({
-        amount, // Optional. Used to display the amount in the Pay Button.
+        amount,
         countryCode,
-        originKey,
-        // clientKey: process.env.__CLIENT_KEY__,
+        clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: 'test',
         installmentOptions: {
-            // card: {
-            //     values: [1, 2]
-            // },
             mc: {
                 values: [1, 2, 3, 4]
-            },
-            visa: {
-                values: [1, 2, 3]
             }
-        }
-        // risk: { enabled: false }
-        // allowPaymentMethods: ['ideal', 'visa'],
-        // removePaymentMethods: ['paypal', 'klarna'],
-    });
-};
+        },
+        onSubmit: async (state, component) => {
+            component.setStatus('loading');
+            const result = await makePayment(state.data);
 
-const initDropin = () => {
-    const dropin = checkout
-        .create('dropin', {
-            paymentMethodsConfiguration: {
-                card: {
-                    // name: 'Debit Card'
-                    enableStoreDetails: false,
-                    hasHolderName: true,
-                    holderNameRequired: true
-                    // holderName: 'J. Smith',
-                    //                    koreanAuthenticationRequired: false,
-                    //                    configuration: {
-                    //                        koreanAuthenticationRequired: false
-                    //                    },
-                    //                    countryCode: 'kr'
-                },
-                boletobancario_santander: {
-                    data: {
-                        socialSecurityNumber: '56861752509',
-                        billingAddress: {
-                            street: 'Roque Petroni Jr',
-                            postalCode: '59000060',
-                            city: 'São Paulo',
-                            houseNumberOrName: '999',
-                            country: 'BR',
-                            stateOrProvince: 'SP'
-                        }
-                    }
-                },
-                paywithgoogle: {
-                    countryCode: 'NL',
-                    //                    configuration: {
-                    //                        gatewayMerchantId: 'TestMerchantCheckout', // name of MerchantAccount
-                    //                        merchantName: 'Adyen Test merchant' // Name to be displayed
-                    //                    },
-                    onAuthorized: console.info
-                },
-                paypal: {
-                    // USE either separate merchantId & intent props...
-                    //                    merchantId: '5RZKQX2FC48EA',
-                    //                    intent: 'capture',
-                    //                    // ...OR, preferably, wrap them in a configuration object
-                    //                    configuration: {
-                    //                        merchantId: '5RZKQX2FC48EAxxx',
-                    //                        intent: 'sale'
-                    //                    },
-                    // style: {},
-                    // Events
-                    onError: (error, component) => {
-                        component.setStatus('ready');
-                        console.log('paypal onError', error);
-                    },
+            // handle actions
+            if (result.action) {
+                // demo only - store paymentData & order
+                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
+                component.handleAction(result.action);
+            } else if (result.order && result.order?.remainingAmount?.value > 0) {
+                // handle orders
+                const order = {
+                    orderData: result.order.orderData,
+                    pspReference: result.order.pspReference
+                };
 
-                    onCancel: (data, component) => {
-                        component.setStatus('ready');
-                        console.log('paypal onCancel', data);
+                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
+            } else {
+                handleFinalState(result.resultCode, component);
+            }
+        },
+        onAdditionalDetails: async (state, component) => {
+            const result = await makeDetailsCall(state.data);
+
+            if (result.action) {
+                component.handleAction(result.action);
+            } else {
+                handleFinalState(result.resultCode, component);
+            }
+        },
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        },
+        onOrderCancel: async order => {
+            await cancelOrder(order);
+            checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
+        },
+        onError: error => {
+            console.log('dropin onError', error);
+        },
+        paymentMethodsConfiguration: {
+            card: {
+                enableStoreDetails: false,
+                hasHolderName: true,
+                holderNameRequired: true
+            },
+            boletobancario_santander: {
+                data: {
+                    socialSecurityNumber: '56861752509',
+                    billingAddress: {
+                        street: 'Roque Petroni Jr',
+                        postalCode: '59000060',
+                        city: 'São Paulo',
+                        houseNumberOrName: '999',
+                        country: 'BR',
+                        stateOrProvince: 'SP'
                     }
                 }
             },
-
-            // Events
-            onSubmit: (state, component) => {
-                component.setStatus('loading');
-
-                makePayment(state.data)
-                    .then(result => {
-                        if (result.action) {
-                            // demo only - store paymentData
-                            if (result.action.paymentData) {
-                                localStorage.setItem('storedPaymentData', result.action.paymentData);
-                            }
-
-                            component.handleAction(result.action);
-                        } else {
-                            handleFinalState(result.resultCode, component);
-                        }
-                    })
-                    .catch(error => {
-                        throw Error(error);
-                    });
+            paywithgoogle: {
+                countryCode: 'NL',
+                onAuthorized: console.info
             },
-            onAdditionalDetails: (state, component) => {
-                makeDetailsCall(state.data).then(result => {
-                    if (result.action) {
-                        component.handleAction(result.action);
-                    } else {
-                        handleFinalState(result.resultCode, component);
-                    }
-                });
-            },
+            paypal: {
+                onError: (error, component) => {
+                    component.setStatus('ready');
+                    console.log('paypal onError', error);
+                },
 
-            onError: error => {
-                console.log('dropin onError', error);
-            },
+                onCancel: (data, component) => {
+                    component.setStatus('ready');
+                    console.log('paypal onCancel', data);
+                }
+            }
+        }
+    });
 
-            showRemovePaymentMethodButton: true,
-            onDisableStoredPaymentMethod: (storedPaymentMethodId, resolve, reject) => {
-                // call disable endpoint and resolve()
-            },
-
-            // Options
-            openFirstPaymentMethod: true, // defaults to true
-            openFirstStoredPaymentMethod: true, // defaults to true
-            showStoredPaymentMethods: true, // defaults to true,
-            showPaymentMethods: true, // defaults to true
-            showPayButton: true // defaults to true
-        })
-        .mount('#dropin-container');
-
-    window.dropin = dropin;
-    window.checkout = checkout;
-
-    return checkout;
+    window.dropin = checkout.create('dropin').mount('#dropin-container');
 };
 
 function handleFinalState(resultCode, dropin) {
@@ -162,6 +120,7 @@ function handleRedirectResult() {
     const { redirectResult, payload } = getSearchParameters(window.location.search);
 
     if (storedPaymentData && (redirectResult || payload)) {
+        dropin.setStatus('loading');
         return makeDetailsCall({
             paymentData: storedPaymentData,
             details: {
@@ -182,11 +141,4 @@ function handleRedirectResult() {
     return Promise.resolve(true);
 }
 
-getOriginKey()
-    .then(originKey => {
-        window.originKey = originKey;
-    })
-    .then(() => getPaymentMethods({ amount, shopperLocale }))
-    .then(initCheckout)
-    .then(initDropin)
-    .then(handleRedirectResult);
+initCheckout().then(handleRedirectResult);

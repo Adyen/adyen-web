@@ -1,14 +1,5 @@
 @import '../../../style';
 
-.adyen-checkout__giftcard-result {
-    position: relative;
-    background: $color-white;
-    border: 1px solid $color-gray-light;
-    width: 100%;
-    padding: $spacing-medium;
-    margin-bottom: $spacing-small;
-    border-radius: $border-radius-large;
-}
 
 .adyen-checkout__giftcard-result__header {
     align-items: center;
@@ -54,4 +45,11 @@
     &--amount {
         font-weight: bold;
     }
+}
+.adyen-checkout__giftcard-result__remaining-balance {
+    font-size: 13px;
+    line-height: 19px;
+    text-align: center;
+    color: #687282;
+    margin: 8px auto 0;
 }

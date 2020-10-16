@@ -2,9 +2,12 @@ const path = require('path');
 const express = require('express');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 const getPaymentMethods = require('./api/paymentMethods');
+const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
 const getOriginKeys = require('./api/originKeys');
 const makePayment = require('./api/payments');
 const postDetails = require('./api/details');
+const createOrder = require('./api/orders');
+const cancelOrder = require('./api/ordersCancel');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -20,9 +23,15 @@ module.exports = (app = express(), options = {}) => {
 
     app.all('/paymentMethods', (req, res) => getPaymentMethods(res, req.body));
 
+    app.all('/paymentMethods/balance', (req, res) => getPaymentMethodsBalance(res, req.body));
+
     app.all('/payments', (req, res) => makePayment(res, req.body));
 
     app.all('/details', (req, res) => postDetails(res, req.body));
+
+    app.all('/orders', (req, res) => createOrder(res, req.body));
+
+    app.all('/orders/cancel', (req, res) => cancelOrder(res, req.body));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;
