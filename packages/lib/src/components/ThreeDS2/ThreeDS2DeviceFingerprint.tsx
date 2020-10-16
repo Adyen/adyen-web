@@ -29,7 +29,6 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this);
 
     render() {
-        console.log('\n### ThreeDS2DeviceFingerprint::render:: this.props=', this.props);
         return <DeviceFingerprint {...this.props} onComplete={this.callSubmit3DS2Fingerprint} />;
     }
 }
