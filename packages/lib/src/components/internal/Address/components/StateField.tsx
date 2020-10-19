@@ -4,6 +4,7 @@ import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import fetchJSONData from '../../../../utils/fetch-json-data';
+import { getFieldLabelKey } from '../utils';
 import { COUNTRIES_WITH_STATES_DATASET } from '../constants';
 
 export default function StateField(props) {
@@ -11,6 +12,7 @@ export default function StateField(props) {
     const { i18n, loadingContext } = useCoreContext();
     const [states, setStates] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const labelKey = getFieldLabelKey('stateOrProvince', country);
 
     useLayoutEffect(() => {
         if (!country || !COUNTRIES_WITH_STATES_DATASET.includes(country)) {
@@ -37,13 +39,13 @@ export default function StateField(props) {
     if (!loaded || !states.length) return null;
 
     return (
-        <Field label={i18n.get('stateOrProvince')} classNameModifiers={['stateOrProvince']} errorMessage={props.errorMessage}>
+        <Field label={i18n.get(labelKey)} classNameModifiers={['stateOrProvince', 'col-70']} errorMessage={props.errorMessage}>
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
                 selected: value,
                 placeholder: i18n.get('select.stateOrProvince'),
-                items: states,
+                items: states.map(({ name, id }) => ({ id, name, selectedOptionName: id })),
                 readonly: readOnly && !!value
             })}
         </Field>

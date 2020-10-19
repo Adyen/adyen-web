@@ -151,5 +151,12 @@
     "error.va.sf-cc-dat.01": "Card too old",
     "error.va.sf-cc-dat.02": "Date too far in the future",
     "partialPayment.warning": "Select another payment method to pay the remaining",
-    "partialPayment.remainingBalance": "Remaining balance will be %{amount}"
+    "partialPayment.remainingBalance": "Remaining balance will be %{amount}",
+    "zipCode": "Zip code",
+    "town": "Town",
+    "apartmentOrSuite": "Apartment / Suite",
+    "provinceOrTerritory": "Province or Territory",
+    "county": "County",
+    "address": "Address",
+    "state": "State"
 }

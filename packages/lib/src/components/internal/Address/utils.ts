@@ -1,5 +1,7 @@
-import { ADDRESS_SCHEMA } from './constants';
+import { ADDRESS_SCHEMA, LABELS } from './constants';
 import { AddressSchema } from '../../../types';
+
+export const getFieldLabelKey = (fieldName, country) => LABELS[fieldName][country] || LABELS[fieldName].default;
 
 /**
  * Generates an object to be used as the initial data.

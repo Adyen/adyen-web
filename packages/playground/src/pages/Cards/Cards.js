@@ -107,7 +107,7 @@ getOriginKey()
 
                 // billingAddress config:
                 billingAddressRequired: true,
-                billingAddressAllowedCountries: ['US', 'CA', 'BR', 'IT'],
+                billingAddressAllowedCountries: ['US', 'CA', 'GB', 'BR', 'IT'],
                 // billingAddressRequiredFields: ['postalCode', 'country'],
 
                 // data:
