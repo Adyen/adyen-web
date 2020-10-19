@@ -5,8 +5,10 @@ import { getCommonProps } from './utils';
 import Status from './status';
 import getProp from '../../../utils/getProp';
 import UIElement from '../../UIElement';
-import './DropinComponent.scss';
 import { DropinComponentProps } from '../types';
+import './DropinComponent.scss';
+import getOrderStatus from '../../../core/Services/order-status';
+import { OrderStatus } from '../../../types';
 
 interface DropinStatus {
     type: 'loading' | 'ready' | 'success' | 'error';
@@ -18,11 +20,13 @@ interface DropinComponentState {
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
     isDisabling: boolean;
+    orderStatus: OrderStatus;
 }
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
         elements: [],
+        orderStatus: null,
         isDisabling: false,
         status: { type: 'loading' },
         activePaymentMethod: null,
@@ -30,16 +34,21 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     };
 
     componentDidMount() {
-        const { paymentMethodsConfiguration, paymentMethods, storedPaymentMethods } = this.props;
+        this.prepareDropinData();
+    }
+
+    public prepareDropinData = () => {
+        const { paymentMethodsConfiguration, paymentMethods, storedPaymentMethods, order, clientKey, loadingContext } = this.props;
         const commonProps = getCommonProps(this.props);
 
         const storedElementsPromises = this.props.showStoredPaymentMethods
             ? createStoredElements(storedPaymentMethods, commonProps, paymentMethodsConfiguration)
             : [];
         const elementsPromises = this.props.showPaymentMethods ? createElements(paymentMethods, commonProps, paymentMethodsConfiguration) : [];
+        const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        Promise.all([storedElementsPromises, elementsPromises]).then(([storedElements, elements]) => {
-            this.setState({ elements: [...storedElements, ...elements] });
+        Promise.all([storedElementsPromises, elementsPromises, orderStatusPromise]).then(([storedElements, elements, orderStatus]) => {
+            this.setState({ elements: [...storedElements, ...elements], orderStatus });
             this.setStatus({ type: 'ready' });
 
             if (this.props.modules.analytics) {
@@ -51,7 +60,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 });
             }
         });
-    }
+    };
 
     private setStatus = status => {
         this.setState({ status });
@@ -128,6 +137,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 paymentMethods={elements}
                                 activePaymentMethod={activePaymentMethod}
                                 cachedPaymentMethods={cachedPaymentMethods}
+                                order={this.props.order}
+                                orderStatus={this.state.orderStatus}
+                                onOrderCancel={this.props.onOrderCancel}
                                 onSelect={this.handleOnSelectPaymentMethod}
                                 openFirstPaymentMethod={this.props.openFirstPaymentMethod}
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}

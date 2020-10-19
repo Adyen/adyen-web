@@ -104,7 +104,9 @@
     "preauthorizeWith": "Preauthorize with",
     "confirmPreauthorization": "Confirm preauthorization",
     "confirmPurchase": "Confirm purchase",
-    "applyGiftcard": "Apply Giftcard",
+    "applyGiftcard": "Redeem",
+    "giftcardBalance": "Gift card balance",
+    "deductedBalance": "Deducted balance",
     "creditCard.pin.title": "Pin",
     "creditCard.encryptedPassword.label": "First 2 digits of card password",
     "creditCard.encryptedPassword.placeholder": "12",
@@ -149,5 +151,8 @@
     "error.va.sf-cc-num.02": "Typed card number doesn't match card brand",
     "error.va.sf-cc-num.03": "Unsupported card entered",
     "error.va.sf-cc-dat.01": "Card too old",
-    "error.va.sf-cc-dat.02": "Date too far in the future"
+    "error.va.sf-cc-dat.02": "Date too far in the future",
+    "partialPayment.warning": "Select another payment method to pay the remaining",
+    "partialPayment.remainingBalance": "Remaining balance will be %{amount}"
 }
+
