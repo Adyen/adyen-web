@@ -7,7 +7,6 @@ import AmazonPayButton from './AmazonPayButton';
 import ChangePaymentDetailsButton from './ChangePaymentDetailsButton';
 import OrderButton from './OrderButton';
 import SignOutButton from './SignOutButton';
-import { PaymentAmount } from '../../../types';
 
 export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
@@ -47,7 +46,6 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
                         amazonCheckoutSessionId={props.amazonCheckoutSessionId}
                         amount={props.amount}
                         clientKey={props.clientKey}
-                        originKey={props.originKey}
                         onError={props.onError}
                         returnUrl={props.returnUrl}
                     />

@@ -8,8 +8,7 @@ export default function OrderButton(props: OrderButtonProps) {
     const { i18n, loadingContext } = useCoreContext();
 
     const createOrder = () => {
-        const { amount, clientKey, originKey, amazonCheckoutSessionId: checkoutSessionId, returnUrl: checkoutResultReturnUrl } = props;
-        const accessKey = clientKey || originKey;
+        const { amazonCheckoutSessionId: checkoutSessionId, amount, clientKey, returnUrl: checkoutResultReturnUrl } = props;
 
         const data = {
             amount,
@@ -17,9 +16,9 @@ export default function OrderButton(props: OrderButtonProps) {
             checkoutResultReturnUrl
         };
 
-        updateAmazonCheckoutSession(loadingContext, accessKey, data)
+        updateAmazonCheckoutSession(loadingContext, clientKey, data)
             .then(response => {
-                if (!response?.action?.type) return console.error('Could not get the AmazonPay URL');
+                if (!response?.action?.type) return console.error(response.errorMessage || 'Could not get the AmazonPay URL');
                 if (response.action.type === 'redirect') window.location.assign(response.action.url);
             })
             .catch(error => {

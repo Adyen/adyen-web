@@ -44,11 +44,10 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     };
 
     useEffect(() => {
-        const { clientKey, originKey, storeId, returnUrl, deliverySpecifications } = props;
-        const accessKey = clientKey || originKey;
+        const { clientKey, deliverySpecifications, returnUrl, storeId } = props;
         const payloadJSON = getPayloadJSON(storeId, returnUrl, deliverySpecifications);
 
-        getAmazonSignature(loadingContext, accessKey, payloadJSON)
+        getAmazonSignature(loadingContext, clientKey, payloadJSON)
             .then(response => {
                 if (!response?.signature) return console.error('Could not get AmazonPay signature');
                 renderAmazonPayButton(payloadJSON, response.signature);

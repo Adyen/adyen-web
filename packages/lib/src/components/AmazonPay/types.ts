@@ -29,7 +29,6 @@ export interface AmazonPayElementProps {
     loadingContext?: string;
     locale?: string;
     merchantId?: string;
-    originKey?: string;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
@@ -61,7 +60,6 @@ export interface AmazonPayButtonProps {
     environment?: string;
     locale?: string;
     merchantId?: string;
-    originKey?: string;
     onClick: (resolve, reject) => Promise<void>;
     onError: (error) => void;
     placement?: Placement;
@@ -87,7 +85,6 @@ export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
     amount: PaymentAmount;
     clientKey: string;
-    originKey: string;
     onError: (error) => void;
     returnUrl: string;
 }
