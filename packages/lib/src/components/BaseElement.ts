@@ -3,8 +3,12 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
+import { Order } from '../types';
+import uuid from '../utils/uuid';
 
 export interface BaseElementProps {
+    _parentInstance?: any;
+    order?: Order;
     modules?: {
         analytics: Analytics;
         risk: RiskElement;
@@ -13,15 +17,18 @@ export interface BaseElementProps {
 }
 
 class BaseElement<P extends BaseElementProps> {
+    public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public props: P;
     public state;
     protected static defaultProps = {};
     public _node;
     public _component;
     public eventEmitter = new EventEmitter();
+    private _parentInstance;
 
     protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
+        this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};
     }
@@ -53,10 +60,12 @@ class BaseElement<P extends BaseElementProps> {
     get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
         const conversionId = getProp(this.props, 'modules.analytics.conversionId');
+        const order = this.state.order || this.props.order;
 
         return {
             ...(clientData && { riskData: { clientData } }),
             ...(conversionId && { conversionId }),
+            ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
             ...this.formatData(),
             clientStateDataIndicator: true
         };
@@ -99,7 +108,22 @@ class BaseElement<P extends BaseElementProps> {
         return this;
     }
 
-    public remount(component): this {
+    /**
+     * Updates props, resets the internal state and remounts the element.
+     * @param props - props to update
+     * @returns this - the element instance
+     */
+    public update(props: P): this {
+        this.props = this.formatProps({ ...this.props, ...props });
+        this.state = {};
+
+        return this.unmount().remount();
+    }
+
+    /**
+     * Unmounts an element and mounts it again on the same node
+     */
+    public remount(component?): this {
         if (!this._node) {
             throw new Error('Component is not mounted.');
         }
@@ -114,9 +138,22 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Unmounts a payment element from the DOM
      */
-    public unmount(): void {
+    public unmount(): this {
         if (this._node) {
             render(null, this._node);
+        }
+
+        return this;
+    }
+
+    /**
+     * Unmounts an element and removes it from the parent instance
+     */
+    public remove() {
+        this.unmount();
+
+        if (this._parentInstance) {
+            this._parentInstance.remove(this);
         }
     }
 }

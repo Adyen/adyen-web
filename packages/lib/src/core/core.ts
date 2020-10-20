@@ -12,8 +12,9 @@ import { PaymentMethods, PaymentMethodOptions } from '../types';
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
-    public readonly modules: any;
-    public readonly options: any;
+    public modules: any;
+    public options: any;
+    public components = [];
 
     public static readonly version = {
         version: process.env.VERSION,
@@ -23,21 +24,10 @@ class Core {
     };
 
     constructor(options: CoreOptions = {}) {
-        this.options = {
-            ...options,
-            loadingContext: resolveEnvironment(options.environment)
-        };
-
-        this.modules = {
-            risk: new RiskModule(this.options),
-            analytics: new Analytics(this.options),
-            i18n: new Language(options.locale, options.translations)
-        };
-
-        this.paymentMethodsResponse = new PaymentMethodsResponse(options.paymentMethodsResponse, options);
-
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
+
+        this.setOptions(options);
     }
 
     /**
@@ -68,6 +58,54 @@ class Core {
     }
 
     /**
+     * Updates global configurations, resets the internal state and remounts each element.
+     * @param options - props to update
+     * @returns this - the element instance
+     */
+    public update = (options: CoreOptions = {}): this => {
+        this.setOptions(options);
+
+        // Update each component under this instance
+        this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
+
+        return this;
+    };
+
+    /**
+     * Remove the reference of a component
+     * @param component - reference to the component to be removed
+     * @returns this - the element instance
+     */
+    public remove = (component): this => {
+        this.components = this.components.filter(c => c._id !== component._id);
+        component.unmount();
+
+        return this;
+    };
+
+    /**
+     * @internal
+     * (Re)Initializes core options (i18n, paymentMethodsResponse, etc...)
+     * @param options
+     * @returns this
+     */
+    private setOptions = (options): this => {
+        this.options = { ...this.options, ...options };
+        this.options.loadingContext = resolveEnvironment(this.options.environment);
+
+        this.modules = {
+            risk: new RiskModule(this.options),
+            analytics: new Analytics(this.options),
+            i18n: new Language(this.options.locale, this.options.translations)
+        };
+
+        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
+
+        return this;
+    };
+
+    /**
+     * @internal
      * @param options - options that will be merged to the global Checkout props
      * @returns props for a new UIElement
      */
@@ -79,7 +117,8 @@ class Core {
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
-            createFromAction: this.createFromAction
+            createFromAction: this.createFromAction,
+            _parentInstance: this
         };
     }
 
@@ -103,7 +142,9 @@ class Core {
             // 1. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
             // 2. the combined props of checkout & the configuration object defined on this particular component
             // 3. a paymentMethodsConfiguration object, if defined at top level
-            return new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
+            const component = new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
+            this.components.push(component);
+            return component;
         }
 
         /**

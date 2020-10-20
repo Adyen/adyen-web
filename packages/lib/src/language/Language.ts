@@ -12,13 +12,16 @@ export class Language {
         this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
 
-        this.translations = loadTranslations(this.locale, this.customTranslations);
+        this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
+            this.translations = translations;
+        });
     }
 
     public readonly locale: string;
     private readonly supportedLocales: string[];
     public translations: object = defaultTranslation;
     public readonly customTranslations;
+    public loaded: Promise<any>;
 
     /**
      * Returns a translated string from a key in the current {@link Language.locale}
