@@ -15,7 +15,7 @@ const propsMock = {
     notificationURL: '',
     paymentData: '',
     type: '',
-    fingerprintToken: btoa(threeDS2FingerPrintToken)
+    token: btoa(threeDS2FingerPrintToken)
 };
 
 describe('ThreeDS2DeviceFingerprint', () => {
