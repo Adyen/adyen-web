@@ -11,7 +11,7 @@ describe('Analytics', () => {
     });
 
     test('Creates an Analytics module with defaultProps', () => {
-        const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', originKey: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
         expect(analytics.props.enabled).toBe(true);
         expect(analytics.props.telemetry).toBe(true);
         expect(analytics.props.conversion).toBe(false);
@@ -20,12 +20,12 @@ describe('Analytics', () => {
 
     test('Calls the collectId endpoint if conversion is enabled', () => {
         mockedCollectId.mockResolvedValueOnce({ name: 'test' });
-        new Analytics({ analytics: { conversion: true }, loadingContext: '', locale: '', originKey: '', clientKey: '' });
+        new Analytics({ analytics: { conversion: true }, loadingContext: '', locale: '', clientKey: '' });
         expect(collectId).toHaveBeenCalled();
     });
 
     test('Will not call the collectId endpoint if conversion is disabled', () => {
-        new Analytics({ analytics: { conversion: false }, loadingContext: '', locale: '', originKey: '', clientKey: '' });
+        new Analytics({ analytics: { conversion: false }, loadingContext: '', locale: '', clientKey: '' });
         expect(collectId).not.toHaveBeenCalled();
     });
 });

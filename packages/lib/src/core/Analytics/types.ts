@@ -23,7 +23,6 @@ export interface AnalyticsOptions {
 export interface AnalyticsProps {
     loadingContext: string;
     locale?: string;
-    originKey?: string;
     clientKey?: string;
     analytics?: AnalyticsOptions;
 }

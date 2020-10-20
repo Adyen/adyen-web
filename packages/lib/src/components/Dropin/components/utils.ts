@@ -16,7 +16,6 @@ export function getCommonProps(props) {
         onBalanceCheck: props.onBalanceCheck,
         onOrderRequest: props.onOrderRequest,
         onSubmit: props.onSubmit,
-        originKey: props.originKey,
         clientKey: props.clientKey,
         showPayButton: props.showPayButton
     };

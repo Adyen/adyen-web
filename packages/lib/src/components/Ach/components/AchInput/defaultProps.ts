@@ -20,8 +20,6 @@ export default {
     onFocus: () => {},
     onChange: () => {},
 
-    originKey: null,
-
     // Values
     holderName: '',
     data: {
