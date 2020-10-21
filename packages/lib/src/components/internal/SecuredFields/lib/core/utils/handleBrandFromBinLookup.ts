@@ -30,12 +30,10 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
     // If no card object force it to true, else base it on the value in the card object
     const cvcRequired: boolean = !existy(card) ? true : !(card.cvcRequired === false);
 
-    const brandToSend: string = card ? passedBrand : 'card';
-
     // Create brand object to send to processBrand (& so handle brand change in the same way as if it had come from securedFields)
     const brandObj: object = {
         cvcRequired,
-        brand: brandToSend,
+        brand: passedBrand,
         hideCVC: !existy(card) ? false : card.hideCVC === true, // If no card object: force to false
         cvcText: existy(card) && card.securityCode ? card.securityCode : 'Security code',
         fieldType: ENCRYPTED_CARD_NUMBER
@@ -44,7 +42,7 @@ export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
     this.processBrand(brandObj as SFFeedbackObj);
 
     // Pass brand to CardNumber SF
-    this.sendBrandToCardSF(brandToSend);
+    this.sendBrandToCardSF(passedBrand);
 
     // CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)
     // Set the cvcRequired value on the relevant SecuredFields instance...
