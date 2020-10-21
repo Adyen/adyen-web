@@ -7,6 +7,7 @@ import '../../utils';
 import './Vouchers.scss';
 
 window.checkout = new AdyenCheckout({
+    clientKey: process.env.__CLIENT_KEY__,
     locale: shopperLocale,
     environment: 'test',
     showPayButton: true

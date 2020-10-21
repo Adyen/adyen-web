@@ -134,7 +134,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         const csfSetupObj: SetupObject = {
             rootNode: root,
             type: this.props.type,
-            originKey: this.props.originKey,
             clientKey: this.props.clientKey,
             cardGroupTypes: this.props.groupTypes,
             allowedDOMAccess: this.props.allowedDOMAccess,
