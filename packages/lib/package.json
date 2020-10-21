@@ -36,7 +36,7 @@
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.14",
+        "@types/jest": "^26.0.15",
         "@typescript-eslint/eslint-plugin": "^4.4.0",
         "@typescript-eslint/parser": "^4.5.0",
         "autoprefixer": "^10.0.1",
