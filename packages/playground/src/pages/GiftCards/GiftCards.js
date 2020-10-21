@@ -8,10 +8,10 @@ import '../../utils';
 import '../../style.scss';
 
 window.checkout = new AdyenCheckout({
+    clientKey: process.env.__CLIENT_KEY__,
     locale: shopperLocale,
     countryCode,
     environment: 'test',
-    clientKey: process.env.__CLIENT_KEY__,
     onChange: handleChange,
     onSubmit: handleSubmit,
     showPayButton: true,
