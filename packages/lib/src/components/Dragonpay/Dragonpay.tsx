@@ -25,10 +25,6 @@ export class DragonpayElement extends UIElement {
         };
     }
 
-    formatProps(props) {
-        return props;
-    }
-
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
