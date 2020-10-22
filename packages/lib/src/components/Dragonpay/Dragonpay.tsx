@@ -26,10 +26,7 @@ export class DragonpayElement extends UIElement {
     }
 
     formatProps(props) {
-        return {
-            ...props,
-            items: props.details && props.details.length ? (props.details.find(d => d.key === 'issuer') || {}).items : props.items
-        };
+        return props;
     }
 
     render() {
@@ -48,6 +45,7 @@ export class DragonpayElement extends UIElement {
                         ref={ref => {
                             this.componentRef = ref;
                         }}
+                        items={this.props.issuers}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

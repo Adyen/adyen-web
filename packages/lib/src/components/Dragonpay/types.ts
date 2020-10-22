@@ -9,8 +9,7 @@ export interface DragonpayInputIssuerItem {
 
 export interface DragonpayElementProps {
     type?: string;
-    details?: DragonpayInputIssuerItem[];
-    items?: DragonpayInputIssuerItem[];
+    issuers?: DragonpayInputIssuerItem[];
     loadingContext?: string;
     reference?: string;
     i18n?: Language;
