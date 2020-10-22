@@ -20,8 +20,8 @@ const createElements = (components: PaymentMethod[] = [], props, componentsConfi
 
         let componentInstance = getComponent(component.type, componentProps);
 
-        // Fallback to redirect if payment method not available and no details are required
-        if (!componentInstance && !component.details) {
+        // Fallback to redirect if payment method not available
+        if (!componentInstance) {
             componentInstance = getComponent(FALLBACK_COMPONENT, componentProps);
         }
 

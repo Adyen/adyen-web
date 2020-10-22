@@ -156,13 +156,10 @@ class Core {
         }
 
         /**
-         * If we are trying to create a payment method that is in the paymentMethodsResponse & it doesn't require any details - treat it as a redirect
+         * If we are trying to create a payment method that is in the paymentMethodsResponse & does not explicitily
+         * implement a component, it will default to a redirect component
          */
-        if (
-            typeof PaymentMethod === 'string' &&
-            this.paymentMethodsResponse.has(PaymentMethod) &&
-            !this.paymentMethodsResponse.find(PaymentMethod).details
-        ) {
+        if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
             const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, options.paymentMethodsConfiguration);
             return this.handleCreate(paymentMethods.redirect, {
                 ...this.paymentMethodsResponse.find(PaymentMethod),
