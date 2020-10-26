@@ -39,7 +39,8 @@ export interface ApplePayElementProps extends UIElementProps {
     totalPriceLabel?: string;
 
     configuration: {
-        merchantName: string;
+        merchantDisplayName?: string;
+        merchantName?: string;
         merchantIdentifier: string;
     };
 
