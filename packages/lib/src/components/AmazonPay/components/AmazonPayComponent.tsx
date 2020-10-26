@@ -35,7 +35,11 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     }
 
     if (props.showSignOutButton) {
-        return <SignOutButton amazonRef={window.amazon} onSignOut={props.onSignOut} />;
+        return (
+            <div className="adyen-checkout__amazonpay">
+                <SignOutButton amazonRef={window.amazon} onSignOut={props.onSignOut} />
+            </div>
+        );
     }
 
     if (props.amazonCheckoutSessionId) {

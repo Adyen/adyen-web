@@ -6,7 +6,8 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();
-    const { amazonRef, buttonColor, currency, environment, locale, merchantId, placement, productType, publicKeyId, region, size } = props;
+    const { amazonRef, buttonColor, configuration = {}, currency, environment, locale, placement, productType, region } = props;
+    const { merchantId, publicKeyId } = configuration;
     const sandbox = environment === 'TEST';
     const checkoutLanguage = getCheckoutLocale(locale, region);
 
@@ -21,7 +22,6 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const renderAmazonPayButton = (payloadJSON: PayloadJSON, signature: string): void => {
         const settings: AmazonPayButtonSettings = {
             ...(buttonColor && { buttonColor }),
-            ...(size && { size }),
             merchantId,
             sandbox,
             productType,
@@ -44,8 +44,8 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     };
 
     useEffect(() => {
-        const { clientKey, deliverySpecifications, returnUrl, storeId } = props;
-        const payloadJSON = getPayloadJSON(storeId, returnUrl, deliverySpecifications);
+        const { clientKey, deliverySpecifications, returnUrl } = props;
+        const payloadJSON = getPayloadJSON(configuration.storeId, returnUrl, deliverySpecifications);
 
         getAmazonSignature(loadingContext, clientKey, payloadJSON)
             .then(response => {

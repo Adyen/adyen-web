@@ -1,4 +1,5 @@
 export default {
+    configuration: {},
     environment: 'TEST',
     locale: 'en_GB',
     placement: 'Cart',

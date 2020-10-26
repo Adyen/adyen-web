@@ -9,12 +9,17 @@ declare global {
 }
 
 type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
-type Size = 'small' | 'medium' | 'large' | 'x-large';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
 type Currency = 'USD' | 'EUR' | 'GBP';
 export type Region = 'US' | 'EU' | 'UK';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
+
+export interface AmazonPayConfiguration {
+    merchantId?: string;
+    publicKeyId?: string;
+    storeId?: string;
+}
 
 export interface AmazonPayElementProps {
     amazonPayToken?: string;
@@ -22,17 +27,16 @@ export interface AmazonPayElementProps {
     amount: PaymentAmount;
     buttonColor?: ButtonColor;
     clientKey?: string;
+    configuration?: AmazonPayConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
     i18n: Language;
     loadingContext?: string;
     locale?: string;
-    merchantId?: string;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
-    publicKeyId?: string;
     region?: Region;
     returnUrl?: string;
     showOrderButton: boolean;
@@ -40,8 +44,6 @@ export interface AmazonPayElementProps {
     showSignOutButton: boolean;
     showPayButton: boolean;
     signature?: string;
-    size?: Size;
-    storeId?: string;
     onClick: (resolve, reject) => Promise<void>;
     onSignOut: (resolve, reject) => Promise<void>;
     onError: (error) => void;
@@ -55,20 +57,17 @@ export interface AmazonPayButtonProps {
     amazonRef: any;
     buttonColor?: ButtonColor;
     clientKey?: string;
+    configuration?: AmazonPayConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
     locale?: string;
-    merchantId?: string;
     onClick: (resolve, reject) => Promise<void>;
     onError: (error) => void;
     placement?: Placement;
     productType?: ProductType;
-    publicKeyId?: string;
     region?: Region;
     returnUrl?: string;
-    size?: Size;
-    storeId?: string;
 }
 
 export interface SignOutButtonProps {
@@ -128,8 +127,6 @@ export interface AmazonPayButtonSettings {
      * Ledger currency provided during registration for the given merchant identifier
      */
     ledgerCurrency: Currency;
-
-    size?: Size;
 }
 
 export interface PayloadJSON {
