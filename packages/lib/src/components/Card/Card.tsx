@@ -9,6 +9,18 @@ import triggerBinLookUp from './triggerBinLookUp';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
+    public sendValueToFrame;
+
+    constructor(props) {
+        super(props);
+
+        if (process.env.NODE_ENV === 'development') {
+            this.sendValueToFrame = (field, value) => {
+                if (this.componentRef?.sendValueToFrame) this.componentRef.sendValueToFrame(field, value);
+                return this;
+            };
+        }
+    }
 
     formatProps(props: CardElementProps) {
         return {

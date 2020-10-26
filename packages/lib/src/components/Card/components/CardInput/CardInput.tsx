@@ -35,6 +35,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private setFocusOn;
     private updateStyles;
     private handleUnsupportedCard;
+    private sendValueToFrame;
     private sfp = createRef();
     private billingAddressRef = createRef();
     private kcpAuthenticationRef = createRef();
@@ -86,6 +87,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.setFocusOn = this.sfp.current.setFocusOn;
         this.updateStyles = this.sfp.current.updateStyles;
         this.handleUnsupportedCard = this.sfp.current.handleUnsupportedCard;
+
+        if (process.env.NODE_ENV === 'development') {
+            this.sendValueToFrame = this.sfp.current.sendValueToFrame;
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
