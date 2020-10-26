@@ -12,7 +12,11 @@ export class SecuredFieldsElement extends UIElement {
         return {
             ...props,
             type: props.type === 'scheme' ? 'card' : props.type,
-            ...(props.brands && !props.groupTypes && { groupTypes: props.brands })
+            ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
+            configuration: {
+                ...props.configuration,
+                ...(props.koreanAuthenticationRequired !== undefined && { koreanAuthenticationRequired: props.koreanAuthenticationRequired })
+            }
         };
     }
 
