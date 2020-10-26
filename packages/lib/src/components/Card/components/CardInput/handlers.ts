@@ -16,12 +16,6 @@ function validateCardInput(who): void {
 
     const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
 
-    console.log('\n### handlers::validateCardInput:: who', who);
-    console.log('### handlers::validateCardInput:: isKorea', isKorea);
-    console.log('### handlers::validateCardInput:: koreanAuthentication', koreanAuthentication);
-    console.log('### handlers::validateCardInput:: sfpValid', sfpValid);
-    console.log('### handlers::validateCardInput:: this.state', this.state);
-
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
     });
@@ -44,15 +38,11 @@ function handleAddress(address): void {
  * Saves the KCP Authentication details in state
  */
 function handleKCPAuthentication(data: object, valid: object): void {
-    console.log('\n### handlers::handleKCPAuthentication:: data=', data);
-    console.log('### handlers::handleKCPAuthentication:: valid=', valid);
     const setKCP = (prevState: SFPState): SFPState => ({
         data: { ...prevState.data, ...data },
         valid: { ...prevState.valid, ...valid }
     });
-    this.setState(setKCP, () => {
-        this.validateCardInput('handleKCPAuthentication');
-    });
+    this.setState(setKCP, this.validateCardInput);
 }
 
 /**
@@ -104,9 +94,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         isSfpValid: sfState.isSfpValid
     });
 
-    this.setState(setSfpData, () => {
-        this.validateCardInput('handleSecuredFieldsChange');
-    });
+    this.setState(setSfpData, this.validateCardInput);
 }
 
 /**
