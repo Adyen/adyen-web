@@ -19,7 +19,7 @@ abstract class AbstractCSF {
     protected handleBinValue: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleEncryption: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleFocus: (pFeedbackObj: SFFeedbackObj) => void;
-    protected handleIframeConfigFeedback: () => boolean;
+    protected handleIframeConfigFeedback: (pFeedbackObj) => boolean;
     protected handleValidation: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleSFShiftTab: (fieldType: string) => void;
     protected handleShiftTab: (fieldType: string) => void;

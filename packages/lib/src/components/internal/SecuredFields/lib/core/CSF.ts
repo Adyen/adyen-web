@@ -44,6 +44,7 @@ class CSF extends AbstractCSF {
             brand: this.props.type !== 'card' ? this.props.type : null,
             allValid: undefined,
             numIframes: 0,
+            originalNumIframes: 0,
             iframeCount: 0,
             iframeConfigCount: 0,
             isConfigured: false,
@@ -108,7 +109,7 @@ class CSF extends AbstractCSF {
          */
         const numIframes: number = this.createSecuredFields();
 
-        this.state.numIframes = numIframes;
+        this.state.numIframes = this.state.originalNumIframes = numIframes;
 
         this.state.isKCP = !!this.props.isKCP;
     }
@@ -202,11 +203,20 @@ class CSF extends AbstractCSF {
             },
             addSecuredField: (pFieldType: string): void => {
                 let securedField: HTMLElement = selectOne(this.props.rootNode, `[data-cse="${pFieldType}"]`);
-                this.setupSecuredField(securedField);
+                if (securedField) {
+                    this.state.numIframes += 1;
+                    this.setupSecuredField(securedField);
+                }
             },
             removeSecuredField: (pFieldType: string): void => {
-                this.state.securedFields[pFieldType].destroy();
-                delete this.state.securedFields[pFieldType];
+                if (this.state.securedFields[pFieldType]) {
+                    this.state.securedFields[pFieldType].destroy();
+                    delete this.state.securedFields[pFieldType];
+                    this.state.numIframes -= 1;
+
+                    // const callbackObj: CbObjOnAdditionalSFRemoved = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
+                    // this.callbacks.onAdditionalRemoved(callbackObj);
+                }
             },
             setKCPStatus: (isKCP: boolean): void => {
                 this.state.isKCP = isKCP;

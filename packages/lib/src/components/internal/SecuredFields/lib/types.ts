@@ -67,6 +67,7 @@ export interface CSFStateObject {
     brand: string;
     allValid: boolean;
     numIframes: number;
+    originalNumIframes: number;
     iframeCount: number;
     iframeConfigCount: number;
     isConfigured: boolean;
