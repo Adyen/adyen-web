@@ -3,12 +3,24 @@ import { CbObjOnFocus, CbObjOnBrand } from '../../../internal/SecuredFields/lib/
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 
 // Validate whole cardInput component i.e holderName + securedFields
-function validateCardInput(): void {
+function validateCardInput(who): void {
     const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
     const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
-    const koreanAuthentication: boolean = this.props.configuration.koreanAuthenticationRequired ? this.state.valid.taxNumber : true;
+
+    const isKorea = this.state.issuingCountryCode ? this.state.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
+    const koreanAuthentication =
+        this.props.configuration.koreanAuthenticationRequired && isKorea
+            ? !!this.state.valid.taxNumber && !!this.state.valid.encryptedPassword
+            : true;
+
     const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
+
+    console.log('\n### handlers::validateCardInput:: who', who);
+    console.log('### handlers::validateCardInput:: isKorea', isKorea);
+    console.log('### handlers::validateCardInput:: koreanAuthentication', koreanAuthentication);
+    console.log('### handlers::validateCardInput:: sfpValid', sfpValid);
+    console.log('### handlers::validateCardInput:: this.state', this.state);
 
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
@@ -32,11 +44,15 @@ function handleAddress(address): void {
  * Saves the KCP Authentication details in state
  */
 function handleKCPAuthentication(data: object, valid: object): void {
+    console.log('\n### handlers::handleKCPAuthentication:: data=', data);
+    console.log('### handlers::handleKCPAuthentication:: valid=', valid);
     const setKCP = (prevState: SFPState): SFPState => ({
         data: { ...prevState.data, ...data },
         valid: { ...prevState.valid, ...valid }
     });
-    this.setState(setKCP, this.validateCardInput);
+    this.setState(setKCP, () => {
+        this.validateCardInput('handleKCPAuthentication');
+    });
 }
 
 /**
@@ -88,7 +104,9 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         isSfpValid: sfState.isSfpValid
     });
 
-    this.setState(setSfpData, this.validateCardInput);
+    this.setState(setSfpData, () => {
+        this.validateCardInput('handleSecuredFieldsChange');
+    });
 }
 
 /**
