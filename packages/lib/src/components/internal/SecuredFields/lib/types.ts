@@ -17,6 +17,10 @@ export interface CSFReturnObject {
     destroy: any;
     brandsFromBinLookup: any;
     hasUnsupportedCard: any;
+    addSecuredField: any;
+    removeSecuredField: any;
+    setKCPStatus: any;
+    sendValueToFrame?: any;
 }
 
 interface CSFCommonProps {
@@ -70,6 +74,7 @@ export interface CSFStateObject {
     currentFocusObject: string;
     registerFieldForIos: boolean;
     securedFields: object;
+    isKCP: boolean;
 }
 
 export interface StylesObject {
