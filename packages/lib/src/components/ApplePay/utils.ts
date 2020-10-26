@@ -1,6 +1,3 @@
-import { ApplePayElementProps } from './types';
-import { PaymentAmount } from '../../types';
-
 export function resolveSupportedVersion(latestVersion) {
     const versions = [];
     for (let i = latestVersion; i > 0; i--) {

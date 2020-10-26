@@ -21,12 +21,6 @@ export interface ApplePayElementProps extends UIElementProps {
     amount: PaymentAmount;
 
     /**
-     * @deprecated since v3.10.0. Use {@link ApplePayElementProps.amount}.
-     * @description The three-letter ISO 4217 currency code for the payment.
-     */
-    currencyCode?: string;
-
-    /**
      * The merchant’s two-letter ISO 3166 country code.
      */
     countryCode: string;
