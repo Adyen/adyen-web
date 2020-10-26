@@ -47,6 +47,10 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
         loadingContext: FALLBACK_CONTEXT
     };
 
+    formatProps(props) {
+        return props;
+    }
+
     /**
      * Formats the component data output
      */
