@@ -29,11 +29,17 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected formatProps(props) {
         const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
+        const { configuration = {} } = props;
+
         return {
             onAuthorized: resolve => resolve(),
             ...props,
+            configuration: {
+                merchantIdentifier: configuration.merchantIdentifier || defaultProps.configuration.merchantIdentifier,
+                merchantName: configuration.merchantDisplayName || configuration.merchantName || defaultProps.configuration.merchantName
+            },
             version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
+            totalPriceLabel: props.totalPriceLabel || configuration.merchantName,
             amount,
             onCancel: event => props.onError(event)
         };
