@@ -7,7 +7,7 @@ import defaultProps from './defaultProps';
 import fetchJsonData from '../../utils/fetch-json-data';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { normalizeAmount, resolveSupportedVersion } from './utils';
+import { resolveSupportedVersion } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 
 const latestSupportedVersion = 10;
@@ -27,14 +27,12 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      * Formats the component props
      */
     protected formatProps(props) {
-        const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
+
         return {
-            onAuthorized: resolve => resolve(),
             ...props,
             version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
-            amount,
             onCancel: event => props.onError(event)
         };
     }
