@@ -123,6 +123,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.numDateFields = fields.filter(f => f.match(/Expiry/)).length;
 
         if (fields.length) {
+            this.destroy(); // TODO test if this solves the React double render problem.
             this.initializeCSF(this.rootNode);
         } else {
             this.handleOnNoDataRequired();
@@ -144,8 +145,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
             loadingContext = process.env.__SF_ENV__;
         }
-
-        console.log('### SecuredFieldsProvider::initializeCSF:: isKCP=', this.state.hasKoreanFields);
 
         const csfSetupObj: SetupObject = {
             rootNode: root,
@@ -188,17 +187,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             needsKoreanFields = this.issuingCountryCode ? this.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
         }
 
-        console.log(
-            '\n### SecuredFieldsProvider::componentDidUpdate:: this.issuingCountryCode=',
-            this.issuingCountryCode,
-            'needsKoreanFields=',
-            needsKoreanFields
-        );
-
         // Was korean, now isn't - hide password field
         if (this.state.hasKoreanFields && !needsKoreanFields) {
-            console.log('### SecuredFieldsProvider::componentDidUpdate:: Was korean, now is not - HIDE FIELD');
-
             // Clear any stored data
             const setRemovedFieldState = prevState => ({
                 data: { ...prevState.data, [ENCRYPTED_PWD_FIELD]: undefined },
@@ -217,8 +207,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         // Wasn't korean, now is - show password field
         if (!this.state.hasKoreanFields && needsKoreanFields) {
-            console.log('### SecuredFieldsProvider::componentDidUpdate:: Was not korean, now is - SHOW FIELD');
-
             this.setState({ hasKoreanFields: true, isSfpValid: false }, () => {
                 this.props.onChange(this.state);
             });
