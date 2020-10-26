@@ -1,37 +1,19 @@
-import daDK from './da-DK.json';
-import deDE from './de-DE.json';
-import enUS from './en-US.json';
-import esES from './es-ES.json';
-import fiFI from './fi-FI.json';
-import frFR from './fr-FR.json';
-import itIT from './it-IT.json';
-import jaJP from './ja-JP.json';
-import koKR from './ko-KR.json';
-import nlNL from './nl-NL.json';
-import noNO from './no-NO.json';
-import plPL from './pl-PL.json';
-import ptBR from './pt-BR.json';
-import ruRU from './ru-RU.json';
-import svSE from './sv-SE.json';
-import zhCN from './zh-CN.json';
-import zhTW from './zh-TW.json';
-
 export default {
-    'da-DK': daDK,
-    'de-DE': deDE,
-    'en-US': enUS,
-    'es-ES': esES,
-    'fi-FI': fiFI,
-    'fr-FR': frFR,
-    'it-IT': itIT,
-    'ja-JP': jaJP,
-    'ko-KR': koKR,
-    'nl-NL': nlNL,
-    'no-NO': noNO,
-    'pl-PL': plPL,
-    'pt-BR': ptBR,
-    'ru-RU': ruRU,
-    'sv-SE': svSE,
-    'zh-CN': zhCN,
-    'zh-TW': zhTW
+    'da-DK': () => import('./da-DK.json'),
+    'de-DE': () => import('./de-DE.json'),
+    'en-US': () => import('./en-US.json'),
+    'es-ES': () => import('./es-ES.json'),
+    'fi-FI': () => import('./fi-FI.json'),
+    'fr-FR': () => import('./fr-FR.json'),
+    'it-IT': () => import('./it-IT.json'),
+    'ja-JP': () => import('./ja-JP.json'),
+    'ko-KR': () => import('./ko-KR.json'),
+    'nl-NL': () => import('./nl-NL.json'),
+    'no-NO': () => import('./no-NO.json'),
+    'pl-PL': () => import('./pl-PL.json'),
+    'pt-BR': () => import('./pt-BR.json'),
+    'ru-RU': () => import('./ru-RU.json'),
+    'sv-SE': () => import('./sv-SE.json'),
+    'zh-CN': () => import('./zh-CN.json'),
+    'zh-TW': () => import('./zh-TW.json')
 };
