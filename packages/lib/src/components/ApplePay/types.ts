@@ -41,7 +41,8 @@ export interface ApplePayElementProps extends UIElementProps {
     configuration: {
         merchantDisplayName?: string;
         merchantName?: string;
-        merchantIdentifier: string;
+        merchantId?: string;
+        merchantIdentifier?: string;
     };
 
     clientKey?: string;
