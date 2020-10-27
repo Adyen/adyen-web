@@ -34,7 +34,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.setState({ status: 'complete' }, () => {
             const paymentData = this.props.paymentData;
             const result = encodeResult(resultObj, this.props.type);
-            const data = createResolveData(this.props.dataKey, result, paymentData, false);
+            const data = createResolveData(this.props.dataKey, result, paymentData);
             this.props.onComplete(data);
         });
     }

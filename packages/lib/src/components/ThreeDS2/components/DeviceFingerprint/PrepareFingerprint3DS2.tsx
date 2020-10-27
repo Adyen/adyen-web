@@ -47,7 +47,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         this.setState({ status: 'complete' }, () => {
             const paymentData = this.props.paymentData;
             const result = encodeResult(resultObj, this.props.type);
-            const data = createResolveData(this.props.dataKey, result, paymentData, true);
+            const data = createResolveData(this.props.dataKey, result, paymentData);
             this.props.onComplete(data);
         });
     }

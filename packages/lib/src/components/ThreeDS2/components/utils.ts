@@ -10,7 +10,6 @@ export interface ResolveData {
             [key: string]: string;
         };
         paymentData: string;
-        threeDSAuthenticationOnly: boolean;
     };
 }
 
@@ -118,11 +117,10 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
     };
 };
 
-export const createResolveData = (dataKey: string, result: string, paymentData: string, authenticateOnly: boolean): ResolveData => ({
+export const createResolveData = (dataKey: string, result: string, paymentData: string): ResolveData => ({
     data: {
         details: { [dataKey]: result },
-        paymentData,
-        threeDSAuthenticationOnly: authenticateOnly // needed if going to /details and not new endpoint
+        paymentData
     }
 });
 

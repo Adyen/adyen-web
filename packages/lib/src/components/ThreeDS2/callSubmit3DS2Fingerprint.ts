@@ -29,8 +29,7 @@ export default function callSubmit3DS2Fingerprint(state) {
                 data: {
                     // Sending no details property should work - BUT currently doesn't in the new flow
                     details: { 'threeds2.challengeResult': btoa('{"transStatus":"Y"}') },
-                    paymentData: data.action.paymentData,
-                    threeDSAuthenticationOnly: false
+                    paymentData: data.action.paymentData
                 }
             };
 
