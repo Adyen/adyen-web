@@ -168,22 +168,17 @@ const challengeFlowProps = ['challengeWindowSize'];
  * @param props - object from which to extract particular properties
  */
 export const get3DS2FlowProps = (actionSubtype, props) => {
-    const isFingerprint = actionSubtype === 'fingerprint';
-
-    let rtnObj;
-
-    if (isFingerprint) {
+    if (actionSubtype === 'fingerprint') {
         // elementRef exists when the fingerprint component is created from the Dropin
         const fingerprintProps = props.elementRef ? fingerprintFlowPropsDropin : fingerprintFlowProps;
-        rtnObj = pick(fingerprintProps).from(props);
+        const rtnObj = pick(fingerprintProps).from(props);
         rtnObj.showSpinner = !props.isDropin;
         rtnObj.statusType = 'loading';
+        return rtnObj;
     }
 
-    if (!isFingerprint) {
-        rtnObj = pick(challengeFlowProps).from(props);
-        rtnObj.statusType = 'custom';
-    }
-
+    // Challenge
+    const rtnObj = pick(challengeFlowProps).from(props);
+    rtnObj.statusType = 'custom';
     return rtnObj;
 };
