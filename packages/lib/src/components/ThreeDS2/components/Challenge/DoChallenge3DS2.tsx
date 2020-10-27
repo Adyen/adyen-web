@@ -63,7 +63,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
     }
 
     componentWillUnmount() {
-        this.challengePromise.cancel();
+        if (this.challengePromise) this.challengePromise.cancel();
         window.removeEventListener('message', this.processMessageHandler);
     }
 

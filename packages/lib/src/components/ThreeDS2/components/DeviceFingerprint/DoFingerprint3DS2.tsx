@@ -75,7 +75,7 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
     }
 
     componentWillUnmount() {
-        this.fingerPrintPromise.cancel();
+        if (this.fingerPrintPromise) this.fingerPrintPromise.cancel();
         window.removeEventListener('message', this.processMessageHandler);
     }
 
