@@ -19,6 +19,16 @@ describe('ApplePay', () => {
             expect(applepay.props.amount.currency).toEqual('USD');
         });
 
+        test('normalizes the configuration properties', () => {
+            const configurationMock = {
+                merchantIdentifier: 'Test1',
+                merchantDisplayName: 'Test2'
+            };
+            const applepay = new ApplePay({ defaultProps, configuration: configurationMock });
+            expect(applepay.props.configuration.merchantId).toEqual(configurationMock.merchantIdentifier);
+            expect(applepay.props.configuration.merchantName).toEqual(configurationMock.merchantDisplayName);
+        });
+
         test('uses merchantName if no totalPriceLabel was defined', () => {
             const applepay = new ApplePay({ ...defaultProps, configuration: { merchantName: 'Test' } });
             expect(applepay.props.totalPriceLabel).toEqual('Test');

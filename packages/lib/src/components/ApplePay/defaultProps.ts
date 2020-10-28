@@ -12,7 +12,7 @@ const defaultProps = {
 
     configuration: {
         merchantName: '',
-        merchantIdentifier: ''
+        merchantId: ''
     },
 
     initiative: 'web',
