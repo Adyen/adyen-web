@@ -11,6 +11,8 @@ export class Language {
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
         this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
+        const [languageCode] = this.locale.split('-');
+        this.languageCode = languageCode;
 
         this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
             this.translations = translations;
@@ -18,6 +20,7 @@ export class Language {
     }
 
     public readonly locale: string;
+    public readonly languageCode: string;
     private readonly supportedLocales: string[];
     public translations: object = defaultTranslation;
     public readonly customTranslations;
