@@ -11,7 +11,6 @@ class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
     protected static defaultProps = defaultProps;
     public dropinRef = null;
-    private componentFromAction = null;
 
     constructor(props) {
         super(props);
@@ -32,7 +31,9 @@ class DropinElement extends UIElement<DropinElementProps> {
 
     setStatus(status, props = {}) {
         this.dropinRef.setStatus({ type: status, props });
-        this.componentFromAction = props['component'];
+        if (process.env.NODE_ENV === 'test') {
+            this['componentFromAction'] = props['component'];
+        }
         return this;
     }
 
