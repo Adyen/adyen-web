@@ -11,24 +11,6 @@ class GooglePay extends UIElement<GooglePayProps> {
     protected googlePay = new GooglePayService(this.props);
 
     /**
-     * Formats the component data input
-     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
-     */
-    formatProps(props) {
-        const { configuration } = props;
-        const { merchantIdentifier } = configuration;
-
-        return {
-            ...props,
-            showButton: props.showPayButton === true,
-            configuration: {
-                ...configuration,
-                ...(merchantIdentifier && { merchantId: merchantIdentifier })
-            }
-        };
-    }
-
-    /**
      * Formats the component data output
      */
     formatData() {
@@ -112,7 +94,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     };
 
     render() {
-        if (this.props.showButton) {
+        if (this.props.showPayButton) {
             return (
                 <GooglePayButton
                     buttonColor={this.props.buttonColor}
