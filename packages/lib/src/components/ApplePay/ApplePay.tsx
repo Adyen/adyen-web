@@ -29,11 +29,17 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected formatProps(props) {
         const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
+        const { configuration = {} } = props;
+
         return {
             onAuthorized: resolve => resolve(),
             ...props,
+            configuration: {
+                merchantId: configuration.merchantIdentifier || configuration.merchantId || defaultProps.configuration.merchantId,
+                merchantName: configuration.merchantDisplayName || configuration.merchantName || defaultProps.configuration.merchantName
+            },
             version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
+            totalPriceLabel: props.totalPriceLabel || configuration.merchantName,
             amount,
             onCancel: event => props.onError(event)
         };
@@ -98,7 +104,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
-        const { merchantName: displayName, merchantIdentifier } = configuration;
+        const { merchantName: displayName, merchantId: merchantIdentifier } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
         const options = { loadingContext, path, method: 'post' };
         const request: ApplePaySessionRequest = { displayName, domainName, initiative, merchantIdentifier };
