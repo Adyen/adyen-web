@@ -6,6 +6,13 @@ import RedirectButton from '../internal/RedirectButton';
 class GiropayElement extends RedirectElement {
     public static type = 'giropay';
 
+    formatProps(props) {
+        return {
+            ...props,
+            showPayButton: props.showButton ?? props.showPayButton
+        };
+    }
+
     /**
      * Formats the component data output
      */
@@ -22,7 +29,7 @@ class GiropayElement extends RedirectElement {
     }
 
     render() {
-        if (this.props.showButton) {
+        if (this.props.showPayButton) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                     <RedirectButton
