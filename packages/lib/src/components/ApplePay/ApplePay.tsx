@@ -96,10 +96,10 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
-        const { merchantName: displayName, merchantId: merchantIdentifier } = configuration;
+        const { merchantName, merchantId } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
         const options = { loadingContext, path, method: 'post' };
-        const request: ApplePaySessionRequest = { displayName, domainName, initiative, merchantIdentifier };
+        const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
 
         try {
             const response = await fetchJsonData(options, request);
