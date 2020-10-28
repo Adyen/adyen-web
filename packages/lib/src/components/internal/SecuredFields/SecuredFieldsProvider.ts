@@ -57,7 +57,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     public state: SFPState;
     public props;
     private issuingCountryCode;
-    private sendValueToFrame;
 
     constructor(props: SFPProps) {
         super(props);
@@ -100,7 +99,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.destroy = this.destroy.bind(this);
 
         if (process.env.NODE_ENV === 'development') {
-            this.sendValueToFrame = (pFieldType: string, pValue: string): void => {
+            this['sendValueToFrame'] = (pFieldType: string, pValue: string): void => {
                 if (this.csf) this.csf.sendValueToFrame(pFieldType, pValue);
             };
         }
