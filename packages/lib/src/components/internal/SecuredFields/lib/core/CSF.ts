@@ -232,7 +232,7 @@ class CSF extends AbstractCSF {
                     numKey: this.state.securedFields[pFieldType]?.numKey
                 };
                 const contentWindow = this.getIframeContentWin(pFieldType);
-                if (contentWindow) postMessageToIframe(dataObj, contentWindow, this.config.loadingContext);
+                postMessageToIframe(dataObj, contentWindow, this.config.loadingContext);
             };
         }
 
@@ -243,7 +243,7 @@ class CSF extends AbstractCSF {
      * Retrieves the iframe, stored by field type, & returns it's contentWindow
      */
     private getIframeContentWin(fieldType: string): Window {
-        return this.state.securedFields[fieldType].iframeContentWindow || null;
+        return this.state.securedFields[fieldType]?.iframeContentWindow || null;
     }
 }
 
