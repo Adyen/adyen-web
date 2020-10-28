@@ -1,4 +1,5 @@
 import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, BinLookupObject, SFFeedbackObj } from '../types';
+import { createSecuredFields } from './createSecuredFields';
 
 abstract class AbstractCSF {
     // Set in CSF
@@ -12,7 +13,7 @@ abstract class AbstractCSF {
     protected configHandler: () => void;
     protected createCardSecuredFields: (securedFields: HTMLElement[]) => number;
     protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => number;
-    protected createSecuredFields: () => number;
+    protected createSecuredFields: typeof createSecuredFields;
     protected destroySecuredFields: () => void;
     protected destroyTouchendListener: () => void;
     protected handleAdditionalFields: () => void;
