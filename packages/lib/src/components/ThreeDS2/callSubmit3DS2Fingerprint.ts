@@ -11,6 +11,7 @@ export default function callSubmit3DS2Fingerprint(state) {
             loadingContext: this.props.loadingContext,
             method: 'POST',
             contentType: 'application/json'
+            // clientKey: this.props.clientKey
         },
         {
             fingerprintResult: state.data.details[this.props.dataKey],
