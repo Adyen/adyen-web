@@ -3,6 +3,7 @@ import cx from 'classnames';
 import './Checkbox.scss';
 
 interface CheckboxProps {
+    checked?: boolean;
     classNameModifiers?: string[];
     label: string | ComponentChild;
     name?: string;

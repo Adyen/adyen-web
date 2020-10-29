@@ -6,7 +6,7 @@ import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import ConsentCheckbox from '../FormFields/ConsentCheckbox';
-import { getInitialActiveFieldsets } from './utils';
+import { getActiveFieldsData, getInitialActiveFieldsets } from './utils';
 import { ActiveFieldsets, FieldsetsRefs, OpenInvoiceProps, OpenInvoiceStateData, OpenInvoiceStateError, OpenInvoiceStateValid } from './types';
 import './OpenInvoice.scss';
 
@@ -15,8 +15,8 @@ const fieldsetsSchema = ['companyDetails', 'personalDetails', 'billingAddress', 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
-    const initialActiveFieldsets = getInitialActiveFieldsets(fieldsetsSchema, visibility);
-    const [activeFieldsets, setActiveFieldsets] = useState<ActiveFieldsets>({ ...initialActiveFieldsets, deliveryAddress: false });
+    const initialActiveFieldsets: ActiveFieldsets = getInitialActiveFieldsets(fieldsetsSchema, visibility, props.data);
+    const [activeFieldsets, setActiveFieldsets] = useState<ActiveFieldsets>(initialActiveFieldsets);
     const fieldsetsRefs: FieldsetsRefs = fieldsetsSchema.reduce((acc, fieldset) => {
         acc[fieldset] = createRef();
         return acc;
@@ -41,15 +41,10 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const fieldsetsAreValid = checkFieldsets();
         const consentCheckboxValid = !hasConsentCheckbox || !!valid.consentCheckbox;
         const isValid = fieldsetsAreValid && consentCheckboxValid;
-        const newData = Object.keys(data)
-            .filter(fieldset => activeFieldsets[fieldset])
-            .reduce((acc, cur) => {
-                acc[cur] = data[cur];
-                return acc;
-            }, {});
+        const newData = getActiveFieldsData(data, activeFieldsets);
 
         props.onChange({ data: newData, isValid });
-    }, [data, valid, errors]);
+    }, [data, activeFieldsets]);
 
     const handleFieldset = key => state => {
         setData(prevData => ({ ...prevData, [key]: state.data }));
@@ -112,9 +107,10 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                 />
             )}
 
-            {initialActiveFieldsets.deliveryAddress && (
+            {visibility.deliveryAddress === 'editable' && (
                 <Checkbox
                     label={i18n.get('separateDeliveryAddress')}
+                    checked={activeFieldsets.deliveryAddress}
                     classNameModifiers={['separateDeliveryAddress']}
                     name="separateDeliveryAddress"
                     onChange={handleSeparateDeliveryAddress}

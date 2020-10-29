@@ -1,6 +1,13 @@
 import { AddressSchema, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 
+export interface OpenInvoiceVisibility {
+    companyDetails?: FieldsetVisibility;
+    personalDetails?: FieldsetVisibility;
+    billingAddress?: FieldsetVisibility;
+    deliveryAddress?: FieldsetVisibility;
+}
+
 export interface OpenInvoiceProps {
     allowedCountries?: string[];
     consentCheckboxLabel: any;
@@ -14,12 +21,7 @@ export interface OpenInvoiceProps {
     onChange: Function;
     payButton: any;
     showPayButton?: boolean;
-    visibility?: {
-        companyDetails?: FieldsetVisibility;
-        personalDetails?: FieldsetVisibility;
-        billingAddress?: FieldsetVisibility;
-        deliveryAddress?: FieldsetVisibility;
-    };
+    visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
 }
 
