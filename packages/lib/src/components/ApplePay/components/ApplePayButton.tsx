@@ -22,6 +22,8 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
         /* eslint-disable jsx-a11y/no-static-element-interactions */
         return (
             <button
+                type="button"
+                aria-label={this.props.i18n.get('payButton')}
                 lang={this.props.i18n.languageCode}
                 className={cx(
                     'adyen-checkout__applepay__button',
