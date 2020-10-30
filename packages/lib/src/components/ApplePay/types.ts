@@ -154,7 +154,7 @@ export interface ApplePayElementProps extends UIElementProps {
 export interface ApplePayElementData {
     paymentMethod: {
         type: string;
-        ['applepay.token']: string;
+        applePayToken: string;
     };
 }
 
