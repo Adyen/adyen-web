@@ -30,5 +30,6 @@ export default function fetchJsonData(
         .then(data => data)
         .catch(e => {
             console.warn(`Call to ${url} failed. Error= ${e}`);
+            return e;
         });
 }
