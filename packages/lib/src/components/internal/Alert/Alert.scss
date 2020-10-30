@@ -1,0 +1,23 @@
+@import '../../../style/index';
+
+.adyen-checkout__alert-message {
+    display: flex;
+    border-radius: $border-radius-medium;
+    margin: 0 0 $spacing-medium;
+    text-align: left;
+    padding: $spacing-small $spacing-medium;
+    font-size: $font-size-small;
+}
+
+.adyen-checkout__alert-message--error {
+    background: $color-red-light;
+}
+
+
+.adyen-checkout__alert-message--warning {
+    background: $color-orange-light;
+}
+
+.adyen-checkout__alert-message--info {
+    background: $color-blue-lighter;
+}
