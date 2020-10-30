@@ -25,6 +25,11 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     };
 
     render() {
+        if (!this.props.paymentData) {
+            this.props.onError({ errorCode: 'threeds2.challenge', message: 'No paymentData received. Challenge cannot proceed' });
+            return null;
+        }
+
         return <Challenge {...this.props} onComplete={this.onComplete} />;
     }
 }

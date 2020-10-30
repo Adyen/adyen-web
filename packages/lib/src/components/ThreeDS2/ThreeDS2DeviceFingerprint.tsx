@@ -29,6 +29,14 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this);
 
     render() {
+        if (!this.props.paymentData) {
+            this.props.onError({
+                errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
+                message: 'No paymentData received. Fingerprinting cannot proceed'
+            });
+            return null;
+        }
+
         return <DeviceFingerprint {...this.props} onComplete={this.callSubmit3DS2Fingerprint} />;
     }
 }
