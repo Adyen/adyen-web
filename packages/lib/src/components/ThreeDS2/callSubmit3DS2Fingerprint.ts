@@ -10,12 +10,11 @@ export default function callSubmit3DS2Fingerprint(state) {
             path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,
             loadingContext: this.props.loadingContext,
             method: 'POST',
-            contentType: 'application/json'
-            // clientKey: this.props.clientKey
+            contentType: 'application/json',
+            clientKey: this.props.clientKey
         },
         {
             fingerprintResult: state.data.details[this.props.dataKey],
-            clientKey: this.props.clientKey,
             paymentData: state.data.paymentData
         }
     ).then(data => {
