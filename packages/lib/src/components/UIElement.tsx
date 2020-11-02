@@ -113,15 +113,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        // const threeDS2Options =
-        //     action.type === 'threeDS2' ? { ...(this.props.challengeWindowSize && { challengeWindowSize: this.props.challengeWindowSize }) } : null;
-
-        // const paymentAction: UIElement = this.props.createFromAction(action, {
-        //     onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
-        //     // Add ref to onError in case the merchant has defined one in the component options
-        //     onError: this.props.onError,
-        //     ...threeDS2Options
-        // });
         const paymentAction: UIElement = this.props.createFromAction(action, {
             ...this.props,
             // Keep at end since we are creating a new function based on the one in props and don't want this new function overridden
