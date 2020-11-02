@@ -86,10 +86,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.setFocusOn = this.sfp.current.setFocusOn;
         this.updateStyles = this.sfp.current.updateStyles;
         this.handleUnsupportedCard = this.sfp.current.handleUnsupportedCard;
-
-        if (process.env.NODE_ENV === 'development') {
-            this['sendValueToFrame'] = this.sfp.current.sendValueToFrame;
-        }
     }
 
     componentDidUpdate(prevProps, prevState) {

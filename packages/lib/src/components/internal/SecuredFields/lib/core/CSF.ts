@@ -223,19 +223,6 @@ class CSF extends AbstractCSF {
             }
         };
 
-        if (process.env.NODE_ENV === 'development') {
-            returnObj.sendValueToFrame = (pFieldType: string, pValue: string): void => {
-                const dataObj: object = {
-                    txVariant: this.state.type,
-                    fieldType: pFieldType,
-                    autoComplete: pValue,
-                    numKey: this.state.securedFields[pFieldType]?.numKey
-                };
-                const contentWindow = this.getIframeContentWin(pFieldType);
-                postMessageToIframe(dataObj, contentWindow, this.config.loadingContext);
-            };
-        }
-
         return returnObj;
     }
 

@@ -97,12 +97,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleUnsupportedCard = this.handleUnsupportedCard.bind(this);
         this.showValidation = this.showValidation.bind(this);
         this.destroy = this.destroy.bind(this);
-
-        if (process.env.NODE_ENV === 'development') {
-            this['sendValueToFrame'] = (pFieldType: string, pValue: string): void => {
-                if (this.csf) this.csf.sendValueToFrame(pFieldType, pValue);
-            };
-        }
     }
 
     public static defaultProps = defaultProps;
