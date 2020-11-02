@@ -43,8 +43,8 @@ describe('Sepa', () => {
 
         test('returns necessary data from state', () => {
             const sepa = mockStateChange(new Sepa({}));
-            expect(sepa.data.paymentMethod['iban']).toBe('NL13TEST0123456789');
-            expect(sepa.data.paymentMethod['ownerName']).toBe('A. Klaassen');
+            expect(sepa.data.paymentMethod.iban).toBe('NL13TEST0123456789');
+            expect(sepa.data.paymentMethod.ownerName).toBe('A. Klaassen');
         });
     });
 
