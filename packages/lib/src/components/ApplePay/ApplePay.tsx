@@ -90,7 +90,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 if (!!event.payment.token && !!event.payment.token.paymentData) {
-                    this.setState({ 'applepay.token': btoa(JSON.stringify(event.payment.token.paymentData)) });
+                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                 }
 
                 onSubmit({ data: this.data, isValid: this.isValid }, this);
