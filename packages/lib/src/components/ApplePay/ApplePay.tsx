@@ -155,7 +155,17 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     render() {
         if (this.props.showPayButton) {
-            return <ApplePayButton buttonColor={this.props.buttonColor} buttonType={this.props.buttonType} onClick={this.submit} />;
+            return (
+                <ApplePayButton
+                    i18n={this.props.i18n}
+                    buttonColor={this.props.buttonColor}
+                    buttonType={this.props.buttonType}
+                    onClick={e => {
+                        e.preventDefault();
+                        this.submit();
+                    }}
+                />
+            );
         }
 
         return null;
