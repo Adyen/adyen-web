@@ -202,7 +202,7 @@ class CSF extends AbstractCSF {
                 }
             },
             addSecuredField: (pFieldType: string): void => {
-                let securedField: HTMLElement = selectOne(this.props.rootNode, `[data-cse="${pFieldType}"]`);
+                const securedField: HTMLElement = selectOne(this.props.rootNode, `[data-cse="${pFieldType}"]`);
                 if (securedField) {
                     this.state.numIframes += 1;
                     this.setupSecuredField(securedField);
