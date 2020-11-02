@@ -1,4 +1,3 @@
-import UIElement from '../UIElement';
 import fetchJSONData from '../../utils/fetch-json-data';
 
 /**
@@ -38,7 +37,7 @@ export default function callSubmit3DS2Fingerprint(state) {
                 }
             };
 
-            return UIElement.prototype.onComplete.call(this, detailsObj);
+            return this.onComplete(detailsObj);
         }
 
         /**
