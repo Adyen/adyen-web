@@ -64,7 +64,7 @@ export class GiftcardElement extends UIElement {
                 }
             })
             .catch(error => {
-                this.setStatus('ready');
+                this.setStatus('error');
                 if (this.props.onError) this.props.onError(error);
             });
     };
@@ -92,7 +92,8 @@ export class GiftcardElement extends UIElement {
                     }}
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.onBalanceCheck}
+                    onBalanceCheck={this.onBalanceCheck}
+                    onSubmit={this.submit}
                     payButton={this.payButton}
                 />
             </CoreProvider>
