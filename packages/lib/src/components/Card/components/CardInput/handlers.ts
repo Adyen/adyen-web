@@ -3,7 +3,7 @@ import { CbObjOnFocus, CbObjOnBrand } from '../../../internal/SecuredFields/lib/
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 
 // Validate whole cardInput component i.e holderName + securedFields
-function validateCardInput(who): void {
+function validateCardInput(): void {
     const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
     const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
