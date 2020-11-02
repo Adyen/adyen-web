@@ -28,7 +28,7 @@
         "css-loader": "^4.2.2",
         "dotenv": "^8.2.0",
         "html-webpack-plugin": "^4.5.0",
-        "node-sass": "^4.12.0",
+        "node-sass": "^5.0.0",
         "postcss": "^8.1.4",
         "postcss-loader": "^4.0.4",
         "prettier": "^1.19.1",
