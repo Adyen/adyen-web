@@ -187,15 +187,20 @@ export function setupSecuredField(pItem: HTMLElement): void {
             this.state.iframeCount += 1;
 
             if (process.env.NODE_ENV === 'development' && window._b$dl) {
-                logger.log('### SecuredFieldCls:::: onIframeLoaded::type=', this.state.type, 'iframeCount=', this.state.iframeCount);
-                logger.log('### SecuredFieldCls:::: onIframeLoaded::type=', this.state.type, 'this.state.numIframes=', this.state.numIframes);
+                logger.log('### createSecuredFields:::: onIframeLoaded::type=', this.state.type, 'iframeCount=', this.state.iframeCount);
+                logger.log(
+                    '### createSecuredFields:::: onIframeLoaded::type=',
+                    this.state.type,
+                    'this.state.originalNumIframes=',
+                    this.state.originalNumIframes
+                );
             }
 
             // If all iframes are loaded - call onLoad callback
-            if (this.state.iframeCount === this.state.numIframes) {
+            if (this.state.iframeCount === this.state.originalNumIframes) {
                 if (process.env.NODE_ENV === 'development' && window._b$dl) {
                     logger.log(
-                        '\n### SecuredFieldCls:::: onIframeLoaded:: ALL IFRAMES LOADED type=',
+                        '\n### createSecuredFields:::: onIframeLoaded:: ALL IFRAMES LOADED type=',
                         this.state.type,
                         'DO CALLBACK callbacks=',
                         this.callbacks
@@ -206,8 +211,8 @@ export function setupSecuredField(pItem: HTMLElement): void {
                 this.callbacks.onLoad(callbackObj);
             }
         })
-        .onConfig((): void => {
-            this.handleIframeConfigFeedback();
+        .onConfig((pFeedbackObj: SFFeedbackObj): void => {
+            this.handleIframeConfigFeedback(pFeedbackObj);
         })
         .onFocus((pFeedbackObj: SFFeedbackObj): void => {
             this.handleFocus(pFeedbackObj);

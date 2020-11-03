@@ -79,7 +79,15 @@ const mockCSF = {
 };
 
 wrapper = shallow(
-    <SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} styles={styles} render={renderFn} onError={onError} i18n={i18n} />
+    <SecuredFieldsProvider
+        ref={handleSecuredFieldsRef}
+        rootNode={nodeHolder}
+        styles={styles}
+        render={renderFn}
+        onError={onError}
+        i18n={i18n}
+        configuration={{}}
+    />
 );
 
 /**
@@ -123,7 +131,9 @@ describe('<SecuredFieldsProvider /> rendering', () => {
     it('should register the presence of 2 date field elements within the passed rootNode', () => {
         nodeHolder.innerHTML = mockNodeTwoDateFields;
 
-        wrapper = shallow(<SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} render={() => null} onError={onError} />);
+        wrapper = shallow(
+            <SecuredFieldsProvider ref={handleSecuredFieldsRef} rootNode={nodeHolder} render={() => null} onError={onError} configuration={{}} />
+        );
         expect(wrapper.instance().numDateFields).toBe(2);
     });
 });
@@ -142,6 +152,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
                 render={renderFn}
                 onError={onError}
                 i18n={i18n}
+                configuration={{}}
             />
         );
 
@@ -223,6 +234,7 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
                 render={renderFn}
                 onError={onError}
                 i18n={i18n}
+                configuration={{}}
             />
         );
 

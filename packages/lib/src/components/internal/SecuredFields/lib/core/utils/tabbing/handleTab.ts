@@ -38,7 +38,7 @@ function handleShiftTab(fieldType: string): void {
         default:
             // KCP scenario: Regular credit card but with additional fields
             // - an encrypted pin/password field preceded by a form field of a non-SF type (d.o.b/taxRefNum)
-            if (this.config.isKCP) {
+            if (this.state.isKCP) {
                 shiftTabObj = shiftTabKCP(fieldType, this.props.rootNode, this.state.hasSeparateDateFields);
             } else {
                 // Regular Credit Card
