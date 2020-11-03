@@ -166,7 +166,9 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onError: this.handleOnError,
                 onFocus: this.handleFocus,
                 onBinValue: this.props.onBinValue,
-                onAutoComplete: this.handleOnAutoComplete
+                onAutoComplete: this.handleOnAutoComplete,
+                onAdditionalSFConfig: this.props.onAdditionalSFConfig,
+                onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
             },
             isKCP: this.state.hasKoreanFields
         };

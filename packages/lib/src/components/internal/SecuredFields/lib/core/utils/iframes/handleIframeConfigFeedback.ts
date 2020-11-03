@@ -1,5 +1,7 @@
 // Count how many iframes have successfully been configured and, if its all of them, call callback function
 
+import { CbObjOnAdditionalSF } from '../../../types';
+
 export function handleIframeConfigFeedback(pFeedbackObj): boolean {
     this.state.iframeConfigCount += 1;
 
@@ -30,8 +32,8 @@ export function handleIframeConfigFeedback(pFeedbackObj): boolean {
             console.log('### handleIframeConfigFeedback:: pFeedbackObj=', pFeedbackObj);
         }
 
-        // const callbackObj: CbObjOnAdditionalSFConfig = { additionalIframeConfigured: true, fieldType: pFeedbackObj.fieldType, type: this.state.type };
-        // this.callbacks.onAdditionalConfigSuccess(callbackObj);
+        const callbackObj: CbObjOnAdditionalSF = { additionalIframeConfigured: true, fieldType: pFeedbackObj.fieldType, type: this.state.type };
+        this.callbacks.onAdditionalSFConfig(callbackObj);
     }
 
     return false;

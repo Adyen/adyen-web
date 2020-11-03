@@ -18,7 +18,7 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject } from '../types';
+import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
 
@@ -214,8 +214,8 @@ class CSF extends AbstractCSF {
                     delete this.state.securedFields[pFieldType];
                     this.state.numIframes -= 1;
 
-                    // const callbackObj: CbObjOnAdditionalSFRemoved = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
-                    // this.callbacks.onAdditionalRemoved(callbackObj);
+                    const callbackObj: CbObjOnAdditionalSF = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
+                    this.callbacks.onAdditionalSFRemoved(callbackObj);
                 }
             },
             setKCPStatus: (isKCP: boolean): void => {

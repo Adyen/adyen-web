@@ -60,6 +60,8 @@ export interface CallbacksConfig {
     onFocus?: (callbackObj: object) => void;
     onBinValue?: (callbackObj: object) => void;
     onAutoComplete?: (callbackObj: object) => void;
+    onAdditionalSFConfig?: (callbackObj: object) => void;
+    onAdditionalSFRemoved?: (callbackObj: object) => void;
 }
 
 export interface CSFStateObject {
@@ -198,6 +200,13 @@ export interface CbObjOnLoad {
 
 export interface CbObjOnConfigSuccess {
     iframesConfigured: boolean;
+    type: string;
+}
+
+export interface CbObjOnAdditionalSF {
+    additionalIframeConfigured?: boolean;
+    additionalIframeRemoved?: boolean;
+    fieldType: string;
     type: string;
 }
 
