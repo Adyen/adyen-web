@@ -1,8 +1,9 @@
-import { ActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
+import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
+import { fieldsetsSchema } from './OpenInvoice';
 
 const isPrefilled = (fieldsetData: OpenInvoiceStateData = {}): boolean => Object.keys(fieldsetData).length > 1;
 
-const getActiveFieldsData = (data: OpenInvoiceStateData, activeFieldsets: ActiveFieldsets): OpenInvoiceStateData =>
+export const getActiveFieldsData = (activeFieldsets: OpenInvoiceActiveFieldsets, data: OpenInvoiceStateData): OpenInvoiceStateData =>
     Object.keys(data)
         .filter(fieldset => activeFieldsets[fieldset])
         .reduce((acc, cur) => {
@@ -10,11 +11,12 @@ const getActiveFieldsData = (data: OpenInvoiceStateData, activeFieldsets: Active
             return acc;
         }, {});
 
-const getInitialActiveFieldsets = (fieldsets, visibility: OpenInvoiceVisibility, data: OpenInvoiceStateData): ActiveFieldsets =>
-    fieldsets.reduce((acc, fieldset) => {
+export const getInitialActiveFieldsets = (visibility: OpenInvoiceVisibility, data: OpenInvoiceStateData = {}): OpenInvoiceActiveFieldsets =>
+    fieldsetsSchema.reduce((acc, fieldset) => {
         const isVisible = visibility[fieldset] !== 'hidden';
-        acc[fieldset] = isVisible && (fieldset !== 'deliveryAddress' || isPrefilled(data[fieldset]));
-        return acc;
-    }, {});
+        const isDeliveryAddress = fieldset === 'deliveryAddress';
+        const billingAddressIsHidden = visibility?.billingAddress === 'hidden';
 
-export { getActiveFieldsData, getInitialActiveFieldsets };
+        acc[fieldset] = isVisible && (!isDeliveryAddress || billingAddressIsHidden || isPrefilled(data[fieldset]));
+        return acc;
+    }, {} as OpenInvoiceActiveFieldsets);

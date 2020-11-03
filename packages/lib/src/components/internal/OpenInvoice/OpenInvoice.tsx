@@ -7,23 +7,31 @@ import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import ConsentCheckbox from '../FormFields/ConsentCheckbox';
 import { getActiveFieldsData, getInitialActiveFieldsets } from './utils';
-import { ActiveFieldsets, FieldsetsRefs, OpenInvoiceProps, OpenInvoiceStateData, OpenInvoiceStateError, OpenInvoiceStateValid } from './types';
+import {
+    OpenInvoiceActiveFieldsets,
+    OpenInvoiceFieldsetsRefs,
+    OpenInvoiceProps,
+    OpenInvoiceStateData,
+    OpenInvoiceStateError,
+    OpenInvoiceStateValid
+} from './types';
 import './OpenInvoice.scss';
 
-const fieldsetsSchema = ['companyDetails', 'personalDetails', 'billingAddress', 'deliveryAddress'];
+export const fieldsetsSchema = ['companyDetails', 'personalDetails', 'billingAddress', 'deliveryAddress'];
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
-    const initialActiveFieldsets: ActiveFieldsets = getInitialActiveFieldsets(fieldsetsSchema, visibility, props.data);
-    const [activeFieldsets, setActiveFieldsets] = useState<ActiveFieldsets>(initialActiveFieldsets);
-    const fieldsetsRefs: FieldsetsRefs = fieldsetsSchema.reduce((acc, fieldset) => {
+    const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
+    const [activeFieldsets, setActiveFieldsets] = useState<OpenInvoiceActiveFieldsets>(initialActiveFieldsets);
+    const fieldsetsRefs: OpenInvoiceFieldsetsRefs = fieldsetsSchema.reduce((acc, fieldset) => {
         acc[fieldset] = createRef();
         return acc;
     }, {});
 
     const checkFieldsets = () => Object.keys(activeFieldsets).every(fieldset => !activeFieldsets[fieldset] || !!valid[fieldset]);
     const hasConsentCheckbox = !!props.consentCheckboxLabel;
+    const showSeparateDeliveryAddressCheckbox = visibility.deliveryAddress === 'editable' && visibility.billingAddress !== 'hidden';
 
     const [data, setData] = useState<OpenInvoiceStateData>({
         ...props.data,
@@ -38,10 +46,10 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     };
 
     useEffect(() => {
-        const fieldsetsAreValid = checkFieldsets();
-        const consentCheckboxValid = !hasConsentCheckbox || !!valid.consentCheckbox;
-        const isValid = fieldsetsAreValid && consentCheckboxValid;
-        const newData = getActiveFieldsData(data, activeFieldsets);
+        const fieldsetsAreValid: boolean = checkFieldsets();
+        const consentCheckboxValid: boolean = !hasConsentCheckbox || !!valid.consentCheckbox;
+        const isValid: boolean = fieldsetsAreValid && consentCheckboxValid;
+        const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
 
         props.onChange({ data: newData, isValid });
     }, [data, activeFieldsets]);
@@ -107,7 +115,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                 />
             )}
 
-            {visibility.deliveryAddress === 'editable' && (
+            {showSeparateDeliveryAddressCheckbox && (
                 <Checkbox
                     label={i18n.get('separateDeliveryAddress')}
                     checked={activeFieldsets.deliveryAddress}

@@ -31,7 +31,6 @@ export interface OpenInvoiceStateData {
     billingAddress?: AddressSchema;
     deliveryAddress?: AddressSchema;
     consentCheckbox?: boolean;
-    separateDeliveryAddress?: boolean;
 }
 
 export interface OpenInvoiceStateError {
@@ -50,14 +49,14 @@ export interface OpenInvoiceStateValid {
     personalDetails?: boolean;
 }
 
-export interface ActiveFieldsets {
+export interface OpenInvoiceActiveFieldsets {
     companyDetails: boolean;
     personalDetails: boolean;
     billingAddress: boolean;
     deliveryAddress: boolean;
 }
 
-export interface FieldsetsRefs {
+export interface OpenInvoiceFieldsetsRefs {
     companyDetails?;
     personalDetails?;
     billingAddress?;
