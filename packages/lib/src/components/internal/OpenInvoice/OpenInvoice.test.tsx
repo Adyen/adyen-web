@@ -32,6 +32,12 @@ describe('OpenInvoice', () => {
         expect(wrapper.find('Checkbox')).toHaveLength(0);
     });
 
+    test('should not show the separate delivery checkbox if the billing address is set to hidden', () => {
+        const visibility = { billingAddress: 'hidden' };
+        const wrapper = getWrapper({ visibility });
+        expect(wrapper.find('Checkbox')).toHaveLength(0);
+    });
+
     test('should render a consent checkbox if a consentCheckboxLabel is passed as a prop', () => {
         const wrapper = getWrapper({ consentCheckboxLabel: 'TEST' });
         expect(wrapper.find('ConsentCheckbox')).toHaveLength(1);
