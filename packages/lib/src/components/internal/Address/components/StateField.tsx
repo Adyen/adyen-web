@@ -3,7 +3,7 @@ import { useState, useLayoutEffect } from 'preact/hooks';
 import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import fetchJSONData from '../../../../utils/fetch-json-data';
+import getDataset from '../../../../core/Services/get-dataset';
 import { COUNTRIES_WITH_STATES_DATASET } from '../constants';
 
 export default function StateField(props) {
@@ -19,10 +19,7 @@ export default function StateField(props) {
             return;
         }
 
-        fetchJSONData({
-            path: `datasets/states/${country}/${i18n.locale}.json`,
-            loadingContext
-        })
+        getDataset(`states/${country}`, loadingContext, i18n.locale)
             .then(response => {
                 const newStates = response && response.length ? response : [];
                 setStates(newStates);

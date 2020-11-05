@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import Countdown from '../Countdown';
 import Button from '../Button';
 import Spinner from '../Spinner';
-import { checkPaymentStatus } from '../../../core/Services/payment-status';
+import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';

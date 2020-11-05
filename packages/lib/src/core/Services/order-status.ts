@@ -1,10 +1,10 @@
-import fetchJsonData from '../../utils/fetch-json-data';
+import fetchJsonData from './fetch-json-data';
 import { OrderStatus } from '../../types';
 
 /**
  */
 export function orderStatus(config, order): Promise<OrderStatus> {
-    const options = { path: `/v1/order/status?token=${config.clientKey}`, loadingContext: config.loadingContext, method: 'POST' };
+    const options = { path: `/v1/order/status`, clientKey: config.clientKey, loadingContext: config.loadingContext };
 
     return fetchJsonData(options, { orderData: order.orderData });
 }

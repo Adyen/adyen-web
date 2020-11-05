@@ -1,4 +1,4 @@
-import fetchJSONData from '../../utils/fetch-json-data';
+import fetchJSONData from '../../core/Services/fetch-json-data';
 import { CbObjOnError } from '../internal/SecuredFields/lib/types';
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
@@ -17,10 +17,9 @@ export default function triggerBinLookUp(callbackObj) {
 
         fetchJSONData(
             {
-                path: `v1/bin/binLookup?token=${this.props.clientKey}`,
+                clientKey: this.props.clientKey,
                 loadingContext: this.props.loadingContext,
-                method: 'POST',
-                contentType: 'application/json'
+                path: 'v1/bin/binLookup'
             },
             {
                 supportedBrands: this.props.brands,
