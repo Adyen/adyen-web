@@ -1,45 +1,22 @@
-import { FALLBACK_CONTEXT } from '../config';
+import fetchJsonData from './fetch-json-data';
 
 /**
- * Submits data to Adyen
- * @param initiationUrl - Url where to make the callbacks
- * @param data - ready to be serialized and included in the body of request
- * @returns a promise containing the response of the call
- */
-const getStatus = (initiationUrl, data) => {
-    const options = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    };
-
-    return fetch(initiationUrl, options)
-        .then(response => response.json())
-        .catch(error => {
-            throw error;
-        });
-};
-
-/**
- * Submits data to Adyen
+ * Calls the payment status endpoint
  * @param paymentData -
- * @param accessKey -
+ * @param clientKey -
  * @param loadingContext -
  * @returns a promise containing the response of the call
  */
-export const checkPaymentStatus = (paymentData, accessKey, loadingContext) => {
-    if (!paymentData || !accessKey) {
+export default function checkPaymentStatus(paymentData, clientKey, loadingContext) {
+    if (!paymentData || !clientKey) {
         throw new Error('Could not check the payment status');
     }
 
-    const statusUrl = `${loadingContext || FALLBACK_CONTEXT}services/PaymentInitiation/v1/status?token=${accessKey}`;
+    const options = {
+        clientKey,
+        loadingContext,
+        path: 'services/PaymentInitiation/v1/status'
+    };
 
-    return getStatus(statusUrl, { paymentData });
-};
-
-export default {
-    checkPaymentStatus
-};
+    return fetchJsonData(options, { paymentData });
+}

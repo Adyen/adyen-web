@@ -1,11 +1,18 @@
+import fetchJsonData from './fetch-json-data';
+
 /**
  * Log event to Adyen
  * @param config -
  */
 const logTelemetry = config => event => {
-    if (!config.clientKey) {
-        return Promise.reject();
-    }
+    if (!config.clientKey) return Promise.reject();
+
+    const options = {
+        clientKey: config.clientKey,
+        errorLevel: 'silent' as const,
+        loadingContext: config.loadingContext,
+        path: 'v1/analytics/log'
+    };
 
     const telemetryEvent = {
         version: process.env.VERSION,
@@ -18,18 +25,7 @@ const logTelemetry = config => event => {
         ...event
     };
 
-    const options = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(telemetryEvent)
-    };
-
-    return fetch(`${config.loadingContext}v1/analytics/log?token=${config.clientKey}`, options)
-        .then(response => response.ok)
-        .catch(() => {});
+    return fetchJsonData(options, telemetryEvent);
 };
 
 export default logTelemetry;
