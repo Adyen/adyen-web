@@ -17,6 +17,8 @@ export const getInitialActiveFieldsets = (visibility: OpenInvoiceVisibility, dat
         const isDeliveryAddress = fieldset === 'deliveryAddress';
         const billingAddressIsHidden = visibility?.billingAddress === 'hidden';
 
+        // The delivery address will be active not only when set as visible
+        // but also when the billing address is hidden or when it has prefilled data
         acc[fieldset] = isVisible && (!isDeliveryAddress || billingAddressIsHidden || isPrefilled(data[fieldset]));
         return acc;
     }, {} as OpenInvoiceActiveFieldsets);
