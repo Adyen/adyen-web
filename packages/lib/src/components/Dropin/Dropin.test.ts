@@ -1,5 +1,6 @@
 import { mount } from 'enzyme';
 import Dropin from './Dropin';
+import AdyenCheckout from '../../core';
 
 describe('Dropin', () => {
     describe('isValid', () => {
@@ -34,5 +35,5 @@ describe('Dropin', () => {
             dropin.closeActivePaymentMethod();
             expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
         });
-    })
+    });
 });
