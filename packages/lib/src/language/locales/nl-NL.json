@@ -53,6 +53,7 @@
     "infix": "Voorvoegsel",
     "lastName": "Achternaam",
     "mobileNumber": "Telefoonnummer mobiel",
+    "mobileNumber.invalid": "Ongeldig mobiel nummer",
     "city": "Stad",
     "postalCode": "Postcode",
     "countryCode": "Landcode",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Het ingevoerde kaartnummer komt niet overeen met het kaartmerk",
     "error.va.sf-cc-num.03": "Niet-ondersteunde kaart ingevoerd",
     "error.va.sf-cc-dat.01": "Kaart te oud",
-    "error.va.sf-cc-dat.02": "Datum te ver in de toekomst"
+    "error.va.sf-cc-dat.02": "Datum te ver in de toekomst",
+    "partialPayment.warning": "Selecteer een andere betaalmethode om het resterende deel te betalen",
+    "partialPayment.remainingBalance": "Het resterende saldo is %{amount}"
 }

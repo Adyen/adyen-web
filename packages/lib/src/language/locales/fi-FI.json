@@ -53,6 +53,7 @@
     "infix": "Etuliite",
     "lastName": "Sukunimi",
     "mobileNumber": "Matkapuhelinnumero",
+    "mobileNumber.invalid": "Ei-kelvollinen matkapuhelinnumero",
     "city": "Kaupunki",
     "postalCode": "Postinumero",
     "countryCode": "Maakoodi",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Kirjoitettu kortin numero ei vastaa kortin brändiä",
     "error.va.sf-cc-num.03": "Ei-tuettu kortti asetettu",
     "error.va.sf-cc-dat.01": "Kortti on liian vanha",
-    "error.va.sf-cc-dat.02": "Päivämäärä liian kaukana tulevaisuudessa"
+    "error.va.sf-cc-dat.02": "Päivämäärä liian kaukana tulevaisuudessa",
+    "partialPayment.warning": "Valitse toinen maksutapa jäännöksen maksamiseksi",
+    "partialPayment.remainingBalance": "Jäljellä oleva saldo on% {summa}"
 }

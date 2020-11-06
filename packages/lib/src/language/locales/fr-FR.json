@@ -53,6 +53,7 @@
     "infix": "Préfixe",
     "lastName": "Nom de famille",
     "mobileNumber": "Numéro de portable",
+    "mobileNumber.invalid": "Numéro de portable non valide",
     "city": "Ville",
     "postalCode": "Code postal",
     "countryCode": "Code pays",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Le numéro de carte saisi ne correspond pas à la marque de la carte",
     "error.va.sf-cc-num.03": "Carte insérée non prise en charge",
     "error.va.sf-cc-dat.01": "Carte trop ancienne",
-    "error.va.sf-cc-dat.02": "La date doit être plus proche"
+    "error.va.sf-cc-dat.02": "La date doit être plus proche",
+    "partialPayment.warning": "Sélectionnez un autre mode de paiement pour régler le solde",
+    "partialPayment.remainingBalance": "Le solde restant sera de %{amount}"
 }

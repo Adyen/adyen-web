@@ -53,6 +53,7 @@
     "infix": "Prefiks",
     "lastName": "Etternavn",
     "mobileNumber": "Mobilnummer",
+    "mobileNumber.invalid": "Ugyldig mobilnummer",
     "city": "Poststed",
     "postalCode": "Postnummer",
     "countryCode": "Landkode",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Det angitte kortnummeret stemmer ikke med kortmerket",
     "error.va.sf-cc-num.03": "Det angitte kortet støttes ikke",
     "error.va.sf-cc-dat.01": "Kortet er for gammelt",
-    "error.va.sf-cc-dat.02": "Datoen er for langt inn i fremtiden"
+    "error.va.sf-cc-dat.02": "Datoen er for langt inn i fremtiden",
+    "partialPayment.warning": "Velg en annen betalingsmetode for å betale det gjenværende",
+    "partialPayment.remainingBalance": "Gjenværende saldo vil være %{amount}"
 }

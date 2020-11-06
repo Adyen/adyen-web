@@ -53,6 +53,7 @@
     "infix": "前綴",
     "lastName": "姓氏",
     "mobileNumber": "行動電話號碼",
+    "mobileNumber.invalid": "手機號碼無效",
     "city": "城市",
     "postalCode": "郵遞區號",
     "countryCode": "國家代碼",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "鍵入的卡號與卡片品牌不符",
     "error.va.sf-cc-num.03": "輸入了不支援的卡",
     "error.va.sf-cc-dat.01": "卡太舊",
-    "error.va.sf-cc-dat.02": "未來日期距今太久"
+    "error.va.sf-cc-dat.02": "未來日期距今太久",
+    "partialPayment.warning": "選取其他付款方式來支付餘額",
+    "partialPayment.remainingBalance": "餘額將為 %{amount}"
 }
