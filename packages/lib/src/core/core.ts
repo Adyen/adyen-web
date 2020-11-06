@@ -51,7 +51,8 @@ class Core {
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (action.type) {
-            const props = this.getPropsForComponent(options);
+            const paymentMethodsConfiguration = getComponentConfiguration(action.paymentMethodType, this.options.paymentMethodsConfiguration);
+            const props = { ...this.options, ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
             return getComponentForAction(action, props);
         }
         return this.handleCreateError();
@@ -113,7 +114,7 @@ class Core {
         return {
             paymentMethods: this.paymentMethodsResponse.paymentMethods,
             storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
-            ...this.options,
+            paymentMethodsConfiguration: this.options.paymentMethodsConfiguration,
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
@@ -139,11 +140,16 @@ class Core {
             const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, options.paymentMethodsConfiguration);
 
             // Merge:
-            // 1. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
-            // 2. the combined props of checkout & the configuration object defined on this particular component
+            // 1. global props
+            // 2. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
             // 3. a paymentMethodsConfiguration object, if defined at top level
-            const component = new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
-            this.components.push(component);
+            // 4. the combined props of checkout & the configuration object defined on this particular component
+            const component = new PaymentMethod({ ...this.options, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...options });
+
+            if (!options.isDropin) {
+                this.components.push(component);
+            }
+
             return component;
         }
 
@@ -162,9 +168,10 @@ class Core {
         if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
             const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, options.paymentMethodsConfiguration);
             return this.handleCreate(paymentMethods.redirect, {
+                ...this.options,
                 ...this.paymentMethodsResponse.find(PaymentMethod),
-                ...options,
-                ...paymentMethodsConfiguration
+                ...paymentMethodsConfiguration,
+                ...options
             });
         }
 
