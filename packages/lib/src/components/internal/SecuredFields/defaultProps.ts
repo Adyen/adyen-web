@@ -34,6 +34,7 @@ export interface SFPProps {
     hideCVC: boolean;
     i18n: Language;
     koreanAuthenticationRequired: boolean;
+    hasKoreanFields: boolean;
     onChange;
     oneClick: boolean;
     render;
