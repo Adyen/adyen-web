@@ -53,6 +53,7 @@
     "infix": "Præfiks",
     "lastName": "Efternavn",
     "mobileNumber": "Mobilnummer",
+    "mobileNumber.invalid": "Ugyldigt mobilnummer",
     "city": "By",
     "postalCode": "Postnummer",
     "countryCode": "Landekode",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Indtastet kortnummer matcher ikke kortmærke",
     "error.va.sf-cc-num.03": "Ikke-understøttet kort indtastet",
     "error.va.sf-cc-dat.01": "Kort for gammelt",
-    "error.va.sf-cc-dat.02": "Dato for langt ude i fremtiden"
+    "error.va.sf-cc-dat.02": "Dato for langt ude i fremtiden",
+    "partialPayment.warning": "Vælg en anden betalingsmåde til betaling af restbeløbet",
+    "partialPayment.remainingBalance": "Restbeløbet vil være %{amount}"
 }

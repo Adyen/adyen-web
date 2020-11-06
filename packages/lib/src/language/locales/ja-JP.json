@@ -53,6 +53,7 @@
     "infix": "敬称",
     "lastName": "姓",
     "mobileNumber": "携帯番号",
+    "mobileNumber.invalid": "無効な携帯電話番号",
     "city": "市区",
     "postalCode": "郵便番号",
     "countryCode": "国コード",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "入力されたカード番号がカードのブランドと一致しません",
     "error.va.sf-cc-num.03": "サポートされていないカードが入力されました",
     "error.va.sf-cc-dat.01": "カードが古すぎます",
-    "error.va.sf-cc-dat.02": "未来の日付が先すぎです"
+    "error.va.sf-cc-dat.02": "未来の日付が先すぎです",
+    "partialPayment.warning": "残金を支払う別の支払方法を選択してください",
+    "partialPayment.remainingBalance": "残りの残高は%{amount}になります"
 }

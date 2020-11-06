@@ -53,6 +53,7 @@
     "infix": "Prefix",
     "lastName": "Efternamn",
     "mobileNumber": "Mobilnummer",
+    "mobileNumber.invalid": "Ogiltigt mobilnummer",
     "city": "Stad",
     "postalCode": "Postnummer",
     "countryCode": "Landskod",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Det angivna kortnumret stämmer inte överens med kortutgivaren",
     "error.va.sf-cc-num.03": "Det angivna kortet stöds inte",
     "error.va.sf-cc-dat.01": "Kortet är för gammalt",
-    "error.va.sf-cc-dat.02": "Datumet ligger för långt fram i framtiden"
+    "error.va.sf-cc-dat.02": "Datumet ligger för långt fram i framtiden",
+    "partialPayment.warning": "Välj ett annat betalningssätt för att betala det återstående",
+    "partialPayment.remainingBalance": "Återstående saldo blir %{amount}"
 }
