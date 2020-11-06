@@ -91,17 +91,17 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
             'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
             'adyen-checkout__payment-method--standalone': standalone,
             [styles['adyen-checkout__payment-method--loading']]: isLoading,
-            [paymentMethod.props.id]: true,
+            [paymentMethod._id]: true,
             [this.props.className]: true
         });
 
         const showRemovePaymentMethodButton = this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected;
-        const disableConfirmationId = `remove-${paymentMethod.props.id}`;
+        const disableConfirmationId = `remove-${paymentMethod._id}`;
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
             <li
-                key={paymentMethod.props.id}
+                key={paymentMethod._id}
                 className={paymentMethodClassnames}
                 onFocus={this.onFocus}
                 onClick={onSelect}
