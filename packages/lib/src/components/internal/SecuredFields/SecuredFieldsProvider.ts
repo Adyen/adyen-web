@@ -69,7 +69,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             data: {},
             cvcRequired: true,
             isSfpValid: false,
-            hasKoreanFields: !!(this.props.configuration.koreanAuthenticationRequired && this.props.countryCode === 'kr')
+            hasKoreanFields: this.props.hasKoreanFields
         };
         this.state = stateObj;
 
@@ -178,7 +178,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     private checkForKCPFields() {
         let needsKoreanFields = false;
-        if (this.props.configuration.koreanAuthenticationRequired) {
+        if (this.props.koreanAuthenticationRequired) {
             needsKoreanFields = this.issuingCountryCode ? this.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
         }
 
@@ -202,7 +202,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         // Wasn't korean, now is - show password field
         if (!this.state.hasKoreanFields && needsKoreanFields) {
-            this.setState({ hasKoreanFields: true, isSfpValid: false }, () => {
+            const setAddedFieldState = prevState => ({
+                valid: { ...prevState.valid, [ENCRYPTED_PWD_FIELD]: false },
+                hasKoreanFields: true,
+                isSfpValid: false
+            });
+
+            this.setState(setAddedFieldState, () => {
                 this.props.onChange(this.state);
             });
 
