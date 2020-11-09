@@ -53,6 +53,7 @@
     "infix": "Prefixo",
     "lastName": "Sobrenome",
     "mobileNumber": "Celular",
+    "mobileNumber.invalid": "Número de celular inválido",
     "city": "Cidade",
     "postalCode": "CEP",
     "countryCode": "Código do país",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "O número digitado do cartão não corresponde à bandeira",
     "error.va.sf-cc-num.03": "O cartão inserido não é aceito",
     "error.va.sf-cc-dat.01": "Cartão muito antigo",
-    "error.va.sf-cc-dat.02": "Data muito distante"
+    "error.va.sf-cc-dat.02": "Data muito distante",
+    "partialPayment.warning": "Selecione outro método de pagamento para pagar o restante",
+    "partialPayment.remainingBalance": "O saldo restante será %{amount}"
 }

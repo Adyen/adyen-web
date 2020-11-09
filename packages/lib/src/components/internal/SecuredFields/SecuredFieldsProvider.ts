@@ -18,7 +18,7 @@ import {
     CbObjOnLoad
 } from './lib/types';
 import { AddressSchema } from '../../../types';
-import { ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 
 export interface SFPState {
     status?: string;
@@ -31,6 +31,7 @@ export interface SFPState {
     autoCompleteName?: string;
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
+    hasKoreanFields?: boolean;
 }
 
 /**
@@ -55,6 +56,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnNoDataRequired: () => void;
     public state: SFPState;
     public props;
+    private issuingCountryCode;
 
     constructor(props: SFPProps) {
         super(props);
@@ -66,7 +68,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             valid: {},
             data: {},
             cvcRequired: true,
-            isSfpValid: false
+            isSfpValid: false,
+            hasKoreanFields: this.props.hasKoreanFields
         };
         this.state = stateObj;
 
@@ -113,10 +116,15 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.numDateFields = fields.filter(f => f.match(/Expiry/)).length;
 
         if (fields.length) {
+            this.destroy(); // TODO test if this solves the React double render problem.
             this.initializeCSF(this.rootNode);
         } else {
             this.handleOnNoDataRequired();
         }
+    }
+
+    public componentDidUpdate() {
+        this.checkForKCPFields();
     }
 
     public componentWillUnmount(): void {
@@ -158,12 +166,55 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onError: this.handleOnError,
                 onFocus: this.handleFocus,
                 onBinValue: this.props.onBinValue,
-                onAutoComplete: this.handleOnAutoComplete
+                onAutoComplete: this.handleOnAutoComplete,
+                onAdditionalSFConfig: this.props.onAdditionalSFConfig,
+                onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
             },
-            isKCP: this.props.koreanAuthenticationRequired === true
+            isKCP: this.state.hasKoreanFields
         };
 
         this.csf = initCSF(csfSetupObj);
+    }
+
+    private checkForKCPFields() {
+        let needsKoreanFields = false;
+        if (this.props.koreanAuthenticationRequired) {
+            needsKoreanFields = this.issuingCountryCode ? this.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
+        }
+
+        // Was korean, now isn't - hide password field
+        if (this.state.hasKoreanFields && !needsKoreanFields) {
+            // Clear any stored data
+            const setRemovedFieldState = prevState => ({
+                data: { ...prevState.data, [ENCRYPTED_PWD_FIELD]: undefined },
+                valid: { ...prevState.valid, [ENCRYPTED_PWD_FIELD]: false },
+                errors: { ...prevState.errors, [ENCRYPTED_PWD_FIELD]: false },
+                hasKoreanFields: false
+            });
+
+            this.setState(setRemovedFieldState, () => {
+                this.props.onChange(this.state);
+            });
+
+            this.csf.removeSecuredField(ENCRYPTED_PWD_FIELD);
+            this.csf.setKCPStatus(false);
+        }
+
+        // Wasn't korean, now is - show password field
+        if (!this.state.hasKoreanFields && needsKoreanFields) {
+            const setAddedFieldState = prevState => ({
+                valid: { ...prevState.valid, [ENCRYPTED_PWD_FIELD]: false },
+                hasKoreanFields: true,
+                isSfpValid: false
+            });
+
+            this.setState(setAddedFieldState, () => {
+                this.props.onChange(this.state);
+            });
+
+            this.csf.addSecuredField(ENCRYPTED_PWD_FIELD);
+            this.csf.setKCPStatus(true);
+        }
     }
 
     public getChildContext(): object {
@@ -216,6 +267,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             }));
             if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
         }
+
+        this.issuingCountryCode = binValueObject?.issuingCountryCode.toLowerCase();
 
         // Scenarios:
         // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup

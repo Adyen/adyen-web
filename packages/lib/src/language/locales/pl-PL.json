@@ -53,6 +53,7 @@
     "infix": "Prefiks",
     "lastName": "Nazwisko",
     "mobileNumber": "Numer telefonu komórkowego",
+    "mobileNumber.invalid": "Nieprawidłowy numer telefonu komórkowego",
     "city": "Miasto",
     "postalCode": "Kod pocztowy",
     "countryCode": "Kod kraju",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Wpisany numer karty nie pasuje do marki karty",
     "error.va.sf-cc-num.03": "Wprowadzono nieobsługiwaną kartę",
     "error.va.sf-cc-dat.01": "Termin ważności karty minął",
-    "error.va.sf-cc-dat.02": "Data w zbyt odległej przyszłości"
+    "error.va.sf-cc-dat.02": "Data w zbyt odległej przyszłości",
+    "partialPayment.warning": "Wybierz inną metodę płatności, aby zapłacić pozostałą kwotę",
+    "partialPayment.remainingBalance": "Pozostałe saldo wynosi %(kwota}"
 }
