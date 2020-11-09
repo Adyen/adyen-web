@@ -120,6 +120,6 @@ export interface GooglePayProps extends UIElementProps {
     buttonType?: google.payments.api.ButtonType;
 
     // Events
-
+    onClick?: (resolve, reject) => void;
     onAuthorized?: (paymentData: google.payments.api.PaymentData) => void;
 }
