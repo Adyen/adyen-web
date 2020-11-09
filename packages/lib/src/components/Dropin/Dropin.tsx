@@ -5,7 +5,6 @@ import DropinComponent from '../../components/Dropin/components/DropinComponent'
 import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
-import { getComponentConfiguration } from '../index';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 
