@@ -51,7 +51,6 @@ export default function callSubmit3DS2Fingerprint(state) {
          * Redirect (usecase: we thought we could do 3DS2 but it turns out we can't)
          */
         if (data.action?.type === 'redirect') {
-            data.action.paymentMethodType = 'scheme';
             return actionHandler.handleAction(data.action);
         }
     });
