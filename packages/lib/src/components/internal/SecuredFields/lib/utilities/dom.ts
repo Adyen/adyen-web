@@ -62,4 +62,14 @@ const removeAllChildren = node => {
     }
 };
 
-export { getAttribute, on, off, select, selectOne, removeAllChildren };
+const getSearchParameters = (search = window.location.search) =>
+    search
+        .replace(/\?/g, '')
+        .split('&')
+        .reduce((acc, cur) => {
+            const [key, prop = ''] = cur.split('=');
+            acc[key] = decodeURIComponent(prop);
+            return acc;
+        }, {}) as any;
+
+export { getAttribute, getSearchParameters, on, off, select, selectOne, removeAllChildren };

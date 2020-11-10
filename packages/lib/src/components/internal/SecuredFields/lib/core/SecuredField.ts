@@ -1,6 +1,6 @@
 import * as logger from '../utilities/logger';
 import createIframe from '../utilities/createIframe';
-import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
+import { selectOne, on, off, removeAllChildren, getSearchParameters } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
 import { ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
@@ -78,9 +78,15 @@ class SecuredField extends AbstractSecuredField {
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
 
         /**
-         * Create & reference iframe and add load listener
+         * Configure, create & reference iframe and add load listener
          */
-        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig[this.fieldType].iframeTitle);
+        const iframeConfig = {
+            src: this.iframeSrc,
+            title: processedAriaConfig[this.fieldType].iframeTitle,
+            policy: getSearchParameters().testing === 'testcafe' ? 'no-referrer-when-downgrade' : 'origin'
+        };
+
+        const iframeEl: HTMLIFrameElement = createIframe(iframeConfig);
 
         // Place the iframe into the holder
         this.holderEl.appendChild(iframeEl);
