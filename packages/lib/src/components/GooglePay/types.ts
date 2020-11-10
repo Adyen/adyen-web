@@ -110,6 +110,11 @@ export interface GooglePayProps extends UIElementProps {
      */
     paymentDataCallbacks?: google.payments.api.PaymentDataCallbacks;
 
+    /**
+     * @see https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo
+     */
+    transactionInfo?: Partial<google.payments.api.TransactionInfo>;
+
     // Button
 
     /**
