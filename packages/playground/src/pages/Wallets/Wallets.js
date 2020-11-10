@@ -57,7 +57,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         // onError: console.error,
 
         // Payment info
-        amount: { value: 10, currency: 'EUR' }, // 0.1 EUR (minor units)
         countryCode: 'NL',
 
         // Merchant config (required)
