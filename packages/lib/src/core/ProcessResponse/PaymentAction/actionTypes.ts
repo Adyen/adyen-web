@@ -20,6 +20,7 @@ const actionTypes = {
             showSpinner: !props.isDropin,
             isDropin: !!props.isDropin,
             ...props,
+            type: 'IdentifyShopper',
             statusType: 'loading'
         }),
 
@@ -32,6 +33,7 @@ const actionTypes = {
             onError: props.onError,
             size: '05',
             isDropin: !!props.isDropin,
+            type: 'ChallengeShopper',
             statusType: 'custom'
         }),
 
