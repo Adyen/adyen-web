@@ -52,8 +52,6 @@ export function handleConfig(): void {
 
     this.config.sfLogAtStart = this.props._b$dl === true;
 
-    this.config.isKCP = !!this.props.isKCP;
-
     let sfBundleType: string = this.config.isCreditCardType ? 'card' : this.props.type;
     if (sfBundleType.indexOf('sepa') > -1) sfBundleType = 'iban';
 

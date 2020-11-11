@@ -17,6 +17,10 @@ export interface CSFReturnObject {
     destroy: any;
     brandsFromBinLookup: any;
     hasUnsupportedCard: any;
+    addSecuredField: any;
+    removeSecuredField: any;
+    setKCPStatus: any;
+    sendValueToFrame?: any;
 }
 
 interface CSFCommonProps {
@@ -55,6 +59,8 @@ export interface CallbacksConfig {
     onFocus?: (callbackObj: object) => void;
     onBinValue?: (callbackObj: object) => void;
     onAutoComplete?: (callbackObj: object) => void;
+    onAdditionalSFConfig?: (callbackObj: object) => void;
+    onAdditionalSFRemoved?: (callbackObj: object) => void;
 }
 
 export interface CSFStateObject {
@@ -62,6 +68,7 @@ export interface CSFStateObject {
     brand: string;
     allValid: boolean;
     numIframes: number;
+    originalNumIframes: number;
     iframeCount: number;
     iframeConfigCount: number;
     isConfigured: boolean;
@@ -69,6 +76,7 @@ export interface CSFStateObject {
     currentFocusObject: string;
     registerFieldForIos: boolean;
     securedFields: object;
+    isKCP: boolean;
 }
 
 export interface StylesObject {
@@ -191,6 +199,13 @@ export interface CbObjOnLoad {
 
 export interface CbObjOnConfigSuccess {
     iframesConfigured: boolean;
+    type: string;
+}
+
+export interface CbObjOnAdditionalSF {
+    additionalIframeConfigured?: boolean;
+    additionalIframeRemoved?: boolean;
+    fieldType: string;
     type: string;
 }
 

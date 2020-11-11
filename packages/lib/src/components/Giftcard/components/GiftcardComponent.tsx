@@ -2,6 +2,7 @@ import { Component, h } from 'preact';
 import classNames from 'classnames';
 import SecuredFieldsProvider from '../../../components/internal/SecuredFields/SecuredFieldsProvider';
 import Field from '../../internal/FormFields/Field';
+import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
@@ -11,6 +12,7 @@ interface GiftcardComponentProps {
     onFocus: (event) => void;
     onBlur: (event) => void;
     onSubmit: (event) => void;
+    onBalanceCheck: (event) => void;
 
     amount: PaymentAmount;
     showPayButton?: boolean;
@@ -70,11 +72,13 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
         const hasEnoughBalance = balance?.value >= this.props.amount?.value;
         if (balance && hasEnoughBalance) {
-            return <GiftcardResult balance={balance} {...props} />;
+            return <GiftcardResult balance={balance} onSubmit={props.onSubmit} {...props} />;
         }
 
         return (
             <div className="adyen-checkout__giftcard">
+                {this.state.status === 'error' && <Alert>{i18n.get('error.message.unknown')}</Alert>}
+
                 <SecuredFieldsProvider
                     {...this.props}
                     ref={ref => {
@@ -133,7 +137,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                 {this.props.showPayButton &&
                     this.props.payButton({
                         status: this.state.status,
-                        onClick: this.props.onSubmit,
+                        onClick: this.props.onBalanceCheck,
                         label: i18n.get('applyGiftcard')
                     })}
             </div>

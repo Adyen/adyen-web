@@ -70,7 +70,7 @@ abstract class AbstractSecuredField {
     protected _postMessageListener: RtnType_postMessageListener;
     // Callback fns assigned via public functions
     protected onIframeLoadedCallback: RtnType_noParamVoidFn;
-    protected onConfigCallback: () => void;
+    protected onConfigCallback: RtnType_callbackFn;
     protected onEncryptionCallback: RtnType_callbackFn;
     protected onValidationCallback: RtnType_callbackFn;
     protected onFocusCallback: RtnType_callbackFn;
