@@ -12,6 +12,7 @@ export interface UIElementProps extends BaseElementProps {
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
+    challengeWindowSize?: string;
 
     name?: string;
     amount?: PaymentAmount;
@@ -112,9 +113,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        const paymentAction = this.props.createFromAction(action, {
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
-            onError: this.props.onError // Add ref to onError in case the merchant has defined one in the component options
+        const paymentAction: UIElement = this.props.createFromAction(action, {
+            ...this.props,
+            // Keep at end since we are creating a new function based on the one in props and don't want this new function overridden
+            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
         });
 
         if (paymentAction) {
