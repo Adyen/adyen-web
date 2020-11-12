@@ -15,12 +15,12 @@ const actionTypes = {
             createFromAction: props.createFromAction,
             token: action.token,
             paymentData: action.paymentData,
-            onComplete: props.onAdditionalDetails,
             onError: props.onError,
             showSpinner: !props.isDropin,
             isDropin: !!props.isDropin,
             ...props,
             type: 'IdentifyShopper',
+            onComplete: props.onAdditionalDetails,
             statusType: 'loading'
         }),
 
