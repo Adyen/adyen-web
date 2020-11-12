@@ -43,8 +43,8 @@ class GooglePay extends UIElement<GooglePayProps> {
     public loadPayment = () => {
         const { onSubmit = () => {}, onAuthorized = () => {} } = this.props;
 
-        return this.googlePay
-            .initiatePayment(this.props)
+        return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
+            .then(() => this.googlePay.initiatePayment(this.props))
             .then(paymentData => {
                 // setState will trigger an onChange event
                 this.setState({

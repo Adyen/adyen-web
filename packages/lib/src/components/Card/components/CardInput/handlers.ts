@@ -76,7 +76,7 @@ function handleInstallments(installments): void {
 function handleSecuredFieldsChange(newState: SFPState): void {
     const sfState: SFPState = newState;
 
-    const tempHolderName: string = sfState.autoCompleteName ? sfState.autoCompleteName : this.state.data.holderName;
+    const tempHolderName: string = sfState.autoCompleteName && this.props.hasHolderName ? sfState.autoCompleteName : this.state.data.holderName;
 
     const setSfpData = (prevState: SFPState): SFPState => ({
         ...prevState,
