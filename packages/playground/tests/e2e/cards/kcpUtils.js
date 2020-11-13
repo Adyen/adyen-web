@@ -1,6 +1,6 @@
 import { setIframeSelector, fillIFrame, deleteFromIFrame, checkIframeContainsValue } from '../commonUtils';
 
-import { KOREAN_TEST_CARD, NON_KOREAN_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
+import { NON_KOREAN_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
 
 /**
  * Unique to each component are where the iframes are to be found,
