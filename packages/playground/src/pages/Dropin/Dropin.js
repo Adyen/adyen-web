@@ -9,12 +9,9 @@ import '../../style.scss';
 const initCheckout = async () => {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    //    paymentMethodsResponse.paymentMethods[0].brands.push('elo');
-    //    paymentMethodsResponse.paymentMethods[0].brands.push('korean_local_card');
-
     window.checkout = new AdyenCheckout({
         amount,
-        countryCode, //: 'KR',
+        countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -66,7 +63,6 @@ const initCheckout = async () => {
             await cancelOrder(order);
             checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
         },
-        //        challengeWindowSize: '02',
         onError: obj => {
             console.log('checkout level merchant defined onError handler obj=', obj);
         },
@@ -122,35 +118,7 @@ const initCheckout = async () => {
         }
     });
 
-    window.dropin = checkout
-        .create('dropin', {
-            paymentMethodsConfiguration: {
-                card: {
-                    enableStoreDetails: false
-                    //                hasHolderName: true,
-                    //                holderNameRequired: true,
-                    //                    challengeWindowSize: '01'
-                    //                    onConfigSuccess: obj => {
-                    //                        console.log('COMPONENT-pmconfig level merchant defined onConfigSuccess handler obj', obj);
-                    //                    }
-                    //                    configuration: {
-                    //                        koreanAuthenticationRequired: true
-                    //                    }
-                    // WILL FIRE
-                    //                    onConfigSuccess: obj => {
-                    //                        console.log('DROPIN-pmConfig level merchant defined onConfigSuccess handler obj', obj);
-                    //                    },
-                    // WILL FIRE
-                    //                    onBrand: obj => {
-                    //                        console.log('DROPIN-pmConfig level merchant defined onBrand handler obj=', obj);
-                    //                    }
-                    //                onError: obj => {
-                    //                    console.log('### Dropin::onError:: pm config defined error handler obj=', obj);
-                    //                }
-                }
-            }
-        })
-        .mount('#dropin-container');
+    window.dropin = checkout.create('dropin').mount('#dropin-container');
 };
 
 function handleFinalState(resultCode, dropin) {
