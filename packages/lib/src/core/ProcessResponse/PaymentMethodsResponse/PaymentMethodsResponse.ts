@@ -8,8 +8,8 @@ class PaymentMethodsResponse {
     constructor(response, options = {}) {
         checkPaymentMethodsResponse(response);
 
-        this.paymentMethods = response ? processPaymentMethods(response, options) : [];
-        this.storedPaymentMethods = response ? processStoredPaymentMethods(response, options) : [];
+        this.paymentMethods = response ? processPaymentMethods(response.paymentMethods, options) : [];
+        this.storedPaymentMethods = response ? processStoredPaymentMethods(response.storedPaymentMethods, options) : [];
     }
 
     has(paymentMethod: string): boolean {

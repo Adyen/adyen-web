@@ -1,1 +1,1 @@
-export { default } from './ThreeDS2DeviceFingerprint';
+export { default } from './PrepareFingerprint3DS2';
