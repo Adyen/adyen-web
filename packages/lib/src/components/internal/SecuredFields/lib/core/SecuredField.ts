@@ -1,6 +1,6 @@
 import * as logger from '../utilities/logger';
 import createIframe from '../utilities/createIframe';
-import { selectOne, on, off, removeAllChildren, getSearchParameters } from '../utilities/dom';
+import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
 import { ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
@@ -19,6 +19,8 @@ import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
 import { processPlaceholders } from './utils/init/processPlaceholders';
 import Language from '../../../../../language/Language';
+
+import URLSearchParams from 'core-js/web/url-search-params';
 
 const logPostMsg = false;
 const doLog = false;
@@ -80,10 +82,12 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Configure, create & reference iframe and add load listener
          */
+        const urlParams = new URLSearchParams(window.location.search);
+
         const iframeConfig = {
             src: this.iframeSrc,
             title: processedAriaConfig[this.fieldType].iframeTitle,
-            policy: getSearchParameters().testing === 'testcafe' ? 'no-referrer-when-downgrade' : 'origin'
+            policy: urlParams.get('testing') === 'testcafe' ? 'no-referrer-when-downgrade' : 'origin'
         };
 
         const iframeEl: HTMLIFrameElement = createIframe(iframeConfig);
