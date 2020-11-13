@@ -1,5 +1,7 @@
 const createTestCafe = require('testcafe');
 
+const PATH = 'tests/e2e/';
+
 (async () => {
     const testcafe = await createTestCafe();
 
@@ -7,7 +9,7 @@ const createTestCafe = require('testcafe');
         const runner = testcafe.createRunner();
 
         const failedCount = await runner
-            .src(['tests/e2e/KCP_iframes_noKCPAtStart.js', 'tests/e2e/KCP_iframes_withKCPAtStart.js'])
+            .src([`${PATH}cards/KCP_iframes_noKCPAtStart.js`, `${PATH}cards/KCP_iframes_withKCPAtStart.js`])
             .browsers('chrome:headless')
             .run();
 

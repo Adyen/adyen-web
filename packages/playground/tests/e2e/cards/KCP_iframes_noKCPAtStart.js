@@ -1,10 +1,10 @@
 import { Selector, ClientFunction } from 'testcafe';
 
-import { start } from './commonUtils';
+import { start } from '../commonUtils';
 
 import { fillCardNumber, fillDateAndCVC, fillTaxNumber, fillPwd, deleteCardNumber, checkPwd } from './kcpUtils';
 
-import { KOREAN_TEST_CARD, NON_KOREAN_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
+import { KOREAN_TEST_CARD, NON_KOREAN_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
 
 const cardNumberHolder = Selector('[data-cse="encryptedCardNumber"]');
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
