@@ -20,8 +20,6 @@ import { processAriaConfig } from './utils/init/processAriaConfig';
 import { processPlaceholders } from './utils/init/processPlaceholders';
 import Language from '../../../../../language/Language';
 
-import URLSearchParams from 'core-js/web/url-search-params';
-
 const logPostMsg = false;
 const doLog = false;
 
@@ -82,12 +80,10 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Configure, create & reference iframe and add load listener
          */
-        const urlParams = new URLSearchParams(window.location.search);
-
         const iframeConfig = {
             src: this.iframeSrc,
             title: processedAriaConfig[this.fieldType].iframeTitle,
-            policy: urlParams.get('testing') === 'testcafe' ? 'no-referrer-when-downgrade' : 'origin'
+            policy: 'origin'
         };
 
         const iframeEl: HTMLIFrameElement = createIframe(iframeConfig);
