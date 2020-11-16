@@ -6,6 +6,7 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getSearchParameters } from '../../utils';
+import { countryCode } from '../../config/commonConfig';
 
 getOriginKey()
     .then(originKey => {
@@ -20,7 +21,7 @@ getOriginKey()
             clientKey: process.env.__CLIENT_KEY__,
             paymentMethodsResponse,
             locale: shopperLocale,
-            ...(getSearchParameters().countryCode?.toLowerCase() === 'kr' && { countryCode: 'KR' }),
+            countryCode,
             environment: 'test',
             //        environment: 'http://localhost:8080/checkoutshopper/',
             showPayButton: true,
