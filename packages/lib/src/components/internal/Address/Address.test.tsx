@@ -1,19 +1,18 @@
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import { h } from 'preact';
 import Address from './Address';
+import getDataset from '../../../utils/fetch-json-data';
+
+jest.mock('../../../utils/fetch-json-data');
+(getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve({})));
 
 describe('Address', () => {
-    const i18n = { get: key => key };
-    const getWrapper = props => shallow(<Address i18n={i18n} {...props} />);
+    const getWrapper = props => shallow(<Address {...props} />);
 
     test('has the required fields', () => {
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
         const wrapper = getWrapper({ requiredFields });
-        expect(wrapper.find('InputText[name="street"]')).toHaveLength(1);
-        expect(wrapper.find('InputText[name="houseNumberOrName"]')).toHaveLength(1);
-        expect(wrapper.find('InputText[name="postalCode"]')).toHaveLength(1);
-        expect(wrapper.find('InputText[name="city"]')).toHaveLength(0);
-        expect(wrapper.find('CountryField')).toHaveLength(1);
+        expect(wrapper.find('FieldContainer')).toHaveLength(requiredFields.length);
     });
 
     test('shows the address as readOnly', () => {
@@ -35,7 +34,7 @@ describe('Address', () => {
 
         const onChangeMock = jest.fn();
         const wrapper = getWrapper({ data, onChange: onChangeMock });
-        wrapper.update();
+        wrapper.update(null);
 
         const lastOnChangeCall = onChangeMock.mock.calls.pop();
         expect(lastOnChangeCall[0].data).toMatchObject(data);
@@ -104,13 +103,21 @@ describe('Address', () => {
 
     test('sets the stateOrProvince field to "N/A" for countries with no state dataset', () => {
         const data = { country: 'NL' };
-        const wrapper = getWrapper({ data });
-        expect(wrapper.find('StateField').prop('value')).toBe('N/A');
+        const onChangeMock = jest.fn();
+        const wrapper = getWrapper({ data, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        const receivedData = lastOnChangeCall[0].data;
+        wrapper.update(null);
+        expect(receivedData.stateOrProvince).toBe('N/A');
     });
 
     test('sets the stateOrProvince field as an empty string for countries with a state dataset', () => {
         const data = { country: 'US' };
-        const wrapper = getWrapper({ data });
-        expect(wrapper.find('StateField').prop('value')).toBe('');
+        const onChangeMock = jest.fn();
+        const wrapper = getWrapper({ data, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        const receivedData = lastOnChangeCall[0].data;
+        wrapper.update(null);
+        expect(receivedData.stateOrProvince).toBe('');
     });
 });
