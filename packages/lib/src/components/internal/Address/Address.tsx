@@ -2,22 +2,18 @@ import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
-import StateField from './components/StateField';
-import CountryField from './components/CountryField';
 import { addressValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
-import { getInitialData } from './utils';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { getAddressSchemaForCountry, getInitialData } from './utils';
 import { AddressProps, AddressStateError, AddressStateValid } from './types';
 import { AddressSchema } from '../../../types';
 import FieldContainer from './components/FieldContainer';
-import { ADDRESS_SCHEMA, COUNTRIES_WITH_TWO_LINES_ADDRESSES, COUNTRIES_WITH_STATES_DATASET, COUNTRIES_WITH_HOUSE_NUMBER_FIRST } from './constants';
+import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET, ADDRESS_SCHEMAS } from './constants';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
     const validator = new Validator(addressValidationRules);
 
-    const { i18n } = useCoreContext();
     const [data, setData] = useState<AddressSchema>(getInitialData(props.data, requiredFields));
     const [errors, setErrors] = useState<AddressStateError>({});
     const [valid, setValid] = useState<AddressStateValid>({});
@@ -77,97 +73,34 @@ export default function Address(props: AddressProps) {
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyAddress data={data} label={label} />;
 
+    const getComponent = (fieldName: string, { classNameModifiers = [] }) => {
+        if (!requiredFields.includes(fieldName)) return null;
+
+        return (
+            <FieldContainer
+                allowedCountries={props.allowedCountries}
+                classNameModifiers={[...classNameModifiers, fieldName]}
+                data={data}
+                errors={errors}
+                fieldName={fieldName}
+                onInput={handleChange}
+                onStateChange={handleStateChange}
+                onCountryChange={handleCountryChange}
+            />
+        );
+    };
+
+    const getWrapper = group => (
+        <div className="adyen-checkout__field-group">
+            {group.map(([field, size]) => getComponent(field, { classNameModifiers: [`col-${size}`] }))}
+        </div>
+    );
+
+    const addressSchema = getAddressSchemaForCountry(data.country);
+
     return (
         <Fieldset classNameModifiers={[label]} label={label}>
-            {requiredFields.includes('country') && (
-                <CountryField
-                    value={data.country}
-                    errorMessage={!!errors.country}
-                    onDropdownChange={handleCountryChange}
-                    allowedCountries={props.allowedCountries}
-                />
-            )}
-
-            {requiredFields.includes('houseNumberOrName') && COUNTRIES_WITH_HOUSE_NUMBER_FIRST.includes(data.country) && (
-                <FieldContainer
-                    classNameModifiers={['col-30']}
-                    data={data}
-                    errors={errors}
-                    fieldName="houseNumberOrName"
-                    i18n={i18n}
-                    onInput={handleChange}
-                />
-            )}
-
-            {requiredFields.includes('street') && (
-                <FieldContainer
-                    classNameModifiers={[...(COUNTRIES_WITH_TWO_LINES_ADDRESSES.includes(data.country) ? [] : ['col-70'])]}
-                    data={data}
-                    errors={errors}
-                    fieldName="street"
-                    i18n={i18n}
-                    onInput={handleChange}
-                />
-            )}
-
-            {requiredFields.includes('houseNumberOrName') && !COUNTRIES_WITH_HOUSE_NUMBER_FIRST.includes(data.country) && (
-                <FieldContainer
-                    classNameModifiers={[...(COUNTRIES_WITH_TWO_LINES_ADDRESSES.includes(data.country) ? [] : ['col-30'])]}
-                    data={data}
-                    errors={errors}
-                    fieldName="houseNumberOrName"
-                    i18n={i18n}
-                    onInput={handleChange}
-                />
-            )}
-
-            <div className="adyen-checkout__field-group">
-                {requiredFields.includes('city') && (
-                    <FieldContainer
-                        classNameModifiers={[...(COUNTRIES_WITH_STATES_DATASET.includes(data.country) ? [] : ['col-70'])]}
-                        data={data}
-                        errors={errors}
-                        fieldName="city"
-                        i18n={i18n}
-                        onInput={handleChange}
-                    />
-                )}
-
-                {requiredFields.includes('postalCode') && !COUNTRIES_WITH_STATES_DATASET.includes(data.country) && (
-                    <FieldContainer
-                        classNameModifiers={['col-30']}
-                        data={data}
-                        errors={errors}
-                        fieldName="postalCode"
-                        i18n={i18n}
-                        onInput={handleChange}
-                    />
-                )}
-            </div>
-
-            {COUNTRIES_WITH_STATES_DATASET.includes(data.country) && (
-                <div className="adyen-checkout__field-group">
-                    {requiredFields.includes('stateOrProvince') && (
-                        <StateField
-                            value={data.stateOrProvince}
-                            errorMessage={!!errors.stateOrProvince}
-                            country={data.country}
-                            onDropdownChange={handleStateChange}
-                        />
-                    )}
-
-                    {requiredFields.includes('postalCode') && (
-                        <FieldContainer
-                            classNameModifiers={['col-30']}
-                            data={data}
-                            errors={errors}
-                            fieldName="postalCode"
-                            i18n={i18n}
-                            onInput={handleChange}
-                        />
-                    )}
-                </div>
-            )}
+            {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
         </Fieldset>
     );
 }
