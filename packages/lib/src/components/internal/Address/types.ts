@@ -1,3 +1,5 @@
+import { AddressSchema } from '../../../types';
+
 export interface AddressProps {
     allowedCountries?: string[];
     countryCode?: string;
@@ -25,4 +27,49 @@ export interface AddressStateValid {
     city?: boolean;
     country?: boolean;
     stateOrProvince?: boolean;
+}
+
+export interface FieldContainerProps {
+    allowedCountries: string[];
+    classNameModifiers: string[];
+    data: AddressSchema;
+    errors: AddressStateError;
+    fieldName: string;
+    onInput: (e: Event) => void;
+    onCountryChange: (e: Event) => void;
+    onStateChange: (e: Event) => void;
+    readOnly?: boolean;
+}
+
+export interface ReadOnlyAddressProps {
+    data: AddressSchema;
+    label: string;
+}
+
+export interface CountryFieldProps {
+    allowedCountries: string[];
+    classNameModifiers: string[];
+    errorMessage: boolean;
+    onDropdownChange: (e: Event) => void;
+    readOnly?: boolean;
+    value: string;
+}
+
+export interface CountryFieldItem {
+    id: string;
+    name: string;
+}
+
+export interface StateFieldProps {
+    classNameModifiers: string[];
+    selectedCountry: string;
+    errorMessage: boolean;
+    onDropdownChange: (e: Event) => void;
+    readOnly?: boolean;
+    value: string;
+}
+
+export interface StateFieldItem {
+    id: string;
+    name: string;
 }
