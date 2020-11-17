@@ -5,7 +5,8 @@ import DropinComponent from '../../components/Dropin/components/DropinComponent'
 import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
-import { getComponentConfiguration } from '../index';
+import { getCommonProps } from './components/utils';
+import { createElements, createStoredElements } from './elements';
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -75,21 +76,29 @@ class DropinElement extends UIElement<DropinElementProps> {
         return this.props.onSubmit({ data, isValid }, this);
     };
 
-    handleAction(action: PaymentAction) {
+    /**
+     * Creates the Drop-in elements
+     */
+    private handleCreate = () => {
+        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods, _parentInstance } = this.props;
+        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
+        const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, _parentInstance?.create) : [];
+        const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, _parentInstance?.create) : [];
+
+        return [storedElements, elements];
+    };
+
+    handleAction(action: PaymentAction, props = {}) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
         if (this.activePaymentMethod.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
         }
 
-        // Extract desired props that we need to pass on from the pmConfiguration for this particular PM
-        const pmConfig = getComponentConfiguration(action.paymentMethodType, this.props.paymentMethodsConfiguration);
-
-        const paymentAction: UIElement = this.props.createFromAction(action, {
-            isDropin: true,
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this),
-            onError: this.props.onError, // Add ref to onError in case the merchant has defined one in the component options
-            ...(pmConfig?.onError && { onError: pmConfig.onError }) // Overwrite ref to onError in case the merchant has defined one in the pmConfig options
+        const paymentAction: UIElement = this.props._parentInstance.createFromAction(action, {
+            ...props,
+            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
+            isDropin: true
         });
 
         if (paymentAction) {
@@ -111,6 +120,7 @@ class DropinElement extends UIElement<DropinElementProps> {
                     onChange={this.setState}
                     onSubmit={this.handleSubmit}
                     elementRef={this.elementRef}
+                    onCreateElements={this.handleCreate}
                     ref={dropinRef => {
                         this.dropinRef = dropinRef;
                     }}

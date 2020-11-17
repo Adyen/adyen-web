@@ -34,5 +34,5 @@ describe('Dropin', () => {
             dropin.closeActivePaymentMethod();
             expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
         });
-    })
+    });
 });

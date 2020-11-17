@@ -9,6 +9,7 @@ import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
+import { processGlobalOptions } from './utils';
 
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
@@ -51,7 +52,8 @@ class Core {
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (action.type) {
-            const props = this.getPropsForComponent(options);
+            const paymentMethodsConfiguration = getComponentConfiguration(action.paymentMethodType, this.options.paymentMethodsConfiguration);
+            const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
             return getComponentForAction(action, props);
         }
         return this.handleCreateError();
@@ -113,7 +115,6 @@ class Core {
         return {
             paymentMethods: this.paymentMethodsResponse.paymentMethods,
             storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
-            ...this.options,
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
@@ -136,14 +137,22 @@ class Core {
 
             // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at top level, in the config object set when a
             // new AdyenCheckout is initialised.
-            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, options.paymentMethodsConfiguration);
+            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, this.options.paymentMethodsConfiguration);
+
+            // Filtered global options
+            const globalOptions = processGlobalOptions(this.options);
 
             // Merge:
-            // 1. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
-            // 2. the combined props of checkout & the configuration object defined on this particular component
+            // 1. global props
+            // 2. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
             // 3. a paymentMethodsConfiguration object, if defined at top level
-            const component = new PaymentMethod({ ...paymentMethodsDetails, ...options, ...paymentMethodsConfiguration });
-            this.components.push(component);
+            // 4. the combined props of checkout & the configuration object defined on this particular component
+            const component = new PaymentMethod({ ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...options });
+
+            if (!options.isDropin) {
+                this.components.push(component);
+            }
+
             return component;
         }
 
@@ -160,11 +169,12 @@ class Core {
          * implement a component, it will default to a redirect component
          */
         if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
-            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, options.paymentMethodsConfiguration);
+            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, this.options.paymentMethodsConfiguration);
             return this.handleCreate(paymentMethods.redirect, {
+                ...processGlobalOptions(this.options),
                 ...this.paymentMethodsResponse.find(PaymentMethod),
-                ...options,
-                ...paymentMethodsConfiguration
+                ...paymentMethodsConfiguration,
+                ...options
             });
         }
 
