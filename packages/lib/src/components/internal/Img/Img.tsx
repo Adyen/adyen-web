@@ -1,3 +1,4 @@
+import { JSX } from 'preact';
 import { useRef, useState, useEffect } from 'preact/hooks';
 import cx from 'classnames';
 import './Img.scss';
@@ -32,7 +33,7 @@ export default function Img(props: ImgProps) {
     }, []);
 
     if (backgroundUrl) {
-        return <div style={JSON.stringify({ backgroundUrl })} {...props} className={classNames} />;
+        return <div style={{ backgroundUrl } as JSX.CSSProperties} {...props} className={classNames} />;
     }
 
     return <img {...props} alt={alt} ref={imageRef} className={classNames} onError={handleError} />;
