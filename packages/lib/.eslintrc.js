@@ -91,6 +91,7 @@ module.exports = {
         '@typescript-eslint/indent': 'off',
         '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }],
         '@typescript-eslint/ban-types': 'off', // TODO
+        '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
 
         // React Rules
         'react/prop-types': 'off',

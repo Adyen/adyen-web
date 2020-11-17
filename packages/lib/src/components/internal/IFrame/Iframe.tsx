@@ -62,7 +62,7 @@ class Iframe extends Component<IframeProps> {
                     this.iframeEl = ref;
                 }}
                 /*
-                // @ts-ignore */
+                // @ts-ignore experimental */
                 allow={allow}
                 className={`adyen-checkout__iframe adyen-checkout__iframe--${name}`}
                 name={name}
