@@ -8,7 +8,7 @@ import { getAddressSchemaForCountry, getInitialData } from './utils';
 import { AddressProps, AddressStateError, AddressStateValid } from './types';
 import { AddressSchema } from '../../../types';
 import FieldContainer from './components/FieldContainer';
-import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET, ADDRESS_SCHEMAS } from './constants';
+import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET } from './constants';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
