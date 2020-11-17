@@ -53,6 +53,7 @@
     "infix": "Vorwahl",
     "lastName": "Nachname",
     "mobileNumber": "Handynummer",
+    "mobileNumber.invalid": "Ungültige Handynummer",
     "city": "Stadt",
     "postalCode": "Postleitzahl",
     "countryCode": "Landesvorwahl",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Die eingegebene Kartennummer passt nicht zur Kartenmarke",
     "error.va.sf-cc-num.03": "Nicht unterstützte Karte eingegeben",
     "error.va.sf-cc-dat.01": "Karte zu alt",
-    "error.va.sf-cc-dat.02": "Datum zu weit in der Zukunft"
+    "error.va.sf-cc-dat.02": "Datum zu weit in der Zukunft",
+    "partialPayment.warning": "Wählen Sie eine andere Zahlungsmethode zur Zahlung des Restbetrags",
+    "partialPayment.remainingBalance": "Es verbleibt ein Restbetrag von %{amount}"
 }
