@@ -52,8 +52,11 @@ class Select extends Component<SelectProps, SelectState> {
 
     select(e) {
         e.preventDefault();
-        this.closeDropdown();
-        this.props.onChange(e);
+
+        if (e.currentTarget.getAttribute('data-disabled') !== 'true') {
+            this.closeDropdown();
+            this.props.onChange(e);
+        }
     }
 
     /**
@@ -177,12 +180,17 @@ class Select extends Component<SelectProps, SelectState> {
                             role="option"
                             tabIndex={-1}
                             aria-selected={item.id === active.id}
+                            aria-disabled={item.available === false}
                             className={cx([
                                 'adyen-checkout__dropdown__element',
                                 styles['adyen-checkout__dropdown__element'],
-                                { 'adyen-checkout__dropdown__element--active': item.id === active.id }
+                                {
+                                    'adyen-checkout__dropdown__element--active': item.id === active.id,
+                                    'adyen-checkout__dropdown__element--disabled': item.available === false
+                                }
                             ])}
                             data-value={item.id}
+                            data-disabled={item.available === false}
                             onClick={this.select}
                             onKeyDown={this.handleKeyDown}
                         >
