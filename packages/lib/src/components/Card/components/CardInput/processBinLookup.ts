@@ -22,7 +22,10 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
             this.setState(switchObj.stateObject); // Don't need to call validateCardInput - this will be called by the brandChange from SFP
 
             // Pass an object through to SFP
-            this.sfp.current.processBinLookupResponse({ supportedBrands: [switchObj.leadType] });
+            this.sfp.current.processBinLookupResponse({
+                issuingCountryCode: binValueObject.issuingCountryCode,
+                supportedBrands: [switchObj.leadType]
+            });
 
             // 2) Single option found (binValueObject.brands.length === 1)
         } else {

@@ -91,6 +91,8 @@ export const getErrorObject = (fieldType, rootNode, state) => {
 export const resolvePlaceholders = (i18n?: Language) => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
     [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
+    [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.month.placeholder'),
+    [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.year.placeholder'),
     [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'),
     [ENCRYPTED_PWD_FIELD]: i18n.get && i18n.get('creditCard.encryptedPassword.placeholder')
 });
