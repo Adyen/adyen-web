@@ -24,7 +24,6 @@ function fetchJsonData(options: FetchJsonDataOptions, data?) {
         headers: {
             Accept: 'application/json, text/plain, */*',
             'Content-Type': method === 'POST' ? 'application/json' : 'text/plain',
-            // NOTE: Remove next line to test old flow
             ...(clientKey && { 'X-Client-Key': clientKey }),
             ...options.headers
         },
@@ -33,8 +32,6 @@ function fetchJsonData(options: FetchJsonDataOptions, data?) {
         ...(data && { body: JSON.stringify(data) })
     } as RequestInit;
 
-    // TODO: Delete
-    // const url = `${loadingContext}${path}${clientKey ? `?token=${clientKey}` : ''}`;
     const url = `${loadingContext}${path}`;
 
     return fetch(url, request)
