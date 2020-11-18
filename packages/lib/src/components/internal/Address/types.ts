@@ -1,4 +1,5 @@
-import { AddressSchema } from '../../../types';
+import { AddressField, AddressSchema } from '../../../types';
+import { ADDRESS_SCHEMA } from './constants';
 
 export interface AddressProps {
     allowedCountries?: string[];
@@ -73,3 +74,15 @@ export interface StateFieldItem {
     id: string;
     name: string;
 }
+
+type AddressSchemaGroupedFields = [AddressField, number][];
+
+export type AddressSchemas = {
+    [key: string]: (AddressField | AddressSchemaGroupedFields)[];
+};
+
+export type AddressLabels = {
+    [label: string]: {
+        [key: string]: string;
+    };
+};
