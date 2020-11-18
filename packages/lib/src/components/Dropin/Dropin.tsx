@@ -31,6 +31,9 @@ class DropinElement extends UIElement<DropinElementProps> {
 
     setStatus(status, props = {}) {
         this.dropinRef.setStatus({ type: status, props });
+        if (process.env.NODE_ENV === 'test') {
+            this['componentFromAction'] = props['component'];
+        }
         return this;
     }
 
@@ -78,18 +81,22 @@ class DropinElement extends UIElement<DropinElementProps> {
     handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        if (this.activePaymentMethod.updateWithAction) {
+        if (this.activePaymentMethod?.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
         }
 
+        const pmType = action.paymentMethodType || 'scheme';
+
         // Extract desired props that we need to pass on from the pmConfiguration for this particular PM
-        const pmConfig = getComponentConfiguration(action.paymentMethodType, this.props.paymentMethodsConfiguration);
+        const pmConfig = getComponentConfiguration(pmType, this.props.paymentMethodsConfiguration);
 
         const paymentAction: UIElement = this.props.createFromAction(action, {
             isDropin: true,
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this),
-            onError: this.props.onError, // Add ref to onError in case the merchant has defined one in the component options
-            ...(pmConfig?.onError && { onError: pmConfig.onError }) // Overwrite ref to onError in case the merchant has defined one in the pmConfig options
+            elementRef: this.elementRef,
+            ...this.props,
+            ...pmConfig,
+            // Keep at end since we are creating a new function based on the one in props and don't want this new function overridden
+            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this)
         });
 
         if (paymentAction) {

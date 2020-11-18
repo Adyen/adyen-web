@@ -113,7 +113,7 @@ getOriginKey().then(originKey => {
             styles: materialStyles,
             placeholders: {
                 encryptedCardNumber: '',
-                encryptedExpiryDate: '',
+                encryptedExpiryDate: null,
                 encryptedSecurityCode: ''
             },
             onFocus: materialFocus,

@@ -1,6 +1,9 @@
 import { FALLBACK_CONTEXT } from '../core/config';
 
-export default function fetchJsonData({ path, loadingContext = FALLBACK_CONTEXT, method = 'GET', contentType = 'text/plain' }, dataObj?) {
+export default function fetchJsonData(
+    { path, loadingContext = FALLBACK_CONTEXT, method = 'GET', contentType = 'text/plain', clientKey = null },
+    dataObj?
+) {
     const options = {
         method,
         mode: 'cors',
@@ -8,7 +11,8 @@ export default function fetchJsonData({ path, loadingContext = FALLBACK_CONTEXT,
         credentials: 'same-origin',
         headers: {
             Accept: 'application/json',
-            'Content-Type': contentType
+            'Content-Type': contentType,
+            ...(clientKey && { 'x-client-key': clientKey })
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
@@ -26,5 +30,6 @@ export default function fetchJsonData({ path, loadingContext = FALLBACK_CONTEXT,
         .then(data => data)
         .catch(e => {
             console.warn(`Call to ${url} failed. Error= ${e}`);
+            return e;
         });
 }

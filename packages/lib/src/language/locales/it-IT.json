@@ -53,6 +53,7 @@
     "infix": "Prefisso",
     "lastName": "Cognome",
     "mobileNumber": "Numero di cellulare",
+    "mobileNumber.invalid": "Numero di cellulare non valido",
     "city": "Città",
     "postalCode": "Codice postale",
     "countryCode": "Codice nazionale",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "Il numero di carta digitato non corrisponde alla marca della carta",
     "error.va.sf-cc-num.03": "Tipo di carta non supportato",
     "error.va.sf-cc-dat.01": "Carta troppo vecchia",
-    "error.va.sf-cc-dat.02": "Data troppo avanti nel futuro"
+    "error.va.sf-cc-dat.02": "Data troppo avanti nel futuro",
+    "partialPayment.warning": "Seleziona un altro metodo di pagamento per pagare l'importo rimanente",
+    "partialPayment.remainingBalance": "Il saldo rimanente sarà di %{amount}"
 }

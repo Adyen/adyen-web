@@ -53,6 +53,7 @@
     "infix": "前缀",
     "lastName": "姓氏",
     "mobileNumber": "手机号",
+    "mobileNumber.invalid": "无效的手机号码",
     "city": "城市",
     "postalCode": "邮政编码",
     "countryCode": "国家代码",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "输入的卡片号与卡片品牌不符",
     "error.va.sf-cc-num.03": "不支持输入的卡片",
     "error.va.sf-cc-dat.01": "卡片太旧",
-    "error.va.sf-cc-dat.02": "日期太久远"
+    "error.va.sf-cc-dat.02": "日期太久远",
+    "partialPayment.warning": "请选择其他支付方式支付剩余款项",
+    "partialPayment.remainingBalance": "剩余额度为 %{amount}"
 }

@@ -163,6 +163,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 ref={this.sfp}
                 {...this.props}
                 styles={{ ...defaultStyles, ...this.props.styles }}
+                koreanAuthenticationRequired={this.props.configuration.koreanAuthenticationRequired}
+                hasKoreanFields={!!(this.props.configuration.koreanAuthenticationRequired && this.props.countryCode === 'kr')}
                 onChange={this.handleSecuredFieldsChange}
                 onBrand={this.handleOnBrand}
                 onFocus={this.handleFocus}

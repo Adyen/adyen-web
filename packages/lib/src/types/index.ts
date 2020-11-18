@@ -5,9 +5,14 @@ import paymentMethods from '../components';
  */
 export interface PaymentAction {
     /**
-     * Typpe of action that needs to be taken by the client
+     * General type of action that needs to be taken by the client
      */
     type: string;
+
+    /**
+     * Refinement of type of action that needs to be taken by the client (currently only applies to the new 'threeDS2' type)
+     */
+    subtype?: string;
 
     /**
      * Specifies the payment method.

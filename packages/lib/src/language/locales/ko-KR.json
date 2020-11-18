@@ -53,6 +53,7 @@
     "infix": "명칭",
     "lastName": "성",
     "mobileNumber": "휴대폰 번호",
+    "mobileNumber.invalid": "유효하지 않은 휴대폰 번호",
     "city": "시",
     "postalCode": "우편번호",
     "countryCode": "국가 코드",
@@ -145,5 +146,7 @@
     "error.va.sf-cc-num.02": "입력한 카드 번호가 카드 브랜드와 일치하지 않습니다",
     "error.va.sf-cc-num.03": "지원되지 않는 카드가 입력되었습니다",
     "error.va.sf-cc-dat.01": "카드가 너무 오래되었습니다",
-    "error.va.sf-cc-dat.02": "현재로부터 너무 먼 날짜입니다"
+    "error.va.sf-cc-dat.02": "현재로부터 너무 먼 날짜입니다",
+    "partialPayment.warning": "나머지 비용 지불에 사용할 다른 결제 수단 선택하기",
+    "partialPayment.remainingBalance": "남은 잔액은 %{amount}입니다"
 }
