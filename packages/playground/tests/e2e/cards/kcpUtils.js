@@ -1,12 +1,19 @@
-import { setIframeSelector, fillIFrame, deleteFromIFrame, checkIframeContainsValue } from '../commonUtils';
+import { setIframeSelector, fillIFrame, checkIframeContainsValue } from '../commonUtils';
 
-import { NON_KOREAN_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
+import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
 
 /**
  * Unique to each component are where the iframes are to be found,
  * the indices by which a specific iframe can be identified,
- * and the selectors for elements found within it
+ * and the selectors for elements found within it.
+ *
+ * A KCP card shares the 3 iframes from a regular card (see cardUtils.js),
+ * plus a taxNumber field,
+ * plus an iframe with the index and id:
+ * 3 - encryptedPassword
  */
+
+// Set Selector that says where the iframes are to be found for this component
 setIframeSelector('.card-field iframe');
 
 /**
@@ -15,27 +22,6 @@ setIframeSelector('.card-field iframe');
  * @param replace - boolean: whether typed text will replace existing content
  * @returns {Promise<*>}
  */
-export const fillCardNumber = async (t, value = NON_KOREAN_TEST_CARD, replace = false) => {
-    return fillIFrame(t, 0, '#encryptedCardNumber', value, replace);
-};
-
-export const deleteCardNumber = async t => {
-    return deleteFromIFrame(t, 0, '#encryptedCardNumber');
-};
-
-export const fillDate = async (t, value = TEST_DATE_VALUE, replace = false) => {
-    return fillIFrame(t, 1, '#encryptedExpiryDate', value, replace);
-};
-
-export const fillCVC = async (t, value = TEST_CVC_VALUE, replace = false) => {
-    return fillIFrame(t, 2, '#encryptedSecurityCode', value, replace);
-};
-
-export const fillDateAndCVC = async (t, dateValue = TEST_DATE_VALUE, cvcValue = TEST_CVC_VALUE) => {
-    await fillDate(t, dateValue);
-    return fillCVC(t, cvcValue);
-};
-
 export const fillPwd = async (t, value = TEST_PWD_VALUE, replace = false) => {
     return fillIFrame(t, 3, '#encryptedPassword', value, replace);
 };

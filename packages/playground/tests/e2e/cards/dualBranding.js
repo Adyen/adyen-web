@@ -2,7 +2,7 @@ import { Selector, ClientFunction } from 'testcafe';
 
 import { start } from '../commonUtils';
 
-import { fillCardNumber, fillDateAndCVC } from './kcpUtils';
+import { fillCardNumber, fillDateAndCVC } from './cardUtils';
 
 import { DUAL_BRANDED_CARD } from '../constants';
 
@@ -12,19 +12,21 @@ const getCardIsValid = ClientFunction(() => {
     return window.card.isValid;
 });
 
-const getBrandFromPMData = ClientFunction(() => {
-    return window.card.formatData().paymentMethod.brand;
+const getPropFromPMData = ClientFunction(prop => {
+    return window.card.formatData().paymentMethod[prop];
 });
 
 //const getCardState = ClientFunction((what, prop) => {
 //    return window.card.state[what][prop];
 //});
 
+const TEST_SPEED = 1;
+
 fixture`Testing dual branding`.page`http://localhost:3020/cards/?testing=testcafe`;
 
 test('Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown', async t => {
     // Start, allow time for iframes to load
-    await start(t, 2000, 0.85);
+    await start(t, 2000, TEST_SPEED);
 
     // Fill card field with dual branded card (visa/cb)
     await fillCardNumber(t, DUAL_BRANDED_CARD);
@@ -54,7 +56,7 @@ test(
         'then check PM data does not have a brand property',
     async t => {
         // Start, allow time for iframes to load
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Fill card field with dual branded card (visa/cb)
         await fillCardNumber(t, DUAL_BRANDED_CARD);
@@ -64,7 +66,8 @@ test(
         // Expect card to now be valid
         await t.expect(getCardIsValid()).eql(true);
 
-        await t.expect(getBrandFromPMData()).notOk();
+        // Should not be a brand property in the PM data
+        await t.expect(getPropFromPMData('brand')).eql(undefined);
     }
 );
 
@@ -74,7 +77,7 @@ test(
         'then check PM data does have a corresponding brand property',
     async t => {
         // Start, allow time for iframes to load
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Fill card field with dual branded card (visa/cb)
         await fillCardNumber(t, DUAL_BRANDED_CARD);
@@ -87,10 +90,11 @@ test(
         // Click brand icons
         await t
             .click(dualBrandingIconHolder.find('img').nth(1))
-            .expect(getBrandFromPMData())
+            .expect(getPropFromPMData('brand'))
             .eql('cartebancaire')
+            .wait(1000)
             .click(dualBrandingIconHolder.find('img').nth(0))
-            .expect(getBrandFromPMData())
+            .expect(getPropFromPMData('brand'))
             .eql('visa');
     }
 );

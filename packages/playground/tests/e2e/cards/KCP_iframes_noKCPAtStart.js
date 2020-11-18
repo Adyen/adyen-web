@@ -2,9 +2,10 @@ import { Selector, ClientFunction } from 'testcafe';
 
 import { start } from '../commonUtils';
 
-import { fillCardNumber, fillDateAndCVC, fillTaxNumber, fillPwd, deleteCardNumber, checkPwd } from './kcpUtils';
+import { fillCardNumber, fillDateAndCVC, deleteCardNumber } from './cardUtils';
+import { fillTaxNumber, fillPwd, checkPwd } from './kcpUtils';
 
-import { KOREAN_TEST_CARD, NON_KOREAN_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
+import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
 
 //const cardNumberHolder = Selector('[data-cse="encryptedCardNumber"]');
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
@@ -21,6 +22,8 @@ const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
 });
 
+const TEST_SPEED = 1;
+
 fixture`Starting without KCP fields`.page`http://localhost:3020/cards/?testing=testcafe&isKCP=true`;
 
 // Pink 1
@@ -30,7 +33,7 @@ test(
         'then complete the form & check component becomes valid',
     async t => {
         // Start, allow time for iframes to load
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Fill card field with korean card
         await fillCardNumber(t, KOREAN_TEST_CARD);
@@ -66,7 +69,7 @@ test(
         'then delete card number and check taxNumber and password state are cleared',
     async t => {
         // Start, allow time for iframes to load
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Complete form with korean card number
         await fillCardNumber(t, KOREAN_TEST_CARD);
@@ -100,10 +103,10 @@ test(
 );
 
 //test('Fill in card number that will not trigger addition of KCP iframe', async t => {
-//    await start(t, 2000, 0.85);
+//    await start(t, 2000, TEST_SPEED);
 //
 //    // Fill card field with korean card
-//    await fillCardNumber(t, NON_KOREAN_TEST_CARD);
+//    await fillCardNumber(t, REGULAR_TEST_CARD);
 //
 //    // Should be no securedField holding element
 //    await t.expect(passwordHolder.exists).notOk();
@@ -115,7 +118,7 @@ test(
         'then complete form and expect component to be valid & to be able to pay,' +
         'then replace card number with non-korean card and expect component to be valid & to be able to pay',
     async t => {
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // handler for alert that's triggered on successful payment
         await t.setNativeDialogHandler(() => true);
@@ -137,7 +140,7 @@ test(
             .notOk();
 
         // Replace number with non-korean card
-        await fillCardNumber(t, NON_KOREAN_TEST_CARD, true);
+        await fillCardNumber(t, REGULAR_TEST_CARD, true);
 
         // Expect card to now be valid
         await t.expect(getCardIsValid()).eql(true);
@@ -158,7 +161,7 @@ test(
         'then complete form except for password field,' +
         'expect component not to be valid and for password field to show error',
     async t => {
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Complete form with korean card number
         await fillCardNumber(t, KOREAN_TEST_CARD);
