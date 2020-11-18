@@ -1,5 +1,4 @@
 import { AddressField, AddressSchema } from '../../../types';
-import { ADDRESS_SCHEMA } from './constants';
 
 export interface AddressProps {
     allowedCountries?: string[];
