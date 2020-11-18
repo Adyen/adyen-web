@@ -2,9 +2,10 @@ import { Selector, ClientFunction } from 'testcafe';
 
 import { start } from '../commonUtils';
 
-import { fillCardNumber, fillDateAndCVC, fillTaxNumber, fillPwd } from './kcpUtils';
+import { fillCardNumber, fillDateAndCVC } from './cardUtils';
+import { fillTaxNumber, fillPwd } from './kcpUtils';
 
-import { KOREAN_TEST_CARD, NON_KOREAN_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../constants';
+import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../constants';
 
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
 
@@ -16,6 +17,8 @@ const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
 });
 
+const TEST_SPEED = 1;
+
 fixture`Starting with KCP fields`.page`http://localhost:3020/cards/?testing=testcafe&isKCP=true&countryCode=KR`;
 
 // Green 1
@@ -25,10 +28,10 @@ test(
         'then complete the form & check component becomes valid',
     async t => {
         // Start, allow time for iframes to load
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Fill card field with non-korean card
-        await fillCardNumber(t, NON_KOREAN_TEST_CARD);
+        await fillCardNumber(t, REGULAR_TEST_CARD);
 
         // Does the password securedField get removed
         await t.expect(passwordHolder.exists).notOk();
@@ -48,7 +51,7 @@ test(
         'then replace card number with non-korean card and check taxNumber and password state are cleared',
     async t => {
         // Start, allow time for iframes to load
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // Complete form with korean card number
         await fillCardNumber(t, KOREAN_TEST_CARD);
@@ -67,7 +70,7 @@ test(
         await t.expect(getCardState('valid', 'encryptedPassword')).eql(true);
 
         // Replace number
-        await fillCardNumber(t, NON_KOREAN_TEST_CARD, true);
+        await fillCardNumber(t, REGULAR_TEST_CARD, true);
 
         // (Does the password securedField get removed)
         await t.expect(passwordHolder.exists).notOk();
@@ -90,13 +93,13 @@ test(
         'then complete form and expect component to be valid & to be able to pay,' +
         'then replace card number with korean card and expect component to be valid & to be able to pay',
     async t => {
-        await start(t, 2000, 0.85);
+        await start(t, 2000, TEST_SPEED);
 
         // handler for alert that's triggered on successful payment
         await t.setNativeDialogHandler(() => true);
 
         // Complete form with korean card number
-        await fillCardNumber(t, NON_KOREAN_TEST_CARD);
+        await fillCardNumber(t, REGULAR_TEST_CARD);
         await fillDateAndCVC(t);
 
         // Expect card to now be valid
