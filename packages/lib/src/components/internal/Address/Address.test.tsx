@@ -1,4 +1,4 @@
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { h } from 'preact';
 import Address from './Address';
 import getDataset from '../../../utils/fetch-json-data';

@@ -1,8 +1,6 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import FieldContainer from './FieldContainer';
-import { AddressSchema } from '../../../../types';
-import { AddressStateError } from '../types';
 
 const propsMock = {
     errors: {},
