@@ -21,6 +21,6 @@ window.checkout = new AdyenCheckout({
 window.card = checkout
     .create('card', {
         brands: ['mc', 'visa', 'amex'],
-        ...window.cardConfigObj
+        ...window.cardConfig
     })
     .mount('.card-field');

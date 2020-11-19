@@ -9,7 +9,7 @@ const PATH = 'tests/e2e/';
         const runner = testcafe.createRunner();
 
         const failedCount = await runner
-            .src([`${PATH}cards/KCP_noKCPAtStart.js`, `${PATH}cards/KCP_withKCPAtStart.js`, `${PATH}cards/dualBranding.js`])
+            .src(`${PATH}**/*.test.js`)
             .browsers('chrome:headless')
             .run();
 

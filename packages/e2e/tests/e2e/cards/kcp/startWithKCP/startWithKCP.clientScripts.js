@@ -1,10 +1,11 @@
 /**
- * Set koreanAuthenticationRequired so KCP fields will show if a korean card number is entered
+ * Set koreanAuthenticationRequired & countryCode so KCP fields show at start
  */
-window.cardConfigObj = {
+window.cardConfig = {
     type: 'scheme',
     brands: ['mc', 'visa', 'amex', 'korean_local_card'],
     configuration: {
         koreanAuthenticationRequired: true
-    }
+    },
+    countryCode: 'kr'
 };

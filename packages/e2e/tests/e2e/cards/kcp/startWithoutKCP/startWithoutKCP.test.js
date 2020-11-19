@@ -1,18 +1,13 @@
 import { Selector, ClientFunction } from 'testcafe';
 
-import { start } from '../commonUtils';
+import { start } from '../../../commonUtils';
 
-import { fillCardNumber, fillDateAndCVC, deleteCardNumber } from './utils/cardUtils';
-import { fillTaxNumber, fillPwd, checkPwd } from './utils/kcpUtils';
+import { fillCardNumber, fillDateAndCVC, deleteCardNumber } from '../../utils/cardUtils';
+import { fillTaxNumber, fillPwd, checkPwd } from '../../utils/kcpUtils';
 
-import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
+import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../../constants';
 
-//const cardNumberHolder = Selector('[data-cse="encryptedCardNumber"]');
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
-
-//const setFocusOn = ClientFunction(who => {
-//    window.card.setFocusOn(who);
-//});
 
 const getCardIsValid = ClientFunction(() => {
     return window.card.isValid;
@@ -24,15 +19,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-/**
- * NOTE: For tests to work with a config file the playground file needs to look for the window.cardConfigObj that the config file creates
- * e.g.
- *  window.card = checkout
- *      .create('card', window.cardConfigObj || {
- *          type: 'scheme',
- *          brands ...
- */
-fixture`Starting without KCP fields`.page`http://localhost:3020/cards/`.clientScripts('config/startWithoutKCP.js');
+fixture`Starting without KCP fields`.page`http://localhost:3020/cards/`.clientScripts('startWithoutKCP.clientScripts.js');
 
 // Pink 1
 test(
@@ -66,7 +53,10 @@ test(
         await fillTaxNumber(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t
+            .wait(1000)
+            .expect(getCardIsValid())
+            .eql(true);
     }
 );
 
