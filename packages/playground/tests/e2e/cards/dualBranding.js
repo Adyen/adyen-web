@@ -61,6 +61,7 @@ test('Fill in card number that will get dual branding result from binLookup, ' +
 test(
     'Fill in card number that will get dual branding result from binLookup, ' +
         'then complete card without selecting dual brand,' +
+        'then check it is valid,' +
         'then check PM data does not have a brand property',
     async t => {
         // Start, allow time for iframes to load
@@ -81,7 +82,9 @@ test(
 
 test(
     'Fill in card number that will get dual branding result from binLookup, ' +
-        'then complete card & select the dual brands,' +
+        'then complete card,' +
+        'then check it is valid,' +
+        'then select the dual brands,' +
         'then check PM data does have a corresponding brand property',
     async t => {
         // Start, allow time for iframes to load
