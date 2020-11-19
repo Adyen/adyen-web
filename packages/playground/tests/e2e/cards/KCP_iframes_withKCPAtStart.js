@@ -19,6 +19,14 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
+/**
+ * NOTE: For tests to work with a config file the playground file needs to look for the window.cardConfigObj that the config file creates
+ * e.g.
+ *  window.card = checkout
+ *      .create('card', window.cardConfigObj || {
+ *          type: 'scheme',
+ *          brands ...
+ */
 fixture`Starting with KCP fields`.page`http://localhost:3020/cards/`.clientScripts('config/startWithKCP.js');
 
 // Green 1
