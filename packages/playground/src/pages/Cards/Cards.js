@@ -95,7 +95,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
 
             // billingAddress config:
             billingAddressRequired: true,
-            billingAddressAllowedCountries: ['US', 'CA', 'BR', 'IT'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
             // billingAddressRequiredFields: ['postalCode', 'country'],
 
             // data:
