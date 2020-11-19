@@ -5,7 +5,6 @@ import { handleSubmit, handleAdditionalDetails, handleError } from '../../handle
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-import { getSearchParameters } from '../../utils';
 import { countryCode } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
