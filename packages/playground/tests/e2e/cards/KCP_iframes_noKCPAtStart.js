@@ -24,7 +24,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-fixture`Starting without KCP fields`.page`http://localhost:3020/cards/?testing=testcafe&isKCP=true`;
+fixture`Starting without KCP fields`.page`http://localhost:3020/cards/`.clientScripts('config/startWithoutKCP.js');
 
 // Pink 1
 test(

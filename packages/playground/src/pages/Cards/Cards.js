@@ -36,7 +36,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     window.card = checkout
         .create('card', {
             type: 'scheme',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'elo', 'korean_local_card'],
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             hasHolderName: false,
             // holderNameRequired: true,
             enableStoreDetails: false,
@@ -63,10 +63,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                     label: 'put your date in here',
                     iframeTitle: 'date iframe'
                 }
-            },
-
-            configuration: {
-                koreanAuthenticationRequired: getSearchParameters().isKCP === 'true'
             }
         })
         .mount('.card-field');

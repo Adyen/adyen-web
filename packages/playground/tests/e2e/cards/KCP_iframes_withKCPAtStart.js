@@ -19,7 +19,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-fixture`Starting with KCP fields`.page`http://localhost:3020/cards/?testing=testcafe&isKCP=true&countryCode=KR`;
+fixture`Starting with KCP fields`.page`http://localhost:3020/cards/`.clientScripts('config/startWithKCP.js');
 
 // Green 1
 test(

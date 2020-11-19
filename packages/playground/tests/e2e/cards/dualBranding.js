@@ -22,7 +22,15 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-fixture`Testing dual branding`.page`http://localhost:3020/cards/?testing=testcafe`;
+/**
+ * NOTE: For tests to work with a config file the playground file needs to look for the window.cardConfigObj that the config file creates
+ * e.g.
+ *  window.card = checkout
+ *      .create('card', window.cardConfigObj || {
+ *          type: 'scheme',
+ *          brands ...
+ */
+fixture`Testing dual branding`.page`http://localhost:3020/cards/`.clientScripts('config/dualBranding.js');
 
 test('Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown', async t => {
     // Start, allow time for iframes to load
