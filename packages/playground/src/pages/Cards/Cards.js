@@ -5,7 +5,6 @@ import { handleSubmit, handleAdditionalDetails, handleError } from '../../handle
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-import { getSearchParameters } from '../../utils';
 import { countryCode } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
@@ -36,7 +35,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     window.card = checkout
         .create('card', {
             type: 'scheme',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'elo', 'korean_local_card'],
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             hasHolderName: false,
             // holderNameRequired: true,
             enableStoreDetails: false,
@@ -63,10 +62,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                     label: 'put your date in here',
                     iframeTitle: 'date iframe'
                 }
-            },
-
-            configuration: {
-                koreanAuthenticationRequired: getSearchParameters().isKCP === 'true'
             }
         })
         .mount('.card-field');

@@ -1,6 +1,6 @@
-import { setIframeSelector, fillIFrame, checkIframeContainsValue } from '../commonUtils';
+import { setIframeSelector, fillIFrame, checkIframeContainsValue } from '../../commonUtils';
 
-import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../constants';
+import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../constants';
 
 /**
  * Unique to each component are where the iframes are to be found,

@@ -2,7 +2,7 @@ import { Selector, ClientFunction } from 'testcafe';
 
 import { start } from '../commonUtils';
 
-import { fillCardNumber, fillDateAndCVC } from './cardUtils';
+import { fillCardNumber, fillDateAndCVC } from './utils/cardUtils';
 
 import { DUAL_BRANDED_CARD } from '../constants';
 
@@ -22,7 +22,15 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-fixture`Testing dual branding`.page`http://localhost:3020/cards/?testing=testcafe`;
+/**
+ * NOTE: For tests to work with a config file the playground file needs to look for the window.cardConfigObj that the config file creates
+ * e.g.
+ *  window.card = checkout
+ *      .create('card', window.cardConfigObj || {
+ *          type: 'scheme',
+ *          brands ...
+ */
+fixture`Testing dual branding`.page`http://localhost:3020/cards/`.clientScripts('config/dualBranding.js');
 
 test('Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown', async t => {
     // Start, allow time for iframes to load
@@ -53,6 +61,7 @@ test('Fill in card number that will get dual branding result from binLookup, ' +
 test(
     'Fill in card number that will get dual branding result from binLookup, ' +
         'then complete card without selecting dual brand,' +
+        'then check it is valid,' +
         'then check PM data does not have a brand property',
     async t => {
         // Start, allow time for iframes to load
@@ -73,7 +82,9 @@ test(
 
 test(
     'Fill in card number that will get dual branding result from binLookup, ' +
-        'then complete card & select the dual brands,' +
+        'then complete card,' +
+        'then check it is valid,' +
+        'then select the dual brands,' +
         'then check PM data does have a corresponding brand property',
     async t => {
         // Start, allow time for iframes to load
