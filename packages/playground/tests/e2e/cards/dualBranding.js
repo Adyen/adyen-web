@@ -2,7 +2,7 @@ import { Selector, ClientFunction } from 'testcafe';
 
 import { start } from '../commonUtils';
 
-import { fillCardNumber, fillDateAndCVC } from './cardUtils';
+import { fillCardNumber, fillDateAndCVC } from './utils/cardUtils';
 
 import { DUAL_BRANDED_CARD } from '../constants';
 
