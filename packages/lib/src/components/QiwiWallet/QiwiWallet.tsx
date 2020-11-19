@@ -10,9 +10,9 @@ class QiwiWalletElement extends UIElement {
 
     public static defaultProps = {
         items: COUNTRIES.map(formatPrefixName).filter(item => item !== false),
-        countryCode: null,
-        prefixName: 'qiwiwallet.telephoneNumberPrefix',
-        phoneName: 'qiwiwallet.telephoneNumber'
+        countryCode: COUNTRIES[0].code,
+        prefixName: 'qiwiwallet.telephoneNumberPrefix' || COUNTRIES[0].id,
+        phoneName: 'qiwiwallet.telephoneNumber' || ''
     };
 
     get isValid() {
