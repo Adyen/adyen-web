@@ -1,7 +1,7 @@
 /**
  * Set koreanAuthenticationRequired & countryCode so KCP fields show at start
  */
-window.cardConfigObj = {
+window.cardConfig = {
     type: 'scheme',
     brands: ['mc', 'visa', 'amex', 'cartebancaire']
 };

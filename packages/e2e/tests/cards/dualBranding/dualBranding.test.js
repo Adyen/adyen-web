@@ -1,10 +1,8 @@
 import { Selector, ClientFunction } from 'testcafe';
-
-import { start } from '../commonUtils';
-
-import { fillCardNumber, fillDateAndCVC } from './utils/cardUtils';
-
-import { DUAL_BRANDED_CARD } from '../constants';
+import { start } from '../utils/commonUtils';
+import { fillCardNumber, fillDateAndCVC } from '../utils/cardUtils';
+import { DUAL_BRANDED_CARD } from '../utils/constants';
+import { CARDS_URL } from '../../pages';
 
 const dualBrandingIconHolder = Selector('.card-field .adyen-checkout__card__dual-branding__buttons--active');
 
@@ -16,21 +14,9 @@ const getPropFromPMData = ClientFunction(prop => {
     return window.card.formatData().paymentMethod[prop];
 });
 
-//const getCardState = ClientFunction((what, prop) => {
-//    return window.card.state[what][prop];
-//});
-
 const TEST_SPEED = 1;
 
-/**
- * NOTE: For tests to work with a config file the playground file needs to look for the window.cardConfigObj that the config file creates
- * e.g.
- *  window.card = checkout
- *      .create('card', window.cardConfigObj || {
- *          type: 'scheme',
- *          brands ...
- */
-fixture`Testing dual branding`.page`http://localhost:3020/cards/`.clientScripts('config/dualBranding.js');
+fixture`Testing dual branding`.page(CARDS_URL).clientScripts('dualBranding.clientScripts.js');
 
 test('Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown', async t => {
     // Start, allow time for iframes to load

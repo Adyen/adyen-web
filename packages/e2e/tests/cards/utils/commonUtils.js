@@ -3,7 +3,7 @@ import { Selector } from 'testcafe';
 let iframeSelector = Selector('iframe');
 
 export const setIframeSelector = selector => {
-    iframeSelector = Selector(selector);
+    iframeSelector = Selector(selector, { timeout: 60000 });
 };
 
 export const start = async (t, wait = 1000, speed = 1) => {
