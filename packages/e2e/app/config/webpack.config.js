@@ -4,7 +4,7 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const checkoutDevServer = require('@adyen/adyen-web-server');
 const host = process.env.HOST || '0.0.0.0';
-const port = process.env.PORT || '3020';
+const port = '3024';
 const resolve = dir => path.resolve(__dirname, dir);
 
 // NOTE: The first page in the array will be considered the index page.

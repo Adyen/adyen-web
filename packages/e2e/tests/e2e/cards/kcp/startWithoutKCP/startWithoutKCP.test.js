@@ -1,10 +1,7 @@
 import { Selector, ClientFunction } from 'testcafe';
-
 import { start } from '../../../commonUtils';
-
 import { fillCardNumber, fillDateAndCVC, deleteCardNumber } from '../../utils/cardUtils';
 import { fillTaxNumber, fillPwd, checkPwd } from '../../utils/kcpUtils';
-
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../../constants';
 
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
@@ -19,7 +16,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-fixture`Starting without KCP fields`.page`http://localhost:3020/cards/`.clientScripts('startWithoutKCP.clientScripts.js');
+fixture`Starting without KCP fields`.page`http://localhost:3024/cards/`.clientScripts('startWithoutKCP.clientScripts.js');
 
 // Pink 1
 test(
