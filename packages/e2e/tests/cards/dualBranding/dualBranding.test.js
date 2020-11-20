@@ -1,7 +1,7 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start } from '../../commonUtils';
+import { start } from '../utils/commonUtils';
 import { fillCardNumber, fillDateAndCVC } from '../utils/cardUtils';
-import { DUAL_BRANDED_CARD } from '../../constants';
+import { DUAL_BRANDED_CARD } from '../utils/constants';
 
 const dualBrandingIconHolder = Selector('.card-field .adyen-checkout__card__dual-branding__buttons--active');
 

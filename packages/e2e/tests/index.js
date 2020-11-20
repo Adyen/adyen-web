@@ -1,6 +1,6 @@
 const createTestCafe = require('testcafe');
 
-const PATH = 'tests/e2e/';
+const PATH = 'tests/';
 
 (async () => {
     const testcafe = await createTestCafe();
