@@ -3,6 +3,7 @@ import { start } from '../../utils/commonUtils';
 import { fillCardNumber, fillDateAndCVC } from '../../utils/cardUtils';
 import { fillTaxNumber, fillPwd } from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
+import { CARDS_URL } from '../../../pages';
 
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
 
@@ -16,7 +17,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-fixture`Starting with KCP fields`.page`http://localhost:3024/cards/`.clientScripts('startWithKCP.clientScripts.js');
+fixture`Starting with KCP fields`.page(CARDS_URL).clientScripts('startWithKCP.clientScripts.js');
 
 // Green 1
 test(

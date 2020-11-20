@@ -2,6 +2,7 @@ import { Selector, ClientFunction } from 'testcafe';
 import { start } from '../utils/commonUtils';
 import { fillCardNumber, fillDateAndCVC } from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
+import { CARDS_URL } from '../../pages';
 
 const dualBrandingIconHolder = Selector('.card-field .adyen-checkout__card__dual-branding__buttons--active');
 
@@ -15,7 +16,7 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-fixture`Testing dual branding`.page`http://localhost:3024/cards/`.clientScripts('dualBranding.clientScripts.js');
+fixture`Testing dual branding`.page(CARDS_URL).clientScripts('dualBranding.clientScripts.js');
 
 test('Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown', async t => {
     // Start, allow time for iframes to load

@@ -17,10 +17,11 @@ const initCheckout = async () => {
         environment: 'test',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError
+        onError: handleError,
+        ...window.mainConfiguration
     });
 
-    window.dropin = checkout.create('dropin').mount('#dropin-container');
+    window.dropin = checkout.create('dropin', window.dropinConfig).mount('#dropin-container');
 };
 
 initCheckout();
