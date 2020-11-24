@@ -2,34 +2,35 @@ import { Selector, ClientFunction } from 'testcafe';
 import { start, setIframeSelector } from '../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
-import { CARDS_URL } from '../../pages';
+import { BASE_URL } from '../../pages';
 
-const dualBrandingIconHolder = Selector('.card-field .adyen-checkout__card__dual-branding__buttons');
-const dualBrandingIconHolderActive = Selector('.card-field .adyen-checkout__card__dual-branding__buttons--active');
+const dualBrandingIconHolder = Selector('.adyen-checkout__payment-method--card .adyen-checkout__card__dual-branding__buttons');
+const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--card .adyen-checkout__card__dual-branding__buttons--active');
 
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
 
 const getCardIsValid = ClientFunction(() => {
-    return window.card.isValid;
+    return window.dropin.isValid;
 });
 
 const getPropFromPMData = ClientFunction(prop => {
-    return window.card.formatData().paymentMethod[prop];
+    return window.dropin.state.data.paymentMethod[prop];
 });
 
 const TEST_SPEED = 1;
 
-let iframeSelector = setIframeSelector('.card-field iframe');
+let iframeSelector = setIframeSelector('.adyen-checkout__payment-method--card iframe');
 
 let cardUtils = cu(iframeSelector);
 
-fixture`Testing dual branding`.page(CARDS_URL).clientScripts('dualBranding.clientScripts.js');
+fixture`Testing dual branding in dropin`.page(BASE_URL).clientScripts('dualBranding.clientScripts.js');
 
 test('Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
     // Fill card field with dual branded card (visa/cb)
+    // await fillCardNumber(t, DUAL_BRANDED_CARD);
     await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
     await t
@@ -184,4 +185,3 @@ test(
             .eql(true);
     }
 );
-//
