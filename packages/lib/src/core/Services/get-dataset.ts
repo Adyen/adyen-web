@@ -1,4 +1,4 @@
-import fetchJsonData from './fetch-json-data';
+import { httpGet } from './http';
 
 export default function getDataset(name: string, loadingContext, locale) {
     const options = {
@@ -8,5 +8,5 @@ export default function getDataset(name: string, loadingContext, locale) {
         path: `datasets/${name}/${locale}.json`
     };
 
-    return fetchJsonData(options);
+    return httpGet(options);
 }

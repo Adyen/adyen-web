@@ -1,4 +1,4 @@
-import fetchJSONData from '../../core/Services/fetch-json-data';
+import { httpPost } from '../../core/Services/http';
 import { CbObjOnError } from '../internal/SecuredFields/lib/types';
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
@@ -15,7 +15,7 @@ export default function triggerBinLookUp(callbackObj) {
         // Store id of request we're about to make
         this.currentRequestId = callbackObj.uuid;
 
-        fetchJSONData(
+        httpPost(
             {
                 clientKey: this.props.clientKey,
                 loadingContext: this.props.loadingContext,

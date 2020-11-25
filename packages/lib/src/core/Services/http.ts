@@ -1,6 +1,6 @@
 import { FALLBACK_CONTEXT } from '../config';
 
-interface FetchJsonDataOptions {
+interface HttpOptions {
     accept?: string;
     contentType?: string;
     clientKey?: string;
@@ -12,9 +12,8 @@ interface FetchJsonDataOptions {
     errorLevel?: 'silent' | 'info' | 'warn' | 'error' | 'fatal';
 }
 
-function fetchJsonData(options: FetchJsonDataOptions, data?) {
-    const { clientKey, errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, path } = options;
-    const method = options.method || (data ? 'POST' : 'GET');
+export function http(options: HttpOptions, data?): Promise<any> {
+    const { clientKey, headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path } = options;
 
     const request = {
         method,
@@ -24,17 +23,20 @@ function fetchJsonData(options: FetchJsonDataOptions, data?) {
         headers: {
             Accept: 'application/json, text/plain, */*',
             'Content-Type': method === 'POST' ? 'application/json' : 'text/plain',
-            ...(clientKey && { 'X-Client-Key': clientKey }),
-            ...options.headers
+            ...headers
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
         ...(data && { body: JSON.stringify(data) })
     } as RequestInit;
 
-    const url = `${loadingContext}${path}`;
+    const url = new URL(`${loadingContext}${path}`);
 
-    return fetch(url, request)
+    if (clientKey) {
+        url.searchParams.set('clientKey', clientKey);
+    }
+
+    return fetch(url.href, request)
         .then(response => {
             if (response.ok) return response.json();
             const errorMessage = options.errorMessage || `Service at ${url} is not available`;
@@ -60,4 +62,5 @@ function handleFetchError(message: string, level: string) {
     }
 }
 
-export default fetchJsonData;
+export const httpGet = (options: HttpOptions, data?): Promise<any> => http({ ...options, method: 'GET' }, data);
+export const httpPost = (options: HttpOptions, data?): Promise<any> => http({ ...options, method: 'POST' }, data);

@@ -1,4 +1,4 @@
-import fetchJsonData from './fetch-json-data';
+import { httpPost } from './http';
 
 /**
  * Log event to Adyen
@@ -25,7 +25,7 @@ const logTelemetry = config => event => {
         ...event
     };
 
-    return fetchJsonData(options, telemetryEvent);
+    return httpPost(options, telemetryEvent);
 };
 
 export default logTelemetry;

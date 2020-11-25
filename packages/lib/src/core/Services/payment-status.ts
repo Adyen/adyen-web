@@ -1,4 +1,4 @@
-import fetchJsonData from './fetch-json-data';
+import { httpPost } from './http';
 
 /**
  * Calls the payment status endpoint
@@ -18,5 +18,5 @@ export default function checkPaymentStatus(paymentData, clientKey, loadingContex
         path: 'services/PaymentInitiation/v1/status'
     };
 
-    return fetchJsonData(options, { paymentData });
+    return httpPost(options, { paymentData });
 }
