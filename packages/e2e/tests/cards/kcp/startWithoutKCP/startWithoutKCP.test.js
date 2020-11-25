@@ -17,10 +17,10 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-let iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = setIframeSelector('.card-field iframe');
 
-let cardUtils = cu(iframeSelector);
-let kcpUtils = kcp(iframeSelector);
+const cardUtils = cu(iframeSelector);
+const kcpUtils = kcp(iframeSelector);
 
 fixture`Starting without KCP fields`.page(CARDS_URL).clientScripts('startWithoutKCP.clientScripts.js');
 

@@ -19,9 +19,9 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-let iframeSelector = setIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = setIframeSelector('.adyen-checkout__payment-method--card iframe');
 
-let cardUtils = cu(iframeSelector);
+const cardUtils = cu(iframeSelector);
 
 fixture`Testing dual branding in dropin`.page(BASE_URL).clientScripts('dualBranding.clientScripts.js');
 

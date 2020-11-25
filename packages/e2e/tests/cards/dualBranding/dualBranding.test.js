@@ -19,9 +19,9 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-let iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = setIframeSelector('.card-field iframe');
 
-let cardUtils = cu(iframeSelector);
+const cardUtils = cu(iframeSelector);
 
 fixture`Testing dual branding`.page(CARDS_URL).clientScripts('dualBranding.clientScripts.js');
 
