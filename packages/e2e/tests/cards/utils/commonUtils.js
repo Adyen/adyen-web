@@ -1,16 +1,14 @@
 import { Selector } from 'testcafe';
 
-let iframeSelector = Selector('iframe');
-
-export const setIframeSelector = selector => {
-    iframeSelector = Selector(selector, { timeout: 60000 });
+export const setIframeSelector = (selectorStr, timeout = 20000) => {
+    return Selector(selectorStr, { timeout });
 };
 
 export const start = async (t, wait = 1000, speed = 1) => {
     return t.wait(wait).setTestSpeed(speed);
 };
 
-export const fillIFrame = async (t, iFrameNum, iFrameInputSelector, value, replace = false) => {
+export const fillIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelector, value, replace = false) => {
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))
@@ -18,7 +16,7 @@ export const fillIFrame = async (t, iFrameNum, iFrameInputSelector, value, repla
         .switchToMainWindow();
 };
 
-export const deleteFromIFrame = async (t, iFrameNum, iFrameInputSelector) => {
+export const deleteFromIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelector) => {
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))
@@ -27,7 +25,7 @@ export const deleteFromIFrame = async (t, iFrameNum, iFrameInputSelector) => {
         .switchToMainWindow();
 };
 
-export const checkIframeContainsValue = async (t, iFrameNum, iFrameInputSelector, valueToCheck) => {
+export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, valueToCheck) => {
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))
