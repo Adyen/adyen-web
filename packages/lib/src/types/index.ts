@@ -23,7 +23,8 @@ export interface PaymentAction {
     /**
      * When non-empty, contains a value that you must submit to the /payments/details endpoint. In some cases, required for polling.
      */
-    paymentData?: string;
+    paymentData?: string; // comes from the /payments endpoint
+    authorisationToken?: string; // comes from the /submitThreeDS2Fingerprint endpoint
 
     // Redirect Actions
 

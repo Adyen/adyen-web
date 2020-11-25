@@ -22,7 +22,8 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
     public static type = 'threeDS2Fingerprint';
 
     public static defaultProps = {
-        dataKey: 'threeds2.fingerprint',
+        // dataKey: 'threeds2.fingerprint',
+        dataKey: 'fingerprintResult',
         type: 'IdentifyShopper'
     };
 

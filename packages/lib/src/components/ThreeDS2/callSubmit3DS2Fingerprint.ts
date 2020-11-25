@@ -13,14 +13,15 @@ export default function callSubmit3DS2Fingerprint(state) {
             clientKey: this.props.clientKey
         },
         {
-            fingerprintResult: state.data.details[this.props.dataKey],
-            paymentData: state.data.paymentData
+            // fingerprintResult: state.data.details[this.props.dataKey],
+            // paymentData: state.data.paymentData
+            ...state.data
         }
     ).then(data => {
         // elementRef exists when the fingerprint component is created from the Dropin
         const actionHandler = this.props.elementRef ?? this;
 
-        if (!data.action) {
+        if (!data.action && !data.details) {
             console.error('Handled Error::callSubmit3DS2Fingerprint::FAILED:: data=', data);
             return;
         }
@@ -28,16 +29,23 @@ export default function callSubmit3DS2Fingerprint(state) {
         /**
          * Frictionless (no challenge) flow
          */
-        if (data.action?.type === 'authenticationFinished') {
-            const detailsObj = {
-                data: {
-                    // Sending no details property should work - BUT currently doesn't in the new flow
-                    details: { 'threeds2.challengeResult': btoa('{"transStatus":"Y"}') },
-                    paymentData: data.action.paymentData
-                }
-            };
+        // if (data.action?.type === 'authenticationFinished') {
+        //     const detailsObj = {
+        //         data: {
+        //             // Sending no details property should work - BUT currently doesn't in the new flow
+        //             details: { 'threeds2.challengeResult': btoa('{"transStatus":"Y"}') },
+        //             paymentData: data.action.paymentData
+        //         }
+        //     };
+        //
+        //     return this.onComplete(detailsObj);
+        // }
 
-            return this.onComplete(detailsObj);
+        console.log('### callSubmit3DS2Fingerprint::data:: ', data);
+
+        if (data.type === 'completed') {
+            const { details } = data;
+            return this.onComplete({ data: { details } });
         }
 
         /**

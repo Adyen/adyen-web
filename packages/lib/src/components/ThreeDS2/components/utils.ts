@@ -4,12 +4,27 @@ import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
 import { pick } from '../../internal/SecuredFields/utils';
 
-export interface ResolveData {
+// export interface ResolveData {
+//     data: {
+//         details: {
+//             [key: string]: string;
+//         };
+//         paymentData: string;
+//     };
+// }
+
+export interface FingerprintResolveData {
+    data: {
+        [key: string]: string;
+        paymentData: string;
+    };
+}
+
+export interface ChallengeResolveData {
     data: {
         details: {
             [key: string]: string;
         };
-        paymentData: string;
     };
 }
 
@@ -32,21 +47,28 @@ export const decodeAndParseToken = (token: string): ThreeDS2Token => {
  * @param type - either 'IdentifyShopper' or 'ChallengeShopper'
  * @returns encoded result
  */
-export const encodeResult = (result: ResultObject, type: string): string => {
-    const { threeDSCompInd, transStatus } = result;
-    if (!threeDSCompInd && !transStatus) {
-        throw new Error('No threeDS2 request details found');
-    }
+// export const encodeResult = (result: ResultObject, type: string): string => {
+//     const { threeDSCompInd, transStatus } = result;
+//     if (!threeDSCompInd && !transStatus) {
+//         throw new Error('No threeDS2 request details found');
+//     }
+//
+//     switch (type) {
+//         case 'IdentifyShopper':
+//             return base64.encode(JSON.stringify({ threeDSCompInd }));
+//         case 'ChallengeShopper':
+//             return base64.encode(JSON.stringify({ transStatus }));
+//         default:
+//             throw new Error('No data available to create a result');
+//     }
+// };
 
-    switch (type) {
-        case 'IdentifyShopper':
-            return base64.encode(JSON.stringify({ threeDSCompInd }));
-        case 'ChallengeShopper':
-            return base64.encode(JSON.stringify({ transStatus }));
-        default:
-            throw new Error('No data available to create a result');
-    }
-};
+/**
+ * Performs JSON.stringify on passed object & and base64 encodes result
+ * @param obj
+ * @returns encoded result
+ */
+export const encodeObject = obj => base64.encode(JSON.stringify(obj));
 
 /**
  * Accepts a size string for the challenge window & returns it if it is valid else returns a default value
@@ -117,12 +139,34 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
     };
 };
 
-export const createResolveData = (dataKey: string, result: string, paymentData: string): ResolveData => ({
+export const createFingerprintResolveData = (dataKey: string, result: string, paymentData: string): FingerprintResolveData => ({
     data: {
-        details: { [dataKey]: result },
+        [dataKey]: result,
         paymentData
     }
 });
+
+// export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
+//     data: {
+//         details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
+//     }
+// });
+
+export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => {
+    console.log('### utils::createChallengeResolveData:: dataKey', dataKey);
+    console.log('### utils::createChallengeResolveData:: transStatus', transStatus);
+    console.log('### utils::createChallengeResolveData:: authorisationToken', authorisationToken);
+
+    const rtnObj = {
+        data: {
+            details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
+        }
+    };
+
+    console.log('### utils::createChallengeResolveData:: rtnObj=', rtnObj);
+
+    return rtnObj;
+};
 
 export const handleErrorCode = (errorCode: string): ErrorObject => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];

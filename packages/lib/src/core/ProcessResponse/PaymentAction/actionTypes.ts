@@ -43,7 +43,7 @@ const actionTypes = {
         const config = {
             // Props common to both flows
             token: action.token,
-            paymentData: action.paymentData,
+            paymentData: action.paymentData || action.authorisationToken,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
             isDropin: !!props.isDropin,
