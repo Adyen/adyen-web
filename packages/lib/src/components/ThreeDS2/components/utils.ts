@@ -4,15 +4,6 @@ import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
 import { pick } from '../../internal/SecuredFields/utils';
 
-// export interface ResolveData {
-//     data: {
-//         details: {
-//             [key: string]: string;
-//         };
-//         paymentData: string;
-//     };
-// }
-
 export interface FingerprintResolveData {
     data: {
         [key: string]: string;
@@ -41,27 +32,6 @@ export const decodeAndParseToken = (token: string): ThreeDS2Token => {
         throw new Error('Could not decode token');
     }
 };
-
-/**
- * @param value - requires an object containing the result parameters
- * @param type - either 'IdentifyShopper' or 'ChallengeShopper'
- * @returns encoded result
- */
-// export const encodeResult = (result: ResultObject, type: string): string => {
-//     const { threeDSCompInd, transStatus } = result;
-//     if (!threeDSCompInd && !transStatus) {
-//         throw new Error('No threeDS2 request details found');
-//     }
-//
-//     switch (type) {
-//         case 'IdentifyShopper':
-//             return base64.encode(JSON.stringify({ threeDSCompInd }));
-//         case 'ChallengeShopper':
-//             return base64.encode(JSON.stringify({ transStatus }));
-//         default:
-//             throw new Error('No data available to create a result');
-//     }
-// };
 
 /**
  * Performs JSON.stringify on passed object & and base64 encodes result
@@ -139,12 +109,22 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
     };
 };
 
-export const createFingerprintResolveData = (dataKey: string, result: string, paymentData: string): FingerprintResolveData => ({
-    data: {
-        [dataKey]: result,
-        paymentData
-    }
-});
+// export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({
+//     data: {
+//         [dataKey]: encodeObject({ threeDSCompInd: resultObj.threeDSCompInd }),
+//         paymentData
+//     }
+// });
+
+// TODO Debug only version
+export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => {
+    return {
+        data: {
+            [dataKey]: encodeObject({ threeDSCompInd: resultObj.threeDSCompInd }),
+            paymentData
+        }
+    };
+};
 
 // export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
 //     data: {
@@ -152,6 +132,7 @@ export const createFingerprintResolveData = (dataKey: string, result: string, pa
 //     }
 // });
 
+// TODO Debug only version
 export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => {
     console.log('### utils::createChallengeResolveData:: dataKey', dataKey);
     console.log('### utils::createChallengeResolveData:: transStatus', transStatus);
