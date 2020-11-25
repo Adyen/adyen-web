@@ -39,11 +39,12 @@ const actionTypes = {
 
     threeDS2: (action: PaymentAction, props) => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
+        const paymentData = action.subtype === 'fingerprint' ? action.paymentData : action.authorisationToken;
 
         const config = {
             // Props common to both flows
             token: action.token,
-            paymentData: action.paymentData || action.authorisationToken,
+            paymentData,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
             isDropin: !!props.isDropin,
