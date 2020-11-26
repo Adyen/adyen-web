@@ -5,7 +5,6 @@ import { handleSubmit, handleAdditionalDetails, handleError } from '../../handle
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-import { countryCode } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     window.checkout = new AdyenCheckout({
@@ -13,8 +12,8 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        countryCode,
         environment: 'test',
+        //        environment: 'http://localhost:8080/checkoutshopper/',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
