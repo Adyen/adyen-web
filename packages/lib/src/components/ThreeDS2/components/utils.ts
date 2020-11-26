@@ -38,7 +38,12 @@ export const decodeAndParseToken = (token: string): ThreeDS2Token => {
  * @param obj
  * @returns encoded result
  */
-export const encodeObject = obj => base64.encode(JSON.stringify(obj));
+export const encodeObject = obj => {
+    if (!obj || !Object.keys(obj).length) {
+        throw new Error('No (populated) data object to encode');
+    }
+    return base64.encode(JSON.stringify(obj));
+};
 
 /**
  * Accepts a size string for the challenge window & returns it if it is valid else returns a default value
