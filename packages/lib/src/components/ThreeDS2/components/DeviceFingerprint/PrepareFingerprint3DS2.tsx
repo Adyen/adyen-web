@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, encodeObject, handleErrorCode, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { ResultObject } from '../../types';
 
