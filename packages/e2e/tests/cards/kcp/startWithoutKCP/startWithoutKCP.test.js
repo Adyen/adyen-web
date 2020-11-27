@@ -1,7 +1,7 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start } from '../../../utils/commonUtils';
-import { fillCardNumber, fillDateAndCVC, deleteCardNumber } from '../../utils/cardUtils';
-import { fillTaxNumber, fillPwd, checkPwd } from '../../utils/kcpUtils';
+import { start, setIframeSelector } from '../../../utils/commonUtils';
+import cu from '../../utils/cardUtils';
+import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
 import { CARDS_URL } from '../../../pages';
 
@@ -17,6 +17,11 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
+const iframeSelector = setIframeSelector('.card-field iframe');
+
+const cardUtils = cu(iframeSelector);
+const kcpUtils = kcp(iframeSelector);
+
 fixture`Starting without KCP fields`.page(CARDS_URL).clientScripts('startWithoutKCP.clientScripts.js');
 
 // Pink 1
@@ -29,7 +34,7 @@ test(
         await start(t, 2000, TEST_SPEED);
 
         // Fill card field with korean card
-        await fillCardNumber(t, KOREAN_TEST_CARD);
+        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
 
         // Does a newly added password securedField now exist with a state.valid entry, a holder and an iframe...?
         await t
@@ -41,16 +46,16 @@ test(
             .contains('securedFields.html');
 
         // ...and can we can type into the iframe?
-        await fillPwd(t);
+        await kcpUtils.fillPwd(t);
 
         // Check pwd field for value
-        await checkPwd(t, TEST_PWD_VALUE);
+        await kcpUtils.checkPwd(t, TEST_PWD_VALUE);
 
-        // Complete form
-        await fillDateAndCVC(t);
-        await fillTaxNumber(t);
+        // // Complete form
+        await cardUtils.fillDateAndCVC(t);
+        await kcpUtils.fillTaxNumber(t);
 
-        // Expect card to now be valid
+        // // Expect card to now be valid
         await t
             .wait(1000)
             .expect(getCardIsValid())
@@ -68,10 +73,10 @@ test(
         await start(t, 2000, TEST_SPEED);
 
         // Complete form with korean card number
-        await fillCardNumber(t, KOREAN_TEST_CARD);
-        await fillDateAndCVC(t);
-        await fillTaxNumber(t);
-        await fillPwd(t);
+        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
+        await cardUtils.fillDateAndCVC(t);
+        await kcpUtils.fillTaxNumber(t);
+        await kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
         await t.expect(getCardIsValid()).eql(true);
@@ -84,7 +89,7 @@ test(
         await t.expect(getCardState('valid', 'encryptedPassword')).eql(true);
 
         // Delete number
-        await deleteCardNumber(t);
+        await cardUtils.deleteCardNumber(t);
 
         // Expect card state's tax and pwd elements to have been cleared/reset
         await t.expect(getCardState('data', 'taxNumber')).eql(undefined);
@@ -102,7 +107,7 @@ test(
 //    await start(t, 2000, TEST_SPEED);
 //
 //    // Fill card field with korean card
-//    await fillCardNumber(t, REGULAR_TEST_CARD);
+//    await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 //
 //    // Should be no securedField holding element
 //    await t.expect(passwordHolder.exists).notOk();
@@ -120,10 +125,10 @@ test(
         await t.setNativeDialogHandler(() => true);
 
         // Complete form with korean card number
-        await fillCardNumber(t, KOREAN_TEST_CARD);
-        await fillDateAndCVC(t);
-        await fillTaxNumber(t);
-        await fillPwd(t);
+        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
+        await cardUtils.fillDateAndCVC(t);
+        await kcpUtils.fillTaxNumber(t);
+        await kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
         await t.expect(getCardIsValid()).eql(true);
@@ -136,7 +141,7 @@ test(
             .notOk();
 
         // Replace number with non-korean card
-        await fillCardNumber(t, REGULAR_TEST_CARD, true);
+        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, true);
 
         // Expect card to now be valid
         await t.expect(getCardIsValid()).eql(true);
@@ -160,9 +165,9 @@ test(
         await start(t, 2000, TEST_SPEED);
 
         // Complete form with korean card number
-        await fillCardNumber(t, KOREAN_TEST_CARD);
-        await fillDateAndCVC(t);
-        await fillTaxNumber(t);
+        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
+        await cardUtils.fillDateAndCVC(t);
+        await kcpUtils.fillTaxNumber(t);
 
         // Expect card to not be valid
         await t.expect(getCardIsValid()).eql(false);

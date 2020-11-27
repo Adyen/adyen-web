@@ -1,4 +1,4 @@
-import { setIframeSelector, fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
+import { fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
 
 import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
 
@@ -13,8 +13,15 @@ import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
  * 3 - encryptedPassword
  */
 
-// Set Selector that says where the iframes are to be found for this component
-setIframeSelector('.card-field iframe');
+// Return a set of functions that will work for a particular iframe set up
+// - iframeSelector dictates how the iframe is to be found within the DOM for this particular set of tests
+export default iframeSelector => {
+    return {
+        fillPwd: fillPwd(iframeSelector),
+        checkPwd: checkPwd(iframeSelector),
+        fillTaxNumber: fillTaxNumber
+    };
+};
 
 /**
  * @param t - TestController ref
@@ -22,14 +29,18 @@ setIframeSelector('.card-field iframe');
  * @param replace - boolean: whether typed text will replace existing content
  * @returns {Promise<*>}
  */
-export const fillPwd = async (t, value = TEST_PWD_VALUE, replace = false) => {
-    return fillIFrame(t, 3, '#encryptedPassword', value, replace);
+const fillPwd = iframeSelector => {
+    return async (t, value = TEST_PWD_VALUE, replace = false) => {
+        return fillIFrame(t, iframeSelector, 3, '#encryptedPassword', value, replace);
+    };
 };
 
-export const checkPwd = async (t, value) => {
-    return checkIframeContainsValue(t, 3, '.js-iframe-input', value);
+const checkPwd = iframeSelector => {
+    return async (t, value) => {
+        return checkIframeContainsValue(t, iframeSelector, 3, '.js-iframe-input', value);
+    };
 };
 
-export const fillTaxNumber = async (t, taxValue = TEST_TAX_NUMBER_VALUE) => {
+const fillTaxNumber = async (t, taxValue = TEST_TAX_NUMBER_VALUE) => {
     return t.switchToMainWindow().typeText('.adyen-checkout__card__kcp-taxNumber__input', taxValue);
 };

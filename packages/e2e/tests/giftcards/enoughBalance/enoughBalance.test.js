@@ -1,6 +1,5 @@
 import { Selector, RequestMock } from 'testcafe';
-import { start } from '../../utils/commonUtils';
-import { fillIFrame } from '../../utils/commonUtils';
+import { start, fillIFrame, setIframeSelector } from '../../utils/commonUtils';
 import { GIFTCARD_NUMBER, GIFTCARD_PIN } from '../utils/constants';
 import { GIFTCARDS_URL } from '../../pages';
 const TEST_SPEED = 1;
@@ -15,18 +14,20 @@ const mock = RequestMock()
         resultCode: 'Authorised'
     });
 
+const iframeSelector = setIframeSelector('.card-field iframe');
+
 fixture`Testing dual branding`
     .page(GIFTCARDS_URL)
     .clientScripts('enoughBalance.clientScripts.js')
     .requestHooks(mock);
 
-test('Should prompt a confirmation when using a gift card with enough balance', async t => {
+test.only('Should prompt a confirmation when using a gift card with enough balance', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
     // Fill card field with dual branded card (visa/cb)
-    await fillIFrame(t, 0, '#encryptedCardNumber', GIFTCARD_NUMBER);
-    await fillIFrame(t, 1, '#encryptedSecurityCode', GIFTCARD_PIN);
+    await fillIFrame(t, iframeSelector, 0, '#encryptedCardNumber', GIFTCARD_NUMBER);
+    await fillIFrame(t, iframeSelector, 1, '#encryptedSecurityCode', GIFTCARD_PIN);
 
     await t
         .click('.card-field .adyen-checkout__button--pay')

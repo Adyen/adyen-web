@@ -15,6 +15,8 @@ declare global {
  */
 type Intent = 'sale' | 'capture' | 'authorize' | 'order';
 
+export type FundingSource = 'paypal' | 'credit';
+
 interface PayPalStyles {
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#color}
