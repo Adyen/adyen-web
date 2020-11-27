@@ -79,7 +79,7 @@ test('Fill in card number that will trigger challenge flow', async t => {
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
         // Allow time for the details call, which we expect to be successful
-        .wait(3000)
+        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
         .ok();
 
