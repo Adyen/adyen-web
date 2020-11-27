@@ -21,7 +21,7 @@ fixture`Testing dual branding`
     .clientScripts('enoughBalance.clientScripts.js')
     .requestHooks(mock);
 
-test.only('Should prompt a confirmation when using a gift card with enough balance', async t => {
+test('Should prompt a confirmation when using a gift card with enough balance', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
