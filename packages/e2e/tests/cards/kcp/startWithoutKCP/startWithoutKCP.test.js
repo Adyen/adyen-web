@@ -1,15 +1,11 @@
 import { Selector, ClientFunction } from 'testcafe';
 import { start, setIframeSelector } from '../../utils/commonUtils';
-import cu from '../../utils/cardUtils';
+import cu, { getCardIsValid } from '../../utils/cardUtils';
 import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
 import { CARDS_URL } from '../../../pages';
 
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
-
-const getCardIsValid = ClientFunction(() => {
-    return window.card.isValid;
-});
 
 const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
@@ -138,7 +134,8 @@ test(
             .click('.card-field .adyen-checkout__button--pay')
             // no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
-            .notOk();
+            .notOk()
+            .wait(1000);
 
         // Replace number with non-korean card
         await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, true);
@@ -152,7 +149,7 @@ test(
             // no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
-            .wait(1000);
+            .wait(3000);
     }
 );
 

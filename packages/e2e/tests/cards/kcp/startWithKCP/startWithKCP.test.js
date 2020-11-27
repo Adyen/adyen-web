@@ -1,15 +1,11 @@
 import { Selector, ClientFunction } from 'testcafe';
 import { start, setIframeSelector } from '../../utils/commonUtils';
-import cu from '../../utils/cardUtils';
+import cu, { getCardIsValid } from '../../utils/cardUtils';
 import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
 import { CARDS_URL } from '../../../pages';
 
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
-
-const getCardIsValid = ClientFunction(() => {
-    return window.card.isValid;
-});
 
 const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
@@ -131,6 +127,6 @@ test(
             // no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
-            .wait(1000);
+            .wait(3000);
     }
 );
