@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../../utils/commonUtils';
+import { start, setIframeSelector } from '../../../utils/commonUtils';
 import cu, { getCardIsValid } from '../../utils/cardUtils';
 import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
@@ -134,8 +134,7 @@ test(
             .click('.card-field .adyen-checkout__button--pay')
             // no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
-            .notOk()
-            .wait(1000);
+            .notOk();
 
         // Replace number with non-korean card
         await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, true);
@@ -149,7 +148,7 @@ test(
             // no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
-            .wait(3000);
+            .wait(1000);
     }
 );
 

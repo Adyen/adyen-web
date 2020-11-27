@@ -127,6 +127,6 @@ test(
             // no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
-            .wait(3000);
+            .wait(1000);
     }
 );

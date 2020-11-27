@@ -10,7 +10,8 @@ const resolve = dir => path.resolve(__dirname, dir);
 // NOTE: The first page in the array will be considered the index page.
 const htmlPages = [
     { name: 'Drop-in', id: 'Dropin' },
-    { name: 'Cards', id: 'Cards' }
+    { name: 'Cards', id: 'Cards' },
+    { name: 'Gift Cards', id: 'GiftCards' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>

@@ -19,7 +19,8 @@
     "scripts": {
         "start": "npm run dev-server",
         "dev-server": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
-        "test:e2e": "concurrently --kill-others --success first \"npm run start\" \"node tests/index.js\" --names \"app,e2e\""
+        "test:e2e": "concurrently --kill-others --success first  --names \"app,e2e\" \"npm run start\" \"node tests/index.js\"",
+        "test:e2e-remote": "concurrently --kill-others --success first --names \"app,e2e\" \"npm run start\" \"node tests/index.js --remote\""
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
