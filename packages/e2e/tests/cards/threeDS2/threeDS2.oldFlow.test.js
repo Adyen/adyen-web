@@ -1,5 +1,5 @@
 import { Selector, RequestLogger } from 'testcafe';
-import { start, setIframeSelector } from '../utils/commonUtils';
+import { start, setIframeSelector } from '../../utils/commonUtils';
 import cu, { getCardIsValid } from '../utils/cardUtils';
 import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';

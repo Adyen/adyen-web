@@ -16,7 +16,7 @@ const mock = RequestMock()
 
 const iframeSelector = setIframeSelector('.card-field iframe');
 
-fixture`Testing dual branding`
+fixture`Testing gift cards`
     .page(GIFTCARDS_URL)
     .clientScripts('enoughBalance.clientScripts.js')
     .requestHooks(mock);

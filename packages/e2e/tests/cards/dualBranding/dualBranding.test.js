@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../utils/commonUtils';
+import { start, setIframeSelector } from '../../utils/commonUtils';
 import cu, { getCardIsValid } from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { CARDS_URL } from '../../pages';

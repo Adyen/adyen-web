@@ -1,4 +1,4 @@
-import { fillIFrame, setIframeSelector } from './commonUtils';
+import { fillIFrame, setIframeSelector } from '../../utils/commonUtils';
 
 const iframeSelector = setIframeSelector('.adyen-checkout__threeds2__challenge iframe');
 
