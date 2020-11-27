@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start } from '../utils/commonUtils';
+import { start } from '../../utils/commonUtils';
 import { fillCardNumber, fillDateAndCVC } from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { CARDS_URL } from '../../pages';

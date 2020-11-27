@@ -1,4 +1,4 @@
-import { setIframeSelector, fillIFrame, checkIframeContainsValue } from './commonUtils';
+import { setIframeSelector, fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
 
 import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
 

@@ -1,4 +1,4 @@
-import { setIframeSelector, fillIFrame, deleteFromIFrame } from './commonUtils';
+import { setIframeSelector, fillIFrame, deleteFromIFrame } from '../../utils/commonUtils';
 
 import { REGULAR_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE } from './constants';
 

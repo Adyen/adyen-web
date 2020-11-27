@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start } from '../../utils/commonUtils';
+import { start } from '../../../utils/commonUtils';
 import { fillCardNumber, fillDateAndCVC, deleteCardNumber } from '../../utils/cardUtils';
 import { fillTaxNumber, fillPwd, checkPwd } from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
