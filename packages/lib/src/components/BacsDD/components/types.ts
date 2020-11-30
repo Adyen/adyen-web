@@ -2,7 +2,8 @@ import { UIElementProps } from '../../UIElement';
 
 export interface BacsInputData {
     holderName?: string;
-    telephoneNumber?: string;
+    bankAccountNumber?: string;
+    bankLocationId?: string;
     shopperEmail?: string;
 }
 
@@ -14,7 +15,8 @@ export interface BacsInputProps extends UIElementProps {
 
 export interface BacsDataState {
     holderName?: string;
-    telephoneNumber?: string;
+    bankAccountNumber?: string;
+    bankLocationId?: string;
     shopperEmail?: string;
     amountConsentCheckbox?: boolean;
     accountConsentCheckbox?: boolean;
@@ -22,7 +24,8 @@ export interface BacsDataState {
 
 export interface BacsErrorsState {
     holderName?: boolean;
-    telephoneNumber?: boolean;
+    bankAccountNumber?: boolean;
+    bankLocationId?: boolean;
     shopperEmail?: boolean;
     amountConsentCheckbox?: boolean;
     accountConsentCheckbox?: boolean;
@@ -30,7 +33,8 @@ export interface BacsErrorsState {
 
 export interface BacsValidState {
     holderName?: boolean;
-    telephoneNumber?: boolean;
+    bankAccountNumber?: boolean;
+    bankLocationId?: boolean;
     shopperEmail?: boolean;
     amountConsentCheckbox?: boolean;
     accountConsentCheckbox?: boolean;

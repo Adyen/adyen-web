@@ -1,31 +1,44 @@
 import { email } from '../../../utils/regex';
 
-const phoneNumberRegEx = /^[+]*[0-9]{1,4}[\s/0-9]*$/;
+const bankAccountNumberRegEx = /^(\d){1,8}$/;
+const bankLocationIdRegEx = /^(\d){6}$/;
+const nonDigitRegEx = /[^0-9]/g;
 
 export const bacsValidationRules: object = {
     input: {
-        telephoneNumber: (num): object => {
+        bankAccountNumber: (num): object => {
             // Format
-            const regEx = /[^0-9+\s]/g;
-            const formattedVal: string = num.replace(regEx, '');
+            const formattedVal: string = num.replace(nonDigitRegEx, '');
             // Validate
-            const isValid: boolean = phoneNumberRegEx.test(formattedVal) && formattedVal && formattedVal.length >= 7;
+            const isValid: boolean = bankAccountNumberRegEx.test(formattedVal);
+
+            return { isValid, value: formattedVal, showError: false };
+        },
+        bankLocationId: (num): object => {
+            // Format
+            const formattedVal: string = num.replace(nonDigitRegEx, '');
+            // Validate
+            const isValid: boolean = bankLocationIdRegEx.test(formattedVal);
 
             return { isValid, value: formattedVal, showError: false };
         },
         shopperEmail: value => {
             return { isValid: email.test(value), errorMessage: true };
         },
-        default: (value): boolean => value && value.length > 0
+        default: value => ({ isValid: value && value.length > 0 })
     },
     blur: {
-        telephoneNumber: (num): object => {
+        bankAccountNumber: (num): object => {
             // Just validate
-            return { isValid: phoneNumberRegEx.test(num) && num && num.length >= 7, value: num, showError: true };
+            return { isValid: bankAccountNumberRegEx.test(num), value: num, showError: true };
+        },
+        bankLocationId: (num): object => {
+            // Just validate
+            return { isValid: bankLocationIdRegEx.test(num), value: num, showError: true };
         },
         shopperEmail: value => {
             return { isValid: email.test(value), errorMessage: true };
         },
-        default: (value): boolean => value && value.length > 0
+        default: value => ({ isValid: value && value.length > 0 })
     }
 };

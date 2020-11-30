@@ -14,12 +14,21 @@ function BacsInput(props: BacsInputProps) {
     const { i18n } = useCoreContext();
     const validator: Validator = new Validator(bacsValidationRules);
 
-    console.log('### BacsInput::BacsInput:: props=', props);
-
     const [data, setData] = useState<BacsDataState>(props.data);
     const [errors, setErrors] = useState<BacsErrorsState>({});
     const [valid, setValid] = useState<BacsValidState>({
-        ...(props.data.telephoneNumber && { telephoneNumber: validator.validate('telephoneNumber', 'input')(props.data.telephoneNumber).isValid })
+        ...(props.data.holderName && {
+            holderName: validator.validate('holderName', 'input')(props.data.holderName)
+        }),
+        ...(props.data.bankAccountNumber && {
+            bankAccountNumber: validator.validate('bankAccountNumber', 'input')(props.data.bankAccountNumber).isValid
+        }),
+        ...(props.data.bankLocationId && {
+            bankLocationId: validator.validate('bankLocationId', 'input')(props.data.bankLocationId).isValid
+        }),
+        ...(props.data.shopperEmail && {
+            shopperEmail: validator.validate('shopperEmail', 'input')(props.data.shopperEmail).isValid
+        })
     });
 
     const [status, setStatus] = useState('ready');
@@ -29,8 +38,12 @@ function BacsInput(props: BacsInputProps) {
     };
 
     this.showValidation = (): void => {
-        const hasError = !validator.validate('telephoneNumber', 'input')(props.data.telephoneNumber).isValid;
-        setErrors({ ...errors, telephoneNumber: hasError });
+        setErrors({
+            holderName: !validator.validate('holderName', 'blur')(data.holderName).isValid,
+            bankAccountNumber: !validator.validate('bankAccountNumber', 'blur')(data.bankAccountNumber).isValid,
+            // bankLocationId: !validator.validate('bankLocationId', 'blur')(data.bankLocationId).isValid,
+            shopperEmail: !validator.validate('shopperEmail', 'blur')(data.shopperEmail).isValid
+        });
     };
 
     const handleEventFor = (key: string, mode: string) => (e: Event): void => {
@@ -59,7 +72,7 @@ function BacsInput(props: BacsInputProps) {
     };
 
     useEffect(() => {
-        props.onChange({ data, isValid: valid.telephoneNumber });
+        props.onChange({ data, isValid: valid.holderName && valid.bankAccountNumber && valid.shopperEmail });
     }, [data, valid]);
 
     return (
@@ -68,6 +81,7 @@ function BacsInput(props: BacsInputProps) {
                 className={'adyen-checkout__field--owner-name'}
                 label={i18n.get('bacs.holderName')}
                 errorMessage={errors.holderName ? i18n.get('bacs.holderName.invalid') : false}
+                isValid={valid.holderName}
             >
                 {renderFormField('text', {
                     name: 'bacs.holderName',
@@ -82,19 +96,19 @@ function BacsInput(props: BacsInputProps) {
             </Field>
 
             <Field
-                errorMessage={!!errors.telephoneNumber && i18n.get('bacs.accountNumberField.invalid')}
+                errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.accountNumberField.invalid')}
                 label={i18n.get('bacs.bankAccount')}
                 className={classNames('adyen-checkout__input--phone-number')}
-                isValid={valid.telephoneNumber}
+                isValid={valid.bankAccountNumber}
             >
                 {renderFormField('text', {
-                    value: data.telephoneNumber,
+                    value: data.bankAccountNumber,
                     className: 'adyen-checkout__pm__phoneNumber__input',
-                    placeholder: props.placeholders.telephoneNumber,
+                    placeholder: props.placeholders.bankAccountNumber,
                     required: true,
                     autoCorrect: 'off',
-                    onChange: handleEventFor('telephoneNumber', 'blur'),
-                    onInput: handleEventFor('telephoneNumber', 'input')
+                    onChange: handleEventFor('bankAccountNumber', 'blur'),
+                    onInput: handleEventFor('bankAccountNumber', 'input')
                 })}
             </Field>
 
