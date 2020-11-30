@@ -42,7 +42,9 @@ function BacsInput(props: BacsInputProps) {
             holderName: !validator.validate('holderName', 'blur')(data.holderName).isValid,
             bankAccountNumber: !validator.validate('bankAccountNumber', 'blur')(data.bankAccountNumber).isValid,
             bankLocationId: !validator.validate('bankLocationId', 'blur')(data.bankLocationId).isValid,
-            shopperEmail: !validator.validate('shopperEmail', 'blur')(data.shopperEmail).isValid
+            shopperEmail: !validator.validate('shopperEmail', 'blur')(data.shopperEmail).isValid,
+            amountConsentCheckbox: !data.amountConsentCheckbox,
+            accountConsentCheckbox: !data.accountConsentCheckbox
         });
     };
 
@@ -72,7 +74,16 @@ function BacsInput(props: BacsInputProps) {
     };
 
     useEffect(() => {
-        props.onChange({ data, isValid: valid.holderName && valid.bankAccountNumber && valid.bankLocationId && valid.shopperEmail });
+        props.onChange({
+            data,
+            isValid:
+                valid.holderName &&
+                valid.bankAccountNumber &&
+                valid.bankLocationId &&
+                valid.shopperEmail &&
+                !!valid.amountConsentCheckbox &&
+                !!valid.accountConsentCheckbox
+        });
     }, [data, valid]);
 
     return (
