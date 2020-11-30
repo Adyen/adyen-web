@@ -1,8 +1,6 @@
 import { UIElementProps } from '../UIElement';
 import { AddressSchema } from '../../types';
 import {
-    CbObjOnAllValid,
-    CbObjOnAutoComplete,
     CbObjOnBinValue,
     CbObjOnBrand,
     CbObjOnConfigSuccess,
