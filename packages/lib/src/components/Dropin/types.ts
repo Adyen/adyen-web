@@ -13,7 +13,7 @@ export interface DropinElementProps extends UIElementProps {
 
     storedPaymentMethods?: StoredPaymentMethod[];
 
-    order: Order;
+    order?: Order;
 
     /**
      * Show/Hide stored payment methods
