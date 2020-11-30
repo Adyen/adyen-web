@@ -2,7 +2,7 @@ import { Selector, RequestLogger } from 'testcafe';
 import { start, setIframeSelector } from '../../utils/commonUtils';
 import cu, { getCardIsValid } from '../utils/cardUtils';
 import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
-import { THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
+import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
 
 const url = `${BASE_URL}/details`;
@@ -45,7 +45,7 @@ test('Fill in card number that will trigger frictionless flow', async t => {
         // Expect no errors
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
-        // Allow time for the details call, which we expect to be successful
+        // Allow time for the ONLY details call, which we expect to be successful
         .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
         .ok()
@@ -78,7 +78,7 @@ test('Fill in card number that will trigger challenge flow', async t => {
         // Expect no errors
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
-        // Allow time for the details call, which we expect to be successful
+        // Allow time for the FIRST details call, which we expect to be successful
         .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
         .ok();
@@ -90,13 +90,51 @@ test('Fill in card number that will trigger challenge flow', async t => {
     await submitChallenge(t);
 
     await t
-        // Allow time for the second details call, which we expect to be successful
+        // Allow time for the SECOND details call, which we expect to be successful
         .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
         .ok()
         .wait(2000);
 
     // console.log(logger.requests[1].response.headers);
+
+    // Check the value of the alert text
+    const history = await t.getNativeDialogHistory();
+    await t.expect(history[0].text).eql('Authorised');
+});
+
+test('Fill in card number that will trigger challenge-only flow', async t => {
+    logger.clear();
+
+    await start(t, 2000, TEST_SPEED);
+
+    // Set handler for the alert window
+    await t.setNativeDialogHandler(() => true);
+
+    // Fill card fields
+    await cardUtils.fillCardNumber(t, THREEDS2_CHALLENGE_ONLY_CARD);
+    await cardUtils.fillDateAndCVC(t);
+
+    // Expect card to now be valid
+    await t.expect(getCardIsValid('dropin')).eql(true);
+
+    // Click pay
+    await t
+        .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
+        // Expect no errors
+        .expect(Selector('.adyen-checkout__field--error').exists)
+        .notOk();
+
+    // Complete challenge
+    await fillChallengeField(t);
+    await submitChallenge(t);
+
+    await t
+        // Allow time for the ONLY details call, which we expect to be successful
+        .wait(1000)
+        .expect(logger.contains(r => r.response.statusCode === 200))
+        .ok()
+        .wait(2000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
