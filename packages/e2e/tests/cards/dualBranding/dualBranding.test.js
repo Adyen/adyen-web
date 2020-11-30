@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../../utils/commonUtils';
+import { start, getIframeSelector } from '../../utils/commonUtils';
 import cu, { getCardIsValid } from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { CARDS_URL } from '../../pages';
@@ -15,7 +15,7 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 

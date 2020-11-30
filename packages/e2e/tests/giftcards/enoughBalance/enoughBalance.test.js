@@ -1,5 +1,5 @@
 import { Selector, RequestMock } from 'testcafe';
-import { start, fillIFrame, setIframeSelector } from '../../utils/commonUtils';
+import { start, fillIFrame, getIframeSelector } from '../../utils/commonUtils';
 import { GIFTCARD_NUMBER, GIFTCARD_PIN } from '../utils/constants';
 import { GIFTCARDS_URL } from '../../pages';
 const TEST_SPEED = 1;
@@ -14,7 +14,7 @@ const mock = RequestMock()
         resultCode: 'Authorised'
     });
 
-const iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 fixture`Testing gift cards`
     .page(GIFTCARDS_URL)

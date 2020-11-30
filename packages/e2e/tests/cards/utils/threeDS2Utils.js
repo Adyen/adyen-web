@@ -1,6 +1,6 @@
-import { fillIFrame, setIframeSelector } from '../../utils/commonUtils';
+import { fillIFrame, getIframeSelector } from '../../utils/commonUtils';
 
-const iframeSelector = setIframeSelector('.adyen-checkout__threeds2__challenge iframe');
+const iframeSelector = getIframeSelector('.adyen-checkout__threeds2__challenge iframe');
 
 export const fillChallengeField = async (t, value = 'password', replace = false) => {
     return fillIFrame(t, iframeSelector, 0, '.input-field', value, replace);

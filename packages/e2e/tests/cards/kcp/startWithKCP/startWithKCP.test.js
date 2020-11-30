@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../../../utils/commonUtils';
+import { start, getIframeSelector } from '../../../utils/commonUtils';
 import cu, { getCardIsValid } from '../../utils/cardUtils';
 import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
@@ -13,7 +13,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 const kcpUtils = kcp(iframeSelector);

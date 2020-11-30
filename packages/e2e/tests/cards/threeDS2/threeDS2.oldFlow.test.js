@@ -1,5 +1,5 @@
 import { Selector, RequestLogger } from 'testcafe';
-import { start, setIframeSelector } from '../../utils/commonUtils';
+import { start, getIframeSelector } from '../../utils/commonUtils';
 import cu, { getCardIsValid } from '../utils/cardUtils';
 import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
@@ -17,7 +17,7 @@ const logger = RequestLogger(
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
 
 const cardUtils = cu(iframeSelector);
 
