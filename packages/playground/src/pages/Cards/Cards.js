@@ -13,7 +13,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: 'test',
-        //        environment: 'http://localhost:8080/checkoutshopper/',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
