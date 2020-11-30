@@ -41,7 +41,7 @@ function BacsInput(props: BacsInputProps) {
         setErrors({
             holderName: !validator.validate('holderName', 'blur')(data.holderName).isValid,
             bankAccountNumber: !validator.validate('bankAccountNumber', 'blur')(data.bankAccountNumber).isValid,
-            // bankLocationId: !validator.validate('bankLocationId', 'blur')(data.bankLocationId).isValid,
+            bankLocationId: !validator.validate('bankLocationId', 'blur')(data.bankLocationId).isValid,
             shopperEmail: !validator.validate('shopperEmail', 'blur')(data.shopperEmail).isValid
         });
     };
@@ -72,7 +72,7 @@ function BacsInput(props: BacsInputProps) {
     };
 
     useEffect(() => {
-        props.onChange({ data, isValid: valid.holderName && valid.bankAccountNumber && valid.shopperEmail });
+        props.onChange({ data, isValid: valid.holderName && valid.bankAccountNumber && valid.bankLocationId && valid.shopperEmail });
     }, [data, valid]);
 
     return (
@@ -96,8 +96,8 @@ function BacsInput(props: BacsInputProps) {
             </Field>
 
             <Field
-                errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.accountNumberField.invalid')}
-                label={i18n.get('bacs.bankAccount')}
+                errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
+                label={i18n.get('bacs.bankAccountNumber')}
                 className={classNames('adyen-checkout__input--phone-number')}
                 isValid={valid.bankAccountNumber}
             >
@@ -109,6 +109,23 @@ function BacsInput(props: BacsInputProps) {
                     autoCorrect: 'off',
                     onChange: handleEventFor('bankAccountNumber', 'blur'),
                     onInput: handleEventFor('bankAccountNumber', 'input')
+                })}
+            </Field>
+
+            <Field
+                errorMessage={!!errors.bankLocationId && i18n.get('bacs.bankLocationId.invalid')}
+                label={i18n.get('bacs.bankLocationId')}
+                className={classNames('adyen-checkout__input--phone-number')}
+                isValid={valid.bankLocationId}
+            >
+                {renderFormField('text', {
+                    value: data.bankLocationId,
+                    className: 'adyen-checkout__pm__phoneNumber__input',
+                    placeholder: props.placeholders.bankLocationId,
+                    required: true,
+                    autoCorrect: 'off',
+                    onChange: handleEventFor('bankLocationId', 'blur'),
+                    onInput: handleEventFor('bankLocationId', 'input')
                 })}
             </Field>
 
@@ -134,14 +151,14 @@ function BacsInput(props: BacsInputProps) {
             <ConsentCheckbox
                 data={data}
                 errorMessage={!!errors.amountConsentCheckbox}
-                label={i18n.get('bacsdd.consent.amount')}
+                label={i18n.get('bacs.consent.amount')}
                 onChange={handleConsentCheckbox('amount')}
             />
 
             <ConsentCheckbox
                 data={data}
                 errorMessage={!!errors.accountConsentCheckbox}
-                label={i18n.get('bacsdd.consent.account')}
+                label={i18n.get('bacs.consent.account')}
                 onChange={handleConsentCheckbox('account')}
             />
 
