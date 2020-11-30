@@ -24,8 +24,6 @@ export default function callSubmit3DS2Fingerprint({ data }) {
             return;
         }
 
-        console.log('### callSubmit3DS2Fingerprint::resData:: ', resData);
-
         /**
          * Frictionless (no challenge) flow
          */
