@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
-import ThreeDS2DeviceFingerprint from './ThreeDS2DeviceFingerprint';
+import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
 
 const fingerPrintToken = {
     threeDSMethodNotificationURL:
@@ -15,7 +15,7 @@ const propsMock = {
     notificationURL: '',
     paymentData: '',
     type: '',
-    fingerprintToken: btoa(threeDS2FingerPrintToken)
+    token: btoa(threeDS2FingerPrintToken)
 };
 
 describe('ThreeDS2DeviceFingerprint', () => {
@@ -40,7 +40,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
         HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
 
-        mount(<ThreeDS2DeviceFingerprint {...propsMock} onError={errorFunction} onComplete={completeFunction} />);
+        mount(<PrepareFingerprint3DS2 {...propsMock} onError={errorFunction} onComplete={completeFunction} />);
         expect(errorFunction.mock.calls.length).toBe(0);
     });
 });

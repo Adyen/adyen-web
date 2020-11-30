@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import Fieldset from '../../FormFields/Fieldset';
+import { ReadOnlyAddressProps } from '../types';
 
-const ReadOnlyAddress = ({ data, label }) => {
+const ReadOnlyAddress = ({ data, label }: ReadOnlyAddressProps) => {
     const { street, houseNumberOrName, city, postalCode, stateOrProvince, country } = data;
 
     return (

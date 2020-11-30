@@ -18,7 +18,9 @@ export const styles = {
 
 export const placeholders = {
     encryptedCardNumber: '9999 9999 9999 9999',
-    encryptedExpiryDate: 'mm/dd',
+    encryptedExpiryDate: 'mm/yy',
+    encryptedExpiryMonth: 'mm',
+    encryptedExpiryYear: 'yy',
     encryptedSecurityCode: '8888'
 };
 

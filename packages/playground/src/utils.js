@@ -10,7 +10,7 @@ export const httpPost = (endpoint, data) =>
         body: JSON.stringify(data)
     }).then(response => response.json());
 
-export const getSearchParameters = search =>
+export const getSearchParameters = (search = window.location.search) =>
     search
         .replace(/\?/g, '')
         .split('&')

@@ -1,10 +1,25 @@
-import { ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, INTEGRATION_DATE, PAYPAL_JS_URL, SUPPORTED_LOCALES } from './config';
-import { PaypalSettings, SupportedLocale, PayPalElementProps } from './types';
+import { ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, INTEGRATION_DATE, PAYPAL_JS_URL, SUPPORTED_LOCALES, SUPPORTED_COLORS_FOR_CREDIT } from './config';
+import { PaypalSettings, SupportedLocale, PayPalElementProps, FundingSource } from './types';
+
+/**
+ * Processes and returns a new style object.
+ */
+const getStyle = (fundingSource: FundingSource, style = {}) => {
+    if (fundingSource === 'paypal') return { ...style };
+
+    return Object.keys(style).reduce((acc, prop) => {
+        const value = style[prop];
+        if (prop !== 'color' || SUPPORTED_COLORS_FOR_CREDIT.includes(value)) {
+            acc[prop] = value;
+        }
+        return acc;
+    }, {});
+};
 
 /**
  * Returns either a locale supported by PayPal or null, in order to let the PayPal SDK auto-detect the shopper locale.
  */
-const getSupportedLocale = (locale?: string): SupportedLocale => {
+const getSupportedLocale = (locale: string): SupportedLocale => {
     const formattedLocale = locale ? locale.replace('-', '_') : null;
     const supportedLocale = SUPPORTED_LOCALES.includes(formattedLocale as SupportedLocale) ? formattedLocale : null;
     return supportedLocale as SupportedLocale;
@@ -59,4 +74,4 @@ const getPaypalUrl = (props: PayPalElementProps): string => {
     return `${PAYPAL_JS_URL}?${params}`;
 };
 
-export { getPaypalSettings, getPaypalUrl };
+export { getStyle, getSupportedLocale, getPaypalUrl };

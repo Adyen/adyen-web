@@ -31,12 +31,15 @@ class DropinElement extends UIElement<DropinElementProps> {
     }
 
     setStatus(status, props = {}) {
-        this.dropinRef.setStatus({ type: status, props });
+        this.dropinRef?.setStatus({ type: status, props });
+        if (process.env.NODE_ENV === 'test') {
+            this['componentFromAction'] = props['component'];
+        }
         return this;
     }
 
     get activePaymentMethod() {
-        if (!this.dropinRef.state && !this.dropinRef.state.activePaymentMethod) {
+        if (!this.dropinRef?.state && !this.dropinRef?.state.activePaymentMethod) {
             return null;
         }
 
@@ -91,7 +94,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     handleAction(action: PaymentAction, props = {}) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        if (this.activePaymentMethod.updateWithAction) {
+        if (this.activePaymentMethod?.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
         }
 

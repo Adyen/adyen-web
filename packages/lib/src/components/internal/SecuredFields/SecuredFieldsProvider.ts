@@ -267,7 +267,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
         }
 
-        this.issuingCountryCode = binValueObject?.issuingCountryCode.toLowerCase();
+        this.issuingCountryCode = binValueObject?.issuingCountryCode?.toLowerCase();
 
         // Scenarios:
         // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup

@@ -4,12 +4,13 @@ import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import fetchJSONData from '../../../../utils/fetch-json-data';
+import { CountryFieldProps, CountryFieldItem } from '../types';
 
-export default function CountryField(props) {
-    const { allowedCountries = [], errorMessage, onDropdownChange, value } = props;
+export default function CountryField(props: CountryFieldProps) {
+    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
     const { i18n, loadingContext } = useCoreContext();
-    const [countries, setCountries] = useState([]);
-    const [loaded, setLoaded] = useState(false);
+    const [countries, setCountries] = useState<CountryFieldItem[]>([]);
+    const [loaded, setLoaded] = useState<boolean>(false);
     const [readOnly, setReadOnly] = useState(props.readOnly);
 
     useLayoutEffect(() => {
@@ -34,7 +35,7 @@ export default function CountryField(props) {
     if (!loaded) return null;
 
     return (
-        <Field label={i18n.get('country')} errorMessage={errorMessage} classNameModifiers={['country']}>
+        <Field label={i18n.get('country')} errorMessage={errorMessage} classNameModifiers={classNameModifiers}>
             {renderFormField('select', {
                 onChange: onDropdownChange,
                 name: 'country',

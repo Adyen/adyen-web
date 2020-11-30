@@ -12,6 +12,7 @@ export interface UIElementProps extends BaseElementProps {
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
+    challengeWindowSize?: string;
 
     name?: string;
     amount?: PaymentAmount;

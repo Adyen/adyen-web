@@ -39,7 +39,7 @@ describe('getComponentForAction', () => {
         });
     });
 
-    describe('ThreeDS2', () => {
+    describe('ThreeDS2 old flow: with separate "threeDS2Fingerprint" & "threeDS2Challenge" actions', () => {
         const threeDS2FingerprintMock = { type: 'threeDS2Fingerprint', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
         const threeDS2ChallengeMock = { type: 'threeDS2Challenge', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
 
@@ -65,6 +65,55 @@ describe('getComponentForAction', () => {
             expect(paymentResult.props.statusType).toBe('custom');
             expect(paymentResult.constructor.type).toBe('threeDS2Challenge');
             expect(paymentResult.props.isDropin).toBe(true);
+        });
+    });
+
+    describe('ThreeDS2 new flow: with one "threeDS2" action with subtypes', () => {
+        const new3DS2FingerprintMock = { type: 'threeDS2', subtype: 'fingerprint', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
+        const new3DS2ChallengeMock = { type: 'threeDS2', subtype: 'challenge', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
+
+        const mockCoreProps = { onAdditionalDetails: () => {}, challengeWindowSize: '02' };
+        const mockDropinProps = { elementRef: {}, isDropin: true, challengeWindowSize: '02' };
+
+        test('processes a new threeDS2Fingerprint action initiated from Card component', () => {
+            const paymentResult = getComponentForAction(new3DS2FingerprintMock, mockCoreProps);
+
+            expect(paymentResult.props.statusType).toEqual('loading');
+            expect(paymentResult.constructor.type).toEqual('threeDS2Fingerprint');
+            expect(paymentResult.props.isDropin).toBe(false);
+            expect(paymentResult.props.showSpinner).toBe(true);
+            expect(typeof paymentResult.props.onAdditionalDetails).toEqual('function');
+        });
+
+        test('processes a new threeDS2Fingerprint action initiated from Dropin', () => {
+            const paymentResult = getComponentForAction(new3DS2FingerprintMock, mockDropinProps);
+
+            expect(paymentResult.props.statusType).toEqual('loading');
+            expect(paymentResult.constructor.type).toEqual('threeDS2Fingerprint');
+            expect(paymentResult.props.isDropin).toBe(true);
+            expect(paymentResult.props.showSpinner).toBe(false);
+            expect(typeof paymentResult.props.onAdditionalDetails).toEqual('undefined');
+            expect(paymentResult.props.elementRef).not.toEqual('undefined');
+        });
+
+        test('processes a new threeDS2Challenge action initiated from Card component', () => {
+            const paymentResult = getComponentForAction(new3DS2ChallengeMock, mockCoreProps);
+
+            expect(paymentResult.props.statusType).toEqual('custom');
+            expect(paymentResult.constructor.type).toEqual('threeDS2Challenge');
+            expect(paymentResult.props.isDropin).toBe(false);
+            expect(paymentResult.props.showSpinner).toBe(undefined);
+            expect(paymentResult.props.challengeWindowSize).toEqual('02');
+        });
+
+        test('processes a new threeDS2Challenge action initiated from Dropin', () => {
+            const paymentResult = getComponentForAction(new3DS2ChallengeMock, mockDropinProps);
+
+            expect(paymentResult.props.statusType).toEqual('custom');
+            expect(paymentResult.constructor.type).toEqual('threeDS2Challenge');
+            expect(paymentResult.props.isDropin).toBe(true);
+            expect(paymentResult.props.showSpinner).toBe(undefined);
+            expect(paymentResult.props.challengeWindowSize).toEqual('02');
         });
     });
 
