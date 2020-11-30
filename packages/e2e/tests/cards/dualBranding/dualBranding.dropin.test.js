@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../../utils/commonUtils';
+import { start, getIframeSelector } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
@@ -19,7 +19,7 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
 
 const cardUtils = cu(iframeSelector);
 

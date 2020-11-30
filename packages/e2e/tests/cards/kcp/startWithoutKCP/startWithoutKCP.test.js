@@ -1,15 +1,11 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../../../utils/commonUtils';
-import cu from '../../utils/cardUtils';
+import { start, getIframeSelector } from '../../../utils/commonUtils';
+import cu, { getCardIsValid } from '../../utils/cardUtils';
 import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
 import { CARDS_URL } from '../../../pages';
 
 const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
-
-const getCardIsValid = ClientFunction(() => {
-    return window.card.isValid;
-});
 
 const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
@@ -17,7 +13,7 @@ const getCardState = ClientFunction((what, prop) => {
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 const kcpUtils = kcp(iframeSelector);

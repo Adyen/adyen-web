@@ -1,5 +1,6 @@
 import { fillIFrame, deleteFromIFrame } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE } from './constants';
+import { ClientFunction } from 'testcafe';
 
 /**
  * Unique to each component are where the iframes are to be found,
@@ -63,3 +64,7 @@ const fillDateAndCVC = iframeSelector => {
         return fc(t, cvcValue);
     };
 };
+
+export const getCardIsValid = ClientFunction((who = 'card') => {
+    return window[who].isValid;
+});

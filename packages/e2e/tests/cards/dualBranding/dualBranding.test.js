@@ -1,6 +1,6 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../../utils/commonUtils';
-import cu from '../utils/cardUtils';
+import { start, getIframeSelector } from '../../utils/commonUtils';
+import cu, { getCardIsValid } from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { CARDS_URL } from '../../pages';
 
@@ -9,17 +9,13 @@ const dualBrandingIconHolderActive = Selector('.card-field .adyen-checkout__card
 
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
 
-const getCardIsValid = ClientFunction(() => {
-    return window.card.isValid;
-});
-
 const getPropFromPMData = ClientFunction(prop => {
     return window.card.formatData().paymentMethod[prop];
 });
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 

@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 
-export const setIframeSelector = (selectorStr, timeout = 20000) => {
+export const getIframeSelector = (selectorStr, timeout = 20000) => {
     return Selector(selectorStr, { timeout });
 };
 
