@@ -1,16 +1,18 @@
-import { ChallengeObject } from './types';
+import { ThreeDS2FlowObject } from './types';
+
+export const DEFAULT_CHALLENGE_WINDOW_SIZE = '05';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT: ChallengeObject = {
+export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT: ThreeDS2FlowObject = {
     result: {
         transStatus: 'U'
     },
     type: 'challengeResult'
 };
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT: ChallengeObject = {
+export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
     result: {
         transStatus: 'U'
     },
@@ -18,14 +20,14 @@ export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT: ChallengeObject = {
     errorCode: 'timeout'
 };
 
-export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ChallengeObject = {
+export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ThreeDS2FlowObject = {
     result: {
         threeDSCompInd: 'N'
     },
     type: 'fingerPrintResult'
 };
 
-export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ChallengeObject = {
+export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
     result: {
         threeDSCompInd: 'N'
     },

@@ -78,9 +78,15 @@ class SecuredField extends AbstractSecuredField {
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
 
         /**
-         * Create & reference iframe and add load listener
+         * Configure, create & reference iframe and add load listener
          */
-        const iframeEl: HTMLIFrameElement = createIframe(`${this.iframeSrc}`, processedAriaConfig[this.fieldType].iframeTitle);
+        const iframeConfig = {
+            src: this.iframeSrc,
+            title: processedAriaConfig[this.fieldType].iframeTitle,
+            policy: 'origin'
+        };
+
+        const iframeEl: HTMLIFrameElement = createIframe(iframeConfig);
 
         // Place the iframe into the holder
         this.holderEl.appendChild(iframeEl);

@@ -6,7 +6,7 @@ import promiseTimeout from '../../../../utils/promiseTimeout';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { FAILED_METHOD_STATUS_RESOLVE_OBJECT, THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT } from '../../config';
 import { encodeBase64URL } from '../utils';
-import { Get3DS2DeviceFingerprintProps, Get3DS2DeviceFingerprintState } from './types';
+import { DoFingerprint3DS2Props, DoFingerprint3DS2State } from './types';
 
 const iframeName = 'threeDSMethodIframe';
 
@@ -19,7 +19,7 @@ const iframeName = 'threeDSMethodIframe';
  * The callbacks exist in the parent component: ThreeDS2DeviceFingerprint where they ultimately call the onComplete
  * function passed as a prop when checkout.create('threeDS2DeviceFingerprint') is called.
  */
-class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, Get3DS2DeviceFingerprintState> {
+class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3DS2State> {
     private processMessageHandler;
     private fingerPrintPromise: any;
     public static defaultProps = {
@@ -32,12 +32,12 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
         /**
          * Create and Base64URL encode a JSON object
          */
-        const dataObj = {
-            threeDSServerTransID: this.props.serverTransactionID,
-            threeDSMethodNotificationURL: this.props.threedsMethodNotificationURL
-        };
+        const { threeDSServerTransID, threeDSMethodNotificationURL } = this.props;
 
-        const jsonStr = JSON.stringify(dataObj);
+        const jsonStr = JSON.stringify({
+            threeDSServerTransID,
+            threeDSMethodNotificationURL
+        });
         const base64URLencodedData = encodeBase64URL(jsonStr);
         this.state = { base64URLencodedData };
     }
@@ -75,11 +75,11 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
     }
 
     componentWillUnmount() {
-        this.fingerPrintPromise.cancel();
+        if (this.fingerPrintPromise) this.fingerPrintPromise.cancel();
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ methodURL }, { base64URLencodedData }) {
+    render({ threeDSMethodURL }, { base64URLencodedData }) {
         return (
             <div className="adyen-checkout__3ds2-device-fingerprint">
                 {this.props.showSpinner && <Spinner />}
@@ -87,7 +87,7 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
                     <Iframe name={iframeName} />
                     <ThreeDS2Form
                         name={'threeDSMethodForm'}
-                        action={methodURL}
+                        action={threeDSMethodURL}
                         target={iframeName}
                         inputName={'threeDSMethodData'}
                         inputValue={base64URLencodedData}
@@ -98,4 +98,4 @@ class Get3DS2DeviceFingerprint extends Component<Get3DS2DeviceFingerprintProps, 
     }
 }
 
-export default Get3DS2DeviceFingerprint;
+export default DoFingerprint3DS2;

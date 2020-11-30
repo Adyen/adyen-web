@@ -40,17 +40,16 @@ export function isReadyToPayRequest({
  * @returns transaction info, suitable for use as transactionInfo property of PaymentDataRequest
  */
 export function getTransactionInfo({
-    currencyCode = 'USD',
-    totalPrice = 0,
+    amount,
     countryCode = 'US',
     totalPriceStatus = 'FINAL',
     ...props
-}): google.payments.api.TransactionInfo {
-    const formattedPrice = String(getDecimalAmount(totalPrice, currencyCode));
+}: GooglePayProps): google.payments.api.TransactionInfo {
+    const formattedPrice = String(getDecimalAmount(amount.value, amount.currency));
 
     return {
         countryCode,
-        currencyCode,
+        currencyCode: amount.currency,
         totalPrice: formattedPrice,
         totalPriceStatus: totalPriceStatus as google.payments.api.TotalPriceStatus,
         ...props.transactionInfo

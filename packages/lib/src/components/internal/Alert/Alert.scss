@@ -5,7 +5,7 @@
     border-radius: $border-radius-medium;
     margin: 0 0 $spacing-medium;
     text-align: left;
-    padding: $spacing-small $spacing-medium;
+    padding: $spacing-medium-small;
     font-size: $font-size-small;
 }
 
@@ -20,4 +20,10 @@
 
 .adyen-checkout__alert-message--info {
     background: $color-blue-lighter;
+}
+
+.adyen-checkout__alert-message__icon {
+    width: 14px;
+    height: 14px;
+    margin-right: $spacing-small;
 }

@@ -7,11 +7,11 @@ import getProcessMessageHandler from '../../../../utils/get-process-message-hand
 import { encodeBase64URL } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import { CHALLENGE_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT } from '../../config';
-import { Do3DS2ChallengeProps, Do3DS2ChallengeState } from './types';
+import { DoChallenge3DS2Props, DoChallenge3DS2State } from './types';
 
 const iframeName = 'threeDSIframe';
 
-class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeState> {
+class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2State> {
     private processMessageHandler;
     private challengePromise: { cancel: () => void; promise: Promise<any> };
 
@@ -63,7 +63,7 @@ class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeSta
     }
 
     componentWillUnmount() {
-        this.challengePromise.cancel();
+        if (this.challengePromise) this.challengePromise.cancel();
         window.removeEventListener('message', this.processMessageHandler);
     }
 
@@ -86,4 +86,4 @@ class Do3DS2Challenge extends Component<Do3DS2ChallengeProps, Do3DS2ChallengeSta
     }
 }
 
-export default Do3DS2Challenge;
+export default DoChallenge3DS2;

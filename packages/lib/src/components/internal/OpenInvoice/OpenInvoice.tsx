@@ -59,8 +59,8 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setValid(prevValid => ({ ...prevValid, [key]: state.isValid }));
     };
 
-    const handleSeparateDeliveryAddress = e => {
-        setActiveFieldsets(prevActiveFields => ({ ...prevActiveFields, deliveryAddress: e.target.checked }));
+    const handleSeparateDeliveryAddress = () => {
+        setActiveFieldsets(prevActiveFields => ({ ...prevActiveFields, deliveryAddress: !activeFieldsets.deliveryAddress }));
     };
 
     const handleConsentCheckbox = e => {

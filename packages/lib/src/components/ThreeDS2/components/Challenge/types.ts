@@ -1,22 +1,22 @@
-import { ChallengeData, ChallengeObject } from '../../types';
+import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import { ResolveData } from '../utils';
-import { ThreeDS2ChallengeElementProps } from '../../ThreeDS2Challenge';
+import { ThreeDS2ChallengeProps } from '../../ThreeDS2Challenge';
 
-export interface Do3DS2ChallengeProps extends ChallengeData {
-    onCompleteChallenge: (resolveObject: ChallengeObject) => void;
-    onErrorChallenge: (rejectObject: ChallengeObject) => void;
+export interface DoChallenge3DS2Props extends ChallengeData {
+    onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
+    onErrorChallenge: (rejectObject: ThreeDS2FlowObject) => void;
 }
 
-export interface Do3DS2ChallengeState {
+export interface DoChallenge3DS2State {
     base64URLencodedData?: string;
     status?: string;
 }
 
-export interface ThreeDS2ChallengeProps extends ThreeDS2ChallengeElementProps {
+export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeProps {
     onComplete?: (data: ResolveData) => void;
 }
 
-export interface ThreeDS2ChallengeState {
+export interface PrepareChallenge3DS2State {
     challengeData?: ChallengeData;
     status?: string;
 }

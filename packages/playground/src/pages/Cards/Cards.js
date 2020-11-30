@@ -8,7 +8,7 @@ import '../../style.scss';
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     window.checkout = new AdyenCheckout({
-        amount, // Optional. Used to display the amount in the Pay Button.
+        amount,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -19,15 +19,8 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         onError: handleError,
         risk: {
             enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event. Also accessible via
-            // checkout.modules.risk.data
-            //                node: '.merchant-checkout__form', // Element that DF iframe is briefly added to (defaults to body)
-            //                onComplete: obj => {},
             onError: console.error
         }
-        //            analytics: {
-        //                conversion: true,
-        //                telemetry: true
-        //            }
     });
 
     // Stored Card
@@ -62,18 +55,12 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                 encryptedCardNumber: {
                     label: 'Credit or debit card number field',
                     iframeTitle: 'cc number field iframe'
-                    //                        error: { 'error.ve.gen.01': 'something is wrong', 'error.ve.sf-cc-num.02': 'another error' }
                 },
                 encryptedExpiryDate: {
-                    label: 'put your date in here'
+                    label: 'put your date in here',
+                    iframeTitle: 'date iframe'
                 }
             }
-            //                placeholders: {
-            //                    encryptedSecurityCode: '8888'
-            //                }
-            //                onError: objdobj => {
-            //                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
-            //                }
         })
         .mount('.card-field');
 
@@ -101,7 +88,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
 
             // billingAddress config:
             billingAddressRequired: true,
-            billingAddressAllowedCountries: ['US', 'CA', 'BR', 'IT'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
             // billingAddressRequiredFields: ['postalCode', 'country'],
 
             // data:
@@ -137,6 +124,3 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         })
         .mount('.card-kcp-field');
 });
-//    .catch(error => {
-//        console.error('### Cards::CATCH:: error=', error);
-//    });

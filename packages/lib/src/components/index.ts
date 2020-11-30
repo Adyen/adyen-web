@@ -62,6 +62,7 @@ const componentsMap = {
     boletobancario_hsbc: Boleto,
     boletobancario_itau: Boleto,
     boletobancario_santander: Boleto,
+    primeiropay_boleto: Boleto,
     card: Card,
     diners: Card,
     discover: Card,
