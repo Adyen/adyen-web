@@ -112,6 +112,11 @@
     background: rgba(0, 102, 255, 0.15);
 }
 
+.adyen-checkout__dropdown__element--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 .adyen-checkout__dropdown__element__icon {
     border-radius: $border-radius-small;
     margin-right: 8px;

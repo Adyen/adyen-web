@@ -5,9 +5,10 @@ import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { Order } from '../types';
 import uuid from '../utils/uuid';
+import Core from '../core';
 
 export interface BaseElementProps {
-    _parentInstance?: any;
+    _parentInstance?: Core;
     order?: Order;
     modules?: {
         analytics: Analytics;
@@ -24,7 +25,7 @@ class BaseElement<P extends BaseElementProps> {
     public _node;
     public _component;
     public eventEmitter = new EventEmitter();
-    private _parentInstance;
+    private readonly _parentInstance;
 
     protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
