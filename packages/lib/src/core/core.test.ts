@@ -74,9 +74,8 @@ describe('Core', () => {
             expect(paymentAction.constructor['type']).toBe('redirect');
         });
 
-
         test('should handle new fingerprint action', () => {
-            const checkout = new AdyenCheckout({ challengeWindowSize: '04' });
+            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { card: { challengeWindowSize: '04' } } });
 
             const fingerprintAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -99,7 +98,13 @@ describe('Core', () => {
         });
 
         test('should handle new challenge action', () => {
-            const checkout = new AdyenCheckout({ challengeWindowSize: '03' });
+            const checkout = new AdyenCheckout({
+                paymentMethodsConfiguration: {
+                    card: {
+                        challengeWindowSize: '03'
+                    }
+                }
+            });
 
             const challengeAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -113,12 +118,11 @@ describe('Core', () => {
             const pa = checkout.createFromAction(challengeAction);
 
             expect(pa.constructor['type']).toBe('threeDS2Challenge');
-
             expect(pa.props.elementRef).not.toBeDefined();
             expect(pa.props.showSpinner).not.toBeDefined();
             expect(pa.props.statusType).toEqual('custom');
-
             expect(pa.props.challengeWindowSize).toEqual('03');
+        });
 
         describe('create props order', () => {
             const onAdditionalDetailsGlobal = jest.fn().mockName('onSubmitGlobal');

@@ -31,7 +31,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     }
 
     setStatus(status, props = {}) {
-        this.dropinRef.setStatus({ type: status, props });
+        this.dropinRef?.setStatus({ type: status, props });
         if (process.env.NODE_ENV === 'test') {
             this['componentFromAction'] = props['component'];
         }
@@ -39,7 +39,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     }
 
     get activePaymentMethod() {
-        if (!this.dropinRef.state && !this.dropinRef.state.activePaymentMethod) {
+        if (!this.dropinRef?.state && !this.dropinRef?.state.activePaymentMethod) {
             return null;
         }
 
