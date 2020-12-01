@@ -5,6 +5,7 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
 import { AmazonPayElementData, AmazonPayElementProps } from './types';
 import defaultProps from './defaultProps';
+import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 
 export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
@@ -32,6 +33,42 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
             },
             browserInfo: this.browserInfo
         };
+    }
+
+    getShopperDetails() {
+        const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey } = this.props;
+        if (!checkoutSessionId) return console.error('Could not shopper details. Missing checkoutSessionId');
+
+        const request = {
+            checkoutSessionId,
+            getDeliveryAddress: true
+        };
+
+        return getCheckoutDetails(loadingContext, clientKey, request);
+    }
+
+    handleDeclineFlow() {
+        const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey, returnUrl } = this.props;
+        if (!checkoutSessionId) return console.error('Missing checkoutSessionId or returnUrl.');
+
+        const request = {
+            checkoutSessionId,
+            returnUrl,
+            getDeclineFlowUrl: true
+        };
+
+        getCheckoutDetails(loadingContext, clientKey, request)
+            .then((response = {}) => {
+                response = {
+                    declineFlowUrl:
+                        'https://payments.amazon.co.uk/checkout/processing/decline?amazonCheckoutSessionId=29605081-10af-4cb0-a03e-cd401dd8e766'
+                };
+                if (!response?.declineFlowUrl) throw Error(response);
+                window.location.assign(response.declineFlowUrl);
+            })
+            .catch(error => {
+                throw Error(error);
+            });
     }
 
     get isValid() {
