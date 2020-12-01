@@ -1,15 +1,5 @@
-import fetchJSONData from '../../utils/fetch-json-data';
+import { AMAZONPAY_URL_EU, AMAZONPAY_URL_US, FALLBACK_LOCALE_EU, FALLBACK_LOCALE_US, SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import { DeliverySpecifications, PayloadJSON, Region, SupportedLocale } from './types';
-import {
-    AMAZONPAY_SIGN_STRING_ENDPOINT,
-    AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT,
-    AMAZONPAY_URL_EU,
-    AMAZONPAY_URL_US,
-    FALLBACK_LOCALE_EU,
-    FALLBACK_LOCALE_US,
-    SUPPORTED_LOCALES_EU,
-    SUPPORTED_LOCALES_US
-} from './config';
 
 /**
  * Returns the AmazonPay script URL for passed region.
@@ -37,42 +27,6 @@ export function getFallbackLocale(region: Region): SupportedLocale {
 export function getSupportedLocales(region: Region): SupportedLocale[] {
     const supportedLocales = region === 'US' ? SUPPORTED_LOCALES_US : SUPPORTED_LOCALES_EU;
     return (supportedLocales as unknown) as SupportedLocale[];
-}
-
-/**
- * Makes a call to the Sign String endpoint to the PayloadJSON string.
- * @param loadingContext - Loading context to be used in the call
- * @param clientKey - Key to be used as a public token
- * @param payloadJSON - Object to be signed
- * @returns A promise containing the response of the call
- */
-export function getAmazonSignature(loadingContext: string, clientKey: string, payloadJSON: PayloadJSON): Promise<any> {
-    const options = {
-        loadingContext,
-        method: 'POST',
-        path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?token=${clientKey}`
-    };
-
-    const request = { stringToSign: JSON.stringify(payloadJSON) };
-
-    return fetchJSONData(options, request);
-}
-
-/**
- * Makes a call to the Update Checkout Session endpoint to create an order.
- * @param loadingContext - Loading context to be used in the call
- * @param clientKey - Key to be used as a public token
- * @param data -
- * @returns A promise containing the response of the call
- */
-export function updateAmazonCheckoutSession(loadingContext: string, clientKey: string, data): Promise<any> {
-    const options = {
-        loadingContext,
-        method: 'POST',
-        path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?token=${clientKey}`
-    };
-
-    return fetchJSONData(options, data);
 }
 
 /**

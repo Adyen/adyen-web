@@ -137,6 +137,18 @@ export interface PayloadJSON {
     deliverySpecifications?: DeliverySpecifications;
 }
 
+export interface CheckoutDetailsRequest {
+    checkoutSessionId: string;
+    getDeliveryAddress?: boolean;
+    getDeclineFlowUrl?: boolean;
+}
+
+export interface UpdateAmazonCheckoutSessionRequest {
+    amount: PaymentAmount;
+    checkoutSessionId: string;
+    checkoutResultReturnUrl: string;
+}
+
 export interface CheckoutSessionConfig {
     payloadJSON: string;
     signature: string;

@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { getAmazonSignature, getCheckoutLocale, getPayloadJSON } from '../utils';
+import { getAmazonSignature } from '../services';
+import { getCheckoutLocale, getPayloadJSON } from '../utils';
 import { AmazonPayButtonProps, AmazonPayButtonSettings, CheckoutSessionConfig, PayloadJSON } from '../types';
 import useCoreContext from '../../../core/Context/useCoreContext';
 

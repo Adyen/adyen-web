@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Button from '../../internal/Button';
-import { updateAmazonCheckoutSession } from '../utils';
+import { updateAmazonCheckoutSession } from '../services';
 import { OrderButtonProps } from '../types';
 
 export default function OrderButton(props: OrderButtonProps) {
