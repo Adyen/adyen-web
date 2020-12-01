@@ -113,6 +113,7 @@
     "confirmPurchase": "Confirm purchase",
     "applyGiftcard": "Redeem",
     "giftcardBalance": "Gift card balance",
+    "giftcardTransactionLimit": "Max. %{amount} allowed per transaction on this gift card",
     "creditCard.pin.title": "Pin",
     "creditCard.encryptedPassword.label": "First 2 digits of card password",
     "creditCard.encryptedPassword.placeholder": "12",

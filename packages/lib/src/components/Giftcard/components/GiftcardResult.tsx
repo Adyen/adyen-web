@@ -2,7 +2,7 @@ import { h } from 'preact';
 import './GiftcardResult.scss';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
-function GiftcardResult({ brand, amount, balance, ...props }) {
+function GiftcardResult({ brand, amount, balance, transactionLimit, ...props }) {
     const { i18n } = useCoreContext();
     const remainingBalance = balance.value - amount.value;
 
@@ -15,6 +15,15 @@ function GiftcardResult({ brand, amount, balance, ...props }) {
                         {i18n.amount(balance.value, balance.currency)}
                     </span>
                 </li>
+                {transactionLimit && (
+                    <li className="adyen-checkout__giftcard-result__balance__item">
+                        <span className="adyen-checkout__giftcard-result__balance__title adyen-checkout__giftcard-result__balance__title--transactionLimit">
+                            {i18n.get('giftcardTransactionLimit', {
+                                values: { amount: i18n.amount(transactionLimit.value, transactionLimit.currency) }
+                            })}
+                        </span>
+                    </li>
+                )}
             </ul>
 
             {this.props.showPayButton &&
