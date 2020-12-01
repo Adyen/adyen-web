@@ -1,0 +1,10 @@
+@import '../../../style';
+.adyen-checkout__bacs{
+
+  .adyen-checkout__field{
+
+      &--inactive{
+        pointer-events: none;
+      }
+  }
+}

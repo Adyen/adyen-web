@@ -1,10 +1,8 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import BacsInput from './components/BacsInput';
-import Await from '../internal/Await';
 import CoreProvider from '../../core/Context/CoreProvider';
-// import config from './config';
-import RedirectButton from '../../components/internal/RedirectButton';
+import PayButton from '../internal/PayButton';
 
 interface BacsElementData {
     paymentMethod: {
@@ -12,36 +10,36 @@ interface BacsElementData {
         holderName: string;
         bankAccountNumber: string;
         bankLocationId: string;
-        shopperEmail: string;
     };
+    shopperEmail: string;
+    billingAddress: object; // TODO - this should not be necessary for the b/e
 }
 
 class BacsElement extends UIElement {
     public static type = 'directdebit_GB';
 
-    // formatProps(props) {
-    //     const { data = {}, placeholders = {} } = props;
-    //
-    //     return {
-    //         ...props,
-    //         data: {
-    //             telephoneNumber: data.telephoneNumber || data.phoneNumber || ''
-    //         },
-    //         placeholders: {
-    //             telephoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '+351 932 123 456'
-    //         }
-    //     };
-    // }
+    constructor(props) {
+        super(props);
+        this.setState({ status: 'enter-data' });
+    }
 
     formatData(): BacsElementData {
         return {
             paymentMethod: {
                 type: BacsElement.type,
-                // TODO - maybe just spread this.state.data
                 ...(this.state.data?.holderName && { holderName: this.state.data.holderName }),
                 ...(this.state.data?.bankAccountNumber && { bankAccountNumber: this.state.data.bankAccountNumber }),
-                ...(this.state.data?.bankLocationId && { bankLocationId: this.state.data.bankLocationId }),
-                ...(this.state.data?.shopperEmail && { shopperEmail: this.state.data.shopperEmail })
+                ...(this.state.data?.bankLocationId && { bankLocationId: this.state.data.bankLocationId })
+            },
+            ...(this.state.data?.shopperEmail && { shopperEmail: this.state.data.shopperEmail }),
+            // TODO - billingAddress should not be necessary in order for the /payments endpoint to accept the payment
+            billingAddress: {
+                street: 'Infinite Loop',
+                postalCode: '95014',
+                city: 'Cupertino',
+                houseNumberOrName: '1',
+                country: 'US',
+                stateOrProvince: 'CA'
             }
         };
     }
@@ -54,8 +52,37 @@ class BacsElement extends UIElement {
         return !!this.state.isValid;
     }
 
+    preSubmit(e, revertToInput) {
+        if (!this.isValid) {
+            this.showValidation();
+            return false;
+        }
+
+        // Send back to input stage ('edit' button pressed in BacsInput comp)
+        if (revertToInput === true) {
+            this.setState({ status: 'enter-data' });
+            return;
+        }
+
+        const isConfirmationStage = e.currentTarget.className.includes('confirm-data');
+        // console.log('### BacsDD::preSubmit:: e.currentTarget.className', e.currentTarget.className);
+        console.log('### BacsDD::preSubmit:: isConfirmationStage', isConfirmationStage);
+
+        // Send to confirmation stage
+        if (!isConfirmationStage) {
+            this.setState({ status: 'confirm-data' });
+            return;
+        }
+
+        super.submit();
+    }
+
+    public payButton = props => {
+        return <PayButton {...props} amount={this.props.amount} classNameModifiers={[this.state.status]} onClick={this.preSubmit.bind(this)} />;
+    };
+
     render() {
-        // if (this.props.downloadURL) {
+        // if (this.props.url) {
         //     const accessKey = this.props.originKey || this.props.clientKey;
         //     return (
         //         <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
@@ -81,32 +108,19 @@ class BacsElement extends UIElement {
         //         </CoreProvider>
         //     );
         // }
-
+        console.log('### BacsDD::render:: this.state.status=', this.state.status);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                {this.props.storedPaymentMethodId ? (
-                    // This will be the non-editable second page
-                    <RedirectButton
-                        name={this.displayName}
-                        amount={this.props.amount}
-                        payButton={this.payButton}
-                        onSubmit={this.submit}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
-                ) : (
-                    // This will be the actual input, first page
-                    <BacsInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        {...this.props}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                )}
+                <BacsInput
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    {...this.props}
+                    onChange={this.setState}
+                    onEdit={this.preSubmit}
+                    payButton={this.payButton}
+                    compState={this.state.status}
+                />
             </CoreProvider>
         );
     }
