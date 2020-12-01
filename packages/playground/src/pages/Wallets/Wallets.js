@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
-import { getPaymentMethods, getOriginKey } from '../../services';
-import { handleSubmit, handleAdditionalDetails } from '../../handlers';
+import { getPaymentMethods, getOriginKey, makePayment } from '../../services';
+import { handleSubmit, handleAdditionalDetails, handleAmazonPayResponse } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -39,16 +39,18 @@ getOriginKey()
                 .create('amazonpay', {
                     currency: 'GBP',
                     environment: 'test',
-                    merchantId: 'A3SKIS53IXYBBU',
-                    publicKeyId: 'AG77NIXPURMDUC3DOC5WQPPH',
+                    configuration: {
+                        merchantId: 'A3SKIS53IXYBBU',
+                        publicKeyId: 'AG77NIXPURMDUC3DOC5WQPPH',
+                        storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
+                    },
 
                     /**
                      * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
                      * which will create and return the signature.
                      * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
                      */
-                    returnUrl: 'http://localhost:3020/wallets?step=review',
-                    storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
+                    returnUrl: 'http://localhost:3020/wallets?step=review'
                 })
                 .mount('.amazonpay-field');
         }
@@ -78,7 +80,16 @@ getOriginKey()
                      * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                      */
                     amazonCheckoutSessionId,
-                    showOrderButton: false
+                    showOrderButton: false,
+                    onSubmit: (state, component) => {
+                        return makePayment(state.data)
+                            .then(response => {
+                                handleAmazonPayResponse(response, component);
+                            })
+                            .catch(error => {
+                                throw Error(error);
+                            });
+                    }
                 })
                 .mount('.amazonpay-field');
 
