@@ -89,7 +89,12 @@ function BacsInput(props: BacsInputProps) {
     }, [data, valid]);
 
     return (
-        <div className="adyen-checkout__bacs">
+        <div
+            className={classNames({
+                'adyen-checkout__bacs': true,
+                'adyen-checkout__bacs--confirm': status === 'confirm-data'
+            })}
+        >
             {status == 'confirm-data' && (
                 <div class="adyen-checkout__bacs--edit">
                     {renderFormField('text', {

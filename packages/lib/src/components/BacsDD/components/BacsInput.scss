@@ -1,6 +1,12 @@
 @import '../../../style';
 .adyen-checkout__bacs{
 
+  &--confirm{
+    .adyen-checkout-input__inline-validation--valid{
+      display: none
+    }
+  }
+
   .adyen-checkout__field{
 
       &--inactive{
