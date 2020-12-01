@@ -39,7 +39,7 @@ function BacsInput(props: BacsInputProps) {
 
     this.setStatus(props['compState']);
 
-    console.log('### BacsInput::BacsInput:: status', status);
+    // console.log('### BacsInput::BacsInput:: status', status);
 
     this.showValidation = (): void => {
         setErrors({
@@ -71,6 +71,10 @@ function BacsInput(props: BacsInputProps) {
         setErrors(prevErrors => ({ ...prevErrors, [consentKey]: !checked }));
     };
 
+    const handleEdit = e => {
+        props['onEdit'](e, true);
+    };
+
     useEffect(() => {
         props.onChange({
             data,
@@ -86,6 +90,18 @@ function BacsInput(props: BacsInputProps) {
 
     return (
         <div className="adyen-checkout__bacs">
+            {status == 'confirm-data' && (
+                <div class="adyen-checkout__bacs--edit">
+                    {renderFormField('text', {
+                        name: 'bacsEdit',
+                        className: 'adyen-checkout__bacs--edit-button',
+                        value: i18n.get('bacs.edit'),
+                        'aria-label': i18n.get('bacs.edit'),
+                        readonly: true,
+                        onClick: handleEdit
+                    })}
+                </div>
+            )}
             <Field
                 className={classNames({
                     'adyen-checkout__bacs--holder-name': true,

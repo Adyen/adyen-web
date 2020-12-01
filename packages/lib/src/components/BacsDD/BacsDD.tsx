@@ -53,15 +53,15 @@ class BacsElement extends UIElement {
     }
 
     preSubmit(e, revertToInput) {
-        if (!this.isValid) {
-            this.showValidation();
-            return false;
-        }
-
         // Send back to input stage ('edit' button pressed in BacsInput comp)
         if (revertToInput === true) {
             this.setState({ status: 'enter-data' });
             return;
+        }
+
+        if (!this.isValid) {
+            this.showValidation();
+            return false;
         }
 
         const isConfirmationStage = e.currentTarget.className.includes('confirm-data');
@@ -108,7 +108,7 @@ class BacsElement extends UIElement {
         //         </CoreProvider>
         //     );
         // }
-        console.log('### BacsDD::render:: this.state.status=', this.state.status);
+        // console.log('### BacsDD::render:: this.state.status=', this.state.status);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <BacsInput
@@ -117,7 +117,7 @@ class BacsElement extends UIElement {
                     }}
                     {...this.props}
                     onChange={this.setState}
-                    onEdit={this.preSubmit}
+                    onEdit={this.preSubmit.bind(this)}
                     payButton={this.payButton}
                     compState={this.state.status}
                 />

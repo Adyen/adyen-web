@@ -7,4 +7,22 @@
         pointer-events: none;
       }
   }
+
+  .adyen-checkout__bacs--edit{
+
+    position: absolute;
+    top: -50px;
+    right: 10px;
+    cursor: pointer;
+    width: 20%;
+
+    .adyen-checkout__bacs--edit-button{
+      border: none;
+      background: none;
+      color: blue;
+      text-decoration: underline;
+      text-align: end;
+      cursor: pointer;
+    }
+  }
 }
