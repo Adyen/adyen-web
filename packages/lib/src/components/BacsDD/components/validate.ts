@@ -23,9 +23,9 @@ export const bacsValidationRules: object = {
             return { isValid, value: formattedVal, showError: false };
         },
         shopperEmail: value => {
-            return { isValid: email.test(value), errorMessage: true };
+            return { isValid: email.test(value), value, errorMessage: true };
         },
-        default: value => ({ isValid: value && value.length > 0 })
+        default: value => ({ isValid: value && value.length > 0, value })
     },
     blur: {
         bankAccountNumber: (num): object => {
@@ -37,8 +37,8 @@ export const bacsValidationRules: object = {
             return { isValid: bankLocationIdRegEx.test(num), value: num, showError: true };
         },
         shopperEmail: value => {
-            return { isValid: email.test(value), errorMessage: true };
+            return { isValid: email.test(value), value, errorMessage: true };
         },
-        default: value => ({ isValid: value && value.length > 0 })
+        default: value => ({ isValid: value && value.length > 0, value })
     }
 };
