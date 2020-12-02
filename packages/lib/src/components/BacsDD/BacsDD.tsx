@@ -20,7 +20,7 @@ class BacsElement extends UIElement {
 
     constructor(props) {
         super(props);
-        this.setState({ status: 'enter-data' });
+        this.state.status = 'edit-data';
     }
 
     formatData(): BacsElementData {
@@ -45,17 +45,24 @@ class BacsElement extends UIElement {
     }
 
     get isValid(): boolean {
-        if (this.props.storedPaymentMethodId) {
-            return true;
-        }
-
         return !!this.state.isValid;
     }
 
-    preSubmit(e, revertToInput) {
+    preSubmit(e, revertToEdit) {
         // Send back to input stage ('edit' button pressed in BacsInput comp)
-        if (revertToInput === true) {
+        if (revertToEdit === true) {
             this.setState({ status: 'enter-data' });
+            this.setStatus('enter-data'); // tell component
+
+            // Nasty hack! Needed when component is in Dropin
+            // If we're coming back to the "enter-data" page then the checkboxes must have been checked - so re-check them
+            setTimeout(() => {
+                Array.prototype.slice
+                    .call(document.querySelectorAll('.adyen-checkout__bacs .adyen-checkout__input--consentCheckbox'))
+                    .forEach(item => {
+                        item.checked = true;
+                    });
+            }, 10);
             return;
         }
 
@@ -65,12 +72,11 @@ class BacsElement extends UIElement {
         }
 
         const isConfirmationStage = e.currentTarget.className.includes('confirm-data');
-        // console.log('### BacsDD::preSubmit:: e.currentTarget.className', e.currentTarget.className);
-        console.log('### BacsDD::preSubmit:: isConfirmationStage', isConfirmationStage);
 
         // Send to confirmation stage
         if (!isConfirmationStage) {
             this.setState({ status: 'confirm-data' });
+            this.setStatus('confirm-data');
             return;
         }
 
@@ -119,7 +125,6 @@ class BacsElement extends UIElement {
                     onChange={this.setState}
                     onEdit={this.preSubmit.bind(this)}
                     payButton={this.payButton}
-                    compState={this.state.status}
                 />
             </CoreProvider>
         );

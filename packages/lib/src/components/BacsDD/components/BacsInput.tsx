@@ -29,15 +29,15 @@ function BacsInput(props: BacsInputProps) {
         ...(props.data.shopperEmail && {
             shopperEmail: validator.validate('shopperEmail', 'input')(props.data.shopperEmail).isValid
         })
+        // amountConsentCheckbox: true,
+        // accountConsentCheckbox: true
     });
 
-    const [status, setStatus] = useState(props['compState']);
+    const [status, setStatus] = useState('enter-data');
 
     this.setStatus = newStatus => {
         setStatus(newStatus);
     };
-
-    this.setStatus(props['compState']);
 
     // console.log('### BacsInput::BacsInput:: status', status);
 
@@ -72,7 +72,7 @@ function BacsInput(props: BacsInputProps) {
     };
 
     const handleEdit = e => {
-        props['onEdit'](e, true);
+        props.onEdit(e, true);
     };
 
     useEffect(() => {
@@ -96,7 +96,12 @@ function BacsInput(props: BacsInputProps) {
             })}
         >
             {status == 'confirm-data' && (
-                <div class="adyen-checkout__bacs--edit">
+                <div
+                    className={classNames({
+                        'adyen-checkout__bacs--edit': true,
+                        'adyen-checkout__bacs--edit-dropin': props.isDropin
+                    })}
+                >
                     {renderFormField('text', {
                         name: 'bacsEdit',
                         className: 'adyen-checkout__bacs--edit-button',
@@ -209,6 +214,7 @@ function BacsInput(props: BacsInputProps) {
                     errorMessage={!!errors.amountConsentCheckbox}
                     label={i18n.get('bacs.consent.amount')}
                     onChange={handleConsentCheckbox('amount')}
+                    // checked={!!valid.amountConsentCheckbox}
                 />
             )}
             {status !== 'confirm-data' && (
@@ -217,6 +223,7 @@ function BacsInput(props: BacsInputProps) {
                     errorMessage={!!errors.accountConsentCheckbox}
                     label={i18n.get('bacs.consent.account')}
                     onChange={handleConsentCheckbox('account')}
+                    // checked={!!valid.accountConsentCheckbox}
                 />
             )}
             {props.showPayButton &&

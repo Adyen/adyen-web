@@ -2,6 +2,8 @@
 .adyen-checkout__bacs{
 
   &--confirm{
+    position: relative;
+
     .adyen-checkout-input__inline-validation--valid{
       display: none
     }
@@ -17,10 +19,14 @@
   .adyen-checkout__bacs--edit{
 
     position: absolute;
-    top: -50px;
-    right: 10px;
+    top: -25px;
+    right: 0px;
     cursor: pointer;
     width: 20%;
+
+    &-dropin{
+      top: -50px;
+    }
 
     .adyen-checkout__bacs--edit-button{
       border: none;
