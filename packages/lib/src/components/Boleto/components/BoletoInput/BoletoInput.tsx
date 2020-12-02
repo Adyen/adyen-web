@@ -5,7 +5,7 @@ import Field from '../../../internal/FormFields/Field';
 import Address from '../../../internal/Address';
 import Validator from '../../../../utils/Validator';
 import { boletoValidationRules } from './validate';
-import SendCopyToEmail from './SendCopyToEmail';
+import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import { formatCPFCNPJ } from './utils';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { BoletoInputDataState, BoletoInputErrorState, BoletoInputValidState } from '../../types';

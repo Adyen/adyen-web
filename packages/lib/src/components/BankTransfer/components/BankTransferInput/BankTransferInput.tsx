@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import './BankTransferInput.scss';
-import SendCopyToEmail from '../../../Boleto/components/BoletoInput/SendCopyToEmail';
+import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import { useEffect, useState } from 'preact/hooks';
 import Validator from '../../../../utils/Validator';
 
