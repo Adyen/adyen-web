@@ -3,6 +3,7 @@ import UIElement from '../UIElement';
 import BacsInput from './components/BacsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
+import BacsResult from './components/BacsResult';
 
 interface BacsElementData {
     paymentMethod: {
@@ -88,32 +89,21 @@ class BacsElement extends UIElement {
     };
 
     render() {
-        // if (this.props.url) {
-        //     const accessKey = this.props.originKey || this.props.clientKey;
-        //     return (
-        //         <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-        //             {/*This would be the pdf download*/}
-        //             <Await
-        //                 ref={ref => {
-        //                     this.componentRef = ref;
-        //                 }}
-        //                 accessKey={accessKey}
-        //                 paymentData={this.props.paymentData}
-        //                 onError={this.props.onError}
-        //                 onComplete={this.onComplete}
-        //                 brandLogo={this.icon}
-        //                 type={config.type}
-        //                 messageText={this.props.i18n.get(config.messageTextId)}
-        //                 awaitText={this.props.i18n.get(config.awaitTextId)}
-        //                 showCountdownTimer={config.showCountdownTimer}
-        //                 delay={config.STATUS_INTERVAL}
-        //                 countdownTime={config.COUNTDOWN_MINUTES}
-        //                 throttleTime={config.THROTTLE_TIME}
-        //                 throttleInterval={config.THROTTLE_INTERVAL}
-        //             />
-        //         </CoreProvider>
-        //     );
-        // }
+        if (this.props.url) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                    {/*This would be the pdf download*/}
+                    <BacsResult
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        icon={this.icon}
+                        url={this.props.url}
+                        paymentMethodType={this.props.paymentMethodType}
+                    />
+                </CoreProvider>
+            );
+        }
         // console.log('### BacsDD::render:: this.state.status=', this.state.status);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
