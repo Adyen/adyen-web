@@ -54,12 +54,14 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                 )}
             </div>
 
-            <div className="adyen-checkout__voucher-result__separator">
-                <div className="adyen-checkout__voucher-result__separator__inner" />
-                <div className="adyen-checkout__voucher-result__code__label">
-                    <span className="adyen-checkout__voucher-result__code__label__text">{i18n.get('voucher.paymentReferenceLabel')}</span>
+            {props.reference && (
+                <div className="adyen-checkout__voucher-result__separator">
+                    <div className="adyen-checkout__voucher-result__separator__inner" />
+                    <div className="adyen-checkout__voucher-result__code__label">
+                        <span className="adyen-checkout__voucher-result__code__label__text">{i18n.get('voucher.paymentReferenceLabel')}</span>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="adyen-checkout__voucher-result__bottom">
                 {props.reference && (
