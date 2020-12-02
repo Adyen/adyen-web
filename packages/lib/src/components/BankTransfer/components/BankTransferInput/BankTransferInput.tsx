@@ -16,24 +16,13 @@ function BankTransferInput(props) {
 
     const toggleEmailField = () => setShowingEmail(!showingEmail);
 
-    const updateFieldData = (key, value, isValid) => {
+    const handleChangeFor = (key, validationMode) => e => {
+        const { value } = e.target;
+        const isValid = validator.validate(key, validationMode)(value);
+
         setData({ ...data, [key]: value });
         setValid({ ...valid, [key]: isValid });
         setErrors({ ...errors, [key]: !isValid });
-    };
-
-    const handleInputFor = key => e => {
-        const { value } = e.target;
-        const isValid = validator.validate(key, 'input')(value);
-
-        updateFieldData(key, value, isValid);
-    };
-
-    const handleChangeFor = key => e => {
-        const { value } = e.target;
-        const isValid = validator.validate(key, 'blur')(value);
-
-        updateFieldData(key, value, isValid);
     };
 
     this.showValidation = () => {
@@ -46,7 +35,7 @@ function BankTransferInput(props) {
         const emailRequired = showingEmail && props.showEmailAddress;
         const emailAddressValid = emailRequired ? Boolean(validator.validate('shopperEmail', 'blur')(data.shopperEmail)) : true;
         const shopperEmail = emailRequired ? data.shopperEmail : null;
-        console.log(data);
+
         props.onChange({ data: { ...data, shopperEmail }, isValid: emailAddressValid });
     }, [data, valid, errors, showingEmail]);
 
@@ -58,8 +47,8 @@ function BankTransferInput(props) {
                 value={data.shopperEmail}
                 errors={errors.shopperEmail}
                 onToggle={toggleEmailField}
-                onInput={handleInputFor('shopperEmail')}
-                onChange={handleChangeFor('shopperEmail')}
+                onInput={handleChangeFor('shopperEmail', 'input')}
+                onChange={handleChangeFor('shopperEmail', 'blur')}
             />
         </div>
     );
