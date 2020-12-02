@@ -37,8 +37,9 @@ import Dropin from './Dropin';
 import Ach from './Ach';
 import MBWay from './MBWay';
 import Blik from './Blik';
-import uuid from '../utils/uuid';
+import BankTransfer from './BankTransfer';
 import Affirm from './Affirm';
+import uuid from '../utils/uuid';
 
 /**
  * Maps each component with a Component element.
@@ -52,6 +53,7 @@ const componentsMap = {
     amazonpay: AmazonPay,
     amex: Card,
     applepay: ApplePay,
+    bankTransfer_IBAN: BankTransfer,
     bcmc: Bancontact,
     bcmc_mobile: BcmcMobile,
     bcmc_mobile_QR: BcmcMobile,
