@@ -11,6 +11,7 @@ export interface BacsInputProps extends UIElementProps {
     data?: BacsInputData;
     placeholders?: BacsInputData;
     onChange: (state) => void;
+    onEdit: (e, revertToEnter) => void;
 }
 
 export interface BacsDataState {
