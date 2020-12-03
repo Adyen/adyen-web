@@ -11,7 +11,7 @@ function FieldContainer(props: FieldContainerProps) {
     const { i18n } = useCoreContext();
     const { classNameModifiers = [], data, errors, fieldName, onInput } = props;
     const errorMessage = !!errors[fieldName];
-    const value = data[fieldName];
+    const value = data[fieldName] || null;
     const labelKey = getKeyForField(fieldName, data.country);
 
     switch (fieldName) {
