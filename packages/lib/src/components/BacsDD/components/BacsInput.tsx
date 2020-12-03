@@ -29,8 +29,8 @@ function BacsInput(props: BacsInputProps) {
         ...(props.data.shopperEmail && {
             shopperEmail: validator.validate('shopperEmail', 'input')(props.data.shopperEmail).isValid
         })
-        // amountConsentCheckbox: true,
-        // accountConsentCheckbox: true
+        // amountConsentCheckbox: false,
+        // accountConsentCheckbox: false
     });
 
     const [status, setStatus] = useState('enter-data');

@@ -16,7 +16,6 @@ const initCheckout = async () => {
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: 'test',
-        //        environment: 'http://localhost:8080/checkoutshopper/',
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
@@ -113,6 +112,14 @@ const initCheckout = async () => {
                 onCancel: (data, component) => {
                     component.setStatus('ready');
                     console.log('paypal onCancel', data);
+                }
+            },
+            directdebit_GB: {
+                data: {
+                    holderName: 'Philip Dog',
+                    bankAccountNumber: '12345678',
+                    bankLocationId: '123456',
+                    shopperEmail: 'phil@ddog.co.uk'
                 }
             }
         }

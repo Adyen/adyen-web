@@ -57,13 +57,13 @@ class BacsElement extends UIElement {
 
             // Nasty hack! Needed when component is in Dropin
             // If we're coming back to the "enter-data" page then the checkboxes must have been checked - so re-check them
-            setTimeout(() => {
-                Array.prototype.slice
-                    .call(document.querySelectorAll('.adyen-checkout__bacs .adyen-checkout__input--consentCheckbox'))
-                    .forEach(item => {
-                        item.checked = true;
-                    });
-            }, 10);
+            // setTimeout(() => {
+            //     Array.prototype.slice
+            //         .call(document.querySelectorAll('.adyen-checkout__bacs .adyen-checkout__input--consentCheckbox'))
+            //         .forEach(item => {
+            //             item.checked = true;
+            //         });
+            // }, 0);
             return;
         }
 
