@@ -136,52 +136,56 @@ function BacsInput(props: BacsInputProps) {
                     onInput: handleEventFor('holderName', 'input')
                 })}
             </Field>
-            <Field
-                errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
-                label={i18n.get('bacs.bankAccountNumber')}
-                className={classNames({
-                    'adyen-checkout__bacs--bank-account-number': true,
-                    'adyen-checkout__field--inactive': status === 'confirm-data'
-                })}
-                isValid={valid.bankAccountNumber}
-            >
-                {renderFormField('text', {
-                    value: data.bankAccountNumber,
-                    className: 'adyen-checkout__bacs-input--bank-account-number',
-                    placeholder: props.placeholders.bankAccountNumber,
-                    'aria-invalid': !valid.bankAccountNumber,
-                    'aria-label': i18n.get('bacs.bankAccountNumber'),
-                    'aria-required': 'true',
-                    required: true,
-                    readonly: status === 'confirm-data',
-                    autocorrect: 'off',
-                    onChange: handleEventFor('bankAccountNumber', 'blur'),
-                    onInput: handleEventFor('bankAccountNumber', 'input')
-                })}
-            </Field>
-            <Field
-                errorMessage={!!errors.bankLocationId && i18n.get('bacs.bankLocationId.invalid')}
-                label={i18n.get('bacs.bankLocationId')}
-                className={classNames({
-                    'adyen-checkout__bacs--bank-location-id': true,
-                    'adyen-checkout__field--inactive': status === 'confirm-data'
-                })}
-                isValid={valid.bankLocationId}
-            >
-                {renderFormField('text', {
-                    value: data.bankLocationId,
-                    className: 'adyen-checkout__bacs-input--bank-location-id',
-                    placeholder: props.placeholders.bankLocationId,
-                    'aria-invalid': !valid.bankLocationId,
-                    'aria-label': i18n.get('bacs.bankLocationId'),
-                    'aria-required': 'true',
-                    required: true,
-                    readonly: status === 'confirm-data',
-                    autocorrect: 'off',
-                    onChange: handleEventFor('bankLocationId', 'blur'),
-                    onInput: handleEventFor('bankLocationId', 'input')
-                })}
-            </Field>
+            <div class="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
+                <Field
+                    errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
+                    label={i18n.get('bacs.bankAccountNumber')}
+                    className={classNames({
+                        'adyen-checkout__bacs--bank-account-number': true,
+                        'adyen-checkout__field--inactive': status === 'confirm-data'
+                    })}
+                    classNameModifiers={['col-70']}
+                    isValid={valid.bankAccountNumber}
+                >
+                    {renderFormField('text', {
+                        value: data.bankAccountNumber,
+                        className: 'adyen-checkout__bacs-input--bank-account-number',
+                        placeholder: props.placeholders.bankAccountNumber,
+                        'aria-invalid': !valid.bankAccountNumber,
+                        'aria-label': i18n.get('bacs.bankAccountNumber'),
+                        'aria-required': 'true',
+                        required: true,
+                        readonly: status === 'confirm-data',
+                        autocorrect: 'off',
+                        onChange: handleEventFor('bankAccountNumber', 'blur'),
+                        onInput: handleEventFor('bankAccountNumber', 'input')
+                    })}
+                </Field>
+                <Field
+                    errorMessage={!!errors.bankLocationId && i18n.get('bacs.bankLocationId.invalid')}
+                    label={i18n.get('bacs.bankLocationId')}
+                    className={classNames({
+                        'adyen-checkout__bacs--bank-location-id': true,
+                        'adyen-checkout__field--inactive': status === 'confirm-data'
+                    })}
+                    classNameModifiers={['col-30']}
+                    isValid={valid.bankLocationId}
+                >
+                    {renderFormField('text', {
+                        value: data.bankLocationId,
+                        className: 'adyen-checkout__bacs-input--bank-location-id',
+                        placeholder: props.placeholders.bankLocationId,
+                        'aria-invalid': !valid.bankLocationId,
+                        'aria-label': i18n.get('bacs.bankLocationId'),
+                        'aria-required': 'true',
+                        required: true,
+                        readonly: status === 'confirm-data',
+                        autocorrect: 'off',
+                        onChange: handleEventFor('bankLocationId', 'blur'),
+                        onInput: handleEventFor('bankLocationId', 'input')
+                    })}
+                </Field>
+            </div>
             <Field
                 errorMessage={!!errors.shopperEmail && i18n.get('bacs.shopperEmail.invalid')}
                 label={i18n.get('bacs.shopperEmail')}
