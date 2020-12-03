@@ -63,7 +63,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
     onChange(): object {
         const isValid = this.isValid;
-        const state = { data: this.data, isValid };
+        const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
         if (this.props.onChange) this.props.onChange(state, this.elementRef);
         if (isValid) this.onValid();
 
