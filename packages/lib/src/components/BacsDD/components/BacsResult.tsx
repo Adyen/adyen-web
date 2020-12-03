@@ -12,7 +12,7 @@ const BacsResult = props => {
     return (
         <Voucher
             paymentMethodType={paymentMethodType}
-            introduction={i18n.get('voucher.introduction')}
+            introduction={i18n.get('bacs.voucher.information')}
             imageUrl={getImage({ loadingContext })(paymentMethodType)}
             downloadUrl={url}
         />
