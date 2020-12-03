@@ -1,6 +1,5 @@
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-
-const ALLOWED_COUNTRIES = ['CA', 'US'];
+import { ALLOWED_COUNTRIES } from './config';
 
 export default class Affirm extends OpenInvoiceContainer {
     public static type = 'affirm';
