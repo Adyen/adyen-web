@@ -13,7 +13,6 @@ interface BacsElementData {
         bankLocationId: string;
     };
     shopperEmail: string;
-    billingAddress: object; // TODO - this should not be necessary for the b/e
 }
 
 class BacsElement extends UIElement {
@@ -32,16 +31,7 @@ class BacsElement extends UIElement {
                 ...(this.state.data?.bankAccountNumber && { bankAccountNumber: this.state.data.bankAccountNumber }),
                 ...(this.state.data?.bankLocationId && { bankLocationId: this.state.data.bankLocationId })
             },
-            ...(this.state.data?.shopperEmail && { shopperEmail: this.state.data.shopperEmail }),
-            // TODO - billingAddress should not be necessary in order for the /payments endpoint to accept the payment
-            billingAddress: {
-                street: 'Infinite Loop',
-                postalCode: '95014',
-                city: 'Cupertino',
-                houseNumberOrName: '1',
-                country: 'US',
-                stateOrProvince: 'CA'
-            }
+            ...(this.state.data?.shopperEmail && { shopperEmail: this.state.data.shopperEmail })
         };
     }
 
