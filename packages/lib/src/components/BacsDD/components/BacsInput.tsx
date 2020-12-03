@@ -9,6 +9,7 @@ import { bacsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import { BacsDataState, BacsErrorsState, BacsInputProps, BacsValidState, ValidationObject } from './types';
 import './BacsInput.scss';
+import getImage from '../../../utils/get-image';
 
 function BacsInput(props: BacsInputProps) {
     const { i18n } = useCoreContext();
@@ -38,8 +39,6 @@ function BacsInput(props: BacsInputProps) {
     this.setStatus = newStatus => {
         setStatus(newStatus);
     };
-
-    // console.log('### BacsInput::BacsInput:: status', status);
 
     this.showValidation = (): void => {
         setErrors({
@@ -231,7 +230,16 @@ function BacsInput(props: BacsInputProps) {
                 />
             )}
             {props.showPayButton &&
-                props.payButton({ status, label: status !== 'confirm-data' ? i18n.get('continue') : i18n.get('confirmPurchase') })}
+                props.payButton({
+                    status,
+                    label:
+                        status !== 'confirm-data'
+                            ? i18n.get('continue')
+                            : `${i18n.get('bacs.confirm')} ${
+                                  !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
+                              }`,
+                    icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
+                })}
         </div>
     );
 }
