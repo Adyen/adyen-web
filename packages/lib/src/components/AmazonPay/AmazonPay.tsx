@@ -59,15 +59,11 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
 
         getCheckoutDetails(loadingContext, clientKey, request)
             .then((response = {}) => {
-                response = {
-                    declineFlowUrl:
-                        'https://payments.amazon.co.uk/checkout/processing/decline?amazonCheckoutSessionId=29605081-10af-4cb0-a03e-cd401dd8e766'
-                };
-                if (!response?.declineFlowUrl) throw Error(response);
+                if (!response?.declineFlowUrl) throw response;
                 window.location.assign(response.declineFlowUrl);
             })
             .catch(error => {
-                throw Error(error);
+                if (this.props.onError) this.props.onError(error);
             });
     }
 
