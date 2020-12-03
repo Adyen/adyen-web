@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import { useState, useEffect, useMemo } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
+import useForm from '../../../utils/useForm';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './IssuerList.scss';
-import Validator from '../../../utils/Validator';
 
 const payButtonLabel = ({ issuer, items }, i18n) => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -12,69 +12,18 @@ const payButtonLabel = ({ issuer, items }, i18n) => {
     return `${i18n.get('continueTo')} ${issuerName}`;
 };
 
-function useForm({ rules = {}, schema = [] }) {
-    const validator = new Validator(rules);
-
-    const [errors, setErrors] = useState(
-        schema.reduce((accumulator, currentValue) => {
-            accumulator[currentValue] = null;
-            return accumulator;
-        }, {})
-    );
-    const [valid, setValid] = useState(
-        schema.reduce((accumulator, currentValue) => {
-            accumulator[currentValue] = false;
-            return accumulator;
-        }, {})
-    );
-    const [data, setData] = useState(
-        schema.reduce((accumulator, currentValue) => {
-            accumulator[currentValue] = null;
-            return accumulator;
-        }, {})
-    );
-
-    const isValid = useMemo(() => schema.reduce((acc, val) => acc && valid[val], true), [valid]);
-
-    const updateFieldData = (key, value, isValid) => {
-        setData({ ...data, [key]: value });
-        setValid({ ...valid, [key]: isValid });
-        setErrors({ ...errors, [key]: !isValid });
-    };
-
-    const handleChangeFor = (key, mode = 'blur') => e => {
-        const { value } = e.target;
-        const isValid = validator.validate(key, mode)(value);
-        updateFieldData(key, value, isValid);
-    };
-
-    const triggerValidation = () => {
-        schema.forEach(key => {
-            const isValid = validator.validate(key, 'blur')(data[key]);
-            setValid({ ...valid, [key]: isValid });
-            setErrors({ ...errors, [key]: !isValid });
-        });
-    };
-
-    return {
-        handleChangeFor,
-        triggerValidation,
-        isValid,
-        errors,
-        valid,
-        data
-    };
-}
+const schema = ['issuer'];
+const validationRules = {
+    blur: {
+        issuer: issuer => !!issuer && issuer.length > 0
+    }
+};
 
 function IssuerList({ items, placeholder, issuer = null, ...props }) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
-        schema: ['issuer'],
-        rules: {
-            blur: {
-                issuer: issuer => !!issuer && issuer.length > 0
-            }
-        }
+        schema,
+        rules: validationRules
     });
     const [status, setStatus] = useState('ready');
 
@@ -84,7 +33,6 @@ function IssuerList({ items, placeholder, issuer = null, ...props }) {
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
-        console.log('CHANGES', data, valid, errors, isValid);
     }, [data, valid, errors, isValid]);
 
     this.showValidation = () => {
