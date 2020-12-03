@@ -1,10 +1,11 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { getPaymentMethods, getOriginKey, makePayment } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleAmazonPayResponse } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
+import { checkPaymentResult } from '../../utils';
 
 getOriginKey()
     .then(originKey => {
@@ -84,11 +85,24 @@ getOriginKey()
                     onSubmit: (state, component) => {
                         return makePayment(state.data)
                             .then(response => {
-                                handleAmazonPayResponse(response, component);
+                                if (response?.resultCode && checkPaymentResult(response.resultCode)) {
+                                    alert(response.resultCode);
+                                } else {
+                                    // Try handling the decline flow
+                                    // This will redirect the shopper to select another payment method
+                                    component.handleDeclineFlow();
+                                }
                             })
                             .catch(error => {
                                 throw Error(error);
                             });
+                    },
+                    onError: e => {
+                        if (e.resultCode) {
+                            alert(e.resultCode);
+                        } else {
+                            console.error(e);
+                        }
                     }
                 })
                 .mount('.amazonpay-field');

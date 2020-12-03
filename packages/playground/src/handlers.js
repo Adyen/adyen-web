@@ -54,22 +54,3 @@ export function handleAdditionalDetails(details, component) {
             throw Error(error);
         });
 }
-
-export function handleAmazonPayResponse(response, component) {
-    // Check if payment was successful
-    if (['authorised', 'received', 'pending'].includes(response.resultCode.toLowerCase())) {
-        return alert('Payment successful!');
-    }
-
-    try {
-        // Try handling the decline flow
-        // This will redirect the shopper to select another payment method
-        component.handleDeclineFlow();
-    } catch (e) {
-        if (e.resultCode) {
-            return alert(e.resultCode);
-        } else {
-            console.error(e);
-        }
-    }
-}
