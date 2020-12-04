@@ -27,23 +27,23 @@ function useForm({ rules = {}, schema = [] }) {
 
     const isValid = useMemo(() => schema.reduce((acc, val) => acc && valid[val], true), [valid]);
 
-    const updateFieldData = (key, value, isValid, mode) => {
+    const updateFieldData = (key, value, isFieldValid, mode) => {
         setData({ ...data, [key]: value });
-        setValid({ ...valid, [key]: isValid });
-        setErrors({ ...errors, [key]: mode === 'blur' && !isValid });
+        setValid({ ...valid, [key]: isFieldValid });
+        setErrors({ ...errors, [key]: mode === 'blur' && !isFieldValid });
     };
 
     const handleChangeFor = (key, mode = 'blur') => e => {
         const { value } = e.target;
-        const isValid = validator.validate(key, mode)(value);
-        updateFieldData(key, value, isValid, mode);
+        const isFieldValid = validator.validate(key, mode)(value);
+        updateFieldData(key, value, isFieldValid, mode);
     };
 
     const triggerValidation = () => {
         schema.forEach(key => {
-            const isValid = validator.validate(key, 'blur')(data[key]);
-            setValid({ ...valid, [key]: isValid });
-            setErrors({ ...errors, [key]: !isValid });
+            const isFieldValid = validator.validate(key, 'blur')(data[key]);
+            setValid({ ...valid, [key]: isFieldValid });
+            setErrors({ ...errors, [key]: !isFieldValid });
         });
     };
 
