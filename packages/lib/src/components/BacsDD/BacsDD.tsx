@@ -72,9 +72,9 @@ class BacsElement extends UIElement {
     }
 
     render() {
-        if (this.props.url) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                {this.props.url ? (
                     <BacsResult
                         ref={ref => {
                             this.componentRef = ref;
@@ -83,21 +83,17 @@ class BacsElement extends UIElement {
                         url={this.props.url}
                         paymentMethodType={this.props.paymentMethodType}
                     />
-                </CoreProvider>
-            );
-        }
-        // console.log('### BacsDD::render:: this.state.status=', this.state.status);
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <BacsInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    onChange={this.setState}
-                    onEdit={this.onEdit}
-                    payButton={this.payButton}
-                />
+                ) : (
+                    <BacsInput
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        onChange={this.setState}
+                        onEdit={this.onEdit}
+                        payButton={this.payButton}
+                    />
+                )}
             </CoreProvider>
         );
     }
