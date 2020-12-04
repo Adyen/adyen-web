@@ -1,5 +1,5 @@
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-import { ALLOWED_COUNTRIES, ALLOWED_COUNTRIES as allowedCountries } from './config';
+import { ALLOWED_COUNTRIES } from './config';
 
 export default class FacilyPay10x extends OpenInvoiceContainer {
     public static type = 'facilypay_10x';
