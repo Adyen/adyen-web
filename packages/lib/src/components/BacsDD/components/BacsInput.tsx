@@ -86,7 +86,6 @@ function BacsInput(props: BacsInputProps) {
 
         if (status === CONFIRM_STATE) {
             props.onSubmit();
-            return;
         }
     };
 
