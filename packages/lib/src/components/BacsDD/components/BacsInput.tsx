@@ -60,7 +60,7 @@ function BacsInput(props: BacsInputProps) {
         setValid({ ...valid, [key]: isValid });
     };
 
-    const handleConsentCheckbox = (key: string) => (e): void => {
+    const handleConsentCheckbox = (key: string) => (): void => {
         const checked = !data[key];
         setData(prevData => ({ ...prevData, [key]: checked }));
         setValid(prevValid => ({ ...prevValid, [key]: checked }));
