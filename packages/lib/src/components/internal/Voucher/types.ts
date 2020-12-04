@@ -9,6 +9,7 @@ export interface VoucherProps {
     issuerImageUrl?: string;
     instructionsUrl?: string;
     downloadUrl?: string;
+    downloadButtonText?: string;
     introduction?: string;
     reference?: string;
     barcode?: string;
