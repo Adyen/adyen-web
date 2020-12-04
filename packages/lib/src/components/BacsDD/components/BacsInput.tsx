@@ -135,6 +135,7 @@ function BacsInput(props: BacsInputProps) {
                     })}
                 </div>
             )}
+
             <Field
                 className={classNames({
                     'adyen-checkout__bacs--holder-name': true,
@@ -159,6 +160,7 @@ function BacsInput(props: BacsInputProps) {
                     onInput: handleEventFor('holderName', 'input')
                 })}
             </Field>
+
             <div class="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
                 <Field
                     errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
@@ -184,6 +186,7 @@ function BacsInput(props: BacsInputProps) {
                         onInput: handleEventFor('bankAccountNumber', 'input')
                     })}
                 </Field>
+
                 <Field
                     errorMessage={!!errors.bankLocationId && i18n.get('bacs.bankLocationId.invalid')}
                     label={i18n.get('bacs.bankLocationId')}
@@ -209,6 +212,7 @@ function BacsInput(props: BacsInputProps) {
                     })}
                 </Field>
             </div>
+
             <Field
                 errorMessage={!!errors.shopperEmail && i18n.get('bacs.shopperEmail.invalid')}
                 label={i18n.get('bacs.shopperEmail')}
@@ -235,6 +239,7 @@ function BacsInput(props: BacsInputProps) {
                     onChange: handleEventFor('shopperEmail', 'blur')
                 })}
             </Field>
+
             {status === ENTER_STATE && (
                 <ConsentCheckbox
                     data={data}
@@ -244,6 +249,7 @@ function BacsInput(props: BacsInputProps) {
                     // checked={!!valid.amountConsentCheckbox}
                 />
             )}
+
             {status === ENTER_STATE && (
                 <ConsentCheckbox
                     data={data}
@@ -253,6 +259,7 @@ function BacsInput(props: BacsInputProps) {
                     // checked={!!valid.accountConsentCheckbox}
                 />
             )}
+
             {props.showPayButton &&
                 props.payButton({
                     status,

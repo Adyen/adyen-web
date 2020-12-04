@@ -12,6 +12,18 @@ window.checkout = new AdyenCheckout({
     showPayButton: true
 });
 
+window.afterpay = checkout
+    .create('directdebit_GB', {
+        countryCode: 'GB',
+        data: {
+            holderName: 'Philip Dog',
+            bankAccountNumber: '12345678',
+            bankLocationId: '123456',
+            shopperEmail: 'phil@ddog.co.uk'
+        }
+    })
+    .mount('#bacsdd-input-container');
+
 window.multibancoResult = checkout
     .createFromAction({
         expiresAt: '2019-09-28T12:54:17',
