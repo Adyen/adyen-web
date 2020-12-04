@@ -11,7 +11,7 @@ export interface OpenInvoiceVisibility {
 export interface OpenInvoiceProps {
     allowedCountries?: string[];
     consentCheckboxLabel: any;
-    countryCode: string;
+    countryCode?: string;
     data: {
         companyDetails?: CompanyDetailsSchema;
         personalDetails?: PersonalDetailsSchema;
