@@ -16,14 +16,6 @@ interface BlikInputDataState {
     blikCode: string;
 }
 
-interface BlikInputValidState {
-    blikCode: boolean;
-}
-
-interface BlikInputErrorState {
-    blikCode: boolean;
-}
-
 function BlikInput(props: BlikInputProps) {
     const { i18n, loadingContext } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
@@ -37,23 +29,8 @@ function BlikInput(props: BlikInputProps) {
             }
         }
     });
-    // const [data, setData] = useState<BlikInputDataState>(props.data);
-    // const [errors, setErrors] = useState<BlikInputErrorState>({ blikCode: false });
-    // const [valid, setValid] = useState<BlikInputValidState>({ blikCode: false });
-
-    // const handleBlikCode = type => (e: Event): void => {
-    //     e.preventDefault();
-    //
-    //     const value: string = (e.target as HTMLInputElement).value;
-    //     const isBlikCodeValid: boolean = value.length === 6;
-    //
-    //     setData({ blikCode: value });
-    //     setErrors({ ...valid, blikCode: type === 'blur' && !isBlikCodeValid });
-    //     setValid({ ...valid, blikCode: isBlikCodeValid });
-    // };
 
     useEffect(() => {
-        console.log(valid, errors);
         props.onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 
