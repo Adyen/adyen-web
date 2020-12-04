@@ -20,7 +20,7 @@ class BacsElement extends UIElement {
 
     constructor(props) {
         super(props);
-        this.state.status = 'edit-data';
+        this.state.status = 'enter-data';
     }
 
     formatData(): BacsElementData {
@@ -39,33 +39,28 @@ class BacsElement extends UIElement {
         return !!this.state.isValid;
     }
 
-    preSubmit(e, revertToEdit) {
-        // Send back to input stage ('edit' button pressed in BacsInput comp)
-        if (revertToEdit === true) {
-            this.setState({ status: 'enter-data' });
-            this.setStatus('enter-data'); // tell component
+    public onEdit = () => {
+        this.setState({ status: 'enter-data' });
+        this.setStatus('enter-data'); // tell component
 
-            // Nasty hack! Needed when component is in Dropin
-            // If we're coming back to the "enter-data" page then the checkboxes must have been checked - so re-check them
-            // setTimeout(() => {
-            //     Array.prototype.slice
-            //         .call(document.querySelectorAll('.adyen-checkout__bacs .adyen-checkout__input--consentCheckbox'))
-            //         .forEach(item => {
-            //             item.checked = true;
-            //         });
-            // }, 0);
-            return;
-        }
+        // Nasty hack! Needed when component is in Dropin
+        // If we're coming back to the "enter-data" page then the checkboxes must have been checked - so re-check them
+        // setTimeout(() => {
+        //     Array.prototype.slice
+        //         .call(document.querySelectorAll('.adyen-checkout__bacs .adyen-checkout__input--consentCheckbox'))
+        //         .forEach(item => {
+        //             item.checked = true;
+        //         });
+        // }, 0);
+    };
 
+    submit() {
         if (!this.isValid) {
             this.showValidation();
             return false;
         }
 
-        const isConfirmationStage = e.currentTarget.className.includes('confirm-data');
-
-        // Send to confirmation stage
-        if (!isConfirmationStage) {
+        if (this.state.status === 'enter-data') {
             this.setState({ status: 'confirm-data' });
             this.setStatus('confirm-data');
             return;
@@ -73,10 +68,6 @@ class BacsElement extends UIElement {
 
         super.submit();
     }
-
-    public payButton = props => {
-        return <PayButton {...props} amount={this.props.amount} classNameModifiers={[this.state.status]} onClick={this.preSubmit.bind(this)} />;
-    };
 
     render() {
         if (this.props.url) {
@@ -103,7 +94,7 @@ class BacsElement extends UIElement {
                     }}
                     {...this.props}
                     onChange={this.setState}
-                    onEdit={this.preSubmit.bind(this)}
+                    onEdit={this.onEdit}
                     payButton={this.payButton}
                 />
             </CoreProvider>
