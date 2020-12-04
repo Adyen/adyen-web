@@ -161,7 +161,7 @@ function BacsInput(props: BacsInputProps) {
                 })}
             </Field>
 
-            <div class="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
+            <div className="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
                 <Field
                     errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
                     label={i18n.get('bacs.bankAccountNumber')}
