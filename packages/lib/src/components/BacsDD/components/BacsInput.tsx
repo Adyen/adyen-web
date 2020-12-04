@@ -38,6 +38,8 @@ function BacsInput(props: BacsInputProps) {
         })
     });
 
+    const [isValid, setIsValid] = useState(false);
+
     this.showValidation = (): void => {
         setErrors({
             holderName: !validator.validate('holderName', 'blur')(data.holderName).isValid,
@@ -65,19 +67,8 @@ function BacsInput(props: BacsInputProps) {
         setErrors(prevErrors => ({ ...prevErrors, [key]: !checked }));
     };
 
-    const isValid = (): boolean => {
-        return (
-            valid.holderName &&
-            valid.bankAccountNumber &&
-            valid.bankLocationId &&
-            valid.shopperEmail &&
-            !!valid.amountConsentCheckbox &&
-            !!valid.accountConsentCheckbox
-        );
-    };
-
     const handlePayButton = () => {
-        if (!isValid()) {
+        if (!isValid) {
             this.showValidation();
             return false;
         }
@@ -89,19 +80,28 @@ function BacsInput(props: BacsInputProps) {
 
         if (status === CONFIRM_STATE) {
             props.onSubmit();
-            return;
         }
     };
 
-    const handleEdit = e => {
+    const handleEdit = () => {
         this.setStatus(ENTER_STATE);
         return;
     };
 
     useEffect(() => {
+        const pmIsValid =
+            valid.holderName &&
+            valid.bankAccountNumber &&
+            valid.bankLocationId &&
+            valid.shopperEmail &&
+            !!valid.amountConsentCheckbox &&
+            !!valid.accountConsentCheckbox;
+
+        setIsValid(pmIsValid);
+
         props.onChange({
             data,
-            isValid: isValid()
+            isValid: pmIsValid
         });
     }, [data, valid]);
 
@@ -155,7 +155,7 @@ function BacsInput(props: BacsInputProps) {
                 })}
             </Field>
 
-            <div class="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
+            <div className="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
                 <Field
                     errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
                     label={i18n.get('bacs.bankAccountNumber')}

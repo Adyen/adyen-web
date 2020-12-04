@@ -15,6 +15,7 @@ const BacsResult = props => {
             introduction={i18n.get('bacs.voucher.information')}
             imageUrl={getImage({ loadingContext })(paymentMethodType)}
             downloadUrl={url}
+            downloadButtonText={i18n.get('download.pdf')}
         />
     );
 };
