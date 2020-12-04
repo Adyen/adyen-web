@@ -21,4 +21,8 @@ export function configureCallbacks(callbacksObj: CallbacksConfig = ({} as any) a
     this.callbacks.onBinValue = callbacksObj.onBinValue ? callbacksObj.onBinValue : noop;
 
     this.callbacks.onAutoComplete = callbacksObj.onAutoComplete ? callbacksObj.onAutoComplete : noop;
+
+    this.callbacks.onAdditionalSFConfig = callbacksObj.onAdditionalSFConfig ? callbacksObj.onAdditionalSFConfig : noop;
+
+    this.callbacks.onAdditionalSFRemoved = callbacksObj.onAdditionalSFRemoved ? callbacksObj.onAdditionalSFRemoved : noop;
 }

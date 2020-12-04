@@ -1,21 +1,22 @@
-import { ChallengeObject, FingerPrintData } from '../../types';
-import { ThreeDS2DeviceFingerprintElementProps } from '../../ThreeDS2DeviceFingerprint';
+import { ThreeDS2FlowObject, FingerPrintData } from '../../types';
+import { ThreeDS2DeviceFingerprintProps } from '../../ThreeDS2DeviceFingerprint';
+import { FingerprintResolveData } from '../utils';
 
-export interface Get3DS2DeviceFingerprintProps extends FingerPrintData {
-    onCompleteFingerprint: (resolveObject: ChallengeObject) => void;
-    onErrorFingerprint: (rejectObject: ChallengeObject) => void;
+export interface DoFingerprint3DS2Props extends FingerPrintData {
+    onCompleteFingerprint: (resolveObject: ThreeDS2FlowObject) => void;
+    onErrorFingerprint: (rejectObject: ThreeDS2FlowObject) => void;
     showSpinner: boolean;
 }
 
-export interface Get3DS2DeviceFingerprintState {
+export interface DoFingerprint3DS2State {
     base64URLencodedData: string;
 }
 
-export interface ThreeDS2DeviceFingerprintProps extends ThreeDS2DeviceFingerprintElementProps {
-    onComplete: (data?) => void;
+export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintProps {
+    onComplete: (data: FingerprintResolveData) => void;
 }
 
-export interface ThreeDS2DeviceFingerprintState {
+export interface PrepareFingerprint3DS2State {
     status?: string;
     fingerPrintData?: FingerPrintData;
 }

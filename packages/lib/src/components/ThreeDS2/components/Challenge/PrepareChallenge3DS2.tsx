@@ -1,11 +1,11 @@
 import { Component, h } from 'preact';
-import Do3DS2Challenge from './Do3DS2Challenge';
-import { createResolveData, handleErrorCode, encodeResult, prepareChallengeData } from '../utils';
-import { ThreeDS2ChallengeProps, ThreeDS2ChallengeState } from './types';
-import { ChallengeObject } from '../../types';
+import DoChallenge3DS2 from './DoChallenge3DS2';
+import { createChallengeResolveData, handleErrorCode, prepareChallengeData } from '../utils';
+import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
+import { ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 
-class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2ChallengeState> {
+class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
         onComplete: () => {},
         onError: () => {}
@@ -14,11 +14,10 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
     constructor(props) {
         super(props);
 
-        if (this.props.challengeToken) {
+        if (this.props.token) {
             const challengeData = prepareChallengeData({
-                challengeToken: this.props.challengeToken,
-                size: this.props.size,
-                notificationURL: this.props.notificationURL
+                token: this.props.token,
+                size: this.props.challengeWindowSize || this.props.size
             });
 
             this.state = {
@@ -33,9 +32,7 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
 
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
-            const paymentData = this.props.paymentData;
-            const result = encodeResult(resultObj, this.props.type);
-            const data = createResolveData(this.props.dataKey, result, paymentData);
+            const data = createChallengeResolveData(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
             this.props.onComplete(data);
         });
     }
@@ -43,11 +40,11 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
     render(props, { challengeData }) {
         if (this.state.status === 'retrievingChallengeToken') {
             return (
-                <Do3DS2Challenge
-                    onCompleteChallenge={(challenge: ChallengeObject) => {
+                <DoChallenge3DS2
+                    onCompleteChallenge={(challenge: ThreeDS2FlowObject) => {
                         this.setStatusComplete(challenge.result);
                     }}
-                    onErrorChallenge={(challenge: ChallengeObject) => {
+                    onErrorChallenge={(challenge: ThreeDS2FlowObject) => {
                         const errorObject = handleErrorCode(challenge.errorCode);
                         this.props.onError(errorObject);
                         this.setStatusComplete(challenge.result);
@@ -61,4 +58,4 @@ class ThreeDS2Challenge extends Component<ThreeDS2ChallengeProps, ThreeDS2Challe
     }
 }
 
-export default ThreeDS2Challenge;
+export default PrepareChallenge3DS2;

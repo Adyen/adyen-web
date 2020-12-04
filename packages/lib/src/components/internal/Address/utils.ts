@@ -1,5 +1,18 @@
-import { ADDRESS_SCHEMA } from './constants';
+import { ADDRESS_SCHEMA, ADDRESS_SCHEMAS, LABELS } from './constants';
 import { AddressSchema } from '../../../types';
+
+/**
+ * Returns the key for a field of the passed country or the default key for that field.
+ * @param fieldName - The data to pre-fill the address fields
+ * @param country - The selected country
+ */
+export const getKeyForField = (fieldName: string, country: string): string => LABELS[fieldName][country] || LABELS[fieldName].default;
+
+/**
+ * Returns the address schema of the selected country or the default address schema.
+ * @param country - The selected country
+ */
+export const getAddressSchemaForCountry = (country: string) => ADDRESS_SCHEMAS[country] || ADDRESS_SCHEMAS.default;
 
 /**
  * Generates an object to be used as the initial data.

@@ -7,7 +7,13 @@ function validateCardInput(): void {
     const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
     const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
-    const koreanAuthentication: boolean = this.props.configuration.koreanAuthenticationRequired ? this.state.valid.taxNumber : true;
+
+    const isKorea = this.state.issuingCountryCode ? this.state.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
+    const koreanAuthentication =
+        this.props.configuration.koreanAuthenticationRequired && isKorea
+            ? !!this.state.valid.taxNumber && !!this.state.valid.encryptedPassword
+            : true;
+
     const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
 
     this.setState({ isValid }, () => {
@@ -70,7 +76,7 @@ function handleInstallments(installments): void {
 function handleSecuredFieldsChange(newState: SFPState): void {
     const sfState: SFPState = newState;
 
-    const tempHolderName: string = sfState.autoCompleteName ? sfState.autoCompleteName : this.state.data.holderName;
+    const tempHolderName: string = sfState.autoCompleteName && this.props.hasHolderName ? sfState.autoCompleteName : this.state.data.holderName;
 
     const setSfpData = (prevState: SFPState): SFPState => ({
         ...prevState,
@@ -126,7 +132,7 @@ function handleAdditionalDataSelection(e: Event): void {
 
     // Pass brand into SecuredFields
     if (this.state.additionalSelectType === 'brandSwitcher') {
-        this.sfp.current.processBinLookupResponse({ supportedBrands: [value] });
+        this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
     }
 }
 

@@ -12,7 +12,7 @@ export const httpPost = (endpoint, data) =>
 
 export const checkPaymentResult = resultCode => ['authorised', 'received', 'pending'].includes(resultCode?.toLowerCase());
 
-export const getSearchParameters = search =>
+export const getSearchParameters = (search = window.location.search) =>
     search
         .replace(/\?/g, '')
         .split('&')

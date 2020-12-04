@@ -62,7 +62,7 @@ class Iframe extends Component<IframeProps> {
                     this.iframeEl = ref;
                 }}
                 /*
-                // @ts-ignore */
+                // @ts-ignore experimental */
                 allow={allow}
                 className={`adyen-checkout__iframe adyen-checkout__iframe--${name}`}
                 name={name}
@@ -70,7 +70,7 @@ class Iframe extends Component<IframeProps> {
                 width={width}
                 height={height}
                 min-width={minWidth}
-                min-heigth={minHeight}
+                min-height={minHeight}
                 border={border}
                 style={{ border: 0 }}
                 frameBorder="0"

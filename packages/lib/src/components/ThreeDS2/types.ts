@@ -25,13 +25,14 @@ export interface ResultObject {
     threeDSCompInd?: ResultValue;
 }
 
-export interface ChallengeObject {
+export interface ThreeDS2FlowObject {
     result: ResultObject;
     type: 'ChallengeShopper' | 'IdentifyShopper' | 'challengeResult' | 'fingerPrintResult';
     errorCode?: string;
 }
 
-export interface ChallengeToken {
+// One token fits all - Fingerprint & Challenge
+export interface ThreeDS2Token {
     acsTransID?: string;
     acsURL?: string;
     messageVersion?: string;
@@ -42,8 +43,8 @@ export interface ChallengeToken {
 }
 
 export interface FingerPrintData {
-    serverTransactionID: string;
-    methodURL: string;
-    threedsMethodNotificationURL: string;
+    threeDSServerTransID: string;
+    threeDSMethodURL: string;
+    threeDSMethodNotificationURL: string;
     postMessageDomain: string;
 }

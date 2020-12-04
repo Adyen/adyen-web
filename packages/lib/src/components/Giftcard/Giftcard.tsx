@@ -20,7 +20,8 @@ export class GiftcardElement extends UIElement {
             paymentMethod: {
                 type: this.constructor['type'],
                 brand: this.props.brand,
-                ...this.state.data
+                encryptedCardNumber: this.state.data?.encryptedCardNumber,
+                encryptedSecurityCode: this.state.data?.encryptedSecurityCode
             }
         };
     }
@@ -51,8 +52,9 @@ export class GiftcardElement extends UIElement {
             this.props.onBalanceCheck(resolve, reject, this.formatData());
         })
             .then(({ balance }) => {
-                if (!balance) throw new Error('Invalid balance');
-                if (balance?.currency !== this.props.amount?.currency) throw new Error('Unsupported balance currency');
+                if (!balance) throw new Error('card-error'); // card doesn't exist
+                if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
+                if (balance?.value <= 0) throw new Error('no-balance');
 
                 this.componentRef.setBalance(balance);
 
@@ -64,7 +66,7 @@ export class GiftcardElement extends UIElement {
                 }
             })
             .catch(error => {
-                this.setStatus('ready');
+                this.setStatus(error?.message || 'error');
                 if (this.props.onError) this.props.onError(error);
             });
     };
@@ -92,7 +94,8 @@ export class GiftcardElement extends UIElement {
                     }}
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.onBalanceCheck}
+                    onBalanceCheck={this.onBalanceCheck}
+                    onSubmit={this.submit}
                     payButton={this.payButton}
                 />
             </CoreProvider>

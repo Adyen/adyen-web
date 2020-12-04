@@ -1,19 +1,19 @@
 import { Component, h } from 'preact';
-import Get3DS2DeviceFingerprint from './Get3DS2DeviceFingerprint';
-import { createResolveData, encodeResult, handleErrorCode, prepareFingerPrintData } from '../utils';
-import { ThreeDS2DeviceFingerprintProps, ThreeDS2DeviceFingerprintState } from './types';
+import DoFingerprint3DS2 from './DoFingerprint3DS2';
+import { createFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
+import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { ResultObject } from '../../types';
 
-class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps, ThreeDS2DeviceFingerprintState> {
+class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
 
     constructor(props) {
         super(props);
 
-        const { fingerprintToken, notificationURL } = this.props;
+        const { token, notificationURL } = this.props;
 
-        if (fingerprintToken) {
-            const fingerPrintData = prepareFingerPrintData({ fingerprintToken, notificationURL });
+        if (token) {
+            const fingerPrintData = prepareFingerPrintData({ token, notificationURL });
 
             this.state = {
                 status: 'init',
@@ -33,14 +33,8 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
     };
 
     componentDidMount() {
-        // If no fingerPrintData, don't even bother
-        if (!this.state.fingerPrintData) {
-            this.setStatusComplete({ threeDSCompInd: 'U' });
-            return;
-        }
-
-        // If no methodURL - don't render component. Instead exit with threeDSCompInd: 'U'
-        if (!this.state.fingerPrintData.methodURL || !this.state.fingerPrintData.methodURL.length) {
+        // If no fingerPrintData or no threeDSMethodURL - don't render component. Instead exit with threeDSCompInd: 'U'
+        if (!this.state.fingerPrintData || !this.state.fingerPrintData.threeDSMethodURL || !this.state.fingerPrintData.threeDSMethodURL.length) {
             this.setStatusComplete({ threeDSCompInd: 'U' });
             return;
         }
@@ -51,9 +45,7 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
 
     setStatusComplete(resultObj: ResultObject) {
         this.setState({ status: 'complete' }, () => {
-            const paymentData = this.props.paymentData;
-            const result = encodeResult(resultObj, this.props.type);
-            const data = createResolveData(this.props.dataKey, result, paymentData);
+            const data = createFingerprintResolveData(this.props.dataKey, resultObj, this.props.paymentData);
             this.props.onComplete(data);
         });
     }
@@ -61,7 +53,7 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
     render(props, { fingerPrintData }) {
         if (this.state.status === 'retrievingFingerPrint') {
             return (
-                <Get3DS2DeviceFingerprint
+                <DoFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
                         this.setStatusComplete(fingerprint.result);
                     }}
@@ -80,4 +72,4 @@ class ThreeDS2DeviceFingerprint extends Component<ThreeDS2DeviceFingerprintProps
     }
 }
 
-export default ThreeDS2DeviceFingerprint;
+export default PrepareFingerprint3DS2;

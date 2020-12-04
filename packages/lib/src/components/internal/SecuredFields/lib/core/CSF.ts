@@ -18,8 +18,9 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject } from '../types';
+import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
 import * as logger from '../utilities/logger';
+import { selectOne } from '../utilities/dom';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -43,13 +44,15 @@ class CSF extends AbstractCSF {
             brand: this.props.type !== 'card' ? this.props.type : null,
             allValid: undefined,
             numIframes: 0,
+            originalNumIframes: 0,
             iframeCount: 0,
             iframeConfigCount: 0,
             isConfigured: false,
             hasSeparateDateFields: false,
             currentFocusObject: null,
             registerFieldForIos: false,
-            securedFields: {}
+            securedFields: {},
+            isKCP: false
         };
 
         // Setup 'this' references
@@ -106,7 +109,9 @@ class CSF extends AbstractCSF {
          */
         const numIframes: number = this.createSecuredFields();
 
-        this.state.numIframes = numIframes;
+        this.state.numIframes = this.state.originalNumIframes = numIframes;
+
+        this.state.isKCP = !!this.props.isKCP;
     }
 
     // Expose functions that can be called on the CSF instance
@@ -114,7 +119,7 @@ class CSF extends AbstractCSF {
         // --
         const returnObj: CSFReturnObject = {
             // --
-            updateStyles: (pStyleObject: StylesObject): CSFReturnObject => {
+            updateStyles: (pStyleObject: StylesObject): void => {
                 if (this.state.isConfigured) {
                     this.postMessageToAllIframes({ styleObject: pStyleObject });
                 } else {
@@ -123,19 +128,17 @@ class CSF extends AbstractCSF {
                             "- they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened."
                     );
                 }
-                return returnObj;
             },
-            setFocusOnFrame: (pFieldType: string): CSFReturnObject => {
+            setFocusOnFrame: (pFieldType: string): void => {
                 if (this.state.isConfigured) {
                     this.setFocusOnFrame(pFieldType);
                 } else {
                     notConfiguredWarning('You cannot set focus on any secured field');
                 }
-                return returnObj;
             },
             // For component based implementation - if showValidation function is called on the component use this
             // function as a way to notify the CSF that a field is in error
-            isValidated: (pFieldType: string, code: string): CSFReturnObject => {
+            isValidated: (pFieldType: string, code: string): void => {
                 if (this.state.isConfigured) {
                     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
                         this.state.securedFields[pFieldType].hasError = true;
@@ -160,9 +163,8 @@ class CSF extends AbstractCSF {
                 } else {
                     notConfiguredWarning('You cannot set validated on any secured field');
                 }
-                return returnObj;
             },
-            hasUnsupportedCard: (pFieldType: string, code: string): CSFReturnObject => {
+            hasUnsupportedCard: (pFieldType: string, code: string): void => {
                 if (this.state.isConfigured) {
                     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
                         //
@@ -182,17 +184,15 @@ class CSF extends AbstractCSF {
                 } else {
                     notConfiguredWarning('You cannot set hasUnsupportedCard on any secured field');
                 }
-                return returnObj;
             },
-            destroy: (): CSFReturnObject => {
+            destroy: (): void => {
                 if (this.state.isConfigured) {
                     this.destroySecuredFields();
                 } else {
                     notConfiguredWarning('You cannot destroy secured fields');
                 }
-                return returnObj;
             },
-            brandsFromBinLookup: (brandsObj: BinLookupObject): CSFReturnObject => {
+            brandsFromBinLookup: (brandsObj: BinLookupObject): void => {
                 if (!this.config.isCreditCardType) return null;
 
                 if (this.state.isConfigured) {
@@ -200,7 +200,26 @@ class CSF extends AbstractCSF {
                 } else {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }
-                return returnObj;
+            },
+            addSecuredField: (pFieldType: string): void => {
+                const securedField: HTMLElement = selectOne(this.props.rootNode, `[data-cse="${pFieldType}"]`);
+                if (securedField) {
+                    this.state.numIframes += 1;
+                    this.setupSecuredField(securedField);
+                }
+            },
+            removeSecuredField: (pFieldType: string): void => {
+                if (this.state.securedFields[pFieldType]) {
+                    this.state.securedFields[pFieldType].destroy();
+                    delete this.state.securedFields[pFieldType];
+                    this.state.numIframes -= 1;
+
+                    const callbackObj: CbObjOnAdditionalSF = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
+                    this.callbacks.onAdditionalSFRemoved(callbackObj);
+                }
+            },
+            setKCPStatus: (isKCP: boolean): void => {
+                this.state.isKCP = isKCP;
             }
         };
 
@@ -211,7 +230,7 @@ class CSF extends AbstractCSF {
      * Retrieves the iframe, stored by field type, & returns it's contentWindow
      */
     private getIframeContentWin(fieldType: string): Window {
-        return this.state.securedFields[fieldType].iframeContentWindow || null;
+        return this.state.securedFields[fieldType]?.iframeContentWindow || null;
     }
 }
 

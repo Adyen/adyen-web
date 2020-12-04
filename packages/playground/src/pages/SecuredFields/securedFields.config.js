@@ -18,8 +18,10 @@ export const styles = {
 
 export const placeholders = {
     encryptedCardNumber: '9999 9999 9999 9999',
-    encryptedExpiryDate: 'mm/dd',
-    encryptedSecurityCode: '1234'
+    encryptedExpiryDate: 'mm/yy',
+    encryptedExpiryMonth: 'mm',
+    encryptedExpiryYear: 'yy',
+    encryptedSecurityCode: '8888'
 };
 
 export const ariaLabels = {

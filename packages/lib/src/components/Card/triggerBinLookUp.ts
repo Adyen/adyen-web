@@ -1,5 +1,6 @@
 import fetchJSONData from '../../utils/fetch-json-data';
 import { CbObjOnError } from '../internal/SecuredFields/lib/types';
+import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configuration/constants';
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
 
@@ -23,7 +24,7 @@ export default function triggerBinLookUp(callbackObj) {
                 contentType: 'application/json'
             },
             {
-                supportedBrands: this.props.brands,
+                supportedBrands: this.props.brands || DEFAULT_CARD_GROUP_TYPES,
                 encryptedBin: callbackObj.encryptedBin,
                 requestId: callbackObj.uuid // Pass id of request
             }

@@ -22,7 +22,10 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
             this.setState(switchObj.stateObject); // Don't need to call validateCardInput - this will be called by the brandChange from SFP
 
             // Pass an object through to SFP
-            this.sfp.current.processBinLookupResponse({ supportedBrands: [switchObj.leadType] });
+            this.sfp.current.processBinLookupResponse({
+                issuingCountryCode: binValueObject.issuingCountryCode,
+                supportedBrands: [switchObj.leadType]
+            });
 
             // 2) Single option found (binValueObject.brands.length === 1)
         } else {
@@ -30,7 +33,7 @@ export default function processBinLookupResponse(binValueObject: BinValueObject)
 
             // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
             // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
-            this.setState({ additionalSelectValue: binValueObject.supportedBrands[0] }, this.validateCardInput());
+            this.setState({ additionalSelectValue: binValueObject.supportedBrands[0] }, this.validateCardInput);
 
             // Pass object through to SFP
             this.sfp.current.processBinLookupResponse(binValueObject);

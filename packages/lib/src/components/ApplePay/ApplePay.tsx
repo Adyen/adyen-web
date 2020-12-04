@@ -29,11 +29,17 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected formatProps(props) {
         const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
+        const { configuration = {} } = props;
+
         return {
             onAuthorized: resolve => resolve(),
             ...props,
+            configuration: {
+                merchantId: configuration.merchantIdentifier || configuration.merchantId || defaultProps.configuration.merchantId,
+                merchantName: configuration.merchantDisplayName || configuration.merchantName || defaultProps.configuration.merchantName
+            },
             version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
+            totalPriceLabel: props.totalPriceLabel || configuration.merchantName,
             amount,
             onCancel: event => props.onError(event)
         };
@@ -84,7 +90,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 if (!!event.payment.token && !!event.payment.token.paymentData) {
-                    this.setState({ 'applepay.token': btoa(JSON.stringify(event.payment.token.paymentData)) });
+                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                 }
 
                 onSubmit({ data: this.data, isValid: this.isValid }, this);
@@ -98,7 +104,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
-        const { merchantName: displayName, merchantIdentifier } = configuration;
+        const { merchantName: displayName, merchantId: merchantIdentifier } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
         const options = { loadingContext, path, method: 'post' };
         const request: ApplePaySessionRequest = { displayName, domainName, initiative, merchantIdentifier };
@@ -149,7 +155,17 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     render() {
         if (this.props.showPayButton) {
-            return <ApplePayButton buttonColor={this.props.buttonColor} buttonType={this.props.buttonType} onClick={this.submit} />;
+            return (
+                <ApplePayButton
+                    i18n={this.props.i18n}
+                    buttonColor={this.props.buttonColor}
+                    buttonType={this.props.buttonType}
+                    onClick={e => {
+                        e.preventDefault();
+                        this.submit();
+                    }}
+                />
+            );
         }
 
         return null;
