@@ -147,7 +147,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     public payButton = props => {
-        return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
+        return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 }
 

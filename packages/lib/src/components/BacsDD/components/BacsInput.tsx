@@ -11,6 +11,9 @@ import { BacsDataState, BacsErrorsState, BacsInputProps, BacsValidState, Validat
 import './BacsInput.scss';
 import getImage from '../../../utils/get-image';
 
+const ENTER_STATE = 'enter-data';
+const CONFIRM_STATE = 'confirm-data';
+
 function BacsInput(props: BacsInputProps) {
     const { i18n } = useCoreContext();
     const validator: Validator = new Validator(bacsValidationRules);
@@ -30,11 +33,9 @@ function BacsInput(props: BacsInputProps) {
         ...(props.data.shopperEmail && {
             shopperEmail: validator.validate('shopperEmail', 'input')(props.data.shopperEmail).isValid
         })
-        // amountConsentCheckbox: false,
-        // accountConsentCheckbox: false
     });
 
-    const [status, setStatus] = useState('enter-data');
+    const [status, setStatus] = useState(ENTER_STATE);
 
     this.setStatus = newStatus => {
         setStatus(newStatus);
@@ -70,20 +71,43 @@ function BacsInput(props: BacsInputProps) {
         setErrors(prevErrors => ({ ...prevErrors, [consentKey]: !checked }));
     };
 
+    const isValid = (): boolean => {
+        return (
+            valid.holderName &&
+            valid.bankAccountNumber &&
+            valid.bankLocationId &&
+            valid.shopperEmail &&
+            !!valid.amountConsentCheckbox &&
+            !!valid.accountConsentCheckbox
+        );
+    };
+
+    const handlePayButton = () => {
+        if (!isValid()) {
+            this.showValidation();
+            return false;
+        }
+
+        if (!status || status === ENTER_STATE) {
+            this.setStatus(CONFIRM_STATE);
+            return;
+        }
+
+        if (status === CONFIRM_STATE) {
+            props.onSubmit();
+            return;
+        }
+    };
+
     const handleEdit = e => {
-        props.onEdit(e, true);
+        this.setStatus(ENTER_STATE);
+        return;
     };
 
     useEffect(() => {
         props.onChange({
             data,
-            isValid:
-                valid.holderName &&
-                valid.bankAccountNumber &&
-                valid.bankLocationId &&
-                valid.shopperEmail &&
-                !!valid.amountConsentCheckbox &&
-                !!valid.accountConsentCheckbox
+            isValid: isValid()
         });
     }, [data, valid]);
 
@@ -91,10 +115,10 @@ function BacsInput(props: BacsInputProps) {
         <div
             className={classNames({
                 'adyen-checkout__bacs': true,
-                'adyen-checkout__bacs--confirm': status === 'confirm-data'
+                'adyen-checkout__bacs--confirm': status === CONFIRM_STATE
             })}
         >
-            {status == 'confirm-data' && (
+            {status == CONFIRM_STATE && (
                 <div
                     className={classNames({
                         'adyen-checkout__bacs--edit': true,
@@ -114,7 +138,7 @@ function BacsInput(props: BacsInputProps) {
             <Field
                 className={classNames({
                     'adyen-checkout__bacs--holder-name': true,
-                    'adyen-checkout__field--inactive': status === 'confirm-data'
+                    'adyen-checkout__field--inactive': status === CONFIRM_STATE
                 })}
                 label={i18n.get('bacs.holderName')}
                 errorMessage={errors.holderName ? i18n.get('bacs.holderName.invalid') : false}
@@ -129,7 +153,7 @@ function BacsInput(props: BacsInputProps) {
                     'aria-label': i18n.get('bacs.holderName'),
                     'aria-required': 'true',
                     required: true,
-                    readonly: status === 'confirm-data',
+                    readonly: status === CONFIRM_STATE,
                     autocorrect: 'off',
                     onChange: handleEventFor('holderName', 'blur'),
                     onInput: handleEventFor('holderName', 'input')
@@ -141,7 +165,7 @@ function BacsInput(props: BacsInputProps) {
                     label={i18n.get('bacs.bankAccountNumber')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-account-number': true,
-                        'adyen-checkout__field--inactive': status === 'confirm-data'
+                        'adyen-checkout__field--inactive': status === CONFIRM_STATE
                     })}
                     classNameModifiers={['col-70']}
                     isValid={valid.bankAccountNumber}
@@ -154,7 +178,7 @@ function BacsInput(props: BacsInputProps) {
                         'aria-label': i18n.get('bacs.bankAccountNumber'),
                         'aria-required': 'true',
                         required: true,
-                        readonly: status === 'confirm-data',
+                        readonly: status === CONFIRM_STATE,
                         autocorrect: 'off',
                         onChange: handleEventFor('bankAccountNumber', 'blur'),
                         onInput: handleEventFor('bankAccountNumber', 'input')
@@ -165,7 +189,7 @@ function BacsInput(props: BacsInputProps) {
                     label={i18n.get('bacs.bankLocationId')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-location-id': true,
-                        'adyen-checkout__field--inactive': status === 'confirm-data'
+                        'adyen-checkout__field--inactive': status === CONFIRM_STATE
                     })}
                     classNameModifiers={['col-30']}
                     isValid={valid.bankLocationId}
@@ -178,7 +202,7 @@ function BacsInput(props: BacsInputProps) {
                         'aria-label': i18n.get('bacs.bankLocationId'),
                         'aria-required': 'true',
                         required: true,
-                        readonly: status === 'confirm-data',
+                        readonly: status === CONFIRM_STATE,
                         autocorrect: 'off',
                         onChange: handleEventFor('bankLocationId', 'blur'),
                         onInput: handleEventFor('bankLocationId', 'input')
@@ -190,7 +214,7 @@ function BacsInput(props: BacsInputProps) {
                 label={i18n.get('bacs.shopperEmail')}
                 className={classNames({
                     'adyen-checkout__bacs--shopper-email': true,
-                    'adyen-checkout__field--inactive': status === 'confirm-data'
+                    'adyen-checkout__field--inactive': status === CONFIRM_STATE
                 })}
                 isValid={valid.shopperEmail}
             >
@@ -205,40 +229,43 @@ function BacsInput(props: BacsInputProps) {
                     'aria-label': i18n.get('bacs.shopperEmail'),
                     'aria-required': 'true',
                     required: true,
-                    readonly: status === 'confirm-data',
+                    readonly: status === CONFIRM_STATE,
                     autocorrect: 'off',
                     onInput: handleEventFor('shopperEmail', 'input'),
                     onChange: handleEventFor('shopperEmail', 'blur')
                 })}
             </Field>
-            {status !== 'confirm-data' && (
-                <ConsentCheckbox
-                    data={data}
-                    errorMessage={!!errors.amountConsentCheckbox}
-                    label={i18n.get('bacs.consent.amount')}
-                    onChange={handleConsentCheckbox('amount')}
-                    // checked={!!valid.amountConsentCheckbox}
-                />
-            )}
-            {status !== 'confirm-data' && (
-                <ConsentCheckbox
-                    data={data}
-                    errorMessage={!!errors.accountConsentCheckbox}
-                    label={i18n.get('bacs.consent.account')}
-                    onChange={handleConsentCheckbox('account')}
-                    // checked={!!valid.accountConsentCheckbox}
-                />
-            )}
+            {!status ||
+                (status === ENTER_STATE && (
+                    <ConsentCheckbox
+                        data={data}
+                        errorMessage={!!errors.amountConsentCheckbox}
+                        label={i18n.get('bacs.consent.amount')}
+                        onChange={handleConsentCheckbox('amount')}
+                        // checked={!!valid.amountConsentCheckbox}
+                    />
+                ))}
+            {!status ||
+                (status === ENTER_STATE && (
+                    <ConsentCheckbox
+                        data={data}
+                        errorMessage={!!errors.accountConsentCheckbox}
+                        label={i18n.get('bacs.consent.account')}
+                        onChange={handleConsentCheckbox('account')}
+                        // checked={!!valid.accountConsentCheckbox}
+                    />
+                ))}
             {props.showPayButton &&
                 props.payButton({
                     status,
                     label:
-                        status !== 'confirm-data'
+                        !status || status === ENTER_STATE
                             ? i18n.get('continue')
                             : `${i18n.get('bacs.confirm')} ${
                                   !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
                               }`,
-                    icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
+                    icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock'),
+                    onClick: handlePayButton
                 })}
         </div>
     );
@@ -247,7 +274,6 @@ function BacsInput(props: BacsInputProps) {
 BacsInput.defaultProps = {
     data: {},
     placeholders: {}
-    // onChange: () => {}
 };
 
 export default BacsInput;
