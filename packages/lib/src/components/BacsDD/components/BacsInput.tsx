@@ -88,7 +88,7 @@ function BacsInput(props: BacsInputProps) {
             return false;
         }
 
-        if (!status || status === ENTER_STATE) {
+        if (status === ENTER_STATE) {
             this.setStatus(CONFIRM_STATE);
             return;
         }
@@ -235,31 +235,29 @@ function BacsInput(props: BacsInputProps) {
                     onChange: handleEventFor('shopperEmail', 'blur')
                 })}
             </Field>
-            {!status ||
-                (status === ENTER_STATE && (
-                    <ConsentCheckbox
-                        data={data}
-                        errorMessage={!!errors.amountConsentCheckbox}
-                        label={i18n.get('bacs.consent.amount')}
-                        onChange={handleConsentCheckbox('amount')}
-                        // checked={!!valid.amountConsentCheckbox}
-                    />
-                ))}
-            {!status ||
-                (status === ENTER_STATE && (
-                    <ConsentCheckbox
-                        data={data}
-                        errorMessage={!!errors.accountConsentCheckbox}
-                        label={i18n.get('bacs.consent.account')}
-                        onChange={handleConsentCheckbox('account')}
-                        // checked={!!valid.accountConsentCheckbox}
-                    />
-                ))}
+            {status === ENTER_STATE && (
+                <ConsentCheckbox
+                    data={data}
+                    errorMessage={!!errors.amountConsentCheckbox}
+                    label={i18n.get('bacs.consent.amount')}
+                    onChange={handleConsentCheckbox('amount')}
+                    // checked={!!valid.amountConsentCheckbox}
+                />
+            )}
+            {status === ENTER_STATE && (
+                <ConsentCheckbox
+                    data={data}
+                    errorMessage={!!errors.accountConsentCheckbox}
+                    label={i18n.get('bacs.consent.account')}
+                    onChange={handleConsentCheckbox('account')}
+                    // checked={!!valid.accountConsentCheckbox}
+                />
+            )}
             {props.showPayButton &&
                 props.payButton({
                     status,
                     label:
-                        !status || status === ENTER_STATE
+                        status === ENTER_STATE
                             ? i18n.get('continue')
                             : `${i18n.get('bacs.confirm')} ${
                                   !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
