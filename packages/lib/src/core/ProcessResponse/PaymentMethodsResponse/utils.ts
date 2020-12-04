@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentMethodsResponseInterface } from '../../../types';
+import { PaymentMethod, StoredPaymentMethod } from '../../../types';
 import {
     filterAllowedPaymentMethods,
     filterEcomStoredPaymentMethods,
@@ -11,20 +11,17 @@ const processStoredPaymentMethod = (pm): PaymentMethod => ({
     storedPaymentMethodId: pm.id
 });
 
-export const processPaymentMethods = (
-    paymentMethodsResponse: PaymentMethodsResponseInterface,
-    { allowPaymentMethods = [], removePaymentMethods = [] }
-): PaymentMethod[] => {
-    const { paymentMethods = [] } = paymentMethodsResponse;
+export const processPaymentMethods = (paymentMethods: PaymentMethod[], { allowPaymentMethods = [], removePaymentMethods = [] }): PaymentMethod[] => {
+    if (!paymentMethods) return [];
 
     return paymentMethods.filter(filterAllowedPaymentMethods, allowPaymentMethods).filter(filterRemovedPaymentMethods, removePaymentMethods);
 };
 
 export const processStoredPaymentMethods = (
-    paymentMethodsResponse: any = {},
+    storedPaymentMethods: StoredPaymentMethod[],
     { allowPaymentMethods = [], removePaymentMethods = [] }
 ): PaymentMethod[] => {
-    const { storedPaymentMethods = [] } = paymentMethodsResponse;
+    if (!storedPaymentMethods) return [];
 
     return storedPaymentMethods
         .filter(filterSupportedStoredPaymentMethods) // only display supported stored payment methods

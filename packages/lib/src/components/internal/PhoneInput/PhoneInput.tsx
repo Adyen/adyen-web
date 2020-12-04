@@ -97,7 +97,12 @@ class PhoneInput extends Component<PhoneInputComponentProps, PhoneInputState> {
                     inputWrapperModifiers={['phoneInput']}
                 >
                     <div className="adyen-checkout__input-wrapper">
-                        <div className="adyen-checkout__input">
+                        <div
+                            className={classNames({
+                                'adyen-checkout__input': true,
+                                'adyen-checkout__input--invalid': !!this.state.errors.phoneNumber
+                            })}
+                        >
                             {!!showPrefix && (
                                 <Field inputWrapperModifiers={['phoneInput']}>
                                     {renderFormField('select', {

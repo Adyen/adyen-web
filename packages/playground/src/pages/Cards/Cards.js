@@ -8,7 +8,7 @@ import '../../style.scss';
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     window.checkout = new AdyenCheckout({
-        amount, // Optional. Used to display the amount in the Pay Button.
+        amount,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -51,7 +51,8 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                     iframeTitle: 'cc number field iframe'
                 },
                 encryptedExpiryDate: {
-                    label: 'put your date in here'
+                    label: 'put your date in here',
+                    iframeTitle: 'date iframe'
                 }
             }
         })
@@ -74,7 +75,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
 
             // billingAddress config:
             billingAddressRequired: true,
-            billingAddressAllowedCountries: ['US', 'CA', 'BR', 'IT'],
+            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
             // billingAddressRequiredFields: ['postalCode', 'country'],
 
             // data:

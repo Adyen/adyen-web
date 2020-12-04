@@ -1,4 +1,4 @@
-const wait = (ms = 100) => {
+const wait = (ms = 100): Promise<void> => {
     return new Promise(resolve => {
         setTimeout(() => {
             resolve();

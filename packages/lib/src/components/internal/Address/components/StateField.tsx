@@ -4,22 +4,26 @@ import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
+import { getKeyForField } from '../utils';
 import { COUNTRIES_WITH_STATES_DATASET } from '../constants';
+import { StateFieldItem, StateFieldProps } from '../types';
 
-export default function StateField(props) {
-    const { country, onDropdownChange, value, readOnly } = props;
+export default function StateField(props: StateFieldProps) {
+    const { classNameModifiers, selectedCountry, onDropdownChange, value, readOnly } = props;
     const { i18n, loadingContext } = useCoreContext();
-    const [states, setStates] = useState([]);
-    const [loaded, setLoaded] = useState(false);
+    const [states, setStates] = useState<StateFieldItem[]>([]);
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const labelKey: string = getKeyForField('stateOrProvince', selectedCountry);
+    const placeholderKey: string = getKeyForField('stateOrProvincePlaceholder', selectedCountry);
 
     useLayoutEffect(() => {
-        if (!country || !COUNTRIES_WITH_STATES_DATASET.includes(country)) {
+        if (!selectedCountry || !COUNTRIES_WITH_STATES_DATASET.includes(selectedCountry)) {
             setStates([]);
             setLoaded(true);
             return;
         }
 
-        getDataset(`states/${country}`, loadingContext, i18n.locale)
+        getDataset(`states/${selectedCountry}`, loadingContext, i18n.locale)
             .then(response => {
                 const newStates = response && response.length ? response : [];
                 setStates(newStates);
@@ -29,17 +33,17 @@ export default function StateField(props) {
                 setStates([]);
                 setLoaded(true);
             });
-    }, [country]);
+    }, [selectedCountry]);
 
     if (!loaded || !states.length) return null;
 
     return (
-        <Field label={i18n.get('stateOrProvince')} classNameModifiers={['stateOrProvince']} errorMessage={props.errorMessage}>
+        <Field label={i18n.get(labelKey)} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage}>
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
                 selected: value,
-                placeholder: i18n.get('select.stateOrProvince'),
+                placeholder: i18n.get(placeholderKey),
                 items: states,
                 readonly: readOnly && !!value
             })}

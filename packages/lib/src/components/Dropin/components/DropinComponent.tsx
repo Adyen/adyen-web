@@ -74,7 +74,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     private handleDisableStoredPaymentMethod = storedPaymentMethod => {
         this.setState({ isDisabling: true });
 
-        new Promise((resolve, reject) => this.props.onDisableStoredPaymentMethod(storedPaymentMethod, resolve, reject))
+        new Promise((resolve, reject) => this.props.onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
             .then(() => {
                 this.setState(prevState => ({ elements: prevState.elements.filter(pm => pm._id !== storedPaymentMethod._id) }));
                 this.setState({ isDisabling: false });

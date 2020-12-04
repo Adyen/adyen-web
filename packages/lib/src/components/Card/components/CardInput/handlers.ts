@@ -76,7 +76,7 @@ function handleInstallments(installments): void {
 function handleSecuredFieldsChange(newState: SFPState): void {
     const sfState: SFPState = newState;
 
-    const tempHolderName: string = sfState.autoCompleteName ? sfState.autoCompleteName : this.state.data.holderName;
+    const tempHolderName: string = sfState.autoCompleteName && this.props.hasHolderName ? sfState.autoCompleteName : this.state.data.holderName;
 
     const setSfpData = (prevState: SFPState): SFPState => ({
         ...prevState,
@@ -132,7 +132,7 @@ function handleAdditionalDataSelection(e: Event): void {
 
     // Pass brand into SecuredFields
     if (this.state.additionalSelectType === 'brandSwitcher') {
-        this.sfp.current.processBinLookupResponse({ supportedBrands: [value] });
+        this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
     }
 }
 

@@ -1,16 +1,17 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
-import { PayPalButtonsProps } from '../types';
+import { PayPalButtonsProps, FundingSource } from '../types';
+import { getStyle } from '../utils';
 
 export default function PaypalButtons(props: PayPalButtonsProps) {
-    const { style, onInit, onComplete, onClick, onCancel, onError, onSubmit, paypalRef } = props;
+    const { onInit, onComplete, onClick, onCancel, onError, onSubmit, paypalRef, style } = props;
     const paypalButtonRef = useRef(null);
     const creditButtonRef = useRef(null);
 
-    const createButton = (fundingSource, buttonRef) => {
+    const createButton = (fundingSource: FundingSource, buttonRef) => {
         const button = paypalRef.Buttons({
             fundingSource,
-            style,
+            style: getStyle(fundingSource, style),
             onInit,
             onClick,
             onCancel,

@@ -1,0 +1,49 @@
+{
+    "name": "@adyen/adyen-web-e2e",
+    "private": true,
+    "keywords": [
+        "adyen",
+        "adyen-web",
+        "checkout",
+        "payment",
+        "payments",
+        "components"
+    ],
+    "version": "1.0.0",
+    "license": "MIT",
+    "homepage": "https://docs.adyen.com/checkout",
+    "repository": "github:Adyen/adyen-web",
+    "bugs": {
+        "url": "https://support.adyen.com/"
+    },
+    "scripts": {
+        "start": "npm run dev-server",
+        "dev-server": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
+        "test:e2e": "concurrently --kill-others --success first \"npm run start\" \"node tests/index.js\" --names \"app,e2e\""
+    },
+    "devDependencies": {
+        "@adyen/adyen-web-server": "1.0.0",
+        "cross-env": "^7.0.2",
+        "concurrently": "^5.3.0",
+        "css-loader": "^4.2.2",
+        "dotenv": "^8.2.0",
+        "html-webpack-plugin": "^4.5.0",
+        "node-sass": "^4.12.0",
+        "prettier": "^1.19.1",
+        "promise": "^8.1.0",
+        "sass-loader": "^10.1.0",
+        "source-map-loader": "^1.1.2",
+        "style-loader": "^2.0.0",
+        "testcafe": "^1.9.4",
+        "ts-jest": "^26.4.4",
+        "ts-loader": "^8.0.11",
+        "typescript": "^4.0.5",
+        "webpack": "^4.44.2",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0",
+        "whatwg-fetch": "^3.5.0"
+    },
+    "dependencies": {
+        "@adyen/adyen-web": "3.18.1"
+    }
+}

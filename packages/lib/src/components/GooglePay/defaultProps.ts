@@ -33,6 +33,7 @@ export default {
     onError: () => {},
     onAuthorized: params => params,
     onSubmit: () => {},
+    onClick: resolve => resolve(),
 
     // CardParameters
     // https://developers.google.com/pay/api/web/reference/object#CardParameters

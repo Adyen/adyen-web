@@ -16,6 +16,7 @@ const initCheckout = async () => {
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: 'test',
+        //        environment: 'http://localhost:8080/checkoutshopper/',
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
@@ -62,14 +63,29 @@ const initCheckout = async () => {
             await cancelOrder(order);
             checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
         },
-        onError: error => {
-            console.log('dropin onError', error);
+        onError: obj => {
+            console.log('checkout level merchant defined onError handler obj=', obj);
         },
         paymentMethodsConfiguration: {
             card: {
                 enableStoreDetails: false,
                 hasHolderName: true,
-                holderNameRequired: true
+                holderNameRequired: true,
+                //                challengeWindowSize: '01',
+                //                configuration: {
+                //                    koreanAuthenticationRequired: true
+                //                }
+                // WILL NOT FIRE, but should, if not defined at Dropin.pmConfig level
+                onConfigSuccess: obj => {
+                    console.log('CHECKOUT-pmConfig level merchant defined onConfigSuccess handler obj', obj);
+                },
+                // WILL NOT FIRE, but should, if not defined at Dropin.pmConfig level
+                onBrand: obj => {
+                    console.log('CHECKOUT-pmConfig level merchant defined onBrand handler obj=', obj);
+                }
+                //                onError: obj => {
+                //                    console.log('CHECKOUT-pmConfig level merchant defined onError handler obj=', obj);
+                //                }
             },
             boletobancario_santander: {
                 data: {

@@ -6,10 +6,6 @@ import getDataset from '../../../../core/Services/get-dataset';
 jest.mock('../../../../core/Services/get-dataset');
 const countriesMock = [
     {
-        id: 'BR',
-        name: 'Brazil'
-    },
-    {
         id: 'NL',
         name: 'Netherlands'
     },
@@ -29,27 +25,28 @@ describe('CountryField', () => {
     const getWrapper = (props?) => mount(<CountryField {...props} />);
 
     test('calls getDataset', () => {
-        const wrapper = getWrapper();
+        getWrapper();
         expect(getDataset).toHaveBeenCalled();
     });
 
     test('loads countries', async () => {
         const wrapper = await getWrapper();
-        wrapper.update();
-        expect(wrapper.find('li[data-value]')).toHaveLength(4);
+        const countriesLength = Object.keys(countriesMock).length;
+        wrapper.update(null);
+        expect(wrapper.find('li[data-value]')).toHaveLength(countriesLength);
     });
 
     test('only loads the allowed countries ', async () => {
         const allowedCountries = ['US', 'NL'];
         const wrapper = await getWrapper({ allowedCountries });
-        wrapper.update();
-        expect(wrapper.find('li[data-value]')).toHaveLength(2);
+        wrapper.update(null);
+        expect(wrapper.find('li[data-value]')).toHaveLength(allowedCountries.length);
     });
 
     test('preselects the passed country', async () => {
         const value = 'NL';
         const wrapper = await getWrapper({ value });
-        wrapper.update();
+        wrapper.update(null);
         expect(wrapper.find('Select').prop('selected')).toBe(value);
     });
 
@@ -57,7 +54,7 @@ describe('CountryField', () => {
         const allowedCountries = ['NL'];
         const value = 'NL';
         const wrapper = await getWrapper({ value, allowedCountries });
-        wrapper.update();
+        wrapper.update(null);
         expect(wrapper.find('Select').prop('readonly')).toBe(true);
     });
 });

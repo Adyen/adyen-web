@@ -1,13 +1,19 @@
 import paymentMethods from '../components';
+import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 
 /**
  * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v51/payments__resParam_action API Explorer /payments action}
  */
 export interface PaymentAction {
     /**
-     * Typpe of action that needs to be taken by the client
+     * General type of action that needs to be taken by the client
      */
     type: string;
+
+    /**
+     * Refinement of type of action that needs to be taken by the client (currently only applies to the new 'threeDS2' type)
+     */
+    subtype?: string;
 
     /**
      * Specifies the payment method.
@@ -134,14 +140,11 @@ export interface PaymentAmount {
     currency: string;
 }
 
-export interface AddressSchema {
-    street?: string;
-    houseNumberOrName?: string;
-    postalCode?: string;
-    city?: string;
-    country?: string;
-    stateOrProvince?: string;
-}
+export type AddressField = typeof ADDRESS_SCHEMA[number];
+
+export type AddressSchema = {
+    [key in AddressField]?: string;
+};
 
 export interface PersonalDetailsSchema {
     firstName?: string;

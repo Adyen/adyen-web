@@ -1,1 +1,1 @@
-export { default } from './ThreeDS2Challenge';
+export { default } from './PrepareChallenge3DS2';
