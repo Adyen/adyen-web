@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import BacsInput from './components/BacsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import PayButton from '../internal/PayButton';
 import BacsResult from './components/BacsResult';
 
 interface BacsElementData {
@@ -35,13 +34,17 @@ class BacsElement extends UIElement {
         };
     }
 
+    setState(newState: object) {
+        super.setState(newState);
+        this.setStatus(newState['status']); // tell component
+    }
+
     get isValid(): boolean {
         return !!this.state.isValid;
     }
 
     public onEdit = () => {
         this.setState({ status: 'enter-data' });
-        this.setStatus('enter-data'); // tell component
 
         // Nasty hack! Needed when component is in Dropin
         // If we're coming back to the "enter-data" page then the checkboxes must have been checked - so re-check them
@@ -62,7 +65,6 @@ class BacsElement extends UIElement {
 
         if (this.state.status === 'enter-data') {
             this.setState({ status: 'confirm-data' });
-            this.setStatus('confirm-data');
             return;
         }
 
@@ -73,7 +75,6 @@ class BacsElement extends UIElement {
         if (this.props.url) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                    {/*This would be the pdf download*/}
                     <BacsResult
                         ref={ref => {
                             this.componentRef = ref;
