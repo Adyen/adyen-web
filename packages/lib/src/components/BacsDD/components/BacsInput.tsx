@@ -16,7 +16,10 @@ const CONFIRM_STATE = 'confirm-data';
 
 function BacsInput(props: BacsInputProps) {
     const { i18n } = useCoreContext();
-    const validator: Validator = new Validator(bacsValidationRules);
+    const validator = new Validator(bacsValidationRules);
+
+    const [status, setStatus] = useState(ENTER_STATE);
+    this.setStatus = setStatus;
 
     const [data, setData] = useState<BacsDataState>(props.data);
     const [errors, setErrors] = useState<BacsErrorsState>({});
@@ -34,12 +37,6 @@ function BacsInput(props: BacsInputProps) {
             shopperEmail: validator.validate('shopperEmail', 'input')(props.data.shopperEmail).isValid
         })
     });
-
-    const [status, setStatus] = useState(ENTER_STATE);
-
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
 
     this.showValidation = (): void => {
         setErrors({
@@ -62,13 +59,10 @@ function BacsInput(props: BacsInputProps) {
     };
 
     const handleConsentCheckbox = (key: string) => (e): void => {
-        const { checked } = e.target;
-
-        const consentKey = key + 'ConsentCheckbox';
-
-        setData(prevData => ({ ...prevData, [consentKey]: checked }));
-        setValid(prevValid => ({ ...prevValid, [consentKey]: checked }));
-        setErrors(prevErrors => ({ ...prevErrors, [consentKey]: !checked }));
+        const checked = !data[key];
+        setData(prevData => ({ ...prevData, [key]: checked }));
+        setValid(prevValid => ({ ...prevValid, [key]: checked }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: !checked }));
     };
 
     const isValid = (): boolean => {
@@ -245,8 +239,8 @@ function BacsInput(props: BacsInputProps) {
                     data={data}
                     errorMessage={!!errors.amountConsentCheckbox}
                     label={i18n.get('bacs.consent.amount')}
-                    onChange={handleConsentCheckbox('amount')}
-                    // checked={!!valid.amountConsentCheckbox}
+                    onChange={handleConsentCheckbox('amountConsentCheckbox')}
+                    checked={!!data.amountConsentCheckbox}
                 />
             )}
 
@@ -255,8 +249,8 @@ function BacsInput(props: BacsInputProps) {
                     data={data}
                     errorMessage={!!errors.accountConsentCheckbox}
                     label={i18n.get('bacs.consent.account')}
-                    onChange={handleConsentCheckbox('account')}
-                    // checked={!!valid.accountConsentCheckbox}
+                    onChange={handleConsentCheckbox('accountConsentCheckbox')}
+                    checked={!!data.accountConsentCheckbox}
                 />
             )}
 

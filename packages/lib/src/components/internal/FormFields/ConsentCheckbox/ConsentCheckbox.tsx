@@ -11,7 +11,7 @@ export default function ConsentCheckbox({ data, errorMessage, label, onChange, .
                 onInput={onChange}
                 value={data.consentCheckbox}
                 label={label}
-                // checked={props.checked}
+                checked={props.checked}
             />
         </Field>
     );
