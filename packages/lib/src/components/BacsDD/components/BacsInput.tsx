@@ -37,6 +37,8 @@ function BacsInput(props: BacsInputProps) {
 
     const [status, setStatus] = useState(ENTER_STATE);
 
+    const [isValid, setIsValid] = useState(false);
+
     this.setStatus = newStatus => {
         setStatus(newStatus);
     };
@@ -71,19 +73,8 @@ function BacsInput(props: BacsInputProps) {
         setErrors(prevErrors => ({ ...prevErrors, [consentKey]: !checked }));
     };
 
-    const isValid = (): boolean => {
-        return (
-            valid.holderName &&
-            valid.bankAccountNumber &&
-            valid.bankLocationId &&
-            valid.shopperEmail &&
-            !!valid.amountConsentCheckbox &&
-            !!valid.accountConsentCheckbox
-        );
-    };
-
     const handlePayButton = () => {
-        if (!isValid()) {
+        if (!isValid) {
             this.showValidation();
             return false;
         }
@@ -99,15 +90,25 @@ function BacsInput(props: BacsInputProps) {
         }
     };
 
-    const handleEdit = e => {
+    const handleEdit = () => {
         this.setStatus(ENTER_STATE);
         return;
     };
 
     useEffect(() => {
+        const pmIsValid =
+            valid.holderName &&
+            valid.bankAccountNumber &&
+            valid.bankLocationId &&
+            valid.shopperEmail &&
+            !!valid.amountConsentCheckbox &&
+            !!valid.accountConsentCheckbox;
+
+        setIsValid(pmIsValid);
+
         props.onChange({
             data,
-            isValid: isValid()
+            isValid: pmIsValid
         });
     }, [data, valid]);
 
