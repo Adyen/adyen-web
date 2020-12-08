@@ -2,5 +2,6 @@ const AFTERPAY_CONSENT_URL_EN = 'https://www.afterpay.nl/en/algemeen/pay-with-af
 const AFTERPAY_CONSENT_URL_BE = 'https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden';
 const AFTERPAY_CONSENT_URL_NL = 'https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden';
 const AFTERPAY_B2B_CONSENT_URL = 'https://www.afterpay.nl/nl/algemeen/zakelijke-partners/betalingsvoorwaarden-zakelijk';
+const ALLOWED_COUNTRIES = ['BE', 'NL'];
 
-export { AFTERPAY_CONSENT_URL_EN, AFTERPAY_CONSENT_URL_BE, AFTERPAY_CONSENT_URL_NL, AFTERPAY_B2B_CONSENT_URL };
+export { AFTERPAY_CONSENT_URL_EN, AFTERPAY_CONSENT_URL_BE, AFTERPAY_CONSENT_URL_NL, AFTERPAY_B2B_CONSENT_URL, ALLOWED_COUNTRIES };

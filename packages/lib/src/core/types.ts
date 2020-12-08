@@ -67,6 +67,11 @@ export interface CoreOptions {
      */
     removePaymentMethods?: string[];
 
+    /**
+     * @internal
+     * */
+    loadingContext?: string;
+
     analytics?: AnalyticsOptions;
 
     risk?: RiskModuleOptions;
