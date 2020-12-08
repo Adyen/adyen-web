@@ -83,6 +83,16 @@ const actionTypes = {
             onError: props.onError,
             statusType: 'custom'
         });
+    },
+
+    bankTransfer: (action: PaymentAction, props) => {
+        return getComponent(action.paymentMethodType, {
+            ...action,
+            ...props,
+            onComplete: props.onAdditionalDetails,
+            onError: props.onError,
+            statusType: 'custom'
+        });
     }
 };
 
