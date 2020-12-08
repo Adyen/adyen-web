@@ -19,6 +19,7 @@ export interface VoucherProps {
     /** Download URL for the voucher. It will display a button allowing the shopper to download it. */
     downloadUrl?: string;
 
+    /** Text that will be displayed on the above Download button. */
     downloadButtonText?: string;
 
     /** Introduction text on the voucher. */
