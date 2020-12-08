@@ -122,8 +122,8 @@ function BacsInput(props: BacsInputProps) {
                     {renderFormField('text', {
                         name: 'bacsEdit',
                         className: 'adyen-checkout__bacs--edit-button',
-                        value: i18n.get('bacs.edit'),
-                        'aria-label': i18n.get('bacs.edit'),
+                        value: i18n.get('edit'),
+                        'aria-label': i18n.get('edit'),
                         readonly: true,
                         onClick: handleEdit
                     })}
@@ -135,17 +135,17 @@ function BacsInput(props: BacsInputProps) {
                     'adyen-checkout__bacs--holder-name': true,
                     'adyen-checkout__field--inactive': status === CONFIRM_STATE
                 })}
-                label={i18n.get('bacs.holderName')}
-                errorMessage={errors.holderName ? i18n.get('bacs.holderName.invalid') : false}
+                label={i18n.get('bacs.accountHolderName')}
+                errorMessage={errors.holderName ? i18n.get('bacs.accountHolderName.invalid') : false}
                 isValid={valid.holderName}
             >
                 {renderFormField('text', {
-                    name: 'bacs.holderName',
+                    name: 'bacs.accountHolderName',
                     className: 'adyen-checkout__bacs-input--holder-name',
                     placeholder: props.placeholders.holderName,
                     value: data.holderName,
                     'aria-invalid': !valid.holderName,
-                    'aria-label': i18n.get('bacs.holderName'),
+                    'aria-label': i18n.get('bacs.accountHolderName'),
                     'aria-required': 'true',
                     required: true,
                     readonly: status === CONFIRM_STATE,
@@ -157,8 +157,8 @@ function BacsInput(props: BacsInputProps) {
 
             <div className="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
                 <Field
-                    errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.bankAccountNumber.invalid')}
-                    label={i18n.get('bacs.bankAccountNumber')}
+                    errorMessage={!!errors.bankAccountNumber && i18n.get('bacs.accountNumber.invalid')}
+                    label={i18n.get('bacs.accountNumber')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-account-number': true,
                         'adyen-checkout__field--inactive': status === CONFIRM_STATE
@@ -171,7 +171,7 @@ function BacsInput(props: BacsInputProps) {
                         className: 'adyen-checkout__bacs-input--bank-account-number',
                         placeholder: props.placeholders.bankAccountNumber,
                         'aria-invalid': !valid.bankAccountNumber,
-                        'aria-label': i18n.get('bacs.bankAccountNumber'),
+                        'aria-label': i18n.get('bacs.accountNumber'),
                         'aria-required': 'true',
                         required: true,
                         readonly: status === CONFIRM_STATE,
