@@ -26,14 +26,6 @@ getOriginKey()
             onAdditionalDetails: handleAdditionalDetails,
             onError: console.error,
             showPayButton: true
-            // risk: {
-            //     node: '.merchant-checkout__form',
-            //     onComplete: riskData => {
-            //         console.log('handleOnRiskData riskData=', riskData);
-            //     },
-            //     onError: console.error,
-            //     enabled: true
-            // }
         });
 
         // Adyen Giving
@@ -61,6 +53,35 @@ getOriginKey()
                 error: 'Ongeldig kaartnummer'
             }
         };
+
+        window.bacsdd = checkout
+            .create('directdebit_GB', {
+                data: {
+                    holderName: 'Philip Dog',
+                    bankAccountNumber: '12345678',
+                    bankLocationId: '123456',
+                    shopperEmail: 'phil@ddog.co.uk'
+                }
+            })
+            .mount('.bacsdd-field');
+
+        // SEPA Bank Transfer
+        window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
+        window.bankTransferResult = checkout
+            .createFromAction({
+                paymentMethodType: 'bankTransfer_IBAN',
+                totalAmount: {
+                    currency: 'EUR',
+                    value: 1000
+                },
+                beneficiary: 'Adyen',
+                iban: 'NL13TEST0123456789',
+                bic: 'TESTNL02',
+                reference: '991-6068-3254-7284F',
+                type: 'bankTransfer',
+                shopperEmail: 'shopper@email.com'
+            })
+            .mount('.bankTransfer-result-field');
 
         // MBWay
         window.mbway = checkout.create('mbway').mount('.mbway-field');
