@@ -53,6 +53,7 @@ class BacsElement extends UIElement {
                         {...this.props}
                         onChange={this.setState}
                         payButton={this.payButton}
+                        onSubmit={this.submit}
                     />
                 )}
             </CoreProvider>
