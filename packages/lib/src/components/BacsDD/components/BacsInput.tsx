@@ -109,7 +109,7 @@ function BacsInput(props: BacsInputProps) {
         <div
             className={classNames({
                 'adyen-checkout__bacs': true,
-                'adyen-checkout__bacs--confirm': status === CONFIRM_STATE
+                'adyen-checkout__bacs--confirm': status === CONFIRM_STATE || status === 'loading'
             })}
         >
             {status == CONFIRM_STATE && (
@@ -133,7 +133,7 @@ function BacsInput(props: BacsInputProps) {
             <Field
                 className={classNames({
                     'adyen-checkout__bacs--holder-name': true,
-                    'adyen-checkout__field--inactive': status === CONFIRM_STATE
+                    'adyen-checkout__field--inactive': status === CONFIRM_STATE || status === 'loading'
                 })}
                 label={i18n.get('bacs.accountHolderName')}
                 errorMessage={errors.holderName ? i18n.get('bacs.accountHolderName.invalid') : false}
@@ -148,7 +148,7 @@ function BacsInput(props: BacsInputProps) {
                     'aria-label': i18n.get('bacs.accountHolderName'),
                     'aria-required': 'true',
                     required: true,
-                    readonly: status === CONFIRM_STATE,
+                    readonly: status === CONFIRM_STATE || status === 'loading',
                     autocorrect: 'off',
                     onChange: handleEventFor('holderName', 'blur'),
                     onInput: handleEventFor('holderName', 'input')
@@ -161,7 +161,7 @@ function BacsInput(props: BacsInputProps) {
                     label={i18n.get('bacs.accountNumber')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-account-number': true,
-                        'adyen-checkout__field--inactive': status === CONFIRM_STATE
+                        'adyen-checkout__field--inactive': status === CONFIRM_STATE || status === 'loading'
                     })}
                     classNameModifiers={['col-70']}
                     isValid={valid.bankAccountNumber}
@@ -174,7 +174,7 @@ function BacsInput(props: BacsInputProps) {
                         'aria-label': i18n.get('bacs.accountNumber'),
                         'aria-required': 'true',
                         required: true,
-                        readonly: status === CONFIRM_STATE,
+                        readonly: status === CONFIRM_STATE || status === 'loading',
                         autocorrect: 'off',
                         onChange: handleEventFor('bankAccountNumber', 'blur'),
                         onInput: handleEventFor('bankAccountNumber', 'input')
@@ -186,7 +186,7 @@ function BacsInput(props: BacsInputProps) {
                     label={i18n.get('bacs.bankLocationId')}
                     className={classNames({
                         'adyen-checkout__bacs--bank-location-id': true,
-                        'adyen-checkout__field--inactive': status === CONFIRM_STATE
+                        'adyen-checkout__field--inactive': status === CONFIRM_STATE || status === 'loading'
                     })}
                     classNameModifiers={['col-30']}
                     isValid={valid.bankLocationId}
@@ -199,7 +199,7 @@ function BacsInput(props: BacsInputProps) {
                         'aria-label': i18n.get('bacs.bankLocationId'),
                         'aria-required': 'true',
                         required: true,
-                        readonly: status === CONFIRM_STATE,
+                        readonly: status === CONFIRM_STATE || status === 'loading',
                         autocorrect: 'off',
                         onChange: handleEventFor('bankLocationId', 'blur'),
                         onInput: handleEventFor('bankLocationId', 'input')
@@ -212,7 +212,7 @@ function BacsInput(props: BacsInputProps) {
                 label={i18n.get('bacs.shopperEmail')}
                 className={classNames({
                     'adyen-checkout__bacs--shopper-email': true,
-                    'adyen-checkout__field--inactive': status === CONFIRM_STATE
+                    'adyen-checkout__field--inactive': status === CONFIRM_STATE || status === 'loading'
                 })}
                 isValid={valid.shopperEmail}
             >
@@ -227,7 +227,7 @@ function BacsInput(props: BacsInputProps) {
                     'aria-label': i18n.get('bacs.shopperEmail'),
                     'aria-required': 'true',
                     required: true,
-                    readonly: status === CONFIRM_STATE,
+                    readonly: status === CONFIRM_STATE || status === 'loading',
                     autocorrect: 'off',
                     onInput: handleEventFor('shopperEmail', 'input'),
                     onChange: handleEventFor('shopperEmail', 'blur')
