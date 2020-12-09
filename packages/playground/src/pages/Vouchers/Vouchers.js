@@ -12,7 +12,7 @@ window.checkout = new AdyenCheckout({
     showPayButton: true
 });
 
-window.afterpay = checkout
+window.bacsdd = checkout
     .create('directdebit_GB', {
         countryCode: 'GB',
         data: {
@@ -23,6 +23,15 @@ window.afterpay = checkout
         }
     })
     .mount('#bacsdd-input-container');
+
+window.bacsddResult = checkout
+    .createFromAction({
+        paymentMethodType: 'directdebit_GB',
+        type: 'voucher',
+        url:
+            'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=3B0HeSD%2FX0K4lKudwtMH%2BWuGfNHsDyzCyCpipuJqy3bbue6XVEIdyg8TDWYMjlr39eWhynIQU7slpqA48izhIkHg%2FI%2Fpy2cd8J0PXvWvpSnFtNG30fIIPL06J1pKQfyL%2FG3wCPXSl6p0a79ajCYKcmV06xJVfJMP0ej6FK45GL7MloD%2Bdrbjo%2FnCbbxooYCiYCgJIZdkNm1iLHoVP2s2eg%3D%3D'
+    })
+    .mount('#bacsdd-result-container');
 
 window.multibancoResult = checkout
     .createFromAction({

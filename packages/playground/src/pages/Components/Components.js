@@ -54,17 +54,6 @@ getOriginKey()
             }
         };
 
-        window.bacsdd = checkout
-            .create('directdebit_GB', {
-                data: {
-                    holderName: 'Philip Dog',
-                    bankAccountNumber: '12345678',
-                    bankLocationId: '123456',
-                    shopperEmail: 'phil@ddog.co.uk'
-                }
-            })
-            .mount('.bacsdd-field');
-
         // SEPA Bank Transfer
         window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
         window.bankTransferResult = checkout
