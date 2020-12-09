@@ -3,6 +3,7 @@ import getImage from '../../../utils/get-image';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Voucher from '../../internal/Voucher';
 import '../../internal/Voucher/Voucher.scss';
+import './BacsResult.scss';
 
 const BacsResult = props => {
     const { i18n, loadingContext } = useCoreContext();
