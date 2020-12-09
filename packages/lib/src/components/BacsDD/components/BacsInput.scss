@@ -2,17 +2,17 @@
 
 .adyen-checkout__bacs{
 
-  &--confirm{
+  &--confirm {
     position: relative;
 
-    .adyen-checkout-input__inline-validation--valid{
+    .adyen-checkout-input__inline-validation--valid {
       display: none
     }
   }
 
-  .adyen-checkout__field{
+  .adyen-checkout__field {
 
-    &--inactive{
+    &--inactive {
       pointer-events: none;
     }
   }
@@ -29,7 +29,7 @@
       top: -50px;
     }
 
-    .adyen-checkout__bacs--edit-button{
+    .adyen-checkout__bacs--edit-button {
       border: none;
       background: none;
       color: $color-blue;
