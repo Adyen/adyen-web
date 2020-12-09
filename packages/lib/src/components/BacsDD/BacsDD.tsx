@@ -3,6 +3,7 @@ import UIElement from '../UIElement';
 import BacsInput from './components/BacsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
+import PayButton from '../internal/PayButton';
 
 interface BacsElementData {
     paymentMethod: {
@@ -32,6 +33,10 @@ class BacsElement extends UIElement {
     get isValid(): boolean {
         return !!this.state.isValid;
     }
+
+    public payButton = props => {
+        return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
+    };
 
     render() {
         return (
