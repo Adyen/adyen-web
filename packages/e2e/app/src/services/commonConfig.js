@@ -6,7 +6,7 @@ const DEFAULT_COUNTRY = 'US';
 
 const urlParams = getSearchParameters(window.location.search);
 export const shopperLocale = DEFAULT_LOCALE;
-export const countryCode = DEFAULT_COUNTRY;
+export const countryCode = urlParams.countryCode || DEFAULT_COUNTRY;
 export const currency = getCurrency(countryCode);
 export const amountValue = urlParams.amount ?? 25900;
 export const amount = {
