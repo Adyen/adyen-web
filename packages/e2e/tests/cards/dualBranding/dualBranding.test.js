@@ -1,6 +1,6 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, getIframeSelector } from '../../utils/commonUtils';
-import cu, { getCardIsValid } from '../utils/cardUtils';
+import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
+import cu from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { CARDS_URL } from '../../pages';
 
@@ -62,7 +62,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
@@ -85,7 +85,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // Click brand icons
         await t

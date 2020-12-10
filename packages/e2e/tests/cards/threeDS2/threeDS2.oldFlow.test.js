@@ -1,6 +1,6 @@
 import { Selector, RequestLogger } from 'testcafe';
-import { start, getIframeSelector } from '../../utils/commonUtils';
-import cu, { getCardIsValid } from '../utils/cardUtils';
+import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
+import cu from '../utils/cardUtils';
 import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
@@ -37,7 +37,7 @@ test('Fill in card number that will trigger frictionless flow', async t => {
     await cardUtils.fillDateAndCVC(t);
 
     // Expect card to now be valid
-    await t.expect(getCardIsValid('dropin')).eql(true);
+    await t.expect(getIsValid('dropin')).eql(true);
 
     // Click pay
     await t
@@ -70,7 +70,7 @@ test('Fill in card number that will trigger challenge flow', async t => {
     await cardUtils.fillDateAndCVC(t);
 
     // Expect card to now be valid
-    await t.expect(getCardIsValid('dropin')).eql(true);
+    await t.expect(getIsValid('dropin')).eql(true);
 
     // Click pay
     await t
@@ -116,7 +116,7 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
     await cardUtils.fillDateAndCVC(t);
 
     // Expect card to now be valid
-    await t.expect(getCardIsValid('dropin')).eql(true);
+    await t.expect(getIsValid('dropin')).eql(true);
 
     // Click pay
     await t
