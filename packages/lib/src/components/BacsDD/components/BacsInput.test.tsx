@@ -1,11 +1,10 @@
 import { h } from 'preact';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
 
 const defaultProps = {
     onChange: () => {},
-    onSubmit: () => {},
-    onEdit: () => {}
+    onSubmit: () => {}
 };
 
 describe('BacsInput', () => {
