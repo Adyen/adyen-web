@@ -237,6 +237,7 @@ function BacsInput(props: BacsInputProps) {
             {status === ENTER_STATE && (
                 <ConsentCheckbox
                     data={data}
+                    classNameModifiers={['amountConsentCheckbox']}
                     errorMessage={!!errors.amountConsentCheckbox}
                     label={i18n.get('bacs.consent.amount')}
                     onChange={handleConsentCheckbox('amountConsentCheckbox')}
@@ -247,6 +248,7 @@ function BacsInput(props: BacsInputProps) {
             {status === ENTER_STATE && (
                 <ConsentCheckbox
                     data={data}
+                    classNameModifiers={['accountConsentCheckbox']}
                     errorMessage={!!errors.accountConsentCheckbox}
                     label={i18n.get('bacs.consent.account')}
                     onChange={handleConsentCheckbox('accountConsentCheckbox')}

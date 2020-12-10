@@ -1,4 +1,4 @@
-import { Selector } from 'testcafe';
+import { ClientFunction, Selector } from 'testcafe';
 
 export const getIframeSelector = (selectorStr, timeout = 20000) => {
     return Selector(selectorStr, { timeout });
@@ -32,3 +32,7 @@ export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFr
         .expect(Selector(iFrameInputSelector).value)
         .contains(valueToCheck);
 };
+
+export const getIsValid = ClientFunction((who = 'card') => {
+    return window[who].isValid;
+});
