@@ -1,6 +1,6 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, getIframeSelector } from '../../../utils/commonUtils';
-import cu, { getCardIsValid } from '../../utils/cardUtils';
+import { start, getIframeSelector, getIsValid } from '../../../utils/commonUtils';
+import cu from '../../utils/cardUtils';
 import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
 import { CARDS_URL } from '../../../pages';
@@ -39,7 +39,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
     }
 );
 
@@ -59,7 +59,7 @@ test(
         await kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // Expect card state to have tax and pwd elements
         await t.expect(getCardState('data', 'taxNumber')).eql(TEST_TAX_NUMBER_VALUE);
@@ -82,7 +82,7 @@ test(
         await t.expect(getCardState('valid', 'encryptedPassword')).eql(false);
 
         // Expect card to still be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
     }
 );
 
@@ -102,7 +102,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // click pay
         await t
@@ -119,7 +119,7 @@ test(
         await kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // click pay
         await t

@@ -64,7 +64,3 @@ const fillDateAndCVC = iframeSelector => {
         return fc(t, cvcValue);
     };
 };
-
-export const getCardIsValid = ClientFunction((who = 'card') => {
-    return window[who].isValid;
-});

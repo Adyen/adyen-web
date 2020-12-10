@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, getIframeSelector } from '../../utils/commonUtils';
+import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
@@ -8,10 +8,6 @@ const dualBrandingIconHolder = Selector('.adyen-checkout__payment-method--card .
 const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--card .adyen-checkout__card__dual-branding__buttons--active');
 
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
-
-const getCardIsValid = ClientFunction(() => {
-    return window.dropin.isValid;
-});
 
 const getPropFromPMData = ClientFunction(prop => {
     return window.dropin.state.data.paymentMethod[prop];
@@ -30,7 +26,6 @@ test('Fill in card number that will get dual branding result from binLookup, ' +
     await start(t, 2000, TEST_SPEED);
 
     // Fill card field with dual branded card (visa/cb)
-    // await fillCardNumber(t, DUAL_BRANDED_CARD);
     await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
     await t
@@ -67,7 +62,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid('dropin')).eql(true);
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
@@ -90,7 +85,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid('dropin')).eql(true);
 
         // Click brand icons
         await t
