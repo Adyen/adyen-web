@@ -76,29 +76,31 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onShippingContactSelected
         } = this.props;
 
-        const paymentRequest = preparePaymentRequest({
-            companyName: this.props.configuration.merchantName,
-            ...this.props
-        });
+        return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {
+            const paymentRequest = preparePaymentRequest({
+                companyName: this.props.configuration.merchantName,
+                ...this.props
+            });
 
-        const session = new ApplePayService(paymentRequest, {
-            version,
-            onCancel,
-            onPaymentMethodSelected,
-            onShippingMethodSelected,
-            onShippingContactSelected,
-            onValidateMerchant: onValidateMerchant || this.validateMerchant,
-            onPaymentAuthorized: (resolve, reject, event) => {
-                if (!!event.payment.token && !!event.payment.token.paymentData) {
-                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
+            const session = new ApplePayService(paymentRequest, {
+                version,
+                onCancel,
+                onPaymentMethodSelected,
+                onShippingMethodSelected,
+                onShippingContactSelected,
+                onValidateMerchant: onValidateMerchant || this.validateMerchant,
+                onPaymentAuthorized: (resolve, reject, event) => {
+                    if (!!event.payment.token && !!event.payment.token.paymentData) {
+                        this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
+                    }
+
+                    onSubmit({ data: this.data, isValid: this.isValid }, this);
+                    onPaymentAuthorized(resolve, reject, event);
                 }
+            });
 
-                onSubmit({ data: this.data, isValid: this.isValid }, this);
-                onPaymentAuthorized(resolve, reject, event);
-            }
+            session.begin();
         });
-
-        session.begin();
     }
 
     private async validateMerchant(resolve, reject) {
