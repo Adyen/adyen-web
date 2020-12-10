@@ -39,6 +39,7 @@ import Blik from './Blik';
 import BankTransfer from './BankTransfer';
 import Affirm from './Affirm';
 import uuid from '../utils/uuid';
+import BacsDD from './BacsDD';
 
 /**
  * Maps each component with a Component element.
@@ -67,6 +68,7 @@ const componentsMap = {
     primeiropay_boleto: Boleto,
     card: Card,
     diners: Card,
+    directdebit_GB: BacsDD,
     discover: Card,
     doku: Doku,
     doku_alfamart: Doku,

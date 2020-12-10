@@ -101,7 +101,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     secondary
                                     href={props.downloadUrl}
                                     icon={getImage({ loadingContext, imageFolder: 'components/' })('download')}
-                                    label={i18n.get('button.download')}
+                                    label={props.downloadButtonText || i18n.get('button.download')}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 />
