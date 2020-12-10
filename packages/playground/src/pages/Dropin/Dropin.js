@@ -99,6 +99,12 @@ const initCheckout = async () => {
                     }
                 }
             },
+            applepay: {
+                configuration: {
+                    merchantName: 'Adyen Test merchant',
+                    merchantIdentifier: '000000000200001'
+                }
+            },
             paywithgoogle: {
                 countryCode: 'NL',
                 onAuthorized: console.info
