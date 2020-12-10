@@ -75,6 +75,7 @@ const defaultProps = {
     applicationData: undefined, // A Base64-encoded string used to contain your application-specific data.
 
     // Events
+    onClick: resolve => resolve(),
     onSubmit: () => {},
     onError: () => {},
     onAuthorized: resolve => resolve(),
