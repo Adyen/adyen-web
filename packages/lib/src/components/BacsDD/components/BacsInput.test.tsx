@@ -17,8 +17,9 @@ describe('BacsInput', () => {
         // Main holder
         expect(wrapper.find('.adyen-checkout__bacs')).toHaveLength(1);
 
-        // Name
+        // Name (active)
         expect(wrapper.find('div.adyen-checkout__bacs--holder-name')).toHaveLength(1);
+        expect(wrapper.find('div.adyen-checkout__bacs--holder-name.adyen-checkout__field--inactive')).toHaveLength(0);
 
         // Holder for account & location + account & location fields
         expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toHaveLength(1);
@@ -49,10 +50,7 @@ describe('BacsInput', () => {
 
         // Holder for account & location + inactive account & location fields
         expect(wrapper.find('.adyen-checkout__bacs .adyen-checkout__bacs__num-id')).toHaveLength(1);
-
         expect(wrapper.find('div.adyen-checkout__bacs--bank-account-number.adyen-checkout__field--inactive')).toHaveLength(1);
-        // expect(wrapper.find('input.adyen-checkout__bacs-input--bank-account-number[readonly="true"]')).toHaveLength(1);
-
         expect(wrapper.find('div.adyen-checkout__bacs--bank-location-id.adyen-checkout__field--inactive')).toHaveLength(1);
 
         // Email (inactive)
