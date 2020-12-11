@@ -40,6 +40,7 @@ window.boletoInput = checkout
         // billingAddressRequired: false,
         showEmailAddress: true,
         data: {
+            socialSecurityNumber: '32553325916',
             billingAddress: {
                 street: 'Fake street',
                 houseNumberOrName: '123',

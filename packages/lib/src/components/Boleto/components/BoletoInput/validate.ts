@@ -4,6 +4,6 @@ export const boletoValidationRules = {
     },
     blur: {
         socialSecurityNumber: ssn => /(^\d{3}\.\d{3}\.\d{3}-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$)/.test(ssn),
-        default: value => value && value.length > 0
+        default: value => !!value && value.length > 0
     }
 };

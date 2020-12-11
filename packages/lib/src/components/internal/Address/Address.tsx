@@ -27,10 +27,8 @@ export default function Address(props: AddressProps) {
         setErrors(prevErrors => ({ ...prevErrors, [name]: !isValid }));
     };
 
-    const handleStateChange = (e: Event): void => {
-        const field = e.currentTarget as HTMLInputElement;
-        const value = field.getAttribute('data-value');
-
+    const handleStateChange = (e): void => {
+        const value = e.target?.value;
         setData(prevData => ({ ...prevData, stateOrProvince: value }));
         setValid(prevValid => ({ ...prevValid, stateOrProvince: !!value }));
         setErrors(prevErrors => ({ ...prevErrors, stateOrProvince: !value }));
@@ -58,7 +56,7 @@ export default function Address(props: AddressProps) {
     useEffect((): void => {
         const isValid: boolean = requiredFields.every(field => validator.validate(field, 'blur')(data[field]));
 
-        props.onChange({ data, isValid });
+        props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors]);
 
     this.showValidation = (): void => {
