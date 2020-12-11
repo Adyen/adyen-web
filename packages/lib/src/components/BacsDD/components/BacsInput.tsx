@@ -208,8 +208,8 @@ function BacsInput(props: BacsInputProps) {
             </div>
 
             <Field
-                errorMessage={!!errors.shopperEmail && i18n.get('bacs.shopperEmail.invalid')}
-                label={i18n.get('bacs.shopperEmail')}
+                errorMessage={!!errors.shopperEmail && i18n.get('shopperEmail.invalid')}
+                label={i18n.get('shopperEmail')}
                 className={classNames({
                     'adyen-checkout__bacs--shopper-email': true,
                     'adyen-checkout__field--inactive': status === CONFIRM_STATE || status === 'loading'
@@ -224,7 +224,7 @@ function BacsInput(props: BacsInputProps) {
                     placeholder: props.placeholders.shopperEmail,
                     spellcheck: false,
                     'aria-invalid': !valid.shopperEmail,
-                    'aria-label': i18n.get('bacs.shopperEmail'),
+                    'aria-label': i18n.get('shopperEmail'),
                     'aria-required': 'true',
                     required: true,
                     readonly: status === CONFIRM_STATE || status === 'loading',
