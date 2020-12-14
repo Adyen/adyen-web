@@ -2,16 +2,6 @@
 # yarn lockfile v1
 
 
-"@adyen/adyen-web@3.18.1":
-  version "3.18.1"
-  resolved "https://registry.yarnpkg.com/@adyen/adyen-web/-/adyen-web-3.18.1.tgz#3f25143d2e487c49050c574bce0469f839878ad6"
-  integrity sha512-s8FpkLpf64fnFxvbUqssOoSXY2BWOpxZKYr05uTjl9KhW3UcwHPtTPytcKBrV2o+mbfHjhPlj3s1o7HpWPy6ow==
-  dependencies:
-    "@types/applepayjs" "^3.0.1"
-    "@types/googlepay" "^0.5.1"
-    classnames "^2.2.6"
-    preact "^10.5.5"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.8.3":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.8.3.tgz#33e25903d7481181534e12ec0a25f16b6fcf419e"
@@ -9048,7 +9038,7 @@ preact-render-to-string@^4.1.0:
   dependencies:
     pretty-format "^3.8.0"
 
-preact@^10.5.5, preact@^10.5.7:
+preact@^10.5.7:
   version "10.5.7"
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.5.7.tgz#f1d84725539e18f7ccbea937cf3db5895661dbd3"
   integrity sha512-4oEpz75t/0UNcwmcsjk+BIcDdk68oao+7kxcpc1hQPNs2Oo3ZL9xFz8UBf350mxk/VEdD41L5b4l2dE3Ug3RYg==
@@ -11316,10 +11306,10 @@ ts-jest@^26.4.4:
     semver "7.x"
     yargs-parser "20.x"
 
-ts-loader@^8.0.11:
-  version "8.0.11"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-8.0.11.tgz#35d58a65932caacb120426eea59eca841786c899"
-  integrity sha512-06X+mWA2JXoXJHYAesUUL4mHFYhnmyoCdQVMXofXF552Lzd4wNwSGg7unJpttqUP7ziaruM8d7u8LUB6I1sgzA==
+ts-loader@^8.0.12:
+  version "8.0.12"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-8.0.12.tgz#1de9f1de65176318c1e6d187bfc496182f8dc2a0"
+  integrity sha512-UIivVfGVJDdwwjgSrbtcL9Nf10c1BWnL1mxAQUVcnhNIn/P9W3nP5v60Z0aBMtc7ZrE11lMmU6+5jSgAXmGaYw==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"
