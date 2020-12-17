@@ -1,12 +1,4 @@
-import { ERROR_CODES, ERROR_MSG_INVALID_FIELD } from './constants';
-import Language from '../../language/Language';
-import {
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_EXPIRY_DATE,
-    ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE
-} from '../../components/internal/SecuredFields/lib/configuration/constants';
+import { ERROR_CODES } from './constants';
 
 /**
  * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
