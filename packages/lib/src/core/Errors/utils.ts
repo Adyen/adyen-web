@@ -26,36 +26,6 @@ export const getError = (keyOrValue: string): string => {
     return keyOrValue;
 };
 
-export const getDefaultErrorCode = fieldType => {
-    switch (fieldType) {
-        case ENCRYPTED_CARD_NUMBER:
-            return 'creditCard.numberField.invalid';
-        case ENCRYPTED_EXPIRY_DATE:
-            return 'creditCard.expiryDateField.invalid';
-        case ENCRYPTED_EXPIRY_MONTH:
-            return 'creditCard.expiryDateField.invalid';
-        case ENCRYPTED_EXPIRY_YEAR:
-            return 'creditCard.expiryDateField.invalid';
-        case ENCRYPTED_SECURITY_CODE:
-            return 'creditCard.oneClickVerification.invalidInput.title';
-        default:
-            return getError(ERROR_MSG_INVALID_FIELD);
-    }
-};
-
-/**
- * If error translation exists then error (code) is usable, else return a default error code
- * @param error -
- * @param i18n -
- */
-export const getVerifiedErrorCode = (fieldType: string, error: string, i18n: Language): string => {
-    // Empty string is a error being cleared - so do nothing;
-    if (error === '') return error;
-    const translatedError = i18n.get(error);
-    // If translatedError still equals error then i18n didn't find a translation - so get a default code
-    return translatedError === error ? getDefaultErrorCode(fieldType) : error;
-};
-
 export const addAriaErrorTranslationsObject = i18n => {
     const errorKeys = Object.keys(ERROR_CODES);
 
