@@ -76,7 +76,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         }
 
         const getCardErrorMessage = sfpState => {
-            if (sfpState.errors.encryptedCardNumber) return i18n.get('creditCard.numberField.invalid');
+            if (sfpState.errors.encryptedCardNumber) return i18n.get('error.va.sf-cc-num.01');
 
             switch (this.state.status) {
                 case 'no-balance':
