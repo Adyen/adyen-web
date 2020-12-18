@@ -4,6 +4,7 @@ import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
+import { mapBrands } from './utils';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -17,6 +18,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     formatProps(props) {
         const { configuration } = props;
         const { merchantIdentifier } = configuration;
+        const allowedCardNetworks = props.brands.length ? mapBrands(props.brands) : props.allowedCardNetworks;
 
         return {
             ...props,
@@ -24,8 +26,13 @@ class GooglePay extends UIElement<GooglePayProps> {
             configuration: {
                 ...configuration,
                 ...(merchantIdentifier && { merchantId: merchantIdentifier })
-            }
+            },
+            allowedCardNetworks
         };
+    }
+
+    mapBrands(brands) {
+        return brands.map(brand => (brand === 'mc' ? 'MASTERCARD' : brand.toUpperCase()));
     }
 
     /**

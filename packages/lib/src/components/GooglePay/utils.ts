@@ -11,3 +11,16 @@ export function resolveEnvironment(env = 'TEST'): google.payments.api.Environmen
             return 'TEST';
     }
 }
+
+export function mapBrands(brands) {
+    const brandMapping = {
+        mc: 'MASTERCARD',
+        amex: 'AMEX',
+        visa: 'VISA',
+        interac: 'INTERAC',
+        discover: 'DISCOVER',
+        jcb: 'JCB'
+    };
+    const allowedCardNetworks = brands.map(brand => brandMapping[brand]);
+    return allowedCardNetworks.reduce((unique, item) => (unique.includes(item) ? unique : [...unique, item]), []);
+}
