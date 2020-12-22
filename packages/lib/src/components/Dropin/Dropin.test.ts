@@ -93,7 +93,7 @@ describe('Dropin', () => {
             expect(pa.componentFromAction.props.statusType).toEqual('custom');
             expect(pa.componentFromAction.props.isDropin).toBe(true);
 
-            expect(pa.componentFromAction.props.size).toEqual('05');
+            expect(pa.componentFromAction.props.size).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from pmConfig', () => {
