@@ -31,7 +31,7 @@ const actionTypes = {
             paymentData: action.paymentData,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
-            size: '05',
+            size: '02',
             isDropin: !!props.isDropin,
             type: 'ChallengeShopper',
             statusType: 'custom'
