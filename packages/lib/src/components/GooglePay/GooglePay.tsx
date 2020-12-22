@@ -18,7 +18,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     formatProps(props) {
         const { configuration } = props;
         const { merchantIdentifier } = configuration;
-        const allowedCardNetworks = props.brands.length ? mapBrands(props.brands) : props.allowedCardNetworks;
+        const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
 
         return {
             ...props,

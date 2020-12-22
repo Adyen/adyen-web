@@ -30,7 +30,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         const { configuration = {} } = props;
-        const supportedNetworks = props.brands.length ? mapBrands(props.brands) : props.supportedNetworks;
+        const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
             onAuthorized: resolve => resolve(),
