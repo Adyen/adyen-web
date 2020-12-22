@@ -6,6 +6,8 @@
     position: relative;
     overflow: hidden;
     width: 100%;
+    min-height: 400px;
+    height: inherit;
 }
 
 .adyen-checkout__threeds2__challenge {
