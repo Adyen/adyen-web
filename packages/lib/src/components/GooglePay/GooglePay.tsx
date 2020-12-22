@@ -31,10 +31,6 @@ class GooglePay extends UIElement<GooglePayProps> {
         };
     }
 
-    mapBrands(brands) {
-        return brands.map(brand => (brand === 'mc' ? 'MASTERCARD' : brand.toUpperCase()));
-    }
-
     /**
      * Formats the component data output
      */

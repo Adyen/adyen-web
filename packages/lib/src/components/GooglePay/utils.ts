@@ -18,8 +18,7 @@ export function mapBrands(brands) {
         amex: 'AMEX',
         visa: 'VISA',
         interac: 'INTERAC',
-        discover: 'DISCOVER',
-        jcb: 'JCB'
+        discover: 'DISCOVER'
     };
     const allowedCardNetworks = brands.map(brand => brandMapping[brand]);
     return allowedCardNetworks.reduce((unique, item) => (unique.includes(item) ? unique : [...unique, item]), []);
