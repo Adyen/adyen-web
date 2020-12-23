@@ -84,6 +84,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
             'adyen-checkout__payment-method': true,
             [styles['adyen-checkout__payment-method']]: true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
+            [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource}`]: true,
             'adyen-checkout__payment-method--selected': isSelected,
             [styles['adyen-checkout__payment-method--selected']]: isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
