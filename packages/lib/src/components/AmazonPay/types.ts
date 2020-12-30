@@ -80,6 +80,11 @@ export interface ChangePaymentDetailsButtonProps {
     amazonRef: any;
 }
 
+export interface ChangeActionOptions {
+    amazonCheckoutSessionId: string;
+    changeAction: 'changeAddress' | 'changePayment';
+}
+
 export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
     amount: PaymentAmount;
@@ -145,8 +150,8 @@ export interface CheckoutDetailsRequest {
 
 export interface UpdateAmazonCheckoutSessionRequest {
     amount: PaymentAmount;
-    checkoutSessionId: string;
     checkoutResultReturnUrl: string;
+    checkoutSessionId: string;
 }
 
 export interface CheckoutSessionConfig {

@@ -7,10 +7,9 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();
-    const { amazonRef, buttonColor, configuration = {}, currency, environment, locale, placement, productType, region } = props;
+    const { amazonRef, buttonColor, configuration = {} } = props;
     const { merchantId, publicKeyId } = configuration;
-    const sandbox = environment === 'TEST';
-    const checkoutLanguage = getCheckoutLocale(locale, region);
+    const checkoutLanguage = getCheckoutLocale(props.locale, props.region);
 
     const handleOnClick = (amazonPayButton, createCheckoutSessionConfig) => {
         new Promise(props.onClick)
@@ -24,22 +23,22 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
         const settings: AmazonPayButtonSettings = {
             ...(buttonColor && { buttonColor }),
             merchantId,
-            sandbox,
-            productType,
-            placement,
+            sandbox: props.environment === 'TEST',
+            productType: props.productType,
+            placement: props.placement,
             checkoutLanguage,
-            ledgerCurrency: currency
-        };
-
-        const checkoutSessionConfig: CheckoutSessionConfig = {
-            payloadJSON: JSON.stringify(payloadJSON),
-            signature,
-            publicKeyId
+            ledgerCurrency: props.currency
         };
 
         const amazonPayButton = amazonRef.Pay.renderButton('#amazonPayButton', settings);
 
         amazonPayButton.onClick(() => {
+            const checkoutSessionConfig: CheckoutSessionConfig = {
+                payloadJSON: JSON.stringify(payloadJSON),
+                signature,
+                publicKeyId
+            };
+
             handleOnClick(amazonPayButton, checkoutSessionConfig);
         });
     };

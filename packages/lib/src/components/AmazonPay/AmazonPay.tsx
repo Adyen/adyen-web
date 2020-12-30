@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
-import { AmazonPayElementData, AmazonPayElementProps } from './types';
+import { AmazonPayElementData, AmazonPayElementProps, CheckoutDetailsRequest } from './types';
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
@@ -37,9 +37,9 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
 
     getShopperDetails() {
         const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey } = this.props;
-        if (!checkoutSessionId) return console.error('Could not shopper details. Missing checkoutSessionId');
+        if (!checkoutSessionId) return console.error('Could not shopper details. Missing checkoutSessionId.');
 
-        const request = {
+        const request: CheckoutDetailsRequest = {
             checkoutSessionId,
             getDeliveryAddress: true
         };
@@ -48,12 +48,11 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     }
 
     handleDeclineFlow() {
-        const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey, returnUrl } = this.props;
-        if (!checkoutSessionId) return console.error('Missing checkoutSessionId or returnUrl.');
+        const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey } = this.props;
+        if (!checkoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
 
-        const request = {
+        const request: CheckoutDetailsRequest = {
             checkoutSessionId,
-            returnUrl,
             getDeclineFlowUrl: true
         };
 

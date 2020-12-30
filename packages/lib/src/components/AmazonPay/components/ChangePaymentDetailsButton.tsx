@@ -1,17 +1,19 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { ChangePaymentDetailsButtonProps } from '../types';
+import { ChangeActionOptions, ChangePaymentDetailsButtonProps } from '../types';
 
 export default function ChangePaymentDetailsButton(props: ChangePaymentDetailsButtonProps) {
     const { i18n } = useCoreContext();
     const { amazonRef, amazonCheckoutSessionId } = props;
 
     useEffect(() => {
-        amazonRef.Pay.bindChangeAction('.adyen-checkout__amazonpay__button--changeAddress', {
+        const changeActionOptions: ChangeActionOptions = {
             amazonCheckoutSessionId,
             changeAction: 'changeAddress'
-        });
+        };
+
+        amazonRef.Pay.bindChangeAction('.adyen-checkout__amazonpay__button--changeAddress', changeActionOptions);
     }, []);
 
     return (
