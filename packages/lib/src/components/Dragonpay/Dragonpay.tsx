@@ -17,10 +17,13 @@ export class DragonpayElement extends UIElement {
      * Formats the component data output
      */
     formatData() {
+        const { issuer, shopperEmail } = this.state.data;
+
         return {
+            ...(shopperEmail && { shopperEmail }),
             paymentMethod: {
-                type: this.props.type || DragonpayElement.type,
-                ...this.state.data
+                ...(issuer && { issuer }),
+                type: this.props.type || DragonpayElement.type
             }
         };
     }

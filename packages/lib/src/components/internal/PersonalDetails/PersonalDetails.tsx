@@ -8,8 +8,9 @@ import { personalDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps, PersonalDetailsStateError, PersonalDetailsStateValid, ValidationResult } from './types';
-import { checkDateInputSupport } from '../FormFields/InputDate/utils';
+import { checkDateInputSupport, unformatDate } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
+import { getFormattedData } from './utils';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -36,7 +37,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     useEffect(() => {
         const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]).isValid);
-        props.onChange({ data, isValid });
+        const formattedData = getFormattedData(data);
+        props.onChange({ data: formattedData, isValid });
     }, [data, valid, errors]);
 
     this.showValidation = () => {

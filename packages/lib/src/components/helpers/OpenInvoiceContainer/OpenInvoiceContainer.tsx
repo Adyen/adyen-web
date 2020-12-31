@@ -56,28 +56,13 @@ export default class OpenInvoiceContainer extends UIElement {
     formatData() {
         const { data = {} } = this.state;
         const { companyDetails = {}, personalDetails = {}, billingAddress, deliveryAddress } = data;
-        const { name, registrationNumber } = companyDetails;
-        const { firstName, lastName, gender = 'UNKNOWN', telephoneNumber, shopperEmail, dateOfBirth } = personalDetails;
 
         return {
             paymentMethod: {
                 type: this.constructor['type']
             },
-            ...((name || registrationNumber) && {
-                company: {
-                    ...(name && { name }),
-                    ...(registrationNumber && { registrationNumber })
-                }
-            }),
-            shopperName: {
-                ...(firstName && { firstName }),
-                ...(lastName && { lastName }),
-                ...(gender && { gender })
-            },
-            ...(dateOfBirth && { dateOfBirth: unformatDate(dateOfBirth) }),
-            ...(telephoneNumber && { telephoneNumber }),
-            ...(shopperEmail && { shopperEmail }),
-            ...(billingAddress?.country && { countryCode: billingAddress.country }),
+            ...personalDetails,
+            ...companyDetails,
             ...(billingAddress && { billingAddress }),
             ...((deliveryAddress || billingAddress) && { deliveryAddress: deliveryAddress || billingAddress })
         };
