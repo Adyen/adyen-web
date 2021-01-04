@@ -18,7 +18,7 @@ const iframeSelector = getIframeSelector('.card-field iframe');
 
 fixture`Testing gift cards`
     .page(GIFTCARDS_URL)
-    .clientScripts('enoughBalance.clientScripts.js')
+    //    .clientScripts('enoughBalance.clientScripts.js')
     .requestHooks(mock);
 
 test('Should prompt a confirmation when using a gift card with enough balance', async t => {
