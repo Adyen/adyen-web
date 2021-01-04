@@ -11,8 +11,17 @@ import {
 } from '../internal/SecuredFields/lib/types';
 
 export interface CardElementProps extends UIElementProps {
-    type?: string;
+    /**
+     * this.props.brand is never set for a generic card
+     * It is only set for a single-branded card or a stored card
+     */
     brand?: string;
+
+    /**
+     * this.props.type will always be "card" (generic card, stored card)
+     * except for a single branded card when it will be the same as the brand prop
+     */
+    type?: string;
 
     /** @deprecated use brands instead */
     groupTypes?: string[];
