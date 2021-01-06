@@ -25,8 +25,8 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
         .create('afterpay_default', {
             countryCode: 'NL', // 'NL' / 'BE'
             visibility: {
-                personalDetails: 'hidden', // editable [default] / readOnly / hidden
-                billingAddress: 'hidden',
+                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                billingAddress: 'readOnly',
                 deliveryAddress: 'hidden'
             },
             data: {
@@ -56,9 +56,9 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
         .create('affirm', {
             countryCode: 'US', // 'US' / 'CA'
             visibility: {
-                personalDetails: 'hidden', // editable [default] / readOnly / hidden
-                billingAddress: 'hidden',
-                deliveryAddress: 'hidden'
+                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                billingAddress: 'editable',
+                deliveryAddress: 'editable'
             },
             data: {
                 personalDetails: {
