@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../../UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
-import { unformatDate } from '../../internal/FormFields/InputDate/utils';
 
 export default class OpenInvoiceContainer extends UIElement {
     protected static defaultProps = {

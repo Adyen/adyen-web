@@ -8,7 +8,7 @@ import { personalDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps, PersonalDetailsStateError, PersonalDetailsStateValid, ValidationResult } from './types';
-import { checkDateInputSupport, unformatDate } from '../FormFields/InputDate/utils';
+import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData } from './utils';
 
