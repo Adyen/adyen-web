@@ -3,7 +3,7 @@ import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import Language from '../../../language/Language';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
-import { getError, getDefaultErrorCode } from '../../../core/Errors/utils';
+import { getError } from '../../../core/Errors/utils';
 
 jest.mock('./lib', () => {
     return () => true;
@@ -245,20 +245,6 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
         expect(errorObj.error).toEqual(errorCode);
         expect(errorObj.errorText).toEqual(getError(errorCode));
         expect(errorObj.errorI18n).toEqual(i18n.get(errorCode));
-    });
-
-    it("should handle an error with a code it doesn't recognise and set the relevant state and props based on a default code", () => {
-        regularErrObj.error = 'some.strange.code';
-
-        wrapper.instance().handleOnError(regularErrObj);
-
-        expect(errorObj.error).toEqual('some.strange.code');
-
-        const defaultErrorCode = getDefaultErrorCode(regularErrObj.fieldType);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(defaultErrorCode);
-
-        expect(errorObj.errorText).toEqual(defaultErrorCode);
-        expect(errorObj.errorI18n).toEqual(i18n.get(defaultErrorCode));
     });
 
     it('should clear the previous error', () => {
