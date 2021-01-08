@@ -63,7 +63,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             focusedElement: '',
             additionalSelectElements: [],
             additionalSelectValue: '',
-            additionalSelectType: '',
             issuingCountryCode: null
         };
 
@@ -113,8 +112,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     public resetAdditionalSelectState() {
         this.setState({
             additionalSelectElements: [],
-            additionalSelectValue: '',
-            additionalSelectType: ''
+            additionalSelectValue: ''
         });
     }
 
