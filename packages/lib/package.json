@@ -41,7 +41,7 @@
         "@typescript-eslint/parser": "^4.11.1",
         "autoprefixer": "^10.1.0",
         "clean-webpack-plugin": "^3.0.0",
-        "core-js": "^3.8.1",
+        "core-js": "^3.8.2",
         "cross-env": "^7.0.3",
         "css-loader": "^4.3.0",
         "cssnano": "^4.1.10",
