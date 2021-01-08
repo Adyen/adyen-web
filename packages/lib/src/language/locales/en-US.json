@@ -177,7 +177,6 @@
     "error.va.gen.01": "Incomplete field",
     "error.va.gen.02": "Field not valid",
     "error.va.sf-cc-num.01": "Invalid card number",
-    "error.va.sf-cc-num.02": "Typed card number doesn't match card brand",
     "error.va.sf-cc-num.03": "Unsupported card entered",
     "error.va.sf-cc-dat.01": "Card too old",
     "error.va.sf-cc-dat.02": "Date too far in the future",
