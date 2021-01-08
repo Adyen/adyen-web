@@ -58,14 +58,6 @@ describe('AmazonPay', () => {
             expect(console.error).toHaveBeenCalledTimes(1);
         });
 
-        test('calls the onError if no declineFlowUrl is received', async () => {
-            const onError = jest.fn();
-            spyFetch.mockResolvedValueOnce({});
-            const amazonPay = getElement({ onError, amazonCheckoutSessionId: 'ABC123' });
-            await amazonPay.handleDeclineFlow();
-            expect(onError).toHaveBeenCalledTimes(1);
-        });
-
         test('redirects the shopper if a declineFlowUrl is received', async () => {
             Object.defineProperty(window, 'location', {
                 writable: true,

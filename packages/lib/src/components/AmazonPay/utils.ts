@@ -39,8 +39,7 @@ export function getSupportedLocales(region: Region): SupportedLocale[] {
 export function getCheckoutLocale(locale: string, region: Region): SupportedLocale {
     const supportedLocales = getSupportedLocales(region);
     const isSupportedLocale = supportedLocales.includes(locale as SupportedLocale);
-    const fallbackLocale = getFallbackLocale(region);
-    const checkoutLocale = isSupportedLocale ? locale : fallbackLocale;
+    const checkoutLocale = isSupportedLocale ? locale : getFallbackLocale(region);
 
     return checkoutLocale as SupportedLocale;
 }
