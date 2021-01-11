@@ -38,7 +38,7 @@ export function mapBrands(brands) {
         maestro: 'maestro'
     };
     return brands.reduce((accumulator, item) => {
-        if (item !== undefined && !accumulator.includes(brandMapping[item])) {
+        if (!!brandMapping[item] && !accumulator.includes(brandMapping[item])) {
             accumulator.push(brandMapping[item]);
         }
         return accumulator;
