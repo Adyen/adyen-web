@@ -171,7 +171,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}
-                        className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${this.props.fundingSource}`}
+                        className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${this.props
+                            .fundingSource ?? 'credit'}`}
                     >
                         {this.props.storedPaymentMethodId ? (
                             <LoadingWrapper status={sfpState.status}>
