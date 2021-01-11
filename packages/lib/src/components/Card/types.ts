@@ -7,7 +7,8 @@ import {
     CbObjOnError,
     CbObjOnFieldValid,
     CbObjOnFocus,
-    CbObjOnLoad
+    CbObjOnLoad,
+    CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
 
 export interface CardElementProps extends UIElementProps {
@@ -78,6 +79,11 @@ export interface CardElementProps extends UIElementProps {
      * Provides the BIN Number of the card (up to 6 digits), called as the user types in the PAN.
      */
     onBinValue?: (event: CbObjOnBinValue) => void;
+
+    /**
+     * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
+     */
+    onBinLookup?: (event: CbObjOnBinLookup) => void;
 
     [key: string]: any;
 }

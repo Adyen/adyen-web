@@ -175,6 +175,12 @@ export interface CbObjOnBinValue {
     encryptedBin?: string;
 }
 
+export interface CbObjOnBinLookup {
+    type: string;
+    detectedBrands: string[];
+    supportedBrands: string[];
+}
+
 export interface CbObjOnError {
     fieldType: string;
     error: string;
