@@ -20,6 +20,10 @@ export function mapBrands(brands) {
         interac: 'INTERAC',
         discover: 'DISCOVER'
     };
-    const allowedCardNetworks = brands.map(brand => brandMapping[brand]);
-    return allowedCardNetworks.reduce((unique, item) => (unique.includes(item) ? unique : [...unique, item]), []);
+    return brands.reduce((accumulator, item) => {
+        if (item !== undefined && !accumulator.includes(brandMapping[item])) {
+            accumulator.push(brandMapping[item]);
+        }
+        return accumulator;
+    }, []);
 }

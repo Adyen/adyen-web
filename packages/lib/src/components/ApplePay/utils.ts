@@ -37,6 +37,10 @@ export function mapBrands(brands) {
         electron: 'electron',
         maestro: 'maestro'
     };
-    const supportedNetworks = brands.map(brand => brandMapping[brand]);
-    return supportedNetworks.reduce((unique, item) => (unique.includes(item) ? unique : [...unique, item]), []);
+    return brands.reduce((accumulator, item) => {
+        if (item !== undefined && !accumulator.includes(brandMapping[item])) {
+            accumulator.push(brandMapping[item]);
+        }
+        return accumulator;
+    }, []);
 }
