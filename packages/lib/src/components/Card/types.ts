@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement';
-import { AddressSchema } from '../../types';
+import { AddressSchema, BrowserInfo } from '../../types';
 import {
     CbObjOnBinValue,
     CbObjOnBrand,
@@ -96,17 +96,6 @@ interface CardPaymentMethodData {
     encryptedExpiryMonth?: string;
     encryptedExpiryYear?: string;
     encryptedSecurityCode?: string;
-}
-
-interface BrowserInfo {
-    acceptHeader: string;
-    colorDepth: string;
-    language: string;
-    javaEnabled: boolean;
-    screenHeight: string;
-    screenWidth: string;
-    userAgent: string;
-    timeZoneOffset: number;
 }
 
 export interface CardElementData {

@@ -174,6 +174,8 @@
     "blik.code": "6-digit code",
     "blik.help": "Get the code from your banking app.",
     "swish.pendingMessage": "After you scan, the status can be pending for up to 10 minutes. Attempting to pay again within this time may result in multiple charges.",
+    "amazonpay.signout": "Sign out from Amazon",
+    "amazonpay.changePaymentDetails": "Change payment details",
     "error.va.gen.01": "Incomplete field",
     "error.va.gen.02": "Field not valid",
     "error.va.sf-cc-num.01": "Invalid card number",

@@ -175,6 +175,20 @@ export interface OrderStatus {
 }
 
 /**
+ * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v52/post/payments__reqParam_browserInfo API Explorer /payments browserInfo}
+ */
+export interface BrowserInfo {
+    acceptHeader: string;
+    colorDepth: string;
+    language: string;
+    javaEnabled: boolean;
+    screenHeight: string;
+    screenWidth: string;
+    userAgent: string;
+    timeZoneOffset: number;
+}
+
+/**
  * Available components
  */
 export type PaymentMethods = typeof paymentMethods;
