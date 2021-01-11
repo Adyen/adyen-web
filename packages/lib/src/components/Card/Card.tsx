@@ -27,7 +27,8 @@ export class CardElement extends UIElement<CardElementProps> {
             configuration: {
                 ...props.configuration,
                 ...(props.koreanAuthenticationRequired !== undefined && { koreanAuthenticationRequired: props.koreanAuthenticationRequired })
-            }
+            },
+            onBinLookup: props.onBinLookup ??= () => {}
         };
     }
 
