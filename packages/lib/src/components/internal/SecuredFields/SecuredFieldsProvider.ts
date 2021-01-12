@@ -258,7 +258,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
     }
 
-    public processBinLookupResponse(binValueObject: BinLookupObject): void {
+    public processBinLookupResponse(binLookupObject: BinLookupObject): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.hasUnsupportedCard) {
@@ -269,12 +269,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
         }
 
-        this.issuingCountryCode = binValueObject?.issuingCountryCode?.toLowerCase();
+        this.issuingCountryCode = binLookupObject?.issuingCountryCode?.toLowerCase();
 
         // Scenarios:
         // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup
         // RESULT (binValueObject.brands.length === 1): binLookup has found a result so inform CSF
-        if (this.csf) this.csf.brandsFromBinLookup(binValueObject);
+        if (this.csf) this.csf.brandsFromBinLookup(binLookupObject);
     }
 
     private setRootNode = (input: HTMLElement): void => {

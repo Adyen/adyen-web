@@ -16,14 +16,14 @@ export function sendBrandToCardSF(brand: string): void {
     }
 }
 
-export function handleBrandFromBinLookup(brandsObj: BinLookupObject): void {
+export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void {
     // The number of digits in number field has dropped below threshold for BIN lookup - so tell SF to reset & republish the brand it detects
-    if (!brandsObj) {
+    if (!binLookupObject) {
         this.sendBrandToCardSF('reset');
         return;
     }
 
-    const passedBrand: string = brandsObj.supportedBrands[0];
+    const passedBrand: string = binLookupObject.supportedBrands[0];
 
     const card: CardObject = cardType.getCardByBrand(passedBrand);
 
