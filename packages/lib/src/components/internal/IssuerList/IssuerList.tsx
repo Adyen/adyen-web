@@ -23,6 +23,7 @@ function IssuerList({ items, placeholder, issuer = null, ...props }) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
+        defaultData: { issuer },
         rules: validationRules
     });
     const [status, setStatus] = useState('ready');
