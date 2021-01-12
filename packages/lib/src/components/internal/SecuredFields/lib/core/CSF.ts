@@ -192,11 +192,11 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot destroy secured fields');
                 }
             },
-            brandsFromBinLookup: (brandsObj: BinLookupObject): void => {
+            brandsFromBinLookup: (binLookupObject: BinLookupObject): void => {
                 if (!this.config.isCreditCardType) return null;
 
                 if (this.state.isConfigured) {
-                    this.brandsFromBinLookup(brandsObj);
+                    this.brandsFromBinLookup(binLookupObject);
                 } else {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }

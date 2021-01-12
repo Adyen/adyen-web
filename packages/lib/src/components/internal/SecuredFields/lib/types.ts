@@ -257,8 +257,10 @@ export interface ShiftTabObject {
     additionalField: HTMLElement;
 }
 
+/**
+ * Simplified version of BinLookupResponseObj for use in SFP/CSF
+ */
 export interface BinLookupObject {
     issuingCountryCode: string;
-    requestId: string;
     supportedBrands?: string[];
 }

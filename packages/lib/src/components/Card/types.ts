@@ -111,3 +111,12 @@ export interface CardElementData {
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;
 }
+
+export interface BinLookupResponseObj {
+    requestId: string;
+    supportedBrands?: string[];
+    detectedBrands?: string[];
+    issuingCountryCode?: string;
+    enableLuhnCheck?: boolean;
+    showExpiryDate?: boolean;
+}
