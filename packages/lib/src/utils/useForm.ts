@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import Validator from './Validator';
 
-function useForm({ rules = {}, formatters = {}, defaultData = {}, ...props }) {
+function useForm<DataState = { [key: string]: any }>({ rules = {}, formatters = {}, defaultData = {}, ...props }) {
     const validator = new Validator(rules);
     const [schema, setSchema] = useState<string[]>(props.schema ?? []);
     const [errors, setErrors] = useState<any>({});
     const [valid, setValid] = useState<any>({});
-    const [data, setData] = useState<any>({});
+    const [data, setData] = useState<DataState>({} as DataState);
     const isValid = useMemo(() => schema.reduce((acc, val) => acc && valid[val], true), [valid]);
 
     const updateFieldData = (key, value, isFieldValid, mode?) => {
