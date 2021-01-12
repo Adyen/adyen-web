@@ -1,16 +1,7 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import Validator from './Validator';
-import { doc } from 'prettier';
-import conditionalGroup = doc.builders.conditionalGroup;
 
-const getInitialValues = (schema: string[], defaultInitialValue) => {
-    return schema.reduce((accumulator, currentValue) => {
-        accumulator[currentValue] = defaultInitialValue;
-        return accumulator;
-    }, {});
-};
-
-function useForm<DataState = any>({ rules = {}, formatters = {}, defaultData = {}, ...props }) {
+function useForm({ rules = {}, formatters = {}, defaultData = {}, ...props }) {
     const validator = new Validator(rules);
     const [schema, setSchema] = useState<string[]>(props.schema ?? []);
     const [errors, setErrors] = useState<any>({});
