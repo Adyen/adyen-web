@@ -75,6 +75,7 @@ function useForm<DataState = { [key: string]: any }>({ rules = {}, formatters = 
         isValid,
         errors,
         valid,
+        schema,
         data
     };
 }
