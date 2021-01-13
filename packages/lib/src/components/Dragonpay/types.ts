@@ -20,11 +20,6 @@ export interface DragonpayInputData {
     shopperEmail?: string;
 }
 
-export interface DragonpayInputErrors {
-    issuer?: boolean;
-    shopperEmail?: boolean;
-}
-
 export interface DragonpayInputProps {
     data: DragonpayInputData;
     issuer?: string;

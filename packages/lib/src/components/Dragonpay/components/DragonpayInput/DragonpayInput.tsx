@@ -3,10 +3,9 @@ import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
 import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../internal/FormFields/Field';
-import { isValidEmail } from './validate';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps, DragonpayInputErrors } from '../../types';
+import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
