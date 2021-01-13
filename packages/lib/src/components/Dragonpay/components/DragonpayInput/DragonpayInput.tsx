@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import useForm from '../../../../utils/useForm';
 import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../internal/FormFields/Field';
 import { isValidEmail } from './validate';
@@ -9,9 +10,22 @@ import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps, Drag
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
-    const [isValid, setIsValid] = useState<boolean>(false);
-    const [data, setData] = useState<DragonpayInputData>({ ...props.data, ...(props.issuer && { issuer: props.issuer }) });
-    const [errors, setErrors] = useState<DragonpayInputErrors>({});
+    const isIssuerRequired = () => {
+        const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
+        return typesRequiringIssuers.indexOf(props.type) > -1;
+    };
+
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<DragonpayInputData>({
+        schema: [...(isIssuerRequired() ? ['issuer'] : []), 'shopperEmail'],
+        rules: {
+            blur: {
+                issuer: issuer => isIssuerRequired() && !!issuer
+            },
+            input: {
+                issuer: issuer => isIssuerRequired() && !!issuer
+            }
+        }
+    });
 
     const getIssuerIcon = getIssuerImageUrl({}, props.type);
     const items = props.items.map(
@@ -21,29 +35,6 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         })
     );
 
-    const isIssuerRequired = () => {
-        const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
-        return typesRequiringIssuers.indexOf(props.type) > -1;
-    };
-
-    const validateFields = (shopperEmail, issuer) => {
-        return isValidEmail(shopperEmail) && (!!issuer || !isIssuerRequired());
-    };
-
-    const handleInputShopperEmail = e => {
-        const shopperEmail = e.target.value;
-        setIsValid(validateFields(shopperEmail, data.issuer));
-        setData({ ...data, shopperEmail });
-        setErrors({ ...errors, shopperEmail: false });
-    };
-
-    const handleSelectIssuer = e => {
-        const issuer = e.currentTarget.getAttribute('data-value');
-        setIsValid(validateFields(data.shopperEmail, issuer));
-        setData({ ...data, issuer });
-        setErrors({ ...errors, issuer: false });
-    };
-
     const getIssuerSelectFieldKey = type => {
         if (type === 'dragonpay_otc_non_banking') {
             return 'dragonpay.voucher.non.bank.selectField.placeholder';
@@ -52,26 +43,14 @@ export default function DragonpayInput(props: DragonpayInputProps) {
     };
 
     useEffect(() => {
-        if (props.issuer) {
-            props.onChange({ isValid, data, errors });
-        }
-    }, []);
-
-    useEffect(() => {
-        props.onChange({ isValid, data, errors });
-    }, [isValid, data, errors]);
+        props.onChange({ isValid, data, valid, errors });
+    }, [isValid, data, valid, errors]);
 
     const [status, setStatus] = useState('ready');
-
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    this.setStatus = setStatus;
 
     this.showValidation = () => {
-        setErrors({
-            shopperEmail: !isValidEmail(data.shopperEmail),
-            issuer: !data.issuer
-        });
+        triggerValidation();
     };
 
     return (
@@ -83,7 +62,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                     value: data.shopperEmail,
                     className: 'adyen-checkout__input--large',
                     spellCheck: false,
-                    onInput: handleInputShopperEmail
+                    onInput: handleChangeFor('shopperEmail')
                 })}
             </Field>
 
@@ -95,7 +74,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                         placeholder: i18n.get(getIssuerSelectFieldKey(props.type)),
                         name: 'issuer',
                         className: 'adyen-checkout__dropdown--large adyen-checkout__issuer-list__dropdown',
-                        onChange: handleSelectIssuer
+                        onChange: handleChangeFor('issuer')
                     })}
                 </Field>
             )}
