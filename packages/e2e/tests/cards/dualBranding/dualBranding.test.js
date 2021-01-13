@@ -1,5 +1,5 @@
 import { Selector, ClientFunction } from 'testcafe';
-import { start, setIframeSelector } from '../utils/commonUtils';
+import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD } from '../utils/constants';
 import { CARDS_URL } from '../../pages';
@@ -9,17 +9,13 @@ const dualBrandingIconHolderActive = Selector('.card-field .adyen-checkout__card
 
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
 
-const getCardIsValid = ClientFunction(() => {
-    return window.card.isValid;
-});
-
 const getPropFromPMData = ClientFunction(prop => {
     return window.card.formatData().paymentMethod[prop];
 });
 
 const TEST_SPEED = 1;
 
-const iframeSelector = setIframeSelector('.card-field iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 
@@ -66,7 +62,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
@@ -89,7 +85,7 @@ test(
         await cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getCardIsValid()).eql(true);
+        await t.expect(getIsValid()).eql(true);
 
         // Click brand icons
         await t

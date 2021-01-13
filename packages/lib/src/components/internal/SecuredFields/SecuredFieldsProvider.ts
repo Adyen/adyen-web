@@ -169,7 +169,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
             },
-            isKCP: this.state.hasKoreanFields
+            isKCP: this.state.hasKoreanFields,
+            locale: this.props.locale
         };
 
         this.csf = initCSF(csfSetupObj);

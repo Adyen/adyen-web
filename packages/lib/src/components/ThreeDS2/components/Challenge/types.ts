@@ -1,5 +1,5 @@
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
-import { ResolveData } from '../utils';
+import { ChallengeResolveData } from '../utils';
 import { ThreeDS2ChallengeProps } from '../../ThreeDS2Challenge';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
@@ -13,7 +13,7 @@ export interface DoChallenge3DS2State {
 }
 
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeProps {
-    onComplete?: (data: ResolveData) => void;
+    onComplete?: (data: ChallengeResolveData) => void;
 }
 
 export interface PrepareChallenge3DS2State {

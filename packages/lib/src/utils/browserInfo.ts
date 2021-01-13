@@ -1,4 +1,5 @@
 import getProp from './getProp';
+import { BrowserInfo } from '../types';
 
 /**
  * Collects available frontend browser info and store it in the properties dictated by the EMVCo spec
@@ -11,7 +12,7 @@ import getProp from './getProp';
  *
  * @returns An object containing the retrieved browser properties
  */
-export default function collectBrowserInfo() {
+export default function collectBrowserInfo(): BrowserInfo {
     const colorDepth = getProp(window, 'screen.colorDepth') || '';
     const javaEnabled = getProp(window, 'navigator.javaEnabled') ? window.navigator.javaEnabled() : false;
     const screenHeight = getProp(window, 'screen.height') || ''; // TODO: Shall we set this to null instead?

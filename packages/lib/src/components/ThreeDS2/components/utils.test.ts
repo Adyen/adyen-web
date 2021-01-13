@@ -1,4 +1,4 @@
-import { decodeAndParseToken, encodeResult, handleErrorCode, encodeBase64URL } from './utils';
+import { decodeAndParseToken, encodeObject, handleErrorCode, encodeBase64URL } from './utils';
 
 const encodedToken =
     'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODcxNDI4OTE0NTM2ODQ0NS5hSFIwY0RvdkwyeHZZMkZzYUc5emREb3pNREl3LmdRMUtpejZPTm1SNlBla0ZEZkZ0VUw0VW9YQkxxLVNfcEQtdUtnZ0UtOXMiLCJ0aHJlZURTTWV0aG9kVXJsIjoiaHR0cHM6XC9cL3BhbC10ZXN0LmFkeWVuLmNvbVwvdGhyZWVkczJzaW11bGF0b3JcL2Fjc1wvc3RhcnRNZXRob2Quc2h0bWwiLCJ0aHJlZURTU2VydmVyVHJhbnNJRCI6IjE1ZTQ4OTQyLWJlOGYtNDYxNy1iYTc1LWI1ODdlMzBlOTM2MiJ9';
@@ -17,20 +17,16 @@ describe('decodeAndParseToken', () => {
 
 describe('encodeResult', () => {
     test('should throw if wrong parameters are passed', () => {
-        expect(() => encodeResult(undefined, undefined)).toThrow();
+        expect(() => encodeObject(undefined)).toThrow();
     });
 
     test('should throw if no type is passed', () => {
-        expect(() => encodeResult({ threeDSCompInd: 'Y' }, null)).toThrow();
-    });
-
-    test('should throw if the type is wrong', () => {
-        expect(() => encodeResult({}, 'ABC')).toThrow();
+        expect(() => encodeObject({})).toThrow();
     });
 
     test('should return a string if everything is passed correctly', () => {
-        expect(typeof encodeResult({ threeDSCompInd: 'Y' }, 'IdentifyShopper')).toBe('string');
-        expect(typeof encodeResult({ transStatus: 'Y' }, 'ChallengeShopper')).toBe('string');
+        expect(typeof encodeObject({ threeDSCompInd: 'Y' })).toBe('string');
+        expect(typeof encodeObject({ transStatus: 'Y' })).toBe('string');
     });
 });
 

@@ -13,6 +13,27 @@ window.checkout = new AdyenCheckout({
     showPayButton: true
 });
 
+window.bacsdd = checkout
+    .create('directdebit_GB', {
+        countryCode: 'GB',
+        data: {
+            holderName: 'Philip Dog',
+            bankAccountNumber: '12345678',
+            bankLocationId: '123456',
+            shopperEmail: 'phil@ddog.co.uk'
+        }
+    })
+    .mount('#bacsdd-input-container');
+
+window.bacsddResult = checkout
+    .createFromAction({
+        paymentMethodType: 'directdebit_GB',
+        type: 'voucher',
+        url:
+            'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=3B0HeSD%2FX0K4lKudwtMH%2BWuGfNHsDyzCyCpipuJqy3bbue6XVEIdyg8TDWYMjlr39eWhynIQU7slpqA48izhIkHg%2FI%2Fpy2cd8J0PXvWvpSnFtNG30fIIPL06J1pKQfyL%2FG3wCPXSl6p0a79ajCYKcmV06xJVfJMP0ej6FK45GL7MloD%2Bdrbjo%2FnCbbxooYCiYCgJIZdkNm1iLHoVP2s2eg%3D%3D'
+    })
+    .mount('#bacsdd-result-container');
+
 window.multibancoResult = checkout
     .createFromAction({
         expiresAt: '2019-09-28T12:54:17',
@@ -151,8 +172,8 @@ window.dokuResult = checkout
     })
     .mount('#doku-result-container');
 
-// Econtext Input
-window.econtextInput = checkout
+// Econtext Stores Input
+window.econtextStoresInput = checkout
     .create('econtext_stores', {
         data: {
             firstName: 'Joe',
@@ -163,8 +184,8 @@ window.econtextInput = checkout
     })
     .mount('#econtext-stores-input-container');
 
-// Econtext Result
-window.econtextResult = checkout
+// Econtext Stores Result
+window.econtextStoresResult = checkout
     .createFromAction({
         paymentMethodType: 'econtext_stores',
         expiresAt: '2019-07-19T23:24:00',
@@ -185,7 +206,7 @@ window.econtextResult = checkout
     .mount('#econtext-stores-result-container');
 
 // Econtext ATM Input
-window.econtextInput = checkout
+window.econtextAtmInput = checkout
     .create('econtext_atm', {
         data: {
             firstName: 'Joe',
@@ -197,7 +218,7 @@ window.econtextInput = checkout
     .mount('#econtext-atm-input-container');
 
 // Econtext ATM Result
-window.econtextResult = checkout
+window.econtextAtmResult = checkout
     .createFromAction({
         paymentMethodType: 'econtext_atm',
         collectionInstitutionNumber: '58091',

@@ -2,7 +2,7 @@ import logEvent from '../Services/log-event';
 import postTelemetry from '../Services/post-telemetry';
 import collectId from '../Services/collect-id';
 import EventsQueue from './EventsQueue';
-import { AnalyticsProps } from './types';
+import { CoreOptions } from '../types';
 
 class Analytics {
     private static defaultProps = {
@@ -18,7 +18,7 @@ class Analytics {
     private readonly logTelemetry;
     private readonly queue = new EventsQueue();
 
-    constructor({ loadingContext, locale, clientKey, analytics }: AnalyticsProps) {
+    constructor({ loadingContext, locale, originKey, clientKey, analytics }: CoreOptions) {
         this.props = { ...Analytics.defaultProps, ...analytics };
         this.logEvent = logEvent({ loadingContext, locale });
         this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });

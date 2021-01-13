@@ -35,9 +35,9 @@ export interface FieldContainerProps {
     data: AddressSchema;
     errors: AddressStateError;
     fieldName: string;
+    key: string;
     onInput: (e: Event) => void;
-    onCountryChange: (e: Event) => void;
-    onStateChange: (e: Event) => void;
+    onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
 }
 
