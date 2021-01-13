@@ -1,51 +1,26 @@
-import csCZ from './cs-CZ.json';
-import daDK from './da-DK.json';
-import deDE from './de-DE.json';
-import elGR from './el-GR.json';
-import enUS from './en-US.json';
-import esES from './es-ES.json';
-import fiFI from './fi-FI.json';
-import frFR from './fr-FR.json';
-import hrHR from './hr-HR.json';
-import huHU from './hu-HU.json';
-import itIT from './it-IT.json';
-import jaJP from './ja-JP.json';
-import koKR from './ko-KR.json';
-import nlNL from './nl-NL.json';
-import noNO from './no-NO.json';
-import plPL from './pl-PL.json';
-import ptBR from './pt-BR.json';
-import roRO from './ro-RO.json';
-import ruRU from './ru-RU.json';
-import skSK from './sk-SK.json';
-import slSI from './sl-SI.json';
-import svSE from './sv-SE.json';
-import zhCN from './zh-CN.json';
-import zhTW from './zh-TW.json';
-
 export default {
-    'cs-CZ': csCZ,
-    'da-DK': daDK,
-    'de-DE': deDE,
-    'el-GR': elGR,
-    'en-US': enUS,
-    'es-ES': esES,
-    'fi-FI': fiFI,
-    'fr-FR': frFR,
-    'hr-HR': hrHR,
-    'hu-HU': huHU,
-    'it-IT': itIT,
-    'ja-JP': jaJP,
-    'ko-KR': koKR,
-    'nl-NL': nlNL,
-    'no-NO': noNO,
-    'pl-PL': plPL,
-    'pt-BR': ptBR,
-    'ro-RO': roRO,
-    'ru-RU': ruRU,
-    'sk-SK': skSK,
-    'sl-SI': slSI,
-    'sv-SE': svSE,
-    'zh-CN': zhCN,
-    'zh-TW': zhTW
+    'cs-CZ': () => import('./cs-CZ.json'),
+    'da-DK': () => import('./da-DK.json'),
+    'de-DE': () => import('./de-DE.json'),
+    'el-GR': () => import('./el-GR.json'),
+    'en-US': () => import('./en-US.json'),
+    'es-ES': () => import('./es-ES.json'),
+    'fi-FI': () => import('./fi-FI.json'),
+    'fr-FR': () => import('./fr-FR.json'),
+    'hr-HR': () => import('./hr-HR.json'),
+    'hu-HU': () => import('./hu-HU.json'),
+    'it-IT': () => import('./it-IT.json'),
+    'ja-JP': () => import('./ja-JP.json'),
+    'ko-KR': () => import('./ko-KR.json'),
+    'nl-NL': () => import('./nl-NL.json'),
+    'no-NO': () => import('./no-NO.json'),
+    'pl-PL': () => import('./pl-PL.json'),
+    'pt-BR': () => import('./pt-BR.json'),
+    'ro-RO': () => import('./ro-RO.json'),
+    'ru-RU': () => import('./ru-RU.json'),
+    'sk-SK': () => import('./sk-SK.json'),
+    'sl-SI': () => import('./sl-SI.json'),
+    'sv-SE': () => import('./sv-SE.json'),
+    'zh-CN': () => import('./zh-CN.json'),
+    'zh-TW': () => import('./zh-TW.json')
 };

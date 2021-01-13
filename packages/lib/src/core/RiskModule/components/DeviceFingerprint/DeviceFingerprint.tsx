@@ -8,11 +8,10 @@ class DeviceFingerprint extends Component<DeviceFingerprintProps, DeviceFingerpr
     constructor(props) {
         super(props);
 
-        const accessKey = props.clientKey || props.originKey;
-        if (accessKey) {
+        if (props.clientKey) {
             this.state = {
                 status: 'retrievingFingerPrint',
-                dfpURL: `${this.props.loadingContext}assets/html/${accessKey}/dfp.${DF_VERSION}.html`
+                dfpURL: `${this.props.loadingContext}assets/html/${props.clientKey}/dfp.${DF_VERSION}.html`
             };
         }
     }
