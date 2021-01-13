@@ -1,5 +1,6 @@
-import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, BinLookupObject, SFFeedbackObj } from '../types';
+import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, SFFeedbackObj } from '../types';
 import { createSecuredFields } from './createSecuredFields';
+import { handleBrandFromBinLookup } from './utils/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
     // Set in CSF
@@ -8,7 +9,7 @@ abstract class AbstractCSF {
     protected props: SetupObject;
     protected state: CSFStateObject;
     protected assessFormValidity: () => void;
-    protected brandsFromBinLookup: (brandsObj: BinLookupObject) => void;
+    protected brandsFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: () => void;
     protected createCardSecuredFields: (securedFields: HTMLElement[]) => number;

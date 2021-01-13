@@ -36,3 +36,10 @@ export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFr
 export const getIsValid = ClientFunction((who = 'card') => {
     return window[who].isValid;
 });
+
+export const getFromWindow = ClientFunction((what, prop) => {
+    if (!prop) {
+        return window[what];
+    }
+    return window[what][prop];
+});

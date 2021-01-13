@@ -74,8 +74,11 @@ const regularErrObj = {
 const nodeHolder = document.createElement('div');
 nodeHolder.innerHTML = mockNode;
 
+const brandsFromBinLookup = jest.fn(() => {});
+
 const mockCSF = {
-    hasUnsupportedCard: () => {}
+    hasUnsupportedCard: () => {},
+    brandsFromBinLookup
 };
 
 wrapper = shallow(
@@ -257,4 +260,45 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
         expect(errorObj.errorText).toEqual(ERROR_MSG_CLEARED);
         expect(errorObj.errorI18n).toEqual('');
     });
+});
+
+describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
+    const mockBinLookupObj = {
+        issuingCountryCode: 'US',
+        supportedBrands: ['mc']
+    };
+
+    it(
+        'should receive a populated binLookup object and set the issuingCountryCode' +
+            'then receive a "reset" object and reset the issuingCountryCode',
+        () => {
+            nodeHolder.innerHTML = mockNode;
+            wrapper = shallow(
+                <SecuredFieldsProvider
+                    ref={handleSecuredFieldsRef}
+                    rootNode={nodeHolder}
+                    styles={styles}
+                    render={renderFn}
+                    onError={onError}
+                    i18n={i18n}
+                    configuration={{}}
+                />
+            );
+
+            const sfp = wrapper.instance();
+
+            sfp.csf = mockCSF;
+
+            sfp.processBinLookupResponse(mockBinLookupObj);
+
+            expect(sfp.issuingCountryCode).toEqual('us');
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(1);
+
+            // reset
+            sfp.processBinLookupResponse(null);
+
+            expect(sfp.issuingCountryCode).toBe(undefined);
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
+        }
+    );
 });

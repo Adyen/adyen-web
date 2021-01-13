@@ -42,10 +42,3 @@ export interface CardInputState {
     valid?: object;
     issuingCountryCode: string;
 }
-
-export interface BinValueObject {
-    detectedBrands: string[];
-    issuingCountryCode: string;
-    requestId: string;
-    supportedBrands: string[];
-}

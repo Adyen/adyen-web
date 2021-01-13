@@ -54,6 +54,12 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                     label: 'put your date in here',
                     iframeTitle: 'date iframe'
                 }
+            },
+            onError: obj => {
+                console.log('### Cards::onError:: obj=', obj);
+            },
+            onBinLookup: obj => {
+                console.log('### Cards::onBinLookup:: obj=', obj);
             }
         })
         .mount('.card-field');
