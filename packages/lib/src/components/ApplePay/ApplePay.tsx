@@ -7,7 +7,7 @@ import defaultProps from './defaultProps';
 import fetchJsonData from '../../utils/fetch-json-data';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands } from './utils';
+import { normalizeAmount, resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 
 const latestSupportedVersion = 10;
@@ -27,11 +27,13 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      * Formats the component props
      */
     protected formatProps(props) {
+        const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         const { configuration = {} } = props;
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
+            onAuthorized: resolve => resolve(),
             ...props,
             configuration: {
                 merchantId: configuration.merchantIdentifier || configuration.merchantId || defaultProps.configuration.merchantId,
@@ -39,7 +41,8 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             },
             supportedNetworks,
             version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
+            totalPriceLabel: props.totalPriceLabel || configuration.merchantName,
+            amount,
             onCancel: event => props.onError(event)
         };
     }
@@ -105,10 +108,10 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
-        const { merchantName, merchantId } = configuration;
+        const { merchantName: displayName, merchantId: merchantIdentifier } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
         const options = { loadingContext, path, method: 'post' };
-        const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
+        const request: ApplePaySessionRequest = { displayName, domainName, initiative, merchantIdentifier };
 
         try {
             const response = await fetchJsonData(options, request);

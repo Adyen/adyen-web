@@ -38,6 +38,7 @@ interface CSFCommonProps {
 
 export interface SetupObject extends CSFCommonProps {
     type: string;
+    originKey: string;
     clientKey: string;
     rootNode: string | HTMLElement;
     callbacks?: object;

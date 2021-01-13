@@ -4,7 +4,7 @@
  * @returns a promise containing the response of the call
  */
 const collectId = config => {
-    if (!config.clientKey) {
+    if (!config.accessKey) {
         return Promise.reject();
     }
 
@@ -16,7 +16,7 @@ const collectId = config => {
         }
     };
 
-    return fetch(`${config.loadingContext}v1/analytics/id?token=${config.clientKey}`, options)
+    return fetch(`${config.loadingContext}v1/analytics/id?token=${config.accessKey}`, options)
         .then(response => {
             if (response.ok) return response.json();
             throw new Error('Collect ID not available');

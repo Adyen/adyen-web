@@ -119,11 +119,10 @@ export const getTranslation = (translations: object, key: string, options: { [ke
 export const loadTranslations = async (locale: string, customTranslations: object = {}) => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
     const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
-    const loadedLocale = await locales[localeToLoad]();
 
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)
-        ...loadedLocale.default, // Merge with our locale file of the locale they are loading
+        ...locales[localeToLoad], // Merge with our locale file of the locale they are loading
         ...(!!customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
     };
 };

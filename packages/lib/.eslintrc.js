@@ -27,8 +27,8 @@ module.exports = {
             version: '16.0'
         },
         'import/resolver': {
-            node: {
-                extensions: ['.js', '.jsx', '.ts', '.tsx']
+            webpack: {
+                config: 'config/webpack.dev.js'
             }
         }
     },
