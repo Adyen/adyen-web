@@ -64,7 +64,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, isValid };
-        if (this.props.onChange) this.props.onChange(state, this.elementRef);
+        if (this.props.onChange) this.props.onChange(state, this);
         if (isValid) this.onValid();
 
         return state;
@@ -72,7 +72,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
     onValid() {
         const state = { data: this.data };
-        if (this.props.onValid) this.props.onValid(state, this.elementRef);
+        if (this.props.onValid) this.props.onValid(state, this);
         return state;
     }
 
@@ -91,13 +91,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                     return false;
                 }
 
-                return onSubmit({ data, isValid }, this.elementRef);
+                return onSubmit({ data, isValid }, this);
             })
             .catch(error => onError(error));
     }
 
     onComplete(state): void {
-        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
+        if (this.props.onComplete) this.props.onComplete(state, this);
     }
 
     showValidation(): this {
@@ -110,11 +110,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
-    handleAction(action: PaymentAction, props = {}) {
+    handleAction(action: PaymentAction) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        const paymentAction = this.props._parentInstance.createFromAction(action, {
-            ...props,
+        const paymentAction: UIElement = this.props.createFromAction(action, {
+            ...this.props,
+            // Keep at end since we are creating a new function based on the one in props and don't want this new function overridden
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
         });
 

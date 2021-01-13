@@ -60,9 +60,9 @@ function Await(props: AwaitComponentProps) {
     };
 
     const checkStatus = (): void => {
-        const { paymentData, clientKey } = props;
+        const { paymentData, accessKey } = props;
 
-        checkPaymentStatus(paymentData, clientKey, loadingContext)
+        checkPaymentStatus(paymentData, accessKey, loadingContext)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',

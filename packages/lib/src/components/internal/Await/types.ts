@@ -20,7 +20,7 @@ export interface AwaitComponentProps {
     url?: string;
     shouldRedirectOnMobile?: boolean;
     classNameModifiers?: string[];
-    clientKey: string;
+    accessKey: string;
     onError: (error, component) => void;
     onComplete: (status, component) => void;
     brandLogo: string;

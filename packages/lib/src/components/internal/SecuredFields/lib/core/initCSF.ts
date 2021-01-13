@@ -22,8 +22,10 @@ const initCSF = (pSetupObj: SetupObject): CSFReturnObject => {
         return null;
     }
 
-    if (falsy(setupObj.clientKey)) {
-        logger.warn('WARNING: AdyenCheckout configuration object is missing a "clientKey" property.');
+    if (falsy(setupObj.clientKey) && falsy(setupObj.originKey)) {
+        logger.warn(
+            'WARNING: Checkout configuration object is missing a "clientKey" property.\nFor a transition period the originKey will be accepted instead but this will eventually be deprecated'
+        );
         return null;
     }
 

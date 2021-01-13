@@ -20,7 +20,7 @@ export interface SFPProps {
     onFieldValid?;
     onFocus?;
     onLoad?;
-    clientKey?: string;
+    originKey?: string;
     placeholders?: object;
     rootNode?: HTMLElement;
     showWarnings?: boolean;
@@ -84,6 +84,7 @@ export default {
     type: 'card',
 
     // Settings
+    originKey: null,
     keypadFix: true,
     rootNode: null,
     loadingContext: null,

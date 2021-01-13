@@ -1,9 +1,27 @@
 import { Component, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
+import { createElements, createStoredElements } from '../elements';
+import { getCommonProps } from './utils';
 import Status from './status';
-import getOrderStatus from '../../../core/Services/order-status';
-import { DropinComponentProps, DropinComponentState } from '../types';
+import getProp from '../../../utils/getProp';
+import UIElement from '../../UIElement';
+import { DropinComponentProps } from '../types';
 import './DropinComponent.scss';
+import getOrderStatus from '../../../core/Services/order-status';
+import { OrderStatus } from '../../../types';
+
+interface DropinStatus {
+    type: 'loading' | 'ready' | 'success' | 'error';
+}
+
+interface DropinComponentState {
+    elements: any[];
+    status: DropinStatus;
+    activePaymentMethod: UIElement;
+    cachedPaymentMethods: object;
+    isDisabling: boolean;
+    orderStatus: OrderStatus;
+}
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -20,8 +38,13 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     }
 
     public prepareDropinData = () => {
-        const { order, clientKey, loadingContext } = this.props;
-        const [storedElementsPromises, elementsPromises] = this.props.onCreateElements();
+        const { paymentMethodsConfiguration, paymentMethods, storedPaymentMethods, order, clientKey, loadingContext } = this.props;
+        const commonProps = getCommonProps(this.props);
+
+        const storedElementsPromises = this.props.showStoredPaymentMethods
+            ? createStoredElements(storedPaymentMethods, commonProps, paymentMethodsConfiguration)
+            : [];
+        const elementsPromises = this.props.showPaymentMethods ? createElements(paymentMethods, commonProps, paymentMethodsConfiguration) : [];
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
         Promise.all([storedElementsPromises, elementsPromises, orderStatusPromise]).then(([storedElements, elements, orderStatus]) => {
@@ -46,7 +69,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     private setActivePaymentMethod = paymentMethod => {
         this.setState(prevState => ({
             activePaymentMethod: paymentMethod,
-            cachedPaymentMethods: { ...prevState.cachedPaymentMethods, [paymentMethod._id]: true }
+            cachedPaymentMethods: { ...prevState.cachedPaymentMethods, [paymentMethod.props.id]: true }
         }));
     };
 
@@ -66,7 +89,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.setActivePaymentMethod(paymentMethod);
 
         // onSelect event
-        if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
+        if ((activePaymentMethod && activePaymentMethod.props.id !== paymentMethod.props.id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
         }
     };
@@ -76,7 +99,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         new Promise((resolve, reject) => this.props.onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
             .then(() => {
-                this.setState(prevState => ({ elements: prevState.elements.filter(pm => pm._id !== storedPaymentMethod._id) }));
+                this.setState(prevState => ({ elements: prevState.elements.filter(pm => pm.props.id !== storedPaymentMethod.props.id) }));
                 this.setState({ isDisabling: false });
             })
             .catch(() => {
@@ -94,10 +117,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         switch (status.type) {
             case 'success':
-                return <Status.Success message={status.props?.message} />;
+                return <Status.Success message={getProp(status, 'props.message') || null} />;
 
             case 'error':
-                return <Status.Error message={status.props?.message} />;
+                return <Status.Error message={getProp(status, 'props.message') || null} />;
 
             case 'custom':
                 return status.props.component.render();
