@@ -18,7 +18,7 @@ class Analytics {
     private readonly logTelemetry;
     private readonly queue = new EventsQueue();
 
-    constructor({ loadingContext, locale, originKey, clientKey, analytics }: CoreOptions) {
+    constructor({ loadingContext, locale, clientKey, analytics }: CoreOptions) {
         this.props = { ...Analytics.defaultProps, ...analytics };
         this.logEvent = logEvent({ loadingContext, locale });
         this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
