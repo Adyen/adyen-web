@@ -33,6 +33,7 @@ interface CSFCommonProps {
     keypadFix?: boolean;
     isKCP?: boolean;
     iframeUIConfig?: object;
+    locale?: string;
 }
 
 export interface SetupObject extends CSFCommonProps {
@@ -171,6 +172,12 @@ export interface CbObjOnBinValue {
     binValue: string;
     uuid?: string;
     encryptedBin?: string;
+}
+
+export interface CbObjOnBinLookup {
+    type: string;
+    detectedBrands: string[];
+    supportedBrands: string[];
 }
 
 export interface CbObjOnError {

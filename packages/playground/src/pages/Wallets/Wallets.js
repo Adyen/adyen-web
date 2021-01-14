@@ -1,7 +1,8 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
-import { getPaymentMethods } from '../../services';
-import { handleChange, handleSubmit, handleAdditionalDetails } from '../../handlers';
+import { getPaymentMethods, makePayment } from '../../services';
+import { handleSubmit, handleAdditionalDetails } from '../../handlers';
+import { checkPaymentResult } from '../../utils';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -15,17 +16,98 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         // environment: 'http://localhost:8080/checkoutshopper/',
         // environment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
         environment: 'test',
-        onChange: handleChange,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: console.error,
         showPayButton: true
     });
 
+    // AMAZON PAY
+    // Demo only
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
+    const step = urlSearchParams.get('step');
+
+    // Initial state
+    if (!amazonCheckoutSessionId) {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                currency: 'GBP',
+                environment: 'test',
+                configuration: {
+                    merchantId: 'A3SKIS53IXYBBU',
+                    publicKeyId: 'AG77NIXPURMDUC3DOC5WQPPH',
+                    storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
+                },
+
+                /**
+                 * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
+                 * which will create and return the signature.
+                 * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
+                 */
+                returnUrl: 'http://localhost:3020/wallets?step=review'
+            })
+            .mount('.amazonpay-field');
+    }
+
+    // Review and confirm order
+    if (amazonCheckoutSessionId && step === 'review') {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                returnUrl: 'http://localhost:3020/wallets?step=result',
+                amount: {
+                    currency: 'GBP',
+                    value: 4700
+                }
+            })
+            .mount('.amazonpay-field');
+    }
+
+    // Make payment
+    if (amazonCheckoutSessionId && step === 'result') {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                showOrderButton: false,
+                onSubmit: (state, component) => {
+                    return makePayment(state.data)
+                        .then(response => {
+                            if (response?.resultCode && checkPaymentResult(response.resultCode)) {
+                                alert(response.resultCode);
+                            } else {
+                                // Try handling the decline flow
+                                // This will redirect the shopper to select another payment method
+                                component.handleDeclineFlow();
+                            }
+                        })
+                        .catch(error => {
+                            throw Error(error);
+                        });
+                },
+                onError: e => {
+                    if (e.resultCode) {
+                        alert(e.resultCode);
+                    } else {
+                        console.error(e);
+                    }
+                }
+            })
+            .mount('.amazonpay-field');
+
+        window.amazonpay.submit();
+    }
+
     // PAYPAL
     window.paypalButtons = checkout
         .create('paypal', {
-            // merchantId: '5RZKQX2FC48EA', // automatic ?
+            // merchantId: '5RZKQX2FC48EA',
             // intent: 'capture', // 'capture' [Default] / 'authorize'
             //                configuration: {
             //                    merchantId: '5RZKQX2FC48EA',

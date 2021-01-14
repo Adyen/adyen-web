@@ -4,11 +4,32 @@ import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
+import { mapBrands } from './utils';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
     public static defaultProps = defaultProps;
     protected googlePay = new GooglePayService(this.props);
+
+    /**
+     * Formats the component data input
+     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
+     */
+    formatProps(props) {
+        const { configuration } = props;
+        const { merchantIdentifier } = configuration;
+        const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
+
+        return {
+            ...props,
+            showButton: props.showPayButton === true,
+            configuration: {
+                ...configuration,
+                ...(merchantIdentifier && { merchantId: merchantIdentifier })
+            },
+            allowedCardNetworks
+        };
+    }
 
     /**
      * Formats the component data output

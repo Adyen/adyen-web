@@ -63,7 +63,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             focusedElement: '',
             additionalSelectElements: [],
             additionalSelectValue: '',
-            additionalSelectType: '',
             issuingCountryCode: null
         };
 
@@ -113,8 +112,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     public resetAdditionalSelectState() {
         this.setState({
             additionalSelectElements: [],
-            additionalSelectValue: '',
-            additionalSelectType: ''
+            additionalSelectValue: ''
         });
     }
 
@@ -171,7 +169,11 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 type={this.props.brand}
                 oneClick={isOneClick}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
-                    <div ref={setRootNode} className={`adyen-checkout__card-input ${styles['card-input__wrapper']}`}>
+                    <div
+                        ref={setRootNode}
+                        className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${this.props
+                            .fundingSource ?? 'credit'}`}
+                    >
                         {this.props.storedPaymentMethodId ? (
                             <LoadingWrapper status={sfpState.status}>
                                 <StoredCardFields

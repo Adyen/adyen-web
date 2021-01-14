@@ -4,12 +4,18 @@ import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
 import { pick } from '../../internal/SecuredFields/utils';
 
-export interface ResolveData {
+export interface FingerprintResolveData {
+    data: {
+        [key: string]: string;
+        paymentData: string;
+    };
+}
+
+export interface ChallengeResolveData {
     data: {
         details: {
             [key: string]: string;
         };
-        paymentData: string;
     };
 }
 
@@ -28,24 +34,15 @@ export const decodeAndParseToken = (token: string): ThreeDS2Token => {
 };
 
 /**
- * @param value - requires an object containing the result parameters
- * @param type - either 'IdentifyShopper' or 'ChallengeShopper'
+ * Performs JSON.stringify on passed object & and base64 encodes result
+ * @param obj
  * @returns encoded result
  */
-export const encodeResult = (result: ResultObject, type: string): string => {
-    const { threeDSCompInd, transStatus } = result;
-    if (!threeDSCompInd && !transStatus) {
-        throw new Error('No threeDS2 request details found');
+export const encodeObject = obj => {
+    if (!obj || !Object.keys(obj).length) {
+        throw new Error('No (populated) data object to encode');
     }
-
-    switch (type) {
-        case 'IdentifyShopper':
-            return base64.encode(JSON.stringify({ threeDSCompInd }));
-        case 'ChallengeShopper':
-            return base64.encode(JSON.stringify({ transStatus }));
-        default:
-            throw new Error('No data available to create a result');
-    }
+    return base64.encode(JSON.stringify(obj));
 };
 
 /**
@@ -69,7 +66,8 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
  *  prepareChallengeData
  *
  *  Requires an object containing the challenge parameters:
- *  @token - challengeToken string received from /submitThreeDS2Fingerprint, /details or /payments call: contains acsTransID, acsURL, messageVersion, threeDSNotificationURL and threeDSServerTransID
+ *  @token - challengeToken string received from /submitThreeDS2Fingerprint, /details or /payments call: contains acsTransID, acsURL, messageVersion,
+ *     threeDSNotificationURL and threeDSServerTransID
  *  @size - one of five possible challenge window sizes
  */
 export const prepareChallengeData = ({ token, size }): ChallengeData => {
@@ -95,7 +93,8 @@ export const prepareChallengeData = ({ token, size }): ChallengeData => {
  *  prepareFingerPrintData
  *
  *  Requires an object containing the fingerprint parameters:
- *  @param token - fingerprintToken string received from /payments call: contains threeDSMethodNotificationURL, threeDSMethodUrl and threeDSServerTransID
+ *  @param token - fingerprintToken string received from /payments call: contains threeDSMethodNotificationURL, threeDSMethodUrl and
+ *     threeDSServerTransID
  *  @param notificationURL - the URL that the final notification is expected to be postMessaged from.
  *
  *  NOTE: we don't expect merchants to alter the default by passing in a notificationURL of their own via props;
@@ -117,10 +116,34 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
     };
 };
 
-export const createResolveData = (dataKey: string, result: string, paymentData: string): ResolveData => ({
+// New 3DS2 flow
+// export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({
+//     data: {
+//         [dataKey]: encodeObject({ threeDSCompInd: resultObj.threeDSCompInd }),
+//         paymentData
+//     }
+// });
+
+// Old 3DS2 flow
+export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): any => ({
     data: {
-        details: { [dataKey]: result },
+        details: { 'threeds2.fingerprint': encodeObject(resultObj) },
         paymentData
+    }
+});
+
+// New 3DS2 flow
+// export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
+//     data: {
+//         details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
+//     }
+// });
+
+// Old 3DS2 flow
+export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
+    data: {
+        details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
+        paymentData: authorisationToken
     }
 });
 

@@ -14,7 +14,7 @@ import { processGlobalOptions } from './utils';
 class Core {
     private paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
-    public options: any;
+    public options: CoreOptions;
     public components = [];
 
     public static readonly version = {
@@ -24,7 +24,7 @@ class Core {
         buildId: process.env.ADYEN_BUILD_ID
     };
 
-    constructor(options: CoreOptions = {}) {
+    constructor(options: CoreOptions) {
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 

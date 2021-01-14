@@ -40,4 +40,29 @@ describe('PersonalDetails', () => {
         expect(wrapper.find('InputTelephone[name="telephoneNumber"]').prop('value')).toBe(data.telephoneNumber);
         expect(wrapper.find('InputEmail[name="shopperEmail"]').prop('value')).toBe(data.shopperEmail);
     });
+
+    test('returns the data in the expected format', () => {
+        const data = {
+            firstName: 'John',
+            lastName: 'Smith',
+            gender: 'MALE',
+            dateOfBirth: '1990-01-01',
+            telephoneNumber: '0610001122',
+            shopperEmail: 'shopper@email.com'
+        };
+
+        const onChange = jest.fn();
+        getWrapper({ data, onChange });
+        const formattedData = onChange.mock.calls[0][0].data;
+
+        expect(formattedData.firstName).toBe(undefined);
+        expect(formattedData.firstName).toBe(undefined);
+        expect(formattedData.gender).toBe(undefined);
+        expect(formattedData.shopperName.firstName).toBe(data.firstName);
+        expect(formattedData.shopperName.firstName).toBe(data.firstName);
+        expect(formattedData.shopperName.gender).toBe(data.gender);
+        expect(formattedData.dateOfBirth).toBe(data.dateOfBirth);
+        expect(formattedData.telephoneNumber).toBe(data.telephoneNumber);
+        expect(formattedData.shopperEmail).toBe(data.shopperEmail);
+    });
 });

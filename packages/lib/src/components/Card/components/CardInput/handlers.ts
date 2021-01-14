@@ -131,9 +131,7 @@ function handleAdditionalDataSelection(e: Event): void {
     this.setState({ additionalSelectValue: value }, this.validateCardInput);
 
     // Pass brand into SecuredFields
-    if (this.state.additionalSelectType === 'brandSwitcher') {
-        this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
-    }
+    this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
 }
 
 export default {

@@ -18,7 +18,7 @@
         "url": "https://support.adyen.com/"
     },
     "devDependencies": {
-        "cross-env": "^7.0.2",
+        "cross-env": "^7.0.3",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "prettier": "^1.19.1",

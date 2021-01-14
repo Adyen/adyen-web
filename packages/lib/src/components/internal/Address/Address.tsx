@@ -27,22 +27,20 @@ export default function Address(props: AddressProps) {
         setErrors(prevErrors => ({ ...prevErrors, [name]: !isValid }));
     };
 
-    const handleStateChange = (e): void => {
-        const value = e.target?.value;
-        setData(prevData => ({ ...prevData, stateOrProvince: value }));
-        setValid(prevValid => ({ ...prevValid, stateOrProvince: !!value }));
-        setErrors(prevErrors => ({ ...prevErrors, stateOrProvince: !value }));
-    };
-
-    const handleCountryChange = (e: Event): void => {
+    const handleDropdownChangeFor = (key: string) => (e: Event): void => {
         const field = e.currentTarget as HTMLInputElement;
         const value = field.getAttribute('data-value');
-        const stateOrProvince = COUNTRIES_WITH_STATES_DATASET.includes(value) ? '' : 'N/A';
 
-        setData(prevData => ({ ...prevData, stateOrProvince, country: value }));
-        setValid(prevValid => ({ ...prevValid, country: !!value }));
-        setErrors(prevErrors => ({ ...prevErrors, country: !value }));
+        setData(prevData => ({ ...prevData, [key]: value }));
+        setValid(prevValid => ({ ...prevValid, [key]: !!value }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: !value }));
     };
+
+    useEffect((): void => {
+        const { country } = data;
+        const stateOrProvince = COUNTRIES_WITH_STATES_DATASET.includes(country) ? '' : 'N/A';
+        setData(prevData => ({ ...prevData, stateOrProvince }));
+    }, [data.country]);
 
     useEffect((): void => {
         const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
@@ -76,14 +74,14 @@ export default function Address(props: AddressProps) {
 
         return (
             <FieldContainer
+                key={fieldName}
                 allowedCountries={props.allowedCountries}
                 classNameModifiers={[...classNameModifiers, fieldName]}
                 data={data}
                 errors={errors}
                 fieldName={fieldName}
                 onInput={handleChange}
-                onStateChange={handleStateChange}
-                onCountryChange={handleCountryChange}
+                onDropdownChange={handleDropdownChangeFor(fieldName)}
             />
         );
     };
