@@ -17,9 +17,9 @@ export class EcontextElement extends UIElement {
      */
     formatData() {
         return {
+            ...this.state.data,
             paymentMethod: {
-                type: this.props.type || EcontextElement.type,
-                ...this.state.data
+                type: this.props.type || EcontextElement.type
             }
         };
     }

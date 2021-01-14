@@ -19,7 +19,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     public static type = 'threeDS2Challenge';
 
     public static defaultProps = {
-        dataKey: 'threeds2.challengeResult',
+        dataKey: 'threeDSResult',
         size: DEFAULT_CHALLENGE_WINDOW_SIZE,
         type: 'ChallengeShopper'
     };

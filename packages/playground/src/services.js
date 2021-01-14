@@ -13,6 +13,9 @@ export const getPaymentMethods = configuration =>
 export const makePayment = (data, config = {}) => {
     // NOTE: Merging data object. DO NOT do this in production.
     const paymentRequest = { ...paymentsConfig, ...config, ...data };
+    if (paymentRequest.order) {
+        delete paymentRequest.amount;
+    }
     return httpPost('payments', paymentRequest)
         .then(response => {
             if (response.error) throw 'Payment initiation failed';

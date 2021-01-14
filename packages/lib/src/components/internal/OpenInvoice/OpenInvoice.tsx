@@ -31,6 +31,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
     const checkFieldsets = () => Object.keys(activeFieldsets).every(fieldset => !activeFieldsets[fieldset] || !!valid[fieldset]);
     const hasConsentCheckbox = !!props.consentCheckboxLabel;
+    const isStandAloneButton = !hasConsentCheckbox && Object.keys(activeFieldsets).every(key => !activeFieldsets[key]);
     const showSeparateDeliveryAddressCheckbox = visibility.deliveryAddress === 'editable' && visibility.billingAddress !== 'hidden';
 
     const [data, setData] = useState<OpenInvoiceStateData>({
@@ -146,7 +147,12 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                 />
             )}
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+            {props.showPayButton &&
+                props.payButton({
+                    status,
+                    classNameModifiers: [...(isStandAloneButton ? ['standalone'] : [])],
+                    label: i18n.get('confirmPurchase')
+                })}
         </div>
     );
 }

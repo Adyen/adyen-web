@@ -4,7 +4,7 @@ export type RtnType_noParamVoidFn = () => void;
 export type RtnType_postMessageListener = (event: Event) => void;
 export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
 
-interface SFInternalConfig {
+export interface SFInternalConfig {
     extraFieldData: string;
     txVariant: string;
     cardGroupTypes: string[];
@@ -13,6 +13,7 @@ interface SFInternalConfig {
     trimTrailingSeparator: boolean;
     isCreditCardType: boolean;
     showWarnings: boolean;
+    locale?: string;
 }
 
 export interface SFSetupObject extends SFInternalConfig {

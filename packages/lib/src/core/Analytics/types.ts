@@ -19,10 +19,3 @@ export interface AnalyticsOptions {
      */
     conversionId?: string;
 }
-
-export interface AnalyticsProps {
-    loadingContext: string;
-    locale?: string;
-    clientKey?: string;
-    analytics?: AnalyticsOptions;
-}

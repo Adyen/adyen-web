@@ -31,7 +31,6 @@ export interface CardInputProps {
 
 export interface CardInputState {
     additionalSelectElements: any[];
-    additionalSelectType: string;
     additionalSelectValue: string;
     billingAddress: object;
     data?: object;

@@ -7,7 +7,7 @@ import defaultProps from './defaultProps';
 import fetchJsonData from '../../utils/fetch-json-data';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion } from './utils';
+import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 
 const latestSupportedVersion = 10;
@@ -28,9 +28,16 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     protected formatProps(props) {
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
+        const { configuration = {} } = props;
+        const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
             ...props,
+            configuration: {
+                merchantId: configuration.merchantIdentifier || configuration.merchantId || defaultProps.configuration.merchantId,
+                merchantName: configuration.merchantDisplayName || configuration.merchantName || defaultProps.configuration.merchantName
+            },
+            supportedNetworks,
             version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
             onCancel: event => props.onError(event)
@@ -68,29 +75,31 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onShippingContactSelected
         } = this.props;
 
-        const paymentRequest = preparePaymentRequest({
-            companyName: this.props.configuration.merchantName,
-            ...this.props
-        });
+        return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {
+            const paymentRequest = preparePaymentRequest({
+                companyName: this.props.configuration.merchantName,
+                ...this.props
+            });
 
-        const session = new ApplePayService(paymentRequest, {
-            version,
-            onCancel,
-            onPaymentMethodSelected,
-            onShippingMethodSelected,
-            onShippingContactSelected,
-            onValidateMerchant: onValidateMerchant || this.validateMerchant,
-            onPaymentAuthorized: (resolve, reject, event) => {
-                if (!!event.payment.token && !!event.payment.token.paymentData) {
-                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
+            const session = new ApplePayService(paymentRequest, {
+                version,
+                onCancel,
+                onPaymentMethodSelected,
+                onShippingMethodSelected,
+                onShippingContactSelected,
+                onValidateMerchant: onValidateMerchant || this.validateMerchant,
+                onPaymentAuthorized: (resolve, reject, event) => {
+                    if (!!event.payment.token && !!event.payment.token.paymentData) {
+                        this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
+                    }
+
+                    onSubmit({ data: this.data, isValid: this.isValid }, this);
+                    onPaymentAuthorized(resolve, reject, event);
                 }
+            });
 
-                onSubmit({ data: this.data, isValid: this.isValid }, this);
-                onPaymentAuthorized(resolve, reject, event);
-            }
+            session.begin();
         });
-
-        session.begin();
     }
 
     private async validateMerchant(resolve, reject) {
