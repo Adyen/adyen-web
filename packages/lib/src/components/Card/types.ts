@@ -112,11 +112,29 @@ export interface CardElementData {
     browserInfo: BrowserInfo;
 }
 
+export interface BrandObject {
+    brand: string;
+    cvcPolicy: string;
+    enableLuhnCheck: string;
+    showExpiryDate: string;
+    supported: string;
+}
+
 export interface BinLookupResponseObj {
     requestId: string;
-    supportedBrands?: string[];
-    detectedBrands?: string[];
     issuingCountryCode?: string;
-    enableLuhnCheck?: boolean;
-    showExpiryDate?: boolean;
+    brands?: BrandObject[];
+}
+
+/**
+ * Simplified version of BinLookupResponseObj to pass down
+ */
+export interface BinLookupObject {
+    issuingCountryCode: string;
+    supportedBrands?: BrandObject[];
+}
+
+export interface DualBrandSelectElement {
+    id: string;
+    brandObject: BrandObject;
 }

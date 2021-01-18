@@ -7,7 +7,7 @@ import cu from '../utils/cardUtils';
 import { CARDS_URL } from '../../pages';
 import { DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../utils/constants';
 
-const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 const logger = RequestLogger(
     { url, method: 'post' },
@@ -21,16 +21,19 @@ const errorLabel = Selector('.card-field .adyen-checkout__error-text');
 
 const TEST_SPEED = 1;
 
+const IS_SUPPORTED = 'true'; // might change to boolean in the response
+const NOT_SUPPORTED = 'false'; // might change to boolean in the response
+
 const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing binLookup response`
+fixture`Testing binLookup v2 response`
     .page(CARDS_URL)
     .clientScripts('binLookup.clientScripts.js')
     .requestHooks(logger);
 
-test.skip('Enter number of known dual branded card, ' + 'then inspect body for expected properties ', async t => {
+test('Enter number of known dual branded card, ' + 'then inspect response body for expected properties ', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -48,17 +51,19 @@ test.skip('Enter number of known dual branded card, ' + 'then inspect body for e
     const responseBody = JSON.parse(responseBodyBuffer);
 
     await t
-        .expect(responseBody.supportedBrands.length)
+        .expect(responseBody.brands.length)
         .eql(2)
-        .expect(responseBody.detectedBrands.length)
-        .eql(2)
+        .expect(responseBody.brands[0].supported)
+        .eql(IS_SUPPORTED)
+        .expect(responseBody.brands[1].supported)
+        .eql(IS_SUPPORTED)
         .expect(responseBody.issuingCountryCode.length)
         .eql(2)
         .expect(responseBody.requestId.length)
         .notEql(0);
 });
 
-test.skip('Enter number of regular, non dual branded, card, ' + 'then inspect body for expected properties ', async t => {
+test('Enter number of regular, non dual branded, card, ' + 'then inspect response body for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -77,22 +82,22 @@ test.skip('Enter number of regular, non dual branded, card, ' + 'then inspect bo
     const responseBody = JSON.parse(responseBodyBuffer);
 
     await t
-        .expect(responseBody.supportedBrands.length)
+        .expect(responseBody.brands.length)
         .eql(1)
-        .expect(responseBody.detectedBrands.length)
-        .eql(1)
+        .expect(responseBody.brands[0].supported)
+        .eql(IS_SUPPORTED)
         .expect(responseBody.issuingCountryCode.length)
         .eql(2)
         .expect(responseBody.requestId.length)
         .notEql(0);
 });
 
-test.skip('Enter number of unsupported card, ' + 'then inspect body for expected properties ' + 'then check UI shows an error', async t => {
+test('Enter number of unsupported card, ' + 'then inspect response body for expected properties ' + 'then check UI shows an error', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
 
-    // Fill card field with regular number
+    // Fill card field with unsupported number
     await cardUtils.fillCardNumber(t, MAESTRO_CARD);
 
     await t
@@ -106,10 +111,10 @@ test.skip('Enter number of unsupported card, ' + 'then inspect body for expected
     const responseBody = JSON.parse(responseBodyBuffer);
 
     await t
-        .expect(responseBody.supportedBrands)
-        .typeOf('undefined')
-        .expect(responseBody.detectedBrands.length)
+        .expect(responseBody.brands.length)
         .eql(1)
+        .expect(responseBody.brands[0].supported)
+        .eql(NOT_SUPPORTED)
         .expect(responseBody.issuingCountryCode.length)
         .eql(2)
         .expect(responseBody.requestId.length)
@@ -124,12 +129,12 @@ test.skip('Enter number of unsupported card, ' + 'then inspect body for expected
         .ok();
 });
 
-test.skip('Enter number of card that is not in the test Dbs, ' + 'then inspect body for expected properties ', async t => {
+test('Enter number of card that is not in the test Dbs, ' + 'then inspect response body for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
 
-    // Fill card field with regular number
+    // Fill card field with unknown number
     await cardUtils.fillCardNumber(t, UNKNOWN_BIN_CARD);
 
     await t
@@ -143,9 +148,7 @@ test.skip('Enter number of card that is not in the test Dbs, ' + 'then inspect b
     const responseBody = JSON.parse(responseBodyBuffer);
 
     await t
-        .expect(responseBody.supportedBrands)
-        .typeOf('undefined')
-        .expect(responseBody.detectedBrands)
+        .expect(responseBody.brands)
         .typeOf('undefined')
         .expect(responseBody.issuingCountryCode)
         .typeOf('undefined')
@@ -156,8 +159,32 @@ test.skip('Enter number of card that is not in the test Dbs, ' + 'then inspect b
 /**
  * TEST CALLBACKS
  */
+test('Enter number of dual branded card, ' + 'then inspect callback for expected properties ', async t => {
+    logger.clear();
 
-test.skip('Enter number of regular, non dual branded, card, ' + 'then inspect callback for expected properties ', async t => {
+    await start(t, 2000, TEST_SPEED);
+
+    /// Fill card field with known dual branded number
+    await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+
+    await t
+        // Allow time for the binLookup call, which we expect to be successful
+        .wait(1000)
+        .expect(logger.contains(r => r.response.statusCode === 200))
+        .ok();
+
+    await t
+        .expect(getFromWindow('binLookupObj', 'type'))
+        .eql('card')
+        .expect(getFromWindow('binLookupObj', 'supportedBrands'))
+        .eql(['visa', 'cartebancaire'])
+        .expect(getFromWindow('binLookupObj', 'detectedBrands'))
+        .eql(['visa', 'cartebancaire'])
+        .expect(getFromWindow('binLookupObj', 'brands'))
+        .eql(['mc', 'visa', 'amex', 'cartebancaire']);
+});
+
+test('Enter number of regular, non dual branded, card, ' + 'then inspect callback for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -177,15 +204,17 @@ test.skip('Enter number of regular, non dual branded, card, ' + 'then inspect ca
         .expect(getFromWindow('binLookupObj', 'supportedBrands'))
         .eql(['mc'])
         .expect(getFromWindow('binLookupObj', 'detectedBrands'))
-        .eql(['mc']);
+        .eql(['mc'])
+        .expect(getFromWindow('binLookupObj', 'brands'))
+        .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 });
 
-test.skip('Enter number of unsupported card, ' + 'then inspect callbacks for expected properties ', async t => {
+test('Enter number of unsupported card, ' + 'then inspect callbacks for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
 
-    // Fill card field with regular number
+    // Fill card field with unsupported number
     await cardUtils.fillCardNumber(t, MAESTRO_CARD);
 
     await t
@@ -198,9 +227,36 @@ test.skip('Enter number of unsupported card, ' + 'then inspect callbacks for exp
         .expect(getFromWindow('binLookupObj', 'type'))
         .eql('card')
         .expect(getFromWindow('binLookupObj', 'supportedBrands'))
-        .eql(['mc', 'visa', 'amex', 'cartebancaire'])
+        .eql(null)
         .expect(getFromWindow('binLookupObj', 'detectedBrands'))
-        .eql(['maestro']);
+        .eql(['maestro'])
+        .expect(getFromWindow('binLookupObj', 'brands'))
+        .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 
     await t.expect(getFromWindow('errorObj', 'errorText')).eql('Unsupported card entered');
+});
+
+test('Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {
+    logger.clear();
+
+    await start(t, 2000, TEST_SPEED);
+
+    // Fill card field with unknown number
+    await cardUtils.fillCardNumber(t, UNKNOWN_BIN_CARD);
+
+    await t
+        // Allow time for the binLookup call, which we expect to be successful
+        .wait(1000)
+        .expect(logger.contains(r => r.response.statusCode === 200))
+        .ok();
+
+    await t
+        .expect(getFromWindow('binLookupObj', 'type'))
+        .eql('card')
+        .expect(getFromWindow('binLookupObj', 'supportedBrands'))
+        .eql(null)
+        .expect(getFromWindow('binLookupObj', 'detectedBrands'))
+        .eql(null)
+        .expect(getFromWindow('binLookupObj', 'brands'))
+        .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 });

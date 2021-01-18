@@ -26,11 +26,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     }
 
     // CHECK IF CVC IS OPTIONAL
-    if (existy(pFeedbackObj.cvcRequired)) {
-        if (process.env.NODE_ENV === 'development' && doLog) {
-            logger.log('\n### HandleValidationCls2:: SF onValidation:: pFeedbackObj.cvcRequired=', pFeedbackObj.cvcRequired);
-        }
-    }
+    // console.log('### handleValidation:: pFeedbackObj.cvcRequired=', pFeedbackObj.cvcRequired);
 
     // Brand information (from setting the CC number) now contains information about
     // whether cvc is optional for that brand e.g. maestro
@@ -42,6 +38,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         existy(pFeedbackObj.cvcRequired) &&
         Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
     ) {
+        // console.log('### handleValidation:: cvcRequired prop exists & has a value and =', pFeedbackObj.cvcRequired);
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = pFeedbackObj.cvcRequired;
     }
 
@@ -79,11 +76,5 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     this.assessFormValidity();
 
     // PROCESS & BROADCAST CARD BRANDS
-    // Doing it here: after calling onAllValid
-    // Use case: When the card component is in a valid state and the card number is deleted it wrongly calls
-    // the component's top level onValid callback.
-    // Reason: When the card component receives the onBrand info before the onAllValid info it triggers an
-    // onChange event - this wrongly perceives the component to be in a valid state because it is only the
-    // onAllValid info that resets the state.isCardValid on which the state.isValid property depends.
     this.processBrand(pFeedbackObj);
 }

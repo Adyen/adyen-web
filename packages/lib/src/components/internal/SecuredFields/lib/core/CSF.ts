@@ -18,9 +18,10 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
+import { CSFReturnObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
+import { BinLookupObject } from '../../../../Card/types';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);

@@ -1,9 +1,9 @@
 import { createCardVariantSwitcher } from './utils';
-import { BinLookupResponseObj } from '../../types';
+import { BinLookupObject } from '../../types';
 
 // Based on values in binValueObject we might need to trigger additional markup
 // e.g. a selector for brands or to choose between credit/debit card variations
-export default function processBinLookupResponse(binLookupObject: BinLookupResponseObj): void {
+export default function processBinLookupResponse(binLookupObject: BinLookupObject): void {
     // RESET: The number of digits in number field has dropped below threshold for BIN lookup - so reset the UI & inform SFP
     if (!binLookupObject) {
         this.resetAdditionalSelectState();
@@ -24,7 +24,7 @@ export default function processBinLookupResponse(binLookupObject: BinLookupRespo
             // Pass an object through to SFP
             this.sfp.current.processBinLookupResponse({
                 issuingCountryCode: binLookupObject.issuingCountryCode,
-                supportedBrands: [switchObj.leadType]
+                supportedBrands: [switchObj.leadBrand]
             });
 
             // 2) Single option found (binValueObject.supportedBrands.length === 1)
@@ -33,7 +33,7 @@ export default function processBinLookupResponse(binLookupObject: BinLookupRespo
 
             // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
             // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
-            this.setState({ additionalSelectValue: binLookupObject.supportedBrands[0] }, this.validateCardInput);
+            this.setState({ additionalSelectValue: binLookupObject.supportedBrands[0].brand }, this.validateCardInput);
 
             // Pass object through to SFP
             this.sfp.current.processBinLookupResponse({

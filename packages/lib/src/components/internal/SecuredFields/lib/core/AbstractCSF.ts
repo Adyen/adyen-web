@@ -1,5 +1,6 @@
-import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, SFFeedbackObj } from '../types';
+import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, SFFeedbackObj, SendBrandObject } from '../types';
 import { createSecuredFields } from './createSecuredFields';
+import { handleProcessBrand } from './utils/processBrand';
 import { handleBrandFromBinLookup } from './utils/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
@@ -28,8 +29,8 @@ abstract class AbstractCSF {
     protected isConfigured: () => void;
     protected postMessageToAllIframes: (pDataObj: object) => void;
     protected processAutoComplete: (pFeedbackObj: SFFeedbackObj) => void;
-    protected processBrand: (pFeedbackObj: SFFeedbackObj) => object;
-    protected sendBrandToCardSF: (brand: string) => void;
+    protected processBrand: typeof handleProcessBrand;
+    protected sendBrandToCardSF: (brandObj: SendBrandObject) => void;
     protected setFocusOnFrame: (pFieldType: string, doLog?: boolean) => void;
     protected setupSecuredField: (pItem: HTMLElement) => void;
     protected touchendListener: (e: Event) => void;

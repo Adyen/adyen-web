@@ -1,9 +1,9 @@
 import fetchJSONData from '../../utils/fetch-json-data';
-import { CbObjOnBinValue, CbObjOnError } from '../internal/SecuredFields/lib/types';
+import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../internal/SecuredFields/lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configuration/constants';
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
-import { BinLookupResponseObj } from './types';
+import { BinLookupObject, BinLookupResponseObj } from './types';
 
 export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -19,7 +19,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
 
         fetchJSONData(
             {
-                path: `v1/bin/binLookup?token=${this.props.clientKey}`,
+                path: `v2/bin/binLookup?token=${this.props.clientKey}`,
                 loadingContext: this.props.loadingContext,
                 method: 'POST',
                 contentType: 'application/json'
@@ -32,48 +32,109 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
         ).then((data: BinLookupResponseObj) => {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
-                /**
-                 * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
-                 */
-                if (data.supportedBrands?.length) {
-                    // ...call processBinLookupResponse with the response object if it contains at least one supported brand
-                    this.processBinLookupResponse(data);
+                if (data.brands?.length) {
+                    // TODO TESTing new v2
+                    // data.brands.push({
+                    //     brand: 'cartebancaire',
+                    //     cvcPolicy: 'required',
+                    //     enableLuhnCheck: 'false',
+                    //     showExpiryDate: 'false',
+                    //     supported: 'true'
+                    // });
+                    // end TODO
 
-                    // Inform merchant of the result
+                    const mappedResponse = data.brands.reduce(
+                        (acc, item) => {
+                            acc.detectedBrands.push(item.brand);
+
+                            if (item.supported === 'true') {
+                                acc.supportedBrands.push(item);
+                                return acc;
+                            }
+
+                            return acc;
+                        },
+                        { supportedBrands: [], detectedBrands: [] }
+                    );
+
+                    console.log('### triggerBinLookUp::mappedResponse=:: ', mappedResponse);
+
+                    /**
+                     * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
+                     */
+                    if (mappedResponse.supportedBrands.length) {
+                        // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
+                        this.processBinLookupResponse({
+                            issuingCountryCode: data.issuingCountryCode,
+                            supportedBrands: mappedResponse.supportedBrands
+                        } as BinLookupObject);
+
+                        // Inform merchant of the result
+                        this.props.onBinLookup({
+                            type: callbackObj.type,
+                            detectedBrands: mappedResponse.detectedBrands,
+                            supportedBrands: mappedResponse.supportedBrands.map(item => item.brand), // supportedBrands contains the subset of this.props.brands that matches the card number that the shopper has typed
+                            brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
+                        } as CbObjOnBinLookup);
+
+                        return;
+                    }
+
+                    /**
+                     * detectedBrands = no brands the merchant supports were found; what we did detect the shopper to be entering was this brand; error!
+                     */
+                    if (mappedResponse.detectedBrands.length) {
+                        const errObj: CbObjOnError = {
+                            type: 'card',
+                            fieldType: 'encryptedCardNumber',
+                            error: getError(ERROR_MSG_UNSUPPORTED_CARD_ENTERED),
+                            detectedBrands: mappedResponse.detectedBrands
+                        };
+                        this.handleUnsupportedCard(errObj);
+
+                        // Inform merchant of the result
+                        this.props.onBinLookup({
+                            type: callbackObj.type,
+                            detectedBrands: mappedResponse.detectedBrands,
+                            supportedBrands: null,
+                            brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
+                        } as CbObjOnBinLookup);
+
+                        return;
+                    }
+                } else {
+                    /**
+                     *  BIN not in DB (a failed lookup will just contain a requestId)
+                     */
                     this.props.onBinLookup({
                         type: callbackObj.type,
-                        detectedBrands: data.detectedBrands,
-                        supportedBrands: data.supportedBrands // here the supportedBrands contains the subset of this.props.brands that matches the card number that the shopper has typed
+                        detectedBrands: null,
+                        supportedBrands: null,
+                        brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
                     });
-                    return;
-                }
-                /**
-                 * detectedBrands = no brands the merchant supports were found; what we did detect the shopper to be entering was this brand; error!
-                 */
-                if (data.detectedBrands?.length) {
-                    const errObj: CbObjOnError = {
-                        type: 'card',
-                        fieldType: 'encryptedCardNumber',
-                        error: getError(ERROR_MSG_UNSUPPORTED_CARD_ENTERED),
-                        binLookupBrands: data.detectedBrands
-                    };
-                    this.handleUnsupportedCard(errObj);
 
-                    // Inform merchant of the result
-                    this.props.onBinLookup({
-                        type: callbackObj.type,
-                        detectedBrands: data.detectedBrands,
-                        supportedBrands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
-                    });
-                    return;
+                    // TODO TESTing new synchrony plcc bins
+                    // this.processBinLookupResponse({
+                    //     issuingCountryCode: 'US',
+                    //     supportedBrands: [
+                    //         // {
+                    //         //     brand: 'visa',
+                    //         //     cvcPolicy: 'required',
+                    //         //     enableLuhnCheck: 'true',
+                    //         //     showExpiryDate: 'true',
+                    //         //     supported: 'true'
+                    //         // },
+                    //         {
+                    //             brand: 'bcmc',
+                    //             cvcPolicy: 'hidden',
+                    //             enableLuhnCheck: 'false',
+                    //             showExpiryDate: 'false',
+                    //             supported: 'true'
+                    //         }
+                    //     ]
+                    // });
+                    // TODO end
                 }
-                // A failed lookup will just contain requestId
-                // console.log('### Card::onBinValue:: binLookup response - no match found for request:', data.requestId);
-                this.props.onBinLookup({
-                    type: callbackObj.type,
-                    detectedBrands: null,
-                    supportedBrands: null
-                });
             }
         });
     } else if (this.currentRequestId) {

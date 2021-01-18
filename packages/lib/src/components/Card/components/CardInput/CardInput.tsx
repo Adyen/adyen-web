@@ -16,6 +16,7 @@ import processBinLookup from './processBinLookup';
 import styles from './CardInput.module.scss';
 import { CardInputProps, CardInputState } from './types';
 import './CardInput.scss';
+import { BinLookupObject } from '../../types';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
@@ -67,7 +68,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
-        this.handleOnBrand = handlers.handleOnBrand.bind(this);
+        // this.handleOnBrand = handlers.handleOnBrand.bind(this);// TODO remove for Synchrony
+        this.handleOnBrand = this.props.onBrand; // TODO new for Synchrony
         this.handleFocus = handlers.handleFocus.bind(this);
         this.handleAddress = handlers.handleAddress.bind(this);
         this.handleHolderName = handlers.handleHolderName.bind(this);
@@ -134,7 +136,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (this.kcpAuthenticationRef?.current) this.kcpAuthenticationRef.current.showValidation();
     }
 
-    public processBinLookupResponse(data) {
+    public processBinLookupResponse(data: BinLookupObject) {
         const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
 
         this.setState({ issuingCountryCode }, () => {

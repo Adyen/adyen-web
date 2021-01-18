@@ -1,6 +1,7 @@
 import { validateHolderName } from './validate';
 import { CbObjOnFocus, CbObjOnBrand } from '../../../internal/SecuredFields/lib/types';
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
+import { BrandObject } from '../../types';
 
 // Validate whole cardInput component i.e holderName + securedFields
 function validateCardInput(): void {
@@ -91,7 +92,9 @@ function handleSecuredFieldsChange(newState: SFPState): void {
             ...sfState.valid,
             holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
         },
-        isSfpValid: sfState.isSfpValid
+        isSfpValid: sfState.isSfpValid,
+        hideCVCForBrand: sfState.hideCVCForBrand, // TODO new for Synchrony
+        brand: sfState.brand // TODO new for Synchrony
     });
 
     this.setState(setSfpData, this.validateCardInput);
@@ -100,11 +103,11 @@ function handleSecuredFieldsChange(newState: SFPState): void {
 /**
  * Saves the card brand in state
  */
-function handleOnBrand(cardInfo: CbObjOnBrand): void {
-    this.setState({ brand: cardInfo.brand, hideCVCForBrand: !!cardInfo.hideCVC }, () => {
-        this.props.onBrand(cardInfo);
-    });
-}
+// function handleOnBrand(cardInfo: CbObjOnBrand): void {
+//     // this.setState({ brand: cardInfo.brand, hideCVCForBrand: !!cardInfo.hideCVC }, () => { // TODO remove for Synchrony
+//     this.props.onBrand(cardInfo);
+//     // }); // TODO remove for Synchrony
+// }
 
 /**
  * Saves the currently focused element in state
@@ -122,7 +125,7 @@ function handleFocus(e: CbObjOnFocus): void {
 }
 
 /**
- * Handler for the select element added in response to the /binLookup call
+ * Handler for the icons added in response to the /binLookup call
  */
 function handleAdditionalDataSelection(e: Event): void {
     const field: HTMLLIElement = e.currentTarget as HTMLLIElement;
@@ -130,8 +133,20 @@ function handleAdditionalDataSelection(e: Event): void {
 
     this.setState({ additionalSelectValue: value }, this.validateCardInput);
 
-    // Pass brand into SecuredFields
-    this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
+    // Find the brandObject with the matching brand value and place into an array
+    const brandObjArr: BrandObject[] = this.state.additionalSelectElements.reduce((acc, item) => {
+        if (item.brandObject.brand === value) {
+            acc.push(item.brandObject);
+        }
+        return acc;
+    }, []);
+
+    // Pass brand object into SecuredFields
+    // this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
+    this.sfp.current.processBinLookupResponse({
+        issuingCountryCode: this.state.issuingCountryCode,
+        supportedBrands: brandObjArr
+    });
 }
 
 export default {
@@ -142,7 +157,7 @@ export default {
     handleHolderName,
     handleInstallments,
     handleSecuredFieldsChange,
-    handleOnBrand,
+    // handleOnBrand,
     handleAdditionalDataSelection,
     validateCardInput
 };

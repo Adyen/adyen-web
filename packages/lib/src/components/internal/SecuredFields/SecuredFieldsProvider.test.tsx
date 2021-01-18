@@ -265,7 +265,15 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
 describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
     const mockBinLookupObj = {
         issuingCountryCode: 'US',
-        supportedBrands: ['mc']
+        supportedBrands: [
+            {
+                brand: 'mc',
+                cvcPolicy: 'required',
+                enableLuhnCheck: 'true',
+                showExpiryDate: 'true',
+                supported: 'true'
+            }
+        ]
     };
 
     it(
