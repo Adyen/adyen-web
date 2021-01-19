@@ -1,4 +1,4 @@
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { existy } from '../../utilities/commonUtils';
 import { CbObjOnBrand, SFFeedbackObj } from '../../types';
@@ -98,9 +98,11 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
                     ...baseDataObj,
                     ...{
                         fieldType: ENCRYPTED_SECURITY_CODE,
-                        hideCVC: pFeedbackObj.hideCVC,
-                        cvcRequired: pFeedbackObj.cvcRequired,
-                        cvcPolicy: pFeedbackObj.cvcPolicy,
+                        hideCVC: pFeedbackObj.cvcPolicy === CVC_POLICY_HIDDEN,
+                        cvcRequired: pFeedbackObj.cvcPolicy === CVC_POLICY_REQUIRED,
+                        // hideCVC: pFeedbackObj.hideCVC,
+                        // cvcRequired: pFeedbackObj.cvcRequired,
+                        // cvcPolicy: pFeedbackObj.cvcPolicy,
                         numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
                     }
                 };
@@ -117,7 +119,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             callbackObj.type = this.state.type;
             callbackObj.rootNode = this.props.rootNode;
 
-            this.callbacks.onBrand(callbackObj);
+            this.callbacks.onBrand(callbackObj); // = SFPHandlers.handleOnBrand
         }
 
         return brandInfoObj;

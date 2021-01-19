@@ -138,8 +138,8 @@ export interface CbObjOnBrand {
     type: string;
     rootNode: HTMLElement;
     brand: string;
-    hideCVC: boolean;
-    cvcRequired: boolean;
+    // hideCVC: boolean;
+    // cvcRequired: boolean;
     cvcPolicy: CvcPolicyType;
     cvcText: string;
     brandImageUrl?: string; // Added by SFP

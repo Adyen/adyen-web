@@ -20,7 +20,8 @@ export interface SFInternalConfig {
 
 export interface SFSetupObject extends SFInternalConfig {
     fieldType: string;
-    cvcRequired: boolean;
+    // cvcRequired: boolean;
+    cvcPolicy: CvcPolicyType;
     iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
@@ -65,7 +66,7 @@ abstract class AbstractSecuredField {
     protected _errorType: string;
     protected _hasError: boolean;
     protected _isValid: boolean;
-    protected _cvcRequired: boolean;
+    // protected _cvcRequired: boolean;
     protected _cvcPolicy: CvcPolicyType;
     protected _iframeContentWindow: Window;
     protected _isEncrypted: boolean;

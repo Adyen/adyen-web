@@ -29,16 +29,16 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
 
     const passedBrand: string = binBrandObj.brand;
 
-    const hideCVC: boolean = binBrandObj.cvcPolicy === 'hidden';
-    const cvcRequired: boolean = hideCVC || binBrandObj.cvcPolicy === 'optional' ? false : true;
+    // const hideCVC: boolean = binBrandObj.cvcPolicy === 'hidden';
+    // const cvcRequired: boolean = hideCVC || binBrandObj.cvcPolicy === 'optional' ? false : true;
 
     // console.log('### handleBrandFromBinLookup::cvcRequired:: ', cvcRequired);
     // console.log('### handleBrandFromBinLookup::binBrandObj.cvcPolicy:: ', binBrandObj.cvcPolicy);
 
     const brandObj: object = {
         brand: passedBrand,
-        cvcRequired, // still required for passing to SF via processBrand
-        hideCVC, // still required for passing to SF via processBrand
+        // cvcRequired, // still required for passing to SF via processBrand
+        // hideCVC, // still required for passing to SF via processBrand
         cvcPolicy: binBrandObj.cvcPolicy,
         cvcText: 'Security code',
         fieldType: ENCRYPTED_CARD_NUMBER
@@ -55,7 +55,7 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
      * ...which will reflect in the cvc field being considered valid, as long as it is not in error...
      */
     if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
-        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = cvcRequired;
+        // this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = cvcRequired;
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = binBrandObj.cvcPolicy;
     }
 

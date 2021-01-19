@@ -3,7 +3,7 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED, ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
@@ -29,8 +29,9 @@ class SecuredField extends AbstractSecuredField {
     constructor(pSetupObj: SFSetupObject, i18n: Language) {
         super();
 
-        // List of props from setup object not needed for iframe config
-        const deltaPropsArr: string[] = ['fieldType', 'cvcRequired', 'iframeSrc', 'loadingContext', 'holderEl'];
+        // List of props from setup object not required in the config object
+        // const deltaPropsArr: string[] = ['fieldType', 'cvcRequired', 'iframeSrc', 'loadingContext', 'holderEl'];
+        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
@@ -42,7 +43,8 @@ class SecuredField extends AbstractSecuredField {
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
 
         this.fieldType = thisVarsFromSetupObj.fieldType;
-        this.cvcRequired = thisVarsFromSetupObj.cvcRequired;
+        // this.cvcRequired = thisVarsFromSetupObj.cvcRequired;
+        this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
@@ -124,7 +126,8 @@ class SecuredField extends AbstractSecuredField {
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
-            cvcRequired: this.cvcRequired,
+            // cvcRequired: this.cvcRequired,
+            cvcRequired: this.cvcPolicy === CVC_POLICY_REQUIRED,
             numKey: this.numKey,
             txVariant: this.config.txVariant,
             extraFieldData: this.config.extraFieldData,
@@ -384,27 +387,28 @@ class SecuredField extends AbstractSecuredField {
         this._isValid = value;
     }
 
-    get cvcRequired(): boolean {
-        return this._cvcRequired;
-    }
-    set cvcRequired(value: boolean) {
-        // Only set if this is a CVC field
-        if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
+    // get cvcRequired(): boolean {
+    //     return this._cvcRequired;
+    // }
 
-        // Only set if value has changed
-        if (value === this.cvcRequired) return;
-
-        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcRequired:: value=', value);
-
-        this._cvcRequired = value;
-
-        // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
-        // NOTE: fixes issue in Components where you first validate and then start typing a maestro number
-        // - w/o this and the fix in CSF the maestro PM will never register as valid
-        if (this.hasError && this.errorType === 'isValidated') {
-            this.hasError = false;
-        }
-    }
+    // set cvcRequired(value: boolean) {
+    //     // Only set if this is a CVC field
+    //     if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
+    //
+    //     // Only set if value has changed
+    //     if (value === this.cvcRequired) return;
+    //
+    //     if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcRequired:: value=', value);
+    //
+    //     this._cvcRequired = value;
+    //
+    //     // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
+    //     // NOTE: fixes issue in Components where you first validate and then start typing a maestro number
+    //     // - w/o this and the fix in CSF the maestro PM will never register as valid
+    //     if (this.hasError && this.errorType === 'isValidated') {
+    //         this.hasError = false;
+    //     }
+    // }
 
     get cvcPolicy(): CvcPolicyType {
         return this._cvcPolicy;
