@@ -1,7 +1,7 @@
 import { makeCallbackObjectsValidation } from './utils/callbackUtils';
 import { removeEncryptedElement } from '../ui/encryptedElements';
 import { processErrors } from './utils/processErrors';
-import { existy } from '../utilities/commonUtils';
+import { existy, getCVCPolicy } from '../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
 
@@ -40,9 +40,22 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     ) {
         // console.log('### handleValidation:: cvcRequired prop exists & has a value and =', pFeedbackObj.cvcRequired);
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = pFeedbackObj.cvcRequired;
+
+        // TODO - move into own if-clause once (if) SF returns cvcPolicy prop
+        const cvcPolicy = getCVCPolicy(pFeedbackObj);
+
+        // console.log('### handleValidation::handleValidation:: cvcPolicy=', cvcPolicy);
+
+        // Parallel cvcPolicy fny - accepts 3 values: required | optional | hidden
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = cvcPolicy;
+
+        // TODO - remove once (if) SF returns cvcPolicy prop
+        pFeedbackObj.cvcPolicy = cvcPolicy;
     }
 
     // PROCESS & BROADCAST ERRORS (OR LACK OF)
+    console.log('### handleValidation:::: fieldType', fieldType);
+    console.log('### handleValidation:::: pFeedbackObj', pFeedbackObj);
     processErrors(pFeedbackObj, this.state.securedFields[fieldType], this.state.type, this.props.rootNode, this.callbacks.onError);
 
     // REMOVE ANY EXISTING ENCRYPTED ELEMENT & CHECK VALIDITY OF THE FORM AS A WHOLE

@@ -17,8 +17,9 @@ import {
     CbObjOnLoad
 } from './lib/types';
 import { AddressSchema } from '../../../types';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupObject } from '../../Card/types';
+import { CvcPolicyType } from './lib/core/AbstractSecuredField';
 
 export interface SFPState {
     status?: string;
@@ -26,13 +27,14 @@ export interface SFPState {
     errors?: object;
     valid: object;
     data: object;
-    cvcRequired?: boolean;
+    // cvcRequired?: boolean;
+    cvcPolicy?: CvcPolicyType;
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
-    hideCVCForBrand?: boolean;
+    hideCVCForBrand?: boolean; // TODO new for Synchrony
 }
 
 /**
@@ -68,7 +70,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             errors: {},
             valid: {},
             data: {},
-            cvcRequired: true,
+            // cvcRequired: true,
+            cvcPolicy: CVC_POLICY_REQUIRED,
             isSfpValid: false,
             hasKoreanFields: this.props.hasKoreanFields
         };

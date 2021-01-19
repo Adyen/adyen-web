@@ -7,7 +7,9 @@ import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_PWD_FIELD
+    ENCRYPTED_PWD_FIELD,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_HIDDEN
 } from './lib/configuration/constants';
 import { DEFAULT_ERROR } from '../../../core/Errors/constants';
 
@@ -55,7 +57,10 @@ const mapDateFields = (field, numDateFields) => {
 const mapCVCField = (field, state) => {
     const isCvcField = field === ENCRYPTED_SECURITY_CODE;
     const isCvcFieldValid = !state.errors[ENCRYPTED_SECURITY_CODE];
-    return !state.cvcRequired && isCvcFieldValid && isCvcField ? null : field;
+    // return !state.cvcRequired && isCvcFieldValid && isCvcField ? null : field;
+
+    // cvcPolicy = NOT required
+    return (state.cvcPolicy === CVC_POLICY_OPTIONAL || state.cvcPolicy === CVC_POLICY_HIDDEN) && isCvcFieldValid && isCvcField ? null : field;
 };
 
 export const getErrorReducer = (numDateFields, state) => (acc, field) => {

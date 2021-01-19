@@ -1,6 +1,6 @@
 import { select, getAttribute } from '../utilities/dom';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR } from '../configuration/constants';
-import { existy } from '../utilities/commonUtils';
+import { existy, getCVCPolicy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
 import { SFSetupObject } from './AbstractSecuredField';
 import SecuredField from './SecuredField';
@@ -118,6 +118,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             brand: type,
             hideCVC: this.hideCVC,
             cvcRequired: this.cvcRequired,
+            cvcPolicy: getCVCPolicy(this),
             cvcText: this.securityCode
             //                maxLength: (type === 'amex')? 4 : 3,
         };

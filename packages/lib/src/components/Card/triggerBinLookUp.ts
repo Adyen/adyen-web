@@ -57,7 +57,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         { supportedBrands: [], detectedBrands: [] }
                     );
 
-                    console.log('### triggerBinLookUp::mappedResponse=:: ', mappedResponse);
+                    // console.log('### triggerBinLookUp::mappedResponse=:: ', mappedResponse);
 
                     /**
                      * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!

@@ -17,6 +17,7 @@ import styles from './CardInput.module.scss';
 import { CardInputProps, CardInputState } from './types';
 import './CardInput.scss';
 import { BinLookupObject } from '../../types';
+import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
@@ -39,6 +40,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private sfp = createRef();
     private billingAddressRef = createRef();
     private kcpAuthenticationRef = createRef();
+    private shouldValidate = null;
 
     constructor(props) {
         super(props);
@@ -94,7 +96,16 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         const { country, stateOrProvince } = this.state.billingAddress || {};
 
         if (prevCountry !== country || prevStateOrProvince !== stateOrProvince) {
-            this.validateCardInput();
+            // this.validateCardInput();
+            this.shouldValidate = 'billingAddress';
+        }
+
+        // console.log('### CardInput::componentDidUpdate:: checking this.shouldValidate for ', this.shouldValidate);
+        if (this.shouldValidate) {
+            const who = this.shouldValidate;
+            this.shouldValidate = null;
+            console.log('### CardInput::componentDidUpdate:: shouldValidate so calling this.validateCardInput for', who);
+            this.validateCardInput(`central (${who})`);
         }
     }
 
@@ -180,7 +191,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             <LoadingWrapper status={sfpState.status}>
                                 <StoredCardFields
                                     {...this.props}
-                                    cvcRequired={sfpState.cvcRequired}
+                                    // cvcRequired={sfpState.cvcRequired}
+                                    cvcRequired={sfpState.cvcPolicy === CVC_POLICY_REQUIRED}
                                     errors={sfpState.errors}
                                     brand={sfpState.brand}
                                     hasCVC={hasCVC}
@@ -212,7 +224,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     hideCVCForBrand={hideCVCForBrand}
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
-                                    cvcRequired={sfpState.cvcRequired}
+                                    // cvcRequired={sfpState.cvcRequired}
+                                    cvcRequired={sfpState.cvcPolicy === CVC_POLICY_REQUIRED}
                                     dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
                                     dualBrandingChangeHandler={this.handleAdditionalDataSelection}
                                     dualBrandingSelected={this.state.additionalSelectValue}

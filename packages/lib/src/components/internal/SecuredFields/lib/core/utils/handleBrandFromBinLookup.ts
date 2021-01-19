@@ -4,7 +4,7 @@ import { SFFeedbackObj, SendBrandObject } from '../../types';
 import { BinLookupObject, BrandObject } from '../../../../../Card/types';
 
 export function sendBrandToCardSF(brandObj: SendBrandObject): void {
-    console.log('### handleBrandFromBinLookup::sendBrandToCardSF:: brandObj', brandObj);
+    // console.log('### handleBrandFromBinLookup::sendBrandToCardSF:: brandObj', brandObj);
     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
         const dataObj: object = {
             txVariant: this.state.type,
@@ -23,7 +23,7 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
         return;
     }
 
-    console.log('### handleBrandFromBinLookup::binLookupObject.supportedBrands[0]:: ', binLookupObject.supportedBrands[0]);
+    // console.log('### handleBrandFromBinLookup::binLookupObject.supportedBrands[0]:: ', binLookupObject.supportedBrands[0]);
 
     const binBrandObj: BrandObject = binLookupObject.supportedBrands[0];
 
@@ -32,12 +32,14 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
     const hideCVC: boolean = binBrandObj.cvcPolicy === 'hidden';
     const cvcRequired: boolean = hideCVC || binBrandObj.cvcPolicy === 'optional' ? false : true;
 
-    console.log('### handleBrandFromBinLookup::cvcRequired:: ', cvcRequired);
+    // console.log('### handleBrandFromBinLookup::cvcRequired:: ', cvcRequired);
+    // console.log('### handleBrandFromBinLookup::binBrandObj.cvcPolicy:: ', binBrandObj.cvcPolicy);
 
     const brandObj: object = {
-        cvcRequired,
         brand: passedBrand,
-        hideCVC,
+        cvcRequired, // still required for passing to SF via processBrand
+        hideCVC, // still required for passing to SF via processBrand
+        cvcPolicy: binBrandObj.cvcPolicy,
         cvcText: 'Security code',
         fieldType: ENCRYPTED_CARD_NUMBER
     };
@@ -54,6 +56,7 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
      */
     if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = cvcRequired;
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = binBrandObj.cvcPolicy;
     }
 
     // ... and re-check if all SecuredFields are valid

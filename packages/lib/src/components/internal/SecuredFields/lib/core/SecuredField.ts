@@ -3,7 +3,7 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
@@ -13,7 +13,8 @@ import AbstractSecuredField, {
     RtnType_postMessageListener,
     RtnType_callbackFn,
     AriaConfig,
-    PlaceholdersObject
+    PlaceholdersObject,
+    CvcPolicyType
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
@@ -234,6 +235,14 @@ class SecuredField extends AbstractSecuredField {
 
             case 'focus':
                 this.onFocusCallback(feedbackObj);
+
+                // HORRIBLE HORRIBLE HACK to get round bug in TestCafe - see comment on 3rd test in packages/e2e/tests/cards/branding/branding.test.js
+                if (process.env.NODE_ENV === 'development' && window.location.origin.indexOf('3024') > -1) {
+                    if (window['testCafeForceClick'] === true) {
+                        window['testCafeForceClick'] = false;
+                        this.onClickCallback(feedbackObj);
+                    }
+                }
                 break;
 
             case 'binValue':
@@ -339,14 +348,37 @@ class SecuredField extends AbstractSecuredField {
     }
 
     get isValid(): boolean {
+        // if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
+        //     if (!this.cvcRequired) {
+        //         // If cvc is optional then the field is always valid UNLESS it has an error
+        //         return !this.hasError;
+        //     }
+        //     return this._isValid && !this.hasError;
+        // }
+        // return this._isValid;
+
+        /**
+         *
+         */
         if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
-            if (!this.cvcRequired) {
-                // If cvc is optional then the field is always valid UNLESS it has an error
-                return !this.hasError;
+            // console.log('### SecuredField::isValid:: cvcPolicy=', this.cvcPolicy);
+            switch (this.cvcPolicy) {
+                case CVC_POLICY_HIDDEN:
+                    // If cvc is hidden then the field is always valid
+                    // console.log('### SecuredField::isValid:: ', true);
+                    return true;
+                    break;
+                case CVC_POLICY_OPTIONAL:
+                    // If cvc is optional then the field is always valid UNLESS it has an error
+                    // console.log('### SecuredField::isValid:: ', !this.hasError);
+                    return !this.hasError;
+                    break;
+                default:
+                    // console.log('### SecuredField::isValid:: ', this._isValid);
+                    return this._isValid; // && !this.hasError; // WHY is this not just: return this._isValid (like below)...
             }
-            return this._isValid && !this.hasError;
         }
-        return this._isValid;
+        return this._isValid; //... or WHY is this not: return this._isValid && !this.hasError (like above)
     }
     set isValid(value: boolean) {
         this._isValid = value;
@@ -365,6 +397,31 @@ class SecuredField extends AbstractSecuredField {
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcRequired:: value=', value);
 
         this._cvcRequired = value;
+
+        // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
+        // NOTE: fixes issue in Components where you first validate and then start typing a maestro number
+        // - w/o this and the fix in CSF the maestro PM will never register as valid
+        if (this.hasError && this.errorType === 'isValidated') {
+            this.hasError = false;
+        }
+    }
+
+    get cvcPolicy(): CvcPolicyType {
+        return this._cvcPolicy;
+    }
+
+    set cvcPolicy(value: CvcPolicyType) {
+        // Only set if this is a CVC field
+        if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
+
+        // Only set if value has changed
+        if (value === this.cvcPolicy) return;
+
+        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcPolicy:: value=', value);
+
+        this._cvcPolicy = value;
+
+        // console.log('### SecuredField::cvcPolicy:: SETTTER cvcPolicy=', value);
 
         // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
         // NOTE: fixes issue in Components where you first validate and then start typing a maestro number

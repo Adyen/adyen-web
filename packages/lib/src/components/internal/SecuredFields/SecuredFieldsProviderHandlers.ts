@@ -1,5 +1,5 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER, CVC_POLICY_OPTIONAL, CVC_POLICY_HIDDEN } from './lib/configuration/constants';
 import { getError } from '../../../core/Errors/utils';
 import { ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
 import {
@@ -53,9 +53,12 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
         return false;
     }
 
+    // console.log('### SecuredFieldsProviderHandlers::handleOnAllValid:: SETTING isSfpValid=', status.allValid);
+
     this.setState({ isSfpValid: status.allValid }, () => {
+        console.log('\n### SecuredFieldsProviderHandlers::handleOnAllValid:: calling this.props.onChange');
         // New - fixes maestro-with-error-on-optional-cvc-field bug
-        this.props.onChange(this.state, 'OnAllValid');
+        this.props.onChange(this.state, 'onAllValid');
         // Propagate onAllValid event
         this.props.onAllValid(status);
     });
@@ -81,7 +84,8 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     });
 
     this.setState(setValidFieldState, () => {
-        this.props.onChange(this.state);
+        console.log('\n### SecuredFieldsProviderHandlers::handleOnFieldValid:: calling this.props.onChange', field);
+        this.props.onChange(this.state, 'handleOnFieldValid');
 
         // Propagate onFieldValid event
         this.props.onFieldValid(field);
@@ -95,27 +99,38 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
  * Emits the onBrand event
  */
 function handleOnBrand(cardInfo: CbObjOnBrand): void {
-    console.log('\n### SecuredFieldsProviderHandlers::handleOnBrand:: cardInfo', cardInfo);
+    // console.log('\n### SecuredFieldsProviderHandlers::handleOnBrand:: cardInfo', cardInfo);
     this.setState(
         prevState => ({
             brand: cardInfo.brand === 'plcc' ? 'bcmc' : cardInfo.brand,
-            cvcRequired: cardInfo.cvcRequired !== false,
+            // cvcRequired: cardInfo.cvcRequired !== false,
+            cvcPolicy: cardInfo.cvcPolicy,
             errors: {
                 ...prevState.errors,
                 // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
-                [ENCRYPTED_SECURITY_CODE]: !cardInfo.cvcRequired && this.numCharsInCVC === 0 ? false : prevState.errors[ENCRYPTED_SECURITY_CODE]
+                // [ENCRYPTED_SECURITY_CODE]: !cardInfo.cvcRequired && this.numCharsInCVC === 0 ? false : prevState.errors[ENCRYPTED_SECURITY_CODE]
+                // new for cvcPolicy
+                [ENCRYPTED_SECURITY_CODE]:
+                    (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
+                        ? false
+                        : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            hideCVCForBrand: !!cardInfo.hideCVC // TODO new for Synchrony
+            // hideCVCForBrand: !!cardInfo.hideCVC // TODO new for Synchrony
+            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN
         }),
         () => {
-            this.props.onChange(this.state);
+            console.log('\n### SecuredFieldsProviderHandlers::handleOnBrand:: calling this.props.onChange', cardInfo.brand);
+            this.props.onChange(this.state, 'handleOnBrand');
 
             // Enhance data object with the url for the brand image
             this.props.onBrand({ ...cardInfo, brandImageUrl: getCardImageUrl(cardInfo.brand, this.props.loadingContext) });
         }
     );
 
-    if ((this.props.hideCVC || !!cardInfo.hideCVC || cardInfo.cvcRequired === false) && this.props.oneClick) {
+    // if ((this.props.hideCVC || !!cardInfo.hideCVC || cardInfo.cvcRequired === false) && this.props.oneClick) {
+    //     this.handleOnNoDataRequired();
+    // }
+    if ((this.props.hideCVC || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN || cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL) && this.props.oneClick) {
         this.handleOnNoDataRequired();
     }
 }
