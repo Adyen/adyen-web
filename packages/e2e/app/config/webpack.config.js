@@ -11,7 +11,8 @@ const resolve = dir => path.resolve(__dirname, dir);
 const htmlPages = [
     { name: 'Drop-in', id: 'Dropin' },
     { name: 'Cards', id: 'Cards' },
-    { name: 'Gift Cards', id: 'GiftCards' }
+    { name: 'Gift Cards', id: 'GiftCards' },
+    { name: 'Issuer Lists', id: 'IssuerLists' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>
