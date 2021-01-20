@@ -37,7 +37,6 @@ abstract class AbstractCSF {
     // Set in createSecuredFields
     protected encryptedAttrName: string;
     protected hasRedundantCVCField: boolean;
-    protected hideCVC: boolean;
     protected isSingleBrandedCard: boolean;
     protected securityCode: string;
     // --

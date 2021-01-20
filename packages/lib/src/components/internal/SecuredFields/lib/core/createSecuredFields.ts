@@ -7,6 +7,22 @@ import SecuredField from './SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../types';
 import * as logger from '../utilities/logger';
 
+/**
+ * cvcRequired = is the CVC field required?
+ * - Always true for GiftCards
+ * - Usually true for single branded Credit Cards but with exceptions e.g. maestro, bcmc.
+ * - Always true for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required comes
+ * from the SF in the brand information (as the shopper inputs the cc number)
+ *
+ * hideCVC = should the CVC field be hidden for this card type?
+ * - Always false, except for BCMC
+ */
+const cvcPolicyObj = { cvcRequired: true, hideCVC: false };
+
+/**
+ * Bound to the instance of CSF
+ * Handles specific functionality related to configuring & creating SecuredFields
+ */
 export function createSecuredFields(): number {
     // Detect DOM elements that qualify as securedField holders
     this.encryptedAttrName = 'data-encrypted-field';
@@ -25,15 +41,6 @@ export function createSecuredFields(): number {
         securedFields = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
     }
 
-    /**
-     * Is the CVC field required?
-     * - Always true for GiftCards
-     * - Usually true for single branded Credit Cards but with exceptions e.g. maestro, bcmc.
-     * - Always true for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required comes
-     * from the SF in the brand information (as the shopper inputs the cc number)
-     */
-    this.cvcRequired = true;
-
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
         return this.createNonCardSecuredFields(securedFields);
@@ -41,10 +48,6 @@ export function createSecuredFields(): number {
 
     // CONTINUE AS CREDIT-CARD TYPE...
     this.isSingleBrandedCard = false;
-
-    // Should the CVC field be hidden for this card type?
-    // Always false, except for BCMC
-    this.hideCVC = false;
 
     // re. BCMC - boolean to indicate whether the markup contains a CVC field that shouldn't be there
     this.hasRedundantCVCField = false;
@@ -83,14 +86,10 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
         // scenario: frontend initially recognises card as e.g. Visa - but then backend tokenises it as a sub-brand which we currently don't recognise
         if (!existy(card)) {
             this.state.type = 'unrecognised-single-brand'; // Will let CVC field accept 4 digits in the input
-            this.cvcRequired = true;
-            this.hideCVC = false;
         } else {
-            // Assess whether cvc field is required based on the card type
-            this.cvcRequired = !(existy(card.cvcRequired) && !card.cvcRequired);
-
-            // Assess whether the cvc field should even be visible
-            this.hideCVC = card.hideCVC === true;
+            // Assess whether cvc field is required based on the card type & whether the cvc field should even be visible
+            cvcPolicyObj.cvcRequired = card.cvcRequired !== false; // Always true unless property exists and is specifically set to false
+            cvcPolicyObj.hideCVC = card.hideCVC === true;
 
             this.securityCode = card.securityCode;
         }
@@ -109,14 +108,14 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
     securedFields.forEach(this.setupSecuredField.bind(this));
 
     // For single branded card we call to onBrand callback once.
-    // This allows the ui to set the correct logo if they haven't already and we also pass a hideCVC property
+    // This allows the ui to set the correct logo if they haven't already and we also pass the cvcPolicy
     // - so the UI can hide the CVC iframe holder if necessary
     if (this.isSingleBrandedCard) {
         const callbackObj: CbObjOnBrand = {
             type: this.state.type,
             rootNode: this.props.rootNode,
             brand: type,
-            cvcPolicy: getCVCPolicy(this),
+            cvcPolicy: getCVCPolicy(cvcPolicyObj),
             cvcText: this.securityCode
             //                maxLength: (type === 'amex')? 4 : 3,
         };
@@ -157,7 +156,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
     // CVC FIELD CHECKS
     // If we have a fieldType for CVC field AND it's a single branded card AND hideCVC is true...
     // ...then we are showing a CVC field when we shouldn't e.g. for a BCMC card - so don't make an iframe
-    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && this.hideCVC) {
+    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && cvcPolicyObj.hideCVC) {
         // We have an unnecessary CVC field
         this.hasRedundantCVCField = true;
         return;
@@ -172,7 +171,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
         sfLogAtStart: this.config.sfLogAtStart,
         trimTrailingSeparator: this.config.trimTrailingSeparator,
-        cvcPolicy: getCVCPolicy(this),
+        cvcPolicy: getCVCPolicy(cvcPolicyObj), // Will assess values of cvcPolicyObj.hideCVC and cvcPolicyObj.cvcRequired to determine the cvcPolicy
         isCreditCardType: this.config.isCreditCardType,
         iframeSrc: this.config.iframeSrc,
         loadingContext: this.config.loadingContext,

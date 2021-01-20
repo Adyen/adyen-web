@@ -38,7 +38,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
     ) {
         // TODO - move into own if-clause once (if) SF returns cvcPolicy prop
-        const cvcPolicy = getCVCPolicy(pFeedbackObj);
+        const cvcPolicy = getCVCPolicy(pFeedbackObj); // Will assess values of pFeedbackObj.hideCVC and pFeedbackObj.cvcRequired to determine the cvcPolicy
 
         // Parallel cvcPolicy fny - accepts 3 values: required | optional | hidden
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = cvcPolicy;

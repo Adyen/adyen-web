@@ -123,6 +123,9 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
         }
     );
 
+    /**
+     * Edge case: one-click PMs where CVC is hidden or optional
+     */
     if ((this.props.hideCVC || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN || cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL) && this.props.oneClick) {
         this.handleOnNoDataRequired();
     }
