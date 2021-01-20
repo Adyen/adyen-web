@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CvcPolicyType } from './core/AbstractSecuredField';
+import { CVCPolicyType } from './core/AbstractSecuredField';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -138,7 +138,7 @@ export interface CbObjOnBrand {
     type: string;
     rootNode: HTMLElement;
     brand: string;
-    cvcPolicy: CvcPolicyType;
+    cvcPolicy: CVCPolicyType;
     cvcText: string;
     brandImageUrl?: string; // Added by SFP
     // maxLength: number;
@@ -227,7 +227,7 @@ export interface SFFeedbackObj {
     code?: string;
     cvcText?: string;
     cvcRequired?: boolean;
-    cvcPolicy?: CvcPolicyType;
+    cvcPolicy?: CVCPolicyType;
     maxLength?: number;
     error?: string;
     endDigits?: string;

@@ -3,11 +3,11 @@ import postMessageToIframe from './iframes/postMessageToIframe';
 import { existy } from '../../utilities/commonUtils';
 import { CbObjOnBrand, SFFeedbackObj } from '../../types';
 import * as logger from '../../utilities/logger';
-import { CvcPolicyType } from '../AbstractSecuredField';
+import { CVCPolicyType } from '../AbstractSecuredField';
 
 interface BrandInfoObject {
     brand: string;
-    cvcPolicy: CvcPolicyType;
+    cvcPolicy: CVCPolicyType;
     cvcText: string;
 }
 

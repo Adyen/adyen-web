@@ -19,7 +19,7 @@ import {
 import { AddressSchema } from '../../../types';
 import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupObject } from '../../Card/types';
-import { CvcPolicyType } from './lib/core/AbstractSecuredField';
+import { CVCPolicyType } from './lib/core/AbstractSecuredField';
 
 export interface SFPState {
     status?: string;
@@ -27,7 +27,7 @@ export interface SFPState {
     errors?: object;
     valid: object;
     data: object;
-    cvcPolicy?: CvcPolicyType;
+    cvcPolicy?: CVCPolicyType;
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressSchema;

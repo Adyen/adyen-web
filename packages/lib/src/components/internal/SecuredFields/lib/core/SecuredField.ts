@@ -14,7 +14,7 @@ import AbstractSecuredField, {
     RtnType_callbackFn,
     AriaConfig,
     PlaceholdersObject,
-    CvcPolicyType
+    CVCPolicyType
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
@@ -372,11 +372,11 @@ class SecuredField extends AbstractSecuredField {
         this._isValid = value;
     }
 
-    get cvcPolicy(): CvcPolicyType {
+    get cvcPolicy(): CVCPolicyType {
         return this._cvcPolicy;
     }
 
-    set cvcPolicy(value: CvcPolicyType) {
+    set cvcPolicy(value: CVCPolicyType) {
         // Only set if this is a CVC field
         if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
 
