@@ -1,5 +1,5 @@
 import { validateHolderName } from './validate';
-import { CbObjOnFocus, CbObjOnBrand } from '../../../internal/SecuredFields/lib/types';
+import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import { BrandObject } from '../../types';
 
@@ -39,7 +39,7 @@ function handleAddress(address): void {
 
     this.setState(setAddress, () => {
         // this.validateCardInput('handleAddress');
-        this.shouldValidate = 'handleAddress';
+        this.shouldValidateFor = 'handleAddress';
     });
 }
 
@@ -53,7 +53,7 @@ function handleKCPAuthentication(data: object, valid: object): void {
     });
     this.setState(setKCP, () => {
         // this.validateCardInput('handleKCPAuthentication');
-        this.shouldValidate = 'handleKCPAuthentication';
+        this.shouldValidateFor = 'handleKCPAuthentication';
     });
 }
 
@@ -63,7 +63,7 @@ function handleKCPAuthentication(data: object, valid: object): void {
 function handleOnStoreDetails(storeDetails: boolean): void {
     this.setState({ storePaymentMethod: storeDetails }, () => {
         // this.validateCardInput('handleOnStoreDetails');
-        this.shouldValidate = 'handleOnStoreDetails';
+        this.shouldValidateFor = 'handleOnStoreDetails';
     });
 }
 
@@ -83,14 +83,14 @@ function handleHolderName(e: Event): void {
 
     this.setState(setHolderName, () => {
         // this.validateCardInput('handleHolderName');
-        this.shouldValidate = 'handleHolderName';
+        this.shouldValidateFor = 'handleHolderName';
     });
 }
 
 function handleInstallments(installments): void {
     this.setState({ installments }, () => {
         // this.validateCardInput('handleInstallments');
-        this.shouldValidate = 'handleInstallments';
+        this.shouldValidateFor = 'handleInstallments';
     });
 }
 
@@ -121,8 +121,7 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
 
     this.setState(setSfpData, () => {
         // this.validateCardInput(who);
-        console.log(who, '### handlers::handleSecuredFieldsChange:: setting this.shouldValidate');
-        this.shouldValidate = who;
+        this.shouldValidateFor = who;
     });
 }
 
@@ -148,12 +147,12 @@ function handleAdditionalDataSelection(e: Event): void {
     const field: HTMLLIElement = e.currentTarget as HTMLLIElement;
     const value: string = field.getAttribute('data-value');
 
-    console.log('\n### handlers::handleAdditionalDataSelection:: this.state.isSfpValid-', this.state.isSfpValid);
+    // console.log('\n### handlers::handleAdditionalDataSelection:: this.state.isSfpValid-', this.state.isSfpValid);
 
     this.setState({ additionalSelectValue: value }, () => {
         // this.validateCardInput('handleAdditionalDataSelection');
-        console.log('### handlers::handleAdditionalDataSelection:: setting this.shouldValidate');
-        this.shouldValidate = 'handleAdditionalDataSelection';
+        // console.log('### handlers::handleAdditionalDataSelection:: setting this.shouldValidateFor');
+        // this.shouldValidateFor = 'handleAdditionalDataSelection';
     });
 
     // Find the brandObject with the matching brand value and place into an array
@@ -180,7 +179,6 @@ export default {
     handleHolderName,
     handleInstallments,
     handleSecuredFieldsChange,
-    // handleOnBrand,
     handleAdditionalDataSelection,
     validateCardInput
 };
