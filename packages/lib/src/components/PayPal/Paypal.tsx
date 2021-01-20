@@ -106,7 +106,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     submit() {
-        console.warn('Calling submit() is not supported for this payment method');
+        console.error('Calling submit() is not supported for this payment method');
     }
 
     render() {
