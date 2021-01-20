@@ -28,7 +28,8 @@ class SepaElement extends UIElement {
             paymentMethod: {
                 type: SepaElement.type,
                 iban: this.state.data['sepa.ibanNumber'],
-                ownerName: this.state.data['sepa.ownerName']
+                ownerName: this.state.data['sepa.ownerName'],
+                canModifyCountryCode : this.state.data['canModifyCountryCode']
             }
         };
     }

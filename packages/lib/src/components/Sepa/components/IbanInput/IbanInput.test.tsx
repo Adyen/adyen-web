@@ -64,7 +64,7 @@ describe('IbanInput', () => {
         });
     });
 
-    describe('Send values from outside', () => {
+    describe('Send properties from config', () => {
         test('Set ibanNumber', () => {
             const wrapper = createWrapper({ data: { 'sepa.ibanNumber': 'NL13TEST0123456789' } });
             setTimeout(() => {

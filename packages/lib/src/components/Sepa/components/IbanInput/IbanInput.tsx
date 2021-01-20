@@ -5,7 +5,7 @@ import Field from '../../../internal/FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
 import { electronicFormat, formatIban, getIbanPlaceHolder, getNextCursorPosition } from './utils';
 import './IbanInput.scss';
-
+import SepaElementData from '../../types';
 interface IbanInputProps {
     holderName?: string;
     placeholders?: any;
@@ -33,8 +33,9 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
             status: 'ready',
             data: {
                 'sepa.ownerName': props?.data?.ownerName || '',
-                'sepa.ibanNumber': props?.data?.ibanNumber || ''
-            },
+                'sepa.ibanNumber': props?.data?.ibanNumber || '',
+                canModifyCountryCode: !!props?.canModifyCountryCode,
+            } as Partial<SepaElementData>,
             isValid: false,
             cursor: 0,
             errors: {},
