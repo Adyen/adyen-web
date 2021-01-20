@@ -103,20 +103,16 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
         prevState => ({
             brand: cardInfo.brand === 'plcc' ? 'bcmc' : cardInfo.brand,
-            // cvcRequired: cardInfo.cvcRequired !== false,
             cvcPolicy: cardInfo.cvcPolicy,
             errors: {
                 ...prevState.errors,
                 // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
-                // [ENCRYPTED_SECURITY_CODE]: !cardInfo.cvcRequired && this.numCharsInCVC === 0 ? false : prevState.errors[ENCRYPTED_SECURITY_CODE]
-                // new for cvcPolicy
                 [ENCRYPTED_SECURITY_CODE]:
                     (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
                         ? false
                         : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            // hideCVCForBrand: !!cardInfo.hideCVC // TODO new for Synchrony
-            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN
+            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN // TODO new for Synchrony
         }),
         () => {
             console.log('\n### SecuredFieldsProviderHandlers::handleOnBrand:: calling this.props.onChange', cardInfo.brand);
@@ -127,9 +123,6 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
         }
     );
 
-    // if ((this.props.hideCVC || !!cardInfo.hideCVC || cardInfo.cvcRequired === false) && this.props.oneClick) {
-    //     this.handleOnNoDataRequired();
-    // }
     if ((this.props.hideCVC || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN || cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL) && this.props.oneClick) {
         this.handleOnNoDataRequired();
     }

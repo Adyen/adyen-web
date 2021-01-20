@@ -57,9 +57,8 @@ const mapDateFields = (field, numDateFields) => {
 const mapCVCField = (field, state) => {
     const isCvcField = field === ENCRYPTED_SECURITY_CODE;
     const isCvcFieldValid = !state.errors[ENCRYPTED_SECURITY_CODE];
-    // return !state.cvcRequired && isCvcFieldValid && isCvcField ? null : field;
 
-    // cvcPolicy = NOT required
+    // if cvcPolicy != required
     return (state.cvcPolicy === CVC_POLICY_OPTIONAL || state.cvcPolicy === CVC_POLICY_HIDDEN) && isCvcFieldValid && isCvcField ? null : field;
 };
 

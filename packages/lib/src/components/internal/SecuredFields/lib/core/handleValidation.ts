@@ -26,7 +26,6 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     }
 
     // CHECK IF CVC IS OPTIONAL
-    // console.log('### handleValidation:: pFeedbackObj.cvcRequired=', pFeedbackObj.cvcRequired);
 
     // Brand information (from setting the CC number) now contains information about
     // whether cvc is optional for that brand e.g. maestro
@@ -38,13 +37,8 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         existy(pFeedbackObj.cvcRequired) &&
         Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
     ) {
-        // console.log('### handleValidation:: cvcRequired prop exists & has a value and =', pFeedbackObj.cvcRequired);
-        // this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = pFeedbackObj.cvcRequired;
-
         // TODO - move into own if-clause once (if) SF returns cvcPolicy prop
         const cvcPolicy = getCVCPolicy(pFeedbackObj);
-
-        // console.log('### handleValidation::handleValidation:: cvcPolicy=', cvcPolicy);
 
         // Parallel cvcPolicy fny - accepts 3 values: required | optional | hidden
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = cvcPolicy;

@@ -27,7 +27,6 @@ export interface SFPState {
     errors?: object;
     valid: object;
     data: object;
-    // cvcRequired?: boolean;
     cvcPolicy?: CvcPolicyType;
     isSfpValid?: boolean;
     autoCompleteName?: string;
@@ -70,7 +69,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             errors: {},
             valid: {},
             data: {},
-            // cvcRequired: true,
             cvcPolicy: CVC_POLICY_REQUIRED,
             isSfpValid: false,
             hasKoreanFields: this.props.hasKoreanFields

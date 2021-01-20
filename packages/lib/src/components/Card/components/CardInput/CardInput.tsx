@@ -101,6 +101,9 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         }
 
         // console.log('### CardInput::componentDidUpdate:: checking this.shouldValidate for ', this.shouldValidate);
+        /**
+         * this.shouldValidate is mostly set in SFPHandlers
+         */
         if (this.shouldValidate) {
             const who = this.shouldValidate;
             this.shouldValidate = null;
@@ -191,7 +194,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             <LoadingWrapper status={sfpState.status}>
                                 <StoredCardFields
                                     {...this.props}
-                                    // cvcRequired={sfpState.cvcRequired}
                                     cvcRequired={sfpState.cvcPolicy === CVC_POLICY_REQUIRED}
                                     errors={sfpState.errors}
                                     brand={sfpState.brand}
@@ -224,7 +226,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     hideCVCForBrand={hideCVCForBrand}
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
-                                    // cvcRequired={sfpState.cvcRequired}
                                     cvcRequired={sfpState.cvcPolicy === CVC_POLICY_REQUIRED}
                                     dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
                                     dualBrandingChangeHandler={this.handleAdditionalDataSelection}

@@ -30,7 +30,6 @@ class SecuredField extends AbstractSecuredField {
         super();
 
         // List of props from setup object not required in the config object
-        // const deltaPropsArr: string[] = ['fieldType', 'cvcRequired', 'iframeSrc', 'loadingContext', 'holderEl'];
         const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this.config...
@@ -43,7 +42,6 @@ class SecuredField extends AbstractSecuredField {
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
 
         this.fieldType = thisVarsFromSetupObj.fieldType;
-        // this.cvcRequired = thisVarsFromSetupObj.cvcRequired;
         this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
@@ -126,7 +124,6 @@ class SecuredField extends AbstractSecuredField {
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
-            // cvcRequired: this.cvcRequired,
             cvcRequired: this.cvcPolicy === CVC_POLICY_REQUIRED,
             numKey: this.numKey,
             txVariant: this.config.txVariant,
@@ -351,18 +348,6 @@ class SecuredField extends AbstractSecuredField {
     }
 
     get isValid(): boolean {
-        // if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
-        //     if (!this.cvcRequired) {
-        //         // If cvc is optional then the field is always valid UNLESS it has an error
-        //         return !this.hasError;
-        //     }
-        //     return this._isValid && !this.hasError;
-        // }
-        // return this._isValid;
-
-        /**
-         *
-         */
         if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
             // console.log('### SecuredField::isValid:: cvcPolicy=', this.cvcPolicy);
             switch (this.cvcPolicy) {
@@ -386,29 +371,6 @@ class SecuredField extends AbstractSecuredField {
     set isValid(value: boolean) {
         this._isValid = value;
     }
-
-    // get cvcRequired(): boolean {
-    //     return this._cvcRequired;
-    // }
-
-    // set cvcRequired(value: boolean) {
-    //     // Only set if this is a CVC field
-    //     if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
-    //
-    //     // Only set if value has changed
-    //     if (value === this.cvcRequired) return;
-    //
-    //     if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcRequired:: value=', value);
-    //
-    //     this._cvcRequired = value;
-    //
-    //     // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
-    //     // NOTE: fixes issue in Components where you first validate and then start typing a maestro number
-    //     // - w/o this and the fix in CSF the maestro PM will never register as valid
-    //     if (this.hasError && this.errorType === 'isValidated') {
-    //         this.hasError = false;
-    //     }
-    // }
 
     get cvcPolicy(): CvcPolicyType {
         return this._cvcPolicy;

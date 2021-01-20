@@ -7,8 +7,6 @@ import { CvcPolicyType } from '../AbstractSecuredField';
 
 interface BrandInfoObject {
     brand: string;
-    // hideCVC: boolean;
-    // cvcRequired: boolean;
     cvcPolicy: CvcPolicyType;
     cvcText: string;
 }
@@ -31,20 +29,10 @@ const setBrandRelatedInfo = (pFeedbackObj: SFFeedbackObj): BrandInfoObject => {
         hasProps = true;
     }
 
-    // if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcRequired')) {
-    //     dataObj.cvcRequired = pFeedbackObj.cvcRequired;
-    //     hasProps = true;
-    // }
-
     if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcPolicy')) {
         dataObj.cvcPolicy = pFeedbackObj.cvcPolicy;
         hasProps = true;
     }
-
-    // if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'hideCVC')) {
-    //     dataObj.hideCVC = pFeedbackObj.hideCVC;
-    //     hasProps = true;
-    // }
 
     return hasProps ? dataObj : null;
 };
@@ -100,9 +88,6 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
                         fieldType: ENCRYPTED_SECURITY_CODE,
                         hideCVC: pFeedbackObj.cvcPolicy === CVC_POLICY_HIDDEN,
                         cvcRequired: pFeedbackObj.cvcPolicy === CVC_POLICY_REQUIRED,
-                        // hideCVC: pFeedbackObj.hideCVC,
-                        // cvcRequired: pFeedbackObj.cvcRequired,
-                        // cvcPolicy: pFeedbackObj.cvcPolicy,
                         numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
                     }
                 };
