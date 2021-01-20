@@ -33,7 +33,7 @@ export interface SFPState {
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
-    hideCVCForBrand?: boolean; // TODO new for Synchrony
+    hideCVCForBrand?: boolean;
 }
 
 /**

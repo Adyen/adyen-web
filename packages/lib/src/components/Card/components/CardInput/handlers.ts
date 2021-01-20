@@ -115,8 +115,8 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
             holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
         },
         isSfpValid: sfState.isSfpValid,
-        hideCVCForBrand: sfState.hideCVCForBrand, // TODO new for Synchrony
-        brand: sfState.brand // TODO new for Synchrony
+        hideCVCForBrand: sfState.hideCVCForBrand,
+        brand: sfState.brand
     });
 
     this.setState(setSfpData, () => {
@@ -125,15 +125,6 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
         this.shouldValidate = who;
     });
 }
-
-/**
- * Saves the card brand in state
- */
-// function handleOnBrand(cardInfo: CbObjOnBrand): void {
-//     // this.setState({ brand: cardInfo.brand, hideCVCForBrand: !!cardInfo.hideCVC }, () => { // TODO remove for Synchrony
-//     this.props.onBrand(cardInfo);
-//     // }); // TODO remove for Synchrony
-// }
 
 /**
  * Saves the currently focused element in state
