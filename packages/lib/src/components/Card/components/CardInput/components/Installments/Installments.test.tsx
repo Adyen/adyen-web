@@ -34,19 +34,19 @@ describe('Installments', () => {
 
     test('does not render any installment options by default when no card key is passed', () => {
         delete installmentOptions.card;
-        const wrapper = getWrapper({ installmentOptions: installmentOptions });
+        const wrapper = getWrapper({ installmentOptions });
         expect(wrapper.find('.adyen-checkout__dropdown__element')).toHaveLength(0);
     });
 
     test('renders the select as read only if only one option is passed', () => {
         installmentOptions.card.values = [3];
-        const wrapper = getWrapper({ installmentOptions: installmentOptions });
+        const wrapper = getWrapper({ installmentOptions });
         expect(wrapper.find('Select').prop('readonly')).toBe(true);
     });
 
     test('preselects the passed value', () => {
         installmentOptions.card.preselectedValue = 2;
-        const wrapper = getWrapper({ installmentOptions: installmentOptions });
+        const wrapper = getWrapper({ installmentOptions });
         expect(wrapper.find('Select').prop('selected')).toBe(2);
     });
 
