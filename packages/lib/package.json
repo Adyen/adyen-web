@@ -24,7 +24,6 @@
     "scripts": {
         "start": "npm run dev-server",
         "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.config.js",
-        "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && cross-env NODE_ENV=production rollup --config config/rollup.config.js",
         "build:analyze": "rm -rf dist/ && cross-env NODE_ENV=analyze rollup --config config/rollup.config.js",
         "test": "BABEL_ENV=test jest --config config/jest.config.js",
