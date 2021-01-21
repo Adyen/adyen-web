@@ -4,7 +4,6 @@ import { SFFeedbackObj, SendBrandObject } from '../../types';
 import { BinLookupObject, BrandObject } from '../../../../../Card/types';
 
 export function sendBrandToCardSF(brandObj: SendBrandObject): void {
-    console.log('### handleBrandFromBinLookup::sendBrandToCardSF:: brandObj', brandObj);
     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
         const dataObj: object = {
             txVariant: this.state.type,
@@ -23,16 +22,12 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
         return;
     }
 
-    console.log('### handleBrandFromBinLookup::binLookupObject.supportedBrands[0]:: ', binLookupObject.supportedBrands[0]);
-
     const binBrandObj: BrandObject = binLookupObject.supportedBrands[0];
 
     const passedBrand: string = binBrandObj.brand;
 
     const hideCVC: boolean = binBrandObj.cvcPolicy === 'hidden';
     const cvcRequired: boolean = hideCVC || binBrandObj.cvcPolicy === 'optional' ? false : true;
-
-    console.log('### handleBrandFromBinLookup::cvcRequired:: ', cvcRequired);
 
     const brandObj: object = {
         cvcRequired,

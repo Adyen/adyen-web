@@ -187,7 +187,7 @@ export interface CbObjOnError {
     error: string;
     type: string;
     rootNode?: HTMLElement;
-    detectedBrands?: string[]; // new v2
+    detectedBrands?: string[];
     errorI18n?: string;
     errorText?: string;
 }

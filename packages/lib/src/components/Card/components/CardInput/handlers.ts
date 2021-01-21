@@ -1,5 +1,5 @@
 import { validateHolderName } from './validate';
-import { CbObjOnFocus, CbObjOnBrand } from '../../../internal/SecuredFields/lib/types';
+import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import { BrandObject } from '../../types';
 
@@ -93,21 +93,12 @@ function handleSecuredFieldsChange(newState: SFPState): void {
             holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
         },
         isSfpValid: sfState.isSfpValid,
-        hideCVCForBrand: sfState.hideCVCForBrand, // TODO new for Synchrony
-        brand: sfState.brand // TODO new for Synchrony
+        hideCVCForBrand: sfState.hideCVCForBrand,
+        brand: sfState.brand
     });
 
     this.setState(setSfpData, this.validateCardInput);
 }
-
-/**
- * Saves the card brand in state
- */
-// function handleOnBrand(cardInfo: CbObjOnBrand): void {
-//     // this.setState({ brand: cardInfo.brand, hideCVCForBrand: !!cardInfo.hideCVC }, () => { // TODO remove for Synchrony
-//     this.props.onBrand(cardInfo);
-//     // }); // TODO remove for Synchrony
-// }
 
 /**
  * Saves the currently focused element in state
@@ -157,7 +148,6 @@ export default {
     handleHolderName,
     handleInstallments,
     handleSecuredFieldsChange,
-    // handleOnBrand,
     handleAdditionalDataSelection,
     validateCardInput
 };

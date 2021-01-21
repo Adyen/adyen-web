@@ -68,8 +68,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
-        // this.handleOnBrand = handlers.handleOnBrand.bind(this);// TODO remove for Synchrony
-        this.handleOnBrand = this.props.onBrand; // TODO new for Synchrony
+        this.handleOnBrand = this.props.onBrand;
         this.handleFocus = handlers.handleFocus.bind(this);
         this.handleAddress = handlers.handleAddress.bind(this);
         this.handleHolderName = handlers.handleHolderName.bind(this);

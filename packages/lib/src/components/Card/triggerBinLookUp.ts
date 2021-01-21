@@ -33,16 +33,6 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
                 if (data.brands?.length) {
-                    // TODO TESTing new v2
-                    // data.brands.push({
-                    //     brand: 'cartebancaire',
-                    //     cvcPolicy: 'required',
-                    //     enableLuhnCheck: 'false',
-                    //     showExpiryDate: 'false',
-                    //     supported: 'true'
-                    // });
-                    // end TODO
-
                     const mappedResponse = data.brands.reduce(
                         (acc, item) => {
                             acc.detectedBrands.push(item.brand);
@@ -56,8 +46,6 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         },
                         { supportedBrands: [], detectedBrands: [] }
                     );
-
-                    console.log('### triggerBinLookUp::mappedResponse=:: ', mappedResponse);
 
                     /**
                      * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
@@ -112,28 +100,6 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         supportedBrands: null,
                         brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
                     });
-
-                    // TODO TESTing new synchrony plcc bins
-                    // this.processBinLookupResponse({
-                    //     issuingCountryCode: 'US',
-                    //     supportedBrands: [
-                    //         // {
-                    //         //     brand: 'visa',
-                    //         //     cvcPolicy: 'required',
-                    //         //     enableLuhnCheck: 'true',
-                    //         //     showExpiryDate: 'true',
-                    //         //     supported: 'true'
-                    //         // },
-                    //         {
-                    //             brand: 'bcmc',
-                    //             cvcPolicy: 'hidden',
-                    //             enableLuhnCheck: 'false',
-                    //             showExpiryDate: 'false',
-                    //             supported: 'true'
-                    //         }
-                    //     ]
-                    // });
-                    // TODO end
                 }
             }
         });
