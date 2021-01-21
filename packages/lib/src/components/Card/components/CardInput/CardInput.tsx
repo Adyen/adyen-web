@@ -109,6 +109,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             console.log('### CardInput::componentDidUpdate:: shouldValidate so calling this.validateCardInput for', who);
             this.validateCardInput(`central (${who})`);
         }
+
+        // if (prevState.isSfpValid !== this.state.isSfpValid) {
+        //     this.validateCardInput('revalidate');
+        // }
     }
 
     public componentWillUnmount() {
