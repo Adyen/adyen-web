@@ -112,7 +112,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                         ? false
                         : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN
+            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN // TODO new for Synchrony
         }),
         () => {
             console.log('\n### SecuredFieldsProviderHandlers::handleOnBrand:: calling this.props.onChange', cardInfo.brand);

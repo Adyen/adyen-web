@@ -22,7 +22,7 @@ function validateCardInput(who): void {
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
         if (window['card']) {
-            console.log('### handlers::validateCardInput:: window.card.isValid=', window['card'].isValid);
+            console.log(who, '### handlers::validateCardInput:: window.card.isValid=', window['card'].isValid);
         }
     });
 }
@@ -115,8 +115,8 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
             holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
         },
         isSfpValid: sfState.isSfpValid,
-        hideCVCForBrand: sfState.hideCVCForBrand,
-        brand: sfState.brand
+        hideCVCForBrand: sfState.hideCVCForBrand, // TODO new for Synchrony
+        brand: sfState.brand // TODO new for Synchrony
     });
 
     this.setState(setSfpData, () => {
