@@ -1,5 +1,5 @@
 import SecuredField from './SecuredField';
-import { AriaConfig, CvcPolicyType } from './AbstractSecuredField';
+import { AriaConfig, CVCPolicyType } from './AbstractSecuredField';
 import Language from '../../../../../language/Language';
 import LANG from '../../../../../language/locales/en-US.json';
 import { ERROR_CODES, ERROR_MSG_CARD_TOO_OLD, ERROR_MSG_INVALID_FIELD, ERROR_MSG_LUHN_CHECK_FAILED } from '../../../../../core/Errors/constants';
@@ -64,7 +64,7 @@ const setupObj = {
     showWarnings: false,
     //
     fieldType: ENCRYPTED_CARD_NUMBER,
-    cvcPolicy: CVC_POLICY_REQUIRED as CvcPolicyType,
+    cvcPolicy: CVC_POLICY_REQUIRED as CVCPolicyType,
     iframeSrc: null,
     loadingContext: null,
     holderEl: nodeHolder
