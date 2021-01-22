@@ -7,9 +7,14 @@ import Language from '../language/Language';
 
 export interface UIElementProps extends BaseElementProps {
     onChange?: (state: any, element: UIElement) => void;
+
     onValid?: (state: any, element: UIElement) => void;
+
     onSubmit?: (state: any, element: UIElement) => void;
+
+    /** @internal */
     onComplete?: (state, element: UIElement) => void;
+
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
     challengeWindowSize?: string;

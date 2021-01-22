@@ -8,12 +8,18 @@ import uuid from '../utils/uuid';
 import Core from '../core';
 
 export interface BaseElementProps {
+    /** @internal */
     _parentInstance?: Core;
+
     order?: Order;
+
+    /** @internal */
     modules?: {
         analytics: Analytics;
         risk: RiskElement;
     };
+
+    /** @internal */
     isDropin?: boolean;
 }
 
