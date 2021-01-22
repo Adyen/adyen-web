@@ -37,7 +37,7 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
     this.processBrand(brandObj as SFFeedbackObj);
 
     // Pass brand to CardNumber SF
-    this.sendBrandToCardSF({ brand: passedBrand, enableLuhnCheck: !(binLookupObject.supportedBrands[0].enableLuhnCheck === 'false') });
+    this.sendBrandToCardSF({ brand: passedBrand, enableLuhnCheck: !(binLookupObject.supportedBrands[0].enableLuhnCheck === false) });
 
     /**
      * CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)

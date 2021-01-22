@@ -7,7 +7,7 @@ const getComponentData = ClientFunction(() => {
     return window.ideal.data;
 });
 
-test.only('should make an iDeal payment', async t => {
+test('should make an iDeal payment', async t => {
     // Opens dropdown
     await t
         .click(Selector('.adyen-checkout__dropdown__button'))

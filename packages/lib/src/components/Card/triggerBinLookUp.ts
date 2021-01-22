@@ -47,7 +47,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         (acc, item) => {
                             acc.detectedBrands.push(item.brand);
 
-                            if (item.supported === 'true') {
+                            if (item.supported === true) {
                                 acc.supportedBrands.push(item);
                                 return acc;
                             }
@@ -135,6 +135,9 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                     // });
                     // TODO end
                 }
+            } else {
+                // Some other kind of error on the backend
+                this.props.onError(data);
             }
         });
     } else if (this.currentRequestId) {
