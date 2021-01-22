@@ -6,7 +6,7 @@ import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import ConsentCheckbox from '../FormFields/ConsentCheckbox';
-import { getActiveFieldsData, getInitialActiveFieldsets } from './utils';
+import { getActiveFieldsData, getInitialActiveFieldsets, fieldsetsSchema } from './utils';
 import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
@@ -16,8 +16,6 @@ import {
     OpenInvoiceStateValid
 } from './types';
 import './OpenInvoice.scss';
-
-export const fieldsetsSchema = ['companyDetails', 'personalDetails', 'billingAddress', 'deliveryAddress'];
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
