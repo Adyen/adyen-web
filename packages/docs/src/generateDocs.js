@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { ElementProperty } = require('./models/ElementProperty');
 
 const outputPath = path.resolve(__dirname, '../dist/docs');
 const outputFormat = 'md';
@@ -34,12 +35,9 @@ function getElementContents(element) {
     elementFileContent.push(`| -------- | ----------- |`);
 
     // interface properties
-    element.children.forEach(property => {
-        elementFileContent.push(
-            `| ${property.name} ${property?.type?.name ? `*${property.type.name}*` : ``} | ${
-                property?.comment?.shortText ? property.comment.shortText : '-'
-            } |`
-        );
+    element.children.forEach(elementProperty => {
+        const property = new ElementProperty(elementProperty);
+        elementFileContent.push(`| ${property.name} ${property?.type?.name ? `*${property.type.name}*` : ``} | ${property.description} |`);
     });
 
     return elementFileContent;
