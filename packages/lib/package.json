@@ -24,7 +24,7 @@
         "dev-server": "cross-env NODE_ENV=development webpack --watch --config config/webpack.dev.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && webpack --config config/webpack.prod.js",
-        "test": "BABEL_ENV=test jest --config config/jest.config.js",
+        "test": "jest --config config/jest.config.js",
         "test:watch": "npm run test -- --watchAll",
         "test:coverage": "npm run test -- --coverage",
         "stats": "webpack --config config/webpack.prod.js --profile --progress --json > stats.json",
