@@ -21,9 +21,6 @@ const errorLabel = Selector('.card-field .adyen-checkout__error-text');
 
 const TEST_SPEED = 1;
 
-const IS_SUPPORTED = 'true'; // might change to boolean in the response
-const NOT_SUPPORTED = 'false'; // might change to boolean in the response
-
 const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
@@ -54,9 +51,9 @@ test('Enter number of known dual branded card, ' + 'then inspect response body f
         .expect(responseBody.brands.length)
         .eql(2)
         .expect(responseBody.brands[0].supported)
-        .eql(IS_SUPPORTED)
+        .eql(true)
         .expect(responseBody.brands[1].supported)
-        .eql(IS_SUPPORTED)
+        .eql(true)
         .expect(responseBody.issuingCountryCode.length)
         .eql(2)
         .expect(responseBody.requestId.length)
@@ -85,7 +82,7 @@ test('Enter number of regular, non dual branded, card, ' + 'then inspect respons
         .expect(responseBody.brands.length)
         .eql(1)
         .expect(responseBody.brands[0].supported)
-        .eql(IS_SUPPORTED)
+        .eql(true)
         .expect(responseBody.issuingCountryCode.length)
         .eql(2)
         .expect(responseBody.requestId.length)
@@ -114,7 +111,7 @@ test('Enter number of unsupported card, ' + 'then inspect response body for expe
         .expect(responseBody.brands.length)
         .eql(1)
         .expect(responseBody.brands[0].supported)
-        .eql(NOT_SUPPORTED)
+        .eql(false)
         .expect(responseBody.issuingCountryCode.length)
         .eql(2)
         .expect(responseBody.requestId.length)

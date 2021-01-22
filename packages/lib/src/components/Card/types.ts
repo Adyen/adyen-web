@@ -115,9 +115,9 @@ export interface CardElementData {
 export interface BrandObject {
     brand: string;
     cvcPolicy: string;
-    enableLuhnCheck: string;
-    showExpiryDate: string;
-    supported: string;
+    enableLuhnCheck: boolean;
+    showExpiryDate: boolean;
+    supported: boolean;
 }
 
 export interface BinLookupResponseObj {

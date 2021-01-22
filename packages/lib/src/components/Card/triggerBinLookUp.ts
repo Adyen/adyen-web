@@ -37,7 +37,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         (acc, item) => {
                             acc.detectedBrands.push(item.brand);
 
-                            if (item.supported === 'true') {
+                            if (item.supported === true) {
                                 acc.supportedBrands.push(item);
                                 return acc;
                             }
@@ -99,8 +99,11 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         detectedBrands: null,
                         supportedBrands: null,
                         brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
-                    });
+                    } as CbObjOnBinLookup);
                 }
+            } else {
+                // Some other kind of error on the backend
+                this.props.onError(data);
             }
         });
     } else if (this.currentRequestId) {
