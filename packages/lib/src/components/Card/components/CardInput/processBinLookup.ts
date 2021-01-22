@@ -32,11 +32,8 @@ export default function processBinLookupResponse(binLookupObject: BinLookupObjec
             this.resetAdditionalSelectState(); // Reset UI
 
             // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
-            // Allow validateCardInput (by setting this.shouldValidate) so this new value ends up in state for the Card UIElement (Card.tsx)
-            this.setState({ additionalSelectValue: binLookupObject.supportedBrands[0].brand }, () => {
-                this.shouldValidate = 'processBinLookup';
-            });
-            // this.setState({ additionalSelectValue: binLookupObject.supportedBrands[0].brand }, this.validateCardInput);
+            // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
+            this.setState({ additionalSelectValue: binLookupObject.supportedBrands[0].brand }, this.validateCardInput);
 
             // Pass object through to SFP
             this.sfp.current.processBinLookupResponse({

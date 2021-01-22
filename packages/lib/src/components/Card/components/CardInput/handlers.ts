@@ -38,8 +38,7 @@ function handleAddress(address): void {
     });
 
     this.setState(setAddress, () => {
-        // this.validateCardInput('handleAddress');
-        this.shouldValidateFor = 'handleAddress';
+        this.validateCardInput('handleAddress');
     });
 }
 
@@ -52,8 +51,7 @@ function handleKCPAuthentication(data: object, valid: object): void {
         valid: { ...prevState.valid, ...valid }
     });
     this.setState(setKCP, () => {
-        // this.validateCardInput('handleKCPAuthentication');
-        this.shouldValidateFor = 'handleKCPAuthentication';
+        this.validateCardInput('handleKCPAuthentication');
     });
 }
 
@@ -62,8 +60,7 @@ function handleKCPAuthentication(data: object, valid: object): void {
  */
 function handleOnStoreDetails(storeDetails: boolean): void {
     this.setState({ storePaymentMethod: storeDetails }, () => {
-        // this.validateCardInput('handleOnStoreDetails');
-        this.shouldValidateFor = 'handleOnStoreDetails';
+        this.validateCardInput('handleOnStoreDetails');
     });
 }
 
@@ -82,15 +79,13 @@ function handleHolderName(e: Event): void {
     });
 
     this.setState(setHolderName, () => {
-        // this.validateCardInput('handleHolderName');
-        this.shouldValidateFor = 'handleHolderName';
+        this.validateCardInput('handleHolderName');
     });
 }
 
 function handleInstallments(installments): void {
     this.setState({ installments }, () => {
-        // this.validateCardInput('handleInstallments');
-        this.shouldValidateFor = 'handleInstallments';
+        this.validateCardInput('handleInstallments');
     });
 }
 
@@ -120,8 +115,7 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
     });
 
     this.setState(setSfpData, () => {
-        // this.validateCardInput(who);
-        this.shouldValidateFor = who;
+        this.validateCardInput(who);
     });
 }
 
@@ -149,11 +143,7 @@ function handleAdditionalDataSelection(e: Event): void {
 
     // console.log('\n### handlers::handleAdditionalDataSelection:: this.state.isSfpValid-', this.state.isSfpValid);
 
-    this.setState({ additionalSelectValue: value }, () => {
-        // this.validateCardInput('handleAdditionalDataSelection');
-        // console.log('### handlers::handleAdditionalDataSelection:: setting this.shouldValidateFor');
-        // this.shouldValidateFor = 'handleAdditionalDataSelection';
-    });
+    this.setState({ additionalSelectValue: value });
 
     // Find the brandObject with the matching brand value and place into an array
     const brandObjArr: BrandObject[] = this.state.additionalSelectElements.reduce((acc, item) => {

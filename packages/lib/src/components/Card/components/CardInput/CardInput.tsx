@@ -40,7 +40,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private sfp = createRef();
     private billingAddressRef = createRef();
     private kcpAuthenticationRef = createRef();
-    private shouldValidateFor = null;
 
     constructor(props) {
         super(props);
@@ -95,24 +94,12 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         const { country, stateOrProvince } = this.state.billingAddress || {};
 
         if (prevCountry !== country || prevStateOrProvince !== stateOrProvince) {
-            // this.validateCardInput();
-            this.shouldValidateFor = 'billingAddress';
+            this.validateCardInput('address');
         }
 
-        // console.log('### CardInput::componentDidUpdate:: checking this.shouldValidate for ', this.shouldValidate);
-        /**
-         * this.shouldValidatefor is mostly set in SFPHandlers
-         */
-        if (this.shouldValidateFor) {
-            const who = this.shouldValidateFor;
-            this.shouldValidateFor = null;
-            console.log('### CardInput::componentDidUpdate:: shouldValidate so calling this.validateCardInput for', who);
-            this.validateCardInput(`central (${who})`);
+        if (prevState.isSfpValid !== this.state.isSfpValid) {
+            this.validateCardInput('revalidate');
         }
-
-        // if (prevState.isSfpValid !== this.state.isSfpValid) {
-        //     this.validateCardInput('revalidate');
-        // }
     }
 
     public componentWillUnmount() {
