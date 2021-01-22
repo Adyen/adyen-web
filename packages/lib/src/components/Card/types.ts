@@ -85,6 +85,11 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
+    /**
+     * 3DS2 challenge size
+     */
+    challengeWindowSize?: string;
+
     [key: string]: any;
 }
 
