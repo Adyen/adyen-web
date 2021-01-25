@@ -1,8 +1,7 @@
 import { CVC_POLICY_HIDDEN, CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
-import { existy } from '../../utilities/commonUtils';
-import { CbObjOnBrand, SFFeedbackObj } from '../../types';
-import * as logger from '../../utilities/logger';
+import { existy, getCVCPolicy, objectsDeepEqual } from '../../utilities/commonUtils';
+import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { CVCPolicyType } from '../AbstractSecuredField';
 
 interface BrandInfoObject {
@@ -37,35 +36,29 @@ const setBrandRelatedInfo = (pFeedbackObj: SFFeedbackObj): BrandInfoObject => {
     return hasProps ? dataObj : null;
 };
 
-// If brand sent with feedbackObj doesn't equal stored brand - extract the new brand ready to send to the cvc field
-const checkForBrandChange = (pBrand: string, storedBrand: string): string => {
-    if (pBrand && pBrand !== storedBrand) {
-        if (process.env.NODE_ENV === 'development' && window._b$dl) {
-            logger.log(
-                '\n### checkoutSecuredFields_handleSF::__checkForBrandChange:: Brand Change! new brand=',
-                pBrand,
-                '---- old brand=',
-                storedBrand
-            );
-        }
-
-        return pBrand;
-    }
-    return '';
+const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStorageObject): boolean => {
+    // if the objects aren't the same - then return true = brandChange has happened
+    return !objectsDeepEqual(pBrand, storedBrand);
 };
 
 // If generic card type AND passed brand doesn't equal stored brand - send the new brand to the cvc input
-// Create object for CSF Brand Callback fn with image & text details
+// Create object for onBrand callback
 export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject {
     let brandInfoObj: BrandInfoObject;
+
+    // console.log('### processBrand::handleProcessBrand:: pFeedbackObj=', pFeedbackObj);
 
     const fieldType: string = pFeedbackObj.fieldType;
 
     if (fieldType === ENCRYPTED_CARD_NUMBER) {
         // Check for new brand...
-        const newBrand: string = checkForBrandChange(pFeedbackObj.brand, this.state.brand);
+        const newBrandObj: BrandStorageObject = {
+            brand: pFeedbackObj.brand,
+            cvcPolicy: pFeedbackObj.cvcPolicy ? pFeedbackObj.cvcPolicy : getCVCPolicy(pFeedbackObj)
+        };
+        const newBrand: boolean = checkForBrandChange(newBrandObj, this.state.brand);
 
-        if (!newBrand.length) {
+        if (!newBrand) {
             return null;
         }
 
@@ -73,11 +66,12 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
 
         // ...if also a generic card - tell cvc field & number field...
         if (isGenericCard && newBrand) {
-            this.state.brand = newBrand;
+            this.state.brand = newBrandObj;
+            // console.log('### processBrand::handleProcessBrand:: this.state.brand', this.state.brand);
 
             const baseDataObj: object = {
                 txVariant: this.state.type,
-                brand: newBrand
+                brand: newBrandObj.brand
             };
 
             // Perform postMessage to send brand on specified (CVC) field

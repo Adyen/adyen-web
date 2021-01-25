@@ -8,6 +8,11 @@ declare global {
     }
 }
 
+export interface BrandStorageObject {
+    brand: string;
+    cvcPolicy: string;
+}
+
 /**
  * Exposed functions that can be called on the CSF instance
  */
@@ -68,7 +73,7 @@ export interface CallbacksConfig {
 
 export interface CSFStateObject {
     type: string;
-    brand: string;
+    brand: BrandStorageObject;
     allValid: boolean;
     numIframes: number;
     originalNumIframes: number;

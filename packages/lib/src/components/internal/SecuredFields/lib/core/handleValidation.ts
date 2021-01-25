@@ -83,5 +83,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     this.assessFormValidity();
 
     // PROCESS & BROADCAST CARD BRANDS
-    this.processBrand(pFeedbackObj);
+    if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'brand')) {
+        this.processBrand(pFeedbackObj);
+    }
 }
