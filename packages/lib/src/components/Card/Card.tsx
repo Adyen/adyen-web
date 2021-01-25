@@ -4,7 +4,7 @@ import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { CardElementData, CardElementProps, BinLookupObject } from './types';
+import { CardElementData, CardElementProps, BinLookupResponse } from './types';
 import triggerBinLookUp from './triggerBinLookUp';
 
 export class CardElement extends UIElement<CardElementProps> {
@@ -74,8 +74,8 @@ export class CardElement extends UIElement<CardElementProps> {
         if (this.props.onBrand) this.props.onBrand(event);
     };
 
-    processBinLookupResponse(binLookupObject: BinLookupObject) {
-        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+    processBinLookupResponse(binLookupResponse: BinLookupResponse) {
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse);
         return this;
     }
 
