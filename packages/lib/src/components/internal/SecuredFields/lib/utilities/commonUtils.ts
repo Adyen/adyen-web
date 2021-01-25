@@ -100,6 +100,29 @@ function isObjectLike(value) {
     return !!value && typeof value === 'object';
 }
 
+function objectsDeepEqual(obj1 = {}, obj2 = {}) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    for (const key of keys1) {
+        if (isObjectLike(obj1[key])) {
+            if (!objectsDeepEqual(obj1[key], obj2[key])) {
+                // console.log('### commonUtils::objectsDeepEqual:: mismatch on key:', key);
+                return false;
+            }
+        }
+        if (obj1[key] !== obj2[key]) {
+            // console.log('### commonUtils::objectsDeepEqual:: mismatch on key:', key);
+            return false;
+        }
+    }
+    return true;
+}
+
 /**
  * @internal
  * Checks if `value` is classified as a `Number` primitive or object.
@@ -206,6 +229,7 @@ export {
     existy,
     falsy,
     isArray,
+    objectsDeepEqual,
     notFalsy,
     truthy
     //    wait

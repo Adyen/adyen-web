@@ -37,9 +37,7 @@ function handleAddress(address): void {
         }
     });
 
-    this.setState(setAddress, () => {
-        this.validateCardInput('handleAddress');
-    });
+    this.setState(setAddress);
 }
 
 /**
@@ -50,18 +48,14 @@ function handleKCPAuthentication(data: object, valid: object): void {
         data: { ...prevState.data, ...data },
         valid: { ...prevState.valid, ...valid }
     });
-    this.setState(setKCP, () => {
-        this.validateCardInput('handleKCPAuthentication');
-    });
+    this.setState(setKCP);
 }
 
 /**
  * Saves the storeDetails in state
  */
 function handleOnStoreDetails(storeDetails: boolean): void {
-    this.setState({ storePaymentMethod: storeDetails }, () => {
-        this.validateCardInput('handleOnStoreDetails');
-    });
+    this.setState({ storePaymentMethod: storeDetails });
 }
 
 /**
@@ -78,15 +72,11 @@ function handleHolderName(e: Event): void {
         }
     });
 
-    this.setState(setHolderName, () => {
-        this.validateCardInput('handleHolderName');
-    });
+    this.setState(setHolderName);
 }
 
 function handleInstallments(installments): void {
-    this.setState({ installments }, () => {
-        this.validateCardInput('handleInstallments');
-    });
+    this.setState({ installments });
 }
 
 function handleSecuredFieldsChange(newState: SFPState, who: string): void {
@@ -114,9 +104,7 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
         brand: sfState.brand // TODO new for Synchrony
     });
 
-    this.setState(setSfpData, () => {
-        this.validateCardInput(who);
-    });
+    this.setState(setSfpData);
 }
 
 /**
