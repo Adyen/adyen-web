@@ -33,16 +33,6 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
                 if (data.brands?.length) {
-                    // TODO TESTing new v2
-                    // data.brands.push({
-                    //     brand: 'cartebancaire',
-                    //     cvcPolicy: 'required',
-                    //     enableLuhnCheck: 'false',
-                    //     showExpiryDate: 'false',
-                    //     supported: 'true'
-                    // });
-                    // end TODO
-
                     const mappedResponse = data.brands.reduce(
                         (acc, item) => {
                             acc.detectedBrands.push(item.brand);
@@ -117,19 +107,19 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                     // this.processBinLookupResponse({
                     //     issuingCountryCode: 'US',
                     //     supportedBrands: [
-                    //         // {
-                    //         //     brand: 'visa',
-                    //         //     cvcPolicy: 'required',
-                    //         //     enableLuhnCheck: 'true',
-                    //         //     showExpiryDate: 'true',
-                    //         //     supported: 'true'
-                    //         // },
+                    //         {
+                    //             brand: 'visa',
+                    //             cvcPolicy: 'hidden',
+                    //             enableLuhnCheck: true,
+                    //             showExpiryDate: true,
+                    //             supported: true
+                    //         },
                     //         {
                     //             brand: 'bcmc',
                     //             cvcPolicy: 'hidden',
-                    //             enableLuhnCheck: 'false',
-                    //             showExpiryDate: 'false',
-                    //             supported: 'true'
+                    //             enableLuhnCheck: false,
+                    //             showExpiryDate: false,
+                    //             supported: true
                     //         }
                     //     ]
                     // });
