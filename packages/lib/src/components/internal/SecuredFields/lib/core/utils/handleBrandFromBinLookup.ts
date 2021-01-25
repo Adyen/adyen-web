@@ -1,7 +1,7 @@
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { SFFeedbackObj, SendBrandObject } from '../../types';
-import { BinLookupObject, BrandObject } from '../../../../../Card/types';
+import { BinLookupResponse, BrandObject } from '../../../../../Card/types';
 
 export function sendBrandToCardSF(brandObj: SendBrandObject): void {
     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
@@ -15,14 +15,14 @@ export function sendBrandToCardSF(brandObj: SendBrandObject): void {
     }
 }
 
-export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void {
+export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): void {
     // The number of digits in number field has dropped below threshold for BIN lookup - so tell SF to reset & republish the brand it detects
-    if (!binLookupObject) {
+    if (!binLookupResponse) {
         this.sendBrandToCardSF({ brand: 'reset' });
         return;
     }
 
-    const binBrandObj: BrandObject = binLookupObject.supportedBrands[0];
+    const binBrandObj: BrandObject = binLookupResponse.supportedBrands[0];
 
     const passedBrand: string = binBrandObj.brand;
 
@@ -40,7 +40,7 @@ export function handleBrandFromBinLookup(binLookupObject: BinLookupObject): void
     this.processBrand(brandObj as SFFeedbackObj);
 
     // Pass brand to CardNumber SF
-    this.sendBrandToCardSF({ brand: passedBrand, enableLuhnCheck: !(binLookupObject.supportedBrands[0].enableLuhnCheck === false) });
+    this.sendBrandToCardSF({ brand: passedBrand, enableLuhnCheck: !(binLookupResponse.supportedBrands[0].enableLuhnCheck === false) });
 
     /**
      * CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)

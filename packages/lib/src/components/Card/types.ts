@@ -127,9 +127,9 @@ export interface BinLookupResponseObj {
 }
 
 /**
- * Simplified version of BinLookupResponseObj to pass down
+ * Mapped & simplified version of BinLookupResponseObj
  */
-export interface BinLookupObject {
+export interface BinLookupResponse {
     issuingCountryCode: string;
     supportedBrands?: BrandObject[];
 }
