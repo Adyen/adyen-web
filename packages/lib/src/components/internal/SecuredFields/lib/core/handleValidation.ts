@@ -48,8 +48,6 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     }
 
     // PROCESS & BROADCAST ERRORS (OR LACK OF)
-    console.log('### handleValidation:::: fieldType', fieldType);
-    console.log('### handleValidation:::: pFeedbackObj', pFeedbackObj);
     processErrors(pFeedbackObj, this.state.securedFields[fieldType], this.state.type, this.props.rootNode, this.callbacks.onError);
 
     // REMOVE ANY EXISTING ENCRYPTED ELEMENT & CHECK VALIDITY OF THE FORM AS A WHOLE

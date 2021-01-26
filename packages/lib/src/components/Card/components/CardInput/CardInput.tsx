@@ -70,7 +70,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
-        this.handleOnBrand = this.props.onBrand; // TODO new for Synchrony
+        this.handleOnBrand = this.props.onBrand;
         this.handleFocus = handlers.handleFocus.bind(this);
         this.handleAddress = handlers.handleAddress.bind(this);
         this.handleHolderName = handlers.handleHolderName.bind(this);
@@ -91,81 +91,25 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // const { country: prevCountry, stateOrProvince: prevStateOrProvince } = prevState.billingAddress || {};
-        // const { country, stateOrProvince } = this.state.billingAddress || {};
-        //
-        // if (prevCountry !== country || prevStateOrProvince !== stateOrProvince) {
-        //     this.validateCardInput('address');
-        // }
-
         /**
          * Validating every time there's a change in state
-         * - debug version
          */
-        if (!objectsDeepEqual(prevState.billingAddress, this.state.billingAddress)) {
-            this.validateCardInput('revalidate::address');
-            return;
+        if (
+            !objectsDeepEqual(prevState.billingAddress, this.state.billingAddress) ||
+            prevState.storePaymentMethod !== this.state.storePaymentMethod ||
+            !objectsDeepEqual(prevState.installments, this.state.installments) ||
+            prevState.isSfpValid !== this.state.isSfpValid ||
+            prevState.hideCVCForBrand !== this.state.hideCVCForBrand ||
+            prevState.brand !== this.state.brand ||
+            prevState.additionalSelectValue !== this.state.additionalSelectValue ||
+            // Covers changes to:
+            // - encryptedField values
+            // - KCP authentication
+            // - holder name
+            !objectsDeepEqual(prevState.data, this.state.data)
+        ) {
+            this.validateCardInput();
         }
-
-        if (prevState.storePaymentMethod !== this.state.storePaymentMethod) {
-            this.validateCardInput('revalidate::storePaymentMethod');
-            return;
-        }
-
-        if (!objectsDeepEqual(prevState.installments, this.state.installments)) {
-            this.validateCardInput('revalidate::installments');
-            return;
-        }
-
-        if (prevState.isSfpValid !== this.state.isSfpValid) {
-            this.validateCardInput('revalidate::isSfpValid');
-            return;
-        }
-
-        if (prevState.hideCVCForBrand !== this.state.hideCVCForBrand) {
-            this.validateCardInput('revalidate::hideCVCForBrand');
-            return;
-        }
-
-        if (prevState.brand !== this.state.brand) {
-            this.validateCardInput('revalidate::brand');
-            return;
-        }
-
-        if (prevState.additionalSelectValue !== this.state.additionalSelectValue) {
-            this.validateCardInput('revalidate::additionalSelectValue');
-            return;
-        }
-
-        // Covers changes to:
-        // - encryptedField values
-        // - KCP authentication
-        // - holder name
-        if (!objectsDeepEqual(prevState.data, this.state.data)) {
-            this.validateCardInput('revalidate::data');
-            return;
-        }
-
-        /**
-         * Validating every time there's a change in state
-         * - production version
-         */
-        // if (
-        //     !objectsDeepEqual(prevState.billingAddress, this.state.billingAddress) ||
-        //     prevState.storePaymentMethod !== this.state.storePaymentMethod ||
-        //     !objectsDeepEqual(prevState.installments, this.state.installments) ||
-        //     prevState.isSfpValid !== this.state.isSfpValid ||
-        //     prevState.hideCVCForBrand !== this.state.hideCVCForBrand ||
-        //     prevState.brand !== this.state.brand ||
-        //     prevState.additionalSelectValue !== this.state.additionalSelectValue ||
-        //     // Covers changes to:
-        //     // - encryptedField values
-        //     // - KCP authentication
-        //     // - holder name
-        //     !objectsDeepEqual(prevState.data, this.state.data)
-        // ) {
-        //     this.validateCardInput('revalidate::general');
-        // }
     }
 
     public componentWillUnmount() {

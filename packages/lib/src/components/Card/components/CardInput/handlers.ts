@@ -4,7 +4,7 @@ import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider'
 import { BrandObject } from '../../types';
 
 // Validate whole cardInput component i.e holderName + securedFields
-function validateCardInput(who): void {
+function validateCardInput(): void {
     const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
     const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
@@ -17,13 +17,8 @@ function validateCardInput(who): void {
 
     const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
 
-    console.log(who, '### handlers::validateCardInput:: isSfpValid=', sfpValid);
-
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
-        if (window['card']) {
-            console.log(who, '### handlers::validateCardInput:: window.card.isValid=', window['card'].isValid);
-        }
     });
 }
 
@@ -79,12 +74,10 @@ function handleInstallments(installments): void {
     this.setState({ installments });
 }
 
-function handleSecuredFieldsChange(newState: SFPState, who: string): void {
+function handleSecuredFieldsChange(newState: SFPState): void {
     const sfState: SFPState = newState;
 
     const tempHolderName: string = sfState.autoCompleteName && this.props.hasHolderName ? sfState.autoCompleteName : this.state.data.holderName;
-
-    console.log(who, '### handlers::handleSecuredFieldsChange:: SETTING isSfpValid=', sfState.isSfpValid);
 
     const setSfpData = (prevState: SFPState): SFPState => ({
         ...prevState,
@@ -100,8 +93,8 @@ function handleSecuredFieldsChange(newState: SFPState, who: string): void {
             holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
         },
         isSfpValid: sfState.isSfpValid,
-        hideCVCForBrand: sfState.hideCVCForBrand, // TODO new for Synchrony
-        brand: sfState.brand // TODO new for Synchrony
+        hideCVCForBrand: sfState.hideCVCForBrand,
+        brand: sfState.brand
     });
 
     this.setState(setSfpData);
@@ -128,8 +121,6 @@ function handleFocus(e: CbObjOnFocus): void {
 function handleAdditionalDataSelection(e: Event): void {
     const field: HTMLLIElement = e.currentTarget as HTMLLIElement;
     const value: string = field.getAttribute('data-value');
-
-    // console.log('\n### handlers::handleAdditionalDataSelection:: this.state.isSfpValid-', this.state.isSfpValid);
 
     this.setState({ additionalSelectValue: value });
 
