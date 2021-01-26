@@ -10,32 +10,6 @@ interface BrandInfoObject {
     cvcText: string;
 }
 
-const noop = () => null;
-
-// Adds brand related properties to the callback object
-const setBrandRelatedInfo = (pFeedbackObj: SFFeedbackObj): BrandInfoObject => {
-    const dataObj: BrandInfoObject = ({} as any) as BrandInfoObject;
-    let hasProps = false;
-
-    if (existy(pFeedbackObj.brand)) {
-        dataObj.brand = pFeedbackObj.brand;
-        hasProps = true;
-    }
-
-    // hasOwnProperty call covers scenario where pFeedbackObj doesn't exist
-    if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcText')) {
-        dataObj.cvcText = pFeedbackObj.cvcText;
-        hasProps = true;
-    }
-
-    if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcPolicy')) {
-        dataObj.cvcPolicy = pFeedbackObj.cvcPolicy;
-        hasProps = true;
-    }
-
-    return hasProps ? dataObj : null;
-};
-
 const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStorageObject): boolean => {
     // if the objects aren't the same - then return true = brandChange has happened
     return !objectsDeepEqual(pBrand, storedBrand);
@@ -44,10 +18,6 @@ const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStora
 // If generic card type AND passed brand doesn't equal stored brand - send the new brand to the cvc input
 // Create object for onBrand callback
 export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject {
-    let brandInfoObj: BrandInfoObject;
-
-    // console.log('### processBrand::handleProcessBrand:: pFeedbackObj=', pFeedbackObj);
-
     const fieldType: string = pFeedbackObj.fieldType;
 
     if (fieldType === ENCRYPTED_CARD_NUMBER) {
@@ -89,11 +59,17 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             }
         }
 
-        // Check for brand related properties
-        brandInfoObj = isGenericCard ? setBrandRelatedInfo(pFeedbackObj) : noop();
+        // Check for & spread brand related properties
+        const brandInfoObj: BrandInfoObject = isGenericCard
+            ? {
+                  ...(pFeedbackObj.brand && { brand: pFeedbackObj.brand }),
+                  ...(pFeedbackObj.cvcText && { cvcText: pFeedbackObj.cvcText }),
+                  ...(pFeedbackObj.cvcPolicy && { cvcPolicy: pFeedbackObj.cvcPolicy })
+              }
+            : null;
 
         // Return object to send to Callback fn
-        if (brandInfoObj) {
+        if (brandInfoObj && brandInfoObj.brand) {
             const callbackObj: CbObjOnBrand = brandInfoObj as CbObjOnBrand;
             callbackObj.type = this.state.type;
             callbackObj.rootNode = this.props.rootNode;

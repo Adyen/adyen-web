@@ -1,5 +1,11 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER, CVC_POLICY_OPTIONAL, CVC_POLICY_HIDDEN } from './lib/configuration/constants';
+import {
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_CARD_NUMBER,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_HIDDEN,
+    CVC_POLICY_REQUIRED
+} from './lib/configuration/constants';
 import { getError } from '../../../core/Errors/utils';
 import { ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
 import {
@@ -99,8 +105,8 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
 function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
         prevState => ({
-            brand: cardInfo.brand === 'plcc' ? 'bcmc' : cardInfo.brand,
-            cvcPolicy: cardInfo.cvcPolicy,
+            brand: cardInfo.brand,
+            cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
             errors: {
                 ...prevState.errors,
                 // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
