@@ -14,11 +14,10 @@ export function PhoneInput(props) {
         schema: [...(showPrefix ? ['phonePrefix'] : []), 'phoneNumber'],
         defaultData: { ...(showPrefix ? { phonePrefix: props.selected } : {}) },
         rules: {
-            blur: {
-                phoneNumber: phone => phone?.length > 6 && phone?.length > 20
-            },
-            input: {
-                phoneNumber: code => code?.length < 10
+            phoneNumber: {
+                modes: ['blur'],
+                errorMessage: 'error.va.gen.01',
+                validate: phone => phone?.length > 6
             }
         }
     });

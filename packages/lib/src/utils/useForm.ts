@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import Validator from './Validator';
+import Validator, { ValidatorRules } from './Validator/FormValidator';
 
-function useForm<DataState = { [key: string]: any }>({ rules = {}, formatters = {}, defaultData = {}, ...props }) {
+function useForm<DataState = { [key: string]: any }>({
+    rules,
+    formatters = {},
+    defaultData = {},
+    ...props
+}: {
+    rules?: ValidatorRules;
+    [key: string]: any;
+}) {
     const validator = new Validator(rules);
     const [schema, setSchema] = useState<string[]>(props.schema ?? []);
     const [errors, setErrors] = useState<any>({});
@@ -9,10 +17,13 @@ function useForm<DataState = { [key: string]: any }>({ rules = {}, formatters = 
     const [data, setData] = useState<DataState>({} as DataState);
     const isValid = useMemo(() => schema.reduce((acc, val) => acc && valid[val], true), [valid]);
 
-    const updateFieldData = (key, value, isFieldValid, mode?) => {
+    const updateFieldData = (key, value) => {
         setData(prevData => ({ ...prevData, [key]: value }));
-        setValid(prevValid => ({ ...prevValid, [key]: isFieldValid }));
-        setErrors(prevErrors => ({ ...prevErrors, [key]: mode === 'blur' && !isFieldValid }));
+    };
+
+    const updateFieldValidation = (key, validation) => {
+        setValid(prevValid => ({ ...prevValid, [key]: validation.isValid ?? false }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: validation.hasError() ? validation.getError() : false }));
     };
 
     /**
@@ -20,8 +31,8 @@ function useForm<DataState = { [key: string]: any }>({ rules = {}, formatters = 
      */
     const processField = (key, value, mode) => {
         const formattedValue = formatters[key] ? formatters[key](value) : value;
-        const isFieldValid = validator.validate(key, mode)(formattedValue);
-        return [formattedValue, isFieldValid];
+        const validationResult = validator.validate(key, formattedValue, mode);
+        return [formattedValue, validationResult];
     };
 
     const reindexSchema = keys => {
@@ -38,16 +49,16 @@ function useForm<DataState = { [key: string]: any }>({ rules = {}, formatters = 
 
     const handleChangeFor = (key, mode = 'blur') => e => {
         const value = e.target ? e.target.value : e;
-        const [formattedValue, isFieldValid] = processField(key, value, mode);
+        const [formattedValue, validationResult] = processField(key, value, mode);
 
-        updateFieldData(key, formattedValue, isFieldValid, mode);
+        updateFieldData(key, formattedValue);
+        updateFieldValidation(key, validationResult);
     };
 
     const triggerValidation = () => {
         schema.forEach(key => {
-            const [, isFieldValid] = processField(key, data[key], 'blur');
-            setValid(prevState => ({ ...prevState, [key]: isFieldValid }));
-            setErrors(prevState => ({ ...prevState, [key]: !isFieldValid }));
+            const [, validationResult] = processField(key, data[key], 'blur');
+            updateFieldValidation(key, validationResult);
         });
     };
 

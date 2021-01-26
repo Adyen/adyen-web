@@ -21,11 +21,10 @@ function BlikInput(props: BlikInputProps) {
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema: ['blikCode'],
         rules: {
-            blur: {
-                blikCode: code => code?.length === 6
-            },
-            input: {
-                blikCode: code => code?.length === 6
+            blikCode: {
+                validate: code => code?.length === 6,
+                errorMessage: 'blik.invalid',
+                modes: ['blur']
             }
         }
     });
@@ -42,7 +41,7 @@ function BlikInput(props: BlikInputProps) {
         <div className="adyen-checkout__blik">
             <p className="adyen-checkout__blik__helper">{i18n.get('blik.help')}</p>
             <Field
-                errorMessage={!!errors.blikCode && i18n.get('blik.invalid')}
+                errorMessage={!!errors.blikCode && i18n.get(errors.blikCode.errorMessage)}
                 label={i18n.get('blik.code')}
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}

@@ -17,11 +17,10 @@ export default function DragonpayInput(props: DragonpayInputProps) {
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<DragonpayInputData>({
         schema: [...(isIssuerRequired() ? ['issuer'] : []), 'shopperEmail'],
         rules: {
-            blur: {
-                issuer: issuer => isIssuerRequired() && !!issuer
-            },
-            input: {
-                issuer: issuer => isIssuerRequired() && !!issuer
+            issuer: {
+                validate: issuer => isIssuerRequired() && !!issuer,
+                errorMessage: 'blik.invalid',
+                modes: ['input', 'blur']
             }
         }
     });
