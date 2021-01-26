@@ -121,14 +121,19 @@ export interface BrandObject {
     supported: boolean;
 }
 
-export interface BinLookupResponseObj {
+export interface BinLookupResponseRaw {
     requestId: string;
     issuingCountryCode?: string;
     brands?: BrandObject[];
+    // OR, if an error has occurred
+    status: number;
+    errorCode: string;
+    message: string;
+    errorType: string;
 }
 
 /**
- * Mapped & simplified version of BinLookupResponseObj
+ * Mapped & simplified version of BinLookupResponseRaw
  */
 export interface BinLookupResponse {
     issuingCountryCode: string;

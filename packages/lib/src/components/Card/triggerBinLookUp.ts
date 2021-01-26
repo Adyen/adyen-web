@@ -3,7 +3,7 @@ import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../internal/Sec
 import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configuration/constants';
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
-import { BinLookupResponse, BinLookupResponseObj } from './types';
+import { BinLookupResponse, BinLookupResponseRaw } from './types';
 
 export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -29,7 +29,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                 encryptedBin: callbackObj.encryptedBin,
                 requestId: callbackObj.uuid // Pass id of request
             }
-        ).then((data: BinLookupResponseObj) => {
+        ).then((data: BinLookupResponseRaw) => {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
                 if (data.brands?.length) {
