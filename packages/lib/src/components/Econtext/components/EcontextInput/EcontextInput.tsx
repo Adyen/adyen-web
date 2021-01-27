@@ -7,26 +7,11 @@ import Validator from '../../../../utils/Validator';
 import { econtextValidationRules } from '../../validate';
 
 export default function EcontextInput(props) {
-    const [data, setData] = useState<EcontextInputSchema>({ ...props.data });
-    const [isValid, setIsValid] = useState(false);
     const personalDetailsRef = useRef(null);
     const { i18n } = useCoreContext();
-    const validator = new Validator(econtextValidationRules);
-
-    useEffect(() => {
-        props.onChange({ data, isValid });
-    }, [data, isValid]);
-
-    const handleChange = (state): void => {
-        setData(state.data);
-        setIsValid(state.isValid);
-    };
 
     const [status, setStatus] = useState('ready');
-
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    this.setStatus = setStatus;
 
     this.showValidation = () => {
         if (personalDetailsRef.current) personalDetailsRef.current.showValidation();
@@ -37,7 +22,7 @@ export default function EcontextInput(props) {
             <PersonalDetails
                 data={props.data}
                 requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
-                onChange={handleChange}
+                onChange={props.onChange}
                 namePrefix="econtext"
                 ref={personalDetailsRef}
                 validationRules={econtextValidationRules}

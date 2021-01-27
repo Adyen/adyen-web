@@ -1,6 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { shopperLocale } from '../../config/commonConfig';
+import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';
@@ -10,6 +11,7 @@ window.checkout = new AdyenCheckout({
     clientKey: process.env.__CLIENT_KEY__,
     locale: shopperLocale,
     environment: 'test',
+    onChange: handleChange,
     showPayButton: true
 });
 

@@ -37,7 +37,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
-        props.onChange({ data: formattedData, isValid });
+        props.onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
     this.showValidation = triggerValidation;
