@@ -7,7 +7,6 @@ import {
     CSFReturnObject,
     SetupObject,
     StylesObject,
-    BinLookupObject,
     CbObjOnError,
     CbObjOnFocus,
     CbObjOnBrand,
@@ -19,6 +18,7 @@ import {
 } from './lib/types';
 import { AddressSchema } from '../../../types';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
+import { BinLookupResponse } from '../../Card/types';
 
 export interface SFPState {
     status?: string;
@@ -32,6 +32,7 @@ export interface SFPState {
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
+    hideCVCForBrand?: boolean;
 }
 
 /**
@@ -243,13 +244,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public showValidation(): void {
-        const { numDateFields, props, state }: SecuredFieldsProvider = this;
+        const { numDateFields, state }: SecuredFieldsProvider = this;
 
         Object.keys(state.valid)
             .reduce(getErrorReducer(numDateFields, state), [])
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
-                const errorObj: CbObjOnError = getErrorObject(field, props.rootNode, state);
+                const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
                 this.handleOnError(errorObj);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
@@ -258,7 +259,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
     }
 
-    public processBinLookupResponse(binLookupObject: BinLookupObject): void {
+    public processBinLookupResponse(binLookupResponse: BinLookupResponse): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.hasUnsupportedCard) {
@@ -269,12 +270,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
         }
 
-        this.issuingCountryCode = binLookupObject?.issuingCountryCode?.toLowerCase();
+        this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
 
         // Scenarios:
         // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup
         // RESULT (binValueObject.brands.length === 1): binLookup has found a result so inform CSF
-        if (this.csf) this.csf.brandsFromBinLookup(binLookupObject);
+        if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse);
     }
 
     private setRootNode = (input: HTMLElement): void => {

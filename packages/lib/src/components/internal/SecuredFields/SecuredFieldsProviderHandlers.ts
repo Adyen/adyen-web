@@ -54,7 +54,10 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
     }
 
     this.setState({ isSfpValid: status.allValid }, () => {
-        this.props.onAllValid(status); // Propagate onAllValid event
+        // New - fixes maestro-with-error-on-optional-cvc-field bug
+        this.props.onChange(this.state, 'OnAllValid');
+        // Propagate onAllValid event
+        this.props.onAllValid(status);
     });
 
     return true;
@@ -100,7 +103,8 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                 ...prevState.errors,
                 // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
                 [ENCRYPTED_SECURITY_CODE]: !cardInfo.cvcRequired && this.numCharsInCVC === 0 ? false : prevState.errors[ENCRYPTED_SECURITY_CODE]
-            }
+            },
+            hideCVCForBrand: !!cardInfo.hideCVC
         }),
         () => {
             this.props.onChange(this.state);

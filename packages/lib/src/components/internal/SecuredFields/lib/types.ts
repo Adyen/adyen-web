@@ -179,6 +179,7 @@ export interface CbObjOnBinLookup {
     type: string;
     detectedBrands: string[];
     supportedBrands: string[];
+    brands: string[];
 }
 
 export interface CbObjOnError {
@@ -186,7 +187,7 @@ export interface CbObjOnError {
     error: string;
     type: string;
     rootNode?: HTMLElement;
-    binLookupBrands?: string[];
+    detectedBrands?: string[];
     errorI18n?: string;
     errorText?: string;
 }
@@ -257,10 +258,7 @@ export interface ShiftTabObject {
     additionalField: HTMLElement;
 }
 
-/**
- * Simplified version of BinLookupResponseObj for use in SFP/CSF
- */
-export interface BinLookupObject {
-    issuingCountryCode: string;
-    supportedBrands?: string[];
+export interface SendBrandObject {
+    brand: string;
+    enableLuhnCheck: boolean;
 }

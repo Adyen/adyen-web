@@ -143,16 +143,38 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
 });
 
 describe('Test mock binLookup results on CardInput.state', () => {
+    const dualBrandObj1 = {
+        brand: 'visa',
+        cvcPolicy: 'required',
+        enableLuhnCheck: 'true',
+        showExpiryDate: 'true',
+        supported: 'true'
+    };
+
+    const dualBrandObj2 = {
+        brand: 'cartebancaire',
+        cvcPolicy: 'required',
+        enableLuhnCheck: 'true',
+        showExpiryDate: 'true',
+        supported: 'true'
+    };
+
     const mockBinLookupObj_dual = {
         issuingCountryCode: 'FR',
-        supportedBrands: ['visa', 'cartebancaire'],
-        detectedBrands: ['visa', 'cartebancaire']
+        supportedBrands: [dualBrandObj1, dualBrandObj2]
     };
 
     const mockBinLookupObj_single = {
         issuingCountryCode: 'US',
-        supportedBrands: ['mc'],
-        detectedBrands: ['mc']
+        supportedBrands: [
+            {
+                brand: 'mc',
+                cvcPolicy: 'required',
+                enableLuhnCheck: 'true',
+                showExpiryDate: 'true',
+                supported: 'true'
+            }
+        ]
     };
 
     test('CardInput.state contains expected values from a "dual-branded" lookup result', () => {
@@ -166,7 +188,10 @@ describe('Test mock binLookup results on CardInput.state', () => {
         let state = cardInput.state;
 
         expect(state.issuingCountryCode).toEqual('fr');
-        expect(state.additionalSelectElements).toEqual([{ id: 'visa' }, { id: 'cartebancaire' }]);
+        expect(state.additionalSelectElements).toEqual([
+            { id: 'visa', brandObject: dualBrandObj1 },
+            { id: 'cartebancaire', brandObject: dualBrandObj2 }
+        ]);
     });
 
     test('CardInput.state is altered when a "dual-branded" lookup result is followed by a "single" lookup result ', () => {
@@ -180,7 +205,10 @@ describe('Test mock binLookup results on CardInput.state', () => {
         let state = cardInput.state;
 
         expect(state.issuingCountryCode).toEqual('fr');
-        expect(state.additionalSelectElements).toEqual([{ id: 'visa' }, { id: 'cartebancaire' }]);
+        expect(state.additionalSelectElements).toEqual([
+            { id: 'visa', brandObject: dualBrandObj1 },
+            { id: 'cartebancaire', brandObject: dualBrandObj2 }
+        ]);
 
         cardInput.processBinLookupResponse(mockBinLookupObj_single);
         wrapper.update();
@@ -203,7 +231,10 @@ describe('Test mock binLookup results on CardInput.state', () => {
         let state = cardInput.state;
 
         expect(state.issuingCountryCode).toEqual('fr');
-        expect(state.additionalSelectElements).toEqual([{ id: 'visa' }, { id: 'cartebancaire' }]);
+        expect(state.additionalSelectElements).toEqual([
+            { id: 'visa', brandObject: dualBrandObj1 },
+            { id: 'cartebancaire', brandObject: dualBrandObj2 }
+        ]);
 
         cardInput.processBinLookupResponse(null);
         wrapper.update();
