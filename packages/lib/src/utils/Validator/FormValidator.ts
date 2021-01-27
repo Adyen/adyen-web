@@ -1,3 +1,5 @@
+import { email } from '../regex';
+
 type ValidatorMode = 'blur' | 'input';
 
 export interface ValidatorRule {
@@ -62,7 +64,7 @@ class ValidationResult {
 class Validator {
     public rules: ValidatorRules = {
         shopperEmail: {
-            validate: email => /\S+@\S+\.\S+/.test(email),
+            validate: value => email.test(value),
             errorMessage: 'error.va.gen.01',
             modes: ['blur']
         },

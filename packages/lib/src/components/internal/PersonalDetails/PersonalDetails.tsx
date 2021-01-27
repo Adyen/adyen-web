@@ -21,7 +21,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
         schema: requiredFields,
-        rules: personalDetailsValidationRules,
+        rules: props.validationRules,
         defaultData: props.data
     });
 
@@ -148,5 +148,6 @@ PersonalDetails.defaultProps = {
     onChange: () => {},
     placeholders: {},
     requiredFields: personalDetailsSchema,
+    validationRules: personalDetailsValidationRules,
     visibility: 'editable'
 };

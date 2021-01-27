@@ -1,5 +1,6 @@
 import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import Validator from '../../../utils/Validator';
+import { ValidatorRules } from '../../../utils/Validator/FormValidator';
 
 type PersonalDetailsPlaceholders = Omit<PersonalDetailsSchema, 'gender'>;
 
@@ -13,7 +14,7 @@ export interface PersonalDetailsProps {
     placeholders?: PersonalDetailsPlaceholders;
     readonly?: boolean;
     ref?: any;
-    validator?: Validator;
+    validationRules?: ValidatorRules;
 }
 
 export interface PersonalDetailsStateError {

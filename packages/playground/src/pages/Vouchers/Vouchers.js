@@ -180,7 +180,7 @@ window.econtextStoresInput = checkout
             firstName: 'Joe',
             lastName: 'Smith',
             shopperEmail: 'test@email.com',
-            telephoneNumber: '06210987654321'
+            telephoneNumber: '0621098765'
         }
     })
     .mount('#econtext-stores-input-container');

@@ -40,7 +40,7 @@ export default function EcontextInput(props) {
                 onChange={handleChange}
                 namePrefix="econtext"
                 ref={personalDetailsRef}
-                validator={validator}
+                validationRules={econtextValidationRules}
             />
 
             {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
