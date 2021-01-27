@@ -1,9 +1,7 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { EcontextInputSchema } from '../../types';
-import Validator from '../../../../utils/Validator';
 import { econtextValidationRules } from '../../validate';
 
 export default function EcontextInput(props) {
