@@ -1,28 +1,14 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
 export default function DokuInput(props) {
-    const [data, setData] = useState<any>({});
-    const [isValid, setIsValid] = useState(false);
     const personalDetailsRef = useRef(null);
     const { i18n } = useCoreContext();
 
-    useEffect(() => {
-        props.onChange({ data, isValid });
-    }, [data, isValid]);
-
-    const handleChange = (state): void => {
-        setData(state.data);
-        setIsValid(state.isValid);
-    };
-
     const [status, setStatus] = useState('ready');
-
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    this.setStatus = setStatus;
 
     this.showValidation = () => {
         if (personalDetailsRef.current) personalDetailsRef.current.showValidation();
@@ -33,7 +19,7 @@ export default function DokuInput(props) {
             <PersonalDetails
                 data={props.data}
                 requiredFields={['firstName', 'lastName', 'shopperEmail']}
-                onChange={handleChange}
+                onChange={props.onChange}
                 namePrefix="doku"
                 ref={personalDetailsRef}
             />
