@@ -53,7 +53,7 @@ describe('PersonalDetails', () => {
 
         const onChange = jest.fn();
         getWrapper({ data, onChange });
-        const formattedData = onChange.mock.calls[0][0].data;
+        const formattedData = onChange.mock.calls[onChange.mock.calls.length - 1][0].data;
 
         expect(formattedData.firstName).toBe(undefined);
         expect(formattedData.firstName).toBe(undefined);

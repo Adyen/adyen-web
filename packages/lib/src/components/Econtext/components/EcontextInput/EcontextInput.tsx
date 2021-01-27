@@ -35,7 +35,7 @@ export default function EcontextInput(props) {
     return (
         <div className="adyen-checkout__econtext-input__field">
             <PersonalDetails
-                data={data}
+                data={props.data}
                 requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
                 onChange={handleChange}
                 namePrefix="econtext"

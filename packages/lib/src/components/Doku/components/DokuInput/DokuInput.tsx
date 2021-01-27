@@ -4,7 +4,7 @@ import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
 export default function DokuInput(props) {
-    const [data, setData] = useState<any>({ ...props.data });
+    const [data, setData] = useState<any>({});
     const [isValid, setIsValid] = useState(false);
     const personalDetailsRef = useRef(null);
     const { i18n } = useCoreContext();
@@ -31,7 +31,7 @@ export default function DokuInput(props) {
     return (
         <div className="adyen-checkout__doku-input__field">
             <PersonalDetails
-                data={data}
+                data={props.data}
                 requiredFields={['firstName', 'lastName', 'shopperEmail']}
                 onChange={handleChange}
                 namePrefix="doku"
