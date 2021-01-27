@@ -13,16 +13,13 @@ import styles from '../../CardInput.module.scss';
  */
 function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
-
     const { amount, brand, onChange, type } = props;
-    const [installmentAmount, setInstallmentAmount] = useState(1);
-    const [radioBtnValue, setRadioBtnValue] = useState('onetime');
-
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
+    const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
+    const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
     // hasRadioButtonUI determines if we have 3 radio buttons in the UI ('onetime', 'installments' and 'revolving')
     const hasRadioButtonUI = installmentOptions?.plans?.includes('revolving');
-
     const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
 
     const onSelectInstallment = e => {
@@ -54,7 +51,7 @@ function Installments(props: InstallmentsProps) {
     };
 
     useEffect(() => {
-        const newAmount = installmentOptions && installmentOptions.values.includes(installmentAmount) ? installmentAmount : 1;
+        const newAmount = installmentOptions?.values?.includes(installmentAmount) ? installmentAmount : installmentOptions?.values[0];
         setInstallmentAmount(newAmount);
     }, [brand]);
 
@@ -114,7 +111,8 @@ function Installments(props: InstallmentsProps) {
                     items: installmentOptions.values.map(installmentItemsMapper),
                     selected: installmentAmount,
                     onChange: onSelectInstallment,
-                    name: 'installments'
+                    name: 'installments',
+                    readonly: installmentOptions?.values?.length === 1
                 })}
             </Field>
         </div>

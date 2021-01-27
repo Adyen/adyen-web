@@ -59,8 +59,6 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
         return false;
     }
 
-    // console.log('### SecuredFieldsProviderHandlers::handleOnAllValid:: SETTING isSfpValid=', status.allValid);
-
     this.setState({ isSfpValid: status.allValid }, () => {
         // New - fixes maestro-with-error-on-optional-cvc-field bug
         this.props.onChange(this.state, 'onAllValid');

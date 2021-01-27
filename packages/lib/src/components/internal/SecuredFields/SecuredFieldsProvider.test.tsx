@@ -269,9 +269,9 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             {
                 brand: 'mc',
                 cvcPolicy: 'required',
-                enableLuhnCheck: 'true',
-                showExpiryDate: 'true',
-                supported: 'true'
+                enableLuhnCheck: true,
+                showExpiryDate: true,
+                supported: true
             }
         ]
     };

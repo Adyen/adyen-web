@@ -4,7 +4,6 @@ import { SFFeedbackObj, SendBrandObject } from '../../types';
 import { BinLookupResponse, BrandObject } from '../../../../../Card/types';
 
 export function sendBrandToCardSF(brandObj: SendBrandObject): void {
-    // console.log('### handleBrandFromBinLookup::sendBrandToCardSF:: brandObj', brandObj);
     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
         const dataObj: object = {
             txVariant: this.state.type,

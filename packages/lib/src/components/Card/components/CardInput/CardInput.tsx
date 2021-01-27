@@ -22,7 +22,6 @@ import { objectsDeepEqual } from '../../../internal/SecuredFields/lib/utilities/
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
-    private readonly handleOnBrand;
     private readonly handleFocus;
     private readonly handleAddress;
     private readonly handleHolderName;
@@ -70,7 +69,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
-        this.handleOnBrand = this.props.onBrand;
         this.handleFocus = handlers.handleFocus.bind(this);
         this.handleAddress = handlers.handleAddress.bind(this);
         this.handleHolderName = handlers.handleHolderName.bind(this);
@@ -180,7 +178,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 koreanAuthenticationRequired={this.props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(this.props.configuration.koreanAuthenticationRequired && this.props.countryCode === 'kr')}
                 onChange={this.handleSecuredFieldsChange}
-                onBrand={this.handleOnBrand}
+                onBrand={this.props.onBrand}
                 onFocus={this.handleFocus}
                 type={this.props.brand}
                 oneClick={isOneClick}

@@ -23,6 +23,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleComplete = this.handleComplete.bind(this);
         this.handleError = this.handleError.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
     // Required for transition period (until configuration object becomes the norm)
@@ -95,12 +96,17 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     handleSubmit() {
-        this.submit();
+        const { data, isValid } = this;
+        if (this.props.onSubmit) this.props.onSubmit({ data, isValid }, this.elementRef);
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
         });
+    }
+
+    submit() {
+        console.error('Calling submit() is not supported for this payment method');
     }
 
     render() {
