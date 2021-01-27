@@ -104,25 +104,35 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                     });
 
                     // TODO TESTing new synchrony plcc bins
-                    // this.processBinLookupResponse({
-                    //     issuingCountryCode: 'US',
-                    //     supportedBrands: [
-                    //         {
-                    //             brand: 'visa',
-                    //             cvcPolicy: 'hidden',
-                    //             enableLuhnCheck: true,
-                    //             showExpiryDate: true,
-                    //             supported: true
-                    //         },
-                    //         {
-                    //             brand: 'bcmc',
-                    //             cvcPolicy: 'hidden',
-                    //             enableLuhnCheck: false,
-                    //             showExpiryDate: false,
-                    //             supported: true
-                    //         }
-                    //     ]
-                    // });
+                    this.processBinLookupResponse({
+                        issuingCountryCode: 'US',
+                        supportedBrands: [
+                            // {
+                            //     brand: 'plcc',
+                            //     cvcPolicy: 'required',
+                            //     enableLuhnCheck: false,
+                            //     showExpiryDate: false,
+                            //     supported: true,
+                            //     dualBrandingWithSinglePLCC: true
+                            // },
+                            {
+                                brand: 'visa',
+                                cvcPolicy: 'required',
+                                enableLuhnCheck: true,
+                                showExpiryDate: true,
+                                supported: true,
+                                dualBrandingWithSinglePLCC: false
+                            },
+                            {
+                                brand: 'cartebancaire',
+                                cvcPolicy: 'required',
+                                enableLuhnCheck: true,
+                                showExpiryDate: true,
+                                supported: true,
+                                dualBrandingWithSinglePLCC: false
+                            }
+                        ]
+                    });
                     // TODO end
                 }
             } else {

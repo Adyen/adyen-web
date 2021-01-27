@@ -42,13 +42,13 @@ export default function CardNumber(props: CardNumberProps) {
                 <div
                     className={classNames([
                         'adyen-checkout__card__dual-branding__buttons',
-                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
+                        { 'adyen-checkout__card__dual-branding__buttons--active': true } // TODO - should be isValid. This is just for testing
                     ])}
                 >
                     {dualBrandingElements.map(element => (
                         <DualBrandingIcon
                             key={element.id}
-                            brand={element.id}
+                            brand={element.id === 'plcc' ? 'card' : element.id} // TODO - remove ternary once plcc or Synchrony has a logo
                             onClick={dualBrandingChangeHandler}
                             dataValue={element.id}
                             notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}

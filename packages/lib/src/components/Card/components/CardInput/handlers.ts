@@ -19,6 +19,10 @@ function validateCardInput(): void {
 
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
+
+        // if (window['card']) {
+        //     console.log('### handlers::validateCardInput:: card.isValid=', window['card'].isValid);
+        // }
     });
 }
 
