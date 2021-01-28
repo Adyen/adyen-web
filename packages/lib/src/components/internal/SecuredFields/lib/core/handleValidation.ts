@@ -5,10 +5,6 @@ import { existy, getCVCPolicy } from '../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
 
-import * as logger from '../utilities/logger';
-
-const doLog = false;
-
 export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // --
     let callbackObjectsArr: CbObjOnFieldValid[];
@@ -16,17 +12,9 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
     const fieldType: string = pFeedbackObj.fieldType;
 
-    if (process.env.NODE_ENV === 'development' && doLog) {
-        logger.log(
-            '### HandleValidationCls2::handleValidation:: pFeedbackObj.fieldType=',
-            pFeedbackObj.fieldType,
-            'isEncrypted=',
-            this.state.securedFields[fieldType].isEncrypted
-        );
-    }
-
-    // CHECK IF CVC IS OPTIONAL
-
+    /**
+     * CHECK IF CVC IS OPTIONAL
+     */
     // Brand information (from setting the CC number) now contains information about
     // whether cvc is optional for that brand e.g. maestro
     // If it is optional, and we're dealing with the generic card type,
@@ -47,11 +35,14 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         pFeedbackObj.cvcPolicy = cvcPolicy;
     }
 
-    // PROCESS & BROADCAST ERRORS (OR LACK OF)
+    /**
+     * PROCESS & BROADCAST ERRORS (OR LACK OF)
+     */
     processErrors(pFeedbackObj, this.state.securedFields[fieldType], this.state.type, this.props.rootNode, this.callbacks.onError);
 
-    // REMOVE ANY EXISTING ENCRYPTED ELEMENT & CHECK VALIDITY OF THE FORM AS A WHOLE
-
+    /**
+     * REMOVE ANY EXISTING ENCRYPTED ELEMENT & CHECK VALIDITY OF THE FORM AS A WHOLE
+     */
     // If the field was previously encrypted...
     if (this.state.securedFields[fieldType].isEncrypted) {
         // callbackObjectsArr will be an array containing 1 or 2 objects that need to be broadcast
@@ -77,10 +68,14 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         this.state.securedFields[fieldType].isEncrypted = false;
     }
 
-    // STORE & BROADCAST VALID STATE OF THE FORM AS A WHOLE ///////
+    /**
+     * STORE & BROADCAST VALID STATE OF THE FORM AS A WHOLE
+     */
     this.assessFormValidity();
 
-    // PROCESS & BROADCAST CARD BRANDS
+    /**
+     * PROCESS & BROADCAST CARD BRANDS
+     */
     if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'brand')) {
         this.processBrand(pFeedbackObj);
     }
