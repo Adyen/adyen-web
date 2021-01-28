@@ -1,51 +1,41 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyCompanyDetails from './ReadOnlyCompanyDetails';
 import { renderFormField } from '../FormFields';
 import { companyDetailsValidationRules } from './validate';
-import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
-import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsStateError, CompanyDetailsStateValid } from './types';
+import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
+import useForm from '../../../utils/useForm';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
 
 export default function CompanyDetails(props: CompanyDetailsProps) {
-    const { label = '', namePrefix, requiredFields, visibility, validator } = props;
+    const { label = '', namePrefix, requiredFields, visibility } = props;
     const { i18n } = useCoreContext();
-    const [data, setData] = useState<CompanyDetailsSchema>(props.data);
-    const [errors, setErrors] = useState<CompanyDetailsStateError>({});
-    const [valid, setValid] = useState<CompanyDetailsStateValid>({});
-
-    const eventHandler = (mode: string): Function => (e: Event): void => {
-        const { name, value } = e.target as HTMLInputElement;
-        const key = name.split(`${namePrefix}.`).pop();
-        const { isValid, errorMessage } = validator.validate(key, mode)(value);
-
-        setData(prevData => ({ ...prevData, [key]: value }));
-        setValid(prevValid => ({ ...prevValid, [key]: isValid }));
-        setErrors(prevErrors => ({ ...prevErrors, [key]: !isValid && errorMessage }));
-    };
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<CompanyDetailsSchema>({
+        schema: requiredFields,
+        rules: props.validationRules,
+        defaultData: props.data
+    });
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
-    useEffect(() => {
-        const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]).isValid);
-        const formattedData = getFormattedData(data);
-        props.onChange({ data: formattedData, isValid });
-    }, [data, valid, errors]);
+    const eventHandler = (mode: string): Function => (e: Event): void => {
+        const { name } = e.target as HTMLInputElement;
+        const key = name.split(`${namePrefix}.`).pop();
 
-    this.showValidation = () => {
-        const errorsReducer = (acc, field) => {
-            const { isValid, errorMessage } = validator.validate(field, 'blur')(data[field]);
-            acc[field] = !isValid && errorMessage;
-            return acc;
-        };
-
-        setErrors(requiredFields.reduce(errorsReducer, {}));
+        handleChangeFor(key, mode)(e);
     };
+
+    useEffect(() => {
+        const formattedData = getFormattedData(data);
+        props.onChange({ data: formattedData, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
+
+    this.showValidation = triggerValidation;
 
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyCompanyDetails {...props} data={data} />;
@@ -90,5 +80,5 @@ CompanyDetails.defaultProps = {
     onChange: () => {},
     visibility: 'editable',
     requiredFields: companyDetailsSchema,
-    validator: new Validator(companyDetailsValidationRules)
+    validationRules: companyDetailsValidationRules
 };
