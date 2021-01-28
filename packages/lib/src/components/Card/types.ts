@@ -124,6 +124,7 @@ export interface BrandObject {
     enableLuhnCheck: boolean;
     showExpiryDate: boolean;
     supported: boolean;
+    dualBrandingContainsPLCC?: boolean;
 }
 
 export interface BinLookupResponseRaw {
@@ -143,6 +144,7 @@ export interface BinLookupResponseRaw {
 export interface BinLookupResponse {
     issuingCountryCode: string;
     supportedBrands?: BrandObject[];
+    dualBrandingContainsPLCC?: boolean;
 }
 
 export interface DualBrandSelectElement {

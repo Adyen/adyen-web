@@ -41,4 +41,5 @@ export interface CardInputState {
     status: string;
     valid?: object;
     issuingCountryCode: string;
+    dualBrandingContainsPLCC?: boolean;
 }

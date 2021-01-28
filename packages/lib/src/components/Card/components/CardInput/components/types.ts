@@ -10,6 +10,8 @@ export interface CardFieldsProps {
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
+    dualBrandingContainsPLCC?: boolean;
+    // numCharsInPAN?: number;
     errors?: any;
     focusedElement?: any;
     hasCVC?: any;
@@ -33,6 +35,7 @@ export interface CardNumberProps {
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
+    dualBrandingContainsPLCC?: boolean;
     error: string;
     filled: boolean;
     focused: boolean;
@@ -40,6 +43,7 @@ export interface CardNumberProps {
     label: string;
     onFocusField: (field: string) => void;
     showBrandIcon: boolean;
+    // numCharsInPAN: number;
 }
 
 export interface CVCProps {

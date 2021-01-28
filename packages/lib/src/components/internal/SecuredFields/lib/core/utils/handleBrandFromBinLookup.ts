@@ -39,7 +39,7 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
     this.sendBrandToCardSF({
         brand: passedBrand,
         enableLuhnCheck: !(binLookupResponse.supportedBrands[0].enableLuhnCheck === false),
-        dualBrandingWithSinglePLCC: binBrandObj['dualBrandingWithSinglePLCC']
+        dualBrandingContainsPLCC: binBrandObj.dualBrandingContainsPLCC
     });
 
     /**
