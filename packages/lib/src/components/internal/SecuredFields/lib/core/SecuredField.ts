@@ -353,11 +353,9 @@ class SecuredField extends AbstractSecuredField {
                 case CVC_POLICY_HIDDEN:
                     // If cvc is hidden then the field is always valid
                     return true;
-                    break;
                 case CVC_POLICY_OPTIONAL:
                     // If cvc is optional then the field is always valid UNLESS it has an error
                     return !this.hasError;
-                    break;
                 default:
                     return this._isValid; // && !this.hasError; // WHY is this not just: return this._isValid (like below)...
             }
