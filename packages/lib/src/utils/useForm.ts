@@ -1,15 +1,8 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import Validator, { ValidatorRules } from './Validator/FormValidator';
 
-function useForm<DataState = { [key: string]: any }>({
-    rules,
-    formatters = {},
-    defaultData = {},
-    ...props
-}: {
-    rules?: ValidatorRules;
-    [key: string]: any;
-}) {
+function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorRules; [key: string]: any }) {
+    const { rules = {}, formatters = {}, defaultData = {} } = props;
     const validator = new Validator(rules);
     const [schema, setSchema] = useState<string[]>(props.schema ?? []);
     const [errors, setErrors] = useState<any>({});
@@ -48,7 +41,7 @@ function useForm<DataState = { [key: string]: any }>({
     };
 
     const handleChangeFor = (key, mode = 'blur') => e => {
-        const value = e.target ? e.target.value : e;
+        const value = e?.target ? e.target.value : e;
         const [formattedValue, validationResult] = processField(key, value, mode);
 
         updateFieldData(key, formattedValue);
@@ -69,12 +62,23 @@ function useForm<DataState = { [key: string]: any }>({
 
     // Set default values
     useEffect(() => {
-        schema.forEach(fieldKey => {
-            if (!!defaultData[fieldKey] && data[fieldKey] === null) {
-                handleChangeFor(fieldKey)(defaultData[fieldKey]);
-            }
-        });
-    }, [schema, data]);
+        const newState = schema.reduce(
+            (acc: any, fieldKey) => {
+                if (typeof defaultData[fieldKey] !== 'undefined') {
+                    const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
+                    acc.valid = { ...acc.valid, [fieldKey]: validationResult.isValid ?? false };
+                    acc.errors = { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false };
+                    acc.data = { ...acc.data, [fieldKey]: formattedValue };
+                }
+                return acc;
+            },
+            { data: {}, valid: {}, errors: {} }
+        );
+
+        setData(prevData => ({ ...prevData, ...newState.data }));
+        setValid(prevData => ({ ...prevData, ...newState.valid }));
+        setErrors(prevData => ({ ...prevData, ...newState.errors }));
+    }, []);
 
     return {
         handleChangeFor,
