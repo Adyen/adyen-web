@@ -38,7 +38,7 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
     // Pass brand to CardNumber SF
     this.sendBrandToCardSF({
         brand: passedBrand,
-        enableLuhnCheck: !(binLookupResponse.supportedBrands[0].enableLuhnCheck === false)
+        enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false
     });
 
     /**
