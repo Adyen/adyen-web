@@ -197,5 +197,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe for secured bank account number",
     "ach.encryptedBankAccountNumber.aria.label": "Bank account field",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for secured bank routing number",
-    "ach.encryptedBankLocationId.aria.label": "Bank routing number field"
+    "ach.encryptedBankLocationId.aria.label": "Bank routing number field",
+    "pix.instructions": "Open the app with the PIX registered key, choose Pay with PIX and scan the QR Code or copy and paste the code"
 }
