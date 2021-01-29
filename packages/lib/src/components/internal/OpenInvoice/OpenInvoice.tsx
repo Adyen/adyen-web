@@ -83,7 +83,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         <div className="adyen-checkout__open-invoice">
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
-                    data={data.companyDetails}
+                    data={props.data.companyDetails}
                     label="companyDetails"
                     onChange={handleFieldset('companyDetails')}
                     ref={fieldsetsRefs.companyDetails}
