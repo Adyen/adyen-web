@@ -57,6 +57,11 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
         callbackObjectsArr[0].endDigits = pFeedbackObj.endDigits;
     }
 
+    // re. dualBrandingContainsPLCC
+    if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.numChars)) {
+        callbackObjectsArr[0].numChars = pFeedbackObj.numChars;
+    }
+
     // BROADCAST VALID STATE OF INDIVIDUAL INPUTS - passing the encryption objects
     for (i = 0, len = callbackObjectsArr.length; i < len; i += 1) {
         this.callbacks.onFieldValid(callbackObjectsArr[i]);

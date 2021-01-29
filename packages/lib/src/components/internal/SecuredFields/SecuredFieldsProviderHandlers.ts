@@ -79,6 +79,8 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
         return false;
     }
 
+    console.log('### SecuredFieldsProviderHandlers::handleOnFieldValid:: field', field);
+
     const setValidFieldState = prevState => ({
         data: { ...prevState.data, [field.encryptedFieldName]: field.blob },
         valid: { ...prevState.valid, [field.encryptedFieldName]: field.valid },

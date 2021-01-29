@@ -66,8 +66,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             additionalSelectElements: [],
             additionalSelectValue: '',
             issuingCountryCode: null,
-            dualBrandingContainsPLCC: null
-            // numCharsInPAN: null
+            dualBrandingContainsPLCC: null,
+            numDigitsInPAN: null
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
@@ -232,7 +232,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     dualBrandingChangeHandler={this.handleAdditionalDataSelection}
                                     dualBrandingSelected={this.state.additionalSelectValue}
                                     dualBrandingContainsPLCC={this.state.dualBrandingContainsPLCC}
-                                    // numCharsInPAN={this.state.numCharsInPAN}
+                                    numDigitsInPAN={this.state.numDigitsInPAN}
                                 />
 
                                 {hasHolderName && (
