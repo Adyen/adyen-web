@@ -34,7 +34,6 @@ export interface SFPState {
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
     hideCVCForBrand?: boolean;
-    numDigitsInPAN?: number;
 }
 
 /**

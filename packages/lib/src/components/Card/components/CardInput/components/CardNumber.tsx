@@ -9,18 +9,7 @@ import styles from '../CardInput.module.scss';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
-    const {
-        error = '',
-        isValid = false,
-        onFocusField = () => {},
-        dualBrandingElements,
-        dualBrandingChangeHandler,
-        dualBrandingSelected,
-        dualBrandingContainsPLCC,
-        numDigitsInPAN
-    } = props;
-
-    const dualBrandingIconsActive = dualBrandingContainsPLCC === true && numDigitsInPAN >= 16 ? true : isValid;
+    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
 
     return (
         <Field
@@ -53,13 +42,13 @@ export default function CardNumber(props: CardNumberProps) {
                 <div
                     className={classNames([
                         'adyen-checkout__card__dual-branding__buttons',
-                        { 'adyen-checkout__card__dual-branding__buttons--active': dualBrandingIconsActive } // TODO - should be isValid. This is just for testing. Remove
+                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
                     ])}
                 >
                     {dualBrandingElements.map(element => (
                         <DualBrandingIcon
                             key={element.id}
-                            brand={element.id === 'plcc' ? 'bcmc' : element.id} // TODO - remove ternary once plcc or Synchrony has a logo
+                            brand={element.id}
                             onClick={dualBrandingChangeHandler}
                             dataValue={element.id}
                             notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}

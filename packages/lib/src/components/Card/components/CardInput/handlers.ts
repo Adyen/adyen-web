@@ -19,10 +19,6 @@ function validateCardInput(): void {
 
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
-
-        // if (window['card']) {
-        //     console.log('### handlers::validateCardInput:: card.isValid=', window['card'].isValid);
-        // }
     });
 }
 
@@ -80,7 +76,7 @@ function handleInstallments(installments): void {
 
 function handleSecuredFieldsChange(newState: SFPState): void {
     const sfState: SFPState = newState;
-    // console.log('### handlers::handleSecuredFieldsChange::  sfState.numDigitsInPAN', sfState.numDigitsInPAN);
+
     const tempHolderName: string = sfState.autoCompleteName && this.props.hasHolderName ? sfState.autoCompleteName : this.state.data.holderName;
 
     const setSfpData = (prevState: SFPState): SFPState => ({
@@ -98,15 +94,10 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         },
         isSfpValid: sfState.isSfpValid,
         hideCVCForBrand: sfState.hideCVCForBrand,
-        brand: sfState.brand,
-        ...(sfState.numDigitsInPAN && { numDigitsInPAN: sfState.numDigitsInPAN }) // TODO - only add if this is present in newState
+        brand: sfState.brand
     });
 
     this.setState(setSfpData);
-
-    // setTimeout(() => {
-    //     console.log('### handlers::handleSecuredFieldsChange:: this.state.numDigitsInPAN', this.state.numDigitsInPAN);
-    // }, 2000);
 }
 
 /**

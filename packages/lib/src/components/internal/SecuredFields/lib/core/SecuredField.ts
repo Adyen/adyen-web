@@ -349,20 +349,16 @@ class SecuredField extends AbstractSecuredField {
 
     get isValid(): boolean {
         if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
-            // console.log('### SecuredField::isValid:: cvcPolicy=', this.cvcPolicy);
             switch (this.cvcPolicy) {
                 case CVC_POLICY_HIDDEN:
                     // If cvc is hidden then the field is always valid
-                    // console.log('### SecuredField::isValid:: ', true);
                     return true;
                     break;
                 case CVC_POLICY_OPTIONAL:
                     // If cvc is optional then the field is always valid UNLESS it has an error
-                    // console.log('### SecuredField::isValid:: ', !this.hasError);
                     return !this.hasError;
                     break;
                 default:
-                    // console.log('### SecuredField::isValid:: ', this._isValid);
                     return this._isValid; // && !this.hasError; // WHY is this not just: return this._isValid (like below)...
             }
         }
@@ -386,8 +382,6 @@ class SecuredField extends AbstractSecuredField {
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcPolicy:: value=', value);
 
         this._cvcPolicy = value;
-
-        // console.log('### SecuredField::cvcPolicy:: SETTTER cvcPolicy=', value);
 
         // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
         // NOTE: fixes issue in Components where you first validate and then start typing a maestro number

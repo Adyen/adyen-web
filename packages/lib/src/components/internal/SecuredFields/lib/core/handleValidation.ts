@@ -1,7 +1,7 @@
 import { makeCallbackObjectsValidation } from './utils/callbackUtils';
 import { removeEncryptedElement } from '../ui/encryptedElements';
 import { processErrors } from './utils/processErrors';
-import { existy, getCVCPolicy, truthy } from '../utilities/commonUtils';
+import { existy, getCVCPolicy } from '../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
 
@@ -52,11 +52,6 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
         // NOTE: in this case (validation) this will be an empty string
         if (fieldType === ENCRYPTED_CARD_NUMBER) {
             callbackObjectsArr[0].endDigits = '';
-        }
-
-        // re. dualBrandingContainsPLCC
-        if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.numChars)) {
-            callbackObjectsArr[0].numChars = pFeedbackObj.numChars;
         }
 
         for (let i = 0, len = callbackObjectsArr.length; i < len; i += 1) {

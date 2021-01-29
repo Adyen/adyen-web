@@ -16,11 +16,9 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
  * @param types - array containing 2 card brands or types
  * @param switcherType - type of switcher ('brandSwitcher' or 'cardTypeSwitcher' - the latter would switch between 'debit' & 'credit' varieties)
  */
-export const createCardVariantSwitcher = (brandObj: BrandObject[], dualBrandingContainsPLCC) => {
+export const createCardVariantSwitcher = (brandObj: BrandObject[]) => {
     const leadBrand = brandObj[0];
     const subBrand = brandObj[1];
-
-    leadBrand.dualBrandingContainsPLCC = subBrand.dualBrandingContainsPLCC = dualBrandingContainsPLCC;
 
     return {
         stateObject: {

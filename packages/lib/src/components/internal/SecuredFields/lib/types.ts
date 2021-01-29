@@ -164,7 +164,6 @@ export interface CbObjOnFieldValid {
     rootNode: HTMLElement;
     blob?: string;
     endDigits?: string;
-    numChars?: number;
 }
 
 export interface CbObjOnAutoComplete {

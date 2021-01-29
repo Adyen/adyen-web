@@ -11,8 +11,6 @@ export default function CardFields({
     dualBrandingElements,
     dualBrandingChangeHandler,
     dualBrandingSelected,
-    dualBrandingContainsPLCC,
-    numDigitsInPAN,
     errors,
     focusedElement,
     hasCVC,
@@ -37,8 +35,6 @@ export default function CardFields({
                 dualBrandingElements={dualBrandingElements}
                 dualBrandingChangeHandler={dualBrandingChangeHandler}
                 dualBrandingSelected={dualBrandingSelected}
-                dualBrandingContainsPLCC={dualBrandingContainsPLCC}
-                numDigitsInPAN={numDigitsInPAN}
             />
 
             <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">

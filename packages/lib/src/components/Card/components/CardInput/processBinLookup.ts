@@ -18,7 +18,7 @@ export default function processBinLookupResponse(binLookupResponse: BinLookupRes
         // 1) Multiple options found - add to the UI & inform SFP
         if (supportedBrands.length > 1) {
             // --
-            const switchObj = createCardVariantSwitcher(supportedBrands, binLookupResponse.dualBrandingContainsPLCC);
+            const switchObj = createCardVariantSwitcher(supportedBrands);
 
             // Set properties on state to trigger a Select element in the UI
             this.setState(switchObj.stateObject); // Don't need to call validateCardInput - this will be called by the brandChange from SFP

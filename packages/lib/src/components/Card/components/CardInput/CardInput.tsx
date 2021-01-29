@@ -17,7 +17,7 @@ import styles from './CardInput.module.scss';
 import { CardInputProps, CardInputState } from './types';
 import './CardInput.scss';
 import { BinLookupResponse } from '../../types';
-import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { objectsDeepEqual } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
@@ -65,9 +65,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             focusedElement: '',
             additionalSelectElements: [],
             additionalSelectValue: '',
-            issuingCountryCode: null,
-            dualBrandingContainsPLCC: null,
-            numDigitsInPAN: null
+            issuingCountryCode: null
         };
 
         this.validateCardInput = handlers.validateCardInput.bind(this);
@@ -152,9 +150,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
     public processBinLookupResponse(data: BinLookupResponse) {
         const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
-        const dualBrandingContainsPLCC = data?.dualBrandingContainsPLCC ? data.dualBrandingContainsPLCC : false;
 
-        this.setState({ issuingCountryCode, dualBrandingContainsPLCC }, () => {
+        this.setState({ issuingCountryCode }, () => {
             this.processBinLookup(data);
         });
     }
@@ -231,8 +228,6 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
                                     dualBrandingChangeHandler={this.handleAdditionalDataSelection}
                                     dualBrandingSelected={this.state.additionalSelectValue}
-                                    dualBrandingContainsPLCC={this.state.dualBrandingContainsPLCC}
-                                    numDigitsInPAN={this.state.numDigitsInPAN}
                                 />
 
                                 {hasHolderName && (

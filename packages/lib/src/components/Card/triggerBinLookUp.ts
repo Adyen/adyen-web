@@ -27,34 +27,11 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             {
                 supportedBrands: this.props.brands || DEFAULT_CARD_GROUP_TYPES,
                 encryptedBin: callbackObj.encryptedBin,
-                // TODO - now have to fake a bin if loading SF locally
-                // encryptedBin:
-                //     'adyenjs_0_1_25$Idz96ona3pX2SieM/Q9O5XwQa/2rNmAsmjlY+pwe85+K1O4WbtomkpOUDNG29DtCBlGXFlq4uZurEiabsJ/wdbfXfQAZwPKi1tD/0h4Uq9Q3Z3vJZDFFRaMQ31w+6RxqBMzUmaJhJYXaclAxpGnP5vQL2A9+oQT2txPPsibN44vcShEFx+lDrNWLHMc4QMDqg/8zhWSlcIJYYfHxYKwZ2mUGiHcDSPghaDdfBiHf/hta4T1TCvI1kc5t9cVDJFLCyt+FinogG3iXfpzGdoQOiHbpCR0g4olbUK5cL8j2I8IOI1LmyhzEt7bs1wxqTtZI1vbEc/8m1euJ5ejYsWKIrw==$aahPmFoXQn9+7ATZngl2L+okugStHz84rNyOwM66YwERRQUgGL6X2s5mhc+NGZU9FJAK9Shy1mioGOBcHP5w4rQVqq5sQY3taPnKXOe4METEHurNBlezeLHHhmljWsXGjsVg2UcjVz3USPh+l1Hz1QnYcCcTGCoU1euNKXiVFAKh74f5yfdPrcTTRiwaPKGU2sv8mNXxt5R7VI2VmqNKgDIXjI+zYIRys0xGHP9nHP84I1Y9IS20tzsEl289UMHpwFwO7ecKsUbthMeo6i1DM0jaG8OTg2zTBDW89N6cSXdtVhjQpMM69CFysgtzEthF2zvpxufCYDd5EKJNX204r8Q2gM9OuqplXFuYMFLWfoUMpBet5VS+P3ASxXqorElnrTbEi41erHBiU/2Te3TzERyNyOy/DkXHV9YGhAB9aYQVlN5N0/p297YflKMCh47L26mx1HVEQBIVRKIrG5iMYA2H1t21IXQjcZSMQvZCslu2c/gzoFl4lTZsbwZMMVNkQ2/kAQgTYIkTVv8Kf4E/8iZdmUx8SzjUYuKBjUH+uNmqHPuk+xSL7XrxWDFAJD2S1RMtu42sVhI6jxViOOyKTXE43pNLw/K48vcaLq4MNz3jPsAfGUXn6m4nnp5DO8/GIv22Ln2GNtwysC2CPvLx5xHgEq05EGCxx+7ZlVzWLhtkBmOnipbT8CObc0ahAvnsKbY2uTMxNlOlPaYsjPF4gbMP9F4PjQbntEnNZ3vMKdoTRCARazxUzfnxmdBbRJ2F4ZTP9dKkxdLhePhc',
                 requestId: callbackObj.uuid // Pass id of request
             }
         ).then((data: BinLookupResponseRaw) => {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
-                //
-                // TODO TESTing new synchrony plcc bins
-                // data.brands = [
-                //     {
-                //         brand: 'visa',
-                //         cvcPolicy: 'required',
-                //         enableLuhnCheck: true,
-                //         showExpiryDate: true,
-                //         supported: true
-                //     },
-                //     {
-                //         brand: 'plcc',
-                //         cvcPolicy: 'required',
-                //         enableLuhnCheck: false,
-                //         showExpiryDate: false,
-                //         supported: true
-                //     }
-                // ];
-                // TODO end
-
                 if (data.brands?.length) {
                     const mappedResponse = data.brands.reduce(
                         (acc, item) => {
@@ -63,13 +40,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
 
                             // Add supported brand objects to the supportedBrands array
                             if (item.supported === true) {
-                                /**
-                                 * NOTE we are currently using item.enableLuhnCheck === false as an indicator of a PLCC - this could/should change in the future
-                                 */
-                                // Add PLCCs to the front of the array so their icons are displayed first
-                                const action = item.enableLuhnCheck === false ? 'unshift' : 'push';
-                                acc.supportedBrands[action](item);
-
+                                acc.supportedBrands.push(item);
                                 return acc;
                             }
 
@@ -78,29 +49,14 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         { supportedBrands: [], detectedBrands: [] }
                     );
 
-                    // console.log('### triggerBinLookUp::mappedResponse=:: ', mappedResponse);
-
                     /**
                      * supportedBrands = merchant supports this brand(s); we have detected the card number to be of this brand(s); carry on!
                      */
                     if (mappedResponse.supportedBrands.length) {
-                        // Detect if we are in a dual branding situation with a regular card and a PLCC
-                        let dualBrandingContainsPLCC = false;
-                        if (mappedResponse.supportedBrands.length > 1) {
-                            dualBrandingContainsPLCC = mappedResponse.supportedBrands.reduce((acc, item) => {
-                                if (!acc && item.enableLuhnCheck === false) {
-                                    // re. using item.enableLuhnCheck === false as an indicator of a PLCC
-                                    acc = true;
-                                }
-                                return acc;
-                            }, false);
-                        }
-
                         // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
                         this.processBinLookupResponse({
                             issuingCountryCode: data.issuingCountryCode,
-                            supportedBrands: mappedResponse.supportedBrands,
-                            dualBrandingContainsPLCC
+                            supportedBrands: mappedResponse.supportedBrands
                         } as BinLookupResponse);
 
                         // Inform merchant of the result
@@ -145,7 +101,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         detectedBrands: null,
                         supportedBrands: null,
                         brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
-                    });
+                    } as CbObjOnBinLookup);
                 }
             } else {
                 // Some other kind of error on the backend

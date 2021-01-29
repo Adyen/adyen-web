@@ -61,7 +61,7 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
 
     this.setState({ isSfpValid: status.allValid }, () => {
         // New - fixes maestro-with-error-on-optional-cvc-field bug
-        this.props.onChange(this.state, 'onAllValid');
+        this.props.onChange(this.state);
         // Propagate onAllValid event
         this.props.onAllValid(status);
     });
@@ -79,8 +79,6 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
         return false;
     }
 
-    console.log('### SecuredFieldsProviderHandlers::handleOnFieldValid:: field', field);
-
     const setValidFieldState = prevState => ({
         data: { ...prevState.data, [field.encryptedFieldName]: field.blob },
         valid: { ...prevState.valid, [field.encryptedFieldName]: field.valid },
@@ -89,7 +87,7 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     });
 
     this.setState(setValidFieldState, () => {
-        this.props.onChange(this.state, 'handleOnFieldValid');
+        this.props.onChange(this.state);
 
         // Propagate onFieldValid event
         this.props.onFieldValid(field);
@@ -118,7 +116,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
             hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN
         }),
         () => {
-            this.props.onChange(this.state, 'handleOnBrand');
+            this.props.onChange(this.state);
 
             // Enhance data object with the url for the brand image
             this.props.onBrand({ ...cardInfo, brandImageUrl: getCardImageUrl(cardInfo.brand, this.props.loadingContext) });

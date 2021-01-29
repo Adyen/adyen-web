@@ -6,8 +6,6 @@ const checkFormIsValid = (pSecuredFields: object): boolean => {
     for (let i = 0, len = securedFieldKeys.length; i < len; i += 1) {
         const key: string = securedFieldKeys[i];
 
-        // console.log('### validateForm::checkFormIsValid::', key, 'isValid=', pSecuredFields[key].isValid);
-
         if (!pSecuredFields[key].isValid) {
             return false;
         }
