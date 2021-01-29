@@ -80,7 +80,7 @@ function handleInstallments(installments): void {
 
 function handleSecuredFieldsChange(newState: SFPState): void {
     const sfState: SFPState = newState;
-    console.log('### handlers::handleSecuredFieldsChange::  sfState.numDigitsInPAN', sfState.numDigitsInPAN);
+    // console.log('### handlers::handleSecuredFieldsChange::  sfState.numDigitsInPAN', sfState.numDigitsInPAN);
     const tempHolderName: string = sfState.autoCompleteName && this.props.hasHolderName ? sfState.autoCompleteName : this.state.data.holderName;
 
     const setSfpData = (prevState: SFPState): SFPState => ({
@@ -104,9 +104,9 @@ function handleSecuredFieldsChange(newState: SFPState): void {
 
     this.setState(setSfpData);
 
-    setTimeout(() => {
-        console.log('### handlers::handleSecuredFieldsChange:: this.state.numDigitsInPAN', this.state.numDigitsInPAN);
-    }, 2000);
+    // setTimeout(() => {
+    //     console.log('### handlers::handleSecuredFieldsChange:: this.state.numDigitsInPAN', this.state.numDigitsInPAN);
+    // }, 2000);
 }
 
 /**
