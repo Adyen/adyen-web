@@ -8,7 +8,7 @@ class PixElement extends QRLoaderContainer {
             delay: 2000, // ms
             countdownTime: 15, // min
             copyBtn: true,
-            introduction: 'Abra o app com sua chave PIX cadastrada, escolha Pagar com Pix e escaneie o QR Code ou copie e cole o código',
+            introduction: 'pix.instructions',
             ...super.formatProps(props)
         };
     }
