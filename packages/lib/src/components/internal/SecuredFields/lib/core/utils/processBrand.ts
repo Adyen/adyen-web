@@ -1,6 +1,6 @@
 import { CVC_POLICY_HIDDEN, CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
-import { existy, getCVCPolicy, objectsDeepEqual } from '../../utilities/commonUtils';
+import { getCVCPolicy, objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { CVCPolicyType } from '../AbstractSecuredField';
 
