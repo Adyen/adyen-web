@@ -56,7 +56,8 @@ class Select extends Component<SelectProps, SelectState> {
         if (!e.currentTarget.getAttribute('data-disabled')) {
             this.closeDropdown();
             const value = e.currentTarget.getAttribute('data-value');
-            this.props.onChange({ ...e, target: { value } });
+            const name = this.props.name;
+            this.props.onChange({ ...e, target: { value, name } });
         }
     }
 
