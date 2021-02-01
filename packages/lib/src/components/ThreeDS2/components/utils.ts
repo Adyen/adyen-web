@@ -117,35 +117,35 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
 };
 
 // New 3DS2 flow
-// export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({
-//     data: {
-//         [dataKey]: encodeObject({ threeDSCompInd: resultObj.threeDSCompInd }),
-//         paymentData
-//     }
-// });
-
-// Old 3DS2 flow
-export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): any => ({
+export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({
     data: {
-        details: { 'threeds2.fingerprint': encodeObject(resultObj) },
+        [dataKey]: encodeObject({ threeDSCompInd: resultObj.threeDSCompInd }),
         paymentData
     }
 });
 
-// New 3DS2 flow
-// export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
+// Old 3DS2 flow
+// export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): any => ({
 //     data: {
-//         details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
+//         details: { 'threeds2.fingerprint': encodeObject(resultObj) },
+//         paymentData
 //     }
 // });
 
-// Old 3DS2 flow
-export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
+// New 3DS2 flow
+export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
     data: {
-        details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
-        paymentData: authorisationToken
+        details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
     }
 });
+
+// Old 3DS2 flow
+// export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
+//     data: {
+//         details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
+//         paymentData: authorisationToken
+//     }
+// });
 
 export const handleErrorCode = (errorCode: string): ErrorObject => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
