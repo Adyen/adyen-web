@@ -35,7 +35,7 @@ export const decodeAndParseToken = (token: string): ThreeDS2Token => {
 
 /**
  * Performs JSON.stringify on passed object & and base64 encodes result
- * @param obj
+ * @param obj -
  * @returns encoded result
  */
 export const encodeObject = obj => {
@@ -66,9 +66,9 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
  *  prepareChallengeData
  *
  *  Requires an object containing the challenge parameters:
- *  @token - challengeToken string received from /submitThreeDS2Fingerprint, /details or /payments call: contains acsTransID, acsURL, messageVersion,
+ *  @param token - challengeToken string received from /submitThreeDS2Fingerprint, /details or /payments call: contains acsTransID, acsURL, messageVersion,
  *     threeDSNotificationURL and threeDSServerTransID
- *  @size - one of five possible challenge window sizes
+ *  @param size - one of five possible challenge window sizes
  */
 export const prepareChallengeData = ({ token, size }): ChallengeData => {
     const decodedChallengeToken = decodeAndParseToken(token);

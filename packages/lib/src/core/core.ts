@@ -86,7 +86,7 @@ class Core {
     /**
      * @internal
      * (Re)Initializes core options (i18n, paymentMethodsResponse, etc...)
-     * @param options
+     * @param options -
      * @returns this
      */
     private setOptions = (options): this => {
