@@ -53,7 +53,8 @@ const defaultProps: PayPalElementProps = {
     onInit: () => {},
     onClick: () => {},
     onCancel: () => {},
-    onError: () => {}
+    onError: () => {},
+    onShippingChange: () => {}
 };
 
 export default defaultProps;
