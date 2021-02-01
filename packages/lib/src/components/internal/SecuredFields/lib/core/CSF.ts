@@ -42,7 +42,7 @@ class CSF extends AbstractCSF {
              *  For generic card will change as shopper types
              *  For non-generic card will be fixed
              */
-            brand: this.props.type !== 'card' ? this.props.type : null,
+            brand: this.props.type !== 'card' ? { brand: this.props.type, cvcPolicy: 'required' } : { brand: null, cvcPolicy: 'required' },
             allValid: undefined,
             numIframes: 0,
             originalNumIframes: 0,

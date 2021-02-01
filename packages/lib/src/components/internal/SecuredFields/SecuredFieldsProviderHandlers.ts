@@ -1,5 +1,11 @@
 import { getCardImageUrl } from './utils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from './lib/configuration/constants';
+import {
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_CARD_NUMBER,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_HIDDEN,
+    CVC_POLICY_REQUIRED
+} from './lib/configuration/constants';
 import { getError } from '../../../core/Errors/utils';
 import { ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
 import {
@@ -55,7 +61,7 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
 
     this.setState({ isSfpValid: status.allValid }, () => {
         // New - fixes maestro-with-error-on-optional-cvc-field bug
-        this.props.onChange(this.state, 'OnAllValid');
+        this.props.onChange(this.state);
         // Propagate onAllValid event
         this.props.onAllValid(status);
     });
@@ -98,13 +104,16 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
         prevState => ({
             brand: cardInfo.brand,
-            cvcRequired: cardInfo.cvcRequired !== false,
+            cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
             errors: {
                 ...prevState.errors,
                 // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
-                [ENCRYPTED_SECURITY_CODE]: !cardInfo.cvcRequired && this.numCharsInCVC === 0 ? false : prevState.errors[ENCRYPTED_SECURITY_CODE]
+                [ENCRYPTED_SECURITY_CODE]:
+                    (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
+                        ? false
+                        : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            hideCVCForBrand: !!cardInfo.hideCVC
+            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN
         }),
         () => {
             this.props.onChange(this.state);
@@ -114,7 +123,10 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
         }
     );
 
-    if ((this.props.hideCVC || !!cardInfo.hideCVC || cardInfo.cvcRequired === false) && this.props.oneClick) {
+    /**
+     * Edge case: one-click PMs where CVC is hidden or optional
+     */
+    if ((this.props.hideCVC || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN || cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL) && this.props.oneClick) {
         this.handleOnNoDataRequired();
     }
 }

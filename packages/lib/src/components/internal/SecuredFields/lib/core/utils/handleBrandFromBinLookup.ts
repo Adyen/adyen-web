@@ -26,13 +26,9 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
 
     const passedBrand: string = binBrandObj.brand;
 
-    const hideCVC: boolean = binBrandObj.cvcPolicy === 'hidden';
-    const cvcRequired: boolean = hideCVC || binBrandObj.cvcPolicy === 'optional' ? false : true;
-
     const brandObj: object = {
-        cvcRequired,
         brand: passedBrand,
-        hideCVC,
+        cvcPolicy: binBrandObj.cvcPolicy,
         cvcText: 'Security code',
         fieldType: ENCRYPTED_CARD_NUMBER
     };
@@ -40,15 +36,18 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
     this.processBrand(brandObj as SFFeedbackObj);
 
     // Pass brand to CardNumber SF
-    this.sendBrandToCardSF({ brand: passedBrand, enableLuhnCheck: !(binLookupResponse.supportedBrands[0].enableLuhnCheck === false) });
+    this.sendBrandToCardSF({
+        brand: passedBrand,
+        enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false
+    });
 
     /**
      * CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)
-     * Set the cvcRequired value on the relevant SecuredFields instance...
+     * Set the cvcPolicy value on the relevant SecuredFields instance...
      * ...which will reflect in the cvc field being considered valid, as long as it is not in error...
      */
     if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
-        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcRequired = cvcRequired;
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = binBrandObj.cvcPolicy;
     }
 
     // ... and re-check if all SecuredFields are valid

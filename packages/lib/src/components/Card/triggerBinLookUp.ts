@@ -3,7 +3,7 @@ import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../internal/Sec
 import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configuration/constants';
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
-import { BinLookupResponse, BinLookupResponseObj } from './types';
+import { BinLookupResponse, BinLookupResponseRaw } from './types';
 
 export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -29,14 +29,16 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                 encryptedBin: callbackObj.encryptedBin,
                 requestId: callbackObj.uuid // Pass id of request
             }
-        ).then((data: BinLookupResponseObj) => {
+        ).then((data: BinLookupResponseRaw) => {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
                 if (data.brands?.length) {
                     const mappedResponse = data.brands.reduce(
                         (acc, item) => {
+                            // All brand strings end up in the detectedBrands array
                             acc.detectedBrands.push(item.brand);
 
+                            // Add supported brand objects to the supportedBrands array
                             if (item.supported === true) {
                                 acc.supportedBrands.push(item);
                                 return acc;
@@ -103,7 +105,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                 }
             } else {
                 // Some other kind of error on the backend
-                this.props.onError(data);
+                this.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
             }
         });
     } else if (this.currentRequestId) {

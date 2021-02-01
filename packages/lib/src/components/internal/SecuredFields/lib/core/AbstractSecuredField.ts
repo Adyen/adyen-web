@@ -4,6 +4,8 @@ export type RtnType_noParamVoidFn = () => void;
 export type RtnType_postMessageListener = (event: Event) => void;
 export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
 
+export type CVCPolicyType = 'required' | 'optional' | 'hidden';
+
 export interface SFInternalConfig {
     extraFieldData: string;
     txVariant: string;
@@ -18,7 +20,7 @@ export interface SFInternalConfig {
 
 export interface SFSetupObject extends SFInternalConfig {
     fieldType: string;
-    cvcRequired: boolean;
+    cvcPolicy: CVCPolicyType;
     iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
@@ -63,7 +65,7 @@ abstract class AbstractSecuredField {
     protected _errorType: string;
     protected _hasError: boolean;
     protected _isValid: boolean;
-    protected _cvcRequired: boolean;
+    protected _cvcPolicy: CVCPolicyType;
     protected _iframeContentWindow: Window;
     protected _isEncrypted: boolean;
     protected _numKey: number;

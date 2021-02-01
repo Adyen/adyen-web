@@ -1,10 +1,16 @@
 import Language from '../../../../language/Language';
+import { CVCPolicyType } from './core/AbstractSecuredField';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
     interface Window {
         _b$dl: boolean;
     }
+}
+
+export interface BrandStorageObject {
+    brand: string;
+    cvcPolicy: string;
 }
 
 /**
@@ -67,7 +73,7 @@ export interface CallbacksConfig {
 
 export interface CSFStateObject {
     type: string;
-    brand: string;
+    brand: BrandStorageObject;
     allValid: boolean;
     numIframes: number;
     originalNumIframes: number;
@@ -137,8 +143,7 @@ export interface CbObjOnBrand {
     type: string;
     rootNode: HTMLElement;
     brand: string;
-    hideCVC: boolean;
-    cvcRequired: boolean;
+    cvcPolicy: CVCPolicyType;
     cvcText: string;
     brandImageUrl?: string; // Added by SFP
     // maxLength: number;
@@ -187,7 +192,7 @@ export interface CbObjOnError {
     error: string;
     type: string;
     rootNode?: HTMLElement;
-    detectedBrands?: string[];
+    detectedBrands?: string[]; // new v2
     errorI18n?: string;
     errorText?: string;
 }
@@ -227,6 +232,7 @@ export interface SFFeedbackObj {
     code?: string;
     cvcText?: string;
     cvcRequired?: boolean;
+    cvcPolicy?: CVCPolicyType;
     maxLength?: number;
     error?: string;
     endDigits?: string;

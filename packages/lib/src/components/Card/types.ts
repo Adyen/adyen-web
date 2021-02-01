@@ -10,6 +10,7 @@ import {
     CbObjOnLoad,
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
+import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -119,20 +120,25 @@ export interface CardElementData {
 
 export interface BrandObject {
     brand: string;
-    cvcPolicy: string;
+    cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
     showExpiryDate: boolean;
     supported: boolean;
 }
 
-export interface BinLookupResponseObj {
+export interface BinLookupResponseRaw {
     requestId: string;
     issuingCountryCode?: string;
     brands?: BrandObject[];
+    // OR, if an error has occurred
+    status: number;
+    errorCode: string;
+    message: string;
+    errorType: string;
 }
 
 /**
- * Mapped & simplified version of BinLookupResponseObj
+ * Mapped & simplified version of BinLookupResponseRaw
  */
 export interface BinLookupResponse {
     issuingCountryCode: string;

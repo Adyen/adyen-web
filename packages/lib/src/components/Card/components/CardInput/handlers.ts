@@ -32,7 +32,7 @@ function handleAddress(address): void {
         }
     });
 
-    this.setState(setAddress, this.validateCardInput);
+    this.setState(setAddress);
 }
 
 /**
@@ -43,14 +43,14 @@ function handleKCPAuthentication(data: object, valid: object): void {
         data: { ...prevState.data, ...data },
         valid: { ...prevState.valid, ...valid }
     });
-    this.setState(setKCP, this.validateCardInput);
+    this.setState(setKCP);
 }
 
 /**
  * Saves the storeDetails in state
  */
 function handleOnStoreDetails(storeDetails: boolean): void {
-    this.setState({ storePaymentMethod: storeDetails }, this.validateCardInput);
+    this.setState({ storePaymentMethod: storeDetails });
 }
 
 /**
@@ -67,11 +67,11 @@ function handleHolderName(e: Event): void {
         }
     });
 
-    this.setState(setHolderName, this.validateCardInput);
+    this.setState(setHolderName);
 }
 
 function handleInstallments(installments): void {
-    this.setState({ installments }, this.validateCardInput);
+    this.setState({ installments });
 }
 
 function handleSecuredFieldsChange(newState: SFPState): void {
@@ -97,7 +97,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         brand: sfState.brand
     });
 
-    this.setState(setSfpData, this.validateCardInput);
+    this.setState(setSfpData);
 }
 
 /**
@@ -122,7 +122,7 @@ function handleAdditionalDataSelection(e: Event): void {
     const field: HTMLLIElement = e.currentTarget as HTMLLIElement;
     const value: string = field.getAttribute('data-value');
 
-    this.setState({ additionalSelectValue: value }, this.validateCardInput);
+    this.setState({ additionalSelectValue: value });
 
     // Find the brandObject with the matching brand value and place into an array
     const brandObjArr: BrandObject[] = this.state.additionalSelectElements.reduce((acc, item) => {

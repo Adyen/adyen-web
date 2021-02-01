@@ -23,3 +23,7 @@ export const CSF_FIELDS_ARRAY = [
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE
 ];
+
+export const CVC_POLICY_REQUIRED = 'required';
+export const CVC_POLICY_OPTIONAL = 'optional';
+export const CVC_POLICY_HIDDEN = 'hidden';

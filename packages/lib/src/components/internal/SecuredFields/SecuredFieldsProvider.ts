@@ -17,8 +17,9 @@ import {
     CbObjOnLoad
 } from './lib/types';
 import { AddressSchema } from '../../../types';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupResponse } from '../../Card/types';
+import { CVCPolicyType } from './lib/core/AbstractSecuredField';
 
 export interface SFPState {
     status?: string;
@@ -26,7 +27,7 @@ export interface SFPState {
     errors?: object;
     valid: object;
     data: object;
-    cvcRequired?: boolean;
+    cvcPolicy?: CVCPolicyType;
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressSchema;
@@ -68,7 +69,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             errors: {},
             valid: {},
             data: {},
-            cvcRequired: true,
+            cvcPolicy: CVC_POLICY_REQUIRED,
             isSfpValid: false,
             hasKoreanFields: this.props.hasKoreanFields
         };
@@ -273,8 +274,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
 
         // Scenarios:
-        // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup
-        // RESULT (binValueObject.brands.length === 1): binLookup has found a result so inform CSF
+        // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
+        // RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
         if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse);
     }
 
