@@ -8,8 +8,6 @@ import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
 export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // --
     let callbackObjectsArr: CbObjOnFieldValid[];
-
-    // EXTRACT VARS
     const fieldType: string = pFeedbackObj.fieldType;
 
     /**

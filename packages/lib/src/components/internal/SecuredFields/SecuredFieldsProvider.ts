@@ -274,8 +274,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
 
         // Scenarios:
-        // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup
-        // RESULT (binValueObject.brands.length === 1): binLookup has found a result so inform CSF
+        // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
+        // RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
         if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse);
     }
 

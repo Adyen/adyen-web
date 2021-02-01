@@ -264,12 +264,15 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             /**
-             * Validate, because action=
-             *  'numberKeyPressed' or date-, month-, year-, cvc-, pin-, or iban- KeyPressed (i.e. regular, "non-error" event)
+             * Validate, because action =
+             *
+             *  'brand'
              *  'delete'
              *  'luhnCheck'
-             *  'brand'
-             *  'incomplete field' (follows from a focus (blur) event)
+             *  'incomplete field' (an error that follows from a focus (blur) event)
+             *  'numberKeyPressed' (or date-, month-, year-, cvc-, pin-, or iban- KeyPressed)
+             *    - since we have no "error" action "...KeyPressed" is the action type on most error events (other than "incomplete field" or "luhnCheck")
+             *    and often these error events representing the clearing of an existing error
              */
             default:
                 // If we're validation handling (& not encryption handling) field must be invalid
