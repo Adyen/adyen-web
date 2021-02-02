@@ -25,7 +25,7 @@ fixture`Testing old (v65) 3DS2 Flow (redirect)`
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks(logger);
 
-test('Fill in card number that will trigger redirect flow', async t => {
+test.skip('Fill in card number that will trigger redirect flow', async t => {
     await start(t, 2000, TEST_SPEED);
 
     // Set handler for the alert window

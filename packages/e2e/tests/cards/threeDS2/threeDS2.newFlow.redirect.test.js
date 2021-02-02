@@ -54,7 +54,7 @@ test('Fill in card number that will trigger redirect flow', async t => {
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
         // Allow time for the ONLY /submitThreeDS2Fingerprint call, which we expect to be successful
-        .wait(2000)
+        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
         .ok()
         // Allow time for redirect to occur

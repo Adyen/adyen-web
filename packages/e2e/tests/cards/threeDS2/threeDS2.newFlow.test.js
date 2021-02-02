@@ -1,3 +1,6 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up, apparently!
+
 import { Selector, RequestLogger } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
@@ -5,10 +8,20 @@ import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
 
-const url = `${BASE_URL}/details`;
+const detailsURL = `${BASE_URL}/details`;
 
-const logger = RequestLogger(
-    { url, method: 'post' },
+const loggerDetails = RequestLogger(
+    { detailsURL, method: 'post' },
+    {
+        logResponseHeaders: true,
+        logResponseBody: true
+    }
+);
+
+const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
+
+const loggerSubmitThreeDS2 = RequestLogger(
+    { submitThreeDS2FingerprintURL, method: 'post' },
     {
         logResponseHeaders: true,
         logResponseBody: true
@@ -24,7 +37,7 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing new (v67) hybrid 3DS2 Flow`
     .page(BASE_URL)
     .clientScripts('threeDS2.clientScripts.js')
-    .requestHooks(logger);
+    .requestHooks([loggerDetails, loggerSubmitThreeDS2]);
 
 test('Fill in card number that will trigger frictionless flow', async t => {
     await start(t, 2000, TEST_SPEED);
@@ -47,7 +60,7 @@ test('Fill in card number that will trigger frictionless flow', async t => {
         .notOk()
         // Allow time for the ONLY details call, which we expect to be successful
         .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         // Allow time for the alert to manifest
         .wait(2000);
@@ -57,8 +70,8 @@ test('Fill in card number that will trigger frictionless flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test.only('Fill in card number that will trigger challenge flow', async t => {
-    logger.clear();
+test('Fill in card number that will trigger challenge flow', async t => {
+    loggerDetails.clear();
 
     await start(t, 2000, TEST_SPEED);
 
@@ -78,9 +91,9 @@ test.only('Fill in card number that will trigger challenge flow', async t => {
         // Expect no errors
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
-        // Allow time for the FIRST details call, which we expect to be successful
+        // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
         .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
         .ok();
 
     // console.log(logger.requests[0].response.headers);
@@ -90,9 +103,9 @@ test.only('Fill in card number that will trigger challenge flow', async t => {
     await submitChallenge(t);
 
     await t
-        // Allow time for the SECOND details call, which we expect to be successful
+        // Allow time for the /details call, which we expect to be successful
         .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         .wait(2000);
 
@@ -103,8 +116,8 @@ test.only('Fill in card number that will trigger challenge flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test('Fill in card number that will trigger challenge-only flow', async t => {
-    logger.clear();
+test.skip('Fill in card number that will trigger challenge-only flow', async t => {
+    loggerDetails.clear();
 
     await start(t, 2000, TEST_SPEED);
 
@@ -132,7 +145,7 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
     await t
         // Allow time for the ONLY details call, which we expect to be successful
         .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         .wait(2000);
 
