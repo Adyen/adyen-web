@@ -1,6 +1,6 @@
 import { ThreeDS2FlowObject } from './types';
 
-export const DEFAULT_CHALLENGE_WINDOW_SIZE = '05';
+export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
