@@ -10,6 +10,8 @@ export const httpPost = (endpoint, data) =>
         body: JSON.stringify(data)
     }).then(response => response.json());
 
+export const checkPaymentResult = resultCode => ['authorised', 'received', 'pending'].includes(resultCode?.toLowerCase());
+
 export const getSearchParameters = (search = window.location.search) =>
     search
         .replace(/\?/g, '')

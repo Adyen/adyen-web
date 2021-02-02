@@ -18,9 +18,10 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, BinLookupObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
+import { CSFReturnObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
+import { BinLookupResponse } from '../../../../Card/types';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -41,7 +42,7 @@ class CSF extends AbstractCSF {
              *  For generic card will change as shopper types
              *  For non-generic card will be fixed
              */
-            brand: this.props.type !== 'card' ? this.props.type : null,
+            brand: this.props.type !== 'card' ? { brand: this.props.type, cvcPolicy: 'required' } : { brand: null, cvcPolicy: 'required' },
             allValid: undefined,
             numIframes: 0,
             originalNumIframes: 0,
@@ -192,11 +193,11 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot destroy secured fields');
                 }
             },
-            brandsFromBinLookup: (brandsObj: BinLookupObject): void => {
+            brandsFromBinLookup: (binLookupResponse: BinLookupResponse): void => {
                 if (!this.config.isCreditCardType) return null;
 
                 if (this.state.isConfigured) {
-                    this.brandsFromBinLookup(brandsObj);
+                    this.brandsFromBinLookup(binLookupResponse);
                 } else {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }

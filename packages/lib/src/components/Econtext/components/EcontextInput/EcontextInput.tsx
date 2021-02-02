@@ -18,7 +18,7 @@ export default function EcontextInput(props) {
     }, [data, isValid]);
 
     const handleChange = (state): void => {
-        setData({ ...data, ...state.data });
+        setData(state.data);
         setIsValid(state.isValid);
     };
 

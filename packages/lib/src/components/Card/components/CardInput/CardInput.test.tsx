@@ -141,3 +141,132 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 });
+
+describe('Test mock binLookup results on CardInput.state', () => {
+    const dualBrandObj1 = {
+        brand: 'visa',
+        cvcPolicy: 'required',
+        enableLuhnCheck: 'true',
+        showExpiryDate: 'true',
+        supported: 'true'
+    };
+
+    const dualBrandObj2 = {
+        brand: 'cartebancaire',
+        cvcPolicy: 'required',
+        enableLuhnCheck: 'true',
+        showExpiryDate: 'true',
+        supported: 'true'
+    };
+
+    const mockBinLookupObj_dual = {
+        issuingCountryCode: 'FR',
+        supportedBrands: [dualBrandObj1, dualBrandObj2]
+    };
+
+    const mockBinLookupObj_single = {
+        issuingCountryCode: 'US',
+        supportedBrands: [
+            {
+                brand: 'mc',
+                cvcPolicy: 'required',
+                enableLuhnCheck: 'true',
+                showExpiryDate: 'true',
+                supported: 'true'
+            }
+        ]
+    };
+
+    test('CardInput.state contains expected values from a "dual-branded" lookup result', () => {
+        const wrapper = mount(<CardInput i18n={i18n} />);
+
+        const cardInput = wrapper.instance();
+
+        cardInput.processBinLookupResponse(mockBinLookupObj_dual);
+        wrapper.update();
+
+        let state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual('fr');
+        expect(state.additionalSelectElements).toEqual([
+            { id: 'visa', brandObject: dualBrandObj1 },
+            { id: 'cartebancaire', brandObject: dualBrandObj2 }
+        ]);
+    });
+
+    test('CardInput.state is altered when a "dual-branded" lookup result is followed by a "single" lookup result ', () => {
+        const wrapper = mount(<CardInput i18n={i18n} />);
+
+        const cardInput = wrapper.instance();
+
+        cardInput.processBinLookupResponse(mockBinLookupObj_dual);
+        wrapper.update();
+
+        let state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual('fr');
+        expect(state.additionalSelectElements).toEqual([
+            { id: 'visa', brandObject: dualBrandObj1 },
+            { id: 'cartebancaire', brandObject: dualBrandObj2 }
+        ]);
+
+        cardInput.processBinLookupResponse(mockBinLookupObj_single);
+        wrapper.update();
+
+        state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual('us');
+        expect(state.additionalSelectElements).toEqual([]);
+        expect(state.additionalSelectValue).toEqual('mc');
+    });
+
+    test('CardInput.state is altered when a "dual-branded" lookup result is followed by a "reset" result ', () => {
+        const wrapper = mount(<CardInput i18n={i18n} />);
+
+        const cardInput = wrapper.instance();
+
+        cardInput.processBinLookupResponse(mockBinLookupObj_dual);
+        wrapper.update();
+
+        let state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual('fr');
+        expect(state.additionalSelectElements).toEqual([
+            { id: 'visa', brandObject: dualBrandObj1 },
+            { id: 'cartebancaire', brandObject: dualBrandObj2 }
+        ]);
+
+        cardInput.processBinLookupResponse(null);
+        wrapper.update();
+
+        state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual(null);
+        expect(state.additionalSelectElements).toEqual([]);
+        expect(state.additionalSelectValue).toEqual('');
+    });
+
+    test('CardInput.state is altered when a "single" lookup result is followed by a "reset" result ', () => {
+        const wrapper = mount(<CardInput i18n={i18n} />);
+
+        const cardInput = wrapper.instance();
+
+        cardInput.processBinLookupResponse(mockBinLookupObj_single);
+        wrapper.update();
+
+        let state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual('us');
+        expect(state.additionalSelectElements).toEqual([]);
+        expect(state.additionalSelectValue).toEqual('mc');
+
+        cardInput.processBinLookupResponse(null);
+        wrapper.update();
+
+        state = cardInput.state;
+
+        expect(state.issuingCountryCode).toEqual(null);
+        expect(state.additionalSelectElements).toEqual([]);
+        expect(state.additionalSelectValue).toEqual('');
+    });
+});

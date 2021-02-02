@@ -14,7 +14,6 @@ CardType.cards = [];
 
 CardType.cards.push({
     cardType: 'mc',
-    displayName: 'Mastercard',
     startingRules: [51, 52, 53, 54, 55, 22, 23, 24, 25, 26, 27],
     permittedLengths: [16],
     pattern: /^(5[1-5][0-9]{0,14}|2[2-7][0-9]{0,14})$/,
@@ -25,7 +24,6 @@ CardType.cards.push({ cardType: 'visadankort', startingRules: [4571], permittedL
 
 CardType.cards.push({
     cardType: 'visa',
-    displayName: 'Visa',
     startingRules: [4],
     permittedLengths: [13, 16, 19],
     pattern: /^4[0-9]{0,18}$/,
@@ -151,7 +149,6 @@ CardType.cards.push({ cardType: 'uatp', startingRules: [1], permittedLengths: [1
 
 CardType.cards.push({
     cardType: 'cartebancaire',
-    displayName: 'Cartes Bancaires',
     startingRules: [4, 5, 6],
     permittedLengths: [16],
     pattern: /^[4-6][0-9]{0,15}$/
@@ -325,11 +322,6 @@ const getCardByBrand = pBrand => {
     return cardType[0];
 };
 
-const getDisplayName = pBrand => {
-    const card = getCardByBrand(pBrand);
-    return card ? card.displayName : null;
-};
-
 const isGenericCardType = (type = 'card') => type === 'card' || type === 'scheme';
 
 export default {
@@ -337,7 +329,6 @@ export default {
     detectCardLength,
     getShortestPermittedCardLength,
     getCardByBrand,
-    getDisplayName,
     isGenericCardType,
     __NO_BRAND: CardType.__NO_BRAND,
     allCards: CardType.cards

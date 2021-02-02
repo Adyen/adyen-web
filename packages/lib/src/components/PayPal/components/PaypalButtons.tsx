@@ -4,7 +4,7 @@ import { PayPalButtonsProps, FundingSource } from '../types';
 import { getStyle } from '../utils';
 
 export default function PaypalButtons(props: PayPalButtonsProps) {
-    const { onInit, onComplete, onClick, onCancel, onError, onSubmit, paypalRef, style } = props;
+    const { onInit, onComplete, onClick, onCancel, onError, onShippingChange, onSubmit, paypalRef, style } = props;
     const paypalButtonRef = useRef(null);
     const creditButtonRef = useRef(null);
 
@@ -16,6 +16,7 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
             onClick,
             onCancel,
             onError,
+            onShippingChange,
             createOrder: onSubmit,
             onApprove: onComplete
         });

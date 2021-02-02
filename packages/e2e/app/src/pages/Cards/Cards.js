@@ -20,7 +20,7 @@ window.checkout = new AdyenCheckout({
 // Credit card with installments
 window.card = checkout
     .create('card', {
-        brands: ['mc', 'visa', 'amex'],
+        brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'],
         ...window.cardConfig
     })
     .mount('.card-field');

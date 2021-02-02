@@ -1,5 +1,5 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import cardType from '../../../internal/SecuredFields/lib/utilities/cardType';
+import { BrandObject, DualBrandSelectElement } from '../../types';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -16,24 +16,18 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
  * @param types - array containing 2 card brands or types
  * @param switcherType - type of switcher ('brandSwitcher' or 'cardTypeSwitcher' - the latter would switch between 'debit' & 'credit' varieties)
  */
-export const createCardVariantSwitcher = (types: string[], switcherType: string) => {
-    const leadType = types[0];
-    let displayName = cardType.getDisplayName(leadType); // Works for when types are card brands e.g. 'visa', 'mc' NOT when types are 'credit'/'debit'
-    const leadDisplayName = displayName || leadType;
-
-    const subType = types[1];
-    displayName = cardType.getDisplayName(subType);
-    const subDisplayName = displayName || subType;
+export const createCardVariantSwitcher = (brandObj: BrandObject[]) => {
+    const leadBrand = brandObj[0];
+    const subBrand = brandObj[1];
 
     return {
         stateObject: {
             additionalSelectElements: [
-                { id: leadType, name: leadDisplayName },
-                { id: subType, name: subDisplayName }
-            ],
-            // additionalSelectValue: leadType, // comment out line if no initial selection is to be made
-            additionalSelectType: switcherType
+                { id: leadBrand.brand, brandObject: leadBrand },
+                { id: subBrand.brand, brandObject: subBrand }
+            ] as DualBrandSelectElement[]
+            // additionalSelectValue: leadBrand.brand, // comment out line if no initial selection is to be made
         },
-        leadType
+        leadBrand
     };
 };

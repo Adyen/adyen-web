@@ -10,11 +10,9 @@ export const ENCRYPTED_PIN_FIELD = 'encryptedPin';
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.2.7';
+export const SF_VERSION = '3.3.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
-
-export const IFRAME_TITLE = 'Iframe for secured card data input field';
 
 export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', 'giftcard'];
 
@@ -25,3 +23,7 @@ export const CSF_FIELDS_ARRAY = [
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE
 ];
+
+export const CVC_POLICY_REQUIRED = 'required';
+export const CVC_POLICY_OPTIONAL = 'optional';
+export const CVC_POLICY_HIDDEN = 'hidden';

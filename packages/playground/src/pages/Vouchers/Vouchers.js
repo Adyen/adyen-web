@@ -171,8 +171,8 @@ window.dokuResult = checkout
     })
     .mount('#doku-result-container');
 
-// Econtext Input
-window.econtextInput = checkout
+// Econtext Stores Input
+window.econtextStoresInput = checkout
     .create('econtext_stores', {
         data: {
             firstName: 'Joe',
@@ -183,8 +183,8 @@ window.econtextInput = checkout
     })
     .mount('#econtext-stores-input-container');
 
-// Econtext Result
-window.econtextResult = checkout
+// Econtext Stores Result
+window.econtextStoresResult = checkout
     .createFromAction({
         paymentMethodType: 'econtext_stores',
         expiresAt: '2019-07-19T23:24:00',
@@ -205,7 +205,7 @@ window.econtextResult = checkout
     .mount('#econtext-stores-result-container');
 
 // Econtext ATM Input
-window.econtextInput = checkout
+window.econtextAtmInput = checkout
     .create('econtext_atm', {
         data: {
             firstName: 'Joe',
@@ -217,7 +217,7 @@ window.econtextInput = checkout
     .mount('#econtext-atm-input-container');
 
 // Econtext ATM Result
-window.econtextResult = checkout
+window.econtextAtmResult = checkout
     .createFromAction({
         paymentMethodType: 'econtext_atm',
         collectionInstitutionNumber: '58091',

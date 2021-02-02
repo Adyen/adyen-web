@@ -90,6 +90,7 @@ export interface InstallmentOptions {
     [key: string]: {
         values: number[];
         plans?: string[];
+        preselectedValue?: number;
     };
 }
 
