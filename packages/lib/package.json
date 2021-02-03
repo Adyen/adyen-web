@@ -10,10 +10,14 @@
     ],
     "main": "dist/cjs/index.js",
     "module": "dist/es/index.js",
-    "umd:main": "dist/adyen.js",
-    "browser": "dist/adyen.js",
     "types": "dist/types",
     "typings": "dist/types",
+    "exports": {
+        ".": {
+            "import": "./dist/es/index.js",
+            "require": "./dist/cjs/index.js"
+        }
+    },
     "version": "3.20.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
