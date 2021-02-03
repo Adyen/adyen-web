@@ -10,6 +10,7 @@
     ],
     "main": "dist/cjs/index.js",
     "module": "dist/es/index.js",
+    "umd:main": "dist/adyen.js",
     "types": "dist/types",
     "typings": "dist/types",
     "exports": {
