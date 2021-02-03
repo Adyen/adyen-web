@@ -1,5 +1,5 @@
 import { getComponent, getComponentConfiguration } from '../..';
-import { filterPresent, filterAvailable } from './filters';
+import { filterUnsupported, filterPresent, filterAvailable } from './filters';
 import { PaymentMethod } from '../../../types';
 
 const FALLBACK_COMPONENT = 'redirect';
@@ -28,7 +28,11 @@ const createElements = (components: PaymentMethod[] = [], props, componentsConfi
         return componentInstance;
     };
 
-    const elements = components.map(createElement).filter(filterPresent);
+    const elements = components
+        .filter(filterUnsupported)
+        .map(createElement)
+        .filter(filterPresent);
+
     const elementPromises = elements.map(filterAvailable).map(p => p.catch(e => e));
 
     return Promise.all(elementPromises).then(values => elements.filter((el, i) => values[i] === true));
