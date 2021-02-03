@@ -14,14 +14,6 @@ export interface MBWayDataState {
     telephoneNumber?: string;
 }
 
-export interface MBWayErrorsState {
-    telephoneNumber?: boolean;
-}
-
-export interface MBWayValidState {
-    telephoneNumber?: boolean;
-}
-
 export interface ValidationObject {
     value: string;
     isValid: boolean;
