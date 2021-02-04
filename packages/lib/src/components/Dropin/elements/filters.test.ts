@@ -1,6 +1,17 @@
-import { filterPresent, filterAvailable } from './filters';
+import { UNSUPPORTED_PAYMENT_METHODS, filterUnsupported, filterPresent, filterAvailable } from './filters';
 
 describe('elements filters', () => {
+    describe('filterUnsupported', () => {
+        test('should return true if the payment method is not unsupported', () => {
+            expect(filterUnsupported({ type: 'visa' })).toBe(true);
+        });
+
+        test('should return false if the payment method is unsupported', () => {
+            const unsupportedPaymentMethodType = UNSUPPORTED_PAYMENT_METHODS[0];
+            expect(filterUnsupported({ type: unsupportedPaymentMethodType })).toBe(false);
+        });
+    });
+
     describe('filterPresent', () => {
         test('should return true if the paymentMethod is truthy', () => {
             expect(filterPresent({})).toBe(true);
