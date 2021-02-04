@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, handleErrorCode, prepareChallengeData } from '../utils';
+import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
@@ -32,7 +32,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
-            const data = createChallengeResolveData(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+            /**
+             * As we transition to switching to the new 3DS2 Flow and we are in a "hybrid" mode of old /payments response working with
+             * new /submitThreeDS2Fingerprint endpoint the challenge-only flow skips the /submitThreeDS2Fingerprint call - so the resolveData needs
+             * to be prepared in the "old" way
+             *
+             * This situation will also apply to the threeds2InMDFlow TODO once fully switched to new flow - rename goesDirectToChallenge => threeds2InMDFlow
+             */
+            const resolveDataFunction = this.props.goesDirectToChallenge ? createOldChallengeResolveData : createChallengeResolveData;
+            const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
             this.props.onComplete(data);
         });
     }

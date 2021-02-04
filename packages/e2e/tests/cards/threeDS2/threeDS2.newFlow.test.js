@@ -70,7 +70,7 @@ test('Fill in card number that will trigger frictionless flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test('Fill in card number that will trigger challenge flow', async t => {
+test('Fill in card number that will trigger full flow (fingerprint & challenge)', async t => {
     loggerDetails.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -116,7 +116,7 @@ test('Fill in card number that will trigger challenge flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test.skip('Fill in card number that will trigger challenge-only flow', async t => {
+test('Fill in card number that will trigger challenge-only flow', async t => {
     loggerDetails.clear();
 
     await start(t, 2000, TEST_SPEED);

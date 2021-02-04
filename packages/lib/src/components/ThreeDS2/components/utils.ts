@@ -139,13 +139,13 @@ export const createChallengeResolveData = (dataKey: string, transStatus: string,
     }
 });
 
-// Old 3DS2 flow
-// export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
-//     data: {
-//         details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
-//         paymentData: authorisationToken
-//     }
-// });
+// Needed for old 3DS2 flow, new flow (challenge-only) & threeds2InMDFlow
+export const createOldChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
+    data: {
+        details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
+        paymentData: authorisationToken
+    }
+});
 
 export const handleErrorCode = (errorCode: string): ErrorObject => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
@@ -180,9 +180,14 @@ export const encodeBase64URL = (dataStr: string): string => {
 };
 
 const fingerprintFlowPropsDropin = ['elementRef'];
-const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails', 'challengeWindowSize'];
 
-const challengeFlowProps = ['challengeWindowSize'];
+/**
+ *  Must contain all props needed for the challenge stage since, in the new 3DS2 flow, the fingerprint component will be the "component" reference
+ *  if the /submitThreeDS2Fingerprint response dictates we "handleAction" to create a challenge
+ */
+const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails', 'challengeWindowSize', 'size'];
+
+const challengeFlowProps = ['challengeWindowSize', 'size']; // support "size" for legacy purposes
 
 /**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge

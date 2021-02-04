@@ -3,6 +3,7 @@ import UIElement from '../UIElement';
 import Challenge from './components/Challenge';
 import { ErrorObject } from './components/utils';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
+import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -13,6 +14,7 @@ export interface ThreeDS2ChallengeProps {
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
     type?: string;
+    goesDirectToChallenge?: boolean;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
@@ -25,7 +27,8 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     };
 
     render() {
-        if (!this.props.paymentData) {
+        // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
+        if (!existy(this.props.paymentData)) {
             this.props.onError({ errorCode: 'threeds2.challenge', message: 'No paymentData received. Challenge cannot proceed' });
             return null;
         }
