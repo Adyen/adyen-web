@@ -13,6 +13,7 @@ export interface SelectProps {
     placeholder: string;
     readonly: boolean;
     selected: string;
+    name?: string;
 }
 
 export interface SelectState {
