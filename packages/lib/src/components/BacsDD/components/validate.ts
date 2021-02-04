@@ -1,44 +1,39 @@
-import { email } from '../../../utils/regex';
+import { ValidatorRules } from '../../../utils/Validator/FormValidator';
 
 const bankAccountNumberRegEx = /^(\d){1,8}$/;
 const bankLocationIdRegEx = /^(\d){6}$/;
 const nonDigitRegEx = /[^0-9]/g;
 
-export const bacsValidationRules: object = {
-    input: {
-        bankAccountNumber: (num): object => {
-            // Format
-            const formattedVal: string = num.replace(nonDigitRegEx, '');
-            // Validate
-            const isValid: boolean = bankAccountNumberRegEx.test(formattedVal);
-
-            return { isValid, value: formattedVal, showError: false };
-        },
-        bankLocationId: (num): object => {
-            // Format
-            const formattedVal: string = num.replace(nonDigitRegEx, '');
-            // Validate
-            const isValid: boolean = bankLocationIdRegEx.test(formattedVal);
-
-            return { isValid, value: formattedVal, showError: false };
-        },
-        shopperEmail: value => {
-            return { isValid: email.test(value), value, showError: false };
-        },
-        default: value => ({ isValid: value && value.length > 0, value, showError: false })
+export const bacsValidationRules: ValidatorRules = {
+    bankAccountNumber: {
+        modes: ['blur', 'input'],
+        validate: value => !!value && bankAccountNumberRegEx.test(value)
     },
-    blur: {
-        bankAccountNumber: (num): object => {
-            // Just validate
-            return { isValid: bankAccountNumberRegEx.test(num), value: num, showError: true };
+    bankLocationId: [
+        {
+            modes: ['input'],
+            validate: value => !!value && /^(\d){1,6}$/.test(value)
         },
-        bankLocationId: (num): object => {
-            // Just validate
-            return { isValid: bankLocationIdRegEx.test(num), value: num, showError: true };
-        },
-        shopperEmail: value => {
-            return { isValid: email.test(value), value, showError: true };
-        },
-        default: value => ({ isValid: value && value.length > 0, value, showError: true })
+        {
+            modes: ['blur'],
+            validate: value => !!value && bankLocationIdRegEx.test(value)
+        }
+    ],
+    amountConsentCheckbox: {
+        modes: ['blur'],
+        validate: value => !!value
+    },
+    accountConsentCheckbox: {
+        modes: ['blur'],
+        validate: value => !!value
+    },
+    default: {
+        modes: ['blur'],
+        validate: value => !!value && value.length > 0
     }
+};
+
+export const bacsFormatters = {
+    bankAccountNumber: value => value.replace(nonDigitRegEx, ''),
+    bankLocationId: value => value.replace(nonDigitRegEx, '')
 };

@@ -23,7 +23,7 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
      * Format and validate a field
      */
     const processField = (key, value, mode) => {
-        const formattedValue = formatters[key] ? formatters[key](value) : value;
+        const formattedValue = formatters[key] ? formatters[key](value ?? '') : value;
         const validationResult = validator.validate(key, formattedValue, mode);
         return [formattedValue, validationResult];
     };
@@ -40,8 +40,17 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
         setValid(prevData => cleanupRemovedFields(prevData, false));
     };
 
+    const getTargetValue = (key, e) => {
+        if (!e.target) return e;
+
+        if (e.target.type === 'checkbox') {
+            return !data[key];
+        }
+        return e.target.value;
+    };
+
     const handleChangeFor = (key, mode = 'blur') => e => {
-        const value = e?.target ? e.target.value : e;
+        const value = e?.target ? getTargetValue(key, e) : e;
         const [formattedValue, validationResult] = processField(key, value, mode);
 
         updateFieldData(key, formattedValue);
