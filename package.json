@@ -19,7 +19,7 @@
         "test": "yarn workspace @adyen/adyen-web test",
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
-        "test:e2e": "yarn build && concurrently --kill-others --success first \"yarn workspace @adyen/adyen-web-playground start\" \"yarn workspace @adyen/adyen-web-e2e test:e2e\" --names \"playground,e2e\""
+        "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e"
     },
     "dependencies": {
         "concurrently": "^5.3.0"
