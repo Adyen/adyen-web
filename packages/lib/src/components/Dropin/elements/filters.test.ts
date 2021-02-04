@@ -6,7 +6,7 @@ describe('elements filters', () => {
             expect(filterUnsupported({ type: 'visa' })).toBe(true);
         });
 
-        test('should return true if the payment method is unsupported', () => {
+        test('should return false if the payment method is unsupported', () => {
             const unsupportedPaymentMethodType = UNSUPPORTED_PAYMENT_METHODS[0];
             expect(filterUnsupported({ type: unsupportedPaymentMethodType })).toBe(false);
         });
