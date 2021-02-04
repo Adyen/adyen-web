@@ -37,7 +37,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              * new /submitThreeDS2Fingerprint endpoint the challenge-only flow skips the /submitThreeDS2Fingerprint call - so the resolveData needs
              * to be prepared in the "old" way
              *
-             * This situation will also apply to the threeds2InMDFlow TODO once fully switched to new flow - rename goesDirectToChallenge => threeds2InMDFlow
+             * This situation will also apply to the threeds2InMDFlow TODO once fully switched to new flow - rename goesDirectToChallenge to threeds2InMDFlow
              */
             const resolveDataFunction = this.props.goesDirectToChallenge ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);

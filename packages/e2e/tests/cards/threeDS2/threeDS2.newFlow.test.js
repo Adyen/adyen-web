@@ -107,7 +107,7 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
         .wait(1000)
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
-        .wait(2000);
+        .wait(1000);
 
     // console.log(logger.requests[1].response.headers);
 
