@@ -1,5 +1,6 @@
 import { ThreeDS2FlowObject, FingerPrintData } from '../../types';
 import { ThreeDS2DeviceFingerprintProps } from '../../ThreeDS2DeviceFingerprint';
+import { FingerprintResolveData } from '../utils';
 
 export interface DoFingerprint3DS2Props extends FingerPrintData {
     onCompleteFingerprint: (resolveObject: ThreeDS2FlowObject) => void;
@@ -12,7 +13,7 @@ export interface DoFingerprint3DS2State {
 }
 
 export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintProps {
-    onComplete: (data?) => void;
+    onComplete: (data: FingerprintResolveData) => void;
 }
 
 export interface PrepareFingerprint3DS2State {

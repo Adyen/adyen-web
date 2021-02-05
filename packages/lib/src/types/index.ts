@@ -23,7 +23,8 @@ export interface PaymentAction {
     /**
      * When non-empty, contains a value that you must submit to the /payments/details endpoint. In some cases, required for polling.
      */
-    paymentData?: string;
+    paymentData?: string; // comes from the /payments endpoint
+    authorisationToken?: string; // comes from the /submitThreeDS2Fingerprint endpoint
 
     // Redirect Actions
 
@@ -175,6 +176,20 @@ export interface OrderStatus {
     pspReference: string;
     reference: string;
     remainingAmount: PaymentAmount;
+}
+
+/**
+ * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v52/post/payments__reqParam_browserInfo API Explorer /payments browserInfo}
+ */
+export interface BrowserInfo {
+    acceptHeader: string;
+    colorDepth: string;
+    language: string;
+    javaEnabled: boolean;
+    screenHeight: string;
+    screenWidth: string;
+    userAgent: string;
+    timeZoneOffset: number;
 }
 
 /**

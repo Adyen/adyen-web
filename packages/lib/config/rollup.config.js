@@ -16,6 +16,7 @@ if (process.env.CI !== 'true') {
 
 let cache;
 const isProduction = process.env.NODE_ENV === 'production';
+const isBundleAnalyzer = process.env.NODE_ENV === 'analyze';
 
 const terserConfig = {
     output: {
@@ -53,7 +54,8 @@ export default async () => [
                 inject: false,
                 extract: 'adyen.css'
             }),
-            isProduction && (await import('rollup-plugin-terser')).terser(terserConfig)
+            isProduction && (await import('rollup-plugin-terser')).terser(terserConfig),
+            isBundleAnalyzer && (await import('rollup-plugin-visualizer')).default({ title: 'Adyen Web bundle visualizer', gzipSize: true })
         ],
         output: [
             {
@@ -63,7 +65,7 @@ export default async () => [
             },
             {
                 name: 'AdyenCheckout',
-                file: pkg.browser,
+                file: pkg['umd:main'],
                 format: 'umd',
                 inlineDynamicImports: true,
                 sourcemap: true

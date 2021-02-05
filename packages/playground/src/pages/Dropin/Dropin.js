@@ -1,4 +1,4 @@
-import AdyenCheckout from '@adyen/adyen-web/dist/es';
+import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder, cancelOrder } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
@@ -16,7 +16,6 @@ const initCheckout = async () => {
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: 'test',
-        //        environment: 'http://localhost:8080/checkoutshopper/',
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
@@ -100,6 +99,12 @@ const initCheckout = async () => {
                     }
                 }
             },
+            applepay: {
+                configuration: {
+                    merchantName: 'Adyen Test merchant',
+                    merchantIdentifier: '000000000200001'
+                }
+            },
             paywithgoogle: {
                 countryCode: 'NL',
                 onAuthorized: console.info
@@ -113,6 +118,14 @@ const initCheckout = async () => {
                 onCancel: (data, component) => {
                     component.setStatus('ready');
                     console.log('paypal onCancel', data);
+                }
+            },
+            directdebit_GB: {
+                data: {
+                    holderName: 'Philip Dog',
+                    bankAccountNumber: '12345678',
+                    bankLocationId: '123456',
+                    shopperEmail: 'phil@ddog.co.uk'
                 }
             }
         }

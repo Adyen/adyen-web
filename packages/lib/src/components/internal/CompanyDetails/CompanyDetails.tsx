@@ -7,6 +7,7 @@ import { renderFormField } from '../FormFields';
 import { companyDetailsValidationRules } from './validate';
 import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import { getFormattedData } from './utils';
 import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsStateError, CompanyDetailsStateValid } from './types';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
@@ -32,7 +33,8 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
 
     useEffect(() => {
         const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]).isValid);
-        props.onChange({ data, isValid });
+        const formattedData = getFormattedData(data);
+        props.onChange({ data: formattedData, isValid });
     }, [data, valid, errors]);
 
     this.showValidation = () => {

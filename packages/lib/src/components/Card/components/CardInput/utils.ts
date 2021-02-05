@@ -1,5 +1,4 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import cardType from '../../../internal/SecuredFields/lib/utilities/cardType';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -16,23 +15,14 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
  * @param types - array containing 2 card brands or types
  * @param switcherType - type of switcher ('brandSwitcher' or 'cardTypeSwitcher' - the latter would switch between 'debit' & 'credit' varieties)
  */
-export const createCardVariantSwitcher = (types: string[], switcherType: string) => {
+export const createCardVariantSwitcher = (types: string[]) => {
     const leadType = types[0];
-    let displayName = cardType.getDisplayName(leadType); // Works for when types are card brands e.g. 'visa', 'mc' NOT when types are 'credit'/'debit'
-    const leadDisplayName = displayName || leadType;
-
     const subType = types[1];
-    displayName = cardType.getDisplayName(subType);
-    const subDisplayName = displayName || subType;
 
     return {
         stateObject: {
-            additionalSelectElements: [
-                { id: leadType, name: leadDisplayName },
-                { id: subType, name: subDisplayName }
-            ],
+            additionalSelectElements: [{ id: leadType }, { id: subType }]
             // additionalSelectValue: leadType, // comment out line if no initial selection is to be made
-            additionalSelectType: switcherType
         },
         leadType
     };
