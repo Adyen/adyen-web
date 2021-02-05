@@ -59,7 +59,7 @@ test('Fill in card number that will trigger frictionless flow', async t => {
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
         // Allow time for the ONLY details call, which we expect to be successful
-        .wait(1000)
+        .wait(2000)
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         // Allow time for the alert to manifest
@@ -92,7 +92,7 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
         // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
-        .wait(1000)
+        .wait(2000)
         .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
         .ok();
 
@@ -104,7 +104,7 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
 
     await t
         // Allow time for the /details call, which we expect to be successful
-        .wait(1000)
+        .wait(2000)
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         .wait(1000);
@@ -144,7 +144,7 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
 
     await t
         // Allow time for the ONLY details call, which we expect to be successful
-        .wait(1000)
+        .wait(2000)
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         .wait(2000);
