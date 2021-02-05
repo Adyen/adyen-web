@@ -1,58 +1,91 @@
-import { shallow } from 'enzyme';
 import useForm from './useForm';
-import { h } from 'preact';
+import { renderHook, act } from '@testing-library/preact-hooks';
 
 describe('useForm', () => {
     const defaultSchema = ['firstName', 'lastName'];
-
-    function HookWrapper(props) {
-        const hook = props.hook ? props.hook() : undefined;
-        return <div data-hook={hook} />;
-    }
+    const defaultData = { firstName: 'John' };
 
     describe('schema', () => {
-        it('should set a default schema', () => {
-            const useFormHook = () => useForm({ schema: defaultSchema });
-            const wrapper = shallow(<HookWrapper hook={useFormHook} />);
-            const { 'data-hook': hook } = wrapper.find('div').props();
+        let useFormHook;
+        beforeEach(() => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            useFormHook = result;
+        });
 
-            const { schema } = hook;
-            expect(schema).toBe(defaultSchema);
+        it('should set a default schema', () => {
+            expect(useFormHook.current.schema).toEqual(defaultSchema);
+            expect(useFormHook.current.data[defaultSchema[0]]).toEqual(null);
+            expect(useFormHook.current.errors[defaultSchema[0]]).toEqual(null);
+            expect(useFormHook.current.valid[defaultSchema[0]]).toEqual(false);
+            expect(useFormHook.current.data[defaultSchema[1]]).toEqual(null);
+            expect(useFormHook.current.valid[defaultSchema[1]]).toEqual(false);
+            expect(useFormHook.current.errors[defaultSchema[1]]).toEqual(null);
         });
 
         it('should update the schema', () => {
-            const useFormHook = () => useForm({ schema: defaultSchema });
-            const wrapper = shallow(<HookWrapper hook={useFormHook} />);
-            let { 'data-hook': hook } = wrapper.find('div').props();
+            act(() => {
+                useFormHook.current.setSchema(['email']);
+            });
 
-            // set schema
-            const { setSchema } = hook;
-            setSchema([...defaultSchema, 'email']);
+            expect(useFormHook.current.schema).toEqual(['email']);
+            expect(useFormHook.current.data['email']).toEqual(null);
+            expect(useFormHook.current.valid['email']).toEqual(false);
+            expect(useFormHook.current.errors['email']).toEqual(null);
+        });
+    });
 
-            // get updated schema
-            ({ 'data-hook': hook } = wrapper.find('div').props());
-            const { schema } = hook;
-            expect(schema).toEqual([...defaultSchema, 'email']);
+    describe('defaultData', () => {
+        it('should set defaultData', () => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }));
+
+            expect(result.current.data.firstName).toEqual(defaultData.firstName);
+            expect(result.current.data.lastName).toEqual(null);
         });
     });
 
     describe('handleChangeFor', () => {
+        const firstNameValue = 'John';
+
         it('should handle changes for a field', () => {
-            const useFormHook = () => useForm({ schema: defaultSchema });
-            const wrapper = shallow(<HookWrapper hook={useFormHook} />);
-            let { 'data-hook': hook } = wrapper.find('div').props();
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
 
-            const firstNameValue = 'John';
+            act(() => {
+                result.current.handleChangeFor('firstName')(firstNameValue);
+            });
 
-            // set a field value
-            const { handleChangeFor } = hook;
-            handleChangeFor('firstName')(firstNameValue);
+            expect(result.current.data.firstName).toBe(firstNameValue);
+            expect(result.current.valid.firstName).toBe(true);
+            expect(result.current.errors.firstName).toBe(false);
+        });
 
-            ({ 'data-hook': hook } = wrapper.find('div').props());
-            const { data, valid, errors } = hook;
-            expect(data.firstName).toBe(firstNameValue);
-            expect(valid.firstName).toBe(true);
-            expect(errors.firstName).toBe(false);
+        it('should format the value of a field using formatters', () => {
+            const formatterMock = jest.fn();
+            const { result } = renderHook(() => useForm({ schema: defaultSchema, formatters: { firstName: formatterMock } }));
+
+            act(() => {
+                result.current.handleChangeFor('firstName')(firstNameValue);
+            });
+
+            expect(formatterMock).toHaveBeenCalledWith(firstNameValue);
+        });
+
+        it('should set the value of a checkbox', () => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            const mockEvent = { target: { type: 'checkbox' } };
+
+            // call once to set to "checked"
+            act(() => {
+                result.current.handleChangeFor('firstName')(mockEvent);
+            });
+
+            expect(result.current.data.firstName).toEqual(true);
+
+            // call again to set to "unchecked
+            act(() => {
+                result.current.handleChangeFor('firstName')(mockEvent);
+            });
+
+            expect(result.current.data.firstName).toEqual(false);
         });
     });
 });
