@@ -6,11 +6,10 @@ import fetchJSONData from '../../utils/fetch-json-data';
 export default function callSubmit3DS2Fingerprint({ data }) {
     fetchJSONData(
         {
-            path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,
+            path: `v1/submitThreeDS2Fingerprint?clientKey=${this.props.clientKey}`,
             loadingContext: this.props.loadingContext,
             method: 'POST',
-            contentType: 'application/json',
-            clientKey: this.props.clientKey
+            contentType: 'application/json'
         },
         {
             ...data

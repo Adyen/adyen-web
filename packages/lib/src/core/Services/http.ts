@@ -3,7 +3,6 @@ import { FALLBACK_CONTEXT } from '../config';
 interface HttpOptions {
     accept?: string;
     contentType?: string;
-    clientKey?: string;
     errorMessage?: string;
     headers?;
     loadingContext?: string;
@@ -13,7 +12,7 @@ interface HttpOptions {
 }
 
 export function http(options: HttpOptions, data?): Promise<any> {
-    const { clientKey, headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path } = options;
+    const { headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path } = options;
 
     const request = {
         method,
@@ -30,13 +29,9 @@ export function http(options: HttpOptions, data?): Promise<any> {
         ...(data && { body: JSON.stringify(data) })
     } as RequestInit;
 
-    const url = new URL(`${loadingContext}${path}`);
+    const url = `${loadingContext}${path}`;
 
-    if (clientKey) {
-        url.searchParams.set('clientKey', clientKey);
-    }
-
-    return fetch(url.href, request)
+    return fetch(url, request)
         .then(response => {
             if (response.ok) return response.json();
             const errorMessage = options.errorMessage || `Service at ${url} is not available`;

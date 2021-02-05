@@ -8,10 +8,9 @@ const logTelemetry = config => event => {
     if (!config.clientKey) return Promise.reject();
 
     const options = {
-        clientKey: config.clientKey,
         errorLevel: 'silent' as const,
         loadingContext: config.loadingContext,
-        path: 'v1/analytics/log'
+        path: `v1/analytics/log?clientKey=${config.clientKey}`
     };
 
     const telemetryEvent = {

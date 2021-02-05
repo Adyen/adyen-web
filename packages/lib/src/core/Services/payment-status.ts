@@ -13,9 +13,8 @@ export default function checkPaymentStatus(paymentData, clientKey, loadingContex
     }
 
     const options = {
-        clientKey,
         loadingContext,
-        path: 'services/PaymentInitiation/v1/status'
+        path: `services/PaymentInitiation/v1/status?clientKey=${clientKey}`
     };
 
     return httpPost(options, { paymentData });

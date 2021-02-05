@@ -13,7 +13,7 @@ export function getAmazonSignature(loadingContext: string, clientKey: string, pa
     const options = {
         loadingContext,
         method: 'POST',
-        path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?token=${clientKey}`
+        path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?clientKey=${clientKey}`
     };
 
     const request = { stringToSign: JSON.stringify(payloadJSON) };
@@ -32,7 +32,7 @@ export function getCheckoutDetails(loadingContext: string, clientKey: string, re
     const options = {
         loadingContext,
         method: 'POST',
-        path: `${AMAZONPAY_GET_CHECKOUT_DETAILS_ENDPOINT}?token=${clientKey}`
+        path: `${AMAZONPAY_GET_CHECKOUT_DETAILS_ENDPOINT}?clientKey=${clientKey}`
     };
 
     return fetchJSONData(options, request);
@@ -49,7 +49,7 @@ export function updateAmazonCheckoutSession(loadingContext: string, clientKey: s
     const options = {
         loadingContext,
         method: 'POST',
-        path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?token=${clientKey}`
+        path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?clientKey=${clientKey}`
     };
 
     return fetchJSONData(options, data);

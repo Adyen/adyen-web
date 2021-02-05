@@ -9,10 +9,9 @@ const collectId = config => {
     if (!config.clientKey) return Promise.reject();
 
     const options = {
-        clientKey: config.clientKey,
         errorLevel: 'silent' as const,
         loadingContext: config.loadingContext,
-        path: 'v1/analytics/id'
+        path: `v1/analytics/id?clientKey=${config.clientKey}`
     };
 
     return httpPost(options).then(conversion => conversion.id);
