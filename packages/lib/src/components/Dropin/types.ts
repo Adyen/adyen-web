@@ -1,5 +1,5 @@
-import { PaymentMethod, StoredPaymentMethod, PaymentMethods, PaymentMethodOptions, Order, OrderStatus } from '../../types';
-import UIElement, { UIElementProps } from '../UIElement';
+import { PaymentMethod, StoredPaymentMethod, PaymentMethods, PaymentMethodOptions, Order } from '../../types';
+import { UIElementProps } from '../UIElement';
 
 export interface DropinElementProps extends UIElementProps {
     /**
@@ -50,20 +50,6 @@ export interface DropinElementProps extends UIElementProps {
 }
 
 export interface DropinComponentProps extends DropinElementProps {
-    onCreateElements: any;
     onChange: (newState?: object) => void;
     onOrderCancel?: (order: Order) => void;
-}
-
-interface DropinStatus {
-    type: 'loading' | 'ready' | 'success' | 'error';
-}
-
-export interface DropinComponentState {
-    elements: any[];
-    status: DropinStatus;
-    activePaymentMethod: UIElement;
-    cachedPaymentMethods: object;
-    isDisabling: boolean;
-    orderStatus: OrderStatus;
 }

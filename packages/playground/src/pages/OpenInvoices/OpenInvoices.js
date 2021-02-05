@@ -10,7 +10,6 @@ window.paymentData = {};
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
     window.checkout = new AdyenCheckout({
-        clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         paymentMethodsResponse: paymentMethodsData,
         environment: 'test',

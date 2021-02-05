@@ -7,7 +7,6 @@ import {
     CSFReturnObject,
     SetupObject,
     StylesObject,
-    BinLookupObject,
     CbObjOnError,
     CbObjOnFocus,
     CbObjOnBrand,
@@ -18,7 +17,9 @@ import {
     CbObjOnLoad
 } from './lib/types';
 import { AddressSchema } from '../../../types';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
+import { BinLookupResponse } from '../../Card/types';
+import { CVCPolicyType } from './lib/core/AbstractSecuredField';
 
 export interface SFPState {
     status?: string;
@@ -26,12 +27,13 @@ export interface SFPState {
     errors?: object;
     valid: object;
     data: object;
-    cvcRequired?: boolean;
+    cvcPolicy?: CVCPolicyType;
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
+    hideCVCForBrand?: boolean;
 }
 
 /**
@@ -67,7 +69,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             errors: {},
             valid: {},
             data: {},
-            cvcRequired: true,
+            cvcPolicy: CVC_POLICY_REQUIRED,
             isSfpValid: false,
             hasKoreanFields: this.props.hasKoreanFields
         };
@@ -142,6 +144,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         const csfSetupObj: SetupObject = {
             rootNode: root,
             type: this.props.type,
+            originKey: this.props.originKey,
             clientKey: this.props.clientKey,
             cardGroupTypes: this.props.groupTypes,
             allowedDOMAccess: this.props.allowedDOMAccess,
@@ -242,13 +245,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public showValidation(): void {
-        const { numDateFields, props, state }: SecuredFieldsProvider = this;
+        const { numDateFields, state }: SecuredFieldsProvider = this;
 
         Object.keys(state.valid)
             .reduce(getErrorReducer(numDateFields, state), [])
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
-                const errorObj: CbObjOnError = getErrorObject(field, props.rootNode, state);
+                const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
                 this.handleOnError(errorObj);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
@@ -257,7 +260,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
     }
 
-    public processBinLookupResponse(binValueObject: BinLookupObject): void {
+    public processBinLookupResponse(binLookupResponse: BinLookupResponse): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.hasUnsupportedCard) {
@@ -268,12 +271,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
         }
 
-        this.issuingCountryCode = binValueObject?.issuingCountryCode?.toLowerCase();
+        this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
 
         // Scenarios:
-        // RESET (binValueObject === null): The number of digits in number field has dropped below threshold for BIN lookup
-        // RESULT (binValueObject.brands.length === 1): binLookup has found a result so inform CSF
-        if (this.csf) this.csf.brandsFromBinLookup(binValueObject);
+        // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
+        // RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
+        if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse);
     }
 
     private setRootNode = (input: HTMLElement): void => {

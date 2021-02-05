@@ -1,5 +1,7 @@
-import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, BinLookupObject, SFFeedbackObj } from '../types';
+import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, SFFeedbackObj, SendBrandObject } from '../types';
 import { createSecuredFields } from './createSecuredFields';
+import { handleProcessBrand } from './utils/processBrand';
+import { handleBrandFromBinLookup } from './utils/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
     // Set in CSF
@@ -8,7 +10,7 @@ abstract class AbstractCSF {
     protected props: SetupObject;
     protected state: CSFStateObject;
     protected assessFormValidity: () => void;
-    protected brandsFromBinLookup: (brandsObj: BinLookupObject) => void;
+    protected brandsFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: () => void;
     protected createCardSecuredFields: (securedFields: HTMLElement[]) => number;
@@ -27,16 +29,14 @@ abstract class AbstractCSF {
     protected isConfigured: () => void;
     protected postMessageToAllIframes: (pDataObj: object) => void;
     protected processAutoComplete: (pFeedbackObj: SFFeedbackObj) => void;
-    protected processBrand: (pFeedbackObj: SFFeedbackObj) => object;
-    protected sendBrandToCardSF: (brand: string) => void;
+    protected processBrand: typeof handleProcessBrand;
+    protected sendBrandToCardSF: (brandObj: SendBrandObject) => void;
     protected setFocusOnFrame: (pFieldType: string, doLog?: boolean) => void;
     protected setupSecuredField: (pItem: HTMLElement) => void;
     protected touchendListener: (e: Event) => void;
     // Set in createSecuredFields
-    protected cvcRequired: boolean;
     protected encryptedAttrName: string;
     protected hasRedundantCVCField: boolean;
-    protected hideCVC: boolean;
     protected isSingleBrandedCard: boolean;
     protected securityCode: string;
     // --

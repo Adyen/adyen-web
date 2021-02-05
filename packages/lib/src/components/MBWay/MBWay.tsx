@@ -44,13 +44,14 @@ export class MBWayElement extends UIElement {
 
     render() {
         if (this.props.paymentData) {
+            const accessKey = this.props.originKey || this.props.clientKey;
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                     <Await
                         ref={ref => {
                             this.componentRef = ref;
                         }}
-                        clientKey={this.props.clientKey}
+                        accessKey={accessKey}
                         paymentData={this.props.paymentData}
                         onError={this.props.onError}
                         onComplete={this.onComplete}

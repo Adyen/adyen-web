@@ -6,7 +6,7 @@ export default {
     hasHolderName: false,
     holderNameRequired: false,
     enableStoreDetails: false,
-    hideCVC: false,
+    hideCVC: false, // passed down to SFP for the "NoDataRequired" scenario with one-click PMs (where CVC is hidden or optional)
     hasCVC: true,
     hasStoreDetails: false,
     storedDetails: false,
@@ -27,6 +27,8 @@ export default {
     onBlur: () => {},
     onFocus: () => {},
     onChange: () => {},
+
+    originKey: null,
 
     // Values
     holderName: '',

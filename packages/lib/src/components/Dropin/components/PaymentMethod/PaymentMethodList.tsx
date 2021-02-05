@@ -67,12 +67,12 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
 
                 <ul className={paymentMethodListClassnames}>
                     {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
-                        const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
-                        const isLoaded = paymentMethod._id in cachedPaymentMethods;
+                        const isSelected = activePaymentMethod && activePaymentMethod.props.id === paymentMethod.props.id;
+                        const isLoaded = paymentMethod.props.id in cachedPaymentMethods;
                         const isNextOneSelected =
                             activePaymentMethod &&
                             paymentMethodsCollection[index + 1] &&
-                            activePaymentMethod._id === paymentMethodsCollection[index + 1]._id;
+                            activePaymentMethod.props.id === paymentMethodsCollection[index + 1].props.id;
 
                         return (
                             <PaymentMethodItem
@@ -84,7 +84,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
                                 isLoaded={isLoaded}
                                 isLoading={isLoading}
                                 onSelect={this.onSelect(paymentMethod)}
-                                key={paymentMethod._id}
+                                key={paymentMethod.props.id}
                                 showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
                                 onDisableStoredPaymentMethod={this.props.onDisableStoredPaymentMethod}
                             />

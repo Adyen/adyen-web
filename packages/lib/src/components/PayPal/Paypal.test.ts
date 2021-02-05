@@ -10,6 +10,13 @@ describe('Paypal', () => {
         const paypal = new Paypal({});
         expect(paypal.isValid).toBe(true);
     });
+
+    test('Prevents calling the submit method manually', () => {
+        console.error = jest.fn();
+        const paypal = new Paypal({});
+        paypal.submit();
+        expect(console.error).toHaveBeenCalled();
+    });
 });
 
 describe('Paypal configuration prop configures correctly', () => {

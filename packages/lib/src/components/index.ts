@@ -39,6 +39,7 @@ import MBWay from './MBWay';
 import Blik from './Blik';
 import BankTransfer from './BankTransfer';
 import Affirm from './Affirm';
+import Pix from './Pix';
 import uuid from '../utils/uuid';
 import BacsDD from './BacsDD';
 
@@ -117,6 +118,7 @@ const componentsMap = {
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
     paywithgoogle: GooglePay,
+    pix: Pix,
     qiwiwallet: QiwiWallet,
     ratepay: RatePay,
     redirect: Redirect,

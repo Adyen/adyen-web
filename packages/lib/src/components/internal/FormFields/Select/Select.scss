@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import '../../../../style';
 
 .adyen-checkout__dropdown {
     max-width: 100%;
@@ -110,11 +110,6 @@
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:focus,
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:active {
     background: rgba(0, 102, 255, 0.15);
-}
-
-.adyen-checkout__dropdown__element--disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
 }
 
 .adyen-checkout__dropdown__element__icon {

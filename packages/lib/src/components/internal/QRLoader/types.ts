@@ -12,6 +12,7 @@ export interface QRLoaderProps {
     url?: string;
     type?: string;
     paymentData?: string;
+    originKey?: string;
     clientKey?: string;
     loadingContext?: string;
     qrCodeData?: string;
@@ -20,7 +21,9 @@ export interface QRLoaderProps {
     i18n?: Language;
     classNameModifiers?: string[];
     brandLogo?: string;
+    introduction?: string;
     instructions?: string;
+    copyBtn?: boolean;
 }
 
 export interface QRLoaderState {

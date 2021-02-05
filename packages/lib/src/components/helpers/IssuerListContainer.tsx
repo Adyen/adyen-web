@@ -9,7 +9,8 @@ import Language from '../../language/Language';
 interface IssuerListProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
-    issuers?: IssuerItem[];
+    items?: IssuerItem[];
+    details?: { key: string; items: IssuerItem[] };
     i18n: Language;
     loadingContext: string;
 }
@@ -33,7 +34,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
 
-            this.props.issuers = this.props.issuers.map(item => ({
+            this.props.items = this.props.items.map(item => ({
                 ...item,
                 icon: getIssuerIcon(item.id)
             }));
@@ -43,10 +44,13 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
     protected static defaultProps = {
         showImage: true,
         onValid: () => {},
-        issuers: [],
+        items: [],
         loadingContext: FALLBACK_CONTEXT
     };
 
+    /**
+     * Formats props on construction time
+     */
     formatProps(props) {
         const issuers = props.issuers || (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || [];
         return { ...props, issuers };
@@ -78,7 +82,6 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
                     ref={ref => {
                         this.componentRef = ref;
                     }}
-                    items={this.props.issuers}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}

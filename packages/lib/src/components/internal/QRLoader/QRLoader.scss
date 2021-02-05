@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import '../../../style';
 
 .adyen-checkout__qr-loader {
     background: $color-white;
@@ -24,7 +24,8 @@
 }
 
 .adyen-checkout__qr-loader__subtitle {
-    margin-top: 32px;
+    max-width: 400px;
+    margin: 32px auto 0;
 }
 
 .adyen-checkout__qr-loader__subtitle--result {
@@ -116,7 +117,14 @@
     color: $color-gray-darker;
     font-size: $font-size-medium;
     line-height: 1.5;
-    margin-top: 16px;
+    margin-top: 32px;
+}
+
+.adyen-checkout__qr-loader__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
 }
 
 @media only screen and (max-device-width: 1200px) {

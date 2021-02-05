@@ -112,9 +112,9 @@ describe('UIElement', () => {
                 type: 'threeDS2'
             };
 
-            const checkout = new Core({});
+            const checkout = new Core({ challengeWindowSize: '04' });
 
-            const comp = checkout.create('card').mount('body');
+            const comp = checkout.create('card', { challengeWindowSize: '03' }).mount('body');
 
             const pa = comp.handleAction(fingerprintAction);
             expect(pa instanceof ThreeDS2DeviceFingerprint).toEqual(true);
@@ -123,18 +123,31 @@ describe('UIElement', () => {
             expect(pa.props.showSpinner).toEqual(true);
             expect(pa.props.statusType).toEqual('loading');
             expect(pa.props.isDropin).toBe(false);
+
+            expect(pa.props.challengeWindowSize).toEqual('03');
         });
 
         test('should handle new challenge action', () => {
-            const checkout = new Core({
-                paymentMethodsConfiguration: {
-                    card: { challengeWindowSize: '02' }
-                }
-            });
+            const checkout = new Core({ challengeWindowSize: '02' });
 
-            const component = checkout.create('card', {}).mount('body');
+            const comp = checkout.create('card', { challengeWindowSize: '03' }).mount('body');
 
-            const pa = component.handleAction(challengeAction);
+            const pa = comp.handleAction(challengeAction);
+            expect(pa instanceof ThreeDS2Challenge).toEqual(true);
+
+            expect(pa.props.elementRef).not.toBeDefined();
+            expect(pa.props.statusType).toEqual('custom');
+            expect(pa.props.isDropin).toBe(false);
+
+            expect(pa.props.challengeWindowSize).toEqual('03');
+        });
+
+        test('new challenge action gets challengeWindowSize from checkout config', () => {
+            const checkout = new Core({ challengeWindowSize: '02' });
+
+            const comp = checkout.create('card', {}).mount('body');
+
+            const pa = comp.handleAction(challengeAction);
             expect(pa instanceof ThreeDS2Challenge).toEqual(true);
 
             expect(pa.props.elementRef).not.toBeDefined();

@@ -1,4 +1,4 @@
-import { Selector } from 'testcafe';
+import { ClientFunction, Selector } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { CARDS_URL } from '../../pages';
@@ -9,9 +9,18 @@ const optionalCVCSpan = Selector('.card-field .adyen-checkout__field__cvc--optio
 const cvcLabel = Selector('.card-field .adyen-checkout__label__text');
 const brandingIcon = Selector('.card-field .adyen-checkout__card__cardNumber__brandIcon');
 
-//const getPropFromPMData = ClientFunction(prop => {
-//    return window.card.formatData().paymentMethod[prop];
-//});
+const dualBrandingIconHolderActive = Selector('.card-field .adyen-checkout__card__dual-branding__buttons--active');
+
+const getPropFromPMData = ClientFunction(prop => {
+    return window.card.formatData().paymentMethod[prop];
+});
+
+/**
+ * Needed for hack detailed in 3rd test, below
+ */
+const setForceClick = ClientFunction(val => {
+    window.testCafeForceClick = val;
+});
 
 const TEST_SPEED = 1;
 
@@ -23,8 +32,8 @@ fixture`Testing branding - especially regarding optional and hidden cvc fields`.
 
 test(
     'Test for generic card icon, ' +
-        'then enter number recognised as maestro, ' +
-        'then add digit so it will be seen as a bcmc card ,' +
+        'then enter number recognised as maestro (by our regEx), ' +
+        'then add digit so it will be seen as a bcmc card (by our regEx) ,' +
         'then delete number (back to generic card)',
     async t => {
         // Start, allow time for iframes to load
@@ -115,13 +124,21 @@ test('Test card is valid with maestro details (cvc optional) ' + 'then test it i
     await t
         // maestro card icon
         .expect(brandingIcon.getAttribute('src'))
-        .contains('maestro.svg');
+        .contains('maestro.svg')
+
+        // with "optional" text
+        .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
+        .ok()
+        // and optional class
+        .expect(optionalCVCSpan.exists)
+        .ok();
 
     await t.expect(getIsValid('card')).eql(true);
 
     // add cvc
     await cardUtils.fillCVC(t, TEST_CVC_VALUE);
 
+    // Is valid
     await t.expect(getIsValid('card')).eql(true);
 
     // Delete number
@@ -133,35 +150,138 @@ test('Test card is valid with maestro details (cvc optional) ' + 'then test it i
         .expect(brandingIcon.getAttribute('src'))
         .contains('nocard.svg');
 
+    // Is not valid
     await t.expect(getIsValid('card')).eql(false);
 });
 
-test('Test card is valid with bcmc details (no cvc) ' + 'then test it is invalid (& brand reset) when number deleted', async t => {
-    // Start, allow time for iframes to load
-    await start(t, 2000, TEST_SPEED);
+/**
+ * 3rd Test
+ *
+ * NOTE: test doesn't work properly - the click away from the CVC field is not triggering a blur event within the securedField
+ * so the error event & focus:false event from the iframe are never sent.
+ *
+ * However if you run localhost:3024 and recreate the steps in the test, it does create the expected error - so this seems to be be a bug with TestCafe.
+ *
+ * The solution is a HORRIBLE HORRIBLE HACK - the setForceClick function - which sets a flag var that SecuredField.ts will look for if the url
+ * is running at the test port of 3024. Then SecuredField will call it's own onClickCallback - which was created to solve problems with iOS not
+ * registering iframes losing focus
+ */
+test(
+    'Test card is invalid if filled with maestro details but optional cvc field is left "in error" (partially filled) ' +
+        'then test it is valid if cvc completed' +
+        'then test it is valid if cvc deleted',
+    async t => {
+        // Start, allow time for iframes to load
+        await start(t, 2000, TEST_SPEED);
 
-    // generic card
-    await t.expect(brandingIcon.getAttribute('src')).contains('nocard.svg');
+        // generic card
+        await t.expect(brandingIcon.getAttribute('src')).contains('nocard.svg');
 
-    // Maestro
-    await cardUtils.fillCardNumber(t, BCMC_CARD);
-    await cardUtils.fillDate(t, TEST_DATE_VALUE);
+        // Maestro
+        await cardUtils.fillCardNumber(t, MAESTRO_CARD);
+        await cardUtils.fillDate(t, TEST_DATE_VALUE);
 
-    await t
-        // maestro card icon
-        .expect(brandingIcon.getAttribute('src'))
-        .contains('bcmc.svg');
+        await t
+            // maestro card icon
+            .expect(brandingIcon.getAttribute('src'))
+            .contains('maestro.svg')
 
-    await t.expect(getIsValid('card')).eql(true);
+            // with "optional" text
+            .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
+            .ok()
+            // and optional class
+            .expect(optionalCVCSpan.exists)
+            .ok();
 
-    // Delete number
-    await cardUtils.deleteCardNumber(t);
+        // Partial cvc
+        await cardUtils.fillCVC(t, '73');
 
-    // Card is reset
-    await t
-        // generic card icon
-        .expect(brandingIcon.getAttribute('src'))
-        .contains('nocard.svg');
+        await setForceClick(true);
 
-    await t.expect(getIsValid('card')).eql(false);
-});
+        // Click pay - to force blur event that will trigger error and reset card.isValid
+        await t
+            .click('.adyen-checkout__label__text')
+            // Expect error
+            .expect(Selector('.adyen-checkout__field--error').exists)
+            .ok();
+
+        // Is not valid
+        await t.expect(getIsValid('card')).eql(false);
+
+        // Complete cvc
+        await cardUtils.fillCVC(t, '7');
+
+        // Is valid
+        await t.expect(getIsValid('card')).eql(true);
+
+        // Delete CVC
+        await cardUtils.deleteCVC(t);
+
+        // Is valid
+        await t.expect(getIsValid('card')).eql(true);
+    }
+);
+
+/**
+ * Relies on same hack as above
+ */
+test(
+    'Test card is valid if filled with maestro details but optional cvc field is left empty' +
+        'then test it is invalid if cvc left in error' +
+        'then test it is valid if switched to bcmc' +
+        'then test it is invalid if switched back to maestro ' +
+        'then test it is valid if cvc field cleared',
+    async t => {
+        // Start, allow time for iframes to load
+        await start(t, 2000, TEST_SPEED);
+
+        // Maestro
+        await cardUtils.fillCardNumber(t, BCMC_CARD);
+        await cardUtils.fillDate(t, TEST_DATE_VALUE);
+
+        await t
+            // maestro card icon
+            .expect(brandingIcon.getAttribute('src'))
+            .contains('maestro.svg');
+
+        // #1 Valid (maestro)
+        await t.expect(getIsValid('card')).eql(true);
+
+        // Partial cvc
+        await cardUtils.fillCVC(t, '7');
+
+        await setForceClick(true);
+
+        // Click pay - to force blur event that will trigger error and reset card.isValid
+        await t.click('.adyen-checkout__label__text').wait(1000);
+
+        // #2 Not valid (maestro w. cvc in error)
+        await t.expect(getIsValid('card')).eql(false);
+
+        // Click brand icons
+        await t
+            .click(dualBrandingIconHolderActive.find('img').nth(1))
+            .expect(getPropFromPMData('brand'))
+            .eql('bcmc')
+            .wait(1000);
+
+        // #3 Is valid (bcmc)
+        await t.expect(getIsValid('card')).eql(true);
+
+        // Click brand icons
+        await t
+            .click(dualBrandingIconHolderActive.find('img').nth(0))
+            .expect(getPropFromPMData('brand'))
+            .eql('maestro')
+            .wait(1000);
+
+        // #4 Not valid (maestro w. cvc in error)
+        await t.expect(getIsValid('card')).eql(false);
+
+        // Delete CVC
+        await cardUtils.deleteCVC(t);
+
+        // #5 Valid (maestro)
+        await t.expect(getIsValid('card')).eql(true);
+    }
+);

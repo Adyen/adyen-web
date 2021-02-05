@@ -6,6 +6,8 @@
     position: relative;
     overflow: hidden;
     width: 100%;
+    min-height: 400px;
+    height: inherit;
 }
 
 .adyen-checkout__threeds2__challenge {
@@ -59,10 +61,6 @@
             height: 100%;
         }
     }
-}
-
-.adyen-checkout__threeds2__challenge.adyen-checkout__threeds2__challenge--05 {
-    padding-top: 56.25%;
 }
 
 .adyen-checkout__iframe--threeDSIframe {
