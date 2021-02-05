@@ -53,6 +53,10 @@ export interface PaymentAction {
     shopperEmail?: string;
     shopperName?: string;
 
+    // QR Code
+
+    qrCodeData?: string;
+
     // 3DS2
 
     /**

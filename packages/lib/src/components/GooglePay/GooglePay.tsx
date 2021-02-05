@@ -115,7 +115,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     };
 
     render() {
-        if (this.props.showButton) {
+        if (this.props.showPayButton) {
             return (
                 <GooglePayButton
                     buttonColor={this.props.buttonColor}

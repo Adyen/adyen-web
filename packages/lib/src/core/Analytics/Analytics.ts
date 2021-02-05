@@ -20,9 +20,8 @@ class Analytics {
 
     constructor({ loadingContext, locale, clientKey, analytics }: CoreOptions) {
         this.props = { ...Analytics.defaultProps, ...analytics };
-        const accessKey = clientKey || originKey;
         this.logEvent = logEvent({ loadingContext, locale });
-        this.logTelemetry = postTelemetry({ loadingContext, locale, accessKey });
+        this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
 
         const { conversion, enabled } = this.props;
 
@@ -32,7 +31,7 @@ class Analytics {
                 this.queue.run(this.conversionId);
             } else {
                 // If no conversionId is provided, fetch a new one
-                collectId({ loadingContext, accessKey })
+                collectId({ loadingContext, clientKey })
                     .then(conversionId => {
                         this.conversionId = conversionId;
                         this.queue.run(this.conversionId);

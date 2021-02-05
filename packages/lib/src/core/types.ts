@@ -11,12 +11,6 @@ export interface CoreOptions {
     environment?: 'test' | 'live' | 'live-us' | 'live-au' | string;
 
     /**
-     * A client-side key linked to your website, used to validate Adyen’s Web component library. Use the {@link https://docs.adyen.com/api-explorer/#/CheckoutUtility/v1/originKeys | /originKeys} endpoint to generate one.
-     * For more information, refer to {@link https://docs.adyen.com/user-management/how-to-get-an-origin-key | How to get an origin key}.
-     */
-    originKey?: string;
-
-    /**
      * A public key linked to your web service user, used for {@link https://docs.adyen.com/user-management/client-side-authentication | client-side authentication}.
      */
     clientKey?: string;

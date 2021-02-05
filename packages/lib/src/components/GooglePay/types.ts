@@ -14,9 +14,6 @@ export interface GooglePayPropsConfiguration {
      */
     merchantId?: string;
 
-    // Kept for legacy reasons
-    merchantIdentifier?: string;
-
     /**
      * Merchant name is rendered in the payment sheet.
      * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
@@ -116,11 +113,6 @@ export interface GooglePayProps extends UIElementProps {
     transactionInfo?: Partial<google.payments.api.TransactionInfo>;
 
     // Button
-
-    /**
-     * @deprecated use showPayButton
-     */
-    showButton?: boolean;
     buttonColor?: google.payments.api.ButtonColor;
     buttonType?: google.payments.api.ButtonType;
 

@@ -3,7 +3,7 @@
  * @param config -
  */
 const logTelemetry = config => event => {
-    if (!config.accessKey) {
+    if (!config.clientKey) {
         return Promise.reject();
     }
 
@@ -27,7 +27,7 @@ const logTelemetry = config => event => {
         body: JSON.stringify(telemetryEvent)
     };
 
-    return fetch(`${config.loadingContext}v1/analytics/log?token=${config.accessKey}`, options)
+    return fetch(`${config.loadingContext}v1/analytics/log?token=${config.clientKey}`, options)
         .then(response => response.ok)
         .catch(() => {});
 };
