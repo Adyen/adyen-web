@@ -19,7 +19,6 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         rules: {
             issuer: {
                 validate: issuer => isIssuerRequired() && !!issuer,
-                errorMessage: 'blik.invalid',
                 modes: ['input', 'blur']
             }
         }
@@ -46,10 +45,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     const [status, setStatus] = useState('ready');
     this.setStatus = setStatus;
-
-    this.showValidation = () => {
-        triggerValidation();
-    };
+    this.showValidation = triggerValidation;
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">
