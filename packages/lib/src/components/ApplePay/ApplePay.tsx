@@ -106,7 +106,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
-        const path = `APPLEPAY_SESSION_ENDPOINT?clientKey=${clientKey}`;
+        const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
         const options = { loadingContext, path };
         const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
 
