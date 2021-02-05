@@ -65,7 +65,7 @@ export default async () => [
             },
             {
                 name: 'AdyenCheckout',
-                file: pkg.browser,
+                file: pkg['umd:main'],
                 format: 'umd',
                 inlineDynamicImports: true,
                 sourcemap: true
