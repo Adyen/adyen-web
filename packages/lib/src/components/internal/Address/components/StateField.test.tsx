@@ -1,9 +1,9 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import StateField from './StateField';
-import getDataset from '../../../../utils/fetch-json-data';
+import getDataset from '../../../../core/Services/get-dataset';
 
-jest.mock('../../../../utils/fetch-json-data');
+jest.mock('../../../../core/Services/get-dataset');
 const statesMock = [
     {
         id: 'CA',

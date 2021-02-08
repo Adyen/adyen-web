@@ -1,4 +1,4 @@
-import fetchJSONData from '../../utils/fetch-json-data';
+import { httpPost } from '../../core/Services/http';
 import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../internal/SecuredFields/lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configuration/constants';
 import { getError } from '../../core/Errors/utils';
@@ -17,12 +17,10 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
         // Store id of request we're about to make
         this.currentRequestId = callbackObj.uuid;
 
-        fetchJSONData(
+        httpPost(
             {
-                path: `v2/bin/binLookup?token=${this.props.clientKey}`,
                 loadingContext: this.props.loadingContext,
-                method: 'POST',
-                contentType: 'application/json'
+                path: `v1/bin/binLookup?clientKey=${this.props.clientKey}`
             },
             {
                 supportedBrands: this.props.brands || DEFAULT_CARD_GROUP_TYPES,

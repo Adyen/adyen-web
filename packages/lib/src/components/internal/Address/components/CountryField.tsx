@@ -3,7 +3,7 @@ import { useState, useLayoutEffect } from 'preact/hooks';
 import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import fetchJSONData from '../../../../utils/fetch-json-data';
+import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
 
 export default function CountryField(props: CountryFieldProps) {
@@ -14,10 +14,7 @@ export default function CountryField(props: CountryFieldProps) {
     const [readOnly, setReadOnly] = useState(props.readOnly);
 
     useLayoutEffect(() => {
-        fetchJSONData({
-            path: `datasets/countries/${i18n.locale}.json`,
-            loadingContext
-        })
+        getDataset('countries', loadingContext, i18n.locale)
             .then(response => {
                 const countriesFilter = country => allowedCountries.includes(country.id);
                 const newCountries = allowedCountries.length ? response.filter(countriesFilter) : response;

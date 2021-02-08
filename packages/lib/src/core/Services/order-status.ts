@@ -1,12 +1,12 @@
-import fetchJsonData from '../../utils/fetch-json-data';
+import { httpGet } from './http';
 import { OrderStatus } from '../../types';
 
 /**
  */
-export function orderStatus(config, order): Promise<OrderStatus> {
-    const options = { path: `/v1/order/status?token=${config.clientKey}`, loadingContext: config.loadingContext, method: 'POST' };
+function orderStatus(config, order): Promise<OrderStatus> {
+    const options = { path: `/v1/order/status?clientKey=${config.clientKey}`, loadingContext: config.loadingContext };
 
-    return fetchJsonData(options, { orderData: order.orderData });
+    return httpGet(options, { orderData: order.orderData });
 }
 
 export default orderStatus;
