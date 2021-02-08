@@ -63,7 +63,7 @@
         "postcss-reporter": "^7.0.2",
         "prettier": "^1.19.1",
         "promise": "^8.1.0",
-        "sass-loader": "^10.1.1",
+        "sass-loader": "^11.0.0",
         "stylelint": "^13.9.0",
         "stylelint-config-recommended": "^3.0.0",
         "terser-webpack-plugin": "^4.2.3",
