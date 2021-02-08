@@ -34,7 +34,8 @@ const actionTypes = {
             size: props.size ?? '02',
             isDropin: !!props.isDropin,
             type: 'ChallengeShopper',
-            statusType: 'custom'
+            statusType: 'custom',
+            goesDirectToChallenge: true
         });
     },
 
