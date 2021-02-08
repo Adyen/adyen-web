@@ -20,7 +20,7 @@
             "require": "./dist/cjs/index.js"
         }
     },
-    "version": "3.21.1",
+    "version": "3.22.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -64,7 +64,7 @@
         "eslint-plugin-tsdoc": "^0.2.11",
         "jest": "^26.6.3",
         "node-sass": "^4.12.0",
-        "postcss": "^8.2.4",
+        "postcss": "^8.2.5",
         "postcss-reporter": "^7.0.2",
         "prettier": "^1.19.1",
         "promise": "^8.1.0",
