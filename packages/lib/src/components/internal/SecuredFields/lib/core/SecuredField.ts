@@ -3,7 +3,7 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED, ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
@@ -13,7 +13,8 @@ import AbstractSecuredField, {
     RtnType_postMessageListener,
     RtnType_callbackFn,
     AriaConfig,
-    PlaceholdersObject
+    PlaceholdersObject,
+    CVCPolicyType
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
@@ -28,8 +29,8 @@ class SecuredField extends AbstractSecuredField {
     constructor(pSetupObj: SFSetupObject, i18n: Language) {
         super();
 
-        // List of props from setup object not needed for iframe config
-        const deltaPropsArr: string[] = ['fieldType', 'cvcRequired', 'iframeSrc', 'loadingContext', 'holderEl'];
+        // List of props from setup object not required in the config object
+        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
@@ -41,7 +42,7 @@ class SecuredField extends AbstractSecuredField {
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
 
         this.fieldType = thisVarsFromSetupObj.fieldType;
-        this.cvcRequired = thisVarsFromSetupObj.cvcRequired;
+        this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
@@ -123,7 +124,7 @@ class SecuredField extends AbstractSecuredField {
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
-            cvcRequired: this.cvcRequired,
+            cvcRequired: this.cvcPolicy === CVC_POLICY_REQUIRED,
             numKey: this.numKey,
             txVariant: this.config.txVariant,
             extraFieldData: this.config.extraFieldData,
@@ -234,6 +235,14 @@ class SecuredField extends AbstractSecuredField {
 
             case 'focus':
                 this.onFocusCallback(feedbackObj);
+
+                // HORRIBLE HORRIBLE HACK to get round bug in TestCafe - see comment on 3rd test in packages/e2e/tests/cards/branding/branding.test.js
+                if (process.env.NODE_ENV === 'development' && window.location.origin.indexOf('3024') > -1) {
+                    if (window['testCafeForceClick'] === true) {
+                        window['testCafeForceClick'] = false;
+                        this.onClickCallback(feedbackObj);
+                    }
+                }
                 break;
 
             case 'binValue':
@@ -255,12 +264,15 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             /**
-             * Validate, because action=
-             *  'numberKeyPressed' or date-, month-, year-, cvc-, pin-, or iban- KeyPressed (i.e. regular, "non-error" event)
+             * Validate, because action =
+             *
+             *  'brand'
              *  'delete'
              *  'luhnCheck'
-             *  'brand'
-             *  'incomplete field' (follows from a focus (blur) event)
+             *  'incomplete field' (an error that follows from a focus (blur) event)
+             *  'numberKeyPressed' (or date-, month-, year-, cvc-, pin-, or iban- KeyPressed)
+             *    - since we have no "error" action "...KeyPressed" is the action type on most error events (other than "incomplete field" or "luhnCheck")
+             *    and often these error events representing the clearing of an existing error
              */
             default:
                 // If we're validation handling (& not encryption handling) field must be invalid
@@ -340,31 +352,37 @@ class SecuredField extends AbstractSecuredField {
 
     get isValid(): boolean {
         if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
-            if (!this.cvcRequired) {
-                // If cvc is optional then the field is always valid UNLESS it has an error
-                return !this.hasError;
+            switch (this.cvcPolicy) {
+                case CVC_POLICY_HIDDEN:
+                    // If cvc is hidden then the field is always valid
+                    return true;
+                case CVC_POLICY_OPTIONAL:
+                    // If cvc is optional then the field is always valid UNLESS it has an error
+                    return !this.hasError;
+                default:
+                    return this._isValid; // && !this.hasError; // WHY is this not just: return this._isValid (like below)...
             }
-            return this._isValid && !this.hasError;
         }
-        return this._isValid;
+        return this._isValid; //... or WHY is this not: return this._isValid && !this.hasError (like above)
     }
     set isValid(value: boolean) {
         this._isValid = value;
     }
 
-    get cvcRequired(): boolean {
-        return this._cvcRequired;
+    get cvcPolicy(): CVCPolicyType {
+        return this._cvcPolicy;
     }
-    set cvcRequired(value: boolean) {
+
+    set cvcPolicy(value: CVCPolicyType) {
         // Only set if this is a CVC field
         if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
 
         // Only set if value has changed
-        if (value === this.cvcRequired) return;
+        if (value === this.cvcPolicy) return;
 
-        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcRequired:: value=', value);
+        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcPolicy:: value=', value);
 
-        this._cvcRequired = value;
+        this._cvcPolicy = value;
 
         // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
         // NOTE: fixes issue in Components where you first validate and then start typing a maestro number

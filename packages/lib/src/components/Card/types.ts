@@ -10,6 +10,7 @@ import {
     CbObjOnLoad,
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
+import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -85,6 +86,11 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
+    /**
+     * 3DS2 challenge size
+     */
+    challengeWindowSize?: string;
+
     [key: string]: any;
 }
 
@@ -110,4 +116,36 @@ export interface CardElementData {
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;
+}
+
+export interface BrandObject {
+    brand: string;
+    cvcPolicy: CVCPolicyType;
+    enableLuhnCheck: boolean;
+    showExpiryDate: boolean;
+    supported: boolean;
+}
+
+export interface BinLookupResponseRaw {
+    requestId: string;
+    issuingCountryCode?: string;
+    brands?: BrandObject[];
+    // OR, if an error has occurred
+    status: number;
+    errorCode: string;
+    message: string;
+    errorType: string;
+}
+
+/**
+ * Mapped & simplified version of BinLookupResponseRaw
+ */
+export interface BinLookupResponse {
+    issuingCountryCode: string;
+    supportedBrands?: BrandObject[];
+}
+
+export interface DualBrandSelectElement {
+    id: string;
+    brandObject: BrandObject;
 }

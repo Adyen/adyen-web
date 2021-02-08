@@ -19,6 +19,7 @@ export default iframeSelector => {
     return {
         fillCardNumber: fillCardNumber(iframeSelector),
         deleteCardNumber: deleteCardNumber(iframeSelector),
+        deleteCVC: deleteCVC(iframeSelector),
         fillDate: fillDate(iframeSelector),
         fillCVC: fillCVC(iframeSelector),
         fillDateAndCVC: fillDateAndCVC(iframeSelector)
@@ -40,6 +41,12 @@ const fillCardNumber = iframeSelector => {
 const deleteCardNumber = iframeSelector => {
     return async t => {
         return deleteFromIFrame(t, iframeSelector, 0, '#encryptedCardNumber');
+    };
+};
+
+const deleteCVC = iframeSelector => {
+    return async t => {
+        return deleteFromIFrame(t, iframeSelector, 2, '#encryptedSecurityCode');
     };
 };
 

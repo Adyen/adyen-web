@@ -171,7 +171,10 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     // APPLE PAY
     const applepay = checkout.create('applepay', {
         // Callbacks
-        onAuthorized: console.info,
+        onAuthorized: (resolve, reject, event) => {
+            console.log('Apple Pay onAuthorized', event);
+            resolve();
+        },
         // onError: console.error,
 
         // Payment info

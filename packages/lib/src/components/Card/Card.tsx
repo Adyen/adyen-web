@@ -4,7 +4,7 @@ import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { CardElementData, CardElementProps } from './types';
+import { CardElementData, CardElementProps, BinLookupResponse } from './types';
 import triggerBinLookUp from './triggerBinLookUp';
 
 export class CardElement extends UIElement<CardElementProps> {
@@ -36,6 +36,11 @@ export class CardElement extends UIElement<CardElementProps> {
      * Formats the component data output
      */
     formatData(): CardElementData {
+        /**
+         * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
+         * this.state.additionalSelectValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
+         *   the shopper makes a brand selection
+         */
         const cardBrand = this.state.additionalSelectValue || this.props.brand;
         const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
@@ -69,8 +74,8 @@ export class CardElement extends UIElement<CardElementProps> {
         if (this.props.onBrand) this.props.onBrand(event);
     };
 
-    processBinLookupResponse(binLookupObject) {
-        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+    processBinLookupResponse(binLookupResponse: BinLookupResponse) {
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse);
         return this;
     }
 

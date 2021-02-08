@@ -7,6 +7,7 @@ import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';
 import { QRLoaderProps, QRLoaderState } from './types';
+import copyToClipboard from '../../../utils/clipboard';
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
@@ -40,7 +41,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         onComplete: () => {},
         throttleTime: 60000,
         classNameModifiers: [],
-        throttledInterval: 10000
+        throttledInterval: 10000,
+        introduction: 'wechatpay.scanqrcode'
     };
 
     // Retry until getting a complete response from the server or it times out\
@@ -190,7 +192,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             >
                 {brandLogo && <img src={brandLogo} alt={type} className="adyen-checkout__qr-loader__brand-logo" />}
 
-                <div className="adyen-checkout__qr-loader__subtitle">{i18n.get('wechatpay.scanqrcode')}</div>
+                <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.introduction)}</div>
 
                 <img src={qrCodeImage} alt={i18n.get('wechatpay.scanqrcode')} />
 
@@ -209,6 +211,21 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 </div>
 
                 {this.props.instructions && <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>}
+
+                {this.props.copyBtn && (
+                    <div className="adyen-checkout__qr-loader__actions">
+                        <Button
+                            inline
+                            secondary
+                            onClick={(e, { complete }) => {
+                                copyToClipboard(this.props.qrCodeData);
+                                complete();
+                            }}
+                            icon={getImageUrl({ loadingContext, imageFolder: 'components/' })('copy')}
+                            label={i18n.get('button.copy')}
+                        />
+                    </div>
+                )}
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">

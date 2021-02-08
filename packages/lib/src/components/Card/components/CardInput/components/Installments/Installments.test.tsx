@@ -3,20 +3,23 @@ import { mount } from 'enzyme';
 import Installments from './Installments';
 import { InstallmentOptions } from '../types';
 
-const installmentOptions = {
-    card: {
-        values: [1, 2]
-    },
-    mc: {
-        values: [1, 2, 3]
-    },
-    visa: {
-        values: [1, 2, 3, 4]
-    }
-} as InstallmentOptions;
-
 describe('Installments', () => {
+    let installmentOptions;
     const getWrapper = (props?) => mount(<Installments installmentOptions={installmentOptions} {...props} />);
+
+    beforeEach(() => {
+        installmentOptions = {
+            card: {
+                values: [1, 2]
+            },
+            mc: {
+                values: [1, 2, 3]
+            },
+            visa: {
+                values: [1, 2, 3, 4]
+            }
+        } as InstallmentOptions;
+    });
 
     test('renders the installment options', () => {
         const wrapper = getWrapper();
@@ -30,11 +33,21 @@ describe('Installments', () => {
     });
 
     test('does not render any installment options by default when no card key is passed', () => {
-        const installmentOptions = {
-            mc: { values: [1, 2, 3] }
-        };
-        const wrapper = getWrapper({ installmentOptions: installmentOptions });
+        delete installmentOptions.card;
+        const wrapper = getWrapper({ installmentOptions });
         expect(wrapper.find('.adyen-checkout__dropdown__element')).toHaveLength(0);
+    });
+
+    test('renders the select as read only if only one option is passed', () => {
+        installmentOptions.card.values = [3];
+        const wrapper = getWrapper({ installmentOptions });
+        expect(wrapper.find('Select').prop('readonly')).toBe(true);
+    });
+
+    test('preselects the passed value', () => {
+        installmentOptions.card.preselectedValue = 2;
+        const wrapper = getWrapper({ installmentOptions });
+        expect(wrapper.find('Select').prop('selected')).toBe(2);
     });
 
     test('renders the right amount of installment options', () => {
@@ -51,7 +64,7 @@ describe('Installments', () => {
         // containing div - not present 'cos no brand is set
         expect(getWrapper().find('.adyen-checkout__fieldset--revolving-plan')).toHaveLength(0);
 
-        let wrapper = getWrapper({ brand: 'visa' });
+        const wrapper = getWrapper({ brand: 'visa' });
         // containing div - once brand is set
         expect(wrapper.find('.adyen-checkout__fieldset--revolving-plan')).toHaveLength(1);
         // radio buttons
@@ -61,7 +74,7 @@ describe('Installments', () => {
     });
 
     test('does not render the radio button UI for mc', () => {
-        let wrapper = getWrapper({ brand: 'mc' });
+        const wrapper = getWrapper({ brand: 'mc' });
         // no containing div
         expect(wrapper.find('.adyen-checkout__fieldset--revolving-plan')).toHaveLength(0);
         // no radio buttons

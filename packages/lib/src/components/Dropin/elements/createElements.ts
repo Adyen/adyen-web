@@ -1,4 +1,4 @@
-import { filterPresent, filterAvailable } from './filters';
+import { filterUnsupported, filterPresent, filterAvailable } from './filters';
 import { PaymentMethod } from '../../../types';
 
 /**
@@ -8,10 +8,14 @@ import { PaymentMethod } from '../../../types';
  * @param create - Reference to the main instance `create` method
  */
 const createElements = (components: PaymentMethod[] = [], props, create) => {
-    const elements = components.map(c => create(c.type, { ...c, ...props })).filter(filterPresent);
+    const elements = components
+        .map(c => create(c.type, { ...c, ...props }))
+        .filter(filterPresent)
+        .filter(filterUnsupported);
 
     // filter available elements
     const elementPromises = elements.map(filterAvailable).map(p => p.catch(e => e));
+
     return Promise.all(elementPromises).then(values => elements.filter((el, i) => values[i] === true));
 };
 

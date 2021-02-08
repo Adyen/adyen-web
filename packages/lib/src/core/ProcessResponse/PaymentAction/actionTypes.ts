@@ -24,18 +24,19 @@ const actionTypes = {
             statusType: 'loading'
         }),
 
-    threeDS2Challenge: (action: PaymentAction, props) =>
-        getComponent('threeDS2Challenge', {
+    threeDS2Challenge: (action: PaymentAction, props) => {
+        return getComponent('threeDS2Challenge', {
             ...props,
             token: action.token,
             paymentData: action.paymentData,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
-            size: '05',
+            size: props.size ?? '02',
             isDropin: !!props.isDropin,
             type: 'ChallengeShopper',
             statusType: 'custom'
-        }),
+        });
+    },
 
     threeDS2: (action: PaymentAction, props) => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
