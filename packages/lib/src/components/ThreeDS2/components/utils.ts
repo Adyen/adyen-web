@@ -116,7 +116,6 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
     };
 };
 
-// New 3DS2 flow
 export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({
     data: {
         [dataKey]: encodeObject({ threeDSCompInd: resultObj.threeDSCompInd }),
@@ -124,15 +123,6 @@ export const createFingerprintResolveData = (dataKey: string, resultObj: ResultO
     }
 });
 
-// Old 3DS2 flow
-// export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): any => ({
-//     data: {
-//         details: { 'threeds2.fingerprint': encodeObject(resultObj) },
-//         paymentData
-//     }
-// });
-
-// New 3DS2 flow
 export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
     data: {
         details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }

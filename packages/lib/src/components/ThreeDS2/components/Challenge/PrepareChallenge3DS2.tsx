@@ -34,7 +34,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.setState({ status: 'complete' }, () => {
             /**
              * As we transition to switching to the new 3DS2 Flow and we are in a "hybrid" mode of old /payments response working with
-             * new /submitThreeDS2Fingerprint endpoint the challenge-only flow skips the /submitThreeDS2Fingerprint call - so the resolveData needs
+             * new /submitThreeDS2Fingerprint endpoint - the challenge-only flow skips the /submitThreeDS2Fingerprint call - so the resolveData needs
              * to be prepared in the "old" way
              *
              * This situation will also apply to the threeds2InMDFlow TODO once fully switched to new flow - rename goesDirectToChallenge to threeds2InMDFlow
