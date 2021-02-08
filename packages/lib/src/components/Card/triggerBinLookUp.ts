@@ -19,10 +19,6 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
 
         httpPost(
             {
-<<<<<<< HEAD
-=======
-                path: `v2/bin/binLookup?token=${this.props.clientKey}`,
->>>>>>> v4
                 loadingContext: this.props.loadingContext,
                 path: `v1/bin/binLookup?clientKey=${this.props.clientKey}`
             },
