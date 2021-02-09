@@ -9,7 +9,7 @@ import { PaymentMethod } from '../../../types';
  */
 const createElements = (components: PaymentMethod[] = [], props, create) => {
     const elements = components
-        .map(c => create(c.type, { ...c, ...props }))
+        .map(c => create(c, props))
         .filter(filterPresent)
         .filter(filterUnsupported);
 

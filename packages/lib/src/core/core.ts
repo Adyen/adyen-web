@@ -178,6 +178,16 @@ class Core {
             });
         }
 
+        /**
+         * PaymentMethod is defined as a paymentMethods object (Used internally on Drop-in).
+         */
+        if (typeof PaymentMethod === 'object' && typeof PaymentMethod.type === 'string') {
+            // paymentMethodsConfiguration object will take precedence here
+            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, this.options.paymentMethodsConfiguration);
+            // handle rest of the flow normally (creating by string)
+            return this.handleCreate(PaymentMethod.type, { ...PaymentMethod, ...options, ...paymentMethodsConfiguration });
+        }
+
         return this.handleCreateError(PaymentMethod);
     }
 
