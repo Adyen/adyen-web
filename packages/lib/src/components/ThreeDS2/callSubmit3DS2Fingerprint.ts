@@ -6,9 +6,8 @@ import { httpPost } from '../../core/Services/http';
 export default function callSubmit3DS2Fingerprint({ data }) {
     httpPost(
         {
-            path: `v1/submitThreeDS2Fingerprint?clientKey=${this.props.clientKey}`,
-            loadingContext: this.props.loadingContext,
-            contentType: 'application/json'
+            path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,
+            loadingContext: this.props.loadingContext
         },
         {
             ...data

@@ -20,7 +20,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
         httpPost(
             {
                 loadingContext: this.props.loadingContext,
-                path: `v1/bin/binLookup?clientKey=${this.props.clientKey}`
+                path: `v2/bin/binLookup?token=${this.props.clientKey}`
             },
             {
                 supportedBrands: this.props.brands || DEFAULT_CARD_GROUP_TYPES,
