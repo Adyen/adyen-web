@@ -7,10 +7,7 @@ window.cardConfig = {
 };
 
 window.dropinConfig = {
-    showStoredPaymentMethods: false, // hide stored PMs so credit card is first on list
-    paymentMethodsConfiguration: {
-        card: { brands: ['mc', 'amex', 'visa', 'cartebancaire'] }
-    }
+    showStoredPaymentMethods: false // hide stored PMs so credit card is first on list
 };
 
 /**
@@ -21,5 +18,7 @@ window.dropinConfig = {
  *    at https://pay.google.com/gp/p/js/pay.js:237:404
  */
 window.mainConfiguration = {
-    removePaymentMethods: ['paywithgoogle']
+    paymentMethodsConfiguration: {
+        card: { brands: ['mc', 'amex', 'visa', 'cartebancaire'] }
+    }
 };

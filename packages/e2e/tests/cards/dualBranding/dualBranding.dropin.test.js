@@ -10,7 +10,7 @@ const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
 
 const getPropFromPMData = ClientFunction(prop => {
-    return window.dropin.state.data.paymentMethod[prop];
+    return window.dropin.dropinRef.state.activePaymentMethod.formatData().paymentMethod[prop];
 });
 
 const TEST_SPEED = 1;

@@ -100,6 +100,7 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         const paymentAction: UIElement = this.props._parentInstance.createFromAction(action, {
             ...props,
+            elementRef: this.elementRef, // maintain elementRef for 3DS2 flow
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
             isDropin: true
         });
