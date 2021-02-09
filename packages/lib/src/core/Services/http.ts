@@ -1,3 +1,4 @@
+import fetch from './fetch';
 import { FALLBACK_CONTEXT } from '../config';
 
 interface HttpOptions {
