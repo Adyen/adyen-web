@@ -52,7 +52,7 @@ class Core {
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (action.type) {
-            const paymentMethodsConfiguration = getComponentConfiguration(action.paymentMethodType, this.options.paymentMethodsConfiguration);
+            const paymentMethodsConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
             const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
             return getComponentForAction(action, props);
         }
