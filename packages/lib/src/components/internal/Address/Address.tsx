@@ -28,8 +28,7 @@ export default function Address(props: AddressProps) {
     };
 
     const handleDropdownChangeFor = (key: string) => (e: Event): void => {
-        const field = e.currentTarget as HTMLInputElement;
-        const value = field.getAttribute('data-value');
+        const value = (e.target as HTMLInputElement).value;
 
         setData(prevData => ({ ...prevData, [key]: value }));
         setValid(prevValid => ({ ...prevValid, [key]: !!value }));

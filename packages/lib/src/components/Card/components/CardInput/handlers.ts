@@ -119,8 +119,7 @@ function handleFocus(e: CbObjOnFocus): void {
  * Handler for the icons added in response to the /binLookup call
  */
 function handleAdditionalDataSelection(e: Event): void {
-    const field: HTMLLIElement = e.currentTarget as HTMLLIElement;
-    const value: string = field.getAttribute('data-value');
+    const value: string = (e.target as HTMLLIElement).getAttribute('data-value');
 
     this.setState({ additionalSelectValue: value });
 
