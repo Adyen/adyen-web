@@ -5,8 +5,8 @@ import { Selector, RequestLogger } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
-import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
-import { BASE_URL } from '../../pages';
+import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
+import { BASE_URL, CARDS_URL } from '../../pages';
 
 const detailsURL = `${BASE_URL}/details`;
 
@@ -30,45 +30,14 @@ const loggerSubmitThreeDS2 = RequestLogger(
 
 const TEST_SPEED = 1;
 
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing new (v67) hybrid 3DS2 Flow`
-    .page(BASE_URL)
-    .clientScripts('threeDS2.clientScripts.js')
+fixture`Testing default size of the 3DS2 challenge window, & the challenge flows, on the Card component, since all other tests are for Dropin`
+    .page(CARDS_URL)
+    .clientScripts('threeDS2.default.size.clientScripts.js')
     .requestHooks([loggerDetails, loggerSubmitThreeDS2]);
-
-test('Fill in card number that will trigger frictionless flow', async t => {
-    await start(t, 2000, TEST_SPEED);
-
-    // Set handler for the alert window
-    await t.setNativeDialogHandler(() => true);
-
-    // Fill card fields
-    await cardUtils.fillCardNumber(t, THREEDS2_FRICTIONLESS_CARD);
-    await cardUtils.fillDateAndCVC(t);
-
-    // Expect card to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
-
-    // Click pay
-    await t
-        .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
-        // Expect no errors
-        .expect(Selector('.adyen-checkout__field--error').exists)
-        .notOk()
-        // Allow time for the ONLY details call, which we expect to be successful
-        .wait(2000)
-        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
-        .ok()
-        // Allow time for the alert to manifest
-        .wait(2000);
-
-    // Check the value of the alert text
-    const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
-});
 
 test('Fill in card number that will trigger full flow (fingerprint & challenge)', async t => {
     loggerDetails.clear();
@@ -83,7 +52,7 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
     await cardUtils.fillDateAndCVC(t);
 
     // Expect card to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
+    await t.expect(getIsValid('card')).eql(true);
 
     // Click pay
     await t
@@ -97,6 +66,9 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
         .ok();
 
     // console.log(logger.requests[0].response.headers);
+
+    // Check challenge window size is read from config prop
+    await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok();
 
     // Complete challenge
     await fillChallengeField(t);
@@ -129,7 +101,7 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
     await cardUtils.fillDateAndCVC(t);
 
     // Expect card to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
+    await t.expect(getIsValid('card')).eql(true);
 
     // Click pay
     await t
@@ -137,6 +109,9 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
         // Expect no errors
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk();
+
+    // Check challenge window size is read from config prop
+    await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok();
 
     // Complete challenge
     await fillChallengeField(t);

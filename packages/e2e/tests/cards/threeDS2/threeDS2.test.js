@@ -1,3 +1,6 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up, apparently!
+
 import { Selector, RequestLogger } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
@@ -5,10 +8,20 @@ import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
 
-const url = `${BASE_URL}/details`;
+const detailsURL = `${BASE_URL}/details`;
 
-const logger = RequestLogger(
-    { url, method: 'post' },
+const loggerDetails = RequestLogger(
+    { detailsURL, method: 'post' },
+    {
+        logResponseHeaders: true,
+        logResponseBody: true
+    }
+);
+
+const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
+
+const loggerSubmitThreeDS2 = RequestLogger(
+    { submitThreeDS2FingerprintURL, method: 'post' },
     {
         logResponseHeaders: true,
         logResponseBody: true
@@ -21,12 +34,12 @@ const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card 
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing old (v65) 3DS2 Flow`
+fixture`Testing new (v67) 3DS2 Flow`
     .page(BASE_URL)
     .clientScripts('threeDS2.clientScripts.js')
-    .requestHooks(logger);
+    .requestHooks([loggerDetails, loggerSubmitThreeDS2]);
 
-test.skip('Fill in card number that will trigger frictionless flow', async t => {
+test('Fill in card number that will trigger frictionless flow', async t => {
     await start(t, 2000, TEST_SPEED);
 
     // Set handler for the alert window
@@ -46,8 +59,8 @@ test.skip('Fill in card number that will trigger frictionless flow', async t => 
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
         // Allow time for the ONLY details call, which we expect to be successful
-        .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        .wait(2000)
+        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         // Allow time for the alert to manifest
         .wait(2000);
@@ -57,8 +70,8 @@ test.skip('Fill in card number that will trigger frictionless flow', async t => 
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test.skip('Fill in card number that will trigger challenge flow', async t => {
-    logger.clear();
+test('Fill in card number that will trigger full flow (fingerprint & challenge)', async t => {
+    loggerDetails.clear();
 
     await start(t, 2000, TEST_SPEED);
 
@@ -78,23 +91,26 @@ test.skip('Fill in card number that will trigger challenge flow', async t => {
         // Expect no errors
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
-        // Allow time for the FIRST details call, which we expect to be successful
-        .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
+        .wait(2000)
+        .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
         .ok();
 
     // console.log(logger.requests[0].response.headers);
+
+    // Check challenge window size is read from config prop
+    await t.expect(Selector('.adyen-checkout__threeds2__challenge--04').exists).ok();
 
     // Complete challenge
     await fillChallengeField(t);
     await submitChallenge(t);
 
     await t
-        // Allow time for the SECOND details call, which we expect to be successful
-        .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        // Allow time for the /details call, which we expect to be successful
+        .wait(2000)
+        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
-        .wait(2000);
+        .wait(1000);
 
     // console.log(logger.requests[1].response.headers);
 
@@ -103,8 +119,8 @@ test.skip('Fill in card number that will trigger challenge flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test.skip('Fill in card number that will trigger challenge-only flow', async t => {
-    logger.clear();
+test('Fill in card number that will trigger challenge-only flow', async t => {
+    loggerDetails.clear();
 
     await start(t, 2000, TEST_SPEED);
 
@@ -125,14 +141,17 @@ test.skip('Fill in card number that will trigger challenge-only flow', async t =
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk();
 
+    // Check challenge window size is read from config prop
+    await t.expect(Selector('.adyen-checkout__threeds2__challenge--04').exists).ok();
+
     // Complete challenge
     await fillChallengeField(t);
     await submitChallenge(t);
 
     await t
         // Allow time for the ONLY details call, which we expect to be successful
-        .wait(1000)
-        .expect(logger.contains(r => r.response.statusCode === 200))
+        .wait(2000)
+        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         .ok()
         .wait(2000);
 
