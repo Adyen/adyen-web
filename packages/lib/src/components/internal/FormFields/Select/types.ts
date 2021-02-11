@@ -9,7 +9,7 @@ export interface SelectProps {
     classNameModifiers: string[];
     isInvalid: boolean;
     items: SelectItem[];
-    onChange: (e: Event) => void;
+    onChange: (e) => void;
     placeholder: string;
     readonly: boolean;
     selected: string;

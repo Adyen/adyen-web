@@ -57,7 +57,7 @@ class Select extends Component<SelectProps, SelectState> {
             this.closeDropdown();
             const value = e.currentTarget.getAttribute('data-value');
             const name = this.props.name;
-            this.props.onChange({ ...e, target: { value, name } });
+            this.props.onChange({ target: { value, name } });
         }
     }
 
