@@ -154,8 +154,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             showWarnings: this.props.showWarnings,
             iframeUIConfig: {
                 sfStyles: this.props.styles,
-                placeholders: this.props.placeholders,
-                ariaConfig: this.props.ariaLabels
+                placeholders: this.props.placeholders
             },
             i18n: this.props.i18n,
             callbacks: {
@@ -171,8 +170,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
             },
-            isKCP: this.state.hasKoreanFields,
-            locale: this.props.locale
+            isKCP: this.state.hasKoreanFields
         };
 
         this.csf = initCSF(csfSetupObj);

@@ -21,27 +21,14 @@ export function processAriaConfig(configObj: SFInternalConfig, fieldType: string
     // Get translation for aria label
     const label: string = i18n.get(`${type}.${fieldType}.aria.label`);
 
-    let newAriaFieldConfigObj: AriaConfigObject;
+    // Get lang property
+    const lang = configObj.locale;
 
-    // Check for a pre-existing, merchant defined ariaConfig object and extract lang property
-    const lang = getProp(configObj, `iframeUIConfig.ariaConfig.lang`) || configObj.locale;
-
-    // Get config object for this specific field, if it exists...
-    const ariaFieldConfig: AriaConfigObject = getProp(configObj, `iframeUIConfig.ariaConfig.${fieldType}`);
-    if (ariaFieldConfig) {
-        newAriaFieldConfigObj = {
-            ...ariaFieldConfig,
-            // If object already has a title & label - use them; otherwise use values from translation file
-            iframeTitle: ariaFieldConfig.iframeTitle || iframeTitle,
-            label: ariaFieldConfig.label || label
-        };
-    } else {
-        // ... else, create a new object with the iframeTitle & label values from translation file
-        newAriaFieldConfigObj = { iframeTitle, label };
-    }
+    // Ceate a new object with the iframeTitle & label values from translation file
+    const ariaFieldConfigObj: AriaConfigObject = { iframeTitle, label };
 
     // Add error translations object
-    const ariaFieldConfigWithTranslatedErrors = addErrorTranslationsToObject(newAriaFieldConfigObj, i18n);
+    const ariaFieldConfigWithTranslatedErrors = addErrorTranslationsToObject(ariaFieldConfigObj, i18n);
 
     // Create a new aria config object keeping the old entries and adding a new one for this field
     // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
