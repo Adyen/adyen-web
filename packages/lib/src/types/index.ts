@@ -1,5 +1,8 @@
 import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
+import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
+
+export type PaymentActionsType = keyof typeof actionTypes;
 
 /**
  * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v51/payments__resParam_action API Explorer /payments action}
@@ -8,7 +11,7 @@ export interface PaymentAction {
     /**
      * General type of action that needs to be taken by the client
      */
-    type: string;
+    type: PaymentActionsType | string;
 
     /**
      * Refinement of type of action that needs to be taken by the client (currently only applies to the new 'threeDS2' type)

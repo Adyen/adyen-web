@@ -75,7 +75,7 @@ describe('Core', () => {
         });
 
         test('should handle new fingerprint action', () => {
-            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { card: { challengeWindowSize: '04' } } });
+            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '04' } } });
 
             const fingerprintAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -100,7 +100,7 @@ describe('Core', () => {
         test('should handle new challenge action', () => {
             const checkout = new AdyenCheckout({
                 paymentMethodsConfiguration: {
-                    card: {
+                    threeDS2: {
                         challengeWindowSize: '03'
                     }
                 }
@@ -130,7 +130,7 @@ describe('Core', () => {
             const onAdditionalDetailsCreateFromAction = jest.fn().mockName('onSubmitMockComponent');
             const checkout = new AdyenCheckout({
                 onAdditionalDetails: onAdditionalDetailsGlobal,
-                paymentMethodsConfiguration: { bcmc_mobile_QR: { onAdditionalDetails: onAdditionalDetailsBCMC } }
+                paymentMethodsConfiguration: { qrCode: { onAdditionalDetails: onAdditionalDetailsBCMC } }
             });
 
             test('paymentMethodsConfiguration properties take precedence over global configuration', () => {
@@ -140,7 +140,7 @@ describe('Core', () => {
                     type: 'qrCode',
                     paymentData: 'test'
                 });
-                expect(paymentAction.props.onAdditionalDetails).toBe(onAdditionalDetailsBCMC);
+                expect(paymentAction.props.onAdditionalDetails).toEqual(onAdditionalDetailsBCMC);
             });
 
             test('createFromAction props take precedence over paymentMethodsConfiguration and global configuration', () => {

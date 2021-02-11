@@ -6,7 +6,7 @@ export interface DropinElementProps extends UIElementProps {
      * Configure each payment method displayed on the Drop-in
      */
     paymentMethodsConfiguration?: {
-        [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+        [key in keyof PaymentMethods | keyof ['threeDS2']]?: Partial<PaymentMethodOptions<key>>;
     };
 
     paymentMethods?: PaymentMethod[];
