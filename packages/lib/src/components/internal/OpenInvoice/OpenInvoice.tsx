@@ -83,7 +83,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         <div className="adyen-checkout__open-invoice">
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
-                    data={data.companyDetails}
+                    data={props.data.companyDetails}
                     label="companyDetails"
                     onChange={handleFieldset('companyDetails')}
                     ref={fieldsetsRefs.companyDetails}
@@ -93,7 +93,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {activeFieldsets.personalDetails && (
                 <PersonalDetails
-                    data={data.personalDetails}
+                    data={props.data.personalDetails}
                     requiredFields={props.personalDetailsRequiredFields}
                     label="personalDetails"
                     onChange={handleFieldset('personalDetails')}

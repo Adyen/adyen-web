@@ -1,6 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { shopperLocale } from '../../config/commonConfig';
+import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';
@@ -10,6 +11,7 @@ window.checkout = new AdyenCheckout({
     clientKey: process.env.__CLIENT_KEY__,
     locale: shopperLocale,
     environment: 'test',
+    onChange: handleChange,
     showPayButton: true
 });
 
@@ -61,6 +63,7 @@ window.boletoInput = checkout
         // billingAddressRequired: false,
         showEmailAddress: true,
         data: {
+            socialSecurityNumber: '32553325916',
             billingAddress: {
                 street: 'Fake street',
                 houseNumberOrName: '123',
@@ -179,7 +182,7 @@ window.econtextStoresInput = checkout
             firstName: 'Joe',
             lastName: 'Smith',
             shopperEmail: 'test@email.com',
-            telephoneNumber: '06210987654321'
+            telephoneNumber: '0621098765'
         }
     })
     .mount('#econtext-stores-input-container');

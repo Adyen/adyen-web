@@ -5,9 +5,8 @@ import DragonpayVoucherResult from './components/DragonpayVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { DragonpayElementProps } from './types';
 
-export class DragonpayElement extends UIElement {
+export class DragonpayElement extends UIElement<DragonpayElementProps> {
     public static type = 'dragonpay';
-    public props: DragonpayElementProps;
 
     get isValid() {
         return !!this.state.isValid;
@@ -25,6 +24,13 @@ export class DragonpayElement extends UIElement {
                 ...(issuer && { issuer }),
                 type: this.props.type || DragonpayElement.type
             }
+        };
+    }
+
+    protected formatProps(props: DragonpayElementProps) {
+        return {
+            ...props,
+            issuers: props.details?.find(detail => detail.key === 'issuer')?.items ?? props.issuers
         };
     }
 

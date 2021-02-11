@@ -14,7 +14,7 @@ export class MBWayElement extends UIElement {
         return {
             ...props,
             data: {
-                telephoneNumber: data.telephoneNumber || data.phoneNumber || ''
+                telephoneNumber: data.telephoneNumber || data.phoneNumber
             },
             placeholders: {
                 telephoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '+351 932 123 456'

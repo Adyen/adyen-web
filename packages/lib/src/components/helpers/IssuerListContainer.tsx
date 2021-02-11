@@ -59,7 +59,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
         return {
             paymentMethod: {
                 type: this.constructor['type'],
-                issuer: this.state.issuer
+                issuer: this.state?.data.issuer
             }
         };
     }
@@ -68,7 +68,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
      * Returns whether the component state is valid or not
      */
     get isValid() {
-        return !!this.state?.issuer;
+        return !!this.state?.isValid;
     }
 
     render() {

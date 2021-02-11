@@ -23,7 +23,7 @@ function Installments(props: InstallmentsProps) {
     const getPartialAmount = (divider: number): string => i18n.amount(amount.value / divider, amount.currency);
 
     const onSelectInstallment = e => {
-        const selectedInstallments = e.currentTarget.getAttribute('data-value');
+        const selectedInstallments = e.target.value;
         setInstallmentAmount(Number(selectedInstallments));
     };
 

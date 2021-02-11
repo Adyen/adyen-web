@@ -1,5 +1,5 @@
 import { FieldsetVisibility } from '../../../types';
-import Validator from '../../../utils/Validator';
+import { ValidatorRules } from '../../../utils/Validator/FormValidator';
 
 export interface CompanyDetailsSchema {
     name?: string;
@@ -15,17 +15,7 @@ export interface CompanyDetailsProps {
     onChange: (newState: object) => void;
     readonly?: boolean;
     ref?: any;
-    validator?: Validator;
-}
-
-export interface CompanyDetailsStateError {
-    name?: boolean;
-    registrationNumber?: boolean;
-}
-
-export interface CompanyDetailsStateValid {
-    name?: boolean;
-    registrationNumber?: boolean;
+    validationRules?: ValidatorRules;
 }
 
 export interface ReadOnlyCompanyDetailsProps {
