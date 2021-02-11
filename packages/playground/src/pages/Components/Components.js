@@ -37,15 +37,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         })
         .mount('.donation-field');
 
-    const ariaLabels = {
-        lang: 'en-GB',
-        encryptedBankAccountNumber: {
-            label: 'Custom aria bank accnt label',
-            iframeTitle: 'Iframe for bank accnt number',
-            error: 'Ongeldig kaartnummer'
-        }
-    };
-
     // SEPA Bank Transfer
     window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
     window.bankTransferResult = checkout
@@ -72,7 +63,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         .create('ach', {
             // holderNameRequired: false,
             // hasHolderName: false,
-            ariaLabels,
             onConfigSuccess: obj => {
                 console.log('### Components::onConfigSuccess:: obj', obj);
             },

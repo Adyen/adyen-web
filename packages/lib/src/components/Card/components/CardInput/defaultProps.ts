@@ -37,6 +37,5 @@ export default {
 
     // Customization
     styles: {},
-    placeholders: {},
-    ariaLabels: {}
+    placeholders: {}
 };

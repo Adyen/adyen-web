@@ -5,7 +5,6 @@ export interface SFPProps {
      * CSF RELATED (23)
      */
     allowedDOMAccess?: boolean;
-    ariaLabels?: object;
     autoFocus?: boolean;
     brands?: string[];
     groupTypes?: string[];
@@ -107,6 +106,5 @@ export default {
 
     // Customization
     placeholders: {},
-    ariaLabels: {},
     styles: {}
 };

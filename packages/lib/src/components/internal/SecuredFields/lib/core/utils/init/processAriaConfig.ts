@@ -1,4 +1,3 @@
-import getProp from '../../../../../../../utils/getProp';
 import { addErrorTranslationsToObject } from '../../../../../../../core/Errors/utils';
 import { AriaConfigObject, AriaConfig, SFInternalConfig } from '../../AbstractSecuredField';
 import Language from '../../../../../../../language/Language';
