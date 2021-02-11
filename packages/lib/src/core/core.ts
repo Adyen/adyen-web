@@ -146,7 +146,7 @@ class Core {
             // 1. global props
             // 2. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
             // 3. a paymentMethodsConfiguration object, if defined at top level
-            // 4. the combined props of checkout & the configuration object defined on this particular component
+            // 4. the configuration object defined on this particular component (after it has passed through getPropsForComponent)
             const component = new PaymentMethod({ ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...options });
 
             if (!options.isDropin) {
@@ -165,7 +165,7 @@ class Core {
         }
 
         /**
-         * If we are trying to create a payment method that is in the paymentMethodsResponse & does not explicitily
+         * If we are trying to create a payment method that is in the paymentMethodsResponse & does not explicitly
          * implement a component, it will default to a redirect component
          */
         if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
