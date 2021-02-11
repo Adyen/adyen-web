@@ -128,7 +128,7 @@ describe('UIElement', () => {
         test('should handle new challenge action', () => {
             const checkout = new Core({
                 paymentMethodsConfiguration: {
-                    card: { challengeWindowSize: '02' }
+                    threeDS2: { challengeWindowSize: '02' }
                 }
             });
 

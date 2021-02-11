@@ -81,12 +81,11 @@ describe('Dropin', () => {
             expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
             expect(pa.componentFromAction.props.statusType).toEqual('custom');
             expect(pa.componentFromAction.props.isDropin).toBe(true);
-
             expect(pa.componentFromAction.props.size).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', () => {
-            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } } });
+            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '02' } } });
 
             const dropin = checkout.create('dropin');
 

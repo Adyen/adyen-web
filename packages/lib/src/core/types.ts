@@ -1,5 +1,5 @@
 import { CustomTranslations, Locales } from '../language/types';
-import { PaymentAmount, PaymentMethods, PaymentMethodOptions } from '../types';
+import { PaymentAmount, PaymentMethods, PaymentMethodOptions, PaymentActionsType } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -47,9 +47,7 @@ export interface CoreOptions {
     /**
      * Optional per payment method configuration
      */
-    paymentMethodsConfiguration?: {
-        [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-    };
+    paymentMethodsConfiguration?: PaymentMethodsConfiguration;
 
     /**
      * Display only these payment methods
@@ -72,3 +70,11 @@ export interface CoreOptions {
 
     [key: string]: any;
 }
+
+export type PaymentMethodsConfiguration =
+    | {
+          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+      }
+    | {
+          [key in PaymentActionsType]?: any;
+      };
