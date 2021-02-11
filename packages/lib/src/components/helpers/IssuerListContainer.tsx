@@ -48,7 +48,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
     };
 
     formatProps(props) {
-        const issuers = props.issuers || (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || [];
+        const issuers = (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || props.issuers || [];
         return { ...props, issuers };
     }
 

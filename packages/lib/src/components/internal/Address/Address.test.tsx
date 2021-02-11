@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import Address from './Address';
-import getDataset from '../../../utils/fetch-json-data';
+import getDataset from '../../../core/Services/get-dataset';
 
-jest.mock('../../../utils/fetch-json-data');
+jest.mock('../../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve({})));
 
 describe('Address', () => {

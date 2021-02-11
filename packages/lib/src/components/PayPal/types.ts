@@ -103,8 +103,21 @@ interface PayPalCommonProps {
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
      */
     style?: PayPalStyles;
+
+    /**
+     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#oninitonclick}
+     */
     onInit?: (data?: object, actions?: object) => void;
+
+    /**
+     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#oninitonclick}
+     */
     onClick?: () => void;
+
+    /**
+     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#onshippingchange}
+     */
+    onShippingChange?: (data, actions) => void;
 }
 
 export interface PayPalConfig {

@@ -1,4 +1,4 @@
-import fetchJSONData from '../../utils/fetch-json-data';
+import { httpPost } from '../../core/Services/http';
 import { AMAZONPAY_SIGN_STRING_ENDPOINT, AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT, AMAZONPAY_GET_CHECKOUT_DETAILS_ENDPOINT } from './config';
 import { CheckoutDetailsRequest, PayloadJSON, UpdateAmazonCheckoutSessionRequest } from './types';
 
@@ -12,13 +12,12 @@ import { CheckoutDetailsRequest, PayloadJSON, UpdateAmazonCheckoutSessionRequest
 export function getAmazonSignature(loadingContext: string, clientKey: string, payloadJSON: PayloadJSON): Promise<any> {
     const options = {
         loadingContext,
-        method: 'POST',
-        path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?token=${clientKey}`
+        path: `${AMAZONPAY_SIGN_STRING_ENDPOINT}?clientKey=${clientKey}`
     };
 
     const request = { stringToSign: JSON.stringify(payloadJSON) };
 
-    return fetchJSONData(options, request);
+    return httpPost(options, request);
 }
 
 /**
@@ -31,11 +30,10 @@ export function getAmazonSignature(loadingContext: string, clientKey: string, pa
 export function getCheckoutDetails(loadingContext: string, clientKey: string, request: CheckoutDetailsRequest): Promise<any> {
     const options = {
         loadingContext,
-        method: 'POST',
-        path: `${AMAZONPAY_GET_CHECKOUT_DETAILS_ENDPOINT}?token=${clientKey}`
+        path: `${AMAZONPAY_GET_CHECKOUT_DETAILS_ENDPOINT}?clientKey=${clientKey}`
     };
 
-    return fetchJSONData(options, request);
+    return httpPost(options, request);
 }
 
 /**
@@ -48,9 +46,8 @@ export function getCheckoutDetails(loadingContext: string, clientKey: string, re
 export function updateAmazonCheckoutSession(loadingContext: string, clientKey: string, data: UpdateAmazonCheckoutSessionRequest): Promise<any> {
     const options = {
         loadingContext,
-        method: 'POST',
-        path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?token=${clientKey}`
+        path: `${AMAZONPAY_UPDATE_CHECKOUT_SESSION_ENDPOINT}?clientKey=${clientKey}`
     };
 
-    return fetchJSONData(options, data);
+    return httpPost(options, data);
 }

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import classnames from 'classnames';
-import { checkPaymentStatus } from '../../../core/Services/payment-status';
+import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import Spinner from '../../internal/Spinner';

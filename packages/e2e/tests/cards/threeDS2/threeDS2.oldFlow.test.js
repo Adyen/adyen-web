@@ -26,7 +26,7 @@ fixture`Testing old (v65) 3DS2 Flow`
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks(logger);
 
-test('Fill in card number that will trigger frictionless flow', async t => {
+test.skip('Fill in card number that will trigger frictionless flow', async t => {
     await start(t, 2000, TEST_SPEED);
 
     // Set handler for the alert window
@@ -57,7 +57,7 @@ test('Fill in card number that will trigger frictionless flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test('Fill in card number that will trigger challenge flow', async t => {
+test.skip('Fill in card number that will trigger challenge flow', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -103,7 +103,7 @@ test('Fill in card number that will trigger challenge flow', async t => {
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test('Fill in card number that will trigger challenge-only flow', async t => {
+test.skip('Fill in card number that will trigger challenge-only flow', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);

@@ -1,5 +1,5 @@
-import { default as Analytics } from './Analytics';
-import { default as collectId } from '../Services/collect-id';
+import Analytics from './Analytics';
+import collectId from '../Services/collect-id';
 
 jest.mock('../Services/collect-id');
 

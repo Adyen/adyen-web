@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
 import { ErrorObject } from './components/utils';
-// import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint'; // New 3DS2 flow
+import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
@@ -26,7 +26,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
         type: 'IdentifyShopper'
     };
 
-    // private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
+    private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
     render() {
         if (!this.props.paymentData) {
@@ -37,8 +37,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
             return null;
         }
 
-        // return <DeviceFingerprint {...this.props} onComplete={this.callSubmit3DS2Fingerprint} />; // New 3DS2 flow
-        return <DeviceFingerprint {...this.props} onComplete={this.onComplete} />; // Old 3DS2 flow
+        return <DeviceFingerprint {...this.props} onComplete={this.callSubmit3DS2Fingerprint} />;
     }
 }
 

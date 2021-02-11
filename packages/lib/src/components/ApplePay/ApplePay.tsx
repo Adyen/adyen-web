@@ -4,7 +4,7 @@ import ApplePayButton from './components/ApplePayButton';
 import ApplePayService from './ApplePayService';
 import base64 from '../../utils/base64';
 import defaultProps from './defaultProps';
-import fetchJsonData from '../../utils/fetch-json-data';
+import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
@@ -106,12 +106,12 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
-        const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
-        const options = { loadingContext, path, method: 'post' };
+        const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
+        const options = { loadingContext, path };
         const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
 
         try {
-            const response = await fetchJsonData(options, request);
+            const response = await httpPost(options, request);
             const decodedData = base64.decode(response.data);
             if (!decodedData) reject('Could not decode Apple Pay session');
             const session = JSON.parse(decodedData as string);

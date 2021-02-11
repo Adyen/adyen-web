@@ -1,16 +1,13 @@
-import fetchJSONData from '../../utils/fetch-json-data';
+import { httpPost } from '../../core/Services/http';
 
 /**
  * ThreeDS2DeviceFingerprint, onComplete, calls a new, internal, endpoint which behaves like the /details endpoint but doesn't require the same credentials
  */
 export default function callSubmit3DS2Fingerprint({ data }) {
-    fetchJSONData(
+    httpPost(
         {
             path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,
-            loadingContext: this.props.loadingContext,
-            method: 'POST',
-            contentType: 'application/json',
-            clientKey: this.props.clientKey
+            loadingContext: this.props.loadingContext
         },
         {
             ...data
