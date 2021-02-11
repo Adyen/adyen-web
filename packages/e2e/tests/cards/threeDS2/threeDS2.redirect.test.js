@@ -29,7 +29,7 @@ const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card 
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing new (v67) hybrid 3DS2 Flow (redirect)`
+fixture`Testing new (v67) 3DS2 Flow (redirect)`
     .page(`${BASE_URL}?amount=12003`)
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks(logger);
