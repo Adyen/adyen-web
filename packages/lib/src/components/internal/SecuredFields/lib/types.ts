@@ -39,7 +39,6 @@ interface CSFCommonProps {
     keypadFix?: boolean;
     isKCP?: boolean;
     iframeUIConfig?: object;
-    locale?: string;
 }
 
 export interface SetupObject extends CSFCommonProps {

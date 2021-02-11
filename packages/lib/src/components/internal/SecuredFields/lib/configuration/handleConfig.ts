@@ -28,8 +28,6 @@ export function handleConfig(): void {
     // Ensure passed loadingContext has trailing slash
     this.config.loadingContext = lastChar(loadingContext) === '/' ? loadingContext : `${loadingContext}/`;
 
-    this.config.locale = this.props.i18n.locale;
-
     this.config.isCreditCardType = NON_CREDIT_CARD_TYPE_SECURED_FIELDS.includes(this.props.type) === false;
 
     // Configuration object for individual txVariants

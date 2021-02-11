@@ -22,7 +22,7 @@ export function processAriaConfig(configObj: SFInternalConfig, fieldType: string
     const label: string = i18n.get(`${type}.${fieldType}.aria.label`);
 
     // Get lang property
-    const lang = configObj.locale;
+    const lang = i18n.locale;
 
     // Ceate a new object with the iframeTitle & label values from translation file
     const ariaFieldConfigObj: AriaConfigObject = { iframeTitle, label };
