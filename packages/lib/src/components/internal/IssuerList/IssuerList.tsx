@@ -21,7 +21,7 @@ const validationRules: ValidatorRules = {
     }
 };
 
-function IssuerList({ items, placeholder, issuer = null, ...props }) {
+function IssuerList({ items, placeholder, issuer, ...props }) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
