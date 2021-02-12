@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
+import eslint from '@rollup/plugin-eslint';
 import pkg from '../package.json';
 const currentVersion = require('./version')();
 
@@ -33,6 +34,12 @@ export default async () => [
         input: 'src/index.ts',
         cache,
         plugins: [
+            resolve(),
+            commonjs(),
+            eslint({
+                include: ['./src/**'],
+                exclude: ['./src/**/*.json', './src/**/*.scss']
+            }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
                 'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
@@ -40,8 +47,6 @@ export default async () => [
                 'process.env.COMMIT_BRANCH': JSON.stringify(currentVersion.COMMIT_BRANCH),
                 'process.env.ADYEN_BUILD_ID': JSON.stringify(currentVersion.ADYEN_BUILD_ID)
             }),
-            resolve(),
-            commonjs(),
             typescript({
                 useTsconfigDeclarationDir: true,
                 check: false,
