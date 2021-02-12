@@ -1,13 +1,12 @@
-import { PaymentMethod, StoredPaymentMethod, PaymentMethods, PaymentMethodOptions, Order, OrderStatus } from '../../types';
+import { PaymentMethod, StoredPaymentMethod, Order, OrderStatus } from '../../types';
 import UIElement, { UIElementProps } from '../UIElement';
+import { PaymentMethodsConfiguration } from '../../core/types';
 
 export interface DropinElementProps extends UIElementProps {
     /**
      * Configure each payment method displayed on the Drop-in
      */
-    paymentMethodsConfiguration?: {
-        [key in keyof PaymentMethods | keyof ['threeDS2']]?: Partial<PaymentMethodOptions<key>>;
-    };
+    paymentMethodsConfiguration?: PaymentMethodsConfiguration;
 
     paymentMethods?: PaymentMethod[];
 
