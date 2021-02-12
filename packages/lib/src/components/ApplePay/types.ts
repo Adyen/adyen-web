@@ -105,7 +105,7 @@ export interface ApplePayElementProps extends UIElementProps {
     onSubmit?: (state, component) => void;
     onError?: (error) => void;
     onCancel?: () => void;
-    onAuthorized?: (resolve, reject) => void;
+    onAuthorized?: (resolve, reject, event: ApplePayJS.ApplePayPaymentAuthorizedEvent) => void;
     onValidateMerchant?: (resolve, reject, event: ApplePayJS.ApplePayValidateMerchantEvent) => void;
 
     /**
