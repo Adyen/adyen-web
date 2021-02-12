@@ -49,6 +49,7 @@ class QiwiWalletElement extends UIElement {
                     }}
                     {...this.props}
                     {...this.state}
+                    phoneLabel={'mobileNumber'}
                     onChange={this.setState}
                     onSubmit={this.submit}
                     payButton={this.payButton}

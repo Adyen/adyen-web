@@ -40,7 +40,7 @@ function MBWayInput(props: MBWayInputProps) {
         <div className="adyen-checkout__mb-way">
             <Field
                 errorMessage={!!errors.telephoneNumber && i18n.get('telephoneNumber.invalid')}
-                label={i18n.get('telephoneNumber')}
+                label={i18n.get('mobileNumber')}
                 className={classNames('adyen-checkout__input--phone-number')}
                 isValid={valid.telephoneNumber}
             >

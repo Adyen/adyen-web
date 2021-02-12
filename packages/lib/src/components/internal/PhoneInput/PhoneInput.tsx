@@ -5,6 +5,7 @@ import renderFormField from '../FormFields';
 import Field from '../FormFields/Field';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import './PhoneInput.scss';
 
 export function PhoneInput(props) {
     const { i18n } = useCoreContext();
@@ -32,7 +33,7 @@ export function PhoneInput(props) {
         <div className="adyen-checkout__phone-input">
             <Field
                 errorMessage={!!errors.phoneNumber}
-                label={this.props.i18n.get('telephoneNumber')}
+                label={i18n.get(props.phoneLabel)}
                 className={classNames({
                     'adyen-checkout__input--phone-number': true
                 })}
@@ -79,5 +80,9 @@ export function PhoneInput(props) {
         </div>
     );
 }
+
+PhoneInput.defaultProps = {
+    phoneLabel: 'telephoneNumber'
+};
 
 export default PhoneInput;
