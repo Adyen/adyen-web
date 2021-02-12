@@ -16,6 +16,8 @@
             width: auto;
             border: 0;
             height: 35px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
 
             &:after {
                 left: 40px;
