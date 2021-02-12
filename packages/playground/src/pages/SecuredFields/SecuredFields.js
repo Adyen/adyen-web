@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, placeholders, ariaLabels, setCCErrors, setFocus, onBrand, onConfigSuccess } from './securedFields.config';
+import { styles, placeholders, setCCErrors, setFocus, onBrand, onConfigSuccess } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
@@ -52,7 +52,6 @@ window.securedFields = checkout
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
         styles,
         placeholders,
-        ariaLabels,
         onConfigSuccess,
         onBrand,
         onBinValue: cbObj => {
@@ -95,7 +94,6 @@ window.fancySecuredFields = checkout
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
         styles: fancyStyles,
-        ariaLabels,
         autoFocus: false,
         onFieldValid: fancyFieldValid,
         onBrand: fancyChangeBrand,

@@ -24,21 +24,6 @@ export const placeholders = {
     encryptedSecurityCode: '8888'
 };
 
-export const ariaLabels = {
-    lang: 'en-GB',
-    encryptedCardNumber: {
-        label: 'Credit or debit card number field',
-        iframeTitle: 'Iframe for credit card number field'
-        //        error: 'credit card number is in error'
-    },
-    encryptedExpiryDate: {
-        label: 'Credit or debit card expiration date field'
-    },
-    encryptedSecurityCode: {
-        label: 'Credit or debit card 3 or 4 digit security code field'
-    }
-};
-
 export function onConfigSuccess(pCallbackObj) {
     document.querySelector('.secured-fields').style.display = 'block';
     document.querySelector('.card-input__spinner__holder').style.display = 'none';

@@ -44,17 +44,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                 }
             },
             showInstallmentAmounts: true,
-            ariaLabels: {
-                lang: 'en-GB',
-                encryptedCardNumber: {
-                    label: 'Credit or debit card number field',
-                    iframeTitle: 'cc number field iframe'
-                },
-                encryptedExpiryDate: {
-                    label: 'put your date in here',
-                    iframeTitle: 'date iframe'
-                }
-            },
             onError: obj => {
                 console.log('### Cards::onError:: obj=', obj);
             },

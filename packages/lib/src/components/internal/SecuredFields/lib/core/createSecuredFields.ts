@@ -176,8 +176,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         iframeSrc: this.config.iframeSrc,
         loadingContext: this.config.loadingContext,
         showWarnings: this.config.showWarnings,
-        holderEl: pItem,
-        locale: this.config.locale
+        holderEl: pItem
     };
 
     const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)

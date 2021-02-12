@@ -11,12 +11,19 @@ const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 const ENCRYPTED_SECURITY_CODE = 'encryptedSecurityCode';
 
 const TRANSLATED_NUMBER_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
+const TRANSLATED_NUMBER_IFRAME_LABEL = LANG['creditCard.encryptedCardNumber.aria.label'];
+
 const TRANSLATED_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
+const TRANSLATED_DATE_IFRAME_LABEL = LANG['creditCard.encryptedExpiryDate.aria.label'];
+
 const TRANSLATED_CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
+const TRANSLATED_CVC_IFRAME_LABEL = LANG['creditCard.encryptedSecurityCode.aria.label'];
 
 const GENERAL_ERROR_CODE = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
+const CARD_TOO_OLD_ERROR_CODE = ERROR_CODES[ERROR_MSG_CARD_TOO_OLD];
 
 const TRANSLATED_INCOMPLETE_FIELD_ERROR = LANG[GENERAL_ERROR_CODE];
+const TRANSLATED_CARD_TOO_OLD_ERROR = LANG[CARD_TOO_OLD_ERROR_CODE];
 
 const TRANSLATED_NUMBER_PLACEHOLDER = LANG['creditCard.numberField.placeholder'];
 const TRANSLATED_DATE_PLACEHOLDER = LANG['creditCard.expiryDateField.placeholder'];
@@ -25,21 +32,6 @@ const TRANSLATED_CVC_PLACEHOLDER = LANG['creditCard.cvcField.placeholder'];
 const nodeHolder = document.createElement('div');
 
 const i18n = new Language('en-US', {});
-
-const mockAriaConfig = {
-    lang: 'en-GB',
-    encryptedCardNumber: {
-        label: 'Credit or debit card number field',
-        iframeTitle: 'Iframe for credit card number field'
-    },
-    encryptedExpiryDate: {
-        label: 'Credit or debit card expiration date field',
-        error: { [GENERAL_ERROR_CODE]: 'Field is not filled out' }
-    },
-    encryptedSecurityCode: {
-        label: 'Credit or debit card 3 or 4 digit security code field'
-    }
-} as AriaConfig;
 
 const mockPlaceholders = {
     encryptedCardNumber: '9999 9999 9999 9999',
@@ -75,62 +67,32 @@ const setupObj = {
  */
 describe('SecuredField handling ariaConfig object - should set defaults', () => {
     //
-    test('Card number field with no defined ariaConfig should get default title & translated error props', () => {
+    test('Card number field should get translated title, label & error props plus a lang prop that equals the i18n.locale', () => {
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle).toEqual(TRANSLATED_NUMBER_IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].label).toEqual(TRANSLATED_NUMBER_IFRAME_LABEL);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
+        expect(card.config.iframeUIConfig.ariaConfig.lang).toEqual(i18n.locale); // = 'en-US'
     });
 
-    test('Date field with no defined ariaConfig should get default title & translated error props', () => {
+    test('Date field should get translated title, label & error props plus a lang prop that equals the i18n.locale', () => {
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
 
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(TRANSLATED_DATE_IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].label).toEqual(TRANSLATED_DATE_IFRAME_LABEL);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
+        expect(card.config.iframeUIConfig.ariaConfig.lang).toEqual(i18n.locale);
     });
 
-    test('CVC field with no defined ariaConfig should get default title & translated error props', () => {
+    test('CVC field should get translated title, label & error props plus a lang prop that equals the i18n.locale', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(TRANSLATED_CVC_IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].label).toEqual(TRANSLATED_CVC_IFRAME_LABEL);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
-    });
-});
-
-describe('SecuredField handling ariaConfig object - should set defaults only where they are not already defined', () => {
-    //
-    test('Card number field with ariaConfig with label & iframeTitle should preserve these props and also get a translated error prop', () => {
-        setupObj.iframeUIConfig.ariaConfig = mockAriaConfig;
-        setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
-
-        const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].label).toEqual(mockAriaConfig[ENCRYPTED_CARD_NUMBER].label);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle).toEqual(mockAriaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
-
-        // Also check that configured language is preserved
-        expect(card.config.iframeUIConfig.ariaConfig.lang).toEqual(mockAriaConfig.lang);
-    });
-
-    test('Date field with ariaConfig with label & error should preserve these props and also get a iframeTitle prop', () => {
-        setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
-
-        const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].label).toEqual(mockAriaConfig[ENCRYPTED_EXPIRY_DATE].label);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(TRANSLATED_DATE_IFRAME_TITLE);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(
-            mockAriaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]
-        );
-    });
-
-    test('CVC field with ariaConfig with label should preserve this prop and also get default title & translated error props', () => {
-        setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
-
-        const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].label).toEqual(mockAriaConfig[ENCRYPTED_SECURITY_CODE].label);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(TRANSLATED_CVC_IFRAME_TITLE);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
+        expect(card.config.iframeUIConfig.ariaConfig.lang).toEqual(i18n.locale);
     });
 });
 
@@ -147,8 +109,7 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE]).toBe(undefined);
     });
 
-    test('cvc field, with defined ariaConfig, should only have a property related to the cvc and nothing for date or cvc', () => {
-        setupObj.iframeUIConfig.ariaConfig = mockAriaConfig;
+    test('cvc field, with default ariaConfig, should only have a property related to the cvc and nothing for date or number', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
         const card = new SecuredField(setupObj, i18n);
@@ -171,15 +132,16 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_CODES[ERROR_MSG_INVALID_FIELD]]).toBe(undefined);
     });
 
-    test('date field, with defined ariaConfig, should have its own defined error object', () => {
-        setupObj.iframeUIConfig.ariaConfig = mockAriaConfig;
+    test('date field, with default ariaConfig, should have expected, translated, error strings', () => {
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
 
         const card = new SecuredField(setupObj, i18n);
 
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual('Field is not filled out');
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
 
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[ERROR_CODES[ERROR_MSG_CARD_TOO_OLD]]).toBe(undefined);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[ERROR_CODES[ERROR_MSG_CARD_TOO_OLD]]).toEqual(
+            TRANSLATED_CARD_TOO_OLD_ERROR
+        );
     });
 
     test('Card number field with default ariaConfig should have an error object containing certain keys whose values are the correct translations', () => {

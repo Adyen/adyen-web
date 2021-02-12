@@ -15,7 +15,6 @@ export interface SFInternalConfig {
     trimTrailingSeparator: boolean;
     isCreditCardType: boolean;
     showWarnings: boolean;
-    locale?: string;
 }
 
 export interface SFSetupObject extends SFInternalConfig {
