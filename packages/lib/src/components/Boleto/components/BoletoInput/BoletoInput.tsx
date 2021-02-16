@@ -16,6 +16,7 @@ function BoletoInput(props) {
     const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } = useForm<
         BoletoInputDataState
     >({
+        schema: ['firstName', 'lastName', 'socialSecurityNumber', 'billingAddress', 'shopperEmail'],
         defaultData: props.data,
         rules: boletoValidationRules,
         formatters: boletoFormatters
@@ -110,7 +111,7 @@ function BoletoInput(props) {
             {props.billingAddressRequired && (
                 <Address
                     label="billingAddress"
-                    data={{ ...data.billingAddress, country: 'BR' }}
+                    data={{ ...props.data.billingAddress, country: 'BR' }}
                     onChange={handleAddress}
                     requiredFields={['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince']}
                     ref={addressRef}
