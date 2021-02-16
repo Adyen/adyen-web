@@ -5,9 +5,43 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
     const { rules = {}, formatters = {}, defaultData = {} } = props;
     const validator = new Validator(rules);
     const [schema, setSchema] = useState<string[]>(props.schema ?? []);
-    const [errors, setErrors] = useState<any>({});
-    const [valid, setValid] = useState<any>({});
-    const [data, setData] = useState<DataState>({} as DataState);
+
+    /**
+     * Format and validate a field
+     */
+    const processField = (key, value, mode) => {
+        const formattedValue = formatters[key] ? formatters[key](value ?? '') : value;
+        const validationResult = validator.validate(key, formattedValue, mode);
+        return [formattedValue, validationResult];
+    };
+
+    /**
+     * Processes default data and sets as default in state
+     */
+
+    const defaultState = schema.reduce(
+        (acc: any, fieldKey) => {
+            if (typeof defaultData[fieldKey] !== 'undefined') {
+                const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
+                return {
+                    valid: { ...acc.valid, [fieldKey]: validationResult.isValid ?? false },
+                    errors: { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false },
+                    data: { ...acc.data, [fieldKey]: formattedValue }
+                };
+            }
+
+            return {
+                valid: { ...acc.valid, [fieldKey]: false },
+                errors: { ...acc.errors, [fieldKey]: null },
+                data: { ...acc.data, [fieldKey]: null }
+            };
+        },
+        { data: {}, valid: {}, errors: {} }
+    );
+
+    const [errors, setErrors] = useState<any>(defaultState.errors);
+    const [valid, setValid] = useState<any>(defaultState.valid);
+    const [data, setData] = useState<DataState>(defaultState.data as DataState);
     const isValid = useMemo(() => schema.reduce((acc, val) => acc && valid[val], true), [valid]);
 
     const updateFieldData = (key, value) => {
@@ -19,25 +53,18 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
         setErrors(prevErrors => ({ ...prevErrors, [key]: validation.hasError() ? validation.getError() : false }));
     };
 
-    /**
-     * Format and validate a field
-     */
-    const processField = (key, value, mode) => {
-        const formattedValue = formatters[key] ? formatters[key](value ?? '') : value;
-        const validationResult = validator.validate(key, formattedValue, mode);
-        return [formattedValue, validationResult];
-    };
-
     const reindexSchema = keys => {
-        const cleanupRemovedFields = (prevData, initialValue) =>
-            keys.reduce((acc, key) => {
-                acc[key] = prevData[key] !== undefined ? prevData[key] : initialValue;
+        const cleanupRemovedFields = (prevData, initialValue, defaultState) => {
+            return keys.reduce((acc, key) => {
+                const fallbackValue = defaultState[key] !== undefined ? defaultState[key] : initialValue;
+                acc[key] = prevData[key] !== undefined ? prevData[key] : fallbackValue;
                 return acc;
             }, {});
+        };
 
-        setData(prevData => cleanupRemovedFields(prevData, null));
-        setErrors(prevData => cleanupRemovedFields(prevData, null));
-        setValid(prevData => cleanupRemovedFields(prevData, false));
+        setData(prevData => cleanupRemovedFields(prevData, null, defaultState.data));
+        setErrors(prevData => cleanupRemovedFields(prevData, null, defaultState.errors));
+        setValid(prevData => cleanupRemovedFields(prevData, false, defaultState.valid));
     };
 
     const getTargetValue = (key, e) => {
@@ -70,24 +97,24 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
     }, [schema]);
 
     // Set default values
-    useEffect(() => {
-        const newState = schema.reduce(
-            (acc: any, fieldKey) => {
-                if (typeof defaultData[fieldKey] !== 'undefined') {
-                    const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
-                    acc.valid = { ...acc.valid, [fieldKey]: validationResult.isValid ?? false };
-                    acc.errors = { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false };
-                    acc.data = { ...acc.data, [fieldKey]: formattedValue };
-                }
-                return acc;
-            },
-            { data: {}, valid: {}, errors: {} }
-        );
-
-        setData(prevData => ({ ...prevData, ...newState.data }));
-        setValid(prevData => ({ ...prevData, ...newState.valid }));
-        setErrors(prevData => ({ ...prevData, ...newState.errors }));
-    }, []);
+    // useEffect(() => {
+    //     const newState = schema.reduce(
+    //         (acc: any, fieldKey) => {
+    //             if (typeof defaultData[fieldKey] !== 'undefined') {
+    //                 const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
+    //                 acc.valid = { ...acc.valid, [fieldKey]: validationResult.isValid ?? false };
+    //                 acc.errors = { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false };
+    //                 acc.data = { ...acc.data, [fieldKey]: formattedValue };
+    //             }
+    //             return acc;
+    //         },
+    //         { data: {}, valid: {}, errors: {} }
+    //     );
+    //
+    //     setData(prevData => ({ ...prevData, ...newState.data }));
+    //     setValid(prevData => ({ ...prevData, ...newState.valid }));
+    //     setErrors(prevData => ({ ...prevData, ...newState.errors }));
+    // }, []);
 
     return {
         handleChangeFor,
