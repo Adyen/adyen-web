@@ -9,21 +9,15 @@ import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL
 import { BASE_URL } from '../../pages';
 
 const detailsURL = `${BASE_URL}/details`;
-
-const loggerDetails = RequestLogger(
-    { detailsURL, method: 'post' },
-    {
-        //        logRequestBody: true,
-        logResponseHeaders: true,
-        logResponseBody: true
-    }
-);
-
 const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
 
-const loggerSubmitThreeDS2 = RequestLogger(
-    { submitThreeDS2FingerprintURL, method: 'post' },
+const logger = RequestLogger(
+    [
+        { url: detailsURL, method: 'post' },
+        { url: submitThreeDS2FingerprintURL, method: 'post' }
+    ],
     {
+        logRequestBody: true,
         logResponseHeaders: true,
         logResponseBody: true
     }
@@ -40,7 +34,7 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing new (v67) 3DS2 Flow`
     .page(BASE_URL)
     .clientScripts('threeDS2.clientScripts.js')
-    .requestHooks([loggerDetails, loggerSubmitThreeDS2]);
+    .requestHooks(logger);
 
 if (apiVersion >= 67) {
     test('Fill in card number that will trigger frictionless flow', async t => {
@@ -64,7 +58,7 @@ if (apiVersion >= 67) {
             .notOk()
             // Allow time for the ONLY details call, which we expect to be successful
             .wait(2000)
-            .expect(loggerDetails.contains(r => r.response.statusCode === 200))
+            .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
             .ok()
             // Allow time for the alert to manifest
             .wait(2000);
@@ -75,7 +69,7 @@ if (apiVersion >= 67) {
     });
 
     test('Fill in card number that will trigger full flow (fingerprint & challenge)', async t => {
-        loggerDetails.clear();
+        logger.clear();
 
         await start(t, 2000, TEST_SPEED);
 
@@ -95,12 +89,14 @@ if (apiVersion >= 67) {
             // Expect no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
-            // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
+            /**
+             *  Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
+             */
             .wait(2000)
-            .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
+            .expect(logger.contains(r => r.request.url.indexOf('/submitThreeDS2Fingerprint') > -1 && r.response.statusCode === 200))
             .ok();
 
-        // console.log(logger.requests[0].response.headers);
+        //        console.log('logger.requests[0].response', logger.requests[0].response);
 
         // Complete challenge
         await fillChallengeField(t);
@@ -109,23 +105,19 @@ if (apiVersion >= 67) {
         await t
             // Allow time for the /details call, which we expect to be successful
             .wait(2000)
-            .expect(loggerDetails.contains(r => r.response.statusCode === 200))
+            .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
             .ok()
             .wait(1000);
 
-        // console.log(logger.requests[1].response.headers);
-
         // Check request body is in the expected form
-        //        const requestBodyBuffer = loggerDetails.requests[0].request.body;
-        //        const requestBody = JSON.parse(requestBodyBuffer);
-        //        console.log('### threeDS2.newFlow.test::loggerDetails.requests.length:: ', loggerDetails.requests.length);
-        //        console.log('### threeDS2.newFlow.test::requestBody:: ', requestBody);
-        //
-        //        await t
-        //            .expect(requestBody.details.threeDSResult)
-        //            .ok()
-        //            .expect(requestBody.paymentData)
-        //            .notOk();
+        const requestBodyBuffer = logger.requests[1].request.body;
+        const requestBody = JSON.parse(requestBodyBuffer);
+
+        await t
+            .expect(requestBody.details.threeDSResult)
+            .ok()
+            .expect(requestBody.paymentData)
+            .notOk();
 
         // Check the value of the alert text
         const history = await t.getNativeDialogHistory();
@@ -133,7 +125,7 @@ if (apiVersion >= 67) {
     });
 
     test('Fill in card number that will trigger challenge-only flow', async t => {
-        loggerDetails.clear();
+        logger.clear();
 
         await start(t, 2000, TEST_SPEED);
 
@@ -161,7 +153,7 @@ if (apiVersion >= 67) {
         await t
             // Allow time for the ONLY details call, which we expect to be successful
             .wait(2000)
-            .expect(loggerDetails.contains(r => r.response.statusCode === 200))
+            .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
             .ok()
             .wait(2000);
 

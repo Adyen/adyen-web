@@ -14,8 +14,10 @@ const logger = RequestLogger(
     { url, method: 'post' },
     {
         logRequestBody: true,
+        //        stringifyRequestBody: true,
         logResponseHeaders: true,
         logResponseBody: true
+        //        stringifyResponseBody: true
     }
 );
 
@@ -89,10 +91,8 @@ if (apiVersion <= 66) {
              * Allow time for the FIRST details call, which we expect to be successful
              */
             .wait(1000)
-            .expect(logger.contains(r => r.response.statusCode === 200))
+            .expect(logger.contains(r => JSON.parse(r.request.body).details['threeds2.fingerprint'] && r.response.statusCode === 200))
             .ok();
-
-        // console.log(logger.requests[0].response.headers);
 
         // Complete challenge
         await fillChallengeField(t);
@@ -103,11 +103,9 @@ if (apiVersion <= 66) {
              * Allow time for the SECOND details call, which we expect to be successful
              */
             .wait(1000)
-            .expect(logger.contains(r => r.response.statusCode === 200))
+            .expect(logger.contains(r => JSON.parse(r.request.body).details['threeds2.challengeResult'] && r.response.statusCode === 200))
             .ok()
             .wait(2000);
-
-        //        console.log(logger.requests[1].request.body);
 
         // Check request body is in the expected form
         const requestBodyBuffer = logger.requests[1].request.body;
