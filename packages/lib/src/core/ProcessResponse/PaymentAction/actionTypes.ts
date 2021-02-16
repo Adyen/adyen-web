@@ -21,7 +21,8 @@ const actionTypes = {
             ...props,
             type: 'IdentifyShopper',
             onComplete: props.onAdditionalDetails,
-            statusType: 'loading'
+            statusType: 'loading',
+            useOriginalFlow: true
         }),
 
     threeDS2Challenge: (action: PaymentAction, props) => {
@@ -35,7 +36,7 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             type: 'ChallengeShopper',
             statusType: 'custom',
-            goesDirectToChallenge: true
+            useOriginalFlow: true
         });
     },
 

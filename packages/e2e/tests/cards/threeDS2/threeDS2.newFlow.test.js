@@ -1,5 +1,5 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up, apparently!
+require('dotenv').config({ path: path.resolve('../../', '.env') });
 
 import { Selector, RequestLogger } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
@@ -13,6 +13,7 @@ const detailsURL = `${BASE_URL}/details`;
 const loggerDetails = RequestLogger(
     { detailsURL, method: 'post' },
     {
+        //        logRequestBody: true,
         logResponseHeaders: true,
         logResponseBody: true
     }
@@ -28,128 +29,148 @@ const loggerSubmitThreeDS2 = RequestLogger(
     }
 );
 
+const apiVersion = Number(process.env.API_VERSION.substr(1));
+
 const TEST_SPEED = 1;
 
 const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing new (v67) hybrid 3DS2 Flow`
+fixture`Testing new (v67) 3DS2 Flow`
     .page(BASE_URL)
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks([loggerDetails, loggerSubmitThreeDS2]);
 
-test('Fill in card number that will trigger frictionless flow', async t => {
-    await start(t, 2000, TEST_SPEED);
+if (apiVersion >= 67) {
+    test('Fill in card number that will trigger frictionless flow', async t => {
+        await start(t, 2000, TEST_SPEED);
 
-    // Set handler for the alert window
-    await t.setNativeDialogHandler(() => true);
+        // Set handler for the alert window
+        await t.setNativeDialogHandler(() => true);
 
-    // Fill card fields
-    await cardUtils.fillCardNumber(t, THREEDS2_FRICTIONLESS_CARD);
-    await cardUtils.fillDateAndCVC(t);
+        // Fill card fields
+        await cardUtils.fillCardNumber(t, THREEDS2_FRICTIONLESS_CARD);
+        await cardUtils.fillDateAndCVC(t);
 
-    // Expect card to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
+        // Expect card to now be valid
+        await t.expect(getIsValid('dropin')).eql(true);
 
-    // Click pay
-    await t
-        .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
-        // Expect no errors
-        .expect(Selector('.adyen-checkout__field--error').exists)
-        .notOk()
-        // Allow time for the ONLY details call, which we expect to be successful
-        .wait(2000)
-        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
-        .ok()
-        // Allow time for the alert to manifest
-        .wait(2000);
+        // Click pay
+        await t
+            .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
+            // Expect no errors
+            .expect(Selector('.adyen-checkout__field--error').exists)
+            .notOk()
+            // Allow time for the ONLY details call, which we expect to be successful
+            .wait(2000)
+            .expect(loggerDetails.contains(r => r.response.statusCode === 200))
+            .ok()
+            // Allow time for the alert to manifest
+            .wait(2000);
 
-    // Check the value of the alert text
-    const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
-});
+        // Check the value of the alert text
+        const history = await t.getNativeDialogHistory();
+        await t.expect(history[0].text).eql('Authorised');
+    });
 
-test('Fill in card number that will trigger full flow (fingerprint & challenge)', async t => {
-    loggerDetails.clear();
+    test('Fill in card number that will trigger full flow (fingerprint & challenge)', async t => {
+        loggerDetails.clear();
 
-    await start(t, 2000, TEST_SPEED);
+        await start(t, 2000, TEST_SPEED);
 
-    // Set handler for the alert window
-    await t.setNativeDialogHandler(() => true);
+        // Set handler for the alert window
+        await t.setNativeDialogHandler(() => true);
 
-    // Fill card fields
-    await cardUtils.fillCardNumber(t, THREEDS2_FULL_FLOW_CARD);
-    await cardUtils.fillDateAndCVC(t);
+        // Fill card fields
+        await cardUtils.fillCardNumber(t, THREEDS2_FULL_FLOW_CARD);
+        await cardUtils.fillDateAndCVC(t);
 
-    // Expect card to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
+        // Expect card to now be valid
+        await t.expect(getIsValid('dropin')).eql(true);
 
-    // Click pay
-    await t
-        .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
-        // Expect no errors
-        .expect(Selector('.adyen-checkout__field--error').exists)
-        .notOk()
-        // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
-        .wait(2000)
-        .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
-        .ok();
+        // Click pay
+        await t
+            .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
+            // Expect no errors
+            .expect(Selector('.adyen-checkout__field--error').exists)
+            .notOk()
+            // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
+            .wait(2000)
+            .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
+            .ok();
 
-    // console.log(logger.requests[0].response.headers);
+        // console.log(logger.requests[0].response.headers);
 
-    // Complete challenge
-    await fillChallengeField(t);
-    await submitChallenge(t);
+        // Complete challenge
+        await fillChallengeField(t);
+        await submitChallenge(t);
 
-    await t
-        // Allow time for the /details call, which we expect to be successful
-        .wait(2000)
-        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
-        .ok()
-        .wait(1000);
+        await t
+            // Allow time for the /details call, which we expect to be successful
+            .wait(2000)
+            .expect(loggerDetails.contains(r => r.response.statusCode === 200))
+            .ok()
+            .wait(1000);
 
-    // console.log(logger.requests[1].response.headers);
+        // console.log(logger.requests[1].response.headers);
 
-    // Check the value of the alert text
-    const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
-});
+        // Check request body is in the expected form
+        //        const requestBodyBuffer = loggerDetails.requests[0].request.body;
+        //        const requestBody = JSON.parse(requestBodyBuffer);
+        //        console.log('### threeDS2.newFlow.test::loggerDetails.requests.length:: ', loggerDetails.requests.length);
+        //        console.log('### threeDS2.newFlow.test::requestBody:: ', requestBody);
+        //
+        //        await t
+        //            .expect(requestBody.details.threeDSResult)
+        //            .ok()
+        //            .expect(requestBody.paymentData)
+        //            .notOk();
 
-test('Fill in card number that will trigger challenge-only flow', async t => {
-    loggerDetails.clear();
+        // Check the value of the alert text
+        const history = await t.getNativeDialogHistory();
+        await t.expect(history[0].text).eql('Authorised');
+    });
 
-    await start(t, 2000, TEST_SPEED);
+    test('Fill in card number that will trigger challenge-only flow', async t => {
+        loggerDetails.clear();
 
-    // Set handler for the alert window
-    await t.setNativeDialogHandler(() => true);
+        await start(t, 2000, TEST_SPEED);
 
-    // Fill card fields
-    await cardUtils.fillCardNumber(t, THREEDS2_CHALLENGE_ONLY_CARD);
-    await cardUtils.fillDateAndCVC(t);
+        // Set handler for the alert window
+        await t.setNativeDialogHandler(() => true);
 
-    // Expect card to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
+        // Fill card fields
+        await cardUtils.fillCardNumber(t, THREEDS2_CHALLENGE_ONLY_CARD);
+        await cardUtils.fillDateAndCVC(t);
 
-    // Click pay
-    await t
-        .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
-        // Expect no errors
-        .expect(Selector('.adyen-checkout__field--error').exists)
-        .notOk();
+        // Expect card to now be valid
+        await t.expect(getIsValid('dropin')).eql(true);
 
-    // Complete challenge
-    await fillChallengeField(t);
-    await submitChallenge(t);
+        // Click pay
+        await t
+            .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
+            // Expect no errors
+            .expect(Selector('.adyen-checkout__field--error').exists)
+            .notOk();
 
-    await t
-        // Allow time for the ONLY details call, which we expect to be successful
-        .wait(2000)
-        .expect(loggerDetails.contains(r => r.response.statusCode === 200))
-        .ok()
-        .wait(2000);
+        // Complete challenge
+        await fillChallengeField(t);
+        await submitChallenge(t);
 
-    // Check the value of the alert text
-    const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
-});
+        await t
+            // Allow time for the ONLY details call, which we expect to be successful
+            .wait(2000)
+            .expect(loggerDetails.contains(r => r.response.statusCode === 200))
+            .ok()
+            .wait(2000);
+
+        // Check the value of the alert text
+        const history = await t.getNativeDialogHistory();
+        await t.expect(history[0].text).eql('Authorised');
+    });
+} else {
+    test(`Skip testing new 3DS2 flow since api version is too low (v${apiVersion})`, async t => {
+        await t.wait(250);
+    });
+}
