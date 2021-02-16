@@ -18,7 +18,7 @@ function MBWayInput(props: MBWayInputProps) {
         rules: {
             telephoneNumber: {
                 validate: num => phoneNumberRegEx.test(num) && num.length >= 7,
-                errorMessage: 'telephoneNumber.invalid',
+                errorMessage: 'mobileNumber.invalid',
                 modes: ['blur']
             }
         },
@@ -39,8 +39,8 @@ function MBWayInput(props: MBWayInputProps) {
     return (
         <div className="adyen-checkout__mb-way">
             <Field
-                errorMessage={!!errors.telephoneNumber && i18n.get('telephoneNumber.invalid')}
-                label={i18n.get('telephoneNumber')}
+                errorMessage={!!errors.telephoneNumber && i18n.get('mobileNumber.invalid')}
+                label={i18n.get('mobileNumber')}
                 className={classNames('adyen-checkout__input--phone-number')}
                 isValid={valid.telephoneNumber}
             >
