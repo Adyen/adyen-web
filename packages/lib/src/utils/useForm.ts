@@ -19,25 +19,28 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
      * Processes default data and sets as default in state
      */
 
-    const defaultState = schema.reduce(
-        (acc: any, fieldKey) => {
-            if (typeof defaultData[fieldKey] !== 'undefined') {
-                const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
-                return {
-                    valid: { ...acc.valid, [fieldKey]: validationResult.isValid ?? false },
-                    errors: { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false },
-                    data: { ...acc.data, [fieldKey]: formattedValue }
-                };
-            }
+    const defaultState = useMemo<any>(() => {
+        return schema.reduce(
+            (acc: any, fieldKey) => {
+                if (typeof defaultData[fieldKey] !== 'undefined') {
+                    const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
+                    return {
+                        valid: { ...acc.valid, [fieldKey]: validationResult.isValid ?? false },
+                        errors: { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false },
+                        data: { ...acc.data, [fieldKey]: formattedValue }
+                    };
+                }
 
-            return {
-                valid: { ...acc.valid, [fieldKey]: false },
-                errors: { ...acc.errors, [fieldKey]: null },
-                data: { ...acc.data, [fieldKey]: null }
-            };
-        },
-        { data: {}, valid: {}, errors: {} }
-    );
+                // If no default value is set, set field to the default initial values
+                return {
+                    valid: { ...acc.valid, [fieldKey]: false },
+                    errors: { ...acc.errors, [fieldKey]: null },
+                    data: { ...acc.data, [fieldKey]: null }
+                };
+            },
+            { data: {}, valid: {}, errors: {} }
+        );
+    }, [schema]);
 
     const [errors, setErrors] = useState<any>(defaultState.errors);
     const [valid, setValid] = useState<any>(defaultState.valid);
@@ -95,26 +98,6 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
     useEffect(() => {
         reindexSchema(schema);
     }, [schema]);
-
-    // Set default values
-    // useEffect(() => {
-    //     const newState = schema.reduce(
-    //         (acc: any, fieldKey) => {
-    //             if (typeof defaultData[fieldKey] !== 'undefined') {
-    //                 const [formattedValue, validationResult] = processField(fieldKey, defaultData[fieldKey], 'blur');
-    //                 acc.valid = { ...acc.valid, [fieldKey]: validationResult.isValid ?? false };
-    //                 acc.errors = { ...acc.errors, [fieldKey]: validationResult.hasError() ? validationResult.getError() : false };
-    //                 acc.data = { ...acc.data, [fieldKey]: formattedValue };
-    //             }
-    //             return acc;
-    //         },
-    //         { data: {}, valid: {}, errors: {} }
-    //     );
-    //
-    //     setData(prevData => ({ ...prevData, ...newState.data }));
-    //     setValid(prevData => ({ ...prevData, ...newState.valid }));
-    //     setErrors(prevData => ({ ...prevData, ...newState.errors }));
-    // }, []);
 
     return {
         handleChangeFor,
