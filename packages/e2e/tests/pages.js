@@ -5,3 +5,5 @@ export const CARDS_URL = `${BASE_URL}/cards/`;
 export const GIFTCARDS_URL = `${BASE_URL}/giftcards/`;
 
 export const ISSUERLISTS_URL = `${BASE_URL}/issuerlists/`;
+
+export const OPENINVOICES_URL = `${BASE_URL}/openinvoices/`;
