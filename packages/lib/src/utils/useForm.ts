@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import Validator, { ValidatorRules } from './Validator/FormValidator';
+import Validator, { ValidatorRules } from './Validator/Validator';
 
 function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorRules; [key: string]: any }) {
     const { rules = {}, formatters = {}, defaultData = {} } = props;

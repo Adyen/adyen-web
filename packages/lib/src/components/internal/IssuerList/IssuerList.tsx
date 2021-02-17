@@ -5,7 +5,7 @@ import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './IssuerList.scss';
-import { ValidatorRules } from '../../../utils/Validator/FormValidator';
+import { ValidatorRules } from '../../../utils/Validator/Validator';
 
 const payButtonLabel = ({ issuer, items }, i18n) => {
     const issuerName = items.find(i => i.id === issuer)?.name;

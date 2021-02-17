@@ -1,5 +1,5 @@
 import { telephoneNumber } from '../../utils/regex';
-import { ValidatorRules } from '../../utils/Validator/FormValidator';
+import { ValidatorRules } from '../../utils/Validator/Validator';
 
 export const econtextValidationRules: ValidatorRules = {
     telephoneNumber: [
