@@ -1,11 +1,5 @@
-/**
- * NOTE: the difference between the old and new flow is that ThreeDS2DeviceFingerprint.tsx calls /submitThreeDS2Fingerprint rather than /details as
- *  its onComplete function and ThreeDS2/components/utils.ts has to provide the createFingerprintResolveData & createChallengeResolveData functions
- *  that will prepare the data in a way acceptable to the /submitThreeDS2Fingerprint endpoint
- */
-
 const path = require('path');
-require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up, apparently!
+require('dotenv').config({ path: path.resolve('../../', '.env') });
 
 import { Selector, RequestLogger } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
@@ -13,7 +7,7 @@ import cu from '../utils/cardUtils';
 import { THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
 
-const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
+const url = `${BASE_URL}/details`;
 
 const logger = RequestLogger(
     { url, method: 'post' },
@@ -23,20 +17,20 @@ const logger = RequestLogger(
     }
 );
 
-const apiVersion = Number(process.env.API_VERSION.substr(1));
-
 const TEST_SPEED = 1;
+
+const apiVersion = Number(process.env.API_VERSION.substr(1));
 
 const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing new (v67) 3DS2 Flow (redirect)`
+fixture`Testing old (v66) 3DS2 Flow (redirect)`
     .page(`${BASE_URL}?amount=12003`)
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks(logger);
 
-if (apiVersion >= 67) {
+if (apiVersion <= 66) {
     test('Fill in card number that will trigger redirect flow', async t => {
         await start(t, 2000, TEST_SPEED);
 
@@ -56,8 +50,8 @@ if (apiVersion >= 67) {
             // Expect no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
-            // Allow time for the ONLY /submitThreeDS2Fingerprint call, which we expect to be successful
-            .wait(2000)
+            // Allow time for the ONLY details call, which we expect to be successful
+            .wait(1000)
             .expect(logger.contains(r => r.response.statusCode === 200))
             .ok()
             // Allow time for redirect to occur
@@ -67,7 +61,7 @@ if (apiVersion >= 67) {
         await t.expect(Selector('title').innerText).eql('3D Authentication Host');
     });
 } else {
-    test(`Skip testing new 3DS2 redirect flow since api version is too low (v${apiVersion})`, async t => {
+    test(`Skip testing old 3DS2 redirect flow since api version is too high (v${apiVersion})`, async t => {
         await t.wait(250);
     });
 }

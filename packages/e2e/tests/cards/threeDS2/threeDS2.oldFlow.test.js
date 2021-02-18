@@ -8,35 +8,33 @@ import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FRICTIONLESS_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
 
-const detailsURL = `${BASE_URL}/details`;
-const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
+const url = `${BASE_URL}/details`;
 
 const logger = RequestLogger(
-    [
-        { url: detailsURL, method: 'post' },
-        { url: submitThreeDS2FingerprintURL, method: 'post' }
-    ],
+    { url, method: 'post' },
     {
         logRequestBody: true,
+        //        stringifyRequestBody: true,
         logResponseHeaders: true,
         logResponseBody: true
+        //        stringifyResponseBody: true
     }
 );
 
-const apiVersion = Number(process.env.API_VERSION.substr(1));
-
 const TEST_SPEED = 1;
+
+const apiVersion = Number(process.env.API_VERSION.substr(1));
 
 const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing new (v67) 3DS2 Flow`
+fixture`Testing old (v66) 3DS2 Flow`
     .page(BASE_URL)
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks(logger);
 
-if (apiVersion >= 67) {
+if (apiVersion <= 66) {
     test('Fill in card number that will trigger frictionless flow', async t => {
         await start(t, 2000, TEST_SPEED);
 
@@ -57,8 +55,8 @@ if (apiVersion >= 67) {
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
             // Allow time for the ONLY details call, which we expect to be successful
-            .wait(2000)
-            .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
+            .wait(1000)
+            .expect(logger.contains(r => r.response.statusCode === 200))
             .ok()
             // Allow time for the alert to manifest
             .wait(2000);
@@ -90,34 +88,34 @@ if (apiVersion >= 67) {
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk()
             /**
-             *  Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
+             * Allow time for the FIRST details call, which we expect to be successful
              */
-            .wait(2000)
-            .expect(logger.contains(r => r.request.url.indexOf('/submitThreeDS2Fingerprint') > -1 && r.response.statusCode === 200))
+            .wait(1000)
+            .expect(logger.contains(r => JSON.parse(r.request.body).details['threeds2.fingerprint'] && r.response.statusCode === 200))
             .ok();
-
-        //        console.log('logger.requests[0].response', logger.requests[0].response);
 
         // Complete challenge
         await fillChallengeField(t);
         await submitChallenge(t);
 
         await t
-            // Allow time for the /details call, which we expect to be successful
-            .wait(2000)
-            .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
+            /**
+             * Allow time for the SECOND details call, which we expect to be successful
+             */
+            .wait(1000)
+            .expect(logger.contains(r => JSON.parse(r.request.body).details['threeds2.challengeResult'] && r.response.statusCode === 200))
             .ok()
-            .wait(1000);
+            .wait(2000);
 
         // Check request body is in the expected form
         const requestBodyBuffer = logger.requests[1].request.body;
         const requestBody = JSON.parse(requestBodyBuffer);
 
         await t
-            .expect(requestBody.details.threeDSResult)
+            .expect(requestBody.details['threeds2.challengeResult'])
             .ok()
             .expect(requestBody.paymentData)
-            .notOk();
+            .ok();
 
         // Check the value of the alert text
         const history = await t.getNativeDialogHistory();
@@ -152,8 +150,8 @@ if (apiVersion >= 67) {
 
         await t
             // Allow time for the ONLY details call, which we expect to be successful
-            .wait(2000)
-            .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
+            .wait(1000)
+            .expect(logger.contains(r => r.response.statusCode === 200))
             .ok()
             .wait(2000);
 
@@ -162,7 +160,7 @@ if (apiVersion >= 67) {
         await t.expect(history[0].text).eql('Authorised');
     });
 } else {
-    test(`Skip testing new 3DS2 flow since api version is too low (v${apiVersion})`, async t => {
+    test(`Skip testing new 3DS2 flow since api version is too high (v${apiVersion})`, async t => {
         await t.wait(250);
     });
 }
