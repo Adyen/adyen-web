@@ -29,7 +29,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     const step = urlSearchParams.get('step');
 
     // Initial state
-    if (!amazonCheckoutSessionId) {
+    if (!amazonCheckoutSessionId || step === 'cancel') {
         window.amazonpay = checkout
             .create('amazonpay', {
                 currency: 'GBP',
@@ -39,12 +39,8 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                     publicKeyId: 'AG77NIXPURMDUC3DOC5WQPPH',
                     storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
                 },
-
-                /**
-                 * The component will send both the returnUrl (as checkoutReviewReturnUrl) and the storeId to the /getAmazonSignature endpoint from Adyen,
-                 * which will create and return the signature.
-                 * (steps 2 and 3 from "Signing requests | AmazonPay": https://amazon-pay-acquirer-guide.s3-eu-west-1.amazonaws.com/v2/amazon-pay-api-v2/signing-requests.html)
-                 */
+                productType: 'PayOnly',
+                cancelUrl: 'http://localhost:3020/wallets?step=cancel',
                 returnUrl: 'http://localhost:3020/wallets?step=review'
             })
             .mount('.amazonpay-field');
@@ -58,6 +54,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
                 amazonCheckoutSessionId,
+                cancelUrl: 'http://localhost:3020/wallets?step=cancel',
                 returnUrl: 'http://localhost:3020/wallets?step=result',
                 amount: {
                     currency: 'GBP',

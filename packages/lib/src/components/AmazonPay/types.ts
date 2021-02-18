@@ -1,6 +1,7 @@
 import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import { BrowserInfo, PaymentAmount } from '../../types';
+import UIElement from '../UIElement';
 
 declare global {
     interface Window {
@@ -26,6 +27,7 @@ export interface AmazonPayElementProps {
     amazonCheckoutSessionId?: string;
     amount: PaymentAmount;
     buttonColor?: ButtonColor;
+    cancelUrl?: string;
     clientKey?: string;
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
@@ -34,19 +36,20 @@ export interface AmazonPayElementProps {
     i18n: Language;
     loadingContext?: string;
     locale?: string;
+    onSubmit?: (state: any, element: UIElement) => void;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
     region?: Region;
     returnUrl?: string;
-    showOrderButton: boolean;
     showChangePaymentDetailsButton: boolean;
-    showSignOutButton: boolean;
+    showOrderButton: boolean;
     showPayButton: boolean;
+    showSignOutButton: boolean;
     signature?: string;
     onClick: (resolve, reject) => Promise<void>;
+    onError: (error, component) => void;
     onSignOut: (resolve, reject) => Promise<void>;
-    onError: (error) => void;
 }
 
 export interface AmazonPayComponentProps extends AmazonPayElementProps {
@@ -56,6 +59,7 @@ export interface AmazonPayComponentProps extends AmazonPayElementProps {
 export interface AmazonPayButtonProps {
     amazonRef: any;
     buttonColor?: ButtonColor;
+    cancelUrl?: string;
     clientKey?: string;
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
@@ -63,11 +67,13 @@ export interface AmazonPayButtonProps {
     environment?: string;
     locale?: string;
     onClick: (resolve, reject) => Promise<void>;
-    onError: (error) => void;
+    onError: (error, component) => void;
     placement?: Placement;
     productType?: ProductType;
+    ref: any;
     region?: Region;
     returnUrl?: string;
+    showPayButton: boolean;
 }
 
 export interface SignOutButtonProps {
@@ -89,7 +95,8 @@ export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
     amount: PaymentAmount;
     clientKey: string;
-    onError: (error) => void;
+    onError: (error, component) => void;
+    ref: any;
     returnUrl: string;
 }
 
@@ -137,6 +144,7 @@ export interface AmazonPayButtonSettings {
 export interface PayloadJSON {
     storeId: string;
     webCheckoutDetails: {
+        checkoutCancelUrl?: string;
         checkoutReviewReturnUrl: string;
     };
     deliverySpecifications?: DeliverySpecifications;

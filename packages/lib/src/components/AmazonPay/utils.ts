@@ -47,15 +47,17 @@ export function getCheckoutLocale(locale: string, region: Region): SupportedLoca
 /**
  * Returns a PayloadJSON object.
  * @param storeId - Store ID from the merchant
- * @param returnUrl - Return URL to be used as checkoutReviewReturnUrl
+ * @param returnUrl - URL to be used as checkoutReviewReturnUrl
+ * @param cancelUrl - Optional URL to be used as checkoutCancelUrl
  * @param deliverySpecifications - Optional delivery specifications object
  * @returns PayloadJSON
  */
-export function getPayloadJSON(storeId: string, returnUrl: string, deliverySpecifications?: DeliverySpecifications): PayloadJSON {
+export function getPayloadJSON(storeId: string, returnUrl: string, cancelUrl?: string, deliverySpecifications?: DeliverySpecifications): PayloadJSON {
     return {
         storeId,
         webCheckoutDetails: {
-            checkoutReviewReturnUrl: returnUrl
+            checkoutReviewReturnUrl: returnUrl,
+            ...(cancelUrl && { checkoutCancelUrl: cancelUrl })
         },
         ...(deliverySpecifications && { deliverySpecifications })
     };
