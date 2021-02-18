@@ -57,9 +57,9 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
     };
 
     const reindexSchema = keys => {
-        const cleanupRemovedFields = (prevData, initialValue, defaultState) => {
+        const cleanupRemovedFields = (prevData, initialValue, defaultStateValues) => {
             return keys.reduce((acc, key) => {
-                const fallbackValue = defaultState[key] !== undefined ? defaultState[key] : initialValue;
+                const fallbackValue = defaultStateValues[key] !== undefined ? defaultStateValues[key] : initialValue;
                 acc[key] = prevData[key] !== undefined ? prevData[key] : fallbackValue;
                 return acc;
             }, {});
