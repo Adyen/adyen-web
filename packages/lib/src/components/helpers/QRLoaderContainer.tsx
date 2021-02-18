@@ -2,6 +2,7 @@ import { h } from 'preact';
 import UIElement, { UIElementProps } from '../UIElement';
 import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
+import RedirectButton from '../internal/RedirectButton';
 
 interface QRLoaderContainerProps extends UIElementProps {
     /**
@@ -67,10 +68,18 @@ class QRLoaderContainer extends UIElement<QRLoaderContainerProps> {
         }
 
         if (this.props.showPayButton) {
-            return this.payButton({
-                label: this.props.buttonLabel ? this.props.i18n.get(this.props.buttonLabel) : this.props.i18n.get('continue'),
-                classNameModifiers: ['standalone']
-            });
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                    <RedirectButton
+                        name={this.displayName}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
+                </CoreProvider>
+            );
         }
 
         return null;

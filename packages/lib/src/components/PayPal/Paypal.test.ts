@@ -11,11 +11,11 @@ describe('Paypal', () => {
         expect(paypal.isValid).toBe(true);
     });
 
-    test('Prevents calling the submit method manually', () => {
-        console.error = jest.fn();
-        const paypal = new Paypal({});
-        paypal.submit();
-        expect(console.error).toHaveBeenCalled();
+    test('Prevents calling the submit method manually', async () => {
+        const onErrorMock = jest.fn();
+        const paypal = new Paypal({ onError: onErrorMock });
+        await paypal.submit();
+        expect(onErrorMock).toHaveBeenCalled();
     });
 });
 

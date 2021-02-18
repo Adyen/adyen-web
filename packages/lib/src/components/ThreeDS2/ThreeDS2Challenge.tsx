@@ -14,7 +14,7 @@ export interface ThreeDS2ChallengeProps {
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
     type?: string;
-    goesDirectToChallenge?: boolean;
+    useOriginalFlow?: boolean;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {

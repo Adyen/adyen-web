@@ -12,7 +12,7 @@ export interface ThreeDS2DeviceFingerprintProps {
     paymentData: string;
     showSpinner: boolean;
     type: string;
-
+    useOriginalFlow?: boolean;
     loadingContext?: string;
     clientKey?: string;
     elementRef?: UIElement;
@@ -37,7 +37,12 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
             return null;
         }
 
-        return <DeviceFingerprint {...this.props} onComplete={this.callSubmit3DS2Fingerprint} />;
+        /**
+         * this.props.useOriginalFlow indicates the old 3DS2 flow.
+         * It means the call to create this component came from the old 'threeDS2Fingerprint' action and upon completion should call the /details endpoint
+         * instead of the new /submitThreeDS2Fingerprint endpoint
+         */
+        return <DeviceFingerprint {...this.props} onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
     }
 }
 
