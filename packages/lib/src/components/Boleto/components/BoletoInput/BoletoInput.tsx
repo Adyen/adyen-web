@@ -37,9 +37,9 @@ function BoletoInput(props) {
     }, [showingEmail, props.personalDetailsRequired, props.billingAddressRequired]);
 
     const handleAddress = address => {
-        setData(prevState => ({ ...prevState, billingAddress: address.data }));
-        setValid(prevState => ({ ...prevState, billingAddress: address.isValid }));
-        setErrors(prevState => ({ ...prevState, billingAddress: !address.isValid }));
+        setData('billingAddress', address.data);
+        setValid('billingAddress', address.isValid);
+        setErrors('billingAddress', !address.isValid);
     };
 
     const [status, setStatus] = useState('ready');
