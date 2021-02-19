@@ -1,5 +1,4 @@
-import { h } from 'preact';
-import { Fragment } from 'preact';
+import { h, Fragment } from 'preact';
 import cx from 'classnames';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectButtonProps } from '../types';
