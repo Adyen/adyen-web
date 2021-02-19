@@ -44,7 +44,7 @@ function IssuerList({ items, placeholder, issuer, ...props }) {
 
     return (
         <div className="adyen-checkout__issuer-list">
-            <Field errorMessage={errors['issuer']} classNameModifiers={['issuer-list']}>
+            <Field errorMessage={!!errors['issuer']} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
                     items,
                     selected: data['issuer'],
