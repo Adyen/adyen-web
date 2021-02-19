@@ -44,7 +44,7 @@
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.11.2",
         "webpack-merge": "^5.7.3",
-        "whatwg-fetch": "^3.5.0"
+        "whatwg-fetch": "^3.6.1"
     },
     "dependencies": {
         "@adyen/adyen-web": "3.22.2"
