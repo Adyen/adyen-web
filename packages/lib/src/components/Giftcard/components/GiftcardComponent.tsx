@@ -71,8 +71,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
     render(props, { focusedElement, balance, transactionLimit }) {
         const { i18n } = useCoreContext();
 
-        const hasEnoughBalance = balance?.value >= this.props.amount?.value;
-        if (balance && hasEnoughBalance) {
+        const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
+        const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
+
+        if (transactionAmount && hasEnoughBalance) {
             return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
         }
 
