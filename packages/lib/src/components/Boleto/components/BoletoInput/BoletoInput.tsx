@@ -91,7 +91,7 @@ function BoletoInput(props) {
                         <Field
                             label={`${i18n.get('boleto.socialSecurityNumber')}`}
                             classNameModifiers={['socialSecurityNumber']}
-                            errorMessage={errors.socialSecurityNumber}
+                            errorMessage={!!errors.socialSecurityNumber}
                             isValid={Boolean(valid.socialSecurityNumber)}
                         >
                             {renderFormField('text', {

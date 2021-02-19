@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'preact/hooks';
+import { useCallback, useMemo, useReducer } from 'preact/hooks';
 import Validator, { ValidatorRules } from '../Validator/Validator';
 import { reducer, init } from './reducer';
+import { FormState, DefaultDataState } from './types';
 
-function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorRules; [key: string]: any }) {
+function useForm<DataState = DefaultDataState>(props: { rules?: ValidatorRules; [key: string]: any }) {
     const { rules = {}, formatters = {}, defaultData = {} } = props;
-    const validator = new Validator(rules);
+    const validator = useMemo(() => new Validator(rules), []);
 
     /**
      * Format and validate a field
@@ -15,7 +16,7 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
         return [formattedValue, validationResult];
     };
 
-    const [state, dispatch] = useReducer(reducer, { defaultData, schema: props.schema ?? [], processField }, init);
+    const [state, dispatch] = useReducer<FormState<DataState>, any, any>(reducer, { defaultData, schema: props.schema ?? [], processField }, init);
     const isValid = useMemo(() => state.schema.reduce((acc, val) => acc && state.valid[val], true), [state.schema, state.valid]);
 
     const updateFieldValidation = (key, validation) => {
@@ -42,7 +43,7 @@ function useForm<DataState = { [key: string]: any }>(props: { rules?: ValidatorR
 
     const triggerValidation = useCallback(() => {
         dispatch({ type: 'validateForm', processField });
-    }, [processField]);
+    }, []);
 
     const setErrors = useCallback((key, value) => dispatch({ type: 'setErrors', key, value }), []);
     const setValid = useCallback((key, value) => dispatch({ type: 'setValid', key, value }), []);
