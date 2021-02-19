@@ -41,44 +41,56 @@ export function init({ schema, defaultData, processField }) {
     };
 }
 
-export function reducer(state, { type, key, value, processField, defaultData, schema }: any) {
-    switch (type) {
-        case 'setData': {
-            return { ...state, data: { ...state['data'], [key]: value } };
-        }
-        case 'setValid': {
-            return { ...state, valid: { ...state['valid'], [key]: value } };
-        }
-        case 'setErrors': {
-            return { ...state, errors: { ...state['errors'], [key]: value } };
-        }
-        case 'setSchema': {
-            const defaultState = init({ schema, defaultData, processField });
-            const removedSchemaFields = state.schema.filter(x => !schema.includes(x));
-            const newSchemaFields = schema.filter(x => !state.schema.includes(x));
+export function getReducer(processField) {
+    return function reducer(state, { type, key, value, mode, defaultData, schema }: any) {
+        switch (type) {
+            case 'setData': {
+                return { ...state, data: { ...state['data'], [key]: value } };
+            }
+            case 'setValid': {
+                return { ...state, valid: { ...state['valid'], [key]: value } };
+            }
+            case 'setErrors': {
+                return { ...state, errors: { ...state['errors'], [key]: value } };
+            }
+            case 'updateField': {
+                const [formattedValue, validation] = processField(key, value, mode);
 
-            // reindex data and validation according to the new schema
-            const data = addKeys(omitKeys(state.data, removedSchemaFields), newSchemaFields, null, defaultState.data);
-            const valid = addKeys(omitKeys(state.valid, removedSchemaFields), newSchemaFields, false, defaultState.valid);
-            const errors = addKeys(omitKeys(state.errors, removedSchemaFields), newSchemaFields, null, defaultState.errors);
+                return {
+                    ...state,
+                    data: { ...state['data'], [key]: formattedValue },
+                    errors: { ...state['errors'], [key]: validation.hasError() ? validation.getError() : null },
+                    valid: { ...state['valid'], [key]: validation.isValid ?? false }
+                };
+            }
+            case 'setSchema': {
+                const defaultState = init({ schema, defaultData, processField });
+                const removedSchemaFields = state.schema.filter(x => !schema.includes(x));
+                const newSchemaFields = schema.filter(x => !state.schema.includes(x));
 
-            return { ...state, schema, data, valid, errors };
-        }
-        case 'validateForm': {
-            const formValidation = state.schema.reduce(
-                (acc, cur) => {
-                    const [, validation] = processField(cur, state.data[cur], 'blur');
-                    return {
-                        valid: { ...acc['valid'], [cur]: validation.isValid ?? false },
-                        errors: { ...acc['errors'], [cur]: validation.hasError() ? validation.getError() : null }
-                    };
-                },
-                { valid: state.valid, errors: state.errors }
-            );
+                // reindex data and validation according to the new schema
+                const data = addKeys(omitKeys(state.data, removedSchemaFields), newSchemaFields, null, defaultState.data);
+                const valid = addKeys(omitKeys(state.valid, removedSchemaFields), newSchemaFields, false, defaultState.valid);
+                const errors = addKeys(omitKeys(state.errors, removedSchemaFields), newSchemaFields, null, defaultState.errors);
 
-            return { ...state, valid: formValidation.valid, errors: formValidation.errors };
+                return { ...state, schema, data, valid, errors };
+            }
+            case 'validateForm': {
+                const formValidation = state.schema.reduce(
+                    (acc, cur) => {
+                        const [, validation] = processField(cur, state.data[cur], 'blur');
+                        return {
+                            valid: { ...acc['valid'], [cur]: validation.isValid ?? false },
+                            errors: { ...acc['errors'], [cur]: validation.hasError() ? validation.getError() : null }
+                        };
+                    },
+                    { valid: state.valid, errors: state.errors }
+                );
+
+                return { ...state, valid: formValidation.valid, errors: formValidation.errors };
+            }
+            default:
+                throw new Error('Undefined useForm action');
         }
-        default:
-            throw new Error('Undefined useForm action');
-    }
+    };
 }
