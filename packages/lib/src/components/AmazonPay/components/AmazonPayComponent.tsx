@@ -16,7 +16,6 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
 
     const handleLoad = () => {
         setStatus('ready');
-        props.onLoad();
     };
 
     this.submit = () => {
