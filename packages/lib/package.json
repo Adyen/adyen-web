@@ -75,7 +75,7 @@
         "webpack-bundle-analyzer": "^4.3.0",
         "webpack-cli": "^3.3.12",
         "webpack-merge": "^5.7.3",
-        "whatwg-fetch": "^3.5.0"
+        "whatwg-fetch": "^3.6.1"
     },
     "dependencies": {
         "@types/applepayjs": "^3.0.1",
