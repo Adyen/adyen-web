@@ -28,15 +28,11 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     protected formatProps(props) {
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
-        const { configuration = {} } = props;
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
             ...props,
-            configuration: {
-                merchantId: configuration.merchantIdentifier || configuration.merchantId || defaultProps.configuration.merchantId,
-                merchantName: configuration.merchantDisplayName || configuration.merchantName || defaultProps.configuration.merchantName
-            },
+            configuration: props.configuration,
             supportedNetworks,
             version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,

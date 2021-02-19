@@ -26,20 +26,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.submit = this.submit.bind(this);
     }
 
-    // Required for transition period (until configuration object becomes the norm)
-    // - if merchant has defined properties directly in props, use these instead
-    protected formatProps(props) {
-        const { configuration, intent, merchantId } = props;
-        return {
-            ...props,
-            configuration: {
-                ...configuration,
-                ...(intent && { intent }),
-                ...(merchantId && { merchantId })
-            }
-        };
-    }
-
     /**
      * Formats the component data output
      */

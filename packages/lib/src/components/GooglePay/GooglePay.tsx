@@ -16,17 +16,12 @@ class GooglePay extends UIElement<GooglePayProps> {
      * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
      */
     formatProps(props) {
-        const { configuration } = props;
-        const { merchantIdentifier } = configuration;
         const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
 
         return {
             ...props,
             showButton: props.showPayButton === true,
-            configuration: {
-                ...configuration,
-                ...(merchantIdentifier && { merchantId: merchantIdentifier })
-            },
+            configuration: props.configuration,
             allowedCardNetworks
         };
     }
