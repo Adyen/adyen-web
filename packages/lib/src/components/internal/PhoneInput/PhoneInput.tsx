@@ -49,6 +49,7 @@ export function PhoneInput(props) {
                             <Field inputWrapperModifiers={['phoneInput']}>
                                 {renderFormField('select', {
                                     className: 'adyen-checkout__dropdown--small adyen-checkout__countryFlag',
+                                    filterable: false,
                                     items: props.items,
                                     name: props.prefixName,
                                     onChange: handleChangeFor('phonePrefix'),
