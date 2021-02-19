@@ -43,7 +43,9 @@ function Select(props: SelectProps) {
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
-        if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!props.filterable || !showList))) {
+        if (e.key === keys.enter && props.filterable && showList && textFilter) {
+            handleSelect(e);
+        } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!props.filterable || !showList))) {
             e.preventDefault();
             setShowList(true);
             if (selectListRef.current?.firstElementChild) {
@@ -101,7 +103,9 @@ function Select(props: SelectProps) {
      */
     const handleSelect = (e: Event) => {
         e.preventDefault();
-        const target = e.currentTarget as HTMLInputElement;
+
+        // If the target is not one of the list items, select the first list item
+        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
 
         if (!target.getAttribute('data-disabled')) {
             closeList();
