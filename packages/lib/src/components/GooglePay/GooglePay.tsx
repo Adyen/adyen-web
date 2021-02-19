@@ -37,7 +37,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     formatData() {
         return {
             paymentMethod: {
-                type: GooglePay.type,
+                type: this.props.type ?? GooglePay.type,
                 ...this.state
             }
         };

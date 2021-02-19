@@ -118,6 +118,7 @@ const componentsMap = {
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
     paywithgoogle: GooglePay,
+    googlepay: GooglePay,
     pix: Pix,
     qiwiwallet: QiwiWallet,
     ratepay: RatePay,
