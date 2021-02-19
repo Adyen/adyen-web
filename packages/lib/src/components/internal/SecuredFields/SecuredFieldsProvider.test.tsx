@@ -3,7 +3,7 @@ import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import Language from '../../../language/Language';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
-import { getError, getDefaultErrorCode } from '../../../core/Errors/utils';
+import { getError } from '../../../core/Errors/utils';
 
 jest.mock('./lib', () => {
     return () => true;
@@ -74,8 +74,11 @@ const regularErrObj = {
 const nodeHolder = document.createElement('div');
 nodeHolder.innerHTML = mockNode;
 
+const brandsFromBinLookup = jest.fn(() => {});
+
 const mockCSF = {
-    hasUnsupportedCard: () => {}
+    hasUnsupportedCard: () => {},
+    brandsFromBinLookup
 };
 
 wrapper = shallow(
@@ -247,20 +250,6 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
         expect(errorObj.errorI18n).toEqual(i18n.get(errorCode));
     });
 
-    it("should handle an error with a code it doesn't recognise and set the relevant state and props based on a default code", () => {
-        regularErrObj.error = 'some.strange.code';
-
-        wrapper.instance().handleOnError(regularErrObj);
-
-        expect(errorObj.error).toEqual('some.strange.code');
-
-        const defaultErrorCode = getDefaultErrorCode(regularErrObj.fieldType);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(defaultErrorCode);
-
-        expect(errorObj.errorText).toEqual(defaultErrorCode);
-        expect(errorObj.errorI18n).toEqual(i18n.get(defaultErrorCode));
-    });
-
     it('should clear the previous error', () => {
         regularErrObj.error = '';
 
@@ -271,4 +260,53 @@ describe('<SecuredFieldsProvider /> handling error codes', () => {
         expect(errorObj.errorText).toEqual(ERROR_MSG_CLEARED);
         expect(errorObj.errorI18n).toEqual('');
     });
+});
+
+describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
+    const mockBinLookupObj = {
+        issuingCountryCode: 'US',
+        supportedBrands: [
+            {
+                brand: 'mc',
+                cvcPolicy: 'required',
+                enableLuhnCheck: true,
+                showExpiryDate: true,
+                supported: true
+            }
+        ]
+    };
+
+    it(
+        'should receive a populated binLookup object and set the issuingCountryCode' +
+            'then receive a "reset" object and reset the issuingCountryCode',
+        () => {
+            nodeHolder.innerHTML = mockNode;
+            wrapper = shallow(
+                <SecuredFieldsProvider
+                    ref={handleSecuredFieldsRef}
+                    rootNode={nodeHolder}
+                    styles={styles}
+                    render={renderFn}
+                    onError={onError}
+                    i18n={i18n}
+                    configuration={{}}
+                />
+            );
+
+            const sfp = wrapper.instance();
+
+            sfp.csf = mockCSF;
+
+            sfp.processBinLookupResponse(mockBinLookupObj);
+
+            expect(sfp.issuingCountryCode).toEqual('us');
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(1);
+
+            // reset
+            sfp.processBinLookupResponse(null);
+
+            expect(sfp.issuingCountryCode).toBe(undefined);
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
+        }
+    );
 });

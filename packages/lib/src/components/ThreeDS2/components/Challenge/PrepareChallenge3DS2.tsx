@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, handleErrorCode, prepareChallengeData } from '../utils';
+import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
@@ -32,7 +32,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
-            const data = createChallengeResolveData(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+            /**
+             * Create the data in the way that the /details endpoint expects.
+             *  This is different for the 'old',v66, flow triggered by a 'threeDS2Challenge' action (which includes the threeds2InMDFlow)
+             *  than for the the new, v67, 'threeDS2' action
+             */
+            const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
+            const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
             this.props.onComplete(data);
         });
     }

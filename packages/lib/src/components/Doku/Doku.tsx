@@ -17,9 +17,9 @@ export class DokuElement extends UIElement {
      */
     formatData() {
         return {
+            ...this.state.data,
             paymentMethod: {
-                type: this.props.type || DokuElement.type,
-                ...this.state.data
+                type: this.props.type || DokuElement.type
             }
         };
     }

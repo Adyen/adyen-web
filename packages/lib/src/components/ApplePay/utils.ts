@@ -23,3 +23,24 @@ export function resolveSupportedVersion(latestVersion) {
 
     return versions.find(v => v && window.ApplePaySession && ApplePaySession.supportsVersion(v));
 }
+
+export function mapBrands(brands) {
+    const brandMapping = {
+        mc: 'masterCard',
+        amex: 'amex',
+        visa: 'visa',
+        elodebit: 'elo',
+        elo: 'elo',
+        interac: 'interac',
+        discover: 'discover',
+        jcb: 'jcb',
+        electron: 'electron',
+        maestro: 'maestro'
+    };
+    return brands.reduce((accumulator, item) => {
+        if (!!brandMapping[item] && !accumulator.includes(brandMapping[item])) {
+            accumulator.push(brandMapping[item]);
+        }
+        return accumulator;
+    }, []);
+}

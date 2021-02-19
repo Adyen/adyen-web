@@ -308,6 +308,10 @@ p {
     text-align: center;
 }
 
+.bankTransfer-result-field {
+    margin-top: 24px;
+}
+
 table {
     border-spacing: 0;
     border-collapse: separate;
@@ -332,4 +336,12 @@ table {
             padding-right: 0;
         }
     }
+}
+
+#dropin-container {
+    min-height: 540px;
+}
+
+.card-field {
+    min-height: 200px;
 }

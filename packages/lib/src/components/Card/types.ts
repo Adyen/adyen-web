@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement';
-import { AddressSchema } from '../../types';
+import { AddressSchema, BrowserInfo } from '../../types';
 import {
     CbObjOnBinValue,
     CbObjOnBrand,
@@ -7,12 +7,23 @@ import {
     CbObjOnError,
     CbObjOnFieldValid,
     CbObjOnFocus,
-    CbObjOnLoad
+    CbObjOnLoad,
+    CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
+import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
 
 export interface CardElementProps extends UIElementProps {
-    type?: string;
+    /**
+     * this.props.brand is never set for a generic card
+     * It is only set for a single-branded card or a stored card
+     */
     brand?: string;
+
+    /**
+     * this.props.type will always be "card" (generic card, stored card)
+     * except for a single branded card when it will be the same as the brand prop
+     */
+    type?: string;
 
     /** @deprecated use brands instead */
     groupTypes?: string[];
@@ -70,6 +81,16 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinValue?: (event: CbObjOnBinValue) => void;
 
+    /**
+     * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
+     */
+    onBinLookup?: (event: CbObjOnBinLookup) => void;
+
+    /**
+     * 3DS2 challenge size
+     */
+    challengeWindowSize?: string;
+
     [key: string]: any;
 }
 
@@ -89,21 +110,42 @@ interface CardPaymentMethodData {
     encryptedSecurityCode?: string;
 }
 
-interface BrowserInfo {
-    acceptHeader: string;
-    colorDepth: string;
-    language: string;
-    javaEnabled: boolean;
-    screenHeight: string;
-    screenWidth: string;
-    userAgent: string;
-    timeZoneOffset: number;
-}
-
 export interface CardElementData {
     paymentMethod: CardPaymentMethodData;
     billingAddress?: AddressSchema;
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;
+}
+
+export interface BrandObject {
+    brand: string;
+    cvcPolicy: CVCPolicyType;
+    enableLuhnCheck: boolean;
+    showExpiryDate: boolean;
+    supported: boolean;
+}
+
+export interface BinLookupResponseRaw {
+    requestId: string;
+    issuingCountryCode?: string;
+    brands?: BrandObject[];
+    // OR, if an error has occurred
+    status: number;
+    errorCode: string;
+    message: string;
+    errorType: string;
+}
+
+/**
+ * Mapped & simplified version of BinLookupResponseRaw
+ */
+export interface BinLookupResponse {
+    issuingCountryCode: string;
+    supportedBrands?: BrandObject[];
+}
+
+export interface DualBrandSelectElement {
+    id: string;
+    brandObject: BrandObject;
 }

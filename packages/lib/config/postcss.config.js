@@ -1,3 +1,8 @@
 module.exports = {
-    plugins: [require('stylelint')({ configFile: 'config/stylelint.config.js' }), require('autoprefixer'), require('cssnano')]
+    plugins: [
+        require('stylelint')({ configFile: 'config/stylelint.config.js' }),
+        require('postcss-reporter'),
+        require('autoprefixer'),
+        require('cssnano')
+    ]
 };

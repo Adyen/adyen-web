@@ -1,8 +1,9 @@
 import { h } from 'preact';
+import cx from 'classnames';
 import { useState } from 'preact/hooks';
-import { renderFormField } from '../../../internal/FormFields';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import Field from '../../../internal/FormFields/Field';
+import { renderFormField } from '../FormFields';
+import useCoreContext from '../../../core/Context/useCoreContext';
+import Field from '../FormFields/Field';
 
 export default function SendCopyToEmail(props) {
     const { errors, value, onInput, onChange } = props;
@@ -15,7 +16,7 @@ export default function SendCopyToEmail(props) {
     };
 
     return (
-        <div className={'adyen-checkout__fieldset adyen-checkout__fieldset--sendCopyToEmail'}>
+        <div className={cx('adyen-checkout__fieldset', 'adyen-checkout__fieldset--sendCopyToEmail', props.classNames)}>
             <Field classNameModifiers={['sendCopyToEmail']}>
                 {renderFormField('boolean', {
                     onChange: toggleEmailField,
@@ -28,7 +29,7 @@ export default function SendCopyToEmail(props) {
             {sendCopyToEmail && (
                 <Field label={i18n.get('shopperEmail')} classNameModifiers={['shopperEmail']} errorMessage={errors}>
                     {renderFormField('emailAddress', {
-                        name: 'boleto.shopperEmail',
+                        name: 'shopperEmail',
                         autoCorrect: 'off',
                         spellCheck: false,
                         value,

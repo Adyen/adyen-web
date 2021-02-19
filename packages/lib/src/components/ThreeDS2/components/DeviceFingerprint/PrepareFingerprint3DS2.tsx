@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, createOldFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { ResultObject } from '../../types';
 
@@ -45,7 +45,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     setStatusComplete(resultObj: ResultObject) {
         this.setState({ status: 'complete' }, () => {
-            const data = createFingerprintResolveData(this.props.dataKey, resultObj, this.props.paymentData);
+            /**
+             * Create the data in the way that the endpoint expects:
+             *  - this will be the /details endpoint for the 'old', v66, flow triggered by a 'threeDS2Fingerprint' action
+             *  - and will be the /submitThreeDS2Fingerprint endpoint for the new, v67, 'threeDS2' action
+             */
+            const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
+            const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
             this.props.onComplete(data);
         });
     }

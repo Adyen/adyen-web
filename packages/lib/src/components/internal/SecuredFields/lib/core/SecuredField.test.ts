@@ -1,14 +1,18 @@
 import SecuredField from './SecuredField';
-import { AriaConfig } from './AbstractSecuredField';
+import { AriaConfig, CVCPolicyType } from './AbstractSecuredField';
 import Language from '../../../../../language/Language';
-import { IFRAME_TITLE } from '../configuration/constants';
-import LANG from '../../../../../language/locales/nl-NL.json';
+import LANG from '../../../../../language/locales/en-US.json';
 import { ERROR_CODES, ERROR_MSG_CARD_TOO_OLD, ERROR_MSG_INVALID_FIELD, ERROR_MSG_LUHN_CHECK_FAILED } from '../../../../../core/Errors/constants';
 import { ERROR_MSG_INCOMPLETE_FIELD } from '../../../../../core/Errors/constants';
+import { CVC_POLICY_REQUIRED } from '../configuration/constants';
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 const ENCRYPTED_SECURITY_CODE = 'encryptedSecurityCode';
+
+const TRANSLATED_NUMBER_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
+const TRANSLATED_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
+const TRANSLATED_CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 
 const GENERAL_ERROR_CODE = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
 
@@ -20,7 +24,7 @@ const TRANSLATED_CVC_PLACEHOLDER = LANG['creditCard.cvcField.placeholder'];
 
 const nodeHolder = document.createElement('div');
 
-const i18n = new Language('nl-NL', {});
+const i18n = new Language('en-US', {});
 
 const mockAriaConfig = {
     lang: 'en-GB',
@@ -60,7 +64,7 @@ const setupObj = {
     showWarnings: false,
     //
     fieldType: ENCRYPTED_CARD_NUMBER,
-    cvcRequired: true,
+    cvcPolicy: CVC_POLICY_REQUIRED as CVCPolicyType,
     iframeSrc: null,
     loadingContext: null,
     holderEl: nodeHolder
@@ -73,7 +77,7 @@ describe('SecuredField handling ariaConfig object - should set defaults', () => 
     //
     test('Card number field with no defined ariaConfig should get default title & translated error props', () => {
         const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle).toEqual(IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle).toEqual(TRANSLATED_NUMBER_IFRAME_TITLE);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
     });
 
@@ -81,7 +85,7 @@ describe('SecuredField handling ariaConfig object - should set defaults', () => 
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
 
         const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(TRANSLATED_DATE_IFRAME_TITLE);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
     });
 
@@ -89,7 +93,7 @@ describe('SecuredField handling ariaConfig object - should set defaults', () => 
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
         const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(TRANSLATED_CVC_IFRAME_TITLE);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
     });
 });
@@ -114,7 +118,7 @@ describe('SecuredField handling ariaConfig object - should set defaults only whe
 
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].label).toEqual(mockAriaConfig[ENCRYPTED_EXPIRY_DATE].label);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(TRANSLATED_DATE_IFRAME_TITLE);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(
             mockAriaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]
         );
@@ -125,7 +129,7 @@ describe('SecuredField handling ariaConfig object - should set defaults only whe
 
         const card = new SecuredField(setupObj, i18n);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].label).toEqual(mockAriaConfig[ENCRYPTED_SECURITY_CODE].label);
-        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(IFRAME_TITLE);
+        expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(TRANSLATED_CVC_IFRAME_TITLE);
         expect(card.config.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
     });
 });

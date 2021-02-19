@@ -11,7 +11,7 @@ export default function createIframe({ src, title = 'iframe element', policy = '
     // Commenting out stops the "The devicemotion events are blocked by feature policy" warning in Chrome >=66 that some merchant experienced
     // Commenting in stops the same warnings in development (??)
     if (process.env.NODE_ENV === 'development') {
-        iframeEl.setAttribute('allow', 'accelerometer, gyroscope');
+        iframeEl.setAttribute('allow', 'accelerometer; gyroscope');
     }
 
     const noIframeElContent = document.createTextNode('<p>Your browser does not support iframes.</p>');

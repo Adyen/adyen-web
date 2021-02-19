@@ -3,48 +3,69 @@
     background-color: transparent;
     box-sizing: border-box;
     display: block;
-    overflow: auto;
+    position: relative;
+    overflow: hidden;
     width: 100%;
+    min-height: 400px;
+    height: inherit;
 }
 
-.adyen-checkout__threeds2__challenge-container {
+.adyen-checkout__threeds2__challenge {
+
     &--01 {
-        height: 400px;
         width: 250px;
+        height: 400px;
+
+        .adyen-checkout__iframe--threeDSIframe {
+            width: 250px;
+            height: 400px;
+        }
     }
 
     &--02 {
-        height: 400px;
         width: 390px;
+        height: 400px;
+
+        .adyen-checkout__iframe--threeDSIframe {
+            width: 390px;
+            height: 400px;
+        }
     }
 
     &--03 {
-        height: 600px;
         width: 500px;
+        height: 600px;
+
+        .adyen-checkout__iframe--threeDSIframe {
+            width: 500px;
+            height: 600px;
+        }
     }
 
     &--04 {
-        height: 400px;
         width: 600px;
+        height: 400px;
+
+        .adyen-checkout__iframe--threeDSIframe {
+            width: 600px;
+            height: 400px;
+        }
     }
 
     &--05 {
-        height: 100%;
         width: 100%;
+        height: 100%;
+
+        .adyen-checkout__iframe--threeDSIframe {
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 
-.adyen-checkout__threeds2__challenge.adyen-checkout__threeds2__challenge--05 {
-    position: relative;
-    overflow: hidden;
-    padding-top: 56.25%;
-
-    .adyen-checkout__iframe--threeDSIframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-    }
+.adyen-checkout__iframe--threeDSIframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
 }

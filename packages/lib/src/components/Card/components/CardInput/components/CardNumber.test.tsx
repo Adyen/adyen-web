@@ -18,7 +18,7 @@ let wrapper = mount(
     />
 );
 
-describe('CardInput', () => {
+describe('CardNumber', () => {
     test('Renders a CardNumber field, with standard brand image, and no dual branding', () => {
         expect(wrapper.find('[data-cse="encryptedCardNumber"]')).toHaveLength(1);
         expect(wrapper.find('.adyen-checkout__card__cardNumber__input .adyen-checkout__card__cardNumber__brandIcon')).toHaveLength(1);

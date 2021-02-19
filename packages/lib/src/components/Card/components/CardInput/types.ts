@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CardConfiguration } from '../../types';
+import { CardConfiguration, DualBrandSelectElement } from '../../types';
 
 export interface CardInputProps {
     amount?: object;
@@ -30,8 +30,7 @@ export interface CardInputProps {
 }
 
 export interface CardInputState {
-    additionalSelectElements: any[];
-    additionalSelectType: string;
+    additionalSelectElements: DualBrandSelectElement[];
     additionalSelectValue: string;
     billingAddress: object;
     data?: object;
@@ -42,11 +41,4 @@ export interface CardInputState {
     status: string;
     valid?: object;
     issuingCountryCode: string;
-}
-
-export interface BinValueObject {
-    detectedBrands: string[];
-    issuingCountryCode: string;
-    requestId: string;
-    supportedBrands: string[];
 }

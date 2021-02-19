@@ -21,7 +21,7 @@ function FieldContainer(props: FieldContainerProps) {
                     classNameModifiers={classNameModifiers}
                     allowedCountries={props.allowedCountries}
                     errorMessage={errorMessage}
-                    onDropdownChange={props.onCountryChange}
+                    onDropdownChange={props.onDropdownChange}
                     value={value}
                 />
             );
@@ -31,7 +31,7 @@ function FieldContainer(props: FieldContainerProps) {
                     classNameModifiers={classNameModifiers}
                     selectedCountry={data.country}
                     errorMessage={errorMessage}
-                    onDropdownChange={props.onStateChange}
+                    onDropdownChange={props.onDropdownChange}
                     value={value}
                 />
             );

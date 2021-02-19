@@ -1,4 +1,5 @@
 import { AfterPay, AfterPayB2B } from './AfterPay';
+import AmazonPay from './AmazonPay';
 import ApplePay from './ApplePay';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
@@ -36,8 +37,11 @@ import Dropin from './Dropin';
 import Ach from './Ach';
 import MBWay from './MBWay';
 import Blik from './Blik';
-import uuid from '../utils/uuid';
+import BankTransfer from './BankTransfer';
 import Affirm from './Affirm';
+import Pix from './Pix';
+import uuid from '../utils/uuid';
+import BacsDD from './BacsDD';
 
 /**
  * Maps each component with a Component element.
@@ -48,8 +52,10 @@ const componentsMap = {
     afterpay: AfterPay,
     afterpay_default: AfterPay,
     afterpay_b2b: AfterPayB2B,
+    amazonpay: AmazonPay,
     amex: Card,
     applepay: ApplePay,
+    bankTransfer_IBAN: BankTransfer,
     bcmc: Bancontact,
     bcmc_mobile: BcmcMobile,
     bcmc_mobile_QR: BcmcMobile,
@@ -65,6 +71,7 @@ const componentsMap = {
     primeiropay_boleto: Boleto,
     card: Card,
     diners: Card,
+    directdebit_GB: BacsDD,
     discover: Card,
     doku: Doku,
     doku_alfamart: Doku,
@@ -111,6 +118,7 @@ const componentsMap = {
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
     paywithgoogle: GooglePay,
+    pix: Pix,
     qiwiwallet: QiwiWallet,
     ratepay: RatePay,
     redirect: Redirect,

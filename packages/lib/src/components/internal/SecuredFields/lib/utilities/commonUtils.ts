@@ -1,3 +1,5 @@
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED } from '../configuration/constants';
+
 /**
  * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
@@ -37,6 +39,16 @@ function generateRandomNumber() {
     const ranNum = new Uint32Array(1);
     window.crypto.getRandomValues(ranNum);
     return ranNum[0];
+}
+
+function getCVCPolicy(obj) {
+    let cvcPolicy;
+    if (obj.hideCVC) {
+        cvcPolicy = CVC_POLICY_HIDDEN;
+    } else {
+        cvcPolicy = obj.cvcRequired === true ? CVC_POLICY_REQUIRED : CVC_POLICY_OPTIONAL;
+    }
+    return cvcPolicy;
 }
 
 /**
@@ -86,6 +98,27 @@ function truthy(x) {
  */
 function isObjectLike(value) {
     return !!value && typeof value === 'object';
+}
+
+function objectsDeepEqual(obj1 = {}, obj2 = {}) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    for (const key of keys1) {
+        if (isObjectLike(obj1[key])) {
+            if (!objectsDeepEqual(obj1[key], obj2[key])) {
+                return false;
+            }
+        }
+        if (obj1[key] !== obj2[key]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -190,9 +223,11 @@ function notFalsy(x) {
 
 export {
     generateRandomNumber,
+    getCVCPolicy,
     existy,
     falsy,
     isArray,
+    objectsDeepEqual,
     notFalsy,
     truthy
     //    wait

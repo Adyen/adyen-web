@@ -39,8 +39,8 @@ export class SecuredFieldsElement extends UIElement {
         return this;
     }
 
-    processBinLookupResponse(binLookupObject) {
-        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupObject);
+    processBinLookupResponse(binLookupResponse) {
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse);
         return this;
     }
 

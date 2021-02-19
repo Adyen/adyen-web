@@ -19,6 +19,7 @@ export default iframeSelector => {
     return {
         fillCardNumber: fillCardNumber(iframeSelector),
         deleteCardNumber: deleteCardNumber(iframeSelector),
+        deleteCVC: deleteCVC(iframeSelector),
         fillDate: fillDate(iframeSelector),
         fillCVC: fillCVC(iframeSelector),
         fillDateAndCVC: fillDateAndCVC(iframeSelector)
@@ -43,6 +44,12 @@ const deleteCardNumber = iframeSelector => {
     };
 };
 
+const deleteCVC = iframeSelector => {
+    return async t => {
+        return deleteFromIFrame(t, iframeSelector, 2, '#encryptedSecurityCode');
+    };
+};
+
 const fillDate = iframeSelector => {
     return async (t, value = TEST_DATE_VALUE, replace = false) => {
         return fillIFrame(t, iframeSelector, 1, '#encryptedExpiryDate', value, replace);
@@ -64,7 +71,3 @@ const fillDateAndCVC = iframeSelector => {
         return fc(t, cvcValue);
     };
 };
-
-export const getCardIsValid = ClientFunction((who = 'card') => {
-    return window[who].isValid;
-});
