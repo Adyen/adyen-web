@@ -93,6 +93,7 @@ function Installments(props: InstallmentsProps) {
                         classNameModifiers={['revolving-plan-installments']}
                     >
                         {renderFormField('select', {
+                            filterable: false,
                             items: installmentOptions.values.map(installmentItemsMapper),
                             selected: installmentAmount,
                             onChange: onSelectInstallment,
@@ -108,6 +109,7 @@ function Installments(props: InstallmentsProps) {
         <div className="adyen-checkout__installments">
             <Field label={i18n.get('installments')} classNameModifiers={['installments']}>
                 {renderFormField('select', {
+                    filterable: false,
                     items: installmentOptions.values.map(installmentItemsMapper),
                     selected: installmentAmount,
                     onChange: onSelectInstallment,
