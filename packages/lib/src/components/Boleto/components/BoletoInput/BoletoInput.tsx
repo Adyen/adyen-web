@@ -16,6 +16,7 @@ function BoletoInput(props) {
     const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } = useForm<
         BoletoInputDataState
     >({
+        schema: ['firstName', 'lastName', 'socialSecurityNumber', 'billingAddress', 'shopperEmail'],
         defaultData: props.data,
         rules: boletoValidationRules,
         formatters: boletoFormatters
@@ -36,9 +37,9 @@ function BoletoInput(props) {
     }, [showingEmail, props.personalDetailsRequired, props.billingAddressRequired]);
 
     const handleAddress = address => {
-        setData(prevState => ({ ...prevState, billingAddress: address.data }));
-        setValid(prevState => ({ ...prevState, billingAddress: address.isValid }));
-        setErrors(prevState => ({ ...prevState, billingAddress: !address.isValid }));
+        setData('billingAddress', address.data);
+        setValid('billingAddress', address.isValid);
+        setErrors('billingAddress', !address.isValid);
     };
 
     const [status, setStatus] = useState('ready');
@@ -65,7 +66,7 @@ function BoletoInput(props) {
                     <div className="adyen-checkout__fieldset__title">{i18n.get('personalDetails')}</div>
 
                     <div className="adyen-checkout__fieldset__fields">
-                        <Field label={i18n.get('firstName')} classNameModifiers={['firstName', 'col-50']} errorMessage={errors.firstName}>
+                        <Field label={i18n.get('firstName')} classNameModifiers={['firstName', 'col-50']} errorMessage={!!errors.firstName}>
                             {renderFormField('text', {
                                 name: 'firstName',
                                 autocorrect: 'off',
@@ -76,7 +77,7 @@ function BoletoInput(props) {
                             })}
                         </Field>
 
-                        <Field label={i18n.get('lastName')} classNameModifiers={['lastName', 'col-50']} errorMessage={errors.lastName}>
+                        <Field label={i18n.get('lastName')} classNameModifiers={['lastName', 'col-50']} errorMessage={!!errors.lastName}>
                             {renderFormField('text', {
                                 name: 'lastName',
                                 autocorrect: 'off',
@@ -90,7 +91,7 @@ function BoletoInput(props) {
                         <Field
                             label={`${i18n.get('boleto.socialSecurityNumber')}`}
                             classNameModifiers={['socialSecurityNumber']}
-                            errorMessage={errors.socialSecurityNumber}
+                            errorMessage={!!errors.socialSecurityNumber}
                             isValid={Boolean(valid.socialSecurityNumber)}
                         >
                             {renderFormField('text', {
@@ -110,7 +111,7 @@ function BoletoInput(props) {
             {props.billingAddressRequired && (
                 <Address
                     label="billingAddress"
-                    data={{ ...data.billingAddress, country: 'BR' }}
+                    data={{ ...props.data.billingAddress, country: 'BR' }}
                     onChange={handleAddress}
                     requiredFields={['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince']}
                     ref={addressRef}

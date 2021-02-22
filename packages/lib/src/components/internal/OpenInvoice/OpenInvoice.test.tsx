@@ -59,7 +59,14 @@ describe('OpenInvoice', () => {
     test('should call the onChange', () => {
         const onChange = jest.fn();
         getWrapper({ onChange });
-        expect(onChange.mock.calls.length).toBe(1);
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange).toHaveBeenCalledWith(
+            expect.objectContaining({
+                data: expect.any(Object),
+                errors: expect.any(Object),
+                isValid: expect.any(Boolean)
+            })
+        );
     });
 
     test('should be possible to change the status', () => {

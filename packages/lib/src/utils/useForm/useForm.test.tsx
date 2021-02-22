@@ -41,6 +41,26 @@ describe('useForm', () => {
             expect(result.current.data.firstName).toEqual(defaultData.firstName);
             expect(result.current.data.lastName).toEqual(null);
         });
+
+        it('should set default data after changing the schema', () => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }));
+
+            act(() => {
+                result.current.setSchema(['email']);
+            });
+
+            expect(result.current.data['firstName']).toEqual(undefined);
+            expect(result.current.valid['firstName']).toEqual(undefined);
+            expect(result.current.errors['firstName']).toEqual(undefined);
+
+            act(() => {
+                result.current.setSchema(['firstName', 'email']);
+            });
+
+            expect(result.current.data['firstName']).toEqual(defaultData.firstName);
+            expect(result.current.valid['firstName']).toEqual(true);
+            expect(result.current.errors['firstName']).toEqual(null);
+        });
     });
 
     describe('handleChangeFor', () => {
@@ -55,7 +75,7 @@ describe('useForm', () => {
 
             expect(result.current.data.firstName).toBe(firstNameValue);
             expect(result.current.valid.firstName).toBe(true);
-            expect(result.current.errors.firstName).toBe(false);
+            expect(result.current.errors.firstName).toBe(null);
         });
 
         it('should format the value of a field using formatters', () => {

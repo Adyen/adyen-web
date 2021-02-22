@@ -40,9 +40,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
     const [status, setStatus] = useState('ready');
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    this.setStatus = setStatus;
 
     useEffect(() => {
         const fieldsetsAreValid: boolean = checkFieldsets();
@@ -50,12 +48,13 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const isValid: boolean = fieldsetsAreValid && consentCheckboxValid;
         const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
 
-        props.onChange({ data: newData, isValid });
+        props.onChange({ data: newData, errors, valid, isValid });
     }, [data, activeFieldsets]);
 
     const handleFieldset = key => state => {
         setData(prevData => ({ ...prevData, [key]: state.data }));
         setValid(prevValid => ({ ...prevValid, [key]: state.isValid }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: state.errors }));
     };
 
     const handleSeparateDeliveryAddress = () => {

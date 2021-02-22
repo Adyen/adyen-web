@@ -1,4 +1,4 @@
-import { ValidatorRules } from '../../../../utils/Validator/FormValidator';
+import { ValidatorRules } from '../../../../utils/Validator/Validator';
 
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
