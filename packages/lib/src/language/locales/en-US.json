@@ -194,6 +194,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Gift card number field",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe for secured gift card security code",
     "giftcard.encryptedSecurityCode.aria.label": "Gift card security code field",
+    "giftcardTransactionLimit": "Max. %{amount} allowed per transaction on this gift card",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe for secured bank account number",
     "ach.encryptedBankAccountNumber.aria.label": "Bank account field",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for secured bank routing number",

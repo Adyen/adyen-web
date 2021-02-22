@@ -24,6 +24,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         status: 'ready',
         data: {},
         balance: null,
+        transactionLimit: null,
         focusedElement: false,
         isValid: false
     };
@@ -63,16 +64,18 @@ class Giftcard extends Component<GiftcardComponentProps> {
         }
     };
 
-    public setBalance = balance => {
-        this.setState({ balance });
+    public setBalance = ({ balance, transactionLimit }) => {
+        this.setState({ balance, transactionLimit });
     };
 
-    render(props, { focusedElement, balance }) {
+    render(props, { focusedElement, balance, transactionLimit }) {
         const { i18n } = useCoreContext();
 
-        const hasEnoughBalance = balance?.value >= this.props.amount?.value;
-        if (balance && hasEnoughBalance) {
-            return <GiftcardResult balance={balance} onSubmit={props.onSubmit} {...props} />;
+        const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
+        const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
+
+        if (transactionAmount && hasEnoughBalance) {
+            return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
         }
 
         const getCardErrorMessage = sfpState => {

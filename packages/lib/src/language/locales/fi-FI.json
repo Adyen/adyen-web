@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Lahjakorttinumeron kenttä",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe suojatulle lahjakortin turvakoodille",
     "giftcard.encryptedSecurityCode.aria.label": "Lahjakortin turvakoodikenttä",
+    "giftcardTransactionLimit": "Maks. % {summa} sallittu tapahtumaa kohti tällä lahjakortilla",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe suojatulle pankkitilinumerolle",
     "ach.encryptedBankAccountNumber.aria.label": "Pankkitilikenttä",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe suojatulle pankin reititysnumerolle",

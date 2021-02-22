@@ -51,14 +51,14 @@ export class GiftcardElement extends UIElement {
             this.setStatus('loading');
             this.props.onBalanceCheck(resolve, reject, this.formatData());
         })
-            .then(({ balance }) => {
+            .then(({ balance, transactionLimit }) => {
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
 
-                this.componentRef.setBalance(balance);
+                this.componentRef.setBalance({ balance, transactionLimit });
 
-                if (this.props.amount.value > balance.value) {
+                if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
                     if (this.props.order) {
                         return this.submit();
                     }

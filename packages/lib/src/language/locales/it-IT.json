@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Campo numero carta regalo",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe per codice di sicurezza della carta regalo protetta",
     "giftcard.encryptedSecurityCode.aria.label": "Campo codice di sicurezza della carta regalo",
+    "giftcardTransactionLimit": "Importo massimo di %{amount} per transazione su questo buono regalo",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe per numero di numero di conto bancario protetto",
     "ach.encryptedBankAccountNumber.aria.label": "Campo conto bancario",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe per numero di routing bancario sicuro",

@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "礼品卡号字段",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "安全礼品卡安全码 Iframe",
     "giftcard.encryptedSecurityCode.aria.label": "礼品卡安全码字段",
+    "giftcardTransactionLimit": "此礼品卡上每笔交易允许的最大金额为 %{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "安全银行账号 Iframe",
     "ach.encryptedBankAccountNumber.aria.label": "银行账号字段",
     "ach.encryptedBankLocationId.aria.iframeTitle": "安全银行路由电汇编码 Iframe",
