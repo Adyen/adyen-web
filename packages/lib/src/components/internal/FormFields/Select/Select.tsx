@@ -4,6 +4,7 @@ import cx from 'classnames';
 import SelectButton from './components/SelectButton';
 import SelectList from './components/SelectList';
 import uuid from '../../../../utils/uuid';
+import { keys } from './constants';
 import { SelectItem, SelectProps } from './types';
 import styles from './Select.module.scss';
 import './Select.scss';
@@ -13,20 +14,11 @@ function Select(props: SelectProps) {
     const selectContainerRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const selectListRef = useRef(null);
-    const firstUpdate = useRef(true);
     const [textFilter, setTextFilter] = useState<string>(null);
     const [showList, setShowList] = useState<boolean>(false);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
     const active: SelectItem = props.items.find(i => i.id === props.selected) || ({} as SelectItem);
-
-    const keys = {
-        arrowDown: 'ArrowDown',
-        arrowUp: 'ArrowUp',
-        enter: 'Enter',
-        escape: 'Escape',
-        space: ' '
-    };
 
     /**
      * Closes the selectList, empties the text filter and focuses the button element
@@ -34,7 +26,7 @@ function Select(props: SelectProps) {
     const closeList = () => {
         setTextFilter(null);
         setShowList(false);
-        toggleButtonRef.current.focus();
+        if (toggleButtonRef.current) toggleButtonRef.current.focus();
     };
 
     /**
@@ -133,17 +125,12 @@ function Select(props: SelectProps) {
     };
 
     useEffect(() => {
-        if (firstUpdate.current) return;
-
-        if (showList && props.filterable) {
-            if (filterInputRef.current) filterInputRef.current.focus();
-        } else {
-            if (toggleButtonRef.current) toggleButtonRef.current.focus();
+        if (showList && props.filterable && filterInputRef.current) {
+            filterInputRef.current.focus();
         }
     }, [showList]);
 
     useEffect(() => {
-        firstUpdate.current = false;
         document.addEventListener('click', handleClickOutside, false);
 
         return () => {
