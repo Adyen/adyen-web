@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "기프트 카드 번호 입력란",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "기프트 카드 보안 코드 보안을 위한 Iframe",
     "giftcard.encryptedSecurityCode.aria.label": "기프트 카드 보안 코드 입력란",
+    "giftcardTransactionLimit": "이 기프트카드로 건당 결제 가능한 최고 액수는 %{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "은행 계좌 번호 보안을 위한 Iframe",
     "ach.encryptedBankAccountNumber.aria.label": "은행 계좌 입력란",
     "ach.encryptedBankLocationId.aria.iframeTitle": "은행 라우팅 번호 보안을 위한 Iframe",
