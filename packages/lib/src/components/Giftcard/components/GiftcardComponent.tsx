@@ -79,7 +79,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         }
 
         const getCardErrorMessage = sfpState => {
-            if (sfpState.errors.encryptedCardNumber) return i18n.get('error.va.sf-cc-num.01');
+            if (sfpState.errors.encryptedCardNumber) return i18n.get('error.va.gen.01');
 
             switch (this.state.status) {
                 case 'no-balance':
@@ -142,7 +142,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                             'adyen-checkout__input': true,
                                             'adyen-checkout__input--large': true,
                                             'adyen-checkout__card__cvc__input': true,
-                                            'adyen-checkout__input--error': sfpState.errors.encryptedCardNumber,
+                                            'adyen-checkout__input--error': sfpState.errors.encryptedSecurityCode,
                                             'adyen-checkout__input--focus': focusedElement === 'encryptedSecurityCode'
                                         })}
                                     />
