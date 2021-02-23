@@ -63,9 +63,10 @@
 }
 
 .adyen-checkout__dropdown__button__text {
-    white-space: nowrap;
     overflow: hidden;
+    pointer-events: none;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .adyen-checkout__dropdown__list {
