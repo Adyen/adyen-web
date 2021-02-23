@@ -142,7 +142,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                             'adyen-checkout__input': true,
                                             'adyen-checkout__input--large': true,
                                             'adyen-checkout__card__cvc__input': true,
-                                            'adyen-checkout__input--error': sfpState.errors.encryptedCardNumber,
+                                            'adyen-checkout__input--error': sfpState.errors.encryptedSecurityCode,
                                             'adyen-checkout__input--focus': focusedElement === 'encryptedSecurityCode'
                                         })}
                                     />
