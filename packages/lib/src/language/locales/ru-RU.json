@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Поле номера подарочной карты",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe для защиты защитного кода подарочной карты",
     "giftcard.encryptedSecurityCode.aria.label": "Поле защитного кода подарочной карты",
+    "giftcardTransactionLimit": "Максимальная сумма, предусмотренная для отдельной операции по этой подарочной карте: %{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe для защиты номера банковского счета",
     "ach.encryptedBankAccountNumber.aria.label": "Поле банковского счета",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe для защиты кода банка",

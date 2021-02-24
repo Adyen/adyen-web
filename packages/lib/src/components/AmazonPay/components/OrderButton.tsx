@@ -7,7 +7,7 @@ import { OrderButtonProps, UpdateAmazonCheckoutSessionRequest } from '../types';
 export default function OrderButton(props: OrderButtonProps) {
     const { i18n, loadingContext } = useCoreContext();
 
-    const createOrder = () => {
+    this.createOrder = () => {
         const { amazonCheckoutSessionId: checkoutSessionId, amount, clientKey, returnUrl: checkoutResultReturnUrl } = props;
         const request: UpdateAmazonCheckoutSessionRequest = {
             amount,
@@ -21,10 +21,9 @@ export default function OrderButton(props: OrderButtonProps) {
                 if (response.action.type === 'redirect') window.location.assign(response.action.url);
             })
             .catch(error => {
-                console.error(error);
-                if (props.onError) props.onError(error);
+                if (props.onError) props.onError(error, this.componentRef);
             });
     };
 
-    return <Button classNameModifiers={['standalone', 'pay']} label={i18n.get('confirmPurchase')} onClick={createOrder} />;
+    return <Button classNameModifiers={['standalone', 'pay']} label={i18n.get('confirmPurchase')} onClick={this.createOrder} />;
 }

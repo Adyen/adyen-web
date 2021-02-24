@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "ギフトカード番号フィールド",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "保護されたギフトカードのセキュリティコードの iframe",
     "giftcard.encryptedSecurityCode.aria.label": "ギフトカードのセキュリティコードフィールド",
+    "giftcardTransactionLimit": "このギフトカードでの取引ごとに許可される最大%{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "保護された銀行口座番号の iframe",
     "ach.encryptedBankAccountNumber.aria.label": "銀行口座フィールド",
     "ach.encryptedBankLocationId.aria.iframeTitle": "保護された銀行支店番号の iframe",

@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Fält för presentkortsnummer",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe för säkrad säkerhetskod för presentkort",
     "giftcard.encryptedSecurityCode.aria.label": "Fält för säkerhetskod för presentkort",
+    "giftcardTransactionLimit": "Maximalt %{amount} per transaktion är tillåtet på detta presentkort",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe för säkrat bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Fält för bankkontonummer",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe för säkrat clearingnummer",

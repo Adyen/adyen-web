@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Pole pro číslo dárkové karty",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe pro bezpečnostní kód zabezpečené dárkové karty",
     "giftcard.encryptedSecurityCode.aria.label": "Pole pro bezpečnostní kód dárkové karty",
+    "giftcardTransactionLimit": "Maximální povolená %{amount} za jednu transakci touto dárkovou kartou.",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe pro číslo zabezpečeného bankovního účtu",
     "ach.encryptedBankAccountNumber.aria.label": "Pole pro bankovní účet",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pro číslo zabezpečeného kódu banky",
