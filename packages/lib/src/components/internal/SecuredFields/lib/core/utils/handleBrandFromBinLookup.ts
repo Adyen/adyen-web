@@ -1,4 +1,4 @@
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER, DATE_POLICY_REQUIRED, DATE_POLICY_HIDDEN } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { SFFeedbackObj, SendBrandObject } from '../../types';
 import { BinLookupResponse, BrandObject } from '../../../../../Card/types';
@@ -29,6 +29,7 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
     const brandObj: object = {
         brand: passedBrand,
         cvcPolicy: binBrandObj.cvcPolicy,
+        datePolicy: binBrandObj.showExpiryDate === true ? DATE_POLICY_REQUIRED : DATE_POLICY_HIDDEN,
         cvcText: 'Security code',
         fieldType: ENCRYPTED_CARD_NUMBER
     };

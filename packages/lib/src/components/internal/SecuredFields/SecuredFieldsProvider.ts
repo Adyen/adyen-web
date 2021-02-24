@@ -34,6 +34,7 @@ export interface SFPState {
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
     hideCVCForBrand?: boolean;
+    hideDateForBrand?: boolean;
 }
 
 /**

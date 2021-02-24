@@ -27,3 +27,6 @@ export const CSF_FIELDS_ARRAY = [
 export const CVC_POLICY_REQUIRED = 'required';
 export const CVC_POLICY_OPTIONAL = 'optional';
 export const CVC_POLICY_HIDDEN = 'hidden';
+
+export const DATE_POLICY_REQUIRED = CVC_POLICY_REQUIRED;
+export const DATE_POLICY_HIDDEN = CVC_POLICY_HIDDEN;

@@ -5,6 +5,7 @@ export type RtnType_postMessageListener = (event: Event) => void;
 export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
 
 export type CVCPolicyType = 'required' | 'optional' | 'hidden';
+export type DatePolicyType = 'required' | 'hidden';
 
 export interface SFInternalConfig {
     extraFieldData: string;

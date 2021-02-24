@@ -6,14 +6,18 @@ import { ExpirationDateProps } from './types';
 import styles from '../CardInput.module.scss';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
-    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false } = props;
+    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, hideDateForBrand = false } = props;
     const { i18n } = useCoreContext();
+
+    const fieldClassnames = classNames(className, {
+        [styles['adyen-checkout__card__exp-date__input--hidden']]: hideDateForBrand
+    });
 
     return (
         <Field
             label={label}
             classNameModifiers={['expiryDate']}
-            className={className}
+            className={fieldClassnames}
             focused={focused}
             filled={filled}
             onFocusField={() => onFocusField('encryptedExpiryDate')}
