@@ -4,10 +4,10 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectButtonProps } from '../types';
 import styles from '../Select.module.scss';
 
-function SelectButtonElement({ filterable, ...props }) {
-    if (filterable) return <div {...props} />;
+function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
+    if (filterable) return <div {...props} ref={toggleButtonRef} />;
 
-    return <button {...props} />;
+    return <button {...props} ref={toggleButtonRef} />;
 }
 
 function SelectButton(props: SelectButtonProps) {
@@ -30,10 +30,10 @@ function SelectButton(props: SelectButtonProps) {
             filterable={props.filterable}
             onClick={!readonly ? props.toggleList : null}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
-            ref={props.toggleButtonRef}
             role={props.filterable ? 'button' : null}
-            tabIndex={0}
+            tabIndex="0"
             title={active.name || props.placeholder}
+            toggleButtonRef={props.toggleButtonRef}
             type={!props.filterable ? 'button' : null}
         >
             {!showList || !props.filterable ? (
