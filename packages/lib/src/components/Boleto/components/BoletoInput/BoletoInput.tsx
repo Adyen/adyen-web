@@ -39,7 +39,7 @@ function BoletoInput(props) {
     const handleAddress = address => {
         setData('billingAddress', address.data);
         setValid('billingAddress', address.isValid);
-        setErrors('billingAddress', !address.isValid);
+        setErrors('billingAddress', address.errors);
     };
 
     const [status, setStatus] = useState('ready');
@@ -55,7 +55,7 @@ function BoletoInput(props) {
     useEffect(() => {
         const billingAddressValid = props.billingAddressRequired ? Boolean(valid.billingAddress) : true;
         props.onChange({ data, valid, errors, isValid: isValid && billingAddressValid });
-    }, [data, valid, errors, showingEmail]);
+    }, [data, valid, errors]);
 
     const buttonModifiers = [...(!props.personalDetailsRequired && !props.billingAddressRequired && !props.showEmailAddress ? ['standalone'] : [])];
 
