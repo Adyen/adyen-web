@@ -102,7 +102,7 @@ const initCheckout = async () => {
             applepay: {
                 configuration: {
                     merchantName: 'Adyen Test merchant',
-                    merchantIdentifier: '000000000200001'
+                    merchantId: '000000000200001'
                 }
             },
             paywithgoogle: {
@@ -114,7 +114,6 @@ const initCheckout = async () => {
                     component.setStatus('ready');
                     console.log('paypal onError', error);
                 },
-
                 onCancel: (data, component) => {
                     component.setStatus('ready');
                     console.log('paypal onCancel', data);
