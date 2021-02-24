@@ -142,7 +142,7 @@ export interface CbObjOnBrand {
     rootNode: HTMLElement;
     brand: string;
     cvcPolicy: CVCPolicyType;
-    datePolicy?: DatePolicyType; // TODO - remove ?
+    datePolicy?: DatePolicyType;
     cvcText: string;
     brandImageUrl?: string; // Added by SFP
     // maxLength: number;

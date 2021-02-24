@@ -21,6 +21,7 @@ export interface SFInternalConfig {
 export interface SFSetupObject extends SFInternalConfig {
     fieldType: string;
     cvcPolicy: CVCPolicyType;
+    datePolicy: DatePolicyType;
     iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
@@ -66,6 +67,7 @@ abstract class AbstractSecuredField {
     protected _hasError: boolean;
     protected _isValid: boolean;
     protected _cvcPolicy: CVCPolicyType;
+    protected _datePolicy: DatePolicyType;
     protected _iframeContentWindow: Window;
     protected _isEncrypted: boolean;
     protected _numKey: number;
