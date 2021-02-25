@@ -1,8 +1,8 @@
-import { Selector, ClientFunction } from 'testcafe';
+import { Selector } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { CARDS_URL } from '../../pages';
-import { MAESTRO_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE, BCMC_CARD } from '../utils/constants';
+import { TEST_DATE_VALUE, BCMC_CARD } from '../utils/constants';
 
 const cvcSpan = Selector('.card-field .adyen-checkout__field__cvc');
 const optionalCVCSpan = Selector('.card-field .adyen-checkout__field__cvc--optional');

@@ -4,7 +4,8 @@ import {
     ENCRYPTED_CARD_NUMBER,
     CVC_POLICY_OPTIONAL,
     CVC_POLICY_HIDDEN,
-    CVC_POLICY_REQUIRED
+    CVC_POLICY_REQUIRED,
+    DATE_POLICY_HIDDEN
 } from './lib/configuration/constants';
 import { getError } from '../../../core/Errors/utils';
 import { ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
@@ -113,7 +114,8 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                         ? false
                         : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN
+            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN,
+            hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
         }),
         () => {
             this.props.onChange(this.state);
