@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Polje s številko darilne kartice",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe za zavarovano varnostno kodo darilne kartice",
     "giftcard.encryptedSecurityCode.aria.label": "Polje z varnostno kodo darilne kartice",
+    "giftcardTransactionLimit": "Za posamezno transakcijo na tej darilni kartici je dovoljeno največ %{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe za zavarovano številko bančnega računa",
     "ach.encryptedBankAccountNumber.aria.label": "Polje z bančnim računom",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe za zavarovano kodo banke",

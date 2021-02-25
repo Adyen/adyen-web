@@ -1,55 +1,61 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import useForm from '../../../utils/useForm';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './IssuerList.scss';
+import { ValidatorRules } from '../../../utils/Validator/Validator';
 
 const payButtonLabel = ({ issuer, items }, i18n) => {
-    if (!issuer) return i18n.get('continue');
-
-    const issuerName = items.find(i => i.id === issuer).name;
+    const issuerName = items.find(i => i.id === issuer)?.name;
+    if (!issuer || !issuerName) return i18n.get('continue');
     return `${i18n.get('continueTo')} ${issuerName}`;
 };
 
-function IssuerList({ items, placeholder, issuer = null, ...props }) {
+const schema = ['issuer'];
+const validationRules: ValidatorRules = {
+    issuer: {
+        validate: issuer => !!issuer && issuer.length > 0,
+        modes: ['blur']
+    }
+};
+
+function IssuerList({ items, placeholder, issuer, ...props }) {
     const { i18n } = useCoreContext();
-    const [selectedIssuer, setSelectedIssuer] = useState(issuer);
-    const [errors, setErrors] = useState(false);
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
+        schema,
+        defaultData: { issuer },
+        rules: validationRules
+    });
     const [status, setStatus] = useState('ready');
 
     this.setStatus = newStatus => {
         setStatus(newStatus);
     };
 
-    const onSelectIssuer = e => {
-        const newIssuer = e.currentTarget.getAttribute('data-value');
-        setSelectedIssuer(newIssuer);
-        setErrors(false);
-    };
-
     useEffect(() => {
-        props.onChange({ issuer: selectedIssuer });
-    }, [selectedIssuer]);
+        props.onChange({ data, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
 
     this.showValidation = () => {
-        setErrors(!selectedIssuer);
+        triggerValidation();
     };
 
     return (
         <div className="adyen-checkout__issuer-list">
-            <Field errorMessage={errors} classNameModifiers={['issuer-list']}>
+            <Field errorMessage={!!errors['issuer']} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
                     items,
-                    selected: selectedIssuer,
+                    selected: data['issuer'],
                     placeholder: i18n.get(placeholder),
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',
-                    onChange: onSelectIssuer
+                    onChange: handleChangeFor('issuer')
                 })}
             </Field>
 
-            {props.showPayButton && props.payButton({ status, label: payButtonLabel({ issuer: selectedIssuer, items }, i18n) })}
+            {props.showPayButton && props.payButton({ status, label: payButtonLabel({ issuer: data['issuer'], items }, i18n) })}
         </div>
     );
 }

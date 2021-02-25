@@ -17,9 +17,10 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        risk: {
-            enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event. Also accessible via
-            onError: console.error
+        paymentMethodsConfiguration: {
+            card: {
+                hasHolderName: true
+            }
         }
     });
 
@@ -32,15 +33,8 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     // Credit card with installments
     window.card = checkout
         .create('card', {
-            type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            hasHolderName: false,
-            // holderNameRequired: true,
-            enableStoreDetails: false,
             installmentOptions: {
-                // card: {
-                //     values: [1, 2]
-                // },
                 mc: {
                     values: [1, 2, 3]
                 },
@@ -50,17 +44,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
                 }
             },
             showInstallmentAmounts: true,
-            ariaLabels: {
-                lang: 'en-GB',
-                encryptedCardNumber: {
-                    label: 'Credit or debit card number field',
-                    iframeTitle: 'cc number field iframe'
-                },
-                encryptedExpiryDate: {
-                    label: 'put your date in here',
-                    iframeTitle: 'date iframe'
-                }
-            },
             onError: obj => {
                 console.log('### Cards::onError:: obj=', obj);
             },
@@ -71,14 +54,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         .mount('.card-field');
 
     // Bancontact card
-    window.bancontact = checkout
-        .create('bcmc', {
-            type: 'bcmc',
-            hasHolderName: true,
-            // holderNameRequired: true,
-            enableStoreDetails: false
-        })
-        .mount('.bancontact-field');
+    window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
 
     // Credit card with AVS
     window.cardAvs = checkout
@@ -120,9 +96,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         .create('card', {
             type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            // USE either separate koreanAuthenticationRequired prop...
-            koreanAuthenticationRequired: true,
-            // ...OR, preferably, wrap it in a configuration object
             configuration: {
                 koreanAuthenticationRequired: true
             },

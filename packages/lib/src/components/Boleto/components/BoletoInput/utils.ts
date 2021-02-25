@@ -18,8 +18,13 @@ export function cleanCPFCNPJ(value) {
     return value.replace(/[^0-9]/g, '').trim();
 }
 
-export function formatCPFCNPJ(value) {
+export function formatCPFCNPJ(value = '') {
+    if (typeof value !== 'string') return '';
     const cleanValue = cleanCPFCNPJ(value);
     const formattedValue = cleanValue.length > CPF_LENGTH ? maskCNPJ(cleanValue) : maskCPF(cleanValue);
     return formattedValue;
 }
+
+export const boletoFormatters = {
+    socialSecurityNumber: ssn => formatCPFCNPJ(ssn)
+};

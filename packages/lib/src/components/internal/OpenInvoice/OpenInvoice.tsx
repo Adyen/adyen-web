@@ -6,7 +6,7 @@ import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import ConsentCheckbox from '../FormFields/ConsentCheckbox';
-import { getActiveFieldsData, getInitialActiveFieldsets } from './utils';
+import { getActiveFieldsData, getInitialActiveFieldsets, fieldsetsSchema } from './utils';
 import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
@@ -16,8 +16,6 @@ import {
     OpenInvoiceStateValid
 } from './types';
 import './OpenInvoice.scss';
-
-export const fieldsetsSchema = ['companyDetails', 'personalDetails', 'billingAddress', 'deliveryAddress'];
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
@@ -42,9 +40,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
     const [status, setStatus] = useState('ready');
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    this.setStatus = setStatus;
 
     useEffect(() => {
         const fieldsetsAreValid: boolean = checkFieldsets();
@@ -52,12 +48,13 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const isValid: boolean = fieldsetsAreValid && consentCheckboxValid;
         const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
 
-        props.onChange({ data: newData, isValid });
+        props.onChange({ data: newData, errors, valid, isValid });
     }, [data, activeFieldsets]);
 
     const handleFieldset = key => state => {
         setData(prevData => ({ ...prevData, [key]: state.data }));
         setValid(prevValid => ({ ...prevValid, [key]: state.isValid }));
+        setErrors(prevErrors => ({ ...prevErrors, [key]: state.errors }));
     };
 
     const handleSeparateDeliveryAddress = () => {
@@ -85,7 +82,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         <div className="adyen-checkout__open-invoice">
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
-                    data={data.companyDetails}
+                    data={props.data.companyDetails}
                     label="companyDetails"
                     onChange={handleFieldset('companyDetails')}
                     ref={fieldsetsRefs.companyDetails}
@@ -95,7 +92,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {activeFieldsets.personalDetails && (
                 <PersonalDetails
-                    data={data.personalDetails}
+                    data={props.data.personalDetails}
                     requiredFields={props.personalDetailsRequiredFields}
                     label="personalDetails"
                     onChange={handleFieldset('personalDetails')}

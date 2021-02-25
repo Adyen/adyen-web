@@ -1,11 +1,11 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up, apparently!
+require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up
 
 import { RequestLogger, Selector } from 'testcafe';
-import { start, getIframeSelector, getFromWindow } from '../../utils/commonUtils';
-import cu from '../utils/cardUtils';
-import { CARDS_URL } from '../../pages';
-import { DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../utils/constants';
+import { start, getIframeSelector, getFromWindow } from '../../../utils/commonUtils';
+import cu from '../../utils/cardUtils';
+import { CARDS_URL } from '../../../pages';
+import { DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
 
 const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 

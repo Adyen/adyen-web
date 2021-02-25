@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CVCPolicyType } from './core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from './core/AbstractSecuredField';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -39,12 +39,10 @@ interface CSFCommonProps {
     keypadFix?: boolean;
     isKCP?: boolean;
     iframeUIConfig?: object;
-    locale?: string;
 }
 
 export interface SetupObject extends CSFCommonProps {
     type: string;
-    originKey: string;
     clientKey: string;
     rootNode: string | HTMLElement;
     callbacks?: object;
@@ -144,6 +142,7 @@ export interface CbObjOnBrand {
     rootNode: HTMLElement;
     brand: string;
     cvcPolicy: CVCPolicyType;
+    datePolicy?: DatePolicyType;
     cvcText: string;
     brandImageUrl?: string; // Added by SFP
     // maxLength: number;
@@ -233,6 +232,7 @@ export interface SFFeedbackObj {
     cvcText?: string;
     cvcRequired?: boolean;
     cvcPolicy?: CVCPolicyType;
+    datePolicy?: DatePolicyType;
     maxLength?: number;
     error?: string;
     endDigits?: string;

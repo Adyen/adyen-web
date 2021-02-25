@@ -14,7 +14,7 @@ export class MBWayElement extends UIElement {
         return {
             ...props,
             data: {
-                telephoneNumber: data.telephoneNumber || data.phoneNumber || ''
+                telephoneNumber: data.telephoneNumber || data.phoneNumber
             },
             placeholders: {
                 telephoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '+351 932 123 456'
@@ -44,14 +44,13 @@ export class MBWayElement extends UIElement {
 
     render() {
         if (this.props.paymentData) {
-            const accessKey = this.props.originKey || this.props.clientKey;
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                     <Await
                         ref={ref => {
                             this.componentRef = ref;
                         }}
-                        accessKey={accessKey}
+                        clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
                         onError={this.props.onError}
                         onComplete={this.onComplete}

@@ -1,55 +1,46 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
 import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
-import Validator from '../../../utils/Validator';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { PersonalDetailsProps, PersonalDetailsStateError, PersonalDetailsStateValid, ValidationResult } from './types';
+import { PersonalDetailsProps } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData } from './utils';
+import useForm from '../../../utils/useForm';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
-    const { label = '', namePrefix, placeholders, requiredFields, visibility, validator } = props;
+    const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
+
     const { i18n } = useCoreContext();
-    const [data, setData] = useState<PersonalDetailsSchema>(props.data);
-    const [errors, setErrors] = useState<PersonalDetailsStateError>({});
-    const [valid, setValid] = useState<PersonalDetailsStateValid>({});
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
+        schema: requiredFields,
+        rules: props.validationRules,
+        defaultData: props.data
+    });
 
     const eventHandler = (mode: string): Function => (e: Event): void => {
-        const { name, value } = e.target as HTMLInputElement;
+        const { name } = e.target as HTMLInputElement;
         const key = name.split(`${namePrefix}.`).pop();
-        const { isValid, errorMessage }: ValidationResult = validator.validate(key, mode)(value);
 
-        setData(prevData => ({ ...prevData, [key]: value }));
-        setValid(prevValid => ({ ...prevValid, [key]: isValid }));
-        setErrors(prevErrors => ({ ...prevErrors, [key]: !isValid && errorMessage }));
+        handleChangeFor(key, mode)(e);
     };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
-    const getErrorMessage = error => (typeof error === 'string' ? i18n.get(error) : error);
+    const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);
 
     useEffect(() => {
-        const isValid = requiredFields.every(field => validator.validate(field, 'blur')(data[field]).isValid);
         const formattedData = getFormattedData(data);
-        props.onChange({ data: formattedData, isValid });
-    }, [data, valid, errors]);
+        props.onChange({ data: formattedData, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
 
-    this.showValidation = () => {
-        const errorsReducer = (acc, field) => {
-            const { isValid, errorMessage }: ValidationResult = validator.validate(field, 'blur')(data[field]);
-            acc[field] = !isValid && errorMessage;
-            return acc;
-        };
-
-        setErrors(requiredFields.reduce(errorsReducer, {}));
-    };
+    this.showValidation = triggerValidation;
 
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyPersonalDetails {...props} data={data} />;
@@ -157,6 +148,6 @@ PersonalDetails.defaultProps = {
     onChange: () => {},
     placeholders: {},
     requiredFields: personalDetailsSchema,
-    validator: new Validator(personalDetailsValidationRules),
+    validationRules: personalDetailsValidationRules,
     visibility: 'editable'
 };

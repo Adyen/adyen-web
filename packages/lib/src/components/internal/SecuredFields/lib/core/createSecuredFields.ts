@@ -1,5 +1,5 @@
 import { select, getAttribute } from '../utilities/dom';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR } from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED } from '../configuration/constants';
 import { existy, getCVCPolicy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
 import { SFSetupObject } from './AbstractSecuredField';
@@ -172,12 +172,12 @@ export function setupSecuredField(pItem: HTMLElement): void {
         sfLogAtStart: this.config.sfLogAtStart,
         trimTrailingSeparator: this.config.trimTrailingSeparator,
         cvcPolicy: getCVCPolicy(cvcPolicyObj), // Will assess values of cvcPolicyObj.hideCVC and cvcPolicyObj.cvcRequired to determine the cvcPolicy
+        datePolicy: DATE_POLICY_REQUIRED,
         isCreditCardType: this.config.isCreditCardType,
         iframeSrc: this.config.iframeSrc,
         loadingContext: this.config.loadingContext,
         showWarnings: this.config.showWarnings,
-        holderEl: pItem,
-        locale: this.config.locale
+        holderEl: pItem
     };
 
     const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)

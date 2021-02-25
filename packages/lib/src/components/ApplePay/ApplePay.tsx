@@ -4,10 +4,10 @@ import ApplePayButton from './components/ApplePayButton';
 import ApplePayService from './ApplePayService';
 import base64 from '../../utils/base64';
 import defaultProps from './defaultProps';
-import fetchJsonData from '../../utils/fetch-json-data';
+import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { normalizeAmount, resolveSupportedVersion, mapBrands } from './utils';
+import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 
 const latestSupportedVersion = 10;
@@ -27,22 +27,15 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      * Formats the component props
      */
     protected formatProps(props) {
-        const amount = normalizeAmount(props);
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
-        const { configuration = {} } = props;
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
-            onAuthorized: resolve => resolve(),
             ...props,
-            configuration: {
-                merchantId: configuration.merchantIdentifier || configuration.merchantId || defaultProps.configuration.merchantId,
-                merchantName: configuration.merchantDisplayName || configuration.merchantName || defaultProps.configuration.merchantName
-            },
+            configuration: props.configuration,
             supportedNetworks,
             version,
-            totalPriceLabel: props.totalPriceLabel || configuration.merchantName,
-            amount,
+            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
             onCancel: event => props.onError(event)
         };
     }
@@ -108,13 +101,13 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
-        const { merchantName: displayName, merchantId: merchantIdentifier } = configuration;
-        const path = `${APPLEPAY_SESSION_ENDPOINT}?token=${clientKey}`;
-        const options = { loadingContext, path, method: 'post' };
-        const request: ApplePaySessionRequest = { displayName, domainName, initiative, merchantIdentifier };
+        const { merchantName, merchantId } = configuration;
+        const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
+        const options = { loadingContext, path };
+        const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
 
         try {
-            const response = await fetchJsonData(options, request);
+            const response = await httpPost(options, request);
             const decodedData = base64.decode(response.data);
             if (!decodedData) reject('Could not decode Apple Pay session');
             const session = JSON.parse(decodedData as string);

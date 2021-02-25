@@ -53,6 +53,9 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
+            _parentInstance: props._parentInstance,
+            paymentMethodType: props.paymentMethodType,
+
             // Props unique to a particular flow
             ...get3DS2FlowProps(action.subtype, props)
         };
@@ -97,6 +100,6 @@ const actionTypes = {
             statusType: 'custom'
         });
     }
-};
+} as const;
 
 export default actionTypes;

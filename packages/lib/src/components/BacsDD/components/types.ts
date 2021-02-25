@@ -24,24 +24,6 @@ export interface BacsDataState {
     accountConsentCheckbox?: boolean;
 }
 
-export interface BacsErrorsState {
-    holderName?: boolean;
-    bankAccountNumber?: boolean;
-    bankLocationId?: boolean;
-    shopperEmail?: boolean;
-    amountConsentCheckbox?: boolean;
-    accountConsentCheckbox?: boolean;
-}
-
-export interface BacsValidState {
-    holderName?: boolean;
-    bankAccountNumber?: boolean;
-    bankLocationId?: boolean;
-    shopperEmail?: boolean;
-    amountConsentCheckbox?: boolean;
-    accountConsentCheckbox?: boolean;
-}
-
 export interface ValidationObject {
     value: string;
     isValid: boolean;

@@ -14,6 +14,7 @@ export interface CardFieldsProps {
     focusedElement?: any;
     hasCVC?: any;
     hideCVCForBrand?: any;
+    hideDateForBrand?: any;
     onFocusField?: any;
     showBrandIcon?: boolean;
     valid?: any;
@@ -76,6 +77,7 @@ export interface ExpirationDateProps {
     isValid?: boolean;
     label?: string;
     onFocusField: (fieldName: string) => {};
+    hideDateForBrand?: boolean;
 }
 
 export interface InstallmentsProps {

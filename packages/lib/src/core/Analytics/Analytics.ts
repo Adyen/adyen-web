@@ -17,29 +17,20 @@ class Analytics {
     private readonly logEvent;
     private readonly logTelemetry;
     private readonly queue = new EventsQueue();
+    public readonly collectId;
 
-    constructor({ loadingContext, locale, originKey, clientKey, analytics }: CoreOptions) {
+    constructor({ loadingContext, locale, clientKey, analytics }: CoreOptions) {
         this.props = { ...Analytics.defaultProps, ...analytics };
-        const accessKey = clientKey || originKey;
         this.logEvent = logEvent({ loadingContext, locale });
-        this.logTelemetry = postTelemetry({ loadingContext, locale, accessKey });
+        this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
+        this.collectId = collectId({ loadingContext, clientKey });
 
         const { conversion, enabled } = this.props;
-
-        if (conversion && enabled) {
+        if (conversion === true && enabled === true) {
             if (this.props.conversionId) {
+                // handle prefilled conversionId
                 this.conversionId = this.props.conversionId;
                 this.queue.run(this.conversionId);
-            } else {
-                // If no conversionId is provided, fetch a new one
-                collectId({ loadingContext, accessKey })
-                    .then(conversionId => {
-                        this.conversionId = conversionId;
-                        this.queue.run(this.conversionId);
-                    })
-                    .catch(() => {
-                        this.queue.run();
-                    });
             }
         }
     }
@@ -48,6 +39,14 @@ class Analytics {
         const { conversion, enabled, telemetry } = this.props;
 
         if (enabled === true) {
+            if (conversion === true && !this.conversionId) {
+                // fetch a new conversionId if none is already available
+                this.collectId().then(conversionId => {
+                    this.conversionId = conversionId;
+                    this.queue.run(this.conversionId);
+                });
+            }
+
             if (telemetry === true) {
                 const telemetryTask = conversionId => this.logTelemetry({ ...event, conversionId }).catch(() => {});
                 this.queue.add(telemetryTask);

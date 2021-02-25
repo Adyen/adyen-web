@@ -3,7 +3,14 @@ import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
-import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED, ENCRYPTED_SECURITY_CODE } from '../configuration/constants';
+import {
+    CVC_POLICY_HIDDEN,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_REQUIRED,
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_EXPIRY_DATE,
+    DATE_POLICY_HIDDEN
+} from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
@@ -14,7 +21,8 @@ import AbstractSecuredField, {
     RtnType_callbackFn,
     AriaConfig,
     PlaceholdersObject,
-    CVCPolicyType
+    CVCPolicyType,
+    DatePolicyType
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
@@ -30,7 +38,7 @@ class SecuredField extends AbstractSecuredField {
         super();
 
         // List of props from setup object not required in the config object
-        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'loadingContext', 'holderEl'];
+        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'datePolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
@@ -43,6 +51,7 @@ class SecuredField extends AbstractSecuredField {
 
         this.fieldType = thisVarsFromSetupObj.fieldType;
         this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
+        this.datePolicy = thisVarsFromSetupObj.datePolicy;
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
@@ -360,10 +369,18 @@ class SecuredField extends AbstractSecuredField {
                     // If cvc is optional then the field is always valid UNLESS it has an error
                     return !this.hasError;
                 default:
-                    return this._isValid; // && !this.hasError; // WHY is this not just: return this._isValid (like below)...
+                    return this._isValid;
             }
         }
-        return this._isValid; //... or WHY is this not: return this._isValid && !this.hasError (like above)
+
+        if (this.fieldType === ENCRYPTED_EXPIRY_DATE) {
+            if (this.datePolicy === DATE_POLICY_HIDDEN) {
+                return true;
+            }
+            return this._isValid;
+        }
+
+        return this._isValid;
     }
     set isValid(value: boolean) {
         this._isValid = value;
@@ -390,6 +407,22 @@ class SecuredField extends AbstractSecuredField {
         if (this.hasError && this.errorType === 'isValidated') {
             this.hasError = false;
         }
+    }
+
+    get datePolicy(): DatePolicyType {
+        return this._datePolicy;
+    }
+
+    set datePolicy(value: DatePolicyType) {
+        // Only set if this is a date field
+        if (this.fieldType !== ENCRYPTED_EXPIRY_DATE) return;
+
+        // Only set if value has changed
+        if (value === this.datePolicy) return;
+
+        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField:datePolicy:: value=', value);
+
+        this._datePolicy = value;
     }
 
     get iframeContentWindow(): Window {

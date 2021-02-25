@@ -1,45 +1,29 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { addressValidationRules } from './validate';
-import Validator from '../../../utils/Validator';
-import { getAddressSchemaForCountry, getInitialData } from './utils';
-import { AddressProps, AddressStateError, AddressStateValid } from './types';
+import { getAddressSchemaForCountry } from './utils';
+import { AddressProps } from './types';
 import { AddressSchema } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET } from './constants';
+import useForm from '../../../utils/useForm';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
-    const validator = new Validator(addressValidationRules);
 
-    const [data, setData] = useState<AddressSchema>(getInitialData(props.data, requiredFields));
-    const [errors, setErrors] = useState<AddressStateError>({});
-    const [valid, setValid] = useState<AddressStateValid>({});
-
-    const handleChange = (e: Event): void => {
-        const { name, value } = e.target as HTMLInputElement;
-        const isValid = validator.validate(name, 'blur')(value);
-
-        setData(prevData => ({ ...prevData, [name]: value }));
-        setValid(prevValid => ({ ...prevValid, [name]: isValid }));
-        setErrors(prevErrors => ({ ...prevErrors, [name]: !isValid }));
-    };
-
-    const handleDropdownChangeFor = (key: string) => (e: Event): void => {
-        const field = e.currentTarget as HTMLInputElement;
-        const value = field.getAttribute('data-value');
-
-        setData(prevData => ({ ...prevData, [key]: value }));
-        setValid(prevValid => ({ ...prevValid, [key]: !!value }));
-        setErrors(prevErrors => ({ ...prevErrors, [key]: !value }));
-    };
+    const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressSchema>({
+        schema: requiredFields,
+        defaultData: props.data,
+        rules: addressValidationRules
+    });
 
     useEffect((): void => {
         const { country } = data;
         const stateOrProvince = COUNTRIES_WITH_STATES_DATASET.includes(country) ? '' : 'N/A';
-        setData(prevData => ({ ...prevData, stateOrProvince }));
+
+        handleChangeFor('stateOrProvince', 'input')(stateOrProvince);
     }, [data.country]);
 
     useEffect((): void => {
@@ -48,23 +32,20 @@ export default function Address(props: AddressProps) {
         const addressShouldHaveState = stateFieldIsRequired && countryHasStatesDataset;
         const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : 'N/A');
 
-        setData(prevData => ({ ...prevData, stateOrProvince }));
+        handleChangeFor('stateOrProvince', 'input')(stateOrProvince);
     }, []);
 
     useEffect((): void => {
-        const isValid: boolean = requiredFields.every(field => validator.validate(field, 'blur')(data[field]));
+        const processedData = ADDRESS_SCHEMA.reduce((acc, cur) => {
+            // recover default data values which are not requiredFields, or prefill with 'N/A'
+            const fallbackValue = !requiredFields.includes(cur) && !data[cur] && props.data[cur] ? props.data[cur] : 'N/A';
+            return { ...acc, [cur]: requiredFields.includes(cur) || !!data[cur] ? data[cur] : fallbackValue };
+        }, {});
 
-        props.onChange({ data, isValid });
-    }, [data, valid, errors]);
+        props.onChange({ data: processedData, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
 
-    this.showValidation = (): void => {
-        const errorsReducer = (acc, cur) => {
-            acc[cur] = !validator.validate(cur, 'blur')(data[cur]);
-            return acc;
-        };
-
-        setErrors(requiredFields.reduce(errorsReducer, {}));
-    };
+    this.showValidation = triggerValidation;
 
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyAddress data={data} label={label} />;
@@ -80,8 +61,8 @@ export default function Address(props: AddressProps) {
                 data={data}
                 errors={errors}
                 fieldName={fieldName}
-                onInput={handleChange}
-                onDropdownChange={handleDropdownChangeFor(fieldName)}
+                onInput={handleChangeFor(fieldName, 'input')}
+                onDropdownChange={handleChangeFor(fieldName, 'blur')}
             />
         );
     };

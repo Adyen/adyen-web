@@ -1,4 +1,4 @@
-@import '../../../../style';
+@import '../../../../style/index';
 
 .adyen-checkout__dropdown {
     position: relative;
@@ -24,6 +24,28 @@
 
 .adyen-checkout__dropdown__button--active:after {
     transform: rotate(180deg);
+}
+
+.adyen-checkout__filter-input {
+    background: $color-white;
+    border: 0;
+    caret-color: $color-blue;
+    color: $color-black;
+    font-family: inherit;
+    font-size: $font-size-medium;
+    height: 100%;
+    padding: 0;
+    width: 100%;
+
+    &::placeholder {
+        color: $color-gray-dark;
+        font-weight: 200;
+    }
+
+    &:focus,
+    &:active {
+        outline: 0;
+    }
 }
 
 .adyen-checkout__dropdown__list {

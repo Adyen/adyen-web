@@ -1,207 +1,188 @@
-import { Component, h } from 'preact';
+import { h } from 'preact';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import cx from 'classnames';
+import SelectButton from './components/SelectButton';
+import SelectList from './components/SelectList';
+import uuid from '../../../../utils/uuid';
+import { keys } from './constants';
+import { SelectItem, SelectProps } from './types';
 import styles from './Select.module.scss';
 import './Select.scss';
-import { SelectProps, SelectState } from './types';
 
-class Select extends Component<SelectProps, SelectState> {
-    private selectContainer;
-    private toggleButton;
-    private dropdownList;
+function Select(props: SelectProps) {
+    const filterInputRef = useRef(null);
+    const selectContainerRef = useRef(null);
+    const toggleButtonRef = useRef(null);
+    const selectListRef = useRef(null);
+    const [textFilter, setTextFilter] = useState<string>(null);
+    const [showList, setShowList] = useState<boolean>(false);
+    const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
-    public static defaultProps = {
-        items: [],
-        readonly: false,
-        onChange: () => {}
+    const active: SelectItem = props.items.find(i => i.id === props.selected) || ({} as SelectItem);
+
+    /**
+     * Closes the selectList, empties the text filter and focuses the button element
+     */
+    const closeList = () => {
+        setTextFilter(null);
+        setShowList(false);
+        if (toggleButtonRef.current) toggleButtonRef.current.focus();
     };
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            toggleDropdown: false
-        };
-
-        this.toggle = this.toggle.bind(this);
-        this.select = this.select.bind(this);
-        this.closeDropdown = this.closeDropdown.bind(this);
-        this.handleButtonKeyDown = this.handleButtonKeyDown.bind(this);
-        this.handleClickOutside = this.handleClickOutside.bind(this);
-        this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.handleOnError = this.handleOnError.bind(this);
-    }
-
-    componentDidMount() {
-        document.addEventListener('click', this.handleClickOutside, false);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('click', this.handleClickOutside, false);
-    }
-
-    handleClickOutside(e) {
-        if (!this.selectContainer.contains(e.target)) {
-            this.setState({ toggleDropdown: false });
-        }
-    }
-
-    toggle(e) {
-        e.preventDefault();
-        this.setState({ toggleDropdown: !this.state.toggleDropdown });
-    }
-
-    select(e) {
-        e.preventDefault();
-        this.closeDropdown();
-        this.props.onChange(e);
-    }
-
     /**
-     * Closes the dropdown and focuses the button element
+     * Handle keyDown events on the selectList button
+     * Opens the selectList and focuses the first element if available
+     * @param e - KeyboardEvent
      */
-    closeDropdown() {
-        this.setState({ toggleDropdown: false }, () => this.toggleButton.focus());
-    }
+    const handleButtonKeyDown = (e: KeyboardEvent) => {
+        if (e.key === keys.enter && props.filterable && showList && textFilter) {
+            handleSelect(e);
+        } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!props.filterable || !showList))) {
+            e.preventDefault();
+            setShowList(true);
+            if (selectListRef.current?.firstElementChild) {
+                selectListRef.current.firstElementChild.focus();
+            }
+        }
+    };
 
     /**
-     * Handle keyDown events on the adyen-checkout__dropdown__element
-     * Navigates through the list, or select an element, or close the menu.
+     * Close the select list when clicking outside the list
+     * @param e - MouseEvent
+     */
+    const handleClickOutside = (e: MouseEvent) => {
+        if (!selectContainerRef.current.contains(e.target)) {
+            setShowList(false);
+        }
+    };
+
+    /**
+     * Handle keyDown events on the select button
+     * Navigates through the list, or select an element, or focus the filter intput, or close the menu.
      * @param e - KeyDownEvent
      */
-    handleKeyDown(e) {
-        switch (e.key) {
-            case 'Escape':
-                e.preventDefault();
-                this.setState({ toggleDropdown: false });
-                break;
-            case ' ': // space
-            case 'Enter':
-                this.select(e);
-                break;
-            case 'ArrowDown':
-                e.preventDefault();
-                if (e.target.nextElementSibling) e.target.nextElementSibling.focus();
-                break;
-            case 'ArrowUp':
-                e.preventDefault();
-                if (e.target.previousElementSibling) e.target.previousElementSibling.focus();
-                break;
-            default:
-        }
-    }
+    const handleListKeyDown = (e: KeyboardEvent) => {
+        const target = e.target as HTMLInputElement;
 
-    /**
-     * Handle keyDown events on the adyen-checkout__dropdown__button
-     * Opens the dropdownList and focuses the first element if available
-     * @param e - KeyDownEvent
-     */
-    handleButtonKeyDown(e) {
         switch (e.key) {
-            case 'ArrowUp':
-            case 'ArrowDown':
-            case ' ': // space
-            case 'Enter':
+            case keys.escape:
                 e.preventDefault();
-                this.setState({ toggleDropdown: true });
-                if (this.dropdownList?.firstElementChild) {
-                    this.dropdownList.firstElementChild.focus();
+                setShowList(false);
+                break;
+            case keys.space:
+            case keys.enter:
+                handleSelect(e);
+                break;
+            case keys.arrowDown:
+                e.preventDefault();
+                if (target.nextElementSibling) (target.nextElementSibling as HTMLElement).focus();
+                break;
+            case keys.arrowUp:
+                e.preventDefault();
+                if (target.previousElementSibling) {
+                    (target.previousElementSibling as HTMLElement).focus();
+                } else if (props.filterable && filterInputRef.current) {
+                    filterInputRef.current.focus();
                 }
                 break;
             default:
         }
-    }
+    };
 
-    handleOnError(e) {
-        e.target.style.cssText = 'display: none';
-    }
+    /**
+     * Closes the select list and fires an onChange
+     * @param e - Event
+     */
+    const handleSelect = (e: Event) => {
+        e.preventDefault();
 
-    render({ className = '', classNameModifiers = [], isInvalid, items = [], placeholder, readonly, selected }, { toggleDropdown }) {
-        const active = items.find(i => i.id === selected) || {};
+        // If the target is not one of the list items, select the first list item
+        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
 
-        return (
-            <div
-                className={cx([
-                    'adyen-checkout__dropdown',
-                    styles['adyen-checkout__dropdown'],
-                    className,
-                    ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)
-                ])}
-                ref={ref => {
-                    this.selectContainer = ref;
-                }}
-            >
-                <button
-                    type="button"
-                    className={cx([
-                        'adyen-checkout__dropdown__button',
-                        styles['adyen-checkout__dropdown__button'],
-                        {
-                            'adyen-checkout__dropdown__button--readonly': readonly,
-                            'adyen-checkout__dropdown__button--active': toggleDropdown,
-                            [styles['adyen-checkout__dropdown__button--active']]: toggleDropdown,
-                            'adyen-checkout__dropdown__button--invalid': isInvalid
-                        }
-                    ])}
-                    onClick={!readonly ? this.toggle : undefined}
-                    onKeyDown={!readonly ? this.handleButtonKeyDown : undefined}
-                    tabIndex={0}
-                    title={active.name || placeholder}
-                    aria-haspopup="listbox"
-                    aria-expanded={toggleDropdown}
-                    aria-disabled={readonly}
-                    ref={ref => {
-                        this.toggleButton = ref;
-                    }}
-                >
-                    <span className="adyen-checkout__dropdown__button__text">{active.selectedOptionName || active.name || placeholder}</span>
-                    {active.icon && (
-                        <img className="adyen-checkout__dropdown__button__icon" src={active.icon} alt={active.name} onError={this.handleOnError} />
-                    )}
-                </button>
+        if (!target.getAttribute('data-disabled')) {
+            closeList();
+            const value = target.getAttribute('data-value');
+            props.onChange({ target: { value, name: props.name } });
+        }
+    };
 
-                <ul
-                    role="listbox"
-                    className={cx({
-                        'adyen-checkout__dropdown__list': true,
-                        [styles['adyen-checkout__dropdown__list']]: true,
-                        'adyen-checkout__dropdown__list--active': toggleDropdown,
-                        [styles['adyen-checkout__dropdown__list--active']]: toggleDropdown
-                    })}
-                    ref={ref => {
-                        this.dropdownList = ref;
-                    }}
-                >
-                    {items.map(item => (
-                        <li
-                            key={item.id}
-                            role="option"
-                            tabIndex={-1}
-                            aria-selected={item.id === active.id}
-                            className={cx([
-                                'adyen-checkout__dropdown__element',
-                                styles['adyen-checkout__dropdown__element'],
-                                { 'adyen-checkout__dropdown__element--active': item.id === active.id }
-                            ])}
-                            data-value={item.id}
-                            onClick={this.select}
-                            onKeyDown={this.handleKeyDown}
-                        >
-                            <span>{item.name}</span>
+    /**
+     * Updates the state with the current text filter value
+     * @param e - KeyboardEvent
+     */
+    const handleTextFilter = (e: KeyboardEvent) => {
+        const value: string = (e.target as HTMLInputElement).value;
+        setTextFilter(value.toLowerCase());
+    };
 
-                            {item.icon && (
-                                <img
-                                    className="adyen-checkout__dropdown__element__icon"
-                                    alt={item.name}
-                                    src={item.icon}
-                                    onError={this.handleOnError}
-                                />
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        );
-    }
+    /**
+     * Toggles the selectList and focuses in either the filter input or in the selectList button
+     * @param e - Event
+     */
+    const toggleList = (e: Event) => {
+        e.preventDefault();
+        setShowList(!showList);
+    };
+
+    useEffect(() => {
+        if (showList && props.filterable && filterInputRef.current) {
+            filterInputRef.current.focus();
+        }
+    }, [showList]);
+
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside, false);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside, false);
+        };
+    }, []);
+
+    return (
+        <div
+            className={cx([
+                'adyen-checkout__dropdown',
+                styles['adyen-checkout__dropdown'],
+                props.className,
+                ...props.classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)
+            ])}
+            ref={selectContainerRef}
+        >
+            <SelectButton
+                active={active}
+                filterInputRef={filterInputRef}
+                filterable={props.filterable}
+                isInvalid={props.isInvalid}
+                onButtonKeyDown={handleButtonKeyDown}
+                onInput={handleTextFilter}
+                placeholder={props.placeholder}
+                readonly={props.readonly}
+                selectListId={selectListId}
+                showList={showList}
+                toggleButtonRef={toggleButtonRef}
+                toggleList={toggleList}
+            />
+            <SelectList
+                active={active}
+                items={props.items}
+                onKeyDown={handleListKeyDown}
+                onSelect={handleSelect}
+                selectListId={selectListId}
+                selectListRef={selectListRef}
+                showList={showList}
+                textFilter={textFilter}
+            />
+        </div>
+    );
 }
+
+Select.defaultProps = {
+    className: '',
+    classNameModifiers: [],
+    filterable: true,
+    items: [],
+    readonly: false,
+    onChange: () => {}
+};
 
 export default Select;

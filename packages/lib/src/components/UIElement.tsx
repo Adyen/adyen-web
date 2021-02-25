@@ -62,8 +62,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
     onChange(): object {
         const isValid = this.isValid;
-        const state = { data: this.data, isValid };
-        if (this.props.onChange) this.props.onChange(state, this);
+        const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
+        if (this.props.onChange) this.props.onChange(state, this.elementRef);
         if (isValid) this.onValid();
 
         return state;
@@ -71,7 +71,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
     onValid() {
         const state = { data: this.data };
-        if (this.props.onValid) this.props.onValid(state, this);
+        if (this.props.onValid) this.props.onValid(state, this.elementRef);
         return state;
     }
 
@@ -90,13 +90,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                     return false;
                 }
 
-                return onSubmit({ data, isValid }, this);
+                return onSubmit({ data, isValid }, this.elementRef);
             })
             .catch(error => onError(error));
     }
 
     onComplete(state): void {
-        if (this.props.onComplete) this.props.onComplete(state, this);
+        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
     }
 
     showValidation(): this {
@@ -109,12 +109,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
-    handleAction(action: PaymentAction) {
+    handleAction(action: PaymentAction, props = {}) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        const paymentAction: UIElement = this.props.createFromAction(action, {
-            ...this.props,
-            // Keep at end since we are creating a new function based on the one in props and don't want this new function overridden
+        const paymentAction = this.props._parentInstance.createFromAction(action, {
+            ...props,
             onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
         });
 

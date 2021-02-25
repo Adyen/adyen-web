@@ -4,50 +4,43 @@ import classNames from 'classnames';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import Field from '../../../internal/FormFields/Field';
 import { renderFormField } from '../../../internal/FormFields';
-import { mbwayValidationRules } from './validate';
-import Validator from '../../../../utils/Validator';
-import { MBWayDataState, MBWayErrorsState, MBWayInputProps, MBWayValidState, ValidationObject } from './types';
+import { MBWayDataState, MBWayInputProps } from './types';
 import './MBWayInput.scss';
+import useForm from '../../../../utils/useForm';
+const phoneNumberRegEx = /^[+]*[0-9]{1,4}[\s/0-9]*$/;
 
 function MBWayInput(props: MBWayInputProps) {
     const { i18n } = useCoreContext();
-    const validator: Validator = new Validator(mbwayValidationRules);
 
-    const [data, setData] = useState<MBWayDataState>(props.data);
-    const [errors, setErrors] = useState<MBWayErrorsState>({});
-    const [valid, setValid] = useState<MBWayValidState>({
-        ...(props.data.telephoneNumber && { telephoneNumber: validator.validate('telephoneNumber', 'input')(props.data.telephoneNumber).isValid })
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<MBWayDataState>({
+        schema: ['telephoneNumber'],
+        defaultData: props.data,
+        rules: {
+            telephoneNumber: {
+                validate: num => phoneNumberRegEx.test(num) && num.length >= 7,
+                errorMessage: 'mobileNumber.invalid',
+                modes: ['blur']
+            }
+        },
+        formatters: {
+            telephoneNumber: num => num.replace(/[^0-9+\s]/g, '')
+        }
     });
 
     const [status, setStatus] = useState('ready');
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
-
-    this.showValidation = (): void => {
-        const hasError = !validator.validate('telephoneNumber', 'input')(props.data.telephoneNumber).isValid;
-        setErrors({ ...errors, telephoneNumber: hasError });
-    };
-
-    const handleEventFor = (key: string, mode: string) => (e: Event): void => {
-        const val: string = (e.target as HTMLInputElement).value;
-        const { value, isValid, showError }: ValidationObject = validator.validate('telephoneNumber', mode)(val);
-
-        setData({ ...data, telephoneNumber: value });
-        setErrors({ ...errors, telephoneNumber: !isValid && showError });
-        setValid({ ...valid, telephoneNumber: isValid });
-    };
+    this.setStatus = setStatus;
+    this.showValidation = triggerValidation;
 
     useEffect(() => {
-        props.onChange({ data, isValid: valid.telephoneNumber });
-    }, [data, valid]);
+        props.onChange({ data, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
 
     return (
         <div className="adyen-checkout__mb-way">
             <Field
-                errorMessage={!!errors.telephoneNumber && i18n.get('telephoneNumber.invalid')}
-                label={i18n.get('telephoneNumber')}
+                errorMessage={!!errors.telephoneNumber && i18n.get('mobileNumber.invalid')}
+                label={i18n.get('mobileNumber')}
                 className={classNames('adyen-checkout__input--phone-number')}
                 isValid={valid.telephoneNumber}
             >
@@ -57,8 +50,8 @@ function MBWayInput(props: MBWayInputProps) {
                     placeholder: props.placeholders.telephoneNumber,
                     required: true,
                     autoCorrect: 'off',
-                    onChange: handleEventFor('telephoneNumber', 'blur'),
-                    onInput: handleEventFor('telephoneNumber', 'input')
+                    onChange: handleChangeFor('telephoneNumber', 'blur'),
+                    onInput: handleChangeFor('telephoneNumber', 'input')
                 })}
             </Field>
 

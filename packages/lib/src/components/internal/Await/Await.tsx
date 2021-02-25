@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import classnames from 'classnames';
-import { checkPaymentStatus } from '../../../core/Services/payment-status';
+import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import Spinner from '../../internal/Spinner';
@@ -60,9 +60,9 @@ function Await(props: AwaitComponentProps) {
     };
 
     const checkStatus = (): void => {
-        const { paymentData, accessKey } = props;
+        const { paymentData, clientKey } = props;
 
-        checkPaymentStatus(paymentData, accessKey, loadingContext)
+        checkPaymentStatus(paymentData, clientKey, loadingContext)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',

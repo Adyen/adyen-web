@@ -5,6 +5,7 @@ import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
+import CoreProvider from '../../core/Context/CoreProvider';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -24,20 +25,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleError = this.handleError.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.submit = this.submit.bind(this);
-    }
-
-    // Required for transition period (until configuration object becomes the norm)
-    // - if merchant has defined properties directly in props, use these instead
-    protected formatProps(props) {
-        const { configuration, intent, merchantId } = props;
-        return {
-            ...props,
-            configuration: {
-                ...configuration,
-                ...(intent && { intent }),
-                ...(merchantId && { merchantId })
-            }
-        };
     }
 
     /**
@@ -119,17 +106,19 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         if (!this.props.showPayButton) return null;
 
         return (
-            <PaypalComponent
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...this.props}
-                onCancel={this.handleCancel}
-                onChange={this.setState}
-                onComplete={this.handleComplete}
-                onError={this.handleError}
-                onSubmit={this.handleSubmit}
-            />
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <PaypalComponent
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    {...this.props}
+                    onCancel={this.handleCancel}
+                    onChange={this.setState}
+                    onComplete={this.handleComplete}
+                    onError={this.handleError}
+                    onSubmit={this.handleSubmit}
+                />
+            </CoreProvider>
         );
     }
 }

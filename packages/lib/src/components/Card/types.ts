@@ -14,13 +14,13 @@ import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecure
 
 export interface CardElementProps extends UIElementProps {
     /**
-     * this.props.brand is never set for a generic card
-     * It is only set for a single-branded card or a stored card
+     * Only set for a single-branded card or a stored card,
+     * brand is never set for a generic card component
      */
     brand?: string;
 
     /**
-     * this.props.type will always be "card" (generic card, stored card)
+     * type will always be "card" (generic card, stored card)
      * except for a single branded card when it will be the same as the brand prop
      */
     type?: string;
@@ -85,11 +85,6 @@ export interface CardElementProps extends UIElementProps {
      * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
-
-    /**
-     * 3DS2 challenge size
-     */
-    challengeWindowSize?: string;
 
     [key: string]: any;
 }

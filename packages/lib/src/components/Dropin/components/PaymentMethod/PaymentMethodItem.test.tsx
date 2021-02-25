@@ -5,8 +5,8 @@ import PaymentMethodItem from './PaymentMethodItem';
 const i18n = { get: key => key };
 const index = 0;
 const paymentMethod = {
+    _id: '123456',
     props: {
-        id: '123456',
         type: 'mytype'
     },
     eventEmitter: { on: jest.fn(), off: jest.fn() },

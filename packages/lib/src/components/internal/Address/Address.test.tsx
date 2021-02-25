@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import Address from './Address';
-import getDataset from '../../../utils/fetch-json-data';
+import getDataset from '../../../core/Services/get-dataset';
 
-jest.mock('../../../utils/fetch-json-data');
+jest.mock('../../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve({})));
 
 describe('Address', () => {
@@ -79,7 +79,7 @@ describe('Address', () => {
         getWrapper({ data, requiredFields, onChange: onChangeMock });
         const lastOnChangeCall = onChangeMock.mock.calls.pop();
         const receivedData = lastOnChangeCall[0].data;
-        expect(receivedData.street).toBe(undefined);
+        expect(receivedData.street).toBe(null);
         expect(receivedData.postalCode).toBe('N/A');
         expect(receivedData.city).toBe('N/A');
         expect(receivedData.houseNumberOrName).toBe('N/A');
@@ -94,10 +94,10 @@ describe('Address', () => {
         const lastOnChangeCall = onChangeMock.mock.calls.pop();
         const receivedData = lastOnChangeCall[0].data;
 
-        expect(receivedData.street).toBe(undefined);
-        expect(receivedData.postalCode).toBe(undefined);
-        expect(receivedData.city).toBe(undefined);
-        expect(receivedData.houseNumberOrName).toBe(undefined);
+        expect(receivedData.street).toBe(null);
+        expect(receivedData.postalCode).toBe(null);
+        expect(receivedData.city).toBe(null);
+        expect(receivedData.houseNumberOrName).toBe(null);
         expect(receivedData.country).toBe(data.country);
     });
 

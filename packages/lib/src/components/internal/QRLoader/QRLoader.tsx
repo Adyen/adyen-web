@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import Countdown from '../Countdown';
 import Button from '../Button';
 import Spinner from '../Spinner';
-import { checkPaymentStatus } from '../../../core/Services/payment-status';
+import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';
@@ -129,9 +129,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     }
 
     checkStatus() {
-        const { paymentData, originKey, clientKey, loadingContext } = this.props;
-        const accessKey = clientKey ? clientKey : originKey;
-        return checkPaymentStatus(paymentData, accessKey, loadingContext)
+        const { paymentData, clientKey, loadingContext } = this.props;
+
+        return checkPaymentStatus(paymentData, clientKey, loadingContext)
             .then(processResponse)
             .catch(response => ({ type: 'network-error', props: response }))
             .then(status => {

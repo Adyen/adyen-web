@@ -1,8 +1,8 @@
 export const companyDetailsValidationRules = {
-    blur: {
-        default: value => {
-            const isValid: boolean = value && value.length > 0;
-            return { isValid: isValid, errorMessage: true };
-        }
+    default: {
+        validate: value => {
+            return value && value.length > 0;
+        },
+        modes: ['blur']
     }
 };

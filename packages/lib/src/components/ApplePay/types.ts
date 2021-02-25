@@ -13,18 +13,12 @@ type Initiative = 'web' | 'messaging';
 export interface ApplePayElementProps extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
-     * @default 3
-     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
+     * @default highest supported version by the shopper device
+     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
      */
     version?: number;
 
     amount: PaymentAmount;
-
-    /**
-     * @deprecated since v3.10.0. Use {@link ApplePayElementProps.amount}.
-     * @description The three-letter ISO 4217 currency code for the payment.
-     */
-    currencyCode?: string;
 
     /**
      * The merchant’s two-letter ISO 3166 country code.
@@ -39,10 +33,8 @@ export interface ApplePayElementProps extends UIElementProps {
     totalPriceLabel?: string;
 
     configuration: {
-        merchantDisplayName?: string;
         merchantName?: string;
         merchantId?: string;
-        merchantIdentifier?: string;
     };
 
     clientKey?: string;
@@ -57,7 +49,6 @@ export interface ApplePayElementProps extends UIElementProps {
      * The payment capabilities supported by the merchant.
      * The value must at least contain ApplePayMerchantCapability.supports3DS.
      * @default ['supports3DS']
-     * @typedef ApplePayJS.ApplePayMerchantCapability[]
      */
     merchantCapabilities?: ApplePayJS.ApplePayMerchantCapability[];
 
@@ -114,7 +105,7 @@ export interface ApplePayElementProps extends UIElementProps {
     onSubmit?: (state, component) => void;
     onError?: (error) => void;
     onCancel?: () => void;
-    onAuthorized?: (resolve, reject) => void;
+    onAuthorized?: (resolve, reject, event: ApplePayJS.ApplePayPaymentAuthorizedEvent) => void;
     onValidateMerchant?: (resolve, reject, event: ApplePayJS.ApplePayValidateMerchantEvent) => void;
 
     /**

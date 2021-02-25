@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import Dropin from './Dropin';
-import Core from '../../core';
+import AdyenCheckout from '../../core';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 
@@ -62,85 +62,49 @@ describe('Dropin', () => {
                 type: 'threeDS2'
             };
 
-            const checkout = new Core({});
-
-            const dropin = new Dropin({ createFromAction: checkout.createFromAction });
-            mount(dropin.render());
-
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+            const checkout = new AdyenCheckout({});
+            const dropin = checkout.create('dropin', {});
 
             const pa = dropin.handleAction(fingerprintAction);
             expect(pa.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);
-
-            expect(pa.componentFromAction.props.elementRef).toBeDefined();
             expect(pa.componentFromAction.props.showSpinner).toEqual(false);
             expect(pa.componentFromAction.props.statusType).toEqual('loading');
             expect(pa.componentFromAction.props.isDropin).toBe(true);
         });
 
         test('should handle new challenge action', () => {
-            const checkout = new Core({});
+            const checkout = new AdyenCheckout({});
 
-            const dropin = new Dropin({ createFromAction: checkout.createFromAction });
-            mount(dropin.render());
-
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+            const dropin = checkout.create('dropin', {});
 
             const pa = dropin.handleAction(challengeAction);
             expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-
-            expect(pa.componentFromAction.props.elementRef).not.toBeDefined();
             expect(pa.componentFromAction.props.statusType).toEqual('custom');
             expect(pa.componentFromAction.props.isDropin).toBe(true);
-
             expect(pa.componentFromAction.props.size).toEqual('02');
         });
 
-        test('new challenge action gets challengeWindowSize from pmConfig', () => {
-            const checkout = new Core({ challengeWindowSize: '04' });
+        test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', () => {
+            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '02' } } });
 
-            const dropin = new Dropin({
-                createFromAction: checkout.createFromAction,
-                challengeWindowSize: '03',
-                paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } }
-            });
-            mount(dropin.render());
-
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+            const dropin = checkout.create('dropin');
 
             const pa = dropin.handleAction(challengeAction);
             expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-
             expect(pa.componentFromAction.props.challengeWindowSize).toEqual('02');
         });
 
-        test('new challenge action gets challengeWindowSize from component config', () => {
-            const checkout = new Core({ challengeWindowSize: '04' });
+        test('new challenge action gets challengeWindowSize from handleAction config', () => {
+            const checkout = new AdyenCheckout({ challengeWindowSize: '04' });
 
-            const dropin = new Dropin({
-                createFromAction: checkout.createFromAction,
+            const dropin = checkout.create('dropin');
+            mount(dropin.render());
+
+            const pa = dropin.handleAction(challengeAction, {
                 challengeWindowSize: '03'
             });
-            mount(dropin.render());
-
-            const pa = dropin.handleAction(challengeAction);
             expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-
             expect(pa.componentFromAction.props.challengeWindowSize).toEqual('03');
-        });
-
-        test('new challenge action gets challengeWindowSize from checkout config', () => {
-            const checkout = new Core({ challengeWindowSize: '04' });
-
-            const dropin = new Dropin({
-                createFromAction: checkout.createFromAction
-            });
-            mount(dropin.render());
-
-            const pa = dropin.handleAction(challengeAction);
-            expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-
-            expect(pa.componentFromAction.props.challengeWindowSize).toEqual('04');
         });
     });
 });

@@ -1,5 +1,5 @@
 import { CustomTranslations, Locales } from '../language/types';
-import { PaymentAmount, PaymentMethods, PaymentMethodOptions } from '../types';
+import { PaymentAmount, PaymentMethods, PaymentMethodOptions, PaymentActionsType } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -9,12 +9,6 @@ export interface CoreOptions {
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
     environment?: 'test' | 'live' | 'live-us' | 'live-au' | string;
-
-    /**
-     * A client-side key linked to your website, used to validate Adyen’s Web component library. Use the {@link https://docs.adyen.com/api-explorer/#/CheckoutUtility/v1/originKeys | /originKeys} endpoint to generate one.
-     * For more information, refer to {@link https://docs.adyen.com/user-management/how-to-get-an-origin-key | How to get an origin key}.
-     */
-    originKey?: string;
 
     /**
      * A public key linked to your web service user, used for {@link https://docs.adyen.com/user-management/client-side-authentication | client-side authentication}.
@@ -53,9 +47,7 @@ export interface CoreOptions {
     /**
      * Optional per payment method configuration
      */
-    paymentMethodsConfiguration?: {
-        [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-    };
+    paymentMethodsConfiguration?: PaymentMethodsConfiguration;
 
     /**
      * Display only these payment methods
@@ -78,3 +70,11 @@ export interface CoreOptions {
 
     [key: string]: any;
 }
+
+export type PaymentMethodsConfiguration =
+    | {
+          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+      }
+    | {
+          [key in PaymentActionsType]?: any;
+      };

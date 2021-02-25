@@ -34,7 +34,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
 
         const isGenericCard: boolean = this.state.type === 'card';
 
-        // ...if also a generic card - tell cvc field & number field...
+        // ...if also a generic card - tell cvc field...
         if (isGenericCard && newBrand) {
             this.state.brand = newBrandObj;
             // console.log('### processBrand::handleProcessBrand:: this.state.brand', this.state.brand);
@@ -59,22 +59,23 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             }
         }
 
-        // Check for & spread brand related properties
+        // ...then check for & spread brand related properties...
         const brandInfoObj: BrandInfoObject = isGenericCard
             ? {
                   ...(pFeedbackObj.brand && { brand: pFeedbackObj.brand }),
                   ...(pFeedbackObj.cvcText && { cvcText: pFeedbackObj.cvcText }),
-                  ...(pFeedbackObj.cvcPolicy && { cvcPolicy: pFeedbackObj.cvcPolicy })
+                  ...(pFeedbackObj.cvcPolicy && { cvcPolicy: pFeedbackObj.cvcPolicy }),
+                  ...(pFeedbackObj.datePolicy && { datePolicy: pFeedbackObj.datePolicy })
               }
             : null;
 
-        // Return object to send to Callback fn
         if (brandInfoObj && brandInfoObj.brand) {
             const callbackObj: CbObjOnBrand = brandInfoObj as CbObjOnBrand;
             callbackObj.type = this.state.type;
             callbackObj.rootNode = this.props.rootNode;
 
-            this.callbacks.onBrand(callbackObj); // = SFPHandlers.handleOnBrand
+            /// ...and call SFPHandlers.handleOnBrand
+            this.callbacks.onBrand(callbackObj);
         }
 
         return brandInfoObj;

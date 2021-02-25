@@ -1,4 +1,8 @@
-import 'whatwg-fetch';
+import 'core-js/es/object/assign';
+import 'core-js/es/object/keys';
+import 'core-js/es/array/includes';
+import 'core-js/es/array/find';
+import 'core-js/es/array/find-index';
 
 // ChildNode.remove()
 (function(arr) {
@@ -19,12 +23,6 @@ import 'whatwg-fetch';
         });
     });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-
-import 'core-js/es/object/assign';
-import 'core-js/es/object/keys';
-import 'core-js/es/array/includes';
-import 'core-js/es/array/find';
-import 'core-js/es/array/find-index';
 
 if (typeof Promise === 'undefined') {
     window.Promise = require('promise/lib/es6-extensions.js');

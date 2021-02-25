@@ -31,10 +31,4 @@ describe('Paypal configuration prop configures correctly', () => {
         expect(paypal.props.configuration.merchantId).toEqual('abcdef');
         expect(paypal.props.configuration.intent).toEqual('order');
     });
-
-    test('Paypal element has configuration object but values direct from props are given precedence', () => {
-        const paypal = new Paypal({ configuration: { merchantId: 'abcdef', intent: 'order' }, merchantId: '123456', intent: 'capture' });
-        expect(paypal.props.configuration.merchantId).toEqual('123456');
-        expect(paypal.props.configuration.intent).toEqual('capture');
-    });
 });

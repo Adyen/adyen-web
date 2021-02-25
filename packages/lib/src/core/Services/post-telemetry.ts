@@ -1,11 +1,17 @@
+import { httpPost } from './http';
+
 /**
  * Log event to Adyen
  * @param config -
  */
 const logTelemetry = config => event => {
-    if (!config.accessKey) {
-        return Promise.reject();
-    }
+    if (!config.clientKey) return Promise.reject();
+
+    const options = {
+        errorLevel: 'silent' as const,
+        loadingContext: config.loadingContext,
+        path: `v1/analytics/log?clientKey=${config.clientKey}`
+    };
 
     const telemetryEvent = {
         version: process.env.VERSION,
@@ -18,18 +24,7 @@ const logTelemetry = config => event => {
         ...event
     };
 
-    const options = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(telemetryEvent)
-    };
-
-    return fetch(`${config.loadingContext}v1/analytics/log?token=${config.accessKey}`, options)
-        .then(response => response.ok)
-        .catch(() => {});
+    return httpPost(options, telemetryEvent);
 };
 
 export default logTelemetry;

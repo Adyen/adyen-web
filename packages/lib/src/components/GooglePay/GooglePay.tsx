@@ -16,17 +16,12 @@ class GooglePay extends UIElement<GooglePayProps> {
      * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
      */
     formatProps(props) {
-        const { configuration } = props;
-        const { merchantIdentifier } = configuration;
         const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
 
         return {
             ...props,
             showButton: props.showPayButton === true,
-            configuration: {
-                ...configuration,
-                ...(merchantIdentifier && { merchantId: merchantIdentifier })
-            },
+            configuration: props.configuration,
             allowedCardNetworks
         };
     }
@@ -37,7 +32,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     formatData() {
         return {
             paymentMethod: {
-                type: GooglePay.type,
+                type: this.props.type ?? GooglePay.type,
                 ...this.state
             }
         };
@@ -115,7 +110,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     };
 
     render() {
-        if (this.props.showButton) {
+        if (this.props.showPayButton) {
             return (
                 <GooglePayButton
                     buttonColor={this.props.buttonColor}

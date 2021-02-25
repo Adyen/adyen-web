@@ -135,6 +135,8 @@
     "select.stateOrProvince": "Select state or province",
     "select.provinceOrTerritory": "Select province or territory",
     "select.country": "Select country",
+    "select.noOptionsFound": "No options found",
+    "select.filter.placeholder": "Search...",
     "telephoneNumber.invalid": "Invalid telephone number",
     "qrCodeOrApp": "or",
     "paypal.processingPayment": "Processing payment...",

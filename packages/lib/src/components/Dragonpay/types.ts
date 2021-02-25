@@ -1,5 +1,6 @@
 import { PaymentAmount } from '../../types';
 import Language from '../../language/Language';
+import { UIElementProps } from '../UIElement';
 
 export interface DragonpayInputIssuerItem {
     id?: string;
@@ -7,10 +8,13 @@ export interface DragonpayInputIssuerItem {
     icon?: string;
 }
 
-export interface DragonpayElementProps {
+export interface DragonpayElementProps extends UIElementProps {
     type?: string;
-    details?: DragonpayInputIssuerItem[];
-    items?: DragonpayInputIssuerItem[];
+    issuers?: DragonpayInputIssuerItem[];
+
+    /** @deprecated use issuers */
+    details?: any;
+
     loadingContext?: string;
     reference?: string;
     i18n?: Language;
@@ -19,11 +23,6 @@ export interface DragonpayElementProps {
 export interface DragonpayInputData {
     issuer?: string;
     shopperEmail?: string;
-}
-
-export interface DragonpayInputErrors {
-    issuer?: boolean;
-    shopperEmail?: boolean;
 }
 
 export interface DragonpayInputProps {

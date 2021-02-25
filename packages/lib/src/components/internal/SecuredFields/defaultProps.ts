@@ -5,7 +5,6 @@ export interface SFPProps {
      * CSF RELATED (23)
      */
     allowedDOMAccess?: boolean;
-    ariaLabels?: object;
     autoFocus?: boolean;
     brands?: string[];
     groupTypes?: string[];
@@ -20,7 +19,7 @@ export interface SFPProps {
     onFieldValid?;
     onFocus?;
     onLoad?;
-    originKey?: string;
+    clientKey?: string;
     placeholders?: object;
     rootNode?: HTMLElement;
     showWarnings?: boolean;
@@ -84,7 +83,6 @@ export default {
     type: 'card',
 
     // Settings
-    originKey: null,
     keypadFix: true,
     rootNode: null,
     loadingContext: null,
@@ -108,6 +106,5 @@ export default {
 
     // Customization
     placeholders: {},
-    ariaLabels: {},
     styles: {}
 };

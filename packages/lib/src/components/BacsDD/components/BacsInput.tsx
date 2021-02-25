@@ -5,105 +5,46 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
 import { renderFormField } from '../../internal/FormFields';
 import ConsentCheckbox from '../../internal/FormFields/ConsentCheckbox';
-import { bacsValidationRules } from './validate';
-import Validator from '../../../utils/Validator';
-import { BacsDataState, BacsErrorsState, BacsInputProps, BacsValidState, ValidationObject } from './types';
+import { bacsValidationRules, bacsFormatters } from './validate';
+import { BacsDataState, BacsInputProps } from './types';
 import './BacsInput.scss';
 import getImage from '../../../utils/get-image';
+import useForm from '../../../utils/useForm';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
 
 function BacsInput(props: BacsInputProps) {
     const { i18n } = useCoreContext();
-    const validator = new Validator(bacsValidationRules);
+
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BacsDataState>({
+        schema: ['holderName', 'bankAccountNumber', 'bankLocationId', 'shopperEmail', 'amountConsentCheckbox', 'accountConsentCheckbox'],
+        defaultData: props.data,
+        formatters: bacsFormatters,
+        rules: bacsValidationRules
+    });
 
     const [status, setStatus] = useState(ENTER_STATE);
     this.setStatus = setStatus;
-
-    const [data, setData] = useState<BacsDataState>(props.data);
-    const [errors, setErrors] = useState<BacsErrorsState>({});
-    const [valid, setValid] = useState<BacsValidState>({
-        ...(props.data.holderName && {
-            holderName: validator.validate('holderName', 'input')(props.data.holderName).isValid
-        }),
-        ...(props.data.bankAccountNumber && {
-            bankAccountNumber: validator.validate('bankAccountNumber', 'input')(props.data.bankAccountNumber).isValid
-        }),
-        ...(props.data.bankLocationId && {
-            bankLocationId: validator.validate('bankLocationId', 'input')(props.data.bankLocationId).isValid
-        }),
-        ...(props.data.shopperEmail && {
-            shopperEmail: validator.validate('shopperEmail', 'input')(props.data.shopperEmail).isValid
-        })
-    });
-
-    const [isValid, setIsValid] = useState(false);
-
-    this.showValidation = (): void => {
-        setErrors({
-            holderName: !validator.validate('holderName', 'blur')(data.holderName).isValid,
-            bankAccountNumber: !validator.validate('bankAccountNumber', 'blur')(data.bankAccountNumber).isValid,
-            bankLocationId: !validator.validate('bankLocationId', 'blur')(data.bankLocationId).isValid,
-            shopperEmail: !validator.validate('shopperEmail', 'blur')(data.shopperEmail).isValid,
-            amountConsentCheckbox: !data.amountConsentCheckbox,
-            accountConsentCheckbox: !data.accountConsentCheckbox
-        });
-    };
-
-    const handleEventFor = (key: string, mode: string) => (e: Event): void => {
-        const val: string = (e.target as HTMLInputElement).value;
-        const { value, isValid, showError }: ValidationObject = validator.validate(key, mode)(val);
-
-        setData({ ...data, [key]: value });
-        setErrors({ ...errors, [key]: !isValid && showError });
-        setValid({ ...valid, [key]: isValid });
-    };
-
-    const handleConsentCheckbox = (key: string) => (): void => {
-        const checked = !data[key];
-        setData(prevData => ({ ...prevData, [key]: checked }));
-        setValid(prevValid => ({ ...prevValid, [key]: checked }));
-        setErrors(prevErrors => ({ ...prevErrors, [key]: !checked }));
-    };
+    this.showValidation = triggerValidation;
 
     const handlePayButton = () => {
-        if (!isValid) {
-            this.showValidation();
-            return false;
-        }
+        if (!isValid) return this.showValidation();
 
         if (status === ENTER_STATE) {
-            this.setStatus(CONFIRM_STATE);
-            return;
-        }
-
-        if (status === CONFIRM_STATE) {
-            props.onSubmit();
+            return this.setStatus(CONFIRM_STATE);
+        } else if (status === CONFIRM_STATE) {
+            return props.onSubmit();
         }
     };
 
     const handleEdit = () => {
-        this.setStatus(ENTER_STATE);
-        return;
+        return this.setStatus(ENTER_STATE);
     };
 
     useEffect(() => {
-        const pmIsValid =
-            valid.holderName &&
-            valid.bankAccountNumber &&
-            valid.bankLocationId &&
-            valid.shopperEmail &&
-            !!valid.amountConsentCheckbox &&
-            !!valid.accountConsentCheckbox;
-
-        setIsValid(pmIsValid);
-
-        props.onChange({
-            data,
-            isValid: pmIsValid
-        });
-    }, [data, valid]);
+        props.onChange({ data, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
 
     return (
         <div
@@ -150,8 +91,8 @@ function BacsInput(props: BacsInputProps) {
                     required: true,
                     readonly: status === CONFIRM_STATE || status === 'loading',
                     autocorrect: 'off',
-                    onChange: handleEventFor('holderName', 'blur'),
-                    onInput: handleEventFor('holderName', 'input')
+                    onChange: handleChangeFor('holderName', 'blur'),
+                    onInput: handleChangeFor('holderName', 'input')
                 })}
             </Field>
 
@@ -176,8 +117,8 @@ function BacsInput(props: BacsInputProps) {
                         required: true,
                         readonly: status === CONFIRM_STATE || status === 'loading',
                         autocorrect: 'off',
-                        onChange: handleEventFor('bankAccountNumber', 'blur'),
-                        onInput: handleEventFor('bankAccountNumber', 'input')
+                        onChange: handleChangeFor('bankAccountNumber', 'blur'),
+                        onInput: handleChangeFor('bankAccountNumber', 'input')
                     })}
                 </Field>
 
@@ -201,8 +142,8 @@ function BacsInput(props: BacsInputProps) {
                         required: true,
                         readonly: status === CONFIRM_STATE || status === 'loading',
                         autocorrect: 'off',
-                        onChange: handleEventFor('bankLocationId', 'blur'),
-                        onInput: handleEventFor('bankLocationId', 'input')
+                        onChange: handleChangeFor('bankLocationId', 'blur'),
+                        onInput: handleChangeFor('bankLocationId', 'input')
                     })}
                 </Field>
             </div>
@@ -229,29 +170,27 @@ function BacsInput(props: BacsInputProps) {
                     required: true,
                     readonly: status === CONFIRM_STATE || status === 'loading',
                     autocorrect: 'off',
-                    onInput: handleEventFor('shopperEmail', 'input'),
-                    onChange: handleEventFor('shopperEmail', 'blur')
+                    onInput: handleChangeFor('shopperEmail', 'input'),
+                    onChange: handleChangeFor('shopperEmail', 'blur')
                 })}
             </Field>
 
             {status === ENTER_STATE && (
                 <ConsentCheckbox
-                    data={data}
                     classNameModifiers={['amountConsentCheckbox']}
                     errorMessage={!!errors.amountConsentCheckbox}
                     label={i18n.get('bacs.consent.amount')}
-                    onChange={handleConsentCheckbox('amountConsentCheckbox')}
+                    onChange={handleChangeFor('amountConsentCheckbox')}
                     checked={!!data.amountConsentCheckbox}
                 />
             )}
 
             {status === ENTER_STATE && (
                 <ConsentCheckbox
-                    data={data}
                     classNameModifiers={['accountConsentCheckbox']}
                     errorMessage={!!errors.accountConsentCheckbox}
                     label={i18n.get('bacs.consent.account')}
-                    onChange={handleConsentCheckbox('accountConsentCheckbox')}
+                    onChange={handleChangeFor('accountConsentCheckbox')}
                     checked={!!data.accountConsentCheckbox}
                 />
             )}

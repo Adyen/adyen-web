@@ -28,8 +28,6 @@ export function handleConfig(): void {
     // Ensure passed loadingContext has trailing slash
     this.config.loadingContext = lastChar(loadingContext) === '/' ? loadingContext : `${loadingContext}/`;
 
-    this.config.locale = this.props.locale;
-
     this.config.isCreditCardType = NON_CREDIT_CARD_TYPE_SECURED_FIELDS.includes(this.props.type) === false;
 
     // Configuration object for individual txVariants
@@ -57,11 +55,9 @@ export function handleConfig(): void {
     let sfBundleType: string = this.config.isCreditCardType ? 'card' : this.props.type;
     if (sfBundleType.indexOf('sepa') > -1) sfBundleType = 'iban';
 
-    // During the transition period accept clientKey & originKey, giving clientKey preference
-    const accessKey: string = this.props.clientKey ? this.props.clientKey : this.props.originKey;
     // Add a hash of the origin to ensure urls are different across domains
     const d = btoa(window.location.origin);
-    this.config.iframeSrc = `${this.config.loadingContext}securedfields/${accessKey}/${SF_VERSION}/securedFields.html?type=${sfBundleType}&d=${d}`;
+    this.config.iframeSrc = `${this.config.loadingContext}securedfields/${this.props.clientKey}/${SF_VERSION}/securedFields.html?type=${sfBundleType}&d=${d}`;
 
     // TODO###### FOR QUICK LOCAL TESTING of sf
     if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
