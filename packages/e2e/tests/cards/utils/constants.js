@@ -5,6 +5,8 @@ export const MAESTRO_CARD = '5000550000000029';
 export const BCMC_CARD = '6703444444444449'; // actually dual branded bcmc & maestro
 export const UNKNOWN_BIN_CARD = '1354 1001 4004 955'; // card that is not in the test DBs (uatp)
 
+export const FAILS_LUHN_CARD = '4111111111111112';
+
 export const THREEDS2_FRICTIONLESS_CARD = '5201281505129736';
 export const THREEDS2_FULL_FLOW_CARD = '5000550000000029';
 export const THREEDS2_CHALLENGE_ONLY_CARD = '4212345678910006';
