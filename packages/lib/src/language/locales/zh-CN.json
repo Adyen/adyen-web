@@ -134,6 +134,8 @@
     "select.stateOrProvince": "选择州或省",
     "select.provinceOrTerritory": "选择省或地区",
     "select.country": "选择国家/地区",
+    "select.noOptionsFound": "未找到任何选项",
+    "select.filter.placeholder": "搜索……",
     "telephoneNumber.invalid": "无效的电话号码",
     "qrCodeOrApp": "或者",
     "paypal.processingPayment": "正在处理付款...",
