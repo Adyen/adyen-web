@@ -134,6 +134,8 @@
     "select.stateOrProvince": "Vyberte kraj alebo okres",
     "select.provinceOrTerritory": "Vyberte okres alebo územie",
     "select.country": "Vyberte krajinu",
+    "select.noOptionsFound": "Neboli nájdené žiadne možnosti",
+    "select.filter.placeholder": "Vyhľadávanie...",
     "telephoneNumber.invalid": "Neplatné telefónne číslo",
     "qrCodeOrApp": "alebo",
     "paypal.processingPayment": "Platba sa spracúva.",

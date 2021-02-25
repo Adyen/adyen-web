@@ -134,6 +134,8 @@
     "select.stateOrProvince": "주/도 선택",
     "select.provinceOrTerritory": "도 선택",
     "select.country": "국가 선택",
+    "select.noOptionsFound": "검색된 옵션 없음",
+    "select.filter.placeholder": "검색...",
     "telephoneNumber.invalid": "유효하지 않은 전화번호",
     "qrCodeOrApp": "또는",
     "paypal.processingPayment": "결제 처리 중...",

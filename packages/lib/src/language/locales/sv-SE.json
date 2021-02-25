@@ -134,6 +134,8 @@
     "select.stateOrProvince": "Välj delstat eller provins",
     "select.provinceOrTerritory": "Välj provins eller territorium",
     "select.country": "Välj land",
+    "select.noOptionsFound": "Inga alternativ hittades",
+    "select.filter.placeholder": "Sök efter…",
     "telephoneNumber.invalid": "Ogiltigt telefonnummer",
     "qrCodeOrApp": "eller",
     "paypal.processingPayment": "Behandlar betalning …",
