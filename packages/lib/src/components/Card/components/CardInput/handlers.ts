@@ -94,6 +94,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         },
         isSfpValid: sfState.isSfpValid,
         hideCVCForBrand: sfState.hideCVCForBrand,
+        hideDateForBrand: sfState.hideDateForBrand,
         brand: sfState.brand
     });
 

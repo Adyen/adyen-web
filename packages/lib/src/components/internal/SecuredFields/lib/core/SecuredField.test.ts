@@ -1,10 +1,10 @@
 import SecuredField from './SecuredField';
-import { AriaConfig, CVCPolicyType } from './AbstractSecuredField';
+import { AriaConfig, CVCPolicyType, DatePolicyType } from './AbstractSecuredField';
 import Language from '../../../../../language/Language';
 import LANG from '../../../../../language/locales/en-US.json';
 import { ERROR_CODES, ERROR_MSG_CARD_TOO_OLD, ERROR_MSG_INVALID_FIELD, ERROR_MSG_LUHN_CHECK_FAILED } from '../../../../../core/Errors/constants';
 import { ERROR_MSG_INCOMPLETE_FIELD } from '../../../../../core/Errors/constants';
-import { CVC_POLICY_REQUIRED } from '../configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../configuration/constants';
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
@@ -57,6 +57,7 @@ const setupObj = {
     //
     fieldType: ENCRYPTED_CARD_NUMBER,
     cvcPolicy: CVC_POLICY_REQUIRED as CVCPolicyType,
+    datePolicy: DATE_POLICY_REQUIRED as DatePolicyType,
     iframeSrc: null,
     loadingContext: null,
     holderEl: nodeHolder

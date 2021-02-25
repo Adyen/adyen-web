@@ -25,6 +25,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             {
                 supportedBrands: this.props.brands || DEFAULT_CARD_GROUP_TYPES,
                 encryptedBin: callbackObj.encryptedBin,
+
                 requestId: callbackObj.uuid // Pass id of request
             }
         ).then((data: BinLookupResponseRaw) => {
@@ -38,7 +39,13 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
 
                             // Add supported brand objects to the supportedBrands array
                             if (item.supported === true) {
-                                acc.supportedBrands.push(item);
+                                /**
+                                 * NOTE we are currently using item.enableLuhnCheck === false as an indicator of a PLCC - this could/should change in the future
+                                 */
+                                // Add PLCCs to the front of the array so their icons are displayed first
+                                const action = item.enableLuhnCheck === false ? 'unshift' : 'push';
+                                acc.supportedBrands[action](item);
+
                                 return acc;
                             }
 
@@ -102,8 +109,11 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                     } as CbObjOnBinLookup);
                 }
             } else {
-                // Some other kind of error on the backend
-                this.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
+                if (!data?.requestId) {
+                    // Some other kind of error on the backend
+                    this.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
+                }
+                // Else - response with wrong requestId
             }
         });
     } else if (this.currentRequestId) {
