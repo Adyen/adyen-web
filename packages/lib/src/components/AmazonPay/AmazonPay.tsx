@@ -62,7 +62,7 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
                 window.location.assign(response.declineFlowUrl);
             })
             .catch(error => {
-                if (this.props.onError) this.props.onError(error);
+                if (this.props.onError) this.props.onError(error, this.componentRef);
             });
     }
 
@@ -72,6 +72,14 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
 
     get browserInfo() {
         return collectBrowserInfo();
+    }
+
+    submit() {
+        const { data, isValid } = this;
+        const { onSubmit = () => {} } = this.props;
+
+        if (this.componentRef && this.componentRef.submit) return this.componentRef.submit();
+        return onSubmit({ data, isValid }, this);
     }
 
     render() {

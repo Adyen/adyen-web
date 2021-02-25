@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Campo del número de la tarjeta de regalo",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe del código de seguridad de la tarjeta de regalo asegurada",
     "giftcard.encryptedSecurityCode.aria.label": "Campo del código de seguridad de la tarjeta de regalo",
+    "giftcardTransactionLimit": "Se permite un máximo de %{amount} por transacción en esta tarjeta de regalo",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe del número de la cuenta bancaria asegurada",
     "ach.encryptedBankAccountNumber.aria.label": "Campo de la cuenta bancaria",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe del número de ruta del banco asegurado",

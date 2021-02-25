@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Πεδίο αριθμού δωροκάρτας",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe για ασφαλή κωδικό ασφαλείας δωροκάρτας",
     "giftcard.encryptedSecurityCode.aria.label": "Πεδίο κωδικού ασφαλείας δωροκάρτας",
+    "giftcardTransactionLimit": "Το μέγιστο επιτρεπόμενο ποσό ανά συναλλαγή σε αυτήν τη δωροκάρτα είναι %{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe για ασφαλή αριθμό τραπεζικού λογαριασμού",
     "ach.encryptedBankAccountNumber.aria.label": "Πεδίο τραπεζικού λογαριασμού",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe για ασφαλή αριθμό κωδικού υποκαταστήματος τράπεζας",

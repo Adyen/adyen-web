@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Pole numeru karty podarunkowej",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Element Iframe dla kodu bezpieczeństwa zabezpieczonej karty podarunkowej",
     "giftcard.encryptedSecurityCode.aria.label": "Pole kodu bezpieczeństwa karty podarunkowej",
+    "giftcardTransactionLimit": "Maks. dozwolona kwota (%{amount}) na transakcję tą kartą upominkową",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Element Iframe dla zabezpieczonego numeru rachunku bankowego",
     "ach.encryptedBankAccountNumber.aria.label": "Pole rachunku bankowego",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Element Iframe dla zabezpieczonego kodu bankowego (Bank Routing Number)",

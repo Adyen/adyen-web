@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import Spinner from '../../internal/Spinner';
 import { getAmazonPayUrl } from '../utils';
 import { AmazonPayComponentProps } from '../types';
@@ -11,9 +11,16 @@ import Script from '../../../utils/Script';
 
 export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
+    const amazonPayButtonRef = useRef(null);
+    const orderButtonRef = useRef(null);
 
     const handleLoad = () => {
         setStatus('ready');
+    };
+
+    this.submit = () => {
+        if (amazonPayButtonRef.current && amazonPayButtonRef.current.initCheckout) return amazonPayButtonRef.current.initCheckout();
+        if (orderButtonRef.current && orderButtonRef.current.createOrder) return orderButtonRef.current.createOrder();
     };
 
     useEffect(() => {
@@ -54,6 +61,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
                         clientKey={props.clientKey}
                         onError={props.onError}
                         returnUrl={props.returnUrl}
+                        ref={orderButtonRef}
                     />
                 )}
 
@@ -66,7 +74,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
 
     return (
         <div className="adyen-checkout__amazonpay">
-            <AmazonPayButton {...props} amazonRef={window.amazon} />
+            <AmazonPayButton {...props} amazonRef={window.amazon} ref={amazonPayButtonRef} />
         </div>
     );
 }

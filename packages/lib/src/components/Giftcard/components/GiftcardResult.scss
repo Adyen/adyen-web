@@ -32,12 +32,12 @@
     justify-content: space-between;
     margin-bottom: $spacing-small;
 
-    &:last-child {
-        margin-bottom: 0;
+    .adyen-checkout__giftcard-result__balance__title--transactionLimit {
+        color: $color-gray-darker;
     }
 
-    &--remaining-balance {
-        font-size: $font-size-small;
+    &:last-child {
+        margin-bottom: 0;
     }
 }
 

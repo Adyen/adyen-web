@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Champ du numéro de la carte cadeau",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe pour le code de sécurité de la carte-cadeau avec garantie",
     "giftcard.encryptedSecurityCode.aria.label": "Champ du code de sécurité de la carte-cadeau",
+    "giftcardTransactionLimit": "Montant maximum autorisé par transaction avec cette carte cadeau : %{amount}",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe pour le numéro du compte bancaire avec garantie",
     "ach.encryptedBankAccountNumber.aria.label": "Champ du compte bancaire",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pour le numéro de routage du compte avec garantie",

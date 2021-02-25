@@ -24,6 +24,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         status: 'ready',
         data: {},
         balance: null,
+        transactionLimit: null,
         focusedElement: false,
         isValid: false
     };
@@ -63,20 +64,22 @@ class Giftcard extends Component<GiftcardComponentProps> {
         }
     };
 
-    public setBalance = balance => {
-        this.setState({ balance });
+    public setBalance = ({ balance, transactionLimit }) => {
+        this.setState({ balance, transactionLimit });
     };
 
-    render(props, { focusedElement, balance }) {
+    render(props, { focusedElement, balance, transactionLimit }) {
         const { i18n } = useCoreContext();
 
-        const hasEnoughBalance = balance?.value >= this.props.amount?.value;
-        if (balance && hasEnoughBalance) {
-            return <GiftcardResult balance={balance} onSubmit={props.onSubmit} {...props} />;
+        const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
+        const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
+
+        if (transactionAmount && hasEnoughBalance) {
+            return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
         }
 
         const getCardErrorMessage = sfpState => {
-            if (sfpState.errors.encryptedCardNumber) return i18n.get('error.va.sf-cc-num.01');
+            if (sfpState.errors.encryptedCardNumber) return i18n.get('error.va.gen.01');
 
             switch (this.state.status) {
                 case 'no-balance':
@@ -139,7 +142,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                             'adyen-checkout__input': true,
                                             'adyen-checkout__input--large': true,
                                             'adyen-checkout__card__cvc__input': true,
-                                            'adyen-checkout__input--error': sfpState.errors.encryptedCardNumber,
+                                            'adyen-checkout__input--error': sfpState.errors.encryptedSecurityCode,
                                             'adyen-checkout__input--focus': focusedElement === 'encryptedSecurityCode'
                                         })}
                                     />

@@ -193,6 +193,7 @@
     "giftcard.encryptedCardNumber.aria.label": "Veld voor cadeaubonnummer",
     "giftcard.encryptedSecurityCode.aria.iframeTitle": "Iframe voor beveiligingscode beveiligde cadeaubon",
     "giftcard.encryptedSecurityCode.aria.label": "Veld beveiligingscode cadeaubon",
+    "giftcardTransactionLimit": "Max. %{amount} toegestaan per transactie met deze cadeaubon",
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe voor beveiligd bankrekeningnummer",
     "ach.encryptedBankAccountNumber.aria.label": "Veld voor bankrekening",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe voor beveiligde BIC-code",
