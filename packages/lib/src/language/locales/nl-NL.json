@@ -134,6 +134,8 @@
     "select.stateOrProvince": "Selecteer staat of provincie",
     "select.provinceOrTerritory": "Selecteer provincie of territorium",
     "select.country": "Selecteer land",
+    "select.noOptionsFound": "Geen opties gevonden",
+    "select.filter.placeholder": "Zoeken...",
     "telephoneNumber.invalid": "Ongeldig telefoonnummer",
     "qrCodeOrApp": "of",
     "paypal.processingPayment": "Betaling wordt verwerkt...",

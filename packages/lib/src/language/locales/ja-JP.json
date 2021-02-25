@@ -134,6 +134,8 @@
     "select.stateOrProvince": "都道府県を選択してください",
     "select.provinceOrTerritory": "州または準州を選択してください",
     "select.country": "国を選択してください",
+    "select.noOptionsFound": "オプションが見つかりませんでした",
+    "select.filter.placeholder": "検索...",
     "telephoneNumber.invalid": "無効な電話番号",
     "qrCodeOrApp": "または",
     "paypal.processingPayment": "支払いを処理しています...",

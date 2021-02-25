@@ -134,6 +134,8 @@
     "select.stateOrProvince": "Выберите штат или область",
     "select.provinceOrTerritory": "Выберите провинцию или территорию",
     "select.country": "Выберите страну",
+    "select.noOptionsFound": "Вариантов не найдено",
+    "select.filter.placeholder": "Поиск...",
     "telephoneNumber.invalid": "Недействительный номер телефона",
     "qrCodeOrApp": "или",
     "paypal.processingPayment": "Платеж обрабатывается…",

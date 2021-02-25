@@ -134,6 +134,8 @@
     "select.stateOrProvince": "Επιλέξτε πολιτεία ή επαρχία",
     "select.provinceOrTerritory": "Επιλέξτε επαρχία ή περιφέρεια",
     "select.country": "Επιλέξτε χώρα",
+    "select.noOptionsFound": "Δεν βρέθηκαν επιλογές",
+    "select.filter.placeholder": "Αναζήτηση...",
     "telephoneNumber.invalid": "Μη έγκυρος αριθμός τηλεφώνου",
     "qrCodeOrApp": "ή",
     "paypal.processingPayment": "Επεξεργασία πληρωμής...",

@@ -134,6 +134,8 @@
     "select.stateOrProvince": "Sélectionnez l'État ou la province",
     "select.provinceOrTerritory": "Sélectionnez la province ou le territoire",
     "select.country": "Sélectionnez le pays",
+    "select.noOptionsFound": "Aucune option trouvée",
+    "select.filter.placeholder": "Recherche...",
     "telephoneNumber.invalid": "Numéro de téléphone incorrect",
     "qrCodeOrApp": "ou",
     "paypal.processingPayment": "Traitement du paiement en cours...",
