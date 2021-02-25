@@ -109,8 +109,11 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                     } as CbObjOnBinLookup);
                 }
             } else {
-                // Some other kind of error on the backend
-                this.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
+                if (!data?.requestId) {
+                    // Some other kind of error on the backend
+                    this.props.onError(data || { errorType: 'binLookup', message: 'unknownError' });
+                }
+                // Else - response with wrong requestId
             }
         });
     } else if (this.currentRequestId) {
