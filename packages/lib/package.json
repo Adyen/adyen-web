@@ -20,7 +20,7 @@
             "require": "./dist/cjs/index.js"
         }
     },
-    "version": "3.23.0",
+    "version": "4.0.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
