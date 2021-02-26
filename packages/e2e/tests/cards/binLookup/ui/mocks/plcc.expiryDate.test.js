@@ -32,7 +32,9 @@ const mockedResponse = {
 };
 
 const mock = RequestMock()
-    .onRequestTo(requestURL)
+    .onRequestTo(request => {
+        return request.url === requestURL && request.method === 'post';
+    })
     .respond(
         (req, res) => {
             const body = JSON.parse(req.body);
@@ -56,7 +58,7 @@ fixture`Testing a PLCC, as detected by a mock/binLookup, for a response that sho
     .clientScripts('plcc.clientScripts.js')
     .requestHooks(mock);
 
-test('Test plcc card hides date field ', async t => {
+test('Test plcc card hides date field ' + 'then complete date and see card is valid ' + ' then delete card number and see card reset', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 

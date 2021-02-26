@@ -33,7 +33,9 @@ const mockedResponse = {
 };
 
 const mock = RequestMock()
-    .onRequestTo(requestURL)
+    .onRequestTo(request => {
+        return request.url === requestURL && request.method === 'post';
+    })
     .respond(
         (req, res) => {
             const body = JSON.parse(req.body);
