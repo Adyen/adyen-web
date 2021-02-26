@@ -6,7 +6,8 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import getImage from '../../utils/get-image';
 
 export class SecuredFieldsElement extends UIElement {
-    public static type = 'custom-scheme';
+    public static type = 'scheme';
+    public static analyticsType = 'custom-scheme';
 
     formatProps(props) {
         return {
@@ -22,7 +23,7 @@ export class SecuredFieldsElement extends UIElement {
     formatData() {
         return {
             paymentMethod: {
-                type: 'scheme',
+                type: SecuredFieldsElement.type,
                 ...this.state.data
             },
             browserInfo: this.browserInfo
