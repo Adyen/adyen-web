@@ -22,7 +22,7 @@ export class SecuredFieldsElement extends UIElement {
     formatData() {
         return {
             paymentMethod: {
-                type: SecuredFieldsElement.type,
+                type: 'scheme',
                 ...this.state.data
             },
             browserInfo: this.browserInfo
