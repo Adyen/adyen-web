@@ -7,6 +7,7 @@ import getImage from '../../utils/get-image';
 
 export class SecuredFieldsElement extends UIElement {
     public static type = 'scheme';
+    public static analyticsType = 'custom-scheme';
 
     formatProps(props) {
         return {

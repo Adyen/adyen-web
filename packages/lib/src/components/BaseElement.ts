@@ -101,7 +101,7 @@ class BaseElement<P extends BaseElementProps> {
         if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
             this.props.modules.analytics.send({
                 containerWidth: this._node && this._node.offsetWidth,
-                component: this.constructor['type'],
+                component: this.constructor['analyticsType'] ?? this.constructor['type'],
                 flavor: 'components'
             });
         }
