@@ -36,7 +36,7 @@ export interface CardInputState {
     data?: object;
     errors?: object;
     focusedElement: string;
-    hideCVCForBrand: boolean;
+    cvcPolicy: string;
     hideDateForBrand: boolean;
     isValid: boolean;
     status: string;

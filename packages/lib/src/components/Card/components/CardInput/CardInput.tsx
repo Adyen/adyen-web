@@ -61,7 +61,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 }
             }),
             isValid: false,
-            hideCVCForBrand: false,
+            cvcPolicy: CVC_POLICY_REQUIRED,
             hideDateForBrand: false,
             focusedElement: '',
             additionalSelectElements: [],
@@ -98,7 +98,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             prevState.storePaymentMethod !== this.state.storePaymentMethod ||
             !objectsDeepEqual(prevState.installments, this.state.installments) ||
             prevState.isSfpValid !== this.state.isSfpValid ||
-            prevState.hideCVCForBrand !== this.state.hideCVCForBrand ||
+            prevState.cvcPolicy !== this.state.cvcPolicy ||
             prevState.hideDateForBrand !== this.state.hideDateForBrand ||
             prevState.brand !== this.state.brand ||
             prevState.additionalSelectValue !== this.state.additionalSelectValue ||
@@ -160,7 +160,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
     render(
         { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts },
-        { status, hideCVCForBrand, hideDateForBrand, focusedElement, issuingCountryCode }
+        { status, cvcPolicy, hideDateForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
 
@@ -194,11 +194,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             <LoadingWrapper status={sfpState.status}>
                                 <StoredCardFields
                                     {...this.props}
-                                    cvcRequired={sfpState.cvcPolicy === CVC_POLICY_REQUIRED}
                                     errors={sfpState.errors}
                                     brand={sfpState.brand}
                                     hasCVC={hasCVC}
-                                    hideCVCForBrand={hideCVCForBrand}
+                                    cvcPolicy={cvcPolicy}
                                     onFocusField={setFocusOn}
                                     focusedElement={focusedElement}
                                     status={sfpState.status}
@@ -223,11 +222,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     focusedElement={focusedElement}
                                     onFocusField={setFocusOn}
                                     hasCVC={hasCVC}
-                                    hideCVCForBrand={hideCVCForBrand}
+                                    cvcPolicy={cvcPolicy}
                                     hideDateForBrand={hideDateForBrand}
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
-                                    cvcRequired={sfpState.cvcPolicy === CVC_POLICY_REQUIRED}
                                     dualBrandingElements={this.state.additionalSelectElements.length > 0 && this.state.additionalSelectElements}
                                     dualBrandingChangeHandler={this.handleAdditionalDataSelection}
                                     dualBrandingSelected={this.state.additionalSelectValue}

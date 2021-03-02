@@ -25,11 +25,10 @@ export default function StoredCardFields({ brand, hasCVC, onFocusField, errors, 
 
                 {hasCVC && (
                     <CVC
-                        cvcRequired={props.cvcRequired}
+                        cvcPolicy={props.cvcPolicy}
                         error={errors.encryptedSecurityCode}
                         focused={props.focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
-                        hideCVCForBrand={props.hideCVCForBrand}
                         isValid={!!valid.encryptedSecurityCode}
                         label={i18n.get('creditCard.cvcField.title')}
                         onFocusField={onFocusField}
