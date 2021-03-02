@@ -87,8 +87,6 @@ class SecuredField extends AbstractSecuredField {
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
 
-        console.log('### SecuredField::init:: processedPlaceholders', processedPlaceholders);
-
         /**
          * Configure, create & reference iframe and add load listener
          */
