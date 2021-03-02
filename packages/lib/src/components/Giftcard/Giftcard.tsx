@@ -4,9 +4,10 @@ import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import PayButton from '../internal/PayButton';
+import { GIFT_CARD } from '../internal/SecuredFields/lib/configuration/constants';
 
 export class GiftcardElement extends UIElement {
-    public static type = 'giftcard';
+    public static type = GIFT_CARD;
 
     formatProps(props) {
         return props;

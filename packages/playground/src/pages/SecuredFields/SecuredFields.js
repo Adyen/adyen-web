@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, placeholders, setCCErrors, setFocus, onBrand, onConfigSuccess } from './securedFields.config';
+import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
@@ -42,6 +42,12 @@ window.checkout = new AdyenCheckout({
         node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
         //            onComplete: handleOnRiskData,
         onError: console.error
+    },
+    translations: {
+        'en-US': {
+            'creditCard.cvcField.placeholder.3digits': 'digits 3',
+            'creditCard.cvcField.placeholder.4digits': 'digits 4'
+        }
     }
 });
 
@@ -51,7 +57,6 @@ window.securedFields = checkout
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
         styles,
-        placeholders,
         onConfigSuccess,
         onBrand,
         onBinValue: cbObj => {

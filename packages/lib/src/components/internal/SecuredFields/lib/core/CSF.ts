@@ -36,6 +36,7 @@ class CSF extends AbstractCSF {
             /**
              *  For generic card will always be 'card'.
              *  For non-generic card will be hardcoded to a particular txVariant e.g. 'mc' or 'visa'
+             *  For other types of SecuredField will be the passed type e.g. 'ach' or 'giftcard'
              */
             type: this.props.type,
             /**

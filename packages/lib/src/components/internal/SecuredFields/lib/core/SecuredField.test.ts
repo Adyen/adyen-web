@@ -9,6 +9,8 @@ import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../configuration/cons
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 const ENCRYPTED_SECURITY_CODE = 'encryptedSecurityCode';
+export const ENCRYPTED_SECURITY_CODE_3_DIGITS = 'encryptedSecurityCode3digits';
+export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 const TRANSLATED_NUMBER_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const TRANSLATED_NUMBER_IFRAME_LABEL = LANG['creditCard.encryptedCardNumber.aria.label'];
@@ -27,17 +29,12 @@ const TRANSLATED_CARD_TOO_OLD_ERROR = LANG[CARD_TOO_OLD_ERROR_CODE];
 
 const TRANSLATED_NUMBER_PLACEHOLDER = LANG['creditCard.numberField.placeholder'];
 const TRANSLATED_DATE_PLACEHOLDER = LANG['creditCard.expiryDateField.placeholder'];
-const TRANSLATED_CVC_PLACEHOLDER = LANG['creditCard.cvcField.placeholder'];
+const TRANSLATED_CVC_PLACEHOLDER_3_DIGITS = LANG['creditCard.cvcField.placeholder.3digits'];
+const TRANSLATED_CVC_PLACEHOLDER_4_DIGITS = LANG['creditCard.cvcField.placeholder.4digits'];
 
 const nodeHolder = document.createElement('div');
 
-const i18n = new Language('en-US', {});
-
-const mockPlaceholders = {
-    encryptedCardNumber: '9999 9999 9999 9999',
-    encryptedExpiryDate: 'MM/YY',
-    encryptedSecurityCode: 999
-};
+let i18n = new Language('en-US', {});
 
 const iframeUIConfig = {
     placeholders: null,
@@ -181,11 +178,12 @@ describe('SecuredField handling undefined placeholders config object - should se
         expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toEqual(TRANSLATED_DATE_PLACEHOLDER);
     });
 
-    test('CVC field with no defined placeholders config should get default value from translation field', () => {
+    test('CVC field with no defined placeholders config should get default values from translation field', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
         const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toEqual(TRANSLATED_CVC_PLACEHOLDER);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toEqual(TRANSLATED_CVC_PLACEHOLDER_3_DIGITS);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toEqual(TRANSLATED_CVC_PLACEHOLDER_4_DIGITS);
     });
 });
 
@@ -209,32 +207,58 @@ describe('SecuredField handling placeholders config object that is set to null o
 
         // Placeholders object should only contain a value for expiryDate
         expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(undefined);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toBe(undefined);
-    });
-});
-
-describe('SecuredField handling placeholders config object - defined placeholder should be preserved', () => {
-    //
-    test('Card number field with defined placeholders should keep that value', () => {
-        setupObj.iframeUIConfig.placeholders = mockPlaceholders;
-        setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
-
-        const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual(mockPlaceholders[ENCRYPTED_CARD_NUMBER]);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toBe(undefined);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toBe(undefined);
     });
 
-    test('Date field with defined placeholders should keep that value', () => {
-        setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
-
-        const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toEqual(mockPlaceholders[ENCRYPTED_EXPIRY_DATE]);
-    });
-
-    test('CVC field with defined placeholders should keep that value', () => {
+    test('CVC field with a placeholders config set to null should get default values from translation field', () => {
+        setupObj.iframeUIConfig.placeholders = null;
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
         const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toEqual(mockPlaceholders[ENCRYPTED_SECURITY_CODE]);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toEqual(TRANSLATED_CVC_PLACEHOLDER_3_DIGITS);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toEqual(TRANSLATED_CVC_PLACEHOLDER_4_DIGITS);
+
+        // Placeholders object should only contain a value for cvc field
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(undefined);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(undefined);
+    });
+});
+
+describe('SecuredField handling placeholders overridden with translations config object - overridden placeholders should be used', () => {
+    //
+    test('Card number field with overridden placeholder should use that value', () => {
+        // expect.assertions(1);
+        i18n = new Language('en-US', {
+            'en-US': {
+                'creditCard.numberField.placeholder': '9999 9999 9999 9999',
+                'creditCard.expiryDateField.placeholder': 'mo/ye',
+                'creditCard.cvcField.placeholder.3digits': 'digits3',
+                'creditCard.cvcField.placeholder.4digits': 'digits4'
+            }
+        });
+
+        i18n.loaded.then(() => {
+            setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+
+            const card = new SecuredField(setupObj, i18n);
+            expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('9999 9999 9999 9999');
+        });
+    });
+
+    test('Date field with overridden placeholder should use that value', () => {
+        setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toEqual('mo/ye');
+    });
+
+    test('CVC field with overridden placeholders should use those values', () => {
+        setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
+
+        const card = new SecuredField(setupObj, i18n);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toEqual('digits3');
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toEqual('digits4');
 
         // Placeholders object should only contain a value for cvc
         expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(undefined);
@@ -242,18 +266,29 @@ describe('SecuredField handling placeholders config object - defined placeholder
     });
 
     // Setting empty placeholder
-    test('Card number field with defined placeholders set to an empty string should keep that value', () => {
-        setupObj.iframeUIConfig.placeholders.encryptedCardNumber = '';
-        setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+    test('Card number field with overridden placeholder set to an empty string should use that value', () => {
+        i18n = new Language('en-US', {
+            'en-US': {
+                'creditCard.numberField.placeholder': '',
+                'creditCard.expiryDateField.placeholder': '',
+                'creditCard.cvcField.placeholder.3digits': '',
+                'creditCard.cvcField.placeholder.4digits': ''
+            }
+        });
 
-        const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('');
+        i18n.loaded.then(() => {
+            setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+
+            const card = new SecuredField(setupObj, i18n);
+            expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('');
+        });
     });
 
-    test('Card number field with defined placeholders set to null should keep that value', () => {
-        setupObj.iframeUIConfig.placeholders.encryptedCardNumber = null;
+    test('CVC field with overridden placeholders set to an empty string should use those values', () => {
+        setupObj.fieldType = ENCRYPTED_SECURITY_CODE;
 
         const card = new SecuredField(setupObj, i18n);
-        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual(null);
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toEqual('');
+        expect(card.config.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toEqual('');
     });
 });
