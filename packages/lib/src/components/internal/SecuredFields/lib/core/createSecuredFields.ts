@@ -93,15 +93,6 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
 
             this.securityCode = card.securityCode;
         }
-    } else {
-        // Check passed cardGroupTypes
-        this.config.cardGroupTypes.forEach(pItem => {
-            if (!existy(cardType.getCardByBrand(pItem))) {
-                logger.warn(
-                    `WARNING: The passed cardGroupType item "${pItem}" is not recognised by SecuredFields. This may affect whether it will be possible to process this payment.`
-                );
-            }
-        });
     }
 
     // Create a new SecuredField for each detected holding element
