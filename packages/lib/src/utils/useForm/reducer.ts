@@ -12,7 +12,7 @@ const addKeys = (obj, add, initialValue, defaultData) => add.reduce((a, c) => ({
  * Processes default data and sets as default in state
  */
 export function init({ schema, defaultData, processField }) {
-    const getProccessedState = (defaultData, fieldKey) => {
+    const getProccessedState = fieldKey => {
         if (typeof defaultData[fieldKey] === 'undefined') return { valid: false, errors: null, data: null };
 
         const [formattedValue, validationResult] = processField(
@@ -29,7 +29,7 @@ export function init({ schema, defaultData, processField }) {
 
     const formData = schema.reduce(
         (acc: any, fieldKey) => {
-            const { valid, errors, data } = getProccessedState(defaultData, fieldKey);
+            const { valid, errors, data } = getProccessedState(fieldKey);
 
             return {
                 valid: { ...acc.valid, [fieldKey]: valid },
@@ -84,11 +84,11 @@ export function getReducer(processField) {
             }
             case 'validateForm': {
                 const formValidation = state.schema.reduce(
-                    (acc, key) => {
-                        const [, validation] = processField({ key, value: state.data[key], mode: 'blur' }, { state });
+                    (acc, cur) => {
+                        const [, validation] = processField({ key: cur, value: state.data[cur], mode: 'blur' }, { state });
                         return {
-                            valid: { ...acc['valid'], [key]: validation.isValid ?? false },
-                            errors: { ...acc['errors'], [key]: validation.hasError() ? validation.getError() : null }
+                            valid: { ...acc['valid'], [cur]: validation.isValid ?? false },
+                            errors: { ...acc['errors'], [cur]: validation.hasError() ? validation.getError() : null }
                         };
                     },
                     { valid: state.valid, errors: state.errors }

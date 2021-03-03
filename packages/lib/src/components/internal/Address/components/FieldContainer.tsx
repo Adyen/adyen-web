@@ -14,7 +14,8 @@ function FieldContainer(props: FieldContainerProps) {
     const selectedCountry: string = data.country;
     const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName);
     const labelKey: string = props.specifications.getKeyForField(fieldName, selectedCountry);
-    const label = `${i18n.get(labelKey)}${isOptional ? ` ${i18n.get('field.title.optional')}` : ''}`;
+    const optionalLabel = isOptional ? ` ${i18n.get('field.title.optional')}` : '';
+    const label = `${i18n.get(labelKey)}${optionalLabel}`;
 
     switch (fieldName) {
         case 'country':
