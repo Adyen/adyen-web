@@ -258,7 +258,7 @@ test(
     }
 );
 
-test.only(
+test(
     'Fill in card number that will get single branding result from binLookup, ' +
         'then enter a partial dual branded card number,' +
         'check both brand icons are at reduced alpha,' +
