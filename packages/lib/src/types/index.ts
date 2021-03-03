@@ -209,3 +209,8 @@ export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<
  * Visibility options for a fieldset
  */
 export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
+
+export type CheckoutSession = {
+    id: string;
+    data: string;
+};

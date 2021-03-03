@@ -10,8 +10,11 @@ import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
+import setupSession from './Services/setupSession';
+import Session from './CheckoutSession';
 
 class Core {
+    private session: Session;
     private paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
@@ -29,6 +32,20 @@ class Core {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(options);
+    }
+
+    async initialize() {
+        if (this.session) {
+            const { clientKey, loadingContext } = this.options;
+            return new Promise(resolve => {
+                setupSession(this.options.session, { clientKey, loadingContext }).then(session => {
+                    this.setOptions(session);
+                    resolve(this);
+                });
+            });
+        }
+
+        return Promise.resolve(this);
     }
 
     /**
@@ -101,7 +118,8 @@ class Core {
             i18n: new Language(this.options.locale, this.options.translations)
         };
 
-        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
+        if (this.options.session) this.session = new Session(this.options.session);
+        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
 
         return this;
     };
@@ -118,6 +136,7 @@ class Core {
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
+            session: this.session,
             createFromAction: this.createFromAction,
             _parentInstance: this
         };

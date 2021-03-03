@@ -5,6 +5,7 @@ import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsRe
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 
 export interface CoreOptions {
+    session?: any;
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */

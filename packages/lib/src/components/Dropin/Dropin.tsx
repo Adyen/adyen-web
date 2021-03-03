@@ -7,6 +7,7 @@ import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
+import makePayment from '../../core/Services/makePayment';
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -16,6 +17,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     constructor(props) {
         super(props);
         this.submit = this.submit.bind(this);
+        this.handleAction = this.handleAction.bind(this);
     }
 
     get isValid() {
@@ -76,7 +78,11 @@ class DropinElement extends UIElement<DropinElementProps> {
             return false;
         }
 
-        return this.props.onSubmit({ data, isValid }, this);
+        if (!this.props.onSubmit && this.props.session) {
+            return this.submitPayment(data);
+        }
+
+        if (this.props.onSubmit) return this.props.onSubmit({ data, isValid }, this);
     };
 
     /**
@@ -84,7 +90,7 @@ class DropinElement extends UIElement<DropinElementProps> {
      */
     private handleCreate = () => {
         const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods, _parentInstance } = this.props;
-        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
+        const commonProps = getCommonProps({ ...this.props, onSubmit: this.submit, elementRef: this.elementRef });
         const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, _parentInstance?.create) : [];
         const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, _parentInstance?.create) : [];
 

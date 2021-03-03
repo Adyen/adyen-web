@@ -9,4 +9,9 @@ import './polyfills';
 import Checkout from './core';
 /* eslint-enable */
 
-export default Checkout;
+async function AdyenCheckout(props) {
+    const checkout = new Checkout(props);
+    return await checkout.initialize();
+}
+
+export default AdyenCheckout;

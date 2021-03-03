@@ -1,57 +1,73 @@
 import AdyenCheckout from '@adyen/adyen-web/dist/es';
 import '@adyen/adyen-web/dist/adyen.css';
-import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder, cancelOrder } from '../../services';
+import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder, cancelOrder, createSession } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
 import '../../style.scss';
 
 const initCheckout = async () => {
-    const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
+    const session = await createSession({
+        amount: {
+            value: 123,
+            currency: 'EUR'
+        },
+        reference: 'ABC123'
+    });
 
-    window.checkout = new AdyenCheckout({
+    window.checkout = await AdyenCheckout({
+        session,
         amount,
         countryCode,
-        clientKey: process.env.__CLIENT_KEY__,
-        paymentMethodsResponse,
+        clientKey: 'devl_F73CCZ4Y7NHFRLC3OMVZHDIVQY47VWFL', //process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        environment: 'test',
+        environment: 'http://localhost:8080/checkoutshopper/',
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
             }
         },
-        onSubmit: async (state, component) => {
-            component.setStatus('loading');
-            const result = await makePayment(state.data);
-
-            // handle actions
-            if (result.action) {
-                // demo only - store paymentData & order
-                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action);
-            } else if (result.order && result.order?.remainingAmount?.value > 0) {
-                // handle orders
-                const order = {
-                    orderData: result.order.orderData,
-                    pspReference: result.order.pspReference
-                };
-
-                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-            } else {
-                handleFinalState(result.resultCode, component);
+        onPaymentCompleted: (result, component) => {
+            console.log('onPaymentCompleted', result);
+            switch (result.status) {
+                case 'authorised':
+                    component.setStatus('success');
+                    break;
+                default:
+                    component.setStatus('error');
             }
         },
-        onAdditionalDetails: async (state, component) => {
-            const result = await makeDetailsCall(state.data);
-
-            if (result.action) {
-                component.handleAction(result.action);
-            } else {
-                handleFinalState(result.resultCode, component);
-            }
-        },
+        // onSubmit: async (state, component) => {
+        //     component.setStatus('loading');
+        //     const result = await makePayment(state.data);
+        //
+        //     // handle actions
+        //     if (result.action) {
+        //         // demo only - store paymentData & order
+        //         if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
+        //         component.handleAction(result.action);
+        //     } else if (result.order && result.order?.remainingAmount?.value > 0) {
+        //         // handle orders
+        //         const order = {
+        //             orderData: result.order.orderData,
+        //             pspReference: result.order.pspReference
+        //         };
+        //
+        //         const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+        //         checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
+        //     } else {
+        //         handleFinalState(result.resultCode, component);
+        //     }
+        // },
+        // onAdditionalDetails: async (state, component) => {
+        //     const result = await makeDetailsCall(state.data);
+        //
+        //     if (result.action) {
+        //         component.handleAction(result.action);
+        //     } else {
+        //         handleFinalState(result.resultCode, component);
+        //     }
+        // },
         onBalanceCheck: async (resolve, reject, data) => {
             resolve(await checkBalance(data));
         },

@@ -1,6 +1,6 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
-import { getPaymentMethods, makeDetailsCall } from '../../services';
+import { getPaymentMethods, makeDetailsCall, createSession } from '../../services';
 import { handleResponse, handleSubmit } from '../../handlers';
 import { shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
@@ -8,13 +8,19 @@ import '../../style.scss';
 
 window.paymentData = {};
 
-getPaymentMethods().then(paymentMethodsData => {
-    window.checkout = new AdyenCheckout({
-        clientKey: process.env.__CLIENT_KEY__,
+(async () => {
+    const session = await createSession({
+        amount: {
+            value: 123,
+            currency: 'EUR'
+        },
+        reference: 'ABC123'
+    });
+
+    window.checkout = await AdyenCheckout({
+        clientKey: 'devl_F73CCZ4Y7NHFRLC3OMVZHDIVQY47VWFL', //process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        paymentMethodsResponse: paymentMethodsData,
-        environment: 'test',
-        onSubmit: handleSubmit,
+        environment: 'http://localhost:8080/checkoutshopper/',
         showPayButton: true,
         onAdditionalDetails: (details, component) => {
             component.setStatus('loading');
@@ -24,7 +30,8 @@ getPaymentMethods().then(paymentMethodsData => {
                 component.setStatus('ready');
             });
         },
-        onError: console.error
+        onError: console.error,
+        session
     });
 
     // iDEAL
@@ -53,4 +60,4 @@ getPaymentMethods().then(paymentMethodsData => {
 
     // Open Banking OK
     window.openbanking_UK = checkout.create('openbanking_UK').mount('.openbanking_UK-field');
-});
+})();

@@ -4,14 +4,20 @@ import { PaymentAction, PaymentAmount } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import Language from '../language/Language';
+import makePayment from '../core/Services/makePayment';
 
 export interface UIElementProps extends BaseElementProps {
+    session?: {
+        id: string;
+        data: string;
+    };
     onChange?: (state: any, element: UIElement) => void;
     onValid?: (state: any, element: UIElement) => void;
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
+    onPaymentCompleted?: (result: any, element?: UIElement) => void;
 
     name?: string;
     amount?: PaymentAmount;
@@ -80,7 +86,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     submit(): void {
-        const { onError = () => {}, onSubmit = () => {} } = this.props;
+        const { onError = () => {}, onSubmit, session } = this.props;
         this.startPayment()
             .then(() => {
                 const { data, isValid } = this;
@@ -90,7 +96,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                     return false;
                 }
 
-                return onSubmit({ data, isValid }, this.elementRef);
+                if (!onSubmit && session) {
+                    return this.submitPayment(data);
+                }
+
+                if (onSubmit) return onSubmit({ data, isValid }, this.elementRef);
             })
             .catch(error => onError(error));
     }
@@ -109,6 +119,18 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
+    submitPayment(data) {
+        this.setStatus('loading');
+        const { session, clientKey, loadingContext } = this.props;
+        return makePayment(data, session, { clientKey, loadingContext }).then(result => {
+            if (result.action) {
+                this.handleAction(result.action);
+            } else {
+                this.handleFinalResult(result);
+            }
+        });
+    }
+
     handleAction(action: PaymentAction, props = {}) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
@@ -125,6 +147,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
         return null;
     }
+
+    protected handleFinalResult = result => {
+        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this);
+        return result;
+    };
 
     get isValid(): boolean {
         return false;
