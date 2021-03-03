@@ -1,6 +1,5 @@
 import { fillIFrame, deleteFromIFrame } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE } from './constants';
-import { ClientFunction } from 'testcafe';
 
 /**
  * Unique to each component are where the iframes are to be found,
@@ -33,8 +32,8 @@ export default iframeSelector => {
  * @returns {Promise<*>}
  */
 const fillCardNumber = iframeSelector => {
-    return async (t, value = REGULAR_TEST_CARD, replace = false) => {
-        return fillIFrame(t, iframeSelector, 0, '#encryptedCardNumber', value, replace);
+    return async (t, value = REGULAR_TEST_CARD, replace = false, paste = false) => {
+        return fillIFrame(t, iframeSelector, 0, '#encryptedCardNumber', value, replace, paste);
     };
 };
 
