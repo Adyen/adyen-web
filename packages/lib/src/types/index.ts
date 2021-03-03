@@ -146,7 +146,7 @@ export interface PaymentAmount {
 
 export type AddressField = typeof ADDRESS_SCHEMA[number];
 
-export type AddressSchema = {
+export type AddressData = {
     [key in AddressField]?: string;
 };
 

@@ -16,7 +16,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from './lib/types';
-import { AddressSchema } from '../../../types';
+import { AddressData } from '../../../types';
 import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupResponse } from '../../Card/types';
 import { CVCPolicyType } from './lib/core/AbstractSecuredField';
@@ -30,7 +30,7 @@ export interface SFPState {
     cvcPolicy?: CVCPolicyType;
     isSfpValid?: boolean;
     autoCompleteName?: string;
-    billingAddress?: AddressSchema;
+    billingAddress?: AddressData;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
     hideCVCForBrand?: boolean;

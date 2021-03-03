@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement';
-import { AddressSchema, BrowserInfo } from '../../types';
+import { AddressData, BrowserInfo } from '../../types';
 import {
     CbObjOnBinValue,
     CbObjOnBrand,
@@ -107,7 +107,7 @@ interface CardPaymentMethodData {
 
 export interface CardElementData {
     paymentMethod: CardPaymentMethodData;
-    billingAddress?: AddressSchema;
+    billingAddress?: AddressData;
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;
