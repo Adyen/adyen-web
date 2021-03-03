@@ -3,9 +3,21 @@ import { email } from '../regex';
 type ValidatorMode = 'blur' | 'input';
 
 export interface ValidatorRule {
-    validate: (value) => boolean;
+    validate: (value, context?) => boolean;
     errorMessage?: string;
     modes: ValidatorMode[];
+}
+
+interface FieldData {
+    key: string;
+    value: string;
+    mode?: ValidatorMode;
+}
+
+interface FieldContext {
+    state: {
+        [key: string]: any;
+    };
 }
 
 export type ValidatorRules = { [field: string]: ValidatorRule | ValidatorRule[] };
@@ -18,9 +30,9 @@ class ValidationRuleResult {
     public isValid: boolean;
     public errorMessage: string;
 
-    constructor(rule, value, mode) {
+    constructor(rule, value, mode, context) {
         this.shouldValidate = rule.modes.includes(mode);
-        this.isValid = rule.validate(value);
+        this.isValid = rule.validate(value, context);
         this.errorMessage = rule.errorMessage;
     }
 
@@ -101,9 +113,9 @@ class Validator {
     /**
      * Validates a field
      */
-    validate(field, value, mode: ValidatorMode = 'blur') {
-        const fieldRules = this.getRulesFor(field);
-        const validationRulesResult = fieldRules.map(rule => new ValidationRuleResult(rule, value, mode));
+    validate({ key, value, mode = 'blur' }: FieldData, context?: FieldContext) {
+        const fieldRules = this.getRulesFor(key);
+        const validationRulesResult = fieldRules.map(rule => new ValidationRuleResult(rule, value, mode, context));
 
         return new ValidationResult(validationRulesResult);
     }

@@ -8,9 +8,9 @@ function useForm<DataState = DefaultDataState>(props: { rules?: ValidatorRules; 
     const validator = useMemo(() => new Validator(rules), []);
 
     /** Formats and validates a field */
-    const processField = (key, value, mode) => {
+    const processField = ({ key, value, mode }, fieldContext) => {
         const formattedValue = formatters[key] ? formatters[key](value ?? '') : value;
-        const validationResult = validator.validate(key, formattedValue, mode);
+        const validationResult = validator.validate({ key, value: formattedValue, mode }, fieldContext);
         return [formattedValue, validationResult];
     };
 
@@ -19,14 +19,12 @@ function useForm<DataState = DefaultDataState>(props: { rules?: ValidatorRules; 
         { defaultData, schema: props.schema ?? [], processField },
         init
     );
-    const isValid = useMemo(() => state.schema.reduce((acc, val) => acc && state.valid[val], true), [state.schema, state.valid]);
+
+    const isValid = useMemo(() => state.schema.every(key => state.valid[key]), [state.schema, state.valid]);
 
     const getTargetValue = (key, e) => {
         if (!e.target) return e;
-
-        if (e.target.type === 'checkbox') {
-            return !state.data[key];
-        }
+        if (e.target.type === 'checkbox') return !state.data[key];
         return e.target.value;
     };
 
