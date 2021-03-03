@@ -4,20 +4,17 @@ import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
-import { getKeyForField } from '../utils';
-import { COUNTRIES_WITH_STATES_DATASET } from '../constants';
 import { StateFieldItem, StateFieldProps } from '../types';
 
 export default function StateField(props: StateFieldProps) {
-    const { classNameModifiers, selectedCountry, onDropdownChange, value, readOnly } = props;
+    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
-    const labelKey: string = getKeyForField('stateOrProvince', selectedCountry);
-    const placeholderKey: string = getKeyForField('stateOrProvincePlaceholder', selectedCountry);
+    const placeholderKey: string = specifications.getKeyForField('stateOrProvincePlaceholder', selectedCountry);
 
     useLayoutEffect(() => {
-        if (!selectedCountry || !COUNTRIES_WITH_STATES_DATASET.includes(selectedCountry)) {
+        if (!selectedCountry || !specifications.countryHasDataset(selectedCountry)) {
             setStates([]);
             setLoaded(true);
             return;
@@ -38,7 +35,7 @@ export default function StateField(props: StateFieldProps) {
     if (!loaded || !states.length) return null;
 
     return (
-        <Field label={i18n.get(labelKey)} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage}>
+        <Field label={label} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage}>
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
