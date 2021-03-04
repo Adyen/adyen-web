@@ -117,6 +117,8 @@ export interface GooglePayProps extends UIElementProps {
     // Button
     buttonColor?: google.payments.api.ButtonColor;
     buttonType?: google.payments.api.ButtonType;
+    buttonSizeMode?: google.payments.api.ButtonSizeMode;
+    buttonLocale?: string;
 
     // Events
     onClick?: (resolve, reject) => void;
