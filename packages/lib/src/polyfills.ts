@@ -3,6 +3,7 @@ import 'core-js/es/object/keys';
 import 'core-js/es/array/includes';
 import 'core-js/es/array/find';
 import 'core-js/es/array/find-index';
+import 'core-js/features/promise'
 
 // ChildNode.remove()
 (function(arr) {
@@ -23,7 +24,3 @@ import 'core-js/es/array/find-index';
         });
     });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-
-if (typeof Promise === 'undefined') {
-    window.Promise = require('promise/lib/es6-extensions.js');
-}
