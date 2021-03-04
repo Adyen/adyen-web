@@ -30,8 +30,8 @@ export default iframeSelector => {
  * @returns {Promise<*>}
  */
 const fillPwd = iframeSelector => {
-    return async (t, value = TEST_PWD_VALUE, replace = false) => {
-        return fillIFrame(t, iframeSelector, 3, '#encryptedPassword', value, replace);
+    return async (t, value = TEST_PWD_VALUE, action) => {
+        return fillIFrame(t, iframeSelector, 3, '#encryptedPassword', value, action);
     };
 };
 
