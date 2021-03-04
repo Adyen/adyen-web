@@ -8,11 +8,23 @@ export const start = async (t, wait = 1000, speed = 1) => {
     return t.wait(wait).setTestSpeed(speed);
 };
 
-export const fillIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelector, value, replace = false) => {
+export const fillIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelector, value, action = 'add') => {
+    let replace = false;
+    let paste = false;
+    switch (action) {
+        case 'replace':
+            replace = true;
+            break;
+        case 'paste':
+            replace = paste = true;
+            break;
+        default: // 'add'
+    }
+
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))
-        .typeText(iFrameInputSelector, value, { replace })
+        .typeText(iFrameInputSelector, value, { replace, paste })
         .switchToMainWindow();
 };
 
