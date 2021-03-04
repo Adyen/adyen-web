@@ -193,7 +193,7 @@ test(
         await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
         // Paste dual branded card (visa/cb) into card field
-        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD, true, true); // true, true = {replace: true, paste: true} which will mimic select and paste action
+        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD, 'paste');
 
         // Check buttons are active
         await t.expect(dualBrandingIconHolderActive.exists).ok();
@@ -275,7 +275,7 @@ test(
         const lastDigits = DUAL_BRANDED_CARD.substring(11, 16);
 
         // Paste partial dual branded card (visa/cb) into card field
-        await cardUtils.fillCardNumber(t, firstDigits, true, true);
+        await cardUtils.fillCardNumber(t, firstDigits, 'paste');
 
         // Check buttons are present but NOT active (which will mean the holding element is at 25% opacity)
         await t

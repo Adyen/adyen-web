@@ -69,7 +69,7 @@ test(
         await t.expect(getCardState('valid', 'encryptedPassword')).eql(true);
 
         // Replace number
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, true);
+        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'replace');
 
         // (Does the password securedField get removed)
         await t.expect(passwordHolder.exists).notOk();
@@ -112,7 +112,7 @@ test(
             .notOk();
 
         // Replace number with non-korean card
-        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, true);
+        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'replace');
 
         // Complete form
         await kcpUtils.fillTaxNumber(t);
