@@ -4,7 +4,7 @@ import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
-import { mapBrands } from './utils';
+import { mapBrands, getGooglePayLocale } from './utils';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -17,12 +17,15 @@ class GooglePay extends UIElement<GooglePayProps> {
      */
     formatProps(props) {
         const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
-
+        const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
+        const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n.locale);
         return {
             ...props,
             showButton: props.showPayButton === true,
             configuration: props.configuration,
-            allowedCardNetworks
+            allowedCardNetworks,
+            buttonSizeMode,
+            buttonLocale
         };
     }
 
@@ -115,6 +118,8 @@ class GooglePay extends UIElement<GooglePayProps> {
                 <GooglePayButton
                     buttonColor={this.props.buttonColor}
                     buttonType={this.props.buttonType}
+                    buttonSizeMode={this.props.buttonSizeMode}
+                    buttonLocale={this.props.buttonLocale}
                     paymentsClient={this.googlePay.paymentsClient}
                     onClick={this.submit}
                 />
