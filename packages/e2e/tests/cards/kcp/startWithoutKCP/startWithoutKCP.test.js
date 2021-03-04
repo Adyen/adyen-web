@@ -137,7 +137,7 @@ test(
             .notOk();
 
         // Replace number with non-korean card
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, true);
+        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'replace');
 
         // Expect card to now be valid
         await t.expect(getIsValid()).eql(true);

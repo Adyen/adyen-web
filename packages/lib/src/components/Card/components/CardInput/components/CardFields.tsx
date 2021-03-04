@@ -9,14 +9,13 @@ import styles from '../CardInput.module.scss';
 
 export default function CardFields({
     brand,
-    cvcRequired,
     dualBrandingElements,
     dualBrandingChangeHandler,
     dualBrandingSelected,
     errors,
     focusedElement,
     hasCVC,
-    hideCVCForBrand,
+    cvcPolicy,
     hideDateForBrand,
     onFocusField,
     showBrandIcon,
@@ -58,10 +57,9 @@ export default function CardFields({
 
                 {hasCVC && (
                     <CVC
-                        cvcRequired={cvcRequired}
                         error={errors.encryptedSecurityCode}
                         focused={focusedElement === 'encryptedSecurityCode'}
-                        hideCVCForBrand={hideCVCForBrand}
+                        cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}
                         filled={!!errors.encryptedSecurityCode || !!valid.encryptedSecurityCode}
                         label={i18n.get('creditCard.cvcField.title')}

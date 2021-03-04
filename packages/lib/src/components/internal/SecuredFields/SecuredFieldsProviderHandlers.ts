@@ -114,7 +114,6 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                         ? false
                         : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN,
             hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
         }),
         () => {
