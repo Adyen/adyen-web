@@ -90,13 +90,6 @@ test('Test card has hidden cvc field ' + 'then complete date and see card is val
 
         // hidden cvc field
         .expect(cvcSpan.filterHidden().exists)
-        .ok()
-
-        // with "optional" text // TODO - currently passes but this should change once we pass cvcPolicy to the CVC component
-        .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
-        .ok()
-        // and optional class
-        .expect(optionalCVCSpan.exists)
         .ok();
 
     // Fill date
