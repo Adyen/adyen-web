@@ -62,7 +62,7 @@ const supportedLocales = [
     'zh'
 ];
 
-export function getGooglePayLocale(locale) {
+export function getGooglePayLocale(locale = '') {
     const twoLetterLocale = locale.toLowerCase().substring(0, 2);
     return supportedLocales.includes(twoLetterLocale) ? twoLetterLocale : null;
 }

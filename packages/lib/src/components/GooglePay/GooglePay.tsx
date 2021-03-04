@@ -18,7 +18,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     formatProps(props) {
         const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
-        const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n.locale);
+        const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
         return {
             ...props,
             showButton: props.showPayButton === true,
