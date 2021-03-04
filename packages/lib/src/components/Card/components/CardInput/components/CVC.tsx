@@ -5,6 +5,7 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CVCProps } from './types';
 import styles from '../CardInput.module.scss';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function CVC(props: CVCProps) {
     const {
@@ -17,15 +18,14 @@ export default function CVC(props: CVCProps) {
         filled,
         isValid,
         frontCVC = false,
-        hideCVCForBrand = false,
-        cvcRequired = true
+        cvcPolicy = CVC_POLICY_REQUIRED
     } = props;
     const { i18n } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
-        [styles['adyen-checkout__card__cvc__input--hidden']]: hideCVCForBrand,
-        'adyen-checkout__field__cvc--optional': !cvcRequired
+        [styles['adyen-checkout__card__cvc__input--hidden']]: cvcPolicy === CVC_POLICY_HIDDEN,
+        'adyen-checkout__field__cvc--optional': cvcPolicy === CVC_POLICY_OPTIONAL
     });
 
     const cvcClassnames = classNames({
@@ -38,7 +38,7 @@ export default function CVC(props: CVCProps) {
         [styles['adyen-checkout__input']]: true
     });
 
-    const fieldLabel = cvcRequired ? label : i18n.get('creditCard.cvcField.title.optional');
+    const fieldLabel = cvcPolicy !== CVC_POLICY_OPTIONAL ? label : i18n.get('creditCard.cvcField.title.optional');
 
     return (
         <Field

@@ -93,7 +93,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
             holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
         },
         isSfpValid: sfState.isSfpValid,
-        hideCVCForBrand: sfState.hideCVCForBrand,
+        cvcPolicy: sfState.cvcPolicy,
         hideDateForBrand: sfState.hideDateForBrand,
         brand: sfState.brand
     });
