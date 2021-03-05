@@ -3,8 +3,8 @@ import Session from '../CheckoutSession';
 
 /**
  */
-function makePayment(paymentRequest, session: Session): Promise<any> {
-    const path = `v1/sessions/${session.id}/payments?clientKey=${session.clientKey}`;
+function submitDetails(paymentRequest, session: Session): Promise<any> {
+    const path = `v1/sessions/${session.id}/paymentDetails?clientKey=${session.clientKey}`;
     const data = {
         sessionData: session.data,
         ...paymentRequest
@@ -19,4 +19,4 @@ function makePayment(paymentRequest, session: Session): Promise<any> {
     });
 }
 
-export default makePayment;
+export default submitDetails;

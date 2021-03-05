@@ -14,7 +14,8 @@ window.paymentData = {};
             value: 123,
             currency: 'EUR'
         },
-        reference: 'ABC123'
+        reference: 'ABC123',
+        returnUrl: 'http://localhost:3020/'
     });
 
     window.checkout = await AdyenCheckout({

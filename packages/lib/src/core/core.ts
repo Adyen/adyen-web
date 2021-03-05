@@ -118,7 +118,7 @@ class Core {
             i18n: new Language(this.options.locale, this.options.translations)
         };
 
-        if (this.options.session) this.session = new Session(this.options.session);
+        if (this.options.session) this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
 
         return this;

@@ -5,6 +5,7 @@ import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import Language from '../language/Language';
 import makePayment from '../core/Services/makePayment';
+import submitDetails from '../core/Services/submitDetails';
 
 export interface UIElementProps extends BaseElementProps {
     session?: {
@@ -121,14 +122,35 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
 
     submitPayment(data) {
         this.setStatus('loading');
-        const { session, clientKey, loadingContext } = this.props;
-        return makePayment(data, session, { clientKey, loadingContext }).then(result => {
-            if (result.action) {
-                this.handleAction(result.action);
-            } else {
-                this.handleFinalResult(result);
-            }
-        });
+
+        return this._parentInstance.session
+            .makePayment(data)
+            .then(result => {
+                if (result.action) {
+                    this.handleAction(result.action);
+                } else {
+                    this.handleFinalResult(result);
+                }
+            })
+            .catch(error => {
+                this.setStatus('ready');
+                throw new Error(error);
+            });
+    }
+
+    submitAdditionalDetails(data) {
+        return this._parentInstance.session
+            .submitDetails(data)
+            .then(result => {
+                if (result.action) {
+                    this.handleAction(result.action);
+                } else {
+                    this.handleFinalResult(result);
+                }
+            })
+            .catch(error => {
+                throw new Error(error);
+            });
     }
 
     handleAction(action: PaymentAction, props = {}) {

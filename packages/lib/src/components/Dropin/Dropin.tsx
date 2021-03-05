@@ -7,7 +7,6 @@ import { PaymentAction } from '../../types';
 import { DropinElementProps } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
-import makePayment from '../../core/Services/makePayment';
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
