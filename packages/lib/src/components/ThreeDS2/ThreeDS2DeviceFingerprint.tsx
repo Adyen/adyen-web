@@ -3,6 +3,7 @@ import UIElement from '../UIElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
 import { ErrorObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
+import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
@@ -29,7 +30,8 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
     render() {
-        if (!this.props.paymentData) {
+        // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
+        if (!existy(this.props.paymentData)) {
             this.props.onError({
                 errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
                 message: 'No paymentData received. Fingerprinting cannot proceed'
