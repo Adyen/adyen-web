@@ -10,6 +10,22 @@ declare global {
 
 type Initiative = 'web' | 'messaging';
 
+export type ApplePayButtonType =
+    | 'plain'
+    | 'buy'
+    | 'donate'
+    | 'check-out'
+    | 'book'
+    | 'subscribe'
+    | 'add-money'
+    | 'contribute'
+    | 'order'
+    | 'reload'
+    | 'rent'
+    | 'support'
+    | 'tip'
+    | 'top-up';
+
 export interface ApplePayElementProps extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
@@ -134,7 +150,7 @@ export interface ApplePayElementProps extends UIElementProps {
 
     // ButtonOptions
     buttonColor?: 'black' | 'white' | 'white-with-line';
-    buttonType?: 'plain' | 'buy' | 'donate' | 'check-out' | 'book' | 'subscribe';
+    buttonType?: ApplePayButtonType;
 
     /**
      * Show or hide the Apple Pay button
