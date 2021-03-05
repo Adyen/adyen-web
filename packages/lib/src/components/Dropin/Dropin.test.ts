@@ -107,4 +107,85 @@ describe('Dropin', () => {
             expect(pa.componentFromAction.props.challengeWindowSize).toEqual('03');
         });
     });
+
+    describe.only('Testing pmConfiguration for cards & storedCards', () => {
+        test('Card config does not override non-existent storedCard config', done => {
+            const paymentMethodsResponse = {
+                paymentMethods: [
+                    {
+                        brands: ['mc', 'visa', 'amex'],
+                        details: [
+                            {
+                                key: 'number',
+                                type: 'text'
+                            },
+                            {
+                                key: 'expiryMonth',
+                                type: 'text'
+                            },
+                            {
+                                key: 'expiryYear',
+                                type: 'text'
+                            },
+                            {
+                                key: 'cvc',
+                                type: 'text'
+                            },
+                            {
+                                key: 'holderName',
+                                optional: true,
+                                type: 'text'
+                            }
+                        ],
+                        name: 'Credit Card',
+                        type: 'scheme'
+                    }
+                ],
+                storedPaymentMethods: [
+                    {
+                        brand: 'visa',
+                        expiryMonth: '03',
+                        expiryYear: '2030',
+                        holderName: 'Checkout Shopper PlaceHolder',
+                        id: '123',
+                        lastFour: '1111',
+                        name: 'VISA',
+                        supportedShopperInteractions: ['ContAuth', 'Ecommerce'],
+                        type: 'scheme'
+                    }
+                ]
+            };
+
+            const checkout = new AdyenCheckout({
+                paymentMethodsResponse,
+                clientKey: 'myClientKey',
+                // @ts-ignore Ignore fact that storedCard isn't a recognised type in components/index.ts > componentsMap
+                paymentMethodsConfiguration: { card: { hideCVC: true }, storedCard: {} }
+                // environment: 'test',
+                // amount: {
+                //     currency: 'EUR',
+                //     value: 25900
+                // },
+                // countryCode: 'NL',
+                // locale: 'nl-NL'
+            });
+
+            const dropin = checkout.create('dropin');
+            const wrapper = mount(dropin.render());
+
+            // wrapper.update();
+
+            setTimeout(() => {
+                // console.log('### Dropin.test::dropin.dropinRef:: ', dropin.dropinRef);
+                console.log('### Dropin.test::dropin.dropinRef:: ', dropin.dropinRef.state.elements[0].props);
+
+                // StoredCard has CVC field
+                expect(dropin.dropinRef.state.elements[0].props.hasCVC).toEqual(true);
+                // Card doesn't have CVC field
+                expect(dropin.dropinRef.state.elements[1].props.hasCVC).toEqual(false);
+
+                done();
+            }, 1000);
+        });
+    });
 });
