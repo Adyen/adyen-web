@@ -3,11 +3,12 @@ import cx from 'classnames';
 import styles from './ApplePayButton.module.scss';
 import './ApplePayButton.scss';
 import Language from '../../../language/Language';
+import { ApplePayButtonType } from '../types';
 
 interface ApplePayButtonProps {
     i18n: Language;
     buttonColor: 'black' | 'white' | 'white-with-line';
-    buttonType: 'plain' | 'buy' | 'donate' | 'check-out' | 'book' | 'subscribe';
+    buttonType: ApplePayButtonType;
     onClick: (event) => void;
 }
 

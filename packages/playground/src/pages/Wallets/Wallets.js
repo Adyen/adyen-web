@@ -184,10 +184,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
             merchantName: 'Adyen Test merchant', // Name to be displayed
             merchantIdentifier: '000000000200001' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
         },
-
-        // Button config (optional)
-        buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-        buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+        buttonType: 'buy'
     });
 
     applepay
