@@ -140,7 +140,7 @@ class Core {
             const paymentMethodsConfiguration = getComponentConfiguration(
                 PaymentMethod.type,
                 this.options.paymentMethodsConfiguration,
-                options.storedPaymentMethodId
+                !!options.storedPaymentMethodId
             );
 
             // Filtered global options
@@ -190,7 +190,7 @@ class Core {
             const paymentMethodsConfiguration = getComponentConfiguration(
                 PaymentMethod.type,
                 this.options.paymentMethodsConfiguration,
-                PaymentMethod.storedPaymentMethodId
+                !!PaymentMethod.storedPaymentMethodId
             );
             // handle rest of the flow normally (creating by string)
             return this.handleCreate(PaymentMethod.type, { ...PaymentMethod, ...options, ...paymentMethodsConfiguration });
