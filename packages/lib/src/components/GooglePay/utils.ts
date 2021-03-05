@@ -27,3 +27,42 @@ export function mapBrands(brands) {
         return accumulator;
     }, []);
 }
+
+const supportedLocales = [
+    'en',
+    'ar',
+    'bg',
+    'ca',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'es',
+    'et',
+    'fi',
+    'fr',
+    'hr',
+    'id',
+    'it',
+    'ja',
+    'ko',
+    'ms',
+    'nl',
+    'no',
+    'pl',
+    'pt',
+    'ru',
+    'sk',
+    'sl',
+    'sr',
+    'sv',
+    'th',
+    'tr',
+    'uk',
+    'zh'
+];
+
+export function getGooglePayLocale(locale = '') {
+    const twoLetterLocale = locale.toLowerCase().substring(0, 2);
+    return supportedLocales.includes(twoLetterLocale) ? twoLetterLocale : null;
+}
