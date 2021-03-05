@@ -1,19 +1,31 @@
 import { resolvePlaceholders } from '../../../../utils';
-import { PlaceholdersObject } from '../../AbstractSecuredField';
+import { PlaceholdersObject, SFInternalConfig } from '../../AbstractSecuredField';
+import {
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_SECURITY_CODE_3_DIGITS,
+    ENCRYPTED_SECURITY_CODE_4_DIGITS,
+    GIFT_CARD
+} from '../../../configuration/constants';
 
 /**
- * Checks if the merchant has defined an placeholder config object and if not create one with a value from the relevant translation file
+ * Create placeholders with a value from the relevant translation file
  */
-export function processPlaceholders(configObj, fieldType, i18n) {
-    // Use the merchant defined value - even if an empty string or null
-    let placeholderFieldValue: string = configObj.iframeUIConfig.placeholders ? configObj.iframeUIConfig.placeholders[fieldType] : undefined;
-
-    // Only if the value is truly "undefined" then get a translated one
-    if (typeof placeholderFieldValue === 'undefined') {
-        placeholderFieldValue = resolvePlaceholders(i18n)[fieldType];
-    }
+export function processPlaceholders(configObj: SFInternalConfig, fieldType, i18n) {
+    const type = configObj.txVariant;
+    const resolvedPlaceholders = resolvePlaceholders(i18n);
 
     return {
-        [fieldType]: placeholderFieldValue
+        // Non-SecurityCode fields
+        ...(fieldType !== ENCRYPTED_SECURITY_CODE && { [fieldType]: resolvedPlaceholders[fieldType] }),
+
+        // Gift cards
+        ...(fieldType === ENCRYPTED_SECURITY_CODE && type === GIFT_CARD && { [fieldType]: resolvedPlaceholders[fieldType] }),
+
+        // Credit card CVC field
+        ...(fieldType === ENCRYPTED_SECURITY_CODE &&
+            type !== GIFT_CARD && {
+                [ENCRYPTED_SECURITY_CODE_3_DIGITS]: resolvedPlaceholders[ENCRYPTED_SECURITY_CODE_3_DIGITS],
+                [ENCRYPTED_SECURITY_CODE_4_DIGITS]: resolvedPlaceholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]
+            })
     } as PlaceholdersObject;
 }

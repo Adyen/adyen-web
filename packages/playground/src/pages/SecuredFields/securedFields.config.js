@@ -16,14 +16,6 @@ export const styles = {
     }
 };
 
-export const placeholders = {
-    encryptedCardNumber: '9999 9999 9999 9999',
-    encryptedExpiryDate: 'mm/yy',
-    encryptedExpiryMonth: 'mm',
-    encryptedExpiryYear: 'yy',
-    encryptedSecurityCode: '8888'
-};
-
 export function onConfigSuccess(pCallbackObj) {
     document.querySelector('.secured-fields').style.display = 'block';
     document.querySelector('.card-input__spinner__holder').style.display = 'none';

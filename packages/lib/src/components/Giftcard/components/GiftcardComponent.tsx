@@ -6,6 +6,7 @@ import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
+import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -104,7 +105,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     }}
                     onChange={this.onChange}
                     onFocus={this.handleFocus}
-                    type={'giftcard'}
+                    type={GIFT_CARD}
                     render={({ setRootNode, setFocusOn }, sfpState) => (
                         <div ref={setRootNode} className="adyen-checkout__field-wrapper">
                             <Field
