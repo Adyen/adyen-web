@@ -70,6 +70,7 @@ const componentsMap = {
     boletobancario_santander: Boleto,
     primeiropay_boleto: Boleto,
     card: Card,
+    storedCard: Card,
     diners: Card,
     directdebit_GB: BacsDD,
     discover: Card,
