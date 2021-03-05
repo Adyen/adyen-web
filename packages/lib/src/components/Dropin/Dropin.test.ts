@@ -177,7 +177,7 @@ describe('Dropin', () => {
 
             setTimeout(() => {
                 // console.log('### Dropin.test::dropin.dropinRef:: ', dropin.dropinRef);
-                console.log('### Dropin.test::dropin.dropinRef:: ', dropin.dropinRef.state.elements[0].props);
+                // console.log('### Dropin.test::dropin.dropinRef:: ', dropin.dropinRef.state.elements[0].props);
 
                 // StoredCard has CVC field
                 expect(dropin.dropinRef.state.elements[0].props.hasCVC).toEqual(true);
