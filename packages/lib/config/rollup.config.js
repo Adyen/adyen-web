@@ -5,6 +5,7 @@ import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import eslint from '@rollup/plugin-eslint';
+import terserConfig from './terser.config';
 import pkg from '../package.json';
 const currentVersion = require('./version')();
 
@@ -15,65 +16,75 @@ if (process.env.CI !== 'true') {
     );
 }
 
-let cache;
 const isProduction = process.env.NODE_ENV === 'production';
 const isBundleAnalyzer = process.env.NODE_ENV === 'analyze';
 
-const terserConfig = {
-    output: {
-        ecma: 5,
-        comments: false,
-        // Turned on because emoji and regex is not minified properly using default
-        // https://github.com/facebook/create-react-app/issues/2488
-        ascii_only: true
-    }
+const input = 'src/index.ts';
+const watchConfig = {
+    chokidar: {
+        usePolling: true,
+        useFsEvents: false,
+        interval: 500
+    },
+    exclude: 'node_modules/**'
 };
+
+async function getPlugins({ compress, analyze, version }) {
+    return [
+        resolve(),
+        commonjs(),
+        eslint({
+            include: ['./src/**'],
+            exclude: ['./src/**/*.json', './src/**/*.scss']
+        }),
+        replace({
+            values: {
+                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+                'process.env.VERSION': JSON.stringify(version.ADYEN_WEB_VERSION),
+                'process.env.COMMIT_HASH': JSON.stringify(version.COMMIT_HASH),
+                'process.env.COMMIT_BRANCH': JSON.stringify(version.COMMIT_BRANCH),
+                'process.env.ADYEN_BUILD_ID': JSON.stringify(version.ADYEN_BUILD_ID)
+            },
+            preventAssignment: true
+        }),
+        typescript({
+            useTsconfigDeclarationDir: true,
+            check: false,
+            cacheRoot: `./node_modules/.cache/.rts2_cache`
+        }),
+        json({ namedExports: false, compact: true, preferConst: true }),
+        postcss({
+            config: 'postcss.config.js',
+            sourceMap: true,
+            inject: false,
+            extract: 'adyen.css'
+        }),
+        compress && (await import('rollup-plugin-terser')).terser(terserConfig),
+        analyze && (await import('rollup-plugin-visualizer')).default({ title: 'Adyen Web bundle visualizer', gzipSize: true })
+    ];
+}
+
+function getExternals() {
+    const peerDeps = Object.keys(pkg.peerDependencies || {});
+    const dependencies = Object.keys(pkg.dependencies || {});
+
+    return [...peerDeps, ...dependencies];
+}
 
 export default async () => [
     {
-        input: 'src/index.ts',
-        cache,
-        plugins: [
-            resolve(),
-            commonjs(),
-            eslint({
-                include: ['./src/**'],
-                exclude: ['./src/**/*.json', './src/**/*.scss']
-            }),
-            replace({
-                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-                'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
-                'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),
-                'process.env.COMMIT_BRANCH': JSON.stringify(currentVersion.COMMIT_BRANCH),
-                'process.env.ADYEN_BUILD_ID': JSON.stringify(currentVersion.ADYEN_BUILD_ID)
-            }),
-            typescript({
-                useTsconfigDeclarationDir: true,
-                check: false,
-                cacheRoot: `./node_modules/.cache/.rts2_cache`
-            }),
-            json({ namedExports: false, compact: true, preferConst: true }),
-            postcss({
-                config: 'postcss.config.js',
-                sourceMap: true,
-                inject: false,
-                extract: 'adyen.css'
-            }),
-            isProduction && (await import('rollup-plugin-terser')).terser(terserConfig),
-            isBundleAnalyzer && (await import('rollup-plugin-visualizer')).default({ title: 'Adyen Web bundle visualizer', gzipSize: true })
-        ],
+        input,
+        external: getExternals(),
+        plugins: await getPlugins({
+            compress: isProduction,
+            analyze: isBundleAnalyzer,
+            version: currentVersion
+        }),
         output: [
             {
                 dir: 'dist/es',
                 format: 'es',
                 chunkFileNames: '[name].js'
-            },
-            {
-                name: 'AdyenCheckout',
-                file: pkg['umd:main'],
-                format: 'umd',
-                inlineDynamicImports: true,
-                sourcemap: true
             },
             {
                 dir: 'dist/cjs',
@@ -82,12 +93,22 @@ export default async () => [
                 inlineDynamicImports: true
             }
         ],
-        watch: {
-            chokidar: {
-                usePolling: true,
-                useFsEvents: false,
-                interval: 500
-            }
-        }
+        watch: watchConfig
+    },
+    {
+        input,
+        plugins: await getPlugins({
+            compress: isProduction,
+            analyze: isBundleAnalyzer,
+            version: currentVersion
+        }),
+        output: {
+            name: 'AdyenCheckout',
+            file: pkg['umd:main'],
+            format: 'umd',
+            inlineDynamicImports: true,
+            sourcemap: true
+        },
+        watch: watchConfig
     }
 ];
