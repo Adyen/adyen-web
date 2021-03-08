@@ -4,8 +4,6 @@ import { PaymentAction, PaymentAmount } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import Language from '../language/Language';
-import makePayment from '../core/Services/makePayment';
-import submitDetails from '../core/Services/submitDetails';
 
 export interface UIElementProps extends BaseElementProps {
     session?: {

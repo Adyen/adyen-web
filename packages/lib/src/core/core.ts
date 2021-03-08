@@ -35,17 +35,23 @@ class Core {
     }
 
     async initialize() {
-        if (this.session) {
+        if (this.options.session) {
             const { clientKey, loadingContext } = this.options;
             return new Promise(resolve => {
-                setupSession(this.options.session, { clientKey, loadingContext }).then(session => {
-                    this.setOptions(session);
+                setupSession(this.options.session, { clientKey, loadingContext }).then(sessionResponse => {
+                    this.setOptions(sessionResponse);
                     resolve(this);
                 });
             });
         }
 
         return Promise.resolve(this);
+    }
+
+    submitDetails(details) {
+        this.session.submitDetails(details).then(response => {
+            if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+        });
     }
 
     /**
@@ -118,7 +124,13 @@ class Core {
             i18n: new Language(this.options.locale, this.options.translations)
         };
 
-        if (this.options.session) this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
+        if (this.options.session) {
+            this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
+            this.session.storeSession();
+        } else if (this.options.sessionId) {
+            this.session = new Session(null, this.options.clientKey, this.options.loadingContext);
+            this.session.getStoredSession(this.options.sessionId);
+        }
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
 
         return this;

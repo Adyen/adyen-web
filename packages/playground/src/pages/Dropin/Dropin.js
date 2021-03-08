@@ -1,6 +1,6 @@
 import AdyenCheckout from '@adyen/adyen-web/dist/es';
 import '@adyen/adyen-web/dist/adyen.css';
-import { makeDetailsCall, makePayment, getPaymentMethods, checkBalance, createOrder, cancelOrder, createSession } from '../../services';
+import { createSession } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
@@ -8,19 +8,15 @@ import '../../style.scss';
 
 const initCheckout = async () => {
     const session = await createSession({
-        amount: {
-            value: 123,
-            currency: 'EUR'
-        },
+        amount,
         reference: 'ABC123',
         returnUrl: 'http://localhost:3020/'
     });
 
     window.checkout = await AdyenCheckout({
         session,
-        amount,
         countryCode,
-        clientKey: 'devl_F73CCZ4Y7NHFRLC3OMVZHDIVQY47VWFL', //process.env.__CLIENT_KEY__,
+        clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: 'http://localhost:8080/checkoutshopper/',
         installmentOptions: {
@@ -37,47 +33,6 @@ const initCheckout = async () => {
                 default:
                     component.setStatus('error');
             }
-        },
-        // onSubmit: async (state, component) => {
-        //     component.setStatus('loading');
-        //     const result = await makePayment(state.data);
-        //
-        //     // handle actions
-        //     if (result.action) {
-        //         // demo only - store paymentData & order
-        //         if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-        //         component.handleAction(result.action);
-        //     } else if (result.order && result.order?.remainingAmount?.value > 0) {
-        //         // handle orders
-        //         const order = {
-        //             orderData: result.order.orderData,
-        //             pspReference: result.order.pspReference
-        //         };
-        //
-        //         const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-        //         checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-        //     } else {
-        //         handleFinalState(result.resultCode, component);
-        //     }
-        // },
-        // onAdditionalDetails: async (state, component) => {
-        //     const result = await makeDetailsCall(state.data);
-        //
-        //     if (result.action) {
-        //         component.handleAction(result.action);
-        //     } else {
-        //         handleFinalState(result.resultCode, component);
-        //     }
-        // },
-        onBalanceCheck: async (resolve, reject, data) => {
-            resolve(await checkBalance(data));
-        },
-        onOrderRequest: async (resolve, reject) => {
-            resolve(await createOrder({ amount }));
-        },
-        onOrderCancel: async order => {
-            await cancelOrder(order);
-            checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
         },
         onError: obj => {
             console.log('checkout level merchant defined onError handler obj=', obj);
@@ -150,40 +105,29 @@ const initCheckout = async () => {
     window.dropin = checkout.create('dropin').mount('#dropin-container');
 };
 
-function handleFinalState(resultCode, dropin) {
-    localStorage.removeItem('storedPaymentData');
+async function handleRedirectResult(redirectResult, sessionId) {
+    window.checkout = await AdyenCheckout({
+        sessionId,
+        clientKey: process.env.__CLIENT_KEY__,
+        environment: 'http://localhost:8080/checkoutshopper/',
+        onPaymentCompleted: result => {
+            console.log('onPaymentCompleted', result);
+            alert(result.status);
+        },
+        onError: obj => {
+            console.log('checkout level merchant defined onError handler obj=', obj);
+        }
+    });
 
-    if (resultCode === 'Authorised' || resultCode === 'Received') {
-        dropin.setStatus('success');
+    checkout.submitDetails({ redirectResult });
+}
+
+(async () => {
+    const { redirectResult, sessionId } = getSearchParameters(window.location.search);
+
+    if (!redirectResult) {
+        await initCheckout();
     } else {
-        dropin.setStatus('error');
+        await handleRedirectResult(redirectResult, sessionId);
     }
-}
-
-function handleRedirectResult() {
-    const storedPaymentData = localStorage.getItem('storedPaymentData');
-    const { redirectResult, payload } = getSearchParameters(window.location.search);
-
-    if (storedPaymentData && (redirectResult || payload)) {
-        dropin.setStatus('loading');
-        return makeDetailsCall({
-            paymentData: storedPaymentData,
-            details: {
-                ...(redirectResult && { redirectResult }),
-                ...(payload && { payload })
-            }
-        }).then(result => {
-            if (result.action) {
-                dropin.handleAction(result.action);
-            } else {
-                handleFinalState(result.resultCode, dropin);
-            }
-
-            return true;
-        });
-    }
-
-    return Promise.resolve(true);
-}
-
-initCheckout().then(handleRedirectResult);
+})();
