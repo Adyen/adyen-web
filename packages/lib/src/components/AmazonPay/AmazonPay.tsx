@@ -15,8 +15,10 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     formatProps(props) {
         return {
             ...props,
+            checkoutMode: props.isDropin ? 'ProcessOrder' : props.checkoutMode,
             environment: props.environment.toUpperCase(),
             locale: props.locale.replace('-', '_'),
+            productType: props.isDropin && !props.addressDetails ? 'PayOnly' : props.productType,
             region: props.region.toUpperCase()
         };
     }
