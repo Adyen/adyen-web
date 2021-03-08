@@ -96,7 +96,7 @@ export default async () => [
         watch: watchConfig
     },
     {
-        input: 'src/index.ts',
+        input,
         plugins: await getPlugins({
             compress: isProduction,
             analyze: isBundleAnalyzer,
