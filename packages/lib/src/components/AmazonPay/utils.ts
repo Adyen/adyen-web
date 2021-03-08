@@ -1,5 +1,7 @@
 import { AMAZONPAY_URL_EU, AMAZONPAY_URL_US, FALLBACK_LOCALE_EU, FALLBACK_LOCALE_US, SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import { DeliverySpecifications, PayloadJSON, Region, SupportedLocale } from './types';
+import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
+import { PaymentAmount } from '../../types';
+import { getDecimalAmount } from '../../utils/amount-util';
 
 /**
  * Returns the AmazonPay script URL for passed region.
@@ -8,6 +10,23 @@ import { DeliverySpecifications, PayloadJSON, Region, SupportedLocale } from './
  */
 export function getAmazonPayUrl(region: Region): string {
     return region === 'US' ? AMAZONPAY_URL_US : AMAZONPAY_URL_EU;
+}
+
+/**
+ * Returns the AmazonPay button settings object
+ * @param props -
+ * @returns the AmazonPay button settings
+ */
+export function getAmazonPaySettings(props): AmazonPayButtonSettings {
+    return {
+        ...(props.buttonColor && { buttonColor: props.buttonColor }),
+        checkoutLanguage: getCheckoutLocale(props.locale, props.region),
+        ledgerCurrency: props.currency || (props.amount?.currency as Currency),
+        merchantId: props.configuration.merchantId,
+        productType: props.productType,
+        placement: props.placement,
+        sandbox: props.environment === 'TEST'
+    };
 }
 
 /**
@@ -45,20 +64,43 @@ export function getCheckoutLocale(locale: string, region: Region): SupportedLoca
 }
 
 /**
+ * Returns the amount in the format Amazon expects.
+ * @param amount - The amount object in the Adyen format
+ * @returns the charge amount object in the Amazon format
+ */
+export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
+    return {
+        amount: String(getDecimalAmount(amount.value, amount.currency)),
+        currencyCode: amount.currency
+    };
+}
+
+/**
  * Returns a PayloadJSON object.
- * @param storeId - Store ID from the merchant
- * @param returnUrl - URL to be used as checkoutReviewReturnUrl
- * @param cancelUrl - Optional URL to be used as checkoutCancelUrl
- * @param deliverySpecifications - Optional delivery specifications object
+ * @param props -
  * @returns PayloadJSON
  */
-export function getPayloadJSON(storeId: string, returnUrl: string, cancelUrl?: string, deliverySpecifications?: DeliverySpecifications): PayloadJSON {
+export function getPayloadJSON(props): PayloadJSON {
+    const { amount, addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata } = props;
+    const { storeId } = props.configuration;
+    const isPayNow = checkoutMode === 'ProcessOrder';
+    const chargeAmount = isPayNow ? getChargeAmount(amount) : null;
+
     return {
         storeId,
         webCheckoutDetails: {
-            checkoutReviewReturnUrl: returnUrl,
-            ...(cancelUrl && { checkoutCancelUrl: cancelUrl })
+            ...(isPayNow ? { checkoutResultReturnUrl: returnUrl } : { checkoutReviewReturnUrl: returnUrl }),
+            ...(cancelUrl && { checkoutCancelUrl: cancelUrl }),
+            ...(isPayNow && { checkoutMode })
         },
-        ...(deliverySpecifications && { deliverySpecifications })
+        ...(isPayNow && {
+            paymentDetails: {
+                chargeAmount,
+                paymentIntent: 'Confirm'
+            }
+        }),
+        ...(merchantMetadata && { merchantMetadata }),
+        ...(deliverySpecifications && { deliverySpecifications }),
+        ...(addressDetails && { addressDetails })
     };
 }
