@@ -29,7 +29,7 @@ const watchConfig = {
     exclude: 'node_modules/**'
 };
 
-async function getPlugins({ compress, analyze, currentVersion }) {
+async function getPlugins({ compress, analyze, version }) {
     return [
         resolve(),
         commonjs(),
@@ -40,10 +40,10 @@ async function getPlugins({ compress, analyze, currentVersion }) {
         replace({
             values: {
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-                'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
-                'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),
-                'process.env.COMMIT_BRANCH': JSON.stringify(currentVersion.COMMIT_BRANCH),
-                'process.env.ADYEN_BUILD_ID': JSON.stringify(currentVersion.ADYEN_BUILD_ID)
+                'process.env.VERSION': JSON.stringify(version.ADYEN_WEB_VERSION),
+                'process.env.COMMIT_HASH': JSON.stringify(version.COMMIT_HASH),
+                'process.env.COMMIT_BRANCH': JSON.stringify(version.COMMIT_BRANCH),
+                'process.env.ADYEN_BUILD_ID': JSON.stringify(version.ADYEN_BUILD_ID)
             },
             preventAssignment: true
         }),
@@ -78,7 +78,7 @@ export default async () => [
         plugins: await getPlugins({
             compress: isProduction,
             analyze: isBundleAnalyzer,
-            currentVersion
+            version: currentVersion
         }),
         output: [
             {
@@ -100,7 +100,7 @@ export default async () => [
         plugins: await getPlugins({
             compress: isProduction,
             analyze: isBundleAnalyzer,
-            currentVersion
+            version: currentVersion
         }),
         output: {
             name: 'AdyenCheckout',
