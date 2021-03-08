@@ -29,32 +29,31 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     const step = urlSearchParams.get('step');
 
     // Initial state
-    if (!amazonCheckoutSessionId || step === 'cancel') {
+    if (!step) {
         window.amazonpay = checkout
             .create('amazonpay', {
-                currency: 'GBP',
-                environment: 'test',
-                configuration: {
-                    merchantId: 'A3SKIS53IXYBBU',
-                    publicKeyId: 'AG77NIXPURMDUC3DOC5WQPPH',
-                    storeId: 'amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e'
-                },
+                amount,
                 productType: 'PayOnly',
-                cancelUrl: 'http://localhost:3020/wallets?step=cancel',
+
+                // Regular checkout:
+                // returnUrl: 'http://localhost:3020/wallets?step=result',
+                // checkoutMode: 'ProcessOrder'
+
+                // Express Checkout flow:
                 returnUrl: 'http://localhost:3020/wallets?step=review'
             })
             .mount('.amazonpay-field');
     }
 
     // Review and confirm order
-    if (amazonCheckoutSessionId && step === 'review') {
+    if (step === 'review') {
         window.amazonpay = checkout
             .create('amazonpay', {
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
                 amazonCheckoutSessionId,
-                cancelUrl: 'http://localhost:3020/wallets?step=cancel',
+                cancelUrl: 'http://localhost:3020/wallets',
                 returnUrl: 'http://localhost:3020/wallets?step=result',
                 amount: {
                     currency: 'GBP',
@@ -65,7 +64,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     }
 
     // Make payment
-    if (amazonCheckoutSessionId && step === 'result') {
+    if (step === 'result') {
         window.amazonpay = checkout
             .create('amazonpay', {
                 /**
