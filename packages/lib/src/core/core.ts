@@ -137,7 +137,11 @@ class Core {
 
             // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at top level, in the config object set when a
             // new AdyenCheckout is initialised.
-            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, this.options.paymentMethodsConfiguration);
+            const paymentMethodsConfiguration = getComponentConfiguration(
+                PaymentMethod.type,
+                this.options.paymentMethodsConfiguration,
+                !!options.storedPaymentMethodId
+            );
 
             // Filtered global options
             const globalOptions = processGlobalOptions(this.options);
@@ -183,7 +187,11 @@ class Core {
          */
         if (typeof PaymentMethod === 'object' && typeof PaymentMethod.type === 'string') {
             // paymentMethodsConfiguration object will take precedence here
-            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod.type, this.options.paymentMethodsConfiguration);
+            const paymentMethodsConfiguration = getComponentConfiguration(
+                PaymentMethod.type,
+                this.options.paymentMethodsConfiguration,
+                !!PaymentMethod.storedPaymentMethodId
+            );
             // handle rest of the flow normally (creating by string)
             return this.handleCreate(PaymentMethod.type, { ...PaymentMethod, ...options, ...paymentMethodsConfiguration });
         }
