@@ -145,12 +145,12 @@ function handleFinalState(resultCode, dropin) {
 
 function handleRedirectResult() {
     const storedPaymentData = localStorage.getItem('storedPaymentData');
-    const { redirectResult, payload } = getSearchParameters(window.location.search);
+    const { amazonCheckoutSessionId, redirectResult, payload } = getSearchParameters(window.location.search);
 
-    if (storedPaymentData && (redirectResult || payload)) {
+    if (redirectResult || payload) {
         dropin.setStatus('loading');
         return makeDetailsCall({
-            paymentData: storedPaymentData,
+            ...(storedPaymentData && { paymentData: storedPaymentData }),
             details: {
                 ...(redirectResult && { redirectResult }),
                 ...(payload && { payload })
@@ -164,6 +164,23 @@ function handleRedirectResult() {
 
             return true;
         });
+    }
+
+    // Handle Amazon Pay redirect result
+    if (amazonCheckoutSessionId) {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                amazonCheckoutSessionId,
+                showOrderButton: false,
+                onSubmit: state => {
+                    makePayment(state.data).then(result => {
+                        handleFinalState(result.resultCode, dropin);
+                    });
+                }
+            })
+            .mount('body');
+
+        window.amazonpay.submit();
     }
 
     return Promise.resolve(true);
