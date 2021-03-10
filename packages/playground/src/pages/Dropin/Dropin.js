@@ -108,7 +108,7 @@ const initCheckout = async () => {
 
 async function handleRedirectResult(redirectResult, sessionId) {
     window.checkout = await AdyenCheckout({
-        sessionId,
+        session: { id: sessionId },
         clientKey: process.env.__CLIENT_KEY__,
         environment: 'http://localhost:8080/checkoutshopper/',
         onPaymentCompleted: result => {

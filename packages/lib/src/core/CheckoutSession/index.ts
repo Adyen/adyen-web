@@ -4,12 +4,22 @@ import submitDetails from '../Services/submitDetails';
 import { getStoredSession, storeSession } from './storage';
 
 class Session {
-    private session: CheckoutSession;
+    private readonly session: CheckoutSession;
     public clientKey: any;
     public loadingContext: any;
 
     constructor(session, clientKey, loadingContext) {
+        if (!session.id) throw new Error('No Session ID');
+        if (!session.clientKey) throw new Error('No clientKey available');
+
         this.session = session;
+
+        if (!this.session.data) {
+            this.session = this.getStoredSession();
+        } else {
+            this.storeSession();
+        }
+
         this.clientKey = clientKey;
         this.loadingContext = loadingContext;
     }
@@ -27,6 +37,7 @@ class Session {
      */
     updateSessionData(latestData: string) {
         this.session.data = latestData;
+        this.storeSession();
     }
 
     /**
@@ -43,9 +54,9 @@ class Session {
         return submitDetails(data, this);
     }
 
-    getStoredSession(sessionId) {
+    getStoredSession(): CheckoutSession {
         const storedSession = getStoredSession();
-        this.session = sessionId === storedSession.id ? storedSession : null;
+        return this.id === storedSession?.id ? storedSession : this.session;
     }
 
     storeSession() {

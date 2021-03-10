@@ -126,11 +126,8 @@ class Core {
 
         if (this.options.session) {
             this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
-            this.session.storeSession();
-        } else if (this.options.sessionId) {
-            this.session = new Session(null, this.options.clientKey, this.options.loadingContext);
-            this.session.getStoredSession(this.options.sessionId);
         }
+
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
 
         return this;
