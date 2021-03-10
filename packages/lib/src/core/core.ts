@@ -14,7 +14,7 @@ import setupSession from './Services/setupSession';
 import Session from './CheckoutSession';
 
 class Core {
-    private session: Session;
+    public session: Session;
     private paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;

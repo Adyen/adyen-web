@@ -214,3 +214,17 @@ export type CheckoutSession = {
     id: string;
     data: string;
 };
+
+export type CheckoutSessionPaymentResponse = {
+    sessionData: string;
+    status?: string;
+    resultCode?: string;
+    action?: PaymentAction;
+};
+
+export type CheckoutSessionDetailsResponse = {
+    sessionData: string;
+    status?: string;
+    resultCode?: string;
+    action?: PaymentAction;
+};

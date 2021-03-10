@@ -22,14 +22,23 @@ class Session {
         return this.session.data;
     }
 
+    /**
+     * Updates the session.data with the latest data blob
+     */
     updateSessionData(latestData: string) {
         this.session.data = latestData;
     }
 
+    /**
+     * Submits a session payment
+     */
     makePayment(data) {
         return makePayment(data, this);
     }
 
+    /**
+     * Submits session payment additional details
+     */
     submitDetails(data) {
         return submitDetails(data, this);
     }
