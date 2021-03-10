@@ -1,7 +1,7 @@
 import { CheckoutSession } from '../../types';
 import makePayment from '../Services/makePayment';
 import submitDetails from '../Services/submitDetails';
-import { getStoredSession, storeSession } from '../../utils/checkoutSessionStorage';
+import { getStoredSession, storeSession } from './storage';
 
 class Session {
     private session: CheckoutSession;
