@@ -10,7 +10,8 @@ const initCheckout = async () => {
     const session = await createSession({
         amount,
         reference: 'ABC123',
-        returnUrl: 'http://localhost:3020/'
+        returnUrl: 'http://localhost:3020/',
+        countryCode
     });
 
     window.checkout = await AdyenCheckout({
