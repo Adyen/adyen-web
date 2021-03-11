@@ -24,16 +24,18 @@ export const getSearchParameters = (search = window.location.search) =>
 
 const insertHeader = pages => {
     const container = document.querySelector('header');
-    const links = pages.map(({ name, id }, index) => {
-        const url = `/${index ? id.toLowerCase() : ''}`;
-        const isActivePage = window.location.pathname === url;
+    const links = pages
+        .filter(page => page.id !== 'Result')
+        .map(({ name, id }, index) => {
+            const url = `/${index ? id.toLowerCase() : ''}`;
+            const isActivePage = window.location.pathname === url;
 
-        return `
+            return `
             <li class="playground-nav__item ${isActivePage ? 'playground-nav__item--active' : ''}">
                 <a href="${url}" class="playground-nav__link">${name}</a>
             </li>
         `;
-    });
+        });
 
     const header = `
         <button type="button" class="playground-nav-button" aria-label="Toggle nav">

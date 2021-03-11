@@ -19,7 +19,8 @@ const htmlPages = [
     { name: 'QR Codes', id: 'QRCodes' },
     { name: 'Secured Fields', id: 'SecuredFields' },
     { name: 'Vouchers', id: 'Vouchers' },
-    { name: 'Wallets', id: 'Wallets' }
+    { name: 'Wallets', id: 'Wallets' },
+    { name: 'Result', id: 'Result' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>
@@ -45,7 +46,8 @@ module.exports = merge(webpackConfig, {
         new webpack.DefinePlugin({
             'process.env': {
                 __SF_ENV__: JSON.stringify(process.env.SF_ENV || 'build'),
-                __CLIENT_KEY__: JSON.stringify(process.env.CLIENT_KEY || null)
+                __CLIENT_KEY__: JSON.stringify(process.env.CLIENT_KEY || null),
+                __CLIENT_ENV__: JSON.stringify(process.env.CLIENT_ENV || 'test')
             }
         })
     ],

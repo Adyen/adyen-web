@@ -1,12 +1,9 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
-import { getPaymentMethods, makeDetailsCall, createSession } from '../../services';
-import { handleResponse, handleSubmit } from '../../handlers';
-import { shopperLocale } from '../../config/commonConfig';
+import { createSession } from '../../services';
+import { shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-
-window.paymentData = {};
 
 (async () => {
     const session = await createSession({
@@ -15,24 +12,17 @@ window.paymentData = {};
             currency: 'EUR'
         },
         reference: 'ABC123',
-        returnUrl: 'http://localhost:3020/'
+        returnUrl,
+        countryCode
     });
 
     window.checkout = await AdyenCheckout({
-        clientKey: 'devl_F73CCZ4Y7NHFRLC3OMVZHDIVQY47VWFL', //process.env.__CLIENT_KEY__,
+        session,
+        clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: 'http://localhost:8080/checkoutshopper/',
         showPayButton: true,
-        onAdditionalDetails: (details, component) => {
-            component.setStatus('loading');
-
-            makeDetailsCall(details.data).then(response => {
-                handleResponse(response, component);
-                component.setStatus('ready');
-            });
-        },
-        onError: console.error,
-        session
+        onError: console.error
     });
 
     // iDEAL
