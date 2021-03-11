@@ -2,6 +2,7 @@ import { CheckoutSession } from '../../types';
 import makePayment from '../Services/makePayment';
 import submitDetails from '../Services/submitDetails';
 import { getStoredSession, storeSession } from './storage';
+import setupSession from '../Services/setupSession';
 
 class Session {
     private readonly session: CheckoutSession;
@@ -38,6 +39,10 @@ class Session {
     updateSessionData(latestData: string) {
         this.session.data = latestData;
         this.storeSession();
+    }
+
+    setupSession() {
+        return setupSession(this.session, { clientKey: this.clientKey, loadingContext: this.loadingContext });
     }
 
     /**

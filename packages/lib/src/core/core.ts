@@ -10,7 +10,6 @@ import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
-import setupSession from './Services/setupSession';
 import Session from './CheckoutSession';
 
 class Core {
@@ -36,12 +35,11 @@ class Core {
 
     async initialize() {
         if (this.options.session) {
-            const { clientKey, loadingContext } = this.options;
-            return new Promise(resolve => {
-                setupSession(this.options.session, { clientKey, loadingContext }).then(sessionResponse => {
-                    this.setOptions(sessionResponse);
-                    resolve(this);
-                });
+            this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
+
+            return this.session.setupSession().then(sessionResponse => {
+                this.setOptions(sessionResponse);
+                return this;
             });
         }
 
@@ -123,10 +121,6 @@ class Core {
             analytics: new Analytics(this.options),
             i18n: new Language(this.options.locale, this.options.translations)
         };
-
-        if (this.options.session) {
-            this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
-        }
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
 
