@@ -59,7 +59,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
         return {
             paymentMethod: {
                 type: this.constructor['type'],
-                issuer: this.state?.data.issuer
+                issuer: this.state?.data?.issuer
             }
         };
     }
