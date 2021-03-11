@@ -132,7 +132,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             })
             .catch(error => {
                 this.setStatus('ready');
-                throw new Error(error);
+                this.props.onError(error);
             });
     }
 
@@ -147,7 +147,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                 }
             })
             .catch(error => {
-                throw new Error(error);
+                this.props.onError(error);
             });
     }
 

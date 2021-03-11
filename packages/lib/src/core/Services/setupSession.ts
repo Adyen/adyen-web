@@ -8,7 +8,7 @@ function setupSession(session, { clientKey, loadingContext }): Promise<any> {
         sessionData: session.data
     };
 
-    return httpPost({ loadingContext, path }, data);
+    return httpPost({ loadingContext, path, errorLevel: 'fatal' }, data);
 }
 
 export default setupSession;

@@ -49,14 +49,26 @@ class Session {
      * Submits a session payment
      */
     makePayment(data) {
-        return makePayment(data, this);
+        return makePayment(data, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
     }
 
     /**
      * Submits session payment additional details
      */
     submitDetails(data) {
-        return submitDetails(data, this);
+        return submitDetails(data, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
     }
 
     getStoredSession(): CheckoutSession {

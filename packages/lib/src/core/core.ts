@@ -33,23 +33,34 @@ class Core {
         this.setOptions(options);
     }
 
-    async initialize() {
+    initialize(): Promise<this> {
         if (this.options.session) {
             this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
 
-            return this.session.setupSession().then(sessionResponse => {
-                this.setOptions(sessionResponse);
-                return this;
-            });
+            return this.session
+                .setupSession()
+                .then(sessionResponse => {
+                    this.setOptions(sessionResponse);
+                    return this;
+                })
+                .catch(error => {
+                    if (this.options.onError) this.options.onError(error);
+                    return this;
+                });
         }
 
         return Promise.resolve(this);
     }
 
     submitDetails(details) {
-        this.session.submitDetails(details).then(response => {
-            if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
-        });
+        this.session
+            .submitDetails(details)
+            .then(response => {
+                if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+            })
+            .catch(error => {
+                if (this.options.onPaymentCompleted) this.options.onError(error);
+            });
     }
 
     /**

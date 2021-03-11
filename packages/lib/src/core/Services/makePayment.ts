@@ -11,13 +11,7 @@ function makePayment(paymentRequest, session: Session): Promise<CheckoutSessionP
         ...paymentRequest
     };
 
-    return httpPost({ loadingContext: session.loadingContext, path }, data).then(response => {
-        if (response.sessionData) {
-            session.updateSessionData(response.sessionData);
-        }
-
-        return response;
-    });
+    return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal' }, data);
 }
 
 export default makePayment;
