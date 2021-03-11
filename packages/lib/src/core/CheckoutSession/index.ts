@@ -10,7 +10,7 @@ class Session {
 
     constructor(session, clientKey, loadingContext) {
         if (!session.id) throw new Error('No Session ID');
-        if (!session.clientKey) throw new Error('No clientKey available');
+        if (!clientKey) throw new Error('No clientKey available');
 
         this.session = session;
 
