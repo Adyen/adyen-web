@@ -5,6 +5,7 @@ import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -37,7 +38,8 @@ class GooglePay extends UIElement<GooglePayProps> {
             paymentMethod: {
                 type: this.props.type ?? GooglePay.type,
                 ...this.state
-            }
+            },
+            browserInfo: this.browserInfo
         };
     }
 
@@ -111,6 +113,10 @@ class GooglePay extends UIElement<GooglePayProps> {
     public prefetch = (): void => {
         return this.googlePay.prefetchPaymentData(this.props);
     };
+
+    get browserInfo() {
+        return collectBrowserInfo();
+    }
 
     render() {
         if (this.props.showPayButton) {
