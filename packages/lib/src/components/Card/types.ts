@@ -34,8 +34,14 @@ export interface CardElementProps extends UIElementProps {
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
-    /** Show/hide the CVC field */
+    /** Show/hide the CVC field - merchant set config option */
     hideCVC?: boolean;
+
+    /**
+     *  Decides whether CVC component will even be rendered.
+     *  Always true except when hideCVC set to false by merchant OR in the case of a bcmc card
+     */
+    hasCVC?: boolean;
 
     /** Show/hide the card holder name field */
     hasHolderName?: boolean;
