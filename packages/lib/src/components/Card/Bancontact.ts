@@ -8,8 +8,7 @@ class BancontactElement extends CardElement {
 
     formatProps(props: CardElementProps) {
         return {
-            brand: 'bcmc',
-            ...super.formatProps(props),
+            ...super.formatProps({ ...props, brand: 'bcmc' }), // Spread props and set brand before passing to super - ensures super.hasCVC gets set to false
             // Override only display brands (groupTypes are decided earlier on super.formatProps)
             brands: ['bcmc', 'maestro']
         };
