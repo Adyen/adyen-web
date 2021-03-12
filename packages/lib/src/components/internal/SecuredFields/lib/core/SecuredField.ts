@@ -118,8 +118,7 @@ class SecuredField extends AbstractSecuredField {
 
     iframeOnLoadListenerFn(): void {
         if (process.env.NODE_ENV === 'development' && window._b$dl) {
-            logger.log('\n############################');
-            logger.log('### SecuredField:::: onIframeLoaded:: this type=', this.config.txVariant);
+            logger.log('\n### SecuredField:::: onIframeLoaded:: this type=', this.config.txVariant);
         }
 
         off(window, 'load', this.iframeOnLoadListener, false);
