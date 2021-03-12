@@ -30,7 +30,6 @@ export interface SFPProps {
     /**
      * SFP RELATED (6)
      */
-    hideCVC: boolean;
     i18n: Language;
     koreanAuthenticationRequired: boolean;
     hasKoreanFields: boolean;
@@ -55,6 +54,7 @@ export interface SFPProps {
     expiryYear: string; // one-click card
     hasCVC: boolean;
     hasHolderName: boolean;
+    hideCVC: boolean;
     holderName: string;
     holderNameRequired: boolean;
     hasStoreDetails: boolean;
