@@ -35,10 +35,10 @@ test('Fill in Bacs details, check "Edit" phase and then complete payment', async
         .notOk()
 
         // Fill fields
-        .typeText(holderName, 'g stacey')
-        .typeText('.adyen-checkout__bacs--bank-account-number', '12345678')
-        .typeText('.adyen-checkout__bacs--bank-location-id', '987654')
-        .typeText('.adyen-checkout__bacs-input--shopper-email', 'gs@smiffy.nl')
+        .typeText(holderName, 'S Dooley')
+        .typeText('.adyen-checkout__bacs--bank-account-number', '40308669')
+        .typeText('.adyen-checkout__bacs--bank-location-id', '560036')
+        .typeText('.adyen-checkout__bacs-input--shopper-email', 'da@ddog.co.uk')
 
         // Expect to see green "valid" ticks
         .expect(validTicks.filterVisible().exists)
@@ -92,7 +92,7 @@ test('Fill in Bacs details, check "Edit" phase and then complete payment', async
         .notOk()
 
         // Change holder name
-        .typeText(holderName, 's dooley', { replace: true })
+        .typeText(holderName, 'David Archer', { replace: true })
 
         // Click Pay
         .click(payButton)
