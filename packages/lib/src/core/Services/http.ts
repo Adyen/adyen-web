@@ -1,5 +1,6 @@
 import fetch from './fetch';
 import { FALLBACK_CONTEXT } from '../config';
+import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
 interface HttpOptions {
     accept?: string;
@@ -54,7 +55,7 @@ function handleFetchError(message: string, level: string) {
         case 'error':
             return console[level](message);
         default:
-            throw new Error(message);
+            throw new AdyenCheckoutError('network', message);
     }
 }
 

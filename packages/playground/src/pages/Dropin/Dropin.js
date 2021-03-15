@@ -18,7 +18,7 @@ const initCheckout = async () => {
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        environment: 'http://localhost:8080/checkoutshopper/',
+        environment: process.env.__CLIENT_ENV__,
         onPaymentCompleted: (result, component) => {
             console.log('onPaymentCompleted', result);
             switch (result.status) {
@@ -30,7 +30,7 @@ const initCheckout = async () => {
             }
         },
         onError: error => {
-            console.log('AdyenCheckout error:', error);
+            console.log('AdyenCheckout error:', error.message, error.type);
         },
         paymentMethodsConfiguration: {}
     });
