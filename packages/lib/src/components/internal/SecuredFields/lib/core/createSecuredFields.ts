@@ -1,23 +1,26 @@
 import { select, getAttribute } from '../utilities/dom';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED } from '../configuration/constants';
-import { existy, getCVCPolicy } from '../utilities/commonUtils';
+import {
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_EXPIRY_YEAR,
+    DATE_POLICY_REQUIRED,
+    CVC_POLICY_REQUIRED,
+    CVC_POLICY_HIDDEN
+} from '../configuration/constants';
+import { existy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
-import { SFSetupObject } from './AbstractSecuredField';
+import { CVCPolicyType, SFSetupObject } from './AbstractSecuredField';
 import SecuredField from './SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../types';
 import * as logger from '../utilities/logger';
 
 /**
- * cvcRequired = is the CVC field required?
- * - Always true for GiftCards
- * - Usually true for single branded Credit Cards but with exceptions e.g. maestro, bcmc.
- * - Always true for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required comes
- * from the SF in the brand information (as the shopper inputs the cc number)
- *
- * hideCVC = should the CVC field be hidden for this card type?
- * - Always false, except for BCMC
+ * cvcPolicy - 'required' | 'optional' | 'hidden'
+ * - Always 'required' for GiftCards
+ * - Usually 'required' for single branded Credit Cards but with exceptions e.g. maestro ('optional'), bcmc ('hidden').
+ * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
+ * comes from the SF in the brand information (as the shopper inputs the cc number)
  */
-const cvcPolicyObj = { cvcRequired: true, hideCVC: false };
+let cvcPolicy: CVCPolicyType = CVC_POLICY_REQUIRED;
 
 /**
  * Bound to the instance of CSF
@@ -88,8 +91,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             this.state.type = 'unrecognised-single-brand'; // Will let CVC field accept 4 digits in the input
         } else {
             // Assess whether cvc field is required based on the card type & whether the cvc field should even be visible
-            cvcPolicyObj.cvcRequired = card.cvcRequired !== false; // Always true unless property exists and is specifically set to false
-            cvcPolicyObj.hideCVC = card.hideCVC === true;
+            cvcPolicy = (card.cvcPolicy as CVCPolicyType) || CVC_POLICY_REQUIRED;
 
             this.securityCode = card.securityCode;
         }
@@ -106,7 +108,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             type: this.state.type,
             rootNode: this.props.rootNode,
             brand: type,
-            cvcPolicy: getCVCPolicy(cvcPolicyObj),
+            cvcPolicy,
             cvcText: this.securityCode
             //                maxLength: (type === 'amex')? 4 : 3,
         };
@@ -144,10 +146,10 @@ export function setupSecuredField(pItem: HTMLElement): void {
 
     const extraFieldData: string = getAttribute(pItem, 'data-info');
 
-    // CVC FIELD CHECKS
-    // If we have a fieldType for CVC field AND it's a single branded card AND hideCVC is true...
+    // CVC FIELD CHECKS (applies to Custom Card component)
+    // If we have a fieldType for CVC field AND it's a single branded card AND cvcPolicy is 'hidden'...
     // ...then we are showing a CVC field when we shouldn't e.g. for a BCMC card - so don't make an iframe
-    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && cvcPolicyObj.hideCVC) {
+    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && cvcPolicy === CVC_POLICY_HIDDEN) {
         // We have an unnecessary CVC field
         this.hasRedundantCVCField = true;
         return;
@@ -162,7 +164,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
         sfLogAtStart: this.config.sfLogAtStart,
         trimTrailingSeparator: this.config.trimTrailingSeparator,
-        cvcPolicy: getCVCPolicy(cvcPolicyObj), // Will assess values of cvcPolicyObj.hideCVC and cvcPolicyObj.cvcRequired to determine the cvcPolicy
+        cvcPolicy,
         datePolicy: DATE_POLICY_REQUIRED,
         isCreditCardType: this.config.isCreditCardType,
         iframeSrc: this.config.iframeSrc,

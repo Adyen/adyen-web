@@ -1,6 +1,6 @@
-import { CVC_POLICY_HIDDEN, CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
-import { getCVCPolicy, objectsDeepEqual } from '../../utilities/commonUtils';
+import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { CVCPolicyType } from '../AbstractSecuredField';
 
@@ -24,7 +24,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
         // Check for new brand...
         const newBrandObj: BrandStorageObject = {
             brand: pFeedbackObj.brand,
-            cvcPolicy: pFeedbackObj.cvcPolicy ? pFeedbackObj.cvcPolicy : getCVCPolicy(pFeedbackObj)
+            cvcPolicy: pFeedbackObj.cvcPolicy
         };
         const newBrand: boolean = checkForBrandChange(newBrandObj, this.state.brand);
 
@@ -50,8 +50,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
                     ...baseDataObj,
                     ...{
                         fieldType: ENCRYPTED_SECURITY_CODE,
-                        hideCVC: pFeedbackObj.cvcPolicy === CVC_POLICY_HIDDEN,
-                        cvcRequired: pFeedbackObj.cvcPolicy === CVC_POLICY_REQUIRED,
+                        cvcPolicy: pFeedbackObj.cvcPolicy,
                         numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
                     }
                 };
