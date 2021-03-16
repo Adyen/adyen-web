@@ -7,7 +7,7 @@ class BancontactElement extends CardElement {
     }
 
     /**
-     * Now that the Bancontact (BCMC) Card component can accept a number dual branded with Visa (which requires a CVC) it has to handled differently
+     * Now that the Bancontact (BCMC) Card component can accept a number dual branded with Visa (which requires a CVC) it has to be handled differently
      * at creation time (no automatic removing of the CVC securedField).
      * At the same time we can't treat it as a regular 'card' component - because it needs to hide the CVC field at at startup,
      * as well as show the BCMC logo in the number field and ignore any of the internal, regEx driven, brand detection.
