@@ -18,6 +18,7 @@ if (process.env.CI !== 'true') {
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isBundleAnalyzer = process.env.NODE_ENV === 'analyze';
+const transformWith = process.env.EXPERIMENTAL_DEVBUILD === 'true' ? 'esbuild' : 'typescript';
 
 const input = 'src/index.ts';
 const watchConfig = {
@@ -29,7 +30,7 @@ const watchConfig = {
     exclude: 'node_modules/**'
 };
 
-async function getPlugins({ compress, analyze, version }) {
+async function getPlugins({ compress, analyze, version, useTypescript = true }) {
     return [
         resolve(),
         commonjs(),
@@ -47,11 +48,16 @@ async function getPlugins({ compress, analyze, version }) {
             },
             preventAssignment: true
         }),
-        typescript({
-            useTsconfigDeclarationDir: true,
-            check: false,
-            cacheRoot: `./node_modules/.cache/.rts2_cache`
-        }),
+        useTypescript &&
+            typescript({
+                useTsconfigDeclarationDir: true,
+                check: false,
+                cacheRoot: `./node_modules/.cache/.rts2_cache`
+            }),
+        !useTypescript &&
+            (await import('rollup-plugin-esbuild')).default({
+                target: 'es2017'
+            }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
             config: 'postcss.config.js',
@@ -71,44 +77,45 @@ function getExternals() {
     return [...peerDeps, ...dependencies];
 }
 
-export default async () => [
-    {
-        input,
-        external: getExternals(),
-        plugins: await getPlugins({
-            compress: isProduction,
-            analyze: isBundleAnalyzer,
-            version: currentVersion
-        }),
-        output: [
-            {
-                dir: 'dist/es',
-                format: 'es',
-                chunkFileNames: '[name].js'
-            },
-            {
-                dir: 'dist/cjs',
-                format: 'cjs',
-                exports: 'auto',
-                inlineDynamicImports: true
-            }
-        ],
-        watch: watchConfig
-    },
-    {
-        input,
-        plugins: await getPlugins({
-            compress: isProduction,
-            analyze: isBundleAnalyzer,
-            version: currentVersion
-        }),
-        output: {
-            name: 'AdyenCheckout',
-            file: pkg['umd:main'],
-            format: 'umd',
-            inlineDynamicImports: true,
-            sourcemap: true
+export default async () => {
+    const plugins = await getPlugins({
+        useTypescript: transformWith === 'typescript',
+        compress: isProduction,
+        analyze: isBundleAnalyzer,
+        version: currentVersion
+    });
+
+    return [
+        {
+            input,
+            external: getExternals(),
+            plugins,
+            output: [
+                {
+                    dir: 'dist/es',
+                    format: 'es',
+                    chunkFileNames: '[name].js'
+                },
+                {
+                    dir: 'dist/cjs',
+                    format: 'cjs',
+                    exports: 'auto',
+                    inlineDynamicImports: true
+                }
+            ],
+            watch: watchConfig
         },
-        watch: watchConfig
-    }
-];
+        {
+            input,
+            plugins,
+            output: {
+                name: 'AdyenCheckout',
+                file: pkg['umd:main'],
+                format: 'umd',
+                inlineDynamicImports: true,
+                sourcemap: true
+            },
+            watch: watchConfig
+        }
+    ];
+};
