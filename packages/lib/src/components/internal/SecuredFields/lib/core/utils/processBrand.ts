@@ -32,10 +32,11 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             return null;
         }
 
-        const isGenericCard: boolean = this.state.type === 'card';
+        // Now BCMC can dual brand with Visa it must also be treated as a generic card so we can show/hide the CVC field
+        const treatAsGenericCard: boolean = this.state.type === 'card' || this.state.type === 'bcmc';
 
         // ...if also a generic card - tell cvc field...
-        if (isGenericCard && newBrand) {
+        if (treatAsGenericCard && newBrand) {
             this.state.brand = newBrandObj;
             // console.log('### processBrand::handleProcessBrand:: this.state.brand', this.state.brand);
 
@@ -60,7 +61,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
         }
 
         // ...then check for & spread brand related properties...
-        const brandInfoObj: BrandInfoObject = isGenericCard
+        const brandInfoObj: BrandInfoObject = treatAsGenericCard
             ? {
                   ...(pFeedbackObj.brand && { brand: pFeedbackObj.brand }),
                   ...(pFeedbackObj.cvcText && { cvcText: pFeedbackObj.cvcText }),

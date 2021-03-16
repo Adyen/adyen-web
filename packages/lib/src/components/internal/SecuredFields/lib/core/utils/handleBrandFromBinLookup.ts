@@ -57,24 +57,22 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
     });
 
     /**
-     * CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc)
+     * CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc) OR bcmc/visa (one of which doesn't require cvc, one of which does)
      */
-    // NOTE: We currently don't reset the cvcPolicy or datePolicy on single branded card components since we don't expect these policies to change based on typed BIN
-    if (this.state.type === 'card') {
-        /**
-         * Set the cvcPolicy value on the relevant SecuredFields instance (which will reflect in the cvc field being considered valid,
-         *  as long as it is not in error)...
-         */
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
-            this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = binBrandObj.cvcPolicy;
-        }
 
-        /**
-         * ...and set the datePolicy...
-         */
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
-            this.state.securedFields[ENCRYPTED_EXPIRY_DATE].datePolicy = datePolicy;
-        }
+    /**
+     * Set the cvcPolicy value on the relevant SecuredFields instance (which will reflect in the cvc field being considered valid,
+     *  as long as it is not in error)...
+     */
+    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = binBrandObj.cvcPolicy;
+    }
+
+    /**
+     * ...and set the datePolicy...
+     */
+    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
+        this.state.securedFields[ENCRYPTED_EXPIRY_DATE].datePolicy = datePolicy;
     }
 
     /**
