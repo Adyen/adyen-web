@@ -2,7 +2,7 @@ import { Language } from '../../../language/Language';
 
 export interface SFPProps {
     /**
-     * CSF RELATED (23)
+     * CSF RELATED (±22)
      */
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
@@ -38,7 +38,7 @@ export interface SFPProps {
     render;
 
     /**
-     * RELATED TO COMPS HIGHER UP THE RENDER CHAIN - Card, CardInput etc (36)
+     * RELATED TO COMPS HIGHER UP THE RENDER CHAIN - Card, CardInput etc (±39)
      */
     amount: object;
     billingAddressAllowedCountries: string[];
@@ -46,6 +46,7 @@ export interface SFPProps {
     billingAddressRequiredFields: string[];
     brand: string;
     createFromAction: () => {};
+    cvcPolicy: string;
     data: object;
     details: object[];
     enableStoreDetails: boolean;

@@ -39,7 +39,8 @@ export interface CardElementProps extends UIElementProps {
 
     /**
      *  Decides whether CVC component will even be rendered.
-     *  Always true except when hideCVC set to false by merchant OR in the case of a bcmc card
+     *  Always true except when hideCVC set to false by merchant OR in the case of a *stored* BCMC card.
+     *  (For the Bancontact card comp this is set to true since dual-branding possibilities mean the BCMC card can now end up needing to show a CVC field)
      */
     hasCVC?: boolean;
 
