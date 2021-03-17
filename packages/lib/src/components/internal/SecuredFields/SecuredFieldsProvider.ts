@@ -33,7 +33,6 @@ export interface SFPState {
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
-    hideCVCForBrand?: boolean;
     hideDateForBrand?: boolean;
 }
 
@@ -154,8 +153,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             keypadFix: this.props.keypadFix,
             showWarnings: this.props.showWarnings,
             iframeUIConfig: {
-                sfStyles: this.props.styles,
-                placeholders: this.props.placeholders
+                sfStyles: this.props.styles
             },
             i18n: this.props.i18n,
             callbacks: {

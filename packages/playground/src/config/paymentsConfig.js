@@ -10,6 +10,8 @@ const paymentsConfig = {
     returnUrl,
     reference: `${identifier}-checkout-components-ref`,
     additionalData: {
+        // Force response code. See https://docs.adyen.com/development-resources/test-cards/result-code-testing/adyen-response-codes
+        // RequestedTestAcquirerResponseCode: 2,
         allow3DS2: true
     },
     shopperEmail: 'test-shopper@storytel.com',

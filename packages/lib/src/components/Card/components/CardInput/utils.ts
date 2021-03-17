@@ -25,8 +25,8 @@ export const createCardVariantSwitcher = (brandObj: BrandObject[]) => {
             additionalSelectElements: [
                 { id: leadBrand.brand, brandObject: leadBrand },
                 { id: subBrand.brand, brandObject: subBrand }
-            ] as DualBrandSelectElement[]
-            // additionalSelectValue: leadBrand.brand, // comment out line if no initial selection is to be made
+            ] as DualBrandSelectElement[],
+            additionalSelectValue: '' // set to leadBrand.brand if an initial selection is to be made
         },
         leadBrand
     };

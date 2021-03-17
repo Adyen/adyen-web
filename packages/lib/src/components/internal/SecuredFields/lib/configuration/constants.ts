@@ -3,18 +3,22 @@ export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 export const ENCRYPTED_EXPIRY_MONTH = 'encryptedExpiryMonth';
 export const ENCRYPTED_EXPIRY_YEAR = 'encryptedExpiryYear';
 export const ENCRYPTED_SECURITY_CODE = 'encryptedSecurityCode';
+export const ENCRYPTED_SECURITY_CODE_3_DIGITS = 'encryptedSecurityCode3digits';
+export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const ENCRYPTED_PWD_FIELD = 'encryptedPassword';
 export const ENCRYPTED_PIN_FIELD = 'encryptedPin';
 
+export const GIFT_CARD = 'giftcard';
+
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.3.1';
+export const SF_VERSION = '3.4.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
-export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', 'giftcard'];
+export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', GIFT_CARD];
 
 export const CSF_FIELDS_ARRAY = [
     ENCRYPTED_CARD_NUMBER,

@@ -236,7 +236,7 @@ test(
         await start(t, 2000, TEST_SPEED);
 
         // Maestro
-        await cardUtils.fillCardNumber(t, BCMC_CARD);
+        await cardUtils.fillCardNumber(t, BCMC_CARD); // dual branded bcmc & maestro
         await cardUtils.fillDate(t, TEST_DATE_VALUE);
 
         await t

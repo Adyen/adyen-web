@@ -14,7 +14,6 @@ export const originCheckPassed = (event: MessageEvent, pLoadingContext: string, 
 
     if (origin !== adyenDomain) {
         if (pShowWarnings) {
-            logger.warn('####################################################################################');
             logger.warn(
                 'WARNING postMessageValidation: postMessage listener for iframe::origin mismatch!\n Received message with origin:',
                 origin,
@@ -22,7 +21,6 @@ export const originCheckPassed = (event: MessageEvent, pLoadingContext: string, 
                 adyenDomain
             );
             logger.warn('### event.data=', event.data);
-            logger.warn('####################################################################################');
         }
         return false;
     }

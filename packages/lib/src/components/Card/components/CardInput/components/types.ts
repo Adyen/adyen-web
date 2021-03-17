@@ -6,14 +6,13 @@ export interface BrandIconProps {
 
 export interface CardFieldsProps {
     brand?: string;
-    cvcRequired?: any;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
     errors?: any;
     focusedElement?: any;
     hasCVC?: any;
-    hideCVCForBrand?: any;
+    cvcPolicy?: string;
     hideDateForBrand?: any;
     onFocusField?: any;
     showBrandIcon?: boolean;
@@ -46,12 +45,11 @@ export interface CardNumberProps {
 export interface CVCProps {
     className?: string;
     classNameModifiers?: string[];
-    cvcRequired: boolean;
     error?: string;
     filled?: any;
     focused?: any;
     frontCVC?: boolean;
-    hideCVCForBrand?: boolean;
+    cvcPolicy?: string;
     isValid?: any;
     label?: any;
     onFocusField: (field: string) => void;
@@ -124,13 +122,12 @@ export type RtnType_ParamVoidFn = (e) => void;
 
 export interface StoredCardFieldsProps {
     brand: string;
-    cvcRequired: boolean;
     errors: any;
     expiryMonth: string;
     expiryYear: string;
     focusedElement: string;
     hasCVC: boolean;
-    hideCVCForBrand: any;
+    cvcPolicy: string;
     lastFour: string;
     onFocusField: any;
     valid: any;

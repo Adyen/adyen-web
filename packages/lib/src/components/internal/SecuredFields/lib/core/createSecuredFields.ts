@@ -1,5 +1,5 @@
 import { select, getAttribute } from '../utilities/dom';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED } from '../configuration/constants';
+import { ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED } from '../configuration/constants';
 import { existy, getCVCPolicy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
 import { SFSetupObject } from './AbstractSecuredField';
@@ -49,9 +49,6 @@ export function createSecuredFields(): number {
     // CONTINUE AS CREDIT-CARD TYPE...
     this.isSingleBrandedCard = false;
 
-    // re. BCMC - boolean to indicate whether the markup contains a CVC field that shouldn't be there
-    this.hasRedundantCVCField = false;
-
     this.securityCode = '';
 
     return this.createCardSecuredFields(securedFields);
@@ -93,15 +90,6 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
 
             this.securityCode = card.securityCode;
         }
-    } else {
-        // Check passed cardGroupTypes
-        this.config.cardGroupTypes.forEach(pItem => {
-            if (!existy(cardType.getCardByBrand(pItem))) {
-                logger.warn(
-                    `WARNING: The passed cardGroupType item "${pItem}" is not recognised by SecuredFields. This may affect whether it will be possible to process this payment.`
-                );
-            }
-        });
     }
 
     // Create a new SecuredField for each detected holding element
@@ -117,7 +105,6 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             brand: type,
             cvcPolicy: getCVCPolicy(cvcPolicyObj),
             cvcText: this.securityCode
-            //                maxLength: (type === 'amex')? 4 : 3,
         };
 
         setTimeout(() => {
@@ -126,8 +113,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
     }
 
     // Return the number of iframes we've created
-    // - taking into account whether we initially tried to create one for an unnecessary CVC field
-    return this.hasRedundantCVCField ? securedFields.length - 1 : securedFields.length;
+    return securedFields.length;
 }
 
 // forEach detected holder for a securedField...
@@ -152,15 +138,6 @@ export function setupSecuredField(pItem: HTMLElement): void {
     }
 
     const extraFieldData: string = getAttribute(pItem, 'data-info');
-
-    // CVC FIELD CHECKS
-    // If we have a fieldType for CVC field AND it's a single branded card AND hideCVC is true...
-    // ...then we are showing a CVC field when we shouldn't e.g. for a BCMC card - so don't make an iframe
-    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && cvcPolicyObj.hideCVC) {
-        // We have an unnecessary CVC field
-        this.hasRedundantCVCField = true;
-        return;
-    } // -- end CVC FIELD CHECKS
 
     // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
     const setupObj: SFSetupObject = {

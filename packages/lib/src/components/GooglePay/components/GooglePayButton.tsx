@@ -4,6 +4,8 @@ import './GooglePayButton.scss';
 interface GooglePayButtonProps {
     buttonColor: google.payments.api.ButtonColor;
     buttonType: google.payments.api.ButtonType;
+    buttonSizeMode: google.payments.api.ButtonSizeMode;
+    buttonLocale: string;
     paymentsClient: Promise<google.payments.api.PaymentsClient>;
     onClick: (e: Event) => void;
 }
@@ -13,7 +15,8 @@ class GooglePayButton extends Component<GooglePayButtonProps> {
 
     public static defaultProps = {
         buttonColor: 'default', // default (black), black, white
-        buttonType: 'long' // long, short
+        buttonType: 'long', // long, short
+        buttonSizeMode: 'static' // long, short
     };
     private clicked = false;
 
@@ -32,10 +35,10 @@ class GooglePayButton extends Component<GooglePayButtonProps> {
     };
 
     componentDidMount() {
-        const { buttonColor, buttonType, paymentsClient } = this.props;
+        const { buttonColor, buttonType, buttonLocale, buttonSizeMode, paymentsClient } = this.props;
 
         paymentsClient
-            .then(client => client.createButton({ onClick: this.handleClick, buttonType, buttonColor }))
+            .then(client => client.createButton({ onClick: this.handleClick, buttonType, buttonColor, buttonLocale, buttonSizeMode }))
             .then(googlePayButton => {
                 this.paywithgoogleWrapper.appendChild(googlePayButton);
             });

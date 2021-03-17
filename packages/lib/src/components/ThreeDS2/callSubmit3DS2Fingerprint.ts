@@ -22,7 +22,7 @@ export default function callSubmit3DS2Fingerprint({ data }) {
         }
 
         /**
-         * Frictionless (no challenge) flow
+         * Frictionless (no challenge) flow OR "refused" flow
          */
         if (resData.type === 'completed') {
             const { details } = resData;

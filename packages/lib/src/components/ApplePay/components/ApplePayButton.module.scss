@@ -33,6 +33,30 @@
     .apple-pay-button--type-subscribe {
         -apple-pay-button-type: subscribe;
     }
+    .apple-pay-button--type-add-money {
+        -apple-pay-button-type: add-money;
+    }
+    .apple-pay-button--type-contribute {
+        -apple-pay-button-type: contribute;
+    }
+    .apple-pay-button--type-order {
+        -apple-pay-button-type: order;
+    }
+    .apple-pay-button--type-reload {
+        -apple-pay-button-type: reload;
+    }
+    .apple-pay-button--type-rent {
+        -apple-pay-button-type: rent;
+    }
+    .apple-pay-button--type-support {
+        -apple-pay-button-type: support;
+    }
+    .apple-pay-button--type-tip {
+        -apple-pay-button-type: tip;
+    }
+    .apple-pay-button--type-top-up {
+        -apple-pay-button-type: top-up;
+    }
 }
 
 @supports not (-webkit-appearance: -apple-pay-button) {

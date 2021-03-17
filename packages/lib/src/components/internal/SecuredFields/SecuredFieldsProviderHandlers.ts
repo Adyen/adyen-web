@@ -114,7 +114,6 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                         ? false
                         : prevState.errors[ENCRYPTED_SECURITY_CODE]
             },
-            hideCVCForBrand: cardInfo.cvcPolicy === CVC_POLICY_HIDDEN,
             hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
         }),
         () => {
@@ -124,13 +123,6 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
             this.props.onBrand({ ...cardInfo, brandImageUrl: getCardImageUrl(cardInfo.brand, this.props.loadingContext) });
         }
     );
-
-    /**
-     * Edge case: one-click PMs where CVC is hidden or optional
-     */
-    if ((this.props.hideCVC || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN || cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL) && this.props.oneClick) {
-        this.handleOnNoDataRequired();
-    }
 }
 
 /**

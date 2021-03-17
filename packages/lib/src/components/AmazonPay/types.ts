@@ -12,7 +12,7 @@ declare global {
 type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
-type Currency = 'USD' | 'EUR' | 'GBP';
+export type Currency = 'USD' | 'EUR' | 'GBP';
 export type Region = 'US' | 'EU' | 'UK';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
@@ -23,9 +23,10 @@ export interface AmazonPayConfiguration {
 }
 
 export interface AmazonPayElementProps {
+    addressDetails?: AddressDetails;
     amazonPayToken?: string;
     amazonCheckoutSessionId?: string;
-    amount: PaymentAmount;
+    amount?: PaymentAmount;
     buttonColor?: ButtonColor;
     cancelUrl?: string;
     clientKey?: string;
@@ -36,6 +37,7 @@ export interface AmazonPayElementProps {
     i18n: Language;
     loadingContext?: string;
     locale?: string;
+    merchantMetadata?: MerchantMetadata;
     onSubmit?: (state: any, element: UIElement) => void;
     payButton?: any;
     placement?: Placement;
@@ -57,6 +59,7 @@ export interface AmazonPayComponentProps extends AmazonPayElementProps {
 }
 
 export interface AmazonPayButtonProps {
+    amount?: PaymentAmount;
     amazonRef: any;
     buttonColor?: ButtonColor;
     cancelUrl?: string;
@@ -141,13 +144,46 @@ export interface AmazonPayButtonSettings {
     ledgerCurrency: Currency;
 }
 
+interface MerchantMetadata {
+    customInformation?: string;
+    merchantReferenceId?: string;
+    merchantStoreName?: string;
+    noteToBuyer?: string;
+}
+
+interface AddressDetails {
+    name?: string;
+    addressLine1?: string;
+    addressLine2?: string;
+    addressLine3?: string;
+    city?: string;
+    districtOrCounty?: string;
+    stateOrRegion?: string;
+    postalCode?: string;
+    countryCode?: string;
+    phoneNumber?: string;
+}
+
+export interface ChargeAmount {
+    amount: string;
+    currencyCode: string;
+}
+
 export interface PayloadJSON {
+    addressDetails?: AddressDetails;
+    deliverySpecifications?: DeliverySpecifications;
+    merchantMetadata?: MerchantMetadata;
+    paymentDetails?: {
+        paymentIntent: 'Confirm';
+        chargeAmount: ChargeAmount;
+    };
     storeId: string;
     webCheckoutDetails: {
         checkoutCancelUrl?: string;
-        checkoutReviewReturnUrl: string;
+        checkoutMode?: 'ProcessOrder';
+        checkoutResultReturnUrl?: string;
+        checkoutReviewReturnUrl?: string;
     };
-    deliverySpecifications?: DeliverySpecifications;
 }
 
 export interface CheckoutDetailsRequest {
@@ -158,6 +194,7 @@ export interface CheckoutDetailsRequest {
 
 export interface UpdateAmazonCheckoutSessionRequest {
     amount: PaymentAmount;
+    checkoutCancelUrl?: string;
     checkoutResultReturnUrl: string;
     checkoutSessionId: string;
 }

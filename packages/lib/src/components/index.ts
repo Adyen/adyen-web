@@ -70,6 +70,7 @@ const componentsMap = {
     boletobancario_santander: Boleto,
     primeiropay_boleto: Boleto,
     card: Card,
+    storedCard: Card,
     diners: Card,
     directdebit_GB: BacsDD,
     discover: Card,
@@ -158,8 +159,12 @@ export const getComponent = (componentType, props) => {
  * @param componentsConfig - global paymentMethodsConfiguration
  * @returns component configuration
  */
-export const getComponentConfiguration = (type: string, componentsConfig = {}) => {
-    const pmType = type === 'scheme' ? 'card' : type;
+export const getComponentConfiguration = (type: string, componentsConfig = {}, isStoredCard = false) => {
+    let pmType = type;
+    if (type === 'scheme') {
+        pmType = isStoredCard ? 'storedCard' : 'card';
+    }
+
     return componentsConfig[pmType] || {};
 };
 

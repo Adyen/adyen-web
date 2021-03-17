@@ -2,6 +2,7 @@ import { formatCustomTranslations, formatLocale, getTranslation, loadTranslation
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
+import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class Language {
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
@@ -57,7 +58,7 @@ export class Language {
      * @param options - Options for {@link Date.toLocaleDateString}
      */
     date(date: string, options: object = {}) {
-        const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
+        const dateOptions: DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
         return new Date(date).toLocaleDateString(this.locale, dateOptions);
     }
 }

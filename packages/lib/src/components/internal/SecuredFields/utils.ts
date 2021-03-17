@@ -9,7 +9,12 @@ import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD,
     CVC_POLICY_OPTIONAL,
-    CVC_POLICY_HIDDEN
+    CVC_POLICY_HIDDEN,
+    ENCRYPTED_SECURITY_CODE_3_DIGITS,
+    ENCRYPTED_SECURITY_CODE_4_DIGITS
+    // TODO Comment out until translations are available
+    // ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
+    // ENCRYPTED_BANK_LOCATION_FIELD
 } from './lib/configuration/constants';
 import { DEFAULT_ERROR } from '../../../core/Errors/constants';
 
@@ -92,13 +97,22 @@ export const getErrorObject = (fieldType, rootNode, state) => {
 };
 // -- end ROUTINES USED IN SecuredFieldsProvider.showValidation -----------------------
 
+/**
+ * Lookup translated values for the placeholders for the SecuredFields
+ * and return an object with these mapped to the data-cse value of the SecuredField
+ */
 export const resolvePlaceholders = (i18n?: Language) => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
     [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
     [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.month.placeholder'),
     [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.year.placeholder'),
-    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'),
+    [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'), // Used for gift cards
+    [ENCRYPTED_SECURITY_CODE_3_DIGITS]: i18n.get && i18n.get('creditCard.cvcField.placeholder.3digits'),
+    [ENCRYPTED_SECURITY_CODE_4_DIGITS]: i18n.get && i18n.get('creditCard.cvcField.placeholder.4digits'),
     [ENCRYPTED_PWD_FIELD]: i18n.get && i18n.get('creditCard.encryptedPassword.placeholder')
+    // TODO Comment out until translations are available
+    // [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: i18n.get && i18n.get('accountNumberField.placeholder'),
+    // [ENCRYPTED_BANK_LOCATION_FIELD]: i18n.get && i18n.get('accountLocationId.placeholder')
 });
 
 /**

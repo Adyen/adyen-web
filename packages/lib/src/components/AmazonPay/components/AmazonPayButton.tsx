@@ -1,25 +1,16 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { getAmazonSignature } from '../services';
-import { getCheckoutLocale, getPayloadJSON } from '../utils';
-import { AmazonPayButtonProps, AmazonPayButtonSettings, CheckoutSessionConfig, PayloadJSON } from '../types';
+import { getAmazonPaySettings, getPayloadJSON } from '../utils';
+import { AmazonPayButtonProps, CheckoutSessionConfig, PayloadJSON } from '../types';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();
-    const { amazonRef, buttonColor, configuration = {} } = props;
+    const { amazonRef, configuration = {} } = props;
     const [signature, setSignature] = useState<string>(null);
-    const payloadJSON: PayloadJSON = getPayloadJSON(configuration.storeId, props.returnUrl, props.cancelUrl, props.deliverySpecifications);
-
-    const settings: AmazonPayButtonSettings = {
-        ...(buttonColor && { buttonColor }),
-        checkoutLanguage: getCheckoutLocale(props.locale, props.region),
-        ledgerCurrency: props.currency,
-        merchantId: configuration.merchantId,
-        productType: props.productType,
-        placement: props.placement,
-        sandbox: props.environment === 'TEST'
-    };
+    const payloadJSON: PayloadJSON = getPayloadJSON(props);
+    const settings = getAmazonPaySettings(props);
 
     const handleOnClick = () => {
         new Promise(props.onClick).then(this.initCheckout).catch(error => {

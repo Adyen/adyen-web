@@ -23,6 +23,7 @@ const CURRENCY_DECIMALS = {
 
     // THREE_DECIMAL_CURRENCIES
     BHD: 1000,
+    IQD: 1000,
     JOD: 1000,
     KWD: 1000,
     OMR: 1000,
