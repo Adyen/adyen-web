@@ -1,8 +1,8 @@
 import { CheckoutSession } from '../../types';
-import makePayment from '../Services/makePayment';
-import submitDetails from '../Services/submitDetails';
+import makePayment from '../Services/sessions/make-payment';
+import submitDetails from '../Services/sessions/submit-details';
 import { getStoredSession, storeSession } from './storage';
-import setupSession from '../Services/setupSession';
+import setupSession from '../Services/sessions/setup-session';
 
 class Session {
     private readonly session: CheckoutSession;

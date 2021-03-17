@@ -1,7 +1,7 @@
 import Analytics from './Analytics';
-import collectId from '../Services/collect-id';
+import collectId from '../Services/analytics/collect-id';
 
-jest.mock('../Services/collect-id');
+jest.mock('../Services/analytics/collect-id');
 
 const mockedCollectId = <jest.Mock>collectId;
 

@@ -1,6 +1,6 @@
-import { httpPost } from './http';
-import Session from '../CheckoutSession';
-import { CheckoutSessionPaymentResponse } from '../../types';
+import { httpPost } from '../http';
+import Session from '../../CheckoutSession';
+import { CheckoutSessionPaymentResponse } from '../../../types';
 
 /**
  */

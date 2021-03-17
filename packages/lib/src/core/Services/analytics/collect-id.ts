@@ -1,4 +1,4 @@
-import { httpPost } from './http';
+import { httpPost } from '../http';
 
 /**
  * Log event to Adyen

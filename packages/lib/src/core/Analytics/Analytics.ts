@@ -1,6 +1,6 @@
-import logEvent from '../Services/log-event';
-import postTelemetry from '../Services/post-telemetry';
-import collectId from '../Services/collect-id';
+import logEvent from '../Services/analytics/log-event';
+import postTelemetry from '../Services/analytics/post-telemetry';
+import collectId from '../Services/analytics/collect-id';
 import EventsQueue from './EventsQueue';
 import { CoreOptions } from '../types';
 
