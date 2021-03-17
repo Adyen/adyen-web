@@ -22,10 +22,14 @@ export function sendBrandToCardSF(brandObj: SendBrandObject): void {
 }
 
 export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): void {
+    const isGenericCard: boolean = this.state.type === 'card';
+
     // The number of digits in number field has dropped below threshold for BIN lookup - so tell SF to reset & republish the brand it detects
     if (!binLookupResponse) {
-        // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast (which will reset cvcPolicy)
-        this.sendBrandToCardSF({ brand: 'reset' });
+        if (isGenericCard) {
+            // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast (which will reset cvcPolicy)
+            this.sendBrandToCardSF({ brand: 'reset' });
+        }
 
         // Reset datePolicy - which never comes from SF
         if (this.state.type === 'card' && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
@@ -50,11 +54,13 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
 
     this.processBrand(brandObj as SFFeedbackObj);
 
-    // Pass brand to CardNumber SF
-    this.sendBrandToCardSF({
-        brand: passedBrand,
-        enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false
-    });
+    if (isGenericCard) {
+        // Pass brand to CardNumber SF
+        this.sendBrandToCardSF({
+            brand: passedBrand,
+            enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false
+        });
+    }
 
     /**
      * CHECK IF BRAND CHANGE MEANS FORM IS NOW VALID e.g maestro/bcmc (which don't require cvc) OR bcmc/visa (one of which doesn't require cvc, one of which does)
