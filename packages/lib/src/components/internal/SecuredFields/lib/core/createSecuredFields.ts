@@ -1,11 +1,5 @@
 import { select, getAttribute } from '../utilities/dom';
-import {
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_EXPIRY_YEAR,
-    DATE_POLICY_REQUIRED,
-    CVC_POLICY_REQUIRED,
-    CVC_POLICY_HIDDEN
-} from '../configuration/constants';
+import { ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED, CVC_POLICY_REQUIRED } from '../configuration/constants';
 import { existy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
 import { CVCPolicyType, SFSetupObject } from './AbstractSecuredField';
