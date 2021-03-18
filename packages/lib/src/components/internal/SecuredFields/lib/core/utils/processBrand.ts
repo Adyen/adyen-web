@@ -32,23 +32,21 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             return null;
         }
 
+        // Now BCMC can dual brand with Visa it must also be treated as a generic card so we can show/hide the CVC field
+        const treatAsGenericCard: boolean = this.state.type === 'card' || this.state.type === 'bcmc';
         const isGenericCard: boolean = this.state.type === 'card';
 
         // ...if also a generic card - tell cvc field...
-        if (isGenericCard && newBrand) {
+        if (treatAsGenericCard && newBrand) {
             this.state.brand = newBrandObj;
             // console.log('### processBrand::handleProcessBrand:: this.state.brand', this.state.brand);
 
-            const baseDataObj: object = {
-                txVariant: this.state.type,
-                brand: newBrandObj.brand
-            };
-
-            // Perform postMessage to send brand on specified (CVC) field
-            if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
+            // Perform postMessage to send brand on specified (CVC) field - IF we are dealing with a generic card
+            if (isGenericCard && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
                 const dataObj: object = {
-                    ...baseDataObj,
                     ...{
+                        txVariant: this.state.type,
+                        brand: newBrandObj.brand,
                         fieldType: ENCRYPTED_SECURITY_CODE,
                         cvcPolicy: pFeedbackObj.cvcPolicy,
                         numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
@@ -59,7 +57,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
         }
 
         // ...then check for & spread brand related properties...
-        const brandInfoObj: BrandInfoObject = isGenericCard
+        const brandInfoObj: BrandInfoObject = treatAsGenericCard
             ? {
                   ...(pFeedbackObj.brand && { brand: pFeedbackObj.brand }),
                   ...(pFeedbackObj.cvcText && { cvcText: pFeedbackObj.cvcText }),

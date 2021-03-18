@@ -19,10 +19,10 @@ window.bacsdd = checkout
     .create('directdebit_GB', {
         countryCode: 'GB',
         data: {
-            holderName: 'Philip Dog',
-            bankAccountNumber: '12345678',
-            bankLocationId: '123456',
-            shopperEmail: 'phil@ddog.co.uk'
+            holderName: 'David Archer',
+            bankAccountNumber: '40308669',
+            bankLocationId: '560036',
+            shopperEmail: 'da@ddog.co.uk'
         }
     })
     .mount('#bacsdd-input-container');

@@ -9,6 +9,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // --
     let callbackObjectsArr: CbObjOnFieldValid[];
     const fieldType: string = pFeedbackObj.fieldType;
+    const isGenericCard: boolean = this.state.type === 'card';
 
     /**
      * CHECK IF CVC IS OPTIONAL
@@ -18,7 +19,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // If it is optional, and we're dealing with the generic card type,
     // (re)set the property that indicates this (in the CVC SecuredField instance)
     if (
-        this.state.type === 'card' &&
+        isGenericCard &&
         Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcPolicy') &&
         existy(pFeedbackObj.cvcPolicy) &&
         Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)

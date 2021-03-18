@@ -52,9 +52,6 @@ export function createSecuredFields(): number {
     // CONTINUE AS CREDIT-CARD TYPE...
     this.isSingleBrandedCard = false;
 
-    // re. BCMC - boolean to indicate whether the markup contains a CVC field that shouldn't be there
-    this.hasRedundantCVCField = false;
-
     this.securityCode = '';
 
     return this.createCardSecuredFields(securedFields);
@@ -110,7 +107,6 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             brand: type,
             cvcPolicy,
             cvcText: this.securityCode
-            //                maxLength: (type === 'amex')? 4 : 3,
         };
 
         setTimeout(() => {
@@ -119,8 +115,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
     }
 
     // Return the number of iframes we've created
-    // - taking into account whether we initially tried to create one for an unnecessary CVC field
-    return this.hasRedundantCVCField ? securedFields.length - 1 : securedFields.length;
+    return securedFields.length;
 }
 
 // forEach detected holder for a securedField...
@@ -145,15 +140,6 @@ export function setupSecuredField(pItem: HTMLElement): void {
     }
 
     const extraFieldData: string = getAttribute(pItem, 'data-info');
-
-    // CVC FIELD CHECKS (applies to Custom Card component)
-    // If we have a fieldType for CVC field AND it's a single branded card AND cvcPolicy is 'hidden'...
-    // ...then we are showing a CVC field when we shouldn't e.g. for a BCMC card - so don't make an iframe
-    if (fieldType === ENCRYPTED_SECURITY_CODE && this.isSingleBrandedCard && cvcPolicy === CVC_POLICY_HIDDEN) {
-        // We have an unnecessary CVC field
-        this.hasRedundantCVCField = true;
-        return;
-    } // -- end CVC FIELD CHECKS
 
     // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
     const setupObj: SFSetupObject = {

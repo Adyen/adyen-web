@@ -14,6 +14,7 @@
     ],
     "scripts": {
         "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
+        "start:fast": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start:fast\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
         "build": "yarn workspace @adyen/adyen-web build",
         "lint": "yarn workspace @adyen/adyen-web lint",
         "test": "yarn workspace @adyen/adyen-web test",
