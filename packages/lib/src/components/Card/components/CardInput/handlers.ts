@@ -2,6 +2,8 @@ import { validateHolderName } from './validate';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import { BrandObject } from '../../types';
+import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
+import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 
 // Validate whole cardInput component i.e holderName + securedFields
 function validateCardInput(): void {
@@ -44,6 +46,26 @@ function handleKCPAuthentication(data: object, valid: object): void {
         valid: { ...prevState.valid, ...valid }
     });
     this.setState(setKCP);
+}
+
+/**
+ * Formats and saves the Brazilian social secuirity number details in state
+ */
+function handleCPF(e: Event, validate = false): void {
+    const socialSecurityNumber = formatCPFCNPJ((e.target as HTMLInputElement).value);
+    const isValid = validateSSN(socialSecurityNumber);
+    console.log(isValid);
+    const setHolderName = (prevState: SFPState): SFPState => ({
+        ...prevState,
+        data: { ...prevState.data, socialSecurityNumber },
+        errors: { ...prevState.errors, socialSecurityNumber: validate && !isValid },
+        valid: {
+            ...prevState.valid,
+            socialSecurityNumber: isValid
+        }
+    });
+
+    this.setState(setHolderName);
 }
 
 /**
@@ -144,6 +166,7 @@ export default {
     handleFocus,
     handleAddress,
     handleKCPAuthentication,
+    handleCPF,
     handleOnStoreDetails,
     handleHolderName,
     handleInstallments,

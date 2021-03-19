@@ -27,6 +27,7 @@
 .adyen-checkout__card__holderName,
 .adyen-checkout__store-details,
 .adyen-checkout__card__kcp-authentication,
+.adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
     margin-top: 16px;
@@ -120,11 +121,11 @@
     }
 
     .adyen-checkout__radio_group__input-wrapper {
-        margin-top: 20px
+        margin-top: 20px;
     }
 }
 
-.adyen-checkout__field--revolving-plan-installments{
+.adyen-checkout__field--revolving-plan-installments {
     position: relative;
     top: 42px;
     width: 30%;

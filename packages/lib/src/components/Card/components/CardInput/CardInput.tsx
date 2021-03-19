@@ -19,6 +19,7 @@ import './CardInput.scss';
 import { BinLookupResponse } from '../../types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { objectsDeepEqual } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
+import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
@@ -27,6 +28,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly handleHolderName;
     private readonly handleInstallments;
     private readonly handleKCPAuthentication;
+    private readonly handleCPF;
     private readonly handleSecuredFieldsChange;
     private readonly handleOnStoreDetails;
     private readonly handleAdditionalDataSelection;
@@ -75,6 +77,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.handleHolderName = handlers.handleHolderName.bind(this);
         this.handleInstallments = handlers.handleInstallments.bind(this);
         this.handleKCPAuthentication = handlers.handleKCPAuthentication.bind(this);
+        this.handleCPF = handlers.handleCPF.bind(this);
         this.handleSecuredFieldsChange = handlers.handleSecuredFieldsChange.bind(this);
         this.handleOnStoreDetails = handlers.handleOnStoreDetails.bind(this);
         this.handleAdditionalDataSelection = handlers.handleAdditionalDataSelection.bind(this);
@@ -170,6 +173,10 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
         const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
 
+        const socialSecurityNumberMode = this.props.configuration.socialSecurityNumberMode;
+        const isBrazil = issuingCountryCode ? issuingCountryCode === 'br' : countryCode === 'br';
+        const showBrazilianSSN: boolean = isBrazil && (socialSecurityNumberMode === 'auto' || socialSecurityNumberMode === 'show');
+
         const showAmountsInInstallments = showInstallmentAmounts ?? true;
 
         return (
@@ -254,6 +261,18 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         ref={this.kcpAuthenticationRef}
                                         onChange={this.handleKCPAuthentication}
                                     />
+                                )}
+
+                                {showBrazilianSSN && (
+                                    <div className="adyen-checkout__card__socialSecurityNumber">
+                                        <SocialSecurityNumberBrazil
+                                            onChange={e => this.handleCPF(e, true)}
+                                            onInput={e => this.handleCPF(e)}
+                                            error={this.state.errors?.socialSecurityNumber}
+                                            valid={this.state.valid?.socialSecurityNumber}
+                                            data={this.state.data?.socialSecurityNumber}
+                                        />
+                                    </div>
                                 )}
 
                                 {enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
