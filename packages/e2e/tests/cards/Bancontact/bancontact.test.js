@@ -163,7 +163,7 @@ test('Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete
     await t.expect(getIsValid('dropin')).eql(true);
 });
 
-test(
+test.only(
     'Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
@@ -199,11 +199,24 @@ test(
         // Click Visa brand icon
         await t.click(dualBrandingIconHolderActive.find('img').nth(1));
 
+        // Visible CVC field
+        await t.expect(cvcSpan.filterVisible().exists).ok();
+
+        // Expect iframe to exist in CVC field and with aria-required set to true
+        return t
+            .switchToIframe(iframeSelector.nth(2))
+            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
+            .eql('true')
+            .switchToMainWindow();
+
         // Expect comp not to be valid
         await t.expect(getIsValid('dropin')).eql(false);
 
         // Click BCMC brand icon
         await t.click(dualBrandingIconHolderActive.find('img').nth(0));
+
+        // Hidden CVC field
+        await t.expect(cvcSpan.filterHidden().exists).ok();
 
         // Expect comp to be valid
         await t.expect(getIsValid('dropin')).eql(true);
