@@ -14,7 +14,7 @@ import * as logger from '../utilities/logger';
  * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
  * comes from the SF in the brand information (as the shopper inputs the cc number)
  */
-let cvcPolicy: CVCPolicyType = CVC_POLICY_REQUIRED;
+let cvcPolicy: CVCPolicyType;
 
 /**
  * Bound to the instance of CSF
@@ -37,6 +37,8 @@ export function createSecuredFields(): number {
         this.encryptedAttrName = 'data-cse';
         securedFields = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
     }
+
+    cvcPolicy = CVC_POLICY_REQUIRED;
 
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
