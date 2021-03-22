@@ -1,11 +1,12 @@
 import { CheckoutSession } from '../../types';
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
-import { getStoredSession, storeSession } from './storage';
 import setupSession from '../Services/sessions/setup-session';
+import Storage from '../../utils/Storage';
 
 class Session {
     private readonly session: CheckoutSession;
+    private storage: Storage;
     public clientKey: any;
     public loadingContext: any;
 
@@ -13,6 +14,9 @@ class Session {
         if (!session.id) throw new Error('No Session ID');
         if (!clientKey) throw new Error('No clientKey available');
 
+        this.storage = new Storage('session');
+        this.clientKey = clientKey;
+        this.loadingContext = loadingContext;
         this.session = session;
 
         if (!this.session.data) {
@@ -20,9 +24,6 @@ class Session {
         } else {
             this.storeSession();
         }
-
-        this.clientKey = clientKey;
-        this.loadingContext = loadingContext;
     }
 
     get id() {
@@ -71,13 +72,26 @@ class Session {
         });
     }
 
+    /**
+     * Gets the stored session but only if the current id and the stored id match
+     */
     getStoredSession(): CheckoutSession {
-        const storedSession = getStoredSession();
+        const storedSession = this.storage.get();
         return this.id === storedSession?.id ? storedSession : this.session;
     }
 
+    /**
+     * Stores the session
+     */
     storeSession() {
-        storeSession(this.session);
+        this.storage.set(this.session);
+    }
+
+    /**
+     * Clears the stored session
+     */
+    removeStoredSession() {
+        this.storage.remove();
     }
 }
 export default Session;
