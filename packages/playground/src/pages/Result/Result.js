@@ -8,7 +8,7 @@ async function handleRedirectResult(redirectResult, sessionId) {
     window.checkout = await AdyenCheckout({
         session: { id: sessionId },
         clientKey: process.env.__CLIENT_KEY__,
-        environment: 'http://localhost:8080/checkoutshopper/',
+        environment: process.env.__CLIENT_ENV__,
         onPaymentCompleted: result => {
             console.log('onPaymentCompleted', result);
             document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');

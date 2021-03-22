@@ -20,7 +20,7 @@ import '../../style.scss';
         session,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        environment: 'http://localhost:8080/checkoutshopper/',
+        environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
         onError: console.error
     });
