@@ -256,7 +256,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
     }
 
-    public processBinLookupResponse(binLookupResponse: BinLookupResponse): void {
+    public processBinLookupResponse(binLookupResponse: BinLookupResponse, brandToReset: string): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.hasUnsupportedCard) {
@@ -268,6 +268,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         }
 
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
+
+        // If "resetting" /binLookup for a single-branded card, brandToReset will be the value of the brand whose logo we want to reshow
+        if (brandToReset) {
+            this.setState({ brand: brandToReset });
+        }
 
         // Scenarios:
         // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup

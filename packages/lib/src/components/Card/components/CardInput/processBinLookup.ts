@@ -3,11 +3,16 @@ import { BinLookupResponse } from '../../types';
 
 // Based on values in binValueObject we might need to trigger additional markup
 // e.g. a selector for brands or to choose between credit/debit card variations
-export default function processBinLookupResponse(binLookupResponse: BinLookupResponse): void {
+export default function processBinLookup(binLookupResponse: BinLookupResponse, isReset: boolean): void {
     // RESET: The number of digits in number field has dropped below threshold for BIN lookup - so reset the UI & inform SFP
     if (!binLookupResponse) {
         this.resetAdditionalSelectState();
-        this.sfp.current.processBinLookupResponse(binLookupResponse);
+
+        // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon
+        // However for a single-branded card we need to pass the "base" type so the brand logo is reset
+        const brandToReset = isReset && this.props.type !== 'card' ? this.props.type : null;
+
+        this.sfp.current.processBinLookupResponse(binLookupResponse, brandToReset);
         return;
     }
 

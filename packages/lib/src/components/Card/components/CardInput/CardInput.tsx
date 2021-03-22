@@ -150,11 +150,11 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (this.kcpAuthenticationRef?.current) this.kcpAuthenticationRef.current.showValidation();
     }
 
-    public processBinLookupResponse(data: BinLookupResponse) {
+    public processBinLookupResponse(data: BinLookupResponse, isReset: boolean) {
         const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
 
         this.setState({ issuingCountryCode }, () => {
-            this.processBinLookup(data);
+            this.processBinLookup(data, isReset);
         });
     }
 
