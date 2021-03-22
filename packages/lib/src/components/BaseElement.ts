@@ -1,21 +1,9 @@
 import { render } from 'preact';
 import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
-import Analytics from '../core/Analytics';
-import RiskElement from '../core/RiskModule';
-import { Order } from '../types';
 import uuid from '../utils/uuid';
 import Core from '../core';
-
-export interface BaseElementProps {
-    _parentInstance?: Core;
-    order?: Order;
-    modules?: {
-        analytics: Analytics;
-        risk: RiskElement;
-    };
-    isDropin?: boolean;
-}
+import { BaseElementProps } from './types';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;

@@ -52,14 +52,33 @@ class Core {
         return Promise.resolve(this);
     }
 
+    submitPayment(data) {
+        if (this.options.onSubmit) return this.options.onSubmit(data);
+
+        this.session
+            .submitPayment(data)
+            .then(response => {
+                if (response.action) {
+                    if (this.options.onPaymentSubmitted) this.options.onPaymentSubmitted(response, this);
+                } else {
+                    if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+                }
+            })
+            .catch(error => {
+                if (this.options.onError) this.options.onError(error);
+            });
+    }
+
     submitDetails(details) {
+        if (this.options.onAdditionalDetails) return this.options.onAdditionalDetails(details);
+
         this.session
             .submitDetails(details)
             .then(response => {
                 if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
             })
             .catch(error => {
-                if (this.options.onPaymentCompleted) this.options.onError(error);
+                if (this.options.onError) this.options.onError(error, this);
             });
     }
 

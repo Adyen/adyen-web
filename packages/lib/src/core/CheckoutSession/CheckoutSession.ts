@@ -49,7 +49,7 @@ class Session {
     /**
      * Submits a session payment
      */
-    makePayment(data) {
+    submitPayment(data) {
         return makePayment(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);

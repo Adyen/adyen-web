@@ -1,50 +1,10 @@
 import { h } from 'preact';
-import BaseElement, { BaseElementProps } from './BaseElement';
-import { PaymentAction, PaymentAmount } from '../types';
+import BaseElement from './BaseElement';
+import { PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import Language from '../language/Language';
-
-export interface UIElementProps extends BaseElementProps {
-    session?: {
-        id: string;
-        data: string;
-    };
-    onChange?: (state: any, element: UIElement) => void;
-    onValid?: (state: any, element: UIElement) => void;
-    onSubmit?: (state: any, element: UIElement) => void;
-    onComplete?: (state, element: UIElement) => void;
-    onAdditionalDetails?: (state: any, element: UIElement) => void;
-    onError?: (error, element?: UIElement) => void;
-    onPaymentCompleted?: (result: any, element?: UIElement) => void;
-
-    name?: string;
-    amount?: PaymentAmount;
-
-    /**
-     * Show/Hide pay button
-     * @defaultValue true
-     */
-    showPayButton?: boolean;
-
-    /** @internal */
-    payButton?: (options) => any;
-
-    /** @internal */
-    loadingContext?: string;
-
-    /** @internal */
-    createFromAction?: (action: PaymentAction, props: object) => UIElement;
-
-    /** @internal */
-    clientKey?: string;
-
-    /** @internal */
-    elementRef?: any;
-
-    /** @internal */
-    i18n?: Language;
-}
+import { UIElementProps } from './types';
+import { getSanitizedResponse } from './utils';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
@@ -57,6 +17,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
+        this.handleOrder = this.handleOrder.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
         this.elementRef = (props && props.elementRef) || this;
     }
 
@@ -95,11 +57,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                     return false;
                 }
 
-                if (!onSubmit && session) {
-                    return this.submitPayment(data);
-                }
-
                 if (onSubmit) return onSubmit({ data, isValid }, this.elementRef);
+                if (session) return this.submitPayment(data);
+
+                return onError('Could not submit the payment');
             })
             .catch(error => onError(error));
     }
@@ -122,14 +83,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.setStatus('loading');
 
         return this._parentInstance.session
-            .makePayment(data)
-            .then(result => {
-                if (result.action) {
-                    this.handleAction(result.action);
-                } else {
-                    this.handleFinalResult(result);
-                }
-            })
+            .submitPayment(data)
+            .then(this.handleResponse)
             .catch(error => {
                 this.setStatus('ready');
                 this.props.onError(error);
@@ -139,13 +94,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     submitAdditionalDetails(data) {
         return this._parentInstance.session
             .submitDetails(data)
-            .then(result => {
-                if (result.action) {
-                    this.handleAction(result.action);
-                } else {
-                    this.handleFinalResult(result);
-                }
-            })
+            .then(this.handleResponse)
             .catch(error => {
                 this.props.onError(error);
             });
@@ -166,6 +115,25 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         }
 
         return null;
+    }
+
+    handleOrder(order) {
+        // handleOrder
+        console.log(order);
+    }
+
+    handleResponse(rawResponse) {
+        const response = getSanitizedResponse(rawResponse);
+
+        if (response.sessionData) this._parentInstance.session.updateSessionData(response.sessionData);
+
+        if (response.action) {
+            this.handleAction(response.action);
+        } else if (response?.order?.remainingAmount?.value > 0) {
+            this.handleOrder(response.order);
+        } else {
+            this.handleFinalResult(response);
+        }
     }
 
     protected handleFinalResult = result => {
