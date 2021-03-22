@@ -202,7 +202,7 @@ test(
         await t.expect(cvcSpan.filterVisible().exists).ok();
 
         // Expect iframe to exist in CVC field and with aria-required set to true
-        return t
+        await t
             .switchToIframe(iframeSelector.nth(2))
             .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
             .eql('true')
