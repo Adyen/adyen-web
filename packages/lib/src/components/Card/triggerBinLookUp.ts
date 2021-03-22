@@ -4,6 +4,7 @@ import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configur
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from './types';
+import { sortBrandsAccordingToRules } from './components/CardInput/utils';
 
 export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -32,20 +33,17 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
                 if (data.brands?.length) {
-                    const mappedResponse = data.brands.reduce(
+                    // Sort brands according to rules
+                    const sortedBrands = data.brands.length === 2 ? sortBrandsAccordingToRules(data.brands, this.props.type) : data.brands;
+
+                    const mappedResponse = sortedBrands.reduce(
                         (acc, item) => {
                             // All brand strings end up in the detectedBrands array
                             acc.detectedBrands.push(item.brand);
 
                             // Add supported brand objects to the supportedBrands array
                             if (item.supported === true) {
-                                /**
-                                 * NOTE we are currently using item.enableLuhnCheck === false as an indicator of a PLCC - this could/should change in the future
-                                 */
-                                // Add PLCCs to the front of the array so their icons are displayed first
-                                const action = item.enableLuhnCheck === false ? 'unshift' : 'push';
-                                acc.supportedBrands[action](item);
-
+                                acc.supportedBrands.push(item);
                                 return acc;
                             }
 
