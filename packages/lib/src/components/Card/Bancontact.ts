@@ -1,5 +1,6 @@
 import { CardElement } from './Card';
 import { CardElementProps } from './types';
+import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
 
 class BancontactElement extends CardElement {
     constructor(props: CardElementProps) {
@@ -17,7 +18,8 @@ class BancontactElement extends CardElement {
             ...super.formatProps(props),
             // Override display brands - these are also the brands that will be considered "supported" by /binLookup
             brands: ['bcmc', 'maestro', 'visa'],
-            type: 'bcmc' // Force type (only for the Dropin is type automatically set to 'bcmc') - this will bypass the regEx brand detection
+            type: 'bcmc', // Force type (only for the Dropin is type automatically set to 'bcmc') - this will bypass the regEx brand detection
+            cvcPolicy: CVC_POLICY_HIDDEN
         };
     }
 

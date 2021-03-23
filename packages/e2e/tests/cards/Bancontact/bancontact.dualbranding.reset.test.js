@@ -193,8 +193,6 @@ test(
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
             .contains('bcmc');
-
-        await t.wait(2000);
     }
 );
 
