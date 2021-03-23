@@ -155,14 +155,15 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
     public processBinLookupResponse(data: BinLookupResponse) {
         const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
+        const showSocialSecurityNumber = data?.showSocialSecurityNumber ?? false;
 
-        this.setState({ issuingCountryCode }, () => {
+        this.setState({ issuingCountryCode, showSocialSecurityNumber }, () => {
             this.processBinLookup(data);
         });
     }
 
     render(
-        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts },
+        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts, configuration },
         { status, cvcPolicy, hideDateForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
@@ -170,22 +171,25 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // In the Drop-in the oneClick status may already have been decided, so give that priority
         const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
 
-        // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
-        const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
+        const cardCountryCode: string = issuingCountryCode ?? countryCode;
 
-        const socialSecurityNumberMode = this.props.configuration.socialSecurityNumberMode;
-        const isBrazil = issuingCountryCode ? issuingCountryCode === 'br' : countryCode === 'br';
-        const showBrazilianSSN: boolean = isBrazil && (socialSecurityNumberMode === 'auto' || socialSecurityNumberMode === 'show');
+        // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
+        const isKorea = cardCountryCode === 'kr';
 
         const showAmountsInInstallments = showInstallmentAmounts ?? true;
+
+        // Brazilian socialSecurityNumber
+        const showBrazilianSSN: boolean =
+            (this.state.showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') ||
+            configuration.socialSecurityNumberMode === 'show';
 
         return (
             <SecuredFieldsProvider
                 ref={this.sfp}
                 {...this.props}
                 styles={{ ...defaultStyles, ...this.props.styles }}
-                koreanAuthenticationRequired={this.props.configuration.koreanAuthenticationRequired}
-                hasKoreanFields={!!(this.props.configuration.koreanAuthenticationRequired && this.props.countryCode === 'kr')}
+                koreanAuthenticationRequired={configuration.koreanAuthenticationRequired}
+                hasKoreanFields={!!(configuration.koreanAuthenticationRequired && countryCode === 'kr')}
                 onChange={this.handleSecuredFieldsChange}
                 onBrand={this.props.onBrand}
                 onFocus={this.handleFocus}

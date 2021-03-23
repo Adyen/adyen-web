@@ -17,6 +17,7 @@ export interface CardInputProps {
     i18n?: Language;
     installmentOptions: object;
     koreanAuthenticationRequired?: boolean;
+    socialSecurityNumberMode?: 'show' | 'hide' | 'auto';
     loadingContext: string;
     payButton?: () => {};
     placeholders?: object;
@@ -42,4 +43,5 @@ export interface CardInputState {
     status: string;
     valid?: object;
     issuingCountryCode: string;
+    showSocialSecurityNumber?: boolean;
 }

@@ -7,17 +7,24 @@ import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/v
 
 // Validate whole cardInput component i.e holderName + securedFields
 function validateCardInput(): void {
-    const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
+    const { configuration, countryCode, billingAddressRequired, holderNameRequired } = this.props;
+    const holderNameValid: boolean = validateHolderName(this.state.data.holderName, holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
-    const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
+    const addressValid: boolean = billingAddressRequired ? this.state.valid.billingAddress : true;
 
-    const isKorea = this.state.issuingCountryCode ? this.state.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
-    const koreanAuthentication =
-        this.props.configuration.koreanAuthenticationRequired && isKorea
+    const cardCountryCode: string = this.state.issuingCountryCode ?? countryCode;
+
+    const koreanAuthentication: boolean =
+        configuration.koreanAuthenticationRequired && cardCountryCode === 'kr'
             ? !!this.state.valid.taxNumber && !!this.state.valid.encryptedPassword
             : true;
 
-    const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
+    const socialSecurityNumberRequired: boolean =
+        (this.state.showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') || // auto mode (Bin Lookup)
+        configuration.socialSecurityNumberMode === 'show'; // require ssn manually
+    const socialSecurityNumberValid: boolean = socialSecurityNumberRequired ? !!this.state.valid.socialSecurityNumber : true;
+
+    const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);

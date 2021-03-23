@@ -144,6 +144,7 @@ export interface BinLookupResponseRaw {
  */
 export interface BinLookupResponse {
     issuingCountryCode: string;
+    showSocialSecurityNumber?: boolean;
     supportedBrands?: BrandObject[];
 }
 
