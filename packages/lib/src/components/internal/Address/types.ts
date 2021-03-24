@@ -1,5 +1,6 @@
 import { AddressField, AddressData } from '../../../types';
 import Specifications from './Specifications';
+import { ValidatorRules } from '../../../utils/Validator/Validator';
 
 export interface AddressProps {
     allowedCountries?: string[];
@@ -10,6 +11,7 @@ export interface AddressProps {
     requiredFields?: string[];
     ref?: any;
     specifications?: AddressSpecifications;
+    validationRules?: ValidatorRules;
     visibility?: string;
 }
 

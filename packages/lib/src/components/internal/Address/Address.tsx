@@ -17,7 +17,7 @@ export default function Address(props: AddressProps) {
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFields,
         defaultData: props.data,
-        rules: getAddressValidationRules(specifications)
+        rules: props.validationRules || getAddressValidationRules(specifications)
     });
 
     useEffect((): void => {
@@ -89,5 +89,5 @@ Address.defaultProps = {
     onChange: () => {},
     visibility: 'editable',
     requiredFields: ADDRESS_SCHEMA,
-    specifications: null
+    specifications: {}
 };

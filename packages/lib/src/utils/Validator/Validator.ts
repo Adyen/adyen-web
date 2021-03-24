@@ -54,7 +54,7 @@ class ValidationResult {
 
     /** Checks if all validation rules have passed */
     get isValid(): boolean {
-        return this.validationResults.reduce((acc, result) => acc && result.isValid, true);
+        return this.validationResults.every(result => result.isValid);
     }
 
     /** Checks if any validation rule returned an error */

@@ -5,7 +5,7 @@ class Specifications {
     private specifications: AddressSpecifications;
 
     constructor(specifications?) {
-        this.specifications = specifications || ADDRESS_SPECIFICATIONS;
+        this.specifications = { ...ADDRESS_SPECIFICATIONS, ...specifications };
     }
 
     /**
@@ -24,7 +24,7 @@ class Specifications {
      * @returns Boolean
      */
     countryHasOptionalField(country: string, fieldName: string): boolean {
-        return !!this.specifications?.[country]?.optionalFields.includes(fieldName as any);
+        return !!this.specifications?.[country]?.optionalFields?.includes(fieldName as any);
     }
 
     /**
