@@ -38,24 +38,26 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     }
 
     getShopperDetails() {
-        const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey } = this.props;
-        if (!checkoutSessionId) return console.error('Could not shopper details. Missing checkoutSessionId.');
+        const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
+        if (!amazonCheckoutSessionId) return console.error('Could not shopper details. Missing checkoutSessionId.');
 
         const request: CheckoutDetailsRequest = {
-            checkoutSessionId,
-            getDeliveryAddress: true
+            checkoutSessionId: amazonCheckoutSessionId,
+            getDeliveryAddress: true,
+            publicKeyId: configuration.publicKeyId
         };
 
         return getCheckoutDetails(loadingContext, clientKey, request);
     }
 
     handleDeclineFlow() {
-        const { amazonCheckoutSessionId: checkoutSessionId, loadingContext, clientKey } = this.props;
-        if (!checkoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
+        const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
+        if (!amazonCheckoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
 
         const request: CheckoutDetailsRequest = {
-            checkoutSessionId,
-            getDeclineFlowUrl: true
+            checkoutSessionId: amazonCheckoutSessionId,
+            getDeclineFlowUrl: true,
+            publicKeyId: configuration.publicKeyId
         };
 
         getCheckoutDetails(loadingContext, clientKey, request)
