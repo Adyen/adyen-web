@@ -12,10 +12,13 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
+        translations: {
+            'en-US': {
+                addressTown: 'Address + Town',
+                pin: 'PIN'
+            }
+        },
         environment: 'test',
-        onChange: handleChange,
-        onSubmit: handleSubmit,
-        onAdditionalDetails: handleAdditionalDetails,
         onError: console.error,
         showPayButton: true
     });
@@ -47,7 +50,41 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     // Address
     window.address = checkout
         .create('address', {
-            onChange: console.log
+            requiredFields: ['country', 'street', 'houseNumberOrName', 'city', 'postalCode'],
+            onChange: console.log,
+            validationRules: {
+                postalCode: {
+                    validate: (value, context) => {
+                        const selectedCountry = context.state?.data?.country;
+                        const isOptional = selectedCountry === 'IN';
+                        return isOptional || (value && value.length > 0);
+                    },
+                    modes: ['blur']
+                },
+                default: {
+                    validate: value => value && value.length > 0,
+                    modes: ['blur']
+                }
+            },
+            specifications: {
+                IN: {
+                    hasDataset: false,
+                    optionalFields: ['postalCode'],
+                    labels: {
+                        postalCode: 'pin',
+                        street: 'addressTown'
+                    },
+                    schema: [
+                        'country',
+                        'street',
+                        'houseNumberOrName',
+                        [
+                            ['city', 70],
+                            ['postalCode', 30]
+                        ]
+                    ]
+                }
+            }
         })
         .mount('.address-field');
 });
