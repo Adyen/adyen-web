@@ -23,7 +23,7 @@ const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
 fixture`Starting with KCP fields`.page(CARDS_URL).clientScripts('showMode.clientScripts.js');
 
 // Green 1
-test.only('Fill in card number with a socialSecurityNumber (CPF) field (socialSecurityMode: show)', async t => {
+test('Fill in card number with a socialSecurityNumber (CPF) field (socialSecurityMode: show)', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -40,4 +40,23 @@ test.only('Fill in card number with a socialSecurityNumber (CPF) field (socialSe
 
     // Expect card to now be valid
     await t.expect(getIsValid()).eql(true);
+});
+
+test('Fill in card number with a wrong socialSecurityNumber (CPF) field (socialSecurityMode: show)', async t => {
+    // Start, allow time for iframes to load
+    await start(t, 2000, TEST_SPEED);
+
+    // Fill card field with non-korean card
+    await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+
+    // Does the password securedField get removed
+    await t.expect(passwordHolder.exists).notOk();
+
+    // Complete form
+    await cardUtils.fillDateAndCVC(t);
+
+    await fillSSN(t, '1234');
+
+    // Expect card to now be valid
+    await t.expect(getIsValid()).eql(false);
 });
