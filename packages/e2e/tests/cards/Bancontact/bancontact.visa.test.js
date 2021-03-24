@@ -13,7 +13,6 @@ const brandsHolder = Selector('.adyen-checkout__payment-method__brands');
 const numberSpan = Selector('.adyen-checkout__dropin .adyen-checkout__card__cardNumber__input');
 const cvcSpan = Selector('.adyen-checkout__dropin .adyen-checkout__field__cvc');
 
-const dualBrandingIconHolder = Selector('.adyen-checkout__payment-method--bcmc .adyen-checkout__card__dual-branding__buttons');
 const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--bcmc .adyen-checkout__card__dual-branding__buttons--active');
 
 const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
@@ -199,11 +198,24 @@ test(
         // Click Visa brand icon
         await t.click(dualBrandingIconHolderActive.find('img').nth(1));
 
+        // Visible CVC field
+        await t.expect(cvcSpan.filterVisible().exists).ok();
+
+        // Expect iframe to exist in CVC field and with aria-required set to true
+        await t
+            .switchToIframe(iframeSelector.nth(2))
+            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
+            .eql('true')
+            .switchToMainWindow();
+
         // Expect comp not to be valid
         await t.expect(getIsValid('dropin')).eql(false);
 
         // Click BCMC brand icon
         await t.click(dualBrandingIconHolderActive.find('img').nth(0));
+
+        // Hidden CVC field
+        await t.expect(cvcSpan.filterHidden().exists).ok();
 
         // Expect comp to be valid
         await t.expect(getIsValid('dropin')).eql(true);
