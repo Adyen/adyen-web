@@ -3,7 +3,6 @@ import '@adyen/adyen-web/dist/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
-import { handleChange, handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
