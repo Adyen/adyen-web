@@ -176,7 +176,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
-            maxExpiryDate: this.props.maxExpiryDate
+            minimumExpiryDate: this.props.minimumExpiryDate
         };
 
         this.csf = initCSF(csfSetupObj);

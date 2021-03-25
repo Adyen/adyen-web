@@ -43,7 +43,7 @@ interface CSFCommonProps {
     isKCP?: boolean;
     iframeUIConfig?: object;
     legacyInputMode?: boolean;
-    maxExpiryDate?: string;
+    minimumExpiryDate?: string;
 }
 
 /**

@@ -22,7 +22,7 @@ export interface SFInternalConfig {
     showWarnings: boolean;
     cvcPolicy: CVCPolicyType;
     legacyInputMode: boolean;
-    maxExpiryDate: string;
+    minimumExpiryDate: string;
 }
 
 /**

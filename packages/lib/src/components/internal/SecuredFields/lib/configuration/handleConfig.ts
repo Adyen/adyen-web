@@ -54,7 +54,7 @@ export function handleConfig(): void {
     this.config.legacyInputMode = this.props.legacyInputMode || null;
 
     // To configure the maximum expiry date to a merchant defined value
-    this.config.maxExpiryDate = this.props.maxExpiryDate || null;
+    this.config.minimumExpiryDate = this.props.minimumExpiryDate || null;
 
     this.config.sfLogAtStart = this.props._b$dl === true;
 

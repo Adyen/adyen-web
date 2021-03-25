@@ -143,7 +143,7 @@ class SecuredField extends AbstractSecuredField {
             trimTrailingSeparator: this.config.trimTrailingSeparator,
             isCreditCardType: this.config.isCreditCardType,
             legacyInputMode: this.config.legacyInputMode,
-            maxExpiryDate: this.config.maxExpiryDate
+            minimumExpiryDate: this.config.minimumExpiryDate
         };
 
         if (process.env.NODE_ENV === 'development' && window._b$dl) {
