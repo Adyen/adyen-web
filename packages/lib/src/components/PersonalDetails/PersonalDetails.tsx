@@ -5,7 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 
 export class PersonalDetailsElement extends UIElement {
     get data() {
-        return { ...this.state.data };
+        return this.state.data;
     }
 
     get isValid() {
