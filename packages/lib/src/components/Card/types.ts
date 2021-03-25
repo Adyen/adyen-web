@@ -96,8 +96,11 @@ export interface CardElementProps extends UIElementProps {
     [key: string]: any;
 }
 
+export type SocialSecurityMode = 'show' | 'hide' | 'auto';
+
 export interface CardConfiguration {
     koreanAuthenticationRequired?: boolean;
+    socialSecurityMode?: SocialSecurityMode;
 }
 
 interface CardPaymentMethodData {
@@ -132,6 +135,8 @@ export interface BinLookupResponseRaw {
     requestId: string;
     issuingCountryCode?: string;
     brands?: BrandObject[];
+    showSocialSecurityNumber?: boolean;
+
     // OR, if an error has occurred
     status: number;
     errorCode: string;

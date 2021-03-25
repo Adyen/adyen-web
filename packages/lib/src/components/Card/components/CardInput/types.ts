@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CardConfiguration, DualBrandSelectElement } from '../../types';
+import { CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
 
 export interface CardInputProps {
     amount?: object;
@@ -17,7 +17,7 @@ export interface CardInputProps {
     i18n?: Language;
     installmentOptions: object;
     koreanAuthenticationRequired?: boolean;
-    socialSecurityNumberMode?: 'show' | 'hide' | 'auto';
+    socialSecurityNumberMode?: SocialSecurityMode;
     loadingContext: string;
     payButton?: () => {};
     placeholders?: object;
