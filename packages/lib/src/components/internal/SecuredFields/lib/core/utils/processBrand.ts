@@ -1,6 +1,6 @@
-import { CVC_POLICY_HIDDEN, CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from './iframes/postMessageToIframe';
-import { getCVCPolicy, objectsDeepEqual } from '../../utilities/commonUtils';
+import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { CVCPolicyType } from '../AbstractSecuredField';
 
@@ -24,7 +24,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
         // Check for new brand...
         const newBrandObj: BrandStorageObject = {
             brand: pFeedbackObj.brand,
-            cvcPolicy: pFeedbackObj.cvcPolicy ? pFeedbackObj.cvcPolicy : getCVCPolicy(pFeedbackObj)
+            cvcPolicy: pFeedbackObj.cvcPolicy
         };
         const newBrand: boolean = checkForBrandChange(newBrandObj, this.state.brand);
 
@@ -34,22 +34,20 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
 
         // Now BCMC can dual brand with Visa it must also be treated as a generic card so we can show/hide the CVC field
         const treatAsGenericCard: boolean = this.state.type === 'card' || this.state.type === 'bcmc';
-        const isGenericCard: boolean = this.state.type === 'card';
 
         // ...if also a generic card - tell cvc field...
         if (treatAsGenericCard && newBrand) {
             this.state.brand = newBrandObj;
-            // console.log('### processBrand::handleProcessBrand:: this.state.brand', this.state.brand);
 
-            // Perform postMessage to send brand on specified (CVC) field - IF we are dealing with a generic card
-            if (isGenericCard && Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
+            // Perform postMessage to send brand to CVC field - this also needs to happen for BCMC, single branded cards,
+            // because it needs to know the cvcPolicy (to set the aria-required attribute & to show the iframe)
+            if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
                 const dataObj: object = {
                     ...{
                         txVariant: this.state.type,
                         brand: newBrandObj.brand,
                         fieldType: ENCRYPTED_SECURITY_CODE,
-                        hideCVC: pFeedbackObj.cvcPolicy === CVC_POLICY_HIDDEN,
-                        cvcRequired: pFeedbackObj.cvcPolicy === CVC_POLICY_REQUIRED,
+                        cvcPolicy: pFeedbackObj.cvcPolicy,
                         numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
                     }
                 };

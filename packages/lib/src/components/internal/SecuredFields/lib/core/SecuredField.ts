@@ -6,7 +6,6 @@ import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils
 import {
     CVC_POLICY_HIDDEN,
     CVC_POLICY_OPTIONAL,
-    CVC_POLICY_REQUIRED,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_EXPIRY_DATE,
     DATE_POLICY_HIDDEN
@@ -133,7 +132,7 @@ class SecuredField extends AbstractSecuredField {
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
-            cvcRequired: this.cvcPolicy === CVC_POLICY_REQUIRED,
+            cvcPolicy: this.cvcPolicy,
             numKey: this.numKey,
             txVariant: this.config.txVariant,
             extraFieldData: this.config.extraFieldData,

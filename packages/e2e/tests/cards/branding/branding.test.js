@@ -240,9 +240,22 @@ test(
         await cardUtils.fillDate(t, TEST_DATE_VALUE);
 
         await t
-            // maestro card icon
-            .expect(brandingIcon.getAttribute('src'))
-            .contains('maestro.svg');
+            .expect(dualBrandingIconHolderActive.exists)
+            .ok()
+            .expect(
+                dualBrandingIconHolderActive
+                    .find('img')
+                    .nth(0)
+                    .getAttribute('data-value')
+            )
+            .eql('maestro')
+            .expect(
+                dualBrandingIconHolderActive
+                    .find('img')
+                    .nth(1)
+                    .getAttribute('data-value')
+            )
+            .eql('bcmc');
 
         // #1 Valid (maestro)
         await t.expect(getIsValid('card')).eql(true);

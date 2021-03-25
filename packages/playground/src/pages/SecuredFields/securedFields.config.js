@@ -81,13 +81,13 @@ export function onBrand(pCallbackObj) {
 
     let labelNode;
 
-    if (pCallbackObj.hideCVC && !myCSF1HideCVC) {
+    if (pCallbackObj.cvcPolicy === 'hidden' && !myCSF1HideCVC) {
         myCSF1HideCVC = true;
         labelNode = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
         labelNode.style.display = 'none';
     }
 
-    if (myCSF1HideCVC && pCallbackObj.hideCVC === false) {
+    if (myCSF1HideCVC && pCallbackObj.cvcPolicy !== 'hidden') {
         // explicitly set to false
         myCSF1HideCVC = false;
 

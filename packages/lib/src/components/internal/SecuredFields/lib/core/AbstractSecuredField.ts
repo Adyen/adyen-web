@@ -39,8 +39,8 @@ export interface SFSetupObject extends SFInternalConfig {
  * Object sent via postMessage to a SecuredField iframe
  */
 export interface IframeConfigObject extends SFInternalConfig {
-    cvcRequired: boolean;
-    numKey: number; // generated in SecuredField.ts
+    cvcPolicy: CVCPolicyType;
+    numKey: number;
 }
 
 interface IframeUIConfigObject {

@@ -148,8 +148,7 @@ export interface CardObject {
     pattern: RegExp;
     securityCode?: string;
     displayName?: string;
-    cvcRequired?: boolean;
-    hideCVC?: boolean;
+    cvcPolicy?: string;
 }
 
 export interface CbObjOnBrand {
@@ -242,10 +241,8 @@ export interface SFFeedbackObj {
     fieldType: string;
     numKey: number;
     brand?: string;
-    hideCVC?: boolean;
     code?: string;
     cvcText?: string;
-    cvcRequired?: boolean;
     cvcPolicy?: CVCPolicyType;
     datePolicy?: DatePolicyType;
     maxLength?: number;

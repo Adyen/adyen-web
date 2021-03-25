@@ -1,7 +1,7 @@
 import { makeCallbackObjectsValidation } from './utils/callbackUtils';
 import { removeEncryptedElement } from '../ui/encryptedElements';
 import { processErrors } from './utils/processErrors';
-import { existy, getCVCPolicy } from '../utilities/commonUtils';
+import { existy } from '../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
 
@@ -20,18 +20,11 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // (re)set the property that indicates this (in the CVC SecuredField instance)
     if (
         isGenericCard &&
-        Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcRequired') &&
-        existy(pFeedbackObj.cvcRequired) &&
+        Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcPolicy') &&
+        existy(pFeedbackObj.cvcPolicy) &&
         Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
     ) {
-        // TODO - move into own if-clause once (if) SF returns cvcPolicy prop
-        const cvcPolicy = getCVCPolicy(pFeedbackObj); // Will assess values of pFeedbackObj.hideCVC and pFeedbackObj.cvcRequired to determine the cvcPolicy
-
-        // Parallel cvcPolicy fny - accepts 3 values: required | optional | hidden
-        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = cvcPolicy;
-
-        // TODO - remove once (if) SF returns cvcPolicy prop
-        pFeedbackObj.cvcPolicy = cvcPolicy;
+        this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = pFeedbackObj.cvcPolicy;
     }
 
     /**
