@@ -73,7 +73,7 @@
         "postcss": "^8.2.7",
         "postcss-reporter": "^7.0.2",
         "prettier": "^1.19.1",
-        "rollup": "^2.42.3",
+        "rollup": "^2.42.4",
         "rollup-plugin-esbuild": "^3.0.2",
         "rollup-plugin-postcss": "^4.0.0",
         "rollup-plugin-terser": "^7.0.2",
