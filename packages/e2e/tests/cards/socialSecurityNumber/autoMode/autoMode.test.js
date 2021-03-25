@@ -57,7 +57,7 @@ fixture`Starting with KCP fields`
     .requestHooks(mock);
 
 // Green 1
-test.only('Fill in card number with a socialSecurityNumber (CPF) field (socialSecurityMode: auto)', async t => {
+test('Fill in card number with a socialSecurityNumber (CPF) field (socialSecurityMode: auto)', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
