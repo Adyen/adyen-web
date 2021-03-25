@@ -2,7 +2,9 @@ import { CheckoutSession } from '../../types';
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
 import setupSession from '../Services/sessions/setup-session';
+import checkBalance from '../Services/sessions/check-balance';
 import Storage from '../../utils/Storage';
+import createOrder from '../Services/sessions/create-order';
 
 class Session {
     private readonly session: CheckoutSession;
@@ -64,6 +66,29 @@ class Session {
      */
     submitDetails(data) {
         return submitDetails(data, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
+    /**
+     * Checks the balance for a payment method
+     */
+    checkBalance(data) {
+        return checkBalance(data, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
+    createOrder() {
+        return createOrder(this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
             }

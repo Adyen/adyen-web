@@ -9,6 +9,7 @@ export interface PaymentResponse {
     action?: PaymentAction;
     resultCode: string;
     sessionData?: string;
+    order?: Order;
 }
 
 export interface RawPaymentResponse extends PaymentResponse {

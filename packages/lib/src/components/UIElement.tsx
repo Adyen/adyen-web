@@ -118,11 +118,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     handleOrder(order) {
-        // handleOrder
+        // TODO handleOrder
         console.log(order);
     }
 
-    handleResponse(rawResponse) {
+    handleResponse(rawResponse): void {
         const response = getSanitizedResponse(rawResponse);
 
         if (response.sessionData) this._parentInstance.session.updateSessionData(response.sessionData);
