@@ -20,6 +20,7 @@ export interface SFInternalConfig {
     trimTrailingSeparator: boolean;
     isCreditCardType: boolean;
     showWarnings: boolean;
+    cvcPolicy: CVCPolicyType;
     legacyInputMode: boolean;
     maxExpiryDate: string;
 }
@@ -28,7 +29,6 @@ export interface SFInternalConfig {
  * The object passed from createSecuredFields to a new instance of SecuredField.ts
  */
 export interface SFSetupObject extends SFInternalConfig {
-    cvcPolicy: CVCPolicyType;
     datePolicy: DatePolicyType;
     iframeSrc: string;
     loadingContext: string;
@@ -39,7 +39,6 @@ export interface SFSetupObject extends SFInternalConfig {
  * Object sent via postMessage to a SecuredField iframe
  */
 export interface IframeConfigObject extends SFInternalConfig {
-    cvcPolicy: CVCPolicyType;
     numKey: number;
 }
 
