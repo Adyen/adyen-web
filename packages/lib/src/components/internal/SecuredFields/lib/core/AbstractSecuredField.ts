@@ -7,8 +7,12 @@ export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
 export type CVCPolicyType = 'required' | 'optional' | 'hidden';
 export type DatePolicyType = 'required' | 'hidden';
 
+/**
+ * Base interface, props common to both SFSetupObject & IframeConfigObject
+ */
 export interface SFInternalConfig {
-    extraFieldData: string;
+    fieldType: string; // extracted in createSecuredFields
+    extraFieldData: string; // extracted in createSecuredFields
     txVariant: string;
     cardGroupTypes: string[];
     iframeUIConfig: IframeUIConfigObject;
@@ -16,10 +20,14 @@ export interface SFInternalConfig {
     trimTrailingSeparator: boolean;
     isCreditCardType: boolean;
     showWarnings: boolean;
+    legacyInputMode: boolean;
+    maxExpiryDate: string;
 }
 
+/**
+ * The object passed from createSecuredFields to a new instance of SecuredField.ts
+ */
 export interface SFSetupObject extends SFInternalConfig {
-    fieldType: string;
     cvcPolicy: CVCPolicyType;
     datePolicy: DatePolicyType;
     iframeSrc: string;
@@ -27,11 +35,12 @@ export interface SFSetupObject extends SFInternalConfig {
     holderEl: HTMLElement;
 }
 
-// Config object sent to SecuredField iframe
+/**
+ * Object sent via postMessage to a SecuredField iframe
+ */
 export interface IframeConfigObject extends SFInternalConfig {
-    fieldType: string;
     cvcRequired: boolean;
-    numKey: number;
+    numKey: number; // generated in SecuredField.ts
 }
 
 interface IframeUIConfigObject {

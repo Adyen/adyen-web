@@ -36,6 +36,8 @@ export interface SFPProps {
     onChange;
     oneClick: boolean;
     render;
+    legacyInputMode: boolean;
+    maxExpiryDate: string;
 
     /**
      * RELATED TO COMPS HIGHER UP THE RENDER CHAIN - Card, CardInput etc (±39)

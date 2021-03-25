@@ -50,6 +50,12 @@ export function handleConfig(): void {
     // By default CSF is allowed to add a fix for iOS to force the keypad to retract - user of CSF must explicitly 'opt-out' to prevent this happening
     this.config.keypadFix = !(this.props.keypadFix === false || this.props.keypadFix === 'false');
 
+    // To set the type on the iframe input fields to 'tel' c.f. the default 'text' (with inputmode='numeric')
+    this.config.legacyInputMode = this.props.legacyInputMode || null;
+
+    // To configure the maximum expiry date to a merchant defined value
+    this.config.maxExpiryDate = this.props.maxExpiryDate || null;
+
     this.config.sfLogAtStart = this.props._b$dl === true;
 
     let sfBundleType: string = this.config.isCreditCardType ? 'card' : this.props.type;
