@@ -36,6 +36,11 @@ export interface SFPState {
     hideDateForBrand?: boolean;
 }
 
+export interface SingleBrandResetObject {
+    brand: string;
+    cvcPolicy: CVCPolicyType;
+}
+
 /**
  * SecuredFieldsProvider:
  * Initialises & handles the client-side part of SecuredFields
@@ -256,7 +261,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
     }
 
-    public processBinLookupResponse(binLookupResponse: BinLookupResponse): void {
+    public processBinLookupResponse(binLookupResponse: BinLookupResponse, resetObject: SingleBrandResetObject): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.hasUnsupportedCard) {
@@ -268,6 +273,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         }
 
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
+
+        // If "resetting" /binLookup for a single-branded card, resetObject.brand will be the value of the brand whose logo we want to reshow
+        if (resetObject?.brand) {
+            this.setState(resetObject, () => {
+                this.props.onChange(this.state);
+            });
+        }
 
         // Scenarios:
         // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
