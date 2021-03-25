@@ -13,7 +13,6 @@ const brandsHolder = Selector('.adyen-checkout__payment-method__brands');
 const numberSpan = Selector('.adyen-checkout__dropin .adyen-checkout__card__cardNumber__input');
 const cvcSpan = Selector('.adyen-checkout__dropin .adyen-checkout__field__cvc');
 
-const dualBrandingIconHolder = Selector('.adyen-checkout__payment-method--bcmc .adyen-checkout__card__dual-branding__buttons');
 const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--bcmc .adyen-checkout__card__dual-branding__buttons--active');
 
 const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
@@ -163,7 +162,7 @@ test('Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete
     await t.expect(getIsValid('dropin')).eql(true);
 });
 
-test.only(
+test(
     'Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
@@ -203,7 +202,7 @@ test.only(
         await t.expect(cvcSpan.filterVisible().exists).ok();
 
         // Expect iframe to exist in CVC field and with aria-required set to true
-        return t
+        await t
             .switchToIframe(iframeSelector.nth(2))
             .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
             .eql('true')

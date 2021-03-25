@@ -1,6 +1,6 @@
 .adyen-checkout__card__dual-branding__buttons{
   display: flex;
-  opacity: 0.25;
+  opacity: 0.40;
   pointer-events: none;
 
   &--active{
@@ -17,7 +17,7 @@
     }
 
     &--not-selected{
-      opacity: 0.25;
+      opacity: 0.50;
     }
   }
 }

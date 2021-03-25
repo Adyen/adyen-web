@@ -20,6 +20,7 @@ export function getAmazonPayUrl(region: Region): string {
 export function getAmazonPaySettings(props): AmazonPayButtonSettings {
     return {
         ...(props.buttonColor && { buttonColor: props.buttonColor }),
+        ...(props.design && { design: getDesignCode(props.design) }),
         checkoutLanguage: getCheckoutLocale(props.locale, props.region),
         ledgerCurrency: props.currency || (props.amount?.currency as Currency),
         merchantId: props.configuration.merchantId,
@@ -61,6 +62,16 @@ export function getCheckoutLocale(locale: string, region: Region): SupportedLoca
     const checkoutLocale = isSupportedLocale ? locale : getFallbackLocale(region);
 
     return checkoutLocale as SupportedLocale;
+}
+
+/**
+ * Gets the design code from the given alias.
+ * @param design - The alias of one of the possible designs.
+ * @returns A design code
+ */
+export function getDesignCode(design: string): string {
+    if (design === 'noTagline') return 'C0001';
+    return null;
 }
 
 /**

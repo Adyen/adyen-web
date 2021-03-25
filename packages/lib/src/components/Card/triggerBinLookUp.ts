@@ -4,6 +4,7 @@ import { DEFAULT_CARD_GROUP_TYPES } from '../internal/SecuredFields/lib/configur
 import { getError } from '../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from './types';
+import { sortBrandsAccordingToRules } from './components/CardInput/utils';
 
 export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
     // Allow way for merchant to disallow binLookup by specifically setting the prop to false
@@ -32,20 +33,17 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             // If response is the one we were waiting for...
             if (data?.requestId === this.currentRequestId) {
                 if (data.brands?.length) {
-                    const mappedResponse = data.brands.reduce(
+                    // Sort brands according to rules
+                    const sortedBrands = data.brands.length === 2 ? sortBrandsAccordingToRules(data.brands, this.props.type) : data.brands;
+
+                    const mappedResponse = sortedBrands.reduce(
                         (acc, item) => {
                             // All brand strings end up in the detectedBrands array
                             acc.detectedBrands.push(item.brand);
 
                             // Add supported brand objects to the supportedBrands array
                             if (item.supported === true) {
-                                /**
-                                 * NOTE we are currently using item.enableLuhnCheck === false as an indicator of a PLCC - this could/should change in the future
-                                 */
-                                // Add PLCCs to the front of the array so their icons are displayed first
-                                const action = item.enableLuhnCheck === false ? 'unshift' : 'push';
-                                acc.supportedBrands[action](item);
-
+                                acc.supportedBrands.push(item);
                                 return acc;
                             }
 
@@ -107,6 +105,10 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         supportedBrands: null,
                         brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
                     } as CbObjOnBinLookup);
+
+                    // Reset the UI and let the native, regex branding happen (for the generic card)
+                    // For a single-branded card we need to pass a boolean to prompt resetting the brand logo to the 'base' type
+                    this.processBinLookupResponse(null, true);
                 }
             } else {
                 if (!data?.requestId) {
@@ -119,7 +121,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
     } else if (this.currentRequestId) {
         // If onBinValue callback is called AND we have been doing binLookup BUT passed object doesn't have an encryptedBin property
         // - then the number of digits in number field has dropped below threshold for BIN lookup - so reset the UI
-        this.processBinLookupResponse(null);
+        this.processBinLookupResponse(null, true);
 
         this.currentRequestId = null; // Ignore any pending responses
 
