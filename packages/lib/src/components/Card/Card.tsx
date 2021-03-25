@@ -75,8 +75,8 @@ export class CardElement extends UIElement<CardElementProps> {
         if (this.props.onBrand) this.props.onBrand(event);
     };
 
-    processBinLookupResponse(binLookupResponse: BinLookupResponse) {
-        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse);
+    processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
         return this;
     }
 
