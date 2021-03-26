@@ -1,13 +1,13 @@
-import { SetupObject, ConfigObject, CallbacksConfig, CSFStateObject, SFFeedbackObj, SendBrandObject } from '../types';
+import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject, SFFeedbackObj, SendBrandObject } from '../types';
 import { createSecuredFields } from './createSecuredFields';
 import { handleProcessBrand } from './utils/processBrand';
 import { handleBrandFromBinLookup } from './utils/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
     // Set in CSF
-    protected callbacks: CallbacksConfig;
-    protected config: ConfigObject;
-    protected props: SetupObject;
+    protected callbacks: CSFCallbacksConfig;
+    protected config: CSFConfigObject;
+    protected props: CSFSetupObject;
     protected state: CSFStateObject;
     protected assessFormValidity: () => void;
     protected brandsFromBinLookup: typeof handleBrandFromBinLookup;
@@ -40,13 +40,13 @@ abstract class AbstractCSF {
     protected isSingleBrandedCard: boolean;
     protected securityCode: string;
     // --
-    protected constructor(setupObj: SetupObject) {
+    protected constructor(setupObj: CSFSetupObject) {
         this.props = setupObj;
         this.state = ({} as any) as CSFStateObject;
 
         // Initialise storage objects
-        this.config = ({} as any) as ConfigObject; // {} as ConfigObject fails in linting
-        this.callbacks = ({} as any) as CallbacksConfig;
+        this.config = ({} as any) as CSFConfigObject; // {} as ConfigObject fails in linting
+        this.callbacks = ({} as any) as CSFCallbacksConfig;
     }
 }
 export default AbstractCSF;
