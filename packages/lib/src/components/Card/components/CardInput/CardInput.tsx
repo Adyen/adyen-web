@@ -159,7 +159,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     render(
-        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts },
+        { loadingContext, hasHolderName, hasCVC, installmentOptions, positionHolderNameOnTop, showInstallmentAmounts },
         { status, cvcPolicy, hideDateForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
@@ -168,9 +168,20 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
 
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
-        const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : countryCode === 'kr';
+        const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
 
         const showAmountsInInstallments = showInstallmentAmounts ?? true;
+
+        const CardHolderNameWrapper = () => (
+            <CardHolderName
+                required={this.props.holderNameRequired}
+                placeholder={this.props.placeholders.holderName}
+                value={this.state.data.holderName}
+                error={!!this.state.errors.holderName}
+                isValid={!!this.state.valid.holderName}
+                onChange={this.handleHolderName}
+            />
+        );
 
         return (
             <SecuredFieldsProvider
@@ -216,6 +227,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
+                                {hasHolderName && positionHolderNameOnTop && <CardHolderNameWrapper />}
+
                                 <CardFields
                                     {...this.props}
                                     brand={sfpState.brand}
@@ -231,16 +244,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
-                                {hasHolderName && (
-                                    <CardHolderName
-                                        required={this.props.holderNameRequired}
-                                        placeholder={this.props.placeholders.holderName}
-                                        value={this.state.data.holderName}
-                                        error={!!this.state.errors.holderName}
-                                        isValid={!!this.state.valid.holderName}
-                                        onChange={this.handleHolderName}
-                                    />
-                                )}
+                                {hasHolderName && !positionHolderNameOnTop && <CardHolderNameWrapper />}
 
                                 {this.props.configuration.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication
@@ -256,7 +260,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     />
                                 )}
 
-                                {enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
+                                {this.props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
 
                                 {hasInstallments && (
                                     <Installments
