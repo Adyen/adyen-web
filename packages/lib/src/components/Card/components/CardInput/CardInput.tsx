@@ -173,8 +173,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     render(
-
-        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts, configuration },
+        { loadingContext, hasHolderName, hasCVC, installmentOptions, positionHolderNameOnTop, showInstallmentAmounts, configuration },
         { status, cvcPolicy, hideDateForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
@@ -182,7 +181,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // In the Drop-in the oneClick status may already have been decided, so give that priority
         const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
 
-        const cardCountryCode: string = issuingCountryCode ?? countryCode;
+        const cardCountryCode: string = issuingCountryCode ?? this.props.countryCode;
 
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
         const isKorea = cardCountryCode === 'kr';
@@ -211,7 +210,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 {...this.props}
                 styles={{ ...defaultStyles, ...this.props.styles }}
                 koreanAuthenticationRequired={configuration.koreanAuthenticationRequired}
-                hasKoreanFields={!!(configuration.koreanAuthenticationRequired && countryCode === 'kr')}
+                hasKoreanFields={!!(configuration.koreanAuthenticationRequired && this.props.countryCode === 'kr')}
                 onChange={this.handleSecuredFieldsChange}
                 onBrand={this.props.onBrand}
                 onFocus={this.handleFocus}
@@ -294,7 +293,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     </div>
                                 )}
 
-                                {enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
+                                {this.props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
 
                                 {hasInstallments && (
                                     <Installments
