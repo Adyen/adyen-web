@@ -6,7 +6,6 @@ import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils
 import {
     CVC_POLICY_HIDDEN,
     CVC_POLICY_OPTIONAL,
-    CVC_POLICY_REQUIRED,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_EXPIRY_DATE,
     DATE_POLICY_HIDDEN
@@ -22,7 +21,8 @@ import AbstractSecuredField, {
     AriaConfig,
     PlaceholdersObject,
     CVCPolicyType,
-    DatePolicyType
+    DatePolicyType,
+    SFInternalConfig
 } from '../core/AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
@@ -37,14 +37,14 @@ class SecuredField extends AbstractSecuredField {
     constructor(pSetupObj: SFSetupObject, i18n: Language) {
         super();
 
-        // List of props from setup object not required in the config object
+        // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
         const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'datePolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
 
         // ...breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
-        this.config = { ...this.config, ...configVarsFromSetUpObj, iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig } };
+        this.config = { ...this.config, ...configVarsFromSetUpObj, iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig } } as SFInternalConfig;
 
         // Copy passed setup object values to this
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
@@ -132,7 +132,7 @@ class SecuredField extends AbstractSecuredField {
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
-            cvcRequired: this.cvcPolicy === CVC_POLICY_REQUIRED,
+            cvcPolicy: this.cvcPolicy,
             numKey: this.numKey,
             txVariant: this.config.txVariant,
             extraFieldData: this.config.extraFieldData,
@@ -141,7 +141,9 @@ class SecuredField extends AbstractSecuredField {
             sfLogAtStart: this.config.sfLogAtStart,
             showWarnings: this.config.showWarnings,
             trimTrailingSeparator: this.config.trimTrailingSeparator,
-            isCreditCardType: this.config.isCreditCardType
+            isCreditCardType: this.config.isCreditCardType,
+            legacyInputMode: this.config.legacyInputMode,
+            minimumExpiryDate: this.config.minimumExpiryDate
         };
 
         if (process.env.NODE_ENV === 'development' && window._b$dl) {

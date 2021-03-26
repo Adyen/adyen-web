@@ -1,8 +1,8 @@
-import { CallbacksConfig } from '../types';
+import { CSFCallbacksConfig } from '../types';
 
 const noop = () => {};
 
-export function configureCallbacks(callbacksObj: CallbacksConfig = ({} as any) as CallbacksConfig): void {
+export function configureCallbacks(callbacksObj: CSFCallbacksConfig = ({} as any) as CSFCallbacksConfig): void {
     // --
     this.callbacks.onLoad = callbacksObj.onLoad ? callbacksObj.onLoad : noop;
 

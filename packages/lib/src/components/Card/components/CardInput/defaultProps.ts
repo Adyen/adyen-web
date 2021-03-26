@@ -6,7 +6,7 @@ export default {
     hasHolderName: false,
     holderNameRequired: false,
     enableStoreDetails: false,
-    hideCVC: false, // passed down to SFP for the "NoDataRequired" scenario with one-click PMs (where CVC is hidden or optional)
+    hideCVC: false,
     hasCVC: true,
     hasStoreDetails: false,
     storedDetails: false,

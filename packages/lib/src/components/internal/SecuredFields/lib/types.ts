@@ -30,6 +30,9 @@ export interface CSFReturnObject {
     sendValueToFrame?: any;
 }
 
+/**
+ * Base interface for SetupObject & ConfigObject
+ */
 interface CSFCommonProps {
     loadingContext: string;
     cardGroupTypes?: string[];
@@ -40,9 +43,14 @@ interface CSFCommonProps {
     keypadFix?: boolean;
     isKCP?: boolean;
     iframeUIConfig?: object;
+    legacyInputMode?: boolean;
+    minimumExpiryDate?: string;
 }
 
-export interface SetupObject extends CSFCommonProps {
+/**
+ * Object sent when SecuredFieldsProvider initialises CSF
+ */
+export interface CSFSetupObject extends CSFCommonProps {
     type: string;
     clientKey: string;
     rootNode: string | HTMLElement;
@@ -50,13 +58,17 @@ export interface SetupObject extends CSFCommonProps {
     i18n?: Language;
 }
 
-export interface ConfigObject extends CSFCommonProps {
+/**
+ * The type for the config object created by CSF: properties that just need to be set once, at startup, and then don't change
+ * This object provides the source for many of the properties that are written into the SFSetupObject used to initialise a new SecuredField.ts
+ */
+export interface CSFConfigObject extends CSFCommonProps {
     iframeSrc: string;
     isCreditCardType: boolean;
     sfLogAtStart: boolean;
 }
 
-export interface CallbacksConfig {
+export interface CSFCallbacksConfig {
     onLoad?: (callbackObj: object) => void;
     onConfigSuccess?: (callbackObj: object) => void;
     onFieldValid?: (callbackObj: object) => void;
@@ -134,8 +146,7 @@ export interface CardObject {
     pattern: RegExp;
     securityCode?: string;
     displayName?: string;
-    cvcRequired?: boolean;
-    hideCVC?: boolean;
+    cvcPolicy?: string;
 }
 
 export interface CbObjOnBrand {
@@ -229,10 +240,8 @@ export interface SFFeedbackObj {
     fieldType: string;
     numKey: number;
     brand?: string;
-    hideCVC?: boolean;
     code?: string;
     cvcText?: string;
-    cvcRequired?: boolean;
     cvcPolicy?: CVCPolicyType;
     datePolicy?: DatePolicyType;
     showSocialSecurityNumber?: boolean;
