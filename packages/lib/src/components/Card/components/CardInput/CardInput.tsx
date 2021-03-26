@@ -99,6 +99,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (
             !objectsDeepEqual(prevState.billingAddress, this.state.billingAddress) ||
             prevState.storePaymentMethod !== this.state.storePaymentMethod ||
+            prevState.socialSecurityNumber !== this.state.socialSecurityNumber ||
             !objectsDeepEqual(prevState.installments, this.state.installments) ||
             prevState.isSfpValid !== this.state.isSfpValid ||
             prevState.cvcPolicy !== this.state.cvcPolicy ||
@@ -283,7 +284,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                             onInput={e => this.handleCPF(e)}
                                             error={this.state.errors?.socialSecurityNumber}
                                             valid={this.state.valid?.socialSecurityNumber}
-                                            data={this.state.data?.socialSecurityNumber}
+                                            data={this.state.socialSecurityNumber}
                                         />
                                     </div>
                                 )}

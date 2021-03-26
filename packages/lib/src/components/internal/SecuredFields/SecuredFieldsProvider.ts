@@ -35,6 +35,7 @@ export interface SFPState {
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
     hideDateForBrand?: boolean;
+    socialSecurityNumber?: string;
 }
 
 export interface SingleBrandResetObject {

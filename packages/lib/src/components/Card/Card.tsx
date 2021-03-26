@@ -54,6 +54,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
+            ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
             ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
             ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
             browserInfo: this.browserInfo

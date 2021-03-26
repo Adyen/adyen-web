@@ -62,9 +62,9 @@ function handleCPF(e: Event, validate = false): void {
     const socialSecurityNumber = formatCPFCNPJ((e.target as HTMLInputElement).value);
     const isValid = validateSSN(socialSecurityNumber);
 
-    const setHolderName = (prevState: SFPState): SFPState => ({
+    const setCPF = (prevState: SFPState): SFPState => ({
         ...prevState,
-        data: { ...prevState.data, socialSecurityNumber },
+        socialSecurityNumber,
         errors: { ...prevState.errors, socialSecurityNumber: validate && !isValid },
         valid: {
             ...prevState.valid,
@@ -72,7 +72,7 @@ function handleCPF(e: Event, validate = false): void {
         }
     });
 
-    this.setState(setHolderName);
+    this.setState(setCPF);
 }
 
 /**
