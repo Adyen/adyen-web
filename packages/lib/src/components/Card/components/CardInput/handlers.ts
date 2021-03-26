@@ -61,7 +61,7 @@ function handleKCPAuthentication(data: object, valid: object): void {
 function handleCPF(e: Event, validate = false): void {
     const socialSecurityNumber = formatCPFCNPJ((e.target as HTMLInputElement).value);
     const isValid = validateSSN(socialSecurityNumber);
-    console.log(isValid);
+
     const setHolderName = (prevState: SFPState): SFPState => ({
         ...prevState,
         data: { ...prevState.data, socialSecurityNumber },
@@ -123,6 +123,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         },
         isSfpValid: sfState.isSfpValid,
         cvcPolicy: sfState.cvcPolicy,
+        showSocialSecurityNumber: sfState.showSocialSecurityNumber,
         hideDateForBrand: sfState.hideDateForBrand,
         brand: sfState.brand
     });

@@ -51,7 +51,7 @@ const mock = RequestMock()
         }
     );
 
-fixture`Starting with KCP fields`
+fixture`Starting with SSN (auto) field`
     .page(CARDS_URL)
     .clientScripts('autoMode.clientScripts.js')
     .requestHooks(mock);

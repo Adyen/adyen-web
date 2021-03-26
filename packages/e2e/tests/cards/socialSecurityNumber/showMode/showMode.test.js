@@ -20,7 +20,7 @@ const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
     return t.switchToMainWindow().typeText('.adyen-checkout__field--socialSecurityNumber input', ssnValue);
 };
 
-fixture`Starting with KCP fields`.page(CARDS_URL).clientScripts('showMode.clientScripts.js');
+fixture`Starting with SSN (show) fields`.page(CARDS_URL).clientScripts('showMode.clientScripts.js');
 
 // Green 1
 test('Fill in card number with a socialSecurityNumber (CPF) field (socialSecurityMode: show)', async t => {

@@ -155,9 +155,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
     public processBinLookupResponse(data: BinLookupResponse, isReset: boolean) {
         const issuingCountryCode = data?.issuingCountryCode ? data.issuingCountryCode.toLowerCase() : null;
-        const showSocialSecurityNumber = data?.showSocialSecurityNumber ?? false;
 
-        this.setState({ issuingCountryCode, showSocialSecurityNumber }, () => {
+        this.setState({ issuingCountryCode }, () => {
             this.processBinLookup(data, isReset);
         });
     }

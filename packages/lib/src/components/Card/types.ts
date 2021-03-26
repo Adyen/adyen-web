@@ -128,6 +128,7 @@ export interface BrandObject {
     cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
     showExpiryDate: boolean;
+    showSocialSecurityNumber?: boolean;
     supported: boolean;
 }
 

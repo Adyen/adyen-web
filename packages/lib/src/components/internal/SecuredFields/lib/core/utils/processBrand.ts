@@ -8,6 +8,7 @@ interface BrandInfoObject {
     brand: string;
     cvcPolicy: CVCPolicyType;
     cvcText: string;
+    showSocialSecurityNumber?: boolean;
 }
 
 const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStorageObject): boolean => {
@@ -24,7 +25,8 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
         // Check for new brand...
         const newBrandObj: BrandStorageObject = {
             brand: pFeedbackObj.brand,
-            cvcPolicy: pFeedbackObj.cvcPolicy ? pFeedbackObj.cvcPolicy : getCVCPolicy(pFeedbackObj)
+            cvcPolicy: pFeedbackObj.cvcPolicy ? pFeedbackObj.cvcPolicy : getCVCPolicy(pFeedbackObj),
+            showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber ?? false
         };
         const newBrand: boolean = checkForBrandChange(newBrandObj, this.state.brand);
 
@@ -63,7 +65,8 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
                   ...(pFeedbackObj.brand && { brand: pFeedbackObj.brand }),
                   ...(pFeedbackObj.cvcText && { cvcText: pFeedbackObj.cvcText }),
                   ...(pFeedbackObj.cvcPolicy && { cvcPolicy: pFeedbackObj.cvcPolicy }),
-                  ...(pFeedbackObj.datePolicy && { datePolicy: pFeedbackObj.datePolicy })
+                  ...(pFeedbackObj.datePolicy && { datePolicy: pFeedbackObj.datePolicy }),
+                  ...(pFeedbackObj.showSocialSecurityNumber && { showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber })
               }
             : null;
 
