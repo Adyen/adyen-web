@@ -146,6 +146,16 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             }));
         }
 
+        if (
+            ((this.state.showSocialSecurityNumber && this.props.configuration.socialSecurityNumberMode === 'auto') ||
+                this.props.configuration.socialSecurityNumberMode === 'show') &&
+            !this.state.valid.socialSecurityNumber
+        ) {
+            this.setState(prevState => ({
+                errors: { ...prevState.errors, socialSecurityNumber: true }
+            }));
+        }
+
         // Validate Address
         if (this.billingAddressRef?.current) this.billingAddressRef.current.showValidation();
 
