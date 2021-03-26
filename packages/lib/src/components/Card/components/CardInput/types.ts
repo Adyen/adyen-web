@@ -8,6 +8,7 @@ export interface CardInputProps {
     billingAddressRequiredFields?: string[];
     brand?: string;
     configuration: CardConfiguration;
+    countryCode: string;
     data?: object;
     enableStoreDetails: boolean;
     hasCVC: boolean;
