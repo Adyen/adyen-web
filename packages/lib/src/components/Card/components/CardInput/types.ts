@@ -37,6 +37,7 @@ export interface CardInputState {
     additionalSelectElements: DualBrandSelectElement[];
     additionalSelectValue: string;
     billingAddress: object;
+    brand: string;
     data?: object;
     errors?: object;
     focusedElement: string;

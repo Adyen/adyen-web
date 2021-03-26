@@ -14,8 +14,8 @@ import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecure
 
 export interface CardElementProps extends UIElementProps {
     /**
-     * Only set for a single-branded card or a stored card,
-     * brand is never set for a generic card component
+     * Only set for a stored card,
+     * brand is never set for a generic card component OR a single-branded card
      */
     brand?: string;
 
