@@ -18,7 +18,7 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, SetupObject, StylesObject, CbObjOnAdditionalSF } from '../types';
+import { CSFReturnObject, CSFSetupObject, StylesObject, CbObjOnAdditionalSF, CSFStateObject } from '../types';
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
 import { BinLookupResponse } from '../../../../Card/types';
@@ -29,7 +29,7 @@ const notConfiguredWarning = (str = 'You cannot use secured fields') => {
 
 class CSF extends AbstractCSF {
     // --
-    constructor(setupObj: SetupObject) {
+    constructor(setupObj: CSFSetupObject) {
         super(setupObj);
 
         this.state = {
@@ -55,7 +55,7 @@ class CSF extends AbstractCSF {
             registerFieldForIos: false,
             securedFields: {},
             isKCP: false
-        };
+        } as CSFStateObject;
 
         // Setup 'this' references
         this.configHandler = handleConfig;

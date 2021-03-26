@@ -5,7 +5,7 @@ import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
 import {
     CSFReturnObject,
-    SetupObject,
+    CSFSetupObject,
     StylesObject,
     CbObjOnError,
     CbObjOnFocus,
@@ -146,7 +146,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             loadingContext = process.env.__SF_ENV__;
         }
 
-        const csfSetupObj: SetupObject = {
+        const csfSetupObj: CSFSetupObject = {
             rootNode: root,
             type: this.props.type,
             clientKey: this.props.clientKey,
@@ -174,7 +174,9 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
             },
-            isKCP: this.state.hasKoreanFields
+            isKCP: this.state.hasKoreanFields,
+            legacyInputMode: this.props.legacyInputMode,
+            minimumExpiryDate: this.props.minimumExpiryDate
         };
 
         this.csf = initCSF(csfSetupObj);
