@@ -100,7 +100,7 @@ export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 
 export interface CardConfiguration {
     koreanAuthenticationRequired?: boolean;
-    socialSecurityMode?: SocialSecurityMode;
+    socialSecurityNumberMode?: SocialSecurityMode;
 }
 
 interface CardPaymentMethodData {
