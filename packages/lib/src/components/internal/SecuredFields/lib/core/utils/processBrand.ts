@@ -2,14 +2,7 @@ import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configurat
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
-import { CVCPolicyType } from '../AbstractSecuredField';
-
-interface BrandInfoObject {
-    brand: string;
-    cvcPolicy: CVCPolicyType;
-    cvcText: string;
-    showSocialSecurityNumber?: boolean;
-}
+import { pick } from '../../../utils';
 
 const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStorageObject): boolean => {
     // if the objects aren't the same - then return true = brandChange has happened
@@ -18,7 +11,7 @@ const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStora
 
 // If generic card type AND passed brand doesn't equal stored brand - send the new brand to the cvc input
 // Create object for onBrand callback
-export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject {
+export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
     const fieldType: string = pFeedbackObj.fieldType;
 
     if (fieldType === ENCRYPTED_CARD_NUMBER) {
@@ -26,7 +19,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
         const newBrandObj: BrandStorageObject = {
             brand: pFeedbackObj.brand,
             cvcPolicy: pFeedbackObj.cvcPolicy,
-            showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber ?? false
+            showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber
         };
         const newBrand: boolean = checkForBrandChange(newBrandObj, this.state.brand);
 
@@ -39,6 +32,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
 
         // ...if also a generic card - tell cvc field...
         if (treatAsGenericCard && newBrand) {
+            // Store on state so for subsequent brand messages we can compare the new and the old
             this.state.brand = newBrandObj;
 
             // Perform postMessage to send brand to CVC field - this also needs to happen for BCMC, single branded cards,
@@ -57,15 +51,9 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             }
         }
 
-        // ...then check for & spread brand related properties...
-        const brandInfoObj: BrandInfoObject = treatAsGenericCard
-            ? {
-                  ...(pFeedbackObj.brand && { brand: pFeedbackObj.brand }),
-                  ...(pFeedbackObj.cvcText && { cvcText: pFeedbackObj.cvcText }),
-                  ...(pFeedbackObj.cvcPolicy && { cvcPolicy: pFeedbackObj.cvcPolicy }),
-                  ...(pFeedbackObj.datePolicy && { datePolicy: pFeedbackObj.datePolicy }),
-                  ...(pFeedbackObj.showSocialSecurityNumber && { showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber })
-              }
+        // Create object with brand related properties
+        const brandInfoObj = treatAsGenericCard
+            ? pick(['brand', 'cvcPolicy', 'cvcText', 'datePolicy', 'showSocialSecurityNumber', 'fiddle']).from(pFeedbackObj)
             : null;
 
         if (brandInfoObj && brandInfoObj.brand) {
@@ -77,8 +65,8 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): BrandInfoObject
             this.callbacks.onBrand(callbackObj);
         }
 
-        return brandInfoObj;
+        return true;
     }
 
-    return null;
+    return false;
 }

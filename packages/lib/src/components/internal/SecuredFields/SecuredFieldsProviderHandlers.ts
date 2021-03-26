@@ -106,7 +106,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
         prevState => ({
             brand: cardInfo.brand,
             cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
-            showSocialSecurityNumber: cardInfo.showSocialSecurityNumber ?? false,
+            showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
             errors: {
                 ...prevState.errors,
                 // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
