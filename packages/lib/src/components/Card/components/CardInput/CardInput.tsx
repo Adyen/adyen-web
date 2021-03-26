@@ -172,6 +172,17 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
         const showAmountsInInstallments = showInstallmentAmounts ?? true;
 
+        const CardHolderNameWrapper = () => (
+            <CardHolderName
+                required={this.props.holderNameRequired}
+                placeholder={this.props.placeholders.holderName}
+                value={this.state.data.holderName}
+                error={!!this.state.errors.holderName}
+                isValid={!!this.state.valid.holderName}
+                onChange={this.handleHolderName}
+            />
+        );
+
         return (
             <SecuredFieldsProvider
                 ref={this.sfp}
@@ -216,16 +227,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
-                                {hasHolderName && positionHolderNameOnTop && (
-                                    <CardHolderName
-                                        required={this.props.holderNameRequired}
-                                        placeholder={this.props.placeholders.holderName}
-                                        value={this.state.data.holderName}
-                                        error={!!this.state.errors.holderName}
-                                        isValid={!!this.state.valid.holderName}
-                                        onChange={this.handleHolderName}
-                                    />
-                                )}
+                                {hasHolderName && positionHolderNameOnTop && <CardHolderNameWrapper />}
 
                                 <CardFields
                                     {...this.props}
@@ -242,16 +244,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
-                                {hasHolderName && !positionHolderNameOnTop && (
-                                    <CardHolderName
-                                        required={this.props.holderNameRequired}
-                                        placeholder={this.props.placeholders.holderName}
-                                        value={this.state.data.holderName}
-                                        error={!!this.state.errors.holderName}
-                                        isValid={!!this.state.valid.holderName}
-                                        onChange={this.handleHolderName}
-                                    />
-                                )}
+                                {hasHolderName && !positionHolderNameOnTop && <CardHolderNameWrapper />}
 
                                 {this.props.configuration.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication

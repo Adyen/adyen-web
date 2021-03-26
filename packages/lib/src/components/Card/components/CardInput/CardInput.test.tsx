@@ -53,9 +53,15 @@ describe('CardInput', () => {
         expect(wrapper.state('valid').holderName).toBe(undefined);
     });
 
-    test('shows holderName first', () => {
+    test.only('does not show the holder name first by default', () => {
+        const wrapper = mount(<CardInput hasHolderName={true} i18n={i18n} />);
+        expect(wrapper.find('CardHolderNameWrapper')).toHaveLength(1);
+        expect(wrapper.find('CardHolderNameWrapper:first-child')).toHaveLength(0);
+    });
+
+    test.only('shows holder name first', () => {
         const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
-        expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
+        expect(wrapper.find('CardHolderNameWrapper:first-child')).toHaveLength(1);
     });
 
     test('issuingCountryCode state var is converted to lowerCase', () => {
