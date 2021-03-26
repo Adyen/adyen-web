@@ -21,14 +21,14 @@ const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
 const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 const mockedResponse = {
-    showSocialSecurityNumber: true,
     brands: [
         {
             brand: 'visa',
             cvcPolicy: 'required',
             enableLuhnCheck: true,
             showExpiryDate: true,
-            supported: true
+            supported: true,
+            showSocialSecurityNumber: true
         }
     ],
     issuingCountryCode: 'BR',
