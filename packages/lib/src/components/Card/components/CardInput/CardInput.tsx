@@ -173,6 +173,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     render(
+
         { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, enableStoreDetails, showInstallmentAmounts, configuration },
         { status, cvcPolicy, hideDateForBrand, focusedElement, issuingCountryCode }
     ) {
@@ -192,6 +193,17 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         const showBrazilianSSN: boolean =
             (this.state.showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') ||
             configuration.socialSecurityNumberMode === 'show';
+
+        const CardHolderNameWrapper = () => (
+            <CardHolderName
+                required={this.props.holderNameRequired}
+                placeholder={this.props.placeholders.holderName}
+                value={this.state.data.holderName}
+                error={!!this.state.errors.holderName}
+                isValid={!!this.state.valid.holderName}
+                onChange={this.handleHolderName}
+            />
+        );
 
         return (
             <SecuredFieldsProvider
@@ -237,6 +249,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
+                                {hasHolderName && positionHolderNameOnTop && <CardHolderNameWrapper />}
+
                                 <CardFields
                                     {...this.props}
                                     brand={sfpState.brand}
@@ -252,16 +266,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
-                                {hasHolderName && (
-                                    <CardHolderName
-                                        required={this.props.holderNameRequired}
-                                        placeholder={this.props.placeholders.holderName}
-                                        value={this.state.data.holderName}
-                                        error={!!this.state.errors.holderName}
-                                        isValid={!!this.state.valid.holderName}
-                                        onChange={this.handleHolderName}
-                                    />
-                                )}
+                                {hasHolderName && !positionHolderNameOnTop && <CardHolderNameWrapper />}
 
                                 {this.props.configuration.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication

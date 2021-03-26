@@ -1,3 +1,5 @@
+@import '../../../../style/index';
+
 .adyen-checkout__card-input__form {
     transition: opacity 0.25s ease-out;
 }
@@ -30,7 +32,11 @@
 .adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
-    margin-top: 16px;
+    margin-top: $spacing-medium;
+}
+
+.adyen-checkout__card__holderName:first-child {
+    margin: 0 0 $spacing-medium;
 }
 
 /* Hide card brand icon when cardNumber is in an error state */

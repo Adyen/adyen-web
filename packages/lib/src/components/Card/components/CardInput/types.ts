@@ -21,6 +21,8 @@ export interface CardInputProps {
     loadingContext: string;
     payButton?: () => {};
     placeholders?: object;
+    positionHolderNameOnTop: boolean;
+    showInstallmentAmounts: boolean;
     showPayButton?: boolean;
     storedPaymentMethodId?: string;
     styles?: object;
