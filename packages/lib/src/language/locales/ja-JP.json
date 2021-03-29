@@ -74,6 +74,7 @@
     "cityTown": "市区町村",
     "address": "住所",
     "state": "都道府県",
+    "field.title.optional": "（任意）",
     "creditCard.cvcField.title.optional": "セキュリティーコード(任意)",
     "issuerList.wallet.placeholder": "ウォレットを選択してください",
     "privacyPolicy": "プライバシーポリシー",

@@ -74,6 +74,7 @@
     "cityTown": "시/구",
     "address": "주소",
     "state": "주",
+    "field.title.optional": "(선택 사항)",
     "creditCard.cvcField.title.optional": "CVC / CVV (선택)",
     "issuerList.wallet.placeholder": "전자 지갑 선택",
     "privacyPolicy": "개인정보 보호정책",

@@ -74,6 +74,7 @@
     "cityTown": "Cidade",
     "address": "Endereço",
     "state": "Estado",
+    "field.title.optional": "(opcional)",
     "creditCard.cvcField.title.optional": "CVC / CVV (opcional)",
     "issuerList.wallet.placeholder": "Selecione uma carteira",
     "privacyPolicy": "Política de Privacidade",

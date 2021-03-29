@@ -1,8 +1,8 @@
 import { ValidatorRules } from '../../../../utils/Validator/Validator';
-
+import validateSSN from '../SocialSecurityNumberBrazil/validate';
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
-        validate: ssn => /(^\d{3}\.\d{3}\.\d{3}-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$)/.test(ssn),
+        validate: validateSSN,
         errorMessage: '',
         modes: ['blur']
     },

@@ -74,6 +74,7 @@
     "cityTown": "Città",
     "address": "Indirizzo",
     "state": "Stato",
+    "field.title.optional": "(facoltativo)",
     "creditCard.cvcField.title.optional": "CVC/CVV (facoltativo)",
     "issuerList.wallet.placeholder": "Seleziona il tuo portafoglio",
     "privacyPolicy": "Informativa sulla privacy",
