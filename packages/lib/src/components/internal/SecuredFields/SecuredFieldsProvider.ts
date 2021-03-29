@@ -33,7 +33,9 @@ export interface SFPState {
     billingAddress?: AddressSchema;
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
+    showSocialSecurityNumber?: boolean;
     hideDateForBrand?: boolean;
+    socialSecurityNumber?: string;
 }
 
 export interface SingleBrandResetObject {
