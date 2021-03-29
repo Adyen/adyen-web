@@ -44,6 +44,15 @@ class Specifications {
     getKeyForField(fieldName: string, country: string): string {
         return this.specifications?.[country]?.labels?.[fieldName] || fieldName;
     }
+
+    /**
+     * Returns the placeholder key for a field of the passed country or the default key for that field.
+     * @param fieldName - The field to be searched
+     * @param country - The selected country
+     */
+    getPlaceholderKeyForField(fieldName: string, country: string): string {
+        return this.specifications?.[country]?.placeholders?.[fieldName] || this.specifications?.default?.placeholders?.[fieldName];
+    }
 }
 
 export default Specifications;

@@ -7,10 +7,16 @@ describe('Specifications', () => {
             labels: {
                 postalCode: 'zipCode'
             },
+            placeholders: {
+                postalCode: '90210'
+            },
             optionalFields: ['houseNumberOrName'],
             schema: ['country', 'postalCode']
         },
         default: {
+            placeholders: {
+                stateOrProvince: 'select.stateOrProvince'
+            },
             schema: ['country', 'city', 'postalCode']
         }
     };
@@ -36,5 +42,12 @@ describe('Specifications', () => {
         expect(specifications.getKeyForField('postalCode', 'US')).toBe(addressSpecificationsMock.US.labels.postalCode);
         expect(specifications.getKeyForField('country', 'US')).toBe('country');
         expect(specifications.getKeyForField('country', 'NL')).toBe('country');
+    });
+
+    test('getPlaceholderKeyForField', () => {
+        expect(specifications.getPlaceholderKeyForField('postalCode', 'US')).toBe(addressSpecificationsMock.US.placeholders.postalCode);
+        expect(specifications.getPlaceholderKeyForField('stateOrProvince', 'US')).toBe(
+            addressSpecificationsMock.default.placeholders.stateOrProvince
+        );
     });
 });

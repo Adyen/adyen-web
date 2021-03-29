@@ -83,6 +83,9 @@ export interface AddressSpecifications {
             [key: string]: string;
         };
         optionalFields?: AddressField[];
+        placeholders?: {
+            [key: string]: string;
+        };
         schema?: AddressSchema;
     };
 }

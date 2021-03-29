@@ -1,47 +1,53 @@
 import { AddressSpecifications } from './types';
 
 export const ADDRESS_SCHEMA = ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'] as const;
-const [STREET, HOUSE_NUMBER, POSTAL_CODE, CITY, STATE, COUNTRY] = ADDRESS_SCHEMA;
+const [STREET, HOUSE_NUMBER_OR_NAME, POSTAL_CODE, CITY, STATE_OR_PROVINCE, COUNTRY] = ADDRESS_SCHEMA;
 
 // prettier-ignore
 export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
     BR: {
         hasDataset: true,
         labels: {
-            stateOrProvince: 'state',
-            stateOrProvincePlaceholder: 'select.state'
-        }
+            [STATE_OR_PROVINCE]: 'state'
+        },
+        placeholders: {
+            [STATE_OR_PROVINCE]: 'select.state'
+        },
     },
     CA: {
         hasDataset: true,
         labels: {
-            houseNumberOrName: 'apartmentSuite',
-            stateOrProvince: 'provinceOrTerritory',
-            stateOrProvincePlaceholder: 'select.provinceOrTerritory',
-            street: 'address'
+            [HOUSE_NUMBER_OR_NAME]: 'apartmentSuite',
+            [STATE_OR_PROVINCE]: 'provinceOrTerritory',
+            [STREET]: 'address'
         },
-        optionalFields: [HOUSE_NUMBER],
-        schema: [COUNTRY, STREET, HOUSE_NUMBER, [[CITY, 70], [POSTAL_CODE, 30]], STATE]
+        optionalFields: [HOUSE_NUMBER_OR_NAME],
+        schema: [COUNTRY, STREET, HOUSE_NUMBER_OR_NAME, [[CITY, 70], [POSTAL_CODE, 30]], STATE_OR_PROVINCE]
     },
     GB: {
         labels: {
-            city: 'cityTown'
+            [CITY]: 'cityTown'
         },
-        schema: [COUNTRY, [[HOUSE_NUMBER, 30], [STREET, 70]], [[CITY, 70], [POSTAL_CODE, 30]], STATE]
+        schema: [COUNTRY, [[HOUSE_NUMBER_OR_NAME, 30], [STREET, 70]], [[CITY, 70], [POSTAL_CODE, 30]], STATE_OR_PROVINCE]
     },
     US: {
         hasDataset: true,
         labels: {
-            postalCode: 'zipCode',
-            houseNumberOrName: 'apartmentSuite',
-            stateOrProvince: 'state',
-            stateOrProvincePlaceholder: 'select.state',
-            street: 'address'
+            [POSTAL_CODE]: 'zipCode',
+            [HOUSE_NUMBER_OR_NAME]: 'apartmentSuite',
+            [STATE_OR_PROVINCE]: 'state',
+            [STREET]: 'address'
         },
-        optionalFields: [HOUSE_NUMBER],
-        schema: [COUNTRY, STREET, HOUSE_NUMBER, CITY, [[STATE, 50], [POSTAL_CODE, 50]]]
+        optionalFields: [HOUSE_NUMBER_OR_NAME],
+        placeholders: {
+            [STATE_OR_PROVINCE]: 'select.state'
+        },
+        schema: [COUNTRY, STREET, HOUSE_NUMBER_OR_NAME, CITY, [[STATE_OR_PROVINCE, 50], [POSTAL_CODE, 50]]]
     },
     default: {
-        schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE]
+        placeholders: {
+            [STATE_OR_PROVINCE]: 'select.provinceOrTerritory'
+        },
+        schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE]
     }
 };
