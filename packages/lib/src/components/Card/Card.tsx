@@ -26,7 +26,6 @@ export class CardElement extends UIElement<CardElementProps> {
             // - if merchant has defined value directly in props, use this instead
             configuration: {
                 ...props.configuration,
-                ...(props.koreanAuthenticationRequired !== undefined && { koreanAuthenticationRequired: props.koreanAuthenticationRequired })
             },
             onBinLookup: props.onBinLookup ??= () => {}
         };
