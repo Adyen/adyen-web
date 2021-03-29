@@ -49,7 +49,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     // Address
     window.address = checkout
         .create('address', {
-            requiredFields: ['country', 'street', 'houseNumberOrName', 'city', 'postalCode'],
             onChange: console.log,
             validationRules: {
                 postalCode: {
