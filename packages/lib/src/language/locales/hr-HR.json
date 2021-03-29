@@ -74,6 +74,7 @@
     "cityTown": "Grad",
     "address": "Adresa",
     "state": "Savezna država",
+    "field.title.optional": "(neobavezno)",
     "creditCard.cvcField.title.optional": "CVC/CVV (nije obavezno)",
     "issuerList.wallet.placeholder": "Odaberite svoju novčanik",
     "privacyPolicy": "Politika privatnosti",

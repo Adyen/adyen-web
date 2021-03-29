@@ -74,6 +74,7 @@
     "cityTown": "Stad",
     "address": "Adres",
     "state": "Staat",
+    "field.title.optional": "(optioneel)",
     "creditCard.cvcField.title.optional": "CVC / CVV (optioneel)",
     "issuerList.wallet.placeholder": "Selecteer uw portemonnee",
     "privacyPolicy": "Privacybeleid",
