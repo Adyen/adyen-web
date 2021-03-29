@@ -74,6 +74,7 @@
     "cityTown": "Ciudad/población",
     "address": "Dirección",
     "state": "Estado",
+    "field.title.optional": "(opcional)",
     "creditCard.cvcField.title.optional": "CVC / CVV (opcional)",
     "issuerList.wallet.placeholder": "Seleccione su monedero electrónico",
     "privacyPolicy": "Política de privacidad",

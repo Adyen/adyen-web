@@ -74,6 +74,7 @@
     "cityTown": "Mesto/obec",
     "address": "Adresa",
     "state": "Štát",
+    "field.title.optional": "(voliteľné)",
     "creditCard.cvcField.title.optional": "CVC/CVV (voliteľné)",
     "issuerList.wallet.placeholder": "Vyberte si peňaženku",
     "privacyPolicy": "Zásady ochrany osobných údajov",
