@@ -150,9 +150,10 @@ export function isArray(prop) {
 }
 
 /**
- * 'Destructures' properties from object, returns a new object only containing those properties that were asked for
+ * 'Destructures' properties from object - returns a new object only containing those properties that were asked for (including if those properties
+ * have values that are falsy: null, undefined, false, '').
  *
- * @param args - property names to select: can be either 'regular' arguments (commma separated list) or an array
+ * @param args - property names to select: can be either 'regular' arguments (comma separated list) or an array
  * @returns - an object with a function 'from' that accepts a single argument - the object from which to choose properties.
  * This function returns a new object - a copy of the original but only including the desired properties
  *
@@ -174,7 +175,7 @@ export function pick(...args) {
 /**
  *'Destructures' properties from object, returning a new object containing all the original objects properties except those that were specifically rejected
  *
- * @param args - property names to reject: can be either 'regular' arguments (commma separated list) or an array
+ * @param args - property names to reject: can be either 'regular' arguments (comma separated list) or an array
  * @returns - an object with a function 'from' that accepts a single argument - the object from which to reject properties.
  * This function returns a new object - a copy of the original but excluding the selected properties
  *

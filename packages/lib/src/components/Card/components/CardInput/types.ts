@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CardConfiguration, DualBrandSelectElement } from '../../types';
+import { CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
 
 export interface CardInputProps {
     amount?: object;
@@ -7,7 +7,8 @@ export interface CardInputProps {
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
-    configuration?: CardConfiguration;
+    configuration: CardConfiguration;
+    countryCode: string;
     data?: object;
     enableStoreDetails: boolean;
     hasCVC: boolean;
@@ -17,9 +18,12 @@ export interface CardInputProps {
     i18n?: Language;
     installmentOptions: object;
     koreanAuthenticationRequired?: boolean;
+    socialSecurityNumberMode?: SocialSecurityMode;
     loadingContext: string;
     payButton?: () => {};
     placeholders?: object;
+    positionHolderNameOnTop: boolean;
+    showInstallmentAmounts: boolean;
     showPayButton?: boolean;
     storedPaymentMethodId?: string;
     styles?: object;
@@ -33,6 +37,7 @@ export interface CardInputState {
     additionalSelectElements: DualBrandSelectElement[];
     additionalSelectValue: string;
     billingAddress: object;
+    brand?: string;
     data?: object;
     errors?: object;
     focusedElement: string;
@@ -42,4 +47,5 @@ export interface CardInputState {
     status: string;
     valid?: object;
     issuingCountryCode: string;
+    showSocialSecurityNumber?: boolean;
 }

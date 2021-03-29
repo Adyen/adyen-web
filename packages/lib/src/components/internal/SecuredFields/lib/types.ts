@@ -11,6 +11,7 @@ declare global {
 export interface BrandStorageObject {
     brand: string;
     cvcPolicy: string;
+    showSocialSecurityNumber?: boolean;
 }
 
 /**
@@ -155,6 +156,7 @@ export interface CbObjOnBrand {
     cvcPolicy: CVCPolicyType;
     datePolicy?: DatePolicyType;
     cvcText: string;
+    showSocialSecurityNumber?: boolean;
     brandImageUrl?: string; // Added by SFP
     // maxLength: number;
 }
@@ -242,6 +244,7 @@ export interface SFFeedbackObj {
     cvcText?: string;
     cvcPolicy?: CVCPolicyType;
     datePolicy?: DatePolicyType;
+    showSocialSecurityNumber?: boolean;
     maxLength?: number;
     error?: string;
     endDigits?: string;

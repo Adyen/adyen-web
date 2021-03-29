@@ -74,6 +74,7 @@
     "cityTown": "Oraș/localitate",
     "address": "Adresă",
     "state": "Stat",
+    "field.title.optional": "(opțional)",
     "creditCard.cvcField.title.optional": "CVC/CVV (opțional)",
     "issuerList.wallet.placeholder": "Selectați-vă portofelul",
     "privacyPolicy": "Politica de confidențialitate",

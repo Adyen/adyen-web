@@ -59,7 +59,8 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         // ...call processBinLookupResponse with, a simplified, response object if it contains at least one supported brand
                         this.processBinLookupResponse({
                             issuingCountryCode: data.issuingCountryCode,
-                            supportedBrands: mappedResponse.supportedBrands
+                            supportedBrands: mappedResponse.supportedBrands,
+                            ...(data.showSocialSecurityNumber ? { showSocialSecurityNumber: data.showSocialSecurityNumber } : {})
                         } as BinLookupResponse);
 
                         // Inform merchant of the result

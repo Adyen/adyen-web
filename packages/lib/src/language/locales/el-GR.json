@@ -74,6 +74,7 @@
     "cityTown": "Πόλη / Κοινότητα",
     "address": "Διεύθυνση",
     "state": "Πολιτεία",
+    "field.title.optional": "(προαιρετικό)",
     "creditCard.cvcField.title.optional": "CVC/CVV (προαιρετικά)",
     "issuerList.wallet.placeholder": "Επιλέξτε το πορτοφόλι σας",
     "privacyPolicy": "Πολιτική απορρήτου",

@@ -74,6 +74,7 @@
     "cityTown": "Kaupunki / taajama",
     "address": "Osoite",
     "state": "Osavaltio",
+    "field.title.optional": "(valinnainen)",
     "creditCard.cvcField.title.optional": "CVC / CVV (valinnainen)",
     "issuerList.wallet.placeholder": "Valitse lompakkosi",
     "privacyPolicy": "Tietosuojamenettely",
