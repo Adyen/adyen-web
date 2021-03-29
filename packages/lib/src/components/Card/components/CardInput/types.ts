@@ -17,7 +17,6 @@ export interface CardInputProps {
     holderNameRequired?: boolean;
     i18n?: Language;
     installmentOptions: object;
-    koreanAuthenticationRequired?: boolean;
     socialSecurityNumberMode?: SocialSecurityMode;
     loadingContext: string;
     payButton?: () => {};
