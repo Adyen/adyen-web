@@ -53,7 +53,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
 
         // Create object with brand related properties
         const brandInfoObj = treatAsGenericCard
-            ? pick(['brand', 'cvcPolicy', 'cvcText', 'datePolicy', 'showSocialSecurityNumber', 'fiddle']).from(pFeedbackObj)
+            ? pick(['brand', 'cvcPolicy', 'cvcText', 'datePolicy', 'showSocialSecurityNumber']).from(pFeedbackObj)
             : null;
 
         if (brandInfoObj && brandInfoObj.brand) {
