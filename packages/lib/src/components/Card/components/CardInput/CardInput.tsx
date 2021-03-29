@@ -19,6 +19,7 @@ import './CardInput.scss';
 import { BinLookupResponse } from '../../types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { objectsDeepEqual } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
+import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 
 class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly validateCardInput;
@@ -27,6 +28,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     private readonly handleHolderName;
     private readonly handleInstallments;
     private readonly handleKCPAuthentication;
+    private readonly handleCPF;
     private readonly handleSecuredFieldsChange;
     private readonly handleOnStoreDetails;
     private readonly handleAdditionalDataSelection;
@@ -75,6 +77,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         this.handleHolderName = handlers.handleHolderName.bind(this);
         this.handleInstallments = handlers.handleInstallments.bind(this);
         this.handleKCPAuthentication = handlers.handleKCPAuthentication.bind(this);
+        this.handleCPF = handlers.handleCPF.bind(this);
         this.handleSecuredFieldsChange = handlers.handleSecuredFieldsChange.bind(this);
         this.handleOnStoreDetails = handlers.handleOnStoreDetails.bind(this);
         this.handleAdditionalDataSelection = handlers.handleAdditionalDataSelection.bind(this);
@@ -96,6 +99,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         if (
             !objectsDeepEqual(prevState.billingAddress, this.state.billingAddress) ||
             prevState.storePaymentMethod !== this.state.storePaymentMethod ||
+            prevState.socialSecurityNumber !== this.state.socialSecurityNumber ||
             !objectsDeepEqual(prevState.installments, this.state.installments) ||
             prevState.isSfpValid !== this.state.isSfpValid ||
             prevState.cvcPolicy !== this.state.cvcPolicy ||
@@ -143,6 +147,16 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             }));
         }
 
+        if (
+            ((this.state.showSocialSecurityNumber && this.props.configuration.socialSecurityNumberMode === 'auto') ||
+                this.props.configuration.socialSecurityNumberMode === 'show') &&
+            !this.state.valid.socialSecurityNumber
+        ) {
+            this.setState(prevState => ({
+                errors: { ...prevState.errors, socialSecurityNumber: true }
+            }));
+        }
+
         // Validate Address
         if (this.billingAddressRef?.current) this.billingAddressRef.current.showValidation();
 
@@ -159,7 +173,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
     }
 
     render(
-        { loadingContext, hasHolderName, hasCVC, installmentOptions, positionHolderNameOnTop, showInstallmentAmounts },
+        { countryCode, loadingContext, hasHolderName, hasCVC, installmentOptions, positionHolderNameOnTop, showInstallmentAmounts, configuration },
         { status, cvcPolicy, hideDateForBrand, focusedElement, issuingCountryCode }
     ) {
         const hasInstallments = !!Object.keys(installmentOptions).length;
@@ -167,10 +181,17 @@ class CardInput extends Component<CardInputProps, CardInputState> {
         // In the Drop-in the oneClick status may already have been decided, so give that priority
         const isOneClick = this.props.oneClick || !!this.props.storedPaymentMethodId;
 
+        const cardCountryCode: string = issuingCountryCode ?? countryCode;
+
         // If issuingCountryCode is set or the merchant defined countryCode is 'KR'
-        const isKorea = issuingCountryCode ? issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
+        const isKorea = cardCountryCode === 'kr';
 
         const showAmountsInInstallments = showInstallmentAmounts ?? true;
+
+        // Brazilian socialSecurityNumber
+        const showBrazilianSSN: boolean =
+            (this.state.showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') ||
+            configuration.socialSecurityNumberMode === 'show';
 
         const CardHolderNameWrapper = () => (
             <CardHolderName
@@ -188,8 +209,8 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                 ref={this.sfp}
                 {...this.props}
                 styles={{ ...defaultStyles, ...this.props.styles }}
-                koreanAuthenticationRequired={this.props.configuration.koreanAuthenticationRequired}
-                hasKoreanFields={!!(this.props.configuration.koreanAuthenticationRequired && this.props.countryCode === 'kr')}
+                koreanAuthenticationRequired={configuration.koreanAuthenticationRequired}
+                hasKoreanFields={!!(configuration.koreanAuthenticationRequired && countryCode === 'kr')}
                 onChange={this.handleSecuredFieldsChange}
                 onBrand={this.props.onBrand}
                 onFocus={this.handleFocus}
@@ -246,7 +267,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
 
                                 {hasHolderName && !positionHolderNameOnTop && <CardHolderNameWrapper />}
 
-                                {this.props.configuration.koreanAuthenticationRequired && isKorea && (
+                                {configuration.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication
                                         onFocusField={setFocusOn}
                                         focusedElement={focusedElement}
@@ -258,6 +279,18 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                         ref={this.kcpAuthenticationRef}
                                         onChange={this.handleKCPAuthentication}
                                     />
+                                )}
+
+                                {showBrazilianSSN && (
+                                    <div className="adyen-checkout__card__socialSecurityNumber">
+                                        <SocialSecurityNumberBrazil
+                                            onChange={e => this.handleCPF(e, true)}
+                                            onInput={e => this.handleCPF(e)}
+                                            error={this.state.errors?.socialSecurityNumber}
+                                            valid={this.state.valid?.socialSecurityNumber}
+                                            data={this.state.socialSecurityNumber}
+                                        />
+                                    </div>
                                 )}
 
                                 {this.props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}

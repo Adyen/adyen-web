@@ -74,6 +74,7 @@
     "cityTown": "Ort",
     "address": "Adress",
     "state": "Delstat",
+    "field.title.optional": "(valfritt)",
     "creditCard.cvcField.title.optional": "CVC/CVV (tillval)",
     "issuerList.wallet.placeholder": "Väj din plånbok",
     "privacyPolicy": "Sekretesspolicy",

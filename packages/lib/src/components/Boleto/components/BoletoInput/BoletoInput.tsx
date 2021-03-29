@@ -9,6 +9,7 @@ import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
+import SocialSecurityNumberBrazil from '../SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 
 function BoletoInput(props) {
     const { i18n } = useCoreContext();
@@ -88,22 +89,13 @@ function BoletoInput(props) {
                             })}
                         </Field>
 
-                        <Field
-                            label={`${i18n.get('boleto.socialSecurityNumber')}`}
-                            classNameModifiers={['socialSecurityNumber']}
-                            errorMessage={!!errors.socialSecurityNumber}
-                            isValid={Boolean(valid.socialSecurityNumber)}
-                        >
-                            {renderFormField('text', {
-                                name: 'socialSecurityNumber',
-                                autocorrect: 'off',
-                                spellcheck: false,
-                                value: data.socialSecurityNumber,
-                                maxLength: 18,
-                                onInput: handleChangeFor('socialSecurityNumber', 'input'),
-                                onChange: handleChangeFor('socialSecurityNumber')
-                            })}
-                        </Field>
+                        <SocialSecurityNumberBrazil
+                            data={data.socialSecurityNumber}
+                            error={errors.socialSecurityNumber}
+                            valid={valid.socialSecurityNumber}
+                            onInput={handleChangeFor('socialSecurityNumber', 'input')}
+                            onChange={handleChangeFor('socialSecurityNumber')}
+                        />
                     </div>
                 </div>
             )}

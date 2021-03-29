@@ -2,20 +2,29 @@ import { validateHolderName } from './validate';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import { BrandObject } from '../../types';
+import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
+import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 
 // Validate whole cardInput component i.e holderName + securedFields
 function validateCardInput(): void {
-    const holderNameValid: boolean = validateHolderName(this.state.data.holderName, this.props.holderNameRequired);
+    const { configuration, countryCode, billingAddressRequired, holderNameRequired } = this.props;
+    const holderNameValid: boolean = validateHolderName(this.state.data.holderName, holderNameRequired);
     const sfpValid: boolean = this.state.isSfpValid;
-    const addressValid: boolean = this.props.billingAddressRequired ? this.state.valid.billingAddress : true;
+    const addressValid: boolean = billingAddressRequired ? this.state.valid.billingAddress : true;
 
-    const isKorea = this.state.issuingCountryCode ? this.state.issuingCountryCode === 'kr' : this.props.countryCode === 'kr';
-    const koreanAuthentication =
-        this.props.configuration.koreanAuthenticationRequired && isKorea
+    const cardCountryCode: string = this.state.issuingCountryCode ?? countryCode;
+
+    const koreanAuthentication: boolean =
+        configuration.koreanAuthenticationRequired && cardCountryCode === 'kr'
             ? !!this.state.valid.taxNumber && !!this.state.valid.encryptedPassword
             : true;
 
-    const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication;
+    const socialSecurityNumberRequired: boolean =
+        (this.state.showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') || // auto mode (Bin Lookup)
+        configuration.socialSecurityNumberMode === 'show'; // require ssn manually
+    const socialSecurityNumberValid: boolean = socialSecurityNumberRequired ? !!this.state.valid.socialSecurityNumber : true;
+
+    const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
     this.setState({ isValid }, () => {
         this.props.onChange(this.state);
@@ -44,6 +53,26 @@ function handleKCPAuthentication(data: object, valid: object): void {
         valid: { ...prevState.valid, ...valid }
     });
     this.setState(setKCP);
+}
+
+/**
+ * Formats and saves the Brazilian social secuirity number details in state
+ */
+function handleCPF(e: Event, validate = false): void {
+    const socialSecurityNumber = formatCPFCNPJ((e.target as HTMLInputElement).value);
+    const isValid = validateSSN(socialSecurityNumber);
+
+    const setCPF = (prevState: SFPState): SFPState => ({
+        ...prevState,
+        socialSecurityNumber,
+        errors: { ...prevState.errors, socialSecurityNumber: validate && !isValid },
+        valid: {
+            ...prevState.valid,
+            socialSecurityNumber: isValid
+        }
+    });
+
+    this.setState(setCPF);
 }
 
 /**
@@ -94,6 +123,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         },
         isSfpValid: sfState.isSfpValid,
         cvcPolicy: sfState.cvcPolicy,
+        showSocialSecurityNumber: sfState.showSocialSecurityNumber,
         hideDateForBrand: sfState.hideDateForBrand,
         brand: sfState.brand
     });
@@ -144,6 +174,7 @@ export default {
     handleFocus,
     handleAddress,
     handleKCPAuthentication,
+    handleCPF,
     handleOnStoreDetails,
     handleHolderName,
     handleInstallments,

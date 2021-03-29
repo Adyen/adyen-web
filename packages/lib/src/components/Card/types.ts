@@ -14,8 +14,8 @@ import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecure
 
 export interface CardElementProps extends UIElementProps {
     /**
-     * Only set for a single-branded card or a stored card,
-     * brand is never set for a generic card component
+     * Only set for a stored card,
+     * brand is never set for a generic card component OR a single-branded card
      */
     brand?: string;
 
@@ -96,8 +96,11 @@ export interface CardElementProps extends UIElementProps {
     [key: string]: any;
 }
 
+export type SocialSecurityMode = 'show' | 'hide' | 'auto';
+
 export interface CardConfiguration {
     koreanAuthenticationRequired?: boolean;
+    socialSecurityNumberMode?: SocialSecurityMode;
 }
 
 interface CardPaymentMethodData {
@@ -125,6 +128,7 @@ export interface BrandObject {
     cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
     showExpiryDate: boolean;
+    showSocialSecurityNumber?: boolean;
     supported: boolean;
 }
 
@@ -132,6 +136,8 @@ export interface BinLookupResponseRaw {
     requestId: string;
     issuingCountryCode?: string;
     brands?: BrandObject[];
+    showSocialSecurityNumber?: boolean;
+
     // OR, if an error has occurred
     status: number;
     errorCode: string;
@@ -144,6 +150,7 @@ export interface BinLookupResponseRaw {
  */
 export interface BinLookupResponse {
     issuingCountryCode: string;
+    showSocialSecurityNumber?: boolean;
     supportedBrands?: BrandObject[];
 }
 

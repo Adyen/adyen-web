@@ -74,6 +74,7 @@
     "cityTown": "Miejscowość",
     "address": "Adres",
     "state": "Stan",
+    "field.title.optional": "(opcjonalnie)",
     "creditCard.cvcField.title.optional": "CVC / CVV (opcjonalnie)",
     "issuerList.wallet.placeholder": "Wybierz swój portfel",
     "privacyPolicy": "Polityka prywatności.",
