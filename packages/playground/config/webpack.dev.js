@@ -14,6 +14,7 @@ const htmlPages = [
     { name: 'Cards', id: 'Cards' },
     { name: 'Components', id: 'Components' },
     { name: 'Gift Cards', id: 'GiftCards' },
+    { name: 'Helpers', id: 'Helpers' },
     { name: 'Issuer Lists', id: 'IssuerLists' },
     { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'QR Codes', id: 'QRCodes' },

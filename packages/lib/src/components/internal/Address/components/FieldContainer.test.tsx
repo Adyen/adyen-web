@@ -1,14 +1,16 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import FieldContainer from './FieldContainer';
+import Specifications from '../Specifications';
 
 const propsMock = {
     errors: {},
-    data: {}
+    data: {},
+    specifications: new Specifications()
 };
 
 describe('FieldContainer', () => {
-    const getWrapper = (props?) => shallow(<FieldContainer {...propsMock} {...props} />);
+    const getWrapper = (props?) => shallow(<FieldContainer fields {...propsMock} {...props} />);
 
     test('renders the StateField', () => {
         const wrapper = getWrapper({ fieldName: 'stateOrProvince' });

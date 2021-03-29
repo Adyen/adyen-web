@@ -1,4 +1,4 @@
-import { AddressSchema, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
+import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 
 export interface OpenInvoiceVisibility {
@@ -15,8 +15,8 @@ export interface OpenInvoiceProps {
     data: {
         companyDetails?: CompanyDetailsSchema;
         personalDetails?: PersonalDetailsSchema;
-        billingAddress?: AddressSchema;
-        deliveryAddress?: AddressSchema;
+        billingAddress?: AddressData;
+        deliveryAddress?: AddressData;
     };
     onChange: Function;
     payButton: any;
@@ -28,8 +28,8 @@ export interface OpenInvoiceProps {
 export interface OpenInvoiceStateData {
     companyDetails?: CompanyDetailsSchema;
     personalDetails?: PersonalDetailsSchema;
-    billingAddress?: AddressSchema;
-    deliveryAddress?: AddressSchema;
+    billingAddress?: AddressData;
+    deliveryAddress?: AddressData;
     consentCheckbox?: boolean;
 }
 

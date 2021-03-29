@@ -2,6 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import StateField from './StateField';
 import getDataset from '../../../../core/Services/get-dataset';
+import Specifications from '../Specifications';
 
 jest.mock('../../../../core/Services/get-dataset');
 const statesMock = [
@@ -18,7 +19,7 @@ const statesMock = [
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(statesMock)));
 
 describe('StateField', () => {
-    const getWrapper = (props?) => mount(<StateField {...props} />);
+    const getWrapper = (props?) => mount(<StateField specifications={new Specifications()} {...props} />);
 
     test('does not call getDataset when no country is passed', () => {
         getWrapper();

@@ -7,7 +7,16 @@ jest.mock('../../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve({})));
 
 describe('Address', () => {
-    const getWrapper = props => shallow(<Address {...props} />);
+    const addressSpecificationsMock = {
+        US: {
+            hasDataset: true,
+            schema: ['country', 'postalCode']
+        },
+        default: {
+            schema: ['country', 'street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince']
+        }
+    };
+    const getWrapper = props => shallow(<Address specifications={addressSpecificationsMock} {...props} />);
 
     test('has the required fields', () => {
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
