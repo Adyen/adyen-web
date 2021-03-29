@@ -1,23 +1,20 @@
 import { select, getAttribute } from '../utilities/dom';
-import { ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED } from '../configuration/constants';
-import { existy, getCVCPolicy } from '../utilities/commonUtils';
+import { ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED, CVC_POLICY_REQUIRED } from '../configuration/constants';
+import { existy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
-import { SFSetupObject } from './AbstractSecuredField';
+import { CVCPolicyType, SFSetupObject } from './AbstractSecuredField';
 import SecuredField from './SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../types';
 import * as logger from '../utilities/logger';
 
 /**
- * cvcRequired = is the CVC field required?
- * - Always true for GiftCards
- * - Usually true for single branded Credit Cards but with exceptions e.g. maestro, bcmc.
- * - Always true for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required comes
- * from the SF in the brand information (as the shopper inputs the cc number)
- *
- * hideCVC = should the CVC field be hidden for this card type?
- * - Always false, except for BCMC
+ * cvcPolicy - 'required' | 'optional' | 'hidden'
+ * - Always 'required' for GiftCards
+ * - Usually 'required' for single branded Credit Cards but with exceptions e.g. maestro ('optional'), bcmc ('hidden').
+ * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
+ * comes from the SF in the brand information (as the shopper inputs the cc number)
  */
-const cvcPolicyObj = { cvcRequired: true, hideCVC: false };
+let cvcPolicy: CVCPolicyType;
 
 /**
  * Bound to the instance of CSF
@@ -40,6 +37,8 @@ export function createSecuredFields(): number {
         this.encryptedAttrName = 'data-cse';
         securedFields = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
     }
+
+    cvcPolicy = CVC_POLICY_REQUIRED;
 
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
@@ -85,8 +84,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             this.state.type = 'unrecognised-single-brand'; // Will let CVC field accept 4 digits in the input
         } else {
             // Assess whether cvc field is required based on the card type & whether the cvc field should even be visible
-            cvcPolicyObj.cvcRequired = card.cvcRequired !== false; // Always true unless property exists and is specifically set to false
-            cvcPolicyObj.hideCVC = card.hideCVC === true;
+            cvcPolicy = (card.cvcPolicy as CVCPolicyType) || CVC_POLICY_REQUIRED;
 
             this.securityCode = card.securityCode;
         }
@@ -103,7 +101,7 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             type: this.state.type,
             rootNode: this.props.rootNode,
             brand: type,
-            cvcPolicy: getCVCPolicy(cvcPolicyObj),
+            cvcPolicy,
             cvcText: this.securityCode
         };
 
@@ -148,13 +146,15 @@ export function setupSecuredField(pItem: HTMLElement): void {
         iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
         sfLogAtStart: this.config.sfLogAtStart,
         trimTrailingSeparator: this.config.trimTrailingSeparator,
-        cvcPolicy: getCVCPolicy(cvcPolicyObj), // Will assess values of cvcPolicyObj.hideCVC and cvcPolicyObj.cvcRequired to determine the cvcPolicy
+        cvcPolicy,
         datePolicy: DATE_POLICY_REQUIRED,
         isCreditCardType: this.config.isCreditCardType,
         iframeSrc: this.config.iframeSrc,
         loadingContext: this.config.loadingContext,
         showWarnings: this.config.showWarnings,
-        holderEl: pItem
+        holderEl: pItem,
+        legacyInputMode: this.config.legacyInputMode,
+        minimumExpiryDate: this.config.minimumExpiryDate
     };
 
     const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)

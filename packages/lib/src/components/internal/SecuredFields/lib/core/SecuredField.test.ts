@@ -57,7 +57,9 @@ const setupObj = {
     datePolicy: DATE_POLICY_REQUIRED as DatePolicyType,
     iframeSrc: null,
     loadingContext: null,
-    holderEl: nodeHolder
+    holderEl: nodeHolder,
+    legacyInputMode: null,
+    minimumExpiryDate: null
 };
 
 /**

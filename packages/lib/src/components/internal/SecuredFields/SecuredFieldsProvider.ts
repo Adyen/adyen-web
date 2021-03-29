@@ -5,7 +5,7 @@ import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
 import {
     CSFReturnObject,
-    SetupObject,
+    CSFSetupObject,
     StylesObject,
     CbObjOnError,
     CbObjOnFocus,
@@ -34,6 +34,11 @@ export interface SFPState {
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
     hideDateForBrand?: boolean;
+}
+
+export interface SingleBrandResetObject {
+    brand: string;
+    cvcPolicy: CVCPolicyType;
 }
 
 /**
@@ -141,7 +146,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             loadingContext = process.env.__SF_ENV__;
         }
 
-        const csfSetupObj: SetupObject = {
+        const csfSetupObj: CSFSetupObject = {
             rootNode: root,
             type: this.props.type,
             clientKey: this.props.clientKey,
@@ -169,7 +174,9 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
             },
-            isKCP: this.state.hasKoreanFields
+            isKCP: this.state.hasKoreanFields,
+            legacyInputMode: this.props.legacyInputMode,
+            minimumExpiryDate: this.props.minimumExpiryDate
         };
 
         this.csf = initCSF(csfSetupObj);
@@ -256,7 +263,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             });
     }
 
-    public processBinLookupResponse(binLookupResponse: BinLookupResponse): void {
+    public processBinLookupResponse(binLookupResponse: BinLookupResponse, resetObject: SingleBrandResetObject): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.hasUnsupportedCard) {
@@ -268,6 +275,13 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         }
 
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
+
+        // If "resetting" /binLookup for a single-branded card, resetObject.brand will be the value of the brand whose logo we want to reshow
+        if (resetObject?.brand) {
+            this.setState(resetObject, () => {
+                this.props.onChange(this.state);
+            });
+        }
 
         // Scenarios:
         // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup

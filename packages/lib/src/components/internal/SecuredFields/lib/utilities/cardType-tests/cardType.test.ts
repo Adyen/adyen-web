@@ -1,5 +1,6 @@
 /* global expect, describe, jest, beforeEach */
 import CardType from '../cardType';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL } from '../../configuration/constants';
 
 const allCards = CardType.allCards.map(pCard => pCard.cardType);
 
@@ -49,7 +50,7 @@ describe('Top level checks for recognising card brands (confirm that at least on
     test('Should return a laser card', () => {
         const card = CardType.detectCard('6304', allCards);
         expect(card.cardType).toEqual('laser');
-        expect(card.cvcRequired).toBe(false);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
     test('Should return a discover card', () => {
@@ -65,8 +66,7 @@ describe('Top level checks for recognising card brands (confirm that at least on
     test('Should return a bcmc card', () => {
         const card = CardType.detectCard('6703', allCards);
         expect(card.cardType).toEqual('bcmc');
-        expect(card.cvcRequired).toBe(false);
-        expect(card.hideCVC).toBe(true);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_HIDDEN);
     });
 
     test('Should return a bijcard card', () => {
@@ -92,7 +92,7 @@ describe('Top level checks for recognising card brands (confirm that at least on
     test('Should return a maestro card', () => {
         const card = CardType.detectCard('50', allCards);
         expect(card.cardType).toEqual('maestro');
-        expect(card.cvcRequired).toBe(false);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
     test('Should return a elo card', () => {
@@ -103,7 +103,7 @@ describe('Top level checks for recognising card brands (confirm that at least on
     test('Should return a uatp card', () => {
         const card = CardType.detectCard('1', allCards);
         expect(card.cardType).toEqual('uatp');
-        expect(card.cvcRequired).toBe(false);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
     test('Should return a cartebancaire card', () => {
@@ -129,19 +129,19 @@ describe('Top level checks for recognising card brands (confirm that at least on
     test('Should return a oasis card', () => {
         const card = CardType.detectCard('982616', allCards);
         expect(card.cardType).toEqual('oasis');
-        expect(card.cvcRequired).toBe(false);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
     test('Should return a karenmillen card', () => {
         const card = CardType.detectCard('98261465', allCards);
         expect(card.cardType).toEqual('karenmillen');
-        expect(card.cvcRequired).toBe(false);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
     test('Should return a warehouse card', () => {
         const card = CardType.detectCard('982633', allCards);
         expect(card.cardType).toEqual('warehouse');
-        expect(card.cvcRequired).toBe(false);
+        expect(card.cvcPolicy).toBe(CVC_POLICY_OPTIONAL);
     });
 
     test('Should return a mir card', () => {

@@ -3,14 +3,14 @@ import cardType from '../utilities/cardType';
 import * as logger from '../utilities/logger';
 import { falsy } from '../utilities/commonUtils';
 import { findRootNode } from '../ui/domUtils';
-import { CSFReturnObject, SetupObject } from '../types';
+import { CSFReturnObject, CSFSetupObject } from '../types';
 
-const initCSF = (pSetupObj: SetupObject): CSFReturnObject => {
+const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
     if (!pSetupObj) {
         throw new Error('No securedFields configuration object defined');
     }
 
-    const setupObj: SetupObject = { ...pSetupObj };
+    const setupObj: CSFSetupObject = { ...pSetupObj };
 
     // Ensure there is always a default type & map the generic types (e.g. 'card', 'scheme') to 'card'
     const isGenericCardType: boolean = cardType.isGenericCardType(setupObj.type);
