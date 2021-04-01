@@ -5,6 +5,7 @@ import { processErrors } from './utils/processErrors';
 import { truthy } from '../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../types';
 import * as logger from '../utilities/logger';
+import postMessageToIframe from './utils/iframes/postMessageToIframe';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     if (process.env.NODE_ENV === 'development' && window._b$dl) {
@@ -51,6 +52,20 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // N.B. when considering "individual inputs" we are concerned with the 4 fields that the checkoutAPI expects to receive for a credit card payment:
     // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
     const callbackObjectsArr: CbObjOnFieldValid[] = makeCallbackObjectsEncryption(fieldType, this.state.type, this.props.rootNode, encryptedObjArr);
+
+    // For standalone month field
+    if (fieldType === ENCRYPTED_EXPIRY_MONTH) {
+        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
+            const dataObj: object = {
+                txVariant: this.state.type,
+                code: pFeedbackObj.code,
+                blob: encryptedObjArr[0].blob,
+                fieldType: ENCRYPTED_EXPIRY_YEAR,
+                numKey: this.state.securedFields[ENCRYPTED_EXPIRY_YEAR].numKey
+            };
+            postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_YEAR), this.config.loadingContext);
+        }
+    }
 
     // For number field - add the endDigits to the encryption object
     if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.endDigits)) {
