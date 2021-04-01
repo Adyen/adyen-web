@@ -11,6 +11,7 @@ interface PayButtonProps {
 
     label?: string;
     amount: PaymentAmount;
+    status?: string;
 }
 
 const PayButton = ({ amount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
@@ -20,7 +21,9 @@ const PayButton = ({ amount, classNameModifiers = [], label, ...props }: PayButt
         ? i18n.get('confirmPreauthorization')
         : `${i18n.get('payButton')} ${!!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency) : ''}`;
 
-    return <Button {...props} classNameModifiers={[...classNameModifiers, 'pay']} label={label || defaultLabel} />;
+    return (
+        <Button {...props} disabled={props.status === 'loading'} classNameModifiers={[...classNameModifiers, 'pay']} label={label || defaultLabel} />
+    );
 };
 
 export default PayButton;
