@@ -33,6 +33,7 @@ export interface AmazonPayElementProps {
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
+    design?: string;
     environment?: string;
     i18n: Language;
     loadingContext?: string;
@@ -112,7 +113,8 @@ export interface AmazonPayElementData {
 }
 
 export interface AmazonPayButtonSettings {
-    buttonColor: ButtonColor;
+    buttonColor?: ButtonColor;
+    design?: string;
     /**
      * Amazon Pay merchant account identifier
      */
@@ -190,6 +192,7 @@ export interface CheckoutDetailsRequest {
     checkoutSessionId: string;
     getDeliveryAddress?: boolean;
     getDeclineFlowUrl?: boolean;
+    publicKeyId: string;
 }
 
 export interface UpdateAmazonCheckoutSessionRequest {

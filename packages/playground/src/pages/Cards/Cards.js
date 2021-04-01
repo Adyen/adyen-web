@@ -67,6 +67,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             hasHolderName: true,
             holderNameRequired: true,
             holderName: 'J. Smith',
+            positionHolderNameOnTop: true,
 
             // billingAddress config:
             billingAddressRequired: true,

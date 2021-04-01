@@ -42,6 +42,8 @@ import Affirm from './Affirm';
 import Pix from './Pix';
 import uuid from '../utils/uuid';
 import BacsDD from './BacsDD';
+import Address from './Address';
+import PersonalDetails from './PersonalDetails';
 
 /**
  * Maps each component with a Component element.
@@ -49,6 +51,7 @@ import BacsDD from './BacsDD';
 const componentsMap = {
     dropin: Dropin,
     ach: Ach,
+    address: Address,
     afterpay: AfterPay,
     afterpay_default: AfterPay,
     afterpay_b2b: AfterPayB2B,
@@ -119,6 +122,7 @@ const componentsMap = {
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
     paywithgoogle: GooglePay,
+    personal_details: PersonalDetails,
     googlepay: GooglePay,
     pix: Pix,
     qiwiwallet: QiwiWallet,

@@ -1,7 +1,7 @@
-import { existy } from '../../utilities/commonUtils';
 import cardType from '../../utilities/cardType';
 import { CardObject, CbObjOnConfigSuccess } from '../../types';
 import * as logger from '../../utilities/logger';
+import { CVC_POLICY_REQUIRED } from '../../configuration/constants';
 
 export function isConfigured(): void {
     this.state.isConfigured = true;
@@ -24,10 +24,10 @@ export function isConfigured(): void {
         // scenario: frontend initially recognises card as e.g. Visa - but then backend tokenises it as a sub-brand which we currently don't recognise
         if (card) {
             // Assess whether cvc field is required
-            const cvcRequired = !(existy(card.cvcRequired) && !card.cvcRequired);
+            const cvcPolicy = card.cvcPolicy ?? CVC_POLICY_REQUIRED;
 
             // If cvc is optional - the form can be considered valid
-            if (!cvcRequired) {
+            if (cvcPolicy !== CVC_POLICY_REQUIRED) {
                 this.assessFormValidity();
             }
         }

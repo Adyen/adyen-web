@@ -43,7 +43,7 @@ CardType.cards.push({
     startingRules: [6304, 6706, 677117, 677120],
     permittedLengths: [16, 17, 18, 19],
     pattern: /^(6304|6706|6709|6771)[0-9]{0,15}$/,
-    cvcRequired: false
+    cvcPolicy: 'optional'
 });
 
 CardType.cards.push({
@@ -66,8 +66,7 @@ CardType.cards.push({
     startingRules: [6703, 479658, 606005],
     permittedLengths: [16, 17, 18, 19],
     pattern: /^((6703)[0-9]{0,15}|(479658|606005)[0-9]{0,13})$/,
-    cvcRequired: false,
-    hideCVC: true
+    cvcPolicy: 'hidden'
 });
 
 CardType.cards.push({ cardType: 'bijcard', startingRules: [5100081], permittedLengths: [16], pattern: /^(5100081)[0-9]{0,9}$/ });
@@ -84,68 +83,18 @@ CardType.cards.push({
     startingRules: [50, 56, 57, 58, 6],
     permittedLengths: [16, 17, 18, 19],
     pattern: /^(5[0|6-8][0-9]{0,17}|6[0-9]{0,18})$/,
-    cvcRequired: false
+    cvcPolicy: 'optional'
 });
 
 CardType.cards.push({
     cardType: 'elo',
-    startingRules: [
-        506699,
-        50670,
-        50671,
-        50672,
-        50673,
-        50674,
-        50675,
-        50676,
-        506770,
-        506771,
-        506772,
-        506773,
-        506774,
-        506775,
-        506776,
-        506777,
-        506778,
-        401178,
-        438935,
-        451416,
-        457631,
-        457632,
-        504175,
-        627780,
-        636297,
-        636368,
-        651653, // this, and those below, are not contained in regEx
-        506728,
-        509096,
-        509083,
-        509082,
-        655001,
-        650487,
-        509081,
-        509074,
-        509066,
-        431274,
-        438935,
-        457631,
-        457632,
-        506744,
-        506747,
-        506748,
-        506753,
-        509069,
-        650906,
-        506730,
-        509067,
-        655003,
-        509068
-    ],
+    // prettier-ignore
+    startingRules: [506699, 50670, 50671, 50672, 50673, 50674, 50675, 50676, 506770, 506771, 506772, 506773, 506774, 506775, 506776, 506777, 506778, 401178, 438935, 451416, 457631, 457632, 504175, 627780, 636297, 636368], // eslint-disable-line max-len
     permittedLengths: [16],
     pattern: /^((((506699)|(506770)|(506771)|(506772)|(506773)|(506774)|(506775)|(506776)|(506777)|(506778)|(401178)|(438935)|(451416)|(457631)|(457632)|(504175)|(627780)|(636368)|(636297))[0-9]{0,10})|((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0,11})$/ // eslint-disable-line max-len
 });
 
-CardType.cards.push({ cardType: 'uatp', startingRules: [1], permittedLengths: [15], pattern: /^1[0-9]{0,14}$/, cvcRequired: false });
+CardType.cards.push({ cardType: 'uatp', startingRules: [1], permittedLengths: [15], pattern: /^1[0-9]{0,14}$/, cvcPolicy: 'optional' });
 
 CardType.cards.push({
     cardType: 'cartebancaire',
@@ -165,17 +114,23 @@ CardType.cards.push({
     pattern: /^(637095|637568|637599|637609|637612)[0-9]{0,10}$/
 });
 
-CardType.cards.push({ cardType: 'oasis', startingRules: [982616], permittedLengths: [16], pattern: /^(982616)[0-9]{0,10}$/, cvcRequired: false });
+CardType.cards.push({ cardType: 'oasis', startingRules: [982616], permittedLengths: [16], pattern: /^(982616)[0-9]{0,10}$/, cvcPolicy: 'optional' });
 
 CardType.cards.push({
     cardType: 'karenmillen',
     startingRules: [98261465],
     permittedLengths: [16],
     pattern: /^(98261465)[0-9]{0,8}$/,
-    cvcRequired: false
+    cvcPolicy: 'optional'
 });
 
-CardType.cards.push({ cardType: 'warehouse', startingRules: [982633], permittedLengths: [16], pattern: /^(982633)[0-9]{0,10}$/, cvcRequired: false });
+CardType.cards.push({
+    cardType: 'warehouse',
+    startingRules: [982633],
+    permittedLengths: [16],
+    pattern: /^(982633)[0-9]{0,10}$/,
+    cvcPolicy: 'optional'
+});
 
 CardType.cards.push({ cardType: 'mir', startingRules: [220], permittedLengths: [16, 17, 18, 19], pattern: /^(220)[0-9]{0,16}$/ });
 

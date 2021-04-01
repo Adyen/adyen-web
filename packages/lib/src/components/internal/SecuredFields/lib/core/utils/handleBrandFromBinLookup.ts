@@ -49,6 +49,7 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
         cvcPolicy: binBrandObj.cvcPolicy,
         datePolicy,
         cvcText: 'Security code',
+        showSocialSecurityNumber: binBrandObj.showSocialSecurityNumber ?? false,
         fieldType: ENCRYPTED_CARD_NUMBER
     };
 

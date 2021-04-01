@@ -1,34 +1,34 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
-import { addressValidationRules } from './validate';
-import { getAddressSchemaForCountry } from './utils';
+import { getAddressValidationRules } from './validate';
 import { AddressProps } from './types';
-import { AddressSchema } from '../../../types';
+import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
-import { ADDRESS_SCHEMA, COUNTRIES_WITH_STATES_DATASET } from './constants';
 import useForm from '../../../utils/useForm';
+import Specifications from './Specifications';
+import { ADDRESS_SCHEMA } from './constants';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
+    const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
-    const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressSchema>({
+    const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFields,
         defaultData: props.data,
-        rules: addressValidationRules
+        rules: props.validationRules || getAddressValidationRules(specifications)
     });
 
     useEffect((): void => {
-        const { country } = data;
-        const stateOrProvince = COUNTRIES_WITH_STATES_DATASET.includes(country) ? '' : 'N/A';
+        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : 'N/A';
 
         handleChangeFor('stateOrProvince', 'input')(stateOrProvince);
     }, [data.country]);
 
     useEffect((): void => {
         const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
-        const countryHasStatesDataset = data.country && COUNTRIES_WITH_STATES_DATASET.includes(data.country);
+        const countryHasStatesDataset = data.country && specifications.countryHasDataset(data.country);
         const addressShouldHaveState = stateFieldIsRequired && countryHasStatesDataset;
         const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : 'N/A');
 
@@ -63,6 +63,7 @@ export default function Address(props: AddressProps) {
                 fieldName={fieldName}
                 onInput={handleChangeFor(fieldName, 'input')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
+                specifications={specifications}
             />
         );
     };
@@ -73,7 +74,7 @@ export default function Address(props: AddressProps) {
         </div>
     );
 
-    const addressSchema = getAddressSchemaForCountry(data.country);
+    const addressSchema = specifications.getAddressSchemaForCountry(data.country);
 
     return (
         <Fieldset classNameModifiers={[label]} label={label}>
@@ -83,9 +84,10 @@ export default function Address(props: AddressProps) {
 }
 
 Address.defaultProps = {
+    countryCode: null,
     data: {},
     onChange: () => {},
     visibility: 'editable',
     requiredFields: ADDRESS_SCHEMA,
-    countryCode: null
+    specifications: {}
 };

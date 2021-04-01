@@ -1,5 +1,6 @@
 module.exports = {
     resolve: {
+        mainFields: ['module', 'main'],
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss']
     },
     stats: { children: false },

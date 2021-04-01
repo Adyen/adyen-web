@@ -20,23 +20,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
-    // Adyen Giving
-    window.donation = checkout
-        .create('donation', {
-            onDonate: (state, component) => console.log({ state, component }),
-            url: 'https://example.org',
-            amounts: {
-                currency: 'EUR',
-                values: [300, 500, 1000]
-            },
-            backgroundUrl:
-                'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
-            description: 'Lorem ipsum...',
-            logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
-            name: 'Test Charity'
-        })
-        .mount('.donation-field');
-
     // SEPA Bank Transfer
     window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
     window.bankTransferResult = checkout

@@ -1,4 +1,6 @@
-import { AddressField, AddressSchema } from '../../../types';
+import { AddressField, AddressData } from '../../../types';
+import Specifications from './Specifications';
+import { ValidatorRules } from '../../../utils/Validator/Validator';
 
 export interface AddressProps {
     allowedCountries?: string[];
@@ -8,6 +10,8 @@ export interface AddressProps {
     onChange: (newState) => void;
     requiredFields?: string[];
     ref?: any;
+    specifications?: AddressSpecifications;
+    validationRules?: ValidatorRules;
     visibility?: string;
 }
 
@@ -20,35 +24,28 @@ export interface AddressStateError {
     stateOrProvince?: boolean;
 }
 
-export interface AddressStateValid {
-    street?: boolean;
-    houseNumberOrName?: boolean;
-    postalCode?: boolean;
-    city?: boolean;
-    country?: boolean;
-    stateOrProvince?: boolean;
-}
-
 export interface FieldContainerProps {
     allowedCountries: string[];
     classNameModifiers: string[];
-    data: AddressSchema;
+    data: AddressData;
     errors: AddressStateError;
     fieldName: string;
     key: string;
     onInput: (e: Event) => void;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
+    specifications: Specifications;
 }
 
 export interface ReadOnlyAddressProps {
-    data: AddressSchema;
+    data: AddressData;
     label: string;
 }
 
 export interface CountryFieldProps {
     allowedCountries: string[];
     classNameModifiers: string[];
+    label: string;
     errorMessage: boolean;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
@@ -62,10 +59,12 @@ export interface CountryFieldItem {
 
 export interface StateFieldProps {
     classNameModifiers: string[];
-    selectedCountry: string;
+    label: string;
     errorMessage: boolean;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
+    selectedCountry: string;
+    specifications: Specifications;
     value: string;
 }
 
@@ -74,14 +73,19 @@ export interface StateFieldItem {
     name: string;
 }
 
-type AddressSchemaGroupedFields = [AddressField, number][];
+type AddressFieldsGroup = [AddressField, number][];
+export type AddressSchema = (AddressField | AddressFieldsGroup)[];
 
-export type AddressSchemas = {
-    [key: string]: (AddressField | AddressSchemaGroupedFields)[];
-};
-
-export type AddressLabels = {
-    [label: string]: {
-        [key: string]: string;
+export interface AddressSpecifications {
+    [key: string]: {
+        hasDataset?: boolean;
+        labels?: {
+            [key: string]: string;
+        };
+        optionalFields?: AddressField[];
+        placeholders?: {
+            [key: string]: string;
+        };
+        schema?: AddressSchema;
     };
-};
+}
