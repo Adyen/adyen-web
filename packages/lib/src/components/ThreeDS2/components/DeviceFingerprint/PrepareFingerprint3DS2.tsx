@@ -10,7 +10,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     constructor(props) {
         super(props);
 
-        const { token, notificationURL } = this.props;
+        const { token, notificationURL } = this.props; // See comments on prepareFingerPrintData regarding notificationURL
 
         if (token) {
             const fingerPrintData = prepareFingerPrintData({ token, notificationURL });
