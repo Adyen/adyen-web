@@ -38,7 +38,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // If the field was previously encrypted...
     if (this.state.securedFields[fieldType].isEncrypted) {
         // callbackObjectsArr will be an array containing 1 or 2 objects that need to be broadcast
-        callbackObjectsArr = makeCallbackObjectsValidation(fieldType, this.state.type, this.props.rootNode);
+        callbackObjectsArr = makeCallbackObjectsValidation({ fieldType, txVariant: this.state.type, rootNode: this.props.rootNode });
 
         // Add the endDigits to the object we send to the onFieldValid callback
         // NOTE: in this case (validation) this will be an empty string
