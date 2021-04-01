@@ -4,14 +4,9 @@ import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE,
 import { processErrors } from './utils/processErrors';
 import { truthy } from '../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../types';
-import * as logger from '../utilities/logger';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
-    if (process.env.NODE_ENV === 'development' && window._b$dl) {
-        logger.log('\n### HandleEncryption:: pFeedbackObj=', pFeedbackObj);
-    }
-
     // EXTRACT VARS
     const fieldType: string = pFeedbackObj.fieldType;
 
@@ -51,7 +46,12 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // MAKE ENCRYPTION OBJECTS FOR EACH OF THE INDIVIDUAL INPUTS
     // N.B. when considering "individual inputs" we are concerned with the 4 fields that the checkoutAPI expects to receive for a credit card payment:
     // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
-    const callbackObjectsArr: CbObjOnFieldValid[] = makeCallbackObjectsEncryption(fieldType, this.state.type, this.props.rootNode, encryptedObjArr);
+    const callbackObjectsArr: CbObjOnFieldValid[] = makeCallbackObjectsEncryption({
+        fieldType,
+        txVariant: this.state.type,
+        rootNode: this.props.rootNode,
+        encryptedObjArr
+    });
 
     // For standalone month field
     if (fieldType === ENCRYPTED_EXPIRY_MONTH) {

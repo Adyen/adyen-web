@@ -39,13 +39,11 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
             // because it needs to know the cvcPolicy (to set the aria-required attribute & to show the iframe)
             if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
                 const dataObj: object = {
-                    ...{
-                        txVariant: this.state.type,
-                        brand: newBrandObj.brand,
-                        fieldType: ENCRYPTED_SECURITY_CODE,
-                        cvcPolicy: pFeedbackObj.cvcPolicy,
-                        numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
-                    }
+                    txVariant: this.state.type,
+                    brand: newBrandObj.brand,
+                    fieldType: ENCRYPTED_SECURITY_CODE,
+                    cvcPolicy: pFeedbackObj.cvcPolicy,
+                    numKey: this.state.securedFields[ENCRYPTED_SECURITY_CODE].numKey
                 };
                 postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_SECURITY_CODE), this.config.loadingContext);
             }

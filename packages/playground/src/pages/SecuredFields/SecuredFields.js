@@ -28,6 +28,12 @@ const createMaterialLabelListener = () => {
     });
 };
 
+const onAdditionalDetails = retrievedData => {
+    makeDetailsCall(retrievedData.data).then(result => {
+        handlePaymentResult(result);
+    });
+};
+
 window.checkout = new AdyenCheckout({
     clientKey: process.env.__CLIENT_KEY__,
     locale: shopperLocale,
@@ -35,6 +41,7 @@ window.checkout = new AdyenCheckout({
     environment: 'test',
     onChange: handleOnChange,
     //        onValid: handleOnValid,
+    onAdditionalDetails,
     onError: console.error,
     risk: {
         enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
@@ -126,25 +133,10 @@ window.materialDesignSecuredFields = checkout
     })
     .mount('.material-secured-fields-container');
 
-const handle3DS2ComponentResponse = retrievedData => {
-    console.log('handle3DS2ComponentResponse data=', retrievedData);
-
-    makeDetailsCall(retrievedData.data).then(result => {
-        handlePaymentResult(result);
-    });
-};
-
-const threeDS2 = result => {
+const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');
 
-    const { authentication, details, paymentData, resultCode } = result;
-    const fingerprintToken = authentication['threeds2.fingerprintToken'] || '';
-    const challengeToken = authentication['threeds2.challengeToken'] || '';
-    window.paymentData = paymentData;
-
     if (window.securedFields) {
-        window.securedFields.unmount();
-
         const sfNode = document.querySelector('.secured-fields');
         while (sfNode.firstChild) {
             sfNode.removeChild(sfNode.firstChild);
@@ -155,34 +147,9 @@ const threeDS2 = result => {
         cardButton.remove();
     }
 
-    cardText.innerText = resultCode;
+    cardText.innerText += ' - 3DS2';
 
-    if (resultCode === 'IdentifyShopper') {
-        const threeds2DeviceFingerprint = checkout
-            .create('threeDS2DeviceFingerprint', {
-                fingerprintToken,
-                paymentData,
-                onComplete: handle3DS2ComponentResponse,
-                onError: console.error
-            })
-            .mount('.secured-fields');
-
-        window.threeDS2DeviceFingerprint = threeds2DeviceFingerprint;
-    }
-
-    if (resultCode === 'ChallengeShopper') {
-        const threeDS2Challenge = checkout
-            .create('threeDS2Challenge', {
-                challengeToken,
-                size: '02', // optional, defaults to '01'
-                paymentData,
-                onComplete: handle3DS2ComponentResponse,
-                onError: console.error
-            })
-            .mount('.secured-fields');
-
-        window.threeDS2Challenge = threeDS2Challenge;
-    }
+    component.handleAction(result.action);
 };
 
 function handleOnChange(state) {
@@ -201,24 +168,22 @@ function handleOnRiskData(riskData) {
     console.log('handleOnRiskData riskData=', riskData);
 }
 
-function handlePaymentResult(result) {
+function handlePaymentResult(result, component) {
     console.log('Result: ', result);
 
-    switch (result.resultCode) {
-        case 'RedirectShopper':
-            window.location = result.redirect.url;
-            break;
-        case 'IdentifyShopper':
-        case 'ChallengeShopper':
-            threeDS2(result);
-            break;
-        case 'Authorised':
-            cardText.innerText = result.resultCode;
-            document.querySelector('.secured-fields').style.display = 'none';
-            break;
-        case 'Refused':
-            cardText.innerText = result.resultCode;
-            break;
+    if (result.action) {
+        threeDS2(result, component);
+    } else {
+        switch (result.resultCode) {
+            case 'Authorised':
+                cardText.innerText += ' - ' + result.resultCode;
+                document.querySelector('.secured-fields').style.display = 'none';
+                break;
+            case 'Refused':
+                cardText.innerText += ' - ' + result.resultCode;
+                break;
+            default:
+        }
     }
 }
 
@@ -231,7 +196,7 @@ function startPayment(component) {
 
     makePayment(component.data, { additionalData: { riskdata, allow3DS2 } })
         .then(result => {
-            handlePaymentResult(result);
+            handlePaymentResult(result, component);
         })
         .catch(error => {
             throw Error(error);
