@@ -52,6 +52,9 @@
 
     &.adyen-checkout__button--pay {
         margin-top: 24px;
+        &:disabled {
+            opacity: 1;
+        }
     }
 
     &.adyen-checkout__button--standalone {

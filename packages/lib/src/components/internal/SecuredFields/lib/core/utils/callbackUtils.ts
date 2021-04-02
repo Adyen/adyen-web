@@ -1,26 +1,27 @@
 import { ENCRYPTED_EXPIRY_DATE } from '../../configuration/constants';
 import { CbObjOnFieldValid, EncryptionObj } from '../../types';
-// import * as logger from '../../utilities/logger';
 
-const makeCallbackObj = (
-    pFieldType: string,
-    pEncryptedFieldName: string,
-    uuid: string,
-    pIsValid: boolean,
-    pTxVariant: string,
-    pRootNode: HTMLElement
-): CbObjOnFieldValid => ({
-    fieldType: pFieldType, // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryDate
-    encryptedFieldName: pEncryptedFieldName, // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
+interface CallbackObjectProps {
+    fieldType: string;
+    encryptedFieldName: string;
+    uuid: string;
+    isValid: boolean;
+    txVariant: string;
+    rootNode: HTMLElement;
+}
+
+const makeCallbackObj = ({ fieldType, encryptedFieldName, uuid, isValid, txVariant, rootNode }: CallbackObjectProps): CbObjOnFieldValid => ({
+    fieldType, // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryDate
+    encryptedFieldName, // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
     uid: uuid, // card-encrypted-encryptedCardNumber, card-encrypted-encryptedSecurityCode, card-encrypted-month, card-encrypted-year, card-encrypted-encryptedExpiryMonth, card-encrypted-encryptedExpiryYear
-    valid: pIsValid,
-    type: pTxVariant,
-    rootNode: pRootNode // A ref to the 'form' element holding the securedFields
+    valid: isValid,
+    type: txVariant,
+    rootNode // A ref to the 'form' element holding the securedFields
 });
 
-export const makeCallbackObjectsValidation = (pFieldType: string, pTxVariant: string, pRootNode: HTMLElement): CbObjOnFieldValid[] => {
+export const makeCallbackObjectsValidation = ({ fieldType, txVariant, rootNode }): CbObjOnFieldValid[] => {
     // - create callback objects to report the changed valid state of the field
-    const isExpiryDateField: boolean = pFieldType === ENCRYPTED_EXPIRY_DATE;
+    const isExpiryDateField: boolean = fieldType === ENCRYPTED_EXPIRY_DATE;
 
     const callbackObjectsArr: CbObjOnFieldValid[] = [];
 
@@ -36,14 +37,22 @@ export const makeCallbackObjectsValidation = (pFieldType: string, pTxVariant: st
     const totalFields: number = isExpiryDateField ? 2 : 1;
 
     for (i = 0; i < totalFields; i += 1) {
-        encryptedType = isExpiryDateField ? sepExpiryDateNames[i] : pFieldType; // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
+        encryptedType = isExpiryDateField ? sepExpiryDateNames[i] : fieldType; // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
 
-        uuid = `${pTxVariant}-encrypted-${encryptedType}`; // card-encrypted-encryptedCardNumber, card-encrypted-encryptedSecurityCode, card-encrypted-encryptedExpiryMonth, card-encrypted-encryptedExpiryYear
+        uuid = `${txVariant}-encrypted-${encryptedType}`; // card-encrypted-encryptedCardNumber, card-encrypted-encryptedSecurityCode, card-encrypted-encryptedExpiryMonth, card-encrypted-encryptedExpiryYear
 
-        encryptedFieldName = isExpiryDateField ? encryptedType : pFieldType; // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
+        encryptedFieldName = isExpiryDateField ? encryptedType : fieldType; // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
 
         // Create objects to broadcast valid state
-        const callbackObj: CbObjOnFieldValid = makeCallbackObj(pFieldType, encryptedFieldName, uuid, false, pTxVariant, pRootNode);
+        // const callbackObj: CbObjOnFieldValid = makeCallbackObj(pFieldType, encryptedFieldName, uuid, false, pTxVariant, pRootNode, null);
+        const callbackObj: CbObjOnFieldValid = makeCallbackObj({
+            fieldType,
+            encryptedFieldName,
+            uuid,
+            isValid: false,
+            txVariant,
+            rootNode
+        } as CallbackObjectProps);
 
         callbackObjectsArr.push(callbackObj);
     }
@@ -51,12 +60,7 @@ export const makeCallbackObjectsValidation = (pFieldType: string, pTxVariant: st
     return callbackObjectsArr;
 };
 
-export const makeCallbackObjectsEncryption = (
-    pFieldType: string,
-    pTxVariant: string,
-    pRootNode: HTMLElement,
-    pEncryptedObjArr: EncryptionObj[]
-): CbObjOnFieldValid[] => {
+export const makeCallbackObjectsEncryption = ({ fieldType, txVariant, rootNode, encryptedObjArr }): CbObjOnFieldValid[] => {
     let i: number;
     let uuid: string;
     let encryptedObj: EncryptionObj;
@@ -65,14 +69,22 @@ export const makeCallbackObjectsEncryption = (
 
     const callbackObjectsArr: CbObjOnFieldValid[] = [];
 
-    for (i = 0; i < pEncryptedObjArr.length; i += 1) {
-        encryptedObj = pEncryptedObjArr[i];
+    for (i = 0; i < encryptedObjArr.length; i += 1) {
+        encryptedObj = encryptedObjArr[i];
         encryptedFieldName = encryptedObj.encryptedFieldName;
-        uuid = `${pTxVariant}-encrypted-${encryptedFieldName}`;
+        uuid = `${txVariant}-encrypted-${encryptedFieldName}`;
         encryptedBlob = encryptedObj.blob;
 
         // Create objects to broadcast valid state
-        const callbackObj: CbObjOnFieldValid = makeCallbackObj(pFieldType, encryptedFieldName, uuid, true, pTxVariant, pRootNode);
+        // const callbackObj: CbObjOnFieldValid = makeCallbackObj(fieldType, encryptedFieldName, uuid, true, txVariant, rootNode, code);
+        const callbackObj: CbObjOnFieldValid = makeCallbackObj({
+            fieldType,
+            encryptedFieldName,
+            uuid,
+            isValid: true,
+            txVariant,
+            rootNode
+        } as CallbackObjectProps);
         callbackObj.blob = encryptedBlob;
 
         callbackObjectsArr.push(callbackObj);

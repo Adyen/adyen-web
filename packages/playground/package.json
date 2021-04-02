@@ -23,7 +23,7 @@
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
         "autoprefixer": "^10.2.5",
-        "core-js": "^3.9.1",
+        "core-js": "^3.10.0",
         "cross-env": "^7.0.3",
         "css-loader": "^5.2.0",
         "dotenv": "^8.2.0",
@@ -47,6 +47,6 @@
         "whatwg-fetch": "^3.6.2"
     },
     "dependencies": {
-        "@adyen/adyen-web": "4.2.0"
+        "@adyen/adyen-web": "4.2.1"
     }
 }
