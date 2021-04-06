@@ -17,6 +17,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 errorMessage={!!errors.encryptedBankAccountNumber && i18n.get('ach.accountNumberField.invalid')}
                 dataInfo='{"length":"4-17", "maskInterval": 4}'
                 className={'adyen-checkout__field--50'}
+                dir={'ltr'}
             />
             <AchSFInput
                 id="bankLocationId"
@@ -28,6 +29,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 errorMessage={!!errors.encryptedBankLocationId && i18n.get('ach.accountLocationField.invalid')}
                 dataInfo='{"length":9}'
                 className={'adyen-checkout__field--50'}
+                dir={'ltr'}
             />
         </div>
     );

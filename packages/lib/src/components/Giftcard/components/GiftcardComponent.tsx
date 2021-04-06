@@ -114,6 +114,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                 errorMessage={getCardErrorMessage(sfpState)}
                                 focused={focusedElement === 'encryptedCardNumber'}
                                 onFocusField={() => setFocusOn('encryptedCardNumber')}
+                                dir={'ltr'}
                             >
                                 <span
                                     data-cse="encryptedCardNumber"
@@ -135,6 +136,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                     errorMessage={sfpState.errors.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
                                     focused={focusedElement === 'encryptedSecurityCode'}
                                     onFocusField={() => setFocusOn('encryptedSecurityCode')}
+                                    dir={'ltr'}
                                 >
                                     <span
                                         data-cse="encryptedSecurityCode"
