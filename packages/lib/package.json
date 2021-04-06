@@ -89,7 +89,7 @@
     "dependencies": {
         "@types/applepayjs": "^3.0.1",
         "@types/googlepay": "^0.5.2",
-        "classnames": "^2.3.0",
+        "classnames": "^2.3.1",
         "preact": "^10.5.13",
         "promise": "^8.1.0"
     },
