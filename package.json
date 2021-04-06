@@ -23,6 +23,6 @@
         "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e"
     },
     "dependencies": {
-        "concurrently": "^6.0.0"
+        "concurrently": "^6.0.1"
     }
 }
