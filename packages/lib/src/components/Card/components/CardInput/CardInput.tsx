@@ -193,7 +193,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             (this.state.showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') ||
             configuration.socialSecurityNumberMode === 'show';
 
-        const CardHolderNameWrapper = () => (
+        const cardHolderField = (
             <CardHolderName
                 required={this.props.holderNameRequired}
                 placeholder={this.props.placeholders.holderName}
@@ -248,7 +248,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                             </LoadingWrapper>
                         ) : (
                             <LoadingWrapper status={sfpState.status}>
-                                {hasHolderName && positionHolderNameOnTop && <CardHolderNameWrapper />}
+                                {hasHolderName && positionHolderNameOnTop && cardHolderField}
 
                                 <CardFields
                                     {...this.props}
@@ -265,7 +265,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
                                     dualBrandingSelected={this.state.additionalSelectValue}
                                 />
 
-                                {hasHolderName && !positionHolderNameOnTop && <CardHolderNameWrapper />}
+                                {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
                                 {configuration.koreanAuthenticationRequired && isKorea && (
                                     <KCPAuthentication
