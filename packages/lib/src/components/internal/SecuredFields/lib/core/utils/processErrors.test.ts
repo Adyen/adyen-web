@@ -26,21 +26,21 @@ const errorObj_dateTooOld = {
     action: 'dateKeyPressed',
     fieldType: 'encryptedExpiryDate',
     numKey: 3522473789
-};
+} as const;
 
 const erroObj_dateTooFar = {
     error: ERROR_MSG_CARD_TOO_FAR_IN_FUTURE,
     action: 'dateKeyPressed',
     fieldType: 'encryptedExpiryDate',
     numKey: 3522473789
-};
+} as const;
 
 const errorObj_incompleteField = {
     error: ERROR_MSG_INCOMPLETE_FIELD,
     action: 'blur',
     fieldType: 'encryptedCardNumber',
     numKey: 3522473789
-};
+} as const;
 
 // const errorObj_luhnCheck = {
 //    "action": "luhnCheck",
@@ -61,14 +61,14 @@ const noErrorObj = {
     action: 'dateKeyPressed',
     fieldType: 'encryptedCardNumber',
     numKey: 3522473789
-};
+} as const;
 
 const noErrorObj_date = {
     error: '',
     action: 'dateKeyPressed',
     fieldType: 'encryptedExpiryDate',
     numKey: 3522473789
-};
+} as const;
 
 beforeEach(() => {
     console.error = jest.fn(error => {

@@ -167,9 +167,11 @@ export interface CbObjOnAllValid {
     rootNode: HTMLElement;
 }
 
+export type SFFieldType = 'encryptedCardNumber' | 'encryptedSecurityCode' | 'encryptedExpiryDate';
+export type SFEncryptedFieldName = Exclude<SFFieldType, 'encryptedExpiryDate'> | 'encryptedExpiryMonth' | 'encryptedExpiryYear';
 export interface CbObjOnFieldValid {
-    fieldType: string;
-    encryptedFieldName: string;
+    fieldType: SFFieldType;
+    encryptedFieldName: SFEncryptedFieldName;
     uid: string;
     valid: boolean;
     type: string;
@@ -179,7 +181,7 @@ export interface CbObjOnFieldValid {
 }
 
 export interface CbObjOnAutoComplete {
-    fieldType: string;
+    fieldType: SFFieldType;
     name: string;
     value: string;
     action: string;
@@ -200,7 +202,7 @@ export interface CbObjOnBinLookup {
 }
 
 export interface CbObjOnError {
-    fieldType: string;
+    fieldType: SFFieldType;
     error: string;
     type: string;
     rootNode?: HTMLElement;
@@ -213,7 +215,7 @@ export interface CbObjOnFocus {
     action: string;
     focus: boolean;
     numChars: number;
-    fieldType: string;
+    fieldType: SFFieldType;
     rootNode: HTMLElement;
     type: string;
     currentFocusObject: string;
@@ -231,13 +233,13 @@ export interface CbObjOnConfigSuccess {
 export interface CbObjOnAdditionalSF {
     additionalIframeConfigured?: boolean;
     additionalIframeRemoved?: boolean;
-    fieldType: string;
+    fieldType: SFFieldType;
     type: string;
 }
 
 export interface SFFeedbackObj {
     action: string;
-    fieldType: string;
+    fieldType: SFFieldType;
     numKey: number;
     brand?: string;
     code?: string;
@@ -267,7 +269,7 @@ export interface SFFeedbackObj {
 
 export interface EncryptionObj {
     type: string;
-    encryptedFieldName: string;
+    encryptedFieldName: SFEncryptedFieldName;
     blob: string;
 }
 

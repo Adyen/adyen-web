@@ -13,7 +13,7 @@ export const processErrors = (
 ): CbObjOnError => {
     if (!Object.prototype.hasOwnProperty.call(pFeedbackObj, 'error')) return null;
 
-    const fieldType: string = pFeedbackObj.fieldType;
+    const fieldType = pFeedbackObj.fieldType;
 
     const field: SecuredField = securedField;
 
