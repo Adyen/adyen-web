@@ -13,6 +13,11 @@
         font-size: $font-size-small;
         font-weight: normal;
         user-select: none;
+
+        [dir='rtl'] & {
+            padding-left: 0;
+            padding-right: 24px;
+        }
     }
 }
 
@@ -66,6 +71,11 @@
         transition: opacity 0.2s ease-out;
         width: 6px;
         z-index: 1;
+
+        [dir='rtl'] & {
+            left: auto;
+            right: 8px;
+        }
     }
 
     /* Box */
@@ -81,6 +91,11 @@
         border: 1px solid $color-gray-dark;
         z-index: 0;
         transition: background 0.15s ease-out, border 0.05s ease-out, box-shadow 0.1s ease-out;
+
+        [dir='rtl'] & {
+            left: auto;
+            right: 0;
+        }
     }
 }
 
@@ -88,7 +103,11 @@
     background: $color-gray-light;
     border: 1px solid $color-gray-light;
     border-radius: $border-radius-medium;
-    padding: 14px 40px 13px 14px;
+    padding: 14px 14px 13px 14px;
+
+    [dir='rtl'] & {
+        padding: 14px 14px 13px 14px;
+    }
 
     &.adyen-checkout__field--error {
         border-color: $color-red;

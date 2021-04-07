@@ -55,6 +55,10 @@
     margin: 32px auto 12px auto;
     width: 152px;
     padding-right: 3%;
+    [dir='rtl'] & {
+        padding-right: 0;
+        padding-left: 3%;
+    }
 }
 
 .adyen-checkout__qr-loader__percentage {
