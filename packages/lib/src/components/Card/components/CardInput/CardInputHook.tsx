@@ -234,6 +234,16 @@ function CardInput(props: CardInputProps) {
         />
     );
 
+    const getInstallmentsComp = brand => (
+        <Installments
+            amount={props.amount}
+            brand={brand}
+            installmentOptions={props.installmentOptions}
+            onChange={handleInstallments}
+            type={showAmountsInInstallments ? 'amount' : 'months'}
+        />
+    );
+
     return (
         <SecuredFieldsProvider
             ref={sfp}
@@ -265,15 +275,7 @@ function CardInput(props: CardInputProps) {
                                 valid={sfpState.valid}
                             />
 
-                            {/*{hasInstallments && (*/}
-                            {/*    <Installments*/}
-                            {/*        amount={this.props.amount}*/}
-                            {/*        brand={sfpState.brand}*/}
-                            {/*        installmentOptions={installmentOptions}*/}
-                            {/*        onChange={this.handleInstallments}*/}
-                            {/*        type={showAmountsInInstallments ? 'amount' : 'months'}*/}
-                            {/*    />*/}
-                            {/*)}*/}
+                            {hasInstallments && getInstallmentsComp(sfpState.brand)}
                         </LoadingWrapper>
                     ) : (
                         <LoadingWrapper status={sfpState.status}>
@@ -324,15 +326,7 @@ function CardInput(props: CardInputProps) {
 
                             {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
 
-                            {hasInstallments && (
-                                <Installments
-                                    amount={props.amount}
-                                    brand={sfpState.brand}
-                                    installmentOptions={props.installmentOptions}
-                                    onChange={handleInstallments}
-                                    type={showAmountsInInstallments ? 'amount' : 'months'}
-                                />
-                            )}
+                            {hasInstallments && getInstallmentsComp(sfpState.brand)}
 
                             {/*{this.props.billingAddressRequired && (*/}
                             {/*    <Address*/}
