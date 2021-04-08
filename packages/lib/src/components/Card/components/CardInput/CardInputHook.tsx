@@ -10,21 +10,19 @@ import LoadingWrapper from '../../../internal/LoadingWrapper';
 import CardFields from './components/CardFields';
 // import KCPAuthentication from './components/KCPAuthentication';
 // import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
-// import StoreDetails from '../../../internal/StoreDetails';
+import StoreDetails from '../../../internal/StoreDetails';
 // import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
-import { CardInputProps, CardInputStateValid, CardInputStateError, CardInputStateData, CardInputState } from './types';
+import { CardInputProps, CardInputStateValid, CardInputStateError, CardInputStateData } from './types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
-import { BinLookupResponse, BrandObject } from '../../types';
+import { BinLookupResponse } from '../../types';
 import { validateHolderName } from './validate';
-// import processBinLookupHook from './processBinLookupHook';
 import CIExtensions from './extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import CardHolderName from './components/CardHolderName';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
-
-    // console.log('### CardInputHook::CardInput:: props=', props);
 
     /**
      * STATE HOOKS
@@ -73,6 +71,21 @@ function CardInput(props: CardInputProps) {
         } else {
             props.onBlur(e);
         }
+    };
+
+    const handleOnStoreDetails = (storeDetails: boolean): void => {
+        setStorePaymentMethod(storeDetails);
+    };
+
+    const handleHolderName = (e: Event): void => {
+        const holderName = (e.target as HTMLInputElement).value;
+
+        setData({ ...data, holderName });
+        setErrors({ ...errors, holderName: !validateHolderName(holderName, props.holderNameRequired, false) });
+        setValid({
+            ...valid,
+            holderName: validateHolderName(holderName, props.holderNameRequired)
+        });
     };
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
@@ -128,19 +141,15 @@ function CardInput(props: CardInputProps) {
         sfp.current.showValidation();
 
         // Validate holderName
-        // if (props.holderNameRequired && !valid.holderName) {
-        //     setErrors({ ...errors, holderName: true });
-        // }
-        //
+        if (props.holderNameRequired && !valid.holderName) {
+            setErrors({ ...errors, holderName: true });
+        }
+
         // // Validate Address
         // if (billingAddressRef.current) billingAddressRef.current.showValidation();
     };
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
-        // const issuingCountryCode = binLookupResponse?.issuingCountryCode ? binLookupResponse.issuingCountryCode.toLowerCase() : null;
-        // setIssuingCountryCode(issuingCountryCode);
-
-        // processBinLookupHook({ binLookupResponse, isReset, props, sfp, setAdditionalSelectElements, setAdditionalSelectValue });
         extensions.processBinLookup(binLookupResponse, isReset);
     };
 
@@ -205,6 +214,17 @@ function CardInput(props: CardInputProps) {
     }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]); // isSfpValid, cvcPolicy, hideDateForBrand, [brand, showSocialSecurityNumber(was never set)] removed 'cos they are set in handleSecuredFieldsChange - which is already making new data, valid, errors objects
     // billingAddress (valid), socialSecurityNumber (valid, errors) - TODO caught by changes to valid or errors objects??
 
+    const cardHolderField = (
+        <CardHolderName
+            required={props.holderNameRequired}
+            placeholder={props.placeholders.holderName}
+            value={data.holderName}
+            error={!!errors.holderName}
+            isValid={!!valid.holderName}
+            onChange={handleHolderName}
+        />
+    );
+
     return (
         <SecuredFieldsProvider
             ref={sfp}
@@ -248,7 +268,7 @@ function CardInput(props: CardInputProps) {
                     {/*    </LoadingWrapper>*/}
                     {/*) : (*/}
                     <LoadingWrapper status={sfpState.status}>
-                        {/*{hasHolderName && positionHolderNameOnTop && cardHolderField}*/}
+                        {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
 
                         <CardFields
                             {...props}
@@ -265,7 +285,7 @@ function CardInput(props: CardInputProps) {
                             dualBrandingSelected={additionalSelectValue}
                         />
 
-                        {/*{hasHolderName && !positionHolderNameOnTop && cardHolderField}*/}
+                        {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
 
                         {/*{configuration.koreanAuthenticationRequired && isKorea && (*/}
                         {/*    <KCPAuthentication*/}
@@ -293,7 +313,7 @@ function CardInput(props: CardInputProps) {
                         {/*    </div>*/}
                         {/*)}*/}
 
-                        {/*{this.props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}*/}
+                        {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
 
                         {/*{hasInstallments && (*/}
                         {/*    <Installments*/}

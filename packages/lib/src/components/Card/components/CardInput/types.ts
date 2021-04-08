@@ -35,6 +35,10 @@ export interface CardInputStateData {
     encryptedPassword?: string;
 }
 
+interface Placeholders {
+    holderName?: string;
+}
+
 export interface CardInputProps {
     amount?: object;
     billingAddressAllowedCountries?: string[];
@@ -58,7 +62,7 @@ export interface CardInputProps {
     onBlur: (e) => {}; // new
     onFocus: (e) => {}; // new
     payButton?: (obj) => {};
-    placeholders?: object;
+    placeholders?: Placeholders;
     positionHolderNameOnTop: boolean;
     showInstallmentAmounts: boolean;
     showPayButton?: boolean;
