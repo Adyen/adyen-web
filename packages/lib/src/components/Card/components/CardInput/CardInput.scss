@@ -129,11 +129,12 @@
     .adyen-checkout__radio_group__input-wrapper {
         margin-top: 20px;
     }
+
+    .adyen-checkout__field--revolving-plan-installments {
+        position: relative;
+        top: 42px;
+        width: 30%;
+        margin-left: 15px;
+    }
 }
 
-.adyen-checkout__field--revolving-plan-installments {
-    position: relative;
-    top: 42px;
-    width: 30%;
-    margin-left: 15px;
-}

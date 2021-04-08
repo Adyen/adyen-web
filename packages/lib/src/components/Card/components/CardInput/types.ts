@@ -1,5 +1,7 @@
 import Language from '../../../../language/Language';
 import { CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
+import { PaymentAmount } from '../../../../types';
+import { InstallmentOptions } from './components/types';
 
 export interface CardInputStateValid {
     holderName?: boolean;
@@ -40,7 +42,7 @@ interface Placeholders {
 }
 
 export interface CardInputProps {
-    amount?: object;
+    amount?: PaymentAmount; // new type
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
@@ -56,7 +58,7 @@ export interface CardInputProps {
     holderName?: string; // new type
     holderNameRequired?: boolean;
     i18n?: Language;
-    installmentOptions: object;
+    installmentOptions: InstallmentOptions; // new type
     socialSecurityNumberMode?: SocialSecurityMode;
     loadingContext: string;
     onBlur: (e) => {}; // new

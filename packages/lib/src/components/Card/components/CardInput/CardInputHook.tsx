@@ -6,7 +6,7 @@ import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 // import StoredCardFields from './components/StoredCardFields';
-// import Installments from './components/Installments';
+import Installments from './components/Installments';
 import CardFields from './components/CardFields';
 // import KCPAuthentication from './components/KCPAuthentication';
 // import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
@@ -22,6 +22,9 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 
 function CardInput(props: CardInputProps) {
+    const hasInstallments = !!Object.keys(props.installmentOptions).length;
+    const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
+
     const sfp = useRef(null);
 
     /**
@@ -48,7 +51,7 @@ function CardInput(props: CardInputProps) {
     const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
-    const [installments, setInstallments] = useState({}); // TODO check if default value should be empty object
+    const [installments, setInstallments] = useState({ value: null });
 
     const extensions = useMemo(
         () =>
@@ -75,6 +78,10 @@ function CardInput(props: CardInputProps) {
 
     const handleOnStoreDetails = (storeDetails: boolean): void => {
         setStorePaymentMethod(storeDetails);
+    };
+
+    const handleInstallments = (installments): void => {
+        setInstallments(installments);
     };
 
     const handleHolderName = (e: Event): void => {
@@ -315,15 +322,15 @@ function CardInput(props: CardInputProps) {
 
                         {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
 
-                        {/*{hasInstallments && (*/}
-                        {/*    <Installments*/}
-                        {/*        amount={this.props.amount}*/}
-                        {/*        brand={sfpState.brand}*/}
-                        {/*        installmentOptions={installmentOptions}*/}
-                        {/*        onChange={this.handleInstallments}*/}
-                        {/*        type={showAmountsInInstallments ? 'amount' : 'months'}*/}
-                        {/*    />*/}
-                        {/*)}*/}
+                        {hasInstallments && (
+                            <Installments
+                                amount={props.amount}
+                                brand={sfpState.brand}
+                                installmentOptions={props.installmentOptions}
+                                onChange={handleInstallments}
+                                type={showAmountsInInstallments ? 'amount' : 'months'}
+                            />
+                        )}
 
                         {/*{this.props.billingAddressRequired && (*/}
                         {/*    <Address*/}
