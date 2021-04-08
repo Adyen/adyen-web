@@ -99,6 +99,16 @@ const actionTypes = {
             onError: props.onError,
             statusType: 'custom'
         });
+    },
+
+    sdk: (action: PaymentAction, props) => {
+        return getComponent(action.paymentMethodType, {
+            ...action,
+            ...props,
+            onComplete: props.onAdditionalDetails,
+            onError: props.onError,
+            statusType: 'custom'
+        });
     }
 } as const;
 
