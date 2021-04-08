@@ -2,7 +2,7 @@ import Script from '../../../../utils/Script';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Fragment, h } from 'preact';
 import { KlarnaWidgetProps } from '../../types';
-import { KLARNA_WIDGET_URL } from '../../constants';
+import { KLARNA_VARIANTS, KLARNA_WIDGET_URL } from '../../constants';
 
 interface KlarnaWidgetAuthorizeResponse {
     approved: boolean;
@@ -14,12 +14,6 @@ interface KlarnaWidgetAuthorizeResponse {
 export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }: KlarnaWidgetProps) {
     const klarnaWidgetRef = useRef(null);
     const [status, setStatus] = useState('ready');
-
-    const klarnaVariants = {
-        klarna: 'pay_later',
-        klarna_paynow: 'pay_now',
-        klarna_account: 'pay_over_time'
-    };
 
     const handleError = error => {
         setStatus('error');
@@ -33,7 +27,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         window.Klarna.Payments.load(
             {
                 container: klarnaWidgetRef.current,
-                payment_method_category: klarnaVariants[paymentMethodType]
+                payment_method_category: KLARNA_VARIANTS[paymentMethodType]
             },
             function(res) {
                 // If show_form: true is received together with an error, something fixable is wrong and the consumer
@@ -52,7 +46,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         try {
             window.Klarna.Payments.authorize(
                 {
-                    payment_method_category: klarnaVariants[paymentMethodType]
+                    payment_method_category: KLARNA_VARIANTS[paymentMethodType]
                 },
                 function(res: KlarnaWidgetAuthorizeResponse) {
                     if (res.approved === true) {
