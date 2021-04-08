@@ -49,7 +49,8 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                     payment_method_category: KLARNA_VARIANTS[paymentMethodType]
                 },
                 function(res: KlarnaWidgetAuthorizeResponse) {
-                    if (res.approved === true) {
+                    if (res.approved === true && res.show_form === true) {
+                        // Klarna has approved the authorization of credit for this order.
                         setStatus('success');
                         props.onComplete({
                             data: {
@@ -59,6 +60,14 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                                 }
                             }
                         });
+                    } else if (!res.approved && res.show_form === true) {
+                        // Fixable error
+                        setStatus('ready');
+                        props.onError(res);
+                    } else {
+                        // The purchase is declined. The widget should be hidden and the user
+                        // should select another payment method.
+                        handleError(res);
                     }
                 }
             );
@@ -81,7 +90,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         };
     }, []);
 
-    if (status !== 'error') {
+    if (status !== 'error' && status !== 'success') {
         return (
             <Fragment>
                 <div ref={klarnaWidgetRef} />
