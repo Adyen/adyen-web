@@ -123,12 +123,13 @@ export type RtnType_ParamVoidFn = (e) => void;
 export interface StoredCardFieldsProps {
     brand: string;
     errors: any;
-    expiryMonth: string;
-    expiryYear: string;
+    expiryMonth?: string;
+    expiryYear?: string;
     focusedElement: string;
     hasCVC: boolean;
     cvcPolicy: string;
-    lastFour: string;
+    lastFour?: string;
     onFocusField: any;
     valid: any;
+    status: string;
 }

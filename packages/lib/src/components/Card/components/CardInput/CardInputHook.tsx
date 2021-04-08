@@ -5,7 +5,7 @@ import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
-// import StoredCardFields from './components/StoredCardFields';
+import StoredCardFields from './components/StoredCardFields';
 import Installments from './components/Installments';
 import CardFields from './components/CardFields';
 // import KCPAuthentication from './components/KCPAuthentication';
@@ -215,7 +215,9 @@ function CardInput(props: CardInputProps) {
             installments
         });
 
-        console.log('### CardInputHook::useEffect:: card.formatData().paymentMethod.brand', window['card'].formatData().paymentMethod.brand);
+        if (window['card']) {
+            console.log('### CardInputHook::useEffect:: card.formatData().paymentMethod.brand', window['card'].formatData().paymentMethod.brand);
+        }
 
         // }, [data, valid, errors, additionalSelectValue, isSfpValid, cvcPolicy, hideDateForBrand, storePaymentMethod, installments]);
     }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]); // isSfpValid, cvcPolicy, hideDateForBrand, [brand, showSocialSecurityNumber(was never set)] removed 'cos they are set in handleSecuredFieldsChange - which is already making new data, valid, errors objects
@@ -249,101 +251,101 @@ function CardInput(props: CardInputProps) {
                     className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${props.fundingSource ??
                         'credit'}`}
                 >
-                    {/*{this.props.storedPaymentMethodId ? (*/}
-                    {/*    <LoadingWrapper status={sfpState.status}>*/}
-                    {/*        <StoredCardFields*/}
-                    {/*            {...this.props}*/}
-                    {/*            errors={sfpState.errors}*/}
-                    {/*            brand={sfpState.brand}*/}
-                    {/*            hasCVC={hasCVC}*/}
-                    {/*            cvcPolicy={cvcPolicy}*/}
-                    {/*            onFocusField={setFocusOn}*/}
-                    {/*            focusedElement={focusedElement}*/}
-                    {/*            status={sfpState.status}*/}
-                    {/*            valid={sfpState.valid}*/}
-                    {/*        />*/}
-
-                    {/*        {hasInstallments && (*/}
-                    {/*            <Installments*/}
-                    {/*                amount={this.props.amount}*/}
-                    {/*                brand={sfpState.brand}*/}
-                    {/*                installmentOptions={installmentOptions}*/}
-                    {/*                onChange={this.handleInstallments}*/}
-                    {/*                type={showAmountsInInstallments ? 'amount' : 'months'}*/}
-                    {/*            />*/}
-                    {/*        )}*/}
-                    {/*    </LoadingWrapper>*/}
-                    {/*) : (*/}
-                    <LoadingWrapper status={sfpState.status}>
-                        {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
-
-                        <CardFields
-                            {...props}
-                            brand={sfpState.brand}
-                            focusedElement={focusedElement} // from state
-                            onFocusField={setFocusOn}
-                            hasCVC={props.hasCVC} // from props
-                            cvcPolicy={cvcPolicy} // from state
-                            hideDateForBrand={hideDateForBrand} // from state
-                            errors={sfpState.errors}
-                            valid={sfpState.valid}
-                            dualBrandingElements={additionalSelectElements.length > 0 && additionalSelectElements}
-                            dualBrandingChangeHandler={extensions.handleAdditionalDataSelection}
-                            dualBrandingSelected={additionalSelectValue}
-                        />
-
-                        {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
-
-                        {/*{configuration.koreanAuthenticationRequired && isKorea && (*/}
-                        {/*    <KCPAuthentication*/}
-                        {/*        onFocusField={setFocusOn}*/}
-                        {/*        focusedElement={focusedElement}*/}
-                        {/*        encryptedPasswordState={{*/}
-                        {/*            data: sfpState.encryptedPassword,*/}
-                        {/*            valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,*/}
-                        {/*            errors: sfpState.errors ? sfpState.errors.encryptedPassword : false*/}
-                        {/*        }}*/}
-                        {/*        ref={this.kcpAuthenticationRef}*/}
-                        {/*        onChange={this.handleKCPAuthentication}*/}
-                        {/*    />*/}
-                        {/*)}*/}
-
-                        {/*{showBrazilianSSN && (*/}
-                        {/*    <div className="adyen-checkout__card__socialSecurityNumber">*/}
-                        {/*        <SocialSecurityNumberBrazil*/}
-                        {/*            onChange={e => this.handleCPF(e, true)}*/}
-                        {/*            onInput={e => this.handleCPF(e)}*/}
-                        {/*            error={this.state.errors?.socialSecurityNumber}*/}
-                        {/*            valid={this.state.valid?.socialSecurityNumber}*/}
-                        {/*            data={this.state.socialSecurityNumber}*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
-
-                        {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
-
-                        {hasInstallments && (
-                            <Installments
-                                amount={props.amount}
+                    {props.storedPaymentMethodId ? (
+                        <LoadingWrapper status={sfpState.status}>
+                            <StoredCardFields
+                                {...props}
+                                errors={sfpState.errors}
                                 brand={sfpState.brand}
-                                installmentOptions={props.installmentOptions}
-                                onChange={handleInstallments}
-                                type={showAmountsInInstallments ? 'amount' : 'months'}
+                                hasCVC={props.hasCVC}
+                                cvcPolicy={cvcPolicy}
+                                onFocusField={setFocusOn}
+                                focusedElement={focusedElement}
+                                status={sfpState.status}
+                                valid={sfpState.valid}
                             />
-                        )}
 
-                        {/*{this.props.billingAddressRequired && (*/}
-                        {/*    <Address*/}
-                        {/*        label="billingAddress"*/}
-                        {/*        data={this.state.billingAddress}*/}
-                        {/*        onChange={this.handleAddress}*/}
-                        {/*        allowedCountries={this.props.billingAddressAllowedCountries}*/}
-                        {/*        requiredFields={this.props.billingAddressRequiredFields}*/}
-                        {/*        ref={this.billingAddressRef}*/}
-                        {/*    />*/}
-                        {/*)}*/}
-                    </LoadingWrapper>
-                    {/*)}*/}
+                            {/*{hasInstallments && (*/}
+                            {/*    <Installments*/}
+                            {/*        amount={this.props.amount}*/}
+                            {/*        brand={sfpState.brand}*/}
+                            {/*        installmentOptions={installmentOptions}*/}
+                            {/*        onChange={this.handleInstallments}*/}
+                            {/*        type={showAmountsInInstallments ? 'amount' : 'months'}*/}
+                            {/*    />*/}
+                            {/*)}*/}
+                        </LoadingWrapper>
+                    ) : (
+                        <LoadingWrapper status={sfpState.status}>
+                            {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
+
+                            <CardFields
+                                {...props}
+                                brand={sfpState.brand}
+                                focusedElement={focusedElement} // from state
+                                onFocusField={setFocusOn}
+                                hasCVC={props.hasCVC} // from props
+                                cvcPolicy={cvcPolicy} // from state
+                                hideDateForBrand={hideDateForBrand} // from state
+                                errors={sfpState.errors}
+                                valid={sfpState.valid}
+                                dualBrandingElements={additionalSelectElements.length > 0 && additionalSelectElements}
+                                dualBrandingChangeHandler={extensions.handleAdditionalDataSelection}
+                                dualBrandingSelected={additionalSelectValue}
+                            />
+
+                            {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
+
+                            {/*{configuration.koreanAuthenticationRequired && isKorea && (*/}
+                            {/*    <KCPAuthentication*/}
+                            {/*        onFocusField={setFocusOn}*/}
+                            {/*        focusedElement={focusedElement}*/}
+                            {/*        encryptedPasswordState={{*/}
+                            {/*            data: sfpState.encryptedPassword,*/}
+                            {/*            valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,*/}
+                            {/*            errors: sfpState.errors ? sfpState.errors.encryptedPassword : false*/}
+                            {/*        }}*/}
+                            {/*        ref={this.kcpAuthenticationRef}*/}
+                            {/*        onChange={this.handleKCPAuthentication}*/}
+                            {/*    />*/}
+                            {/*)}*/}
+
+                            {/*{showBrazilianSSN && (*/}
+                            {/*    <div className="adyen-checkout__card__socialSecurityNumber">*/}
+                            {/*        <SocialSecurityNumberBrazil*/}
+                            {/*            onChange={e => this.handleCPF(e, true)}*/}
+                            {/*            onInput={e => this.handleCPF(e)}*/}
+                            {/*            error={this.state.errors?.socialSecurityNumber}*/}
+                            {/*            valid={this.state.valid?.socialSecurityNumber}*/}
+                            {/*            data={this.state.socialSecurityNumber}*/}
+                            {/*        />*/}
+                            {/*    </div>*/}
+                            {/*)}*/}
+
+                            {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
+
+                            {hasInstallments && (
+                                <Installments
+                                    amount={props.amount}
+                                    brand={sfpState.brand}
+                                    installmentOptions={props.installmentOptions}
+                                    onChange={handleInstallments}
+                                    type={showAmountsInInstallments ? 'amount' : 'months'}
+                                />
+                            )}
+
+                            {/*{this.props.billingAddressRequired && (*/}
+                            {/*    <Address*/}
+                            {/*        label="billingAddress"*/}
+                            {/*        data={this.state.billingAddress}*/}
+                            {/*        onChange={this.handleAddress}*/}
+                            {/*        allowedCountries={this.props.billingAddressAllowedCountries}*/}
+                            {/*        requiredFields={this.props.billingAddressRequiredFields}*/}
+                            {/*        ref={this.billingAddressRef}*/}
+                            {/*    />*/}
+                            {/*)}*/}
+                        </LoadingWrapper>
+                    )}
 
                     {props.showPayButton &&
                         props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
