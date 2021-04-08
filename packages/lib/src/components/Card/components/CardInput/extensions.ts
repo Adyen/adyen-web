@@ -5,7 +5,7 @@ import { BrandObject } from '../../types';
 export default function extensions(props, refs, states) {
     // Destructure refs and state hooks
     const { sfp } = refs;
-    const { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode } = states;
+    const { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode } = states;
 
     console.log('### extensions::extensions:: sfp=', sfp);
 
@@ -18,6 +18,9 @@ export default function extensions(props, refs, states) {
          * @param isReset -
          */
         processBinLookup: (binLookupResponse, isReset) => {
+            const issuingCode = binLookupResponse?.issuingCountryCode ? binLookupResponse.issuingCountryCode.toLowerCase() : null;
+            setIssuingCountryCode(issuingCode);
+
             if (!binLookupResponse) {
                 // Reset UI
                 setAdditionalSelectElements([]);

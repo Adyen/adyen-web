@@ -9,6 +9,8 @@ export interface CardInputStateValid {
     encryptedExpiryMonth?: boolean;
     encryptedExpiryYear?: boolean;
     encryptedSecurityCode?: boolean;
+    taxNumber?: boolean;
+    encryptedPassword?: boolean;
 }
 
 export interface CardInputStateError {
@@ -18,6 +20,8 @@ export interface CardInputStateError {
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
+    // taxNumber?: string;
+    // encryptedPassword?: string;
 }
 
 export interface CardInputStateData {
@@ -27,6 +31,8 @@ export interface CardInputStateData {
     encryptedCardNumber?: string;
     encryptedExpiryDate?: string;
     encryptedSecurityCode?: string;
+    taxNumber?: string;
+    encryptedPassword?: string;
 }
 
 export interface CardInputProps {

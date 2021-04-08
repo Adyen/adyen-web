@@ -46,10 +46,19 @@ function CardInput(props: CardInputProps) {
     const [additionalSelectElements, setAdditionalSelectElements] = useState([]);
     const [additionalSelectValue, setAdditionalSelectValue] = useState('');
 
+    const [storePaymentMethod, setStorePaymentMethod] = useState(false);
     const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
+    const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
+    const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
+    const [installments, setInstallments] = useState({}); // TODO check if default value should be empty object
 
     const extensions = useMemo(
-        () => CIExtensions(props, { sfp }, { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode }),
+        () =>
+            CIExtensions(
+                props,
+                { sfp },
+                { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode }
+            ),
         [additionalSelectElements, issuingCountryCode]
     );
 
@@ -66,9 +75,10 @@ function CardInput(props: CardInputProps) {
         }
     };
 
-    const handleSecuredFieldsChange = (newState: SFPState): void => {
-        console.log('### CardInputHook::handleSecuredFieldsChange:: newState', newState);
-        const sfState = newState;
+    const handleSecuredFieldsChange = (sfState: SFPState): void => {
+        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState.data', sfState.data);
+        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState.errors', sfState.errors);
+        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState.valid', sfState.valid);
 
         const tempHolderName = sfState.autoCompleteName && props.hasHolderName ? sfState.autoCompleteName : data.holderName;
 
@@ -82,7 +92,7 @@ function CardInput(props: CardInputProps) {
 
         setIsSfpValid(sfState.isSfpValid);
         setCvcPolicy(sfState.cvcPolicy);
-        // setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
+        setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
         setHideDateForBrand(sfState.hideDateForBrand);
         // setBrand(sfState.brand);
     };
@@ -127,9 +137,8 @@ function CardInput(props: CardInputProps) {
     };
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
-        const issuingCountryCode = binLookupResponse?.issuingCountryCode ? binLookupResponse.issuingCountryCode.toLowerCase() : null;
-
-        setIssuingCountryCode(issuingCountryCode);
+        // const issuingCountryCode = binLookupResponse?.issuingCountryCode ? binLookupResponse.issuingCountryCode.toLowerCase() : null;
+        // setIssuingCountryCode(issuingCountryCode);
 
         // processBinLookupHook({ binLookupResponse, isReset, props, sfp, setAdditionalSelectElements, setAdditionalSelectValue });
         extensions.processBinLookup(binLookupResponse, isReset);
@@ -152,20 +161,49 @@ function CardInput(props: CardInputProps) {
 
     // Run when state.data, -errors or -valid change
     useEffect(() => {
-        // Validate whole component i.e holderName + securedFields + address
-        const holderNameValid = validateHolderName(data.holderName, props.holderNameRequired);
-        const billingAddressValid = props.billingAddressRequired ? Boolean(valid.billingAddress) : true;
-
-        const isValid = isSfpValid; // && holderNameValid && billingAddressValid;
-
         console.log('\n### CardInputHook:::: useEffect data=', data);
         console.log('### CardInputHook:::: useEffect valid=', valid);
         console.log('### CardInputHook:::: useEffect errors=', errors);
 
-        props.onChange({ data, valid, errors, isValid, billingAddress, additionalSelectValue });
+        /**
+         * ex. validateCardInput
+         */
+        const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
+        const holderNameValid: boolean = validateHolderName(data.holderName, holderNameRequired);
+        const sfpValid: boolean = isSfpValid;
+        const addressValid: boolean = billingAddressRequired ? valid.billingAddress : true;
+
+        const cardCountryCode: string = issuingCountryCode ?? countryCode;
+
+        const koreanAuthentication: boolean =
+            configuration.koreanAuthenticationRequired && cardCountryCode === 'kr' ? !!valid.taxNumber && !!valid.encryptedPassword : true;
+
+        const socialSecurityNumberRequired: boolean =
+            (showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') || // auto mode (Bin Lookup)
+            configuration.socialSecurityNumberMode === 'show'; // require ssn manually
+        const socialSecurityNumberValid: boolean = socialSecurityNumberRequired ? !!valid.socialSecurityNumber : true;
+
+        const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
+
+        // TODO - do we need to set isValid on state?
+
+        props.onChange({
+            data,
+            valid,
+            errors,
+            isValid,
+            billingAddress,
+            additionalSelectValue,
+            storePaymentMethod,
+            socialSecurityNumber,
+            installments
+        });
 
         console.log('### CardInputHook::useEffect:: card.formatData().paymentMethod.brand', window['card'].formatData().paymentMethod.brand);
-    }, [data, valid, errors, additionalSelectValue]);
+
+        // }, [data, valid, errors, additionalSelectValue, isSfpValid, cvcPolicy, hideDateForBrand, storePaymentMethod, installments]);
+    }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]); // isSfpValid, cvcPolicy, hideDateForBrand, [brand, showSocialSecurityNumber(was never set)] removed 'cos they are set in handleSecuredFieldsChange - which is already making new data, valid, errors objects
+    // billingAddress (valid), socialSecurityNumber (valid, errors) - TODO caught by changes to valid or errors objects??
 
     return (
         <SecuredFieldsProvider
