@@ -1,6 +1,34 @@
 import Language from '../../../../language/Language';
 import { CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
 
+export interface CardInputStateValid {
+    holderName?: boolean;
+    billingAddress?: boolean; // TODO check
+    socialSecurityNumber?: boolean; // TODO check
+    encryptedCardNumber?: boolean;
+    encryptedExpiryMonth?: boolean;
+    encryptedExpiryYear?: boolean;
+    encryptedSecurityCode?: boolean;
+}
+
+export interface CardInputStateError {
+    holderName?: boolean;
+    billingAddress?: boolean;
+    socialSecurityNumber?: boolean;
+    encryptedCardNumber?: boolean;
+    encryptedExpiryDate?: boolean;
+    encryptedSecurityCode?: boolean;
+}
+
+export interface CardInputStateData {
+    holderName?: string;
+    billingAddress?: string;
+    socialSecurityNumber?: string;
+    encryptedCardNumber?: string;
+    encryptedExpiryDate?: string;
+    encryptedSecurityCode?: string;
+}
+
 export interface CardInputProps {
     amount?: object;
     billingAddressAllowedCountries?: string[];
@@ -9,24 +37,29 @@ export interface CardInputProps {
     brand?: string;
     configuration: CardConfiguration;
     countryCode: string;
-    data?: object;
+    cvcPolicy?: string; // new
+    data?: CardInputStateData; // new type
     enableStoreDetails: boolean;
+    fundingSource: string; // new
     hasCVC: boolean;
     hasHolderName: boolean;
-    holderName?: boolean;
+    holderName?: string; // new type
     holderNameRequired?: boolean;
     i18n?: Language;
     installmentOptions: object;
     socialSecurityNumberMode?: SocialSecurityMode;
     loadingContext: string;
-    payButton?: () => {};
+    onBlur: (e) => {}; // new
+    onFocus: (e) => {}; // new
+    payButton?: (obj) => {};
     placeholders?: object;
     positionHolderNameOnTop: boolean;
     showInstallmentAmounts: boolean;
     showPayButton?: boolean;
     storedPaymentMethodId?: string;
     styles?: object;
-    onChange?: () => {};
+    type: string; // new
+    onChange?: (state) => {};
     onSubmit?: () => {};
     onBrand?: () => {};
     onBinValue?: () => {};

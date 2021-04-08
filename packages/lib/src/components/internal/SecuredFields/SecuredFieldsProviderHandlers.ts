@@ -140,10 +140,15 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
 
     const errorCode = cbObj.error;
 
-    this.setState(prevState => ({
-        errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
-        hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
-    }));
+    this.setState(
+        prevState => ({
+            errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
+            hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
+        }),
+        () => {
+            this.props.onChange(this.state);
+        }
+    );
 
     cbObj.errorI18n = this.props.i18n.get(errorCode); // Add translation
 

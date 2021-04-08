@@ -17,6 +17,7 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
  * @param types - array containing 2 card brands or types
  * @param switcherType - type of switcher ('brandSwitcher' or 'cardTypeSwitcher' - the latter would switch between 'debit' & 'credit' varieties)
  */
+// TODO - remove once we switch to CardInput as a Hook
 export const createCardVariantSwitcher = (brandObj: BrandObject[]) => {
     const leadBrand = brandObj[0];
     const subBrand = brandObj[1];
@@ -29,6 +30,24 @@ export const createCardVariantSwitcher = (brandObj: BrandObject[]) => {
             ] as DualBrandSelectElement[],
             additionalSelectValue: '' // set to leadBrand.brand if an initial selection is to be made
         },
+        leadBrand
+    };
+};
+
+/**
+ * Creates an object used for setting state - that will trigger the rendering of a select element to allow a choice between 2 different card variants
+ * @param brandObjArr - array containing 2 card brands objects
+ */
+export const createCardVariantSwitcherHook = (brandObjArr: BrandObject[]) => {
+    const leadBrand = brandObjArr[0];
+    const subBrand = brandObjArr[1];
+
+    return {
+        additionalSelectElements: [
+            { id: leadBrand.brand, brandObject: leadBrand },
+            { id: subBrand.brand, brandObject: subBrand }
+        ] as DualBrandSelectElement[],
+        additionalSelectValue: '', // set to leadBrand.brand if an initial selection is to be made
         leadBrand
     };
 };
