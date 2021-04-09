@@ -27,10 +27,6 @@ export const getImageUrl = ({ loadingContext = FALLBACK_CONTEXT, extension = 'sv
         ...options
     };
 
-    if (extension !== 'svg') {
-        return returnImage({ size: `@${size}`, subFolder: 'small/', ...imageOptions });
-    }
-
     return returnImage(imageOptions);
 };
 
