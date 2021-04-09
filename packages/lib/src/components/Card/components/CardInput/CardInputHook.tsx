@@ -9,7 +9,7 @@ import StoredCardFields from './components/StoredCardFields';
 import Installments from './components/Installments';
 import CardFields from './components/CardFields';
 import KCPAuthentication from './components/KCPAuthentication';
-// import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
+import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 import StoreDetails from '../../../internal/StoreDetails';
 import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
@@ -20,6 +20,8 @@ import { validateHolderName } from './validate';
 import CIExtensions from './extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
+import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
+import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -71,6 +73,11 @@ function CardInput(props: CardInputProps) {
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
 
+    // Brazilian socialSecurityNumber
+    const showBrazilianSSN: boolean =
+        (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
+        props.configuration.socialSecurityNumberMode === 'show';
+
     /**
      * HANDLERS
      */
@@ -109,13 +116,20 @@ function CardInput(props: CardInputProps) {
     };
 
     const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
-        console.log('### CardInputHook::handleKCPAuthentication:: kcpData', kcpData);
-        console.log('### CardInputHook::handleKCPAuthentication:: kcpValid', kcpValid);
-        console.log('### CardInputHook::handleKCPAuthentication:: old data=', { ...data });
-        console.log('### CardInputHook::handleKCPAuthentication:: old valid=', { ...valid });
-
         setData({ ...data, ...kcpData });
         setValid({ ...valid, ...kcpValid });
+    };
+
+    /**
+     * Formats and saves the Brazilian social security number details in state
+     */
+    const handleCPF = (e: Event, validate = false): void => {
+        const socialSecurityNumberStr = formatCPFCNPJ((e.target as HTMLInputElement).value);
+        const isValid = validateSSN(socialSecurityNumberStr);
+
+        setSocialSecurityNumber(socialSecurityNumberStr);
+        setValid({ ...valid, socialSecurityNumber: isValid });
+        setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
     };
 
     const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
@@ -177,20 +191,18 @@ function CardInput(props: CardInputProps) {
         sfp.current.showValidation();
 
         // Validate holderName
-        if (props.holderNameRequired && !valid.holderName) {
-            setErrors({ ...errors, holderName: true });
-        }
+        const holderNameInError = props.holderNameRequired && !valid.holderName ? true : false;
 
         // Validate SSN
-        // if (
-        //     ((this.state.showSocialSecurityNumber && this.props.configuration.socialSecurityNumberMode === 'auto') ||
-        //         this.props.configuration.socialSecurityNumberMode === 'show') &&
-        //     !this.state.valid.socialSecurityNumber
-        // ) {
-        //     this.setState(prevState => ({
-        //         errors: { ...prevState.errors, socialSecurityNumber: true }
-        //     }));
-        // }
+        const ssnInError =
+            ((showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
+                props.configuration.socialSecurityNumberMode === 'show') &&
+            !valid.socialSecurityNumber
+                ? true
+                : false;
+
+        // Set holderName & SSN errors
+        setErrors({ ...errors, ...(ssnInError && { socialSecurityNumber: true }), ...(holderNameInError && { holderName: true }) });
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
@@ -218,15 +230,11 @@ function CardInput(props: CardInputProps) {
         };
     }, []);
 
-    // Run when state.data, -errors, -valid, -additionalSelectValue, -storePaymentMethod or -installments change
     useEffect(() => {
         console.log('### CardInputHook:::: useEffect data=', data);
         console.log('### CardInputHook:::: useEffect valid=', valid);
         console.log('### CardInputHook:::: useEffect errors=', errors);
 
-        /**
-         * ex. validateCardInput
-         */
         const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
         const holderNameValid: boolean = validateHolderName(data.holderName, holderNameRequired);
         const sfpValid: boolean = isSfpValid;
@@ -244,8 +252,6 @@ function CardInput(props: CardInputProps) {
 
         const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
-        // TODO - do we need to set isValid on state?
-
         props.onChange({
             data,
             valid,
@@ -261,10 +267,7 @@ function CardInput(props: CardInputProps) {
         if (window['card']) {
             console.log('### CardInputHook::useEffect:: card.formatData().paymentMethod.brand', window['card'].formatData().paymentMethod.brand);
         }
-
-        // }, [data, valid, errors, additionalSelectValue, isSfpValid, cvcPolicy, hideDateForBrand, storePaymentMethod, installments]);
-    }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]); // isSfpValid, cvcPolicy, hideDateForBrand, [brand, showSocialSecurityNumber(was never set)] removed 'cos they are set in handleSecuredFieldsChange - which is already making new data, valid, errors objects
-    // billingAddress (valid), socialSecurityNumber (valid, errors) - TODO caught by changes to valid or errors objects??
+    }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]);
 
     const cardHolderField = (
         <CardHolderName
@@ -355,17 +358,17 @@ function CardInput(props: CardInputProps) {
                                 />
                             )}
 
-                            {/*{showBrazilianSSN && (*/}
-                            {/*    <div className="adyen-checkout__card__socialSecurityNumber">*/}
-                            {/*        <SocialSecurityNumberBrazil*/}
-                            {/*            onChange={e => this.handleCPF(e, true)}*/}
-                            {/*            onInput={e => this.handleCPF(e)}*/}
-                            {/*            error={this.state.errors?.socialSecurityNumber}*/}
-                            {/*            valid={this.state.valid?.socialSecurityNumber}*/}
-                            {/*            data={this.state.socialSecurityNumber}*/}
-                            {/*        />*/}
-                            {/*    </div>*/}
-                            {/*)}*/}
+                            {showBrazilianSSN && (
+                                <div className="adyen-checkout__card__socialSecurityNumber">
+                                    <SocialSecurityNumberBrazil
+                                        onChange={e => handleCPF(e, true)}
+                                        onInput={e => handleCPF(e)}
+                                        error={errors?.socialSecurityNumber}
+                                        valid={valid?.socialSecurityNumber}
+                                        data={socialSecurityNumber}
+                                    />
+                                </div>
+                            )}
 
                             {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
 
