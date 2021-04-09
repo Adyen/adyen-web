@@ -31,12 +31,13 @@ export default function KCPAuthentication(props: KCPProps) {
         props.onChange(data, valid);
     }, [data.taxNumber]);
 
-    // When "unmounting" clear any stored data
-    useEffect(() => {
-        return (): void => {
-            props.onChange({ taxNumber: undefined }, { taxNumber: false });
-        };
-    }, []);
+    // When "unmounting" clear any stored data -
+    // TODO fails to achieve the desired result when CardInput is a Hook component, so can be removed
+    // useEffect(() => {
+    //     return (): void => {
+    //         props.onChange({ taxNumber: undefined }, { taxNumber: false });
+    //     };
+    // }, []);
 
     this.showValidation = (): void => {
         setErrors({ taxNumber: !isTaxNumberValid(data.taxNumber) });

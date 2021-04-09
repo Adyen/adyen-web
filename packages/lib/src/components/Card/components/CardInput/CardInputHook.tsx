@@ -8,7 +8,7 @@ import LoadingWrapper from '../../../internal/LoadingWrapper';
 import StoredCardFields from './components/StoredCardFields';
 import Installments from './components/Installments';
 import CardFields from './components/CardFields';
-// import KCPAuthentication from './components/KCPAuthentication';
+import KCPAuthentication from './components/KCPAuthentication';
 // import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 import StoreDetails from '../../../internal/StoreDetails';
 // import Address from '../../../internal/Address/Address';
@@ -22,10 +22,8 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 
 function CardInput(props: CardInputProps) {
-    const hasInstallments = !!Object.keys(props.installmentOptions).length;
-    const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
-
     const sfp = useRef(null);
+    const kcpAuthenticationRef = useRef(null);
 
     /**
      * STATE HOOKS
@@ -64,6 +62,15 @@ function CardInput(props: CardInputProps) {
     );
 
     /**
+     * LOCAL VARS
+     */
+    const hasInstallments = !!Object.keys(props.installmentOptions).length;
+    const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
+
+    const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
+    const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
+
+    /**
      * HANDLERS
      */
     const handleFocus = (e: CbObjOnFocus) => {
@@ -95,22 +102,42 @@ function CardInput(props: CardInputProps) {
         });
     };
 
-    const handleSecuredFieldsChange = (sfState: SFPState): void => {
+    const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
+        console.log('### CardInputHook::handleKCPAuthentication:: kcpData', kcpData);
+        console.log('### CardInputHook::handleKCPAuthentication:: kcpValid', kcpValid);
+        console.log('### CardInputHook::handleKCPAuthentication:: old data=', { ...data });
+        console.log('### CardInputHook::handleKCPAuthentication:: old valid=', { ...valid });
+
+        setData({ ...data, ...kcpData });
+        setValid({ ...valid, ...kcpValid });
+    };
+
+    const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
+        console.log('### CardInputHook::handleSecuredFieldsChange:: WHO', who);
+        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState', sfState);
+
         const tempHolderName = sfState.autoCompleteName && props.hasHolderName ? sfState.autoCompleteName : data.holderName;
 
-        setData({ ...data, ...sfState.data, holderName: tempHolderName });
+        // Needed because of strange timing/lifecycle/render issue now we are using hooks.
+        // The 'componentWillUnmount' useEffect in KCPAuthentication which should trigger handleKCPAuthentication, passing it
+        // values to clear the taxNumber field from the data & valid objects, is failing to reset these fields when the
+        // new data & valid objects are generated in our 'componentDidUpdate' useEffect, below.
+        // Although the correct objects are received in handleKCPAuthentication, curiously the data & valid objects (...data) are empty.
+        const kcpFieldsRemoved = !sfState.hasKoreanFields && props.configuration.koreanAuthenticationRequired ? true : false;
+
+        setData({ ...data, ...sfState.data, holderName: tempHolderName, ...(kcpFieldsRemoved && { taxNumber: undefined }) });
         setErrors({ ...errors, ...sfState.errors });
         setValid({
             ...valid,
             ...sfState.valid,
-            holderName: validateHolderName(tempHolderName, props.holderNameRequired)
+            holderName: validateHolderName(tempHolderName, props.holderNameRequired),
+            ...(kcpFieldsRemoved && { taxNumber: false })
         });
 
         setIsSfpValid(sfState.isSfpValid);
         setCvcPolicy(sfState.cvcPolicy);
         setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
         setHideDateForBrand(sfState.hideDateForBrand);
-        // setBrand(sfState.brand);
     };
 
     /**
@@ -148,8 +175,22 @@ function CardInput(props: CardInputProps) {
             setErrors({ ...errors, holderName: true });
         }
 
-        // // Validate Address
-        // if (billingAddressRef.current) billingAddressRef.current.showValidation();
+        // Validate SSN
+        // if (
+        //     ((this.state.showSocialSecurityNumber && this.props.configuration.socialSecurityNumberMode === 'auto') ||
+        //         this.props.configuration.socialSecurityNumberMode === 'show') &&
+        //     !this.state.valid.socialSecurityNumber
+        // ) {
+        //     this.setState(prevState => ({
+        //         errors: { ...prevState.errors, socialSecurityNumber: true }
+        //     }));
+        // }
+
+        // Validate Address
+        // if (billingAddressRef?.current) billingAddressRef.current.showValidation();
+
+        // Validate KCP authentication
+        if (kcpAuthenticationRef?.current) kcpAuthenticationRef.current.showValidation();
     };
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
@@ -171,9 +212,9 @@ function CardInput(props: CardInputProps) {
         };
     }, []);
 
-    // Run when state.data, -errors or -valid change
+    // Run when state.data, -errors, -valid, -additionalSelectValue, -storePaymentMethod or -installments change
     useEffect(() => {
-        console.log('\n### CardInputHook:::: useEffect data=', data);
+        console.log('### CardInputHook:::: useEffect data=', data);
         console.log('### CardInputHook:::: useEffect valid=', valid);
         console.log('### CardInputHook:::: useEffect errors=', errors);
 
@@ -245,8 +286,8 @@ function CardInput(props: CardInputProps) {
             ref={sfp}
             {...props}
             styles={{ ...defaultStyles, ...props.styles }}
-            // koreanAuthenticationRequired={configuration.koreanAuthenticationRequired}
-            // hasKoreanFields={!!(configuration.koreanAuthenticationRequired && countryCode === 'kr')}
+            koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
+            hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
             onChange={handleSecuredFieldsChange}
             onBrand={props.onBrand}
             onFocus={handleFocus}
@@ -280,11 +321,11 @@ function CardInput(props: CardInputProps) {
                             <CardFields
                                 {...props}
                                 brand={sfpState.brand}
-                                focusedElement={focusedElement} // from state
+                                focusedElement={focusedElement}
                                 onFocusField={setFocusOn}
-                                hasCVC={props.hasCVC} // from props
-                                cvcPolicy={cvcPolicy} // from state
-                                hideDateForBrand={hideDateForBrand} // from state
+                                hasCVC={props.hasCVC}
+                                cvcPolicy={cvcPolicy}
+                                hideDateForBrand={hideDateForBrand}
                                 errors={sfpState.errors}
                                 valid={sfpState.valid}
                                 dualBrandingElements={additionalSelectElements.length > 0 && additionalSelectElements}
@@ -294,19 +335,19 @@ function CardInput(props: CardInputProps) {
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
 
-                            {/*{configuration.koreanAuthenticationRequired && isKorea && (*/}
-                            {/*    <KCPAuthentication*/}
-                            {/*        onFocusField={setFocusOn}*/}
-                            {/*        focusedElement={focusedElement}*/}
-                            {/*        encryptedPasswordState={{*/}
-                            {/*            data: sfpState.encryptedPassword,*/}
-                            {/*            valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,*/}
-                            {/*            errors: sfpState.errors ? sfpState.errors.encryptedPassword : false*/}
-                            {/*        }}*/}
-                            {/*        ref={this.kcpAuthenticationRef}*/}
-                            {/*        onChange={this.handleKCPAuthentication}*/}
-                            {/*    />*/}
-                            {/*)}*/}
+                            {props.configuration.koreanAuthenticationRequired && isKorea && (
+                                <KCPAuthentication
+                                    onFocusField={setFocusOn}
+                                    focusedElement={focusedElement}
+                                    encryptedPasswordState={{
+                                        data: sfpState.encryptedPassword,
+                                        valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
+                                        errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
+                                    }}
+                                    ref={kcpAuthenticationRef}
+                                    onChange={handleKCPAuthentication}
+                                />
+                            )}
 
                             {/*{showBrazilianSSN && (*/}
                             {/*    <div className="adyen-checkout__card__socialSecurityNumber">*/}

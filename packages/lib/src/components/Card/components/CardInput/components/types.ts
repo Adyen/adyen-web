@@ -112,7 +112,7 @@ export interface KCPProps {
     filled?: boolean;
     focusedElement;
     onFocusField: (str: string) => {};
-    onChange: (data: object, valid: object) => {};
+    onChange: (kcpData: object, kcpValid: object) => void;
     ref: any;
     taxNumber?: string;
 }
