@@ -89,10 +89,10 @@ function handleHolderName(e: Event): void {
     const holderName = (e.target as HTMLInputElement).value;
     const setHolderName = (prevState: SFPState): SFPState => ({
         data: { ...prevState.data, holderName },
-        errors: { ...prevState.errors, holderName: this.props.holderNameRequired ? !validateHolderName(holderName) : false },
+        errors: { ...prevState.errors, holderName: !validateHolderName(holderName, this.props.holderNameRequired, false) },
         valid: {
             ...prevState.valid,
-            holderName: this.props.holderNameRequired ? validateHolderName(holderName, this.props.holderNameRequired) : true
+            holderName: validateHolderName(holderName, this.props.holderNameRequired)
         }
     });
 
@@ -119,7 +119,7 @@ function handleSecuredFieldsChange(newState: SFPState): void {
         valid: {
             ...this.state.valid,
             ...sfState.valid,
-            holderName: this.props.holderNameRequired ? validateHolderName(tempHolderName, this.props.holderNameRequired) : true
+            holderName: validateHolderName(tempHolderName, this.props.holderNameRequired)
         },
         isSfpValid: sfState.isSfpValid,
         cvcPolicy: sfState.cvcPolicy,
@@ -163,7 +163,6 @@ function handleAdditionalDataSelection(e: Event): void {
     }, []);
 
     // Pass brand object into SecuredFields
-    // this.sfp.current.processBinLookupResponse({ issuingCountryCode: this.state.issuingCountryCode, supportedBrands: [value] });
     this.sfp.current.processBinLookupResponse({
         issuingCountryCode: this.state.issuingCountryCode,
         supportedBrands: brandObjArr
