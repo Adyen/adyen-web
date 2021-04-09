@@ -10,7 +10,7 @@ const Error = ({ message }) => {
         <div className="adyen-checkout__status adyen-checkout__status--error">
             <Img
                 className="adyen-checkout__status__icon"
-                src={getImageUrl({ loadingContext, imageFolder: 'components/' })('error')}
+                src={getImageUrl({ loadingContext, extension: 'gif', imageFolder: 'components/' })('error')}
                 alt={i18n.get(message || 'error.message.unknown')}
                 height="88"
             />
