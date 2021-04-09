@@ -11,7 +11,7 @@ import CardFields from './components/CardFields';
 import KCPAuthentication from './components/KCPAuthentication';
 // import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 import StoreDetails from '../../../internal/StoreDetails';
-// import Address from '../../../internal/Address/Address';
+import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputStateValid, CardInputStateError, CardInputStateData } from './types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
@@ -24,6 +24,7 @@ import CardHolderName from './components/CardHolderName';
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
     const kcpAuthenticationRef = useRef(null);
+    const billingAddressRef = useRef(null);
 
     /**
      * STATE HOOKS
@@ -100,6 +101,11 @@ function CardInput(props: CardInputProps) {
             ...valid,
             holderName: validateHolderName(holderName, props.holderNameRequired)
         });
+    };
+
+    const handleAddress = address => {
+        setBillingAddress({ ...billingAddress, ...address.data });
+        setValid({ ...valid, billingAddress: address.isValid });
     };
 
     const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
@@ -187,7 +193,7 @@ function CardInput(props: CardInputProps) {
         // }
 
         // Validate Address
-        // if (billingAddressRef?.current) billingAddressRef.current.showValidation();
+        if (billingAddressRef?.current) billingAddressRef.current.showValidation();
 
         // Validate KCP authentication
         if (kcpAuthenticationRef?.current) kcpAuthenticationRef.current.showValidation();
@@ -365,16 +371,16 @@ function CardInput(props: CardInputProps) {
 
                             {hasInstallments && getInstallmentsComp(sfpState.brand)}
 
-                            {/*{this.props.billingAddressRequired && (*/}
-                            {/*    <Address*/}
-                            {/*        label="billingAddress"*/}
-                            {/*        data={this.state.billingAddress}*/}
-                            {/*        onChange={this.handleAddress}*/}
-                            {/*        allowedCountries={this.props.billingAddressAllowedCountries}*/}
-                            {/*        requiredFields={this.props.billingAddressRequiredFields}*/}
-                            {/*        ref={this.billingAddressRef}*/}
-                            {/*    />*/}
-                            {/*)}*/}
+                            {props.billingAddressRequired && (
+                                <Address
+                                    label="billingAddress"
+                                    data={billingAddress}
+                                    onChange={handleAddress}
+                                    allowedCountries={props.billingAddressAllowedCountries}
+                                    requiredFields={props.billingAddressRequiredFields}
+                                    ref={billingAddressRef}
+                                />
+                            )}
                         </LoadingWrapper>
                     )}
 

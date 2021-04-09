@@ -5,8 +5,8 @@ import { InstallmentOptions } from './components/types';
 
 export interface CardInputStateValid {
     holderName?: boolean;
-    billingAddress?: boolean; // TODO check
-    socialSecurityNumber?: boolean; // TODO check
+    billingAddress?: boolean;
+    socialSecurityNumber?: boolean;
     encryptedCardNumber?: boolean;
     encryptedExpiryMonth?: boolean;
     encryptedExpiryYear?: boolean;
@@ -22,19 +22,15 @@ export interface CardInputStateError {
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
-    // taxNumber?: string;
-    // encryptedPassword?: string;
+    taxNumber?: string;
+    encryptedPassword?: string;
 }
 
 export interface CardInputStateData {
     holderName?: string;
-    billingAddress?: string;
+    billingAddress?: object;
     socialSecurityNumber?: string;
-    encryptedCardNumber?: string;
-    encryptedExpiryDate?: string;
-    encryptedSecurityCode?: string;
     taxNumber?: string;
-    encryptedPassword?: string;
 }
 
 interface Placeholders {
