@@ -54,16 +54,6 @@ function CardInput(props: CardInputProps) {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
 
-    const extensions = useMemo(
-        () =>
-            CIExtensions(
-                props,
-                { sfp },
-                { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode }
-            ),
-        [additionalSelectElements, issuingCountryCode]
-    );
-
     /**
      * LOCAL VARS
      */
@@ -73,7 +63,6 @@ function CardInput(props: CardInputProps) {
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
 
-    // Brazilian socialSecurityNumber
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
         props.configuration.socialSecurityNumberMode === 'show';
@@ -83,12 +72,7 @@ function CardInput(props: CardInputProps) {
      */
     const handleFocus = (e: CbObjOnFocus) => {
         setFocusedElement(e.currentFocusObject);
-
-        if (e.focus === true) {
-            props.onFocus(e);
-        } else {
-            props.onBlur(e);
-        }
+        e.focus === true ? props.onFocus(e) : props.onBlur(e);
     };
 
     const handleOnStoreDetails = (storeDetails: boolean): void => {
@@ -120,9 +104,6 @@ function CardInput(props: CardInputProps) {
         setValid({ ...valid, ...kcpValid });
     };
 
-    /**
-     * Formats and saves the Brazilian social security number details in state
-     */
     const handleCPF = (e: Event, validate = false): void => {
         const socialSecurityNumberStr = formatCPFCNPJ((e.target as HTMLInputElement).value);
         const isValid = validateSSN(socialSecurityNumberStr);
@@ -160,28 +141,16 @@ function CardInput(props: CardInputProps) {
         setHideDateForBrand(sfState.hideDateForBrand);
     };
 
-    /**
-     * Handler for the icons added in response to the /binLookup call
-     */
-    // const handleDualBrandSelection = (e: Event): void => {
-    //     const value: string = (e.target as HTMLLIElement).getAttribute('data-value');
-    //
-    //     setAdditionalSelectValue(value);
-    //
-    //     // Find the brandObject with the matching brand value and place into an array
-    //     const brandObjArr: BrandObject[] = additionalSelectElements.reduce((acc, item) => {
-    //         if (item.brandObject.brand === value) {
-    //             acc.push(item.brandObject);
-    //         }
-    //         return acc;
-    //     }, []);
-    //
-    //     // Pass brand object into SecuredFields
-    //     sfp.current.processBinLookupResponse({
-    //         issuingCountryCode,
-    //         supportedBrands: brandObjArr
-    //     });
-    // };
+    // Farm the handlers for binLookup related functionality out to another 'extensions' file
+    const extensions = useMemo(
+        () =>
+            CIExtensions(
+                props,
+                { sfp },
+                { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode }
+            ),
+        [additionalSelectElements, issuingCountryCode]
+    );
 
     /**
      * EXPECTED METHODS ON CARD.THIS
@@ -263,12 +232,11 @@ function CardInput(props: CardInputProps) {
             socialSecurityNumber,
             installments
         });
-
-        if (window['card']) {
-            console.log('### CardInputHook::useEffect:: card.formatData().paymentMethod.brand', window['card'].formatData().paymentMethod.brand);
-        }
     }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]);
 
+    /**
+     * RENDER
+     */
     const cardHolderField = (
         <CardHolderName
             required={props.holderNameRequired}
