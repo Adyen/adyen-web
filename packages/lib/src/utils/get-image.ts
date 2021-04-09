@@ -15,7 +15,7 @@ export interface ImageOptions {
 const returnImage = ({ name, loadingContext, imageFolder = '', parentFolder = '', extension, size = '', subFolder = '' }: ImageOptions): string =>
     `${loadingContext}images/${imageFolder}${subFolder}${parentFolder}${name}${size}.${extension}`;
 
-export const getImageUrl = ({ loadingContext = FALLBACK_CONTEXT, extension = 'svg', size = '3x', ...options }: ImageOptions): Function => (
+export const getImageUrl = ({ loadingContext = FALLBACK_CONTEXT, extension = 'svg', ...options }: ImageOptions): Function => (
     name: string
 ): string => {
     const imageOptions: ImageOptions = {
