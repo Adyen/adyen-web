@@ -96,10 +96,6 @@ function CardInput(props: CardInputProps) {
     };
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
-        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState.data', sfState.data);
-        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState.errors', sfState.errors);
-        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState.valid', sfState.valid);
-
         const tempHolderName = sfState.autoCompleteName && props.hasHolderName ? sfState.autoCompleteName : data.holderName;
 
         setData({ ...data, ...sfState.data, holderName: tempHolderName });
@@ -120,7 +116,7 @@ function CardInput(props: CardInputProps) {
     /**
      * Handler for the icons added in response to the /binLookup call
      */
-    // const handleAdditionalDataSelection = (e: Event): void => {
+    // const handleDualBrandSelection = (e: Event): void => {
     //     const value: string = (e.target as HTMLLIElement).getAttribute('data-value');
     //
     //     setAdditionalSelectValue(value);
@@ -292,7 +288,7 @@ function CardInput(props: CardInputProps) {
                                 errors={sfpState.errors}
                                 valid={sfpState.valid}
                                 dualBrandingElements={additionalSelectElements.length > 0 && additionalSelectElements}
-                                dualBrandingChangeHandler={extensions.handleAdditionalDataSelection}
+                                dualBrandingChangeHandler={extensions.handleDualBrandSelection}
                                 dualBrandingSelected={additionalSelectValue}
                             />
 
