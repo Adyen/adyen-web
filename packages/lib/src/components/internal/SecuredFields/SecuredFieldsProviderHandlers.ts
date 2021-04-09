@@ -19,6 +19,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from './lib/types';
+import { existy } from './lib/utilities/commonUtils';
 
 /**
  * Emits the onConfigSuccess (ready) event
@@ -103,20 +104,25 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
  */
 function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
-        prevState => ({
-            brand: cardInfo.brand,
-            cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
-            showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
-            errors: {
-                ...prevState.errors,
-                // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
-                [ENCRYPTED_SECURITY_CODE]:
-                    (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
-                        ? false
-                        : prevState.errors[ENCRYPTED_SECURITY_CODE]
-            },
-            hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
-        }),
+        prevState => {
+            // If we change brand to one where the cvc field is not required & is empty - then the cvc field cannot be in error...
+            // ...else propagate the existing error
+            const cvcFieldInError =
+                (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
+                    ? false
+                    : prevState.errors[ENCRYPTED_SECURITY_CODE];
+
+            return {
+                brand: cardInfo.brand,
+                cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
+                showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
+                errors: {
+                    ...prevState.errors,
+                    ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError })
+                },
+                hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
+            };
+        },
         () => {
             this.props.onChange(this.state);
 
@@ -130,14 +136,6 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
  * Handles validation errors
  */
 function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null): boolean {
-    // If we're in an "unsupported card" state and a 'regular' card number error comes through - ignore it until the "unsupported card" state is cleared
-    if (this.state.hasUnsupportedCard && cbObj.fieldType === ENCRYPTED_CARD_NUMBER && hasUnsupportedCard === null) {
-        // Temporary - for testing in development
-        if (process.env.NODE_ENV === 'development') {
-            throw new Error('SecuredFieldsProviderHandlers::handleOnError:: IN UNSUPPORTED CARD STATE');
-        }
-    }
-
     const errorCode = cbObj.error;
 
     this.setState(
