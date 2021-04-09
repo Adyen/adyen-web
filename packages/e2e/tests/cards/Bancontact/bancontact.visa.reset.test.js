@@ -70,7 +70,7 @@ const mock = RequestMock()
         }
     );
 
-const TEST_SPEED = 0.5;
+const TEST_SPEED = 1;
 
 const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--bcmc iframe');
 
