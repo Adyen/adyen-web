@@ -54,6 +54,8 @@ function CardInput(props: CardInputProps) {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
 
+    const [kcpRemoved, setKCPRemoved] = useState(false);
+
     /**
      * LOCAL VARS
      */
@@ -100,6 +102,14 @@ function CardInput(props: CardInputProps) {
     };
 
     const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
+        // Detect when KCPAuthentication comp has been unmounted
+        if (kcpData['taxNumber'] === null && kcpValid['taxNumber'] === false) {
+            setKCPRemoved(true);
+            return;
+        }
+
+        setKCPRemoved(false);
+
         setData({ ...data, ...kcpData });
         setValid({ ...valid, ...kcpValid });
     };
@@ -115,24 +125,15 @@ function CardInput(props: CardInputProps) {
 
     const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
         console.log('### CardInputHook::handleSecuredFieldsChange:: WHO', who);
-        console.log('### CardInputHook::handleSecuredFieldsChange:: sfState', sfState);
 
         const tempHolderName = sfState.autoCompleteName && props.hasHolderName ? sfState.autoCompleteName : data.holderName;
 
-        // Needed because of strange timing/lifecycle/render issue now we are using hooks.
-        // The 'componentWillUnmount' useEffect in KCPAuthentication which should trigger handleKCPAuthentication, passing it
-        // values to clear the taxNumber field from the data & valid objects, is failing to reset these fields when the
-        // new data & valid objects are generated in our 'componentDidUpdate' useEffect, below.
-        // Although the correct objects are received in handleKCPAuthentication, curiously the data & valid objects (...data) are empty.
-        const kcpFieldsRemoved = !sfState.hasKoreanFields && props.configuration.koreanAuthenticationRequired ? true : false;
-
-        setData({ ...data, ...sfState.data, holderName: tempHolderName, ...(kcpFieldsRemoved && { taxNumber: undefined }) });
+        setData({ ...data, ...sfState.data, holderName: tempHolderName });
         setErrors({ ...errors, ...sfState.errors });
         setValid({
             ...valid,
             ...sfState.valid,
-            holderName: validateHolderName(tempHolderName, props.holderNameRequired),
-            ...(kcpFieldsRemoved && { taxNumber: false })
+            holderName: validateHolderName(tempHolderName, props.holderNameRequired)
         });
 
         setIsSfpValid(sfState.isSfpValid);
@@ -199,8 +200,18 @@ function CardInput(props: CardInputProps) {
         };
     }, []);
 
+    // Resets taxNumber values when KCPAuthentication comp is unmounted.
+    // Use of this hook avoids the race conditions on setting data & valid that exist with the simultaneous changes from SFP triggered by the
+    // removal of this comp
     useEffect(() => {
-        console.log('### CardInputHook:::: useEffect data=', data);
+        if (kcpRemoved === true) {
+            setData({ ...data, taxNumber: undefined });
+            setValid({ ...valid, taxNumber: false });
+        }
+    }, [kcpRemoved]);
+
+    useEffect(() => {
+        console.log('\n### CardInputHook:::: useEffect data=', data);
         console.log('### CardInputHook:::: useEffect valid=', valid);
         console.log('### CardInputHook:::: useEffect errors=', errors);
 

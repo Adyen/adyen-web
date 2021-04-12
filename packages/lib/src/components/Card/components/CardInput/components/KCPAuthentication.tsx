@@ -31,13 +31,13 @@ export default function KCPAuthentication(props: KCPProps) {
         props.onChange(data, valid);
     }, [data.taxNumber]);
 
-    // When "unmounting" clear any stored data -
-    // TODO fails to achieve the desired result when CardInput is a Hook component, so can be removed
-    // useEffect(() => {
-    //     return (): void => {
-    //         props.onChange({ taxNumber: undefined }, { taxNumber: false });
-    //     };
-    // }, []);
+    // When "unmounting" clear any stored data
+    useEffect(() => {
+        return (): void => {
+            // Specific form of object that differs from the startup form, which allows us to distinguish between the 2 events in CardInput
+            props.onChange({ taxNumber: null }, { taxNumber: false });
+        };
+    }, []);
 
     this.showValidation = (): void => {
         setErrors({ taxNumber: !isTaxNumberValid(data.taxNumber) });
