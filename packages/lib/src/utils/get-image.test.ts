@@ -30,13 +30,14 @@ describe('Ideal utils', () => {
             expect(getImageUrl(options)(type)).toBe('http://adyen.com/images/logos/ideal.svg');
         });
 
-        test('Gets amn image in PNG', () => {
+        test('Gets an image in PNG', () => {
             const options = {
                 loadingContext,
                 parentFolder: 'ideal/',
                 extension: 'png'
             };
-            expect(getImageUrl(options)(issuer)).toBe('http://adyen.com/images/logos/small/ideal/123@3x.png');
+
+            expect(getImageUrl(options)(issuer)).toBe('http://adyen.com/images/logos/ideal/123.png');
         });
     });
 });
