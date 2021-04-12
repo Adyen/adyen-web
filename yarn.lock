@@ -9908,10 +9908,10 @@ rollup-plugin-typescript2@^0.30.0:
     resolve "1.20.0"
     tslib "2.1.0"
 
-rollup-plugin-visualizer@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-visualizer/-/rollup-plugin-visualizer-5.3.0.tgz#2aafea2626f430a5eb84cf4a42b2f01948a4681b"
-  integrity sha512-beMaHDF1BgqYLY7URjSzawzQP/sBi+1cnInwXOsUdkWy84VZNQRXanitfmdz0lkSKupkE/KtiU61qbedAU5Kfg==
+rollup-plugin-visualizer@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-visualizer/-/rollup-plugin-visualizer-5.3.3.tgz#af29bcba60f66bc9eee63450dbfc63d592ff52f3"
+  integrity sha512-vDMnVckdRRTuxTOO17s1UHgbu/UQ9mVyDiMrSsC17GZB3lI0ZEo3sDwSaJnP03uohuW1Jb6v9N7RqRRFJgtkhw==
   dependencies:
     nanoid "^3.1.22"
     open "^7.4.2"
