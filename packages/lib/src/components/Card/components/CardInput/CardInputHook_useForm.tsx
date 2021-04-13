@@ -81,12 +81,6 @@ function CardInput(props: CardInputProps) {
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
         props.configuration.socialSecurityNumberMode === 'show';
 
-    // Handle form schema updates
-    useEffect(() => {
-        const newSchema = [...(props.hasHolderName ? ['holderName'] : [])];
-        setSchema(newSchema);
-    }, [props.hasHolderName]); //showSocialSecurityNumber
-
     /**
      * HANDLERS
      */
@@ -211,9 +205,11 @@ function CardInput(props: CardInputProps) {
         };
     }, []);
 
-    // Resets taxNumber values when KCPAuthentication comp is unmounted.
-    // Use of this hook avoids the race conditions on setting data & valid that exist with the simultaneous changes from SFP triggered by the
-    // removal of this comp
+    /**
+     * Resets taxNumber values when KCPAuthentication comp is unmounted.
+     * Use of this hook avoids the race conditions on setting data & valid that exist with the simultaneous changes from SFP triggered by the
+     * removal of this comp
+     */
     useEffect(() => {
         if (kcpRemoved === true) {
             setData({ ...data, taxNumber: undefined });
@@ -221,31 +217,54 @@ function CardInput(props: CardInputProps) {
         }
     }, [kcpRemoved]);
 
-    // Handle properties set by useForm
+    /**
+     * Handle form schema updates
+     */
+    useEffect(() => {
+        const newSchema = [...(props.hasHolderName ? ['holderName'] : []), ...(showBrazilianSSN ? ['socialSecurityNumber'] : [])];
+        setSchema(newSchema);
+    }, [props.hasHolderName, showBrazilianSSN]);
+
+    /**
+     * Handle updates from useForm
+     */
     useEffect(() => {
         console.log('### CardInputHook::formData:: ', formData);
         console.log('### CardInputHook::formValid:: ', formValid);
         console.log('### CardInputHook::formErrors:: ', formErrors);
 
-        setData({ ...data, holderName: formData?.holderName });
+        // From handleCPF
+        // setSocialSecurityNumber(socialSecurityNumberStr);
+        // setValid({ ...valid, socialSecurityNumber: isValid });
+        // setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
+
+        console.log('### CardInputHook_useForm update:::: ', data);
+
+        setData({ ...data, holderName: formData.holderName });
+
+        // setSocialSecurityNumber(formData.socialSecurityNumber);// re. useForm
 
         setValid({
             ...valid,
-            holderName: props.holderNameRequired ? formValid?.holderName : true
+            holderName: props.holderNameRequired ? formValid.holderName : true
+            // socialSecurityNumber: formValid.socialSecurityNumber // re. useForm
         });
 
         // Errors
         let holderNameInError;
         if (validationTriggered) {
-            holderNameInError = props.holderNameRequired && !!formErrors?.holderName;
+            holderNameInError = props.holderNameRequired && !!formErrors.holderName;
             setValidationTriggered(false);
         } else {
-            holderNameInError = formData?.holderName?.length > 0 && !!formErrors?.holderName;
+            holderNameInError = formData.holderName?.length > 0 && !!formErrors.holderName;
         }
 
-        setErrors({ ...errors, holderName: holderNameInError ? formErrors?.holderName : null });
+        setErrors({ ...errors, holderName: holderNameInError ? formErrors.holderName : null });
     }, [formData, formValid, formErrors]);
 
+    /**
+     * Main 'componentDidUpdate' handler
+     */
     useEffect(() => {
         const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
 
@@ -379,6 +398,8 @@ function CardInput(props: CardInputProps) {
                                     <SocialSecurityNumberBrazil
                                         onChange={e => handleCPF(e, true)}
                                         onInput={e => handleCPF(e)}
+                                        // onChange={handleChangeFor('socialSecurityNumber', 'blur')}
+                                        // onInput={handleChangeFor('socialSecurityNumber', 'input')}
                                         error={errors?.socialSecurityNumber}
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
