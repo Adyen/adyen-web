@@ -30,9 +30,7 @@ export default {
     onChange: () => {},
 
     // Values
-    holderName: '',
     data: {
-        holderName: '',
         billingAddress: {}
     },
 

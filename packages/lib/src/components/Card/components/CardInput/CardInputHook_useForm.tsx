@@ -37,7 +37,7 @@ function CardInput(props: CardInputProps) {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.data.holderName })
+        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');
@@ -240,7 +240,7 @@ function CardInput(props: CardInputProps) {
 
         console.log('### CardInputHook_useForm update:::: ', data);
 
-        setData({ ...data, holderName: formData.holderName });
+        setData({ ...data, holderName: formData.holderName ?? '' });
 
         // setSocialSecurityNumber(formData.socialSecurityNumber);// re. useForm
 
@@ -251,15 +251,7 @@ function CardInput(props: CardInputProps) {
         });
 
         // Errors
-        let holderNameInError;
-        if (validationTriggered) {
-            holderNameInError = props.holderNameRequired && !!formErrors.holderName;
-            setValidationTriggered(false);
-        } else {
-            holderNameInError = formData.holderName?.length > 0 && !!formErrors.holderName;
-        }
-
-        setErrors({ ...errors, holderName: holderNameInError ? formErrors.holderName : null });
+        setErrors({ ...errors, holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null });
     }, [formData, formValid, formErrors]);
 
     /**
