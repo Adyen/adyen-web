@@ -13,7 +13,7 @@ import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurit
 import StoreDetails from '../../../internal/StoreDetails';
 import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
-import { CardInputProps, CardInputStateValid, CardInputStateError, CardInputStateData } from './types';
+import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { validateHolderName, cardInputFormatters, cardInputValidationRules } from './validate';
@@ -32,11 +32,11 @@ function CardInput(props: CardInputProps) {
     /**
      * STATE HOOKS
      */
-    const [errors, setErrors] = useState<CardInputStateError>({});
-    const [valid, setValid] = useState<CardInputStateValid>({
+    const [errors, setErrors] = useState<CardInputErrorState>({});
+    const [valid, setValid] = useState<CardInputValidState>({
         ...(props.holderNameRequired && { holderName: false })
     });
-    const [data, setData] = useState<CardInputStateData>({
+    const [data, setData] = useState<CardInputDataState>({
         ...(props.hasHolderName && { holderName: props.data.holderName })
     });
 
@@ -239,14 +239,12 @@ function CardInput(props: CardInputProps) {
         }
 
         setErrors({ ...errors, holderName: holderNameInError ? formErrors.holderName : null });
-    }, [formData, formValid, formErrors]); // formValid
+    }, [formData, formValid, formErrors]);
 
     useEffect(() => {
         const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
-        // const holderNameValid: boolean = validateHolderName(data.holderName, holderNameRequired);
-        // const holderNameValid: boolean = holderNameRequired ? formValid.holderName : true;
 
-        const holderNameValid: boolean = valid.holderName; //formValid.holderName;
+        const holderNameValid: boolean = valid.holderName;
         console.log('### CardInputHook::holderNameRequired:: ', holderNameRequired);
         console.log('### CardInputHook::holderNameValid:: ', holderNameValid);
 

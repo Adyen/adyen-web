@@ -4,7 +4,7 @@ import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 
-export interface CardInputStateValid {
+export interface CardInputValidState {
     holderName?: boolean;
     billingAddress?: boolean;
     socialSecurityNumber?: boolean;
@@ -16,7 +16,7 @@ export interface CardInputStateValid {
     encryptedPassword?: boolean;
 }
 
-export interface CardInputStateError {
+export interface CardInputErrorState {
     // holderName?: boolean;
     holderName?: ValidationResult;
     billingAddress?: boolean;
@@ -28,7 +28,7 @@ export interface CardInputStateError {
     encryptedPassword?: string;
 }
 
-export interface CardInputStateData {
+export interface CardInputDataState {
     holderName?: string;
     billingAddress?: object;
     socialSecurityNumber?: string;

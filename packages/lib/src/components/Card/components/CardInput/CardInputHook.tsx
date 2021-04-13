@@ -13,7 +13,7 @@ import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurit
 import StoreDetails from '../../../internal/StoreDetails';
 import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
-import { CardInputProps, CardInputStateValid, CardInputStateError, CardInputStateData } from './types';
+import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { validateHolderName } from './validate';
@@ -31,11 +31,11 @@ function CardInput(props: CardInputProps) {
     /**
      * STATE HOOKS
      */
-    const [errors, setErrors] = useState<CardInputStateError>({});
-    const [valid, setValid] = useState<CardInputStateValid>({
+    const [errors, setErrors] = useState<CardInputErrorState>({});
+    const [valid, setValid] = useState<CardInputValidState>({
         ...(props.holderNameRequired && { holderName: false })
     });
-    const [data, setData] = useState<CardInputStateData>({
+    const [data, setData] = useState<CardInputDataState>({
         ...(props.hasHolderName && { holderName: props.holderName || props.data.holderName })
     });
 
@@ -211,9 +211,9 @@ function CardInput(props: CardInputProps) {
     }, [kcpRemoved]);
 
     useEffect(() => {
-        console.log('\n### CardInputHook:::: useEffect data=', data);
-        console.log('### CardInputHook:::: useEffect valid=', valid);
-        console.log('### CardInputHook:::: useEffect errors=', errors);
+        // console.log('\n### CardInputHook:::: useEffect data=', data);
+        // console.log('### CardInputHook:::: useEffect valid=', valid);
+        // console.log('### CardInputHook:::: useEffect errors=', errors);
 
         const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
         const holderNameValid: boolean = validateHolderName(data.holderName, holderNameRequired);
