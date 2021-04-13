@@ -57,8 +57,6 @@ function CardInput(props: CardInputProps) {
 
     const [kcpRemoved, setKCPRemoved] = useState(false);
 
-    const [validationTriggered, setValidationTriggered] = useState(false);
-
     console.log('### CardInputHook_useForm::CardInput:: props.data', props.data);
 
     /**
@@ -162,7 +160,6 @@ function CardInput(props: CardInputProps) {
         sfp.current.showValidation();
 
         // Validate holderName
-        setValidationTriggered(true);
         triggerValidation();
 
         // Validate SSN
@@ -242,12 +239,12 @@ function CardInput(props: CardInputProps) {
 
         setData({ ...data, holderName: formData.holderName ?? '' });
 
-        // setSocialSecurityNumber(formData.socialSecurityNumber);// re. useForm
+        setSocialSecurityNumber(formData.socialSecurityNumber); // re. useForm
 
         setValid({
             ...valid,
-            holderName: props.holderNameRequired ? formValid.holderName : true
-            // socialSecurityNumber: formValid.socialSecurityNumber // re. useForm
+            holderName: props.holderNameRequired ? formValid.holderName : true,
+            socialSecurityNumber: formValid.socialSecurityNumber // re. useForm
         });
 
         // Errors
@@ -388,10 +385,10 @@ function CardInput(props: CardInputProps) {
                             {showBrazilianSSN && (
                                 <div className="adyen-checkout__card__socialSecurityNumber">
                                     <SocialSecurityNumberBrazil
-                                        onChange={e => handleCPF(e, true)}
-                                        onInput={e => handleCPF(e)}
-                                        // onChange={handleChangeFor('socialSecurityNumber', 'blur')}
-                                        // onInput={handleChangeFor('socialSecurityNumber', 'input')}
+                                        // onChange={e => handleCPF(e, true)}
+                                        // onInput={e => handleCPF(e)}
+                                        onChange={handleChangeFor('socialSecurityNumber', 'blur')}
+                                        onInput={handleChangeFor('socialSecurityNumber', 'input')}
                                         error={errors?.socialSecurityNumber}
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
