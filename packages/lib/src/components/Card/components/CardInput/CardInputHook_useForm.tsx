@@ -64,8 +64,8 @@ function CardInput(props: CardInputProps) {
     /**
      * LOCAL VARS
      */
-    const { handleChangeFor, triggerValidation, data: formData, valid: formValid, errors: formErrors } = useForm<CardInputStateData>({
-        schema: ['holderName'],
+    const { handleChangeFor, triggerValidation, data: formData, valid: formValid, errors: formErrors, setSchema } = useForm<CardInputDataState>({
+        schema: [],
         defaultData: props.data,
         formatters: cardInputFormatters,
         rules: cardInputValidationRules
@@ -80,6 +80,12 @@ function CardInput(props: CardInputProps) {
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
         props.configuration.socialSecurityNumberMode === 'show';
+
+    // Handle form schema updates
+    useEffect(() => {
+        const newSchema = [...(props.hasHolderName ? ['holderName'] : [])];
+        setSchema(newSchema);
+    }, [props.hasHolderName]); //showSocialSecurityNumber
 
     /**
      * HANDLERS
@@ -221,24 +227,23 @@ function CardInput(props: CardInputProps) {
         console.log('### CardInputHook::formValid:: ', formValid);
         console.log('### CardInputHook::formErrors:: ', formErrors);
 
-        setData({ ...data, holderName: formData.holderName });
+        setData({ ...data, holderName: formData?.holderName });
 
         setValid({
             ...valid,
-            holderName: props.holderNameRequired ? formValid.holderName : true
-            // holderName: formValid.holderName
+            holderName: props.holderNameRequired ? formValid?.holderName : true
         });
 
         // Errors
         let holderNameInError;
         if (validationTriggered) {
-            holderNameInError = props.holderNameRequired && !!formErrors.holderName;
+            holderNameInError = props.holderNameRequired && !!formErrors?.holderName;
             setValidationTriggered(false);
         } else {
-            holderNameInError = formData.holderName.length > 0 && !!formErrors.holderName;
+            holderNameInError = formData?.holderName?.length > 0 && !!formErrors?.holderName;
         }
 
-        setErrors({ ...errors, holderName: holderNameInError ? formErrors.holderName : null });
+        setErrors({ ...errors, holderName: holderNameInError ? formErrors?.holderName : null });
     }, [formData, formValid, formErrors]);
 
     useEffect(() => {
