@@ -57,6 +57,10 @@ function CardInput(props: CardInputProps) {
 
     const [kcpRemoved, setKCPRemoved] = useState(false);
 
+    const [validationTriggered, setValidationTriggered] = useState(false);
+
+    console.log('### CardInputHook_useForm::CardInput:: props.data', props.data);
+
     /**
      * LOCAL VARS
      */
@@ -158,7 +162,8 @@ function CardInput(props: CardInputProps) {
         sfp.current.showValidation();
 
         // Validate holderName
-        const holderNameInError = props.holderNameRequired && !valid.holderName ? true : false;
+        setValidationTriggered(true);
+        triggerValidation();
 
         // Validate SSN
         const ssnInError =
@@ -168,8 +173,11 @@ function CardInput(props: CardInputProps) {
                 ? true
                 : false;
 
-        // Set holderName & SSN errors
-        setErrors({ ...errors, ...(ssnInError && { socialSecurityNumber: true }), ...(holderNameInError && { holderName: true }) });
+        // Set SSN errors
+        setErrors({
+            ...errors,
+            ...(ssnInError && { socialSecurityNumber: true })
+        });
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
@@ -218,21 +226,30 @@ function CardInput(props: CardInputProps) {
         setValid({
             ...valid,
             holderName: props.holderNameRequired ? formValid.holderName : true
+            // holderName: formValid.holderName
         });
 
         // Errors
-        setErrors({ ...errors, holderName: !!formErrors.holderName });
-        // setErrors({ ...errors, holderName: formErrors.holderName && formData.holderName.length > 0 }); // also check if field is filled
-        // setErrors({ ...errors, holderName: !formValid.holderName && formData.holderName.length > 0 }); // also check if field is filled
+        let holderNameInError;
+        if (validationTriggered) {
+            holderNameInError = props.holderNameRequired && !!formErrors.holderName;
+            setValidationTriggered(false);
+        } else {
+            holderNameInError = formData.holderName.length > 0 && !!formErrors.holderName;
+        }
+
+        setErrors({ ...errors, holderName: holderNameInError ? formErrors.holderName : null });
     }, [formData, formValid, formErrors]); // formValid
 
     useEffect(() => {
         const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
         // const holderNameValid: boolean = validateHolderName(data.holderName, holderNameRequired);
         // const holderNameValid: boolean = holderNameRequired ? formValid.holderName : true;
-        const holderNameValid: boolean = formValid.holderName;
+
+        const holderNameValid: boolean = valid.holderName; //formValid.holderName;
         console.log('### CardInputHook::holderNameRequired:: ', holderNameRequired);
         console.log('### CardInputHook::holderNameValid:: ', holderNameValid);
+
         const sfpValid: boolean = isSfpValid;
         const addressValid: boolean = billingAddressRequired ? valid.billingAddress : true;
 
@@ -269,13 +286,10 @@ function CardInput(props: CardInputProps) {
             required={props.holderNameRequired}
             placeholder={props.placeholders.holderName}
             value={data.holderName}
-            // value={formData.holderName}
-            // error={!!errors.holderName}
             error={!!errors.holderName}
             isValid={!!valid.holderName}
             // onChange={handleHolderName}
-            onChange={handleChangeFor('holderName', 'blur')}
-            onInput={handleChangeFor('holderName', 'input')}
+            onChange={handleChangeFor('holderName', 'input')}
         />
     );
 

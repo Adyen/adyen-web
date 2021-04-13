@@ -2,6 +2,7 @@ import Language from '../../../../language/Language';
 import { CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
+import { ValidationResult } from '../../../internal/PersonalDetails/types';
 
 export interface CardInputStateValid {
     holderName?: boolean;
@@ -16,7 +17,8 @@ export interface CardInputStateValid {
 }
 
 export interface CardInputStateError {
-    holderName?: boolean;
+    // holderName?: boolean;
+    holderName?: ValidationResult;
     billingAddress?: boolean;
     socialSecurityNumber?: boolean;
     encryptedCardNumber?: boolean;
