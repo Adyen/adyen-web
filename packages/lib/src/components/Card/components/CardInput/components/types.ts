@@ -104,6 +104,20 @@ export interface KCPErrors {
     taxNumber: boolean | string;
 }
 
+// export interface KCPProps {
+//     encryptedPasswordState: {
+//         data: string;
+//         valid: boolean;
+//         errors: boolean | string;
+//     };
+//     filled?: boolean;
+//     focusedElement;
+//     onFocusField: (str: string) => {};
+//     onChange: (kcpData: object, kcpValid: object) => void;
+//     ref: any;
+//     taxNumber?: string;
+// }
+
 export interface KCPProps {
     encryptedPasswordState: {
         data: string;
@@ -113,9 +127,12 @@ export interface KCPProps {
     filled?: boolean;
     focusedElement;
     onFocusField: (str: string) => {};
-    onChange: (kcpData: object, kcpValid: object) => void;
-    ref: any;
+    onChange: (event: Event) => void;
+    onInput: (event: Event) => void;
     taxNumber?: string;
+    error: boolean;
+    isValid: boolean;
+    value: string;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;

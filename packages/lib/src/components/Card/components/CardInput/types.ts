@@ -25,8 +25,9 @@ export interface CardInputErrorState {
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
-    taxNumber?: string;
-    encryptedPassword?: string;
+    // taxNumber?: boolean;
+    taxNumber?: ValidationResult;
+    encryptedPassword?: boolean;
 }
 
 export interface CardInputDataState {

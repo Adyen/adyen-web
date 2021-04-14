@@ -39,6 +39,12 @@ export const cardInputValidationRules: ValidatorRules = {
             validate: validateSSN
         }
     ],
+    taxNumber: [
+        {
+            modes: ['blur'],
+            validate: value => value?.length === 6 || value?.length === 10
+        }
+    ],
     holderName: [
         {
             // Will fire at startup and when triggerValidation is called
