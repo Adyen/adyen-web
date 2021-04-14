@@ -56,8 +56,6 @@ function CardInput(props: CardInputProps) {
 
     const [kcpRemoved, setKCPRemoved] = useState(false);
 
-    console.log('### CardInputHook_useForm::CardInput:: props.data', props.data);
-
     /**
      * LOCAL VARS
      */
@@ -73,6 +71,10 @@ function CardInput(props: CardInputProps) {
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
+    const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
+    if (!showKCP) {
+        setKCPRemoved(true);
+    }
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -100,12 +102,6 @@ function CardInput(props: CardInputProps) {
     };
 
     const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
-        // Detect when KCPAuthentication comp has been unmounted
-        if (kcpData['taxNumber'] === null && kcpValid['taxNumber'] === false) {
-            setKCPRemoved(true);
-            return;
-        }
-
         setKCPRemoved(false);
 
         setData({ ...data, ...kcpData });
@@ -338,7 +334,7 @@ function CardInput(props: CardInputProps) {
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
 
-                            {props.configuration.koreanAuthenticationRequired && isKorea && (
+                            {showKCP && (
                                 <KCPAuthentication
                                     onFocusField={setFocusOn}
                                     focusedElement={focusedElement}
