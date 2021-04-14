@@ -104,20 +104,6 @@ export interface KCPErrors {
     taxNumber: boolean | string;
 }
 
-// export interface KCPProps {
-//     encryptedPasswordState: {
-//         data: string;
-//         valid: boolean;
-//         errors: boolean | string;
-//     };
-//     filled?: boolean;
-//     focusedElement;
-//     onFocusField: (str: string) => {};
-//     onChange: (kcpData: object, kcpValid: object) => void;
-//     ref: any;
-//     taxNumber?: string;
-// }
-
 export interface KCPProps {
     encryptedPasswordState: {
         data: string;

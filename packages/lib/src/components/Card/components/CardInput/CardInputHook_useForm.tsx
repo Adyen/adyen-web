@@ -24,7 +24,6 @@ import useForm from '../../../../utils/useForm';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
-    // const kcpAuthenticationRef = useRef(null);
     const billingAddressRef = useRef(null);
 
     /**
@@ -53,8 +52,6 @@ function CardInput(props: CardInputProps) {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
 
-    // const [kcpRemoved, setKCPRemoved] = useState(false);
-
     /**
      * LOCAL VARS
      */
@@ -71,9 +68,6 @@ function CardInput(props: CardInputProps) {
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
     const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
-    // if (!showKCP) {
-    //     setKCPRemoved(true);
-    // }
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -99,13 +93,6 @@ function CardInput(props: CardInputProps) {
         setBillingAddress({ ...billingAddress, ...address.data });
         setValid({ ...valid, billingAddress: address.isValid });
     };
-
-    // const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
-    //     setKCPRemoved(false);
-    //
-    //     setData({ ...data, ...kcpData });
-    //     setValid({ ...valid, ...kcpValid });
-    // };
 
     const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
         console.log('### CardInputHook::handleSecuredFieldsChange:: WHO', who);
@@ -149,9 +136,6 @@ function CardInput(props: CardInputProps) {
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
-
-        // Validate KCP authentication
-        // if (kcpAuthenticationRef?.current) kcpAuthenticationRef.current.showValidation();
     };
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
@@ -174,18 +158,6 @@ function CardInput(props: CardInputProps) {
     }, []);
 
     /**
-     * Resets taxNumber values when KCPAuthentication comp is unmounted.
-     * Use of this hook avoids the race conditions on setting data & valid that exist with the simultaneous changes from SFP triggered by the
-     * removal of this comp
-     */
-    // useEffect(() => {
-    //     if (kcpRemoved === true) {
-    //         setData({ ...data, taxNumber: undefined });
-    //         setValid({ ...valid, taxNumber: false });
-    //     }
-    // }, [kcpRemoved]);
-
-    /**
      * Handle form schema updates
      */
     useEffect(() => {
@@ -196,11 +168,6 @@ function CardInput(props: CardInputProps) {
         ];
         setSchema(newSchema);
     }, [props.hasHolderName, showBrazilianSSN, showKCP]);
-
-    // useEffect(() => {
-    //     const newSchema = [...(props.hasHolderName ? ['holderName'] : []), ...(showBrazilianSSN ? ['socialSecurityNumber'] : [])];
-    //     setSchema(newSchema);
-    // }, [props.hasHolderName, showBrazilianSSN]);
 
     /**
      * Handle updates from useForm
@@ -217,8 +184,6 @@ function CardInput(props: CardInputProps) {
         setValid({
             ...valid,
             holderName: props.holderNameRequired ? formValid.holderName : true,
-            // socialSecurityNumber: formValid.socialSecurityNumber,
-            // taxNumber: formValid.taxNumber,
             // Setting value to false if it's falsy keeps in line with existing, expected behaviour
             // - but there is an argument to allow 'undefined' as a value to indicate the non-presence of the field
             socialSecurityNumber: formValid.socialSecurityNumber ? formValid.socialSecurityNumber : false,
@@ -238,7 +203,6 @@ function CardInput(props: CardInputProps) {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        // const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
         const { billingAddressRequired, holderNameRequired } = props;
 
         const holderNameValid: boolean = valid.holderName;
@@ -247,10 +211,6 @@ function CardInput(props: CardInputProps) {
 
         const sfpValid: boolean = isSfpValid;
         const addressValid: boolean = billingAddressRequired ? valid.billingAddress : true;
-
-        // const cardCountryCode: string = issuingCountryCode ?? countryCode;
-        // const koreanAuthentication: boolean =
-        //     configuration.koreanAuthenticationRequired && cardCountryCode === 'kr' ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
@@ -350,19 +310,6 @@ function CardInput(props: CardInputProps) {
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
 
-                            {/*{showKCP && (*/}
-                            {/*    <KCPAuthentication*/}
-                            {/*        onFocusField={setFocusOn}*/}
-                            {/*        focusedElement={focusedElement}*/}
-                            {/*        encryptedPasswordState={{*/}
-                            {/*            data: sfpState.encryptedPassword,*/}
-                            {/*            valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,*/}
-                            {/*            errors: sfpState.errors ? sfpState.errors.encryptedPassword : false*/}
-                            {/*        }}*/}
-                            {/*        ref={kcpAuthenticationRef}*/}
-                            {/*        onChange={handleKCPAuthentication}*/}
-                            {/*    />*/}
-                            {/*)}*/}
                             {showKCP && (
                                 <KCPAuthentication
                                     onFocusField={setFocusOn}
@@ -372,7 +319,6 @@ function CardInput(props: CardInputProps) {
                                         valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
                                         errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
                                     }}
-                                    // ref={kcpAuthenticationRef}
                                     value={data.taxNumber}
                                     error={!!errors.taxNumber}
                                     isValid={!!valid.taxNumber}
