@@ -355,8 +355,6 @@ function CardInput(props: CardInputProps) {
                             {showBrazilianSSN && (
                                 <div className="adyen-checkout__card__socialSecurityNumber">
                                     <SocialSecurityNumberBrazil
-                                        // onChange={e => handleCPF(e, true)}
-                                        // onInput={e => handleCPF(e)}
                                         onChange={handleChangeFor('socialSecurityNumber', 'blur')}
                                         onInput={handleChangeFor('socialSecurityNumber', 'input')}
                                         error={errors?.socialSecurityNumber}

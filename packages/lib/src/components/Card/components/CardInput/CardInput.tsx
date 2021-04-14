@@ -54,7 +54,7 @@ class CardInput extends Component<CardInputProps, CardInputState> {
             },
             data: {
                 ...(this.props.hasHolderName && {
-                    holderName: this.props.holderName || this.props.data.holderName
+                    holderName: this.props.holderName || this.props.data.holderName || ''
                 })
             },
             ...(this.props.billingAddressRequired && {
