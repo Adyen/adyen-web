@@ -36,7 +36,7 @@ function CardInput(props: CardInputProps) {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.holderName || props.data.holderName })
+        ...(props.hasHolderName && { holderName: props.holderName || props.data.holderName || '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');

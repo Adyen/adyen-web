@@ -23,6 +23,7 @@ export interface CardHolderNameProps {
     error: boolean;
     isValid: boolean;
     onChange: (event: Event) => void;
+    onInput: (event: Event) => void;
     placeholder?: string;
     required?: boolean;
     value?: string;

@@ -23,6 +23,7 @@ import CardHolderName from './components/CardHolderName';
 import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 import useForm from '../../../../utils/useForm';
+import { existy } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -113,14 +114,14 @@ function CardInput(props: CardInputProps) {
         setValid({ ...valid, ...kcpValid });
     };
 
-    const handleCPF = (e: Event, validate = false): void => {
-        const socialSecurityNumberStr = formatCPFCNPJ((e.target as HTMLInputElement).value);
-        const isValid = validateSSN(socialSecurityNumberStr);
-
-        setSocialSecurityNumber(socialSecurityNumberStr);
-        setValid({ ...valid, socialSecurityNumber: isValid });
-        setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
-    };
+    // const handleCPF = (e: Event, validate = false): void => {
+    //     const socialSecurityNumberStr = formatCPFCNPJ((e.target as HTMLInputElement).value);
+    //     const isValid = validateSSN(socialSecurityNumberStr);
+    //
+    //     setSocialSecurityNumber(socialSecurityNumberStr);
+    //     setValid({ ...valid, socialSecurityNumber: isValid });
+    //     setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
+    // };
 
     const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
         console.log('### CardInputHook::handleSecuredFieldsChange:: WHO', who);
@@ -244,7 +245,7 @@ function CardInput(props: CardInputProps) {
         setValid({
             ...valid,
             holderName: props.holderNameRequired ? formValid.holderName : true,
-            socialSecurityNumber: formValid.socialSecurityNumber // re. useForm
+            ...(existy(formValid.socialSecurityNumber) && { socialSecurityNumber: formValid.socialSecurityNumber }) // re. useForm
         });
 
         // Errors
@@ -299,8 +300,8 @@ function CardInput(props: CardInputProps) {
             value={data.holderName}
             error={!!errors.holderName}
             isValid={!!valid.holderName}
-            // onChange={handleHolderName}
-            onChange={handleChangeFor('holderName', 'input')}
+            onChange={handleChangeFor('holderName', 'blur')}
+            onInput={handleChangeFor('holderName', 'input')}
         />
     );
 
