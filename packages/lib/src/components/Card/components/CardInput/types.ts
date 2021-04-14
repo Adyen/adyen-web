@@ -20,7 +20,8 @@ export interface CardInputErrorState {
     // holderName?: boolean;
     holderName?: ValidationResult;
     billingAddress?: boolean;
-    socialSecurityNumber?: boolean;
+    // socialSecurityNumber?: boolean;
+    socialSecurityNumber?: ValidationResult;
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
@@ -40,27 +41,27 @@ interface Placeholders {
 }
 
 export interface CardInputProps {
-    amount?: PaymentAmount; // new type
+    amount?: PaymentAmount;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
     configuration: CardConfiguration;
     countryCode: string;
-    cvcPolicy?: string; // new
-    data?: CardInputStateData; // new type
+    cvcPolicy?: string;
+    data?: CardInputDataState;
     enableStoreDetails: boolean;
-    fundingSource: string; // new
+    fundingSource: string;
     hasCVC: boolean;
     hasHolderName: boolean;
-    holderName?: string; // new type
+    holderName?: string;
     holderNameRequired?: boolean;
     i18n?: Language;
-    installmentOptions: InstallmentOptions; // new type
+    installmentOptions: InstallmentOptions;
     socialSecurityNumberMode?: SocialSecurityMode;
     loadingContext: string;
-    onBlur: (e) => {}; // new
-    onFocus: (e) => {}; // new
+    onBlur: (e) => {};
+    onFocus: (e) => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop: boolean;
@@ -68,7 +69,7 @@ export interface CardInputProps {
     showPayButton?: boolean;
     storedPaymentMethodId?: string;
     styles?: object;
-    type: string; // new
+    type: string;
     onChange?: (state) => {};
     onSubmit?: () => {};
     onBrand?: () => {};

@@ -20,8 +20,6 @@ import { validateHolderName, cardInputFormatters, cardInputValidationRules } fro
 import CIExtensions from './extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
-import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
-import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 import useForm from '../../../../utils/useForm';
 import { existy } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
 
@@ -114,15 +112,6 @@ function CardInput(props: CardInputProps) {
         setValid({ ...valid, ...kcpValid });
     };
 
-    // const handleCPF = (e: Event, validate = false): void => {
-    //     const socialSecurityNumberStr = formatCPFCNPJ((e.target as HTMLInputElement).value);
-    //     const isValid = validateSSN(socialSecurityNumberStr);
-    //
-    //     setSocialSecurityNumber(socialSecurityNumberStr);
-    //     setValid({ ...valid, socialSecurityNumber: isValid });
-    //     setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
-    // };
-
     const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
         console.log('### CardInputHook::handleSecuredFieldsChange:: WHO', who);
 
@@ -160,22 +149,8 @@ function CardInput(props: CardInputProps) {
         // Validate SecuredFields
         sfp.current.showValidation();
 
-        // Validate holderName
+        // Validates holderName & SSN
         triggerValidation();
-
-        // Validate SSN
-        const ssnInError =
-            ((showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
-                props.configuration.socialSecurityNumberMode === 'show') &&
-            !valid.socialSecurityNumber
-                ? true
-                : false;
-
-        // Set SSN errors
-        setErrors({
-            ...errors,
-            ...(ssnInError && { socialSecurityNumber: true })
-        });
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
@@ -231,25 +206,22 @@ function CardInput(props: CardInputProps) {
         console.log('### CardInputHook::formValid:: ', formValid);
         console.log('### CardInputHook::formErrors:: ', formErrors);
 
-        // From handleCPF
-        // setSocialSecurityNumber(socialSecurityNumberStr);
-        // setValid({ ...valid, socialSecurityNumber: isValid });
-        // setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
-
-        console.log('### CardInputHook_useForm update:::: ', data);
-
         setData({ ...data, holderName: formData.holderName ?? '' });
 
-        setSocialSecurityNumber(formData.socialSecurityNumber); // re. useForm
+        setSocialSecurityNumber(formData.socialSecurityNumber);
 
         setValid({
             ...valid,
             holderName: props.holderNameRequired ? formValid.holderName : true,
-            ...(existy(formValid.socialSecurityNumber) && { socialSecurityNumber: formValid.socialSecurityNumber }) // re. useForm
+            ...(existy(formValid.socialSecurityNumber) && { socialSecurityNumber: formValid.socialSecurityNumber })
         });
 
         // Errors
-        setErrors({ ...errors, holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null });
+        setErrors({
+            ...errors,
+            holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null,
+            socialSecurityNumber: showBrazilianSSN && !!formErrors.socialSecurityNumber ? formErrors.socialSecurityNumber : null
+        });
     }, [formData, formValid, formErrors]);
 
     /**
@@ -270,10 +242,7 @@ function CardInput(props: CardInputProps) {
         const koreanAuthentication: boolean =
             configuration.koreanAuthenticationRequired && cardCountryCode === 'kr' ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
-        const socialSecurityNumberRequired: boolean =
-            (showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') || // auto mode (Bin Lookup)
-            configuration.socialSecurityNumberMode === 'show'; // require ssn manually
-        const socialSecurityNumberValid: boolean = socialSecurityNumberRequired ? !!valid.socialSecurityNumber : true;
+        const socialSecurityNumberValid: boolean = showBrazilianSSN ? !!valid.socialSecurityNumber : true;
 
         const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
