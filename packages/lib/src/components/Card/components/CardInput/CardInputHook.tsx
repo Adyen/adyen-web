@@ -16,7 +16,7 @@ import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
-import { validateHolderName, cardInputFormatters, cardInputValidationRules } from './validate';
+import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from './extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
@@ -55,7 +55,17 @@ function CardInput(props: CardInputProps) {
     /**
      * LOCAL VARS
      */
-    const { handleChangeFor, triggerValidation, data: formData, valid: formValid, errors: formErrors, setSchema } = useForm<CardInputDataState>({
+    const {
+        handleChangeFor,
+        triggerValidation,
+        data: formData,
+        valid: formValid,
+        errors: formErrors,
+        setSchema,
+        setData: setFormData,
+        setValid: setFormValid,
+        setErrors: setFormErrors
+    } = useForm<CardInputDataState>({
         schema: [],
         defaultData: props.data,
         formatters: cardInputFormatters,
@@ -94,18 +104,21 @@ function CardInput(props: CardInputProps) {
         setValid({ ...valid, billingAddress: address.isValid });
     };
 
-    const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
-        console.log('### CardInputHook::handleSecuredFieldsChange:: WHO', who);
+    const handleSecuredFieldsChange = (sfState: SFPState): void => {
+        // Only add auto complete value for holderName if the component is using a holderName field
+        if (sfState.autoCompleteName && props.hasHolderName) {
+            const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
+            const acHolderName = holderNameValidationFn(sfState.autoCompleteName) ? sfState.autoCompleteName : null;
+            if (acHolderName) {
+                setFormData('holderName', acHolderName);
+                setFormValid('holderName', true); // only if holderName is valid does this fny get called - so we know it's valid and w/o error
+                setFormErrors('holderName', null);
+            }
+        }
 
-        const tempHolderName = sfState.autoCompleteName && props.hasHolderName ? sfState.autoCompleteName : data.holderName;
-
-        setData({ ...data, ...sfState.data, holderName: tempHolderName });
+        setData({ ...data, ...sfState.data });
         setErrors({ ...errors, ...sfState.errors });
-        setValid({
-            ...valid,
-            ...sfState.valid,
-            holderName: validateHolderName(tempHolderName, props.holderNameRequired)
-        });
+        setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);
         setCvcPolicy(sfState.cvcPolicy);

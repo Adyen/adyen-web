@@ -66,3 +66,16 @@ export const cardInputValidationRules: ValidatorRules = {
         }
     ]
 };
+
+export const getRuleByNameAndMode = (name, mode) => {
+    const ruleArr = cardInputValidationRules[name] as any[];
+    const rule = ruleArr.reduce((acc, elem) => {
+        if (!acc.length) {
+            if (elem.modes.includes(mode)) {
+                acc.push(elem.validate);
+            }
+        }
+        return acc;
+    }, []);
+    return rule[0];
+};
