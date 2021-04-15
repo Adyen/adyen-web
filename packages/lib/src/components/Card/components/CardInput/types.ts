@@ -17,15 +17,12 @@ export interface CardInputValidState {
 }
 
 export interface CardInputErrorState {
-    // holderName?: boolean;
     holderName?: ValidationResult;
     billingAddress?: boolean;
-    // socialSecurityNumber?: boolean;
     socialSecurityNumber?: ValidationResult;
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
     encryptedSecurityCode?: boolean;
-    // taxNumber?: boolean;
     taxNumber?: ValidationResult;
     encryptedPassword?: boolean;
 }

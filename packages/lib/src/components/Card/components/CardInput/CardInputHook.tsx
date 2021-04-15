@@ -26,6 +26,8 @@ function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
 
+    if (process.env.NODE_ENV === 'development') this.sfp = sfp;
+
     /**
      * STATE HOOKS
      */
@@ -105,8 +107,11 @@ function CardInput(props: CardInputProps) {
     };
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
-        // Only add auto complete value for holderName if the component is using a holderName field
-        if (sfState.autoCompleteName && props.hasHolderName) {
+        /**
+         * Handling auto complete value for holderName (but only if the component is using a holderName field)
+         */
+        if (sfState.autoCompleteName) {
+            if (!props.hasHolderName) return;
             const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
             const acHolderName = holderNameValidationFn(sfState.autoCompleteName) ? sfState.autoCompleteName : null;
             if (acHolderName) {
@@ -114,6 +119,7 @@ function CardInput(props: CardInputProps) {
                 setFormValid('holderName', true); // only if holderName is valid does this fny get called - so we know it's valid and w/o error
                 setFormErrors('holderName', null);
             }
+            return;
         }
 
         setData({ ...data, ...sfState.data });
