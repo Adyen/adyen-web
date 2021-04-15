@@ -16,16 +16,14 @@ import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
-import { validateHolderName } from './validate';
+import { validateHolderName, cardInputFormatters, cardInputValidationRules } from './validate';
 import CIExtensions from './extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
-import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
-import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
+import useForm from '../../../../utils/useForm';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
-    const kcpAuthenticationRef = useRef(null);
     const billingAddressRef = useRef(null);
 
     /**
@@ -36,7 +34,7 @@ function CardInput(props: CardInputProps) {
         ...(props.holderNameRequired && { holderName: false })
     });
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: props.holderName || props.data.holderName || '' })
+        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
 
     const [focusedElement, setFocusedElement] = useState('');
@@ -54,16 +52,22 @@ function CardInput(props: CardInputProps) {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
 
-    const [kcpRemoved, setKCPRemoved] = useState(false);
-
     /**
      * LOCAL VARS
      */
+    const { handleChangeFor, triggerValidation, data: formData, valid: formValid, errors: formErrors, setSchema } = useForm<CardInputDataState>({
+        schema: [],
+        defaultData: props.data,
+        formatters: cardInputFormatters,
+        rules: cardInputValidationRules
+    });
+
     const hasInstallments = !!Object.keys(props.installmentOptions).length;
     const showAmountsInInstallments = props.showInstallmentAmounts ?? true;
 
     const cardCountryCode: string = issuingCountryCode ?? props.countryCode;
     const isKorea = cardCountryCode === 'kr'; // If issuingCountryCode or the merchant defined countryCode is set to 'kr'
+    const showKCP = props.configuration.koreanAuthenticationRequired && isKorea;
 
     const showBrazilianSSN: boolean =
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
@@ -85,42 +89,9 @@ function CardInput(props: CardInputProps) {
         setInstallments(installments);
     };
 
-    const handleHolderName = (e: Event): void => {
-        const holderName = (e.target as HTMLInputElement).value;
-
-        setData({ ...data, holderName });
-        setErrors({ ...errors, holderName: !validateHolderName(holderName, props.holderNameRequired, false) });
-        setValid({
-            ...valid,
-            holderName: validateHolderName(holderName, props.holderNameRequired)
-        });
-    };
-
     const handleAddress = address => {
         setBillingAddress({ ...billingAddress, ...address.data });
         setValid({ ...valid, billingAddress: address.isValid });
-    };
-
-    const handleKCPAuthentication = (kcpData: object, kcpValid: object): void => {
-        // Detect when KCPAuthentication comp has been unmounted
-        if (kcpData['taxNumber'] === null && kcpValid['taxNumber'] === false) {
-            setKCPRemoved(true);
-            return;
-        }
-
-        setKCPRemoved(false);
-
-        setData({ ...data, ...kcpData });
-        setValid({ ...valid, ...kcpValid });
-    };
-
-    const handleCPF = (e: Event, validate = false): void => {
-        const socialSecurityNumberStr = formatCPFCNPJ((e.target as HTMLInputElement).value);
-        const isValid = validateSSN(socialSecurityNumberStr);
-
-        setSocialSecurityNumber(socialSecurityNumberStr);
-        setValid({ ...valid, socialSecurityNumber: isValid });
-        setErrors({ ...errors, socialSecurityNumber: validate && !isValid });
     };
 
     const handleSecuredFieldsChange = (sfState: SFPState, who): void => {
@@ -160,25 +131,11 @@ function CardInput(props: CardInputProps) {
         // Validate SecuredFields
         sfp.current.showValidation();
 
-        // Validate holderName
-        const holderNameInError = props.holderNameRequired && !valid.holderName ? true : false;
-
-        // Validate SSN
-        const ssnInError =
-            ((showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
-                props.configuration.socialSecurityNumberMode === 'show') &&
-            !valid.socialSecurityNumber
-                ? true
-                : false;
-
-        // Set holderName & SSN errors
-        setErrors({ ...errors, ...(ssnInError && { socialSecurityNumber: true }), ...(holderNameInError && { holderName: true }) });
+        // Validates holderName & SSN & KCP (taxNumber)
+        triggerValidation();
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
-
-        // Validate KCP authentication
-        if (kcpAuthenticationRef?.current) kcpAuthenticationRef.current.showValidation();
     };
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
@@ -200,35 +157,64 @@ function CardInput(props: CardInputProps) {
         };
     }, []);
 
-    // Resets taxNumber values when KCPAuthentication comp is unmounted.
-    // Use of this hook avoids the race conditions on setting data & valid that exist with the simultaneous changes from SFP triggered by the
-    // removal of this comp
+    /**
+     * Handle form schema updates
+     */
     useEffect(() => {
-        if (kcpRemoved === true) {
-            setData({ ...data, taxNumber: undefined });
-            setValid({ ...valid, taxNumber: false });
-        }
-    }, [kcpRemoved]);
+        const newSchema = [
+            ...(props.hasHolderName ? ['holderName'] : []),
+            ...(showBrazilianSSN ? ['socialSecurityNumber'] : []),
+            ...(showKCP ? ['taxNumber'] : [])
+        ];
+        setSchema(newSchema);
+    }, [props.hasHolderName, showBrazilianSSN, showKCP]);
 
+    /**
+     * Handle updates from useForm
+     */
     useEffect(() => {
-        // console.log('\n### CardInputHook:::: useEffect data=', data);
-        // console.log('### CardInputHook:::: useEffect valid=', valid);
-        // console.log('### CardInputHook:::: useEffect errors=', errors);
+        console.log('### CardInputHook::formData:: ', formData);
+        console.log('### CardInputHook::formValid:: ', formValid);
+        console.log('### CardInputHook::formErrors:: ', formErrors);
 
-        const { configuration, countryCode, billingAddressRequired, holderNameRequired } = props;
-        const holderNameValid: boolean = validateHolderName(data.holderName, holderNameRequired);
+        setData({ ...data, holderName: formData.holderName ?? '', taxNumber: formData.taxNumber });
+
+        setSocialSecurityNumber(formData.socialSecurityNumber);
+
+        setValid({
+            ...valid,
+            holderName: props.holderNameRequired ? formValid.holderName : true,
+            // Setting value to false if it's falsy keeps in line with existing, expected behaviour
+            // - but there is an argument to allow 'undefined' as a value to indicate the non-presence of the field
+            socialSecurityNumber: formValid.socialSecurityNumber ? formValid.socialSecurityNumber : false,
+            taxNumber: formValid.taxNumber ? formValid.taxNumber : false
+        });
+
+        // Errors
+        setErrors({
+            ...errors,
+            holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null,
+            socialSecurityNumber: showBrazilianSSN && !!formErrors.socialSecurityNumber ? formErrors.socialSecurityNumber : null,
+            taxNumber: showKCP && !!formErrors.taxNumber ? formErrors.taxNumber : null
+        });
+    }, [formData, formValid, formErrors]);
+
+    /**
+     * Main 'componentDidUpdate' handler
+     */
+    useEffect(() => {
+        const { billingAddressRequired, holderNameRequired } = props;
+
+        const holderNameValid: boolean = valid.holderName;
+        console.log('### CardInputHook::holderNameRequired:: ', holderNameRequired);
+        console.log('### CardInputHook::holderNameValid:: ', holderNameValid);
+
         const sfpValid: boolean = isSfpValid;
         const addressValid: boolean = billingAddressRequired ? valid.billingAddress : true;
 
-        const cardCountryCode: string = issuingCountryCode ?? countryCode;
+        const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
-        const koreanAuthentication: boolean =
-            configuration.koreanAuthenticationRequired && cardCountryCode === 'kr' ? !!valid.taxNumber && !!valid.encryptedPassword : true;
-
-        const socialSecurityNumberRequired: boolean =
-            (showSocialSecurityNumber && configuration.socialSecurityNumberMode === 'auto') || // auto mode (Bin Lookup)
-            configuration.socialSecurityNumberMode === 'show'; // require ssn manually
-        const socialSecurityNumberValid: boolean = socialSecurityNumberRequired ? !!valid.socialSecurityNumber : true;
+        const socialSecurityNumberValid: boolean = showBrazilianSSN ? !!valid.socialSecurityNumber : true;
 
         const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
@@ -255,7 +241,8 @@ function CardInput(props: CardInputProps) {
             value={data.holderName}
             error={!!errors.holderName}
             isValid={!!valid.holderName}
-            onChange={handleHolderName}
+            onChange={handleChangeFor('holderName', 'blur')}
+            onInput={handleChangeFor('holderName', 'input')}
         />
     );
 
@@ -323,7 +310,7 @@ function CardInput(props: CardInputProps) {
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
 
-                            {props.configuration.koreanAuthenticationRequired && isKorea && (
+                            {showKCP && (
                                 <KCPAuthentication
                                     onFocusField={setFocusOn}
                                     focusedElement={focusedElement}
@@ -332,16 +319,19 @@ function CardInput(props: CardInputProps) {
                                         valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
                                         errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
                                     }}
-                                    ref={kcpAuthenticationRef}
-                                    onChange={handleKCPAuthentication}
+                                    value={data.taxNumber}
+                                    error={!!errors.taxNumber}
+                                    isValid={!!valid.taxNumber}
+                                    onChange={handleChangeFor('taxNumber', 'blur')}
+                                    onInput={handleChangeFor('taxNumber', 'input')}
                                 />
                             )}
 
                             {showBrazilianSSN && (
                                 <div className="adyen-checkout__card__socialSecurityNumber">
                                     <SocialSecurityNumberBrazil
-                                        onChange={e => handleCPF(e, true)}
-                                        onInput={e => handleCPF(e)}
+                                        onChange={handleChangeFor('socialSecurityNumber', 'blur')}
+                                        onInput={handleChangeFor('socialSecurityNumber', 'input')}
                                         error={errors?.socialSecurityNumber}
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
