@@ -102,10 +102,11 @@ function BoletoInput(props) {
 
             {props.billingAddressRequired && (
                 <Address
+                    allowedCountries={['BR']}
                     label="billingAddress"
                     data={{ ...props.data.billingAddress, country: 'BR' }}
                     onChange={handleAddress}
-                    requiredFields={['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince']}
+                    requiredFields={['country', 'street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince']}
                     ref={addressRef}
                 />
             )}

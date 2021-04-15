@@ -25,8 +25,8 @@
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
         "cross-env": "^7.0.3",
-        "concurrently": "^6.0.1",
-        "css-loader": "^5.2.0",
+        "concurrently": "^6.0.2",
+        "css-loader": "^5.2.1",
         "dotenv": "^8.2.0",
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^4.12.0",
