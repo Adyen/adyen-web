@@ -42,6 +42,10 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
     };
 
     render() {
+        if(this.props.showEmailAddress === undefined || this.props.showEmailAddress === null){
+            this.props.showEmailAddress = BankTransferElement.defaultProps.showEmailAddress;
+        }
+
         if (this.props.reference) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
@@ -53,10 +57,12 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
         if (this.props.showPayButton) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                    <BankTransferInput ref={this.handleRef} {...this.props} onChange={this.setState} />
+                    {this.props.showEmailAddress && (
+                        <BankTransferInput ref={this.handleRef} {...this.props} onChange={this.setState} />
+                    )}
                     <RedirectButton {...this.props} name={this.displayName} onSubmit={this.submit} payButton={this.payButton} />
                 </CoreProvider>
-            );
+            )
         }
 
         return null;
