@@ -205,7 +205,7 @@ function CardInput(props: CardInputProps) {
 
         setSocialSecurityNumber(formData.socialSecurityNumber);
 
-        setBillingAddress({ ...billingAddress, ...formData.billingAddress }); // TODO test
+        if (props.billingAddressRequired) setBillingAddress({ ...billingAddress, ...formData.billingAddress });
 
         setValid({
             ...valid,
