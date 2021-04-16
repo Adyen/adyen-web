@@ -4,6 +4,7 @@ import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';
+import './CardInput.scss';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 import StoredCardFields from './components/StoredCardFields';
 import Installments from './components/Installments';
