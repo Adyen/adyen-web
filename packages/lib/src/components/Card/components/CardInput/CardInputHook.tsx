@@ -103,8 +103,9 @@ function CardInput(props: CardInputProps) {
     };
 
     const handleAddress = address => {
-        setBillingAddress({ ...billingAddress, ...address.data });
-        setValid({ ...valid, billingAddress: address.isValid });
+        setFormData('billingAddress', address.data);
+        setFormValid('billingAddress', address.isValid);
+        setFormErrors('billingAddress', address.errors);
     };
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
@@ -128,6 +129,8 @@ function CardInput(props: CardInputProps) {
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);
+
+        // Values relating to /binLookup response
         setCvcPolicy(sfState.cvcPolicy);
         setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
         setHideDateForBrand(sfState.hideDateForBrand);
@@ -184,7 +187,8 @@ function CardInput(props: CardInputProps) {
         const newSchema = [
             ...(props.hasHolderName ? ['holderName'] : []),
             ...(showBrazilianSSN ? ['socialSecurityNumber'] : []),
-            ...(showKCP ? ['taxNumber'] : [])
+            ...(showKCP ? ['taxNumber'] : []),
+            ...(props.billingAddressRequired ? ['billingAddress'] : [])
         ];
         setSchema(newSchema);
     }, [props.hasHolderName, showBrazilianSSN, showKCP]);
@@ -201,13 +205,16 @@ function CardInput(props: CardInputProps) {
 
         setSocialSecurityNumber(formData.socialSecurityNumber);
 
+        setBillingAddress({ ...billingAddress, ...formData.billingAddress }); // TODO test
+
         setValid({
             ...valid,
             holderName: props.holderNameRequired ? formValid.holderName : true,
             // Setting value to false if it's falsy keeps in line with existing, expected behaviour
             // - but there is an argument to allow 'undefined' as a value to indicate the non-presence of the field
             socialSecurityNumber: formValid.socialSecurityNumber ? formValid.socialSecurityNumber : false,
-            taxNumber: formValid.taxNumber ? formValid.taxNumber : false
+            taxNumber: formValid.taxNumber ? formValid.taxNumber : false,
+            billingAddress: formValid.billingAddress ? formValid.billingAddress : false
         });
 
         // Errors
@@ -215,7 +222,8 @@ function CardInput(props: CardInputProps) {
             ...errors,
             holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null,
             socialSecurityNumber: showBrazilianSSN && !!formErrors.socialSecurityNumber ? formErrors.socialSecurityNumber : null,
-            taxNumber: showKCP && !!formErrors.taxNumber ? formErrors.taxNumber : null
+            taxNumber: showKCP && !!formErrors.taxNumber ? formErrors.taxNumber : null,
+            billingAddress: props.billingAddressRequired && !!formErrors.billingAddress ? formErrors.billingAddress : null
         });
     }, [formData, formValid, formErrors]);
 
@@ -223,14 +231,10 @@ function CardInput(props: CardInputProps) {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        const { billingAddressRequired, holderNameRequired } = props;
-
         const holderNameValid: boolean = valid.holderName;
-        console.log('### CardInputHook::holderNameRequired:: ', holderNameRequired);
-        console.log('### CardInputHook::holderNameValid:: ', holderNameValid);
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = billingAddressRequired ? valid.billingAddress : true;
+        const addressValid: boolean = props.billingAddressRequired ? valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 

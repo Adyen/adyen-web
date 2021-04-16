@@ -47,22 +47,16 @@ export const cardInputValidationRules: ValidatorRules = {
     ],
     holderName: [
         {
-            // Will fire at startup and when triggerValidation is called
-            // and also applies as text is input
+            // Will fire at startup and when triggerValidation is called and also applies as text is input
             modes: ['blur'],
-            validate: value => {
-                return value.trim().length > 0; // are there some other chars other than spaces?
-            }
+            validate: value => value.trim().length > 0 // i.e. are there chars other than spaces?
         }
     ],
-    // TODO - currently there is a bug in useForm which means the default ruleset is run at start
-    //  i.e. it doesn't find the 'named' ruleset for the field
     default: [
         {
             modes: ['blur'],
-            validate: value => {
-                return value.trim().length > 0;
-            }
+            // ensuring we don't try to run this against objects e.g. billingAddress
+            validate: value => !!value && typeof value === 'string' && value.trim().length > 0
         }
     ]
 };

@@ -18,7 +18,7 @@ export interface CardInputValidState {
 
 export interface CardInputErrorState {
     holderName?: ValidationResult;
-    billingAddress?: boolean;
+    billingAddress?: ValidationResult;
     socialSecurityNumber?: ValidationResult;
     encryptedCardNumber?: boolean;
     encryptedExpiryDate?: boolean;
