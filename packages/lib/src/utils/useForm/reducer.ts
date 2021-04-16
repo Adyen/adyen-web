@@ -16,7 +16,7 @@ export function init({ schema, defaultData, processField }) {
         if (typeof defaultData[fieldKey] === 'undefined') return { valid: false, errors: null, data: null };
 
         const [formattedValue, validationResult] = processField(
-            { field: fieldKey, value: defaultData[fieldKey], mode: 'blur' },
+            { key: fieldKey, value: defaultData[fieldKey], mode: 'blur' },
             { state: defaultData }
         );
 
