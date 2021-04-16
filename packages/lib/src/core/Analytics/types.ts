@@ -15,9 +15,9 @@ export interface AnalyticsOptions {
     conversion?: boolean;
 
     /**
-     * Reuse a previous checkoutAttemptId from a previous page
+     * Reuse a previous conversionId from a previous page
      */
-    checkoutAttemptId?: string;
+    conversionId?: string;
 
     /**
      * Data to be sent along with the event data

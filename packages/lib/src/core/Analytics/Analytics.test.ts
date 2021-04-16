@@ -49,7 +49,7 @@ describe('Analytics', () => {
         };
         const analytics = new Analytics({ analytics: { conversion: false }, loadingContext: '', locale: '', clientKey: '' });
         analytics.send(event);
-        expect(logTelemetryPromiseMock).toHaveBeenCalledWith({ ...event, checkoutAttemptId: null });
+        expect(logTelemetryPromiseMock).toHaveBeenCalledWith({ ...event, conversionId: null });
     });
 
     test('Adds the fields in the payload', () => {
@@ -61,6 +61,6 @@ describe('Analytics', () => {
         };
         const analytics = new Analytics({ analytics: { conversion: false, payload }, loadingContext: '', locale: '', clientKey: '' });
         analytics.send(event);
-        expect(logTelemetryPromiseMock).toHaveBeenCalledWith({ ...payload, ...event, checkoutAttemptId: null });
+        expect(logTelemetryPromiseMock).toHaveBeenCalledWith({ ...payload, ...event, conversionId: null });
     });
 });
