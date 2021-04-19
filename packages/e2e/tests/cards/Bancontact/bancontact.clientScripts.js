@@ -2,4 +2,7 @@ window.dropinConfig = {
     showStoredPaymentMethods: false // hide stored PMs
 };
 
-window.mainConfiguration = { allowPaymentMethods: ['bcmc'] };
+window.mainConfiguration = {
+    removePaymentMethods: ['paywithgoogle'],
+    allowPaymentMethods: ['bcmc']
+};

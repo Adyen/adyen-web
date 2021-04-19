@@ -11,6 +11,7 @@ window.dropinConfig = {
 };
 
 window.mainConfiguration = {
+    removePaymentMethods: ['paywithgoogle'],
     paymentMethodsConfiguration: {
         card: { brands: ['mc', 'amex', 'visa', 'cartebancaire'] }
     }

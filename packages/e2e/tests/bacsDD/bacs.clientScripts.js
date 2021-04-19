@@ -2,4 +2,6 @@ window.dropinConfig = {
     showStoredPaymentMethods: false // hide stored PMs
 };
 
-//window.mainConfiguration = {};
+window.mainConfiguration = {
+    removePaymentMethods: ['paywithgoogle']
+};
