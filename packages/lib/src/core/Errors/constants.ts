@@ -1,6 +1,6 @@
 export const ERROR_MSG_CARD_TOO_OLD = 'Card too old';
 export const ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = 'Date too far in future';
-export const ERROR_MSG_CARD_EXPIRES_TOO_SOON = 'Card expires too soon';
+export const ERROR_MSG_CARD_EXPIRES_TOO_SOON = 'Your card expires before check out date';
 export const ERROR_MSG_INCOMPLETE_FIELD = 'incomplete field';
 export const ERROR_MSG_LUHN_CHECK_FAILED = 'luhn check failed';
 export const ERROR_MSG_UNSUPPORTED_CARD_ENTERED = 'Unsupported card entered';
