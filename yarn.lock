@@ -6897,10 +6897,10 @@ jju@~1.4.0:
   resolved "https://registry.yarnpkg.com/jju/-/jju-1.4.0.tgz#a3abe2718af241a2b2904f84a625970f389ae32a"
   integrity sha1-o6vicYryQaKykE+EpiWXDzia4yo=
 
-joycon@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/joycon/-/joycon-3.0.0.tgz#0f8f7d94d86c75e6865e9afeee0964bffb1e3506"
-  integrity sha512-liltsn9SO+IuOHnVb1EgW6HBaHb6rUsMzkLKnGV7izz8UrXBpa3bsMSa2J8pbXo3B4Ebk6Wm2Izs4Dgbl2EGPw==
+joycon@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/joycon/-/joycon-3.0.1.tgz#9074c9b08ccf37a6726ff74a18485f85efcaddaf"
+  integrity sha512-SJcJNBg32dGgxhPtM0wQqxqV0ax9k/9TaUskGDSJkSFSQOEWWvQ3zzWdGQRIUry2j1zA5+ReH13t0Mf3StuVZA==
 
 js-base64@^2.1.8:
   version "2.6.4"
@@ -9859,13 +9859,13 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rollup-plugin-esbuild@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-3.0.2.tgz#85a1afd59510ef143813b46f515e92a49779a60b"
-  integrity sha512-uq+oBCeLXF1m6g9V0qpqbPbgyq24aXBKF474BvqgxfNmTP6FZ+oVk5/pCWQ/2rfSNJs4IimNU/k0q8xMaa0iCA==
+rollup-plugin-esbuild@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-3.0.4.tgz#4b536a2db2ba1700521eec5fa9535437c7247145"
+  integrity sha512-Txe/qWTx4NykWLwHjQ8vxXB1Mh6nTWnk7nl9lTYBN0DKnbvnSz4u2qiLqceLMZXTk//iYP5jnxlBNciNBp57LQ==
   dependencies:
     "@rollup/pluginutils" "^4.1.0"
-    joycon "^3.0.0"
+    joycon "^3.0.1"
     jsonc-parser "^3.0.0"
 
 rollup-plugin-postcss@^4.0.0:
