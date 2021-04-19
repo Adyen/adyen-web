@@ -3,6 +3,6 @@ window.dropinConfig = {
 };
 
 window.mainConfiguration = {
-    removePaymentMethods: ['paywithgoogle'],
+    removePaymentMethods: ['paywithgoogle', 'applepay'],
     allowPaymentMethods: ['bcmc']
 };

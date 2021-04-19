@@ -134,7 +134,7 @@ test(
             .contains('bcmc');
     }
 );
-test(
+test.only(
     'Enter card number, that we mock to co-branded bcmc/visa ' +
         'then click Visa logo and expect CVC field to show, then' +
         'delete card number and ' +
@@ -169,12 +169,11 @@ test(
         await t.expect(cvcSpan.filterVisible().exists).ok();
 
         // Expect iframe to exist in CVC field and with aria-required set to true
-        // TODO comment in once sf 3.4.1 is on Test
-        //        await t
-        //            .switchToIframe(iframeSelector.nth(2))
-        //            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
-        //            .eql('true')
-        //            .switchToMainWindow();
+        await t
+            .switchToIframe(iframeSelector.nth(2))
+            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
+            .eql('true')
+            .switchToMainWindow();
 
         await cardUtils.deleteCardNumber(t);
 
