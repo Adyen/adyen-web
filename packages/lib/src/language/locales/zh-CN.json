@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "不支持输入的卡片",
     "error.va.sf-cc-dat.01": "卡片太旧",
     "error.va.sf-cc-dat.02": "日期太久远",
+    "error.va.sf-cc-dat.03": "您的卡在结账日期前已过期",
     "error.giftcard.no-balance": "礼品卡余额为零",
     "error.giftcard.card-error": "我们的数据库中没有这个号码的礼品卡",
     "error.giftcard.currency-error": "礼品卡仅以其发行的货币为有效货币",

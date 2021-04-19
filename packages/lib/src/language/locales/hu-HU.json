@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "A megadott kártya nem támogatott",
     "error.va.sf-cc-dat.01": "A kártya túl régi",
     "error.va.sf-cc-dat.02": "Túl távoli jövőbeli dátum",
+    "error.va.sf-cc-dat.03": "A kártya lejár a fizetés dátuma előtt",
     "error.giftcard.no-balance": "Az ajándékkártya egyenlege nulla",
     "error.giftcard.card-error": "Nyilvántartásunkban nem szerepel ilyen számú ajándékkártya",
     "error.giftcard.currency-error": "Az ajándékkártyák csak abban a pénznemben érvényesek, amelyre kiállították azokat",

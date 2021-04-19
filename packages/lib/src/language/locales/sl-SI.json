@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Vnesena je nepodprta kartica",
     "error.va.sf-cc-dat.01": "Kartica je prestara",
     "error.va.sf-cc-dat.02": "Datum je predaleč v prihodnosti",
+    "error.va.sf-cc-dat.03": "Vaša kartica poteče pred datumom odjave",
     "error.giftcard.no-balance": "Na tej darilni kartici ni sredstev",
     "error.giftcard.card-error": "V naši evidenci nimamo darilne kartice s to številko",
     "error.giftcard.currency-error": "Darilne kartice so veljavne samo za valuto, za katero so bile izdane",
