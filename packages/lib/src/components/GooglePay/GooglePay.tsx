@@ -44,7 +44,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     }
 
     public loadPayment = () => {
-        const { onSubmit = () => {}, onAuthorized = () => {} } = this.props;
+        const { onAuthorized = () => {} } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => this.googlePay.initiatePayment(this.props))
@@ -55,7 +55,6 @@ class GooglePay extends UIElement<GooglePayProps> {
                     googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
                 });
 
-                onSubmit({ data: this.data, isValid: this.isValid }, this);
                 return onAuthorized(paymentData);
             })
             .catch(error => {
@@ -65,7 +64,9 @@ class GooglePay extends UIElement<GooglePayProps> {
     };
 
     public submit = () => {
-        return this.loadPayment();
+        return this.loadPayment().then(() => {
+            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this);
+        });
     };
 
     public startPayment = () => {
