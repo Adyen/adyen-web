@@ -134,7 +134,7 @@ test(
             .contains('bcmc');
     }
 );
-test.only(
+test(
     'Enter card number, that we mock to co-branded bcmc/visa ' +
         'then click Visa logo and expect CVC field to show, then' +
         'delete card number and ' +
