@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Se ha introducido una tarjeta no admitida",
     "error.va.sf-cc-dat.01": "Tarjeta demasiado vieja",
     "error.va.sf-cc-dat.02": "Fecha con demasiada antelación",
+    "error.va.sf-cc-dat.03": "Su tarjeta caduca antes de la fecha de pago",
     "error.giftcard.no-balance": "Esta tarjeta regalo no tiene saldo",
     "error.giftcard.card-error": "No tenemos ninguna tarjeta regalo con este número en nuestros registros.",
     "error.giftcard.currency-error": "Las tarjetas regalo solo son válidas en la moneda en que fueron emitidas",

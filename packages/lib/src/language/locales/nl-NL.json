@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Niet-ondersteunde kaart ingevoerd",
     "error.va.sf-cc-dat.01": "Kaart te oud",
     "error.va.sf-cc-dat.02": "Datum te ver in de toekomst",
+    "error.va.sf-cc-dat.03": "Uw kaart verloopt voor de betaaldatum",
     "error.giftcard.no-balance": "Deze cadeaukaart heeft geen saldo",
     "error.giftcard.card-error": "We hebben geen cadeaukaart met dit nummer in onze administratie",
     "error.giftcard.currency-error": "Cadeaukaarten zijn alleen geldig in de valuta waarin ze zijn uitgegeven",

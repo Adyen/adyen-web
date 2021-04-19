@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Carte insérée non prise en charge",
     "error.va.sf-cc-dat.01": "Carte trop ancienne",
     "error.va.sf-cc-dat.02": "La date doit être plus proche",
+    "error.va.sf-cc-dat.03": "Votre carte expirera avant la date de paiement",
     "error.giftcard.no-balance": "Aucun solde n'est disponible sur cette carte cadeau",
     "error.giftcard.card-error": "Aucune carte cadeau ne correspond à ce numéro",
     "error.giftcard.currency-error": "Les cartes cadeaux sont valables uniquement dans la devise dans laquelle elles ont été émises",
