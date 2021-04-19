@@ -25,7 +25,7 @@
         "autoprefixer": "^10.2.5",
         "core-js": "^3.10.1",
         "cross-env": "^7.0.3",
-        "css-loader": "^5.2.1",
+        "css-loader": "^5.2.2",
         "dotenv": "^8.2.0",
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^4.12.0",
