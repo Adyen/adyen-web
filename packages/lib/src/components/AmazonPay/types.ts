@@ -102,6 +102,7 @@ export interface OrderButtonProps {
     onError: (error, component) => void;
     ref: any;
     returnUrl: string;
+    publicKeyId: string;
 }
 
 export interface AmazonPayElementData {
@@ -200,6 +201,7 @@ export interface UpdateAmazonCheckoutSessionRequest {
     checkoutCancelUrl?: string;
     checkoutResultReturnUrl: string;
     checkoutSessionId: string;
+    publicKeyId: string;
 }
 
 export interface CheckoutSessionConfig {

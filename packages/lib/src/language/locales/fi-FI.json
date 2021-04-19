@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Ei-tuettu kortti asetettu",
     "error.va.sf-cc-dat.01": "Kortti on liian vanha",
     "error.va.sf-cc-dat.02": "Päivämäärä liian kaukana tulevaisuudessa",
+    "error.va.sf-cc-dat.03": "Korttisi vanhenee ennen lähtöpäivää",
     "error.giftcard.no-balance": "Lahjakortin saldo on nolla",
     "error.giftcard.card-error": "Asiakirjoissamme ei ole tämän numeron lahjakorttia",
     "error.giftcard.currency-error": "Gift cards are only valid in the currency they were issued in",
