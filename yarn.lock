@@ -3396,6 +3396,11 @@ core-js-pure@^3.0.0:
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.8.2.tgz#286f885c0dac1cdcd6d78397392abc25ddeca225"
   integrity sha512-v6zfIQqL/pzTVAbZvYUozsxNfxcFb6Ks3ZfEbuneJl3FW9Jb8F6vLWB6f+qTmAu72msUdyb84V8d/yBFf7FNnw==
 
+core-js@^3.10.0:
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.10.2.tgz#17cb038ce084522a717d873b63f2b3ee532e2cd5"
+  integrity sha512-W+2oVYeNghuBr3yTzZFQ5rfmjZtYB/Ubg87R5YOmlGrIb+Uw9f7qjUbhsj+/EkXhcV7eOD3jiM4+sgraX3FZUw==
+
 core-js@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.10.1.tgz#e683963978b6806dcc6c0a4a8bd4ab0bdaf3f21a"
@@ -9895,10 +9900,10 @@ rollup-plugin-typescript2@^0.30.0:
     resolve "1.20.0"
     tslib "2.1.0"
 
-rollup-plugin-visualizer@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-visualizer/-/rollup-plugin-visualizer-5.4.0.tgz#4898fc39a85163c337792c4f97f8ed7a899e37c0"
-  integrity sha512-4PlSd3xuKfqK0RT/Cu2E/jJZz9uBd6IjLNfLai0Jx6qmBv5XwyaQEg70TmcrGDvDSZJspc4NRyuB4KmS5TBnMA==
+rollup-plugin-visualizer@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-visualizer/-/rollup-plugin-visualizer-5.4.1.tgz#ec25c88d1ebab6d523e938c0084ca14cfe63b02e"
+  integrity sha512-mwrUIfOamkCw3dCtLvgnn/H0rvNSDA1RAe0sO9uHBpmdf86j/xOX/2yeCrVh2Ia/gCGLG846JB00MW0chq8CHQ==
   dependencies:
     nanoid "^3.1.22"
     open "^7.4.2"
