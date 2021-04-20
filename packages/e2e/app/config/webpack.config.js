@@ -13,7 +13,8 @@ const htmlPages = [
     { name: 'Cards', id: 'Cards' },
     { name: 'Gift Cards', id: 'GiftCards' },
     { name: 'Issuer Lists', id: 'IssuerLists' },
-    { name: 'Open Invoices', id: 'OpenInvoices' }
+    { name: 'Open Invoices', id: 'OpenInvoices' },
+    { name: 'Vouchers', id: 'Vouchers' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>
