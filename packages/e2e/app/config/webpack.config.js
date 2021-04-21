@@ -11,6 +11,7 @@ const resolve = dir => path.resolve(__dirname, dir);
 const htmlPages = [
     { name: 'Drop-in', id: 'Dropin' },
     { name: 'Cards', id: 'Cards' },
+    { name: 'CustomCards', id: 'CustomCards' },
     { name: 'Gift Cards', id: 'GiftCards' },
     { name: 'Issuer Lists', id: 'IssuerLists' },
     { name: 'Open Invoices', id: 'OpenInvoices' },
