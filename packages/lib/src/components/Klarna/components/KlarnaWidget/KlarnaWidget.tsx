@@ -19,6 +19,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         setStatus('error');
         props.onError(error);
     };
+
     const initializeKlarnaWidget = () => {
         window.Klarna.Payments.init({
             client_token: sdkData.client_token

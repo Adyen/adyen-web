@@ -22,9 +22,9 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     }
 
     render() {
-        return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                {this.props.sdkData ? (
+        if (this.props.sdkData) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                     <KlarnaWidget
                         sdkData={this.props.sdkData}
                         payButton={this.payButton}
@@ -33,15 +33,21 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
                         onComplete={this.onComplete}
                         onError={this.props.onError}
                     />
-                ) : (
-                    this.payButton({
+                </CoreProvider>
+            );
+        } else if (this.props.showPayButton) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                    {this.payButton({
                         ...this.props,
                         classNameModifiers: ['standalone'],
                         label: `${this.props.i18n.get('continueTo')} ${this.props.name}`
-                    })
-                )}
-            </CoreProvider>
-        );
+                    })}
+                </CoreProvider>
+            );
+        }
+
+        return null;
     }
 }
 
