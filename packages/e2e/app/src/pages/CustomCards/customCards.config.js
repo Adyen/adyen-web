@@ -1,49 +1,5 @@
 let myCSF1HideCVC = false;
 
-export const styles = {
-    //    base: {
-    //        caretColor: 'red'
-    //    },
-    error: {
-        color: 'red'
-    },
-    validated: {
-        color: 'green',
-        fontWeight: 'bold'
-    },
-    placeholder: {
-        color: '#d8d8d8'
-    }
-};
-
-export function onConfigSuccess(pCallbackObj) {
-    //    document.querySelector('.secured-fields').style.display = 'block';
-    //    document.querySelector('.card-input__spinner__holder').style.display = 'none';
-
-    setTimeout(() => {
-        // Allow time for screen to redraw after spinner is hidden
-        window.securedFields.setFocusOn('encryptedCardNumber');
-    }, 100);
-    //
-    //    window.securedFields.updateStyles({
-    //        base: {
-    //            color: '#000',
-    ////            fontSize: '18px',
-    ////            lineHeight: '18px'
-    //        },
-    //        error: {
-    //            color: 'orange'
-    //        },
-    //        validated: {
-    //            color: 'blue',
-    //            fontWeight: 'bold'
-    //        },
-    //        placeholder: {
-    //            color: 'green'
-    //        }
-    //    });
-}
-
 export function setCCErrors(pCallbackObj) {
     const sfNode = pCallbackObj.rootNode.querySelector(`[data-cse="${pCallbackObj.fieldType}"]`);
     const errorNode = sfNode.parentNode.querySelector('.pm-form-label__error-text');

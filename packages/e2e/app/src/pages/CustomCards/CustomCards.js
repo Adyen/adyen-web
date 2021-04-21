@@ -4,7 +4,7 @@ import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import './customcards.style.scss';
-import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess } from './customCards.config';
+import { setCCErrors, setFocus, onBrand } from './customCards.config';
 
 window.checkout = new AdyenCheckout({
     amount,
@@ -22,8 +22,6 @@ window.securedFields = checkout
     .create('securedfields', {
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-        //        styles,
-        //        onConfigSuccess,
         onBrand,
         onError: setCCErrors,
         onFocus: setFocus,
