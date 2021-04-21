@@ -83,8 +83,13 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     const setValidFieldState = prevState => ({
         data: { ...prevState.data, [field.encryptedFieldName]: field.blob },
         valid: { ...prevState.valid, [field.encryptedFieldName]: field.valid },
-        // if a securedField comes through as valid:false it means the field has not been completed BUT is without errors - so set it as so (unless it was already in an error state)
-        errors: { ...prevState.errors, [field.fieldType]: prevState.errors[field.fieldType] === true }
+        /**
+         * For a field that has just received valid:true (field has just been completed & encrypted) - mark the error state for this field as false
+         * For a field that has just received valid:false (field was encrypted, now is not)
+         *  - field is either in a state of being incomplete but without errors (digit deleted) - so mark the error state for this field as false
+         *  or has switched from valid/encrypted state to being in error (digit edited to one that puts the field in error) - so keep any error that might just have been set
+         */
+        errors: { ...prevState.errors, [field.fieldType]: prevState.errors[field.fieldType] ?? false }
     });
 
     this.setState(setValidFieldState, () => {

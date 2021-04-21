@@ -10,6 +10,7 @@ window.dropinConfig = {
  *    at https://pay.google.com/gp/p/js/pay.js:237:404
  */
 window.mainConfiguration = {
+    removePaymentMethods: ['paywithgoogle', 'applepay'],
     paymentMethodsConfiguration: {
         threeDS2: {
             challengeWindowSize: '04'

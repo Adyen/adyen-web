@@ -36,7 +36,7 @@ class Analytics {
     }
 
     send(event) {
-        const { conversion, enabled, telemetry } = this.props;
+        const { conversion, enabled, payload, telemetry } = this.props;
 
         if (enabled === true) {
             if (conversion === true && !this.conversionId) {
@@ -48,7 +48,7 @@ class Analytics {
             }
 
             if (telemetry === true) {
-                const telemetryTask = conversionId => this.logTelemetry({ ...event, conversionId }).catch(() => {});
+                const telemetryTask = conversionId => this.logTelemetry({ ...event, ...(payload && { ...payload }), conversionId }).catch(() => {});
                 this.queue.add(telemetryTask);
 
                 // Not waiting for conversionId

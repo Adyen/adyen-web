@@ -20,9 +20,10 @@
         "test": "yarn workspace @adyen/adyen-web test",
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
-        "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e"
+        "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e",
+        "type-check": "yarn workspace @adyen/adyen-web type-check"
     },
     "dependencies": {
-        "concurrently": "^6.0.0"
+        "concurrently": "^6.0.2"
     }
 }

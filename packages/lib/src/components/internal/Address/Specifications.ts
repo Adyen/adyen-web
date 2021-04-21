@@ -37,6 +37,15 @@ class Specifications {
     }
 
     /**
+     * Returns the optional fields of the selected country or the default optional fields.
+     * @param country - The selected country
+     * @returns Optional fields array
+     */
+    getOptionalFieldsForCountry(country: string): string[] {
+        return this.specifications?.[country]?.optionalFields || this.specifications.default?.optionalFields || [];
+    }
+
+    /**
      * Returns the key for a field of the passed country or the default key for that field.
      * @param fieldName - The field to be searched
      * @param country - The selected country

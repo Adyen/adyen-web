@@ -53,7 +53,7 @@ export function handleConfig(): void {
     // To set the type on the iframe input fields to 'tel' c.f. the default 'text' (with inputmode='numeric')
     this.config.legacyInputMode = this.props.legacyInputMode || null;
 
-    // To configure the maximum expiry date to a merchant defined value
+    // To configure the minimum expiry date to a merchant defined value - this means the card has to be valid until at least this date
     this.config.minimumExpiryDate = this.props.minimumExpiryDate || null;
 
     this.config.sfLogAtStart = this.props._b$dl === true;

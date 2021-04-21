@@ -18,4 +18,9 @@ export interface AnalyticsOptions {
      * Reuse a previous conversionId from a previous page
      */
     conversionId?: string;
+
+    /**
+     * Data to be sent along with the event data
+     */
+    payload?: any;
 }

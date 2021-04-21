@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Tipo di carta non supportato",
     "error.va.sf-cc-dat.01": "Carta troppo vecchia",
     "error.va.sf-cc-dat.02": "Data troppo avanti nel futuro",
+    "error.va.sf-cc-dat.03": "La tua carta scade prima della data di check out",
     "error.giftcard.no-balance": "Questo buono regalo ha un saldo pari a zero",
     "error.giftcard.card-error": "Non abbiamo alcun buono regalo con questo numero nei nostri archivi",
     "error.giftcard.currency-error": "I buono regalo sono validi solo nella valuta in cui sono state emessi",
