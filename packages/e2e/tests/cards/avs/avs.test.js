@@ -4,7 +4,7 @@ import { REGULAR_TEST_CARD } from '../utils/constants';
 import cu from '../utils/cardUtils';
 import { CARDS_URL } from '../../pages';
 
-const TEST_SPEED = 0.5;
+const TEST_SPEED = 1;
 
 const iframeSelector = getIframeSelector('.card-field iframe');
 
