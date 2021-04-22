@@ -172,6 +172,13 @@ CardType.cards.push({
     pattern: /^(40[1,8]|413|43[4,5]|44[1,2,3,4,6,7]|45[5,8]|46[0,1,3,6]|47[1,9]|48[2,3,7])[0-9]{0,16}$/ // ^(4[0-1|3-8][0-9]{1,17})$
 });
 
+CardType.cards.push({
+    cardType: 'rupay',
+    startingRules: [508528],
+    permittedLengths: [16],
+    pattern: /^(100003|508(2|[5-9])|60(69|[7-8])|652(1[5-9]|[2-5][0-9]|8[5-9])|65300[3-4]|8172([0-1]|[3-5]|7|9)|817(3[3-8]|40[6-9]|410)|35380([0-2]|[5-6]|9))[0-9]{0,12}$/ // eslint-disable-line max-len
+});
+
 const detectCard = (pCardNumber, pAvailableCards?) => {
     let matchedCards;
     let i;

@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Det angitte kortet støttes ikke",
     "error.va.sf-cc-dat.01": "Kortet er for gammelt",
     "error.va.sf-cc-dat.02": "Datoen er for langt inn i fremtiden",
+    "error.va.sf-cc-dat.03": "Kortet ditt utløper før betalingsdatoen",
     "error.giftcard.no-balance": "Dette gavekortet har en saldo på null",
     "error.giftcard.card-error": "Vi har ikke noe gavekort med dette nummeret i registrene våre",
     "error.giftcard.currency-error": "Gavekort er kun gyldige i den valutaen de ble utstedt i",
