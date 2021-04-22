@@ -70,7 +70,7 @@ const mock = RequestMock()
         }
     );
 
-const TEST_SPEED = 0.5;
+const TEST_SPEED = 1;
 
 const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--bcmc iframe');
 
@@ -116,12 +116,11 @@ test(
         await t.expect(cvcSpan.filterVisible().exists).ok();
 
         // Expect iframe to exist in CVC field and with aria-required set to true
-        // TODO comment in once sf 3.4.1 is on Test
-        //        await t
-        //            .switchToIframe(iframeSelector.nth(2))
-        //            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
-        //            .eql('true')
-        //            .switchToMainWindow();
+        await t
+            .switchToIframe(iframeSelector.nth(2))
+            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
+            .eql('true')
+            .switchToMainWindow();
 
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
 
@@ -169,12 +168,11 @@ test(
         await t.expect(cvcSpan.filterVisible().exists).ok();
 
         // Expect iframe to exist in CVC field and with aria-required set to true
-        // TODO comment in once sf 3.4.1 is on Test
-        //        await t
-        //            .switchToIframe(iframeSelector.nth(2))
-        //            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
-        //            .eql('true')
-        //            .switchToMainWindow();
+        await t
+            .switchToIframe(iframeSelector.nth(2))
+            .expect(Selector('#encryptedSecurityCode').getAttribute('aria-required'))
+            .eql('true')
+            .switchToMainWindow();
 
         await cardUtils.deleteCardNumber(t);
 

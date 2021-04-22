@@ -12,12 +12,12 @@ const addKeys = (obj, add, initialValue, defaultData) => add.reduce((a, c) => ({
  * Processes default data and sets as default in state
  */
 export function init({ schema, defaultData, processField }) {
-    const getProccessedState = fieldKey => {
+    const getProcessedState = fieldKey => {
         if (typeof defaultData[fieldKey] === 'undefined') return { valid: false, errors: null, data: null };
 
         const [formattedValue, validationResult] = processField(
-            { field: fieldKey, value: defaultData[fieldKey], mode: 'blur' },
-            { state: defaultData }
+            { key: fieldKey, value: defaultData[fieldKey], mode: 'blur' },
+            { state: { data: defaultData } }
         );
 
         return {
@@ -29,7 +29,7 @@ export function init({ schema, defaultData, processField }) {
 
     const formData = schema.reduce(
         (acc: any, fieldKey) => {
-            const { valid, errors, data } = getProccessedState(fieldKey);
+            const { valid, errors, data } = getProcessedState(fieldKey);
 
             return {
                 valid: { ...acc.valid, [fieldKey]: valid },

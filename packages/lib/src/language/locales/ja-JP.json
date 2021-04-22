@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "サポートされていないカードが入力されました",
     "error.va.sf-cc-dat.01": "カードが古すぎます",
     "error.va.sf-cc-dat.02": "未来の日付が先すぎです",
+    "error.va.sf-cc-dat.03": "チェックアウト日より前にカードの有効期限が切れます",
     "error.giftcard.no-balance": "このギフトカードの残高はゼロです",
     "error.giftcard.card-error": "記録では、この番号のギフトカードはありません",
     "error.giftcard.currency-error": "ギフトカードは、発行された通貨でのみ有効です。",

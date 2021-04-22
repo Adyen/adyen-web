@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Unijeli ste nepodržanu vrstu kartice",
     "error.va.sf-cc-dat.01": "Kartica je prestara",
     "error.va.sf-cc-dat.02": "Datum je predaleko u budućnosti",
+    "error.va.sf-cc-dat.03": "Vaša kartica istječe prije datuma plaćanja",
     "error.giftcard.no-balance": "Stanje na ovoj poklon-kartici iznosi nula",
     "error.giftcard.card-error": "U našoj evidenciji nemamo poklon-karticu s ovim brojem",
     "error.giftcard.currency-error": "Poklon-kartice vrijede samo u valuti u kojoj su izdane",
