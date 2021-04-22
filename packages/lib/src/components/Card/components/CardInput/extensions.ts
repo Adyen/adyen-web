@@ -7,8 +7,6 @@ export default function extensions(props, refs, states) {
     const { sfp } = refs;
     const { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode } = states;
 
-    console.log('### extensions::extensions:: sfp=', sfp);
-
     return {
         /**
          * Handle the binLookup response object generated in triggerBinLookup and process it in relation to the CardInput and it's sub-components.

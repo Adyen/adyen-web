@@ -1,2 +1,1 @@
-// export { default } from './CardInput';
-export { default } from './CardInputHook';
+export { default } from './CardInput';
