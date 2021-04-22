@@ -2,29 +2,6 @@ import { ValidatorRules } from '../../../../utils/Validator/Validator';
 import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 
-export const validateHolderName = (holderName: string, holderNameRequired = false, emptyIsError = true): boolean => {
-    // if (holderNameRequired) {
-    //     return !!holderName && typeof holderName === 'string' && holderName.trim().length > 0;
-    // }
-    //
-    // return true;
-
-    if (!holderNameRequired) {
-        return true;
-    }
-
-    // Holder name is required...
-    const len = holderName.trim().length;
-    if (len === 0 && !emptyIsError) {
-        return true;
-    }
-
-    return len > 0;
-};
-export default {
-    validateHolderName
-};
-
 const nonLetterRegEx = /[^A-Z\s]/gi; // detect anything that's not a letter or spaces
 
 export const cardInputFormatters = {
