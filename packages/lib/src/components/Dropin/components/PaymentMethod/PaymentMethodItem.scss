@@ -61,6 +61,11 @@
     transition: background 0.1s ease-out;
     width: 100%;
 
+    [dir='rtl'] & {
+        padding: 16px;
+        padding-right: 48px;
+    }
+
     .adyen-checkout__payment-method--standalone & {
         padding: 16px;
     }
@@ -72,6 +77,11 @@
     flex-shrink: 0;
     margin-right: 16px;
     max-width: 100%;
+
+    [dir='rtl'] & {
+        margin-right: 0;
+        margin-left: 16px;
+    }
 }
 
 .adyen-checkout__payment-method__surcharge {
@@ -186,6 +196,10 @@
     left: 16px;
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
+    [dir='rtl'] & {
+        right: 16px;
+        left: auto;
+    }
     .adyen-checkout__payment-method--standalone & {
         display: none;
     }

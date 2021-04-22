@@ -43,6 +43,7 @@ function MBWayInput(props: MBWayInputProps) {
                 label={i18n.get('mobileNumber')}
                 className={classNames('adyen-checkout__input--phone-number')}
                 isValid={valid.telephoneNumber}
+                dir={'ltr'}
             >
                 {renderFormField('tel', {
                     value: data.telephoneNumber,
