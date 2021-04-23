@@ -33,6 +33,8 @@ function CardInput(props: CardInputProps) {
     /**
      * STATE HOOKS
      */
+    const [status, setStatus] = useState('ready');
+
     const [errors, setErrors] = useState<CardInputErrorState>({});
     const [valid, setValid] = useState<CardInputValidState>({
         ...(props.holderNameRequired && { holderName: false })
@@ -164,6 +166,10 @@ function CardInput(props: CardInputProps) {
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
         extensions.processBinLookup(binLookupResponse, isReset);
+    };
+
+    this.setStatus = status => {
+        setStatus(status);
     };
 
     /**
