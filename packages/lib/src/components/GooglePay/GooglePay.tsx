@@ -70,7 +70,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     };
 
     public startPayment = () => {
-        return this.loadPayment();
+        return Promise.resolve();
     };
 
     /**
