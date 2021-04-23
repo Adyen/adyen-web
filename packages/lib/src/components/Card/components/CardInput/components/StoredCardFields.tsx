@@ -18,7 +18,10 @@ export default function StoredCardFields({ brand, hasCVC, onFocusField, errors, 
                     classNameModifiers={['storedCard']}
                     disabled
                 >
-                    <div className="adyen-checkout__input adyen-checkout__input--disabled adyen-checkout__card__exp-date__input--oneclick">
+                    <div
+                        className="adyen-checkout__input adyen-checkout__input--disabled adyen-checkout__card__exp-date__input--oneclick"
+                        dir={'ltr'}
+                    >
                         {props.expiryMonth} / {props.expiryYear}
                     </div>
                 </Field>

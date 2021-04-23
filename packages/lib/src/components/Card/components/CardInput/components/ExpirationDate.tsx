@@ -23,6 +23,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             onFocusField={() => onFocusField('encryptedExpiryDate')}
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
+            dir={'ltr'}
         >
             <span
                 data-cse="encryptedExpiryDate"
