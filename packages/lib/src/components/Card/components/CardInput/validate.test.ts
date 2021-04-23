@@ -1,15 +1,12 @@
-// import { validateHolderName } from './validate';
-//
-// describe('validateHolderName', () => {
-//     test('validates a required card holder name', () => {
-//         expect(validateHolderName('', true)).toBe(false);
-//         expect(validateHolderName('John Smith', true)).toBe(true);
-//         // expect(validateHolderName(undefined, true)).toBe(false);
-//         // expect(validateHolderName(null, true)).toBe(false);
-//     });
-//
-//     test('validates a non-required card holder name', () => {
-//         expect(validateHolderName('', false)).toBe(true);
-//         expect(validateHolderName('John Smith', false)).toBe(true);
-//     });
-// });
+import { getRuleByNameAndMode } from './validate';
+
+const holderNameValidationFn = getRuleByNameAndMode('holderName', 'blur');
+
+describe('validateHolderName', () => {
+    test('validates a required card holder name', () => {
+        expect(holderNameValidationFn('')).toBe(false);
+        expect(holderNameValidationFn('John Smith')).toBe(true);
+        // expect(validateHolderName(undefined)).toBe(false);
+        // expect(validateHolderName(null)).toBe(false);
+    });
+});
