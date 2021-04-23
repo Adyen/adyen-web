@@ -1,3 +1,5 @@
+import { SocialSecurityMode } from '../../types';
+
 export default {
     details: [],
     type: 'card',
@@ -9,25 +11,25 @@ export default {
     hideCVC: false,
     hasCVC: true,
     hasStoreDetails: false,
-    storedDetails: false,
+    storedDetails: null,
     showBrandIcon: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
     installmentOptions: {},
-    configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' },
+    configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
 
     // Events
-    onLoad: () => {},
-    onConfigSuccess: () => {},
-    onAllValid: () => {},
-    onFieldValid: () => {},
-    onBrand: () => {},
-    onError: () => {},
-    onBinValue: () => {},
-    onBlur: () => {},
-    onFocus: () => {},
-    onChange: () => {},
+    onLoad: (): any => {},
+    onConfigSuccess: (): any => {},
+    onAllValid: (): any => {},
+    onFieldValid: (): any => {},
+    onBrand: (): any => {},
+    onError: (): any => {},
+    onBinValue: (): any => {},
+    onBlur: (): any => {},
+    onFocus: (): any => {},
+    onChange: (): any => {},
 
     // Values
     data: {
