@@ -112,14 +112,42 @@ describe('CardInput > holderName', () => {
     });
 });
 
-describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is set to true', () => {
+describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is set to true and either countryCode or issuingCountryCode is set to kr', () => {
     test('Renders a card form with kcp fields since countryCode is kr', () => {
         const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
 
+    test('Renders a card form with kcp fields since countryCode is kr & issuingCountryCode is kr', () => {
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
+        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
+    });
+
+    test('Renders a card form with kcp fields since countryCode is not kr but issuingCountryCode is kr', () => {
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
+        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
+    });
+
     test('Renders a card form with no kcp fields since countryCode is not kr', () => {
         const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
+        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+    });
+
+    test('Renders a card form with no kcp fields since countryCode is kr but issuingCountryCode is not kr', () => {
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
+        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'us' }, false);
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+    });
+
+    test('Renders a card form with no kcp fields since countryCode is not kr & issuingCountryCode is not kr', () => {
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
+        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'us' }, false);
+        wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 });
@@ -131,8 +159,10 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
-    test('countryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
+    test('countryCode is kr & issuingCountryCode is kr', () => {
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
+        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 });
