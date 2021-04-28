@@ -50,13 +50,15 @@ describe('CardInput', () => {
         const wrapper = mount(<CardInput hasHolderName={true} i18n={i18n} />);
         expect(wrapper.find('div.adyen-checkout__card__holderName')).toHaveLength(1);
     });
+});
 
+describe('CardInput > holderName', () => {
     test('Does not have HolderName element', () => {
         const wrapper = mount(<CardInput i18n={i18n} />);
         expect(wrapper.find('div.adyen-checkout__card__holderName')).toHaveLength(0);
     });
 
-    test('holderName required, valid.holderName is false', () => {
+    test('holderName required, so valid.holderName is false', () => {
         mount(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
         // expect(onChange.mock.calls[onChange.mock.calls.length - 1][0].valid.holderName).toBe(false);
         expect(valid.holderName).toBe(false);
@@ -66,7 +68,9 @@ describe('CardInput', () => {
         render(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
         expect(valid.holderName).toBe(false);
 
-        const field = screen.getByPlaceholderText('J. Smith');
+        const placeholderText = i18n.get('creditCard.holderName.placeholder');
+
+        const field = screen.getByPlaceholderText(placeholderText);
         fireEvent.change(field, { target: { value: 'joe blogs' } });
 
         // await waitFor(() => {
