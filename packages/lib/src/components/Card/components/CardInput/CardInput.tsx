@@ -49,8 +49,10 @@ function CardInput(props: CardInputProps) {
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
     const [issuingCountryCode, setIssuingCountryCode] = useState(null);
 
-    const [additionalSelectElements, setAdditionalSelectElements] = useState([]);
-    const [additionalSelectValue, setAdditionalSelectValue] = useState('');
+    // const [additionalSelectElements, setAdditionalSelectElements] = useState([]);
+    // const [additionalSelectValue, setAdditionalSelectValue] = useState('');
+    const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
+    const [dualBrandSelectedValue, setDualBrandSelectedValue] = useState('');
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
     const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
@@ -145,9 +147,9 @@ function CardInput(props: CardInputProps) {
             CIExtensions(
                 props,
                 { sfp },
-                { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode }
+                { dualBrandSelectElements, setDualBrandSelectElements, setDualBrandSelectedValue, issuingCountryCode, setIssuingCountryCode }
             ),
-        [additionalSelectElements, issuingCountryCode]
+        [dualBrandSelectElements, issuingCountryCode]
     );
 
     /**
@@ -251,12 +253,12 @@ function CardInput(props: CardInputProps) {
             errors,
             isValid,
             billingAddress,
-            additionalSelectValue,
+            dualBrandSelectedValue,
             storePaymentMethod,
             socialSecurityNumber,
             installments
         });
-    }, [data, valid, errors, additionalSelectValue, storePaymentMethod, installments]);
+    }, [data, valid, errors, dualBrandSelectedValue, storePaymentMethod, installments]);
 
     /**
      * RENDER
@@ -330,9 +332,9 @@ function CardInput(props: CardInputProps) {
                                 hideDateForBrand={hideDateForBrand}
                                 errors={sfpState.errors}
                                 valid={sfpState.valid}
-                                dualBrandingElements={additionalSelectElements.length > 0 && additionalSelectElements}
+                                dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
                                 dualBrandingChangeHandler={extensions.handleDualBrandSelection}
-                                dualBrandingSelected={additionalSelectValue}
+                                dualBrandingSelected={dualBrandSelectedValue}
                             />
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}

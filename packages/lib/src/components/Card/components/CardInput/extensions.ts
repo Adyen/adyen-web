@@ -1,11 +1,11 @@
 import { SingleBrandResetObject } from '../../../internal/SecuredFields/SecuredFieldsProvider';
-import { createCardVariantSwitcherHook } from './utils';
+import { createCardVariantSwitcher } from './utils';
 import { BrandObject } from '../../types';
 
 export default function extensions(props, refs, states) {
     // Destructure refs and state hooks
     const { sfp } = refs;
-    const { additionalSelectElements, setAdditionalSelectElements, setAdditionalSelectValue, issuingCountryCode, setIssuingCountryCode } = states;
+    const { dualBrandSelectElements, setDualBrandSelectElements, setDualBrandSelectedValue, issuingCountryCode, setIssuingCountryCode } = states;
 
     return {
         /**
@@ -21,8 +21,8 @@ export default function extensions(props, refs, states) {
 
             if (!binLookupResponse) {
                 // Reset UI
-                setAdditionalSelectElements([]);
-                setAdditionalSelectValue('');
+                setDualBrandSelectElements([]);
+                setDualBrandSelectedValue('');
 
                 // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon
                 // However for a single-branded card we need to pass the "base" type so the brand logo is reset
@@ -42,12 +42,12 @@ export default function extensions(props, refs, states) {
                 // 1) Multiple options found - add to the UI & inform SFP
                 if (supportedBrands.length > 1) {
                     // --
-                    const switcherObj = createCardVariantSwitcherHook(supportedBrands);
+                    const switcherObj = createCardVariantSwitcher(supportedBrands);
 
                     // Set properties on state to trigger the dual branding icons in the UI
                     // Don't need to call validateCardInput - this will be called by the brandChange from SFP
-                    setAdditionalSelectElements(switcherObj.additionalSelectElements);
-                    setAdditionalSelectValue(switcherObj.additionalSelectValue);
+                    setDualBrandSelectElements(switcherObj.dualBrandSelectElements);
+                    setDualBrandSelectedValue(switcherObj.dualBrandSelectedValue);
 
                     // Pass an object through to SFP
                     sfp.current.processBinLookupResponse({
@@ -58,12 +58,12 @@ export default function extensions(props, refs, states) {
                     // 2) Single option found (binValueObject.supportedBrands.length === 1)
                 } else {
                     // Reset UI
-                    setAdditionalSelectElements([]);
-                    setAdditionalSelectValue('');
+                    setDualBrandSelectElements([]);
+                    setDualBrandSelectedValue('');
 
                     // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
                     // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
-                    setAdditionalSelectValue(supportedBrands[0].brand);
+                    setDualBrandSelectedValue(supportedBrands[0].brand);
 
                     // Pass object through to SFP
                     sfp.current.processBinLookupResponse({
@@ -80,10 +80,10 @@ export default function extensions(props, refs, states) {
         handleDualBrandSelection: (e: Event): void => {
             const value: string = (e.target as HTMLLIElement).getAttribute('data-value');
 
-            setAdditionalSelectValue(value);
+            setDualBrandSelectedValue(value);
 
             // Find the brandObject with the matching brand value and place into an array
-            const brandObjArr: BrandObject[] = additionalSelectElements.reduce((acc, item) => {
+            const brandObjArr: BrandObject[] = dualBrandSelectElements.reduce((acc, item) => {
                 if (item.brandObject.brand === value) {
                     acc.push(item.brandObject);
                 }
