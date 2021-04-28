@@ -127,8 +127,20 @@ function CardInput(props: CardInputProps) {
             return;
         }
 
+        // console.log('### CardInput::handleSecuredFieldsChange:: sfState.errors', sfState.errors);
+        // const errorKeys = Object.keys(sfState.errors);
+        // const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
+        //     if (sfState.errors[key]) {
+        //         acc[key] = { isValid: false, errorMessage: sfState.errors[key] };
+        //     } else {
+        //         acc[key] = null;
+        //     }
+        //     return acc;
+        // }, {});
+
         setData({ ...data, ...sfState.data });
         setErrors({ ...errors, ...sfState.errors });
+        // setErrors({ ...errors, ...sfStateErrorsObj });
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);
