@@ -49,8 +49,6 @@ function CardInput(props: CardInputProps) {
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
     const [issuingCountryCode, setIssuingCountryCode] = useState(null);
 
-    // const [additionalSelectElements, setAdditionalSelectElements] = useState([]);
-    // const [additionalSelectValue, setAdditionalSelectValue] = useState('');
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
     const [dualBrandSelectedValue, setDualBrandSelectedValue] = useState('');
 
