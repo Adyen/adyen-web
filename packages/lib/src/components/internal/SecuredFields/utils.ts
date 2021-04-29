@@ -17,6 +17,7 @@ import {
     // ENCRYPTED_BANK_LOCATION_FIELD
 } from './lib/configuration/constants';
 import { DEFAULT_ERROR } from '../../../core/Errors/constants';
+import { SFPlaceholdersObject } from './lib/core/AbstractSecuredField';
 
 // ROUTINES USED IN SecuredFieldsProvider.componentDidMount TO DETECT & MAP FIELD NAMES ///////////
 /**
@@ -101,7 +102,7 @@ export const getErrorObject = (fieldType, rootNode, state) => {
  * Lookup translated values for the placeholders for the SecuredFields
  * and return an object with these mapped to the data-cse value of the SecuredField
  */
-export const resolvePlaceholders = (i18n?: Language) => ({
+export const resolvePlaceholders = (i18n?: Language): SFPlaceholdersObject => ({
     [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
     [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
     [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.month.placeholder'),

@@ -1,4 +1,16 @@
 import { SFFeedbackObj, StylesObject } from '../types';
+import {
+    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
+    ENCRYPTED_BANK_LOCATION_FIELD,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_PWD_FIELD,
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_SECURITY_CODE_3_DIGITS,
+    ENCRYPTED_SECURITY_CODE_4_DIGITS
+} from '../configuration/constants';
 
 export type RtnType_noParamVoidFn = () => void;
 export type RtnType_postMessageListener = (event: Event) => void;
@@ -44,12 +56,21 @@ export interface IframeConfigObject extends SFInternalConfig {
 
 interface IframeUIConfigObject {
     sfStyles?: StylesObject;
-    placeholders?: PlaceholdersObject;
+    placeholders?: SFPlaceholdersObject;
     ariaConfig?: AriaConfig;
 }
 
-export interface PlaceholdersObject {
-    [key: string]: string; // e.g. encryptedExpiryDate: 'MM/YY'
+export interface SFPlaceholdersObject {
+    [ENCRYPTED_CARD_NUMBER]?: string;
+    [ENCRYPTED_EXPIRY_DATE]?: string;
+    [ENCRYPTED_EXPIRY_MONTH]?: string;
+    [ENCRYPTED_EXPIRY_YEAR]?: string;
+    [ENCRYPTED_SECURITY_CODE]?: string;
+    [ENCRYPTED_SECURITY_CODE_3_DIGITS]?: string;
+    [ENCRYPTED_SECURITY_CODE_4_DIGITS]?: string;
+    [ENCRYPTED_PWD_FIELD]?: string;
+    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
+    [ENCRYPTED_BANK_LOCATION_FIELD]?: string;
 }
 
 export type AriaConfig = {

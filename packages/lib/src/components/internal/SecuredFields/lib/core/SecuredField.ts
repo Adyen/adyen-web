@@ -19,7 +19,7 @@ import AbstractSecuredField, {
     RtnType_postMessageListener,
     RtnType_callbackFn,
     AriaConfig,
-    PlaceholdersObject,
+    SFPlaceholdersObject,
     CVCPolicyType,
     DatePolicyType,
     SFInternalConfig
@@ -83,7 +83,7 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
          */
-        const processedPlaceholders: PlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
+        const processedPlaceholders: SFPlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
         // Set result back onto config object
         this.config.iframeUIConfig.placeholders = processedPlaceholders;
 

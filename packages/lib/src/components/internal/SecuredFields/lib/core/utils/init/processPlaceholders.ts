@@ -1,5 +1,5 @@
 import { resolvePlaceholders } from '../../../../utils';
-import { PlaceholdersObject, SFInternalConfig } from '../../AbstractSecuredField';
+import { SFPlaceholdersObject, SFInternalConfig } from '../../AbstractSecuredField';
 import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
@@ -10,9 +10,9 @@ import {
 /**
  * Create placeholders with a value from the relevant translation file
  */
-export function processPlaceholders(configObj: SFInternalConfig, fieldType, i18n) {
-    const type = configObj.txVariant;
-    const resolvedPlaceholders = resolvePlaceholders(i18n);
+export function processPlaceholders(configObj: SFInternalConfig, fieldType, i18n): SFPlaceholdersObject {
+    const type: string = configObj.txVariant;
+    const resolvedPlaceholders: SFPlaceholdersObject = resolvePlaceholders(i18n);
 
     return {
         // Non-SecurityCode fields
@@ -27,5 +27,5 @@ export function processPlaceholders(configObj: SFInternalConfig, fieldType, i18n
                 [ENCRYPTED_SECURITY_CODE_3_DIGITS]: resolvedPlaceholders[ENCRYPTED_SECURITY_CODE_3_DIGITS],
                 [ENCRYPTED_SECURITY_CODE_4_DIGITS]: resolvedPlaceholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]
             })
-    } as PlaceholdersObject;
+    } as SFPlaceholdersObject;
 }

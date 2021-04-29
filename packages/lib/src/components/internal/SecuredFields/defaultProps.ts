@@ -34,7 +34,6 @@ export interface SFPProps {
     koreanAuthenticationRequired: boolean;
     hasKoreanFields: boolean;
     onChange;
-    oneClick: boolean;
     render;
     legacyInputMode: boolean;
     minimumExpiryDate: string;

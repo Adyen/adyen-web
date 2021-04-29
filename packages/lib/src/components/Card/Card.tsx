@@ -38,10 +38,10 @@ export class CardElement extends UIElement<CardElementProps> {
     formatData(): CardElementData {
         /**
          * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
-         * this.state.additionalSelectValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
-         *   the shopper makes a brand selection
+         * this.state.selectedBrandValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
+         *  the shopper makes a brand selection
          */
-        const cardBrand = this.state.additionalSelectValue || this.props.brand;
+        const cardBrand = this.state.selectedBrandValue || this.props.brand;
         const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
