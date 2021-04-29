@@ -127,8 +127,10 @@ function CardInput(props: CardInputProps) {
             return;
         }
 
+        const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
+
         setData({ ...data, ...sfState.data });
-        setErrors({ ...errors, ...sfState.errors });
+        setErrors({ ...errors, ...sfStateErrorsObj });
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);

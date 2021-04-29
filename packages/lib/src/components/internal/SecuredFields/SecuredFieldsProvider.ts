@@ -20,6 +20,7 @@ import { AddressData } from '../../../types';
 import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupResponse } from '../../Card/types';
 import { CVCPolicyType } from './lib/core/AbstractSecuredField';
+import { getError } from '../../../core/Errors/utils';
 
 export interface SFPState {
     status?: string;
@@ -265,6 +266,22 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     this.csf.isValidated(field, errorObj.error);
                 }
             });
+    }
+
+    /**
+     * Map SF errors to ValidationRuleResult like objects, for CardInput component
+     */
+    public mapErrorsToValidationRuleResult() {
+        const errorKeys = Object.keys(this.state.errors);
+        const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
+            if (this.state.errors[key]) {
+                acc[key] = { isValid: false, errorMessage: getError(this.state.errors[key]) };
+            } else {
+                acc[key] = null;
+            }
+            return acc;
+        }, {});
+        return sfStateErrorsObj;
     }
 
     public processBinLookupResponse(binLookupResponse: BinLookupResponse, resetObject: SingleBrandResetObject): void {
