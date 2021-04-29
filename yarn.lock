@@ -9875,10 +9875,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rollup-plugin-esbuild@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.1.0.tgz#f3a85ee4a24df2b72f29682d2c4f8b253e1805a3"
-  integrity sha512-1Ti3tI/zpoPfaq2jh4TO/blUiEnMOFwzjGBdBQPN19I+5vpL9xWDQfGUjjTWESIubH1lsCfpTj9rpOpXle6n4A==
+rollup-plugin-esbuild@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-4.2.3.tgz#3d719e58e7a5f84515fe52a58d35bc97a9e7e12c"
+  integrity sha512-GWyDUPv79Iw4uQdizD7ch7yA+wiB9W4Ye01RmO/kuF3yjybluJT5rbmLAnyv3kWmOF8suOjf+TvvBCXEj6qSAw==
   dependencies:
     "@rollup/pluginutils" "^4.1.0"
     joycon "^3.0.1"
