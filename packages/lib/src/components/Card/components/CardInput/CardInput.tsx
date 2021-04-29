@@ -168,9 +168,7 @@ function CardInput(props: CardInputProps) {
         extensions.processBinLookup(binLookupResponse, isReset);
     };
 
-    this.setStatus = status => {
-        setStatus(status);
-    };
+    this.setStatus = setStatus;
 
     /**
      * EFFECT HOOKS
