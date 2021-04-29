@@ -78,7 +78,7 @@ export interface CardInputProps {
 
 export interface CardInputState {
     dualBrandSelectElements: DualBrandSelectElement[];
-    dualBrandSelectedValue: string;
+    selectedBrandValue: string;
     billingAddress: object;
     brand?: string;
     data?: object;

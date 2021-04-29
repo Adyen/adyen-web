@@ -15,8 +15,8 @@ let setIssuingCountryCode;
 let dualBrandSelectElements = [];
 let setDualBrandSelectElements;
 
-let dualBrandSelectedValue = '';
-let setDualBrandSelectedValue;
+let selectedBrandValue = '';
+let setSelectedBrandValue;
 
 beforeEach(() => {
     setIssuingCountryCode = jest.fn(countryCode => {
@@ -27,11 +27,11 @@ beforeEach(() => {
         dualBrandSelectElements = selectElements;
     });
 
-    setDualBrandSelectedValue = jest.fn(selectVal => {
-        dualBrandSelectedValue = selectVal;
+    setSelectedBrandValue = jest.fn(selectVal => {
+        selectedBrandValue = selectVal;
     });
 
-    CIExtensions = extensions({}, { sfp }, { setDualBrandSelectedValue, setDualBrandSelectElements, setIssuingCountryCode });
+    CIExtensions = extensions({}, { sfp }, { setSelectedBrandValue, setDualBrandSelectElements, setIssuingCountryCode });
 });
 
 describe('Testing CardInput extensions (handling binLookup response related functionality)', () => {
@@ -89,7 +89,7 @@ describe('Test mock binLookup results on CardInput.state', () => {
             { id: 'cartebancaire', brandObject: dualBrandObj2 }
         ]);
 
-        expect(dualBrandSelectedValue).toEqual('');
+        expect(selectedBrandValue).toEqual('');
     });
 
     test('CardInput.state is altered when a "dual-branded" lookup result is followed by a "single" lookup result ', () => {
@@ -104,7 +104,7 @@ describe('Test mock binLookup results on CardInput.state', () => {
         expect(issuingCountryCode).toEqual('us');
 
         expect(dualBrandSelectElements).toEqual([]);
-        expect(dualBrandSelectedValue).toEqual('mc');
+        expect(selectedBrandValue).toEqual('mc');
     });
 
     test('CardInput.state is altered when a "dual-branded" lookup result is followed by a "reset" result ', () => {
@@ -118,7 +118,7 @@ describe('Test mock binLookup results on CardInput.state', () => {
         expect(issuingCountryCode).toEqual(null);
 
         expect(dualBrandSelectElements).toEqual([]);
-        expect(dualBrandSelectedValue).toEqual('');
+        expect(selectedBrandValue).toEqual('');
     });
 
     test('CardInput.state is altered when a "single" lookup result is followed by a "reset" result ', () => {
@@ -128,13 +128,13 @@ describe('Test mock binLookup results on CardInput.state', () => {
         expect(issuingCountryCode).toEqual('us');
 
         expect(dualBrandSelectElements).toEqual([]);
-        expect(dualBrandSelectedValue).toEqual('mc');
+        expect(selectedBrandValue).toEqual('mc');
 
         CIExtensions.processBinLookup(null, true);
 
         expect(issuingCountryCode).toEqual(null);
 
         expect(dualBrandSelectElements).toEqual([]);
-        expect(dualBrandSelectedValue).toEqual('');
+        expect(selectedBrandValue).toEqual('');
     });
 });

@@ -50,7 +50,7 @@ function CardInput(props: CardInputProps) {
     const [issuingCountryCode, setIssuingCountryCode] = useState(null);
 
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
-    const [dualBrandSelectedValue, setDualBrandSelectedValue] = useState('');
+    const [selectedBrandValue, setSelectedBrandValue] = useState('');
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
     const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
@@ -127,20 +127,8 @@ function CardInput(props: CardInputProps) {
             return;
         }
 
-        // console.log('### CardInput::handleSecuredFieldsChange:: sfState.errors', sfState.errors);
-        // const errorKeys = Object.keys(sfState.errors);
-        // const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
-        //     if (sfState.errors[key]) {
-        //         acc[key] = { isValid: false, errorMessage: sfState.errors[key] };
-        //     } else {
-        //         acc[key] = null;
-        //     }
-        //     return acc;
-        // }, {});
-
         setData({ ...data, ...sfState.data });
         setErrors({ ...errors, ...sfState.errors });
-        // setErrors({ ...errors, ...sfStateErrorsObj });
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);
@@ -157,7 +145,7 @@ function CardInput(props: CardInputProps) {
             CIExtensions(
                 props,
                 { sfp },
-                { dualBrandSelectElements, setDualBrandSelectElements, setDualBrandSelectedValue, issuingCountryCode, setIssuingCountryCode }
+                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode }
             ),
         [dualBrandSelectElements, issuingCountryCode]
     );
@@ -263,12 +251,12 @@ function CardInput(props: CardInputProps) {
             errors,
             isValid,
             billingAddress,
-            dualBrandSelectedValue,
+            selectedBrandValue,
             storePaymentMethod,
             socialSecurityNumber,
             installments
         });
-    }, [data, valid, errors, dualBrandSelectedValue, storePaymentMethod, installments]);
+    }, [data, valid, errors, selectedBrandValue, storePaymentMethod, installments]);
 
     /**
      * RENDER
@@ -344,7 +332,7 @@ function CardInput(props: CardInputProps) {
                                 valid={sfpState.valid}
                                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
                                 dualBrandingChangeHandler={extensions.handleDualBrandSelection}
-                                dualBrandingSelected={dualBrandSelectedValue}
+                                dualBrandingSelected={selectedBrandValue}
                             />
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}

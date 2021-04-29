@@ -5,7 +5,7 @@ import { BrandObject } from '../../types';
 export default function extensions(props, refs, states) {
     // Destructure refs and state hooks
     const { sfp } = refs;
-    const { dualBrandSelectElements, setDualBrandSelectElements, setDualBrandSelectedValue, issuingCountryCode, setIssuingCountryCode } = states;
+    const { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode } = states;
 
     return {
         /**
@@ -22,7 +22,7 @@ export default function extensions(props, refs, states) {
             if (!binLookupResponse) {
                 // Reset UI
                 setDualBrandSelectElements([]);
-                setDualBrandSelectedValue('');
+                setSelectedBrandValue('');
 
                 // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon
                 // However for a single-branded card we need to pass the "base" type so the brand logo is reset
@@ -47,7 +47,7 @@ export default function extensions(props, refs, states) {
                     // Set properties on state to trigger the dual branding icons in the UI
                     // Don't need to call validateCardInput - this will be called by the brandChange from SFP
                     setDualBrandSelectElements(switcherObj.dualBrandSelectElements);
-                    setDualBrandSelectedValue(switcherObj.dualBrandSelectedValue);
+                    setSelectedBrandValue(switcherObj.selectedBrandValue);
 
                     // Pass an object through to SFP
                     sfp.current.processBinLookupResponse({
@@ -59,11 +59,11 @@ export default function extensions(props, refs, states) {
                 } else {
                     // Reset UI
                     setDualBrandSelectElements([]);
-                    setDualBrandSelectedValue('');
+                    setSelectedBrandValue('');
 
                     // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
                     // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
-                    setDualBrandSelectedValue(supportedBrands[0].brand);
+                    setSelectedBrandValue(supportedBrands[0].brand);
 
                     // Pass object through to SFP
                     sfp.current.processBinLookupResponse({
@@ -80,7 +80,7 @@ export default function extensions(props, refs, states) {
         handleDualBrandSelection: (e: Event): void => {
             const value: string = (e.target as HTMLLIElement).getAttribute('data-value');
 
-            setDualBrandSelectedValue(value);
+            setSelectedBrandValue(value);
 
             // Find the brandObject with the matching brand value and place into an array
             const brandObjArr: BrandObject[] = dualBrandSelectElements.reduce((acc, item) => {
