@@ -17,23 +17,27 @@ export type KlarnaSdkData = {
     client_token: string;
 };
 
-export interface KlarnaWidgetProps {
+interface KlarnaPaymentsShared {
+    onKlarnaDeclined: (error) => void;
+
     sdkData: KlarnaSdkData;
-
     paymentData: string;
-
     paymentMethodType: string;
+}
 
+export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     /** @internal */
     payButton: (options) => any;
 
     onComplete: (detailsData) => void;
     onError: (error) => void;
-    onKlarnaDeclined: (error) => void;
 }
 
-export interface KlarnaPaymentsProps extends UIElementProps {
-    paymentData?: string;
-    paymentMethodType?: string;
-    sdkData?: KlarnaSdkData;
+export interface KlarnaPaymentsProps extends UIElementProps, KlarnaPaymentsShared {}
+
+export interface KlarnaWidgetAuthorizeResponse {
+    approved: boolean;
+    show_form: boolean;
+    authorization_token: string;
+    error?: any;
 }

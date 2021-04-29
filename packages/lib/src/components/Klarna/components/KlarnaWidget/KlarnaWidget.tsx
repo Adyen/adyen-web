@@ -1,15 +1,8 @@
 import Script from '../../../../utils/Script';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Fragment, h } from 'preact';
-import { KlarnaWidgetProps } from '../../types';
+import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
 import { KLARNA_VARIANTS, KLARNA_WIDGET_URL } from '../../constants';
-
-interface KlarnaWidgetAuthorizeResponse {
-    approved: boolean;
-    show_form: boolean;
-    authorization_token: string;
-    error?: any;
-}
 
 export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }: KlarnaWidgetProps) {
     const klarnaWidgetRef = useRef(null);

@@ -32,6 +32,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
                         paymentData={this.props.paymentData}
                         onComplete={this.onComplete}
                         onError={this.props.onError}
+                        onKlarnaDeclined={this.props.onKlarnaDeclined}
                     />
                 </CoreProvider>
             );
