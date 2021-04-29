@@ -17,7 +17,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
 
     const handleError = error => {
         setStatus('error');
-        props.onError(error);
+        props.onKlarnaDeclined(error);
     };
 
     const initializeKlarnaWidget = () => {

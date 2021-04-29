@@ -29,6 +29,7 @@ export interface KlarnaWidgetProps {
 
     onComplete: (detailsData) => void;
     onError: (error) => void;
+    onKlarnaDeclined: (error) => void;
 }
 
 export interface KlarnaPaymentsProps extends UIElementProps {
