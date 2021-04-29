@@ -127,10 +127,8 @@ function CardInput(props: CardInputProps) {
             return;
         }
 
-        const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
-
         setData({ ...data, ...sfState.data });
-        setErrors({ ...errors, ...sfStateErrorsObj });
+        setErrors({ ...errors, ...sfState.errors });
         setValid({ ...valid, ...sfState.valid });
 
         setIsSfpValid(sfState.isSfpValid);
@@ -247,10 +245,12 @@ function CardInput(props: CardInputProps) {
 
         const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
+        const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
+
         props.onChange({
             data,
             valid,
-            errors,
+            errors: { ...errors, ...sfStateErrorsObj }, // maps sfErrors AND solves race condition problems for sfp from showValidation
             isValid,
             billingAddress,
             selectedBrandValue,

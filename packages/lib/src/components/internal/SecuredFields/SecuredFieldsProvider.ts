@@ -258,9 +258,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
-                setTimeout(() => {
-                    this.handleOnError(errorObj); // Timeout race conditions with SFP errors and the other errors generated when CardInput.showValidation called
-                }, 0);
+                this.handleOnError(errorObj);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
                     this.csf.isValidated(field, errorObj.error);
@@ -271,7 +269,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     /**
      * Map SF errors to ValidationRuleResult like objects, for CardInput component
      */
-    public mapErrorsToValidationRuleResult() {
+    public mapErrorsToValidationRuleResult(): object {
         const errorKeys = Object.keys(this.state.errors);
         const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
             if (this.state.errors[key]) {
