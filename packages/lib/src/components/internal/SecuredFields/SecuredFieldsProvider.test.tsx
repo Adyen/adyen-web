@@ -114,13 +114,16 @@ describe('<SecuredFieldsProvider /> rendering', () => {
         expect(sfp.csf).toBeDefined();
     });
 
-    it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', () => {
+    it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', done => {
         sfp.showValidation();
 
-        expect(onError).toHaveBeenCalledTimes(3);
-        expect(sfp.state.errors.encryptedCardNumber).not.toBe(false);
-        expect(sfp.state.errors.encryptedExpiryDate).not.toBe(false);
-        expect(sfp.state.errors.encryptedSecurityCode).not.toBe(false);
+        setTimeout(() => {
+            done();
+            expect(onError).toHaveBeenCalledTimes(3);
+            expect(sfp.state.errors.encryptedCardNumber).not.toBe(false);
+            expect(sfp.state.errors.encryptedExpiryDate).not.toBe(false);
+            expect(sfp.state.errors.encryptedSecurityCode).not.toBe(false);
+        }, 0);
     });
 
     it('should call the passed render function', () => {
