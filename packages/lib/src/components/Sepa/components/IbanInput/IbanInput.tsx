@@ -148,6 +148,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         label={i18n.get('sepa.ownerName')}
                         filled={data['sepa.ownerName'] && data['sepa.ownerName'].length}
                         errorMessage={errors.holder ? i18n.get('creditCard.holderName.invalid') : false}
+                        dir={'ltr'}
                     >
                         {renderFormField('text', {
                             name: 'sepa.ownerName',
@@ -168,6 +169,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                     filled={data['sepa.ibanNumber'] && data['sepa.ibanNumber'].length}
                     isValid={valid.iban}
                     onBlur={this.handleIbanBlur}
+                    dir={'ltr'}
                 >
                     {renderFormField('text', {
                         ref: ref => {

@@ -51,7 +51,8 @@ class Field extends Component<FieldProps, FieldState> {
         isLoading,
         isValid,
         label,
-        dualBrandingElements
+        dualBrandingElements,
+        dir
     }) {
         return (
             <div
@@ -94,6 +95,7 @@ class Field extends Component<FieldProps, FieldState> {
                             'adyen-checkout__input-wrapper',
                             ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
                         ])}
+                        dir={dir}
                     >
                         {toChildArray(children).map(
                             (child: ComponentChild): ComponentChild => {

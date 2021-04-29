@@ -112,7 +112,12 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             )}
 
             {requiredFields.includes('shopperEmail') && (
-                <Field label={i18n.get('shopperEmail')} classNameModifiers={['shopperEmail']} errorMessage={getErrorMessage(errors.shopperEmail)}>
+                <Field
+                    label={i18n.get('shopperEmail')}
+                    classNameModifiers={['shopperEmail']}
+                    errorMessage={getErrorMessage(errors.shopperEmail)}
+                    dir={'ltr'}
+                >
                     {renderFormField('emailAddress', {
                         name: generateFieldName('shopperEmail'),
                         value: data.shopperEmail,
@@ -129,6 +134,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     label={i18n.get('telephoneNumber')}
                     classNameModifiers={['telephoneNumber']}
                     errorMessage={getErrorMessage(errors.telephoneNumber)}
+                    dir={'ltr'}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),

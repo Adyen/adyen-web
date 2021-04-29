@@ -96,6 +96,7 @@ test(
         // Should be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql('bcmc');
 
+        // TODO delete action fails in Safari
         await cardUtils.deleteCardNumber(t);
 
         await t

@@ -50,6 +50,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 classNameModifiers={['kcp-taxNumber']}
                 errorMessage={errors.taxNumber && i18n.get('creditCard.taxNumber.invalid')}
                 isValid={valid.taxNumber}
+                dir={'ltr'}
             >
                 {renderFormField('tel', {
                     className: `adyen-checkout__card__kcp-taxNumber__input ${styles['adyen-checkout__input']}`,
@@ -72,6 +73,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 onFocusField={() => props.onFocusField('encryptedPassword')}
                 errorMessage={props.encryptedPasswordState.errors && i18n.get('creditCard.encryptedPassword.invalid')}
                 isValid={props.encryptedPasswordState.valid}
+                dir={'ltr'}
             >
                 <span
                     data-cse="encryptedPassword"

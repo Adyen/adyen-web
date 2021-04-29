@@ -21,6 +21,7 @@ export default function CardNumber(props: CardNumberProps) {
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dualBrandingElements={dualBrandingElements}
+            dir={'ltr'}
         >
             <span
                 data-cse="encryptedCardNumber"

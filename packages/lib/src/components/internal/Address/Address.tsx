@@ -8,7 +8,7 @@ import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
-import { ADDRESS_SCHEMA } from './constants';
+import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
@@ -21,25 +21,34 @@ export default function Address(props: AddressProps) {
     });
 
     useEffect((): void => {
-        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : 'N/A';
-
-        handleChangeFor('stateOrProvince', 'input')(stateOrProvince);
+        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
+        const newData = { ...data, stateOrProvince };
+        requiredFields.forEach(fieldName => {
+            handleChangeFor(fieldName, 'input')(newData[fieldName] ?? '');
+        });
     }, [data.country]);
 
     useEffect((): void => {
         const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
         const countryHasStatesDataset = data.country && specifications.countryHasDataset(data.country);
         const addressShouldHaveState = stateFieldIsRequired && countryHasStatesDataset;
-        const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : 'N/A');
+        const stateOrProvince = data.stateOrProvince || (addressShouldHaveState ? '' : FALLBACK_VALUE);
 
         handleChangeFor('stateOrProvince', 'input')(stateOrProvince);
     }, []);
 
     useEffect((): void => {
+        const optionalFields = specifications.getOptionalFieldsForCountry(data.country);
         const processedData = ADDRESS_SCHEMA.reduce((acc, cur) => {
+            const isOptional = optionalFields.includes(cur);
+            const isRequired = requiredFields.includes(cur);
+            const newValue = data[cur];
+            const initialValue = props.data[cur];
             // recover default data values which are not requiredFields, or prefill with 'N/A'
-            const fallbackValue = !requiredFields.includes(cur) && !data[cur] && props.data[cur] ? props.data[cur] : 'N/A';
-            return { ...acc, [cur]: requiredFields.includes(cur) || !!data[cur] ? data[cur] : fallbackValue };
+            const fallbackValue = !isRequired && !newValue && !!initialValue ? initialValue : FALLBACK_VALUE;
+            const value = (isOptional && !newValue) || !isRequired ? fallbackValue : newValue;
+            if (value?.length) acc[cur] = value;
+            return acc;
         }, {});
 
         props.onChange({ data: processedData, valid, errors, isValid });

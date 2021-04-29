@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import Fieldset from '../../FormFields/Fieldset';
 import { ReadOnlyAddressProps } from '../types';
+import { FALLBACK_VALUE } from '../constants';
 
 const ReadOnlyAddress = ({ data, label }: ReadOnlyAddressProps) => {
     const { street, houseNumberOrName, city, postalCode, stateOrProvince, country } = data;
@@ -12,7 +13,7 @@ const ReadOnlyAddress = ({ data, label }: ReadOnlyAddressProps) => {
             <br />
             {postalCode && `${postalCode}`}
             {city && `, ${city}`}
-            {stateOrProvince && stateOrProvince !== 'N/A' && `, ${stateOrProvince}`}
+            {stateOrProvince && stateOrProvince !== FALLBACK_VALUE && `, ${stateOrProvince}`}
             {country && `, ${country} `}
         </Fieldset>
     );

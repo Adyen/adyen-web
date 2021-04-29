@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "O cartão inserido não é aceito",
     "error.va.sf-cc-dat.01": "Cartão muito antigo",
     "error.va.sf-cc-dat.02": "Data muito distante",
+    "error.va.sf-cc-dat.03": "Seu cartão expira antes da data do pagamento",
     "error.giftcard.no-balance": "Este vale-presente tem saldo zero",
     "error.giftcard.card-error": "Não existe um vale-presente com esse número em nossos registros",
     "error.giftcard.currency-error": "Os vales-presente são válidos somente na moeda em que foram emitidos",

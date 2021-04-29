@@ -4,6 +4,7 @@ import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE,
 import { processErrors } from './utils/processErrors';
 import { truthy } from '../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../types';
+import postMessageToIframe from './utils/iframes/postMessageToIframe';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
@@ -51,6 +52,20 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
         rootNode: this.props.rootNode,
         encryptedObjArr
     });
+
+    // For standalone month field
+    if (fieldType === ENCRYPTED_EXPIRY_MONTH) {
+        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
+            const dataObj: object = {
+                txVariant: this.state.type,
+                code: pFeedbackObj.code,
+                blob: encryptedObjArr[0].blob,
+                fieldType: ENCRYPTED_EXPIRY_YEAR,
+                numKey: this.state.securedFields[ENCRYPTED_EXPIRY_YEAR].numKey
+            };
+            postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_YEAR), this.config.loadingContext);
+        }
+    }
 
     // For number field - add the endDigits to the encryption object
     if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.endDigits)) {

@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "Nicht unterstützte Karte eingegeben",
     "error.va.sf-cc-dat.01": "Karte zu alt",
     "error.va.sf-cc-dat.02": "Datum zu weit in der Zukunft",
+    "error.va.sf-cc-dat.03": "Ihre Karte läuft vor dem Bezahldatum ab.",
     "error.giftcard.no-balance": "Auf dieser Geschenkkarte ist kein Guthaben vorhanden",
     "error.giftcard.card-error": "Es gibt in unserem System keine Geschenkkarte mit dieser Nummer",
     "error.giftcard.currency-error": "Geschenkkarten sind nur in der Währung gültig, in der sie ausgestellt wurden",

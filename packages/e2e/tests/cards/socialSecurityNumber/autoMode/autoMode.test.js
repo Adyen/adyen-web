@@ -8,7 +8,7 @@ const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
 });
 
-const TEST_SPEED = 0.5;
+const TEST_SPEED = 1;
 
 const iframeSelector = getIframeSelector('.card-field iframe');
 

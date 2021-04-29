@@ -45,6 +45,7 @@ function BlikInput(props: BlikInputProps) {
                 label={i18n.get('blik.code')}
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}
+                dir={'ltr'}
             >
                 {renderFormField('text', {
                     value: data.blikCode,

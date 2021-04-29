@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "輸入了不支援的卡",
     "error.va.sf-cc-dat.01": "卡太舊",
     "error.va.sf-cc-dat.02": "未來日期距今太久",
+    "error.va.sf-cc-dat.03": "您的卡會於付款日期前到期",
     "error.giftcard.no-balance": "此禮品卡的餘額為零",
     "error.giftcard.card-error": "我們的記錄中並沒有這個號碼的禮品卡",
     "error.giftcard.currency-error": "禮品卡只能以其簽發時所使用的貨幣進行結算",

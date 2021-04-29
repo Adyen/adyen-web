@@ -157,6 +157,7 @@
     "error.va.sf-cc-num.03": "A fost introdus un card neacceptat",
     "error.va.sf-cc-dat.01": "Cardul este prea vechi",
     "error.va.sf-cc-dat.02": "Data este prea departe în viitor",
+    "error.va.sf-cc-dat.03": "Cardul dvs. expiră înainte de data de check-out",
     "error.giftcard.no-balance": "Acest card cadou are soldul zero",
     "error.giftcard.card-error": "În evidențele noastre nu figurează niciun card cadou cu acest număr",
     "error.giftcard.currency-error": "Cardurile cadou sunt valabile numai în moneda în care au fost emise",

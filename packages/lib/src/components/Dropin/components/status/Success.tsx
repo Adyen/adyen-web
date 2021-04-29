@@ -10,7 +10,7 @@ const Success = ({ message }) => {
             <Img
                 height="88"
                 className="adyen-checkout__status__icon"
-                src={getImageUrl({ loadingContext, imageFolder: 'components/' })('success')}
+                src={getImageUrl({ loadingContext, extension: 'gif', imageFolder: 'components/' })('success')}
                 alt={i18n.get(message || 'creditCard.success')}
             />
             <span className="adyen-checkout__status__text">{i18n.get(message || 'creditCard.success')}</span>
