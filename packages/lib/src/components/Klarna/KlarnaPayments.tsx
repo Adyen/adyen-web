@@ -3,6 +3,7 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { KlarnaPaymentsProps } from './types';
 import { KlarnaWidget } from './components/KlarnaWidget/KlarnaWidget';
+import PayButton from '../internal/PayButton';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
@@ -20,6 +21,10 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
             }
         };
     }
+
+    public payButton = props => {
+        return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
+    };
 
     render() {
         if (this.props.sdkData) {
