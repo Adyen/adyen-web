@@ -14,7 +14,7 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing regular card completion and payment`.page(CARDS_URL);
 //    .clientScripts('general.clientScripts.js');
 
-test.only('Can fill out the fields in the regular custom card and make a successful payment', async t => {
+test('Can fill out the fields in the regular custom card and make a successful payment', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
