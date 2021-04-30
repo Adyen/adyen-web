@@ -47,7 +47,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
                     {this.payButton({
                         ...this.props,
                         classNameModifiers: ['standalone'],
-                        label: `${this.props.i18n.get('continueTo')} ${this.props.name}`
+                        label: `${this.props.i18n.get('continueTo')} ${this.displayName}`
                     })}
                 </CoreProvider>
             );
