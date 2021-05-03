@@ -78,7 +78,7 @@
         "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-typescript2": "^0.30.0",
         "rollup-plugin-visualizer": "^5.4.1",
-        "stylelint": "^13.13.0",
+        "stylelint": "^13.13.1",
         "stylelint-config-recommended": "^4.0.0",
         "ts-jest": "^26.5.5",
         "tslib": "^2.2.0",
