@@ -118,7 +118,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                             >
                                 <span
                                     data-cse="encryptedCardNumber"
-                                    data-info='{"length":"15-22", "maskInterval":4}'
+                                    data-info='{"length":"15-32", "maskInterval":4}'
                                     className={classNames({
                                         'adyen-checkout__input': true,
                                         'adyen-checkout__input--large': true,
