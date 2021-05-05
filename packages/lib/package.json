@@ -45,7 +45,7 @@
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^18.0.0",
+        "@rollup/plugin-commonjs": "^18.1.0",
         "@rollup/plugin-eslint": "^8.0.1",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^11.2.1",
