@@ -14,6 +14,7 @@ export interface UIElementProps extends BaseElementProps {
     onError?: (error, element?: UIElement) => void;
 
     name?: string;
+    icon?: string;
     amount?: PaymentAmount;
 
     /**
@@ -134,7 +135,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
     }
 
     /**
