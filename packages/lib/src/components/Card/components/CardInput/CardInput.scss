@@ -67,11 +67,16 @@
     }
 }
 
-.adyen-checkout__label--focused .adyen-checkout__card__cvc__hint__location {
-    animation-duration: 1s;
-    animation-name: cvcIndicateLocation;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+.adyen-checkout__label--focused {
+    .adyen-checkout__field__cvc--front-hint .adyen-checkout__card__cvc__hint--front,
+    .adyen-checkout__field__cvc--back-hint .adyen-checkout__card__cvc__hint--back {
+        .adyen-checkout__card__cvc__hint__location {
+            animation-duration: 1s;
+            animation-name: cvcIndicateLocation;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+    }
 }
 
 .adyen-checkout__card__cvc__hint__wrapper {
@@ -138,4 +143,3 @@
         margin-left: 15px;
     }
 }
-
