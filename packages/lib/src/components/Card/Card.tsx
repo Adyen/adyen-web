@@ -28,6 +28,8 @@ export class CardElement extends UIElement<CardElementProps> {
                 ...props.configuration,
                 socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto',
             },
+            brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
+            icon: props.icon || props.configuration?.icon,
             onBinLookup: props.onBinLookup ??= () => {}
         };
     }
@@ -92,17 +94,18 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.brand);
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
-        const { brands, loadingContext } = this.props;
+        const { brands, loadingContext, brandsConfiguration } = this.props;
         if (brands) {
-            return brands.map(brand => ({
-                icon: getImage({ loadingContext })(brand),
-                name: brand
-            }));
+            return brands.map(brand => {
+                const brandIcon = brandsConfiguration[brand]?.icon ?? getImage({ loadingContext })(brand);
+                return { icon: brandIcon, name: brand };
+            })
         }
+
         return [];
     }
 
