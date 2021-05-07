@@ -28,8 +28,8 @@ export class CardElement extends UIElement<CardElementProps> {
                 ...props.configuration,
                 socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto',
             },
-            brandsConfiguration: props.brandsConfiguration ?? props?.configuration?.brandsConfiguration ?? {},
-            icon: props.icon ?? props?.configuration?.icon,
+            brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
+            icon: props.icon || props.configuration?.icon,
             onBinLookup: props.onBinLookup ??= () => {}
         };
     }
