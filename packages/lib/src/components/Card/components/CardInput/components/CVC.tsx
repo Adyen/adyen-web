@@ -50,6 +50,7 @@ export default function CVC(props: CVCProps) {
             className={fieldClassnames}
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
+            dir={'ltr'}
         >
             <span className={cvcClassnames} data-cse="encryptedSecurityCode" />
 

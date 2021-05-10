@@ -13,6 +13,8 @@ export const THREEDS2_FULL_FLOW_CARD = '5000550000000029';
 export const THREEDS2_CHALLENGE_ONLY_CARD = '4212345678910006';
 
 export const TEST_DATE_VALUE = '03/30';
+export const TEST_MONTH_VALUE = '03';
+export const TEST_YEAR_VALUE = '30';
 export const TEST_CVC_VALUE = '737';
 export const TEST_PWD_VALUE = '12';
 export const TEST_TAX_NUMBER_VALUE = '123456';

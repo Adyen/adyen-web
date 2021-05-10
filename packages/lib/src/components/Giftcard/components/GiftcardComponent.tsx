@@ -114,10 +114,11 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                 errorMessage={getCardErrorMessage(sfpState)}
                                 focused={focusedElement === 'encryptedCardNumber'}
                                 onFocusField={() => setFocusOn('encryptedCardNumber')}
+                                dir={'ltr'}
                             >
                                 <span
                                     data-cse="encryptedCardNumber"
-                                    data-info='{"length":"15-22", "maskInterval":4}'
+                                    data-info='{"length":"15-32", "maskInterval":4}'
                                     className={classNames({
                                         'adyen-checkout__input': true,
                                         'adyen-checkout__input--large': true,
@@ -135,6 +136,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                     errorMessage={sfpState.errors.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
                                     focused={focusedElement === 'encryptedSecurityCode'}
                                     onFocusField={() => setFocusOn('encryptedSecurityCode')}
+                                    dir={'ltr'}
                                 >
                                     <span
                                         data-cse="encryptedSecurityCode"

@@ -1,12 +1,12 @@
-import { httpGet } from './http';
+import { httpPost } from './http';
 import { OrderStatus } from '../../types';
 
 /**
  */
 function orderStatus(config, order): Promise<OrderStatus> {
-    const options = { path: `/v1/order/status?clientKey=${config.clientKey}`, loadingContext: config.loadingContext };
+    const options = { path: `v1/order/status?clientKey=${config.clientKey}`, loadingContext: config.loadingContext };
 
-    return httpGet(options, { orderData: order.orderData });
+    return httpPost(options, { orderData: order.orderData });
 }
 
 export default orderStatus;

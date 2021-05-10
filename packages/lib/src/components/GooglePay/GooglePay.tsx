@@ -65,7 +65,7 @@ class GooglePay extends UIElement<GooglePayProps> {
 
     public submit = () => {
         return this.loadPayment().then(() => {
-            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this);
+            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         });
     };
 

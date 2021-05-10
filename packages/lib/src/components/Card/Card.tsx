@@ -28,6 +28,8 @@ export class CardElement extends UIElement<CardElementProps> {
                 ...props.configuration,
                 socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto',
             },
+            brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
+            icon: props.icon || props.configuration?.icon,
             onBinLookup: props.onBinLookup ??= () => {}
         };
     }
@@ -38,10 +40,10 @@ export class CardElement extends UIElement<CardElementProps> {
     formatData(): CardElementData {
         /**
          * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
-         * this.state.additionalSelectValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
-         *   the shopper makes a brand selection
+         * this.state.selectedBrandValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
+         *  the shopper makes a brand selection
          */
-        const cardBrand = this.state.additionalSelectValue || this.props.brand;
+        const cardBrand = this.state.selectedBrandValue || this.props.brand;
         const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
@@ -92,17 +94,18 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.brand);
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
-        const { brands, loadingContext } = this.props;
+        const { brands, loadingContext, brandsConfiguration } = this.props;
         if (brands) {
-            return brands.map(brand => ({
-                icon: getImage({ loadingContext })(brand),
-                name: brand
-            }));
+            return brands.map(brand => {
+                const brandIcon = brandsConfiguration[brand]?.icon ?? getImage({ loadingContext })(brand);
+                return { icon: brandIcon, name: brand };
+            })
         }
+
         return [];
     }
 

@@ -141,6 +141,11 @@
 
     &__icon {
         margin-right: 12px;
+
+        [dir='rtl'] & {
+            margin-right: 0;
+            margin-left: 12px;
+        }
     }
 
     &__text {

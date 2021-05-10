@@ -1,4 +1,5 @@
 export default {
+    ar: () => import('./ar.json'),
     'cs-CZ': () => import('./cs-CZ.json'),
     'da-DK': () => import('./da-DK.json'),
     'de-DE': () => import('./de-DE.json'),

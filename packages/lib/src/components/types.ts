@@ -40,6 +40,7 @@ export interface UIElementProps extends BaseElementProps {
     onPaymentCompleted?: (result: any, element?: UIElement) => void;
 
     name?: string;
+    icon?: string;
     amount?: PaymentAmount;
 
     /**

@@ -1,46 +1,20 @@
 import { h } from 'preact';
-import { useState, useEffect, useMemo } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 import { renderFormField } from '../../../../internal/FormFields';
 import classNames from 'classnames';
 import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
-import { KCPErrors, KCPProps, RtnType_ParamBooleanFn, RtnType_ParamVoidFn } from './types';
+import { KCPProps } from './types';
 import styles from '../CardInput.module.scss';
 
 export default function KCPAuthentication(props: KCPProps) {
     const { i18n } = useCoreContext();
 
-    const isTaxNumberValid: RtnType_ParamBooleanFn = (taxNumber = ''): boolean => taxNumber.length === 6 || taxNumber.length === 10;
-    const [data, setData] = useState({ taxNumber: props.taxNumber });
-    const [valid, setValid] = useState({ taxNumber: isTaxNumberValid(props.taxNumber) });
-    const [errors, setErrors] = useState(({} as any) as KCPErrors);
-
     const taxNumberLabel = useMemo((): string => {
-        if (data.taxNumber?.length > 6) return i18n.get('creditCard.taxNumber.labelAlt');
+        if (props.value?.length > 6) return i18n.get('creditCard.taxNumber.labelAlt');
 
         return i18n.get('creditCard.taxNumber.label');
-    }, [data.taxNumber]);
-
-    const handleTaxNumber: RtnType_ParamVoidFn = (e: Event): void => {
-        setData({ ...data, taxNumber: (e.target as HTMLInputElement).value });
-        setValid({ ...valid, taxNumber: isTaxNumberValid((e.target as HTMLInputElement).value) });
-        setErrors({ ...errors, taxNumber: false });
-    };
-
-    useEffect(() => {
-        props.onChange(data, valid);
-    }, [data.taxNumber]);
-
-    // When "unmounting" clear any stored data
-    useEffect(() => {
-        return (): void => {
-            props.onChange({ taxNumber: undefined }, { taxNumber: false });
-        };
-    }, []);
-
-    this.showValidation = (): void => {
-        setErrors({ taxNumber: !isTaxNumberValid(data.taxNumber) });
-    };
+    }, [props.value]);
 
     return (
         <div className="adyen-checkout__card__kcp-authentication">
@@ -48,8 +22,9 @@ export default function KCPAuthentication(props: KCPProps) {
                 label={taxNumberLabel}
                 filled={props.filled}
                 classNameModifiers={['kcp-taxNumber']}
-                errorMessage={errors.taxNumber && i18n.get('creditCard.taxNumber.invalid')}
-                isValid={valid.taxNumber}
+                errorMessage={props.error && i18n.get('creditCard.taxNumber.invalid')}
+                isValid={props.isValid}
+                dir={'ltr'}
             >
                 {renderFormField('tel', {
                     className: `adyen-checkout__card__kcp-taxNumber__input ${styles['adyen-checkout__input']}`,
@@ -57,10 +32,10 @@ export default function KCPAuthentication(props: KCPProps) {
                     maxLength: 10,
                     minLength: 6,
                     autoComplete: false,
-                    value: data.taxNumber,
+                    value: props.value,
                     required: true,
-                    onChange: handleTaxNumber,
-                    onInput: handleTaxNumber
+                    onChange: props.onChange,
+                    onInput: props.onInput
                 })}
             </Field>
 
@@ -72,6 +47,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 onFocusField={() => props.onFocusField('encryptedPassword')}
                 errorMessage={props.encryptedPasswordState.errors && i18n.get('creditCard.encryptedPassword.invalid')}
                 isValid={props.encryptedPasswordState.valid}
+                dir={'ltr'}
             >
                 <span
                     data-cse="encryptedPassword"

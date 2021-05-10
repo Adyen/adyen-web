@@ -11,6 +11,10 @@
     height: auto;
     display: inline-block;
     margin-right: 8px;
+    [dir='rtl'] & {
+        margin-right: 0;
+        margin-left: 8px;
+    }
 }
 
 .adyen-checkout__spinner {

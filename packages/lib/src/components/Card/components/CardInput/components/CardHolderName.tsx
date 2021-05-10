@@ -5,7 +5,7 @@ import { renderFormField } from '../../../../internal/FormFields';
 import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
 
-export default function CardHolderName({ onChange, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
+export default function CardHolderName({ onChange, onInput, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -20,7 +20,8 @@ export default function CardHolderName({ onChange, placeholder, value, required,
                 placeholder: placeholder || i18n.get('creditCard.holderName.placeholder'),
                 value,
                 required,
-                onInput: onChange
+                onChange,
+                onInput
             })}
         </Field>
     );
