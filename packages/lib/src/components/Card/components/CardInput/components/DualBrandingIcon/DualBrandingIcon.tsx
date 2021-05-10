@@ -5,7 +5,7 @@ import { getCardImageUrl } from '../../utils';
 import { DualBrandingIconProps } from '../types';
 import './DualBrandingIcon.scss';
 
-const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfiguration }: DualBrandingIconProps) => {
+const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfiguration = {} }: DualBrandingIconProps) => {
     const { loadingContext } = useCoreContext();
     const imageName = brand === 'card' ? 'nocard' : brand;
     const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, loadingContext);

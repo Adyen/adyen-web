@@ -4,7 +4,7 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { BrandIconProps } from './types';
 import styles from '../CardInput.module.scss';
 
-export default function BrandIcon({ brand, brandsConfiguration }: BrandIconProps) {
+export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIconProps) {
     const { loadingContext } = useCoreContext();
     const imageName = brand === 'card' ? 'nocard' : brand;
     const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, loadingContext);
