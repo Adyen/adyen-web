@@ -24,6 +24,6 @@
         "type-check": "yarn workspace @adyen/adyen-web type-check"
     },
     "dependencies": {
-        "concurrently": "^6.0.2"
+        "concurrently": "^6.1.0"
     }
 }
