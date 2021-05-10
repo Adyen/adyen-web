@@ -36,7 +36,7 @@ export default function CardNumber(props: CardNumberProps) {
                     'adyen-checkout__card__cardNumber__input--noBrand': !props.showBrandIcon
                 })}
             >
-                {props.showBrandIcon && !dualBrandingElements && <BrandIcon brand={props.brand} />}
+                {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
             </span>
 
             {dualBrandingElements && !error && (
@@ -50,6 +50,7 @@ export default function CardNumber(props: CardNumberProps) {
                         <DualBrandingIcon
                             key={element.id}
                             brand={element.id}
+                            brandsConfiguration={props.brandsConfiguration}
                             onClick={dualBrandingChangeHandler}
                             dataValue={element.id}
                             notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}
