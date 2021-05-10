@@ -19,7 +19,8 @@
             "import": "./dist/es/index.js",
             "require": "./dist/cjs/index.js"
         },
-        "./dist/adyen.css": "./dist/adyen.css"
+        "./dist/adyen.css": "./dist/adyen.css",
+        "./package.json": "./package.json"
     },
     "version": "4.4.0",
     "license": "MIT",
