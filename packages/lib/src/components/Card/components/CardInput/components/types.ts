@@ -34,7 +34,7 @@ export interface CardHolderNameProps {
 
 export interface CardNumberProps {
     brand: string;
-    brandsConfiguration: CardBrandsConfiguration;
+    brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
