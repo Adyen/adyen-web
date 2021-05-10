@@ -9,6 +9,7 @@ import styles from '../CardInput.module.scss';
 
 export default function CardFields({
     brand,
+    brandsConfiguration,
     dualBrandingElements,
     dualBrandingChangeHandler,
     dualBrandingSelected,
@@ -27,6 +28,7 @@ export default function CardFields({
         <div className="adyen-checkout__card__form">
             <CardNumber
                 brand={brand}
+                brandsConfiguration={brandsConfiguration}
                 error={errors.encryptedCardNumber}
                 focused={focusedElement === 'encryptedCardNumber'}
                 isValid={!!valid.encryptedCardNumber}

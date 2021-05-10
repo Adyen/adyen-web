@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
+import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
@@ -44,6 +44,7 @@ export interface CardInputProps {
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
+    brandsConfiguration?: CardBrandsConfiguration;
     configuration?: CardConfiguration;
     countryCode?: string;
     cvcPolicy?: string;

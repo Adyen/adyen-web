@@ -323,6 +323,7 @@ function CardInput(props: CardInputProps) {
                             <CardFields
                                 {...props}
                                 brand={sfpState.brand}
+                                brandsConfiguration={this.props.brandsConfiguration}
                                 focusedElement={focusedElement}
                                 onFocusField={setFocusOn}
                                 hasCVC={props.hasCVC}
