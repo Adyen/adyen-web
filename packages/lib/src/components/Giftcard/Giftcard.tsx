@@ -8,6 +8,10 @@ import PayButton from '../internal/PayButton';
 export class GiftcardElement extends UIElement {
     public static type = 'giftcard';
 
+    protected static defaultProps = {
+        brandsConfiguration: {}
+    };
+
     formatProps(props) {
         return {
             ...props?.configuration,
@@ -34,7 +38,11 @@ export class GiftcardElement extends UIElement {
     }
 
     get icon() {
-        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.props.brand);
+        return (
+            this.props.brandsConfiguration[this.props.brand]?.icon ||
+            this.props.icon ||
+            getImage({ loadingContext: this.props.loadingContext })(this.props.brand)
+        );
     }
 
     get displayName() {
