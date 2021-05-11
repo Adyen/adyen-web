@@ -20,9 +20,8 @@ const initCheckout = async () => {
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
         onPaymentCompleted: (result, component) => {
-            console.log('onPaymentCompleted', result);
-            switch (result.status) {
-                case 'authorised':
+            switch (result.resultCode) {
+                case 'Authorised':
                     component.setStatus('success');
                     break;
                 default:
