@@ -8,7 +8,7 @@ function submitDetails(details, session: Session): Promise<CheckoutSessionDetail
     const path = `v1/sessions/${session.id}/paymentDetails?clientKey=${session.clientKey}`;
     const data = {
         sessionData: session.data,
-        details
+        ...details
     };
 
     return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal' }, data);

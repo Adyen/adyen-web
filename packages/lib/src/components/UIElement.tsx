@@ -42,23 +42,30 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return state;
     }
 
+    /**
+     * Payment initiation handler. Used when a payment method needs to perform a step as soon as the Pay button is clicked.
+     */
     startPayment(): Promise<any> {
         return Promise.resolve(true);
     }
 
+    /**
+     * Submit payment method data. If the form is not valid, it will trigger validation.
+     */
     submit(): void {
         const { onError = () => {}, onSubmit, session } = this.props;
         this.startPayment()
             .then(() => {
-                const { data, isValid } = this;
-
-                if (!isValid) {
+                if (!this.isValid) {
                     this.showValidation();
                     return false;
                 }
 
-                if (onSubmit) return onSubmit({ data, isValid }, this.elementRef);
-                if (session) return this.submitPayment(data);
+                // Classic flow
+                if (onSubmit) return onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
+
+                // Session flow
+                if (session) return this.submitPayment(this.data);
 
                 return onError('Could not submit the payment');
             })
@@ -91,7 +98,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             });
     }
 
-    submitAdditionalDetails(data) {
+    submitAdditionalDetails(data): Promise<void> {
         return this._parentInstance.session
             .submitDetails(data)
             .then(this.handleResponse)
@@ -100,18 +107,17 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             });
     }
 
-    handleAction(action: PaymentAction, props = {}) {
+    handleAction(action: PaymentAction, props = {}): UIElement {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        const paymentAction = this.props._parentInstance.createFromAction(action, {
+        const paymentAction = this._parentInstance.createFromAction(action, {
             ...props,
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
+            onAdditionalDetails: this.handleAdditionalDetails
         });
 
         if (paymentAction) {
             this.unmount();
-            paymentAction.mount(this._node);
-            return paymentAction;
+            return paymentAction.mount(this._node);
         }
 
         return null;
@@ -125,19 +131,23 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     handleResponse(rawResponse): void {
         const response = getSanitizedResponse(rawResponse);
 
-        if (response.sessionData) this._parentInstance.session.updateSessionData(response.sessionData);
-
         if (response.action) {
             this.handleAction(response.action);
-        } else if (response?.order?.remainingAmount?.value > 0) {
+        } else if (response.order?.remainingAmount?.value > 0) {
             this.handleOrder(response.order);
         } else {
             this.handleFinalResult(response);
         }
     }
 
+    protected handleAdditionalDetails = state => {
+        if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
+        if (this.props.session) this.submitAdditionalDetails(state.data);
+        return state;
+    };
+
     protected handleFinalResult = result => {
-        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this);
+        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);
         return result;
     };
 
@@ -153,12 +163,15 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     /**
-     * Get the element displayable name
+     * Get the element's displayable name
      */
     get displayName(): string {
         return this.props.name || this.constructor['type'];
     }
 
+    /**
+     * Get the payButton component for the current element
+     */
     public payButton = props => {
         return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
     };
