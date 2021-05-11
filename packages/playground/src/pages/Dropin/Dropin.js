@@ -24,6 +24,9 @@ const initCheckout = async () => {
                 case 'Authorised':
                     component.setStatus('success');
                     break;
+                case 'Received':
+                    component.setStatus('success', { message: 'Processing your payment...' });
+                    break;
                 default:
                     component.setStatus('error');
             }
