@@ -18,7 +18,7 @@ async function handleRedirectResult(redirectResult, sessionId) {
         }
     });
 
-    checkout.submitDetails({ redirectResult });
+    checkout.submitDetails({ details: { redirectResult } });
 }
 
 const { redirectResult, sessionId } = getSearchParameters(window.location.search);
