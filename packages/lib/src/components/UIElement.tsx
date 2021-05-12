@@ -5,6 +5,7 @@ import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import { UIElementProps } from './types';
 import { getSanitizedResponse } from './utils';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
@@ -94,7 +95,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             .then(this.handleResponse)
             .catch(error => {
                 this.setStatus('ready');
-                this.props.onError(error);
+                this.handleError(error);
             });
     }
 
@@ -103,7 +104,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             .submitDetails(data)
             .then(this.handleResponse)
             .catch(error => {
-                this.props.onError(error);
+                this.handleError(error);
             });
     }
 
@@ -140,6 +141,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         }
     }
 
+    handleError = (error: AdyenCheckoutError): void => {
+        if (this.props.onError) this.props.onError(error, this);
+    };
+
     protected handleAdditionalDetails = state => {
         if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
         if (this.props.session) this.submitAdditionalDetails(state.data);
@@ -151,6 +156,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return result;
     };
 
+    /**
+     * Get the current validation status of the element
+     */
     get isValid(): boolean {
         return false;
     }
