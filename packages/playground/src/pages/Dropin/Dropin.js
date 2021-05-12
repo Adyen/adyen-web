@@ -174,7 +174,11 @@ function handleRedirectResult() {
                 showOrderButton: false,
                 onSubmit: state => {
                     makePayment(state.data).then(result => {
-                        handleFinalState(result.resultCode, dropin);
+                        if (result.action) {
+                            dropin.handleAction(result.action);
+                        } else {
+                            handleFinalState(result.resultCode, dropin);
+                        }
                     });
                 }
             })
