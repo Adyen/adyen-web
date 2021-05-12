@@ -29,7 +29,7 @@
         "css-loader": "^5.2.4",
         "dotenv": "^9.0.2",
         "html-webpack-plugin": "^4.5.2",
-        "node-sass": "^4.12.0",
+        "node-sass": "^6.0.0",
         "prettier": "^1.19.1",
         "sass-loader": "^10.1.1",
         "source-map-loader": "^1.1.3",
