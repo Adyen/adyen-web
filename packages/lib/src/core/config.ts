@@ -15,7 +15,10 @@ export const GENERIC_OPTIONS = [
     'clientKey',
     'showPayButton',
     'installmentOptions',
+
+    // Events
     'onPaymentCompleted',
+    'beforeRedirect',
     'onSubmit',
     'onAdditionalDetails',
     'onCancel',

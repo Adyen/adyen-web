@@ -37,7 +37,8 @@ export interface UIElementProps extends BaseElementProps {
     onComplete?: (state, element: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
-    onPaymentCompleted?: (result: any, element?: UIElement) => void;
+    onPaymentCompleted?: (result: any, element: UIElement) => void;
+    beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
     name?: string;
     icon?: string;
