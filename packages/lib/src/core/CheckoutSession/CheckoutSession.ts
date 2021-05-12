@@ -1,4 +1,4 @@
-import { CheckoutSession } from '../../types';
+import { CheckoutSession, Order } from '../../types';
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
 import setupSession from '../Services/sessions/setup-session';
@@ -8,11 +8,11 @@ import createOrder from '../Services/sessions/create-order';
 
 class Session {
     private readonly session: CheckoutSession;
-    private storage: Storage;
-    public clientKey: any;
-    public loadingContext: any;
+    private readonly storage: Storage;
+    public readonly clientKey: string;
+    public readonly loadingContext: string;
 
-    constructor(session, clientKey, loadingContext) {
+    constructor(session: CheckoutSession, clientKey: string, loadingContext: string) {
         if (!session.id) throw new Error('No Session ID');
         if (!clientKey) throw new Error('No clientKey available');
 
@@ -39,17 +39,22 @@ class Session {
     /**
      * Updates the session.data with the latest data blob
      */
-    updateSessionData(latestData: string) {
+    updateSessionData(latestData: string): void {
         this.session.data = latestData;
         this.storeSession();
     }
 
+    /**
+     * Fetches data from a session
+     * @returns {Promise<CheckoutSessionSetupResponse>}
+     */
     setupSession() {
-        return setupSession(this.session, { clientKey: this.clientKey, loadingContext: this.loadingContext });
+        return setupSession(this);
     }
 
     /**
      * Submits a session payment
+     * @returns {Promise<CheckoutSessionPaymentResponse>}
      */
     submitPayment(data) {
         return makePayment(data, this).then(response => {
@@ -63,6 +68,7 @@ class Session {
 
     /**
      * Submits session payment additional details
+     * @returns {Promise<CheckoutSessionDetailsResponse>}
      */
     submitDetails(data) {
         return submitDetails(data, this).then(response => {
@@ -76,6 +82,7 @@ class Session {
 
     /**
      * Checks the balance for a payment method
+     * @returns {Promise<CheckoutSessionBalanceResponse>}
      */
     checkBalance(data) {
         return checkBalance(data, this).then(response => {
@@ -87,6 +94,10 @@ class Session {
         });
     }
 
+    /**
+     * Creates an order for the current session
+     * @returns {Promise<CheckoutSessionOrdersResponse>}
+     */
     createOrder() {
         return createOrder(this).then(response => {
             if (response.sessionData) {
@@ -108,15 +119,16 @@ class Session {
     /**
      * Stores the session
      */
-    storeSession() {
-        this.storage.set(this.session);
+    storeSession(): void {
+        this.storage.set({ id: this.session.id, data: this.session.data });
     }
 
     /**
      * Clears the stored session
      */
-    removeStoredSession() {
+    removeStoredSession(): void {
         this.storage.remove();
     }
 }
+
 export default Session;

@@ -221,6 +221,16 @@ export type CheckoutSession = {
     data: string;
 };
 
+export type CheckoutSessionSetupResponse = {
+    id: string;
+    sessionData: string;
+
+    amount: PaymentAmount;
+    expiresAt: string;
+    paymentMethods: any;
+    returnUrl: string;
+};
+
 export type CheckoutSessionPaymentResponse = {
     sessionData: string;
     status?: string;
