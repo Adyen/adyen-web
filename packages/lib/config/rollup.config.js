@@ -94,7 +94,8 @@ export default async () => {
                 {
                     dir: 'dist/es',
                     format: 'es',
-                    chunkFileNames: '[name].js'
+                    chunkFileNames: '[name].js',
+                    ...(!isProduction ? { sourcemap: true } : {})
                 },
                 {
                     dir: 'dist/cjs',
