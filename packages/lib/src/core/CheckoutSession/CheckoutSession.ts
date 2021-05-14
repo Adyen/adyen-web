@@ -1,4 +1,11 @@
-import { CheckoutSession, Order } from '../../types';
+import {
+    CheckoutSession,
+    CheckoutSessionBalanceResponse,
+    CheckoutSessionDetailsResponse,
+    CheckoutSessionOrdersResponse,
+    CheckoutSessionPaymentResponse,
+    CheckoutSessionSetupResponse
+} from '../../types';
 import makePayment from '../Services/sessions/make-payment';
 import submitDetails from '../Services/sessions/submit-details';
 import setupSession from '../Services/sessions/setup-session';
@@ -46,17 +53,15 @@ class Session {
 
     /**
      * Fetches data from a session
-     * @returns {Promise<CheckoutSessionSetupResponse>}
      */
-    setupSession() {
+    setupSession(): Promise<CheckoutSessionSetupResponse> {
         return setupSession(this);
     }
 
     /**
      * Submits a session payment
-     * @returns {Promise<CheckoutSessionPaymentResponse>}
      */
-    submitPayment(data) {
+    submitPayment(data): Promise<CheckoutSessionPaymentResponse> {
         return makePayment(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
@@ -68,9 +73,8 @@ class Session {
 
     /**
      * Submits session payment additional details
-     * @returns {Promise<CheckoutSessionDetailsResponse>}
      */
-    submitDetails(data) {
+    submitDetails(data): Promise<CheckoutSessionDetailsResponse> {
         return submitDetails(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
@@ -82,9 +86,8 @@ class Session {
 
     /**
      * Checks the balance for a payment method
-     * @returns {Promise<CheckoutSessionBalanceResponse>}
      */
-    checkBalance(data) {
+    checkBalance(data): Promise<CheckoutSessionBalanceResponse> {
         return checkBalance(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);
@@ -96,9 +99,9 @@ class Session {
 
     /**
      * Creates an order for the current session
-     * @returns {Promise<CheckoutSessionOrdersResponse>}
+
      */
-    createOrder() {
+    createOrder(): Promise<CheckoutSessionOrdersResponse> {
         return createOrder(this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);

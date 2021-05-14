@@ -141,7 +141,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         }
     }
 
-    handleError = (error: AdyenCheckoutError): void => {
+    protected handleError = (error: AdyenCheckoutError): void => {
         if (this.props.onError) this.props.onError(error, this);
     };
 
