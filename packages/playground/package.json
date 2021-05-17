@@ -30,7 +30,7 @@
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^6.0.0",
         "postcss": "^8.2.15",
-        "postcss-loader": "^4.2.0",
+        "postcss-loader": "^4.3.0",
         "prettier": "^1.19.1",
         "sass-loader": "^10.1.1",
         "source-map-loader": "^1.1.3",
