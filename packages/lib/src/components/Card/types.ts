@@ -55,6 +55,8 @@ export interface CardElementProps extends UIElementProps {
     /** Whether the card holder name field will be required */
     holderNameRequired?: boolean;
 
+    socialSecurityNumberMode?: SocialSecurityMode;
+
     configuration?: CardConfiguration;
 
     /**
