@@ -63,33 +63,15 @@ class DropinElement extends UIElement<DropinElementProps> {
             throw new Error('No active payment method.');
         }
 
-        this.activePaymentMethod
-            .startPayment()
-            .then(this.handleSubmit)
-            .catch(error => this.props.onError(error));
+        this.activePaymentMethod.submit();
     }
-
-    protected handleSubmit = () => {
-        const { data, isValid } = this.activePaymentMethod;
-
-        if (!isValid) {
-            this.showValidation();
-            return false;
-        }
-
-        if (!this.props.onSubmit && this.props.session) {
-            return this.submitPayment(data);
-        }
-
-        if (this.props.onSubmit) return this.props.onSubmit({ data, isValid }, this);
-    };
 
     /**
      * Creates the Drop-in elements
      */
     private handleCreate = () => {
         const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods } = this.props;
-        const commonProps = getCommonProps({ ...this.props, onSubmit: this.submit, elementRef: this.elementRef });
+        const commonProps = getCommonProps({ ...this.props, /*onSubmit: this.submit,*/ elementRef: this.elementRef });
         const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance.create) : [];
         const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance.create) : [];
 
@@ -127,7 +109,6 @@ class DropinElement extends UIElement<DropinElementProps> {
                 <DropinComponent
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.handleSubmit}
                     elementRef={this.elementRef}
                     onCreateElements={this.handleCreate}
                     ref={dropinRef => {

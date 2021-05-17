@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import BaseElement from './BaseElement';
-import { PaymentAction } from '../types';
+import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import { UIElementProps } from './types';
@@ -17,6 +17,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
@@ -37,44 +38,38 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return state;
     }
 
+    onSubmit(): void {
+        if (this.props.onSubmit) {
+            // Classic flow
+            this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
+        } else if (this._parentInstance.session) {
+            // Session flow
+            this.submitPayment(this.data);
+        } else {
+            this.handleError(new AdyenCheckoutError('submitPayment', 'Could not submit the payment'));
+        }
+    }
+
     onValid() {
         const state = { data: this.data };
         if (this.props.onValid) this.props.onValid(state, this.elementRef);
         return state;
     }
 
-    /**
-     * Payment initiation handler. Used when a payment method needs to perform a step as soon as the Pay button is clicked.
-     */
-    startPayment(): Promise<any> {
-        return Promise.resolve(true);
+    onComplete(state): void {
+        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
     }
 
     /**
      * Submit payment method data. If the form is not valid, it will trigger validation.
      */
     submit(): void {
-        const { onError = () => {}, onSubmit, session } = this.props;
-        this.startPayment()
-            .then(() => {
-                if (!this.isValid) {
-                    this.showValidation();
-                    return false;
-                }
+        if (!this.isValid) {
+            this.showValidation();
+            return null;
+        }
 
-                // Classic flow
-                if (onSubmit) return onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
-
-                // Session flow
-                if (session) return this.submitPayment(this.data);
-
-                return onError('Could not submit the payment');
-            })
-            .catch(error => onError(error));
-    }
-
-    onComplete(state): void {
-        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
+        this.onSubmit();
     }
 
     showValidation(): this {
@@ -87,7 +82,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
-    submitPayment(data) {
+    submitPayment(data): Promise<void> {
         this.setStatus('loading');
 
         return this._parentInstance.session
@@ -103,10 +98,18 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this._parentInstance.session
             .submitDetails(data)
             .then(this.handleResponse)
-            .catch(error => {
-                this.handleError(error);
-            });
+            .catch(this.handleError);
     }
+
+    protected handleError = (error: AdyenCheckoutError): void => {
+        if (this.props.onError) this.props.onError(error, this);
+    };
+
+    protected handleAdditionalDetails = state => {
+        if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
+        if (this.props.session) this.submitAdditionalDetails(state.data);
+        return state;
+    };
 
     handleAction(action: PaymentAction, props = {}): UIElement {
         if (!action || !action.type) throw new Error('Invalid Action');
@@ -124,37 +127,27 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return null;
     }
 
-    handleOrder(order) {
+    protected handleOrder = (order: Order): void => {
         // TODO handleOrder
         console.log(order);
-    }
-
-    handleResponse(rawResponse): void {
-        const response = getSanitizedResponse(rawResponse);
-
-        if (response.action) {
-            this.handleAction(response.action);
-        } else if (response.order?.remainingAmount?.value > 0) {
-            this.handleOrder(response.order);
-        } else {
-            this.handleFinalResult(response);
-        }
-    }
-
-    protected handleError = (error: AdyenCheckoutError): void => {
-        if (this.props.onError) this.props.onError(error, this);
-    };
-
-    protected handleAdditionalDetails = state => {
-        if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
-        if (this.props.session) this.submitAdditionalDetails(state.data);
-        return state;
     };
 
     protected handleFinalResult = result => {
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);
         return result;
     };
+
+    handleResponse(rawResponse): void {
+        const response = getSanitizedResponse(rawResponse);
+
+        if (response.action) {
+            this.elementRef.handleAction(response.action);
+        } else if (response.order?.remainingAmount?.value > 0) {
+            this.elementRef.handleOrder(response.order);
+        } else {
+            this.elementRef.handleFinalResult(response);
+        }
+    }
 
     /**
      * Get the current validation status of the element

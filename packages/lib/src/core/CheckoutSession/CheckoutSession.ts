@@ -1,3 +1,9 @@
+import makePayment from '../Services/sessions/make-payment';
+import submitDetails from '../Services/sessions/submit-details';
+import setupSession from '../Services/sessions/setup-session';
+import checkBalance from '../Services/sessions/check-balance';
+import Storage from '../../utils/Storage';
+import createOrder from '../Services/sessions/create-order';
 import {
     CheckoutSession,
     CheckoutSessionBalanceResponse,
@@ -6,12 +12,6 @@ import {
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse
 } from '../../types';
-import makePayment from '../Services/sessions/make-payment';
-import submitDetails from '../Services/sessions/submit-details';
-import setupSession from '../Services/sessions/setup-session';
-import checkBalance from '../Services/sessions/check-balance';
-import Storage from '../../utils/Storage';
-import createOrder from '../Services/sessions/create-order';
 
 class Session {
     private readonly session: CheckoutSession;
@@ -99,7 +99,6 @@ class Session {
 
     /**
      * Creates an order for the current session
-
      */
     createOrder(): Promise<CheckoutSessionOrdersResponse> {
         return createOrder(this).then(response => {

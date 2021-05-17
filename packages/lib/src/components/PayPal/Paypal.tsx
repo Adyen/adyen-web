@@ -6,6 +6,7 @@ import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -82,10 +83,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.props.onError(data, this.elementRef);
     }
 
-    startPayment() {
-        return Promise.reject('Calling submit() is not supported for this payment method');
-    }
-
     handleSubmit() {
         const { data, isValid } = this;
         if (this.props.onSubmit) this.props.onSubmit({ data, isValid }, this.elementRef);
@@ -97,9 +94,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     submit() {
-        this.startPayment().catch(e => {
-            this.props.onError(e, this.elementRef);
-        });
+        this.handleError(new AdyenCheckoutError('error', 'Calling submit() is not supported for this payment method'));
     }
 
     render() {

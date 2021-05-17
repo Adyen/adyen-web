@@ -172,8 +172,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         // onError: console.error,
 
         // Payment info
-        currencyCode: 'EUR', // Required. The three-letter ISO 4217 currency code for the payment.
-        amount: 10, // 0.1 EUR (minor units)
         countryCode: 'DE', // Required. The merchant’s two-letter ISO 3166 country code.
 
         // Merchant config (required)

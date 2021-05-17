@@ -1,4 +1,8 @@
 const errorTypes = {
+    submitPayment: 'AdyenCheckoutSubmitPaymentError',
+
+    googlePay: 'AdyenCheckoutGooglePayAPIError',
+
     /** Network error */
     network: 'AdyenCheckoutNetworkError',
 

@@ -19,6 +19,7 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+
         onPaymentCompleted: (result, component) => {
             switch (result.resultCode) {
                 case 'Authorised':
@@ -33,8 +34,7 @@ const initCheckout = async () => {
         },
         onError: error => {
             console.log('AdyenCheckout error:', error.message, error.type);
-        },
-        paymentMethodsConfiguration: {}
+        }
     });
 
     const dropin = checkout.create('dropin').mount('#dropin-container');
