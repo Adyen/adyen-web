@@ -18,8 +18,10 @@ export function mapBrands(brands) {
         discover: 'discover',
         jcb: 'jcb',
         electron: 'electron',
-        maestro: 'maestro'
+        maestro: 'maestro',
+        girocard: 'girocard'
     };
+
     return brands.reduce((accumulator, item) => {
         if (!!brandMapping[item] && !accumulator.includes(brandMapping[item])) {
             accumulator.push(brandMapping[item]);
