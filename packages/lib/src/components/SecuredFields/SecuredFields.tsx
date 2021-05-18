@@ -71,9 +71,9 @@ export class SecuredFieldsElement extends UIElement {
         nuObj.rootNode = this._node;
 
         if (!nuObj.isReset) {
-            // Add brandImage urls
+            // Add brandImage urls, first checking if the merchant has configured their own one for the brand
             nuObj.supportedBrandsRaw = obj.supportedBrandsRaw?.map((item: BrandObject) => {
-                item.brandImageUrl = getCardImageUrl(item.brand, this.props.loadingContext);
+                item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.props.loadingContext);
                 return item;
             });
         }

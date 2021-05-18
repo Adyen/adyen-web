@@ -57,6 +57,22 @@ window.checkout = new AdyenCheckout({
             'creditCard.cvcField.placeholder.3digits': 'digits 3',
             'creditCard.cvcField.placeholder.4digits': 'digits 4'
         }
+    },
+    paymentMethodsConfiguration: {
+        // NOTE: still use 'card' because it's about the component 'type', not the name
+        card: {
+            brandsConfiguration: {
+                synchrony_plcc: {
+                    icon: 'http://localhost:3000/test_images/smartmoney.png'
+                },
+                bcmc: {
+                    icon: 'http://localhost:3000/test_images/bcmc.png'
+                },
+                maestro: {
+                    icon: 'http://localhost:3000/test_images/maestro.png'
+                }
+            }
+        }
     }
 });
 
