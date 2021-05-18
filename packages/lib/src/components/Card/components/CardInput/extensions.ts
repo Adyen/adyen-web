@@ -79,8 +79,6 @@ export default function extensions(props, refs, states) {
             const target = e.target as HTMLLIElement;
             const value: string = target.getAttribute('data-value') || target.getAttribute('alt');
 
-            console.log('### CardInput extensions::handleDualBrandSelection:: brand', value);
-
             setSelectedBrandValue(value);
 
             // Find the brandObject with the matching brand value and place into an array

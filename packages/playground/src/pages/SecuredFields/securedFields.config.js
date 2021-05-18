@@ -9,19 +9,23 @@ function setAttributes(el, attrs) {
 
 function setLogosActive(rootNode, mode) {
     const imageHolder = rootNode.querySelector('.pm-image');
+    const dualBrandingImageHolder = rootNode.querySelector('.pm-image-dual');
 
     switch (mode) {
         case 'dualBranding_notValid':
-            Object.assign(imageHolder.style, { 'pointer-events': 'none', opacity: 0.5 });
+            Object.assign(imageHolder.style, { display: 'none' });
+            Object.assign(dualBrandingImageHolder.style, { display: 'block', 'pointer-events': 'none', opacity: 0.5 });
             break;
 
         case 'dualBranding_valid':
-            Object.assign(imageHolder.style, { 'pointer-events': 'auto', opacity: 1 });
+            Object.assign(imageHolder.style, { display: 'none' });
+            Object.assign(dualBrandingImageHolder.style, { display: 'block', 'pointer-events': 'auto', opacity: 1 });
             break;
 
         default:
             // reset
-            Object.assign(imageHolder.style, { 'pointer-events': 'none', opacity: 1 });
+            Object.assign(imageHolder.style, { display: 'block' });
+            Object.assign(dualBrandingImageHolder.style, { display: 'none' });
     }
 }
 
@@ -48,7 +52,8 @@ export function onConfigSuccess(pCallbackObj) {
     document.querySelector('.card-input__spinner__holder').style.display = 'none';
 
     pCallbackObj.rootNode.style.display = 'block';
-    pCallbackObj.rootNode.querySelector('#pmImage2').style.display = 'none';
+
+    pCallbackObj.rootNode.querySelector('.pm-image-dual').style.display = 'none';
 
     setLogosActive(pCallbackObj.rootNode);
 
@@ -124,12 +129,8 @@ export function onBrand(pCallbackObj) {
         const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImage');
         setAttributes(brandLogo1, {
             src: pCallbackObj.brandImageUrl,
-            alt: pCallbackObj.brand,
-            'data-value': pCallbackObj.brand
+            alt: pCallbackObj.brand
         });
-
-        // Ensure holder is in correct state
-        setLogosActive(pCallbackObj.rootNode);
     }
 
     /**
@@ -161,32 +162,31 @@ function resetDualBranding(rootNode) {
 
     setLogosActive(rootNode);
 
-    const brandLogo1 = rootNode.querySelector('#pmImage');
+    const brandLogo1 = rootNode.querySelector('#pmImageDual1');
     brandLogo1.removeEventListener('click', dualBrandListener);
 
-    const brandLogo2 = rootNode.querySelector('#pmImage2');
+    const brandLogo2 = rootNode.querySelector('#pmImageDual2');
     brandLogo2.removeEventListener('click', dualBrandListener);
-    brandLogo2.style.display = 'none';
 }
 
 /**
  * Implementing dual branding
  */
 function onDualBrand(pCallbackObj) {
-    console.log('### securedFields.config::onDualBrand:: pCallbackObj', pCallbackObj);
-
-    const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImage');
-    const brandLogo2 = pCallbackObj.rootNode.querySelector('#pmImage2');
+    const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImageDual1');
+    const brandLogo2 = pCallbackObj.rootNode.querySelector('#pmImageDual2');
 
     isDualBranding = true;
+
+    const supportedBrands = pCallbackObj.supportedBrandsRaw;
 
     /**
      * Set first brand icon (and, importantly also add alt &/or data-value attrs); and add event listener
      */
     setAttributes(brandLogo1, {
-        src: pCallbackObj.supportedBrandsRaw[0].brandImageUrl,
-        alt: pCallbackObj.supportedBrandsRaw[0].brand,
-        'data-value': pCallbackObj.supportedBrandsRaw[0].brand
+        src: supportedBrands[0].brandImageUrl,
+        alt: supportedBrands[0].brand,
+        'data-value': supportedBrands[0].brand
     });
 
     brandLogo1.addEventListener('click', dualBrandListener);
@@ -194,20 +194,12 @@ function onDualBrand(pCallbackObj) {
     /**
      * Set second brand icon (and, importantly also add alt &/or data-value attrs); and add event listener
      */
-    brandLogo2.style.display = 'inline';
     setAttributes(brandLogo2, {
-        src: pCallbackObj.supportedBrandsRaw[1].brandImageUrl,
-        alt: pCallbackObj.supportedBrandsRaw[1].brand,
-        'data-value': pCallbackObj.supportedBrandsRaw[1].brand
+        src: supportedBrands[1].brandImageUrl,
+        alt: supportedBrands[1].brand,
+        'data-value': supportedBrands[1].brand
     });
     brandLogo2.addEventListener('click', dualBrandListener);
-
-    /**
-     *  If card number already valid e.g. from 'paste' event (in which case the onFieldValid callback will be called before the onBinLookup callback)
-     *  - make the logos active
-     */
-    const mode = securedFields.state.valid.encryptedCardNumber ? 'dualBranding_valid' : 'dualBranding_notValid';
-    setLogosActive(pCallbackObj.rootNode, mode);
 }
 
 export function onBinLookup(pCallbackObj) {
@@ -225,23 +217,17 @@ export function onBinLookup(pCallbackObj) {
     /**
      * ...else - binLookup 'reset' result or binLookup result with only one brand
      */
-    if (pCallbackObj.isReset) {
-        console.log('### SecuredFields::onBinLookup:: RESET');
-    } else {
-        console.log('### SecuredFields::onBinLookup:: RESULT BUT NO DUAL BRANDING');
-    }
-
     resetDualBranding(pCallbackObj.rootNode);
 }
 
-export function onFieldValid(pCallbackObj) {
+export function onChange(state) {
     /**
      * If we're in a dual branding scenario & the number field becomes valid or is valid and become invalid
      * - set the brand logos to the required 'state'
      */
-    if (pCallbackObj.fieldType === 'encryptedCardNumber' && isDualBranding) {
-        const mode = pCallbackObj.valid ? 'dualBranding_valid' : 'dualBranding_notValid';
-        setLogosActive(pCallbackObj.rootNode, mode);
+    if (isDualBranding) {
+        const mode = state.valid.encryptedCardNumber ? 'dualBranding_valid' : 'dualBranding_notValid';
+        setLogosActive(document.querySelector('.secured-fields'), mode);
     }
 }
 

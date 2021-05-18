@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onFieldValid } from './securedFields.config';
+import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
@@ -66,6 +66,7 @@ window.securedFields = checkout
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'synchrony_plcc'],
         styles,
+        minimumExpiryDate: '09/21',
         onConfigSuccess,
         onBrand,
         onBinValue: cbObj => {
@@ -76,8 +77,7 @@ window.securedFields = checkout
         onError: setCCErrors,
         onFocus: setFocus,
         onBinLookup,
-        minimumExpiryDate: '09/21',
-        onFieldValid
+        onChange
     })
     .mount('.secured-fields');
 
