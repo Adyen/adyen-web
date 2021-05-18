@@ -1,4 +1,5 @@
 let hideCVC = false;
+let hideDate = false;
 let isDualBranding = false;
 
 function setAttributes(el, attrs) {
@@ -119,9 +120,6 @@ export function setFocus(pCallbackObj) {
 }
 
 export function onBrand(pCallbackObj) {
-    console.log('### securedFields.config::onBrand:: pCallbackObj', pCallbackObj);
-    console.log('### securedFields.config::onBrand:: isDualBranding', isDualBranding);
-
     /**
      * If not in dual branding mode - add card brand to first image element
      */
@@ -136,20 +134,37 @@ export function onBrand(pCallbackObj) {
     /**
      * Deal with showing/hiding CVC field
      */
-    let labelNode;
+    const cvcNode = pCallbackObj.rootNode.querySelector('.pm-form-label--cvc');
 
     if (pCallbackObj.cvcPolicy === 'hidden' && !hideCVC) {
         hideCVC = true;
-        labelNode = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
-        labelNode.style.display = 'none';
+        cvcNode.style.display = 'none';
     }
 
     if (hideCVC && pCallbackObj.cvcPolicy !== 'hidden') {
-        // explicitly set to false
         hideCVC = false;
+        cvcNode.style.display = 'block';
+    }
 
-        labelNode = pCallbackObj.rootNode.getElementsByClassName('pm-form-label--cvc')[0];
-        labelNode.style.display = 'block';
+    /**
+     * Deal with showing/hiding date field(s)
+     */
+    const dateNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-date');
+    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-month');
+    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-year');
+
+    if (pCallbackObj.datePolicy === 'hidden' && !hideDate) {
+        hideDate = true;
+        dateNode?.style.display = 'none';
+        monthNode?.style.display = 'none';
+        yearNode?.style.display = 'none';
+    }
+
+    if (hideDate && pCallbackObj.datePolicy !== 'hidden') {
+        hideDate = false;
+        dateNode?.style.display = 'block';
+        monthNode?.style.display = 'block';
+        yearNode?.style.display = 'block';
     }
 }
 
@@ -203,13 +218,10 @@ function onDualBrand(pCallbackObj) {
 }
 
 export function onBinLookup(pCallbackObj) {
-    console.log('### SecuredFields::onBinLookup:: pCallbackObj', pCallbackObj);
-
     /**
      * Dual branded result...
      */
     if (pCallbackObj.supportedBrandsRaw?.length > 1) {
-        console.log('### SecuredFields::onBinLookup:: DUAL BRANDING');
         onDualBrand(pCallbackObj);
         return;
     }

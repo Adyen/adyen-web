@@ -31,7 +31,6 @@ export class SecuredFieldsElement extends UIElement {
      */
     formatData() {
         const sfBrand = this.state.selectedBrandValue || this.props.brand;
-        console.log('### SecuredFields::formatData:: sfBrand', sfBrand);
         return {
             paymentMethod: {
                 type: SecuredFieldsElement.type,
@@ -73,7 +72,7 @@ export class SecuredFieldsElement extends UIElement {
 
         if (!nuObj.isReset) {
             // Add brandImage urls
-            nuObj.supportedBrandsRaw = obj.supportedBrandsRaw.map((item: BrandObject) => {
+            nuObj.supportedBrandsRaw = obj.supportedBrandsRaw?.map((item: BrandObject) => {
                 item.brandImageUrl = getCardImageUrl(item.brand, this.props.loadingContext);
                 return item;
             });
