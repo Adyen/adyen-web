@@ -64,10 +64,11 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         } as BinLookupResponse);
 
                         // Inform merchant of the result
-                        this.props.onBinLookup({
+                        this.onBinLookup({
                             type: callbackObj.type,
                             detectedBrands: mappedResponse.detectedBrands,
                             supportedBrands: mappedResponse.supportedBrands.map(item => item.brand), // supportedBrands contains the subset of this.props.brands that matches the card number that the shopper has typed
+                            supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                             brands: this.props.brands || DEFAULT_CARD_GROUP_TYPES
                         } as CbObjOnBinLookup);
 
@@ -87,7 +88,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                         this.handleUnsupportedCard(errObj);
 
                         // Inform merchant of the result
-                        this.props.onBinLookup({
+                        this.onBinLookup({
                             type: callbackObj.type,
                             detectedBrands: mappedResponse.detectedBrands,
                             supportedBrands: null,
@@ -100,7 +101,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
                     /**
                      *  BIN not in DB (a failed lookup will just contain a requestId)
                      */
-                    this.props.onBinLookup({
+                    this.onBinLookup({
                         type: callbackObj.type,
                         detectedBrands: null,
                         supportedBrands: null,
@@ -133,6 +134,11 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             error: ''
         };
         this.handleUnsupportedCard(errObj);
+
+        // CustomCard needs this to reset the UI
+        this.onBinLookup({
+            isReset: true
+        } as CbObjOnBinLookup);
     }
 
     if (this.props.onBinValue) this.props.onBinValue(callbackObj);

@@ -232,6 +232,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public handleUnsupportedCard(errObj: CbObjOnError): boolean {
         const hasUnsupportedCard = !!errObj.error;
+        errObj.rootNode = this.rootNode; // Needed for CustomCard
         this.handleOnError(errObj, hasUnsupportedCard);
         // Inform CSF that the number field has an unsupportedCard error
         if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, errObj.error);

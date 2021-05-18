@@ -1,5 +1,6 @@
 import Language from '../../../../language/Language';
 import { CVCPolicyType, DatePolicyType } from './core/AbstractSecuredField';
+import { BrandObject } from '../../../Card/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -193,10 +194,14 @@ export interface CbObjOnBinValue {
 }
 
 export interface CbObjOnBinLookup {
-    type: string;
-    detectedBrands: string[];
-    supportedBrands: string[];
-    brands: string[];
+    type?: string;
+    detectedBrands?: string[];
+    supportedBrands?: string[];
+    brands?: string[];
+    // New for CustomCard
+    supportedBrandsRaw?: BrandObject[];
+    isReset?: boolean;
+    rootNode?: HTMLElement;
 }
 
 export interface CbObjOnError {
@@ -204,7 +209,7 @@ export interface CbObjOnError {
     error: string;
     type: string;
     rootNode?: HTMLElement;
-    detectedBrands?: string[]; // new v2
+    detectedBrands?: string[];
     errorI18n?: string;
     errorText?: string;
 }
@@ -226,6 +231,7 @@ export interface CbObjOnLoad {
 export interface CbObjOnConfigSuccess {
     iframesConfigured: boolean;
     type: string;
+    rootNode: HTMLElement;
 }
 
 export interface CbObjOnAdditionalSF {
