@@ -52,10 +52,13 @@ test(
             )
             .eql('maestro');
 
+        // TODO delete action fails in Safari - but only if the "Click BCMC brand icon" action takes place!?
         await cardUtils.deleteCardNumber(t);
 
         await t
-            // bcmc card icon
+            .expect(dualBrandingIconHolderActive.exists)
+            .notOk()
+            // single bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
             .contains('bcmc');
     }
@@ -100,6 +103,8 @@ test(
         await cardUtils.deleteCardNumber(t);
 
         await t
+            .expect(dualBrandingIconHolderActive.exists)
+            .notOk()
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
             .contains('bcmc');
@@ -148,6 +153,7 @@ test(
         // Hidden cvc field
         await t.expect(cvcSpan.filterHidden().exists).ok();
 
+        // TODO delete action fails in Safari - but only if the "Click BCMC brand icon" action takes place
         await cardUtils.deleteCardNumber(t);
 
         await t
