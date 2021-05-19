@@ -15,7 +15,8 @@ export class SecuredFieldsElement extends UIElement {
     public static analyticsType = 'custom-scheme';
 
     protected static defaultProps = {
-        onBinLookup: () => {}
+        onBinLookup: () => {},
+        brandsConfiguration: {}
     };
 
     formatProps(props) {
