@@ -1,22 +1,20 @@
-const errorTypes = {
+const genericErrorTypes = {
     submitPayment: 'AdyenCheckoutSubmitPaymentError',
-
-    googlePay: 'AdyenCheckoutGooglePayAPIError',
 
     /** Network error */
     network: 'AdyenCheckoutNetworkError',
 
     /** Generic error */
     error: 'AdyenCheckoutError'
-} as const;
+} as { [key: string]: string };
 
-type AdyenCheckoutErrorType = keyof typeof errorTypes;
+class AdyenCheckoutError<T extends typeof genericErrorTypes = typeof genericErrorTypes> extends Error {
+    protected errorTypes: T = genericErrorTypes as T;
 
-class AdyenCheckoutError extends Error {
-    constructor(type: AdyenCheckoutErrorType, message: string) {
+    constructor(type: keyof T, message: string) {
         super(message);
 
-        this.name = errorTypes[type];
+        this.name = this.errorTypes[type];
     }
 }
 
