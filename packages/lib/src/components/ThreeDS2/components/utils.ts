@@ -184,7 +184,6 @@ const fingerprintFlowPropsDropin = ['elementRef'];
  *  if the /submitThreeDS2Fingerprint response dictates we "handleAction" to create a challenge
  */
 const fingerprintFlowProps = ['createFromAction', 'onAdditionalDetails'];
-// const challengeFlowProps = ['challengeWindowSize'];
 
 /**
  * Add props specifically needed for the type of 3DS2 flow: fingerprint or challenge
