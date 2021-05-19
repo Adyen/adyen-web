@@ -10,7 +10,7 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 
-const latestSupportedVersion = 10;
+const latestSupportedVersion = 11;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
