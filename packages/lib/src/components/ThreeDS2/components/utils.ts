@@ -177,7 +177,7 @@ export const encodeBase64URL = (dataStr: string): string => {
     return base64url;
 };
 
-const fingerprintFlowPropsDropin = ['elementRef'];
+const fingerprintFlowPropsDropin = ['elementRef', 'challengeWindowSize']; // also pass challengeWindowSize in case its been set directly in the handleAction config object
 
 /**
  *  Must contain all props needed for the challenge stage since, in the new 3DS2 flow, the fingerprint component will be the "component" reference
