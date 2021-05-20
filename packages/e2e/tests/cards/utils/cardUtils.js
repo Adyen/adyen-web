@@ -1,4 +1,4 @@
-import { fillIFrame, deleteFromIFrame } from '../../utils/commonUtils';
+import { fillIFrame, deleteFromIFrame, deleteDigitsFromIFrame } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE } from './constants';
 
 /**
@@ -21,7 +21,8 @@ export default iframeSelector => {
         deleteCVC: deleteCVC(iframeSelector),
         fillDate: fillDate(iframeSelector),
         fillCVC: fillCVC(iframeSelector),
-        fillDateAndCVC: fillDateAndCVC(iframeSelector)
+        fillDateAndCVC: fillDateAndCVC(iframeSelector),
+        deleteDigitsFromCardNumber: deleteDigitsFromCardNumber(iframeSelector)
     };
 };
 
@@ -40,6 +41,12 @@ const fillCardNumber = iframeSelector => {
 const deleteCardNumber = iframeSelector => {
     return async t => {
         return deleteFromIFrame(t, iframeSelector, 0, '#encryptedCardNumber');
+    };
+};
+
+const deleteDigitsFromCardNumber = iframeSelector => {
+    return async (t, startCaretPos, endCaretPos) => {
+        return deleteDigitsFromIFrame(t, iframeSelector, 0, '#encryptedCardNumber', startCaretPos, endCaretPos);
     };
 };
 

@@ -6,6 +6,9 @@ export const BCMC_CARD = '6703444444444449'; // actually dual branded bcmc & mae
 export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the test DBs (uatp)
 export const UNKNOWN_VISA_CARD = '4111111111111111'; // card that is not in the test DBs (visa)
 
+export const SYNCHRONY_PLCC_NO_LUHN = '6044100018023838';
+export const SYNCHRONY_PLCC_WITH_LUHN = '6044141000018769';
+
 export const FAILS_LUHN_CARD = '4111111111111112';
 
 export const THREEDS2_FRICTIONLESS_CARD = '5201281505129736';
