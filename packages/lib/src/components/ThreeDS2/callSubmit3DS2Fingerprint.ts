@@ -1,4 +1,5 @@
 import { httpPost } from '../../core/Services/http';
+import { pick } from '../internal/SecuredFields/utils';
 
 /**
  * ThreeDS2DeviceFingerprint, onComplete, calls a new, internal, endpoint which behaves like the /details endpoint but doesn't require the same credentials
@@ -33,7 +34,8 @@ export default function callSubmit3DS2Fingerprint({ data }) {
          * Challenge flow
          */
         if (resData.action?.type === 'threeDS2') {
-            return actionHandler.handleAction(resData.action);
+            // Ensure challengeWindowSize is propagated if there was a (merchant defined) handleAction call proceeding this one that had it set as an option
+            return actionHandler.handleAction(resData.action, pick('challengeWindowSize').from(this.props));
         }
 
         /**
