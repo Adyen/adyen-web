@@ -4,6 +4,7 @@ import UIElement from './UIElement';
 import Core from '../core';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export interface PaymentResponse {
     action?: PaymentAction;

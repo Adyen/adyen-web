@@ -3,6 +3,8 @@ import { PaymentAmount, PaymentMethods, PaymentMethodOptions, PaymentActionsType
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
+import AdyenCheckoutError from './Errors/AdyenCheckoutError';
+import UIElement from '../components/UIElement';
 
 export interface CoreOptions {
     session?: any;

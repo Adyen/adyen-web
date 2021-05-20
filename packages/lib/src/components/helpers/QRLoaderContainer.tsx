@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import UIElement, { UIElementProps } from '../UIElement';
+import UIElement from '../UIElement';
+import { UIElementProps } from '../types';
 import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';

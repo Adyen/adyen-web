@@ -7,7 +7,6 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import AdyenCheckoutGooglePayError from './errors';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -61,7 +60,7 @@ class GooglePay extends UIElement<GooglePayProps> {
                 return onAuthorized(paymentData);
             })
             .catch((error: google.payments.api.PaymentsError) => {
-                this.handleError(new AdyenCheckoutGooglePayError('googlePay', error.statusCode, error.toString()));
+                this.handleError(new AdyenCheckoutError('ERROR', error.toString()));
                 return Promise.reject(error);
             });
     };

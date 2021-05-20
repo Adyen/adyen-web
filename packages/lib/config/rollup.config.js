@@ -94,6 +94,7 @@ export default async () => {
                 {
                     dir: 'dist/es',
                     format: 'es',
+                    sourcemap: true,
                     chunkFileNames: '[name].js'
                 },
                 {

@@ -55,7 +55,7 @@ function handleFetchError(message: string, level: string) {
         case 'error':
             return console[level](message);
         default:
-            throw new AdyenCheckoutError('network', message);
+            throw new AdyenCheckoutError('NETWORK_ERROR', message);
     }
 }
 

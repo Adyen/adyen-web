@@ -1,20 +1,24 @@
-const genericErrorTypes = {
-    submitPayment: 'AdyenCheckoutSubmitPaymentError',
+class AdyenCheckoutError extends Error {
+    protected static errorTypes = {
+        SUBMIT_PAYMENT: 'SUBMIT_PAYMENT',
 
-    /** Network error */
-    network: 'AdyenCheckoutNetworkError',
+        /** Network error. */
+        NETWORK_ERROR: 'NETWORK_ERROR',
 
-    /** Generic error */
-    error: 'AdyenCheckoutError'
-} as { [key: string]: string };
+        /** Shopper canceled the current transaction. */
+        CANCEL: 'CANCEL',
 
-class AdyenCheckoutError<T extends typeof genericErrorTypes = typeof genericErrorTypes> extends Error {
-    protected errorTypes: T = genericErrorTypes as T;
+        /** Implementation error. The method or parameter are incorrect or are not supported. */
+        DEVELOPER_ERROR: 'DEVELOPER_ERROR',
 
-    constructor(type: keyof T, message: string) {
+        /** Generic error. */
+        ERROR: 'ERROR'
+    };
+
+    constructor(type: keyof typeof AdyenCheckoutError.errorTypes, message?: string) {
         super(message);
 
-        this.name = this.errorTypes[type];
+        this.name = (this.constructor as typeof AdyenCheckoutError).errorTypes[type];
     }
 }
 

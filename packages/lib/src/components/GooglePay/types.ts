@@ -1,4 +1,4 @@
-import { UIElementProps } from '../UIElement';
+import { UIElementProps } from '../types';
 
 export interface GooglePayPropsConfiguration {
     /**

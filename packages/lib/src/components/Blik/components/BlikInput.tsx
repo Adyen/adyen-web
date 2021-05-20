@@ -4,7 +4,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
 import getImage from '../../../utils/get-image';
 import { renderFormField } from '../../internal/FormFields';
-import { UIElementProps } from '../../UIElement';
+import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 

@@ -14,11 +14,12 @@ const initCheckout = async () => {
     });
 
     const checkout = await AdyenCheckout({
-        session,
-        countryCode,
-        clientKey: process.env.__CLIENT_KEY__,
-        locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+        clientKey: process.env.__CLIENT_KEY__,
+        session,
+
+        countryCode, // @deprecated
+        locale: shopperLocale, // @deprecated
 
         onPaymentCompleted: (result, component) => {
             switch (result.resultCode) {
@@ -32,8 +33,8 @@ const initCheckout = async () => {
                     component.setStatus('error');
             }
         },
-        onError: error => {
-            console.log('AdyenCheckout error:', error.message, error.type);
+        onError: (error, component) => {
+            console.error(error.name, error.message, error.stack);
         }
     });
 

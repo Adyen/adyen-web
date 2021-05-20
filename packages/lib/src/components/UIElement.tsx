@@ -46,7 +46,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             // Session flow
             this.submitPayment(this.data);
         } else {
-            this.handleError(new AdyenCheckoutError('submitPayment', 'Could not submit the payment'));
+            this.handleError(new AdyenCheckoutError('SUBMIT_PAYMENT', 'Could not submit the payment'));
         }
     }
 
@@ -102,7 +102,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
-        if (this.props.onError) this.props.onError(error, this);
+        if (this.props.onError) this.props.onError(error, this.elementRef);
     };
 
     protected handleAdditionalDetails = state => {

@@ -23,7 +23,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.updateWithAction = this.updateWithAction.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleComplete = this.handleComplete.bind(this);
-        this.handleError = this.handleError.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.submit = this.submit.bind(this);
     }
@@ -70,17 +69,13 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return true;
     }
 
-    handleCancel(data) {
-        this.props.onCancel(data, this.elementRef);
+    handleCancel() {
+        this.handleError(new AdyenCheckoutError('CANCEL'));
     }
 
     handleComplete(details) {
         const state = { data: { details, paymentData: this.paymentData } };
         this.props.onAdditionalDetails(state, this.elementRef);
-    }
-
-    handleError(data) {
-        this.props.onError(data, this.elementRef);
     }
 
     handleSubmit() {
@@ -94,7 +89,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     submit() {
-        this.handleError(new AdyenCheckoutError('error', 'Calling submit() is not supported for this payment method'));
+        this.handleError(new AdyenCheckoutError('DEVELOPER_ERROR', 'Calling submit() is not supported for this payment method'));
     }
 
     render() {
