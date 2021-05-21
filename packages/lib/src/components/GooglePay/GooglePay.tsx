@@ -44,7 +44,7 @@ class GooglePay extends UIElement<GooglePayProps> {
         };
     }
 
-    public loadPayment = () => {
+    public submit = () => {
         const { onAuthorized = () => {} } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
@@ -63,10 +63,6 @@ class GooglePay extends UIElement<GooglePayProps> {
                 this.handleError(new AdyenCheckoutError('ERROR', error.toString()));
                 return Promise.reject(error);
             });
-    };
-
-    public submit = () => {
-        return this.loadPayment();
     };
 
     /**
