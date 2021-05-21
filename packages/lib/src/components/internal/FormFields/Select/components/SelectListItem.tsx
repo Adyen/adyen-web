@@ -2,6 +2,7 @@ import { h } from 'preact';
 import cx from 'classnames';
 import { SelectItemProps } from '../types';
 import styles from '../Select.module.scss';
+import Img from '../../../Img';
 
 const SelectListItem = ({ item, selected, ...props }: SelectItemProps) => (
     <li
@@ -23,7 +24,7 @@ const SelectListItem = ({ item, selected, ...props }: SelectItemProps) => (
         tabIndex={-1}
     >
         <span>{item.name}</span>
-        {item.icon && <img className="adyen-checkout__dropdown__element__icon" alt={item.name} src={item.icon} />}
+        {item.icon && <Img className="adyen-checkout__dropdown__element__icon" alt={item.name} src={item.icon} />}
     </li>
 );
 
