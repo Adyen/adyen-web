@@ -67,5 +67,5 @@ test('Can fill out the fields in the separate custom card and make a successful 
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised'); // TODO will fail until new 3.5.0 is on Test (eta pm 22/04/21)
+    await t.expect(history[0].text).eql('Authorised');
 });

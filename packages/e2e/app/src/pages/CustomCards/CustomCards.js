@@ -37,7 +37,7 @@ createPayButton('.secured-fields', window.securedFields, 'securedfields');
 window.securedFields2 = checkout
     .create('securedfields', {
         type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
         onBrand,
         onError: setCCErrors,
         onFocus: setFocus,

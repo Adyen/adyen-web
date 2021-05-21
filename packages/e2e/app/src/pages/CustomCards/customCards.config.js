@@ -80,7 +80,7 @@ export function onBrand(pCallbackObj) {
      * If not in dual branding mode - add card brand to first image element
      */
     if (!isDualBranding) {
-        const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImage');
+        const brandLogo1 = pCallbackObj.rootNode.querySelector('img');
         setAttributes(brandLogo1, {
             src: pCallbackObj.brandImageUrl,
             alt: pCallbackObj.brand

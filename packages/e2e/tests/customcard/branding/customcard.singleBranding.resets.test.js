@@ -7,8 +7,6 @@ import { CUSTOMCARDS_URL } from '../../pages';
 const singleBrandingIconHolder = Selector('.secured-fields .pm-image');
 const dualBrandingIconHolder = Selector('.secured-fields .pm-image-dual');
 
-const cvcField = Selector('.secured-fields .pm-form-label--cvc');
-
 const getPropFromPMData = ClientFunction(prop => {
     return window.securedFields.formatData().paymentMethod[prop];
 });
@@ -72,7 +70,7 @@ test(
 
 test(
     'Fill in regular MC card then ' +
-        'check that a brand has been set on PM data, then' +
+        'check that a brand has been set on PM data, then ' +
         'delete digits and , ' +
         'check that the brand has been reset on paymentMethod data ',
     async t => {
