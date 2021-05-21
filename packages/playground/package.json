@@ -29,7 +29,7 @@
         "dotenv": "^9.0.2",
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^6.0.0",
-        "postcss": "^8.2.15",
+        "postcss": "^8.3.0",
         "postcss-loader": "^4.3.0",
         "prettier": "^1.19.1",
         "sass-loader": "^10.1.1",
