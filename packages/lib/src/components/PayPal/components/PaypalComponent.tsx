@@ -11,9 +11,7 @@ export default function PaypalComponent(props: PayPalComponentProps) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('pending');
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    this.setStatus = setStatus;
 
     const handleComplete = data => {
         setStatus('processing');

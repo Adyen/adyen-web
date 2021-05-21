@@ -75,12 +75,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     handleComplete(details) {
         const state = { data: { details, paymentData: this.paymentData } };
-        this.props.onAdditionalDetails(state, this.elementRef);
+        this.handleAdditionalDetails(state);
     }
 
     handleSubmit() {
-        const { data, isValid } = this;
-        if (this.props.onSubmit) this.props.onSubmit({ data, isValid }, this.elementRef);
+        this.onSubmit();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
