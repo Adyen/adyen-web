@@ -80,7 +80,7 @@ window.checkout = new AdyenCheckout({
 window.securedFields = checkout
     .create('securedfields', {
         type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'synchrony_plcc'],
+        brands: ['visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
         styles,
         minimumExpiryDate: '09/21',
         onConfigSuccess,
