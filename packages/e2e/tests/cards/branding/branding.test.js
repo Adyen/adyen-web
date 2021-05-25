@@ -198,12 +198,13 @@ test(
 
         await setForceClick(true);
 
-        // Click pay - to force blur event that will trigger error and reset card.isValid
+        // Click label - to force blur event that will trigger error and reset card.isValid
         await t
             .click('.adyen-checkout__label__text')
             // Expect error
             .expect(Selector('.adyen-checkout__field--error').exists)
-            .ok();
+            .ok()
+            .wait(2000);
 
         // Is not valid
         await t.expect(getIsValid('card')).eql(false);
@@ -265,7 +266,7 @@ test(
 
         await setForceClick(true);
 
-        // Click pay - to force blur event that will trigger error and reset card.isValid
+        // Click label - to force blur event that will trigger error and reset card.isValid
         await t.click('.adyen-checkout__label__text').wait(1000);
 
         // #2 Not valid (maestro w. cvc in error)

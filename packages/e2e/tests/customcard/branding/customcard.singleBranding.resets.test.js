@@ -53,7 +53,10 @@ test(
 
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
 
-        // visa card icon
+        // Should not be a brand property in the PM data
+        await t.expect(getPropFromPMData('brand')).eql(undefined);
+
+        // visa card icon (internal regex has run)
         await t
             .expect(
                 singleBrandingIconHolder
@@ -62,9 +65,6 @@ test(
                     .getAttribute('alt')
             )
             .eql('visa');
-
-        // Should not be a brand property in the PM data
-        await t.expect(getPropFromPMData('brand')).eql(undefined);
     }
 );
 
@@ -72,7 +72,8 @@ test(
     'Fill in regular MC card then ' +
         'check that a brand has been set on PM data, then ' +
         'delete digits and , ' +
-        'check that the brand has been reset on paymentMethod data ',
+        'check that the brand has been reset on paymentMethod data ' +
+        'and the generic card icon is shown',
     async t => {
         // Start, allow time to load
         await start(t, 2000, TEST_SPEED);
