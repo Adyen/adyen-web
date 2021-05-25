@@ -261,7 +261,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
-                this.handleOnError(errorObj);
+                this.handleOnError(errorObj, state.hasUnsupportedCard);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
                     this.csf.isValidated(field, errorObj.error);
