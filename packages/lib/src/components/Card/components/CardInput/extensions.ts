@@ -19,8 +19,8 @@ export default function extensions(props, refs, states) {
             const issuingCode = binLookupResponse?.issuingCountryCode ? binLookupResponse.issuingCountryCode.toLowerCase() : null;
             setIssuingCountryCode(issuingCode);
 
-            if (!binLookupResponse) {
-                // Reset UI
+            // Reset UI
+            if (!binLookupResponse || !Object.keys(binLookupResponse).length) {
                 setDualBrandSelectElements([]);
                 setSelectedBrandValue('');
 

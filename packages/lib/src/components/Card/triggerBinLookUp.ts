@@ -110,7 +110,7 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
 
                     // Reset the UI and let the native, regex branding happen (for the generic card)
                     // For a single-branded card we need to pass a boolean to prompt resetting the brand logo to the 'base' type
-                    this.processBinLookupResponse(null, true);
+                    this.processBinLookupResponse({}, true);
                 }
             } else {
                 if (!data?.requestId) {
@@ -121,8 +121,10 @@ export default function triggerBinLookUp(callbackObj: CbObjOnBinValue) {
             }
         });
     } else if (this.currentRequestId) {
-        // If onBinValue callback is called AND we have been doing binLookup BUT passed object doesn't have an encryptedBin property
-        // - then the number of digits in number field has dropped below threshold for BIN lookup - so reset the UI
+        /**
+         * If onBinValue callback is called AND we have been doing binLookup BUT passed object doesn't have an encryptedBin property
+         * - then THE NUMBER OF DIGITS IN NUMBER FIELD HAS DROPPED BELOW THRESHOLD for BIN lookup - so reset the UI
+         */
         this.processBinLookupResponse(null, true);
 
         this.currentRequestId = null; // Ignore any pending responses
