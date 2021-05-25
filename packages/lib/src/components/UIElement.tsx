@@ -13,6 +13,7 @@ export interface UIElementProps extends BaseElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
 
+    type?: string;
     name?: string;
     icon?: string;
     amount?: PaymentAmount;
@@ -143,6 +144,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
      */
     get displayName(): string {
         return this.props.name || this.constructor['type'];
+    }
+
+    /**
+     * Return the type of an element
+     */
+    get type(): string {
+        return this.props.type || this.constructor['type'];
     }
 
     public payButton = props => {
