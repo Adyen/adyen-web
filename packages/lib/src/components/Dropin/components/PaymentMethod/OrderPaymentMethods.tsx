@@ -14,7 +14,11 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
                     <li key={`${orderPaymentMethod.type}-${index}`} className="adyen-checkout__order-payment-method">
                         <div className="adyen-checkout__order-payment-method__header">
                             <div className="adyen-checkout__payment-method__header__title">
-                                <PaymentMethodIcon name={orderPaymentMethod.type} src={getImage({ loadingContext })(orderPaymentMethod.type)} />
+                                <PaymentMethodIcon
+                                    name={orderPaymentMethod.type}
+                                    type={orderPaymentMethod.type}
+                                    src={getImage({ loadingContext })(orderPaymentMethod.type)}
+                                />
                                 •••• {orderPaymentMethod.lastFour}
                             </div>
 
