@@ -69,6 +69,8 @@ interface PayPalCommonProps {
     debug?: boolean;
     environment?: string;
 
+    blockPayPalCreditButton?: boolean;
+
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
