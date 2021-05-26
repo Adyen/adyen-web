@@ -29,7 +29,7 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
     useEffect(() => {
         const { PAYPAL, CREDIT } = paypalRef.FUNDING;
         createButton(PAYPAL, paypalButtonRef);
-        createButton(CREDIT, creditButtonRef);
+        if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);
     }, []);
 
     return (

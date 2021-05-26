@@ -3,6 +3,7 @@ import cx from 'classnames';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectButtonProps } from '../types';
 import styles from '../Select.module.scss';
+import Img from '../../../Img';
 
 function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
     if (filterable) return <div {...props} ref={toggleButtonRef} />;
@@ -39,7 +40,7 @@ function SelectButton(props: SelectButtonProps) {
             {!showList || !props.filterable ? (
                 <Fragment>
                     <span className="adyen-checkout__dropdown__button__text">{active.selectedOptionName || active.name || props.placeholder}</span>
-                    {active.icon && <img className="adyen-checkout__dropdown__button__icon" src={active.icon} alt={active.name} />}
+                    {active.icon && <Img className="adyen-checkout__dropdown__button__icon" src={active.icon} alt={active.name} />}
                 </Fragment>
             ) : (
                 <input

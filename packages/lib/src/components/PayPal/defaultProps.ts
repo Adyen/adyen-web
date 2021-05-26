@@ -36,6 +36,8 @@ const defaultProps: PayPalElementProps = {
         height: 48
     },
 
+    blockPayPalCreditButton: false,
+
     configuration: {
         /**
          * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
