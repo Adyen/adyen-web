@@ -111,16 +111,16 @@ export function onBrand(pCallbackObj) {
 
     if (pCallbackObj.datePolicy === 'hidden' && !hideDate) {
         hideDate = true;
-        dateNode?.style.display = 'none';
-        monthNode?.style.display = 'none';
-        yearNode?.style.display = 'none';
+        if (dateNode) dateNode.style.display = 'none';
+        if (monthNode) monthNode.style.display = 'none';
+        if (yearNode) yearNode.style.display = 'none';
     }
 
     if (hideDate && pCallbackObj.datePolicy !== 'hidden') {
         hideDate = false;
-        dateNode?.style.display = 'block';
-        monthNode?.style.display = 'block';
-        yearNode?.style.display = 'block';
+        if (dateNode) dateNode.style.display = 'block';
+        if (monthNode) monthNode.style.display = 'block';
+        if (yearNode) yearNode.style.display = 'block';
     }
 }
 
