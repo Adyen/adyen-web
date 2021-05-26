@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-// import SecuredFields from '../internal/SecuredFields';
 import SecuredFields from './SecuredFieldsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
