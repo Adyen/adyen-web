@@ -19,7 +19,9 @@ const iframeSelector = getIframeSelector('.secured-fields iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing persistence of "Unsupported card" error and state at both component & securedField level`.page(CUSTOMCARDS_URL).clientScripts('customcard.unsupportedCard.clientScripts.js');
+fixture`Testing persistence of "Unsupported card" error and state at both component & securedField level`
+    .page(CUSTOMCARDS_URL)
+    .clientScripts('customcard.unsupportedCard.clientScripts.js');
 
 test(
     'Enter partial card number that is not supported then ' +
@@ -85,10 +87,9 @@ test(
             // Expect input in iframe to have aria-invalid set to true
             .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
             .eql('true')
-            // TODO will fail prior to sf v3.5.3
             // Expect error field in iframe to be filled
-            //        .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            //        .ok()
+            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .ok()
             .switchToMainWindow();
 
         /**
@@ -102,17 +103,16 @@ test(
         // Merchant/components level error field persists
         await t.expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists).ok();
 
-        // TODO will fail prior to sf v3.5.3
         // Expect errors received & processed at SF level to persist
-        //    await t
-        //        .switchToIframe(iframeSelector.nth(0))
-        //        // Expect input in iframe to have aria-invalid set to true
-        //        .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-        //        .eql('true')
-        //        // Expect error field in iframe to be filled
-        //        .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-        //        .ok()
-        //        .switchToMainWindow();
+        await t
+            .switchToIframe(iframeSelector.nth(0))
+            // Expect input in iframe to have aria-invalid set to true
+            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
+            .eql('true')
+            // Expect error field in iframe to be filled
+            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .ok()
+            .switchToMainWindow();
 
         /**
          * Delete number
@@ -218,10 +218,9 @@ test(
             // Expect input in iframe to have aria-invalid set to true
             .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
             .eql('true')
-            // TODO will fail prior to sf v3.5.3
             // Expect error field in iframe to be filled
-            //        .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            //        .ok()
+            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .ok()
             .switchToMainWindow();
 
         /**
@@ -235,17 +234,16 @@ test(
         // Merchant/components level error field persists
         await t.expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists).ok();
 
-        // TODO will fail prior to sf v3.5.3
         // Expect errors received & processed at SF level to persist
-        //    await t
-        //        .switchToIframe(iframeSelector.nth(0))
-        //        // Expect input in iframe to have aria-invalid set to true
-        //        .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-        //        .eql('true')
-        //        // Expect error field in iframe to be filled
-        //        .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-        //        .ok()
-        //        .switchToMainWindow();
+        await t
+            .switchToIframe(iframeSelector.nth(0))
+            // Expect input in iframe to have aria-invalid set to true
+            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
+            .eql('true')
+            // Expect error field in iframe to be filled
+            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .ok()
+            .switchToMainWindow();
 
         /**
          * Paste in supported number
