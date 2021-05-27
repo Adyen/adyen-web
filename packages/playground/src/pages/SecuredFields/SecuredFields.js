@@ -41,15 +41,15 @@ window.checkout = new AdyenCheckout({
     locale: shopperLocale,
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
-    //    onChange: handleOnChange,
-    //        onValid: handleOnValid,
+    onChange: handleOnChange,
+    onValid: handleOnValid,
     onAdditionalDetails,
     onError: console.error,
     risk: {
         enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
         // Also accessible via checkout.modules.risk.data
         node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
-        //            onComplete: handleOnRiskData,
+        onComplete: handleOnRiskData,
         onError: console.error
     },
     translations: {
@@ -179,18 +179,18 @@ const threeDS2 = (result, component) => {
 
 function handleOnChange(state) {
     if (!state.data || !state.data.paymentMethod) return;
-    const type = state.data.type || state.data.paymentMethod.type;
-    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
+    //    const type = state.data.type || state.data.paymentMethod.type;
+    //    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
 }
 
 function handleOnValid(state) {
     if (!state.data || !state.data.paymentMethod) return;
-    const type = state.data.type || state.data.paymentMethod.type;
-    console.log(`${type} Component handleOnValid. state.data=`, state.data);
+    //    const type = state.data.type || state.data.paymentMethod.type;
+    //    console.log(`${type} Component handleOnValid. state.data=`, state.data);
 }
 
 function handleOnRiskData(riskData) {
-    console.log('handleOnRiskData riskData=', riskData);
+    //    console.log('handleOnRiskData riskData=', riskData);
 }
 
 function handlePaymentResult(result, component) {
