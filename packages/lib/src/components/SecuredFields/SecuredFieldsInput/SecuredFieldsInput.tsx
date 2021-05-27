@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import Language from '../../../language/Language';
 import SecuredFieldsProvider, { SFPState } from '../../internal/SecuredFields/SecuredFieldsProvider';
 import { BinLookupResponse } from '../../Card/types';
-import SFExtensions from '../../Card/components/CardInput/extensions';
+import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
 
 interface SecuredFieldsProps {
     onChange: (data) => void;

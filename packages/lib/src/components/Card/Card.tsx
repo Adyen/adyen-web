@@ -5,7 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { CardElementData, CardElementProps, BinLookupResponse } from './types';
-import triggerBinLookUp from './triggerBinLookUp';
+import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 
@@ -100,7 +100,7 @@ export class CardElement extends UIElement<CardElementProps> {
         }
     }
 
-    public onBinValue = triggerBinLookUp.bind(this);
+    public onBinValue = triggerBinLookUp(this);
 
     get isValid() {
         return !!this.state.isValid;
