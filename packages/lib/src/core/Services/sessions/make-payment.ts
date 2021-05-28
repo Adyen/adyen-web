@@ -1,11 +1,12 @@
 import { httpPost } from '../http';
 import Session from '../../CheckoutSession';
 import { CheckoutSessionPaymentResponse } from '../../../types';
+import { API_VERSION } from './constants';
 
 /**
  */
 function makePayment(paymentRequest, session: Session): Promise<CheckoutSessionPaymentResponse> {
-    const path = `v1/sessions/${session.id}/payments?clientKey=${session.clientKey}`;
+    const path = `${API_VERSION}/sessions/${session.id}/payments?clientKey=${session.clientKey}`;
     const data = {
         sessionData: session.data,
         ...paymentRequest

@@ -1,11 +1,12 @@
 import { httpPost } from '../http';
 import Session from '../../CheckoutSession';
 import { CheckoutSessionSetupResponse } from '../../../types';
+import { API_VERSION } from './constants';
 
 /**
  */
 function setupSession(session: Session): Promise<CheckoutSessionSetupResponse> {
-    const path = `v1/sessions/${session.id}/setup?clientKey=${session.clientKey}`;
+    const path = `${API_VERSION}/sessions/${session.id}/setup?clientKey=${session.clientKey}`;
     const data = {
         sessionData: session.data
     };
