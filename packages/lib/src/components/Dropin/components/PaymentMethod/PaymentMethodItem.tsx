@@ -120,7 +120,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             aria-hidden="true"
                         />
 
-                        <PaymentMethodIcon name={paymentMethod.props.name} src={paymentMethod.icon} />
+                        <PaymentMethodIcon name={paymentMethod.displayName} type={paymentMethod.type} src={paymentMethod.icon} />
 
                         <span
                             className={classNames({
@@ -151,6 +151,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                                 <PaymentMethodIcon
                                     key={brand.name}
                                     name={brand.name}
+                                    type={brand.name}
                                     disabled={activeBrand && brand.name !== activeBrand}
                                     src={brand.icon}
                                 />
