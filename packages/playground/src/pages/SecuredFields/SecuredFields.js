@@ -42,7 +42,6 @@ window.checkout = new AdyenCheckout({
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
     onChange: handleOnChange,
-    onValid: handleOnValid,
     onAdditionalDetails,
     onError: console.error,
     risk: {
@@ -181,12 +180,6 @@ function handleOnChange(state) {
     if (!state.data || !state.data.paymentMethod) return;
     //    const type = state.data.type || state.data.paymentMethod.type;
     //    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
-}
-
-function handleOnValid(state) {
-    if (!state.data || !state.data.paymentMethod) return;
-    //    const type = state.data.type || state.data.paymentMethod.type;
-    //    console.log(`${type} Component handleOnValid. state.data=`, state.data);
 }
 
 function handleOnRiskData(riskData) {
