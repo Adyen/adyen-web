@@ -27,7 +27,7 @@
         "cross-env": "^7.0.3",
         "concurrently": "^6.2.0",
         "css-loader": "^5.2.6",
-        "dotenv": "^9.0.2",
+        "dotenv": "^10.0.0",
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^6.0.0",
         "prettier": "^1.19.1",
