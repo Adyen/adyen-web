@@ -15,7 +15,7 @@ const defaultProps = {
     onError: () => {}
 };
 
-function SecuredFields(props: SecuredFieldsProps) {
+function SecuredFieldsInput(props: SecuredFieldsProps) {
     const sfp = useRef(null);
 
     const [errors, setErrors] = useState({});
@@ -92,6 +92,6 @@ function SecuredFields(props: SecuredFieldsProps) {
     return <SecuredFieldsProvider ref={sfp} {...props} onChange={handleSecuredFieldsChange} render={() => null} />;
 }
 
-SecuredFields.defaultProps = defaultProps;
+SecuredFieldsInput.defaultProps = defaultProps;
 
-export default SecuredFields;
+export default SecuredFieldsInput;
