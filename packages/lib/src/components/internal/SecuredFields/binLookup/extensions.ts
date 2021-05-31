@@ -1,6 +1,6 @@
-import { SingleBrandResetObject } from '../../../internal/SecuredFields/SecuredFieldsProvider';
-import { createCardVariantSwitcher } from './utils';
-import { BrandObject } from '../../types';
+import { SingleBrandResetObject } from '../SecuredFieldsProvider';
+import { BrandObject } from '../../../Card/types';
+import createCardVariantSwitcher from './createCardVariantSwitcher';
 
 export default function extensions(props, refs, states) {
     // Destructure refs and state hooks
@@ -19,8 +19,8 @@ export default function extensions(props, refs, states) {
             const issuingCode = binLookupResponse?.issuingCountryCode ? binLookupResponse.issuingCountryCode.toLowerCase() : null;
             setIssuingCountryCode(issuingCode);
 
-            if (!binLookupResponse) {
-                // Reset UI
+            // Reset UI
+            if (!binLookupResponse || !Object.keys(binLookupResponse).length) {
                 setDualBrandSelectElements([]);
                 setSelectedBrandValue('');
 
@@ -45,7 +45,6 @@ export default function extensions(props, refs, states) {
                     const switcherObj = createCardVariantSwitcher(supportedBrands);
 
                     // Set properties on state to trigger the dual branding icons in the UI
-                    // Don't need to call validateCardInput - this will be called by the brandChange from SFP
                     setDualBrandSelectElements(switcherObj.dualBrandSelectElements);
                     setSelectedBrandValue(switcherObj.selectedBrandValue);
 
@@ -62,7 +61,6 @@ export default function extensions(props, refs, states) {
                     setSelectedBrandValue('');
 
                     // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
-                    // Call validateCardInput so this new value ends up in state for the Card UIElement (Card.tsx)
                     setSelectedBrandValue(supportedBrands[0].brand);
 
                     // Pass object through to SFP
@@ -78,7 +76,8 @@ export default function extensions(props, refs, states) {
          * Inform SFP of the brand changes when these selections are made
          */
         handleDualBrandSelection: (e: Event): void => {
-            const value: string = (e.target as HTMLLIElement).getAttribute('data-value');
+            const target = e.target as HTMLLIElement;
+            const value: string = target.getAttribute('data-value') || target.getAttribute('alt');
 
             setSelectedBrandValue(value);
 

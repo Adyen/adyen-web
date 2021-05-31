@@ -6,7 +6,7 @@ import { CVC_POLICY_REQUIRED } from '../../configuration/constants';
 export function isConfigured(): void {
     this.state.isConfigured = true;
 
-    const callbackObj: CbObjOnConfigSuccess = { iframesConfigured: true, type: this.state.type };
+    const callbackObj: CbObjOnConfigSuccess = { iframesConfigured: true, type: this.state.type, rootNode: this.props.rootNode };
 
     this.callbacks.onConfigSuccess(callbackObj);
 
