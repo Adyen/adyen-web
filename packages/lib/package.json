@@ -58,7 +58,7 @@
         "@typescript-eslint/parser": "^4.25.0",
         "autoprefixer": "^10.2.6",
         "cross-env": "^7.0.3",
-        "cssnano": "^5.0.4",
+        "cssnano": "^5.0.5",
         "dotenv": "^9.0.2",
         "enzyme": "^3.11.0",
         "enzyme-adapter-preact-pure": "^3.1.0",
