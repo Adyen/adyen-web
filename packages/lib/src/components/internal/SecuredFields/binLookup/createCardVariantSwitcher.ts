@@ -5,8 +5,7 @@ import { BrandObject, DualBrandSelectElement } from '../../../Card/types';
  * @param brandObjArr - array containing 2 card brands objects
  */
 export default function createCardVariantSwitcher(brandObjArr: BrandObject[]) {
-    const leadBrand = brandObjArr[0];
-    const subBrand = brandObjArr[1];
+    const [leadBrand, subBrand] = brandObjArr;
 
     return {
         dualBrandSelectElements: [
