@@ -26,7 +26,7 @@
         "core-js": "^3.13.1",
         "cross-env": "^7.0.3",
         "css-loader": "^5.2.6",
-        "dotenv": "^9.0.2",
+        "dotenv": "^10.0.0",
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^6.0.0",
         "postcss": "^8.3.0",
