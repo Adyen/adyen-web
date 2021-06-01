@@ -19,7 +19,8 @@ export function mapBrands(brands) {
         jcb: 'jcb',
         electron: 'electron',
         maestro: 'maestro',
-        girocard: 'girocard'
+        girocard: 'girocard',
+        cartebancaire: 'cartesBancaires'
     };
 
     return brands.reduce((accumulator, item) => {
