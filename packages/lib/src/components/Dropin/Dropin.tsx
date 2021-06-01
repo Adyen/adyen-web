@@ -76,6 +76,7 @@ class DropinElement extends UIElement<DropinElementProps> {
             return false;
         }
 
+        if (this.props.setStatusAutomatically !== false) this.setStatus('loading');
         return this.props.onSubmit({ data, isValid }, this);
     };
 
