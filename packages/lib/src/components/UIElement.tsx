@@ -13,6 +13,9 @@ export interface UIElementProps extends BaseElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
 
+    /** Automatically set status through the payment flow */
+    setStatusAutomatically?: boolean;
+
     type?: string;
     name?: string;
     icon?: string;
@@ -92,6 +95,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                     return false;
                 }
 
+                if (this.props.setStatusAutomatically !== false) this.setStatus('loading');
                 return onSubmit({ data, isValid }, this.elementRef);
             })
             .catch(error => onError(error));

@@ -22,7 +22,6 @@ const initCheckout = async () => {
             }
         },
         onSubmit: async (state, component) => {
-            component.setStatus('loading');
             const result = await makePayment(state.data);
 
             // handle actions
