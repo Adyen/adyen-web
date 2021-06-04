@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createRef, h } from 'preact';
 import UIElement from '../UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
@@ -11,7 +11,7 @@ import { createElements, createStoredElements } from './elements';
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
     protected static defaultProps = defaultProps;
-    public dropinRef = null;
+    public dropinRef = createRef<DropinComponent>();
 
     constructor(props) {
         super(props);
@@ -19,31 +19,31 @@ class DropinElement extends UIElement<DropinElementProps> {
     }
 
     get isValid() {
-        return !!this.dropinRef && !!this.dropinRef.state.activePaymentMethod && !!this.dropinRef.state.activePaymentMethod.isValid;
+        return !!this.activePaymentMethod?.isValid;
     }
 
     showValidation() {
-        if (this.dropinRef.state.activePaymentMethod) {
-            this.dropinRef.state.activePaymentMethod.showValidation();
+        if (this.activePaymentMethod) {
+            this.activePaymentMethod.showValidation();
         }
 
         return this;
     }
 
     setStatus(status, props = {}) {
-        this.dropinRef?.setStatus({ type: status, props });
+        this.dropinRef.current?.setStatus({ type: status, props });
         if (process.env.NODE_ENV === 'test') {
             this['componentFromAction'] = props['component'];
         }
         return this;
     }
 
-    get activePaymentMethod() {
-        if (!this.dropinRef?.state && !this.dropinRef?.state.activePaymentMethod) {
+    get activePaymentMethod(): UIElement {
+        if (!this.dropinRef.current?.state && !this.dropinRef.current?.state.activePaymentMethod) {
             return null;
         }
 
-        return this.dropinRef.state.activePaymentMethod;
+        return this.dropinRef.current.state.activePaymentMethod;
     }
 
     get data() {
@@ -51,7 +51,7 @@ class DropinElement extends UIElement<DropinElementProps> {
             return null;
         }
 
-        return this.dropinRef.state.activePaymentMethod.data;
+        return this.dropinRef.current.state.activePaymentMethod.data;
     }
 
     /**
@@ -94,8 +94,8 @@ class DropinElement extends UIElement<DropinElementProps> {
     handleAction(action: PaymentAction, props = {}) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        if (this.activePaymentMethod?.updateWithAction) {
-            return this.activePaymentMethod.updateWithAction(action);
+        if (this.activePaymentMethod && this.activePaymentMethod['updateWithAction']) {
+            return this.activePaymentMethod['updateWithAction'](action);
         }
 
         const paymentAction: UIElement = this.props._parentInstance.createFromAction(action, {
@@ -113,8 +113,24 @@ class DropinElement extends UIElement<DropinElementProps> {
     }
 
     closeActivePaymentMethod() {
-        this.dropinRef.closeActivePaymentMethod();
+        this.dropinRef.current?.closeActivePaymentMethod();
     }
+
+    /**
+     * Updates props, resets the internal state and remounts the element.
+     * @param props - props to update
+     * @returns this - the element instance
+     */
+    public update(props): this {
+        this.props = this.formatProps({ ...this.props, ...props });
+        this.dropinRef.current?.update(this.props);
+
+        return this._node ? this.remount() : this;
+    }
+
+    private reset = (): this => {
+        return this.unmount().remount();
+    };
 
     render() {
         return (
@@ -123,11 +139,10 @@ class DropinElement extends UIElement<DropinElementProps> {
                     {...this.props}
                     onChange={this.setState}
                     onSubmit={this.handleSubmit}
+                    onDropinReset={this.reset}
                     elementRef={this.elementRef}
                     onCreateElements={this.handleCreate}
-                    ref={dropinRef => {
-                        this.dropinRef = dropinRef;
-                    }}
+                    ref={this.dropinRef}
                 />
             </CoreProvider>
         );

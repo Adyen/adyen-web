@@ -3,6 +3,7 @@ import Dropin from './Dropin';
 import AdyenCheckout from '../../core';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
+import UIElement from '../UIElement';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
@@ -19,8 +20,15 @@ describe('Dropin', () => {
         test('should return the isValid value of the activePaymentMethod', () => {
             const dropin = new Dropin({});
             mount(dropin.render());
-            dropin.dropinRef.state.activePaymentMethod = { isValid: true };
-            expect(dropin.isValid).toEqual(true);
+
+            setTimeout(() => {
+                dropin.dropinRef.current.state.activePaymentMethod = new (class PaymentMethodTest extends UIElement {
+                    get isValid() {
+                        return true;
+                    }
+                })({});
+                expect(dropin.isValid).toEqual(true);
+            });
         });
     });
 
@@ -35,10 +43,10 @@ describe('Dropin', () => {
         test('should close active payment method', () => {
             const dropin = new Dropin({});
             mount(dropin.render());
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+            expect(dropin.activePaymentMethod).toBeDefined();
 
             dropin.closeActivePaymentMethod();
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+            expect(dropin.activePaymentMethod).toBeNull();
         });
     });
 
