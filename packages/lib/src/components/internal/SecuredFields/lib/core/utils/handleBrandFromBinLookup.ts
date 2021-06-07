@@ -24,8 +24,9 @@ export function sendBrandToCardSF(brandObj: SendBrandObject): void {
 export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): void {
     const isGenericCard: boolean = this.state.type === 'card';
 
-    // The number of digits in number field has dropped below threshold for BIN lookup - so tell SF to reset & republish the brand it detects
-    if (!binLookupResponse) {
+    // The number of digits in number field has dropped below threshold for BIN lookup (or the bin wasn't found in the db)
+    // - so tell SF to reset & republish the brand it detects
+    if (!binLookupResponse || !Object.keys(binLookupResponse).length) {
         if (isGenericCard) {
             // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast (which will reset cvcPolicy)
             this.sendBrandToCardSF({ brand: 'reset' });

@@ -68,7 +68,7 @@ test(
         // Should be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql('mc');
 
-        // Paste number not recognised by binLookup
+        // Delete number
         await cardUtils.deleteCardNumber(t);
 
         // Brand property in the PM data should be reset
@@ -125,8 +125,10 @@ test(
 test(
     'Fill in dual branded card then ' +
         'select bcmc then' +
+        'ensure cvc field is hidden' +
         'ensure only generic card logo shows after deleting digits and ' +
-        'that the brand has been reset on paymentMethod data',
+        'that the brand has been reset on paymentMethod data ' +
+        ' and the cvc field is visble again',
     async t => {
         // Start, allow time to load
         await start(t, 2000, TEST_SPEED);
@@ -157,56 +159,8 @@ test(
         // Should be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql('bcmc');
 
-        await cardUtils.deleteCardNumber(t);
-
-        await t
-            // generic card icon
-            .expect(brandingIcon.getAttribute('alt'))
-            .contains('card');
-
-        // Should not be a brand property in the PM data
-        await t.expect(getPropFromPMData('brand')).eql(undefined);
-    }
-);
-
-test(
-    'Fill in dual branded card then ' +
-        'select maestro then' +
-        'ensure cvc field is shown' +
-        'ensure only bcmc logo shows after deleting digits and ' +
-        'that the brand has been reset on paymentMethod data',
-    async t => {
-        // Start, allow time to load
-        await start(t, 2000, TEST_SPEED);
-
-        await cardUtils.fillCardNumber(t, BCMC_CARD); // dual branded with maestro
-
-        await t
-            .expect(dualBrandingIconHolderActive.exists)
-            .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
-            .eql('maestro')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
-            .eql('bcmc');
-
-        // Click Maestro brand icon
-        await t.click(dualBrandingIconHolderActive.find('img').nth(0));
-
-        // Should be a brand property in the PM data
-        await t.expect(getPropFromPMData('brand')).eql('maestro');
-
         // Hidden cvc field
-        await t.expect(cvcSpan.filterVisible().exists).ok();
+        await t.expect(cvcSpan.filterHidden().exists).ok();
 
         await cardUtils.deleteCardNumber(t);
 
@@ -217,6 +171,9 @@ test(
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
+
+        // Visible cvc field
+        await t.expect(cvcSpan.filterVisible().exists).ok();
     }
 );
 
@@ -251,11 +208,9 @@ test(
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
 
         await t
-            // generic card icon
+            // visa card icon
             .expect(brandingIcon.getAttribute('alt'))
             .contains('visa');
-
-        await t.wait(2000);
     }
 );
 

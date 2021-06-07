@@ -73,7 +73,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 onSubmit: (state, component) => {
                     return makePayment(state.data)
                         .then(response => {
-                            if (response?.resultCode && checkPaymentResult(response.resultCode)) {
+                            if (response.action) {
+                                component.handleAction(response.action);
+                            } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
                                 alert(response.resultCode);
                             } else {
                                 // Try handling the decline flow

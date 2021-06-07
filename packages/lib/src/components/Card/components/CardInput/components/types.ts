@@ -1,11 +1,14 @@
 import { PaymentAmount } from '../../../../../types';
+import { CardBrandsConfiguration } from '../../../types';
 
 export interface BrandIconProps {
     brand: string;
+    brandsConfiguration: CardBrandsConfiguration;
 }
 
 export interface CardFieldsProps {
     brand?: string;
+    brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
@@ -31,6 +34,7 @@ export interface CardHolderNameProps {
 
 export interface CardNumberProps {
     brand: string;
+    brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
@@ -62,6 +66,7 @@ export interface CVCHintProps {
 
 export interface DualBrandingIconProps {
     brand: string;
+    brandsConfiguration: CardBrandsConfiguration;
     onClick?: any;
     dataValue?: string;
     notSelected?: boolean;

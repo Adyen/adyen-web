@@ -25,7 +25,11 @@ export default function PaypalComponent(props: PayPalComponentProps) {
     useEffect(() => {
         const src = getPaypalUrl(props);
         const script = new Script(src);
-        script.load().then(handlePaypalLoad);
+        if (window.paypal) {
+            handlePaypalLoad();
+        } else {
+            script.load().then(handlePaypalLoad);
+        }
 
         return () => {
             script.remove();

@@ -7,6 +7,7 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import getImage from '../../utils/get-image';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -109,6 +110,10 @@ class GooglePay extends UIElement<GooglePayProps> {
 
     get browserInfo() {
         return collectBrowserInfo();
+    }
+
+    get icon(): string {
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })('googlepay');
     }
 
     render() {

@@ -18,7 +18,7 @@ import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputData
 import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
-import CIExtensions from './extensions';
+import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
@@ -323,6 +323,7 @@ function CardInput(props: CardInputProps) {
                             <CardFields
                                 {...props}
                                 brand={sfpState.brand}
+                                brandsConfiguration={this.props.brandsConfiguration}
                                 focusedElement={focusedElement}
                                 onFocusField={setFocusOn}
                                 hasCVC={props.hasCVC}

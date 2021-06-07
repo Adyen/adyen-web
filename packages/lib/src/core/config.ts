@@ -25,7 +25,8 @@ export const GENERIC_OPTIONS = [
     'onChange',
     'onError',
     'onBalanceCheck',
-    'onOrderRequest'
+    'onOrderRequest',
+    'setStatusAutomatically'
 ];
 
 export default {

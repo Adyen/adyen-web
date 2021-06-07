@@ -9,7 +9,7 @@
     font-size: 14px;
     padding: 0 24px;
 }
-.pm-image {
+.pm-image, .pm-image-dual{
     background-color: #ffffff;
     border-radius: 4px;
     -moz-boder-radius: 4px;
@@ -27,10 +27,6 @@
 }
 .pm-form-label--exp-date {
     width: 40%;
-}
-.pm-form-label--exp-year {
-    width: 40%;
-    margin-left: 20px;
 }
 .pm-form-label--cvc {
     float: right;

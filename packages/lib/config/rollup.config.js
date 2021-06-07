@@ -60,7 +60,9 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
             }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
-            config: 'postcss.config.js',
+            config: {
+                path: 'config/postcss.config.js'
+            },
             sourceMap: true,
             inject: false,
             extract: 'adyen.css'
@@ -94,8 +96,8 @@ export default async () => {
                 {
                     dir: 'dist/es',
                     format: 'es',
-                    sourcemap: true,
-                    chunkFileNames: '[name].js'
+                    chunkFileNames: '[name].js',
+                    ...(!isProduction ? { sourcemap: true } : {})
                 },
                 {
                     dir: 'dist/cjs',

@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess } from './securedFields.config';
+import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
@@ -10,6 +10,8 @@ import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import './securedFields.style.scss';
+
+const showOtherExamples = false; // For testing: set to false to only instantiate the basic form of SecuredFields
 
 window.paymentData = {};
 const cardText = document.querySelector('.sf-text');
@@ -40,20 +42,35 @@ window.checkout = new AdyenCheckout({
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
     onChange: handleOnChange,
-    //        onValid: handleOnValid,
     onAdditionalDetails,
     onError: console.error,
     risk: {
         enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
         // Also accessible via checkout.modules.risk.data
         node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
-        //            onComplete: handleOnRiskData,
+        onComplete: handleOnRiskData,
         onError: console.error
     },
     translations: {
         'en-US': {
             'creditCard.cvcField.placeholder.3digits': 'digits 3',
             'creditCard.cvcField.placeholder.4digits': 'digits 4'
+        }
+    },
+    paymentMethodsConfiguration: {
+        // NOTE: still use 'card' because it's about the component 'type', not the name
+        card: {
+            brandsConfiguration: {
+                synchrony_plcc: {
+                    icon: 'http://localhost:3000/test_images/smartmoney.png'
+                },
+                bcmc: {
+                    icon: 'http://localhost:3000/test_images/bcmc.png'
+                },
+                maestro: {
+                    icon: 'http://localhost:3000/test_images/maestro.png'
+                }
+            }
         }
     }
 });
@@ -62,76 +79,83 @@ window.checkout = new AdyenCheckout({
 window.securedFields = checkout
     .create('securedfields', {
         type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
         styles,
+        minimumExpiryDate: '09/21',
         onConfigSuccess,
         onBrand,
         onBinValue: cbObj => {
-            //                console.log('onBinValue', cbObj);
+            if (cbObj.encryptedBin) {
+                console.log('onBinValue', cbObj);
+            }
         },
         onError: setCCErrors,
-        onFocus: setFocus
-        //            onFieldValid: obj => {
-        //                console.log('### SecuredFields::onFieldValid:: obj=', obj);
-        //            }
+        onFocus: setFocus,
+        onBinLookup,
+        onChange
     })
     .mount('.secured-fields');
 
 createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
-// COMMENT IN TO HIDE ADDITIONAL SF EXAMPLES
-//    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
-//    extraSFs.forEach(elem => {
-//        elem.style.display = 'none';
-//    });
-//    return;
+// HIDE ADDITIONAL SF EXAMPLES
+if (showOtherExamples === false) {
+    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
+    extraSFs.forEach(elem => {
+        elem.style.display = 'none';
+    });
+}
 // - END
 
-window.securedFieldsSi = checkout
-    .create('securedfields', {
-        type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-        styles: styles_si,
-        trimTrailingSeparator: true,
-        onConfigSuccess: onConfigSuccess_si,
-        onFieldValid: onFieldValid_si,
-        onBrand: onBrand_si,
-        onError: onError_si,
-        onFocus: onFocus_si
-    })
-    .mount('.secured-fields-si');
+window.securedFieldsSi =
+    showOtherExamples &&
+    checkout
+        .create('securedfields', {
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            styles: styles_si,
+            trimTrailingSeparator: true,
+            onConfigSuccess: onConfigSuccess_si,
+            onFieldValid: onFieldValid_si,
+            onBrand: onBrand_si,
+            onError: onError_si,
+            onFocus: onFocus_si
+        })
+        .mount('.secured-fields-si');
 
-window.fancySecuredFields = checkout
-    .create('securedfields', {
-        type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-        styles: fancyStyles,
-        autoFocus: false,
-        onFieldValid: fancyFieldValid,
-        onBrand: fancyChangeBrand,
-        onError: fancyErrors,
-        onFocus: fancyFocus
-    })
-    .mount('.fancy-secured-fields');
+window.fancySecuredFields =
+    showOtherExamples &&
+    checkout
+        .create('securedfields', {
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            styles: fancyStyles,
+            autoFocus: false,
+            onFieldValid: fancyFieldValid,
+            onBrand: fancyChangeBrand,
+            onError: fancyErrors,
+            onFocus: fancyFocus
+        })
+        .mount('.fancy-secured-fields');
 
-window.materialDesignSecuredFields = checkout
-    .create('securedfields', {
-        type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-        styles: materialStyles,
-        placeholders: {
-            encryptedCardNumber: '',
-            encryptedExpiryDate: '',
-            encryptedSecurityCode: ''
-        },
-        onFocus: materialFocus,
-        onError: handleMaterialError,
-        onChange: console.log,
-        onBinValue: console.log,
-        onFieldValid: onMaterialFieldValid,
-        onConfigSuccess: createMaterialLabelListener
-    })
-    .mount('.material-secured-fields-container');
+window.materialDesignSecuredFields =
+    showOtherExamples &&
+    checkout
+        .create('securedfields', {
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            styles: materialStyles,
+            placeholders: {
+                encryptedCardNumber: '',
+                encryptedExpiryDate: '',
+                encryptedSecurityCode: ''
+            },
+            onFocus: materialFocus,
+            onError: handleMaterialError,
+            onFieldValid: onMaterialFieldValid,
+            onConfigSuccess: createMaterialLabelListener
+        })
+        .mount('.material-secured-fields-container');
 
 const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');
@@ -154,18 +178,12 @@ const threeDS2 = (result, component) => {
 
 function handleOnChange(state) {
     if (!state.data || !state.data.paymentMethod) return;
-    const type = state.data.type || state.data.paymentMethod.type;
-    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
-}
-
-function handleOnValid(state) {
-    if (!state.data || !state.data.paymentMethod) return;
-    const type = state.data.type || state.data.paymentMethod.type;
-    console.log(`${type} Component handleOnValid. state.data=`, state.data);
+    //    const type = state.data.type || state.data.paymentMethod.type;
+    //    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
 }
 
 function handleOnRiskData(riskData) {
-    console.log('handleOnRiskData riskData=', riskData);
+    //    console.log('handleOnRiskData riskData=', riskData);
 }
 
 function handlePaymentResult(result, component) {

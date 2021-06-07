@@ -4,7 +4,7 @@ import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import './customcards.style.scss';
-import { setCCErrors, setFocus, onBrand } from './customCards.config';
+import { setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
 
 window.checkout = new AdyenCheckout({
     amount,
@@ -21,10 +21,13 @@ window.checkout = new AdyenCheckout({
 window.securedFields = checkout
     .create('securedfields', {
         type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+        onConfigSuccess,
         onBrand,
         onError: setCCErrors,
         onFocus: setFocus,
+        onBinLookup,
+        onChange,
         ...window.cardConfig
     })
     .mount('.secured-fields');
@@ -34,7 +37,7 @@ createPayButton('.secured-fields', window.securedFields, 'securedfields');
 window.securedFields2 = checkout
     .create('securedfields', {
         type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
         onBrand,
         onError: setCCErrors,
         onFocus: setFocus,

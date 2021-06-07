@@ -39,7 +39,6 @@ const initCheckout = async () => {
     });
 
     const dropin = checkout.create('dropin').mount('#dropin-container');
-
     return [checkout, dropin];
 };
 

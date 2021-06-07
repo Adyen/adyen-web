@@ -67,7 +67,7 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
 
     // console.log(logger.requests[0].response.headers);
 
-    // Check challenge window size is read from config prop
+    // Check challenge window size is read from default config prop
     await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok();
 
     // Complete challenge

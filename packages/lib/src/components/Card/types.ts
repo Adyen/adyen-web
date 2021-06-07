@@ -143,6 +143,7 @@ export interface BrandObject {
     showExpiryDate: boolean;
     showSocialSecurityNumber?: boolean;
     supported: boolean;
+    brandImageUrl?: string;
 }
 
 export interface BinLookupResponseRaw {

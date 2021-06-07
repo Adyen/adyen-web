@@ -7,6 +7,7 @@ import { PayPalElementProps } from './types';
 import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { ERRORS } from './constants';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -51,9 +52,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         }
 
         if (action.sdkData && action.sdkData.token) {
-            this.resolve(action.sdkData.token);
+            this.handleResolve(action.sdkData.token);
         } else {
-            this.reject(new Error('No token was provided'));
+            this.handleReject(ERRORS.NO_TOKEN_PROVIDED);
         }
 
         return null;
@@ -76,6 +77,25 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     handleComplete(details) {
         const state = { data: { details, paymentData: this.paymentData } };
         this.handleAdditionalDetails(state);
+    }
+
+    // @ts-ignore
+    handleError(data) {
+        this.props.onError(data, this.elementRef);
+    }
+
+    handleResolve(token: string) {
+        if (!this.resolve) return this.handleError(ERRORS.WRONG_INSTANCE);
+        this.resolve(token);
+    }
+
+    handleReject(errorMessage: string) {
+        if (!this.reject) return this.handleError(ERRORS.WRONG_INSTANCE);
+        this.reject(new Error(errorMessage));
+    }
+
+    startPayment() {
+        return Promise.reject(ERRORS.SUBMIT_NOT_SUPPORTED);
     }
 
     handleSubmit() {

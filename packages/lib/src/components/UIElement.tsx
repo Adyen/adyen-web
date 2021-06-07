@@ -171,6 +171,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     /**
+     * Return the type of an element
+     */
+    get type(): string {
+        return this.props.type || this.constructor['type'];
+    }
+
+    /**
      * Get the payButton component for the current element
      */
     public payButton = props => {

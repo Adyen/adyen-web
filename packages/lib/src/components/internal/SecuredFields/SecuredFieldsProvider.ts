@@ -232,9 +232,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public handleUnsupportedCard(errObj: CbObjOnError): boolean {
         const hasUnsupportedCard = !!errObj.error;
+        errObj.rootNode = this.rootNode; // Needed for CustomCard
         this.handleOnError(errObj, hasUnsupportedCard);
-        // Inform CSF that the number field has an unsupportedCard error
-        if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, errObj.error);
+        // Inform CSF that the number field has an unsupportedCard error (or that it has been cleared)
+        if (this.csf) {
+            this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, errObj.error);
+        }
         return hasUnsupportedCard;
     }
 
@@ -258,7 +261,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
-                this.handleOnError(errorObj);
+                this.handleOnError(errorObj, state.hasUnsupportedCard);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
                     this.csf.isValidated(field, errorObj.error);
@@ -290,7 +293,17 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: false },
                 hasUnsupportedCard: false
             }));
-            if (this.csf) this.csf.hasUnsupportedCard(ENCRYPTED_CARD_NUMBER, '');
+
+            // If we have some sort of binLookupResponse object then this isn't the reset caused by digits dropping below a threshold
+            // - so call handleUnsupportedCard to clear the error
+            if (this.csf && binLookupResponse) {
+                const errObj: CbObjOnError = {
+                    type: 'card',
+                    fieldType: 'encryptedCardNumber',
+                    error: ''
+                };
+                this.handleUnsupportedCard(errObj);
+            }
         }
 
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
