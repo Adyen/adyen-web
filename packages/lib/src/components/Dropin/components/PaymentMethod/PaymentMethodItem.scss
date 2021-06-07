@@ -127,7 +127,7 @@
     position: relative;
 }
 
-.adyen-checkout__payment-method__image__wrapper--outline:after {
+.adyen-checkout__payment-method__image__wrapper:after {
     content: '';
     position: absolute;
     top: 0;
@@ -135,6 +135,10 @@
     height: 100%;
     left: 0;
     border-radius: $border-radius-small;
+    border: 1px solid transparent;
+}
+
+.adyen-checkout__payment-method__image__wrapper--outline:after {
     border: 1px solid rgba(0, 27, 43, 0.17);
 }
 
