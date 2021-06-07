@@ -79,23 +79,18 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleAdditionalDetails(state);
     }
 
-    // @ts-ignore
-    handleError(data) {
-        this.props.onError(data, this.elementRef);
-    }
-
     handleResolve(token: string) {
-        if (!this.resolve) return this.handleError(ERRORS.WRONG_INSTANCE);
+        if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.resolve(token);
     }
 
     handleReject(errorMessage: string) {
-        if (!this.reject) return this.handleError(ERRORS.WRONG_INSTANCE);
+        if (!this.reject) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.reject(new Error(errorMessage));
     }
 
     startPayment() {
-        return Promise.reject(ERRORS.SUBMIT_NOT_SUPPORTED);
+        return Promise.reject(new AdyenCheckoutError('ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     handleSubmit() {
@@ -108,7 +103,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     submit() {
-        this.handleError(new AdyenCheckoutError('DEVELOPER_ERROR', 'Calling submit() is not supported for this payment method'));
+        this.handleError(new AdyenCheckoutError('DEVELOPER_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     render() {
@@ -124,7 +119,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     onCancel={this.handleCancel}
                     onChange={this.setState}
                     onComplete={this.handleComplete}
-                    onError={this.handleError}
+                    onError={e => {
+                        this.handleError(new AdyenCheckoutError('ERROR', e));
+                    }}
                     onSubmit={this.handleSubmit}
                 />
             </CoreProvider>
