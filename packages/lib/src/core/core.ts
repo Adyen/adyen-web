@@ -52,34 +52,46 @@ class Core {
         return Promise.resolve(this);
     }
 
-    submitPayment(data) {
+    /**
+     * Submit data to payments using the onSubmit event or the session flow if available
+     * @param data -
+     */
+    public submitPayment(data): void {
         if (this.options.onSubmit) return this.options.onSubmit(data);
 
-        this.session
-            .submitPayment(data)
-            .then(response => {
-                if (response.action) {
-                    if (this.options.onPaymentSubmitted) this.options.onPaymentSubmitted(response, this);
-                } else {
-                    if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
-                }
-            })
-            .catch(error => {
-                if (this.options.onError) this.options.onError(error);
-            });
+        if (this.session) {
+            this.session
+                .submitPayment(data)
+                .then(response => {
+                    if (response.action) {
+                        if (this.options.onPaymentSubmitted) this.options.onPaymentSubmitted(response, this);
+                    } else {
+                        if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+                    }
+                })
+                .catch(error => {
+                    if (this.options.onError) this.options.onError(error);
+                });
+        }
     }
 
-    submitDetails(details) {
+    /**
+     * Submits details using onAdditionalDetails or the session flow if available
+     * @param details -
+     */
+    public submitDetails(details): void {
         if (this.options.onAdditionalDetails) return this.options.onAdditionalDetails(details);
 
-        this.session
-            .submitDetails(details)
-            .then(response => {
-                if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
-            })
-            .catch(error => {
-                if (this.options.onError) this.options.onError(error, this);
-            });
+        if (this.session) {
+            this.session
+                .submitDetails(details)
+                .then(response => {
+                    if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+                })
+                .catch(error => {
+                    if (this.options.onError) this.options.onError(error, this);
+                });
+        }
     }
 
     /**

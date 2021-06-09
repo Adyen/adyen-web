@@ -85,7 +85,7 @@ export class GiftcardElement extends UIElement {
         this.setStatus('loading');
 
         this.handleBalanceCheck(this.formatData())
-            .then(({ balance, transactionLimit }) => {
+            .then(({ balance, transactionLimit = {} }) => {
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');

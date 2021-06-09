@@ -3,7 +3,7 @@ import BaseElement from './BaseElement';
 import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import { UIElementProps } from './types';
+import { RawPaymentResponse, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
@@ -142,7 +142,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return result;
     };
 
-    handleResponse(rawResponse): void {
+    /**
+     * Handles a session /payments or /payments/details response.
+     * The component will handle automatically actions, orders, and final results.
+     * @param rawResponse -
+     * @protected
+     */
+    protected handleResponse(rawResponse): void {
         const response = getSanitizedResponse(rawResponse);
 
         if (response.action) {
