@@ -22,16 +22,7 @@ const initCheckout = async () => {
         locale: shopperLocale, // @deprecated
 
         onPaymentCompleted: (result, component) => {
-            switch (result.resultCode) {
-                case 'Authorised':
-                    component.setStatus('success');
-                    break;
-                case 'Received':
-                    component.setStatus('success', { message: 'Processing your payment...' });
-                    break;
-                default:
-                    component.setStatus('error');
-            }
+            console.info(result);
         },
         onError: (error, component) => {
             console.error(error.name, error.message, error.stack);

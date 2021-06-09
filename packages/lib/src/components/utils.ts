@@ -18,3 +18,18 @@ export function getSanitizedResponse(response: RawPaymentResponse): PaymentRespo
 
     return sanitizedObject as PaymentResponse;
 }
+
+export function resolveFinalResult(result: PaymentResponse) {
+    switch (result.resultCode) {
+        case 'Authorised':
+        case 'Received':
+            return ['success'];
+        case 'Pending':
+            return ['success'];
+        case 'Cancelled':
+        case 'Error':
+        case 'Refused':
+            return ['error'];
+        default:
+    }
+}

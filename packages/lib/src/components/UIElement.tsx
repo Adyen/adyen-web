@@ -4,7 +4,7 @@ import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import { UIElementProps } from './types';
-import { getSanitizedResponse } from './utils';
+import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
@@ -77,8 +77,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
-    setStatus(status): this {
-        if (this.componentRef && this.componentRef.setStatus) this.componentRef.setStatus(status);
+    setStatus(status, props?): this {
+        if (this.componentRef && this.componentRef.setStatus) this.componentRef.setStatus(status, props);
         return this;
     }
 
@@ -133,6 +133,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     };
 
     protected handleFinalResult = result => {
+        if (this.props.setStatusAutomatically !== false) {
+            const [status, statusProps] = resolveFinalResult(result);
+            if (status) this.elementRef.setStatus(status, statusProps);
+        }
+
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);
         return result;
     };

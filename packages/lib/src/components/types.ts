@@ -52,6 +52,8 @@ export interface UIElementProps extends BaseElementProps {
      */
     showPayButton?: boolean;
 
+    setStatusAutomatically?: boolean;
+
     /** @internal */
     payButton?: (options) => any;
 
