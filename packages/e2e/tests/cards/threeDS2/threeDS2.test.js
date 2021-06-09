@@ -98,6 +98,9 @@ if (apiVersion >= 67) {
 
         //        console.log('logger.requests[0].response', logger.requests[0].response);
 
+        // Check challenge window size is read from config prop
+        await t.expect(Selector('.adyen-checkout__threeds2__challenge--04').exists).ok();
+
         // Complete challenge
         await fillChallengeField(t);
         await submitChallenge(t);
@@ -145,6 +148,9 @@ if (apiVersion >= 67) {
             // Expect no errors
             .expect(Selector('.adyen-checkout__field--error').exists)
             .notOk();
+
+        // Check challenge window size is read from config prop
+        await t.expect(Selector('.adyen-checkout__threeds2__challenge--04').exists).ok();
 
         // Complete challenge
         await fillChallengeField(t);

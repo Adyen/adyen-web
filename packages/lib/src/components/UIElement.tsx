@@ -13,7 +13,12 @@ export interface UIElementProps extends BaseElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
 
+    /** Automatically set status through the payment flow */
+    setStatusAutomatically?: boolean;
+
+    type?: string;
     name?: string;
+    icon?: string;
     amount?: PaymentAmount;
 
     /**
@@ -90,6 +95,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                     return false;
                 }
 
+                if (this.props.setStatusAutomatically !== false) this.setStatus('loading');
                 return onSubmit({ data, isValid }, this.elementRef);
             })
             .catch(error => onError(error));
@@ -134,7 +140,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
     }
 
     /**
@@ -142,6 +148,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
      */
     get displayName(): string {
         return this.props.name || this.constructor['type'];
+    }
+
+    /**
+     * Return the type of an element
+     */
+    get type(): string {
+        return this.props.type || this.constructor['type'];
     }
 
     public payButton = props => {

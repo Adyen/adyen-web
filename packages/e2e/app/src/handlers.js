@@ -2,7 +2,7 @@ import { makePayment, makeDetailsCall } from './services';
 
 export function handleResponse(response, component) {
     if (response.action) {
-        component.handleAction(response.action);
+        component.handleAction(response.action, window.actionConfigObject || {});
     } else if (response.resultCode) {
         alert(response.resultCode);
     }

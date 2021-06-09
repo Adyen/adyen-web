@@ -32,7 +32,14 @@ class Script {
                 reject(new Error(`Unable to load script ${this.src}`));
             };
 
-            document.querySelector(this.node).appendChild(this.script);
+            const container = document.querySelector(this.node);
+            const addedScript = container.querySelector(`script[src="${this.src}"]`);
+
+            if (addedScript) {
+                addedScript.addEventListener('load', resolve);
+            } else {
+                container.appendChild(this.script);
+            }
         });
 
     public remove = () => this.script.remove();

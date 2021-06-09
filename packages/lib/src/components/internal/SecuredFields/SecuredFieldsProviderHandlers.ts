@@ -19,6 +19,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from './lib/types';
+import { existy } from './lib/utilities/commonUtils';
 
 /**
  * Emits the onConfigSuccess (ready) event
@@ -108,25 +109,31 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
  */
 function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
-        prevState => ({
-            brand: cardInfo.brand,
-            cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
-            showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
-            errors: {
-                ...prevState.errors,
-                // Maintain error in CVC field unless switching brand to card where cvc field is not required & cvc field is empty
-                [ENCRYPTED_SECURITY_CODE]:
-                    (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
-                        ? false
-                        : prevState.errors[ENCRYPTED_SECURITY_CODE]
-            },
-            hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
-        }),
+        prevState => {
+            // If we change brand to one where the cvc field is not required & is empty - then the cvc field cannot be in error...
+            // ...else propagate the existing error
+            const cvcFieldInError =
+                (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
+                    ? false
+                    : prevState.errors[ENCRYPTED_SECURITY_CODE];
+
+            return {
+                brand: cardInfo.brand,
+                cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
+                showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
+                errors: {
+                    ...prevState.errors,
+                    ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError })
+                },
+                hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
+            };
+        },
         () => {
             this.props.onChange(this.state);
 
-            // Enhance data object with the url for the brand image
-            this.props.onBrand({ ...cardInfo, brandImageUrl: getCardImageUrl(cardInfo.brand, this.props.loadingContext) });
+            // Enhance data object with the url for the brand image, first checking if the merchant has configured their own one for this brand
+            const brandImageUrl = this.props.brandsConfiguration[cardInfo.brand]?.icon ?? getCardImageUrl(cardInfo.brand, this.props.loadingContext);
+            this.props.onBrand({ ...cardInfo, brandImageUrl });
         }
     );
 }
@@ -135,20 +142,17 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
  * Handles validation errors
  */
 function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null): boolean {
-    // If we're in an "unsupported card" state and a 'regular' card number error comes through - ignore it until the "unsupported card" state is cleared
-    if (this.state.hasUnsupportedCard && cbObj.fieldType === ENCRYPTED_CARD_NUMBER && hasUnsupportedCard === null) {
-        // Temporary - for testing in development
-        if (process.env.NODE_ENV === 'development') {
-            throw new Error('SecuredFieldsProviderHandlers::handleOnError:: IN UNSUPPORTED CARD STATE');
-        }
-    }
-
     const errorCode = cbObj.error;
 
-    this.setState(prevState => ({
-        errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
-        hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
-    }));
+    this.setState(
+        prevState => ({
+            errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
+            hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
+        }),
+        () => {
+            this.props.onChange(this.state);
+        }
+    );
 
     cbObj.errorI18n = this.props.i18n.get(errorCode); // Add translation
 

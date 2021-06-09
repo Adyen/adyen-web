@@ -20,6 +20,11 @@ export interface CardElementProps extends UIElementProps {
     brand?: string;
 
     /**
+     * Configuration specific to brands
+     */
+    brandsConfiguration?: CardBrandsConfiguration;
+
+    /**
      * type will always be "card" (generic card, stored card)
      * except for a single branded card when it will be the same as the brand prop
      */
@@ -101,6 +106,14 @@ export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 export interface CardConfiguration {
     koreanAuthenticationRequired?: boolean;
     socialSecurityNumberMode?: SocialSecurityMode;
+    icon?: string;
+    brandsConfiguration?: CardBrandsConfiguration;
+}
+
+export interface CardBrandsConfiguration {
+    [key: string]: {
+        icon?: string;
+    };
 }
 
 interface CardPaymentMethodData {
@@ -130,6 +143,7 @@ export interface BrandObject {
     showExpiryDate: boolean;
     showSocialSecurityNumber?: boolean;
     supported: boolean;
+    brandImageUrl?: string;
 }
 
 export interface BinLookupResponseRaw {

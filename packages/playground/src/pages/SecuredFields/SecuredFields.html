@@ -23,6 +23,18 @@
                                 id="pmImage"
                                 width="40"
                                 src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/nocard.svg"
+                                alt="card"
+                            />
+                        </span>
+                        <span class="pm-image-dual">
+                            <img
+                                id="pmImageDual1"
+                                width="40"
+                                alt=""
+                            />
+                            <img
+                                id="pmImageDual2"
+                                width="40"
                                 alt=""
                             />
                         </span>
@@ -37,21 +49,21 @@
                             </span>
                             <span class="pm-form-label__error-text">Please enter a valid credit card number</span>
                         </label>
-                        <label class="pm-form-label pm-form-label--exp-date">
+                        <!--<label class="pm-form-label pm-form-label&#45;&#45;exp-date">
                             <span class="pm-form-label__text">Expiry date:</span>
                             <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
                             <span class="pm-form-label__error-text">Date error text</span>
+                        </label>-->
+                        <label class="pm-form-label exp-month">
+                            <span class="pm-form-label__text">Expiry month:</span>
+                            <span class="pm-input-field" data-cse="encryptedExpiryMonth"></span>
+                            <span class="pm-form-label__error-text">Date error text</span>
                         </label>
-                        <!--<label class="pm-form-label exp-month">
-                    <span class="pm-form-label__text">Expiry month:</span>
-                    <span class="pm-input-field" data-cse="encryptedExpiryMonth"></span>
-                    <span class="pm-form-label__error-text">Date error text</span>
-                </label>
-                <label class="pm-form-label exp-year">
-                    <span class="pm-form-label__text">Expiry year:</span>
-                    <span class="pm-input-field" data-cse="encryptedExpiryYear"></span>
-                    <span class="pm-form-label__error-text">Date error text</span>
-                </label>-->
+                        <label class="pm-form-label exp-year">
+                            <span class="pm-form-label__text">Expiry year:</span>
+                            <span class="pm-input-field" data-cse="encryptedExpiryYear"></span>
+                            <span class="pm-form-label__error-text">Date error text</span>
+                        </label>
                         <label class="pm-form-label pm-form-label--cvc">
                             <span class="pm-form-label__text">CVV/CVC:</span>
                             <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>

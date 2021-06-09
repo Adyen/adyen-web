@@ -22,7 +22,6 @@ const initCheckout = async () => {
             }
         },
         onSubmit: async (state, component) => {
-            component.setStatus('loading');
             const result = await makePayment(state.data);
 
             // handle actions
@@ -174,7 +173,11 @@ function handleRedirectResult() {
                 showOrderButton: false,
                 onSubmit: state => {
                     makePayment(state.data).then(result => {
-                        handleFinalState(result.resultCode, dropin);
+                        if (result.action) {
+                            dropin.handleAction(result.action);
+                        } else {
+                            handleFinalState(result.resultCode, dropin);
+                        }
                     });
                 }
             })

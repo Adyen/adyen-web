@@ -5,10 +5,16 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { CardElementData, CardElementProps, BinLookupResponse } from './types';
-import triggerBinLookUp from './triggerBinLookUp';
+import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
+import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
+import { reject } from '../internal/SecuredFields/utils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
+
+    protected static defaultProps = {
+        onBinLookup: () => {}
+    };
 
     formatProps(props: CardElementProps) {
         return {
@@ -26,9 +32,10 @@ export class CardElement extends UIElement<CardElementProps> {
             // - if merchant has defined value directly in props, use this instead
             configuration: {
                 ...props.configuration,
-                socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto',
+                socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto'
             },
-            onBinLookup: props.onBinLookup ??= () => {}
+            brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
+            icon: props.icon || props.configuration?.icon
         };
     }
 
@@ -38,10 +45,10 @@ export class CardElement extends UIElement<CardElementProps> {
     formatData(): CardElementData {
         /**
          * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
-         * this.state.additionalSelectValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
-         *   the shopper makes a brand selection
+         * this.state.selectedBrandValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
+         *  the shopper makes a brand selection
          */
-        const cardBrand = this.state.additionalSelectValue || this.props.brand;
+        const cardBrand = this.state.selectedBrandValue || this.props.brand;
         const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
@@ -85,24 +92,33 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
-    public onBinValue = triggerBinLookUp.bind(this);
+    onBinLookup(obj: CbObjOnBinLookup) {
+        // Handler for regular card comp doesn't need this 'raw' data or to know about 'resets'
+        if (!obj.isReset) {
+            const nuObj = reject('supportedBrandsRaw').from(obj);
+            this.props.onBinLookup(nuObj);
+        }
+    }
+
+    public onBinValue = triggerBinLookUp(this);
 
     get isValid() {
         return !!this.state.isValid;
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.brand);
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
-        const { brands, loadingContext } = this.props;
+        const { brands, loadingContext, brandsConfiguration } = this.props;
         if (brands) {
-            return brands.map(brand => ({
-                icon: getImage({ loadingContext })(brand),
-                name: brand
-            }));
+            return brands.map(brand => {
+                const brandIcon = brandsConfiguration[brand]?.icon ?? getImage({ loadingContext })(brand);
+                return { icon: brandIcon, name: brand };
+            });
         }
+
         return [];
     }
 

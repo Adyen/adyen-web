@@ -37,6 +37,15 @@ export const deleteFromIFrame = async (t, iframeSelector, iFrameNum, iFrameInput
         .switchToMainWindow();
 };
 
+export const deleteDigitsFromIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelector, startCaretPos, endCaretPos) => {
+    return t
+        .switchToMainWindow()
+        .switchToIframe(iframeSelector.nth(iFrameNum))
+        .selectText(iFrameInputSelector, startCaretPos, endCaretPos)
+        .pressKey('delete')
+        .switchToMainWindow();
+};
+
 export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, valueToCheck) => {
     return t
         .switchToMainWindow()

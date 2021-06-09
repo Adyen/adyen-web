@@ -6,6 +6,7 @@ import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
+import getImage from '../../utils/get-image';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -65,7 +66,7 @@ class GooglePay extends UIElement<GooglePayProps> {
 
     public submit = () => {
         return this.loadPayment().then(() => {
-            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this);
+            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         });
     };
 
@@ -117,6 +118,10 @@ class GooglePay extends UIElement<GooglePayProps> {
 
     get browserInfo() {
         return collectBrowserInfo();
+    }
+
+    get icon(): string {
+        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })('googlepay');
     }
 
     render() {

@@ -1,11 +1,14 @@
 import { PaymentAmount } from '../../../../../types';
+import { CardBrandsConfiguration } from '../../../types';
 
 export interface BrandIconProps {
     brand: string;
+    brandsConfiguration: CardBrandsConfiguration;
 }
 
 export interface CardFieldsProps {
     brand?: string;
+    brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
@@ -23,6 +26,7 @@ export interface CardHolderNameProps {
     error: boolean;
     isValid: boolean;
     onChange: (event: Event) => void;
+    onInput: (event: Event) => void;
     placeholder?: string;
     required?: boolean;
     value?: string;
@@ -30,6 +34,7 @@ export interface CardHolderNameProps {
 
 export interface CardNumberProps {
     brand: string;
+    brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
     dualBrandingSelected?: string;
@@ -61,6 +66,7 @@ export interface CVCHintProps {
 
 export interface DualBrandingIconProps {
     brand: string;
+    brandsConfiguration: CardBrandsConfiguration;
     onClick?: any;
     dataValue?: string;
     notSelected?: boolean;
@@ -112,9 +118,12 @@ export interface KCPProps {
     filled?: boolean;
     focusedElement;
     onFocusField: (str: string) => {};
-    onChange: (data: object, valid: object) => {};
-    ref: any;
+    onChange: (event: Event) => void;
+    onInput: (event: Event) => void;
     taxNumber?: string;
+    error: boolean;
+    isValid: boolean;
+    value: string;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;
@@ -123,12 +132,13 @@ export type RtnType_ParamVoidFn = (e) => void;
 export interface StoredCardFieldsProps {
     brand: string;
     errors: any;
-    expiryMonth: string;
-    expiryYear: string;
+    expiryMonth?: string;
+    expiryYear?: string;
     focusedElement: string;
     hasCVC: boolean;
     cvcPolicy: string;
-    lastFour: string;
+    lastFour?: string;
     onFocusField: any;
     valid: any;
+    status: string;
 }
