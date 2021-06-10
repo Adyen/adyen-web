@@ -8,9 +8,14 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
     const klarnaWidgetRef = useRef(null);
     const [status, setStatus] = useState('ready');
 
-    const handleError = error => {
+    const handleError = () => {
         setStatus('error');
-        props.onKlarnaDeclined(error);
+        props.onComplete({
+            data: {
+                paymentData: props.paymentData,
+                details: {}
+            }
+        });
     };
 
     const initializeKlarnaWidget = () => {
@@ -29,7 +34,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 // If show_form: false, the payment method in the loaded widget will not be offered for this order
                 // based on Klarna’s pre-assessment.
                 if (!res.show_form || !!res.error) {
-                    handleError(res);
+                    handleError();
                 }
             }
         );
@@ -61,12 +66,12 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                     } else {
                         // The purchase is declined. The widget should be hidden and the user
                         // should select another payment method.
-                        handleError(res);
+                        handleError();
                     }
                 }
             );
         } catch (e) {
-            handleError(e);
+            handleError();
         }
     };
 

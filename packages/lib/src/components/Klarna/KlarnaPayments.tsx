@@ -2,13 +2,21 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { KlarnaPaymentsProps } from './types';
-import { KlarnaWidget } from './components/KlarnaWidget/KlarnaWidget';
 import PayButton from '../internal/PayButton';
+import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
+import { PaymentAction } from '../../types';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
     protected static defaultProps = {};
 
+    constructor(props: KlarnaPaymentsProps) {
+        super(props);
+
+        this.onComplete = this.onComplete.bind(this);
+        this.updateWithAction = this.updateWithAction.bind(this);
+        this.submit = this.submit.bind(this);
+    }
     get isValid() {
         return true;
     }
@@ -26,34 +34,26 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
         return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 
-    render() {
-        if (this.props.sdkData) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                    <KlarnaWidget
-                        sdkData={this.props.sdkData}
-                        payButton={this.payButton}
-                        paymentMethodType={this.props.paymentMethodType}
-                        paymentData={this.props.paymentData}
-                        onComplete={this.onComplete}
-                        onError={this.props.onError}
-                        onKlarnaDeclined={this.props.onKlarnaDeclined}
-                    />
-                </CoreProvider>
-            );
-        } else if (this.props.showPayButton) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                    {this.payButton({
-                        ...this.props,
-                        classNameModifiers: ['standalone'],
-                        label: `${this.props.i18n.get('continueTo')} ${this.displayName}`
-                    })}
-                </CoreProvider>
-            );
-        }
+    updateWithAction(action: PaymentAction): void {
+        if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
+        this.componentRef.setAction(action);
+    }
 
-        return null;
+    render() {
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <KlarnaContainer
+                    {...this.props}
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    displayName={this.displayName}
+                    onComplete={state => this.props.onAdditionalDetails(state, this.elementRef)}
+                    onError={this.props.onError}
+                    payButton={this.payButton}
+                />
+            </CoreProvider>
+        );
     }
 }
 

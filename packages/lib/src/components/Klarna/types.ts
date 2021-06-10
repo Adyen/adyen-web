@@ -18,8 +18,6 @@ export type KlarnaSdkData = {
 };
 
 interface KlarnaPaymentsShared {
-    onKlarnaDeclined: (error) => void;
-
     sdkData: KlarnaSdkData;
     paymentData: string;
     paymentMethodType: string;
