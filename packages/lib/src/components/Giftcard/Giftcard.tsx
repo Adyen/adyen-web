@@ -4,6 +4,7 @@ import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import PayButton from '../internal/PayButton';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export class GiftcardElement extends UIElement {
     public static type = 'giftcard';
@@ -105,7 +106,7 @@ export class GiftcardElement extends UIElement {
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
-                if (this.props.onError) this.props.onError(error);
+                if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
             });
     };
 

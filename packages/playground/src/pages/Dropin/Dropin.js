@@ -10,6 +10,7 @@ const initCheckout = async () => {
         amount,
         reference: 'ABC123',
         returnUrl,
+        shopperLocale,
         countryCode
     });
 
@@ -18,14 +19,11 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         session,
 
-        countryCode, // @deprecated
-        locale: shopperLocale, // @deprecated
-
         onPaymentCompleted: (result, component) => {
-            console.info(result);
+            console.info(result, component);
         },
         onError: (error, component) => {
-            console.error(error.name, error.message, error.stack);
+            console.error(error.name, error.message, error.stack, component);
         }
     });
 
