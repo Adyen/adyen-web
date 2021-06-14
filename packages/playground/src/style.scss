@@ -26,12 +26,14 @@ header {
     background: $color-white;
     border-bottom: 1px solid $color-gray-light;
     display: flex;
+    align-items: center;
     left: 0;
     position: fixed;
     top: 0;
     transition: transform 0.2s ease-out;
     width: 100%;
     z-index: 5;
+    padding: 0 16px;
 
     @media screen and (min-width: 1240px) {
         background: #f3f6f9;
@@ -41,6 +43,7 @@ header {
         height: 100vh;
         overflow-y: auto;
         width: 240px;
+        padding: 0;
     }
 
     .nav-open & {
@@ -102,7 +105,6 @@ h2 {
     background: none;
     border: 0;
     cursor: pointer;
-    padding: 12px;
     transition: background-color 0.3s ease-out, opacity 0.3s ease-out;
 
     @media screen and (min-width: 1240px) {
@@ -175,7 +177,8 @@ h2 {
     border-right: 1px solid #d2dae1;
     height: 100vh;
     left: -240px;
-    position: absolute;
+    position: fixed;
+    top: 0;
     width: 240px;
 
     @media screen and (min-width: 1240px) {
@@ -224,6 +227,41 @@ h2 {
         &:active,
         &:hover {
             box-shadow: none;
+        }
+    }
+}
+
+.session-switch {
+    @media screen and (min-width: 1240px) {
+        margin-top: auto;
+        margin-bottom: 24px;
+    }
+}
+.session-switch__list {
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+
+    li {
+        list-style: none;
+
+        .session-switch__button {
+            background: #fff;
+            border: 1px solid $color-primary;
+            color: $color-primary;
+            border-radius: 3px;
+            padding: 4px 8px;
+            transition: background-color 0.25s linear, color 0.25s linear;
+            cursor: pointer;
+
+            &:hover,
+            &:active,
+            &:focus,
+            &--active {
+                color: #fff;
+                background: $color-primary;
+            }
         }
     }
 }

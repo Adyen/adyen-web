@@ -22,7 +22,12 @@ export const getSearchParameters = (search = window.location.search) =>
             return acc;
         }, {});
 
+const setSearchParams = params => {
+    window.location = window.location.origin + window.location.pathname + '?' + new URLSearchParams(params).toString();
+};
+
 const insertHeader = pages => {
+    const isManualFlow = getSearchParameters(window.location.search).session === 'manual';
     const container = document.querySelector('header');
     const links = pages
         .filter(page => page.id !== 'Result')
@@ -47,12 +52,35 @@ const insertHeader = pages => {
         <nav class="playground-nav">
             <ul class="playground-nav__list">${links.join('')}</ul>
         </nav>
+        
+        <nav class="session-switch">
+            <ul class="session-switch__list">
+                <li><button class="session-switch__button session-switch__button--session ${
+                    !isManualFlow ? 'session-switch__button--active' : ''
+                }">Session</button></li>
+                <li><button class="session-switch__button session-switch__button--manual ${
+                    isManualFlow ? 'session-switch__button--active' : ''
+                }">Manual</button></li>
+            </ul>
+        </nav>
     `;
 
     if (container) container.innerHTML = header;
 };
 
 const addEventListeners = () => {
+    document.querySelector('.session-switch__button--session').addEventListener('click', () => {
+        const params = getSearchParameters(window.location.search);
+        delete params.session;
+        setSearchParams(params);
+    });
+
+    document.querySelector('.session-switch__button--manual').addEventListener('click', () => {
+        const params = getSearchParameters(window.location.search);
+        params.session = 'manual';
+        setSearchParams(params);
+    });
+
     document.querySelectorAll('.playground-nav__link').forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
