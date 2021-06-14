@@ -134,6 +134,7 @@ export interface CardElementData {
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;
+    origin?: string;
 }
 
 export interface BrandObject {
