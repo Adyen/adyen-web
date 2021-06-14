@@ -157,6 +157,7 @@ class Core {
     private setOptions = (options): this => {
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
+        this.options.locale = this.options.locale || this.options.shopperLocale;
 
         this.modules = {
             risk: new RiskModule(this.options),
