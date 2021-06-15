@@ -15,6 +15,8 @@ export const amount = {
     value: Number(amountValue)
 };
 
+export const useSession = urlParams.session !== 'manual';
+
 export const returnUrl = 'http://localhost:3020/result';
 
 export default {
