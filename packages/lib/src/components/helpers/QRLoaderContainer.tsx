@@ -26,14 +26,6 @@ interface QRLoaderContainerProps extends UIElementProps {
 }
 
 class QRLoaderContainer extends UIElement<QRLoaderContainerProps> {
-    protected static defaultProps = {
-        qrCodeImage: '',
-        amount: null,
-        paymentData: null,
-        onError: () => {},
-        onComplete: () => {}
-    };
-
     formatData() {
         return {
             paymentMethod: {
@@ -56,6 +48,7 @@ class QRLoaderContainer extends UIElement<QRLoaderContainerProps> {
                             this.componentRef = ref;
                         }}
                         {...this.props}
+                        onError={this.handleError}
                         shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
                         type={this.constructor['type']}
                         brandLogo={this.props.brandLogo || this.icon}
