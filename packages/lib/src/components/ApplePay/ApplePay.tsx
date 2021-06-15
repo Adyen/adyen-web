@@ -9,6 +9,7 @@ import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 const latestSupportedVersion = 11;
 
@@ -36,7 +37,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             supportedNetworks,
             version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
-            onCancel: event => props.onError(event)
+            onCancel: event => this.handleError(new AdyenCheckoutError('CANCEL', event))
         };
     }
 
@@ -121,18 +122,18 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     isAvailable(): Promise<boolean> {
         if (document.location.protocol !== 'https:') {
-            return Promise.reject(new Error('Trying to start an Apple Pay session from an insecure document'));
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
 
         if (!this.props.onValidateMerchant && !this.props.clientKey) {
-            return Promise.reject(new Error('clientKey was not provided'));
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'clientKey was not provided'));
         }
 
         if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
             return Promise.resolve(ApplePaySession.canMakePayments());
         }
 
-        return Promise.reject(new Error('Apple Pay is not available on this device'));
+        return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
     }
 
     /**
