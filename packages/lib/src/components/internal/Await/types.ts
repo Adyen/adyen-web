@@ -21,7 +21,7 @@ export interface AwaitComponentProps {
     shouldRedirectOnMobile?: boolean;
     classNameModifiers?: string[];
     clientKey: string;
-    onError: (error, component) => void;
+    onError: (error) => void;
     onComplete: (status, component) => void;
     brandLogo: string;
     messageText: string;

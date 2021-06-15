@@ -10,6 +10,7 @@ import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -26,8 +27,7 @@ function Await(props: AwaitComponentProps) {
     const onTimeUp = (): void => {
         setExpired(true);
         clearTimeout(storedTimeout);
-        const error = { type: 'error', props: { errorMessage: 'Payment Expired' } };
-        props.onError(error, this);
+        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
     const onTick = (time): void => {
@@ -90,8 +90,7 @@ function Await(props: AwaitComponentProps) {
     const redirectToApp = (url, fallback = (): void => {}): void => {
         setTimeout((): void => {
             // Redirect to the APP failed
-            const error = `${props.type} App was not found`;
-            props.onError(error, this);
+            props.onError(new AdyenCheckoutError('ERROR', `${props.type} App was not found`));
             fallback();
         }, 25);
         window.location.assign(url);
