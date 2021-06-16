@@ -6,6 +6,19 @@ const [STREET, HOUSE_NUMBER_OR_NAME, POSTAL_CODE, CITY, STATE_OR_PROVINCE, COUNT
 
 // prettier-ignore
 export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
+    AU: {
+        hasDataset: true,
+        labels: {
+            [HOUSE_NUMBER_OR_NAME]: 'apartmentSuite',
+            [STATE_OR_PROVINCE]: 'state',
+            [STREET]: 'address'
+        },
+        optionalFields: [HOUSE_NUMBER_OR_NAME],
+        placeholders: {
+            [STATE_OR_PROVINCE]: 'select.state'
+        },
+        schema: [COUNTRY, STREET, HOUSE_NUMBER_OR_NAME, CITY, [[STATE_OR_PROVINCE, 50], [POSTAL_CODE, 50]]]
+    },
     BR: {
         hasDataset: true,
         labels: {
