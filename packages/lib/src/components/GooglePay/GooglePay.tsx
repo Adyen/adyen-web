@@ -59,14 +59,13 @@ class GooglePay extends UIElement<GooglePayProps> {
                 return onAuthorized(paymentData);
             })
             .catch(error => {
-                this.props.onError(error);
-                return Promise.reject(error);
+                if (this.props.onError) this.props.onError(error);
             });
     };
 
     public submit = () => {
         return this.loadPayment().then(() => {
-            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
+            if (this.props.onSubmit && this.isValid) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         });
     };
 
