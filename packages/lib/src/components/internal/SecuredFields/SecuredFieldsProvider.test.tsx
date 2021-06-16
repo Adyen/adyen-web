@@ -117,7 +117,6 @@ describe('<SecuredFieldsProvider /> rendering', () => {
     it('should create an error object for each visible secured field, pass the object to the props.onError fn & set state.errors', () => {
         sfp.showValidation();
 
-        expect(onError).toHaveBeenCalledTimes(3);
         expect(sfp.state.errors.encryptedCardNumber).not.toBe(false);
         expect(sfp.state.errors.encryptedExpiryDate).not.toBe(false);
         expect(sfp.state.errors.encryptedSecurityCode).not.toBe(false);

@@ -4,6 +4,7 @@ import setupSession from '../Services/sessions/setup-session';
 import checkBalance from '../Services/sessions/check-balance';
 import Storage from '../../utils/Storage';
 import createOrder from '../Services/sessions/create-order';
+import { sanitizeSession } from './utils';
 import {
     CheckoutSession,
     CheckoutSessionBalanceResponse,
@@ -19,8 +20,8 @@ class Session {
     public readonly clientKey: string;
     public readonly loadingContext: string;
 
-    constructor(session: CheckoutSession, clientKey: string, loadingContext: string) {
-        if (!session.id) throw new Error('No Session ID');
+    constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
+        const session = sanitizeSession(rawSession);
         if (!clientKey) throw new Error('No clientKey available');
 
         this.storage = new Storage('session');
@@ -46,7 +47,7 @@ class Session {
     /**
      * Updates the session.data with the latest data blob
      */
-    updateSessionData(latestData: string): void {
+    private updateSessionData(latestData: string): void {
         this.session.data = latestData;
         this.storeSession();
     }
