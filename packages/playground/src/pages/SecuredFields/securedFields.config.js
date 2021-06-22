@@ -3,7 +3,7 @@ let hideDate = false;
 let isDualBranding = false;
 
 function setAttributes(el, attrs) {
-    for (var key in attrs) {
+    for (const key in attrs) {
         el.setAttribute(key, attrs[key]);
     }
 }

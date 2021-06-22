@@ -56,8 +56,8 @@ export class SecuredFieldsElement extends UIElement {
         return this;
     }
 
-    dualBrandingChangeHandler(brand: string) {
-        if (this.componentRef?.dualBrandingChangeHandler) this.componentRef.dualBrandingChangeHandler(brand);
+    dualBrandingChangeHandler(e: Event) {
+        if (this.componentRef?.dualBrandingChangeHandler) this.componentRef.dualBrandingChangeHandler(e);
         return this;
     }
 
