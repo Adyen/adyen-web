@@ -3,5 +3,6 @@ export const keys = {
     arrowUp: 'ArrowUp',
     enter: 'Enter',
     escape: 'Escape',
-    space: ' '
+    space: ' ',
+    tab: 'Tab'
 };
