@@ -21,9 +21,11 @@ export default function InputBase(props) {
         classNameModifiers.map(m => `adyen-checkout__input--${m}`)
     );
 
+    const { classNameModifiers: cnm, ...newProps } = props;
+
     return (
         <input
-            {...props}
+            {...newProps}
             type={type}
             className={inputClassNames}
             onInput={handleInput}
