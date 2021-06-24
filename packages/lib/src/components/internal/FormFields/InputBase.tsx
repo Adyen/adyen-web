@@ -21,6 +21,7 @@ export default function InputBase(props) {
         classNameModifiers.map(m => `adyen-checkout__input--${m}`)
     );
 
+    // Don't spread classNameModifiers to input element (it ends up as an attribute on the element itself)
     const { classNameModifiers: cnm, ...newProps } = props;
 
     return (
