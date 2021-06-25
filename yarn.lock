@@ -1484,10 +1484,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/googlepay@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@types/googlepay/-/googlepay-0.6.0.tgz#55317607900ee753f082f711177868b3a5d115c4"
-  integrity sha512-jysQuZ2LH75sN9b8J2ezElfb3+X7jhQQAFTu6rx4cn3d6wdj525bXQb0CoYMUJmgdc9DxmhFjM5GHwWZ8faraw==
+"@types/googlepay@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@types/googlepay/-/googlepay-0.6.1.tgz#6010dee7fce6764fd613e97b1de46bd134b09494"
+  integrity sha512-vx4wwIRIF7h7ajxGVszzlVXAOFYJdb8dPhKFIXRYPRK1+yewSfqLmAZSjkQA3EqIQWCNplohV+bzD9RFklZgpg==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.4"
