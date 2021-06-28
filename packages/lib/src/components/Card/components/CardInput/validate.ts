@@ -2,10 +2,10 @@ import { ValidatorRules } from '../../../../utils/Validator/Validator';
 import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 
-const nonLetterRegEx = /[^A-Z\s]/gi; // detect anything that's not a letter or spaces
+const digitRegEx = /[0-9]/g; // detect digits
 
 export const cardInputFormatters = {
-    holderName: value => value.replace(nonLetterRegEx, ''),
+    holderName: value => value.replace(digitRegEx, ''), // allow anything except digits
     socialSecurityNumber: formatCPFCNPJ
 };
 
@@ -26,7 +26,7 @@ export const cardInputValidationRules: ValidatorRules = {
         {
             // Will fire at startup and when triggerValidation is called and also applies as text is input
             modes: ['blur'],
-            validate: value => value.trim().length > 0 // i.e. are there chars other than spaces?
+            validate: value => value && value.trim().length > 0 // i.e. are there chars other than spaces?
         }
     ],
     default: [
