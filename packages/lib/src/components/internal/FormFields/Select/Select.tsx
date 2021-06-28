@@ -30,6 +30,23 @@ function Select(props: SelectProps) {
     };
 
     /**
+     * Closes the select list and fires an onChange
+     * @param e - Event
+     */
+    const handleSelect = (e: Event) => {
+        e.preventDefault();
+
+        // If the target is not one of the list items, select the first list item
+        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
+
+        if (!target.getAttribute('data-disabled')) {
+            closeList();
+            const value = target.getAttribute('data-value');
+            props.onChange({ target: { value, name: props.name } });
+        }
+    };
+
+    /**
      * Handle keyDown events on the selectList button
      * Opens the selectList and focuses the first element if available
      * @param e - KeyboardEvent
@@ -37,12 +54,21 @@ function Select(props: SelectProps) {
     const handleButtonKeyDown = (e: KeyboardEvent) => {
         if (e.key === keys.enter && props.filterable && showList && textFilter) {
             handleSelect(e);
+        } else if (e.key === keys.escape) {
+            // When user has focused Select button but not yet moved into Select list - close list and keep focus on the Select Button re. a11y guidelines
+            // https://w3c.github.io/aria-practices/examples/disclosure/disclosure-navigation.html
+            closeList();
         } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!props.filterable || !showList))) {
             e.preventDefault();
             setShowList(true);
             if (selectListRef.current?.firstElementChild) {
                 selectListRef.current.firstElementChild.focus();
             }
+        } else if (e.shiftKey && e.key === keys.tab) {
+            // Shift-Tab out of Select - close list re. a11y guidelines (above)
+            closeList();
+        } else if (e.key === keys.tab) {
+            closeList();
         }
     };
 
@@ -57,8 +83,8 @@ function Select(props: SelectProps) {
     };
 
     /**
-     * Handle keyDown events on the select button
-     * Navigates through the list, or select an element, or focus the filter intput, or close the menu.
+     * Handle keyDown events on the list elements
+     * Navigates through the list, or select an element, or focus the filter input, or close the menu.
      * @param e - KeyDownEvent
      */
     const handleListKeyDown = (e: KeyboardEvent) => {
@@ -67,7 +93,8 @@ function Select(props: SelectProps) {
         switch (e.key) {
             case keys.escape:
                 e.preventDefault();
-                setShowList(false);
+                // When user is actively navigating through list with arrow keys - close list and keep focus on the Select Button re. a11y guidelines (above)
+                closeList();
                 break;
             case keys.space:
             case keys.enter:
@@ -85,24 +112,10 @@ function Select(props: SelectProps) {
                     filterInputRef.current.focus();
                 }
                 break;
+            case keys.tab:
+                closeList();
+                break;
             default:
-        }
-    };
-
-    /**
-     * Closes the select list and fires an onChange
-     * @param e - Event
-     */
-    const handleSelect = (e: Event) => {
-        e.preventDefault();
-
-        // If the target is not one of the list items, select the first list item
-        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
-
-        if (!target.getAttribute('data-disabled')) {
-            closeList();
-            const value = target.getAttribute('data-value');
-            props.onChange({ target: { value, name: props.name } });
         }
     };
 
