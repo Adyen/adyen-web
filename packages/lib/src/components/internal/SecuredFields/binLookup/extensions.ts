@@ -75,9 +75,13 @@ export default function extensions(props, refs, states) {
          * Handler for clicks on the icons added in response to the /binLookup call
          * Inform SFP of the brand changes when these selections are made
          */
-        handleDualBrandSelection: (e: Event): void => {
-            const target = e.target as HTMLLIElement;
-            const value: string = target.getAttribute('data-value') || target.getAttribute('alt');
+        handleDualBrandSelection: (e: Event | string): void => {
+            let value: Event | string = e;
+
+            if (e instanceof Event) {
+                const target = e.target as HTMLLIElement;
+                value = target.getAttribute('data-value') || target.getAttribute('alt');
+            }
 
             setSelectedBrandValue(value);
 
