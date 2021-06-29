@@ -1,10 +1,10 @@
 import { CheckoutSession } from '../../types';
 
-export function sanitizeSession(session): CheckoutSession {
-    if (!session || !session.id || !session.data) throw new Error('Invalid session');
+export function sanitizeSession(session): Partial<CheckoutSession> {
+    if (!session || !session.id) throw new Error('Invalid session');
 
     return {
         id: session.id,
-        data: session.data
+        ...(session.data ? { data: session.data } : {})
     };
 }
