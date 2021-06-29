@@ -44,7 +44,8 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
                 'process.env.VERSION': JSON.stringify(version.ADYEN_WEB_VERSION),
                 'process.env.COMMIT_HASH': JSON.stringify(version.COMMIT_HASH),
                 'process.env.COMMIT_BRANCH': JSON.stringify(version.COMMIT_BRANCH),
-                'process.env.ADYEN_BUILD_ID': JSON.stringify(version.ADYEN_BUILD_ID)
+                'process.env.ADYEN_BUILD_ID': JSON.stringify(version.ADYEN_BUILD_ID),
+                'process.env.__SF_ENV__': JSON.stringify(process.env.SF_ENV || 'build')
             },
             preventAssignment: true
         }),
