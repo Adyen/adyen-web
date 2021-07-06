@@ -15,16 +15,16 @@ export default function InputBase(props) {
 
     const handleChange = e => {
         setHandleChangeHasFired(true);
-        props.onChange(e);
+        props?.onChange?.(e);
     };
 
     const handleBlur = e => {
         if (!handleChangeHasFired) {
-            props.onChange(e);
+            props?.onChange?.(e);
         }
         setHandleChangeHasFired(false);
 
-        props.onBlur(e);
+        props?.onBlur?.(e);
     };
 
     const inputClassNames = classNames(
