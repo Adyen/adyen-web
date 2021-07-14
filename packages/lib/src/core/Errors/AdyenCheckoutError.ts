@@ -18,7 +18,7 @@ class AdyenCheckoutError extends Error {
     constructor(type: keyof typeof AdyenCheckoutError.errorTypes, message?: string) {
         super(message);
 
-        this.name = (this.constructor as typeof AdyenCheckoutError).errorTypes[type];
+        this.name = AdyenCheckoutError.errorTypes[type];
     }
 }
 
