@@ -2,10 +2,7 @@ import { ValidatorRules } from '../../../../utils/Validator/Validator';
 import { formatCPFCNPJ } from '../../../Boleto/components/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../Boleto/components/SocialSecurityNumberBrazil/validate';
 
-const digitRegEx = /[0-9]/g; // detect digits
-
 export const cardInputFormatters = {
-    holderName: value => value.replace(digitRegEx, ''), // allow anything except digits
     socialSecurityNumber: formatCPFCNPJ
 };
 
