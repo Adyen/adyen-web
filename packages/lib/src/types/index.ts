@@ -72,7 +72,9 @@ export interface PaymentAction {
     /**
      * An object containing data to be used in external SDKs like PayPal Buttons SDK.
      */
-    sdkData?: any;
+    sdkData?: {
+        [key: string]: any;
+    };
 }
 
 export interface PaymentMethod {

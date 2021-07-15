@@ -2,6 +2,16 @@ import { getComponent } from '../../../components';
 import { PaymentAction } from '../../../types';
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 
+const getActionHandler = statusType => (action: PaymentAction, props) => {
+    return getComponent(action.paymentMethodType, {
+        ...action,
+        ...props,
+        onComplete: props.onAdditionalDetails,
+        onError: props.onError,
+        statusType
+    });
+};
+
 const actionTypes = {
     redirect: (action: PaymentAction, props) =>
         getComponent('redirect', {
@@ -64,43 +74,11 @@ const actionTypes = {
         return getComponent(componentType, config);
     },
 
-    voucher: (action: PaymentAction, props) =>
-        getComponent(action.paymentMethodType, {
-            ...action,
-            ...props,
-            i18n: props.i18n,
-            loadingContext: props.loadingContext,
-            statusType: 'custom'
-        }),
-
-    qrCode: (action: PaymentAction, props) =>
-        getComponent(action.paymentMethodType, {
-            ...action,
-            ...props,
-            onComplete: props.onAdditionalDetails,
-            onError: props.onError,
-            statusType: 'custom'
-        }),
-
-    await: (action: PaymentAction, props) => {
-        return getComponent(action.paymentMethodType, {
-            ...action,
-            ...props,
-            onComplete: props.onAdditionalDetails,
-            onError: props.onError,
-            statusType: 'custom'
-        });
-    },
-
-    bankTransfer: (action: PaymentAction, props) => {
-        return getComponent(action.paymentMethodType, {
-            ...action,
-            ...props,
-            onComplete: props.onAdditionalDetails,
-            onError: props.onError,
-            statusType: 'custom'
-        });
-    }
+    voucher: getActionHandler('custom'),
+    qrCode: getActionHandler('custom'),
+    await: getActionHandler('custom'),
+    bankTransfer: getActionHandler('custom'),
+    sdk: getActionHandler('custom')
 } as const;
 
 export default actionTypes;

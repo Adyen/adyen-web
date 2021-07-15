@@ -44,6 +44,7 @@ import uuid from '../utils/uuid';
 import BacsDD from './BacsDD';
 import Address from './Address';
 import PersonalDetails from './PersonalDetails';
+import Klarna from './Klarna';
 
 /**
  * Maps each component with a Component element.
@@ -111,6 +112,7 @@ const componentsMap = {
     ideal: Ideal,
     jcb: Card,
     kcp: Card,
+    klarna: Klarna,
     maestro: Card,
     mbway: MBWay,
     mc: Card,
