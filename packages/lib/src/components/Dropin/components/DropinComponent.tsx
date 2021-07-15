@@ -39,7 +39,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         });
     };
 
-    private setStatus = status => {
+    public setStatus = status => {
         this.setState({ status });
     };
 
@@ -57,6 +57,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         if (this.state.status.type === 'ready' && prevState.status.type !== 'ready' && this.props.onReady) {
             this.props.onReady();
+        }
+
+        if (this.props.order && !prevProps.order) {
+            this.props.onDropinReset();
         }
     }
 
@@ -83,6 +87,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ isDisabling: false });
             });
     };
+
+    public update(props) {
+        this.state.elements.forEach(element => element.update(props));
+    }
 
     closeActivePaymentMethod() {
         this.setState({ activePaymentMethod: null });

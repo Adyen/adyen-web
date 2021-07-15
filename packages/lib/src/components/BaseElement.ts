@@ -25,7 +25,7 @@ class BaseElement<P extends BaseElementProps> {
     public _node;
     public _component;
     public eventEmitter = new EventEmitter();
-    private readonly _parentInstance;
+    private readonly _parentInstance: Core;
 
     protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
@@ -116,9 +116,8 @@ class BaseElement<P extends BaseElementProps> {
      */
     public update(props: P): this {
         this.props = this.formatProps({ ...this.props, ...props });
-        this.state = {};
 
-        return this.unmount().remount();
+        return this._node ? this.remount() : this;
     }
 
     /**
@@ -129,9 +128,9 @@ class BaseElement<P extends BaseElementProps> {
             throw new Error('Component is not mounted.');
         }
 
-        const newComponent = component || this.render();
+        this._component = component || this.render();
 
-        render(newComponent, this._node, null);
+        render(this._component, this._node, null);
 
         return this;
     }

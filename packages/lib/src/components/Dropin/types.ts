@@ -51,6 +51,7 @@ export interface DropinElementProps extends UIElementProps {
 export interface DropinComponentProps extends DropinElementProps {
     onCreateElements: any;
     onChange: (newState?: object) => void;
+    onDropinReset: () => void;
     onOrderCancel?: (order: Order) => void;
 }
 
