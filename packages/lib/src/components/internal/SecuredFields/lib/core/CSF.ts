@@ -18,7 +18,7 @@ import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, CSFSetupObject, StylesObject, CbObjOnAdditionalSF, CSFStateObject } from '../types';
+import { CSFReturnObject, CSFSetupObject, StylesObject, CbObjOnAdditionalSF, CSFStateObject, SFFieldType } from '../types';
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
 import { BinLookupResponse } from '../../../../Card/types';
@@ -131,7 +131,7 @@ class CSF extends AbstractCSF {
                     );
                 }
             },
-            setFocusOnFrame: (pFieldType: string): void => {
+            setFocusOnFrame: (pFieldType: SFFieldType): void => {
                 if (this.state.isConfigured) {
                     this.setFocusOnFrame(pFieldType);
                 } else {
@@ -140,7 +140,7 @@ class CSF extends AbstractCSF {
             },
             // For component based implementation - if showValidation function is called on the component use this
             // function as a way to notify the CSF that a field is in error
-            isValidated: (pFieldType: string, code: string): void => {
+            isValidated: (pFieldType: SFFieldType, code: string): void => {
                 if (this.state.isConfigured) {
                     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
                         this.state.securedFields[pFieldType].hasError = true;
@@ -166,7 +166,7 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot set validated on any secured field');
                 }
             },
-            hasUnsupportedCard: (pFieldType: string, code: string): void => {
+            hasUnsupportedCard: (pFieldType: SFFieldType, code: string): void => {
                 if (this.state.isConfigured) {
                     if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
                         //
@@ -203,14 +203,14 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }
             },
-            addSecuredField: (pFieldType: string): void => {
+            addSecuredField: (pFieldType: SFFieldType): void => {
                 const securedField: HTMLElement = selectOne(this.props.rootNode, `[data-cse="${pFieldType}"]`);
                 if (securedField) {
                     this.state.numIframes += 1;
                     this.setupSecuredField(securedField);
                 }
             },
-            removeSecuredField: (pFieldType: string): void => {
+            removeSecuredField: (pFieldType: SFFieldType): void => {
                 if (this.state.securedFields[pFieldType]) {
                     this.state.securedFields[pFieldType].destroy();
                     delete this.state.securedFields[pFieldType];

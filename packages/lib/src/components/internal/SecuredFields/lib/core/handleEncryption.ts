@@ -8,7 +8,7 @@ import postMessageToIframe from './utils/iframes/postMessageToIframe';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
-    const fieldType: string = pFeedbackObj.fieldType;
+    const fieldType = pFeedbackObj.fieldType;
 
     // SET FOCUS ON OTHER INPUT - If user has just typed a correct expiryDate - set focus on the cvc field OR typed a correct expiryMonth - focus on year field
     if (this.config.autoFocus) {
