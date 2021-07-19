@@ -22,10 +22,10 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "autoprefixer": "^10.2.6",
+        "autoprefixer": "^10.3.1",
         "core-js": "^3.14.0",
         "cross-env": "^7.0.3",
-        "css-loader": "^5.2.6",
+        "css-loader": "^5.2.7",
         "dotenv": "^10.0.0",
         "html-webpack-plugin": "^4.5.2",
         "node-sass": "^6.0.0",
