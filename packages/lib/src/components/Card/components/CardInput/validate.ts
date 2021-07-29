@@ -23,7 +23,7 @@ export const cardInputValidationRules: ValidatorRules = {
         {
             // Will fire at startup and when triggerValidation is called and also applies as text is input
             modes: ['blur'],
-            validate: value => value.trim().length > 0 // i.e. are there chars other than spaces?
+            validate: value => value?.trim().length > 0 // i.e. are there chars other than spaces?
         }
     ],
     default: [
