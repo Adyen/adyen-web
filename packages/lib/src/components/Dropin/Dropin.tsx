@@ -95,7 +95,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     handleAction(action: PaymentAction, props = {}) {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        if (this.activePaymentMethod?.updateWithAction) {
+        if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
         }
 

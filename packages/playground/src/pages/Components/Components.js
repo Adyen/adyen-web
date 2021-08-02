@@ -41,6 +41,9 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
     // MBWay
     window.mbway = checkout.create('mbway').mount('.mbway-field');
 
+    // Klarna Widget
+    window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
+
     // ACH
     window.ach = checkout
         .create('ach', {
