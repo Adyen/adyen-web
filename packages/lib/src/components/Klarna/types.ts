@@ -31,7 +31,9 @@ export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     onError: (error) => void;
 }
 
-export interface KlarnaPaymentsProps extends UIElementProps, KlarnaPaymentsShared {}
+export interface KlarnaPaymentsProps extends UIElementProps, KlarnaPaymentsShared {
+    useKlarnaWidget: boolean;
+}
 
 export interface KlarnaWidgetAuthorizeResponse {
     approved: boolean;

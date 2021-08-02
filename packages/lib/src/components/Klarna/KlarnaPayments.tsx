@@ -8,7 +8,9 @@ import { PaymentAction } from '../../types';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
-    protected static defaultProps = {};
+    protected static defaultProps = {
+        useKlarnaWidget: false
+    };
 
     constructor(props: KlarnaPaymentsProps) {
         super(props);
@@ -25,7 +27,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
         return {
             paymentMethod: {
                 type: this.constructor['type'],
-                subtype: 'sdk'
+                ...(this.props.useKlarnaWidget ? { subtype: 'sdk' } : {})
             }
         };
     }
