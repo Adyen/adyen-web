@@ -1,4 +1,12 @@
-import { AMAZONPAY_URL_EU, AMAZONPAY_URL_US, FALLBACK_LOCALE_EU, FALLBACK_LOCALE_US, SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
+import {
+    AMAZONPAY_URL_EU,
+    AMAZONPAY_URL_US,
+    FALLBACK_LOCALE_EU,
+    FALLBACK_LOCALE_US,
+    LEDGER_CURRENCIES_PER_REGION,
+    SUPPORTED_LOCALES_EU,
+    SUPPORTED_LOCALES_US
+} from './config';
 import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
 import { PaymentAmount } from '../../types';
 import { getDecimalAmount } from '../../utils/amount-util';
@@ -22,7 +30,7 @@ export function getAmazonPaySettings(props): AmazonPayButtonSettings {
         ...(props.buttonColor && { buttonColor: props.buttonColor }),
         ...(props.design && { design: getDesignCode(props.design) }),
         checkoutLanguage: getCheckoutLocale(props.locale, props.region),
-        ledgerCurrency: props.currency || (props.amount?.currency as Currency),
+        ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (props.amount?.currency as Currency),
         merchantId: props.configuration.merchantId,
         productType: props.productType,
         placement: props.placement,
@@ -82,7 +90,7 @@ export function getDesignCode(design: string): string {
 export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
     return {
         amount: String(getDecimalAmount(amount.value, amount.currency)),
-        currencyCode: amount.currency
+        currencyCode: amount.currency as Currency
     };
 }
 
@@ -92,10 +100,10 @@ export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
  * @returns PayloadJSON
  */
 export function getPayloadJSON(props): PayloadJSON {
-    const { amount, addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata } = props;
+    const { addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata } = props;
     const { storeId } = props.configuration;
     const isPayNow = checkoutMode === 'ProcessOrder';
-    const chargeAmount = isPayNow ? getChargeAmount(amount) : null;
+    const amount = isPayNow ? getChargeAmount(props.amount) : null;
 
     return {
         storeId,
@@ -106,8 +114,10 @@ export function getPayloadJSON(props): PayloadJSON {
         },
         ...(isPayNow && {
             paymentDetails: {
-                chargeAmount,
-                paymentIntent: 'Confirm'
+                chargeAmount: amount,
+                paymentIntent: 'Confirm',
+                presentmentCurrency: amount.currencyCode,
+                totalOrderAmount: amount
             }
         }),
         ...(merchantMetadata && { merchantMetadata }),
