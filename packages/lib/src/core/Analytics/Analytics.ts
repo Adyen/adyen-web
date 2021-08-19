@@ -9,7 +9,8 @@ class Analytics {
         enabled: true,
         telemetry: true,
         conversion: false,
-        conversionId: null
+        conversionId: null,
+        experiments: []
     };
 
     public conversionId = null;
@@ -23,7 +24,7 @@ class Analytics {
         this.props = { ...Analytics.defaultProps, ...analytics };
         this.logEvent = logEvent({ loadingContext, locale });
         this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
-        this.collectId = collectId({ loadingContext, clientKey });
+        this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });
 
         const { conversion, enabled } = this.props;
         if (conversion === true && enabled === true) {

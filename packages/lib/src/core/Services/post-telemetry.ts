@@ -10,7 +10,7 @@ const logTelemetry = config => event => {
     const options = {
         errorLevel: 'silent' as const,
         loadingContext: config.loadingContext,
-        path: `v1/analytics/log?clientKey=${config.clientKey}`
+        path: `v2/analytics/log?clientKey=${config.clientKey}`
     };
 
     const telemetryEvent = {
