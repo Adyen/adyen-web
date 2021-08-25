@@ -1,6 +1,7 @@
 interface Experiment {
-    experimentId: string;
     controlGroup: boolean;
+    experimentId: string;
+    experimentName?: string;
 }
 
 export interface AnalyticsOptions {
