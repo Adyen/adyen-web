@@ -19,6 +19,7 @@ export interface FieldProps {
     onFocusField?;
     onFieldBlur?;
     dir?;
+    name?: string;
 }
 
 export interface FieldState {

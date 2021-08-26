@@ -2,9 +2,10 @@ import { h } from 'preact';
 import { useState } from 'preact/hooks';
 import classNames from 'classnames';
 import { convertFullToHalf } from './utils';
+import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export default function InputBase(props) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId } = props;
 
     const [handleChangeHasFired, setHandleChangeHasFired] = useState(false);
 
@@ -39,10 +40,11 @@ export default function InputBase(props) {
     );
 
     // Don't spread classNameModifiers to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, ...newProps } = props;
+    const { classNameModifiers: cnm, uniqueId: uid, ...newProps } = props;
 
     return (
         <input
+            id={uniqueId}
             {...newProps}
             type={type}
             className={inputClassNames}
@@ -50,6 +52,7 @@ export default function InputBase(props) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
+            aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
             onChange={handleChange}
             onBlur={handleBlur}
         />

@@ -43,7 +43,7 @@ function FieldContainer(props: FieldContainerProps) {
             );
         default:
             return (
-                <Field label={label} classNameModifiers={classNameModifiers} errorMessage={errorMessage}>
+                <Field label={label} classNameModifiers={classNameModifiers} errorMessage={errorMessage} name={fieldName}>
                     {renderFormField('text', {
                         classNameModifiers,
                         name: fieldName,
