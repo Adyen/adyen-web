@@ -26,7 +26,8 @@ function SelectButton(props: SelectButtonProps) {
                 'adyen-checkout__dropdown__button--readonly': readonly,
                 'adyen-checkout__dropdown__button--active': showList,
                 [styles['adyen-checkout__dropdown__button--active']]: showList,
-                'adyen-checkout__dropdown__button--invalid': props.isInvalid
+                'adyen-checkout__dropdown__button--invalid': props.isInvalid,
+                'adyen-checkout__dropdown__button--valid': props.isValid
             })}
             filterable={props.filterable}
             onClick={!readonly ? props.toggleList : null}

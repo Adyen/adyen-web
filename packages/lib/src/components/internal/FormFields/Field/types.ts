@@ -19,6 +19,7 @@ export interface FieldProps {
     onFocusField?;
     onFieldBlur?;
     dir?;
+    showValidIcon?: boolean;
 }
 
 export interface FieldState {

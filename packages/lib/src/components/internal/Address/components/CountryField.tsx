@@ -32,7 +32,7 @@ export default function CountryField(props: CountryFieldProps) {
     if (!loaded) return null;
 
     return (
-        <Field label={i18n.get('country')} errorMessage={errorMessage} classNameModifiers={classNameModifiers}>
+        <Field label={i18n.get('country')} errorMessage={errorMessage} classNameModifiers={classNameModifiers} isValid={!!value} showValidIcon={true}>
             {renderFormField('select', {
                 onChange: onDropdownChange,
                 name: 'country',
