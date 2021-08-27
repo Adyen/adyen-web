@@ -6,6 +6,7 @@ import Specifications from '../Specifications';
 const propsMock = {
     errors: {},
     data: {},
+    valid: {},
     specifications: new Specifications()
 };
 
