@@ -104,6 +104,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['col-50', 'lastName']}
                     errorMessage={getErrorMessage(errors.dateOfBirth)}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
+                    name={'dateOfBirth'}
                 >
                     {renderFormField('date', {
                         name: generateFieldName('dateOfBirth'),
@@ -122,6 +123,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['shopperEmail']}
                     errorMessage={getErrorMessage(errors.shopperEmail)}
                     dir={'ltr'}
+                    name={'emailAddress'}
                 >
                     {renderFormField('emailAddress', {
                         name: generateFieldName('shopperEmail'),
@@ -140,6 +142,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['telephoneNumber']}
                     errorMessage={getErrorMessage(errors.telephoneNumber)}
                     dir={'ltr'}
+                    name={'telephoneNumber'}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),

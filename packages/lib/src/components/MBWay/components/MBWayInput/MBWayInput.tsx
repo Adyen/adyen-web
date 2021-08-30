@@ -44,6 +44,7 @@ function MBWayInput(props: MBWayInputProps) {
                 className={classNames('adyen-checkout__input--phone-number')}
                 isValid={valid.telephoneNumber}
                 dir={'ltr'}
+                name={'telephoneNumber'}
             >
                 {renderFormField('tel', {
                     value: data.telephoneNumber,
