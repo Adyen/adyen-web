@@ -143,6 +143,7 @@ function AchInput(props) {
                                         className={'adyen-checkout__pm__holderName'}
                                         errorMessage={!!errors.holderName && i18n.get('ach.accountHolderNameField.invalid')}
                                         isValid={!!valid.holderName}
+                                        name={'holderName'}
                                     >
                                         {renderFormField('text', {
                                             className: `adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`,
