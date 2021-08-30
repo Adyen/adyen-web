@@ -35,7 +35,7 @@ export default function StateField(props: StateFieldProps) {
     if (!loaded || !states.length) return null;
 
     return (
-        <Field label={label} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage} isValid={!!value} showValidIcon={true}>
+        <Field label={label} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage} isValid={!!value} showValidIcon={false}>
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
