@@ -59,7 +59,8 @@ const setupObj = {
     loadingContext: null,
     holderEl: nodeHolder,
     legacyInputMode: null,
-    minimumExpiryDate: null
+    minimumExpiryDate: null,
+    uid: null
 };
 
 /**
