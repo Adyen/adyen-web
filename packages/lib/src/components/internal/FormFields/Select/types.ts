@@ -11,6 +11,7 @@ export interface SelectProps {
     classNameModifiers: string[];
     filterable: boolean;
     isInvalid: boolean;
+    isValid?: boolean;
     items: SelectItem[];
     name?: string;
     onChange: (e) => void;
@@ -25,6 +26,7 @@ export interface SelectButtonProps {
     filterInputRef;
     filterable: boolean;
     isInvalid: boolean;
+    isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
     onInput: (e: Event) => void;
     placeholder: string;

@@ -20,6 +20,7 @@ function Select({
     selected,
     name,
     isInvalid,
+    isValid,
     placeholder,
     uniqueId
 }: SelectProps) {
@@ -180,6 +181,7 @@ function Select({
                 filterInputRef={filterInputRef}
                 filterable={filterable}
                 isInvalid={isInvalid}
+                isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
                 onInput={handleTextFilter}
                 placeholder={placeholder}

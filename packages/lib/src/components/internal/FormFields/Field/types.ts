@@ -20,6 +20,7 @@ export interface FieldProps {
     onFieldBlur?;
     dir?;
     name?: string;
+    showValidIcon?: boolean;
 }
 
 export interface FieldState {

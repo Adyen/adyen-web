@@ -8,8 +8,8 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 
 function FieldContainer(props: FieldContainerProps) {
     const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, fieldName, onInput } = props;
-    const errorMessage = !!errors[fieldName];
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange } = props;
+    const errorMessage = i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
     const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName);
@@ -43,12 +43,13 @@ function FieldContainer(props: FieldContainerProps) {
             );
         default:
             return (
-                <Field label={label} classNameModifiers={classNameModifiers} errorMessage={errorMessage} name={fieldName}>
+                <Field label={label} classNameModifiers={classNameModifiers} errorMessage={errorMessage} isValid={valid[fieldName]}>
                     {renderFormField('text', {
                         classNameModifiers,
                         name: fieldName,
                         value,
-                        onInput
+                        onInput,
+                        onChange
                     })}
                 </Field>
             );

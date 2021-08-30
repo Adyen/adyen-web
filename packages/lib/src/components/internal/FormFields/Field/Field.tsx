@@ -59,7 +59,8 @@ class Field extends Component<FieldProps, FieldState> {
         label,
         dualBrandingElements,
         dir,
-        name
+        name,
+               showValidIcon
     }) {
         return (
             <div
@@ -124,7 +125,7 @@ class Field extends Component<FieldProps, FieldState> {
                             </span>
                         )}
 
-                        {isValid && !dualBrandingElements && (
+                        {isValid && showValidIcon !== false && !dualBrandingElements && (
                             <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
                                 <Icon type="checkmark" />
                             </span>
