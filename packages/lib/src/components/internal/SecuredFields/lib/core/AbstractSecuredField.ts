@@ -35,6 +35,7 @@ export interface SFInternalConfig {
     cvcPolicy: CVCPolicyType;
     legacyInputMode: boolean;
     minimumExpiryDate: string;
+    uid: string;
 }
 
 /**

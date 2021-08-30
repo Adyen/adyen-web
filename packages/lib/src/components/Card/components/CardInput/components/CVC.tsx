@@ -5,7 +5,13 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CVCProps } from './types';
 import styles from '../CardInput.module.scss';
-import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import {
+    CVC_POLICY_HIDDEN,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_REQUIRED,
+    DATA_ENCRYPTED_FIELD_ATTR
+} from '../../../../internal/SecuredFields/lib/configuration/constants';
+import DataSfSpan from './DataSfSpan';
 
 export default function CVC(props: CVCProps) {
     const {
@@ -40,6 +46,8 @@ export default function CVC(props: CVCProps) {
 
     const fieldLabel = cvcPolicy !== CVC_POLICY_OPTIONAL ? label : i18n.get('creditCard.cvcField.title.optional');
 
+    const opts = { [DATA_ENCRYPTED_FIELD_ATTR]: 'encryptedSecurityCode' };
+
     return (
         <Field
             label={fieldLabel}
@@ -51,8 +59,9 @@ export default function CVC(props: CVCProps) {
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dir={'ltr'}
+            name={'encryptedSecurityCode'}
         >
-            <span className={cvcClassnames} data-cse="encryptedSecurityCode" />
+            <DataSfSpan {...opts} className={cvcClassnames} />
 
             <CVCHint frontCVC={frontCVC} />
         </Field>

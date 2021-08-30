@@ -2,10 +2,14 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import styles from '../AchInput.module.scss';
 import Field from '../../../../internal/FormFields/Field';
+import { DATA_ENCRYPTED_FIELD_ATTR, DATA_INFO } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import DataSfSpan from '../../../../Card/components/CardInput/components/DataSfSpan';
 
 const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, errorMessage = '', isValid = false, onFocusField, dir }) => {
     const capitalisedId = id.charAt(0).toUpperCase() + id.slice(1);
     const encryptedIdStr = `encrypted${capitalisedId}`;
+
+    const opts = { [DATA_ENCRYPTED_FIELD_ATTR]: encryptedIdStr, [DATA_INFO]: dataInfo };
 
     return (
         <Field
@@ -18,10 +22,10 @@ const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, erro
             isValid={isValid}
             className={className}
             dir={dir}
+            name={id}
         >
-            <span
-                data-cse={encryptedIdStr}
-                data-info={dataInfo}
+            <DataSfSpan
+                {...opts}
                 className={classNames({
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,

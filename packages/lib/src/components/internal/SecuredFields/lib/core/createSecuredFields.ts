@@ -1,5 +1,12 @@
 import { select, getAttribute } from '../utilities/dom';
-import { ENCRYPTED_EXPIRY_YEAR, DATE_POLICY_REQUIRED, CVC_POLICY_REQUIRED } from '../configuration/constants';
+import {
+    ENCRYPTED_EXPIRY_YEAR,
+    DATE_POLICY_REQUIRED,
+    CVC_POLICY_REQUIRED,
+    DATA_ENCRYPTED_FIELD_ATTR,
+    DATA_INFO,
+    DATA_UID
+} from '../configuration/constants';
 import { existy } from '../utilities/commonUtils';
 import cardType from '../utilities/cardType';
 import { CVCPolicyType, SFSetupObject } from './AbstractSecuredField';
@@ -21,8 +28,7 @@ let cvcPolicy: CVCPolicyType;
  * Handles specific functionality related to configuring & creating SecuredFields
  */
 export function createSecuredFields(): number {
-    // Detect DOM elements that qualify as securedField holders
-    this.encryptedAttrName = 'data-encrypted-field';
+    this.encryptedAttrName = DATA_ENCRYPTED_FIELD_ATTR;
 
     if (process.env.NODE_ENV === 'development' && window._b$dl) {
         logger.log('\n### CreateSF::createSecuredFields:: this.state.type=', this.state.type);
@@ -30,13 +36,7 @@ export function createSecuredFields(): number {
     }
 
     // Detect DOM elements that qualify as securedField holders
-    let securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
-
-    // Fallback to old attr name
-    if (!securedFields.length) {
-        this.encryptedAttrName = 'data-cse';
-        securedFields = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
-    }
+    const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
 
     cvcPolicy = CVC_POLICY_REQUIRED;
 
@@ -135,12 +135,14 @@ export function setupSecuredField(pItem: HTMLElement): void {
         this.state.hasSeparateDateFields = true;
     }
 
-    const extraFieldData: string = getAttribute(pItem, 'data-info');
+    const extraFieldData: string = getAttribute(pItem, DATA_INFO);
+    const uid = getAttribute(pItem, DATA_UID);
 
     // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
     const setupObj: SFSetupObject = {
         fieldType,
         extraFieldData,
+        uid,
         txVariant: this.state.type,
         cardGroupTypes: this.config.cardGroupTypes,
         iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},

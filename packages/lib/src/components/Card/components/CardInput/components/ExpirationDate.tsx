@@ -4,6 +4,8 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { ExpirationDateProps } from './types';
 import styles from '../CardInput.module.scss';
+import { DATA_ENCRYPTED_FIELD_ATTR } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import DataSfSpan from './DataSfSpan';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, hideDateForBrand = false } = props;
@@ -12,6 +14,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
     const fieldClassnames = classNames(className, {
         [styles['adyen-checkout__card__exp-date__input--hidden']]: hideDateForBrand
     });
+
+    const opts = { [DATA_ENCRYPTED_FIELD_ATTR]: 'encryptedExpiryDate' };
 
     return (
         <Field
@@ -24,9 +28,10 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dir={'ltr'}
+            name={'encryptedExpiryDate'}
         >
-            <span
-                data-cse="encryptedExpiryDate"
+            <DataSfSpan
+                {...opts}
                 className={classNames(
                     'adyen-checkout__input',
                     'adyen-checkout__input--small',

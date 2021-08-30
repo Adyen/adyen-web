@@ -34,3 +34,7 @@ export const CVC_POLICY_HIDDEN = 'hidden';
 
 export const DATE_POLICY_REQUIRED = CVC_POLICY_REQUIRED;
 export const DATE_POLICY_HIDDEN = CVC_POLICY_HIDDEN;
+
+export const DATA_ENCRYPTED_FIELD_ATTR = 'data-cse';
+export const DATA_INFO = 'data-info';
+export const DATA_UID = 'data-uid';

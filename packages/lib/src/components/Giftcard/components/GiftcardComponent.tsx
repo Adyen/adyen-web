@@ -6,7 +6,8 @@ import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
-import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
+import { DATA_ENCRYPTED_FIELD_ATTR, DATA_INFO, GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
+import DataSfSpan from '../../Card/components/CardInput/components/DataSfSpan';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -94,6 +95,9 @@ class Giftcard extends Component<GiftcardComponentProps> {
             }
         };
 
+        const numOpts = { [DATA_ENCRYPTED_FIELD_ATTR]: 'encryptedCardNumber', [DATA_INFO]: '{"length":"15-32", "maskInterval":4}' };
+        const pinOpts = { [DATA_ENCRYPTED_FIELD_ATTR]: 'encryptedSecurityCode', [DATA_INFO]: '{"length":"3-10", "maskInterval": 0}' };
+
         return (
             <div className="adyen-checkout__giftcard">
                 {this.state.status === 'error' && <Alert icon={'cross'}>{i18n.get('error.message.unknown')}</Alert>}
@@ -115,10 +119,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                 focused={focusedElement === 'encryptedCardNumber'}
                                 onFocusField={() => setFocusOn('encryptedCardNumber')}
                                 dir={'ltr'}
+                                name={'encryptedCardNumber'}
                             >
-                                <span
-                                    data-cse="encryptedCardNumber"
-                                    data-info='{"length":"15-32", "maskInterval":4}'
+                                <DataSfSpan
+                                    {...numOpts}
                                     className={classNames({
                                         'adyen-checkout__input': true,
                                         'adyen-checkout__input--large': true,
@@ -137,10 +141,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                     focused={focusedElement === 'encryptedSecurityCode'}
                                     onFocusField={() => setFocusOn('encryptedSecurityCode')}
                                     dir={'ltr'}
+                                    name={'encryptedSecurityCode'}
                                 >
-                                    <span
-                                        data-cse="encryptedSecurityCode"
-                                        data-info='{"length":"3-10", "maskInterval": 0}'
+                                    <DataSfSpan
+                                        {...pinOpts}
                                         className={classNames({
                                             'adyen-checkout__input': true,
                                             'adyen-checkout__input--large': true,
