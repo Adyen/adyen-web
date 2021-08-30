@@ -113,6 +113,8 @@ const componentsMap = {
     jcb: Card,
     kcp: Card,
     klarna: Klarna,
+    klarna_paynow: Klarna,
+    klarna_account: Klarna,
     maestro: Card,
     mbway: MBWay,
     mc: Card,

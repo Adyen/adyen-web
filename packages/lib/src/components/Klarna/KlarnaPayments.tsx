@@ -26,7 +26,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     protected formatData() {
         return {
             paymentMethod: {
-                type: this.constructor['type'],
+                type: this.type,
                 ...(this.props.useKlarnaWidget ? { subtype: 'sdk' } : {})
             }
         };
