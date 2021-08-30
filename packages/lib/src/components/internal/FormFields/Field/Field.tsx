@@ -60,7 +60,7 @@ class Field extends Component<FieldProps, FieldState> {
         dualBrandingElements,
         dir,
         name,
-               showValidIcon
+        showValidIcon
     }) {
         return (
             <div
