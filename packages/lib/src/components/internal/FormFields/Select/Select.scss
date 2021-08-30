@@ -66,6 +66,10 @@
     border-color: $color-alert;
 }
 
+.adyen-checkout__dropdown__button--valid {
+    border-bottom-color: $color-success;
+}
+
 .adyen-checkout__dropdown__button__text {
     overflow: hidden;
     pointer-events: none;

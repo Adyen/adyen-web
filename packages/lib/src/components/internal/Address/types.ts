@@ -31,7 +31,9 @@ export interface FieldContainerProps {
     errors: AddressStateError;
     fieldName: string;
     key: string;
-    onInput: (e: Event) => void;
+    valid?: object;
+    onInput?: (e: Event) => void;
+    onChange?: (e: Event) => void;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     specifications: Specifications;
@@ -46,7 +48,7 @@ export interface CountryFieldProps {
     allowedCountries: string[];
     classNameModifiers: string[];
     label: string;
-    errorMessage: boolean;
+    errorMessage: boolean | string;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     value: string;
@@ -60,7 +62,7 @@ export interface CountryFieldItem {
 export interface StateFieldProps {
     classNameModifiers: string[];
     label: string;
-    errorMessage: boolean;
+    errorMessage: boolean | string;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     selectedCountry: string;

@@ -166,6 +166,7 @@ function Select(props: SelectProps) {
                 filterInputRef={filterInputRef}
                 filterable={props.filterable}
                 isInvalid={props.isInvalid}
+                isValid={props.isValid}
                 onButtonKeyDown={handleButtonKeyDown}
                 onInput={handleTextFilter}
                 placeholder={props.placeholder}

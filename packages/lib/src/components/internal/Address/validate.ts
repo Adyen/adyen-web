@@ -11,6 +11,7 @@ export const getAddressValidationRules = (specifications): ValidatorRules => ({
     },
     default: {
         validate: value => value?.length > 0,
-        modes: ['blur']
+        modes: ['blur'],
+        errorMessage: 'error.va.gen.01' // Incomplete field
     }
 });
