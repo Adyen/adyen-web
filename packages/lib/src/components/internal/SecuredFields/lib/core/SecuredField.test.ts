@@ -60,7 +60,8 @@ const setupObj = {
     holderEl: nodeHolder,
     legacyInputMode: null,
     minimumExpiryDate: null,
-    uid: null
+    uid: null,
+    implementationType: null
 };
 
 /**
