@@ -36,6 +36,7 @@ export interface SFInternalConfig {
     legacyInputMode: boolean;
     minimumExpiryDate: string;
     uid: string;
+    implementationType: string;
 }
 
 /**

@@ -46,6 +46,7 @@ interface CSFCommonProps {
     iframeUIConfig?: object;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
+    implementationType?: string;
 }
 
 /**
