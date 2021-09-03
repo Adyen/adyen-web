@@ -77,7 +77,8 @@ function Select(props: SelectProps) {
      * @param e - MouseEvent
      */
     const handleClickOutside = (e: MouseEvent) => {
-        if (!selectContainerRef.current.contains(e.target)) {
+        // use composedPath so it can also check when inside a web component
+        if (!e.composedPath().includes(selectContainerRef.current)) {
             setShowList(false);
         }
     };
