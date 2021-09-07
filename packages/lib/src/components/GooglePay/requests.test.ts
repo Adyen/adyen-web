@@ -56,6 +56,15 @@ describe('Google Pay Requests', () => {
             expect(paymentRequest.apiVersion).toBeDefined();
             expect(paymentRequest.apiVersionMinor).toBeDefined();
         });
+
+        test('should pass merchantOrigin correctly', () => {
+            const paymentRequest = initiatePaymentRequest({
+                ...defaultProps,
+                configuration: { ...defaultProps.configuration, merchantOrigin: 'example.com' }
+            });
+
+            expect(paymentRequest.merchantInfo.merchantOrigin).toBe('example.com');
+        });
     });
 
     describe('isReadyToPayRequest', () => {

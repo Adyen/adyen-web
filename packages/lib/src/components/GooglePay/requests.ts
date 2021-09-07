@@ -1,6 +1,6 @@
 import { getDecimalAmount } from '../../utils/amount-util';
 import config from './config';
-import { GooglePayProps } from './types';
+import {GooglePaymentDataRequest, GooglePayProps} from './types';
 
 /**
  * Configure your site's support for payment methods supported by the Google Pay API.
@@ -56,14 +56,15 @@ export function getTransactionInfo({
     };
 }
 
-export function initiatePaymentRequest({ configuration, ...props }: GooglePayProps): google.payments.api.PaymentDataRequest {
+export function initiatePaymentRequest({ configuration, ...props }: GooglePayProps): GooglePaymentDataRequest {
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
         transactionInfo: getTransactionInfo(props),
         merchantInfo: {
             merchantId: configuration.merchantId,
-            merchantName: configuration.merchantName
+            merchantName: configuration.merchantName,
+            merchantOrigin: configuration.merchantOrigin
         },
         allowedPaymentMethods: [
             {
