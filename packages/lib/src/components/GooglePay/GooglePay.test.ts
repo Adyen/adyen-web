@@ -50,5 +50,15 @@ describe('GooglePay', () => {
             const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
             expect(gpay.props.configuration.merchantId).toEqual('abcdef');
         });
+
+        test('Retrieves merchantId from configuration', () => {
+            const gpay = new GooglePay({
+                configuration: {
+                    gatewayMerchantId: 'TestMerchant',
+                    merchantOrigin: 'example.com'
+                }
+            });
+            expect(gpay.props.configuration.merchantOrigin).toEqual('example.com');
+        });
     });
 });
