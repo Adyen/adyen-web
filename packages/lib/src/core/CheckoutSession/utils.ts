@@ -5,6 +5,6 @@ export function sanitizeSession(session): Partial<CheckoutSession> {
 
     return {
         id: session.id,
-        ...(session.data ? { data: session.data } : {})
+        ...(session.sessionData ? { sessionData: session.sessionData } : {})
     };
 }

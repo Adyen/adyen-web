@@ -21,7 +21,7 @@ class Session {
     public readonly loadingContext: string;
 
     constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
-        const session = sanitizeSession(rawSession);
+        const session = sanitizeSession(rawSession) as CheckoutSession;
         if (!clientKey) throw new Error('No clientKey available');
 
         this.storage = new Storage('session');
@@ -29,7 +29,7 @@ class Session {
         this.loadingContext = loadingContext;
         this.session = session;
 
-        if (!this.session.data) {
+        if (!this.session.sessionData) {
             this.session = this.getStoredSession();
         } else {
             this.storeSession();
@@ -41,14 +41,14 @@ class Session {
     }
 
     get data() {
-        return this.session.data;
+        return this.session.sessionData;
     }
 
     /**
      * Updates the session.data with the latest data blob
      */
     private updateSessionData(latestData: string): void {
-        this.session.data = latestData;
+        this.session.sessionData = latestData;
         this.storeSession();
     }
 
@@ -123,7 +123,7 @@ class Session {
      * Stores the session
      */
     storeSession(): void {
-        this.storage.set({ id: this.session.id, data: this.session.data });
+        this.storage.set({ id: this.session.id, sessionData: this.session.sessionData });
     }
 
     /**

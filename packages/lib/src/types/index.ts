@@ -218,7 +218,7 @@ export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
 
 export type CheckoutSession = {
     id: string;
-    data: string;
+    sessionData: string;
 };
 
 export type CheckoutSessionSetupResponse = {
