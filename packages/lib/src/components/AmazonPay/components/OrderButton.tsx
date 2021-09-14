@@ -8,12 +8,13 @@ export default function OrderButton(props: OrderButtonProps) {
     const { i18n, loadingContext } = useCoreContext();
 
     this.createOrder = () => {
-        const { amazonCheckoutSessionId, amount, clientKey, publicKeyId, returnUrl } = props;
+        const { amazonCheckoutSessionId, amount, clientKey, publicKeyId, region, returnUrl } = props;
         const request: UpdateAmazonCheckoutSessionRequest = {
             amount,
             checkoutResultReturnUrl: returnUrl,
             checkoutSessionId: amazonCheckoutSessionId,
-            publicKeyId
+            publicKeyId,
+            region
         };
 
         updateAmazonCheckoutSession(loadingContext, clientKey, request)
