@@ -1,8 +1,9 @@
 import Script from '../../../../utils/Script';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
 import { KLARNA_VARIANTS, KLARNA_WIDGET_URL } from '../../constants';
+import './KlarnaWidget.scss';
 
 export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }: KlarnaWidgetProps) {
     const klarnaWidgetRef = useRef(null);
@@ -91,10 +92,10 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
 
     if (status !== 'error' && status !== 'success') {
         return (
-            <Fragment>
+            <div className="adyen-checkout__klarna-widget">
                 <div ref={klarnaWidgetRef} />
                 {payButton({ status, disabled: status === 'loading', onClick: authorizeKlarna })}
-            </Fragment>
+            </div>
         );
     }
 
