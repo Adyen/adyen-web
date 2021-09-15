@@ -33,6 +33,7 @@ export default function CountryField(props: CountryFieldProps) {
 
     return (
         <Field
+            name={'country'}
             label={i18n.get('country')}
             errorMessage={errorMessage}
             classNameModifiers={classNameModifiers}

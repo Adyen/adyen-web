@@ -107,6 +107,7 @@ export class SecuredFieldsElement extends UIElement {
                     rootNode={this._node}
                     onChange={this.setState}
                     onBinValue={this.onBinValue}
+                    implementationType={'custom'}
                 />
             </CoreProvider>
         );

@@ -14,7 +14,7 @@ export const GIFT_CARD = 'giftcard';
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.5.3';
+export const SF_VERSION = '3.5.4';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
@@ -34,3 +34,7 @@ export const CVC_POLICY_HIDDEN = 'hidden';
 
 export const DATE_POLICY_REQUIRED = CVC_POLICY_REQUIRED;
 export const DATE_POLICY_HIDDEN = CVC_POLICY_HIDDEN;
+
+export const DATA_ENCRYPTED_FIELD_ATTR = 'data-cse';
+export const DATA_INFO = 'data-info';
+export const DATA_UID = 'data-uid';

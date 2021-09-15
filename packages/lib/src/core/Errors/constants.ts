@@ -8,6 +8,8 @@ export const ERROR_MSG_INVALID_FIELD = 'field not valid';
 export const ERROR_MSG_CLEARED = 'error was cleared';
 export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
 
+export const ARIA_ERROR_SUFFIX = '-ariaError';
+
 /**
  * Error Codes
  * @example error.va.sf-cc-num.01

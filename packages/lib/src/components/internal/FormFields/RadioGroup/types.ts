@@ -13,4 +13,5 @@ export interface RadioGroupProps {
     name?: string;
     onChange: (e) => void;
     value?: string;
+    uniqueId?: string;
 }

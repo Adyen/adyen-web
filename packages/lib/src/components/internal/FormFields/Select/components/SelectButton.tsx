@@ -37,6 +37,8 @@ function SelectButton(props: SelectButtonProps) {
             title={active.name || props.placeholder}
             toggleButtonRef={props.toggleButtonRef}
             type={!props.filterable ? 'button' : null}
+            aria-describedby={props.ariaDescribedBy}
+            id={props.id}
         >
             {!showList || !props.filterable ? (
                 <Fragment>

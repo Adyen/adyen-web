@@ -49,7 +49,12 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     return (
         <Fieldset classNameModifiers={['personalDetails']} label={label}>
             {requiredFields.includes('firstName') && (
-                <Field label={i18n.get('firstName')} classNameModifiers={['col-50', 'firstName']} errorMessage={!!errors.firstName}>
+                <Field
+                    label={i18n.get('firstName')}
+                    classNameModifiers={['col-50', 'firstName']}
+                    errorMessage={!!errors.firstName}
+                    name={'firstName'}
+                >
                     {renderFormField('text', {
                         name: generateFieldName('firstName'),
                         value: data.firstName,
@@ -63,7 +68,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             )}
 
             {requiredFields.includes('lastName') && (
-                <Field label={i18n.get('lastName')} classNameModifiers={['col-50', 'lastName']} errorMessage={!!errors.lastName}>
+                <Field label={i18n.get('lastName')} classNameModifiers={['col-50', 'lastName']} errorMessage={!!errors.lastName} name={'lastName'}>
                     {renderFormField('text', {
                         name: generateFieldName('lastName'),
                         value: data.lastName,
@@ -77,7 +82,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             )}
 
             {requiredFields.includes('gender') && (
-                <Field errorMessage={!!errors.gender} classNameModifiers={['gender']}>
+                <Field errorMessage={!!errors.gender} classNameModifiers={['gender']} name={'gender'}>
                     {renderFormField('radio', {
                         i18n,
                         name: generateFieldName('gender'),
@@ -99,6 +104,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['col-50', 'lastName']}
                     errorMessage={getErrorMessage(errors.dateOfBirth)}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
+                    name={'dateOfBirth'}
                 >
                     {renderFormField('date', {
                         name: generateFieldName('dateOfBirth'),
@@ -117,6 +123,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['shopperEmail']}
                     errorMessage={getErrorMessage(errors.shopperEmail)}
                     dir={'ltr'}
+                    name={'emailAddress'}
                 >
                     {renderFormField('emailAddress', {
                         name: generateFieldName('shopperEmail'),
@@ -135,6 +142,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['telephoneNumber']}
                     errorMessage={getErrorMessage(errors.telephoneNumber)}
                     dir={'ltr'}
+                    name={'telephoneNumber'}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),

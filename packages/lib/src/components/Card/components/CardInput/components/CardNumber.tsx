@@ -6,6 +6,7 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardNumberProps } from './types';
 import styles from '../CardInput.module.scss';
+import DataSfSpan from './DataSfSpan';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
@@ -22,9 +23,10 @@ export default function CardNumber(props: CardNumberProps) {
             isValid={isValid}
             dualBrandingElements={dualBrandingElements}
             dir={'ltr'}
+            name={'encryptedCardNumber'}
         >
-            <span
-                data-cse="encryptedCardNumber"
+            <DataSfSpan
+                encryptedFieldType={'encryptedCardNumber'}
                 className={classNames({
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,
@@ -37,7 +39,7 @@ export default function CardNumber(props: CardNumberProps) {
                 })}
             >
                 {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
-            </span>
+            </DataSfSpan>
 
             {dualBrandingElements && !error && (
                 <div
