@@ -1,0 +1,64 @@
+import QRLoaderContainer, {QRLoaderContainerProps} from '../helpers/QRLoaderContainer';
+import CoreProvider from "../../core/Context/CoreProvider";
+import {h} from "preact";
+import PixInput from "./PixInput";
+import {cleanCPFCNPJ} from "../Boleto/components/SocialSecurityNumberBrazil/utils";
+
+interface PixProps extends QRLoaderContainerProps {
+    personalDetailsRequired?: Boolean
+}
+
+class PixElement extends QRLoaderContainer<PixProps> {
+    public static type = 'pix';
+
+    formatProps(props) {
+        return {
+            delay: 2000, // ms
+            countdownTime: 15, // min
+            copyBtn: true,
+            introduction: 'pix.instructions',
+            ...super.formatProps(props)
+        };
+    }
+
+    formatData() {
+        const { data = {} } = this.state;
+        const { firstName, lastName, socialSecurityNumber = '' } = data;
+
+        return {
+            paymentMethod: {
+                type: this.props.type || this.constructor['type'],
+            },
+            ...(firstName && lastName && { shopperName: { firstName, lastName } }),
+            ...(socialSecurityNumber && { socialSecurityNumber: cleanCPFCNPJ(socialSecurityNumber) })
+        };
+    }
+
+    render() {
+        if (this.props.paymentData) {
+            return (
+                this.renderQRCode()
+            );
+        }
+
+        if (this.props.showPayButton) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                    <PixInput
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        onChange={this.setState}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                    />
+                </CoreProvider>
+            );
+        }
+
+        return null;
+    }
+}
+
+export default PixElement;
