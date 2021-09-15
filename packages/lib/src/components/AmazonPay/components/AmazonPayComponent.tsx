@@ -65,6 +65,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
                         clientKey={props.clientKey}
                         onError={props.onError}
                         publicKeyId={props.configuration?.publicKeyId}
+                        region={props.configuration?.region}
                         returnUrl={props.returnUrl}
                         ref={orderButtonRef}
                     />

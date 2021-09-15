@@ -44,7 +44,8 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
         const request: CheckoutDetailsRequest = {
             checkoutSessionId: amazonCheckoutSessionId,
             getDeliveryAddress: true,
-            publicKeyId: configuration.publicKeyId
+            publicKeyId: configuration.publicKeyId,
+            region: configuration.region
         };
 
         return getCheckoutDetails(loadingContext, clientKey, request);
@@ -57,7 +58,8 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
         const request: CheckoutDetailsRequest = {
             checkoutSessionId: amazonCheckoutSessionId,
             getDeclineFlowUrl: true,
-            publicKeyId: configuration.publicKeyId
+            publicKeyId: configuration.publicKeyId,
+            region: configuration.region
         };
 
         getCheckoutDetails(loadingContext, clientKey, request)

@@ -19,6 +19,7 @@ export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPO
 export interface AmazonPayConfiguration {
     merchantId?: string;
     publicKeyId?: string;
+    region?: Region;
     storeId?: string;
 }
 
@@ -101,6 +102,7 @@ export interface OrderButtonProps {
     clientKey: string;
     onError: (error, component) => void;
     ref: any;
+    region: Region;
     returnUrl: string;
     publicKeyId: string;
 }
@@ -200,6 +202,7 @@ export interface CheckoutDetailsRequest {
     getDeliveryAddress?: boolean;
     getDeclineFlowUrl?: boolean;
     publicKeyId: string;
+    region: Region;
 }
 
 export interface UpdateAmazonCheckoutSessionRequest {
@@ -208,6 +211,7 @@ export interface UpdateAmazonCheckoutSessionRequest {
     checkoutResultReturnUrl: string;
     checkoutSessionId: string;
     publicKeyId: string;
+    region: Region;
 }
 
 export interface CheckoutSessionConfig {
