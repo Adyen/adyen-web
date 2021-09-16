@@ -8,6 +8,11 @@ import {PixProps} from "./types";
 class PixElement extends QRLoaderContainer<PixProps> {
     public static type = 'pix';
 
+    public static defaultProps = {
+        personalDetailsRequired: false,
+        ...QRLoaderContainer.defaultProps
+    };
+
     formatProps(props) {
         return {
             delay: 2000, // ms
