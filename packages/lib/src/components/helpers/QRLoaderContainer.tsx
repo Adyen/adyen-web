@@ -24,8 +24,8 @@ export interface QRLoaderContainerProps extends UIElementProps {
     instructions?: string;
 }
 
-// TODO: maybe explain this
 class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProps> extends UIElement<T> {
+// Using the generic here allow to fully extend the QRLoaderContainer (including it's props)
     protected static defaultProps = {
         qrCodeImage: '',
         amount: null,

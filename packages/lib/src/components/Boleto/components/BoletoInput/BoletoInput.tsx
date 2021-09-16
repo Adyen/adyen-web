@@ -9,7 +9,7 @@ import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
-import SocialSecurityNumberBrazil from '../SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
+import SocialSecurityNumberBrazil from '../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 
 function BoletoInput(props) {
     const { i18n } = useCoreContext();

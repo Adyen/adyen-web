@@ -14,7 +14,6 @@ function PixInput(props) {
     const addressRef = useRef(null);
     const formSchema = ['firstName', 'lastName', 'socialSecurityNumber'];
     const {handleChangeFor, triggerValidation, setSchema, data, valid, errors, isValid} = useForm<PixInputDataState>({
-        // TODO: Maybe this can be dynamic - Antonio
         schema: formSchema,
         defaultData: props.data,
         rules: pixValidationRules,

@@ -10,7 +10,7 @@ import StoredCardFields from './components/StoredCardFields';
 import Installments from './components/Installments';
 import CardFields from './components/CardFields';
 import KCPAuthentication from './components/KCPAuthentication';
-import SocialSecurityNumberBrazil from '../../../Boleto/components/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
+import SocialSecurityNumberBrazil from '../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 import StoreDetails from '../../../internal/StoreDetails';
 import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';

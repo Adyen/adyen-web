@@ -1,12 +1,9 @@
-import QRLoaderContainer, {QRLoaderContainerProps} from '../helpers/QRLoaderContainer';
+import QRLoaderContainer from '../helpers/QRLoaderContainer';
 import CoreProvider from "../../core/Context/CoreProvider";
 import {h} from "preact";
 import PixInput from "./PixInput";
-import {cleanCPFCNPJ} from "../Boleto/components/SocialSecurityNumberBrazil/utils";
-
-interface PixProps extends QRLoaderContainerProps {
-    personalDetailsRequired?: Boolean
-}
+import {cleanCPFCNPJ} from "../internal/SocialSecurityNumberBrazil/utils";
+import {PixProps} from "./types";
 
 class PixElement extends QRLoaderContainer<PixProps> {
     public static type = 'pix';

@@ -1,3 +1,9 @@
+import {QRLoaderContainerProps} from "../helpers/QRLoaderContainer";
+
+export interface PixProps extends QRLoaderContainerProps {
+    personalDetailsRequired?: boolean
+}
+
 export interface PixInputDataState {
     firstName?: string;
     lastName?: string;

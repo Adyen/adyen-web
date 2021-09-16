@@ -1,5 +1,5 @@
 import { ValidatorRules } from '../../../../utils/Validator/Validator';
-import validateSSN from '../SocialSecurityNumberBrazil/validate';
+import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,
