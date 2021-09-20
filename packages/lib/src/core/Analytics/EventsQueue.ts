@@ -1,4 +1,4 @@
-type EventItem = (conversionId: string) => Promise<any>;
+type EventItem = (checkoutAttemptId: string) => Promise<any>;
 
 class EventsQueue {
     public events: EventItem[] = [];
@@ -7,8 +7,8 @@ class EventsQueue {
         this.events.push(event);
     }
 
-    run(conversionId?: string) {
-        const promises = this.events.map(e => e(conversionId));
+    run(checkoutAttemptId?: string) {
+        const promises = this.events.map(e => e(checkoutAttemptId));
         this.events = [];
 
         return Promise.all(promises);
