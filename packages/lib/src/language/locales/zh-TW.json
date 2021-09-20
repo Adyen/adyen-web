@@ -204,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "安全銀行帳戶號碼的 IFrame",
     "ach.encryptedBankAccountNumber.aria.label": "銀行帳戶欄位",
     "ach.encryptedBankLocationId.aria.iframeTitle": "安全銀行匯款路徑編號的 IFrame",
-    "ach.encryptedBankLocationId.aria.label": "銀行匯款路徑編號欄位"
+    "ach.encryptedBankLocationId.aria.label": "銀行匯款路徑編號欄位",
+    "twint.saved": "儲存的"
 }

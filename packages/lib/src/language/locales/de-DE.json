@@ -204,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe für gesicherte Bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Feld „Bankkonto“",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe für gesicherte BLZ",
-    "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld"
+    "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld",
+    "twint.saved": "hinterlegt"
 }
