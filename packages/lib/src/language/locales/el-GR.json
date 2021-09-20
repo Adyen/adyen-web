@@ -158,6 +158,9 @@
     "error.va.sf-cc-dat.01": "Η κάρτα είναι πολύ παλιά",
     "error.va.sf-cc-dat.02": "Η ημερομηνία είναι πολύ μακρινή",
     "error.va.sf-cc-dat.03": "Η κάρτα σας λήγει πριν από την ημερομηνία αναχώρησης",
+    "error.va.sf-ach-num.01": "Μη έγκυρος αριθμός λογαριασμού",
+    "error.va.sf-ach-loc.01": "Μη έγκυρος αριθμός δρομολόγησης ABA",
+    "error.va.sf-kcp-pwd.01": "Μη έγκυρος κωδικός πρόσβασης",
     "error.giftcard.no-balance": "Η συγκεκριμένη δωροκάρτα έχει μηδενικό υπόλοιπο",
     "error.giftcard.card-error": "Στα αρχεία μας δεν υπάρχει δωροκάρτα με αυτόν τον αριθμό",
     "error.giftcard.currency-error": "Οι δωροκάρτες ισχύουν μόνο για το νόμισμα στο οποίο εκδόθηκαν",
@@ -201,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe για ασφαλή αριθμό τραπεζικού λογαριασμού",
     "ach.encryptedBankAccountNumber.aria.label": "Πεδίο τραπεζικού λογαριασμού",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe για ασφαλή αριθμό κωδικού υποκαταστήματος τράπεζας",
-    "ach.encryptedBankLocationId.aria.label": "Πεδίο αριθμού κωδικού υποκαταστήματος τράπεζας"
+    "ach.encryptedBankLocationId.aria.label": "Πεδίο αριθμού κωδικού υποκαταστήματος τράπεζας",
+    "twint.saved": "αποθηκεύτηκε"
 }

@@ -114,7 +114,6 @@
     "deductedBalance": "扣减余额",
     "creditCard.pin.title": "Pin",
     "creditCard.encryptedPassword.label": "卡片密码的前 2 位数",
-    "creditCard.encryptedPassword.placeholder": "12",
     "creditCard.encryptedPassword.invalid": "无效的密码",
     "creditCard.taxNumber.label": "持卡人生日 (YYMMDD) 或公司注册号（10 位数）",
     "creditCard.taxNumber.labelAlt": "公司注册号（10 位数）",
@@ -158,6 +157,9 @@
     "error.va.sf-cc-dat.01": "卡片太旧",
     "error.va.sf-cc-dat.02": "日期太久远",
     "error.va.sf-cc-dat.03": "您的卡在结账日期前已过期",
+    "error.va.sf-ach-num.01": "无效的账号",
+    "error.va.sf-ach-loc.01": "无效的 ABA 路由电汇编码",
+    "error.va.sf-kcp-pwd.01": "无效的密码",
     "error.giftcard.no-balance": "礼品卡余额为零",
     "error.giftcard.card-error": "我们的数据库中没有这个号码的礼品卡",
     "error.giftcard.currency-error": "礼品卡仅以其发行的货币为有效货币",
@@ -201,5 +203,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "安全银行账号 Iframe",
     "ach.encryptedBankAccountNumber.aria.label": "银行账号字段",
     "ach.encryptedBankLocationId.aria.iframeTitle": "安全银行路由电汇编码 Iframe",
-    "ach.encryptedBankLocationId.aria.label": "银行路由电汇编码字段"
+    "ach.encryptedBankLocationId.aria.label": "银行路由电汇编码字段",
+    "twint.saved": "已保存"
 }
