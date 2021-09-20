@@ -13,6 +13,10 @@ class PixElement extends QRLoaderContainer<PixProps> {
         ...QRLoaderContainer.defaultProps
     };
 
+    get isValid() {
+        return !!this.state.isValid;
+    }
+
     formatProps(props) {
         return {
             delay: 2000, // ms
