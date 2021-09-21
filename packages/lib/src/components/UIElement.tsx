@@ -44,7 +44,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this._parentInstance.session) {
             // Session flow
-            this.submitPayment(this.data);
+            const beforeSubmitEvent = this.props.beforeSubmit
+                ? new Promise((resolve, reject) => this.props.beforeSubmit(this.data, this.elementRef, { resolve, reject }))
+                : Promise.resolve(this.data);
+
+            beforeSubmitEvent
+                .then(data => this.submitPayment(data))
+                .catch(() => this.handleError(new AdyenCheckoutError('SUBMIT_PAYMENT', 'Payment was canceled')));
         } else {
             this.handleError(new AdyenCheckoutError('SUBMIT_PAYMENT', 'Could not submit the payment'));
         }
@@ -127,10 +133,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return null;
     }
 
-    protected handleOrder = (order: Order): void => {
-        // TODO handleOrder
-        console.log(order);
-    };
+    protected handleOrder = (order: Order): void => {};
 
     protected handleFinalResult = result => {
         if (this.props.setStatusAutomatically !== false) {

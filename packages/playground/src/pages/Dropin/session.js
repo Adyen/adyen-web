@@ -18,11 +18,15 @@ export async function initSession() {
         clientKey: process.env.__CLIENT_KEY__,
         session,
 
+        // Events
+        // beforeSubmit: (data, component, actions) => {
+        //     actions.resolve(data);
+        // },
         onPaymentCompleted: (result, component) => {
             console.info(result, component);
         },
         onError: (error, component) => {
-            console.error(error.name, error.message, error.stack, component);
+            console.error(error.message, component);
         }
     });
 
