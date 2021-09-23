@@ -15,7 +15,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
                         <div className="adyen-checkout__order-payment-method__header">
                             <div className="adyen-checkout__payment-method__header__title">
                                 <PaymentMethodIcon
-                                    name={orderPaymentMethod.type}
+                                    altDescription={orderPaymentMethod.name}
                                     type={orderPaymentMethod.type}
                                     src={getImage({ loadingContext })(orderPaymentMethod.type)}
                                 />

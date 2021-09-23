@@ -44,6 +44,14 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         }
     };
 
+
+    public onClick = () => {
+        if (!this.isMouseDown) {
+            this.props.onSelect();
+        }
+    };
+
+
     public onMouseDown = () => {
         this.isMouseDown = true;
     };
@@ -98,6 +106,9 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
         const showRemovePaymentMethodButton = this.props.showRemovePaymentMethodButton && paymentMethod.props.oneClick && isSelected;
         const disableConfirmationId = `remove-${paymentMethod._id}`;
+        const containerId = `container-${paymentMethod._id}`;
+        const buttonId = `button-${paymentMethod._id}`;
+
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
@@ -108,10 +119,15 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                 onClick={onSelect}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
-                tabIndex={isLoading ? -1 : 0}
+                //tabIndex={isLoading ? -1 : 0}
             >
                 <div className="adyen-checkout__payment-method__header">
-                    <div className="adyen-checkout__payment-method__header__title">
+                    <button className="adyen-checkout__payment-method__header__title"
+                            id={buttonId}
+                            aria-expanded={isSelected}
+                            aria-controls={containerId}
+                            onClick={onSelect}
+                    >
                         <span
                             className={classNames({
                                 'adyen-checkout__payment-method__radio': true,
@@ -120,18 +136,17 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             aria-hidden="true"
                         />
 
-                        <PaymentMethodIcon name={paymentMethod.displayName} type={paymentMethod.type} src={paymentMethod.icon} />
+                        <PaymentMethodIcon altDescription={paymentMethod.props.name} type={paymentMethod.type} src={paymentMethod.icon} />
 
                         <span
                             className={classNames({
                                 'adyen-checkout__payment-method__name': true,
                                 'adyen-checkout__payment-method__name--selected': isSelected
                             })}
-                            aria-hidden="true"
                         >
                             {paymentMethod.displayName}
                         </span>
-                    </div>
+                    </button>
 
                     {showRemovePaymentMethodButton && (
                         <button
@@ -150,7 +165,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             {paymentMethod.brands.map(brand => (
                                 <PaymentMethodIcon
                                     key={brand.name}
-                                    name={brand.name}
+                                    altDescription={brand.name}
                                     type={brand.name}
                                     disabled={activeBrand && brand.name !== activeBrand}
                                     src={brand.icon}
@@ -160,7 +175,11 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     )}
                 </div>
 
-                <div className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}>
+                <div className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}
+                    id={containerId}
+                     role='region'
+                     aria-labelledby={buttonId}
+                >
                     {showRemovePaymentMethodButton && (
                         <DisableOneClickConfirmation
                             id={disableConfirmationId}
