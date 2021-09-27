@@ -18,7 +18,7 @@ interface PaymentMethodIconProps {
 
 const paymentMethodsWithoutBorder = ['googlepay', 'paywithgoogle'];
 
-const PaymentMethodIcon = ({ src, altDescription, type, disabled = false}: PaymentMethodIconProps) => {
+const PaymentMethodIcon = ({ src, altDescription, type, disabled = false }: PaymentMethodIconProps) => {
     return (
         <span
             className={classNames('adyen-checkout__payment-method__image__wrapper', styles['adyen-checkout__payment-method__image__wrapper'], {

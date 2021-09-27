@@ -44,13 +44,9 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         }
     };
 
-
     public onClick = () => {
-        if (!this.isMouseDown) {
-            this.props.onSelect();
-        }
+        this.props.onSelect();
     };
-
 
     public onMouseDown = () => {
         this.isMouseDown = true;
@@ -82,6 +78,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }, { activeBrand = null }) {
+
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -119,14 +116,16 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                 onClick={onSelect}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
-                //tabIndex={isLoading ? -1 : 0}
+                aria-labelledby={buttonId}
             >
                 <div className="adyen-checkout__payment-method__header">
-                    <button className="adyen-checkout__payment-method__header__title"
-                            id={buttonId}
-                            aria-expanded={isSelected}
-                            aria-controls={containerId}
-                            onClick={onSelect}
+                    <button
+                        className="adyen-checkout__payment-method__header__title"
+                        id={buttonId}
+                        aria-label={paymentMethod.accessibleName}
+                        aria-expanded={isSelected}
+                        aria-controls={containerId}
+                        onClick={onSelect}
                     >
                         <span
                             className={classNames({
@@ -175,10 +174,11 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     )}
                 </div>
 
-                <div className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}
+                <div
+                    className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}
                     id={containerId}
-                     role='region'
-                     aria-labelledby={buttonId}
+                    role="region"
+                    aria-labelledby={buttonId}
                 >
                     {showRemovePaymentMethodButton && (
                         <DisableOneClickConfirmation
