@@ -56,8 +56,8 @@ export class SecuredFieldsElement extends UIElement {
         return this;
     }
 
-    dualBrandingChangeHandler(brand: string) {
-        if (this.componentRef?.dualBrandingChangeHandler) this.componentRef.dualBrandingChangeHandler(brand);
+    dualBrandingChangeHandler(e: Event | string) {
+        if (this.componentRef?.dualBrandingChangeHandler) this.componentRef.dualBrandingChangeHandler(e);
         return this;
     }
 
@@ -107,6 +107,7 @@ export class SecuredFieldsElement extends UIElement {
                     rootNode={this._node}
                     onChange={this.setState}
                     onBinValue={this.onBinValue}
+                    implementationType={'custom'}
                 />
             </CoreProvider>
         );

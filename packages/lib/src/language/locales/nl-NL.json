@@ -13,7 +13,7 @@
     "creditCard.expiryDateField.month.placeholder": "MM",
     "creditCard.expiryDateField.year.placeholder": "JJ",
     "creditCard.expiryDateField.year": "Jaar",
-    "creditCard.cvcField.title": "Verificatiecode",
+    "creditCard.cvcField.title": "CVC / CVV",
     "creditCard.cvcField.placeholder": "123",
     "creditCard.storeDetailsButton": "Onthouden voor de volgende keer",
     "creditCard.cvcField.placeholder.4digits": "4 cijfers",
@@ -26,7 +26,7 @@
     "installments.installments": "Betaling termijnen",
     "installments.revolving": "Terugkerende betaling",
     "sepaDirectDebit.ibanField.invalid": "Ongeldig rekeningnummer",
-    "sepaDirectDebit.nameField.placeholder": "P. de Ridder",
+    "sepaDirectDebit.nameField.placeholder": "J. Janssen",
     "sepa.ownerName": "Ten name van",
     "sepa.ibanNumber": "Rekeningnummer (IBAN)",
     "error.title": "Fout",
@@ -158,6 +158,9 @@
     "error.va.sf-cc-dat.01": "Kaart te oud",
     "error.va.sf-cc-dat.02": "Datum te ver in de toekomst",
     "error.va.sf-cc-dat.03": "Uw kaart verloopt voor de betaaldatum",
+    "error.va.sf-ach-num.01": "Ongeldig rekeningnummer",
+    "error.va.sf-ach-loc.01": "Ongeldig routingnummer (ABA)",
+    "error.va.sf-kcp-pwd.01": "Ongeldig wachtwoord",
     "error.giftcard.no-balance": "Deze cadeaukaart heeft geen saldo",
     "error.giftcard.card-error": "We hebben geen cadeaukaart met dit nummer in onze administratie",
     "error.giftcard.currency-error": "Cadeaukaarten zijn alleen geldig in de valuta waarin ze zijn uitgegeven",
@@ -201,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe voor beveiligd bankrekeningnummer",
     "ach.encryptedBankAccountNumber.aria.label": "Veld voor bankrekening",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe voor beveiligde BIC-code",
-    "ach.encryptedBankLocationId.aria.label": "Veld voor BIC-code"
+    "ach.encryptedBankLocationId.aria.label": "Veld voor BIC-code",
+    "twint.saved": "opgeslagen"
 }

@@ -19,6 +19,12 @@ export interface GooglePayPropsConfiguration {
      * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
      */
     merchantName?: string;
+
+
+    /**
+     * Merchant fully qualified domain name.
+     */
+    merchantOrigin?: string;
 }
 
 export interface GooglePayProps extends UIElementProps {
@@ -123,4 +129,13 @@ export interface GooglePayProps extends UIElementProps {
     // Events
     onClick?: (resolve, reject) => void;
     onAuthorized?: (paymentData: google.payments.api.PaymentData) => void;
+}
+
+// Used to add undocumented google payment options
+export interface GooglePaymentDataRequest extends google.payments.api.PaymentDataRequest {
+    merchantInfo: ExtendedMerchantInfo
+}
+
+export interface ExtendedMerchantInfo extends google.payments.api.MerchantInfo {
+    merchantOrigin?: string
 }

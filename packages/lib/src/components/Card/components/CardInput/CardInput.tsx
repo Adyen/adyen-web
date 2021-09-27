@@ -265,9 +265,9 @@ function CardInput(props: CardInputProps) {
         <CardHolderName
             required={props.holderNameRequired}
             placeholder={props.placeholders.holderName}
-            value={data.holderName}
-            error={!!errors.holderName}
-            isValid={!!valid.holderName}
+            value={formData.holderName}
+            error={!!formErrors.holderName && props.holderNameRequired}
+            isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
         />

@@ -26,7 +26,7 @@
     "installments.installments": "Ratenzahlung",
     "installments.revolving": "Ratenzahlung",
     "sepaDirectDebit.ibanField.invalid": "Ungültige Kontonummer",
-    "sepaDirectDebit.nameField.placeholder": "L. Schmidt",
+    "sepaDirectDebit.nameField.placeholder": "A. Müller",
     "sepa.ownerName": "Name des Kontoinhabers",
     "sepa.ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fehler",
@@ -35,7 +35,7 @@
     "error.subtitle.refused": "Zahlvorgang verweigert",
     "error.message.unknown": "Es ist ein unbekannter Fehler aufgetreten.",
     "idealIssuer.selectField.title": "Bank",
-    "idealIssuer.selectField.placeholder": "Wählen Sie Ihre Bank",
+    "idealIssuer.selectField.placeholder": "Bank auswählen",
     "creditCard.success": "Zahlung erfolgreich",
     "loading": "Laden …",
     "continue": "Weiter",
@@ -158,6 +158,9 @@
     "error.va.sf-cc-dat.01": "Karte zu alt",
     "error.va.sf-cc-dat.02": "Datum zu weit in der Zukunft",
     "error.va.sf-cc-dat.03": "Ihre Karte läuft vor dem Bezahldatum ab.",
+    "error.va.sf-ach-num.01": "Ungültige Kontonummer",
+    "error.va.sf-ach-loc.01": "Ungültige ABA-Nummer",
+    "error.va.sf-kcp-pwd.01": "Ungültiges Passwort",
     "error.giftcard.no-balance": "Auf dieser Geschenkkarte ist kein Guthaben vorhanden",
     "error.giftcard.card-error": "Es gibt in unserem System keine Geschenkkarte mit dieser Nummer",
     "error.giftcard.currency-error": "Geschenkkarten sind nur in der Währung gültig, in der sie ausgestellt wurden",
@@ -201,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe für gesicherte Bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Feld „Bankkonto“",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe für gesicherte BLZ",
-    "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld"
+    "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld",
+    "twint.saved": "hinterlegt"
 }

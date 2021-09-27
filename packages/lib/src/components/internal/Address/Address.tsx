@@ -69,8 +69,10 @@ export default function Address(props: AddressProps) {
                 classNameModifiers={[...classNameModifiers, fieldName]}
                 data={data}
                 errors={errors}
+                valid={valid}
                 fieldName={fieldName}
                 onInput={handleChangeFor(fieldName, 'input')}
+                onChange={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
             />

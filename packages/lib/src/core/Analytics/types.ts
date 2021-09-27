@@ -1,3 +1,9 @@
+interface Experiment {
+    controlGroup: boolean;
+    experimentId: string;
+    experimentName?: string;
+}
+
 export interface AnalyticsOptions {
     /**
      * Enable/Disable all analytics
@@ -15,12 +21,17 @@ export interface AnalyticsOptions {
     conversion?: boolean;
 
     /**
-     * Reuse a previous conversionId from a previous page
+     * Reuse a previous checkoutAttemptId from a previous page
      */
-    conversionId?: string;
+    checkoutAttemptId?: string;
 
     /**
      * Data to be sent along with the event data
      */
     payload?: any;
+
+    /**
+     * List of experiments to be sent in the collectId call
+     */
+    experiments?: Experiment[];
 }

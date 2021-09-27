@@ -130,7 +130,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         }
 
         if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-            return Promise.resolve(ApplePaySession.canMakePayments());
+            return Promise.resolve(true);
         }
 
         return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));

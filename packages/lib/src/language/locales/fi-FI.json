@@ -158,13 +158,16 @@
     "error.va.sf-cc-dat.01": "Kortti on liian vanha",
     "error.va.sf-cc-dat.02": "Päivämäärä liian kaukana tulevaisuudessa",
     "error.va.sf-cc-dat.03": "Korttisi vanhenee ennen lähtöpäivää",
+    "error.va.sf-ach-num.01": "Väärä tilin numero",
+    "error.va.sf-ach-loc.01": "Ei-kelvollinen ABA-reititysnumero",
+    "error.va.sf-kcp-pwd.01": "Kelpaamaton salasana",
     "error.giftcard.no-balance": "Lahjakortin saldo on nolla",
     "error.giftcard.card-error": "Asiakirjoissamme ei ole tämän numeron lahjakorttia",
     "error.giftcard.currency-error": "Gift cards are only valid in the currency they were issued in",
     "amazonpay.signout": "Kirjaudu ulos Amazonista",
     "amazonpay.changePaymentDetails": "Muuta maksutietoja",
     "partialPayment.warning": "Valitse toinen maksutapa jäännöksen maksamiseksi",
-    "partialPayment.remainingBalance": "Jäljellä oleva saldo on% {summa}",
+    "partialPayment.remainingBalance": "Jäljellä oleva saldo on %{summa}",
     "bankTransfer.beneficiary": "Edunsaaja",
     "bankTransfer.iban": "IBAN",
     "bankTransfer.bic": "BIC",
@@ -201,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe suojatulle pankkitilinumerolle",
     "ach.encryptedBankAccountNumber.aria.label": "Pankkitilikenttä",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe suojatulle pankin reititysnumerolle",
-    "ach.encryptedBankLocationId.aria.label": "Pankin reititysnumerokenttä"
+    "ach.encryptedBankLocationId.aria.label": "Pankin reititysnumerokenttä",
+    "twint.saved": "tallennettu"
 }

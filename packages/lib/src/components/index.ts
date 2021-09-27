@@ -44,6 +44,8 @@ import uuid from '../utils/uuid';
 import BacsDD from './BacsDD';
 import Address from './Address';
 import PersonalDetails from './PersonalDetails';
+import Klarna from './Klarna';
+import Twint from "./Twint";
 
 /**
  * Maps each component with a Component element.
@@ -111,6 +113,9 @@ const componentsMap = {
     ideal: Ideal,
     jcb: Card,
     kcp: Card,
+    klarna: Klarna,
+    klarna_paynow: Klarna,
+    klarna_account: Klarna,
     maestro: Card,
     mbway: MBWay,
     mc: Card,
@@ -142,6 +147,7 @@ const componentsMap = {
     vipps: Vipps,
     swish: Swish,
     affirm: Affirm,
+    twint: Twint,
     default: null
 };
 

@@ -3,6 +3,6 @@ module.exports = {
         require('stylelint')({ configFile: 'config/stylelint.config.js' }),
         require('postcss-reporter'),
         require('autoprefixer'),
-        require('cssnano')
+        require('cssnano')({ preset: ['default', { colormin: false }] })
     ]
 };

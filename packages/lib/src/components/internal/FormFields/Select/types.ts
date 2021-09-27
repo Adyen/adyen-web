@@ -11,12 +11,14 @@ export interface SelectProps {
     classNameModifiers: string[];
     filterable: boolean;
     isInvalid: boolean;
+    isValid?: boolean;
     items: SelectItem[];
     name?: string;
     onChange: (e) => void;
     placeholder: string;
     readonly: boolean;
     selected: string;
+    uniqueId?: string;
 }
 
 export interface SelectButtonProps {
@@ -24,6 +26,7 @@ export interface SelectButtonProps {
     filterInputRef;
     filterable: boolean;
     isInvalid: boolean;
+    isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
     onInput: (e: Event) => void;
     placeholder: string;
@@ -32,6 +35,8 @@ export interface SelectButtonProps {
     showList: boolean;
     toggleButtonRef;
     toggleList: (e: Event) => void;
+    id?: string;
+    ariaDescribedBy: string;
 }
 
 export interface SelectListProps {

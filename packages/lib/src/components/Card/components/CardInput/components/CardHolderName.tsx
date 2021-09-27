@@ -14,6 +14,7 @@ export default function CardHolderName({ onChange, onInput, placeholder, value, 
             className={'adyen-checkout__card__holderName'}
             errorMessage={error && i18n.get('creditCard.holderName.invalid')}
             isValid={!!isValid}
+            name={'holderName'}
         >
             {renderFormField('text', {
                 className: `adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`,

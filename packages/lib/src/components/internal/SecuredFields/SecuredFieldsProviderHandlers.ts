@@ -86,7 +86,8 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
          * For a field that has just received valid:true (field has just been completed & encrypted) - mark the error state for this field as false
          * For a field that has just received valid:false (field was encrypted, now is not)
          *  - field is either in a state of being incomplete but without errors (digit deleted) - so mark the error state for this field as false
-         *  or has switched from valid/encrypted state to being in error (digit edited to one that puts the field in error) - so keep any error that might just have been set
+         *  or has switched from valid/encrypted state to being in error (digit edited to one that puts the field in error) - so keep any error that
+         *  might just have been set
          */
         errors: { ...prevState.errors, [field.fieldType]: prevState.errors[field.fieldType] ?? false }
     });
@@ -145,7 +146,11 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     this.setState(
         prevState => ({
             errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
-            hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false
+            hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false,
+            // If dealing with an unsupported card ensure these card number related fields are reset re. pasting a full, unsupported card straight in
+            ...(hasUnsupportedCard && { data: { ...prevState.data, [ENCRYPTED_CARD_NUMBER]: undefined } }),
+            ...(hasUnsupportedCard && { valid: { ...prevState.valid, [ENCRYPTED_CARD_NUMBER]: false } }),
+            ...(hasUnsupportedCard && { isSfpValid: false })
         }),
         () => {
             this.props.onChange(this.state);

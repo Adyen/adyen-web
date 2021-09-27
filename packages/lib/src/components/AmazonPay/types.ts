@@ -12,13 +12,14 @@ declare global {
 type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
-export type Currency = 'USD' | 'EUR' | 'GBP';
-export type Region = 'US' | 'EU' | 'UK';
+export type Currency = 'EUR' | 'GBP' | 'USD';
+export type Region = 'EU' | 'UK' | 'US';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
 export interface AmazonPayConfiguration {
     merchantId?: string;
     publicKeyId?: string;
+    region?: Region;
     storeId?: string;
 }
 
@@ -101,6 +102,7 @@ export interface OrderButtonProps {
     clientKey: string;
     onError: (error, component) => void;
     ref: any;
+    region: Region;
     returnUrl: string;
     publicKeyId: string;
 }
@@ -169,16 +171,22 @@ interface AddressDetails {
 
 export interface ChargeAmount {
     amount: string;
-    currencyCode: string;
+    currencyCode: Currency;
 }
+
+export type LedgerCurrencies = {
+    [key in Region]: Currency;
+};
 
 export interface PayloadJSON {
     addressDetails?: AddressDetails;
     deliverySpecifications?: DeliverySpecifications;
     merchantMetadata?: MerchantMetadata;
     paymentDetails?: {
-        paymentIntent: 'Confirm';
         chargeAmount: ChargeAmount;
+        paymentIntent: 'Confirm';
+        presentmentCurrency: Currency;
+        totalOrderAmount: ChargeAmount;
     };
     storeId: string;
     webCheckoutDetails: {
@@ -194,6 +202,7 @@ export interface CheckoutDetailsRequest {
     getDeliveryAddress?: boolean;
     getDeclineFlowUrl?: boolean;
     publicKeyId: string;
+    region: Region;
 }
 
 export interface UpdateAmazonCheckoutSessionRequest {
@@ -202,6 +211,7 @@ export interface UpdateAmazonCheckoutSessionRequest {
     checkoutResultReturnUrl: string;
     checkoutSessionId: string;
     publicKeyId: string;
+    region: Region;
 }
 
 export interface CheckoutSessionConfig {

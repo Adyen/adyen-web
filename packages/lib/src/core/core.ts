@@ -230,7 +230,7 @@ class Core {
          * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
          */
         if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
-            return this.handleCreate(paymentMethods[PaymentMethod], options);
+            return this.handleCreate(paymentMethods[PaymentMethod], { type: PaymentMethod, ...options });
         }
 
         /**

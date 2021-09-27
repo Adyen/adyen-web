@@ -48,12 +48,12 @@ class BaseElement<P extends BaseElementProps> {
      */
     get data(): any {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const conversionId = getProp(this.props, 'modules.analytics.conversionId');
+        const checkoutAttemptId = getProp(this.props, 'modules.analytics.checkoutAttemptId');
         const order = this.state.order || this.props.order;
 
         return {
             ...(clientData && { riskData: { clientData } }),
-            ...(conversionId && { conversionId }),
+            ...(checkoutAttemptId && { checkoutAttemptId }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
             ...this.formatData(),
             clientStateDataIndicator: true

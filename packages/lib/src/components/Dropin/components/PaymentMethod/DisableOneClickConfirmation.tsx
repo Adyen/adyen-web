@@ -18,6 +18,7 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
                 {i18n.get('storedPaymentMethod.disable.confirmation')}
                 <div className="adyen-checkout__payment-method__disable-confirmation__buttons">
                     <button
+                        type="button"
                         className={classNames(
                             'adyen-checkout__button',
                             'adyen-checkout__payment-method__disable-confirmation__button',
@@ -29,6 +30,7 @@ const DisableOneClickConfirmation = ({ id, open, onDisable, onCancel }) => {
                         {i18n.get('storedPaymentMethod.disable.confirmButton')}
                     </button>
                     <button
+                        type="button"
                         className={classNames(
                             'adyen-checkout__button',
                             'adyen-checkout__payment-method__disable-confirmation__button',

@@ -4,8 +4,12 @@ import './Field.scss';
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
 import { FieldProps, FieldState } from './types';
+import { getUniqueId } from '../../../../utils/idGenerator';
+import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 
 class Field extends Component<FieldProps, FieldState> {
+    private readonly uniqueId: string;
+
     constructor(props) {
         super(props);
 
@@ -13,6 +17,8 @@ class Field extends Component<FieldProps, FieldState> {
 
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
+
+        this.uniqueId = getUniqueId(`adyen-checkout-${this.props.name}`);
     }
 
     onFocus(e) {
@@ -52,7 +58,9 @@ class Field extends Component<FieldProps, FieldState> {
         isValid,
         label,
         dualBrandingElements,
-        dir
+        dir,
+        name,
+        showValidIcon
     }) {
         return (
             <div
@@ -74,6 +82,7 @@ class Field extends Component<FieldProps, FieldState> {
                         'adyen-checkout__label--filled': this.state.filled,
                         'adyen-checkout__label--disabled': this.props.disabled
                     })}
+                    htmlFor={name && this.uniqueId}
                 >
                     {typeof label === 'string' && (
                         <span
@@ -99,7 +108,13 @@ class Field extends Component<FieldProps, FieldState> {
                     >
                         {toChildArray(children).map(
                             (child: ComponentChild): ComponentChild => {
-                                const childProps = { isValid, onFocus: this.onFocus, onBlur: this.onBlur, isInvalid: !!errorMessage };
+                                const childProps = {
+                                    isValid,
+                                    onFocus: this.onFocus,
+                                    onBlur: this.onBlur,
+                                    isInvalid: !!errorMessage,
+                                    ...(name && { uniqueId: this.uniqueId })
+                                };
                                 return cloneElement(child as VNode, childProps);
                             }
                         )}
@@ -110,7 +125,7 @@ class Field extends Component<FieldProps, FieldState> {
                             </span>
                         )}
 
-                        {isValid && !dualBrandingElements && (
+                        {isValid && showValidIcon !== false && !dualBrandingElements && (
                             <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
                                 <Icon type="checkmark" />
                             </span>
@@ -124,7 +139,7 @@ class Field extends Component<FieldProps, FieldState> {
                     </div>
 
                     {errorMessage && errorMessage.length && (
-                        <span className={'adyen-checkout__error-text'} aria-live="polite">
+                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${this.uniqueId}${ARIA_ERROR_SUFFIX}`}>
                             {errorMessage}
                         </span>
                     )}

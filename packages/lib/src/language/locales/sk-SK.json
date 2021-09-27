@@ -158,6 +158,9 @@
     "error.va.sf-cc-dat.01": "Karta je príliš stará",
     "error.va.sf-cc-dat.02": "Dátum je príliš ďaleko v budúcnosti",
     "error.va.sf-cc-dat.03": "Platnosť vašej karty vyprší pred dátumom odhlásenia",
+    "error.va.sf-ach-num.01": "Neplatné číslo účtu",
+    "error.va.sf-ach-loc.01": "Neplatné smerovacie číslo ABA",
+    "error.va.sf-kcp-pwd.01": "Neplané heslo",
     "error.giftcard.no-balance": "Táto darčeková karta má nulový zostatok",
     "error.giftcard.card-error": "V našich záznamoch nemáme žiadnu darčekovú kartu s týmto číslom",
     "error.giftcard.currency-error": "Darčekové karty sú platné iba v mene, v ktorej boli vydané",
@@ -201,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe pre číslo zabezpečeného bankového účtu",
     "ach.encryptedBankAccountNumber.aria.label": "Pole bankového účtu",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pre zabezpečené smerovacie číslo banky",
-    "ach.encryptedBankLocationId.aria.label": "Pole smerovacieho čísla banky"
+    "ach.encryptedBankLocationId.aria.label": "Pole smerovacieho čísla banky",
+    "twint.saved": "uložené"
 }

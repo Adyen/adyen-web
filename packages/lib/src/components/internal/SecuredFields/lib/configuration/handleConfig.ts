@@ -56,6 +56,9 @@ export function handleConfig(): void {
     // To configure the minimum expiry date to a merchant defined value - this means the card has to be valid until at least this date
     this.config.minimumExpiryDate = this.props.minimumExpiryDate || null;
 
+    // To distinguish between regular 'components' initiated securedField or 'custom' card component
+    this.config.implementationType = this.props.implementationType;
+
     this.config.sfLogAtStart = this.props._b$dl === true;
 
     let sfBundleType: string = this.config.isCreditCardType ? 'card' : this.props.type;

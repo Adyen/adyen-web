@@ -9,10 +9,11 @@ class Analytics {
         enabled: true,
         telemetry: true,
         conversion: false,
-        conversionId: null
+        checkoutAttemptId: null,
+        experiments: []
     };
 
-    public conversionId = null;
+    public checkoutAttemptId = null;
     public props;
     private readonly logEvent;
     private readonly logTelemetry;
@@ -23,14 +24,14 @@ class Analytics {
         this.props = { ...Analytics.defaultProps, ...analytics };
         this.logEvent = logEvent({ loadingContext, locale });
         this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
-        this.collectId = collectId({ loadingContext, clientKey });
+        this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });
 
         const { conversion, enabled } = this.props;
         if (conversion === true && enabled === true) {
-            if (this.props.conversionId) {
-                // handle prefilled conversionId
-                this.conversionId = this.props.conversionId;
-                this.queue.run(this.conversionId);
+            if (this.props.checkoutAttemptId) {
+                // handle prefilled checkoutAttemptId
+                this.checkoutAttemptId = this.props.checkoutAttemptId;
+                this.queue.run(this.checkoutAttemptId);
             }
         }
     }
@@ -39,21 +40,22 @@ class Analytics {
         const { conversion, enabled, payload, telemetry } = this.props;
 
         if (enabled === true) {
-            if (conversion === true && !this.conversionId) {
-                // fetch a new conversionId if none is already available
-                this.collectId().then(conversionId => {
-                    this.conversionId = conversionId;
-                    this.queue.run(this.conversionId);
+            if (conversion === true && !this.checkoutAttemptId) {
+                // fetch a new checkoutAttemptId if none is already available
+                this.collectId().then(checkoutAttemptId => {
+                    this.checkoutAttemptId = checkoutAttemptId;
+                    this.queue.run(this.checkoutAttemptId);
                 });
             }
 
             if (telemetry === true) {
-                const telemetryTask = conversionId => this.logTelemetry({ ...event, ...(payload && { ...payload }), conversionId }).catch(() => {});
+                const telemetryTask = checkoutAttemptId =>
+                    this.logTelemetry({ ...event, ...(payload && { ...payload }), checkoutAttemptId }).catch(() => {});
                 this.queue.add(telemetryTask);
 
-                // Not waiting for conversionId
-                if (!conversion || this.conversionId) {
-                    this.queue.run(this.conversionId);
+                // Not waiting for checkoutAttemptId
+                if (!conversion || this.checkoutAttemptId) {
+                    this.queue.run(this.checkoutAttemptId);
                 }
             }
 
