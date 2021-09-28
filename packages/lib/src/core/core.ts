@@ -38,9 +38,10 @@ class Core {
             this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
 
             return this.session
-                .setupSession()
+                .setupSession(this.options)
                 .then(sessionResponse => {
-                    this.setOptions(sessionResponse);
+                    const amount = this.options.order ? this.options.order.remainingAmount : sessionResponse.amount;
+                    this.setOptions({ ...sessionResponse, amount });
                     return this;
                 })
                 .catch(error => {
@@ -127,13 +128,15 @@ class Core {
      * @param options - props to update
      * @returns this - the element instance
      */
-    public update = (options: CoreOptions = {}): this => {
+    public update = (options: CoreOptions = {}): Promise<this> => {
         this.setOptions(options);
 
-        // Update each component under this instance
-        this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
+        return this.initialize().then(() => {
+            // Update each component under this instance
+            this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
 
-        return this;
+            return this;
+        });
     };
 
     /**
@@ -166,6 +169,7 @@ class Core {
         };
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
+        delete this.options.paymentMethods;
 
         return this;
     };

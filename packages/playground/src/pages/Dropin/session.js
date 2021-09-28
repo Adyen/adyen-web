@@ -19,9 +19,9 @@ export async function initSession() {
         session,
 
         // Events
-        // beforeSubmit: (data, component, actions) => {
-        //     actions.resolve(data);
-        // },
+        beforeSubmit: (data, component, actions) => {
+            actions.resolve(data);
+        },
         onPaymentCompleted: (result, component) => {
             console.info(result, component);
         },

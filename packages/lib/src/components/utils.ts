@@ -1,6 +1,6 @@
 import { PaymentResponse, RawPaymentResponse } from './types';
 
-const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData'];
+const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order'];
 
 export function getSanitizedResponse(response: RawPaymentResponse): PaymentResponse {
     const removedProperties = [];

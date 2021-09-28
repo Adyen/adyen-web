@@ -133,7 +133,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return null;
     }
 
-    protected handleOrder = (order: Order): void => {};
+    protected handleOrder = (order: Order): void => {
+        this.elementRef._parentInstance.update({ order });
+    };
 
     protected handleFinalResult = result => {
         if (this.props.setStatusAutomatically !== false) {
