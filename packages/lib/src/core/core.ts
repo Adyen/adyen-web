@@ -133,7 +133,6 @@ class Core {
          * Once we receive a valid class for a Component - create a new instance of it
          */
         if (isValidClass) {
-            console.log(PaymentMethod.type, options.type);
             const paymentMethodsDetails = !options.supportedShopperInteractions ? this.paymentMethodsResponse.find(options.type) : [];
 
             // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at top level, in the config object set when a
