@@ -9,7 +9,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
     public static type = 'pix';
 
     public static defaultProps = {
-        personalDetailsRequired: false,
+        personalDetailsRequired: true,
         ...QRLoaderContainer.defaultProps
     };
 
