@@ -1,5 +1,6 @@
 import { ValidatorRules } from '../../../utils/Validator/Validator';
 import validateSSN from '../../internal/SocialSecurityNumberBrazil/validate';
+
 export const pixValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,

@@ -15,7 +15,7 @@ describe('Pix', () => {
         });
 
         test('always returns a type', () => {
-            const pix = new Pix({personalDetailsRequired: true});
+            const pix = new Pix({ personalDetailsRequired: true });
             expect(pix.props.personalDetailsRequired).toBe(true);
         });
     });

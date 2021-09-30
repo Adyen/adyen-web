@@ -1,9 +1,9 @@
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
-import CoreProvider from "../../core/Context/CoreProvider";
-import {h} from "preact";
-import PixInput from "./PixInput";
-import {cleanCPFCNPJ} from "../internal/SocialSecurityNumberBrazil/utils";
-import {PixProps} from "./types";
+import CoreProvider from '../../core/Context/CoreProvider';
+import { h } from 'preact';
+import PixInput from './PixInput';
+import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
+import { PixProps } from './types';
 
 class PixElement extends QRLoaderContainer<PixProps> {
     public static type = 'pix';
@@ -33,7 +33,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
 
         return {
             paymentMethod: {
-                type: this.props.type || this.constructor['type'],
+                type: this.props.type || this.constructor['type']
             },
             ...(firstName && lastName && { shopperName: { firstName, lastName } }),
             ...(socialSecurityNumber && { socialSecurityNumber: cleanCPFCNPJ(socialSecurityNumber) })
@@ -42,9 +42,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
 
     render() {
         if (this.props.paymentData) {
-            return (
-                this.renderQRCode()
-            );
+            return this.renderQRCode();
         }
 
         if (this.props.showPayButton) {
