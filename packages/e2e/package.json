@@ -29,9 +29,9 @@
         "css-loader": "^5.2.7",
         "dotenv": "^10.0.0",
         "html-webpack-plugin": "^4.5.2",
-        "node-sass": "^6.0.0",
+        "node-sass": "^6.0.1",
         "prettier": "^1.19.1",
-        "sass-loader": "^10.1.1",
+        "sass-loader": "^10.2.0",
         "source-map-loader": "^1.1.3",
         "style-loader": "^2.0.0",
         "testcafe": "~1.13.0",
@@ -44,6 +44,6 @@
         "whatwg-fetch": "^3.6.2"
     },
     "dependencies": {
-        "@adyen/adyen-web": "4.7.5"
+        "@adyen/adyen-web": "4.8.0"
     }
 }

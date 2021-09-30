@@ -6,6 +6,7 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CVCProps } from './types';
 import styles from '../CardInput.module.scss';
 import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import DataSfSpan from './DataSfSpan';
 
 export default function CVC(props: CVCProps) {
     const {
@@ -51,8 +52,9 @@ export default function CVC(props: CVCProps) {
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dir={'ltr'}
+            name={'encryptedSecurityCode'}
         >
-            <span className={cvcClassnames} data-cse="encryptedSecurityCode" />
+            <DataSfSpan encryptedFieldType={'encryptedSecurityCode'} className={cvcClassnames} />
 
             <CVCHint frontCVC={frontCVC} />
         </Field>

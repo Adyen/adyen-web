@@ -79,6 +79,7 @@ function BacsInput(props: BacsInputProps) {
                 label={i18n.get('bacs.accountHolderName')}
                 errorMessage={errors.holderName ? i18n.get('bacs.accountHolderName.invalid') : false}
                 isValid={valid.holderName}
+                name={'accountHolderName'}
             >
                 {renderFormField('text', {
                     name: 'bacs.accountHolderName',
@@ -106,6 +107,7 @@ function BacsInput(props: BacsInputProps) {
                     })}
                     classNameModifiers={['col-70']}
                     isValid={valid.bankAccountNumber}
+                    name={'bankAccountNumber'}
                 >
                     {renderFormField('text', {
                         value: data.bankAccountNumber,
@@ -131,6 +133,7 @@ function BacsInput(props: BacsInputProps) {
                     })}
                     classNameModifiers={['col-30']}
                     isValid={valid.bankLocationId}
+                    name={'bankLocationId'}
                 >
                     {renderFormField('text', {
                         value: data.bankLocationId,
@@ -156,6 +159,7 @@ function BacsInput(props: BacsInputProps) {
                     'adyen-checkout__field--inactive': status === CONFIRM_STATE || status === 'loading'
                 })}
                 isValid={valid.shopperEmail}
+                name={'emailAddress'}
             >
                 {renderFormField('emailAddress', {
                     value: data.shopperEmail,

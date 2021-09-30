@@ -64,7 +64,7 @@ export function initiatePaymentRequest({ configuration, ...props }: GooglePayPro
         merchantInfo: {
             merchantId: configuration.merchantId,
             merchantName: configuration.merchantName,
-            merchantOrigin: configuration.merchantOrigin
+            ...(configuration.merchantOrigin ? { merchantOrigin: configuration.merchantOrigin } : {})
         },
         allowedPaymentMethods: [
             {

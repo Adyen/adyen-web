@@ -18,6 +18,7 @@ export interface SelectProps {
     placeholder: string;
     readonly: boolean;
     selected: string;
+    uniqueId?: string;
 }
 
 export interface SelectButtonProps {
@@ -34,6 +35,8 @@ export interface SelectButtonProps {
     showList: boolean;
     toggleButtonRef;
     toggleList: (e: Event) => void;
+    id?: string;
+    ariaDescribedBy: string;
 }
 
 export interface SelectListProps {

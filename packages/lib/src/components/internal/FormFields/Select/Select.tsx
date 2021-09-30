@@ -8,8 +8,22 @@ import { keys } from './constants';
 import { SelectItem, SelectProps } from './types';
 import styles from './Select.module.scss';
 import './Select.scss';
+import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 
-function Select(props: SelectProps) {
+function Select({
+    items = [],
+    className = '',
+    classNameModifiers = [],
+    filterable = true,
+    readonly = false,
+    onChange = () => {},
+    selected,
+    name,
+    isInvalid,
+    isValid,
+    placeholder,
+    uniqueId
+}: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
     const toggleButtonRef = useRef(null);
@@ -18,7 +32,7 @@ function Select(props: SelectProps) {
     const [showList, setShowList] = useState<boolean>(false);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
-    const active: SelectItem = props.items.find(i => i.id === props.selected) || ({} as SelectItem);
+    const active: SelectItem = items.find(i => i.id === selected) || ({} as SelectItem);
 
     /**
      * Closes the selectList, empties the text filter and focuses the button element
@@ -42,7 +56,7 @@ function Select(props: SelectProps) {
         if (!target.getAttribute('data-disabled')) {
             closeList();
             const value = target.getAttribute('data-value');
-            props.onChange({ target: { value, name: props.name } });
+            onChange({ target: { value, name: name } });
         }
     };
 
@@ -52,13 +66,13 @@ function Select(props: SelectProps) {
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
-        if (e.key === keys.enter && props.filterable && showList && textFilter) {
+        if (e.key === keys.enter && filterable && showList && textFilter) {
             handleSelect(e);
         } else if (e.key === keys.escape) {
             // When user has focused Select button but not yet moved into Select list - close list and keep focus on the Select Button re. a11y guidelines
             // https://w3c.github.io/aria-practices/examples/disclosure/disclosure-navigation.html
             closeList();
-        } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!props.filterable || !showList))) {
+        } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!filterable || !showList))) {
             e.preventDefault();
             setShowList(true);
             if (selectListRef.current?.firstElementChild) {
@@ -113,7 +127,7 @@ function Select(props: SelectProps) {
                 e.preventDefault();
                 if (target.previousElementSibling) {
                     (target.previousElementSibling as HTMLElement).focus();
-                } else if (props.filterable && filterInputRef.current) {
+                } else if (filterable && filterInputRef.current) {
                     filterInputRef.current.focus();
                 }
                 break;
@@ -143,7 +157,7 @@ function Select(props: SelectProps) {
     };
 
     useEffect(() => {
-        if (showList && props.filterable && filterInputRef.current) {
+        if (showList && filterable && filterInputRef.current) {
             filterInputRef.current.focus();
         }
     }, [showList]);
@@ -161,29 +175,31 @@ function Select(props: SelectProps) {
             className={cx([
                 'adyen-checkout__dropdown',
                 styles['adyen-checkout__dropdown'],
-                props.className,
-                ...props.classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)
+                className,
+                ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)
             ])}
             ref={selectContainerRef}
         >
             <SelectButton
+                id={uniqueId ?? null}
                 active={active}
                 filterInputRef={filterInputRef}
-                filterable={props.filterable}
-                isInvalid={props.isInvalid}
-                isValid={props.isValid}
+                filterable={filterable}
+                isInvalid={isInvalid}
+                isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
                 onInput={handleTextFilter}
-                placeholder={props.placeholder}
-                readonly={props.readonly}
+                placeholder={placeholder}
+                readonly={readonly}
                 selectListId={selectListId}
                 showList={showList}
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
+                ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
             />
             <SelectList
                 active={active}
-                items={props.items}
+                items={items}
                 onKeyDown={handleListKeyDown}
                 onSelect={handleSelect}
                 selectListId={selectListId}

@@ -158,6 +158,9 @@
     "error.va.sf-cc-dat.01": "Kortet er for gammelt",
     "error.va.sf-cc-dat.02": "Datoen er for langt inn i fremtiden",
     "error.va.sf-cc-dat.03": "Kortet ditt utløper før betalingsdatoen",
+    "error.va.sf-ach-num.01": "Ugyldig kontonummer",
+    "error.va.sf-ach-loc.01": "Ugyldig ABA-dirigeringsnummer",
+    "error.va.sf-kcp-pwd.01": "Ugyldig passord",
     "error.giftcard.no-balance": "Dette gavekortet har en saldo på null",
     "error.giftcard.card-error": "Vi har ikke noe gavekort med dette nummeret i registrene våre",
     "error.giftcard.currency-error": "Gavekort er kun gyldige i den valutaen de ble utstedt i",
@@ -201,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe for sikret bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Bankkontofelt",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for sikret bankdirigeringsnummer",
-    "ach.encryptedBankLocationId.aria.label": "Felt for bankdirigeringsnummer"
+    "ach.encryptedBankLocationId.aria.label": "Felt for bankdirigeringsnummer",
+    "twint.saved": "lagret"
 }

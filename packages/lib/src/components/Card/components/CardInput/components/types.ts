@@ -1,5 +1,6 @@
 import { PaymentAmount } from '../../../../../types';
 import { CardBrandsConfiguration } from '../../../types';
+import { ComponentChildren } from 'preact';
 
 export interface BrandIconProps {
     brand: string;
@@ -141,4 +142,12 @@ export interface StoredCardFieldsProps {
     onFocusField: any;
     valid: any;
     status: string;
+}
+
+export interface SfSpanProps {
+    encryptedFieldType: string;
+    className: string;
+    uniqueId?: string; // not optional - but added in DataSfSpan comp rather than passed to it
+    children?: ComponentChildren; // as above
+    ['data-info']?: string; // optional
 }

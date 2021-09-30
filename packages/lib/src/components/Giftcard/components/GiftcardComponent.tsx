@@ -7,6 +7,7 @@ import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
+import DataSfSpan from '../../Card/components/CardInput/components/DataSfSpan';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -115,9 +116,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                 focused={focusedElement === 'encryptedCardNumber'}
                                 onFocusField={() => setFocusOn('encryptedCardNumber')}
                                 dir={'ltr'}
+                                name={'encryptedCardNumber'}
                             >
-                                <span
-                                    data-cse="encryptedCardNumber"
+                                <DataSfSpan
+                                    encryptedFieldType="encryptedCardNumber"
                                     data-info='{"length":"15-32", "maskInterval":4}'
                                     className={classNames({
                                         'adyen-checkout__input': true,
@@ -137,9 +139,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                     focused={focusedElement === 'encryptedSecurityCode'}
                                     onFocusField={() => setFocusOn('encryptedSecurityCode')}
                                     dir={'ltr'}
+                                    name={'encryptedSecurityCode'}
                                 >
-                                    <span
-                                        data-cse="encryptedSecurityCode"
+                                    <DataSfSpan
+                                        encryptedFieldType="encryptedSecurityCode"
                                         data-info='{"length":"3-10", "maskInterval": 0}'
                                         className={classNames({
                                             'adyen-checkout__input': true,
