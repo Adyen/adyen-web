@@ -151,6 +151,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     /**
+     * Get the element accessible name, used in the aria-label of the button that controls selected payment method
+     */
+    get accessibleName(): string {
+        return this.displayName;
+    }
+
+    /**
      * Return the type of an element
      */
     get type(): string {

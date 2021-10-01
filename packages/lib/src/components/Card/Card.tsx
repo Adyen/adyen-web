@@ -134,6 +134,16 @@ export class CardElement extends UIElement<CardElementProps> {
         return this.props.name || CardElement.type;
     }
 
+    get accessibleName(): string {
+        // use display name, unless it's a stored payment method, there inform user
+        return (
+            (this.props.name || CardElement.type) +
+            (this.props.storedPaymentMethodId
+                ? ' ' + this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
+                : '')
+        );
+    }
+
     get browserInfo() {
         return collectBrowserInfo();
     }
