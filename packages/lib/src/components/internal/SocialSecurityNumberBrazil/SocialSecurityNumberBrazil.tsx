@@ -1,7 +1,7 @@
 import { h } from 'preact';
-import renderFormField from '../../../internal/FormFields';
-import Field from '../../../internal/FormFields/Field';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import renderFormField from '../../internal/FormFields';
+import Field from '../../internal/FormFields/Field';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function({ onChange, onInput, valid = false, error = null, data = '' }) {
     const { i18n } = useCoreContext();

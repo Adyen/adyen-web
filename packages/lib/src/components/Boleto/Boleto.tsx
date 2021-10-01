@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import BoletoInput from './components/BoletoInput';
-import { cleanCPFCNPJ } from './components/SocialSecurityNumberBrazil/utils';
+import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 
