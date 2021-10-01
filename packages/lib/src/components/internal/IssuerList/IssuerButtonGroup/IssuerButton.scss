@@ -1,0 +1,30 @@
+@import '../../../../style/index';
+
+.adyen-checkout__issuer-button {
+  background-color: $color-white;
+  border: 1px solid $color-gray-dark;
+  border-radius: $border-radius-medium;
+  padding: $spacing-none $spacing-medium-small;
+  cursor: pointer;
+  flex-basis: 48%;
+  flex-grow: 2;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:focus, &:focus-visible, &:hover, &:active {
+    border: 2px solid #99A3AD;
+    padding: 0 11px;
+    outline: 0;
+  }
+
+}
+
+.adyen-checkout__issuer-button-text {
+}
+
+.adyen-checkout__issuer-button-img {
+  max-height: 26px;
+}

@@ -10,6 +10,7 @@ interface IssuerListProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
+    predefinedIssuers?: IssuerItem[];
     i18n: Language;
     loadingContext: string;
 }
@@ -17,6 +18,7 @@ interface IssuerListProps extends UIElementProps {
 interface IssuerItem {
     id: string;
     name: string;
+    icon?: string;
 }
 
 interface IssuerListData {
@@ -34,6 +36,11 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
 
             this.props.issuers = this.props.issuers.map(item => ({
+                ...item,
+                icon: getIssuerIcon(item.id)
+            }));
+
+            this.props.predefinedIssuers = this.props.predefinedIssuers.map(item => ({
                 ...item,
                 icon: getIssuerIcon(item.id)
             }));

@@ -1,11 +1,13 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
+import IssuerButtonGroup from './IssuerButtonGroup';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './IssuerList.scss';
 import { ValidatorRules } from '../../../utils/Validator/Validator';
+import ContentSeparator from './ContentSeparator';
 
 const payButtonLabel = ({ issuer, items }, i18n) => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -21,7 +23,7 @@ const validationRules: ValidatorRules = {
     }
 };
 
-function IssuerList({ items, placeholder, issuer, ...props }) {
+function IssuerList({ items, placeholder, issuer, predefinedIssuers, ...props }) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -42,8 +44,17 @@ function IssuerList({ items, placeholder, issuer, ...props }) {
         triggerValidation();
     };
 
+    console.log(status, items, predefinedIssuers, props);
+
     return (
         <div className="adyen-checkout__issuer-list">
+            {predefinedIssuers && (
+                <Fragment>
+                    <IssuerButtonGroup options={predefinedIssuers} />
+                    <ContentSeparator />
+                </Fragment>
+            )}
+
             <Field errorMessage={!!errors['issuer']} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
                     items,

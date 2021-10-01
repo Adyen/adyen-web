@@ -29,7 +29,7 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
             url: 'https://example.org',
             amounts: {
                 currency: 'EUR',
-                values: [300, 500, 1000]
+                values: [300, 500, 1000, 90, 20, 5]
             },
             backgroundUrl:
                 'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',

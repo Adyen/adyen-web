@@ -1,0 +1,27 @@
+@import '../../../style/index';
+
+.adyen-checkout__field--issuer-list-separator {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  color: $color-gray-darker;
+}
+
+.adyen-checkout__field--issuer-list-separator:after,
+.adyen-checkout__field--issuer-list-separator:before {
+  content: "";
+  display: block;
+  background: $color-gray-light;
+  width: 100%;
+  height: 1px;
+}
+
+.adyen-checkout__field--issuer-list-separator:after {
+  margin-left: 20px
+}
+
+.adyen-checkout__field--issuer-list-separator:before {
+  margin-right: 20px
+}
