@@ -48,11 +48,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
                 ? new Promise((resolve, reject) => this.props.beforeSubmit(this.data, this.elementRef, { resolve, reject }))
                 : Promise.resolve(this.data);
 
-            beforeSubmitEvent
-                .then(data => this.submitPayment(data))
-                .catch(() => this.handleError(new AdyenCheckoutError('SUBMIT_PAYMENT', 'Payment was canceled')));
+            beforeSubmitEvent.then(data => this.submitPayment(data)).catch(() => {});
         } else {
-            this.handleError(new AdyenCheckoutError('SUBMIT_PAYMENT', 'Could not submit the payment'));
+            this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
         }
     }
 

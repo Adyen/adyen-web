@@ -103,7 +103,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     submit() {
-        this.handleError(new AdyenCheckoutError('DEVELOPER_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     render() {

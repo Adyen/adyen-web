@@ -1,7 +1,5 @@
 class AdyenCheckoutError extends Error {
     protected static errorTypes = {
-        SUBMIT_PAYMENT: 'SUBMIT_PAYMENT',
-
         /** Network error. */
         NETWORK_ERROR: 'NETWORK_ERROR',
 
@@ -9,7 +7,7 @@ class AdyenCheckoutError extends Error {
         CANCEL: 'CANCEL',
 
         /** Implementation error. The method or parameter are incorrect or are not supported. */
-        DEVELOPER_ERROR: 'DEVELOPER_ERROR',
+        IMPLEMENTATION_ERROR: 'IMPLEMENTATION_ERROR',
 
         /** Generic error. */
         ERROR: 'ERROR'

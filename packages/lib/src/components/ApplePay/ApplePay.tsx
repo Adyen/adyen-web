@@ -122,11 +122,11 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     isAvailable(): Promise<boolean> {
         if (document.location.protocol !== 'https:') {
-            return Promise.reject(new AdyenCheckoutError('ERROR', 'Trying to start an Apple Pay session from an insecure document'));
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
 
         if (!this.props.onValidateMerchant && !this.props.clientKey) {
-            return Promise.reject(new AdyenCheckoutError('ERROR', 'clientKey was not provided'));
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
         }
 
         if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
