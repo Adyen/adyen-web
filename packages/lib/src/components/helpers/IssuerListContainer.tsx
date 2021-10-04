@@ -28,9 +28,18 @@ interface IssuerListData {
     };
 }
 
+const removePredefinedIssuersFromIssuersList = predefinedIssuers => issuer => {
+    if (predefinedIssuers.find(({ id }) => id === issuer.id)) return false;
+    return true;
+};
+
 class IssuerListContainer extends UIElement<IssuerListProps> {
     constructor(props: IssuerListProps) {
         super(props);
+
+        if (!!this.props.predefinedIssuers?.length) {
+            this.props.issuers = this.props.issuers.filter(removePredefinedIssuersFromIssuersList(this.props.predefinedIssuers));
+        }
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
@@ -40,7 +49,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
                 icon: getIssuerIcon(item.id)
             }));
 
-            this.props.predefinedIssuers = this.props.predefinedIssuers.map(item => ({
+            this.props.predefinedIssuers = (this.props.predefinedIssuers || []).map(item => ({
                 ...item,
                 icon: getIssuerIcon(item.id)
             }));

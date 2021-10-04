@@ -23,6 +23,12 @@ const validationRules: ValidatorRules = {
     }
 };
 
+const selectorPlaceholder = (placeholder: string, hasPredefinedIssuers: boolean): string => {
+    if (placeholder) return placeholder;
+    if (hasPredefinedIssuers) return 'idealIssuer.selectField.placeholderWithPredefinedIssuers';
+    return 'idealIssuer.selectField.placeholder';
+};
+
 function IssuerList({ items, placeholder, issuer, predefinedIssuers, ...props }) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
@@ -44,13 +50,11 @@ function IssuerList({ items, placeholder, issuer, predefinedIssuers, ...props })
         triggerValidation();
     };
 
-    console.log(status, items, predefinedIssuers, props);
-
     return (
         <div className="adyen-checkout__issuer-list">
-            {predefinedIssuers && (
+            {!!predefinedIssuers.length && (
                 <Fragment>
-                    <IssuerButtonGroup options={predefinedIssuers} />
+                    <IssuerButtonGroup selectedIssuerId={data['issuer']} options={predefinedIssuers} onChange={handleChangeFor('issuer')} />
                     <ContentSeparator />
                 </Fragment>
             )}
@@ -59,21 +63,25 @@ function IssuerList({ items, placeholder, issuer, predefinedIssuers, ...props })
                 {renderFormField('select', {
                     items,
                     selected: data['issuer'],
-                    placeholder: i18n.get(placeholder),
+                    placeholder: i18n.get(selectorPlaceholder(placeholder, !!predefinedIssuers.length)),
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',
                     onChange: handleChangeFor('issuer')
                 })}
             </Field>
 
-            {props.showPayButton && props.payButton({ status, label: payButtonLabel({ issuer: data['issuer'], items }, i18n) })}
+            {props.showPayButton &&
+                props.payButton({
+                    status,
+                    label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...predefinedIssuers] }, i18n)
+                })}
         </div>
     );
 }
 
 IssuerList.defaultProps = {
     onChange: () => {},
-    placeholder: 'idealIssuer.selectField.placeholder'
+    predefinedIssuers: []
 };
 
 export default IssuerList;

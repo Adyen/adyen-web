@@ -4,7 +4,7 @@ import './ContentSeparator.scss';
 
 function ContentSeparator() {
     const { i18n } = useCoreContext();
-    return <div class="adyen-checkout__field--issuer-list-separator">{i18n.get('qrCodeOrApp')}</div>;
+    return <div className="adyen-checkout__field--issuer-list-separator">{i18n.get('qrCodeOrApp')}</div>;
 }
 
 export default ContentSeparator;

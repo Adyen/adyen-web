@@ -2,7 +2,8 @@
 
 .adyen-checkout__issuer-button {
   background-color: $color-white;
-  border: 1px solid $color-gray-dark;
+  box-shadow: inset 0 0 0 1px $color-border-dark;
+  border: none;
   border-radius: $border-radius-medium;
   padding: $spacing-none $spacing-medium-small;
   cursor: pointer;
@@ -14,10 +15,22 @@
   align-items: center;
   justify-content: space-between;
 
-  &:focus, &:focus-visible, &:hover, &:active {
-    border: 2px solid #99A3AD;
-    padding: 0 11px;
-    outline: 0;
+  transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
+
+  &:not(&--selected):focus,
+  &:not(&--selected):focus-visible,
+  &:not(&--selected):hover {
+    outline: none;
+    box-shadow: inset 0 0 0 2px #99A3AD;
+  }
+
+  &--selected {
+    background: $color-blue-lighter;
+    box-shadow: inset 0 0 0 2px $color-blue;
+    color: $color-blue;
+    font-weight: 500;
+    height: 40px;
+    transition: none;
   }
 
 }
