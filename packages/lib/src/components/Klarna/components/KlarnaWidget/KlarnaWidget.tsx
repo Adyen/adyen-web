@@ -2,7 +2,7 @@ import Script from '../../../../utils/Script';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { h } from 'preact';
 import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
-import { KLARNA_VARIANTS, KLARNA_WIDGET_URL } from '../../constants';
+import { KLARNA_WIDGET_URL } from '../../constants';
 import './KlarnaWidget.scss';
 
 export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }: KlarnaWidgetProps) {
@@ -27,7 +27,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         window.Klarna.Payments.load(
             {
                 container: klarnaWidgetRef.current,
-                payment_method_category: KLARNA_VARIANTS[paymentMethodType]
+                payment_method_category: sdkData.payment_method_category
             },
             function(res) {
                 // If show_form: true is received together with an error, something fixable is wrong and the consumer
@@ -46,7 +46,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         try {
             window.Klarna.Payments.authorize(
                 {
-                    payment_method_category: KLARNA_VARIANTS[paymentMethodType]
+                    payment_method_category: sdkData.payment_method_category
                 },
                 function(res: KlarnaWidgetAuthorizeResponse) {
                     if (res.approved === true && res.show_form === true) {
