@@ -5,6 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { PaymentAmount } from '../../types';
 
 export class GiftcardElement extends UIElement {
     public static type = 'giftcard';
@@ -86,7 +87,7 @@ export class GiftcardElement extends UIElement {
         this.setStatus('loading');
 
         this.handleBalanceCheck(this.formatData())
-            .then(({ balance, transactionLimit = {} }) => {
+            .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');

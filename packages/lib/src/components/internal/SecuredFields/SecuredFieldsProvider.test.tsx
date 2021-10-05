@@ -161,8 +161,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         wrapper.instance().csf = mockCSF;
 
         expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(true);
-        expect(onError).toHaveBeenCalledTimes(4);
-        expect(errorObj.error).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
     });
 
     it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
@@ -173,7 +171,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
         unsupportedCardErrObj.error = '';
         expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(false);
-        expect(errorObj.error).toEqual('');
     });
 
     it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
@@ -219,45 +216,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         expect(wrapper.instance().handleOnAllValid({ allValid: true })).toBe(true);
 
         expect(wrapper.instance().state.isSfpValid).toBe(true);
-    });
-});
-
-/**
- * Error handling
- */
-describe('<SecuredFieldsProvider /> handling error codes', () => {
-    it("should handle an error and set the appropriate 'errorText' and translated, 'errorI18n' props onto the error object", () => {
-        nodeHolder.innerHTML = mockNode;
-        wrapper = shallow(
-            <SecuredFieldsProvider
-                ref={handleSecuredFieldsRef}
-                rootNode={nodeHolder}
-                styles={styles}
-                render={renderFn}
-                onError={onError}
-                i18n={i18n}
-                configuration={{}}
-            />
-        );
-
-        wrapper.instance().handleOnError(regularErrObj);
-
-        const errorCode = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
-
-        expect(errorObj.error).toEqual(errorCode);
-        expect(errorObj.errorText).toEqual(getError(errorCode));
-        expect(errorObj.errorI18n).toEqual(i18n.get(errorCode));
-    });
-
-    it('should clear the previous error', () => {
-        regularErrObj.error = '';
-
-        wrapper.instance().handleOnError(regularErrObj);
-
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(false);
-
-        expect(errorObj.errorText).toEqual(ERROR_MSG_CLEARED);
-        expect(errorObj.errorI18n).toEqual('');
     });
 });
 

@@ -4,13 +4,13 @@ describe('CheckoutSession utils', () => {
     test('sanitizeSession', () => {
         const sessionMock = {
             id: 'CS123456',
-            data: 'ABC1234',
+            sessionData: 'ABC1234',
             otherField: '123'
         };
 
         const expectedSanitizedSession = {
             id: 'CS123456',
-            data: 'ABC1234'
+            sessionData: 'ABC1234'
         };
 
         expect(sanitizeSession(sessionMock)).toMatchObject(expectedSanitizedSession);

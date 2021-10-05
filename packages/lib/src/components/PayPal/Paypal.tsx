@@ -120,7 +120,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     onChange={this.setState}
                     onComplete={this.handleComplete}
                     onError={e => {
-                        this.handleError(new AdyenCheckoutError('ERROR', e));
+                        this.handleError(new AdyenCheckoutError('ERROR', e.toString()));
                     }}
                     onSubmit={this.handleSubmit}
                 />
