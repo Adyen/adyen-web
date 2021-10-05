@@ -12,7 +12,8 @@ import Language from '../../../../../../../language/Language';
  * since this is a more complex object involving special, specific codes
  */
 export function processAriaConfig(configObj: SFInternalConfig, fieldType: string, i18n: Language): AriaConfig {
-    const type = configObj.txVariant === 'card' ? 'creditCard' : configObj.txVariant;
+    // txVariant can be the scheme name (VISA, Mastercard...) so we put all of them under creditCard
+    const type = ['ach','giftcard'].includes(configObj.txVariant) ? configObj.txVariant : 'creditCard';
 
     // Get translation for iframeTitle
     const iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);

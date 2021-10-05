@@ -15,6 +15,13 @@ export type KlarnaSdkData = {
      * @see https://developers.klarna.com/documentation/klarna-payments/single-call-descriptions/create-session/
      * */
     client_token: string;
+
+    /**
+     * `payment_method_category` specifies which of Klarna’s customer offerings (e.g. Pay now, Pay later or Slice it)
+     * that is being shown in the widget
+     * @see https://developers.klarna.com/documentation/klarna-payments/single-call-descriptions/create-session/
+     * */
+    payment_method_category: string;
 };
 
 interface KlarnaPaymentsShared {
