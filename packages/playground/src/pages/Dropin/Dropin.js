@@ -65,6 +65,14 @@ const initCheckout = async () => {
             console.log('checkout level merchant defined onError handler obj=', obj);
         },
         paymentMethodsConfiguration: {
+            ideal: {
+                showImage: true,
+                predefinedIssuers: [
+                    { name: 'ABN Amro', id: '1121' },
+                    { name: 'ING', id: '1154' },
+                    { name: 'Rabobank', id: '1152' }
+                ]
+            },
             card: {
                 enableStoreDetails: false,
                 hasHolderName: true,

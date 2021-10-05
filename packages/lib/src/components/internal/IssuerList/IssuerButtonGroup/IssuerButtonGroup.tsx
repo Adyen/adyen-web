@@ -3,17 +3,12 @@ import { useCallback } from 'preact/hooks';
 import IssuerButton from './IssuerButton';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import './IssuerButtonGroup.scss';
+import { IssuerItem } from '../types';
 
 interface IssuerButtonGroupProps {
     options: IssuerItem[];
     selectedIssuerId: string;
-    onChange: (event: any) => void;
-}
-
-interface IssuerItem {
-    id: string;
-    name: string;
-    icon?: string;
+    onChange: (event: UIEvent) => void;
 }
 
 const IssuerButtonGroup = ({ options = [], selectedIssuerId, onChange }: IssuerButtonGroupProps) => {

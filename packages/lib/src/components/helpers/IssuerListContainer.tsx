@@ -5,20 +5,15 @@ import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
+import { IssuerItem } from '../internal/IssuerList/types';
 
-interface IssuerListProps extends UIElementProps {
+interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
     predefinedIssuers?: IssuerItem[];
     i18n: Language;
     loadingContext: string;
-}
-
-interface IssuerItem {
-    id: string;
-    name: string;
-    icon?: string;
 }
 
 interface IssuerListData {
@@ -29,15 +24,14 @@ interface IssuerListData {
 }
 
 const removePredefinedIssuersFromIssuersList = predefinedIssuers => issuer => {
-    if (predefinedIssuers.find(({ id }) => id === issuer.id)) return false;
-    return true;
+    return !predefinedIssuers.find(({ id }) => id === issuer.id);
 };
 
-class IssuerListContainer extends UIElement<IssuerListProps> {
-    constructor(props: IssuerListProps) {
+class IssuerListContainer extends UIElement<IssuerListContainerProps> {
+    constructor(props: IssuerListContainerProps) {
         super(props);
 
-        if (!!this.props.predefinedIssuers?.length) {
+        if (this.props.predefinedIssuers?.length) {
             this.props.issuers = this.props.issuers.filter(removePredefinedIssuersFromIssuersList(this.props.predefinedIssuers));
         }
 
@@ -60,6 +54,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
         showImage: true,
         onValid: () => {},
         issuers: [],
+        predefinedIssuers: [],
         loadingContext: FALLBACK_CONTEXT
     };
 

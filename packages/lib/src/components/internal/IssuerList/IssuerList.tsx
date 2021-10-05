@@ -4,12 +4,13 @@ import useForm from '../../../utils/useForm';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
+import ContentSeparator from './ContentSeparator';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './IssuerList.scss';
 import { ValidatorRules } from '../../../utils/Validator/Validator';
-import ContentSeparator from './ContentSeparator';
+import { IssuerListProps } from './types';
 
-const payButtonLabel = ({ issuer, items }, i18n) => {
+const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
     if (!issuer || !issuerName) return i18n.get('continue');
     return `${i18n.get('continueTo')} ${issuerName}`;
@@ -29,7 +30,7 @@ const selectorPlaceholder = (placeholder: string, hasPredefinedIssuers: boolean)
     return 'idealIssuer.selectField.placeholder';
 };
 
-function IssuerList({ items, placeholder, issuer, predefinedIssuers, ...props }) {
+function IssuerList({ items, placeholder, issuer, predefinedIssuers = [], ...props }: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -80,8 +81,7 @@ function IssuerList({ items, placeholder, issuer, predefinedIssuers, ...props })
 }
 
 IssuerList.defaultProps = {
-    onChange: () => {},
-    predefinedIssuers: []
+    onChange: () => {}
 };
 
 export default IssuerList;

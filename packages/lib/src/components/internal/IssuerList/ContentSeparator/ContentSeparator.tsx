@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 import './ContentSeparator.scss';
 
 function ContentSeparator() {
