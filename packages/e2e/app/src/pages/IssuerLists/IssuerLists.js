@@ -21,7 +21,16 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError
+        onError: handleError,
+        paymentMethodsConfiguration: {
+            ideal: {
+                predefinedIssuers: [
+                    { id: '1121', name: 'Test Issuer' },
+                    { id: '1154', name: 'Test Issuer 5' },
+                    { id: '1153', name: 'Test Issuer 4' }
+                ]
+            }
+        }
         // ...window.mainConfiguration
     });
 

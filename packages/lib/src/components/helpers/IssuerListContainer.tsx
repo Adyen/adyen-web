@@ -45,7 +45,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
 
             this.props.predefinedIssuers = (this.props.predefinedIssuers || []).map(item => ({
                 ...item,
-                icon: getIssuerIcon(item.id)
+                icon: item.icon || getIssuerIcon(item.id)
             }));
         }
     }

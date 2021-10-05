@@ -29,9 +29,9 @@ getPaymentMethods().then(paymentMethodsData => {
             ideal: {
                 showImage: true,
                 predefinedIssuers: [
-                    { name: 'ABN Amro', id: '1121' },
-                    { name: 'ING', id: '1154' },
-                    { name: 'Rabobank', id: '1152' }
+                    { name: 'Test Issuer', id: '1121' },
+                    { name: 'Test Issuer 5', id: '1154' },
+                    { name: 'Test Issuer 3', id: '1152' }
                 ]
             }
         }

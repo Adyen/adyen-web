@@ -19,6 +19,20 @@ test('should make an iDeal payment', async t => {
     await t.expect(getComponentData()).eql({
         paymentMethod: {
             type: 'ideal',
+            issuer: '1152'
+        },
+        clientStateDataIndicator: true
+    });
+});
+
+test('should make an iDeal payment using a predefined issuer', async t => {
+    const buttons = Selector('.adyen-checkout__issuer-button-group button');
+
+    await t.click(buttons.nth(0));
+
+    await t.expect(getComponentData()).eql({
+        paymentMethod: {
+            type: 'ideal',
             issuer: '1121'
         },
         clientStateDataIndicator: true
