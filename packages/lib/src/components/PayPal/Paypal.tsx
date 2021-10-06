@@ -28,6 +28,18 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.submit = this.submit.bind(this);
     }
 
+    protected formatProps(props) {
+        const isZeroAuth = props.amount.value === 0;
+        return {
+            ...props,
+            vault: isZeroAuth || props.vault,
+            configuration: {
+                ...props.configuration,
+                intent: isZeroAuth ? 'tokenize' : props.configuration.intent
+            }
+        };
+    }
+
     /**
      * Formats the component data output
      */

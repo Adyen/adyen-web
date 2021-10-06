@@ -32,10 +32,6 @@ export default function PaypalComponent(props: PayPalComponentProps) {
         } else {
             script.load().then(handlePaypalLoad);
         }
-
-        return () => {
-            script.remove();
-        };
     }, []);
 
     if (status === 'pending') {
