@@ -30,18 +30,18 @@ export default iframeSelector => {
  */
 const fillMonth = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 1, '#encryptedExpiryMonth', value, action);
+        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryMonth"', value, action);
     };
 };
 
 const fillYear = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 2, '#encryptedExpiryYear', value, action);
+        return fillIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedExpiryYear"', value, action);
     };
 };
 
 const fillCVC = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 3, '#encryptedSecurityCode', value, action);
+        return fillIFrame(t, iframeSelector, 3, '[data-fieldtype="encryptedSecurityCode"', value, action);
     };
 };

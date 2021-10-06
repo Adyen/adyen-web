@@ -179,7 +179,7 @@ test(
 
 test(
     'Fill in dual branded card then ' +
-        'paste in number not recognised by binLookup (but that internally is recognised as Visa)' +
+        'paste in number not recognised by binLookup (but that internally is recognised as Visa) ' +
         'ensure that Visa logo shows',
     async t => {
         // Start, allow time to load

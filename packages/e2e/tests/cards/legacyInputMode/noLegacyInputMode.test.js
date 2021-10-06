@@ -15,27 +15,27 @@ test('Do not set legacyInputMode and expect all securedFields to have inputs wit
     // Expect CardNumber field to have input type="text" & inputmode="numeric"
     await t
         .switchToIframe(iframeSelector.nth(0))
-        .expect(Selector('#encryptedCardNumber').getAttribute('type'))
+        .expect(Selector('[data-fieldtype="encryptedCardNumber"').getAttribute('type'))
         .eql('text')
-        .expect(Selector('#encryptedCardNumber').getAttribute('inputmode'))
+        .expect(Selector('[data-fieldtype="encryptedCardNumber"').getAttribute('inputmode'))
         .eql('numeric')
         .switchToMainWindow();
 
     // Expect ExpiryDate field to have input type type="text" & inputmode="numeric"
     await t
         .switchToIframe(iframeSelector.nth(1))
-        .expect(Selector('#encryptedExpiryDate').getAttribute('type'))
+        .expect(Selector('[data-fieldtype="encryptedExpiryDate"').getAttribute('type'))
         .eql('text')
-        .expect(Selector('#encryptedExpiryDate').getAttribute('inputmode'))
+        .expect(Selector('[data-fieldtype="encryptedExpiryDate"').getAttribute('inputmode'))
         .eql('numeric')
         .switchToMainWindow();
 
     // Expect CVC field to have input type type="text" & inputmode="numeric"
     await t
         .switchToIframe(iframeSelector.nth(2))
-        .expect(Selector('#encryptedSecurityCode').getAttribute('type'))
+        .expect(Selector('[data-fieldtype="encryptedSecurityCode"').getAttribute('type'))
         .eql('text')
-        .expect(Selector('#encryptedSecurityCode').getAttribute('inputmode'))
+        .expect(Selector('[data-fieldtype="encryptedSecurityCode"').getAttribute('inputmode'))
         .eql('numeric')
         .switchToMainWindow();
 });
