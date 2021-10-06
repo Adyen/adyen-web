@@ -11,6 +11,8 @@
   flex-grow: 2;
   height: 40px;
 
+  font-size: $font-size-small;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -25,7 +27,7 @@
   }
 
   &--selected {
-    background: $color-blue-lighter;
+    background: $color-white;
     box-shadow: inset 0 0 0 2px $color-blue;
     color: $color-blue;
     font-weight: 500;

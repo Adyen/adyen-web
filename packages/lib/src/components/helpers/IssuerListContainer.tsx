@@ -23,15 +23,17 @@ interface IssuerListData {
     };
 }
 
-const removePredefinedIssuersFromIssuersList = predefinedIssuers => issuer => {
-    return !predefinedIssuers.find(({ id }) => id === issuer.id);
-};
+const removePredefinedIssuersFromIssuersList = (predefinedIssuers: IssuerItem[]) => (issuer: IssuerItem) =>
+    !predefinedIssuers.find(({ id }) => id === issuer.id);
+
+const isPredefinedIssuerValid = (issuers: IssuerItem[]) => (predefinedIssuer: IssuerItem) => issuers.find(({ id }) => id === predefinedIssuer.id);
 
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     constructor(props: IssuerListContainerProps) {
         super(props);
 
         if (this.props.predefinedIssuers?.length) {
+            this.props.predefinedIssuers = this.props.predefinedIssuers.filter(isPredefinedIssuerValid(this.props.issuers));
             this.props.issuers = this.props.issuers.filter(removePredefinedIssuersFromIssuersList(this.props.predefinedIssuers));
         }
 
@@ -90,6 +92,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                         this.componentRef = ref;
                     }}
                     items={this.props.issuers}
+                    predefinedIssuers={this.props.predefinedIssuers}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}
