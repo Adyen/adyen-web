@@ -29,6 +29,7 @@ export const fillIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelect
 };
 
 export const deleteFromIFrame = async (t, iframeSelector, iFrameNum, iFrameInputSelector) => {
+    console.log('### commonUtils::deleteFromIFrame:: iFrameInputSelector=', iFrameInputSelector);
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))

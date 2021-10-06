@@ -15,21 +15,21 @@ test('Set legacyInputMode and expect all securedFields to have inputs with type=
     // Expect CardNumber field to have input type 'tel'
     await t
         .switchToIframe(iframeSelector.nth(0))
-        .expect(Selector('[data-fieldtype="encryptedCardNumber"').getAttribute('type'))
+        .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('type'))
         .eql('tel')
         .switchToMainWindow();
 
     // Expect ExpiryDate field to have input type 'tel'
     await t
         .switchToIframe(iframeSelector.nth(1))
-        .expect(Selector('[data-fieldtype="encryptedExpiryDate"').getAttribute('type'))
+        .expect(Selector('[data-fieldtype="encryptedExpiryDate"]').getAttribute('type'))
         .eql('tel')
         .switchToMainWindow();
 
     // Expect CVC field to have input type 'tel'
     await t
         .switchToIframe(iframeSelector.nth(2))
-        .expect(Selector('[data-fieldtype="encryptedSecurityCode"').getAttribute('type'))
+        .expect(Selector('[data-fieldtype="encryptedSecurityCode"]').getAttribute('type'))
         .eql('tel')
         .switchToMainWindow();
 });

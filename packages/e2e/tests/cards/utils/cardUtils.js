@@ -40,31 +40,31 @@ const fillCardNumber = iframeSelector => {
 
 const deleteCardNumber = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"');
+        return deleteFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]');
     };
 };
 
 const deleteDigitsFromCardNumber = iframeSelector => {
     return async (t, startCaretPos, endCaretPos) => {
-        return deleteDigitsFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"', startCaretPos, endCaretPos);
+        return deleteDigitsFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', startCaretPos, endCaretPos);
     };
 };
 
 const deleteCVC = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"');
+        return deleteFromIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"]');
     };
 };
 
 const fillDate = iframeSelector => {
     return async (t, value = TEST_DATE_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryDate"', value, action);
+        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryDate"]', value, action);
     };
 };
 
 const fillCVC = iframeSelector => {
     return async (t, value = TEST_CVC_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"', value, action);
+        return fillIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"]', value, action);
     };
 };
 

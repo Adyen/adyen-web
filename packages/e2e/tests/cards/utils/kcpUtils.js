@@ -31,7 +31,7 @@ export default iframeSelector => {
  */
 const fillPwd = iframeSelector => {
     return async (t, value = TEST_PWD_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 3, '[data-fieldtype="encryptedPassword"', value, action);
+        return fillIFrame(t, iframeSelector, 3, '[data-fieldtype="encryptedPassword"]', value, action);
     };
 };
 
