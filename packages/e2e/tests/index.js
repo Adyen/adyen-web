@@ -16,9 +16,7 @@ const remote = process.argv.indexOf('--remote') > -1 || process.argv.indexOf('-r
             browser = remoteConnection;
         }
         const failedCount = await runner
-            // .src(`${PATH}**/*.test.js`)
-            .src(`${PATH}issuerLists/**/*.test.js`)
-
+            .src(`${PATH}**/*.test.js`)
             .browsers(browser)
             .run();
 
