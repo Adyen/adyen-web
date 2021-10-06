@@ -1,5 +1,6 @@
 import { PaymentMethod, StoredPaymentMethod, Order, OrderStatus } from '../../types';
-import UIElement, { UIElementProps } from '../UIElement';
+import UIElement from '../UIElement';
+import { UIElementProps } from '../types';
 import { PaymentMethodsConfiguration } from '../../core/types';
 
 export interface DropinElementProps extends UIElementProps {

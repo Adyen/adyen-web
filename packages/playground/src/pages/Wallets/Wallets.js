@@ -7,15 +7,13 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 
-getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
-    window.checkout = new AdyenCheckout({
+getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
+    window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        // environment: 'http://localhost:8080/checkoutshopper/',
-        // environment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
-        environment: 'test',
+        environment: process.env.__CLIENT_ENV__,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: console.error,
@@ -176,8 +174,6 @@ getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
         // onError: console.error,
 
         // Payment info
-        currencyCode: 'EUR', // Required. The three-letter ISO 4217 currency code for the payment.
-        amount: 10, // 0.1 EUR (minor units)
         countryCode: 'DE', // Required. The merchant’s two-letter ISO 3166 country code.
 
         // Merchant config (required)

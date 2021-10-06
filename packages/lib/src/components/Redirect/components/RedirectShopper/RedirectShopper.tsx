@@ -1,20 +1,18 @@
 import { Component, h } from 'preact';
 
 interface RedirectShopperProps {
-    beforeRedirect: (resolve, reject, url) => Promise<any>;
+    beforeRedirect: (resolve, reject, url) => Promise<void>;
     url: string;
     method: 'GET' | 'POST';
     data?: any;
 }
 
 class RedirectShopper extends Component<RedirectShopperProps> {
+    private postForm;
     public static defaultProps = {
         beforeRedirect: resolve => resolve(),
-        method: 'GET',
-        data: {}
+        method: 'GET'
     };
-
-    private postForm;
 
     componentDidMount() {
         const doRedirect = () => {
@@ -25,7 +23,14 @@ class RedirectShopper extends Component<RedirectShopperProps> {
             }
         };
 
-        const dispatchEvent = new Promise((resolve, reject) => this.props.beforeRedirect(resolve, reject, this.props.url));
+        const dispatchEvent = new Promise((resolve, reject) =>
+            this.props.beforeRedirect(resolve, reject, {
+                url: this.props.url,
+                method: this.props.method,
+                ...(this.props.data ? { data: this.props.data } : {})
+            })
+        );
+
         dispatchEvent.then(doRedirect).catch(() => {});
     }
 

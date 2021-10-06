@@ -8,12 +8,12 @@ import '../../style.scss';
 
 window.paymentData = {};
 
-getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsData => {
-    window.checkout = new AdyenCheckout({
+getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
+    window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         paymentMethodsResponse: paymentMethodsData,
-        environment: 'test',
+        environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
         onError: console.error,

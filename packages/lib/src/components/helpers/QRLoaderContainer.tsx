@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import UIElement, { UIElementProps } from '../UIElement';
+import UIElement from '../UIElement';
+import { UIElementProps } from '../types';
 import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
@@ -25,7 +26,7 @@ export interface QRLoaderContainerProps extends UIElementProps {
 }
 
 class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProps> extends UIElement<T> {
-// Using the generic here allow to fully extend the QRLoaderContainer (including it's props)
+    // Using the generic here allow to fully extend the QRLoaderContainer (including it's props)
     protected static defaultProps = {
         qrCodeImage: '',
         amount: null,
@@ -49,28 +50,28 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
 
     // Makes possible to extend the final QR code step
     public renderQRCode() {
-        return (<CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-            <QRLoader
-                ref={ref => {
-                    this.componentRef = ref;
-                }}
-                {...this.props}
-                shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
-                type={this.constructor['type']}
-                brandLogo={this.props.brandLogo || this.icon}
-                delay={this.props.delay}
-                onComplete={this.onComplete}
-                countdownTime={this.props.countdownTime}
-                instructions={this.props.instructions}
-            />
-        </CoreProvider>)
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <QRLoader
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    {...this.props}
+                    shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
+                    type={this.constructor['type']}
+                    brandLogo={this.props.brandLogo || this.icon}
+                    delay={this.props.delay}
+                    onComplete={this.onComplete}
+                    countdownTime={this.props.countdownTime}
+                    instructions={this.props.instructions}
+                />
+            </CoreProvider>
+        );
     }
 
     render() {
         if (this.props.paymentData) {
-            return (
-                this.renderQRCode()
-            );
+            return this.renderQRCode();
         }
 
         if (this.props.showPayButton) {

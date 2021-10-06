@@ -1,5 +1,6 @@
 import { PaymentAmount, PaymentMethod } from '../../types';
-import UIElement, { UIElementProps } from '../UIElement';
+import UIElement from '../UIElement';
+import { UIElementProps } from '../types';
 import { SUPPORTED_LOCALES } from './config';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

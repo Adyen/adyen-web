@@ -46,7 +46,7 @@ class BlikElement extends UIElement {
                         }}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
-                        onError={this.props.onError}
+                        onError={this.handleError}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                         type={config.type}

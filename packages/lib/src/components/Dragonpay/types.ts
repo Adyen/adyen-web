@@ -1,6 +1,6 @@
 import { PaymentAmount } from '../../types';
 import Language from '../../language/Language';
-import { UIElementProps } from '../UIElement';
+import { UIElementProps } from '../types';
 
 export interface DragonpayInputIssuerItem {
     id?: string;

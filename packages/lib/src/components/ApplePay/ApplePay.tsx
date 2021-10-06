@@ -9,6 +9,7 @@ import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 const latestSupportedVersion = 11;
 
@@ -36,7 +37,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             supportedNetworks,
             version,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
-            onCancel: event => props.onError(event)
+            onCancel: event => this.handleError(new AdyenCheckoutError('CANCEL', event))
         };
     }
 
@@ -53,19 +54,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     }
 
     submit() {
-        this.startSession((resolve, reject, event) => {
-            if (this.props.onSubmit) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
-            this.props.onAuthorized(resolve, reject, event);
-        });
-    }
-
-    startPayment() {
-        return new Promise(continuePayment => {
-            this.startSession((resolve, reject, event) => {
-                this.props.onAuthorized(resolve, reject, event);
-                return continuePayment(true);
-            });
-        });
+        return this.startSession(this.props.onAuthorized);
     }
 
     private startSession(onPaymentAuthorized) {
@@ -89,6 +78,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
 
+                    this.onSubmit();
                     onPaymentAuthorized(resolve, reject, event);
                 }
             });
@@ -132,18 +122,18 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     isAvailable(): Promise<boolean> {
         if (document.location.protocol !== 'https:') {
-            return Promise.reject(new Error('Trying to start an Apple Pay session from an insecure document'));
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
 
         if (!this.props.onValidateMerchant && !this.props.clientKey) {
-            return Promise.reject(new Error('clientKey was not provided'));
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
         }
 
         if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
             return Promise.resolve(true);
         }
 
-        return Promise.reject(new Error('Apple Pay is not available on this device'));
+        return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
     }
 
     /**
