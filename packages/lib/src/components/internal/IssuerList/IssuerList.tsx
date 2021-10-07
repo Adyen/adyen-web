@@ -24,13 +24,13 @@ const validationRules: ValidatorRules = {
     }
 };
 
-const selectorPlaceholder = (placeholder: string, hasPredefinedIssuers: boolean): string => {
+const selectorPlaceholder = (placeholder: string, hasHighlightedIssuers: boolean): string => {
     if (placeholder) return placeholder;
-    if (hasPredefinedIssuers) return 'idealIssuer.selectField.placeholderWithPredefinedIssuers';
+    if (hasHighlightedIssuers) return 'idealIssuer.selectField.placeholderWithPredefinedIssuers';
     return 'idealIssuer.selectField.placeholder';
 };
 
-function IssuerList({ items, placeholder, issuer, predefinedIssuers = [], ...props }: IssuerListProps) {
+function IssuerList({ items, placeholder, issuer, highlightedIds = [], ...props }: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -51,20 +51,29 @@ function IssuerList({ items, placeholder, issuer, predefinedIssuers = [], ...pro
         triggerValidation();
     };
 
+    const { highlightedItems, dropdownItems } = items.reduce(
+        (memo, item) => {
+            if (highlightedIds.includes(item.id)) memo.highlightedItems.push(item);
+            else memo.dropdownItems.push(item);
+            return memo;
+        },
+        { highlightedItems: [], dropdownItems: [] }
+    );
+
     return (
         <div className="adyen-checkout__issuer-list">
-            {!!predefinedIssuers.length && (
+            {!!highlightedItems.length && (
                 <Fragment>
-                    <IssuerButtonGroup selectedIssuerId={data['issuer']} options={predefinedIssuers} onChange={handleChangeFor('issuer')} />
+                    <IssuerButtonGroup selectedIssuerId={data['issuer']} items={highlightedItems} onChange={handleChangeFor('issuer')} />
                     <ContentSeparator />
                 </Fragment>
             )}
 
             <Field errorMessage={!!errors['issuer']} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
-                    items,
+                    items: dropdownItems,
                     selected: data['issuer'],
-                    placeholder: i18n.get(selectorPlaceholder(placeholder, !!predefinedIssuers.length)),
+                    placeholder: i18n.get(selectorPlaceholder(placeholder, !!highlightedItems.length)),
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',
                     onChange: handleChangeFor('issuer')
@@ -74,7 +83,7 @@ function IssuerList({ items, placeholder, issuer, predefinedIssuers = [], ...pro
             {props.showPayButton &&
                 props.payButton({
                     status,
-                    label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...predefinedIssuers] }, i18n)
+                    label: payButtonLabel({ issuer: data['issuer'], items: [...dropdownItems, ...highlightedItems] }, i18n)
                 })}
         </div>
     );

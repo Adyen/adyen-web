@@ -6,12 +6,12 @@ import './IssuerButtonGroup.scss';
 import { IssuerItem } from '../types';
 
 interface IssuerButtonGroupProps {
-    options: IssuerItem[];
+    items: IssuerItem[];
     selectedIssuerId: string;
     onChange: (event: UIEvent) => void;
 }
 
-const IssuerButtonGroup = ({ options = [], selectedIssuerId, onChange }: IssuerButtonGroupProps) => {
+const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerButtonGroupProps) => {
     const { i18n } = useCoreContext();
 
     const handleClick = useCallback(
@@ -25,7 +25,7 @@ const IssuerButtonGroup = ({ options = [], selectedIssuerId, onChange }: IssuerB
 
     return (
         <div className="adyen-checkout__issuer-button-group" role="group" aria-label={i18n.get('idealIssuer.selectField.placeholder')}>
-            {options.map(issuer => (
+            {items.map(issuer => (
                 <IssuerButton key={issuer.id} {...issuer} selected={selectedIssuerId === issuer.id} onClick={handleClick} />
             ))}
         </div>

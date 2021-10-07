@@ -27,12 +27,7 @@ getPaymentMethods().then(paymentMethodsData => {
         onError: console.error,
         paymentMethodsConfiguration: {
             ideal: {
-                showImage: true,
-                predefinedIssuers: [
-                    { name: 'Test Issuer', id: '1121' },
-                    { name: 'Test Issuer 5', id: '1154' },
-                    { name: 'Test Issuer 3', id: '1152' }
-                ]
+                highlightedIssuers: ['1121', '1154', '1152']
             }
         }
     });

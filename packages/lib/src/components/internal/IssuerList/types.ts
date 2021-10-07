@@ -6,9 +6,9 @@ export interface IssuerListProps {
     showPayButton: boolean;
     payButton(props: Partial<PayButtonProps>): ComponentChildren;
     onChange(payload: any): void;
+    highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;
-    predefinedIssuers?: IssuerItem[];
 }
 
 export interface IssuerItem {

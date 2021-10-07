@@ -24,11 +24,7 @@ const initCheckout = async () => {
         onError: handleError,
         paymentMethodsConfiguration: {
             ideal: {
-                predefinedIssuers: [
-                    { id: '1121', name: 'Test Issuer' },
-                    { id: '1154', name: 'Test Issuer 5' },
-                    { id: '1153', name: 'Test Issuer 4' }
-                ]
+                highlightedIssuers: ['1121', '1154', '1153']
             }
         }
         // ...window.mainConfiguration

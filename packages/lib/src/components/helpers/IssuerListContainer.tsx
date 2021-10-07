@@ -11,7 +11,7 @@ interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
-    predefinedIssuers?: IssuerItem[];
+    highlightedIssuers: string[];
     i18n: Language;
     loadingContext: string;
 }
@@ -23,19 +23,9 @@ interface IssuerListData {
     };
 }
 
-const removePredefinedIssuersFromIssuersList = (predefinedIssuers: IssuerItem[]) => (issuer: IssuerItem) =>
-    !predefinedIssuers.find(({ id }) => id === issuer.id);
-
-const isPredefinedIssuerValid = (issuers: IssuerItem[]) => (predefinedIssuer: IssuerItem) => issuers.find(({ id }) => id === predefinedIssuer.id);
-
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     constructor(props: IssuerListContainerProps) {
         super(props);
-
-        if (this.props.predefinedIssuers?.length) {
-            this.props.predefinedIssuers = this.props.predefinedIssuers.filter(isPredefinedIssuerValid(this.props.issuers));
-            this.props.issuers = this.props.issuers.filter(removePredefinedIssuersFromIssuersList(this.props.predefinedIssuers));
-        }
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
@@ -44,11 +34,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                 ...item,
                 icon: getIssuerIcon(item.id)
             }));
-
-            this.props.predefinedIssuers = (this.props.predefinedIssuers || []).map(item => ({
-                ...item,
-                icon: item.icon || getIssuerIcon(item.id)
-            }));
         }
     }
 
@@ -56,7 +41,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         showImage: true,
         onValid: () => {},
         issuers: [],
-        predefinedIssuers: [],
+        highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT
     };
 
@@ -92,7 +77,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                         this.componentRef = ref;
                     }}
                     items={this.props.issuers}
-                    predefinedIssuers={this.props.predefinedIssuers}
+                    highlightedIds={this.props.highlightedIssuers}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}
