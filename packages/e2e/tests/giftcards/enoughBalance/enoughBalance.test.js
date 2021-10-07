@@ -26,8 +26,8 @@ test('Should prompt a confirmation when using a gift card with enough balance', 
     await start(t, 2000, TEST_SPEED);
 
     // Fill card field with dual branded card (visa/cb)
-    await fillIFrame(t, iframeSelector, 0, '#encryptedCardNumber', GIFTCARD_NUMBER);
-    await fillIFrame(t, iframeSelector, 1, '#encryptedSecurityCode', GIFTCARD_PIN);
+    await fillIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', GIFTCARD_NUMBER);
+    await fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedSecurityCode"]', GIFTCARD_PIN);
 
     await t
         .click('.card-field .adyen-checkout__button--pay')
