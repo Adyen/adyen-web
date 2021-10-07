@@ -29,7 +29,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     protected formatProps(props) {
-        const isZeroAuth = props.amount.value === 0;
+        const isZeroAuth = props.amount?.value === 0;
         return {
             ...props,
             vault: isZeroAuth || props.vault,
