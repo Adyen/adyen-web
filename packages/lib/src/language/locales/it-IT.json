@@ -2,7 +2,7 @@
     "payButton": "Paga",
     "payButton.redirecting": "Reindirizzamento...",
     "storeDetails": "Salva per il prossimo pagamento",
-    "creditCard.holderName": "Nome sulla carta",
+    "creditCard.holderName": "Titolare carta",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Nome del titolare della carta non valido",
     "creditCard.numberField.title": "Numero carta",
@@ -203,5 +203,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "Campo conto bancario",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe per numero di routing bancario sicuro",
     "ach.encryptedBankLocationId.aria.label": "Campo numero di routing bancario",
-    "twint.saved": "memorizzato"
+    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Scegli un'altra banca"
 }

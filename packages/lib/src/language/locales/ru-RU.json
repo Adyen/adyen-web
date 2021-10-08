@@ -202,5 +202,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "Поле банковского счета",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe для защиты маршрутного номера банка",
     "ach.encryptedBankLocationId.aria.label": "Поле маршрутного номера банка",
-    "twint.saved": "сохранено"
+    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Выберите другой банк"
 }

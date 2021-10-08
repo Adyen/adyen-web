@@ -205,5 +205,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "Veld voor bankrekening",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe voor beveiligde BIC-code",
     "ach.encryptedBankLocationId.aria.label": "Veld voor BIC-code",
-    "twint.saved": "opgeslagen"
+    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Kies een andere bank"
 }

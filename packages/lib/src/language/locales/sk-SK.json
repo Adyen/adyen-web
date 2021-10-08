@@ -205,5 +205,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "Pole bankového účtu",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pre zabezpečené smerovacie číslo banky",
     "ach.encryptedBankLocationId.aria.label": "Pole smerovacieho čísla banky",
-    "twint.saved": "uložené"
+    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Vyberte inú banku"
 }

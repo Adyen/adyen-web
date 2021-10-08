@@ -205,5 +205,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "Bankszámla mezője",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe a biztonságos bankazonosító kódhoz",
     "ach.encryptedBankLocationId.aria.label": "Bankazonosító kód mezője",
-    "twint.saved": "mentve"
+    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Válasszon másik bankot"
 }

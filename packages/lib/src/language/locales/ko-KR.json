@@ -205,5 +205,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "은행 계좌 입력란",
     "ach.encryptedBankLocationId.aria.iframeTitle": "은행 라우팅 번호 보안을 위한 Iframe",
     "ach.encryptedBankLocationId.aria.label": "은행 라우팅 번호 입력란",
-    "twint.saved": "저장됨"
+    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "다른 은행을 선택하세요"
 }
