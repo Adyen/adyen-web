@@ -1,4 +1,4 @@
-import { UIElementProps } from '../UIElement';
+import { UIElementProps } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -15,6 +15,13 @@ export type KlarnaSdkData = {
      * @see https://developers.klarna.com/documentation/klarna-payments/single-call-descriptions/create-session/
      * */
     client_token: string;
+
+    /**
+     * `payment_method_category` specifies which of Klarna’s customer offerings (e.g. Pay now, Pay later or Slice it)
+     * that is being shown in the widget
+     * @see https://developers.klarna.com/documentation/klarna-payments/single-call-descriptions/create-session/
+     * */
+    payment_method_category: string;
 };
 
 interface KlarnaPaymentsShared {
@@ -31,9 +38,10 @@ export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     onError: (error) => void;
 }
 
-export interface KlarnaPaymentsProps extends UIElementProps, KlarnaPaymentsShared {
-    useKlarnaWidget: boolean;
-}
+export type KlarnaPaymentsProps = UIElementProps &
+    KlarnaPaymentsShared & {
+        useKlarnaWidget: boolean;
+    };
 
 export interface KlarnaWidgetAuthorizeResponse {
     approved: boolean;

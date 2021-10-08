@@ -63,7 +63,8 @@ export class CardElement extends UIElement<CardElementProps> {
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
             ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
             ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
-            browserInfo: this.browserInfo
+            browserInfo: this.browserInfo,
+            origin: !!window && window.location.origin
         };
     }
 
@@ -132,6 +133,16 @@ export class CardElement extends UIElement<CardElementProps> {
         }
 
         return this.props.name || CardElement.type;
+    }
+
+    get accessibleName(): string {
+        // use display name, unless it's a stored payment method, there inform user
+        return (
+            (this.props.name || CardElement.type) +
+            (this.props.storedPaymentMethodId
+                ? ' ' + this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
+                : '')
+        );
     }
 
     get browserInfo() {

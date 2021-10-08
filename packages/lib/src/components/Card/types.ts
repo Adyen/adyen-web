@@ -1,4 +1,4 @@
-import { UIElementProps } from '../UIElement';
+import { UIElementProps } from '../types';
 import { AddressData, BrowserInfo } from '../../types';
 import {
     CbObjOnBinValue,
@@ -134,6 +134,7 @@ export interface CardElementData {
     installments?: { value: number };
     storePaymentMethod?: boolean;
     browserInfo: BrowserInfo;
+    origin?: string;
 }
 
 export interface BrandObject {

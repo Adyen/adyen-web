@@ -8,6 +8,8 @@ import { getImageUrl } from '../../../utils/get-image';
 import './QRLoader.scss';
 import { QRLoaderProps, QRLoaderState } from './types';
 import copyToClipboard from '../../../utils/clipboard';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import useCoreContext from '../../../core/Context/useCoreContext';
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
@@ -22,16 +24,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             delay: props.delay,
             expired: false,
             loading: true,
-            onError: () => {},
             percentage: 100,
             timePassed: 0
         };
-
-        this.onTimeUp = this.onTimeUp.bind(this);
-        this.onTick = this.onTick.bind(this);
-        this.onComplete = this.onComplete.bind(this);
-        this.onError = this.onError.bind(this);
-        this.checkStatus = this.checkStatus.bind(this);
     }
 
     public static defaultProps = {
@@ -75,7 +70,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     public redirectToApp = (url, fallback = () => {}) => {
         setTimeout(() => {
             // Redirect to the APP failed
-            this.props.onError(`${this.props.type} App was not found`);
+            this.props.onError(new AdyenCheckoutError('ERROR', `${this.props.type} App was not found`));
             fallback();
         }, 25);
         window.location.assign(url);
@@ -92,17 +87,17 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         clearInterval(this.interval);
     }
 
-    onTick(time) {
+    private onTick = (time): void => {
         this.setState({ percentage: time.percentage });
-    }
+    };
 
-    onTimeUp() {
+    private onTimeUp = (): void => {
         this.setState({ expired: true });
         clearInterval(this.interval);
-        return this.props.onError({ type: 'error', props: { errorMessage: 'Payment Expired' } });
-    }
+        this.props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
+    };
 
-    onComplete(status) {
+    private onComplete = status => {
         clearInterval(this.interval);
         this.setState({ completed: true, loading: false });
 
@@ -114,9 +109,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         });
 
         return status;
-    }
+    };
 
-    onError(status) {
+    private onError = status => {
         clearInterval(this.interval);
         this.setState({ expired: true, loading: false });
         this.props.onComplete({
@@ -126,9 +121,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             }
         });
         return status;
-    }
+    };
 
-    checkStatus() {
+    private checkStatus = () => {
         const { paymentData, clientKey, loadingContext } = this.props;
 
         return checkPaymentStatus(paymentData, clientKey, loadingContext)
@@ -147,9 +142,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 }
                 return status;
             });
-    }
+    };
 
-    render({ amount, url, brandLogo, countdownTime, i18n, loadingContext, type }: QRLoaderProps, { expired, completed, loading }) {
+    render({ amount, url, brandLogo, countdownTime, type }: QRLoaderProps, { expired, completed, loading }) {
+        const { i18n, loadingContext } = useCoreContext();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
         const finalState = (image, message) => (

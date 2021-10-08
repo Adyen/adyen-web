@@ -6,6 +6,7 @@ import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import getImage from '../../utils/get-image';
 
 class GooglePay extends UIElement<GooglePayProps> {
@@ -44,7 +45,7 @@ class GooglePay extends UIElement<GooglePayProps> {
         };
     }
 
-    public loadPayment = () => {
+    public submit = () => {
         const { onAuthorized = () => {} } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
@@ -56,21 +57,13 @@ class GooglePay extends UIElement<GooglePayProps> {
                     googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
                 });
 
+                this.onSubmit();
                 return onAuthorized(paymentData);
             })
-            .catch(error => {
-                if (this.props.onError) this.props.onError(error);
+            .catch((error: google.payments.api.PaymentsError) => {
+                this.handleError(new AdyenCheckoutError('ERROR', error.toString()));
+                return Promise.reject(error);
             });
-    };
-
-    public submit = () => {
-        return this.loadPayment().then(() => {
-            if (this.props.onSubmit && this.isValid) this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
-        });
-    };
-
-    public startPayment = () => {
-        return this.loadPayment();
     };
 
     /**

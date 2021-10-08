@@ -1,9 +1,9 @@
 import Analytics from './Analytics';
-import collectId from '../Services/collect-id';
-import postTelemetry from '../Services/post-telemetry';
+import collectId from '../Services/analytics/collect-id';
+import postTelemetry from '../Services/analytics/post-telemetry';
 
-jest.mock('../Services/collect-id');
-jest.mock('../Services/post-telemetry');
+jest.mock('../Services/analytics/collect-id');
+jest.mock('../Services/analytics/post-telemetry');
 
 const mockedCollectId = <jest.Mock>collectId;
 const mockedPostTelemetry = <jest.Mock>postTelemetry;

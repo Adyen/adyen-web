@@ -8,37 +8,45 @@ const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 describe('Dropin', () => {
+    let dropin;
+
+    beforeEach(() => {
+        const checkout = new AdyenCheckout({});
+        dropin = checkout.create('dropin', {});
+    });
+
     describe('isValid', () => {
         test('should fail if no activePaymentMethod', () => {
-            const dropin = new Dropin({});
             mount(dropin.render());
 
             expect(dropin.isValid).toEqual(false);
         });
 
         test('should return the isValid value of the activePaymentMethod', () => {
-            const dropin = new Dropin({});
             mount(dropin.render());
-            dropin.dropinRef.state.activePaymentMethod = { isValid: true };
-            expect(dropin.isValid).toEqual(true);
+
+            setTimeout(() => {
+                dropin.dropinRef.state.activePaymentMethod = { isValid: true };
+                expect(dropin.isValid).toEqual(true);
+            }, 0);
         });
     });
 
     describe('submit', () => {
         test('should fail if no activePaymentMethod', () => {
-            const dropin = new Dropin({});
             expect(() => dropin.submit()).toThrow();
         });
     });
 
     describe('closeActivePaymentMethod', () => {
         test('should close active payment method', () => {
-            const dropin = new Dropin({});
             mount(dropin.render());
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
 
-            dropin.closeActivePaymentMethod();
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+            setTimeout(() => {
+                expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+                dropin.closeActivePaymentMethod();
+                expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+            }, 0);
         });
     });
 
@@ -61,9 +69,6 @@ describe('Dropin', () => {
                     'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
                 type: 'threeDS2'
             };
-
-            const checkout = new AdyenCheckout({});
-            const dropin = checkout.create('dropin', {});
 
             const pa = dropin.handleAction(fingerprintAction);
             expect(pa.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);

@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import BaseElement, { BaseElementProps } from '../../components/BaseElement';
+import BaseElement from '../../components/BaseElement';
+import { BaseElementProps } from '../../components/types';
 import DeviceFingerprint from './components/DeviceFingerprint';
 import base64 from '../../utils/base64';
 import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';

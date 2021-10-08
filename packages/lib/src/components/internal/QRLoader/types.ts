@@ -31,7 +31,6 @@ export interface QRLoaderState {
     delay: any;
     expired: boolean;
     loading: boolean;
-    onError: (error) => void;
     percentage: number;
     timePassed: number;
 }

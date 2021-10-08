@@ -1,5 +1,5 @@
 import { PaymentAmount } from '../../types';
-import { UIElementProps } from '../UIElement';
+import { UIElementProps } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {

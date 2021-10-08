@@ -6,6 +6,7 @@ import { PaymentAction } from '../../types';
 import { PayPalElementProps } from './types';
 import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
@@ -23,7 +24,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.updateWithAction = this.updateWithAction.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleComplete = this.handleComplete.bind(this);
-        this.handleError = this.handleError.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.submit = this.submit.bind(this);
     }
@@ -70,36 +70,31 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return true;
     }
 
-    handleCancel(data) {
-        this.props.onCancel(data, this.elementRef);
+    handleCancel() {
+        this.handleError(new AdyenCheckoutError('CANCEL'));
     }
 
     handleComplete(details) {
         const state = { data: { details, paymentData: this.paymentData } };
-        this.props.onAdditionalDetails(state, this.elementRef);
-    }
-
-    handleError(data) {
-        this.props.onError(data, this.elementRef);
+        this.handleAdditionalDetails(state);
     }
 
     handleResolve(token: string) {
-        if (!this.resolve) return this.handleError(ERRORS.WRONG_INSTANCE);
+        if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.resolve(token);
     }
 
     handleReject(errorMessage: string) {
-        if (!this.reject) return this.handleError(ERRORS.WRONG_INSTANCE);
+        if (!this.reject) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.reject(new Error(errorMessage));
     }
 
     startPayment() {
-        return Promise.reject(ERRORS.SUBMIT_NOT_SUPPORTED);
+        return Promise.reject(new AdyenCheckoutError('ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     handleSubmit() {
-        const { data, isValid } = this;
-        if (this.props.onSubmit) this.props.onSubmit({ data, isValid }, this.elementRef);
+        this.onSubmit();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
@@ -108,9 +103,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     submit() {
-        this.startPayment().catch(e => {
-            this.props.onError(e, this.elementRef);
-        });
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     render() {
@@ -126,7 +119,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     onCancel={this.handleCancel}
                     onChange={this.setState}
                     onComplete={this.handleComplete}
-                    onError={this.handleError}
+                    onError={e => {
+                        this.handleError(new AdyenCheckoutError('ERROR', e.toString()));
+                    }}
                     onSubmit={this.handleSubmit}
                 />
             </CoreProvider>

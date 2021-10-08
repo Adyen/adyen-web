@@ -7,26 +7,28 @@ import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
 
-window.checkout = new AdyenCheckout({
-    clientKey: process.env.__CLIENT_KEY__,
-    locale: shopperLocale,
-    countryCode,
-    environment: 'test',
-    onChange: handleChange,
-    onSubmit: handleSubmit,
-    showPayButton: true,
-    amount
-});
+(async () => {
+    window.checkout = await AdyenCheckout({
+        clientKey: process.env.__CLIENT_KEY__,
+        locale: shopperLocale,
+        countryCode,
+        environment: process.env.__CLIENT_ENV__,
+        onChange: handleChange,
+        onSubmit: handleSubmit,
+        showPayButton: true,
+        amount
+    });
 
-window.giftcard = checkout
-    .create('giftcard', {
-        type: 'giftcard',
-        brand: 'valuelink',
-        onBalanceCheck: async (resolve, reject, data) => {
-            resolve(await checkBalance(data));
-        },
-        onOrderRequest: async (resolve, reject) => {
-            resolve(await createOrder({ amount }));
-        }
-    })
-    .mount('#genericgiftcard-container');
+    window.giftcard = checkout
+        .create('giftcard', {
+            type: 'giftcard',
+            brand: 'valuelink',
+            onBalanceCheck: async (resolve, reject, data) => {
+                resolve(await checkBalance(data));
+            },
+            onOrderRequest: async (resolve, reject) => {
+                resolve(await createOrder({ amount }));
+            }
+        })
+        .mount('#genericgiftcard-container');
+})();

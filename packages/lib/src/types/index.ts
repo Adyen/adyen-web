@@ -171,7 +171,13 @@ export interface Order {
      * The pspReference that belongs to the order.
      */
     pspReference: string;
+
+    /**
+     * The remaining amount to complete the order.
+     */
+    remainingAmount?: PaymentAmount;
 }
+
 export interface OrderStatus {
     expiresAt: string;
     paymentMethods: {
@@ -211,3 +217,44 @@ export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<
  * Visibility options for a fieldset
  */
 export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
+
+export type CheckoutSession = {
+    id: string;
+    sessionData: string;
+};
+
+export type CheckoutSessionSetupResponse = {
+    id: string;
+    sessionData: string;
+
+    amount: PaymentAmount;
+    expiresAt: string;
+    paymentMethods: any;
+    returnUrl: string;
+};
+
+export type CheckoutSessionPaymentResponse = {
+    sessionData: string;
+    status?: string;
+    resultCode?: string;
+    action?: PaymentAction;
+};
+
+export type CheckoutSessionDetailsResponse = {
+    sessionData: string;
+    status?: string;
+    resultCode?: string;
+    action?: PaymentAction;
+};
+
+export type CheckoutSessionBalanceResponse = {
+    sessionData: string;
+    balance?: PaymentAmount;
+    transactionLimit?: PaymentAmount;
+};
+
+export type CheckoutSessionOrdersResponse = {
+    sessionData: string;
+    orderData: string;
+    pspReference: string;
+};

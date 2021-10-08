@@ -162,11 +162,11 @@ describe('Core', () => {
     });
 
     describe('update', () => {
-        test('Should update all components under main instance', () => {
+        test('Should update all components under main instance', async () => {
             const checkout = new AdyenCheckout({});
             const component = checkout.create('dropin').mount('body');
             const spy = jest.spyOn(component, 'update');
-            checkout.update();
+            await checkout.update();
 
             expect(spy).toHaveBeenCalled();
         });

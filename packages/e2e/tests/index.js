@@ -12,7 +12,7 @@ const remote = process.argv.indexOf('--remote') > -1 || process.argv.indexOf('-r
 
         if (remote) {
             const remoteConnection = await testcafe.createBrowserConnection();
-            console.log(remoteConnection.url); // Outputs remoteConnection.url so that it can be visited from the remote browser.
+            console.log('\x1b[36m%s\x1b[0m', `${remoteConnection.url}`); // Outputs remoteConnection.url so that it can be visited from the remote browser.
             browser = remoteConnection;
         }
         const failedCount = await runner

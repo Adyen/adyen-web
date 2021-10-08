@@ -10,8 +10,10 @@ import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
+import Session from './CheckoutSession';
 
 class Core {
+    public session: Session;
     private paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
@@ -29,6 +31,68 @@ class Core {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(options);
+    }
+
+    initialize(): Promise<this> {
+        if (this.options.session) {
+            this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
+
+            return this.session
+                .setupSession(this.options)
+                .then(sessionResponse => {
+                    const amount = this.options.order ? this.options.order.remainingAmount : sessionResponse.amount;
+                    this.setOptions({ ...sessionResponse, amount });
+                    return this;
+                })
+                .catch(error => {
+                    if (this.options.onError) this.options.onError(error);
+                    return this;
+                });
+        }
+
+        return Promise.resolve(this);
+    }
+
+    /**
+     * Submit data to payments using the onSubmit event or the session flow if available
+     * @param data -
+     */
+    public submitPayment(data): void {
+        if (this.options.onSubmit) return this.options.onSubmit(data);
+
+        if (this.session) {
+            this.session
+                .submitPayment(data)
+                .then(response => {
+                    if (response.action) {
+                        if (this.options.onPaymentSubmitted) this.options.onPaymentSubmitted(response, this);
+                    } else {
+                        if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+                    }
+                })
+                .catch(error => {
+                    if (this.options.onError) this.options.onError(error);
+                });
+        }
+    }
+
+    /**
+     * Submits details using onAdditionalDetails or the session flow if available
+     * @param details -
+     */
+    public submitDetails(details): void {
+        if (this.options.onAdditionalDetails) return this.options.onAdditionalDetails(details);
+
+        if (this.session) {
+            this.session
+                .submitDetails(details)
+                .then(response => {
+                    if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+                })
+                .catch(error => {
+                    if (this.options.onError) this.options.onError(error, this);
+                });
+        }
     }
 
     /**
@@ -64,13 +128,15 @@ class Core {
      * @param options - props to update
      * @returns this - the element instance
      */
-    public update = (options: CoreOptions = {}): this => {
+    public update = (options: CoreOptions = {}): Promise<this> => {
         this.setOptions(options);
 
-        // Update each component under this instance
-        this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
+        return this.initialize().then(() => {
+            // Update each component under this instance
+            this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
 
-        return this;
+            return this;
+        });
     };
 
     /**
@@ -94,6 +160,7 @@ class Core {
     private setOptions = (options): this => {
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
+        this.options.locale = this.options.locale || this.options.shopperLocale;
 
         this.modules = {
             risk: new RiskModule(this.options),
@@ -101,7 +168,8 @@ class Core {
             i18n: new Language(this.options.locale, this.options.translations)
         };
 
-        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
+        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
+        delete this.options.paymentMethods;
 
         return this;
     };
@@ -118,6 +186,7 @@ class Core {
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
+            session: this.session,
             createFromAction: this.createFromAction,
             _parentInstance: this
         };
@@ -133,12 +202,12 @@ class Core {
          * Once we receive a valid class for a Component - create a new instance of it
          */
         if (isValidClass) {
-            const paymentMethodsDetails = !options.supportedShopperInteractions ? this.paymentMethodsResponse.find(PaymentMethod.type) : [];
+            const paymentMethodsDetails = !options.supportedShopperInteractions ? this.paymentMethodsResponse.find(options.type) : [];
 
             // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at top level, in the config object set when a
             // new AdyenCheckout is initialised.
             const paymentMethodsConfiguration = getComponentConfiguration(
-                PaymentMethod.type,
+                options.type,
                 this.options.paymentMethodsConfiguration,
                 !!options.storedPaymentMethodId
             );

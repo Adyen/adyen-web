@@ -31,7 +31,6 @@ export default {
     totalPriceStatus: 'FINAL' as google.payments.api.TotalPriceStatus,
 
     // Callbacks
-    onError: () => {},
     onAuthorized: params => params,
     onSubmit: () => {},
     onClick: resolve => resolve(),

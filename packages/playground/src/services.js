@@ -32,6 +32,16 @@ export const makeDetailsCall = data =>
         })
         .catch(err => console.error(err));
 
+export const createSession = (data, config = {}) => {
+    // NOTE: Merging data object. DO NOT do this in production.
+    return httpPost('sessions', data)
+        .then(response => {
+            if (response.error) throw 'Session initiation failed';
+            return response;
+        })
+        .catch(console.error);
+};
+
 export const getOriginKey = (originKeyOrigin = document.location.origin) =>
     httpPost('originKeys', { originDomains: [originKeyOrigin] }).then(response => response.originKeys[originKeyOrigin]);
 

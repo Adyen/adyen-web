@@ -77,6 +77,14 @@
     flex-shrink: 0;
     margin-right: 16px;
     max-width: 100%;
+    // reset button styles
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    color: $color-black;
+    font-size: 1em;
+    font-weight: 400;
 
     [dir='rtl'] & {
         margin-right: 0;
