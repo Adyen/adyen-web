@@ -90,7 +90,7 @@
         "@types/applepayjs": "^3.0.2",
         "@types/googlepay": "^0.6.2",
         "classnames": "^2.3.1",
-        "core-js": "^3.18.1",
+        "core-js-pure": "^3.18.1",
         "preact": "^10.5.13"
     },
     "files": [
