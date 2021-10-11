@@ -199,6 +199,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe del número de la cuenta bancaria asegurada",
     "ach.encryptedBankAccountNumber.aria.label": "Campo de la cuenta bancaria",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe del número de ruta del banco asegurado",
-    "ach.encryptedBankLocationId.aria.label": "Campo del número de ruta del banco",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Elija otra cuenta bancaria"
+    "ach.encryptedBankLocationId.aria.label": "Campo del número de ruta del banco"
 }

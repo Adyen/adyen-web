@@ -205,6 +205,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe til sikret bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Felt til bankkonto",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe til registreringsnummer for sikret bank",
-    "ach.encryptedBankLocationId.aria.label": "Felt til registreringsnummer for bank",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Vælg en anden bank"
+    "ach.encryptedBankLocationId.aria.label": "Felt til registreringsnummer for bank"
 }

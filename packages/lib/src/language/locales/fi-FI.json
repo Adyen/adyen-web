@@ -204,6 +204,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe suojatulle pankkitilinumerolle",
     "ach.encryptedBankAccountNumber.aria.label": "Pankkitilikenttä",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe suojatulle pankin reititysnumerolle",
-    "ach.encryptedBankLocationId.aria.label": "Pankin reititysnumerokenttä",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Valitse toinen pankki"
+    "ach.encryptedBankLocationId.aria.label": "Pankin reititysnumerokenttä"
 }

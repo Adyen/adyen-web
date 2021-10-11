@@ -103,4 +103,29 @@ describe('IssuerList', () => {
         expect(highlightedButtons).toHaveLength(1);
         expect(highlightedButtons.at(0).text()).toBe('Issuer 3');
     });
+
+    test('Highlighted issuer is rendered as Button and as part of the dropdown', () => {
+        const items = [
+            { name: 'Issuer 1', id: '1' },
+            { name: 'Issuer 2', id: '2' },
+            { name: 'Issuer 3', id: '3' }
+        ];
+        const highlightedIds = ['3'];
+
+        const wrapper = mount(
+            <IssuerList
+                items={items}
+                highlightedIds={highlightedIds}
+                showPayButton={false}
+                onChange={jest.fn()}
+                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+            />
+        );
+
+        const highlightedIssuerButton = wrapper.find('.adyen-checkout__issuer-button-group button').at(0);
+        const highlightedIssuerDropdownItem = wrapper.find('ul li').at(2);
+
+        expect(highlightedIssuerButton.text()).toBe(highlightedIssuerDropdownItem.text());
+        expect(highlightedIssuerButton.prop('value')).toBe(highlightedIssuerDropdownItem.prop('data-value'));
+    });
 });

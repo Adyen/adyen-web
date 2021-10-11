@@ -204,6 +204,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe für gesicherte Bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Feld „Bankkonto“",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe für gesicherte BLZ",
-    "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Wählen Sie eine andere Bank aus"
+    "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld"
 }

@@ -204,6 +204,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "保護された銀行口座番号の iframe",
     "ach.encryptedBankAccountNumber.aria.label": "銀行口座フィールド",
     "ach.encryptedBankLocationId.aria.iframeTitle": "保護された銀行支店番号の iframe",
-    "ach.encryptedBankLocationId.aria.label": "銀行支店番号フィールド",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "別の銀行を選択"
+    "ach.encryptedBankLocationId.aria.label": "銀行支店番号フィールド"
 }

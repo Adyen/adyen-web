@@ -36,7 +36,6 @@
     "error.message.unknown": "An unknown error occurred",
     "idealIssuer.selectField.title": "Bank",
     "idealIssuer.selectField.placeholder": "Select your bank",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Choose a different bank",
     "creditCard.success": "Payment Successful",
     "loading": "Loading…",
     "continue": "Continue",
@@ -207,6 +206,5 @@
     "ach.encryptedBankAccountNumber.aria.label": "Bank account field",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for secured bank routing number",
     "ach.encryptedBankLocationId.aria.label": "Bank routing number field",
-    "pix.instructions": "Open the app with the PIX registered key, choose Pay with PIX and scan the QR Code or copy and paste the code",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Choose a different bank"
+    "pix.instructions": "Open the app with the PIX registered key, choose Pay with PIX and scan the QR Code or copy and paste the code"
 }

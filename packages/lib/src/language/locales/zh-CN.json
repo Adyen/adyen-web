@@ -203,6 +203,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "安全银行账号 Iframe",
     "ach.encryptedBankAccountNumber.aria.label": "银行账号字段",
     "ach.encryptedBankLocationId.aria.iframeTitle": "安全银行路由电汇编码 Iframe",
-    "ach.encryptedBankLocationId.aria.label": "银行路由电汇编码字段",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "选择其它银行"
+    "ach.encryptedBankLocationId.aria.label": "银行路由电汇编码字段"
 }

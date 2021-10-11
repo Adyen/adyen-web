@@ -204,6 +204,5 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe za zavarovano številko bančnega računa",
     "ach.encryptedBankAccountNumber.aria.label": "Polje z bančnim računom",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe za zavarovano kodo banke",
-    "ach.encryptedBankLocationId.aria.label": "Polje s kodo banke",
-    "idealIssuer.selectField.placeholderWithPredefinedIssuers": "Izberite drugo banko"
+    "ach.encryptedBankLocationId.aria.label": "Polje s kodo banke"
 }
