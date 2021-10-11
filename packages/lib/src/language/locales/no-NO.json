@@ -204,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe for sikret bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Bankkontofelt",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for sikret bankdirigeringsnummer",
-    "ach.encryptedBankLocationId.aria.label": "Felt for bankdirigeringsnummer"
+    "ach.encryptedBankLocationId.aria.label": "Felt for bankdirigeringsnummer",
+    "twint.saved": "lagret"
 }

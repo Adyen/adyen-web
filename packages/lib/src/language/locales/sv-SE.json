@@ -204,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe för säkrat bankkontonummer",
     "ach.encryptedBankAccountNumber.aria.label": "Fält för bankkontonummer",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe för säkrat clearingnummer",
-    "ach.encryptedBankLocationId.aria.label": "Fält för clearingnummer"
+    "ach.encryptedBankLocationId.aria.label": "Fält för clearingnummer",
+    "twint.saved": "sparat"
 }

@@ -204,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe pentru numărul contului bancar securizat",
     "ach.encryptedBankAccountNumber.aria.label": "Câmp aferent contului bancar",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pentru numărul securizat de direcționare bancară (routing number)",
-    "ach.encryptedBankLocationId.aria.label": "Câmp aferent codului de direcționare bancară (routing number)"
+    "ach.encryptedBankLocationId.aria.label": "Câmp aferent codului de direcționare bancară (routing number)",
+    "twint.saved": "salvat"
 }

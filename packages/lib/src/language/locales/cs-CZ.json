@@ -204,5 +204,6 @@
     "ach.encryptedBankAccountNumber.aria.iframeTitle": "Iframe pro číslo zabezpečeného bankovního účtu",
     "ach.encryptedBankAccountNumber.aria.label": "Pole pro bankovní účet",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pro číslo zabezpečeného kódu banky",
-    "ach.encryptedBankLocationId.aria.label": "Pole pro kód banky"
+    "ach.encryptedBankLocationId.aria.label": "Pole pro kód banky",
+    "twint.saved": "uloženo"
 }

@@ -202,5 +202,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "Campo de conta bancária",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe para número de roteamento bancário seguro",
     "ach.encryptedBankLocationId.aria.label": "Campo de número de roteamento bancário",
-    "pix.instructions": "Abra o app com sua chave PIX cadastrada, escolha Pagar com Pix e escaneie o QR Code ou copie e cole o código"
+    "pix.instructions": "Abra o app com sua chave PIX cadastrada, escolha Pagar com Pix e escaneie o QR Code ou copie e cole o código",
+    "twint.saved": "salvo"
 }
