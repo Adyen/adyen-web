@@ -1,4 +1,4 @@
-import { ClientFunction, RequestMock, RequestLogger } from 'testcafe';
+import { ClientFunction, RequestMock } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../../utils/commonUtils';
 import cu from '../../utils/cardUtils';
 import { REGULAR_TEST_CARD, TEST_CPF_VALUE } from '../../utils/constants';

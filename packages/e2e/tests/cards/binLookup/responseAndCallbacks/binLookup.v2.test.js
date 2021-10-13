@@ -231,7 +231,6 @@ test('Enter number of unsupported card, ' + 'then inspect callbacks for expected
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 
     const cardError = await getFromWindow('errorObj', 'encryptedCardNumber');
-
     await t.expect(cardError.errorMessage).eql('Unsupported card entered');
 });
 

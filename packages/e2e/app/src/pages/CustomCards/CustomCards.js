@@ -25,7 +25,6 @@ const initCheckout = async () => {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,
             onBrand,
-            onError: setCCErrors,
             onFocus: setFocus,
             onBinLookup,
             onChange,
@@ -40,8 +39,8 @@ const initCheckout = async () => {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onBrand,
-            onError: setCCErrors,
             onFocus: setFocus,
+            onChange,
             ...window.cardConfig
         })
         .mount('.secured-fields-2');
