@@ -13,6 +13,7 @@ export interface AddressProps {
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
+    mode?: AddressModeOptions;
 }
 
 export interface AddressStateError {
@@ -89,5 +90,12 @@ export interface AddressSpecifications {
             [key: string]: string;
         };
         schema?: AddressSchema;
+        partialSchema?: AddressSchema;
     };
+}
+
+export enum AddressModeOptions {
+    full = 'full',
+    partial = 'partial',
+    none = 'none'
 }

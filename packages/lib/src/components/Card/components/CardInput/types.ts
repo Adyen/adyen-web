@@ -3,6 +3,7 @@ import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, Soc
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
+import {AddressModeOptions} from "../../../internal/Address/types";
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -43,6 +44,7 @@ export interface CardInputProps {
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
+    billingAddressMode?: AddressModeOptions;
     brand?: string;
     brandsConfiguration?: CardBrandsConfiguration;
     configuration?: CardConfiguration;

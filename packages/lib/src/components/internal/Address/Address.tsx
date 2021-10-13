@@ -14,8 +14,12 @@ export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
+    const requiredFieldsSchema = specifications
+        .getAddressSchemaForCountryFlat(props.countryCode, props.mode)
+        .filter(field => requiredFields.includes(field));
+
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
-        schema: requiredFields,
+        schema: requiredFieldsSchema,
         defaultData: props.data,
         rules: props.validationRules || getAddressValidationRules(specifications)
     });
@@ -85,7 +89,7 @@ export default function Address(props: AddressProps) {
         </div>
     );
 
-    const addressSchema = specifications.getAddressSchemaForCountry(data.country);
+    const addressSchema = specifications.getAddressSchemaForCountry(data.country, props.mode);
 
     return (
         <Fieldset classNameModifiers={[label]} label={label}>

@@ -1,4 +1,5 @@
 import { SocialSecurityMode } from '../../types';
+import {AddressModeOptions} from "../../../internal/Address/types";
 
 export default {
     details: [],
@@ -15,6 +16,7 @@ export default {
     showBrandIcon: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
+    billingAddressMode: AddressModeOptions.full,
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
     installmentOptions: {},
     configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },

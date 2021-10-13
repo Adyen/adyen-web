@@ -52,8 +52,10 @@ function CardInput(props: CardInputProps) {
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState('');
 
+    const showBillingAddress = props.billingAddressMode !== 'none' && props.billingAddressRequired;
+
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState(showBillingAddress ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
@@ -145,7 +147,13 @@ function CardInput(props: CardInputProps) {
             CIExtensions(
                 props,
                 { sfp },
-                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode }
+                {
+                    dualBrandSelectElements,
+                    setDualBrandSelectElements,
+                    setSelectedBrandValue,
+                    issuingCountryCode,
+                    setIssuingCountryCode
+                }
             ),
         [dualBrandSelectElements, issuingCountryCode]
     );
@@ -193,7 +201,7 @@ function CardInput(props: CardInputProps) {
             ...(props.hasHolderName ? ['holderName'] : []),
             ...(showBrazilianSSN ? ['socialSecurityNumber'] : []),
             ...(showKCP ? ['taxNumber'] : []),
-            ...(props.billingAddressRequired ? ['billingAddress'] : [])
+            ...(showBillingAddress ? ['billingAddress'] : [])
         ];
         setSchema(newSchema);
     }, [props.hasHolderName, showBrazilianSSN, showKCP]);
@@ -206,7 +214,7 @@ function CardInput(props: CardInputProps) {
 
         setSocialSecurityNumber(formData.socialSecurityNumber);
 
-        if (props.billingAddressRequired) setBillingAddress({ ...formData.billingAddress });
+        if (showBillingAddress) setBillingAddress({ ...formData.billingAddress });
 
         setValid({
             ...valid,
@@ -224,7 +232,7 @@ function CardInput(props: CardInputProps) {
             holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null,
             socialSecurityNumber: showBrazilianSSN && !!formErrors.socialSecurityNumber ? formErrors.socialSecurityNumber : null,
             taxNumber: showKCP && !!formErrors.taxNumber ? formErrors.taxNumber : null,
-            billingAddress: props.billingAddressRequired && !!formErrors.billingAddress ? formErrors.billingAddress : null
+            billingAddress: showBillingAddress && !!formErrors.billingAddress ? formErrors.billingAddress : null
         });
     }, [formData, formValid, formErrors]);
 
@@ -235,7 +243,7 @@ function CardInput(props: CardInputProps) {
         const holderNameValid: boolean = valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = props.billingAddressRequired ? valid.billingAddress : true;
+        const addressValid: boolean = showBillingAddress ? valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
@@ -371,13 +379,14 @@ function CardInput(props: CardInputProps) {
 
                             {hasInstallments && getInstallmentsComp(sfpState.brand)}
 
-                            {props.billingAddressRequired && (
+                            {showBillingAddress && (
                                 <Address
                                     label="billingAddress"
                                     data={billingAddress}
                                     onChange={handleAddress}
                                     allowedCountries={props.billingAddressAllowedCountries}
                                     requiredFields={props.billingAddressRequiredFields}
+                                    mode={props.billingAddressMode}
                                     ref={billingAddressRef}
                                 />
                             )}
@@ -385,7 +394,10 @@ function CardInput(props: CardInputProps) {
                     )}
 
                     {props.showPayButton &&
-                        props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
+                        props.payButton({
+                            status,
+                            icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
+                        })}
                 </div>
             )}
         />

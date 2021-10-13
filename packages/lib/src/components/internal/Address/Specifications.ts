@@ -1,5 +1,8 @@
-import { AddressSchema, AddressSpecifications } from './types';
+import { AddressModeOptions, AddressSchema, AddressSpecifications } from './types';
 import { ADDRESS_SPECIFICATIONS } from './constants';
+import { AddressField } from '../../../types';
+
+const SCHEMA_MAX_DEPTH = 2;
 
 class Specifications {
     private specifications: AddressSpecifications;
@@ -30,10 +33,20 @@ class Specifications {
     /**
      * Returns the address schema of the selected country or the default address schema.
      * @param country - The selected country
+     * @param mode - Address schema mode, can be 'full', 'partial' or 'none'
      * @returns AddressSchema
      */
-    getAddressSchemaForCountry(country: string): AddressSchema {
-        return this.specifications?.[country]?.schema || this.specifications.default.schema;
+    getAddressSchemaForCountry(country: string, mode = AddressModeOptions.full): AddressSchema {
+        const schemaTypes = {
+            [AddressModeOptions.full]: 'schema',
+            [AddressModeOptions.partial]: 'partialSchema',
+            [AddressModeOptions.none]: null
+        };
+        const schemaType = schemaTypes[mode];
+        if (schemaType === null) {
+            return [];
+        }
+        return this.specifications?.[country]?.[schemaType] || this.specifications.default[schemaType];
     }
 
     /**
@@ -61,6 +74,19 @@ class Specifications {
      */
     getPlaceholderKeyForField(fieldName: string, country: string): string {
         return this.specifications?.[country]?.placeholders?.[fieldName] || this.specifications?.default?.placeholders?.[fieldName];
+    }
+
+    /**
+     * Returns an array with the address schema of the selected country or the default address schema
+     * Flat version of getAddressSchemaForCountry
+     * @param country - The selected country
+     * @param mode - Address schema mode, can be 'full', 'partial' or 'none'
+     * @returns Array
+     */
+    getAddressSchemaForCountryFlat(country: string, mode?: AddressModeOptions): AddressField[] {
+        return this.getAddressSchemaForCountry(country, mode)
+            .flat(SCHEMA_MAX_DEPTH)
+            .filter((element): element is AddressField => typeof element === 'string');
     }
 }
 
