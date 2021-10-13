@@ -17,7 +17,7 @@ const remote = process.argv.indexOf('--remote') > -1 || process.argv.indexOf('-r
         }
         const failedCount = await runner
             // .src(`${PATH}**/*.test.js`)
-            .src(`${PATH}/cards/binLookup/responseAndCallbacks/**/*.test.js`)
+            .src(`${PATH}/customcard/branding/**/*.test.js`)
             .browsers(browser)
             .run();
 

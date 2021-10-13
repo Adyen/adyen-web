@@ -206,7 +206,7 @@ test('Enter number of regular, non dual branded, card, ' + 'then inspect callbac
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 });
 
-test.only('Enter number of unsupported card, ' + 'then inspect callbacks for expected properties ', async t => {
+test('Enter number of unsupported card, ' + 'then inspect callbacks for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -230,7 +230,9 @@ test.only('Enter number of unsupported card, ' + 'then inspect callbacks for exp
         .expect(getFromWindow('binLookupObj', 'brands'))
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 
-    await t.expect(getFromWindow('errorObj', 'errorText')).eql('Unsupported card entered');
+    const cardError = await getFromWindow('errorObj', 'encryptedCardNumber');
+
+    await t.expect(cardError.errorMessage).eql('Unsupported card entered');
 });
 
 test('Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {

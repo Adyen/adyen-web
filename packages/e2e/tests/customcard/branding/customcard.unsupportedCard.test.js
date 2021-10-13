@@ -23,7 +23,7 @@ fixture`Testing persistence of "Unsupported card" error and state at both compon
     .page(CUSTOMCARDS_URL)
     .clientScripts('customcard.unsupportedCard.clientScripts.js');
 
-test(
+test.only(
     'Enter partial card number that is not supported then ' +
         'check resulting error is processed correctly at merchant and SF level then ' +
         'add digits to number and check error states persist then ' +
