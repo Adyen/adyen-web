@@ -4,7 +4,7 @@ import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import './customcards.style.scss';
-import { setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
+import { setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
 
 const initCheckout = async () => {
     window.checkout = await AdyenCheckout({
