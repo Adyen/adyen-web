@@ -1,8 +1,8 @@
 @import 'src/style/index';
 
 .adyen-checkout__field--issuer-list-separator {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: $spacing-medium;
+  margin-bottom: $spacing-medium;
   display:flex;
   justify-content:center;
   align-items: center;
