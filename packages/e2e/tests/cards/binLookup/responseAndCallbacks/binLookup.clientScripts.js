@@ -7,8 +7,8 @@ window.cardConfig = {
     onBinLookup: obj => {
         window.binLookupObj = obj;
     },
-    onError: obj => {
-        window.errorObj = obj;
+    onChange: state => {
+        window.errorObj = state.errors;
     }
 };
 

@@ -11,7 +11,7 @@ const initCheckout = async () => {
         shopperLocale
     });
 
-    const checkout = new AdyenCheckout({
+    const checkout = await AdyenCheckout({
         amount,
         paymentMethodsResponse,
         clientKey: process.env.__CLIENT_KEY__,
