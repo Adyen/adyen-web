@@ -63,8 +63,8 @@ const fillDate = iframeSelector => {
 };
 
 const fillCVC = iframeSelector => {
-    return async (t, value = TEST_CVC_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"]', value, action);
+    return async (t, value = TEST_CVC_VALUE, action, iFrameNum = 2) => {
+        return fillIFrame(t, iframeSelector, iFrameNum, '[data-fieldtype="encryptedSecurityCode"]', value, action);
     };
 };
 
