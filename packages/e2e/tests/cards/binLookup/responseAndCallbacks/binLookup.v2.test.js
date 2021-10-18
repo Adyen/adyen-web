@@ -230,7 +230,8 @@ test('Enter number of unsupported card, ' + 'then inspect callbacks for expected
         .expect(getFromWindow('binLookupObj', 'brands'))
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 
-    await t.expect(getFromWindow('errorObj', 'errorText')).eql('Unsupported card entered');
+    const cardError = await getFromWindow('errorObj', 'encryptedCardNumber');
+    await t.expect(cardError.errorMessage).eql('Unsupported card entered');
 });
 
 test('Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {

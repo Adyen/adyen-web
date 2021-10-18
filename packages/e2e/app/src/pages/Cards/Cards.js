@@ -4,23 +4,28 @@ import { handleSubmit, handleAdditionalDetails, handleError } from '../../handle
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 
-window.checkout = new AdyenCheckout({
-    amount,
-    clientKey: process.env.__CLIENT_KEY__,
-    locale: shopperLocale,
-    countryCode,
-    environment: 'test',
-    showPayButton: true,
-    onSubmit: handleSubmit,
-    onAdditionalDetails: handleAdditionalDetails,
-    onError: handleError,
-    ...window.mainConfiguration
-});
+const initCheckout = async () => {
+    window.checkout = await AdyenCheckout({
+        amount,
+        clientKey: process.env.__CLIENT_KEY__,
+        locale: shopperLocale,
+        countryCode,
+        environment: 'test',
+        showPayButton: true,
+        onSubmit: handleSubmit,
+        onAdditionalDetails: handleAdditionalDetails,
+        onError: handleError,
+        ...window.mainConfiguration
+    });
 
-// Credit card with installments
-window.card = checkout
-    .create('card', {
-        brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'],
-        ...window.cardConfig
-    })
-    .mount('.card-field');
+    // Credit card with installments
+    window.card = checkout
+        .create('card', {
+            brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'],
+            onChange: state => console.log(state),
+            ...window.cardConfig
+        })
+        .mount('.card-field');
+};
+
+initCheckout();
