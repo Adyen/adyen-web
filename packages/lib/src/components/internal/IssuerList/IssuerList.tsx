@@ -1,13 +1,16 @@
-import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { Fragment, h } from 'preact';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
+import IssuerButtonGroup from './IssuerButtonGroup';
+import ContentSeparator from './ContentSeparator';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import './IssuerList.scss';
 import { ValidatorRules } from '../../../utils/Validator/Validator';
+import { IssuerListProps } from './types';
+import './IssuerList.scss';
 
-const payButtonLabel = ({ issuer, items }, i18n) => {
+const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
     if (!issuer || !issuerName) return i18n.get('continue');
     return `${i18n.get('continueTo')} ${issuerName}`;
@@ -21,7 +24,12 @@ const validationRules: ValidatorRules = {
     }
 };
 
-function IssuerList({ items, placeholder, issuer, ...props }) {
+enum IssuerListInputTypes {
+    ButtonGroup,
+    Dropdown
+}
+
+function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder', issuer, highlightedIds = [], ...props }: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -29,10 +37,19 @@ function IssuerList({ items, placeholder, issuer, ...props }) {
         rules: validationRules
     });
     const [status, setStatus] = useState('ready');
+    const [inputType, setInputType] = useState<IssuerListInputTypes>(IssuerListInputTypes.Dropdown);
 
     this.setStatus = newStatus => {
         setStatus(newStatus);
     };
+
+    const handleInputChange = useCallback(
+        (type: IssuerListInputTypes) => (event: UIEvent) => {
+            setInputType(type);
+            handleChangeFor('issuer')(event);
+        },
+        [handleChangeFor]
+    );
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
@@ -42,27 +59,49 @@ function IssuerList({ items, placeholder, issuer, ...props }) {
         triggerValidation();
     };
 
+    const { highlightedItems } = items.reduce(
+        (memo, item) => {
+            if (highlightedIds.includes(item.id)) memo.highlightedItems.push({ ...item });
+            return memo;
+        },
+        { highlightedItems: [] }
+    );
+
     return (
         <div className="adyen-checkout__issuer-list">
+            {!!highlightedItems.length && (
+                <Fragment>
+                    <IssuerButtonGroup
+                        selectedIssuerId={inputType === IssuerListInputTypes.ButtonGroup ? data['issuer'] : null}
+                        items={highlightedItems}
+                        onChange={handleInputChange(IssuerListInputTypes.ButtonGroup)}
+                    />
+                    <ContentSeparator />
+                </Fragment>
+            )}
+
             <Field errorMessage={!!errors['issuer']} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
                     items,
-                    selected: data['issuer'],
+                    selected: inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null,
                     placeholder: i18n.get(placeholder),
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',
-                    onChange: handleChangeFor('issuer')
+                    onChange: handleInputChange(IssuerListInputTypes.Dropdown)
                 })}
             </Field>
 
-            {props.showPayButton && props.payButton({ status, label: payButtonLabel({ issuer: data['issuer'], items }, i18n) })}
+            {props.showPayButton &&
+                props.payButton({
+                    status,
+                    label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
+                })}
         </div>
     );
 }
 
 IssuerList.defaultProps = {
-    onChange: () => {},
-    placeholder: 'idealIssuer.selectField.placeholder'
+    onChange: () => {}
 };
 
 export default IssuerList;

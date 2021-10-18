@@ -188,7 +188,19 @@ export function onBinLookup(pCallbackObj) {
     resetDualBranding(pCallbackObj.rootNode);
 }
 
-export function onChange(state) {
+export function onChange(state, component) {
+    if (!!Object.keys(state.errors).length) {
+        const errors = Object.entries(state.errors).map(([fieldType, error]) => {
+            return {
+                fieldType,
+                error: !!error ? error.toString() : '',
+                rootNode: component._node,
+                errorI18n: component.props.i18n.translations[error]
+            };
+        });
+        errors.forEach(setCCErrors);
+    }
+
     /**
      * If we're in a dual branding scenario & the number field becomes valid or is valid and become invalid
      * - set the brand logos to the required 'state'
