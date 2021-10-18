@@ -22,7 +22,12 @@ import '../../style.scss';
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
-        onError: console.error
+        onError: console.error,
+        paymentMethodsConfiguration: {
+            ideal: {
+                highlightedIssuers: ['1121', '1154', '1152']
+            }
+        }
     });
 
     // iDEAL

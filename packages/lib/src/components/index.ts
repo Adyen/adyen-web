@@ -45,7 +45,7 @@ import BacsDD from './BacsDD';
 import Address from './Address';
 import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
-import Twint from "./Twint";
+import Twint from './Twint';
 
 /**
  * Maps each component with a Component element.
