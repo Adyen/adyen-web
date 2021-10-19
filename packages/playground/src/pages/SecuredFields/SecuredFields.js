@@ -36,48 +36,50 @@ const onAdditionalDetails = retrievedData => {
     });
 };
 
-const initCheckout = async () => {
-    window.checkout = await AdyenCheckout({
-        clientKey: process.env.__CLIENT_KEY__,
-        locale: shopperLocale,
-        //        environment: 'http://localhost:8080/checkoutshopper/',
-        environment: 'test',
-        onChange: handleOnChange,
-        onAdditionalDetails,
-        onError: console.error,
-        risk: {
-            enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
-            // Also accessible via checkout.modules.risk.data
-            node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
-            onComplete: handleOnRiskData,
-            onError: console.error
-        },
-        translations: {
-            'en-US': {
-                'creditCard.cvcField.placeholder.3digits': 'digits 3',
-                'creditCard.cvcField.placeholder.4digits': 'digits 4'
-            }
-        },
-        paymentMethodsConfiguration: {
-            // NOTE: still use 'card' because it's about the component 'type', not the name
-            card: {
-                brandsConfiguration: {
-                    synchrony_plcc: {
-                        icon: 'http://localhost:3000/test_images/smartmoney.png'
-                    },
-                    bcmc: {
-                        icon: 'http://localhost:3000/test_images/bcmc.png'
-                    },
-                    maestro: {
-                        icon: 'http://localhost:3000/test_images/maestro.png'
-                    }
-                }
-            },
-            threeDS2: {
-                challengeWindowSize: '01'
-            }
+const configObj = {
+    clientKey: process.env.__CLIENT_KEY__,
+    locale: shopperLocale,
+    //        environment: 'http://localhost:8080/checkoutshopper/',
+    environment: 'test',
+    onChange: handleOnChange,
+    onAdditionalDetails,
+    onError: console.error,
+    risk: {
+        enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
+        // Also accessible via checkout.modules.risk.data
+        node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
+        onComplete: handleOnRiskData,
+        onError: console.error
+    },
+    translations: {
+        'en-US': {
+            'creditCard.cvcField.placeholder.3digits': 'digits 3',
+            'creditCard.cvcField.placeholder.4digits': 'digits 4'
         }
-    });
+    },
+    paymentMethodsConfiguration: {
+        // NOTE: still use 'card' because it's about the component 'type', not the name
+        card: {
+            brandsConfiguration: {
+                synchrony_plcc: {
+                    icon: 'http://localhost:3000/test_images/smartmoney.png'
+                },
+                bcmc: {
+                    icon: 'http://localhost:3000/test_images/bcmc.png'
+                },
+                maestro: {
+                    icon: 'http://localhost:3000/test_images/maestro.png'
+                }
+            }
+        },
+        threeDS2: {
+            challengeWindowSize: '01'
+        }
+    }
+};
+
+const initCheckout = async () => {
+    window.checkout = await AdyenCheckout(configObj);
 
     // SECURED FIELDS
     window.securedFields = checkout
@@ -140,6 +142,22 @@ const initCheckout = async () => {
                 onFocus: fancyFocus
             })
             .mount('.fancy-secured-fields');
+};
+
+initCheckout();
+
+// Clear placeholders for material design example
+configObj.translations = {
+    'en-US': {
+        'creditCard.numberField.placeholder': '',
+        'creditCard.expiryDateField.placeholder': '',
+        'creditCard.cvcField.placeholder.3digits': '',
+        'creditCard.cvcField.placeholder.4digits': ''
+    }
+};
+
+const initCheckout2 = async () => {
+    window.checkout = await AdyenCheckout(configObj);
 
     window.materialDesignSecuredFields =
         showOtherExamples &&
@@ -156,7 +174,7 @@ const initCheckout = async () => {
             .mount('.material-secured-fields-container');
 };
 
-initCheckout();
+initCheckout2();
 
 const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');
