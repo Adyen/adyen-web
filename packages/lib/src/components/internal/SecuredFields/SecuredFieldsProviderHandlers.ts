@@ -2,10 +2,11 @@ import { getCardImageUrl } from './utils';
 import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_CARD_NUMBER,
-    CVC_POLICY_OPTIONAL,
-    CVC_POLICY_HIDDEN,
     CVC_POLICY_REQUIRED,
-    DATE_POLICY_HIDDEN
+    DATE_POLICY_REQUIRED,
+    ENCRYPTED_EXPIRY_DATE,
+    OPTIONAL,
+    HIDDEN
 } from './lib/configuration/constants';
 import {
     CbObjOnError,
@@ -102,6 +103,10 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     return true;
 }
 
+function fieldIsInError(fieldType: string, policy: string, numCharsObj: object, errorsObj) {
+    return (policy === OPTIONAL || policy === HIDDEN) && numCharsObj[fieldType] === 0 ? false : errorsObj[fieldType];
+}
+
 /**
  * Saves the card brand in state
  * Emits the onBrand event
@@ -109,12 +114,15 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
 function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
         prevState => {
-            // If we change brand to one where the cvc field is not required & is empty - then the cvc field cannot be in error...
-            // ...else propagate the existing error
-            const cvcFieldInError =
-                (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
-                    ? false
-                    : prevState.errors[ENCRYPTED_SECURITY_CODE];
+            /**
+             * If we change brand to one where the cvc or date field is not required & is empty - then these fields cannot be in error
+             * (scenario: have validated empty form, then choose brand w. optional/hidden cvc or date)...
+             * ...else propagate the existing error.
+             * TODO - does separate date fields i.e the custom card comp require something similar?
+             */
+            const cvcFieldInError = fieldIsInError(ENCRYPTED_SECURITY_CODE, cardInfo.cvcPolicy, this.numCharsInField, prevState.errors);
+            const dateFieldInError =
+                this.numDateFields === 1 && fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors);
 
             return {
                 brand: cardInfo.brand,
@@ -122,9 +130,10 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                 showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
                 errors: {
                     ...prevState.errors,
-                    ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError })
+                    ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError }),
+                    ...(existy(dateFieldInError) && { [ENCRYPTED_EXPIRY_DATE]: dateFieldInError })
                 },
-                hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
+                expiryDatePolicy: cardInfo.expiryDatePolicy ?? DATE_POLICY_REQUIRED
             };
         },
         () => {
@@ -161,9 +170,7 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
 }
 
 function handleFocus(cbObj: CbObjOnFocus): void {
-    if (cbObj.fieldType === ENCRYPTED_SECURITY_CODE) {
-        this.numCharsInCVC = cbObj.numChars;
-    }
+    this.numCharsInField[cbObj.fieldType] = cbObj.numChars;
 
     this.props.onFocus(cbObj);
 }

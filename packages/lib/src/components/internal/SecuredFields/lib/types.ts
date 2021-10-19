@@ -11,7 +11,8 @@ declare global {
 
 export interface BrandStorageObject {
     brand: string;
-    cvcPolicy: string;
+    cvcPolicy: CVCPolicyType;
+    expiryDatePolicy: DatePolicyType;
     showSocialSecurityNumber?: boolean;
 }
 
@@ -148,7 +149,7 @@ export interface CardObject {
     pattern: RegExp;
     securityCode?: string;
     displayName?: string;
-    cvcPolicy?: string;
+    cvcPolicy?: CVCPolicyType;
 }
 
 export interface CbObjOnBrand {
@@ -156,7 +157,7 @@ export interface CbObjOnBrand {
     rootNode: HTMLElement;
     brand: string;
     cvcPolicy: CVCPolicyType;
-    datePolicy?: DatePolicyType;
+    expiryDatePolicy?: DatePolicyType;
     cvcText: string;
     showSocialSecurityNumber?: boolean;
     brandImageUrl?: string; // Added by SFP
@@ -250,7 +251,7 @@ export interface SFFeedbackObj {
     code?: string;
     cvcText?: string;
     cvcPolicy?: CVCPolicyType;
-    datePolicy?: DatePolicyType;
+    expiryDatePolicy?: DatePolicyType;
     showSocialSecurityNumber?: boolean;
     maxLength?: number;
     error?: string;
@@ -286,4 +287,8 @@ export interface ShiftTabObject {
 export interface SendBrandObject {
     brand: string;
     enableLuhnCheck: boolean;
+}
+
+export interface SendExpiryDateObject {
+    expiryDatePolicy: DatePolicyType;
 }

@@ -13,7 +13,7 @@ import { handleIframeConfigFeedback } from './utils/iframes/handleIframeConfigFe
 import { isConfigured } from './utils/isConfigured';
 import { assessFormValidity } from './utils/validateForm';
 import { handleBinValue } from './utils/handleBinValue';
-import { handleBrandFromBinLookup, sendBrandToCardSF } from './utils/handleBrandFromBinLookup';
+import { handleBrandFromBinLookup, sendBrandToCardSF, sendExpiryDatePolicyToSF } from './utils/handleBrandFromBinLookup';
 import handleAdditionalFields from './utils/registerAdditionalField';
 import tabHandlers from './utils/tabbing/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
@@ -22,6 +22,7 @@ import { CSFReturnObject, CSFSetupObject, StylesObject, CbObjOnAdditionalSF, CSF
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
 import { BinLookupResponse } from '../../../../Card/types';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -97,6 +98,7 @@ class CSF extends AbstractCSF {
 
         this.brandsFromBinLookup = handleBrandFromBinLookup;
         this.sendBrandToCardSF = sendBrandToCardSF;
+        this.sendExpiryDatePolicyToSF = sendExpiryDatePolicyToSF;
 
         // Populate config & callbacks objects & create securedFields
         this.init();
@@ -142,7 +144,7 @@ class CSF extends AbstractCSF {
             // function as a way to notify the CSF that a field is in error
             isValidated: (pFieldType: string, code: string): void => {
                 if (this.state.isConfigured) {
-                    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
+                    if (hasOwnProperty(this.state.securedFields, pFieldType)) {
                         this.state.securedFields[pFieldType].hasError = true;
 
                         // If there's not already an errorType, set one
@@ -168,7 +170,7 @@ class CSF extends AbstractCSF {
             },
             hasUnsupportedCard: (pFieldType: string, code: string): void => {
                 if (this.state.isConfigured) {
-                    if (Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) {
+                    if (hasOwnProperty(this.state.securedFields, pFieldType)) {
                         //
                         this.state.securedFields[pFieldType].hasError = !!code;
                         this.state.securedFields[pFieldType].errorType = code;

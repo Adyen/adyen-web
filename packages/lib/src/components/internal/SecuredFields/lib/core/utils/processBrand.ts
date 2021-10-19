@@ -3,14 +3,19 @@ import postMessageToIframe from './iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { pick } from '../../../utils';
+import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStorageObject): boolean => {
     // if the objects aren't the same - then return true = brandChange has happened
     return !objectsDeepEqual(pBrand, storedBrand);
 };
 
-// If generic card type AND passed brand doesn't equal stored brand - send the new brand to the cvc input
-// Create object for onBrand callback
+/**
+ * - If generic card type AND passed brand doesn't equal stored brand - send the new brand to the cvc input
+ *    (so it can reassess what length it should be and if any value it contains is now valid)
+ *
+ * - Create object for onBrand callback aka SFPHandlers.handleOnBrand
+ */
 export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
     const fieldType: string = pFeedbackObj.fieldType;
 
@@ -19,6 +24,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
         const newBrandObj: BrandStorageObject = {
             brand: pFeedbackObj.brand,
             cvcPolicy: pFeedbackObj.cvcPolicy,
+            expiryDatePolicy: pFeedbackObj.expiryDatePolicy,
             showSocialSecurityNumber: pFeedbackObj.showSocialSecurityNumber
         };
         const newBrand: boolean = checkForBrandChange(newBrandObj, this.state.brand);
@@ -37,7 +43,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
 
             // Perform postMessage to send brand to CVC field - this also needs to happen for BCMC, single branded cards,
             // because it needs to know the cvcPolicy (to set the aria-required attribute & to show the iframe)
-            if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
+            if (hasOwnProperty(this.state.securedFields, ENCRYPTED_SECURITY_CODE)) {
                 const dataObj: object = {
                     txVariant: this.state.type,
                     brand: newBrandObj.brand,
@@ -51,7 +57,7 @@ export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
 
         // Create object with brand related properties
         const brandInfoObj = treatAsGenericCard
-            ? pick(['brand', 'cvcPolicy', 'cvcText', 'datePolicy', 'showSocialSecurityNumber']).from(pFeedbackObj)
+            ? pick(['brand', 'cvcPolicy', 'cvcText', 'expiryDatePolicy', 'showSocialSecurityNumber']).from(pFeedbackObj)
             : null;
 
         if (brandInfoObj && brandInfoObj.brand) {

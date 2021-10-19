@@ -4,6 +4,7 @@ import { processErrors } from './utils/processErrors';
 import { existy } from '../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // --
@@ -20,9 +21,9 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // (re)set the property that indicates this (in the CVC SecuredField instance)
     if (
         isGenericCard &&
-        Object.prototype.hasOwnProperty.call(pFeedbackObj, 'cvcPolicy') &&
+        hasOwnProperty(pFeedbackObj, 'cvcPolicy') &&
         existy(pFeedbackObj.cvcPolicy) &&
-        Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
+        hasOwnProperty(this.state.securedFields, ENCRYPTED_SECURITY_CODE)
     ) {
         this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy = pFeedbackObj.cvcPolicy;
     }
@@ -68,7 +69,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     /**
      * PROCESS & BROADCAST CARD BRANDS
      */
-    if (Object.prototype.hasOwnProperty.call(pFeedbackObj, 'brand')) {
+    if (hasOwnProperty(pFeedbackObj, 'brand')) {
         this.processBrand(pFeedbackObj);
     }
 }
