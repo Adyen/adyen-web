@@ -11,7 +11,7 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import './securedFields.style.scss';
 
-const showOtherExamples = false; // For testing: set to false to only instantiate the basic form of SecuredFields
+const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of SecuredFields
 
 window.paymentData = {};
 const cardText = document.querySelector('.sf-text');
@@ -36,126 +36,127 @@ const onAdditionalDetails = retrievedData => {
     });
 };
 
-window.checkout = new AdyenCheckout({
-    clientKey: process.env.__CLIENT_KEY__,
-    locale: shopperLocale,
-    //        environment: 'http://localhost:8080/checkoutshopper/',
-    environment: 'test',
-    onChange: handleOnChange,
-    onAdditionalDetails,
-    onError: console.error,
-    risk: {
-        enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
-        // Also accessible via checkout.modules.risk.data
-        node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
-        onComplete: handleOnRiskData,
-        onError: console.error
-    },
-    translations: {
-        'en-US': {
-            'creditCard.cvcField.placeholder.3digits': 'digits 3',
-            'creditCard.cvcField.placeholder.4digits': 'digits 4'
-        }
-    },
-    paymentMethodsConfiguration: {
-        // NOTE: still use 'card' because it's about the component 'type', not the name
-        card: {
-            brandsConfiguration: {
-                synchrony_plcc: {
-                    icon: 'http://localhost:3000/test_images/smartmoney.png'
-                },
-                bcmc: {
-                    icon: 'http://localhost:3000/test_images/bcmc.png'
-                },
-                maestro: {
-                    icon: 'http://localhost:3000/test_images/maestro.png'
-                }
-            }
-        }
-    }
-});
-
-// SECURED FIELDS
-window.securedFields = checkout
-    .create('securedfields', {
-        type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
-        styles,
-        minimumExpiryDate: '09/21',
-        onConfigSuccess,
-        onBrand,
-        onBinValue: cbObj => {
-            if (cbObj.encryptedBin) {
-                console.log('onBinValue', cbObj);
+const initCheckout = async () => {
+    window.checkout = await AdyenCheckout({
+        clientKey: process.env.__CLIENT_KEY__,
+        locale: shopperLocale,
+        //        environment: 'http://localhost:8080/checkoutshopper/',
+        environment: 'test',
+        onChange: handleOnChange,
+        onAdditionalDetails,
+        onError: console.error,
+        risk: {
+            enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
+            // Also accessible via checkout.modules.risk.data
+            node: '.merchant-checkout__form', // Element that DF iframe is briefly added to
+            onComplete: handleOnRiskData,
+            onError: console.error
+        },
+        translations: {
+            'en-US': {
+                'creditCard.cvcField.placeholder.3digits': 'digits 3',
+                'creditCard.cvcField.placeholder.4digits': 'digits 4'
             }
         },
-        onError: setCCErrors,
-        onFocus: setFocus,
-        onBinLookup,
-        onChange
-    })
-    .mount('.secured-fields');
-
-createPayButton('.secured-fields', window.securedFields, 'securedfields');
-
-// HIDE ADDITIONAL SF EXAMPLES
-if (showOtherExamples === false) {
-    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
-    extraSFs.forEach(elem => {
-        elem.style.display = 'none';
-    });
-}
-// - END
-
-window.securedFieldsSi =
-    showOtherExamples &&
-    checkout
-        .create('securedfields', {
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            styles: styles_si,
-            trimTrailingSeparator: true,
-            onConfigSuccess: onConfigSuccess_si,
-            onFieldValid: onFieldValid_si,
-            onBrand: onBrand_si,
-            onError: onError_si,
-            onFocus: onFocus_si
-        })
-        .mount('.secured-fields-si');
-
-window.fancySecuredFields =
-    showOtherExamples &&
-    checkout
-        .create('securedfields', {
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            styles: fancyStyles,
-            autoFocus: false,
-            onFieldValid: fancyFieldValid,
-            onBrand: fancyChangeBrand,
-            onError: fancyErrors,
-            onFocus: fancyFocus
-        })
-        .mount('.fancy-secured-fields');
-
-window.materialDesignSecuredFields =
-    showOtherExamples &&
-    checkout
-        .create('securedfields', {
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            styles: materialStyles,
-            placeholders: {
-                encryptedCardNumber: '',
-                encryptedExpiryDate: '',
-                encryptedSecurityCode: ''
+        paymentMethodsConfiguration: {
+            // NOTE: still use 'card' because it's about the component 'type', not the name
+            card: {
+                brandsConfiguration: {
+                    synchrony_plcc: {
+                        icon: 'http://localhost:3000/test_images/smartmoney.png'
+                    },
+                    bcmc: {
+                        icon: 'http://localhost:3000/test_images/bcmc.png'
+                    },
+                    maestro: {
+                        icon: 'http://localhost:3000/test_images/maestro.png'
+                    }
+                }
             },
-            onFocus: materialFocus,
-            onError: handleMaterialError,
-            onFieldValid: onMaterialFieldValid,
-            onConfigSuccess: createMaterialLabelListener
+            threeDS2: {
+                challengeWindowSize: '01'
+            }
+        }
+    });
+
+    // SECURED FIELDS
+    window.securedFields = checkout
+        .create('securedfields', {
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
+            styles,
+            minimumExpiryDate: '09/21',
+            onConfigSuccess,
+            onBrand,
+            onBinValue: cbObj => {
+                if (cbObj.encryptedBin) {
+                    console.log('onBinValue', cbObj);
+                }
+            },
+            onFocus: setFocus,
+            onBinLookup,
+            onChange
         })
-        .mount('.material-secured-fields-container');
+        .mount('.secured-fields');
+
+    createPayButton('.secured-fields', window.securedFields, 'securedfields');
+
+    // HIDE ADDITIONAL SF EXAMPLES
+    //    if (showOtherExamples === false) {
+    //        const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
+    //        extraSFs.forEach(elem => {
+    //            elem.style.display = 'none';
+    //        });
+    //    }
+    // - END
+
+    window.securedFieldsSi =
+        showOtherExamples &&
+        checkout
+            .create('securedfields', {
+                type: 'card',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                styles: styles_si,
+                trimTrailingSeparator: true,
+                onConfigSuccess: onConfigSuccess_si,
+                onFieldValid: onFieldValid_si,
+                onBrand: onBrand_si,
+                onError: onError_si,
+                onFocus: onFocus_si
+            })
+            .mount('.secured-fields-si');
+
+    window.fancySecuredFields =
+        showOtherExamples &&
+        checkout
+            .create('securedfields', {
+                type: 'card',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                styles: fancyStyles,
+                autoFocus: false,
+                onFieldValid: fancyFieldValid,
+                onBrand: fancyChangeBrand,
+                onError: fancyErrors,
+                onFocus: fancyFocus
+            })
+            .mount('.fancy-secured-fields');
+
+    window.materialDesignSecuredFields =
+        showOtherExamples &&
+        checkout
+            .create('securedfields', {
+                type: 'card',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                styles: materialStyles,
+                onFocus: materialFocus,
+                onError: handleMaterialError,
+                onFieldValid: onMaterialFieldValid,
+                onConfigSuccess: createMaterialLabelListener
+            })
+            .mount('.material-secured-fields-container');
+};
+
+initCheckout();
 
 const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');
