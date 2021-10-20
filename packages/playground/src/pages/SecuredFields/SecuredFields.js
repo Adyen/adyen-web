@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
+import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
@@ -35,6 +35,15 @@ const onAdditionalDetails = retrievedData => {
         handlePaymentResult(result);
     });
 };
+
+// HIDE ADDITIONAL SF EXAMPLES
+if (showOtherExamples === false) {
+    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
+    extraSFs.forEach(elem => {
+        elem.style.display = 'none';
+    });
+}
+// - END
 
 const configObj = {
     clientKey: process.env.__CLIENT_KEY__,
@@ -102,15 +111,6 @@ const initCheckout = async () => {
         .mount('.secured-fields');
 
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
-
-    // HIDE ADDITIONAL SF EXAMPLES
-    //    if (showOtherExamples === false) {
-    //        const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
-    //        extraSFs.forEach(elem => {
-    //            elem.style.display = 'none';
-    //        });
-    //    }
-    // - END
 
     window.securedFieldsSi =
         showOtherExamples &&
