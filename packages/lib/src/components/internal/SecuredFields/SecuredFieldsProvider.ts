@@ -282,7 +282,15 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         const errorKeys = Object.keys(this.state.errors);
         const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
             if (this.state.errors[key]) {
-                acc[key] = { isValid: false, errorMessage: getError(this.state.errors[key]) };
+                acc[key] = {
+                    isValid: false,
+                    errorMessage: getError(this.state.errors[key]),
+                    // For v5 the object found in state.errors should also contain the additional properties that used to be sent to the onError callback
+                    // namely: translation, errorCode & ref to rootNode
+                    errorI18n: this.props.i18n.get(this.state.errors[key]),
+                    error: this.state.errors[key],
+                    rootNode: this.rootNode
+                };
             } else {
                 acc[key] = null;
             }

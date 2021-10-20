@@ -146,9 +146,6 @@ const initCheckout = async () => {
 
 initCheckout();
 
-/**
- * Material design example (needs Checkout w. different config)
- */
 // Clear placeholders for material design example
 configObj.translations = {
     'en-US': {
@@ -179,9 +176,6 @@ const initCheckout2 = async () => {
 
 initCheckout2();
 
-/**
- * HANDLERS
- */
 const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');
 
