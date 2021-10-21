@@ -5,8 +5,11 @@ import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import eslint from '@rollup/plugin-eslint';
+import babel from '@rollup/plugin-babel';
 import terserConfig from './terser.config';
 import pkg from '../package.json';
+import { DEFAULT_EXTENSIONS } from '@babel/core';
+
 const currentVersion = require('./version')();
 
 if (process.env.CI !== 'true') {
@@ -59,6 +62,31 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
             (await import('rollup-plugin-esbuild')).default({
                 target: 'es2017'
             }),
+        babel({
+            extensions: [...DEFAULT_EXTENSIONS, 'ts', 'tsx'],
+            exclude: ['node_modules/**', '**/*.test.*'],
+            ignore: [/core-js/, /@babel\/runtime/],
+            presets: [
+                [
+                    '@babel/preset-env',
+                    {
+                        targets: {
+                            chrome: '58',
+                            ie: '11'
+                        }
+                    }
+                ]
+            ],
+            babelHelpers: 'runtime',
+            plugins: [
+                [
+                    '@babel/plugin-transform-runtime',
+                    {
+                        corejs: 3
+                    }
+                ]
+            ]
+        }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
             config: {
@@ -69,7 +97,11 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
             extract: 'adyen.css'
         }),
         compress && (await import('rollup-plugin-terser')).terser(terserConfig),
-        analyze && (await import('rollup-plugin-visualizer')).default({ title: 'Adyen Web bundle visualizer', gzipSize: true })
+        analyze &&
+            (await import('rollup-plugin-visualizer')).default({
+                title: 'Adyen Web bundle visualizer',
+                gzipSize: true
+            })
     ];
 }
 

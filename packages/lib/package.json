@@ -40,12 +40,17 @@
         "test:watch": "npm run test -- --watchAll",
         "test:coverage": "npm run test -- --coverage",
         "size": "npm run build && node ./scripts/size",
+        "size-only": "node ./scripts/size",
         "type-check": "tsc --noEmit",
         "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
         "lint:fix": "npm run lint -- --fix",
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
+        "@babel/core": "^7.15.8",
+        "@babel/plugin-transform-runtime": "^7.15.8",
+        "@babel/preset-env": "^7.15.8",
+        "@rollup/plugin-babel": "^5.3.0",
         "@rollup/plugin-commonjs": "^19.0.0",
         "@rollup/plugin-eslint": "^8.0.1",
         "@rollup/plugin-json": "^4.1.0",
@@ -87,6 +92,7 @@
         "whatwg-fetch": "^3.6.2"
     },
     "dependencies": {
+        "@babel/runtime": "^7.15.4",
         "@types/applepayjs": "^3.0.2",
         "@types/googlepay": "^0.6.2",
         "classnames": "^2.3.1",

@@ -19,11 +19,3 @@ import 'whatwg-fetch';
         });
     });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-
-import 'core-js-pure/es/object/assign';
-import 'core-js-pure/es/object/keys';
-import 'core-js-pure/es/array/includes';
-import 'core-js-pure/es/array/find';
-import 'core-js-pure/es/array/find-index';
-import 'core-js-pure/es/promise';
-
