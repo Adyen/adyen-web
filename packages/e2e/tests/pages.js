@@ -11,3 +11,5 @@ export const ISSUERLISTS_URL = `${BASE_URL}/issuerlists/`;
 export const OPENINVOICES_URL = `${BASE_URL}/openinvoices/`;
 
 export const VOUCHERS_URL = `${BASE_URL}/vouchers/`;
+
+export const DROPIN_SESSIONS_URL = `${BASE_URL}/dropinsessions`;
