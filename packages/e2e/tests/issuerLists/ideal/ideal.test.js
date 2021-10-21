@@ -19,7 +19,7 @@ test('should make an iDeal payment', async t => {
     await t.expect(getComponentData()).eql({
         paymentMethod: {
             type: 'ideal',
-            issuer: '1152'
+            issuer: '1121'
         },
         clientStateDataIndicator: true
     });
