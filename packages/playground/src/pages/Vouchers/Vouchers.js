@@ -178,12 +178,14 @@ import './Vouchers.scss';
     // Econtext Stores Input
     window.econtextStoresInput = checkout
         .create('econtext_stores', {
+            personalDetailsRequired: false,
             data: {
                 firstName: 'Joe',
                 lastName: 'Smith',
                 shopperEmail: 'test@email.com',
                 telephoneNumber: '0621098765'
-            }
+            },
+            onSubmit: e => console.log('SUBMIT:', e)
         })
         .mount('#econtext-stores-input-container');
 
