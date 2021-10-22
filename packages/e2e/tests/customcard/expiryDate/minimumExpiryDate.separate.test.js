@@ -1,10 +1,8 @@
 import { Selector } from 'testcafe';
 import { start, getIframeSelector } from '../../utils/commonUtils';
-import cu from '../../cards/utils/cardUtils';
 import { CUSTOMCARDS_URL } from '../../pages';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 import ccu from '../utils/customCardUtils';
-import { TEST_MONTH_VALUE, TEST_YEAR_VALUE } from '../../cards/utils/constants';
 
 const errorHolder = Selector('.pm-form-label__error-text');
 
