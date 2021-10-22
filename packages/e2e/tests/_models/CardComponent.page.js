@@ -18,7 +18,7 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.numHolder = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber`);
-        this.numHolderInError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__field--error`);
+        //        this.numHolderInError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber.adyen-checkout__field--error`);
 
         // The <span> that holds the label text (first child of the <label>)
         this.numLabelText = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text`);
@@ -38,7 +38,7 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.dateHolder = Selector(`${BASE_EL} .adyen-checkout__field__exp-date`);
-        this.dateHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__field--error`);
+        //        this.dateHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date.adyen-checkout__field--error`);
         this.dateHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__exp-date--optional`);
 
         // The <span> that holds the label text (first child of the <label>)
@@ -56,7 +56,7 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.cvcHolder = Selector(`${BASE_EL} .adyen-checkout__field__cvc`);
-        this.cvcHolderInError = Selector(`${BASE_EL} .adyen-checkout__field____cvc .adyen-checkout__field--error`);
+        //        this.cvcHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__cvc.adyen-checkout__field--error`);
         this.cvcHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__cvc--optional`);
 
         // The <span> that holds the label text (first child of the <label>)
@@ -85,6 +85,11 @@ export default class CardPage extends BasePage {
          */
         this.iframeSelector = getIframeSelector(`${BASE_EL} iframe`);
         this.cardUtils = cu(this.iframeSelector);
+
+        /**
+         * Pay button
+         */
+        this.payButton = Selector(`${BASE_EL} .adyen-checkout__button--pay`);
     }
 
     getFromState = ClientFunction(path => {
@@ -93,4 +98,18 @@ export default class CardPage extends BasePage {
 
         return splitPath.reduce(reducer, window.card.state);
     });
+
+    getFromWindow = ClientFunction((what, prop) => {
+        if (!prop) {
+            return window[what];
+        }
+        return window[what][prop];
+    });
+
+    //    getFromWindow = ClientFunction(path => {
+    //        const splitPath = path.split('.');
+    //        const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
+    //
+    //        return splitPath.reduce(reducer, window);
+    //    });
 }

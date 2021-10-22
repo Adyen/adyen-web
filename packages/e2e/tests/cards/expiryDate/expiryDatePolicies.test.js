@@ -77,7 +77,7 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
         .eql(false);
 });
 
-test.only('#2 Testing optional expiryDatePolicy - how securedField responds', async t => {
+test('#2 Testing optional expiryDatePolicy - how securedField responds', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -106,4 +106,53 @@ test.only('#2 Testing optional expiryDatePolicy - how securedField responds', as
         .expect(Selector('[data-fieldtype="encryptedExpiryDate"]').getAttribute('aria-required'))
         .eql('true')
         .switchToMainWindow();
+});
+
+test('#3 Testing optional expiryDatePolicy - validating fields first and then entering PAN should see errors cleared from both UI & state', async t => {
+    // This test, if run at full speed, *after* test #1, can fail to clear the PAN error - wtf? thanks testcafe!
+    await t.setTestSpeed(0.85);
+
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    // Click pay
+    await t.click('.adyen-checkout__card-input .adyen-checkout__button--pay');
+
+    // Expect errors in UI
+    await t
+        .expect(cardPage.numLabelTextError.exists)
+        .ok()
+        .expect(cardPage.dateLabelTextError.exists)
+        .ok()
+        .expect(cardPage.cvcLabelTextError.exists)
+        .ok();
+
+    // Expect errors in (mapped) state
+    await t
+        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedExpiryDate'))
+        .notEql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedSecurityCode'))
+        .notEql(null);
+
+    // Fill number to provoke (mock) binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+
+    // Expect errors to be cleared - since the fields were in error because they were empty
+    // and now the PAN field is filled and the date & cvc fields are now optional...
+
+    // ...UI errors cleared...
+    await t
+        .expect(cardPage.numLabelTextError.exists)
+        .notOk()
+        .expect(cardPage.dateLabelTextError.exists)
+        .notOk()
+        .expect(cardPage.cvcLabelTextError.exists)
+        .notOk();
+
+    // ...State errors cleared
+    await t
+        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedExpiryDate'))
+        .eql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedSecurityCode'))
+        .eql(null);
 });
