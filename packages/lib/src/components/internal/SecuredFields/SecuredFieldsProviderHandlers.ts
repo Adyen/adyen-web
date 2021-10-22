@@ -6,7 +6,9 @@ import {
     DATE_POLICY_REQUIRED,
     ENCRYPTED_EXPIRY_DATE,
     OPTIONAL,
-    HIDDEN
+    HIDDEN,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR
 } from './lib/configuration/constants';
 import {
     CbObjOnError,
@@ -115,10 +117,9 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
         prevState => {
             /**
-             * If we change brand to one where the cvc or date field is not required & is empty - then these fields cannot be in error
+             * If we change brand to one where the cvc or date field(s) are not required & are empty - then these fields cannot be in error
              * (scenario: have validated empty form, then choose brand w. optional/hidden cvc or date)...
              * ...else propagate the existing error.
-             * TODO - does separate date fields i.e the custom card comp require something similar?
              */
             const cvcFieldInError = fieldIsInError(ENCRYPTED_SECURITY_CODE, cardInfo.cvcPolicy, this.numCharsInField, prevState.errors);
 
@@ -127,6 +128,19 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                     ? fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
                     : null;
 
+            // For custom card comp
+            const monthFieldInError =
+                this.numDateFields === 2
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_MONTH, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    : null;
+
+            const yearFieldInError =
+                this.numDateFields === 2
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_YEAR, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    : null;
+            // --
+            /** end */
+
             return {
                 brand: cardInfo.brand,
                 cvcPolicy: cardInfo.cvcPolicy ?? CVC_POLICY_REQUIRED,
@@ -134,7 +148,9 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                 errors: {
                     ...prevState.errors,
                     ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError }),
-                    ...(existy(dateFieldInError) && { [ENCRYPTED_EXPIRY_DATE]: dateFieldInError })
+                    ...(existy(dateFieldInError) && { [ENCRYPTED_EXPIRY_DATE]: dateFieldInError }),
+                    ...(existy(monthFieldInError) && { [ENCRYPTED_EXPIRY_MONTH]: monthFieldInError }),
+                    ...(existy(yearFieldInError) && { [ENCRYPTED_EXPIRY_YEAR]: yearFieldInError })
                 },
                 expiryDatePolicy: cardInfo.expiryDatePolicy ?? DATE_POLICY_REQUIRED
             };
