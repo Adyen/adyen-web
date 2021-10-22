@@ -436,6 +436,11 @@ class SecuredField extends AbstractSecuredField {
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField:expiryDatePolicy:: value=', value);
 
         this._expiryDatePolicy = value;
+
+        // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
+        if (this.hasError && this.errorType === 'isValidated') {
+            this.hasError = false;
+        }
     }
 
     get iframeContentWindow(): Window {
