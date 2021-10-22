@@ -129,9 +129,9 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
 
     // Expect errors in (mapped) state
     await t
-        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedExpiryDate'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
         .notEql(null)
-        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedSecurityCode'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .notEql(null);
 
     // Fill number to provoke (mock) binLookup response
@@ -151,8 +151,8 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
 
     // ...State errors cleared
     await t
-        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedExpiryDate'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
         .eql(null)
-        .expect(cardPage.getFromWindow('mappedStateErrors', 'encryptedSecurityCode'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .eql(null);
 });
