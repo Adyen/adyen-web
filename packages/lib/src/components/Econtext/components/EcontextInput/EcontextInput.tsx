@@ -4,15 +4,16 @@ import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types';
-import './EcontextInput.css';
+import './EcontextInput.scss';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
-    data: PersonalDetailsSchema;
-    showPayButton: boolean;
+    data?: PersonalDetailsSchema;
+    showPayButton?: boolean;
     payButton(config: any): VNode;
-    onChange(data: any): void;
-    onSubmit(state: any, component: any): void;
+    onChange?(data: any): void;
+    onSubmit?(state: any, component: any): void;
+    [key: string]: any;
 }
 
 export default function EcontextInput({ personalDetailsRequired = true, data, onChange, showPayButton, payButton }: EcontextInputProps) {

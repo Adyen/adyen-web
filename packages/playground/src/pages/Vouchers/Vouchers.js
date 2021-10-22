@@ -175,10 +175,17 @@ import './Vouchers.scss';
         })
         .mount('#doku-result-container');
 
-    // Econtext Stores Input
+    // Econtext Stores Input without personal details form
     window.econtextStoresInput = checkout
         .create('econtext_stores', {
             personalDetailsRequired: false,
+            onSubmit: e => console.log('SUBMIT:', e)
+        })
+        .mount('#econtext-stores-without-form-input-container');
+
+    // Econtext Stores Input
+    window.econtextStoresInput = checkout
+        .create('econtext_stores', {
             data: {
                 firstName: 'Joe',
                 lastName: 'Smith',

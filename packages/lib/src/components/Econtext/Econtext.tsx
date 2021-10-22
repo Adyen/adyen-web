@@ -8,9 +8,9 @@ import { UIElementProps } from '../types';
 import { PersonalDetailsSchema } from '../../types';
 
 interface EcontextElementProps extends UIElementProps {
+    reference?: string;
     personalDetailsRequired?: boolean;
-    reference: string;
-    data: PersonalDetailsSchema;
+    data?: PersonalDetailsSchema;
 }
 
 export class EcontextElement extends UIElement<EcontextElementProps> {
