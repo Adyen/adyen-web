@@ -3,7 +3,7 @@ let hideDate = false;
 let isDualBranding = false;
 
 function setAttributes(el, attrs) {
-    for (var key in attrs) {
+    for (const key in attrs) {
         el.setAttribute(key, attrs[key]);
     }
 }
@@ -42,16 +42,12 @@ export function onConfigSuccess(pCallbackObj) {
 }
 
 export function setCCErrors(pCallbackObj) {
-    if (pCallbackObj.error === 'originKeyError') {
-        document.querySelector('.card-input__spinner__holder').style.display = 'none';
-        pCallbackObj.rootNode.style.display = 'block';
-        return;
-    }
-
     if (!pCallbackObj.rootNode) return;
 
     const sfNode = pCallbackObj.rootNode.querySelector(`[data-cse="${pCallbackObj.fieldType}"]`);
     const errorNode = sfNode.parentNode.querySelector('.pm-form-label__error-text');
+
+    if (errorNode.innerText === '' && pCallbackObj.error === '') return;
 
     if (pCallbackObj.error !== '') {
         errorNode.style.display = 'block';
@@ -189,13 +185,12 @@ export function onBinLookup(pCallbackObj) {
 }
 
 export function onChange(state, component) {
+    // From v5 the onError handler is no longer only for card comp related errors - so watch state.errors and call the card specific setCCErrors based on this
     if (!!Object.keys(state.errors).length) {
         const errors = Object.entries(state.errors).map(([fieldType, error]) => {
             return {
                 fieldType,
-                error: !!error ? error.toString() : '',
-                rootNode: component._node,
-                errorI18n: component.props.i18n.translations[error]
+                ...(error ? error : { error: '', rootNode: component._node })
             };
         });
         errors.forEach(setCCErrors);

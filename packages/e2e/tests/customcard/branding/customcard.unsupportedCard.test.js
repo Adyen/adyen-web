@@ -57,7 +57,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -69,7 +69,7 @@ test(
         // Expect error field in iframe to persist
         await t
             .switchToIframe(iframeSelector.nth(0))
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -88,7 +88,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -110,7 +110,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -129,7 +129,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be unfilled
-            .expect(Selector('#ariaErrorField').withExactText('').exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText('').exists)
             .ok()
             .switchToMainWindow();
 
@@ -151,7 +151,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('false')
             // Expect error field in iframe to be unfilled
-            .expect(Selector('#ariaErrorField').withExactText('').exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText('').exists)
             .ok()
             .switchToMainWindow();
     }
@@ -188,7 +188,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -200,7 +200,7 @@ test(
         // Expect error field in iframe to persist
         await t
             .switchToIframe(iframeSelector.nth(0))
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -219,7 +219,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -241,7 +241,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('true')
             // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
             .ok()
             .switchToMainWindow();
 
@@ -266,7 +266,7 @@ test(
             .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('aria-invalid'))
             .eql('false')
             // Expect error field in iframe to be unfilled
-            .expect(Selector('#ariaErrorField').withExactText('').exists)
+            .expect(Selector('#encryptedCardNumber-ariaErrorField').withExactText('').exists)
             .ok()
             .switchToMainWindow();
     }
