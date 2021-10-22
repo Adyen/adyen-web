@@ -12,6 +12,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
     const { i18n } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
+        'adyen-checkout__field__exp-date': true,
         [styles['adyen-checkout__card__exp-date__input--hidden']]: expiryDatePolicy === DATE_POLICY_HIDDEN,
         'adyen-checkout__field__exp-date--optional': expiryDatePolicy === DATE_POLICY_OPTIONAL
     });
