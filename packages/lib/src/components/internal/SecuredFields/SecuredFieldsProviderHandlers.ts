@@ -121,8 +121,11 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
              * TODO - does separate date fields i.e the custom card comp require something similar?
              */
             const cvcFieldInError = fieldIsInError(ENCRYPTED_SECURITY_CODE, cardInfo.cvcPolicy, this.numCharsInField, prevState.errors);
+
             const dateFieldInError =
-                this.numDateFields === 1 && fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors);
+                this.numDateFields === 1
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    : null;
 
             return {
                 brand: cardInfo.brand,
