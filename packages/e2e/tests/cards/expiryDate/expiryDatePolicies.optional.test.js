@@ -23,15 +23,19 @@ const mockedResponse = {
     requestId: null
 };
 
-// EXAMPLE function for processing the mockResponse
-//const processFn = (reqBody, mockedResponse) => {
-//    mockedResponse.requestId = reqBody.requestId;
-//    return mockedResponse;
-//};
+/**
+ * EXAMPLE function for processing the mockResponse
+ * - this can be passed as a 3rd param to cardPage.getMock and enables a
+ * particular set of tests to have a more bespoke processing of the mocked response body
+ */
+/*const processFn = (reqBody, mockedResponse) => {
+    mockedResponse.requestId = reqBody.requestId;
+    return mockedResponse;
+};*/
 
 const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse); //, processFn);
 
-fixture`Test how Card Component handles different expiryDate policies`
+fixture`Test how Card Component handles optional expiryDate policy`
     .clientScripts('expiryDate.clientScripts.js')
     .requestHooks(mock)
     .beforeEach(async t => {
@@ -146,4 +150,36 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
         .eql(null)
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .eql(null);
+});
+
+test('#4 Testing optional expiryDatePolicy - date field in error DOES stop card becoming valid', async t => {
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    // Card out of date
+    await cardPage.cardUtils.fillDate(t, '12/90');
+
+    // Expect errors in UI
+    await t.expect(cardPage.dateLabelTextError.exists).ok();
+
+    // Force blur event to fire on date field
+    await cardPage.setForceClick(true);
+
+    // Fill number to provoke (mock) binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+
+    // UI reflects that binLookup says expiryDate is optional
+    await t.expect(cardPage.dateLabelText.withText('(optional)').exists).ok();
+
+    // Visual errors persist in UI
+    await t.expect(cardPage.dateLabelTextError.exists).ok();
+
+    // Card not seen as valid
+    await t.expect(cardPage.getFromState('isValid')).eql(false);
+
+    // Delete erroneous date
+    await cardPage.cardUtils.deleteDate(t);
+
+    // Card is now valid
+    await t.expect(cardPage.getFromState('isValid')).eql(true);
 });

@@ -24,6 +24,14 @@ export default class BasePage {
         return mockedResponse;
     }
 
+    /**
+     * Centralised functionality for mocking an API response via testcafe's fixture.requestHooks()
+     *
+     * @param requestURL
+     * @param mockedResponse
+     * @param processResFn
+     * @returns {RequestMock}
+     */
     getMock(requestURL, mockedResponse, processResFn = null) {
         return RequestMock()
             .onRequestTo(request => {
@@ -42,10 +50,20 @@ export default class BasePage {
             );
     }
 
+    /**
+     * Client function that accesses properties on the window object
+     */
     getFromWindow = ClientFunction(path => {
         const splitPath = path.split('.');
         const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
 
         return splitPath.reduce(reducer, window);
+    });
+
+    /**
+     * Hack to force testcafe to fire expected blur events as (securedFields) switch focus
+     */
+    setForceClick = ClientFunction(val => {
+        window.testCafeForceClick = val;
     });
 }
