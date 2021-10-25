@@ -110,7 +110,7 @@ test('#2 Testing optional expiryDatePolicy - how securedField responds', async t
 
 test('#3 Testing optional expiryDatePolicy - validating fields first and then entering PAN should see errors cleared from both UI & state', async t => {
     // This test, if run at full speed, *after* test #1, can fail to clear the PAN error - wtf? thanks testcafe!
-    await t.setTestSpeed(0.85);
+    await t.setTestSpeed(0.75);
 
     // Wait for field to appear in DOM
     await cardPage.numHolder();
