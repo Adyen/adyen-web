@@ -13,7 +13,7 @@ const cardPage = new CardComponentPage();
 const mockedResponse = {
     brands: [
         {
-            brand: 'bcmc', // keep as a recognised card brand (bcmc) until we have a genuine brand w. optional expiryDate
+            brand: 'cup', // keep as a recognised card brand (cup) until we have a genuine brand w. optional expiryDate
             cvcPolicy: 'optional',
             enableLuhnCheck: true,
             expiryDatePolicy: 'optional',
