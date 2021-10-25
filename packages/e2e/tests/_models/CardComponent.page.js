@@ -92,13 +92,6 @@ export default class CardPage extends BasePage {
         this.payButton = Selector(`${BASE_EL} .adyen-checkout__button--pay`);
     }
 
-    getFromWindow = ClientFunction(path => {
-        const splitPath = path.split('.');
-        const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
-
-        return splitPath.reduce(reducer, window);
-    });
-
     getFromState = ClientFunction(path => {
         const splitPath = path.split('.');
         const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);

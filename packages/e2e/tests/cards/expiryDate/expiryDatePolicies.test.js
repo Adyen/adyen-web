@@ -1,8 +1,7 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 
 import { REGULAR_TEST_CARD } from '../utils/constants';
-import { RequestMock, Selector } from 'testcafe';
-import { BASE_URL } from '../../pages';
+import { Selector } from 'testcafe';
 
 const cardPage = new CardComponentPage();
 
@@ -24,21 +23,13 @@ const mockedResponse = {
     requestId: null
 };
 
-const mock = RequestMock()
-    .onRequestTo(request => {
-        return request.url === cardPage.binLookupUrl && request.method === 'post';
-    })
-    .respond(
-        (req, res) => {
-            const body = JSON.parse(req.body);
-            mockedResponse.requestId = body.requestId;
-            res.setBody(mockedResponse);
-        },
-        200,
-        {
-            'Access-Control-Allow-Origin': BASE_URL
-        }
-    );
+// EXAMPLE function for processing the mockResponse
+//const processFn = (reqBody, mockedResponse) => {
+//    mockedResponse.requestId = reqBody.requestId;
+//    return mockedResponse;
+//};
+
+const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse); //, processFn);
 
 fixture`Test how Card Component handles different expiryDate policies`
     .clientScripts('expiryDate.clientScripts.js')
