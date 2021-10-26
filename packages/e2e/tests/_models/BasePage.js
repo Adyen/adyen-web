@@ -66,4 +66,16 @@ export default class BasePage {
     setForceClick = ClientFunction(val => {
         window.testCafeForceClick = val;
     });
+
+    // For the tests as a whole - throw an error if SDK binLookup mocking is turned on
+    checkSDKMocking = ClientFunction(() => {
+        if (window.mockBinCount > 0) {
+            throw new Error('SDK bin mocking is turned on - this will affect/break the tests - so turn it off in triggerBinLookup.ts');
+        }
+    });
+
+    // For individual test suites (perhaps being run in isolation) - provide a way to ensure SDK bin mocking is turned off
+    turnOffSDKMocking = ClientFunction(() => {
+        window.mockBinCount = 0;
+    });
 }

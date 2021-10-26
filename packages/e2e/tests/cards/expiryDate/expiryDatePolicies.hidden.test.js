@@ -1,7 +1,6 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 
 import { REGULAR_TEST_CARD } from '../utils/constants';
-import { Selector } from 'testcafe';
 
 const cardPage = new CardComponentPage();
 
@@ -30,6 +29,7 @@ fixture`Test how Card Component handles hidden expiryDate policy`
     .requestHooks(mock)
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
+        await cardPage.turnOffSDKMocking();
     });
 
 test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
@@ -60,7 +60,6 @@ test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
 });
 
 test('#2 Testing hidden expiryDatePolicy - date field in error does not stop card becoming valid', async t => {
-    await t.setTestSpeed(0.5);
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
