@@ -36,14 +36,14 @@ const mockedResponse = {
 const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse); //, processFn);
 
 fixture`Test how Card Component handles optional expiryDate policy`
-    .clientScripts('expiryDate.clientScripts.js')
-    .requestHooks(mock)
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
         // - provide a way to ensure SDK bin mocking is turned off
         await cardPage.turnOffSDKMocking();
-    });
+    })
+    .requestHooks(mock)
+    .clientScripts('./expiryDate.clientScripts.js');
 
 test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t => {
     // Wait for field to appear in DOM
@@ -107,11 +107,8 @@ test('#2 Testing optional expiryDatePolicy - how securedField responds', async t
 });
 
 test('#3 Testing optional expiryDatePolicy - validating fields first and then entering PAN should see errors cleared from both UI & state', async t => {
-    // This test, if run at full speed, *after* test #1, can fail to clear the PAN error - wtf? thanks testcafe!
-    await t.setTestSpeed(0.75);
-
-    // Wait for field to appear in DOM
-    await cardPage.numHolder();
+    // Start, allow time for iframes to load so isValidated call to SF won't fail
+    await t.wait(1000);
 
     // Click pay
     await t.click('.adyen-checkout__card-input .adyen-checkout__button--pay');

@@ -22,7 +22,7 @@ const initCheckout = async () => {
     window.card = checkout
         .create('card', {
             brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'],
-            onChange: state => console.log(state),
+            //            onChange: state => console.log(state),
             ...window.cardConfig
         })
         .mount('.card-field');

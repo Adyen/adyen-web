@@ -25,12 +25,12 @@ const mockedResponse = {
 const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse);
 
 fixture`Test how Card Component handles hidden expiryDate policy`
-    .clientScripts('expiryDate.clientScripts.js')
-    .requestHooks(mock)
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         await cardPage.turnOffSDKMocking();
-    });
+    })
+    .requestHooks(mock)
+    .clientScripts('./expiryDate.clientScripts.js');
 
 test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
     // Wait for field to appear in DOM
@@ -59,7 +59,44 @@ test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
         .eql(false);
 });
 
-test('#2 Testing hidden expiryDatePolicy - date field in error does not stop card becoming valid', async t => {
+test('#2 Testing hidden expiryDatePolicy - validating fields first and then entering PAN should see errors cleared from state', async t => {
+    // Start, allow time for iframes to load so isValidated call to SF won't fail
+    await t.wait(1000);
+
+    // Click pay
+    await t.click('.adyen-checkout__card-input .adyen-checkout__button--pay');
+
+    // Expect errors in UI
+    await t
+        .expect(cardPage.numLabelTextError.exists)
+        .ok()
+        .expect(cardPage.dateLabelTextError.exists)
+        .ok()
+        .expect(cardPage.cvcLabelTextError.exists)
+        .ok();
+
+    // Expect errors in (mapped) state
+    await t
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .notEql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
+        .notEql(null);
+
+    // Fill number to provoke (mock) binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+
+    // Expect errors to be cleared - since the fields were in error because they were empty
+    // and now the PAN field is filled and the date & cvc fields are now hidden...
+
+    // ...State errors cleared
+    await t
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .eql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
+        .eql(null);
+});
+
+test('#3 Testing hidden expiryDatePolicy - date field in error does not stop card becoming valid', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -80,6 +117,9 @@ test('#2 Testing hidden expiryDatePolicy - date field in error does not stop car
 
     // Card seen as valid (despite date field technically being in error)
     await t.expect(cardPage.getFromState('isValid')).eql(true);
+
+    // Expect errors in (mapped) state to remain
+    await t.expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate')).notEql(null);
 
     // Delete number
     await cardPage.cardUtils.deleteCardNumber(t);
