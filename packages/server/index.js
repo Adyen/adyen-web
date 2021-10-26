@@ -17,6 +17,13 @@ module.exports = (app = express(), options = {}) => {
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+        const tempNonce = 'nonce-c29tZSBjb29sIHN0cmluZyB3aWxsIHBvcCB1cCAxMjM=';
+
+        res.header(
+            'Content-Security-Policy',
+            `default-src 'self'; script-src 'self' '${tempNonce}'; style-src 'self' '${tempNonce}'; connect-src ws://localhost:3020 https://checkoutshopper-test.adyen.com http://localhost:3020 https://www.sandbox.paypal.com; frame-src https://www.sandbox.paypal.com https://checkoutshopper-test.adyen.com; img-src 'self' data: https://checkoutshopper-test.adyen.com/;`
+        );
         next();
     });
 

@@ -24,10 +24,16 @@ export default function PaypalComponent(props: PayPalComponentProps) {
 
     useEffect(() => {
         const src = getPaypalUrl(props);
-        const datasetAttributes = {
-            ...(props.cspNonce && { cspNonce: props.cspNonce })
-        };
-        const script = new Script(src, 'body', datasetAttributes);
+
+        let attributes = {},
+            dataAttributes = {};
+
+        if (props.cspNonce) {
+            attributes = { nonce: props.cspNonce };
+            dataAttributes = { cspNonce: props.cspNonce };
+        }
+
+        const script = new Script(src, 'body', attributes, dataAttributes);
 
         if (window.paypal) {
             handlePaypalLoad();

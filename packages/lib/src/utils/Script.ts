@@ -15,17 +15,22 @@ class Script {
     private readonly script: HTMLScriptElement;
     private readonly src: string;
     private readonly node: string;
-    private readonly datasetAttributes: Record<string, string>;
+    private readonly attributes: Partial<HTMLScriptElement>;
+    private readonly dataAttributes: Record<string, string | undefined>;
 
-    constructor(src, node = 'body', datasetAttributes: Record<string, string> = {}) {
+    constructor(src, node = 'body', attributes: Partial<HTMLScriptElement> = {}, dataAttributes: Record<string, string | undefined> = {}) {
         this.script = document.createElement('script');
         this.src = src;
         this.node = node;
-        this.datasetAttributes = datasetAttributes;
+        this.attributes = attributes;
+        this.dataAttributes = dataAttributes;
     }
 
     public load = (): Promise<any> =>
         new Promise((resolve, reject) => {
+            Object.assign(this.script, this.attributes);
+            Object.assign(this.script.dataset, this.dataAttributes);
+
             this.script.src = this.src;
             this.script.async = true;
             this.script.onload = resolve;
@@ -33,8 +38,6 @@ class Script {
                 this.remove();
                 reject(new Error(`Unable to load script ${this.src}`));
             };
-
-            Object.assign(this.script.dataset, this.datasetAttributes);
 
             const container = document.querySelector(this.node);
             const addedScript = container.querySelector(`script[src="${this.src}"]`);

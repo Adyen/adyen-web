@@ -7,9 +7,6 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 
-// does not change anything apparently
-__webpack_nonce__ = 'c29tZSBjb29sIHN0cmluZyB3aWxsIHBvcCB1cCAxMjM=';
-
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
@@ -115,6 +112,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // commit: true, // true [Default] / false
             // style: {},
 
+            // Must be generated on the server and passed down to the component
             cspNonce: 'c29tZSBjb29sIHN0cmluZyB3aWxsIHBvcCB1cCAxMjM=',
 
             // Events
