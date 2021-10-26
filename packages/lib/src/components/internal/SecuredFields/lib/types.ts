@@ -6,6 +6,7 @@ import { BrandObject } from '../../../Card/types';
 declare global {
     interface Window {
         _b$dl: boolean;
+        mockBinCount: number;
     }
 }
 
