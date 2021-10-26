@@ -45,7 +45,7 @@ test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
     // ...and cvc is hidden too
     await t.expect(cardPage.cvcHolder.filterHidden().exists).ok();
 
-    // Card seen as valid (since CVC is optional too)
+    // Card seen as valid (since CVC is hidden too)
     await t.expect(cardPage.getFromState('isValid')).eql(true);
 
     // Clear number and see UI & state reset
@@ -86,4 +86,7 @@ test('#2 Testing hidden expiryDatePolicy - date field in error does not stop car
 
     // Errors in UI visible again
     await t.expect(cardPage.dateLabelTextError.exists).ok();
+
+    // Card is not valid
+    await t.expect(cardPage.getFromState('isValid')).eql(false);
 });
