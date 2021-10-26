@@ -73,6 +73,11 @@ interface PayPalCommonProps {
     blockPayPalCreditButton?: boolean;
 
     /**
+     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
+     */
+    cspNonce?: string;
+
+    /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
     intent?: Intent;

@@ -15,11 +15,13 @@ class Script {
     private readonly script: HTMLScriptElement;
     private readonly src: string;
     private readonly node: string;
+    private readonly datasetAttributes: Record<string, string>;
 
-    constructor(src, node = 'body') {
+    constructor(src, node = 'body', datasetAttributes: Record<string, string> = {}) {
         this.script = document.createElement('script');
         this.src = src;
         this.node = node;
+        this.datasetAttributes = datasetAttributes;
     }
 
     public load = (): Promise<any> =>
@@ -31,6 +33,8 @@ class Script {
                 this.remove();
                 reject(new Error(`Unable to load script ${this.src}`));
             };
+
+            Object.assign(this.script.dataset, this.datasetAttributes);
 
             const container = document.querySelector(this.node);
             const addedScript = container.querySelector(`script[src="${this.src}"]`);
