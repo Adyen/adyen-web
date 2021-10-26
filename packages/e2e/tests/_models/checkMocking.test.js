@@ -1,4 +1,4 @@
-import CardComponentPage from '../../../_models/CardComponent.page';
+import CardComponentPage from './CardComponent.page';
 
 const cardPage = new CardComponentPage();
 
