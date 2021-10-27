@@ -232,6 +232,20 @@ export function onChange(state, component) {
         const mode = state.valid.encryptedCardNumber ? 'dualBranding_valid' : 'dualBranding_notValid';
         setLogosActive(component._node, mode);
     }
+
+    /**
+     * For running the e2e tests in testcafe - we need a mapped version of state.errors
+     * since, for v5, we enhance the securedFields state.errors object with a rootNode prop
+     * & Testcafe doesn't like a ClientFunction retrieving an object with a DOM node in it!?
+     */
+    if (!!Object.keys(state.errors).length) {
+        // Replace any rootNode values in the objects in state.errors with an empty string
+        const nuErrors = Object.entries(state.errors).reduce((acc, [fieldType, error]) => {
+            acc[fieldType] = error ? { ...error, rootNode: '' } : error;
+            return acc;
+        }, {});
+        window.mappedStateErrors = nuErrors;
+    }
 }
 
 const setErrorClasses = function(pNode, pSetErrors) {

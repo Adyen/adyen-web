@@ -64,7 +64,7 @@ test('#2 Testing hidden expiryDatePolicy - validating fields first and then ente
     await t.wait(1000);
 
     // Click pay
-    await t.click('.adyen-checkout__card-input .adyen-checkout__button--pay');
+    await t.click(cardPage.payButton);
 
     // Expect errors in UI
     await t

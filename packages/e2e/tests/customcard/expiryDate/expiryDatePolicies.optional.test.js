@@ -1,9 +1,11 @@
-import CardComponentPage from '../../_models/CardComponent.page';
+import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
 
-import { REGULAR_TEST_CARD } from '../utils/constants';
+import { REGULAR_TEST_CARD } from '../../cards/utils/constants';
 import { Selector } from 'testcafe';
 
-const cardPage = new CardComponentPage();
+const cardPage = new CustomCardComponentPage();
+
+const BASE_REF = 'securedFields';
 
 /**
  * NOTE - we are mocking the response until such time as we have a genuine card,
@@ -35,7 +37,7 @@ const mockedResponse = {
 
 const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse); //, processFn);
 
-fixture`Test how Card Component handles optional expiryDate policy`
+fixture`Test how Custom Card Component handles optional expiryDate policy`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
@@ -62,7 +64,7 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
     await t.expect(cardPage.cvcLabelText.withText('(optional)').exists).ok();
 
     // Card seen as valid (since CVC is optional too)
-    await t.expect(cardPage.getFromState('isValid')).eql(true);
+    await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(true);
 
     // Clear number and see UI & state reset
     await cardPage.cardUtils.deleteCardNumber(t);
@@ -71,7 +73,7 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
         .notOk()
         .expect(cardPage.cvcLabelText.withText('(optional)').exists)
         .notOk()
-        .expect(cardPage.getFromState('isValid'))
+        .expect(cardPage.getFromState(BASE_REF, 'isValid'))
         .eql(false);
 });
 
@@ -115,17 +117,19 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
 
     // Expect errors in UI
     await t
-        .expect(cardPage.numLabelTextError.exists)
+        .expect(cardPage.numErrorText.filterVisible().exists)
         .ok()
-        .expect(cardPage.dateLabelTextError.exists)
+        .expect(cardPage.dateErrorText.filterVisible().exists)
         .ok()
-        .expect(cardPage.cvcLabelTextError.exists)
+        .expect(cardPage.cvcErrorText.filterVisible().exists)
         .ok();
 
     // Expect errors in (mapped) state
     await t
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
         .notEql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .notEql(undefined)
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .notEql(null);
 
@@ -137,12 +141,12 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
 
     // ...UI errors cleared...
     await t
-        .expect(cardPage.numLabelTextError.exists)
-        .notOk()
-        .expect(cardPage.dateLabelTextError.exists)
-        .notOk()
-        .expect(cardPage.cvcLabelTextError.exists)
-        .notOk();
+        .expect(cardPage.numErrorText.filterHidden().exists)
+        .ok()
+        .expect(cardPage.dateErrorText.filterHidden().exists)
+        .ok()
+        .expect(cardPage.cvcErrorText.filterHidden().exists)
+        .ok();
 
     // ...State errors cleared
     await t
@@ -160,7 +164,7 @@ test('#4 Testing optional expiryDatePolicy - date field in error DOES stop card 
     await cardPage.cardUtils.fillDate(t, '12/90');
 
     // Expect errors in UI
-    await t.expect(cardPage.dateLabelTextError.exists).ok();
+    await t.expect(cardPage.dateErrorText.filterVisible().exists).ok();
 
     // Force blur event to fire on date field
     await cardPage.setForceClick(true);
@@ -172,14 +176,14 @@ test('#4 Testing optional expiryDatePolicy - date field in error DOES stop card 
     await t.expect(cardPage.dateLabelText.withText('(optional)').exists).ok();
 
     // Visual errors persist in UI
-    await t.expect(cardPage.dateLabelTextError.exists).ok();
+    await t.expect(cardPage.dateErrorText.filterVisible().exists).ok();
 
     // Card not seen as valid
-    await t.expect(cardPage.getFromState('isValid')).eql(false);
+    await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(false);
 
     // Delete erroneous date
     await cardPage.cardUtils.deleteDate(t);
 
     // Card is now valid
-    await t.expect(cardPage.getFromState('isValid')).eql(true);
+    await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(true);
 });
