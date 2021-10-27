@@ -41,7 +41,6 @@ const entriesReducer = (acc, { id }) => {
 
 module.exports = merge(webpackConfig, {
     mode: 'development',
-
     plugins: [
         ...htmlPages.map(htmlPageGenerator),
         new webpack.HotModuleReplacementPlugin(),

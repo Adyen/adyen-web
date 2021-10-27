@@ -22,98 +22,95 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // AMAZON PAY
     // Demo only
-    // const urlSearchParams = new URLSearchParams(window.location.search);
-    // const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
-    // const step = urlSearchParams.get('step');
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
+    const step = urlSearchParams.get('step');
 
     // Initial state
-    // if (!step) {
-    //     window.amazonpay = checkout
-    //         .create('amazonpay', {
-    //             amount,
-    //             productType: 'PayOnly',
-    //
-    //             // Regular checkout:
-    //             // returnUrl: 'http://localhost:3020/wallets?step=result',
-    //             // checkoutMode: 'ProcessOrder'
-    //
-    //             // Express Checkout flow:
-    //             returnUrl: 'http://localhost:3020/wallets?step=review'
-    //         })
-    //         .mount('.amazonpay-field');
-    // }
-    //
-    // // Review and confirm order
-    // if (step === 'review') {
-    //     window.amazonpay = checkout
-    //         .create('amazonpay', {
-    //             /**
-    //              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-    //              */
-    //             amazonCheckoutSessionId,
-    //             cancelUrl: 'http://localhost:3020/wallets',
-    //             returnUrl: 'http://localhost:3020/wallets?step=result',
-    //             amount: {
-    //                 currency: 'GBP',
-    //                 value: 4700
-    //             }
-    //         })
-    //         .mount('.amazonpay-field');
-    // }
-    //
-    // // Make payment
-    // if (step === 'result') {
-    //     window.amazonpay = checkout
-    //         .create('amazonpay', {
-    //             /**
-    //              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-    //              */
-    //             amazonCheckoutSessionId,
-    //             showOrderButton: false,
-    //             onSubmit: (state, component) => {
-    //                 return makePayment(state.data)
-    //                     .then(response => {
-    //                         if (response.action) {
-    //                             component.handleAction(response.action);
-    //                         } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
-    //                             alert(response.resultCode);
-    //                         } else {
-    //                             // Try handling the decline flow
-    //                             // This will redirect the shopper to select another payment method
-    //                             component.handleDeclineFlow();
-    //                         }
-    //                     })
-    //                     .catch(error => {
-    //                         throw Error(error);
-    //                     });
-    //             },
-    //             onError: e => {
-    //                 if (e.resultCode) {
-    //                     alert(e.resultCode);
-    //                 } else {
-    //                     console.error(e);
-    //                 }
-    //             }
-    //         })
-    //         .mount('.amazonpay-field');
-    //
-    //     window.amazonpay.submit();
-    // }
+    if (!step) {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                amount,
+                productType: 'PayOnly',
+
+                // Regular checkout:
+                // returnUrl: 'http://localhost:3020/wallets?step=result',
+                // checkoutMode: 'ProcessOrder'
+
+                // Express Checkout flow:
+                returnUrl: 'http://localhost:3020/wallets?step=review'
+            })
+            .mount('.amazonpay-field');
+    }
+
+    // Review and confirm order
+    if (step === 'review') {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                cancelUrl: 'http://localhost:3020/wallets',
+                returnUrl: 'http://localhost:3020/wallets?step=result',
+                amount: {
+                    currency: 'GBP',
+                    value: 4700
+                }
+            })
+            .mount('.amazonpay-field');
+    }
+
+    // Make payment
+    if (step === 'result') {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                showOrderButton: false,
+                onSubmit: (state, component) => {
+                    return makePayment(state.data)
+                        .then(response => {
+                            if (response.action) {
+                                component.handleAction(response.action);
+                            } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
+                                alert(response.resultCode);
+                            } else {
+                                // Try handling the decline flow
+                                // This will redirect the shopper to select another payment method
+                                component.handleDeclineFlow();
+                            }
+                        })
+                        .catch(error => {
+                            throw Error(error);
+                        });
+                },
+                onError: e => {
+                    if (e.resultCode) {
+                        alert(e.resultCode);
+                    } else {
+                        console.error(e);
+                    }
+                }
+            })
+            .mount('.amazonpay-field');
+
+        window.amazonpay.submit();
+    }
 
     // PAYPAL
     window.paypalButtons = checkout
         .create('paypal', {
             // merchantId: '5RZKQX2FC48EA',
             // intent: 'capture', // 'capture' [Default] / 'authorize'
-            configuration: {
-                intent: 'capture',
-                merchantId: 'M6TNAESZ5FGNN'
-            },
+            // configuration: {
+            //      merchantId: '5RZKQX2FC48EA',
+            //      intent: 'capture'
+            // },
             // commit: true, // true [Default] / false
             // style: {},
-
-            // Must be generated on the server and passed down to the component
-            cspNonce: 'c29tZSBjb29sIHN0cmluZyB3aWxsIHBvcCB1cCAxMjM=',
 
             // Events
             onError: (error, component) => {
@@ -129,74 +126,74 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.paypal-field');
 
     // GOOGLE PAY
-    // const googlepay = checkout.create('paywithgoogle', {
-    //     // environment: 'PRODUCTION',
-    //     environment: 'TEST',
-    //
-    //     // Callbacks
-    //     onAuthorized: console.info,
-    //     // onError: console.error,
-    //
-    //     // Payment info
-    //     countryCode: 'NL',
-    //
-    //     // Merchant config (required)
-    //     //            configuration: {
-    //     //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
-    //     //                merchantName: 'Adyen Test merchant', // Name to be displayed
-    //     //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
-    //     //            },
-    //
-    //     // Shopper info (optional)
-    //     emailRequired: true,
-    //     shippingAddressRequired: true,
-    //     shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
-    //
-    //     // Button config (optional)
-    //     buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-    //     buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-    // });
-    //
-    // // First, check availability. If environment is TEST, Google Pay will always be considered available.
-    // googlepay
-    //     .isAvailable()
-    //     .then(() => {
-    //         googlepay.mount('.googlepay-field');
-    //     })
-    //     .catch(e => console.warn(e));
-    //
-    // window.googlepay = googlepay;
-    //
-    // // APPLE PAY
-    // const applepay = checkout.create('applepay', {
-    //     // Callbacks
-    //     onAuthorized: (resolve, reject, event) => {
-    //         console.log('Apple Pay onAuthorized', event);
-    //         resolve();
-    //     },
-    //     // onError: console.error,
-    //
-    //     // Payment info
-    //     countryCode: 'DE', // Required. The merchant’s two-letter ISO 3166 country code.
-    //
-    //     // Merchant config (required)
-    //     configuration: {
-    //         merchantName: 'Adyen Test merchant', // Name to be displayed
-    //         merchantIdentifier: '000000000200001' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
-    //     },
-    //     buttonType: 'buy'
-    // });
-    //
-    // applepay
-    //     .isAvailable()
-    //     .then(isAvailable => {
-    //         // Demo only
-    //         if (isAvailable) document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
-    //
-    //         // If Available mount it in the dom
-    //         if (isAvailable) applepay.mount('.applepay-field');
-    //     })
-    //     .catch(e => {
-    //         console.warn(e);
-    //     });
+    const googlepay = checkout.create('paywithgoogle', {
+        // environment: 'PRODUCTION',
+        environment: 'TEST',
+
+        // Callbacks
+        onAuthorized: console.info,
+        // onError: console.error,
+
+        // Payment info
+        countryCode: 'NL',
+
+        // Merchant config (required)
+        //            configuration: {
+        //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
+        //                merchantName: 'Adyen Test merchant', // Name to be displayed
+        //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
+        //            },
+
+        // Shopper info (optional)
+        emailRequired: true,
+        shippingAddressRequired: true,
+        shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
+
+        // Button config (optional)
+        buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+        buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+    });
+
+    // First, check availability. If environment is TEST, Google Pay will always be considered available.
+    googlepay
+        .isAvailable()
+        .then(() => {
+            googlepay.mount('.googlepay-field');
+        })
+        .catch(e => console.warn(e));
+
+    window.googlepay = googlepay;
+
+    // APPLE PAY
+    const applepay = checkout.create('applepay', {
+        // Callbacks
+        onAuthorized: (resolve, reject, event) => {
+            console.log('Apple Pay onAuthorized', event);
+            resolve();
+        },
+        // onError: console.error,
+
+        // Payment info
+        countryCode: 'DE', // Required. The merchant’s two-letter ISO 3166 country code.
+
+        // Merchant config (required)
+        configuration: {
+            merchantName: 'Adyen Test merchant', // Name to be displayed
+            merchantIdentifier: '000000000200001' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
+        },
+        buttonType: 'buy'
+    });
+
+    applepay
+        .isAvailable()
+        .then(isAvailable => {
+            // Demo only
+            if (isAvailable) document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
+
+            // If Available mount it in the dom
+            if (isAvailable) applepay.mount('.applepay-field');
+        })
+        .catch(e => {
+            console.warn(e);
+        });
 });
