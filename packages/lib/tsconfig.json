@@ -12,6 +12,8 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
 
+        "noEmit": true,
+
         "noImplicitAny": false,
         "strictPropertyInitialization": false,
         "suppressImplicitAnyIndexErrors": true,

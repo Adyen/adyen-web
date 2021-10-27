@@ -79,7 +79,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             data: {},
             cvcPolicy: CVC_POLICY_REQUIRED,
             isSfpValid: false,
-            hasKoreanFields: this.props.hasKoreanFields
+            hasKoreanFields: props.hasKoreanFields
         };
         this.state = stateObj;
 

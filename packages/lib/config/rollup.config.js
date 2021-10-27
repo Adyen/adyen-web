@@ -1,4 +1,3 @@
-import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
@@ -8,7 +7,6 @@ import eslint from '@rollup/plugin-eslint';
 import babel from '@rollup/plugin-babel';
 import terserConfig from './terser.config';
 import pkg from '../package.json';
-import { DEFAULT_EXTENSIONS } from '@babel/core';
 
 const currentVersion = require('./version')();
 
@@ -21,7 +19,6 @@ if (process.env.CI !== 'true') {
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isBundleAnalyzer = process.env.NODE_ENV === 'analyze';
-const transformWith = process.env.EXPERIMENTAL_DEVBUILD === 'true' ? 'esbuild' : 'typescript';
 
 const input = 'src/index.ts';
 const watchConfig = {
@@ -33,9 +30,11 @@ const watchConfig = {
     exclude: 'node_modules/**'
 };
 
-async function getPlugins({ compress, analyze, version, useTypescript = true }) {
+const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+
+async function getPlugins({ compress, analyze, version }) {
     return [
-        resolve(),
+        resolve({ extensions }),
         commonjs(),
         eslint({
             include: ['./src/**'],
@@ -52,21 +51,23 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
             },
             preventAssignment: true
         }),
-        useTypescript &&
-            typescript({
-                useTsconfigDeclarationDir: true,
-                check: false,
-                cacheRoot: `./node_modules/.cache/.rts2_cache`
-            }),
-        !useTypescript &&
-            (await import('rollup-plugin-esbuild')).default({
-                target: 'es2017'
-            }),
         babel({
-            extensions: [...DEFAULT_EXTENSIONS, 'ts', 'tsx'],
+            extensions,
             exclude: ['node_modules/**', '**/*.test.*'],
             ignore: [/core-js/, /@babel\/runtime/],
             presets: [
+                ['@babel/preset-typescript',
+                    {
+                        isTSX: true,
+                        allExtensions: true,
+                        jsxPragma: 'h',
+                        jsxPragmaFrag: 'Fragment'
+                    }
+                ],
+                ['@babel/preset-react', {
+                    pragma: 'h',
+                    pragmaFrag: 'Fragment'
+                }],
                 [
                     '@babel/preset-env',
                     {
@@ -114,7 +115,6 @@ function getExternals() {
 
 export default async () => {
     const plugins = await getPlugins({
-        useTypescript: transformWith === 'typescript',
         compress: isProduction,
         analyze: isBundleAnalyzer,
         version: currentVersion
