@@ -16,10 +16,11 @@ const remote = process.argv.indexOf('--remote') > -1 || process.argv.indexOf('-r
         const runner = testcafe.createRunner();
         let browser = 'chrome:headless';
 
+        let d = new Date();
+
         if (remote) {
             const remoteConnection = await testcafe.createBrowserConnection();
 
-            const d = new Date();
             console.log(`Tests ready at - ${zeroPad(d.getHours())}:${zeroPad(d.getMinutes())}:${zeroPad(d.getSeconds())}`);
             console.log('\x1b[36m%s\x1b[0m', `${remoteConnection.url}`); // Outputs remoteConnection.url so that it can be visited from the remote browser.
             browser = remoteConnection;
@@ -29,6 +30,8 @@ const remote = process.argv.indexOf('--remote') > -1 || process.argv.indexOf('-r
             .browsers(browser)
             .run();
 
+        d = new Date();
+        console.log(`Tests completed at - ${zeroPad(d.getHours())}:${zeroPad(d.getMinutes())}:${zeroPad(d.getSeconds())}`);
         console.log('Number failed tests:', failedCount);
     } finally {
         await testcafe.close();

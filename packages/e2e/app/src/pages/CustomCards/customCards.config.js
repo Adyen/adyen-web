@@ -157,10 +157,10 @@ function resetDualBranding(rootNode) {
 
     setLogosActive(rootNode);
 
-    const brandLogo1 = rootNode.querySelector('#pmImageDual1');
+    const brandLogo1 = rootNode.querySelector('.pm-image-dual-1');
     brandLogo1.removeEventListener('click', dualBrandListener);
 
-    const brandLogo2 = rootNode.querySelector('#pmImageDual2');
+    const brandLogo2 = rootNode.querySelector('.pm-image-dual-2');
     brandLogo2.removeEventListener('click', dualBrandListener);
 }
 
@@ -168,8 +168,8 @@ function resetDualBranding(rootNode) {
  * Implementing dual branding
  */
 function onDualBrand(pCallbackObj) {
-    const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImageDual1');
-    const brandLogo2 = pCallbackObj.rootNode.querySelector('#pmImageDual2');
+    const brandLogo1 = pCallbackObj.rootNode.querySelector('.pm-image-dual-1');
+    const brandLogo2 = pCallbackObj.rootNode.querySelector('.pm-image-dual-2');
 
     isDualBranding = true;
 
@@ -230,7 +230,7 @@ export function onChange(state, component) {
      */
     if (isDualBranding) {
         const mode = state.valid.encryptedCardNumber ? 'dualBranding_valid' : 'dualBranding_notValid';
-        setLogosActive(document.querySelector('.secured-fields'), mode);
+        setLogosActive(component._node, mode);
     }
 }
 

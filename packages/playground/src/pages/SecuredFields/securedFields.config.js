@@ -122,7 +122,7 @@ export function onBrand(pCallbackObj) {
      * If not in dual branding mode - add card brand to first image element
      */
     if (!isDualBranding) {
-        const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImage');
+        const brandLogo1 = pCallbackObj.rootNode.querySelector('.pm-image-1');
         setAttributes(brandLogo1, {
             src: pCallbackObj.brandImageUrl,
             alt: pCallbackObj.brand
@@ -201,10 +201,10 @@ function resetDualBranding(rootNode) {
 
     setLogosActive(rootNode);
 
-    const brandLogo1 = rootNode.querySelector('#pmImageDual1');
+    const brandLogo1 = rootNode.querySelector('.pm-image-dual-1');
     brandLogo1.removeEventListener('click', dualBrandListener);
 
-    const brandLogo2 = rootNode.querySelector('#pmImageDual2');
+    const brandLogo2 = rootNode.querySelector('.pm-image-dual-2');
     brandLogo2.removeEventListener('click', dualBrandListener);
 }
 
@@ -212,8 +212,8 @@ function resetDualBranding(rootNode) {
  * Implementing dual branding
  */
 function onDualBrand(pCallbackObj) {
-    const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImageDual1');
-    const brandLogo2 = pCallbackObj.rootNode.querySelector('#pmImageDual2');
+    const brandLogo1 = pCallbackObj.rootNode.querySelector('.pm-image-dual-1');
+    const brandLogo2 = pCallbackObj.rootNode.querySelector('.pm-image-dual-2');
 
     isDualBranding = true;
 
