@@ -2,7 +2,7 @@
     "payButton": "Paga",
     "payButton.redirecting": "Reindirizzamento...",
     "storeDetails": "Salva per il prossimo pagamento",
-    "creditCard.holderName": "Nome sulla carta",
+    "creditCard.holderName": "Titolare carta",
     "creditCard.holderName.placeholder": "J. Smith",
     "creditCard.holderName.invalid": "Nome del titolare della carta non valido",
     "creditCard.numberField.title": "Numero carta",

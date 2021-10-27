@@ -16,7 +16,7 @@ function GiftcardResult({ brand, amount, balance, transactionLimit, ...props }) 
                         {i18n.amount(balance.value, balance.currency)}
                     </span>
                 </li>
-                {transactionLimit && (
+                {transactionLimit && transactionLimit.value && (
                     <li className="adyen-checkout__giftcard-result__balance__item">
                         <span className="adyen-checkout__giftcard-result__balance__title adyen-checkout__giftcard-result__balance__title--transactionLimit">
                             {i18n.get('giftcardTransactionLimit', {

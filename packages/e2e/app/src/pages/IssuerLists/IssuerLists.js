@@ -11,7 +11,7 @@ const initCheckout = async () => {
         shopperLocale
     });
 
-    const checkout = new AdyenCheckout({
+    const checkout = await AdyenCheckout({
         amount,
         paymentMethodsResponse,
         clientKey: process.env.__CLIENT_KEY__,
@@ -21,7 +21,12 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError
+        onError: handleError,
+        paymentMethodsConfiguration: {
+            ideal: {
+                highlightedIssuers: ['1121', '1154', '1153']
+            }
+        }
         // ...window.mainConfiguration
     });
 

@@ -1,50 +1,11 @@
 import { h } from 'preact';
-import BaseElement, { BaseElementProps } from './BaseElement';
-import { PaymentAction, PaymentAmount } from '../types';
+import BaseElement from './BaseElement';
+import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import Language from '../language/Language';
-
-export interface UIElementProps extends BaseElementProps {
-    onChange?: (state: any, element: UIElement) => void;
-    onValid?: (state: any, element: UIElement) => void;
-    onSubmit?: (state: any, element: UIElement) => void;
-    onComplete?: (state, element: UIElement) => void;
-    onAdditionalDetails?: (state: any, element: UIElement) => void;
-    onError?: (error, element?: UIElement) => void;
-
-    /** Automatically set status through the payment flow */
-    setStatusAutomatically?: boolean;
-
-    type?: string;
-    name?: string;
-    icon?: string;
-    amount?: PaymentAmount;
-
-    /**
-     * Show/Hide pay button
-     * @defaultValue true
-     */
-    showPayButton?: boolean;
-
-    /** @internal */
-    payButton?: (options) => any;
-
-    /** @internal */
-    loadingContext?: string;
-
-    /** @internal */
-    createFromAction?: (action: PaymentAction, props: object) => UIElement;
-
-    /** @internal */
-    clientKey?: string;
-
-    /** @internal */
-    elementRef?: any;
-
-    /** @internal */
-    i18n?: Language;
-}
+import { UIElementProps } from './types';
+import { getSanitizedResponse, resolveFinalResult } from './utils';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
@@ -56,7 +17,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.handleAction = this.handleAction.bind(this);
+        this.handleOrder = this.handleOrder.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
         this.elementRef = (props && props.elementRef) || this;
     }
 
@@ -74,35 +38,42 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return state;
     }
 
+    onSubmit(): void {
+        if (this.props.onSubmit) {
+            // Classic flow
+            this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
+        } else if (this._parentInstance.session) {
+            // Session flow
+            const beforeSubmitEvent = this.props.beforeSubmit
+                ? new Promise((resolve, reject) => this.props.beforeSubmit(this.data, this.elementRef, { resolve, reject }))
+                : Promise.resolve(this.data);
+
+            beforeSubmitEvent.then(data => this.submitPayment(data)).catch(() => {});
+        } else {
+            this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
+        }
+    }
+
     onValid() {
         const state = { data: this.data };
         if (this.props.onValid) this.props.onValid(state, this.elementRef);
         return state;
     }
 
-    startPayment(): Promise<any> {
-        return Promise.resolve(true);
-    }
-
-    submit(): void {
-        const { onError = () => {}, onSubmit = () => {} } = this.props;
-        this.startPayment()
-            .then(() => {
-                const { data, isValid } = this;
-
-                if (!isValid) {
-                    this.showValidation();
-                    return false;
-                }
-
-                if (this.props.setStatusAutomatically !== false) this.setStatus('loading');
-                return onSubmit({ data, isValid }, this.elementRef);
-            })
-            .catch(error => onError(error));
-    }
-
     onComplete(state): void {
         if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
+    }
+
+    /**
+     * Submit payment method data. If the form is not valid, it will trigger validation.
+     */
+    submit(): void {
+        if (!this.isValid) {
+            this.showValidation();
+            return null;
+        }
+
+        this.onSubmit();
     }
 
     showValidation(): this {
@@ -110,28 +81,90 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
-    setStatus(status): this {
-        if (this.componentRef && this.componentRef.setStatus) this.componentRef.setStatus(status);
+    setStatus(status, props?): this {
+        if (this.componentRef && this.componentRef.setStatus) this.componentRef.setStatus(status, props);
         return this;
     }
 
-    handleAction(action: PaymentAction, props = {}) {
+    submitPayment(data): Promise<void> {
+        this.setStatus('loading');
+
+        return this._parentInstance.session
+            .submitPayment(data)
+            .then(this.handleResponse)
+            .catch(error => {
+                this.setStatus('ready');
+                this.handleError(error);
+            });
+    }
+
+    submitAdditionalDetails(data): Promise<void> {
+        return this._parentInstance.session
+            .submitDetails(data)
+            .then(this.handleResponse)
+            .catch(this.handleError);
+    }
+
+    protected handleError = (error: AdyenCheckoutError): void => {
+        if (this.props.onError) this.props.onError(error, this.elementRef);
+    };
+
+    protected handleAdditionalDetails = state => {
+        if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
+        if (this.props.session) this.submitAdditionalDetails(state.data);
+        return state;
+    };
+
+    handleAction(action: PaymentAction, props = {}): UIElement {
         if (!action || !action.type) throw new Error('Invalid Action');
 
-        const paymentAction = this.props._parentInstance.createFromAction(action, {
+        const paymentAction = this._parentInstance.createFromAction(action, {
             ...props,
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef)
+            onAdditionalDetails: this.handleAdditionalDetails
         });
 
         if (paymentAction) {
             this.unmount();
-            paymentAction.mount(this._node);
-            return paymentAction;
+            return paymentAction.mount(this._node);
         }
 
         return null;
     }
 
+    protected handleOrder = (order: Order): void => {
+        this.elementRef._parentInstance.update({ order });
+    };
+
+    protected handleFinalResult = result => {
+        if (this.props.setStatusAutomatically !== false) {
+            const [status, statusProps] = resolveFinalResult(result);
+            if (status) this.elementRef.setStatus(status, statusProps);
+        }
+
+        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);
+        return result;
+    };
+
+    /**
+     * Handles a session /payments or /payments/details response.
+     * The component will handle automatically actions, orders, and final results.
+     * @param rawResponse -
+     */
+    protected handleResponse(rawResponse): void {
+        const response = getSanitizedResponse(rawResponse);
+
+        if (response.action) {
+            this.elementRef.handleAction(response.action);
+        } else if (response.order?.remainingAmount?.value > 0) {
+            this.elementRef.handleOrder(response.order);
+        } else {
+            this.elementRef.handleFinalResult(response);
+        }
+    }
+
+    /**
+     * Get the current validation status of the element
+     */
     get isValid(): boolean {
         return false;
     }
@@ -144,7 +177,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     /**
-     * Get the element displayable name
+     * Get the element's displayable name
      */
     get displayName(): string {
         return this.props.name || this.constructor['type'];
@@ -164,6 +197,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this.props.type || this.constructor['type'];
     }
 
+    /**
+     * Get the payButton component for the current element
+     */
     public payButton = props => {
         return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
     };

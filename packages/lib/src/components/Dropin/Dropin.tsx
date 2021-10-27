@@ -16,6 +16,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     constructor(props) {
         super(props);
         this.submit = this.submit.bind(this);
+        this.handleAction = this.handleAction.bind(this);
     }
 
     get isValid() {
@@ -62,32 +63,17 @@ class DropinElement extends UIElement<DropinElementProps> {
             throw new Error('No active payment method.');
         }
 
-        this.activePaymentMethod
-            .startPayment()
-            .then(this.handleSubmit)
-            .catch(error => this.props.onError(error));
+        this.activePaymentMethod.submit();
     }
-
-    protected handleSubmit = () => {
-        const { data, isValid } = this.activePaymentMethod;
-
-        if (!isValid) {
-            this.showValidation();
-            return false;
-        }
-
-        if (this.props.setStatusAutomatically !== false) this.setStatus('loading');
-        return this.props.onSubmit({ data, isValid }, this);
-    };
 
     /**
      * Creates the Drop-in elements
      */
     private handleCreate = () => {
-        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods, _parentInstance } = this.props;
-        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
-        const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, _parentInstance?.create) : [];
-        const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, _parentInstance?.create) : [];
+        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods } = this.props;
+        const commonProps = getCommonProps({ ...this.props, /*onSubmit: this.submit,*/ elementRef: this.elementRef });
+        const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance.create) : [];
+        const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance.create) : [];
 
         return [storedElements, elements];
     };
@@ -99,10 +85,10 @@ class DropinElement extends UIElement<DropinElementProps> {
             return this.activePaymentMethod.updateWithAction(action);
         }
 
-        const paymentAction: UIElement = this.props._parentInstance.createFromAction(action, {
+        const paymentAction: UIElement = this._parentInstance.createFromAction(action, {
             ...props,
             elementRef: this.elementRef, // maintain elementRef for 3DS2 flow
-            onAdditionalDetails: state => this.props.onAdditionalDetails(state, this.elementRef),
+            onAdditionalDetails: this.handleAdditionalDetails,
             isDropin: true
         });
 
@@ -123,7 +109,6 @@ class DropinElement extends UIElement<DropinElementProps> {
                 <DropinComponent
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.handleSubmit}
                     elementRef={this.elementRef}
                     onCreateElements={this.handleCreate}
                     ref={dropinRef => {

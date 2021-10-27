@@ -7,8 +7,6 @@ import {
     CVC_POLICY_REQUIRED,
     DATE_POLICY_HIDDEN
 } from './lib/configuration/constants';
-import { getError } from '../../../core/Errors/utils';
-import { ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
 import {
     CbObjOnError,
     CbObjOnFocus,
@@ -158,13 +156,6 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
             this.props.onChange(this.state);
         }
     );
-
-    cbObj.errorI18n = this.props.i18n.get(errorCode); // Add translation
-
-    const errorExplained = getError(errorCode);
-    cbObj.errorText = errorExplained !== '' ? errorExplained : ERROR_MSG_CLEARED; // Add internal explanation
-
-    this.props.onError(cbObj);
 
     return true;
 }

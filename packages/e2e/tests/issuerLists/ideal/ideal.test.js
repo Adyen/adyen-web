@@ -24,3 +24,19 @@ test('should make an iDeal payment', async t => {
         clientStateDataIndicator: true
     });
 });
+
+test('should make an iDeal payment using a highlighted issuer', async t => {
+    const firstHighlightedIssuer = await Selector('.adyen-checkout__issuer-button-group button').nth(0)();
+
+    await t.click(firstHighlightedIssuer);
+    await t.expect(getComponentData()).eql({
+        paymentMethod: {
+            type: 'ideal',
+            issuer: '1121'
+        },
+        clientStateDataIndicator: true
+    });
+
+    const paymentButtonLabel = await Selector('button.adyen-checkout__button.adyen-checkout__button--pay').textContent;
+    await t.expect(paymentButtonLabel).eql(`Continue to ${firstHighlightedIssuer.textContent}`);
+});

@@ -1,22 +1,20 @@
 import { h } from 'preact';
-import UIElement, { UIElementProps } from '../UIElement';
+import UIElement from '../UIElement';
+import { UIElementProps } from '../types';
 import IssuerList from '../internal/IssuerList';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
+import { IssuerItem } from '../internal/IssuerList/types';
 
-interface IssuerListProps extends UIElementProps {
+interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
+    highlightedIssuers: string[];
     i18n: Language;
     loadingContext: string;
-}
-
-interface IssuerItem {
-    id: string;
-    name: string;
 }
 
 interface IssuerListData {
@@ -26,8 +24,8 @@ interface IssuerListData {
     };
 }
 
-class IssuerListContainer extends UIElement<IssuerListProps> {
-    constructor(props: IssuerListProps) {
+class IssuerListContainer extends UIElement<IssuerListContainerProps> {
+    constructor(props: IssuerListContainerProps) {
         super(props);
 
         if (this.props.showImage) {
@@ -44,6 +42,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
         showImage: true,
         onValid: () => {},
         issuers: [],
+        highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT
     };
 
@@ -79,6 +78,7 @@ class IssuerListContainer extends UIElement<IssuerListProps> {
                         this.componentRef = ref;
                     }}
                     items={this.props.issuers}
+                    highlightedIds={this.props.highlightedIssuers}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}

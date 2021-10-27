@@ -4,6 +4,9 @@ import cu from '../../utils/cardUtils';
 import { REGULAR_TEST_CARD, TEST_CPF_VALUE } from '../../utils/constants';
 import { CARDS_URL, BASE_URL } from '../../../pages';
 
+const path = require('path');
+require('dotenv').config({ path: path.resolve('../../', '.env') });
+
 const getCardState = ClientFunction((what, prop) => {
     return window.card.state[what][prop];
 });
@@ -15,7 +18,7 @@ const iframeSelector = getIframeSelector('.card-field iframe');
 const cardUtils = cu(iframeSelector);
 
 const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
-    return t.switchToMainWindow().typeText('.adyen-checkout__field--socialSecurityNumber input', ssnValue);
+    return t.switchToMainWindow().typeText('.adyen-checkout__field--socialSecurityNumber input', ssnValue, { speed: 0.5 });
 };
 
 const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;

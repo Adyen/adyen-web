@@ -34,37 +34,37 @@ export default iframeSelector => {
  */
 const fillCardNumber = iframeSelector => {
     return async (t, value = REGULAR_TEST_CARD, action) => {
-        return fillIFrame(t, iframeSelector, 0, '#encryptedCardNumber', value, action);
+        return fillIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', value, action);
     };
 };
 
 const deleteCardNumber = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 0, '#encryptedCardNumber');
+        return deleteFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]');
     };
 };
 
 const deleteDigitsFromCardNumber = iframeSelector => {
     return async (t, startCaretPos, endCaretPos) => {
-        return deleteDigitsFromIFrame(t, iframeSelector, 0, '#encryptedCardNumber', startCaretPos, endCaretPos);
+        return deleteDigitsFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', startCaretPos, endCaretPos);
     };
 };
 
 const deleteCVC = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 2, '#encryptedSecurityCode');
+        return deleteFromIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"]');
     };
 };
 
 const fillDate = iframeSelector => {
     return async (t, value = TEST_DATE_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 1, '#encryptedExpiryDate', value, action);
+        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryDate"]', value, action);
     };
 };
 
 const fillCVC = iframeSelector => {
-    return async (t, value = TEST_CVC_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 2, '#encryptedSecurityCode', value, action);
+    return async (t, value = TEST_CVC_VALUE, action, iFrameNum = 2) => {
+        return fillIFrame(t, iframeSelector, iFrameNum, '[data-fieldtype="encryptedSecurityCode"]', value, action);
     };
 };
 

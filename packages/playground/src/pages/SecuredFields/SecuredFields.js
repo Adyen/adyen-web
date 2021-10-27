@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/adyen.css';
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setCCErrors, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
+import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
@@ -11,7 +11,7 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import './securedFields.style.scss';
 
-const showOtherExamples = false; // For testing: set to false to only instantiate the basic form of SecuredFields
+const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of SecuredFields
 
 window.paymentData = {};
 const cardText = document.querySelector('.sf-text');
@@ -36,7 +36,16 @@ const onAdditionalDetails = retrievedData => {
     });
 };
 
-window.checkout = new AdyenCheckout({
+// HIDE ADDITIONAL SF EXAMPLES
+if (showOtherExamples === false) {
+    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
+    extraSFs.forEach(elem => {
+        elem.style.display = 'none';
+    });
+}
+// - END
+
+const configObj = {
     clientKey: process.env.__CLIENT_KEY__,
     locale: shopperLocale,
     //        environment: 'http://localhost:8080/checkoutshopper/',
@@ -71,91 +80,101 @@ window.checkout = new AdyenCheckout({
                     icon: 'http://localhost:3000/test_images/maestro.png'
                 }
             }
+        },
+        threeDS2: {
+            challengeWindowSize: '01'
         }
     }
-});
+};
 
-// SECURED FIELDS
-window.securedFields = checkout
-    .create('securedfields', {
-        type: 'card',
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
-        styles,
-        minimumExpiryDate: '09/21',
-        onConfigSuccess,
-        onBrand,
-        onBinValue: cbObj => {
-            if (cbObj.encryptedBin) {
-                console.log('onBinValue', cbObj);
-            }
-        },
-        onError: setCCErrors,
-        onFocus: setFocus,
-        onBinLookup,
-        onChange
-    })
-    .mount('.secured-fields');
+const initCheckout = async () => {
+    window.checkout = await AdyenCheckout(configObj);
 
-createPayButton('.secured-fields', window.securedFields, 'securedfields');
-
-// HIDE ADDITIONAL SF EXAMPLES
-if (showOtherExamples === false) {
-    const extraSFs = Array.prototype.slice.call(document.querySelectorAll('.extra-sf'));
-    extraSFs.forEach(elem => {
-        elem.style.display = 'none';
-    });
-}
-// - END
-
-window.securedFieldsSi =
-    showOtherExamples &&
-    checkout
+    // SECURED FIELDS
+    window.securedFields = checkout
         .create('securedfields', {
             type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            styles: styles_si,
-            trimTrailingSeparator: true,
-            onConfigSuccess: onConfigSuccess_si,
-            onFieldValid: onFieldValid_si,
-            onBrand: onBrand_si,
-            onError: onError_si,
-            onFocus: onFocus_si
-        })
-        .mount('.secured-fields-si');
-
-window.fancySecuredFields =
-    showOtherExamples &&
-    checkout
-        .create('securedfields', {
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            styles: fancyStyles,
-            autoFocus: false,
-            onFieldValid: fancyFieldValid,
-            onBrand: fancyChangeBrand,
-            onError: fancyErrors,
-            onFocus: fancyFocus
-        })
-        .mount('.fancy-secured-fields');
-
-window.materialDesignSecuredFields =
-    showOtherExamples &&
-    checkout
-        .create('securedfields', {
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            styles: materialStyles,
-            placeholders: {
-                encryptedCardNumber: '',
-                encryptedExpiryDate: '',
-                encryptedSecurityCode: ''
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
+            styles,
+            minimumExpiryDate: '09/21',
+            onConfigSuccess,
+            onBrand,
+            onBinValue: cbObj => {
+                if (cbObj.encryptedBin) {
+                    console.log('onBinValue', cbObj);
+                }
             },
-            onFocus: materialFocus,
-            onError: handleMaterialError,
-            onFieldValid: onMaterialFieldValid,
-            onConfigSuccess: createMaterialLabelListener
+            onFocus: setFocus,
+            onBinLookup,
+            onChange
         })
-        .mount('.material-secured-fields-container');
+        .mount('.secured-fields');
+
+    createPayButton('.secured-fields', window.securedFields, 'securedfields');
+
+    window.securedFieldsSi =
+        showOtherExamples &&
+        checkout
+            .create('securedfields', {
+                type: 'card',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                styles: styles_si,
+                trimTrailingSeparator: true,
+                onConfigSuccess: onConfigSuccess_si,
+                onFieldValid: onFieldValid_si,
+                onBrand: onBrand_si,
+                onError: onError_si,
+                onFocus: onFocus_si
+            })
+            .mount('.secured-fields-si');
+
+    window.fancySecuredFields =
+        showOtherExamples &&
+        checkout
+            .create('securedfields', {
+                type: 'card',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                styles: fancyStyles,
+                autoFocus: false,
+                onFieldValid: fancyFieldValid,
+                onBrand: fancyChangeBrand,
+                onError: fancyErrors,
+                onFocus: fancyFocus
+            })
+            .mount('.fancy-secured-fields');
+};
+
+initCheckout();
+
+// Clear placeholders for material design example
+configObj.translations = {
+    'en-US': {
+        'creditCard.numberField.placeholder': '',
+        'creditCard.expiryDateField.placeholder': '',
+        'creditCard.cvcField.placeholder.3digits': '',
+        'creditCard.cvcField.placeholder.4digits': ''
+    }
+};
+
+const initCheckout2 = async () => {
+    window.checkout = await AdyenCheckout(configObj);
+
+    window.materialDesignSecuredFields =
+        showOtherExamples &&
+        checkout
+            .create('securedfields', {
+                type: 'card',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                styles: materialStyles,
+                onFocus: materialFocus,
+                onError: handleMaterialError,
+                onFieldValid: onMaterialFieldValid,
+                onConfigSuccess: createMaterialLabelListener
+            })
+            .mount('.material-secured-fields-container');
+};
+
+initCheckout2();
 
 const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');

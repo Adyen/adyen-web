@@ -11,9 +11,15 @@ export const GENERIC_OPTIONS = [
     'i18n',
     'modules',
     'order',
+    'session',
     'clientKey',
     'showPayButton',
     'installmentOptions',
+
+    // Events
+    'onPaymentCompleted',
+    'beforeRedirect',
+    'beforeSubmit',
     'onSubmit',
     'onAdditionalDetails',
     'onCancel',
