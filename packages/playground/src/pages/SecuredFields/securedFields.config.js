@@ -159,8 +159,8 @@ export function onBrand(pCallbackObj) {
      * Deal with showing/hiding date field(s)
      */
     const dateNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-date');
-    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-month');
-    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-year');
+    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-month');
+    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-year');
 
     if (pCallbackObj.expiryDatePolicy === 'hidden' && !hideDate) {
         hideDate = true;
