@@ -2,6 +2,7 @@ import { ClientFunction, Selector } from 'testcafe';
 import BasePage from './BasePage';
 import { getIframeSelector } from '../utils/commonUtils';
 import cu from '../cards/utils/cardUtils';
+import ccu from '../customcard/utils/customCardUtils';
 
 export default class CustomCardPage extends BasePage {
     constructor(baseEl = '.secured-fields') {
@@ -40,6 +41,36 @@ export default class CustomCardPage extends BasePage {
         this.dateErrorText = Selector(`${BASE_EL} .pm-form-label--exp-date .pm-form-label__error-text`);
 
         /**
+         * ExpiryMonth
+         */
+        // Top level <div>
+        this.monthHolder = Selector(`${BASE_EL} .pm-form-label--exp-month`);
+
+        // The <span> that holds the label text (first child of the <label>)
+        this.monthLabelText = Selector(`${BASE_EL} .pm-form-label--exp-month .pm-form-label__text`);
+
+        // The <span> that holds the iframe
+        this.monthSpan = Selector(`${BASE_EL} .pm-form-label--exp-month .pm-input-field`);
+
+        // The <span> that holds the error text
+        this.monthErrorText = Selector(`${BASE_EL} .pm-form-label--exp-month .pm-form-label__error-text`);
+
+        /**
+         * ExpiryYear
+         */
+        // Top level <div>
+        this.yearHolder = Selector(`${BASE_EL} .pm-form-label--exp-year`);
+
+        // The <span> that holds the label text (first child of the <label>)
+        this.yearLabelText = Selector(`${BASE_EL} .pm-form-label--exp-year .pm-form-label__text`);
+
+        // The <span> that holds the iframe
+        this.yearSpan = Selector(`${BASE_EL} .pm-form-label--exp-year .pm-input-field`);
+
+        // The <span> that holds the error text
+        this.yearErrorText = Selector(`${BASE_EL} .pm-form-label--exp-year .pm-form-label__error-text`);
+
+        /**
          * CVC
          */
         // Top level <div>
@@ -75,6 +106,9 @@ export default class CustomCardPage extends BasePage {
          */
         this.iframeSelector = getIframeSelector(`${BASE_EL} iframe`);
         this.cardUtils = cu(this.iframeSelector);
+
+        // Applies to custom card with separate date fields - where month, year & cvc have different indices
+        this.customCardUtils = ccu(this.iframeSelector);
 
         /**
          * Pay button

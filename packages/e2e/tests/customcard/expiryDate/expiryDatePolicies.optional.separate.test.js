@@ -1,11 +1,10 @@
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
 
 import { REGULAR_TEST_CARD } from '../../cards/utils/constants';
-import { Selector } from 'testcafe';
 
-const cardPage = new CustomCardComponentPage();
+const cardPage = new CustomCardComponentPage('.secured-fields-2');
 
-const BASE_REF = 'securedFields';
+const BASE_REF = 'securedFields2';
 
 /**
  * NOTE - we are mocking the response until such time as we have a genuine card,
@@ -25,19 +24,9 @@ const mockedResponse = {
     requestId: null
 };
 
-/**
- * EXAMPLE function for processing the mockResponse
- * - this can be passed as a 3rd param to cardPage.getMock and enables a
- * particular set of tests to have a more bespoke processing of the mocked response body
- */
-/*const processFn = (reqBody, mockedResponse) => {
-    mockedResponse.requestId = reqBody.requestId;
-    return mockedResponse;
-};*/
+const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse);
 
-const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse); //, processFn);
-
-fixture`Test how Custom Card Component handles optional expiryDate policy`
+fixture`Test how Custom Card Component with separate date fields handles optional expiryDate policy`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
@@ -51,14 +40,22 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    // Regular date label
-    await t.expect(cardPage.dateLabelText.withText('(optional)').exists).notOk();
+    // Regular date labels
+    await t
+        .expect(cardPage.monthLabelText.withText('(optional)').exists)
+        .notOk()
+        .expect(cardPage.yearLabelText.withText('(optional)').exists)
+        .notOk();
 
     // Fill number to provoke (mock) binLookup response
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
     // UI reflects that binLookup says expiryDate is optional
-    await t.expect(cardPage.dateLabelText.withText('(optional)').exists).ok();
+    await t
+        .expect(cardPage.monthLabelText.withText('(optional)').exists)
+        .ok()
+        .expect(cardPage.yearLabelText.withText('(optional)').exists)
+        .ok();
 
     // ...and cvc is optional too
     await t.expect(cardPage.cvcLabelText.withText('(optional)').exists).ok();
@@ -69,7 +66,9 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
     // Clear number and see UI & state reset
     await cardPage.cardUtils.deleteCardNumber(t);
     await t
-        .expect(cardPage.dateLabelText.withText('(optional)').exists)
+        .expect(cardPage.monthLabelText.withText('(optional)').exists)
+        .notOk()
+        .expect(cardPage.yearLabelText.withText('(optional)').exists)
         .notOk()
         .expect(cardPage.cvcLabelText.withText('(optional)').exists)
         .notOk()
@@ -77,35 +76,30 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
         .eql(false);
 });
 
-test('#2 Testing optional expiryDatePolicy - how securedField responds', async t => {
+test('#2 Testing optional expiryDatePolicy - how securedFields respond', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    // Expect iframe to exist in expiryDate field with aria-required attr set to true
-    await t
-        .switchToIframe(cardPage.iframeSelector.nth(1))
-        .expect(Selector('[data-fieldtype="encryptedExpiryDate"]').getAttribute('aria-required'))
-        .eql('true')
-        .switchToMainWindow();
+    // Expect iframe to exist in expiryMonth field with aria-required attr set to true
+    await cardPage.cardUtils.checkIframeForAttrVal(t, 1, 'encryptedExpiryMonth', 'aria-required', 'true');
+
+    // Expect iframe to exist in expiryYear field with aria-required attr set to true
+    await cardPage.cardUtils.checkIframeForAttrVal(t, 2, 'encryptedExpiryYear', 'aria-required', 'true');
 
     // Fill number to provoke (mock) binLookup response
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
-    // Expect iframe to exist in expiryDate field and with aria-required attr set to false
-    await t
-        .switchToIframe(cardPage.iframeSelector.nth(1))
-        .expect(Selector('[data-fieldtype="encryptedExpiryDate"]').getAttribute('aria-required'))
-        .eql('false')
-        .switchToMainWindow();
+    // Expect iframe to exist in expiryMonth field and with aria-required attr set to false
+    await cardPage.cardUtils.checkIframeForAttrVal(t, 1, 'encryptedExpiryMonth', 'aria-required', 'false');
+
+    // Expect iframe to exist in expiryYear field and with aria-required attr set to false
+    await cardPage.cardUtils.checkIframeForAttrVal(t, 2, 'encryptedExpiryYear', 'aria-required', 'false');
 
     // Clear number and see SF's aria-required reset
     await cardPage.cardUtils.deleteCardNumber(t);
 
-    await t
-        .switchToIframe(cardPage.iframeSelector.nth(1))
-        .expect(Selector('[data-fieldtype="encryptedExpiryDate"]').getAttribute('aria-required'))
-        .eql('true')
-        .switchToMainWindow();
+    await cardPage.cardUtils.checkIframeForAttrVal(t, 1, 'encryptedExpiryMonth', 'aria-required', 'true');
+    await cardPage.cardUtils.checkIframeForAttrVal(t, 2, 'encryptedExpiryYear', 'aria-required', 'true');
 });
 
 test('#3 Testing optional expiryDatePolicy - validating fields first and then entering PAN should see errors cleared from both UI & state', async t => {
@@ -119,17 +113,21 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
     await t
         .expect(cardPage.numErrorText.filterVisible().exists)
         .ok()
-        .expect(cardPage.dateErrorText.filterVisible().exists)
+        .expect(cardPage.monthErrorText.filterVisible().exists)
+        .ok()
+        .expect(cardPage.yearErrorText.filterVisible().exists)
         .ok()
         .expect(cardPage.cvcErrorText.filterVisible().exists)
         .ok();
 
     // Expect errors in (mapped) state
     await t
-        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryMonth'))
         .notEql(null)
-        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryMonth'))
         .notEql(undefined)
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryYear'))
+        .notEql(null)
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .notEql(null);
 
@@ -143,14 +141,18 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
     await t
         .expect(cardPage.numErrorText.filterHidden().exists)
         .ok()
-        .expect(cardPage.dateErrorText.filterHidden().exists)
+        .expect(cardPage.monthErrorText.filterHidden().exists)
+        .ok()
+        .expect(cardPage.yearErrorText.filterHidden().exists)
         .ok()
         .expect(cardPage.cvcErrorText.filterHidden().exists)
         .ok();
 
     // ...State errors cleared
     await t
-        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryMonth'))
+        .eql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryYear'))
         .eql(null)
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .eql(null);
@@ -161,10 +163,11 @@ test('#4 Testing optional expiryDatePolicy - date field in error DOES stop card 
     await cardPage.numHolder();
 
     // Card out of date
-    await cardPage.cardUtils.fillDate(t, '12/90');
+    await cardPage.customCardUtils.fillMonth(t, '12');
+    await cardPage.customCardUtils.fillYear(t, '90');
 
     // Expect errors in UI
-    await t.expect(cardPage.dateErrorText.filterVisible().exists).ok();
+    await t.expect(cardPage.yearErrorText.filterVisible().exists).ok();
 
     // Force blur event to fire on date field
     await cardPage.setForceClick(true);
@@ -173,16 +176,21 @@ test('#4 Testing optional expiryDatePolicy - date field in error DOES stop card 
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
     // UI reflects that binLookup says expiryDate is optional
-    await t.expect(cardPage.dateLabelText.withText('(optional)').exists).ok();
+    await t
+        .expect(cardPage.monthLabelText.withText('(optional)').exists)
+        .ok()
+        .expect(cardPage.yearLabelText.withText('(optional)').exists)
+        .ok();
 
     // Visual errors persist in UI
-    await t.expect(cardPage.dateErrorText.filterVisible().exists).ok();
+    await t.expect(cardPage.yearErrorText.filterVisible().exists).ok();
 
     // Card not seen as valid
     await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(false);
 
     // Delete erroneous date
-    await cardPage.cardUtils.deleteDate(t);
+    await cardPage.customCardUtils.deleteMonth(t);
+    await cardPage.customCardUtils.deleteYear(t);
 
     // Card is now valid
     await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(true);
