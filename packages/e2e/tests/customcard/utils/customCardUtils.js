@@ -1,4 +1,4 @@
-import { deleteFromIFrame, fillIFrame } from '../../utils/commonUtils';
+import { getInputSelector, deleteFromIFrame, fillIFrame } from '../../utils/commonUtils';
 
 /**
  * These utils provide a 'friendly' wrapper around the more generic functions in commonUtils
@@ -35,30 +35,30 @@ export default iframeSelector => {
  */
 const fillMonth = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryMonth"]', value, action);
+        return fillIFrame(t, iframeSelector, 1, getInputSelector('encryptedExpiryMonth'), value, action);
     };
 };
 
 const deleteMonth = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryMonth"]');
+        return deleteFromIFrame(t, iframeSelector, 1, getInputSelector('encryptedExpiryMonth'));
     };
 };
 
 const fillYear = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedExpiryYear"]', value, action);
+        return fillIFrame(t, iframeSelector, 2, getInputSelector('encryptedExpiryYear'), value, action);
     };
 };
 
 const deleteYear = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedExpiryYear"]');
+        return deleteFromIFrame(t, iframeSelector, 2, getInputSelector('encryptedExpiryYear'));
     };
 };
 
 const fillCVC = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 3, '[data-fieldtype="encryptedSecurityCode"]', value, action);
+        return fillIFrame(t, iframeSelector, 3, getInputSelector('encryptedSecurityCode'), value, action);
     };
 };

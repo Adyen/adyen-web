@@ -1,5 +1,15 @@
 import { ClientFunction, Selector } from 'testcafe';
 
+export const getInputSelector = (fieldType, withSelector = false) => {
+    const selStr = `[data-fieldtype="${fieldType}"]`;
+    return withSelector ? Selector(selStr) : selStr;
+};
+
+export const getAriaErrorField = (fieldType, withSelector = false) => {
+    const selStr = `#${fieldType}-ariaErrorField`;
+    return withSelector ? Selector(selStr) : selStr;
+};
+
 export const getIframeSelector = (selectorStr, timeout = 20000) => {
     return Selector(selectorStr, { timeout });
 };

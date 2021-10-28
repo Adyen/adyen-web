@@ -1,4 +1,4 @@
-import { fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
+import { getInputSelector, fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
 
 import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
 
@@ -34,7 +34,7 @@ export default iframeSelector => {
  */
 const fillPwd = iframeSelector => {
     return async (t, value = TEST_PWD_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 3, '[data-fieldtype="encryptedPassword"]', value, action);
+        return fillIFrame(t, iframeSelector, 3, getInputSelector('encryptedPassword'), value, action);
     };
 };
 
