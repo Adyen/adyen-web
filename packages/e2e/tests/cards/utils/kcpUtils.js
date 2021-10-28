@@ -3,6 +3,9 @@ import { fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
 import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
 
 /**
+ * These utils provide a 'friendly' wrapper around the more generic functions in commonUtils
+ * - prefilling the iframe selector, an iframe index and the iframe input element selector
+ *
  * Unique to each component are where the iframes are to be found,
  * the indices by which a specific iframe can be identified,
  * and the selectors for elements found within it.

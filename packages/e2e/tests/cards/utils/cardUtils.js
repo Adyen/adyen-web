@@ -1,7 +1,10 @@
-import { fillIFrame, deleteFromIFrame, deleteDigitsFromIFrame } from '../../utils/commonUtils';
+import { fillIFrame, deleteFromIFrame, deleteDigitsFromIFrame, checkIframeForAttributeValue } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE } from './constants';
 
 /**
+ * These utils provide a 'friendly' wrapper around the more generic functions in commonUtils
+ * - prefilling the iframe selector, an iframe index and the iframe input element selector
+ *
  * Unique to each component are where the iframes are to be found,
  * the indices by which a specific iframe can be identified,
  * and the selectors for elements found within it
@@ -23,7 +26,9 @@ export default iframeSelector => {
         fillDate: fillDate(iframeSelector),
         fillCVC: fillCVC(iframeSelector),
         fillDateAndCVC: fillDateAndCVC(iframeSelector),
-        deleteDigitsFromCardNumber: deleteDigitsFromCardNumber(iframeSelector)
+        deleteDigitsFromCardNumber: deleteDigitsFromCardNumber(iframeSelector),
+        // More generic function (need to specify index and fieldType
+        checkIframeForAttrVal: checkIframeForAttrVal(iframeSelector)
     };
 };
 
@@ -82,5 +87,15 @@ const fillDateAndCVC = iframeSelector => {
     return async (t, dateValue = TEST_DATE_VALUE, cvcValue = TEST_CVC_VALUE) => {
         await fd(t, dateValue);
         return fc(t, cvcValue);
+    };
+};
+
+/**
+ * @usage cardPage.cardUtils.checkIframeForAttrVal(t, 1, 'encryptedExpiryDate', 'aria-required', 'true');
+ * Will check input in expiryDate iframe for an 'aria-required' attr with a value 'true'
+ */
+const checkIframeForAttrVal = iframeSelector => {
+    return async (t, index, fieldType, attr, value) => {
+        return checkIframeForAttributeValue(t, iframeSelector, index, `[data-fieldtype="${fieldType}"]`, attr, value);
     };
 };

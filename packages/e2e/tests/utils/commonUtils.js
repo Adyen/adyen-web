@@ -54,6 +54,15 @@ export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFr
         .contains(valueToCheck);
 };
 
+export const checkIframeForAttributeValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, inputAttr, valueToCheck) => {
+    return t
+        .switchToMainWindow()
+        .switchToIframe(iframeSelector.nth(iFrameNum))
+        .expect(Selector(iFrameInputSelector).getAttribute(inputAttr))
+        .eql(valueToCheck)
+        .switchToMainWindow();
+};
+
 export const getIsValid = ClientFunction((who = 'card') => {
     return window[who].isValid;
 });
