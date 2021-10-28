@@ -56,7 +56,7 @@ export const deleteDigitsFromIFrame = async (t, iframeSelector, iFrameNum, iFram
         .switchToMainWindow();
 };
 
-export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, valueToCheck) => {
+export const checkIframeInputContainsValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, valueToCheck) => {
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))
@@ -70,6 +70,15 @@ export const checkIframeForAttributeValue = async (t, iframeSelector, iFrameNum,
         .switchToIframe(iframeSelector.nth(iFrameNum))
         .expect(Selector(iFrameInputSelector).getAttribute(inputAttr))
         .eql(valueToCheck)
+        .switchToMainWindow();
+};
+
+export const checkIframeElHasExactText = async (t, iframeSelector, iFrameNum, iFrameElSelector, textValue) => {
+    return t
+        .switchToMainWindow()
+        .switchToIframe(iframeSelector.nth(iFrameNum))
+        .expect(Selector(iFrameElSelector).withExactText(textValue).exists)
+        .ok()
         .switchToMainWindow();
 };
 

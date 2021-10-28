@@ -1,4 +1,4 @@
-import { getInputSelector, fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
+import { getInputSelector, fillIFrame, checkIframeInputContainsValue } from '../../utils/commonUtils';
 
 import { TEST_PWD_VALUE, TEST_TAX_NUMBER_VALUE } from './constants';
 
@@ -40,7 +40,7 @@ const fillPwd = iframeSelector => {
 
 const checkPwd = iframeSelector => {
     return async (t, value) => {
-        return checkIframeContainsValue(t, iframeSelector, 3, '.js-iframe-input', value);
+        return checkIframeInputContainsValue(t, iframeSelector, 3, '.js-iframe-input', value);
     };
 };
 
