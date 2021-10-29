@@ -105,10 +105,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .create('paypal', {
             // merchantId: '5RZKQX2FC48EA',
             // intent: 'capture', // 'capture' [Default] / 'authorize'
-            //                configuration: {
-            //                    merchantId: '5RZKQX2FC48EA',
-            //                    intent: 'capture'
-            //                },
+            // configuration: {
+            //      merchantId: '5RZKQX2FC48EA',
+            //      intent: 'capture'
+            // },
             // commit: true, // true [Default] / false
             // style: {},
 

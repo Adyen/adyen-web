@@ -12,6 +12,11 @@ const defaultProps: PayPalElementProps = {
     merchantId: '',
 
     /**
+     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
+     */
+    cspNonce: null,
+
+    /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
      */
     intent: null,
