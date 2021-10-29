@@ -7,6 +7,11 @@ class BancontactElement extends CardElement {
         super(props);
     }
 
+    protected static defaultProps = {
+        ...CardElement.defaultProps,
+        brands: ['bcmc', 'maestro', 'visa']
+    };
+
     /**
      * Now that the Bancontact (BCMC) Card component can accept a number dual branded with Visa (which requires a CVC) it has to be handled differently
      * at creation time (no automatic removing of the CVC securedField).
@@ -16,8 +21,6 @@ class BancontactElement extends CardElement {
     formatProps(props: CardElementProps) {
         return {
             ...super.formatProps(props),
-            // Override display brands - these are also the brands that will be considered "supported" by /binLookup
-            brands: ['bcmc', 'maestro', 'visa'],
             type: 'bcmc', // Force type (only for the Dropin is type automatically set to 'bcmc') - this will bypass the regEx brand detection
             cvcPolicy: CVC_POLICY_HIDDEN
         };
