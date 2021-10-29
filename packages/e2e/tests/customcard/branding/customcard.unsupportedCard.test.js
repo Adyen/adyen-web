@@ -3,6 +3,7 @@ import { REGULAR_TEST_CARD, MAESTRO_CARD } from '../../cards/utils/constants';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
+import { turnOffSDKMocking } from '../../_common/cardMocks';
 
 const cardPage = new CustomCardComponentPage();
 
@@ -17,7 +18,7 @@ fixture`Testing persistence of "Unsupported card" error and state at both compon
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
         // - provide a way to ensure SDK bin mocking is turned off
-        await cardPage.turnOffSDKMocking();
+        await turnOffSDKMocking();
     })
     .clientScripts('./customcard.unsupportedCard.clientScripts.js');
 

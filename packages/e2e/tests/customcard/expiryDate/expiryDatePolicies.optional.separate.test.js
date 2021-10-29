@@ -1,5 +1,5 @@
+import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../_common/cardMocks';
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
-
 import { REGULAR_TEST_CARD } from '../../cards/utils/constants';
 
 const cardPage = new CustomCardComponentPage('.secured-fields-2');
@@ -24,14 +24,14 @@ const mockedResponse = {
     requestId: null
 };
 
-const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse);
+const mock = getBinLookupMock(binLookupUrl, mockedResponse);
 
 fixture`Test how Custom Card Component with separate date fields handles optional expiryDate policy`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
         // - provide a way to ensure SDK bin mocking is turned off
-        await cardPage.turnOffSDKMocking();
+        await turnOffSDKMocking();
     })
     .requestHooks(mock)
     .clientScripts('./expiryDate.clientScripts.js');

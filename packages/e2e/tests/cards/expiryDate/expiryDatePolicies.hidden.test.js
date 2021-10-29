@@ -1,6 +1,6 @@
 import CardComponentPage from '../../_models/CardComponent.page';
-
 import { REGULAR_TEST_CARD } from '../utils/constants';
+import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../_common/cardMocks';
 
 const cardPage = new CardComponentPage();
 
@@ -22,12 +22,12 @@ const mockedResponse = {
     requestId: null
 };
 
-const mock = cardPage.getMock(cardPage.binLookupUrl, mockedResponse);
+const mock = getBinLookupMock(binLookupUrl, mockedResponse);
 
 fixture`Test how Card Component handles hidden expiryDate policy`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
-        await cardPage.turnOffSDKMocking();
+        await turnOffSDKMocking();
     })
     .requestHooks(mock)
     .clientScripts('./expiryDate.clientScripts.js');
