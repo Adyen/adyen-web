@@ -22,10 +22,15 @@ const initCheckout = async () => {
     window.card = checkout
         .create('card', {
             brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'],
-            //            onChange: state => console.log(state),
             onChange: state => {
-                // Needed now that, for v5, we enhance the securedFields state.errors object with a rootNode prop
-                // - Testcafe doesn't like a ClientFunction retrieving an object with a DOM node in it!?
+                /**
+                 * Needed now that, for v5, we enhance the securedFields state.errors object with a rootNode prop
+                 *  - Testcafe doesn't like a ClientFunction retrieving an object with a DOM node in it!?
+                 *
+                 *  AND, for some reason, if you place this onChange function in expiryDate.clientScripts.js it doesn't always get read.
+                 *  It'll work when it's part of a small batch but if part of the full test suite it gets ignored - so the tests that rely on
+                 *  window.mappedStateErrors fail
+                 */
                 if (!!Object.keys(state.errors).length) {
                     // Replace any rootNode values in the objects in state.errors with an empty string
                     const nuErrors = Object.entries(state.errors).reduce((acc, [fieldType, error]) => {
