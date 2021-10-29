@@ -149,7 +149,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         sfLogAtStart: this.config.sfLogAtStart,
         trimTrailingSeparator: this.config.trimTrailingSeparator,
         cvcPolicy,
-        datePolicy: DATE_POLICY_REQUIRED,
+        expiryDatePolicy: DATE_POLICY_REQUIRED,
         isCreditCardType: this.config.isCreditCardType,
         iframeSrc: this.config.iframeSrc,
         loadingContext: this.config.loadingContext,

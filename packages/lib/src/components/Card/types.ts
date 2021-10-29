@@ -10,7 +10,7 @@ import {
     CbObjOnLoad,
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
-import { CVCPolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -142,6 +142,7 @@ export interface BrandObject {
     cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
     showExpiryDate: boolean;
+    expiryDatePolicy?: DatePolicyType;
     showSocialSecurityNumber?: boolean;
     supported: boolean;
     brandImageUrl?: string;

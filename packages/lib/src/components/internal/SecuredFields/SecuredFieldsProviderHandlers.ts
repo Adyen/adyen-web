@@ -2,10 +2,13 @@ import { getCardImageUrl } from './utils';
 import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_CARD_NUMBER,
-    CVC_POLICY_OPTIONAL,
-    CVC_POLICY_HIDDEN,
     CVC_POLICY_REQUIRED,
-    DATE_POLICY_HIDDEN
+    DATE_POLICY_REQUIRED,
+    ENCRYPTED_EXPIRY_DATE,
+    OPTIONAL,
+    HIDDEN,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR
 } from './lib/configuration/constants';
 import {
     CbObjOnError,
@@ -102,6 +105,10 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     return true;
 }
 
+function fieldIsInError(fieldType: string, policy: string, numCharsObj: object, errorsObj) {
+    return (policy === OPTIONAL || policy === HIDDEN) && numCharsObj[fieldType] === 0 ? false : errorsObj[fieldType];
+}
+
 /**
  * Saves the card brand in state
  * Emits the onBrand event
@@ -109,12 +116,30 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
 function handleOnBrand(cardInfo: CbObjOnBrand): void {
     this.setState(
         prevState => {
-            // If we change brand to one where the cvc field is not required & is empty - then the cvc field cannot be in error...
-            // ...else propagate the existing error
-            const cvcFieldInError =
-                (cardInfo.cvcPolicy === CVC_POLICY_OPTIONAL || cardInfo.cvcPolicy === CVC_POLICY_HIDDEN) && this.numCharsInCVC === 0
-                    ? false
-                    : prevState.errors[ENCRYPTED_SECURITY_CODE];
+            /**
+             * If we change brand to one where the cvc or date field(s) are not required & are empty - then these fields cannot be in error
+             * (scenario: have validated empty form, then choose brand w. optional/hidden cvc or date)...
+             * ...else propagate the existing error.
+             */
+            const cvcFieldInError = fieldIsInError(ENCRYPTED_SECURITY_CODE, cardInfo.cvcPolicy, this.numCharsInField, prevState.errors);
+
+            const dateFieldInError =
+                this.numDateFields === 1
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_DATE, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    : null;
+
+            // For custom card comp
+            const monthFieldInError =
+                this.numDateFields === 2
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_MONTH, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    : null;
+
+            const yearFieldInError =
+                this.numDateFields === 2
+                    ? fieldIsInError(ENCRYPTED_EXPIRY_YEAR, cardInfo.expiryDatePolicy, this.numCharsInField, prevState.errors)
+                    : null;
+            // --
+            /** end */
 
             return {
                 brand: cardInfo.brand,
@@ -122,9 +147,12 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
                 showSocialSecurityNumber: cardInfo.showSocialSecurityNumber,
                 errors: {
                     ...prevState.errors,
-                    ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError })
+                    ...(existy(cvcFieldInError) && { [ENCRYPTED_SECURITY_CODE]: cvcFieldInError }),
+                    ...(existy(dateFieldInError) && { [ENCRYPTED_EXPIRY_DATE]: dateFieldInError }),
+                    ...(existy(monthFieldInError) && { [ENCRYPTED_EXPIRY_MONTH]: monthFieldInError }),
+                    ...(existy(yearFieldInError) && { [ENCRYPTED_EXPIRY_YEAR]: yearFieldInError })
                 },
-                hideDateForBrand: cardInfo.datePolicy === DATE_POLICY_HIDDEN
+                expiryDatePolicy: cardInfo.expiryDatePolicy ?? DATE_POLICY_REQUIRED
             };
         },
         () => {
@@ -161,9 +189,7 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
 }
 
 function handleFocus(cbObj: CbObjOnFocus): void {
-    if (cbObj.fieldType === ENCRYPTED_SECURITY_CODE) {
-        this.numCharsInCVC = cbObj.numChars;
-    }
+    this.numCharsInField[cbObj.fieldType] = cbObj.numChars;
 
     this.props.onFocus(cbObj);
 }

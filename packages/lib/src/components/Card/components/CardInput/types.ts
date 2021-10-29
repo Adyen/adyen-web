@@ -3,6 +3,7 @@ import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, Soc
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
+import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/core/AbstractSecuredField';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -47,7 +48,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     configuration?: CardConfiguration;
     countryCode?: string;
-    cvcPolicy?: string;
+    cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
     enableStoreDetails?: boolean;
     fundingSource?: string;
@@ -85,8 +86,8 @@ export interface CardInputState {
     data?: object;
     errors?: object;
     focusedElement: string;
-    cvcPolicy: string;
-    hideDateForBrand: boolean;
+    cvcPolicy: CVCPolicyType;
+    expiryDatePolicy: DatePolicyType;
     isValid: boolean;
     status: string;
     valid?: object;

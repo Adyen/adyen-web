@@ -4,6 +4,7 @@ import * as logger from '../utilities/logger';
 import { falsy } from '../utilities/commonUtils';
 import { findRootNode } from '../ui/domUtils';
 import { CSFReturnObject, CSFSetupObject } from '../types';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
     if (!pSetupObj) {
@@ -17,7 +18,7 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
     setupObj.type = isGenericCardType ? 'card' : setupObj.type;
 
     // //////// 1. Check passed config object has minimum expected properties //////////
-    if (!Object.prototype.hasOwnProperty.call(setupObj, 'rootNode')) {
+    if (!hasOwnProperty(setupObj, 'rootNode')) {
         logger.error('ERROR: SecuredFields configuration object is missing a "rootNode" property');
         return null;
     }

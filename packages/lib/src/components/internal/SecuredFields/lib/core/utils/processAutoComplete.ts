@@ -1,6 +1,7 @@
 import postMessageToIframe from './iframes/postMessageToIframe';
 import { ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR } from '../../configuration/constants';
 import { SFFeedbackObj, CbObjOnAutoComplete } from '../../types';
+import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
     // Specifically for cc-name (but no reason not to propagate all AC objects to the merchant)
@@ -25,7 +26,7 @@ export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
         const acYearVal: string = dateValArr[1].substr(2); // take last 2 digits of year
         const acDateVal = `${acMonthVal}/${acYearVal}`;
 
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
+        if (hasOwnProperty(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
             const dataObj: object = {
                 txVariant: this.state.type,
                 fieldType: ENCRYPTED_EXPIRY_DATE,
@@ -36,7 +37,7 @@ export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
             return;
         }
 
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_MONTH)) {
+        if (hasOwnProperty(this.state.securedFields, ENCRYPTED_EXPIRY_MONTH)) {
             const dataObj: object = {
                 txVariant: this.state.type,
                 fieldType: ENCRYPTED_EXPIRY_MONTH,
@@ -46,7 +47,7 @@ export function processAutoComplete(pFeedbackObj: SFFeedbackObj): void {
             postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_MONTH), this.config.loadingContext);
         }
 
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
+        if (hasOwnProperty(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
             // Dirty! - Need to wait til next page draw if setting month and year at the same time, otherwise only year gets set
             setTimeout(() => {
                 const dataObj: object = {

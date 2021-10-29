@@ -6,6 +6,7 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardFieldsProps } from './types';
 import classNames from 'classnames';
 import styles from '../CardInput.module.scss';
+import { DATE_POLICY_HIDDEN } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function CardFields({
     brand,
@@ -17,7 +18,7 @@ export default function CardFields({
     focusedElement,
     hasCVC,
     cvcPolicy,
-    hideDateForBrand,
+    expiryDatePolicy,
     onFocusField,
     showBrandIcon,
     valid
@@ -43,7 +44,7 @@ export default function CardFields({
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {
-                    [styles['adyen-checkout__card__exp-cvc__exp-date__input--hidden']]: hideDateForBrand
+                    [styles['adyen-checkout__card__exp-cvc__exp-date__input--hidden']]: expiryDatePolicy === DATE_POLICY_HIDDEN
                 })}
             >
                 <ExpirationDate
@@ -54,7 +55,7 @@ export default function CardFields({
                     label={i18n.get('creditCard.expiryDateField.title')}
                     onFocusField={onFocusField}
                     className={'adyen-checkout__field--50'}
-                    hideDateForBrand={hideDateForBrand}
+                    expiryDatePolicy={expiryDatePolicy}
                 />
 
                 {hasCVC && (

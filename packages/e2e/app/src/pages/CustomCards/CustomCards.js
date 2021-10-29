@@ -38,8 +38,10 @@ const initCheckout = async () => {
         .create('securedfields', {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+            onConfigSuccess,
             onBrand,
             onFocus: setFocus,
+            onBinLookup,
             onChange,
             ...window.cardConfig
         })
