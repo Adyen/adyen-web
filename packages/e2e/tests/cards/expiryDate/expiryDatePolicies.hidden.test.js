@@ -79,6 +79,8 @@ test('#2 Testing hidden expiryDatePolicy - validating fields first and then ente
     await t
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
         .notEql(null)
+        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
+        .notEql(undefined)
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .notEql(null);
 
