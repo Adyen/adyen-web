@@ -32,7 +32,6 @@ export default {
 
     // Callbacks
     onAuthorized: params => params,
-    onSubmit: () => {},
     onClick: resolve => resolve(),
 
     // CardParameters
