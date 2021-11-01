@@ -1,6 +1,7 @@
 import { CbObjOnError, SFFeedbackObj } from '../../types';
 import SecuredField from '../../../../../../components/internal/SecuredFields/lib/core/SecuredField';
 import { ERROR_CODES, ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../../../../../core/Errors/constants';
+import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 type RtnType_callbackFn = (obj: CbObjOnError) => void;
 
@@ -11,7 +12,7 @@ export const processErrors = (
     rootNode: HTMLElement,
     callbackFn: RtnType_callbackFn
 ): CbObjOnError => {
-    if (!Object.prototype.hasOwnProperty.call(pFeedbackObj, 'error')) return null;
+    if (!hasOwnProperty(pFeedbackObj, 'error')) return null;
 
     const fieldType: string = pFeedbackObj.fieldType;
 

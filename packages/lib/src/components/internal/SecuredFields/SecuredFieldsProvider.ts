@@ -19,7 +19,7 @@ import {
 import { AddressData } from '../../../types';
 import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupResponse } from '../../Card/types';
-import { CVCPolicyType } from './lib/core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from './lib/core/AbstractSecuredField';
 import { getError } from '../../../core/Errors/utils';
 
 export interface SFPState {
@@ -35,7 +35,7 @@ export interface SFPState {
     hasUnsupportedCard?: boolean;
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
-    hideDateForBrand?: boolean;
+    expiryDatePolicy?: DatePolicyType;
     socialSecurityNumber?: string;
 }
 
@@ -51,7 +51,7 @@ export interface SingleBrandResetObject {
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private originKeyErrorTimeout: number;
     private originKeyTimeoutMS: number;
-    private numCharsInCVC: number;
+    private numCharsInField: object;
     private rootNode;
     private numDateFields: number;
     private csf: CSFReturnObject;
@@ -86,7 +86,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.originKeyErrorTimeout = null;
         this.originKeyTimeoutMS = 15000;
 
-        this.numCharsInCVC = 0;
+        this.numCharsInField = {};
 
         // Handlers
         this.handleOnLoad = handlers.handleOnLoad.bind(this);
@@ -121,6 +121,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         const valid = fields.reduce(validFieldsReducer, {});
 
         this.setState({ valid });
+
+        // Populate numCharsInField object
+        fields.forEach(field => {
+            this.numCharsInField[field] = 0;
+        });
 
         // Store how many dateFields we are dealing with visually
         this.numDateFields = fields.filter(f => f.match(/Expiry/)).length;

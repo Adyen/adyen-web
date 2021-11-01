@@ -175,6 +175,14 @@ import './Vouchers.scss';
         })
         .mount('#doku-result-container');
 
+    // Econtext Stores Input without personal details form
+    window.econtextStoresInput = checkout
+        .create('econtext_stores', {
+            personalDetailsRequired: false,
+            onSubmit: e => console.log('SUBMIT:', e)
+        })
+        .mount('#econtext-stores-without-form-input-container');
+
     // Econtext Stores Input
     window.econtextStoresInput = checkout
         .create('econtext_stores', {
@@ -183,7 +191,8 @@ import './Vouchers.scss';
                 lastName: 'Smith',
                 shopperEmail: 'test@email.com',
                 telephoneNumber: '0621098765'
-            }
+            },
+            onSubmit: e => console.log('SUBMIT:', e)
         })
         .mount('#econtext-stores-input-container');
 

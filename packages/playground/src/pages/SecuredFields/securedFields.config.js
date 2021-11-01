@@ -1,5 +1,7 @@
 let hideCVC = false;
+let optionalCVC = false;
 let hideDate = false;
+let optionalDate = false;
 let isDualBranding = false;
 
 function setAttributes(el, attrs) {
@@ -120,7 +122,7 @@ export function onBrand(pCallbackObj) {
      * If not in dual branding mode - add card brand to first image element
      */
     if (!isDualBranding) {
-        const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImage');
+        const brandLogo1 = pCallbackObj.rootNode.querySelector('.pm-image-1');
         setAttributes(brandLogo1, {
             src: pCallbackObj.brandImageUrl,
             alt: pCallbackObj.brand
@@ -142,25 +144,51 @@ export function onBrand(pCallbackObj) {
         cvcNode.style.display = 'block';
     }
 
+    // Optional cvc fields
+    if (pCallbackObj.cvcPolicy === 'optional' && !optionalCVC) {
+        optionalCVC = true;
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC (optional):';
+    }
+
+    if (optionalCVC && pCallbackObj.cvcPolicy !== 'optional') {
+        optionalCVC = false;
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC:';
+    }
+
     /**
      * Deal with showing/hiding date field(s)
      */
     const dateNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-date');
-    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-month');
-    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-year');
+    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-month');
+    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-year');
 
-    if (pCallbackObj.datePolicy === 'hidden' && !hideDate) {
+    if (pCallbackObj.expiryDatePolicy === 'hidden' && !hideDate) {
         hideDate = true;
         if (dateNode) dateNode.style.display = 'none';
         if (monthNode) monthNode.style.display = 'none';
         if (yearNode) yearNode.style.display = 'none';
     }
 
-    if (hideDate && pCallbackObj.datePolicy !== 'hidden') {
+    if (hideDate && pCallbackObj.expiryDatePolicy !== 'hidden') {
         hideDate = false;
         if (dateNode) dateNode.style.display = 'block';
         if (monthNode) monthNode.style.display = 'block';
         if (yearNode) yearNode.style.display = 'block';
+    }
+
+    // Optional date fields
+    if (pCallbackObj.expiryDatePolicy === 'optional' && !optionalDate) {
+        optionalDate = true;
+        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date (optional):';
+        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month (optional):';
+        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year (optional):';
+    }
+
+    if (optionalDate && pCallbackObj.expiryDatePolicy !== 'optional') {
+        optionalDate = false;
+        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date:';
+        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month:';
+        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year:';
     }
 }
 
@@ -173,10 +201,10 @@ function resetDualBranding(rootNode) {
 
     setLogosActive(rootNode);
 
-    const brandLogo1 = rootNode.querySelector('#pmImageDual1');
+    const brandLogo1 = rootNode.querySelector('.pm-image-dual-1');
     brandLogo1.removeEventListener('click', dualBrandListener);
 
-    const brandLogo2 = rootNode.querySelector('#pmImageDual2');
+    const brandLogo2 = rootNode.querySelector('.pm-image-dual-2');
     brandLogo2.removeEventListener('click', dualBrandListener);
 }
 
@@ -184,8 +212,8 @@ function resetDualBranding(rootNode) {
  * Implementing dual branding
  */
 function onDualBrand(pCallbackObj) {
-    const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImageDual1');
-    const brandLogo2 = pCallbackObj.rootNode.querySelector('#pmImageDual2');
+    const brandLogo1 = pCallbackObj.rootNode.querySelector('.pm-image-dual-1');
+    const brandLogo2 = pCallbackObj.rootNode.querySelector('.pm-image-dual-2');
 
     isDualBranding = true;
 

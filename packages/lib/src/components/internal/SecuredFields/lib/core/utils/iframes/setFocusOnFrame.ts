@@ -1,8 +1,9 @@
 import postMessageToIframe from './postMessageToIframe';
+import { hasOwnProperty } from '../../../../../../../utils/hasOwnProperty';
 
 export function setFocusOnFrame(pFieldType: string, doLog?: boolean): void {
     // Check destroySecuredFields hasn't been called (thus clearing the state's securedFields object)
-    if (!Object.prototype.hasOwnProperty.call(this.state.securedFields, pFieldType)) return;
+    if (!hasOwnProperty(this.state.securedFields, pFieldType)) return;
 
     if (process.env.NODE_ENV === 'development' && doLog) console.log('\n### setFocusOnFrame:: (SHIFT_TAB) place focus on:', pFieldType);
 

@@ -1,6 +1,9 @@
-import { fillIFrame, checkIframeContainsValue } from '../../utils/commonUtils';
+import { getInputSelector, deleteFromIFrame, fillIFrame } from '../../utils/commonUtils';
 
 /**
+ * These utils provide a 'friendly' wrapper around the more generic functions in commonUtils
+ * - prefilling the iframe selector, an iframe index and the iframe input element selector
+ *
  * Unique to each component are where the iframes are to be found,
  * the indices by which a specific iframe can be identified,
  * and the selectors for elements found within it.
@@ -18,7 +21,9 @@ export default iframeSelector => {
     return {
         fillMonth: fillMonth(iframeSelector),
         fillYear: fillYear(iframeSelector),
-        fillCVC: fillCVC(iframeSelector)
+        fillCVC: fillCVC(iframeSelector),
+        deleteMonth: deleteMonth(iframeSelector),
+        deleteYear: deleteYear(iframeSelector)
     };
 };
 
@@ -30,18 +35,30 @@ export default iframeSelector => {
  */
 const fillMonth = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryMonth"]', value, action);
+        return fillIFrame(t, iframeSelector, 1, getInputSelector('encryptedExpiryMonth'), value, action);
+    };
+};
+
+const deleteMonth = iframeSelector => {
+    return async t => {
+        return deleteFromIFrame(t, iframeSelector, 1, getInputSelector('encryptedExpiryMonth'));
     };
 };
 
 const fillYear = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedExpiryYear"]', value, action);
+        return fillIFrame(t, iframeSelector, 2, getInputSelector('encryptedExpiryYear'), value, action);
+    };
+};
+
+const deleteYear = iframeSelector => {
+    return async t => {
+        return deleteFromIFrame(t, iframeSelector, 2, getInputSelector('encryptedExpiryYear'));
     };
 };
 
 const fillCVC = iframeSelector => {
     return async (t, value, action) => {
-        return fillIFrame(t, iframeSelector, 3, '[data-fieldtype="encryptedSecurityCode"]', value, action);
+        return fillIFrame(t, iframeSelector, 3, getInputSelector('encryptedSecurityCode'), value, action);
     };
 };

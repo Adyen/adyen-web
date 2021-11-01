@@ -54,7 +54,7 @@ const setupObj = {
     //
     fieldType: ENCRYPTED_CARD_NUMBER,
     cvcPolicy: CVC_POLICY_REQUIRED as CVCPolicyType,
-    datePolicy: DATE_POLICY_REQUIRED as DatePolicyType,
+    expiryDatePolicy: DATE_POLICY_REQUIRED as DatePolicyType,
     iframeSrc: null,
     loadingContext: null,
     holderEl: nodeHolder,

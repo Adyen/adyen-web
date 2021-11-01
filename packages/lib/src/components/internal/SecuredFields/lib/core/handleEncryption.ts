@@ -5,6 +5,7 @@ import { processErrors } from './utils/processErrors';
 import { truthy } from '../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../types';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
@@ -55,7 +56,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
 
     // For standalone month field
     if (fieldType === ENCRYPTED_EXPIRY_MONTH) {
-        if (Object.prototype.hasOwnProperty.call(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
+        if (hasOwnProperty(this.state.securedFields, ENCRYPTED_EXPIRY_YEAR)) {
             const dataObj: object = {
                 txVariant: this.state.type,
                 code: pFeedbackObj.code,

@@ -97,7 +97,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.kcpCard = checkout
         .create('card', {
             type: 'scheme',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
             configuration: {
                 koreanAuthenticationRequired: true
             },

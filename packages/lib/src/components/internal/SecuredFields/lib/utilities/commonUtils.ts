@@ -88,25 +88,19 @@ function isObjectLike(value) {
     return !!value && typeof value === 'object';
 }
 
-function objectsDeepEqual(obj1 = {}, obj2 = {}) {
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
-
-    if (keys1.length !== keys2.length) {
-        return false;
-    }
-
-    for (const key of keys1) {
-        if (isObjectLike(obj1[key])) {
-            if (!objectsDeepEqual(obj1[key], obj2[key])) {
-                return false;
-            }
-        }
-        if (obj1[key] !== obj2[key]) {
+/**
+ * Recursively compare 2 objects
+ */
+function objectsDeepEqual(x, y) {
+    const xType = typeof x;
+    const yType = typeof y;
+    if (x && y && xType === 'object' && xType === yType) {
+        if (Object.keys(x).length !== Object.keys(y).length) {
             return false;
         }
+        return Object.keys(x).every(key => objectsDeepEqual(x[key], y[key]));
     }
-    return true;
+    return x === y;
 }
 
 /**

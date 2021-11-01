@@ -9,6 +9,8 @@ import terserConfig from './terser.config';
 import pkg from '../package.json';
 
 const currentVersion = require('./version')();
+import path from 'path';
+require('dotenv').config({ path: path.resolve('../../', '.env') });
 
 if (process.env.CI !== 'true') {
     console.warn(

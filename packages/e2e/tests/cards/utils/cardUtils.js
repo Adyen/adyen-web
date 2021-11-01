@@ -1,7 +1,10 @@
-import { fillIFrame, deleteFromIFrame, deleteDigitsFromIFrame } from '../../utils/commonUtils';
+import { getInputSelector, fillIFrame, deleteFromIFrame, deleteDigitsFromIFrame, checkIframeForAttributeValue } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, TEST_DATE_VALUE, TEST_CVC_VALUE } from './constants';
 
 /**
+ * These utils provide a 'friendly' wrapper around the more generic functions in commonUtils
+ * - prefilling the iframe selector, an iframe index and the iframe input element selector
+ *
  * Unique to each component are where the iframes are to be found,
  * the indices by which a specific iframe can be identified,
  * and the selectors for elements found within it
@@ -18,11 +21,14 @@ export default iframeSelector => {
     return {
         fillCardNumber: fillCardNumber(iframeSelector),
         deleteCardNumber: deleteCardNumber(iframeSelector),
+        deleteDate: deleteDate(iframeSelector),
         deleteCVC: deleteCVC(iframeSelector),
         fillDate: fillDate(iframeSelector),
         fillCVC: fillCVC(iframeSelector),
         fillDateAndCVC: fillDateAndCVC(iframeSelector),
-        deleteDigitsFromCardNumber: deleteDigitsFromCardNumber(iframeSelector)
+        deleteDigitsFromCardNumber: deleteDigitsFromCardNumber(iframeSelector),
+        // More generic function (need to specify index and fieldType
+        checkIframeForAttrVal: checkIframeForAttrVal(iframeSelector)
     };
 };
 
@@ -34,37 +40,43 @@ export default iframeSelector => {
  */
 const fillCardNumber = iframeSelector => {
     return async (t, value = REGULAR_TEST_CARD, action) => {
-        return fillIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', value, action);
+        return fillIFrame(t, iframeSelector, 0, getInputSelector('encryptedCardNumber'), value, action);
     };
 };
 
 const deleteCardNumber = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]');
+        return deleteFromIFrame(t, iframeSelector, 0, getInputSelector('encryptedCardNumber'));
     };
 };
 
 const deleteDigitsFromCardNumber = iframeSelector => {
     return async (t, startCaretPos, endCaretPos) => {
-        return deleteDigitsFromIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', startCaretPos, endCaretPos);
+        return deleteDigitsFromIFrame(t, iframeSelector, 0, getInputSelector('encryptedCardNumber'), startCaretPos, endCaretPos);
+    };
+};
+
+const deleteDate = iframeSelector => {
+    return async t => {
+        return deleteFromIFrame(t, iframeSelector, 1, getInputSelector('encryptedExpiryDate'));
     };
 };
 
 const deleteCVC = iframeSelector => {
     return async t => {
-        return deleteFromIFrame(t, iframeSelector, 2, '[data-fieldtype="encryptedSecurityCode"]');
+        return deleteFromIFrame(t, iframeSelector, 2, getInputSelector('encryptedSecurityCode'));
     };
 };
 
 const fillDate = iframeSelector => {
     return async (t, value = TEST_DATE_VALUE, action) => {
-        return fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedExpiryDate"]', value, action);
+        return fillIFrame(t, iframeSelector, 1, getInputSelector('encryptedExpiryDate'), value, action);
     };
 };
 
 const fillCVC = iframeSelector => {
     return async (t, value = TEST_CVC_VALUE, action, iFrameNum = 2) => {
-        return fillIFrame(t, iframeSelector, iFrameNum, '[data-fieldtype="encryptedSecurityCode"]', value, action);
+        return fillIFrame(t, iframeSelector, iFrameNum, getInputSelector('encryptedSecurityCode'), value, action);
     };
 };
 
@@ -75,5 +87,15 @@ const fillDateAndCVC = iframeSelector => {
     return async (t, dateValue = TEST_DATE_VALUE, cvcValue = TEST_CVC_VALUE) => {
         await fd(t, dateValue);
         return fc(t, cvcValue);
+    };
+};
+
+/**
+ * @usage cardPage.cardUtils.checkIframeForAttrVal(t, 1, 'encryptedExpiryDate', 'aria-required', 'true');
+ * Will check input in expiryDate iframe for an 'aria-required' attr with a value 'true'
+ */
+const checkIframeForAttrVal = iframeSelector => {
+    return async (t, index, fieldType, attr, value) => {
+        return checkIframeForAttributeValue(t, iframeSelector, index, getInputSelector(fieldType), attr, value);
     };
 };
