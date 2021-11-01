@@ -74,6 +74,7 @@ export default class CardPage extends BasePage {
          */
         this.dualBrandingIconHolder = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons`);
         this.dualBrandingIconHolderActive = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons--active`);
+        this.dualBrandingImages = this.dualBrandingIconHolderActive.find('img');
 
         /**
          * KCP
