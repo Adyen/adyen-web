@@ -2,6 +2,7 @@ import { ClientFunction, Selector } from 'testcafe';
 import BasePage from './BasePage';
 import { getIframeSelector } from '../utils/commonUtils';
 import cu from '../cards/utils/cardUtils';
+import kcp from '../cards/utils/kcpUtils';
 
 /**
  * The Page Model Pattern is a test automation pattern that allows you to create an
@@ -79,13 +80,15 @@ export default class CardPage extends BasePage {
         /**
          * KCP
          */
-        this.passwordSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
+        this.pwdSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
+        this.pwdErrorText = Selector(`${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout__error-text`);
 
         /**
          * iframe utils
          */
         this.iframeSelector = getIframeSelector(`${BASE_EL} iframe`);
         this.cardUtils = cu(this.iframeSelector);
+        this.kcpUtils = kcp(this.iframeSelector);
 
         /**
          * Pay button

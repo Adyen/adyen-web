@@ -11,7 +11,6 @@ fixture`Starting with KCP fields`
     })
     .clientScripts('./startWithKCP.clientScripts.js');
 
-// Green 1
 test(
     '#1 Fill in card number that will hide KCP fields, ' +
         'then check password iframe is hidden, ' +
@@ -24,7 +23,7 @@ test(
         await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
         // Does the password securedField get removed
-        await t.expect(cardPage.passwordSpan.exists).notOk();
+        await t.expect(cardPage.pwdSpan.exists).notOk();
 
         // Complete form
         await cardPage.cardUtils.fillDateAndCVC(t);
@@ -34,7 +33,6 @@ test(
     }
 );
 
-// Green 2
 test(
     '#2 Fill in all KCP details, ' +
         'then check card state for taxNumber & password entries, ' +
@@ -62,7 +60,7 @@ test(
         await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'replace');
 
         // (Does the password securedField get removed)
-        await t.expect(cardPage.passwordSpan.exists).notOk();
+        await t.expect(cardPage.pwdSpan.exists).notOk();
 
         // Expect card state's tax and pwd elements to have been cleared/reset
         await t.expect(cardPage.getFromState('data.taxNumber')).eql(undefined);
@@ -76,7 +74,6 @@ test(
     }
 );
 
-// Green 3
 test(
     '#3 Fill in card number that will hide KCP fields, ' +
         'then complete form and expect component to be valid & to be able to pay,' +
