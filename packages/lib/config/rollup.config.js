@@ -10,6 +10,7 @@ import pkg from '../package.json';
 
 const currentVersion = require('./version')();
 import path from 'path';
+
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
 if (process.env.CI !== 'true') {
@@ -77,7 +78,7 @@ async function getPlugins({ compress, analyze, version }) {
                 [
                     '@babel/preset-env',
                     {
-                        useBuiltIns: false,
+                        useBuiltIns: false
                     }
                 ]
             ],
@@ -87,7 +88,7 @@ async function getPlugins({ compress, analyze, version }) {
                     '@babel/plugin-transform-runtime',
                     {
                         corejs: 3,
-                        absoluteRuntime: true,
+                        absoluteRuntime: true
                     }
                 ]
             ]

@@ -5,14 +5,12 @@
 
         "moduleResolution": "node",
         "module": "esnext",
-        "target": "es2020",
+        "target": "es2019",
         "jsx": "react",
         "jsxFactory": "h",
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-
-        "noEmit": true,
 
         "noImplicitAny": false,
         "strictPropertyInitialization": false,
