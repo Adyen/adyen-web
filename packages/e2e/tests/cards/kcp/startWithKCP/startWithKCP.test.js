@@ -97,18 +97,18 @@ test(
         // ... & no errors
         await t.expect(cardPage.numLabelTextError.exists).notOk();
 
-        // Replace number with non-korean card
-        await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'replace');
+        // Replace number with non-korean card (pasting works better than replacing in textcafe >1.13.0)
+        await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'paste'); // 'replace'
 
         // Expect card to now be invalid
-        await t.expect(cardPage.getFromState('isValid')).eql(false, { timeout: 1000 });
+        await t.expect(cardPage.getFromState('isValid')).eql(false);
 
         // Complete form
         await cardPage.kcpUtils.fillTaxNumber(t);
         await cardPage.kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
-        await t.expect(cardPage.getFromState('isValid')).eql(true, { timeout: 1000 });
+        await t.expect(cardPage.getFromState('isValid')).eql(true);
 
         // Click pay
         await t
