@@ -9,10 +9,10 @@ import kcp from '../cards/utils/kcpUtils';
  * abstraction of the tested page, and use it in test code to refer to page elements
  */
 export default class CardPage extends BasePage {
-    constructor() {
+    constructor(baseEl = '.card-field') {
         super('cards');
 
-        const BASE_EL = '.card-field';
+        const BASE_EL = baseEl;
 
         /**
          * CardNumber
