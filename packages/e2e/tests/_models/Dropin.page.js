@@ -37,6 +37,6 @@ export default class DropinPage extends BasePage {
         const splitPath = path.split('.');
         const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
 
-        return splitPath.reduce(reducer, window.dropin.dropinRef.state);
+        return splitPath.reduce(reducer, window.dropin.dropinRef.state.activePaymentMethod.state);
     });
 }

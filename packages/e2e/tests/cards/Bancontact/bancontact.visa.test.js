@@ -43,7 +43,7 @@ fixture`Testing Bancontact in Dropin`
     .requestHooks(mock)
     .clientScripts('./bancontact.clientScripts.js');
 
-test('Check Bancontact comp is correctly presented at startup', async t => {
+test('#1 Check Bancontact comp is correctly presented at startup', async t => {
     // Wait for field to appear in DOM
     await t.wait(1000);
 
@@ -71,7 +71,7 @@ test('Check Bancontact comp is correctly presented at startup', async t => {
         .ok();
 });
 
-test('Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
+test('#2 Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
     await dropinPage.cc.numSpan();
 
     await dropinPage.cc.cardUtils.fillCardNumber(t, '41');
@@ -83,7 +83,7 @@ test('Entering digits that our local regEx will recognise as Visa does not affec
     await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
 });
 
-test('Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete expiryDate and expect comp to be valid', async t => {
+test('#3 Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete expiryDate and expect comp to be valid', async t => {
     await dropinPage.cc.numSpan();
 
     await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
@@ -104,7 +104,7 @@ test('Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete
 });
 
 test(
-    'Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#4 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then click BCMC logo and expect comp to be valid again',
@@ -137,13 +137,14 @@ test(
         // Hidden CVC field
         await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
 
-        // Expect comp to be valid
+        // Expect comp to be valid (also check that it is set on state for this PM)
         await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
+        await t.expect(dropinPage.getFromState('isValid')).eql(true);
     }
 );
 
 test(
-    'Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#5 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then enter CVC and expect comp to be valid',
