@@ -55,43 +55,11 @@ async function getPlugins({ compress, analyze, version }) {
             preventAssignment: true
         }),
         babel({
+            configFile: path.resolve(__dirname, ".." , 'babel.config.json'),
             extensions,
             exclude: ['node_modules/**', '**/*.test.*'],
             ignore: [/core-js/, /@babel\/runtime/],
-            presets: [
-                [
-                    '@babel/preset-typescript',
-                    {
-                        isTSX: true,
-                        allExtensions: true,
-                        jsxPragma: 'h',
-                        jsxPragmaFrag: 'Fragment'
-                    }
-                ],
-                [
-                    '@babel/preset-react',
-                    {
-                        pragma: 'h',
-                        pragmaFrag: 'Fragment'
-                    }
-                ],
-                [
-                    '@babel/preset-env',
-                    {
-                        useBuiltIns: false
-                    }
-                ]
-            ],
-            babelHelpers: 'runtime',
-            plugins: [
-                [
-                    '@babel/plugin-transform-runtime',
-                    {
-                        corejs: 3,
-                        absoluteRuntime: true
-                    }
-                ]
-            ]
+            babelHelpers: 'runtime'
         }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
