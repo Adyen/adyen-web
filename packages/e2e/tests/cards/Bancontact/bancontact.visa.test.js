@@ -1,21 +1,13 @@
-import cu from '../utils/cardUtils';
-
-const path = require('path');
-require('dotenv').config({ path: path.resolve('../../', '.env') });
-
-import { RequestMock, Selector } from 'testcafe';
-import { start, getIsValid, getIframeSelector } from '../../utils/commonUtils';
-import { BASE_URL } from '../../pages';
+import DropinPage from '../../_models/Dropin.page';
+import CardComponentPage from '../../_models/CardComponent.page';
+import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../_common/cardMocks';
 import { DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
 
-const brandsHolder = Selector('.adyen-checkout__payment-method__brands');
-
-const numberSpan = Selector('.adyen-checkout__dropin .adyen-checkout__card__cardNumber__input');
-const cvcSpan = Selector('.adyen-checkout__dropin .adyen-checkout__field__cvc');
-
-const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--bcmc .adyen-checkout__card__dual-branding__buttons--active');
-
-const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+const dropinPage = new DropinPage({
+    components: {
+        cc: new CardComponentPage('.adyen-checkout__payment-method--bcmc')
+    }
+});
 
 /**
  * NOTE - we are mocking the response until such time as we have the correct BIN in the Test DB
@@ -41,230 +33,142 @@ const mockedResponse = {
     requestId: null
 };
 
-const mock = RequestMock()
-    .onRequestTo(request => {
-        return request.url === requestURL && request.method === 'post';
-    })
-    .respond(
-        (req, res) => {
-            const body = JSON.parse(req.body);
-            mockedResponse.requestId = body.requestId;
-            res.setBody(mockedResponse);
-        },
-        200,
-        {
-            'Access-Control-Allow-Origin': BASE_URL
-        }
-    );
-
-const TEST_SPEED = 1;
-
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--bcmc iframe');
-
-const cardUtils = cu(iframeSelector);
+const mock = getBinLookupMock(binLookupUrl, mockedResponse);
 
 fixture`Testing Bancontact in Dropin`
-    .page(BASE_URL + '?countryCode=BE')
-    .clientScripts('bancontact.clientScripts.js')
-    .requestHooks(mock);
+    .beforeEach(async t => {
+        await t.navigateTo(`${dropinPage.pageUrl}?countryCode=BE`);
+        await turnOffSDKMocking();
+    })
+    .requestHooks(mock)
+    .clientScripts('./bancontact.clientScripts.js');
 
-test('Check Bancontact comp is correctly presented at startup', async t => {
-    // Start, allow time to load
-    await start(t, 2000, TEST_SPEED);
+test('#1 Check Bancontact comp is correctly presented at startup', async t => {
+    // Wait for field to appear in DOM
+    await t.wait(1000);
 
-    // Expect 3 card brand logos to be displayed
+    await t.expect(dropinPage.brandsImages.count).eql(3);
+
+    // Expect 3 card brand logos to be displayed (not concerned about order)
     await t
-        .expect(brandsHolder.exists)
+        .expect(dropinPage.brandsHolder.exists)
         .ok()
-        .expect(
-            brandsHolder
-                .find('img')
-                .nth(0)
-                .getAttribute('alt')
-        )
-        .eql('bcmc')
-        .expect(
-            brandsHolder
-                .find('img')
-                .nth(1)
-                .getAttribute('alt')
-        )
-        .eql('maestro')
-        .expect(
-            brandsHolder
-                .find('img')
-                .nth(2)
-                .getAttribute('alt')
-        )
-        .eql('visa');
+        .expect(dropinPage.brandsImages.withAttribute('alt', 'bcmc').exists)
+        .ok()
+        .expect(dropinPage.brandsImages.withAttribute('alt', 'visa').exists)
+        .ok()
+        .expect(dropinPage.brandsImages.withAttribute('alt', 'maestro').exists)
+        .ok();
 
     // Hidden cvc field
-    await t.expect(cvcSpan.filterHidden().exists).ok();
+    await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
 
     // BCMC logo in number field
     await t
-        .expect(numberSpan.exists)
+        .expect(dropinPage.cc.numSpan.exists)
         .ok()
-        .expect(
-            numberSpan
-                .find('img')
-                .nth(0)
-                .getAttribute('alt')
-        )
-        .eql('bcmc');
+        .expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'bcmc').exists)
+        .ok();
 });
 
-test('Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
-    await start(t, 2000, TEST_SPEED);
+test('#2 Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
+    await dropinPage.cc.numSpan();
 
-    await cardUtils.fillCardNumber(t, '41');
+    await dropinPage.cc.cardUtils.fillCardNumber(t, '41');
 
     // BCMC logo still in number field
-    await t
-        .expect(
-            numberSpan
-                .find('img')
-                .nth(0)
-                .getAttribute('alt')
-        )
-        .eql('bcmc');
+    await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'bcmc').exists).ok();
 
     // Hidden cvc field
-    await t.expect(cvcSpan.filterHidden().exists).ok();
+    await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
 });
 
-test('Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete expiryDate and expect comp to be valid', async t => {
-    await start(t, 2000, TEST_SPEED);
+test('#3 Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete expiryDate and expect comp to be valid', async t => {
+    await dropinPage.cc.numSpan();
 
-    await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+    await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
+    // Dual branded with bcmc logo shown first
     await t
-        .expect(dualBrandingIconHolderActive.exists)
+        .expect(dropinPage.dualBrandingIconHolderActive.exists)
         .ok()
-        .expect(
-            dualBrandingIconHolderActive
-                .find('img')
-                .nth(0)
-                .getAttribute('data-value')
-        )
-        .eql('bcmc')
-        .expect(
-            dualBrandingIconHolderActive
-                .find('img')
-                .nth(1)
-                .getAttribute('data-value')
-        )
-        .eql('visa');
+        .expect(dropinPage.dualBrandingImages.nth(0).withAttribute('data-value', 'bcmc').exists)
+        .ok()
+        .expect(dropinPage.dualBrandingImages.nth(1).withAttribute('data-value', 'visa').exists)
+        .ok();
 
-    await cardUtils.fillDate(t, TEST_DATE_VALUE);
+    await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
 
     // Expect comp to now be valid
-    await t.expect(getIsValid('dropin')).eql(true);
+    await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
 });
 
 test(
-    'Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#4 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then click BCMC logo and expect comp to be valid again',
     async t => {
-        await start(t, 2000, TEST_SPEED);
+        // Wait for field to appear in DOM
+        await dropinPage.cc.numSpan();
 
-        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
-        await t
-            .expect(dualBrandingIconHolderActive.exists)
-            .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
-            .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
-            .eql('visa');
-
-        await cardUtils.fillDate(t, TEST_DATE_VALUE);
+        await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
 
         // Expect comp to now be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
 
         // Click Visa brand icon
-        await t.click(dualBrandingIconHolderActive.find('img').nth(1));
+        await t.click(dropinPage.dualBrandingImages.nth(1));
 
         // Visible CVC field
-        await t.expect(cvcSpan.filterVisible().exists).ok();
+        await t.expect(dropinPage.cc.cvcHolder.filterVisible().exists).ok();
 
         // Expect iframe to exist in CVC field and with aria-required set to true
-        await t
-            .switchToIframe(iframeSelector.nth(2))
-            .expect(Selector('[data-fieldtype="encryptedSecurityCode"]').getAttribute('aria-required'))
-            .eql('true')
-            .switchToMainWindow();
+        await dropinPage.cc.cardUtils.checkIframeForAttrVal(t, 2, 'encryptedSecurityCode', 'aria-required', 'true');
 
         // Expect comp not to be valid
-        await t.expect(getIsValid('dropin')).eql(false);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(false);
 
         // Click BCMC brand icon
-        await t.click(dualBrandingIconHolderActive.find('img').nth(0));
+        await t.click(dropinPage.dualBrandingImages.nth(0));
 
         // Hidden CVC field
-        await t.expect(cvcSpan.filterHidden().exists).ok();
+        await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
 
-        // Expect comp to be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        // Expect comp to be valid (also check that it is set on state for this PM)
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
+        await t.expect(dropinPage.getFromState('isValid')).eql(true);
     }
 );
 
 test(
-    'Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#5 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then enter CVC and expect comp to be valid',
     async t => {
-        await start(t, 2000, TEST_SPEED);
+        // Wait for field to appear in DOM
+        await dropinPage.cc.numSpan();
 
-        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
-        await t
-            .expect(dualBrandingIconHolderActive.exists)
-            .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
-            .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
-            .eql('visa');
-
-        await cardUtils.fillDate(t, TEST_DATE_VALUE);
+        await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
 
         // Expect comp to now be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
 
         // Click Visa brand icon
-        await t.click(dualBrandingIconHolderActive.find('img').nth(1));
+        await t.click(dropinPage.dualBrandingImages.nth(1));
 
         // Expect comp not to be valid
-        await t.expect(getIsValid('dropin')).eql(false);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(false);
 
         // fill CVC
-        await cardUtils.fillCVC(t, TEST_CVC_VALUE);
+        await dropinPage.cc.cardUtils.fillCVC(t, TEST_CVC_VALUE);
 
         // Expect comp to now be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
     }
 );

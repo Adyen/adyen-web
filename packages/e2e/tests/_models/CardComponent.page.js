@@ -2,16 +2,17 @@ import { ClientFunction, Selector } from 'testcafe';
 import BasePage from './BasePage';
 import { getIframeSelector } from '../utils/commonUtils';
 import cu from '../cards/utils/cardUtils';
+import kcp from '../cards/utils/kcpUtils';
 
 /**
  * The Page Model Pattern is a test automation pattern that allows you to create an
  * abstraction of the tested page, and use it in test code to refer to page elements
  */
 export default class CardPage extends BasePage {
-    constructor() {
+    constructor(baseEl = '.card-field') {
         super('cards');
 
-        const BASE_EL = '.card-field';
+        const BASE_EL = baseEl;
 
         /**
          * CardNumber
@@ -74,17 +75,20 @@ export default class CardPage extends BasePage {
          */
         this.dualBrandingIconHolder = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons`);
         this.dualBrandingIconHolderActive = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons--active`);
+        this.dualBrandingImages = this.dualBrandingIconHolderActive.find('img');
 
         /**
          * KCP
          */
-        this.passwordSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
+        this.pwdSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
+        this.pwdErrorText = Selector(`${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout__error-text`);
 
         /**
          * iframe utils
          */
         this.iframeSelector = getIframeSelector(`${BASE_EL} iframe`);
         this.cardUtils = cu(this.iframeSelector);
+        this.kcpUtils = kcp(this.iframeSelector);
 
         /**
          * Pay button

@@ -257,7 +257,8 @@ export function onBinLookup(pCallbackObj) {
 }
 
 export function onChange(state, component) {
-    // From v5 the onError handler is no longer only for card comp related errors - so watch state.errors and call the card specific setCCErrors based on this
+    // From v5 the onError handler is no longer only for card comp related errors
+    // - so watch state.errors and use it to call the custom card specific 'setErrors' function
     if (!!Object.keys(state.errors).length) {
         const errors = Object.entries(state.errors).map(([fieldType, error]) => {
             return {
