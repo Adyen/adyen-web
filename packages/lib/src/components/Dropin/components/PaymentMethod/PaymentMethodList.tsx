@@ -6,9 +6,11 @@ import styles from '../DropinComponent.module.scss';
 import UIElement from '../../../UIElement';
 import { Order, OrderStatus } from '../../../../types';
 import OrderPaymentMethods from './OrderPaymentMethods';
+import InstantPaymentMethods from './InstantPaymentMethods';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];
+    instantPaymentMethods: UIElement[];
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
     order?: Order;
@@ -27,6 +29,7 @@ interface PaymentMethodListProps {
 
 class PaymentMethodList extends Component<PaymentMethodListProps> {
     public static defaultProps: PaymentMethodListProps = {
+        instantPaymentMethods: [],
         paymentMethods: [],
         activePaymentMethod: null,
         cachedPaymentMethods: {},
@@ -52,7 +55,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
 
     public onSelect = paymentMethod => () => this.props.onSelect(paymentMethod);
 
-    render({ paymentMethods, activePaymentMethod, cachedPaymentMethods, isLoading }) {
+    render({ paymentMethods, instantPaymentMethods, activePaymentMethod, cachedPaymentMethods, isLoading }) {
         const paymentMethodListClassnames = classNames({
             [styles['adyen-checkout__payment-methods-list']]: true,
             'adyen-checkout__payment-methods-list': true,
@@ -64,6 +67,8 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
                 {this.props.orderStatus && (
                     <OrderPaymentMethods order={this.props.order} orderStatus={this.props.orderStatus} onOrderCancel={this.props.onOrderCancel} />
                 )}
+
+                {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
 
                 <ul className={paymentMethodListClassnames}>
                     {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {

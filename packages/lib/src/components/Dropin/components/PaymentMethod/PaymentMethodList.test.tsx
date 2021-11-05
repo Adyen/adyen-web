@@ -2,6 +2,7 @@ import { shallow, mount } from 'enzyme';
 import { h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import PaymentMethodItem from './PaymentMethodItem';
+import InstantPaymentMethods from './InstantPaymentMethods';
 
 const i18n = { get: key => key };
 const index = 0;
@@ -24,11 +25,21 @@ const paymentMethods = [
     }
 ];
 
+const instantPaymentMethods = [
+    {
+        props: {
+            id: '3',
+            type: 'googlepay'
+        }
+    }
+];
+
 describe('PaymentMethodList', () => {
     const getWrapper = props => shallow(<PaymentMethodList i18n={i18n} {...props} />);
 
     test('Renders a PaymentMethodList', () => {
         const wrapper = getWrapper({ paymentMethods });
+
         expect(wrapper.hasClass('adyen-checkout__payment-methods-list')).toBe(true);
         expect(wrapper.find(PaymentMethodItem).length).toBe(2);
     });
@@ -54,5 +65,10 @@ describe('PaymentMethodList', () => {
 
         getWrapper({ paymentMethods, onSelect, openFirstStoredPaymentMethod: true });
         expect(onSelect.mock.calls.length).toBe(0);
+    });
+
+    test('Renders InstantPaymentMethods when prop is provided', () => {
+        const wrapper = getWrapper({ paymentMethods, instantPaymentMethods });
+        expect(wrapper.find(InstantPaymentMethods)).toHaveLength(1);
     });
 });

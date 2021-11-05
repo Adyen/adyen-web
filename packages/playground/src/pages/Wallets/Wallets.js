@@ -194,6 +194,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             if (isAvailable) applepay.mount('.applepay-field');
         })
         .catch(e => {
+            document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
             console.warn(e);
         });
 });

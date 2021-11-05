@@ -1,4 +1,4 @@
-import { render } from 'preact';
+import { ComponentChild, render } from 'preact';
 import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
@@ -60,7 +60,7 @@ class BaseElement<P extends BaseElementProps> {
         };
     }
 
-    protected render() {
+    public render(): ComponentChild | Error {
         // render() not implemented in the element
         throw new Error('Payment method cannot be rendered.');
     }
