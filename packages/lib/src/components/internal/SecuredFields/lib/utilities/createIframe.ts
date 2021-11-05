@@ -1,4 +1,9 @@
-export default function createIframe({ src, title = 'iframe element', policy = 'origin', styleStr = 'border: none; height:100%; width:100%;' }) {
+export default function createIframe({
+    src,
+    title = 'iframe element',
+    policy = 'origin',
+    styleStr = 'border: none; height:100%; width:100%; overflow:hidden;'
+}) {
     const iframeEl = document.createElement('iframe');
     iframeEl.setAttribute('src', src);
     iframeEl.setAttribute('class', 'js-iframe');
@@ -7,8 +12,6 @@ export default function createIframe({ src, title = 'iframe element', policy = '
     } else {
         iframeEl.setAttribute('role', 'presentation');
     }
-    iframeEl.setAttribute('frameborder', '0'); // deprecated but still necessary for IE TODO re-test this on next round of IE testing
-    iframeEl.setAttribute('scrolling', 'no');
     iframeEl.setAttribute('allowtransparency', 'true');
     iframeEl.setAttribute('style', styleStr);
     iframeEl.setAttribute('referrerpolicy', policy); // Necessary for ClientKey to work
