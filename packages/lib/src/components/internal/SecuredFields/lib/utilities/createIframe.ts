@@ -2,7 +2,11 @@ export default function createIframe({ src, title = 'iframe element', policy = '
     const iframeEl = document.createElement('iframe');
     iframeEl.setAttribute('src', src);
     iframeEl.setAttribute('class', 'js-iframe');
-    iframeEl.setAttribute('title', title);
+    if (title !== '' && title.trim().length !== 0) {
+        iframeEl.setAttribute('title', title);
+    } else {
+        iframeEl.setAttribute('role', 'presentation');
+    }
     iframeEl.setAttribute('frameborder', '0'); // deprecated but still necessary for IE TODO re-test this on next round of IE testing
     iframeEl.setAttribute('scrolling', 'no');
     iframeEl.setAttribute('allowtransparency', 'true');
