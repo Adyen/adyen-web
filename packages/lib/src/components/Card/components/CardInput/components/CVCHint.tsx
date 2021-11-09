@@ -11,7 +11,7 @@ export default function CVCHint({ frontCVC = false }: CVCHintProps) {
 
     /* eslint-disable max-len */
     return (
-        <div className={hintClassnames}>
+        <div className={hintClassnames} aria-hidden={true}>
             <svg
                 className={'adyen-checkout__card__cvc__hint adyen-checkout__card__cvc__hint--front'}
                 width="27"

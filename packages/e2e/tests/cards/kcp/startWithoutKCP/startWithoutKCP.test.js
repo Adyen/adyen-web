@@ -16,6 +16,9 @@ test(
         'then check new iframe field is correctly set up, ' +
         'then complete the form & check component becomes valid',
     async t => {
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
         // Wait for field to appear in DOM
         await cardPage.numHolder();
 
@@ -51,6 +54,9 @@ test(
         'then fill in all KCP details & check card state for taxNumber & password entries, ' +
         'then delete card number and check taxNumber and password state are cleared',
     async t => {
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
         await cardPage.numHolder();
 
         // Complete form with korean card number
@@ -89,6 +95,9 @@ test(
         'then complete form and expect component to be valid & to be able to pay,' +
         'then replace card number with non-korean card and expect component to be valid & to be able to pay',
     async t => {
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
         await cardPage.numHolder();
 
         // handler for alert that's triggered on successful payment
@@ -131,6 +140,9 @@ test(
         'then complete form except for password field,' +
         'expect component not to be valid and for password field to show error',
     async t => {
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
         await cardPage.numHolder();
 
         // Complete form with korean card number

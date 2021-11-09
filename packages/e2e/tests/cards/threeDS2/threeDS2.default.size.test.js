@@ -83,7 +83,7 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
+    await t.expect(history[0].text).eql('Authorised', { timeout: 3000 });
 });
 
 test('Fill in card number that will trigger challenge-only flow', async t => {
@@ -123,5 +123,5 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
+    await t.expect(history[0].text).eql('Authorised', { timeout: 3000 });
 });

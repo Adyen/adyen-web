@@ -23,6 +23,7 @@ const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfig
             src={imageUrl}
             onClick={onClick}
             data-value={dataValue}
+            aria-hidden={'true'}
         />
     );
 };

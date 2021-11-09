@@ -6,7 +6,7 @@ export const getInputSelector = (fieldType, withSelector = false) => {
 };
 
 export const getAriaErrorField = (fieldType, withSelector = false) => {
-    const selStr = `#${fieldType}-ariaErrorField`;
+    const selStr = `#${fieldType}-ariaError`;
     return withSelector ? Selector(selStr) : selStr;
 };
 
