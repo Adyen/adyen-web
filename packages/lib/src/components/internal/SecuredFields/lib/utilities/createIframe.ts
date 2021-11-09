@@ -7,11 +7,13 @@ export default function createIframe({
     const iframeEl = document.createElement('iframe');
     iframeEl.setAttribute('src', src);
     iframeEl.setAttribute('class', 'js-iframe');
-    if (title !== '' && title.trim().length !== 0) {
-        iframeEl.setAttribute('title', title);
-    } else {
+    // For a11y some merchants want to be able to remove the title element on the iframe - seeing the info it carries as extraneous for the screenreader
+    if (title === '' || title.trim().length === 0 || title === 'none') {
         iframeEl.setAttribute('role', 'presentation');
+    } else {
+        iframeEl.setAttribute('title', title);
     }
+
     iframeEl.setAttribute('allowtransparency', 'true');
     iframeEl.setAttribute('style', styleStr);
     iframeEl.setAttribute('referrerpolicy', policy); // Necessary for ClientKey to work
