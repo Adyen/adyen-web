@@ -27,6 +27,11 @@ export async function initSession() {
         },
         onError: (error, component) => {
             console.error(error.message, component);
+        },
+        paymentMethodsConfiguration: {
+            paywithgoogle: {
+                buttonType: 'plain'
+            }
         }
     });
 

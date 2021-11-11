@@ -67,6 +67,11 @@ export async function initManual() {
                 enableStoreDetails: false,
                 hasHolderName: true,
                 holderNameRequired: true
+            },
+            paymentMethodsConfiguration: {
+                paywithgoogle: {
+                    buttonType: 'plain'
+                }
             }
         }
     });
@@ -128,7 +133,11 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = checkout.create('dropin').mount('#dropin-container');
+    const dropin = checkout
+        .create('dropin', {
+            instantPaymentTypes: ['paywithgoogle']
+        })
+        .mount('#dropin-container');
 
     handleRedirectResult();
 

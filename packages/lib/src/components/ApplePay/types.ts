@@ -42,11 +42,15 @@ export interface ApplePayElementProps extends UIElementProps {
     countryCode: string;
 
     /**
+     * Part of the 'ApplePayLineItem' object, which sets the label of the payment request
+     * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaylineitem ApplePayLineItem docs}
+     */
+    totalPriceLabel: string;
+
+    /**
      * @default 'final'
      */
     totalPriceStatus?: ApplePayJS.ApplePayLineItemType;
-
-    totalPriceLabel?: string;
 
     configuration: {
         merchantName?: string;

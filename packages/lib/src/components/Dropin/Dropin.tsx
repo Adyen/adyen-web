@@ -7,6 +7,7 @@ import { PaymentAction } from '../../types';
 import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
+import createInstantPaymentElements from './elements/createInstantPaymentElements';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
 
@@ -99,9 +100,7 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance.create) : [];
         const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance.create) : [];
-        const instantPaymentElements = instantPaymentMethods.length
-            ? createElements(instantPaymentMethods, commonProps, this._parentInstance.create)
-            : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, commonProps, this._parentInstance.create);
 
         return [storedElements, elements, instantPaymentElements];
     };

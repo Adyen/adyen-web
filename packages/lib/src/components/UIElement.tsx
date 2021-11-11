@@ -39,6 +39,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     onSubmit(): void {
+        if (this.props.isInstantPayment) {
+            this.elementRef.closeActivePaymentMethod();
+        }
+
         if (this.props.onSubmit) {
             // Classic flow
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
