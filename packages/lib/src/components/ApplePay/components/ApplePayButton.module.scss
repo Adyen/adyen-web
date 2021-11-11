@@ -1,15 +1,28 @@
 @supports (-webkit-appearance: -apple-pay-button) {
+
+    /*
+    *  Combination of both classes improve the specificity, avoiding
+    *  overwrite of the -webkit-appearence by the button native css
+    */
+    .adyen-checkout__applepay__button {
+        &.apple-pay-button {
+            -webkit-appearance: -apple-pay-button;
+        }
+    }
+
     .apple-pay-button {
         display: inline-block;
-        -webkit-appearance: -apple-pay-button;
         cursor: pointer;
     }
+
     .apple-pay-button-black {
         -apple-pay-button-style: black;
     }
+
     .apple-pay-button-white {
         -apple-pay-button-style: white;
     }
+
     .apple-pay-button-white-with-line {
         -apple-pay-button-style: white-outline;
     }
@@ -18,42 +31,55 @@
     .apple-pay-button--type-plain {
         -apple-pay-button-type: plain;
     }
+
     .apple-pay-button--type-buy {
         -apple-pay-button-type: buy;
     }
+
     .apple-pay-button--type-donate {
         -apple-pay-button-type: donate;
     }
+
     .apple-pay-button--type-check-out {
         -apple-pay-button-type: check-out;
     }
+
     .apple-pay-button--type-book {
         -apple-pay-button-type: book;
     }
+
     .apple-pay-button--type-subscribe {
         -apple-pay-button-type: subscribe;
     }
+
     .apple-pay-button--type-add-money {
         -apple-pay-button-type: add-money;
     }
+
     .apple-pay-button--type-contribute {
         -apple-pay-button-type: contribute;
     }
+
     .apple-pay-button--type-order {
         -apple-pay-button-type: order;
     }
+
     .apple-pay-button--type-reload {
         -apple-pay-button-type: reload;
     }
+
     .apple-pay-button--type-rent {
         -apple-pay-button-type: rent;
     }
+
     .apple-pay-button--type-support {
         -apple-pay-button-type: support;
     }
+
     .apple-pay-button--type-tip {
         -apple-pay-button-type: tip;
     }
+
     .apple-pay-button--type-top-up {
         -apple-pay-button-type: top-up;
     }
