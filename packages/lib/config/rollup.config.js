@@ -5,7 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import eslint from '@rollup/plugin-eslint';
 import babel from '@rollup/plugin-babel';
-import terserConfig from './terser.config';
+import { terserConfig, modernTerserConfig } from './terser.config';
 import pkg from '../package.json';
 
 const currentVersion = require('./version')();
@@ -35,7 +35,27 @@ const watchConfig = {
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
-async function getPlugins({ compress, analyze, version }) {
+const polyfillPlugin = [
+    '@babel/plugin-transform-runtime',
+    {
+        corejs: 3,
+        absoluteRuntime: true
+        //useESModules: true
+    }
+];
+
+const polyfillPreset = [
+    '@babel/preset-env',
+    {
+        useBuiltIns: false
+    }
+];
+
+async function getPlugins({ compress, analyze, version, modern }) {
+    const polyfill = !modern;
+    const babelPlugins = polyfill ? [polyfillPlugin] : [];
+    const babelPreset = polyfill ? [polyfillPreset] : [];
+
     return [
         resolve({ extensions }),
         commonjs(),
@@ -55,11 +75,13 @@ async function getPlugins({ compress, analyze, version }) {
             preventAssignment: true
         }),
         babel({
-            configFile: path.resolve(__dirname, ".." , 'babel.config.json'),
+            configFile: path.resolve(__dirname, '..', 'babel.config.json'),
             extensions,
             exclude: ['node_modules/**', '**/*.test.*'],
             ignore: [/core-js/, /@babel\/runtime/],
-            babelHelpers: 'runtime'
+            babelHelpers: polyfill ? 'runtime' : 'bundled',
+            plugins: babelPlugins,
+            presets: babelPreset
         }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
@@ -70,7 +92,7 @@ async function getPlugins({ compress, analyze, version }) {
             inject: false,
             extract: 'adyen.css'
         }),
-        compress && (await import('rollup-plugin-terser')).terser(terserConfig),
+        compress && (await import('rollup-plugin-terser')).terser(modern ? modernTerserConfig : terserConfig),
         analyze &&
             (await import('rollup-plugin-visualizer')).default({
                 title: 'Adyen Web bundle visualizer',
@@ -90,10 +112,32 @@ export default async () => {
     const plugins = await getPlugins({
         compress: isProduction,
         analyze: isBundleAnalyzer,
-        version: currentVersion
+        version: currentVersion,
+        modern: false
+    });
+
+    const modernPlugins = await getPlugins({
+        compress: isProduction,
+        analyze: isBundleAnalyzer,
+        version: currentVersion,
+        modern: true
     });
 
     return [
+        {
+            input,
+            external: getExternals(),
+            plugins: modernPlugins,
+            output: [
+                {
+                    dir: 'dist/es.modern',
+                    format: 'esm',
+                    chunkFileNames: '[name].js',
+                    ...(!isProduction ? { sourcemap: true } : {})
+                }
+            ],
+            watch: watchConfig
+        },
         {
             input,
             external: getExternals(),

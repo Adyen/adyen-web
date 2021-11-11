@@ -2,6 +2,17 @@
 # yarn lockfile v1
 
 
+"@adyen/adyen-web@../lib/adyen-adyen-web-5.2.0.tgz":
+  version "5.2.0"
+  resolved "../lib/adyen-adyen-web-5.2.0.tgz#15817961d23e8562bd4e0a92654f83fb2b1eecf2"
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    "@types/applepayjs" "^3.0.2"
+    "@types/googlepay" "^0.6.2"
+    classnames "^2.3.1"
+    core-js-pure "^3.18.1"
+    preact "^10.5.13"
+
 "@babel/cli@^7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.16.0.tgz#a729b7a48eb80b49f48a339529fc4129fd7bcef3"
