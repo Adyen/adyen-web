@@ -4,10 +4,9 @@
     *  Combination of both classes improve the specificity, avoiding
     *  overwrite of the -webkit-appearence by the button native css
     */
-    .adyen-checkout__applepay__button {
-        &.apple-pay-button {
-            -webkit-appearance: -apple-pay-button;
-        }
+    .apple-pay,
+    .apple-pay-button {
+        -webkit-appearance: -apple-pay-button;
     }
 
     .apple-pay-button {
