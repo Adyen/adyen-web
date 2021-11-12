@@ -117,8 +117,6 @@ class GooglePay extends UIElement<GooglePayProps> {
     }
 
     render() {
-        console.log(this.props);
-
         if (this.props.showPayButton) {
             return (
                 <GooglePayButton
