@@ -19,6 +19,7 @@
             "import": "./dist/es/index.js",
             "require": "./dist/cjs/index.js"
         },
+        "./modern" : "./dist/es.modern/index.js",
         "./dist/adyen.css": "./dist/adyen.css",
         "./package.json": "./package.json"
     },

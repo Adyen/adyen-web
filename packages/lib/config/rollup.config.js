@@ -52,9 +52,8 @@ const polyfillPreset = [
 ];
 
 async function getPlugins({ compress, analyze, version, modern }) {
-    const polyfill = !modern;
-    const babelPlugins = polyfill ? [polyfillPlugin] : [];
-    const babelPreset = polyfill ? [polyfillPreset] : [];
+    const babelPlugins = modern ? [] : [polyfillPlugin];
+    const babelPreset = modern ? [] : [polyfillPreset];
 
     return [
         resolve({ extensions }),
@@ -79,7 +78,7 @@ async function getPlugins({ compress, analyze, version, modern }) {
             extensions,
             exclude: ['node_modules/**', '**/*.test.*'],
             ignore: [/core-js/, /@babel\/runtime/],
-            babelHelpers: polyfill ? 'runtime' : 'bundled',
+            babelHelpers: modern ? 'bundled' : 'runtime',
             plugins: babelPlugins,
             presets: babelPreset
         }),
@@ -123,21 +122,7 @@ export default async () => {
         modern: true
     });
 
-    return [
-        {
-            input,
-            external: getExternals(),
-            plugins: modernPlugins,
-            output: [
-                {
-                    dir: 'dist/es.modern',
-                    format: 'esm',
-                    chunkFileNames: '[name].js',
-                    ...(!isProduction ? { sourcemap: true } : {})
-                }
-            ],
-            watch: watchConfig
-        },
+    const build = [
         {
             input,
             external: getExternals(),
@@ -157,8 +142,40 @@ export default async () => {
                 }
             ],
             watch: watchConfig
-        },
-        {
+        }
+    ];
+    build.push({
+        input,
+        external: getExternals(),
+        plugins: modernPlugins,
+        output: [
+            {
+                dir: 'dist/es.modern',
+                format: 'esm',
+                chunkFileNames: '[name].js',
+                ...(!isProduction ? { sourcemap: true } : {})
+            }
+        ],
+        watch: watchConfig
+    });
+
+    // only add modern build and umd when building in production
+    if (isProduction) {
+        build.push({
+            input,
+            external: getExternals(),
+            plugins: modernPlugins,
+            output: [
+                {
+                    dir: 'dist/es.modern',
+                    format: 'esm',
+                    chunkFileNames: '[name].js',
+                    ...(!isProduction ? { sourcemap: true } : {})
+                }
+            ],
+            watch: watchConfig
+        });
+        build.push({
             input,
             plugins,
             output: {
@@ -169,6 +186,7 @@ export default async () => {
                 sourcemap: true
             },
             watch: watchConfig
-        }
-    ];
+        });
+    }
+    return build;
 };
