@@ -97,6 +97,26 @@ export interface PaymentMethod {
      * Configuration props as set by the merchant in the CA and received in the PM object in the /paymentMethods response
      */
     configuration?: object;
+
+    /**
+     * Brand for the selected gift card. For example: plastix, hmclub.
+     */
+    brand?: string;
+
+    /**
+     * List of possible brands. For example: visa, mc.
+     */
+    brands?: string[];
+
+    /**
+     * The funding source of the payment method.
+     */
+    fundingSource?: string;
+
+    /**
+     * The group where this payment method belongs to.
+     */
+    group?: object;
 }
 
 export interface StoredPaymentMethod extends PaymentMethod {
