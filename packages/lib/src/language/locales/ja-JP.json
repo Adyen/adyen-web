@@ -205,5 +205,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "銀行口座フィールド",
     "ach.encryptedBankLocationId.aria.iframeTitle": "保護された銀行支店番号の iframe",
     "ach.encryptedBankLocationId.aria.label": "銀行支店番号フィールド",
-    "twint.saved": "を保存しました"
+    "twint.saved": "を保存しました",
+    "orPayWith": "または次の方法で支払う"
 }

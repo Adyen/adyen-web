@@ -205,5 +205,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "Feld „Bankkonto“",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe für gesicherte BLZ",
     "ach.encryptedBankLocationId.aria.label": "Bankleitzahl-Feld",
-    "twint.saved": "hinterlegt"
+    "twint.saved": "hinterlegt",
+    "orPayWith": "oder bezahlen Sie mit"
 }
