@@ -38,6 +38,10 @@
     position: relative;
     transition: background .1s ease-out;
     width: 100%;
+
+    .adyen-checkout__payment-method__header__title {
+        padding: $spacing-none;
+    }
 }
 
 
