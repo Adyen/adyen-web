@@ -17,7 +17,7 @@ export type RtnType_postMessageListener = (event: Event) => void;
 export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
 
 export type CVCPolicyType = 'required' | 'optional' | 'hidden';
-export type DatePolicyType = 'required' | 'hidden';
+export type DatePolicyType = 'required' | 'optional' | 'hidden';
 
 /**
  * Base interface, props common to both SFSetupObject & IframeConfigObject
@@ -33,6 +33,7 @@ export interface SFInternalConfig {
     isCreditCardType: boolean;
     showWarnings: boolean;
     cvcPolicy: CVCPolicyType;
+    expiryDatePolicy: DatePolicyType;
     legacyInputMode: boolean;
     minimumExpiryDate: string;
     uid: string;
@@ -43,7 +44,7 @@ export interface SFInternalConfig {
  * The object passed from createSecuredFields to a new instance of SecuredField.ts
  */
 export interface SFSetupObject extends SFInternalConfig {
-    datePolicy: DatePolicyType;
+    expiryDatePolicy: DatePolicyType;
     iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
@@ -98,7 +99,7 @@ abstract class AbstractSecuredField {
     protected _hasError: boolean;
     protected _isValid: boolean;
     protected _cvcPolicy: CVCPolicyType;
-    protected _datePolicy: DatePolicyType;
+    protected _expiryDatePolicy: DatePolicyType;
     protected _iframeContentWindow: Window;
     protected _isEncrypted: boolean;
     protected _numKey: number;

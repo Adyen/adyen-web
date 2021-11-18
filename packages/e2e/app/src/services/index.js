@@ -2,6 +2,15 @@ import paymentMethodsConfig from './paymentMethodsConfig';
 import paymentsConfig from './paymentsConfig';
 import { httpPost } from '../utils/utils';
 
+export const createSession = (data, config = {}) => {
+    return httpPost('sessions', data)
+        .then(response => {
+            if (response.error) throw 'Session initiation failed';
+            return response;
+        })
+        .catch(console.error);
+};
+
 export const getPaymentMethods = configuration =>
     httpPost('paymentMethods', { ...paymentMethodsConfig, ...configuration })
         .then(response => {

@@ -1,3 +1,5 @@
+import { CVCPolicyType, DatePolicyType } from '../core/AbstractSecuredField';
+
 export const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 export const ENCRYPTED_EXPIRY_MONTH = 'encryptedExpiryMonth';
@@ -14,7 +16,7 @@ export const GIFT_CARD = 'giftcard';
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.5.4';
+export const SF_VERSION = '3.7.2';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
@@ -28,12 +30,17 @@ export const CSF_FIELDS_ARRAY = [
     ENCRYPTED_SECURITY_CODE
 ];
 
-export const CVC_POLICY_REQUIRED = 'required';
-export const CVC_POLICY_OPTIONAL = 'optional';
-export const CVC_POLICY_HIDDEN = 'hidden';
+export const REQUIRED = 'required';
+export const OPTIONAL = 'optional';
+export const HIDDEN = 'hidden';
 
-export const DATE_POLICY_REQUIRED = CVC_POLICY_REQUIRED;
-export const DATE_POLICY_HIDDEN = CVC_POLICY_HIDDEN;
+export const CVC_POLICY_REQUIRED: CVCPolicyType = REQUIRED;
+export const CVC_POLICY_OPTIONAL: CVCPolicyType = OPTIONAL;
+export const CVC_POLICY_HIDDEN: CVCPolicyType = HIDDEN;
+
+export const DATE_POLICY_REQUIRED: DatePolicyType = REQUIRED;
+export const DATE_POLICY_OPTIONAL: DatePolicyType = OPTIONAL;
+export const DATE_POLICY_HIDDEN: DatePolicyType = HIDDEN;
 
 export const DATA_ENCRYPTED_FIELD_ATTR = 'data-cse';
 export const DATA_INFO = 'data-info';

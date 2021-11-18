@@ -1,5 +1,15 @@
 import { ClientFunction, Selector } from 'testcafe';
 
+export const getInputSelector = (fieldType, withSelector = false) => {
+    const selStr = `[data-fieldtype="${fieldType}"]`;
+    return withSelector ? Selector(selStr) : selStr;
+};
+
+export const getAriaErrorField = (fieldType, withSelector = false) => {
+    const selStr = `#${fieldType}-ariaError`;
+    return withSelector ? Selector(selStr) : selStr;
+};
+
 export const getIframeSelector = (selectorStr, timeout = 20000) => {
     return Selector(selectorStr, { timeout });
 };
@@ -46,12 +56,30 @@ export const deleteDigitsFromIFrame = async (t, iframeSelector, iFrameNum, iFram
         .switchToMainWindow();
 };
 
-export const checkIframeContainsValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, valueToCheck) => {
+export const checkIframeInputContainsValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, valueToCheck) => {
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(iFrameNum))
         .expect(Selector(iFrameInputSelector).value)
         .contains(valueToCheck);
+};
+
+export const checkIframeForAttributeValue = async (t, iframeSelector, iFrameNum, iFrameInputSelector, inputAttr, valueToCheck) => {
+    return t
+        .switchToMainWindow()
+        .switchToIframe(iframeSelector.nth(iFrameNum))
+        .expect(Selector(iFrameInputSelector).getAttribute(inputAttr))
+        .eql(valueToCheck)
+        .switchToMainWindow();
+};
+
+export const checkIframeElHasExactText = async (t, iframeSelector, iFrameNum, iFrameElSelector, textValue) => {
+    return t
+        .switchToMainWindow()
+        .switchToIframe(iframeSelector.nth(iFrameNum))
+        .expect(Selector(iFrameElSelector).withExactText(textValue).exists)
+        .ok()
+        .switchToMainWindow();
 };
 
 export const getIsValid = ClientFunction((who = 'card') => {

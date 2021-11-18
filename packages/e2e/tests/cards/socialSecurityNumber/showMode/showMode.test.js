@@ -17,7 +17,7 @@ const iframeSelector = getIframeSelector('.card-field iframe');
 const cardUtils = cu(iframeSelector);
 
 const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
-    return t.switchToMainWindow().typeText('.adyen-checkout__field--socialSecurityNumber input', ssnValue);
+    return t.switchToMainWindow().typeText('.adyen-checkout__field--socialSecurityNumber input', ssnValue, { speed: 0.5 });
 };
 
 fixture`Starting with SSN (show) fields`.page(CARDS_URL).clientScripts('showMode.clientScripts.js');

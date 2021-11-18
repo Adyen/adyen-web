@@ -30,7 +30,6 @@ const PaymentMethodIcon = ({ src, altDescription, type, disabled = false }: Paym
                 className={`adyen-checkout__payment-method__image ${styles['adyen-checkout__payment-method__image']}`}
                 src={src}
                 alt={altDescription}
-                focusable="false"
             />
         </span>
     );

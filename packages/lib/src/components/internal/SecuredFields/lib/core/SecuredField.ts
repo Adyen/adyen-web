@@ -8,7 +8,10 @@ import {
     CVC_POLICY_OPTIONAL,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_EXPIRY_DATE,
-    DATE_POLICY_HIDDEN
+    DATE_POLICY_HIDDEN,
+    DATE_POLICY_OPTIONAL,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
@@ -28,6 +31,7 @@ import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/init/processAriaConfig';
 import { processPlaceholders } from './utils/init/processPlaceholders';
 import Language from '../../../../../language/Language';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 const logPostMsg = false;
 const doLog = false;
@@ -38,7 +42,7 @@ class SecuredField extends AbstractSecuredField {
         super();
 
         // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
-        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'datePolicy', 'loadingContext', 'holderEl'];
+        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'expiryDatePolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this.config...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
@@ -51,7 +55,7 @@ class SecuredField extends AbstractSecuredField {
 
         this.fieldType = thisVarsFromSetupObj.fieldType;
         this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
-        this.datePolicy = thisVarsFromSetupObj.datePolicy;
+        this.expiryDatePolicy = thisVarsFromSetupObj.expiryDatePolicy;
         this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
@@ -133,6 +137,7 @@ class SecuredField extends AbstractSecuredField {
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
             cvcPolicy: this.cvcPolicy,
+            expiryDatePolicy: this.expiryDatePolicy,
             numKey: this.numKey,
             txVariant: this.config.txVariant,
             extraFieldData: this.config.extraFieldData,
@@ -203,8 +208,7 @@ class SecuredField extends AbstractSecuredField {
         }
 
         // CHECK FOR EXPECTED PROPS
-        const hasMainProps: boolean =
-            Object.prototype.hasOwnProperty.call(feedbackObj, 'action') && Object.prototype.hasOwnProperty.call(feedbackObj, 'numKey');
+        const hasMainProps: boolean = hasOwnProperty(feedbackObj, 'action') && hasOwnProperty(feedbackObj, 'numKey');
 
         if (!hasMainProps) {
             if (this.config.showWarnings) logger.warn('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!');
@@ -376,11 +380,17 @@ class SecuredField extends AbstractSecuredField {
             }
         }
 
-        if (this.fieldType === ENCRYPTED_EXPIRY_DATE) {
-            if (this.datePolicy === DATE_POLICY_HIDDEN) {
-                return true;
+        if (this.fieldType === ENCRYPTED_EXPIRY_DATE || this.fieldType === ENCRYPTED_EXPIRY_MONTH || this.fieldType === ENCRYPTED_EXPIRY_YEAR) {
+            switch (this.expiryDatePolicy) {
+                case DATE_POLICY_HIDDEN:
+                    // If date is hidden then the field is always valid
+                    return true;
+                case DATE_POLICY_OPTIONAL:
+                    // If date is optional then the field is always valid UNLESS it has an error
+                    return !this.hasError;
+                default:
+                    return this._isValid;
             }
-            return this._isValid;
         }
 
         return this._isValid;
@@ -412,20 +422,25 @@ class SecuredField extends AbstractSecuredField {
         }
     }
 
-    get datePolicy(): DatePolicyType {
-        return this._datePolicy;
+    get expiryDatePolicy(): DatePolicyType {
+        return this._expiryDatePolicy;
     }
 
-    set datePolicy(value: DatePolicyType) {
-        // Only set if this is a date field
-        if (this.fieldType !== ENCRYPTED_EXPIRY_DATE) return;
+    set expiryDatePolicy(value: DatePolicyType) {
+        // Only set if this is a date field type of securedField
+        if (this.fieldType !== ENCRYPTED_EXPIRY_DATE && this.fieldType !== ENCRYPTED_EXPIRY_MONTH && this.fieldType !== ENCRYPTED_EXPIRY_YEAR) return;
 
         // Only set if value has changed
-        if (value === this.datePolicy) return;
+        if (value === this.expiryDatePolicy) return;
 
-        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField:datePolicy:: value=', value);
+        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField:expiryDatePolicy:: value=', value);
 
-        this._datePolicy = value;
+        this._expiryDatePolicy = value;
+
+        // If the field has changed status (required <--> not required) AND it's error state was due to an isValidated call
+        if (this.hasError && this.errorType === 'isValidated') {
+            this.hasError = false;
+        }
     }
 
     get iframeContentWindow(): Window {

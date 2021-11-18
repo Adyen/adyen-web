@@ -60,32 +60,30 @@ test('Fill in card number that will trigger full flow (fingerprint & challenge)'
         // Expect no errors
         .expect(Selector('.adyen-checkout__field--error').exists)
         .notOk()
-        // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
-        .wait(2000)
         .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
-        .ok();
+        // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
+        .ok({ timeout: 2000 });
 
     // console.log(logger.requests[0].response.headers);
 
     // Check challenge window size is read from default config prop
-    await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok();
+    await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok({ timeout: 3000 });
 
     // Complete challenge
     await fillChallengeField(t);
     await submitChallenge(t);
 
     await t
-        // Allow time for the /details call, which we expect to be successful
-        .wait(2000)
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
-        .ok()
+        // Allow time for the /details call, which we expect to be successful
+        .ok({ timeout: 2000 })
         .wait(1000);
 
     // console.log(logger.requests[1].response.headers);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
+    await t.expect(history[0].text).eql('Authorised', { timeout: 3000 });
 });
 
 test('Fill in card number that will trigger challenge-only flow', async t => {
@@ -111,20 +109,19 @@ test('Fill in card number that will trigger challenge-only flow', async t => {
         .notOk();
 
     // Check challenge window size is read from config prop
-    await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok();
+    await t.expect(Selector('.adyen-checkout__threeds2__challenge--02').exists).ok({ timeout: 3000 });
 
     // Complete challenge
     await fillChallengeField(t);
     await submitChallenge(t);
 
     await t
-        // Allow time for the ONLY details call, which we expect to be successful
-        .wait(2000)
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
-        .ok()
+        // Allow time for the ONLY details call, which we expect to be successful
+        .ok({ timeout: 2000 })
         .wait(2000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
+    await t.expect(history[0].text).eql('Authorised', { timeout: 3000 });
 });

@@ -4,11 +4,26 @@ import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
+import { UIElementProps } from '../types';
+import { PersonalDetailsSchema } from '../../types';
 
-export class EcontextElement extends UIElement {
+interface EcontextElementProps extends UIElementProps {
+    reference?: string;
+    personalDetailsRequired?: boolean;
+    data?: PersonalDetailsSchema;
+}
+
+export class EcontextElement extends UIElement<EcontextElementProps> {
     public static type = 'econtext';
 
+    protected static defaultProps = {
+        personalDetailsRequired: true
+    };
+
     get isValid() {
+        if (!this.props.personalDetailsRequired) {
+            return true;
+        }
         return !!this.state.isValid;
     }
 

@@ -1,4 +1,5 @@
 import { Language } from '../../../language/Language';
+import { CVCPolicyType } from './lib/core/AbstractSecuredField';
 
 export interface SFPProps {
     /**
@@ -47,7 +48,7 @@ export interface SFPProps {
     billingAddressRequiredFields: string[];
     brand: string;
     createFromAction: () => {};
-    cvcPolicy: string;
+    cvcPolicy: CVCPolicyType;
     data: object;
     details: object[];
     enableStoreDetails: boolean;

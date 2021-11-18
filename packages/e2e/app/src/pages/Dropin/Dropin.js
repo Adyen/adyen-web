@@ -8,7 +8,7 @@ import '../../style.scss';
 const initCheckout = async () => {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    window.checkout = new AdyenCheckout({
+    window.checkout = await AdyenCheckout({
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,

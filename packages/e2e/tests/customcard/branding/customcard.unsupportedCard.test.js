@@ -1,273 +1,183 @@
-import { Selector, ClientFunction } from 'testcafe';
-import { start, getIframeSelector } from '../../utils/commonUtils';
-import cu from '../../cards/utils/cardUtils';
+import { start, getAriaErrorField, checkIframeElHasExactText } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, MAESTRO_CARD } from '../../cards/utils/constants';
-import { CUSTOMCARDS_URL } from '../../pages';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
-const errorLabel = Selector('.secured-fields .pm-form-label__error-text');
+import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
+import { turnOffSDKMocking } from '../../_common/cardMocks';
+
+const cardPage = new CustomCardComponentPage();
+
+const BASE_REF = 'securedFields';
 
 const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
 
-const getSFState = ClientFunction((what, prop) => {
-    return window.securedFields.state[what][prop];
-});
-
 const TEST_SPEED = 1;
 
-const iframeSelector = getIframeSelector('.secured-fields iframe');
-
-const cardUtils = cu(iframeSelector);
-
 fixture`Testing persistence of "Unsupported card" error and state at both component & securedField level`
-    .page(CUSTOMCARDS_URL)
-    .clientScripts('customcard.unsupportedCard.clientScripts.js');
+    .beforeEach(async t => {
+        await t.navigateTo(cardPage.pageUrl);
+        // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
+        // - provide a way to ensure SDK bin mocking is turned off
+        await turnOffSDKMocking();
+    })
+    .clientScripts('./customcard.unsupportedCard.clientScripts.js');
 
 test(
     'Enter partial card number that is not supported then ' +
         'check resulting error is processed correctly at merchant and SF level then ' +
         'add digits to number and check error states persist then ' +
-        ' complete number to make it "valid" (right length, passes luhn then ' +
+        'complete number to make it "valid" (right length, passes luhn then ' +
         'check error states persist then ' +
-        'delete number & check error state clear then ' +
+        'delete number & check error states clear then ' +
         'add supported number and check field is seen as valid at merchant and SF levels',
     async t => {
         // Start, allow time to load
-        await start(t, 2000, TEST_SPEED);
+        await start(t, 1000, TEST_SPEED);
 
         // Hidden error field
-        await t.expect(errorLabel.filterHidden().exists).ok();
+        await t.expect(cardPage.numErrorText.filterHidden().exists).ok();
 
-        /**
-         * Add partial number
-         */
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD.substr(0, 11));
+        // Add partial number
+        await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD.substr(0, 11));
 
-        // Merchant/components level error field visible & text set
+        // Components level error field visible & text set
         await t
-            .expect(errorLabel.filterVisible().exists)
+            .expect(cardPage.numErrorText.filterVisible().exists)
             .ok()
-            .expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists)
+            .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
             .ok();
 
-        // Error received & processed at SF level
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
+        /**
+         * Error received & processed at SF level
+         */
+        // Expect input in iframe to have aria-invalid set to true
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'true');
+
+        // Expect error field in iframe to be filled
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), UNSUPPORTED_CARD);
+
+        // Click button - to force blur event
+        await t.click(cardPage.payButton);
+
+        // Expect unsupported card error in iframe to persist (and not become 'incomplete field')
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), UNSUPPORTED_CARD);
+
+        // Add more digits
+        await cardPage.cardUtils.fillCardNumber(t, '0000');
+
+        // Components level error field persists
+        await t.expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists).ok();
 
         /**
-         * Click button - to force blur event
+         * Expect errors received & processed at SF level to persist
          */
-        await t.click('.adyen-checkout__button');
+        // Expect input in iframe to have aria-invalid set to true
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'true');
 
-        // Expect error field in iframe to persist
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
+        // Expect error field in iframe to be filled
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), UNSUPPORTED_CARD);
 
-        /**
-         * Add more digits
-         */
-        await cardUtils.fillCardNumber(t, '0000');
+        // Add last digit to complete a number that passes luhn
+        await cardPage.cardUtils.fillCardNumber(t, '4');
+
+        // Field should be marked in state as not valid
+        await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(false);
 
         // Merchant/components level error field persists
-        await t.expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists).ok();
+        await t.expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists).ok();
 
         // Expect errors received & processed at SF level to persist
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'true');
+
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), UNSUPPORTED_CARD);
+
+        // Delete number
+        await cardPage.cardUtils.deleteCardNumber(t);
+
+        // Components level error field hidden
+        await t.expect(cardPage.numErrorText.filterHidden().exists).ok();
 
         /**
-         * Add last digit to complete a number that passes luhn
+         * Expect error clearing received & processed at SF level
          */
-        await cardUtils.fillCardNumber(t, '4');
+        // Expect input in iframe to have aria-invalid set to true
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'true');
 
-        // Field should be marked as not valid
-        await t.expect(getSFState('valid', 'encryptedCardNumber')).eql(false);
+        // Expect error field in iframe to be unfilled
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), '');
 
-        // Merchant/components level error field persists
-        await t.expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists).ok();
+        // Add supported number
+        await cardPage.cardUtils.fillCardNumber(t, MAESTRO_CARD);
 
-        // Expect errors received & processed at SF level to persist
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
+        // Field should be marked in state as valid...
+        await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(true);
+
+        // ...with encrypted blob
+        await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
 
         /**
-         * Delete number
+         * Validity received & processed at SF level
          */
-        await cardUtils.deleteCardNumber(t);
+        // Expect input in iframe to have aria-invalid set to false
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'false');
 
-        // Merchant/components level error field hidden
-        await t.expect(errorLabel.filterHidden().exists).ok();
-
-        // Error clearing received & processed at SF level
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be unfilled
-            .expect(Selector('#ariaErrorField').withExactText('').exists)
-            .ok()
-            .switchToMainWindow();
-
-        /**
-         * Add supported number
-         */
-        await cardUtils.fillCardNumber(t, MAESTRO_CARD);
-
-        // Field should be marked as valid
-        await t.expect(getSFState('valid', 'encryptedCardNumber')).eql(true);
-
-        // With encrypted blob
-        await t.expect(getSFState('data', 'encryptedCardNumber')).contains('adyenjs_0_1_');
-
-        // Validity received & processed at SF level
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('false')
-            // Expect error field in iframe to be unfilled
-            .expect(Selector('#ariaErrorField').withExactText('').exists)
-            .ok()
-            .switchToMainWindow();
+        // Expect error field in iframe to be unfilled
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), '');
     }
 );
 
 test(
-    'Same as previous test except ' +
+    'Enter unsupported card and expect similar errors in UI, state & SF as previous test, then ' +
         'when adding supported number we paste it straight in then ' +
         'check error states are removed at merchant and SF levels then ' +
         'check field is seen as valid at merchant and SF levels',
     async t => {
         // Start, allow time to load
-        await start(t, 2000, TEST_SPEED);
+        await start(t, 1000, TEST_SPEED);
 
-        // Hidden error field
-        await t.expect(errorLabel.filterHidden().exists).ok();
+        // Add unsupported number
+        await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
-        /**
-         * Add partial number
-         */
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD.substr(0, 11));
-
-        // Merchant/components level error field visible & text set
+        // Components level error field visible & text set
         await t
-            .expect(errorLabel.filterVisible().exists)
+            .expect(cardPage.numErrorText.filterVisible().exists)
             .ok()
-            .expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists)
+            .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
             .ok();
 
-        // Error received & processed at SF level
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
-
         /**
-         * Click button - to force blur event
+         * Error received & processed at SF level
          */
-        await t.click('.adyen-checkout__button');
+        // Expect input in iframe to have aria-invalid set to true
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'true');
 
-        // Expect error field in iframe to persist
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
+        // Expect error field in iframe to be filled
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), UNSUPPORTED_CARD);
 
-        /**
-         * Add more digits
-         */
-        await cardUtils.fillCardNumber(t, '0000');
-
-        // Merchant/components level error field persists
-        await t.expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists).ok();
-
-        // Expect errors received & processed at SF level to persist
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
-
-        /**
-         * Add last digit to complete a number that passes luhn
-         */
-        await cardUtils.fillCardNumber(t, '4');
-
-        // Field should be marked as not valid
-        await t.expect(getSFState('valid', 'encryptedCardNumber')).eql(false);
-
-        // Merchant/components level error field persists
-        await t.expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists).ok();
-
-        // Expect errors received & processed at SF level to persist
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('true')
-            // Expect error field in iframe to be filled
-            .expect(Selector('#ariaErrorField').withExactText(UNSUPPORTED_CARD).exists)
-            .ok()
-            .switchToMainWindow();
+        // Field should be marked in state as not valid
+        await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(false);
 
         /**
          * Paste in supported number
          */
-        await cardUtils.fillCardNumber(t, MAESTRO_CARD, 'paste');
+        await cardPage.cardUtils.fillCardNumber(t, MAESTRO_CARD, 'paste');
 
         // Merchant/components level error field hidden
-        await t.expect(errorLabel.filterHidden().exists).ok();
+        await t.expect(cardPage.numErrorText.filterHidden().exists).ok();
 
-        // Field should be marked as valid
-        await t.expect(getSFState('valid', 'encryptedCardNumber')).eql(true);
+        // Field should be marked in state as valid...
+        await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(true);
 
-        // With encrypted blob
-        await t.expect(getSFState('data', 'encryptedCardNumber')).contains('adyenjs_0_1_');
+        // ...with encrypted blob
+        await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
 
-        // Validity received & processed at SF level
-        await t
-            .switchToIframe(iframeSelector.nth(0))
-            // Expect input in iframe to have aria-invalid set to true
-            .expect(Selector('#encryptedCardNumber').getAttribute('aria-invalid'))
-            .eql('false')
-            // Expect error field in iframe to be unfilled
-            .expect(Selector('#ariaErrorField').withExactText('').exists)
-            .ok()
-            .switchToMainWindow();
+        /**
+         * Validity received & processed at SF level
+         */
+        // Expect input in iframe to have aria-invalid set to false
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'false');
+
+        // Expect error field in iframe to be unfilled
+        await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), '');
     }
 );

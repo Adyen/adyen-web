@@ -1,10 +1,19 @@
-export default function createIframe({ src, title = 'iframe element', policy = 'origin', styleStr = 'border: none; height:100%; width:100%;' }) {
+export default function createIframe({
+    src,
+    title = 'iframe element',
+    policy = 'origin',
+    styleStr = 'border: none; height:100%; width:100%; overflow:hidden;'
+}) {
     const iframeEl = document.createElement('iframe');
     iframeEl.setAttribute('src', src);
     iframeEl.setAttribute('class', 'js-iframe');
-    iframeEl.setAttribute('title', title);
-    iframeEl.setAttribute('frameborder', '0'); // deprecated but still necessary for IE TODO re-test this on next round of IE testing
-    iframeEl.setAttribute('scrolling', 'no');
+    // For a11y some merchants want to be able to remove the title element on the iframe - seeing the info it carries as extraneous for the screenreader
+    if (title === '' || title.trim().length === 0 || title === 'none') {
+        iframeEl.setAttribute('role', 'presentation');
+    } else {
+        iframeEl.setAttribute('title', title);
+    }
+
     iframeEl.setAttribute('allowtransparency', 'true');
     iframeEl.setAttribute('style', styleStr);
     iframeEl.setAttribute('referrerpolicy', policy); // Necessary for ClientKey to work

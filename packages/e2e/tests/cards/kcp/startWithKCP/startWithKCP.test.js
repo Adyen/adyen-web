@@ -1,131 +1,126 @@
-import { Selector, ClientFunction } from 'testcafe';
-import { start, getIframeSelector, getIsValid } from '../../../utils/commonUtils';
-import cu from '../../utils/cardUtils';
-import kcp from '../../utils/kcpUtils';
 import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
-import { CARDS_URL } from '../../../pages';
+import CardComponentPage from '../../../_models/CardComponent.page';
+import { turnOffSDKMocking } from '../../../_common/cardMocks';
 
-const passwordHolder = Selector('.card-field [data-cse="encryptedPassword"]');
+const cardPage = new CardComponentPage();
 
-const getCardState = ClientFunction((what, prop) => {
-    return window.card.state[what][prop];
-});
+fixture`Starting with KCP fields`
+    .beforeEach(async t => {
+        await t.navigateTo(cardPage.pageUrl);
+        await turnOffSDKMocking();
+    })
+    .clientScripts('./startWithKCP.clientScripts.js');
 
-const TEST_SPEED = 1;
-
-const iframeSelector = getIframeSelector('.card-field iframe');
-
-const cardUtils = cu(iframeSelector);
-const kcpUtils = kcp(iframeSelector);
-
-fixture`Starting with KCP fields`.page(CARDS_URL).clientScripts('startWithKCP.clientScripts.js');
-
-// Green 1
 test(
-    'Fill in card number that will hide KCP fields, ' +
+    '#1 Fill in card number that will hide KCP fields, ' +
         'then check password iframe is hidden, ' +
         'then complete the form & check component becomes valid',
     async t => {
-        // Start, allow time for iframes to load
-        await start(t, 2000, TEST_SPEED);
+        // Wait for field to appear in DOM
+        await cardPage.numHolder();
 
         // Fill card field with non-korean card
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+        await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
         // Does the password securedField get removed
-        await t.expect(passwordHolder.exists).notOk();
+        await t.expect(cardPage.pwdSpan.exists).notOk();
 
         // Complete form
-        await cardUtils.fillDateAndCVC(t);
+        await cardPage.cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid()).eql(true);
+        await t.expect(cardPage.getFromState('isValid')).eql(true);
     }
 );
 
-// Green 2
 test(
-    'Fill in all KCP details, ' +
+    '#2 Fill in all KCP details, ' +
         'then check card state for taxNumber & password entries, ' +
         'then replace card number with non-korean card and check taxNumber and password state are cleared',
     async t => {
-        // Start, allow time for iframes to load
-        await start(t, 2000, TEST_SPEED);
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
+        await cardPage.numHolder();
 
         // Complete form with korean card number
-        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
-        await cardUtils.fillDateAndCVC(t);
-        await kcpUtils.fillTaxNumber(t);
-        await kcpUtils.fillPwd(t);
+        await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
+        await cardPage.cardUtils.fillDateAndCVC(t);
+        await cardPage.kcpUtils.fillTaxNumber(t);
+        await cardPage.kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid()).eql(true);
+        await t.expect(cardPage.getFromState('isValid')).eql(true);
 
         // Expect card state to have tax and pwd elements
-        await t.expect(getCardState('data', 'taxNumber')).eql(TEST_TAX_NUMBER_VALUE);
-        await t.expect(getCardState('data', 'encryptedPassword')).contains('adyenjs_0_1_'); // check for blob
+        await t.expect(cardPage.getFromState('data.taxNumber')).eql(TEST_TAX_NUMBER_VALUE);
+        await t.expect(cardPage.getFromState('data.encryptedPassword')).contains('adyenjs_0_1_');
 
-        await t.expect(getCardState('valid', 'taxNumber')).eql(true);
-        await t.expect(getCardState('valid', 'encryptedPassword')).eql(true);
+        await t.expect(cardPage.getFromState('valid.taxNumber')).eql(true);
+        await t.expect(cardPage.getFromState('valid.encryptedPassword')).eql(true);
 
         // Replace number
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'replace');
+        await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'replace');
 
         // (Does the password securedField get removed)
-        await t.expect(passwordHolder.exists).notOk();
+        await t.expect(cardPage.pwdSpan.exists).notOk();
 
         // Expect card state's tax and pwd elements to have been cleared/reset
-        await t.expect(getCardState('data', 'taxNumber')).eql(undefined);
-        await t.expect(getCardState('data', 'encryptedPassword')).eql(undefined);
+        await t.expect(cardPage.getFromState('data.taxNumber')).eql(undefined);
+        await t.expect(cardPage.getFromState('data.encryptedPassword')).eql(undefined);
 
-        await t.expect(getCardState('valid', 'taxNumber')).eql(false);
-        await t.expect(getCardState('valid', 'encryptedPassword')).eql(false);
+        await t.expect(cardPage.getFromState('valid.taxNumber')).eql(false);
+        await t.expect(cardPage.getFromState('valid.encryptedPassword')).eql(false);
 
-        // Expect card to still be valid
-        await t.expect(getIsValid()).eql(true);
+        // Expect card to still be valid (get it from window.card this time - just to check that is also set)
+        await t.expect(cardPage.getFromWindow('card.isValid')).eql(true);
     }
 );
 
-// Green 3
 test(
-    'Fill in card number that will hide KCP fields, ' +
+    '#3 Fill in card number that will hide KCP fields, ' +
         'then complete form and expect component to be valid & to be able to pay,' +
         'then replace card number with korean card and expect component to be valid & to be able to pay',
     async t => {
-        await start(t, 2000, TEST_SPEED);
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
+        await cardPage.numHolder();
 
         // handler for alert that's triggered on successful payment
         await t.setNativeDialogHandler(() => true);
 
-        // Complete form with korean card number
-        await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
-        await cardUtils.fillDateAndCVC(t);
+        // Complete form with regular card number
+        await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+        await cardPage.cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid()).eql(true);
+        await t.expect(cardPage.getFromState('isValid')).eql(true);
 
-        // click pay
-        await t
-            //            .click('.card-field .adyen-checkout__button--pay') // Can't do this in testing scenario - for some reason it triggers a redirect to a hpp/collectKcpAuthentication page
-            // no errors
-            .expect(Selector('.adyen-checkout__field--error').exists)
-            .notOk();
+        // Click pay - except we can't...
+        await t;
+        //            .click(cardPage.payButton) // Can't do this in testing scenario - for some reason it triggers a redirect to a hpp/collectKcpAuthentication page
+        // ... & no errors
+        await t.expect(cardPage.numLabelTextError.exists).notOk();
 
-        // Replace number with non-korean card
-        await cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'replace');
+        // Replace number with non-korean card (pasting works better than replacing in textcafe >1.13.0)
+        await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'paste'); // 'replace'
+
+        // Expect card to now be invalid
+        await t.expect(cardPage.getFromState('isValid')).eql(false);
 
         // Complete form
-        await kcpUtils.fillTaxNumber(t);
-        await kcpUtils.fillPwd(t);
+        await cardPage.kcpUtils.fillTaxNumber(t);
+        await cardPage.kcpUtils.fillPwd(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid()).eql(true);
+        await t.expect(cardPage.getFromState('isValid')).eql(true);
 
-        // click pay
+        // Click pay
         await t
-            .click('.card-field .adyen-checkout__button--pay')
+            .click(cardPage.payButton)
             // no errors
-            .expect(Selector('.adyen-checkout__field--error').exists)
+            .expect(cardPage.numLabelTextError.exists)
             .notOk()
             .wait(1000);
     }

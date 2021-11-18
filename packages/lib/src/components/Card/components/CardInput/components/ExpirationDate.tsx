@@ -5,18 +5,23 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { ExpirationDateProps } from './types';
 import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
+import { DATE_POLICY_HIDDEN, DATE_POLICY_OPTIONAL, DATE_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
-    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, hideDateForBrand = false } = props;
+    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
     const { i18n } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
-        [styles['adyen-checkout__card__exp-date__input--hidden']]: hideDateForBrand
+        'adyen-checkout__field__exp-date': true,
+        [styles['adyen-checkout__card__exp-date__input--hidden']]: expiryDatePolicy === DATE_POLICY_HIDDEN,
+        'adyen-checkout__field__exp-date--optional': expiryDatePolicy === DATE_POLICY_OPTIONAL
     });
+
+    const fieldLabel = expiryDatePolicy !== DATE_POLICY_OPTIONAL ? label : `${label} ${i18n.get('field.title.optional')}`;
 
     return (
         <Field
-            label={label}
+            label={fieldLabel}
             classNameModifiers={['expiryDate']}
             className={fieldClassnames}
             focused={focused}

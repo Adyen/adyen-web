@@ -15,7 +15,7 @@ import StoreDetails from '../../../internal/StoreDetails';
 import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
-import { CVC_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
@@ -45,7 +45,7 @@ function CardInput(props: CardInputProps) {
 
     const [focusedElement, setFocusedElement] = useState('');
     const [isSfpValid, setIsSfpValid] = useState(false);
-    const [hideDateForBrand, setHideDateForBrand] = useState(false);
+    const [expiryDatePolicy, setExpiryDatePolicy] = useState(DATE_POLICY_REQUIRED);
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
     const [issuingCountryCode, setIssuingCountryCode] = useState(null);
 
@@ -138,7 +138,7 @@ function CardInput(props: CardInputProps) {
         // Values relating to /binLookup response
         setCvcPolicy(sfState.cvcPolicy);
         setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
-        setHideDateForBrand(sfState.hideDateForBrand);
+        setExpiryDatePolicy(sfState.expiryDatePolicy);
     };
 
     // Farm the handlers for binLookup related functionality out to another 'extensions' file
@@ -336,7 +336,7 @@ function CardInput(props: CardInputProps) {
                                 onFocusField={setFocusOn}
                                 hasCVC={props.hasCVC}
                                 cvcPolicy={cvcPolicy}
-                                hideDateForBrand={hideDateForBrand}
+                                expiryDatePolicy={expiryDatePolicy}
                                 errors={sfpState.errors}
                                 valid={sfpState.valid}
                                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}

@@ -1,4 +1,5 @@
 import { CardObject } from '../types';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 let shortestPermittedCardLength;
 
@@ -189,7 +190,7 @@ const detectCard = (pCardNumber, pAvailableCards?) => {
         matchedCards = CardType.cards
             .filter(card => pAvailableCards.includes(card.cardType))
             // Further filter them to those with a regEx pattern that matches pCardNumber
-            .filter(card => Object.prototype.hasOwnProperty.call(card, 'pattern') && pCardNumber.match(card.pattern));
+            .filter(card => hasOwnProperty(card, 'pattern') && pCardNumber.match(card.pattern));
 
         // If we have matched cards: if there's only one - return it; else return the one with the longest startingRule
         if (matchedCards.length) {

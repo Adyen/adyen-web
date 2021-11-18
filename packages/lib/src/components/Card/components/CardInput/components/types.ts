@@ -1,6 +1,7 @@
 import { PaymentAmount } from '../../../../../types';
 import { CardBrandsConfiguration } from '../../../types';
 import { ComponentChildren } from 'preact';
+import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/core/AbstractSecuredField';
 
 export interface BrandIconProps {
     brand: string;
@@ -16,8 +17,8 @@ export interface CardFieldsProps {
     errors?: any;
     focusedElement?: any;
     hasCVC?: any;
-    cvcPolicy?: string;
-    hideDateForBrand?: any;
+    cvcPolicy?: CVCPolicyType;
+    expiryDatePolicy?: DatePolicyType;
     onFocusField?: any;
     showBrandIcon?: boolean;
     valid?: any;
@@ -55,7 +56,7 @@ export interface CVCProps {
     filled?: any;
     focused?: any;
     frontCVC?: boolean;
-    cvcPolicy?: string;
+    cvcPolicy?: CVCPolicyType;
     isValid?: any;
     label?: any;
     onFocusField: (field: string) => void;
@@ -82,7 +83,7 @@ export interface ExpirationDateProps {
     isValid?: boolean;
     label?: string;
     onFocusField: (fieldName: string) => {};
-    hideDateForBrand?: boolean;
+    expiryDatePolicy?: DatePolicyType;
 }
 
 export interface InstallmentsProps {
@@ -137,7 +138,7 @@ export interface StoredCardFieldsProps {
     expiryYear?: string;
     focusedElement: string;
     hasCVC: boolean;
-    cvcPolicy: string;
+    cvcPolicy: CVCPolicyType;
     lastFour?: string;
     onFocusField: any;
     valid: any;

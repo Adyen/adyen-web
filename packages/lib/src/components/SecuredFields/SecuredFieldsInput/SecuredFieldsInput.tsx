@@ -77,10 +77,12 @@ function SecuredFieldsInput(props: SecuredFieldsProps) {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
+        const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
+
         props.onChange({
             data,
             valid,
-            errors,
+            errors: { ...errors, ...sfStateErrorsObj }, // maps sfErrors
             isValid: isSfpValid,
             selectedBrandValue
         });

@@ -1,9 +1,11 @@
 let hideCVC = false;
+let optionalCVC = false;
 let hideDate = false;
+let optionalDate = false;
 let isDualBranding = false;
 
 function setAttributes(el, attrs) {
-    for (var key in attrs) {
+    for (const key in attrs) {
         el.setAttribute(key, attrs[key]);
     }
 }
@@ -42,16 +44,12 @@ export function onConfigSuccess(pCallbackObj) {
 }
 
 export function setCCErrors(pCallbackObj) {
-    if (pCallbackObj.error === 'originKeyError') {
-        document.querySelector('.card-input__spinner__holder').style.display = 'none';
-        pCallbackObj.rootNode.style.display = 'block';
-        return;
-    }
-
     if (!pCallbackObj.rootNode) return;
 
     const sfNode = pCallbackObj.rootNode.querySelector(`[data-cse="${pCallbackObj.fieldType}"]`);
     const errorNode = sfNode.parentNode.querySelector('.pm-form-label__error-text');
+
+    if (errorNode.innerText === '' && pCallbackObj.error === '') return;
 
     if (pCallbackObj.error !== '') {
         errorNode.style.display = 'block';
@@ -102,25 +100,51 @@ export function onBrand(pCallbackObj) {
         cvcNode.style.display = 'block';
     }
 
+    // Optional cvc fields
+    if (pCallbackObj.cvcPolicy === 'optional' && !optionalCVC) {
+        optionalCVC = true;
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC (optional):';
+    }
+
+    if (optionalCVC && pCallbackObj.cvcPolicy !== 'optional') {
+        optionalCVC = false;
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC:';
+    }
+
     /**
      * Deal with showing/hiding date field(s)
      */
     const dateNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-date');
-    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-month');
-    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label.exp-year');
+    const monthNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-month');
+    const yearNode = pCallbackObj.rootNode.querySelector('.pm-form-label--exp-year');
 
-    if (pCallbackObj.datePolicy === 'hidden' && !hideDate) {
+    if (pCallbackObj.expiryDatePolicy === 'hidden' && !hideDate) {
         hideDate = true;
         if (dateNode) dateNode.style.display = 'none';
         if (monthNode) monthNode.style.display = 'none';
         if (yearNode) yearNode.style.display = 'none';
     }
 
-    if (hideDate && pCallbackObj.datePolicy !== 'hidden') {
+    if (hideDate && pCallbackObj.expiryDatePolicy !== 'hidden') {
         hideDate = false;
         if (dateNode) dateNode.style.display = 'block';
         if (monthNode) monthNode.style.display = 'block';
         if (yearNode) yearNode.style.display = 'block';
+    }
+
+    // Optional date fields
+    if (pCallbackObj.expiryDatePolicy === 'optional' && !optionalDate) {
+        optionalDate = true;
+        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date (optional):';
+        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month (optional):';
+        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year (optional):';
+    }
+
+    if (optionalDate && pCallbackObj.expiryDatePolicy !== 'optional') {
+        optionalDate = false;
+        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date:';
+        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month:';
+        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year:';
     }
 }
 
@@ -133,10 +157,10 @@ function resetDualBranding(rootNode) {
 
     setLogosActive(rootNode);
 
-    const brandLogo1 = rootNode.querySelector('#pmImageDual1');
+    const brandLogo1 = rootNode.querySelector('.pm-image-dual-1');
     brandLogo1.removeEventListener('click', dualBrandListener);
 
-    const brandLogo2 = rootNode.querySelector('#pmImageDual2');
+    const brandLogo2 = rootNode.querySelector('.pm-image-dual-2');
     brandLogo2.removeEventListener('click', dualBrandListener);
 }
 
@@ -144,8 +168,8 @@ function resetDualBranding(rootNode) {
  * Implementing dual branding
  */
 function onDualBrand(pCallbackObj) {
-    const brandLogo1 = pCallbackObj.rootNode.querySelector('#pmImageDual1');
-    const brandLogo2 = pCallbackObj.rootNode.querySelector('#pmImageDual2');
+    const brandLogo1 = pCallbackObj.rootNode.querySelector('.pm-image-dual-1');
+    const brandLogo2 = pCallbackObj.rootNode.querySelector('.pm-image-dual-2');
 
     isDualBranding = true;
 
@@ -188,14 +212,39 @@ export function onBinLookup(pCallbackObj) {
     resetDualBranding(pCallbackObj.rootNode);
 }
 
-export function onChange(state) {
+export function onChange(state, component) {
+    // From v5 the onError handler is no longer only for card comp related errors - so watch state.errors and call the card specific setCCErrors based on this
+    if (!!Object.keys(state.errors).length) {
+        const errors = Object.entries(state.errors).map(([fieldType, error]) => {
+            return {
+                fieldType,
+                ...(error ? error : { error: '', rootNode: component._node })
+            };
+        });
+        errors.forEach(setCCErrors);
+    }
+
     /**
      * If we're in a dual branding scenario & the number field becomes valid or is valid and become invalid
      * - set the brand logos to the required 'state'
      */
     if (isDualBranding) {
         const mode = state.valid.encryptedCardNumber ? 'dualBranding_valid' : 'dualBranding_notValid';
-        setLogosActive(document.querySelector('.secured-fields'), mode);
+        setLogosActive(component._node, mode);
+    }
+
+    /**
+     * For running the e2e tests in testcafe - we need a mapped version of state.errors
+     * since, for v5, we enhance the securedFields state.errors object with a rootNode prop
+     * & Testcafe doesn't like a ClientFunction retrieving an object with a DOM node in it!?
+     */
+    if (!!Object.keys(state.errors).length) {
+        // Replace any rootNode values in the objects in state.errors with an empty string
+        const nuErrors = Object.entries(state.errors).reduce((acc, [fieldType, error]) => {
+            acc[fieldType] = error ? { ...error, rootNode: '' } : error;
+            return acc;
+        }, {});
+        window.mappedStateErrors = nuErrors;
     }
 }
 
