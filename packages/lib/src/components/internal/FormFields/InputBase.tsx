@@ -5,7 +5,7 @@ import { convertFullToHalf } from './utils';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export default function InputBase(props) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, describedBy, name = null } = props;
 
     const [handleChangeHasFired, setHandleChangeHasFired] = useState(false);
 
@@ -52,9 +52,10 @@ export default function InputBase(props) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
-            aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
+            aria-describedby={describedBy ? describedBy : `${uniqueId}${ARIA_ERROR_SUFFIX}`}
             onChange={handleChange}
             onBlur={handleBlur}
+            name={name}
         />
     );
 }
