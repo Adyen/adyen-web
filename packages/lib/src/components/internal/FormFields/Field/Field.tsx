@@ -113,7 +113,8 @@ class Field extends Component<FieldProps, FieldState> {
                                     onFocus: this.onFocus,
                                     onBlur: this.onBlur,
                                     isInvalid: !!errorMessage,
-                                    ...(name && { uniqueId: this.uniqueId })
+                                    ...(name && { uniqueId: this.uniqueId }),
+                                    name
                                 };
                                 return cloneElement(child as VNode, childProps);
                             }
