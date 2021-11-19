@@ -15,7 +15,7 @@ import StoreDetails from '../../../internal/StoreDetails';
 import Address from '../../../internal/Address/Address';
 import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { ALL_SECURED_FIELDS, CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
@@ -23,14 +23,15 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { CREDIT_CARD, CREDIT_CARD_NAME_BOTTOM, CREDIT_CARD_NAME_TOP } from '../../../../core/Errors/layouts';
+import { CREDIT_CARD, CREDIT_CARD_NAME_BOTTOM, CREDIT_CARD_NAME_TOP, KCP_CARD, KCP_CARD_NAME_BOTTOM, KCP_CARD_NAME_TOP } from './layouts';
 import { sortErrorsForPanel } from './utils';
+import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
 
-    const errorFieldId = 'creditCardConsolidatedErrors';
+    const errorFieldId = 'creditCardErrors';
 
     // Creates access to sfp so we can call functionality on it (like handleOnAutoComplete) directly from the console. Used for testing.
     if (process.env.NODE_ENV === 'development') this.sfp = sfp;
@@ -102,17 +103,46 @@ function CardInput(props: CardInputProps) {
     /**
      * HANDLERS
      */
+    const getLayout = () => {
+        let layout = CREDIT_CARD;
+        const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
+
+        if (hasRequiredHolderName) {
+            layout = props.positionHolderNameOnTop ? CREDIT_CARD_NAME_TOP : CREDIT_CARD_NAME_BOTTOM;
+        }
+        if (showKCP) {
+            layout = KCP_CARD;
+            if (hasRequiredHolderName) {
+                layout = props.positionHolderNameOnTop ? KCP_CARD_NAME_TOP : KCP_CARD_NAME_BOTTOM;
+            }
+        }
+        return layout;
+    };
+
+    // SecuredField-only handler
     const handleFocus = (e: CbObjOnFocus) => {
-        console.log('### CardInput::handleFocus:: e', e);
         setFocusedElement(e.currentFocusObject);
         e.focus === true ? props.onFocus(e) : props.onBlur(e);
     };
 
-    const doErrorPanelFocus = who => {
+    const setFocusForErrorPanel = who => {
         if (isValidating.current) {
             console.log('### CardInput::doErrorPanelFocus:: setFocus on:', who);
-            setFocusedElement(who);
-            this.setFocusOn(who);
+            console.log('### CardInput::setFocusForErrorPanel:: root=', sfp.current.rootNode);
+
+            if (!ALL_SECURED_FIELDS.includes(who)) {
+                let nameVal = who;
+                if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
+                console.log('### CardInput::serFocusForErrorPanel:: not a secured field');
+                const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
+                console.log('### CardInput::setFocusForErrorPanel:: field=', field);
+                field.focus();
+            } else {
+                // setFocusedElement(who);
+                handleFocus({ currentFocusObject: who } as CbObjOnFocus);
+                this.setFocusOn(who);
+            }
+
             isValidating.current = false;
         }
     };
@@ -296,14 +326,6 @@ function CardInput(props: CardInputProps) {
         });
     }, [data, valid, errors, selectedBrandValue, storePaymentMethod, installments]);
 
-    const getLayout = () => {
-        let layout = CREDIT_CARD;
-        if (props.hasHolderName && props.holderNameRequired) {
-            layout = props.positionHolderNameOnTop ? CREDIT_CARD_NAME_TOP : CREDIT_CARD_NAME_BOTTOM;
-        }
-        return layout;
-    };
-
     /**
      * RENDER
      */
@@ -316,6 +338,7 @@ function CardInput(props: CardInputProps) {
             isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
+            describedBy={errorFieldId}
         />
     );
 
@@ -368,8 +391,8 @@ function CardInput(props: CardInputProps) {
                             <ErrorPanel
                                 id={errorFieldId}
                                 heading={props.i18n.get('Existing errors:')}
-                                errors={mergedSRErrors as any}
-                                focusFn={doErrorPanelFocus}
+                                errors={mergedSRErrors}
+                                focusFn={setFocusForErrorPanel}
                             />
 
                             {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}

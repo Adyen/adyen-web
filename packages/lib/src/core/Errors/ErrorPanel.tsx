@@ -34,13 +34,10 @@ export interface ErrorPanelProps {
     id?: string;
     heading?: string;
     errors: ErrorPanelObj;
-    // errors: ErrorObj;
-    // i18n: Language;
     focusFn: (who) => void;
-    // layout: string[];
 }
 
-export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'error panel', errors, focusFn }: ErrorPanelProps) {
+export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, focusFn }: ErrorPanelProps) {
     if (!errors) return null;
 
     const defaultHeading: string = heading;

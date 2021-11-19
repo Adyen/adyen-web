@@ -112,6 +112,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     public static defaultProps = defaultProps;
 
     public componentDidMount(): void {
+        // When SFP instantiated through SecuredFieldsInput c.f. CardInput
         if (this.props.rootNode) {
             this.setRootNode(this.props.rootNode);
         }
