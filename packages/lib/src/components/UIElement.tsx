@@ -110,8 +110,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     };
 
     protected handleAdditionalDetails = state => {
-        if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
-        if (this.props.session) this.submitAdditionalDetails(state.data);
+        if (this.props.onAdditionalDetails) {
+            this.props.onAdditionalDetails(state, this.elementRef);
+        } else if (this.props.session) {
+            this.submitAdditionalDetails(state.data);
+        }
+
         return state;
     };
 
