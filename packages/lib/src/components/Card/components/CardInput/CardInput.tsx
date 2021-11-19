@@ -22,9 +22,9 @@ import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
-import { ErrorPanel } from '../../../../core/Errors/ErrorPanel';
+import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { CREDIT_CARD, CREDIT_CARD_NAME_BOTTOM, CREDIT_CARD_NAME_TOP } from '../../../../core/Errors/layouts';
-import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
+import { sortErrorsForPanel } from './utils';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -51,7 +51,7 @@ function CardInput(props: CardInputProps) {
     const isValidating = useRef(false);
 
     // An object containing a collection of all the errors that can be passed to the ErrorPanel to be read by the screenreader
-    const [mergedSRErrors, setMergedSRErrors] = useState<CardInputErrorState>({});
+    const [mergedSRErrors, setMergedSRErrors] = useState<ErrorPanelObj>(null);
 
     const [focusedElement, setFocusedElement] = useState('');
     const [isSfpValid, setIsSfpValid] = useState(false);
@@ -109,7 +109,6 @@ function CardInput(props: CardInputProps) {
     };
 
     const doErrorPanelFocus = who => {
-        console.log('### CardInput::doErrorPanelFocus:: isValidating', isValidating.current);
         if (isValidating.current) {
             console.log('### CardInput::doErrorPanelFocus:: setFocus on:', who);
             setFocusedElement(who);
@@ -134,7 +133,7 @@ function CardInput(props: CardInputProps) {
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
-        setMergedSRErrors({});
+        setMergedSRErrors(null);
 
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
@@ -179,7 +178,7 @@ function CardInput(props: CardInputProps) {
      */
     this.showValidation = () => {
         // Clear errors so that the screenreader will read them *all* again
-        setMergedSRErrors({});
+        setMergedSRErrors(null);
 
         isValidating.current = true;
 
@@ -191,12 +190,6 @@ function CardInput(props: CardInputProps) {
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
-
-        // const errorMessages: string[] = Object.entries(mergedErrors).reduce((acc, [key, value]) => {
-        //     return [...acc, ...(value ? [key] : [])];
-        // }, []);
-        //
-        // console.log('### CardInput::showValidation:: errorMessages', errorMessages);
     };
 
     this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
@@ -238,7 +231,7 @@ function CardInput(props: CardInputProps) {
      */
     useEffect(() => {
         // Clear errors so that the screenreader will read them *all* again
-        setMergedSRErrors({});
+        setMergedSRErrors(null);
 
         setData({ ...data, holderName: formData.holderName ?? '', taxNumber: formData.taxNumber });
 
@@ -285,9 +278,10 @@ function CardInput(props: CardInputProps) {
 
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
 
-        setMergedSRErrors(mergedErrors);
+        // console.log('### CardInput::mergedErrors:: ', mergedErrors);
 
-        console.log('### CardInput::mergedErrors:: ', mergedErrors);
+        const sortedMergedErrors = sortErrorsForPanel(mergedErrors, getLayout(), props.i18n);
+        setMergedSRErrors(sortedMergedErrors);
 
         props.onChange({
             data,
@@ -373,10 +367,9 @@ function CardInput(props: CardInputProps) {
                         <LoadingWrapper status={sfpState.status}>
                             <ErrorPanel
                                 id={errorFieldId}
-                                i18n={props.i18n}
+                                heading={props.i18n.get('Existing errors:')}
                                 errors={mergedSRErrors as any}
                                 focusFn={doErrorPanelFocus}
-                                layout={getLayout()}
                             />
 
                             {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
