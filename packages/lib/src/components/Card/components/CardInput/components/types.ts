@@ -32,7 +32,6 @@ export interface CardHolderNameProps {
     placeholder?: string;
     required?: boolean;
     value?: string;
-    describedBy?: string;
 }
 
 export interface CardNumberProps {

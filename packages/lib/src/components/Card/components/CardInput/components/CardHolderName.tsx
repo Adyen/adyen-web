@@ -5,16 +5,7 @@ import { renderFormField } from '../../../../internal/FormFields';
 import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
 
-export default function CardHolderName({
-    onChange,
-    onInput,
-    placeholder,
-    value,
-    required,
-    error = false,
-    isValid,
-    describedBy = ''
-}: CardHolderNameProps) {
+export default function CardHolderName({ onChange, onInput, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -26,13 +17,13 @@ export default function CardHolderName({
             name={'holderName'}
         >
             {renderFormField('text', {
+                name: 'holderName',
                 className: `adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`,
                 placeholder: placeholder || i18n.get('creditCard.holderName.placeholder'),
                 value,
                 required,
                 onChange,
-                onInput,
-                describedBy
+                onInput
             })}
         </Field>
     );
