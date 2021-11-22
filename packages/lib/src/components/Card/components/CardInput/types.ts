@@ -4,6 +4,7 @@ import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/core/AbstractSecuredField';
+import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -93,4 +94,27 @@ export interface CardInputState {
     valid?: object;
     issuingCountryCode: string;
     showSocialSecurityNumber?: boolean;
+}
+
+interface FieldError {
+    errorMessage?: string;
+    errorI18n?: string;
+    // error: string;
+    // rootNode?: HTMLElement;
+    // isValid?: boolean;
+    // shouldValidate?: boolean;
+}
+
+export interface ErrorObj {
+    holderName?: ValidationRuleResult;
+    socialSecurityNumber?: ValidationRuleResult;
+    taxNumber?: ValidationRuleResult;
+    billingAddress?: ValidationRuleResult;
+    encryptedCardNumber?: FieldError;
+    encryptedExpiryDate?: FieldError;
+    encryptedSecurityCode?: FieldError;
+    encryptedBankAccountNumber?: FieldError;
+    encryptedBankLocationId?: FieldError;
+    encryptedPassword?: FieldError;
+    encryptedPin?: FieldError;
 }

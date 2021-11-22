@@ -16,7 +16,8 @@ export const cardInputValidationRules: ValidatorRules = {
     taxNumber: [
         {
             modes: ['blur'],
-            validate: value => value?.length === 6 || value?.length === 10
+            validate: value => value?.length === 6 || value?.length === 10,
+            errorMessage: 'creditCard.taxNumber.invalid'
         }
     ],
     holderName: [

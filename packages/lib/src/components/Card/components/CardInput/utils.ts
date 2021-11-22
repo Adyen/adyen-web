@@ -1,7 +1,8 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import { ErrorObj, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
+import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import Language from '../../../../language/Language';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
+import { ErrorObj } from './types';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -16,6 +17,9 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
 const mapFieldKey = (key: string, i18n: Language): string => {
     switch (key) {
         case 'holderName':
+            return i18n.get(`creditCard.${key}`);
+            break;
+        case 'taxNumber':
             return i18n.get(`creditCard.${key}`);
             break;
         default: {
@@ -45,7 +49,7 @@ export const sortErrorsForPanel = (errors: ErrorObj, layout: string[], i18n: Lan
         // Get corresponding error msg
         const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n : i18n.get(errors[key].errorMessage);
 
-        return `${errorKey} ${errorMsg}`;
+        return `${errorKey}: ${errorMsg}`;
     });
 
     return !errorMessages.length ? null : { errorMessages, fieldList };

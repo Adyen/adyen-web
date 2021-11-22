@@ -30,6 +30,7 @@ import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
+    const isValidating = useRef(false);
 
     const errorFieldId = 'creditCardErrors';
 
@@ -48,8 +49,6 @@ function CardInput(props: CardInputProps) {
     const [data, setData] = useState<CardInputDataState>({
         ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
-
-    const isValidating = useRef(false);
 
     // An object containing a collection of all the errors that can be passed to the ErrorPanel to be read by the screenreader
     const [mergedSRErrors, setMergedSRErrors] = useState<ErrorPanelObj>(null);
@@ -125,20 +124,22 @@ function CardInput(props: CardInputProps) {
         e.focus === true ? props.onFocus(e) : props.onBlur(e);
     };
 
-    const setFocusForErrorPanel = who => {
+    const setFocusForErrorPanel = (errors: ErrorPanelObj) => {
         if (isValidating.current) {
-            console.log('### CardInput::doErrorPanelFocus:: setFocus on:', who);
-            console.log('### CardInput::setFocusForErrorPanel:: root=', sfp.current.rootNode);
+            const who = errors.fieldList[0];
 
+            // If not a securedField - find field and set focus on it
             if (!ALL_SECURED_FIELDS.includes(who)) {
                 let nameVal = who;
+
+                // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
+                // the value by which the field is referred to internally ('taxNumber')
                 if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
-                console.log('### CardInput::serFocusForErrorPanel:: not a secured field');
+
                 const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-                console.log('### CardInput::setFocusForErrorPanel:: field=', field);
                 field.focus();
             } else {
-                // setFocusedElement(who);
+                // Is a securedField - so it has it's own focus procedures
                 handleFocus({ currentFocusObject: who } as CbObjOnFocus);
                 this.setFocusOn(who);
             }
@@ -390,9 +391,9 @@ function CardInput(props: CardInputProps) {
                         <LoadingWrapper status={sfpState.status}>
                             <ErrorPanel
                                 id={errorFieldId}
-                                heading={props.i18n.get('Existing errors:')}
+                                heading={props.i18n.get('errorPanel.title')}
                                 errors={mergedSRErrors}
-                                focusFn={setFocusForErrorPanel}
+                                callbackFn={setFocusForErrorPanel}
                             />
 
                             {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}

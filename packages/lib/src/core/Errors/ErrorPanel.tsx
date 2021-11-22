@@ -1,29 +1,5 @@
 import { h } from 'preact';
 import './ErrorPanel.scss';
-import { ValidationRuleResult } from '../../utils/Validator/Validator';
-
-interface FieldError {
-    errorMessage?: string;
-    errorI18n?: string;
-    // error: string;
-    // rootNode?: HTMLElement;
-    // isValid?: boolean;
-    // shouldValidate?: boolean;
-}
-
-export interface ErrorObj {
-    holderName?: ValidationRuleResult;
-    socialSecurityNumber?: ValidationRuleResult;
-    taxNumber?: ValidationRuleResult;
-    billingAddress?: ValidationRuleResult;
-    encryptedCardNumber?: FieldError;
-    encryptedExpiryDate?: FieldError;
-    encryptedSecurityCode?: FieldError;
-    encryptedBankAccountNumber?: FieldError;
-    encryptedBankLocationId?: FieldError;
-    encryptedPassword?: FieldError;
-    encryptedPin?: FieldError;
-}
 
 export interface ErrorPanelObj {
     errorMessages: string[];
@@ -34,21 +10,19 @@ export interface ErrorPanelProps {
     id?: string;
     heading?: string;
     errors: ErrorPanelObj;
-    focusFn: (who) => void;
+    callbackFn: (who) => void;
 }
 
-export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, focusFn }: ErrorPanelProps) {
+export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, callbackFn = () => {} }: ErrorPanelProps) {
     if (!errors) return null;
 
-    const defaultHeading: string = heading;
+    const { errorMessages } = errors;
 
-    const { errorMessages, fieldList } = errors;
+    // console.log('### ErrorPanel:: errorMessages', errorMessages);
+    // console.log('### ErrorPanel:: fieldList', errors.fieldList);
 
-    console.log('### ErrorPanel:: errorMessages', errorMessages);
-    console.log('### ErrorPanel:: fieldList', fieldList);
-
-    // If pay button has just been pressed - we will set focus on the first field in error
-    focusFn(fieldList[0]);
+    // Perform passed callback, if specified
+    callbackFn(errors);
 
     return (
         <div className="adyen-checkput__error-panel" id={id} aria-live="polite">
@@ -58,7 +32,7 @@ export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Error
                     <span className="adl-alert__icon">
                         <i className="adl-icon-triangle"></i>
                     </span>
-                    <span className="adl-alert__title">{defaultHeading}</span>
+                    <span className="adl-alert__title">{heading}</span>
                 </div>
                 {errorMessages.map(error => (
                     <div key={error} className="adl-alert__explanation">
