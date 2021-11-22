@@ -15,12 +15,14 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
 };
 
 const mapFieldKey = (key: string, i18n: Language): string => {
+    // console.log('### utils::mapFieldKey:: key', key);
     switch (key) {
         case 'holderName':
-            return i18n.get(`creditCard.${key}`);
-            break;
         case 'taxNumber':
             return i18n.get(`creditCard.${key}`);
+            break;
+        case 'socialSecurityNumber':
+            return i18n.get(`boleto.${key}`);
             break;
         default: {
             // Map all securedField field types to 'creditCard' - with 2 exceptions

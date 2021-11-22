@@ -23,7 +23,17 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { CREDIT_CARD, CREDIT_CARD_NAME_BOTTOM, CREDIT_CARD_NAME_TOP, KCP_CARD, KCP_CARD_NAME_BOTTOM, KCP_CARD_NAME_TOP } from './layouts';
+import {
+    CREDIT_CARD,
+    CREDIT_CARD_NAME_BOTTOM,
+    CREDIT_CARD_NAME_TOP,
+    KCP_CARD,
+    KCP_CARD_NAME_BOTTOM,
+    KCP_CARD_NAME_TOP,
+    SSN_CARD,
+    SSN_CARD_NAME_BOTTOM,
+    SSN_CARD_NAME_TOP
+} from './layouts';
 import { sortErrorsForPanel } from './utils';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 
@@ -99,9 +109,6 @@ function CardInput(props: CardInputProps) {
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
         props.configuration.socialSecurityNumberMode === 'show';
 
-    /**
-     * HANDLERS
-     */
     const getLayout = () => {
         let layout = CREDIT_CARD;
         const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
@@ -115,16 +122,25 @@ function CardInput(props: CardInputProps) {
                 layout = props.positionHolderNameOnTop ? KCP_CARD_NAME_TOP : KCP_CARD_NAME_BOTTOM;
             }
         }
+        if (showBrazilianSSN) {
+            layout = SSN_CARD;
+            if (hasRequiredHolderName) {
+                layout = props.positionHolderNameOnTop ? SSN_CARD_NAME_TOP : SSN_CARD_NAME_BOTTOM;
+            }
+        }
         return layout;
     };
 
+    /**
+     * HANDLERS
+     */
     // SecuredField-only handler
     const handleFocus = (e: CbObjOnFocus) => {
         setFocusedElement(e.currentFocusObject);
         e.focus === true ? props.onFocus(e) : props.onBlur(e);
     };
 
-    const setFocusForErrorPanel = (errors: ErrorPanelObj) => {
+    const handleErrorPanelFocus = (errors: ErrorPanelObj) => {
         if (isValidating.current) {
             const who = errors.fieldList[0];
 
@@ -136,8 +152,10 @@ function CardInput(props: CardInputProps) {
                 // the value by which the field is referred to internally ('taxNumber')
                 if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
 
+                // console.log('### CardInput::handleErrorPanelFocus:: who', who);
+
                 const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-                field.focus();
+                field?.focus();
             } else {
                 // Is a securedField - so it has it's own focus procedures
                 handleFocus({ currentFocusObject: who } as CbObjOnFocus);
@@ -339,7 +357,6 @@ function CardInput(props: CardInputProps) {
             isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
-            describedBy={errorFieldId}
         />
     );
 
@@ -393,7 +410,7 @@ function CardInput(props: CardInputProps) {
                                 id={errorFieldId}
                                 heading={props.i18n.get('errorPanel.title')}
                                 errors={mergedSRErrors}
-                                callbackFn={setFocusForErrorPanel}
+                                callbackFn={handleErrorPanelFocus}
                             />
 
                             {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}

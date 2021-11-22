@@ -12,6 +12,7 @@ export default function({ onChange, onInput, valid = false, error = null, data =
             classNameModifiers={['socialSecurityNumber']}
             errorMessage={!!error}
             isValid={Boolean(valid)}
+            name={'socialSecurityNumber'}
         >
             {renderFormField('text', {
                 name: 'socialSecurityNumber',
