@@ -10,7 +10,8 @@ export const cardInputValidationRules: ValidatorRules = {
     socialSecurityNumber: [
         {
             modes: ['blur'],
-            validate: validateSSN
+            validate: validateSSN,
+            errorMessage: 'boleto.socialSecurityNumber.invalid'
         }
     ],
     taxNumber: [

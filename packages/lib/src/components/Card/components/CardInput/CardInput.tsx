@@ -458,6 +458,7 @@ function CardInput(props: CardInputProps) {
                                         error={errors?.socialSecurityNumber}
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
+                                        required={true}
                                     />
                                 </div>
                             )}
