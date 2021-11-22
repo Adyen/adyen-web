@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { BrowserInfo, PaymentAmount } from '../../types';
 import { UIElementProps } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -166,6 +166,7 @@ export interface ApplePayElementData {
         type: string;
         applePayToken: string;
     };
+    browserInfo: BrowserInfo;
 }
 
 export interface ApplePaySessionRequest {

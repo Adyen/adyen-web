@@ -10,6 +10,7 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 const latestSupportedVersion = 11;
 
@@ -49,7 +50,8 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             paymentMethod: {
                 type: ApplePayElement.type,
                 ...this.state
-            }
+            },
+            browserInfo: this.browserInfo
         };
     }
 
@@ -114,6 +116,10 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      */
     get isValid(): boolean {
         return true;
+    }
+
+    get browserInfo() {
+        return collectBrowserInfo();
     }
 
     /**
