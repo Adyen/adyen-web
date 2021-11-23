@@ -23,18 +23,7 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import {
-    CREDIT_CARD,
-    CREDIT_CARD_NAME_BOTTOM,
-    CREDIT_CARD_NAME_TOP,
-    KCP_CARD,
-    KCP_CARD_NAME_BOTTOM,
-    KCP_CARD_NAME_TOP,
-    SSN_CARD,
-    SSN_CARD_NAME_BOTTOM,
-    SSN_CARD_NAME_TOP
-} from './layouts';
-import { sortErrorsForPanel } from './utils';
+import { getLayout, sortErrorsForPanel } from './utils';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 
 function CardInput(props: CardInputProps) {
@@ -111,28 +100,6 @@ function CardInput(props: CardInputProps) {
         (showSocialSecurityNumber && props.configuration.socialSecurityNumberMode === 'auto') ||
         props.configuration.socialSecurityNumberMode === 'show';
 
-    const getLayout = () => {
-        let layout = CREDIT_CARD;
-        const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
-
-        if (hasRequiredHolderName) {
-            layout = props.positionHolderNameOnTop ? CREDIT_CARD_NAME_TOP : CREDIT_CARD_NAME_BOTTOM;
-        }
-        if (showKCP) {
-            layout = KCP_CARD;
-            if (hasRequiredHolderName) {
-                layout = props.positionHolderNameOnTop ? KCP_CARD_NAME_TOP : KCP_CARD_NAME_BOTTOM;
-            }
-        }
-        if (showBrazilianSSN) {
-            layout = SSN_CARD;
-            if (hasRequiredHolderName) {
-                layout = props.positionHolderNameOnTop ? SSN_CARD_NAME_TOP : SSN_CARD_NAME_BOTTOM;
-            }
-        }
-        return layout;
-    };
-
     /**
      * HANDLERS
      */
@@ -142,6 +109,7 @@ function CardInput(props: CardInputProps) {
         e.focus === true ? props.onFocus(e) : props.onBlur(e);
     };
 
+    // Callback for ErrorPanel
     const handleErrorPanelFocus = (errors: ErrorPanelObj) => {
         if (isValidating.current) {
             const who = errors.fieldList[0];
@@ -329,9 +297,7 @@ function CardInput(props: CardInputProps) {
 
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
 
-        // console.log('### CardInput::mergedErrors:: ', mergedErrors);
-
-        const sortedMergedErrors = sortErrorsForPanel(mergedErrors, getLayout(), props.i18n);
+        const sortedMergedErrors = sortErrorsForPanel(mergedErrors, getLayout({ props, showKCP, showBrazilianSSN }), props.i18n);
         setMergedSRErrors(sortedMergedErrors);
 
         props.onChange({
