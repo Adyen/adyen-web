@@ -144,20 +144,6 @@ export default async () => {
             watch: watchConfig
         }
     ];
-    build.push({
-        input,
-        external: getExternals(),
-        plugins: modernPlugins,
-        output: [
-            {
-                dir: 'dist/es.modern',
-                format: 'esm',
-                chunkFileNames: '[name].js',
-                ...(!isProduction ? { sourcemap: true } : {})
-            }
-        ],
-        watch: watchConfig
-    });
 
     // only add modern build and umd when building in production
     if (isProduction) {
