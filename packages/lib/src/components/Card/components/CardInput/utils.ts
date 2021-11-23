@@ -51,7 +51,7 @@ export const sortErrorsForPanel = (errors: ErrorObj, layout: string[], i18n: Lan
         // Get corresponding error msg
         const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n : i18n.get(errors[key].errorMessage);
 
-        return `${errorKey}: ${errorMsg}`;
+        return `${errorKey}: ${errorMsg}.`;
     });
 
     return !errorMessages.length ? null : { errorMessages, fieldList };
