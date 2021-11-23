@@ -27,6 +27,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.isValid}
                 dir={'ltr'}
                 name={'kcpTaxNumberOrDOB'}
+                collateErrors={props.collateErrors}
             >
                 {renderFormField('tel', {
                     name: 'kcpTaxNumberOrDOB',
@@ -38,7 +39,8 @@ export default function KCPAuthentication(props: KCPProps) {
                     value: props.value,
                     required: true,
                     onChange: props.onChange,
-                    onInput: props.onInput
+                    onInput: props.onInput,
+                    collateErrors: props.collateErrors
                 })}
             </Field>
 

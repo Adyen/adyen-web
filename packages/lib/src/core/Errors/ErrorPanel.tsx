@@ -13,16 +13,16 @@ export interface ErrorPanelProps {
     callbackFn?: (who) => void;
 }
 
-export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, callbackFn = () => {} }: ErrorPanelProps) {
+export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, callbackFn = null }: ErrorPanelProps) {
     if (!errors) return null;
 
     const { errorMessages } = errors;
 
     // console.log('### ErrorPanel:: errorMessages', errorMessages);
-    // console.log('### ErrorPanel:: fieldList', errors.fieldList);
+    // console.log('### ErrorPanel:: callbackFn', callbackFn);
 
     // Perform passed callback, if specified
-    callbackFn(errors);
+    callbackFn?.(errors);
 
     return (
         <div className="adyen-checkout-error-panel" id={id} aria-live="polite">

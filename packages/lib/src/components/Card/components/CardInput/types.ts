@@ -77,6 +77,7 @@ export interface CardInputProps {
     onBinValue?: () => {};
     details?: object;
     storedDetails?: object;
+    SRConfig?: ScreenreaderConfig;
 }
 
 export interface CardInputState {
@@ -94,6 +95,11 @@ export interface CardInputState {
     valid?: object;
     issuingCountryCode: string;
     showSocialSecurityNumber?: boolean;
+}
+
+interface ScreenreaderConfig {
+    collateErrors: boolean;
+    moveFocus: boolean;
 }
 
 interface FieldError {

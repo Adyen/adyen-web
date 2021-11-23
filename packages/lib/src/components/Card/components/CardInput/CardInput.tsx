@@ -44,6 +44,8 @@ function CardInput(props: CardInputProps) {
 
     const errorFieldId = 'creditCardErrors';
 
+    const { collateErrors = true, moveFocus = false } = props.SRConfig;
+
     // Creates access to sfp so we can call functionality on it (like handleOnAutoComplete) directly from the console. Used for testing.
     if (process.env.NODE_ENV === 'development') this.sfp = sfp;
 
@@ -357,6 +359,7 @@ function CardInput(props: CardInputProps) {
             isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
+            collateErrors={collateErrors}
         />
     );
 
@@ -386,7 +389,8 @@ function CardInput(props: CardInputProps) {
                     ref={setRootNode}
                     className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${props.fundingSource ??
                         'credit'}`}
-                    aria-describedby={errorFieldId}
+                    role={collateErrors && 'form'}
+                    aria-describedby={collateErrors ? errorFieldId : null}
                 >
                     {props.storedPaymentMethodId ? (
                         <LoadingWrapper status={sfpState.status}>
@@ -406,12 +410,14 @@ function CardInput(props: CardInputProps) {
                         </LoadingWrapper>
                     ) : (
                         <LoadingWrapper status={sfpState.status}>
-                            <ErrorPanel
-                                id={errorFieldId}
-                                heading={props.i18n.get('errorPanel.title')}
-                                errors={mergedSRErrors}
-                                callbackFn={handleErrorPanelFocus}
-                            />
+                            {collateErrors && (
+                                <ErrorPanel
+                                    id={errorFieldId}
+                                    heading={props.i18n.get('errorPanel.title')}
+                                    errors={mergedSRErrors}
+                                    callbackFn={moveFocus ? handleErrorPanelFocus : null}
+                                />
+                            )}
 
                             {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
 
@@ -429,6 +435,7 @@ function CardInput(props: CardInputProps) {
                                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
                                 dualBrandingChangeHandler={extensions.handleDualBrandSelection}
                                 dualBrandingSelected={selectedBrandValue}
+                                collateErrors={collateErrors}
                             />
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
@@ -447,6 +454,7 @@ function CardInput(props: CardInputProps) {
                                     isValid={!!valid.taxNumber}
                                     onChange={handleChangeFor('taxNumber', 'blur')}
                                     onInput={handleChangeFor('taxNumber', 'input')}
+                                    collateErrors={collateErrors}
                                 />
                             )}
 
@@ -459,6 +467,7 @@ function CardInput(props: CardInputProps) {
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
                                         required={true}
+                                        collateErrors={collateErrors}
                                     />
                                 </div>
                             )}

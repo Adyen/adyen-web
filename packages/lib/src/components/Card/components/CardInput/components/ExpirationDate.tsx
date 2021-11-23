@@ -8,7 +8,17 @@ import DataSfSpan from './DataSfSpan';
 import { DATE_POLICY_HIDDEN, DATE_POLICY_OPTIONAL, DATE_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
-    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
+    const {
+        label,
+        focused,
+        filled,
+        onFocusField,
+        className = '',
+        error = '',
+        isValid = false,
+        expiryDatePolicy = DATE_POLICY_REQUIRED,
+        collateErrors
+    } = props;
     const { i18n } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
@@ -31,6 +41,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             isValid={isValid}
             dir={'ltr'}
             name={'encryptedExpiryDate'}
+            collateErrors={collateErrors}
         >
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}
