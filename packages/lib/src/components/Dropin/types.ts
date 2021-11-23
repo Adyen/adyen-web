@@ -3,6 +3,8 @@ import UIElement from '../UIElement';
 import { UIElementProps } from '../types';
 import { PaymentMethodsConfiguration } from '../../core/types';
 
+export type InstantPaymentTypes = 'paywithgoogle' | 'applepay';
+
 export interface DropinElementProps extends UIElementProps {
     /**
      * Configure each payment method displayed on the Drop-in
@@ -26,6 +28,20 @@ export interface DropinElementProps extends UIElementProps {
      * @defaultValue true
      */
     showPaymentMethods?: boolean;
+
+    /**
+     * Show wallet payment methods to show on top of the regular payment
+     * method list.
+     *
+     * @defaultValue []
+     */
+    instantPaymentTypes: InstantPaymentTypes[];
+
+    /**
+     * Instant Payment methods derived from the instantPaymentTypes property
+     * @internal
+     */
+    instantPaymentMethods?: PaymentMethod[];
 
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
@@ -61,6 +77,7 @@ interface DropinStatus {
 
 export interface DropinComponentState {
     elements: any[];
+    instantPaymentElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;

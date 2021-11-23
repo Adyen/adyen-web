@@ -7,9 +7,7 @@ export default {
     onSelect: () => {}, // triggered when a paymentMethod is selected
     onDisableStoredPaymentMethod: null, // triggered when a shopper removes a storedPaymentMethod
     onChange: () => {},
-    // onSubmit: () => {},
-    // onAdditionalDetails: () => {},
-
+    instantPaymentMethods: [],
     amount: {},
     installmentOptions: {},
     paymentMethodsConfiguration: {}, // per paymentMethod configuration

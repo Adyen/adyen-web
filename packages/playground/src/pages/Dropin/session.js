@@ -27,9 +27,18 @@ export async function initSession() {
         },
         onError: (error, component) => {
             console.error(error.message, component);
+        },
+        paymentMethodsConfiguration: {
+            paywithgoogle: {
+                buttonType: 'plain'
+            }
         }
     });
 
-    const dropin = checkout.create('dropin').mount('#dropin-container');
+    const dropin = checkout
+        .create('dropin', {
+            instantPaymentTypes: ['paywithgoogle']
+        })
+        .mount('#dropin-container');
     return [checkout, dropin];
 }
