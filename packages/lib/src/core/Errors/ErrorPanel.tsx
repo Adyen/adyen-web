@@ -10,7 +10,7 @@ export interface ErrorPanelProps {
     id?: string;
     heading?: string;
     errors: ErrorPanelObj;
-    callbackFn: (who) => void;
+    callbackFn?: (who) => void;
 }
 
 export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, callbackFn = () => {} }: ErrorPanelProps) {
@@ -25,7 +25,7 @@ export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Error
     callbackFn(errors);
 
     return (
-        <div className="adyen-checkput__error-panel" id={id} aria-live="polite">
+        <div className="adyen-checkout-error-panel" id={id} aria-live="polite">
             {/*<div className="sr-only" id={id} aria-live="polite">*/}
             <div className="adl-alert adl-alert--error">
                 <div className="adl-alert__header">
