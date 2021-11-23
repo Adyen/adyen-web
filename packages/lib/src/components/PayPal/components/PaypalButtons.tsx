@@ -11,15 +11,17 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
 
     const createButton = (fundingSource: FundingSource, buttonRef) => {
         const button = paypalRef.Buttons({
-            ...(!isTokenize && { createOrder: onSubmit }),
             ...(isTokenize && { createBillingAgreement: onSubmit }),
+            ...(!isTokenize && {
+                createOrder: onSubmit,
+                onShippingChange
+            }),
             fundingSource,
             style: getStyle(fundingSource, style),
             onInit,
             onClick,
             onCancel,
             onError,
-            onShippingChange,
             onApprove: onComplete
         });
 
