@@ -54,6 +54,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.encryptedPasswordState.valid}
                 dir={'ltr'}
                 name={'encryptedPassword'}
+                collateErrors={props.collateErrors}
             >
                 <DataSfSpan
                     encryptedFieldType="encryptedPassword"

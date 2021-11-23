@@ -157,7 +157,8 @@ export function setupSecuredField(pItem: HTMLElement): void {
         holderEl: pItem,
         legacyInputMode: this.config.legacyInputMode,
         minimumExpiryDate: this.config.minimumExpiryDate,
-        implementationType: this.config.implementationType
+        implementationType: this.config.implementationType,
+        collateErrors: this.config.collateErrors
     };
 
     const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)

@@ -150,7 +150,8 @@ class SecuredField extends AbstractSecuredField {
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
             uid: this.config.uid,
-            implementationType: this.config.implementationType
+            implementationType: this.config.implementationType,
+            collateErrors: this.config.collateErrors
         };
 
         if (process.env.NODE_ENV === 'development' && window._b$dl) {
