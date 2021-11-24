@@ -151,7 +151,7 @@ class SecuredField extends AbstractSecuredField {
             minimumExpiryDate: this.config.minimumExpiryDate,
             uid: this.config.uid,
             implementationType: this.config.implementationType,
-            collateErrors: this.config.collateErrors
+            isCollatingErrors: this.config.isCollatingErrors
         };
 
         if (process.env.NODE_ENV === 'development' && window._b$dl) {

@@ -187,7 +187,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             legacyInputMode: this.props.legacyInputMode,
             minimumExpiryDate: this.props.minimumExpiryDate,
             implementationType: this.props.implementationType || 'components',
-            collateErrors: this.props.collateErrors
+            isCollatingErrors: this.props.isCollatingErrors
         };
 
         this.csf = initCSF(csfSetupObj);

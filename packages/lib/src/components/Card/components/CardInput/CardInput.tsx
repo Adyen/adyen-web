@@ -350,7 +350,7 @@ function CardInput(props: CardInputProps) {
             onBrand={props.onBrand}
             onFocus={handleFocus}
             type={props.brand}
-            collateErrors={collateErrors}
+            isCollatingErrors={collateErrors}
             render={({ setRootNode, setFocusOn }, sfpState) => (
                 <div
                     ref={setRootNode}

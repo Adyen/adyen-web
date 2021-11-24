@@ -60,7 +60,7 @@ export function handleConfig(): void {
     this.config.implementationType = this.props.implementationType;
 
     // Whether Component is collating errors into a single element for the screenreader & therefore whether indiv. SFs will have an aria-describedby attr
-    this.config.collateErrors = this.props.collateErrors;
+    this.config.isCollatingErrors = this.props.isCollatingErrors;
 
     this.config.sfLogAtStart = this.props._b$dl === true;
 
