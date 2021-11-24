@@ -19,8 +19,9 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.numHolder = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber`);
-        //        this.numHolderInError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber.adyen-checkout__field--error`);
+        //        this.numHolderWithErrorCls = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber.adyen-checkout__field--error`);
 
+        this.numLabel = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label`);
         // The <span> that holds the label text (first child of the <label>)
         this.numLabelText = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text`);
         this.numLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text--error`);
@@ -39,9 +40,9 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.dateHolder = Selector(`${BASE_EL} .adyen-checkout__field__exp-date`);
-        //        this.dateHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date.adyen-checkout__field--error`);
         this.dateHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__exp-date--optional`);
 
+        this.dateLabel = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label`);
         // The <span> that holds the label text (first child of the <label>)
         this.dateLabelText = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label__text`);
         this.dateLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label__text--error`);
@@ -57,9 +58,9 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.cvcHolder = Selector(`${BASE_EL} .adyen-checkout__field__cvc`);
-        //        this.cvcHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__cvc.adyen-checkout__field--error`);
         this.cvcHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__cvc--optional`);
 
+        this.cvcLabel = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label`);
         // The <span> that holds the label text (first child of the <label>)
         this.cvcLabelText = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label__text`);
         this.cvcLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label__text--error`);

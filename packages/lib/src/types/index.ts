@@ -97,6 +97,11 @@ export interface PaymentMethod {
      * Configuration props as set by the merchant in the CA and received in the PM object in the /paymentMethods response
      */
     configuration?: object;
+
+    /**
+     * Brands available for this payment method
+     */
+    brands?: string[];
 }
 
 export interface StoredPaymentMethod extends PaymentMethod {

@@ -205,5 +205,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "Πεδίο τραπεζικού λογαριασμού",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe για ασφαλή αριθμό κωδικού υποκαταστήματος τράπεζας",
     "ach.encryptedBankLocationId.aria.label": "Πεδίο αριθμού κωδικού υποκαταστήματος τράπεζας",
-    "twint.saved": "αποθηκεύτηκε"
+    "twint.saved": "αποθηκεύτηκε",
+    "orPayWith": "ή πληρώστε με"
 }

@@ -205,5 +205,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "銀行帳戶欄位",
     "ach.encryptedBankLocationId.aria.iframeTitle": "安全銀行匯款路徑編號的 IFrame",
     "ach.encryptedBankLocationId.aria.label": "銀行匯款路徑編號欄位",
-    "twint.saved": "儲存的"
+    "twint.saved": "儲存的",
+    "orPayWith": "或透過以下方式支付："
 }

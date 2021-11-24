@@ -205,5 +205,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "Polje za broj bankovnog računa",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe za identifikacijski broj prepaid banke",
     "ach.encryptedBankLocationId.aria.label": "Polje za identifikacijski broj banke",
-    "twint.saved": "spremljeno"
+    "twint.saved": "spremljeno",
+    "orPayWith": "ili platite s"
 }

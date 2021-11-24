@@ -12,6 +12,16 @@
     pointer-events: none;
 }
 
+.adyen-checkout__instant-payment-methods-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li:not(:last-child) {
+        margin-bottom: 8px;
+    }
+}
+
 /* Forms */
 
 .adyen-checkout__link {
