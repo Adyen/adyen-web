@@ -6,8 +6,9 @@ import 'core-js/es/array/find-index';
 import 'core-js/es/promise';
 
 // ChildNode.remove()
-(function(arr) {
-    arr.forEach(function(item) {
+
+(function() {
+    function polyfill(item) {
         if (item.hasOwnProperty('remove')) {
             return;
         }
@@ -22,5 +23,9 @@ import 'core-js/es/promise';
                 this.parentNode.removeChild(this);
             }
         });
-    });
-})([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+    }
+
+    Element && polyfill(Element.prototype);
+    CharacterData && polyfill(CharacterData.prototype);
+    DocumentType && polyfill(Element.prototype);
+})();
