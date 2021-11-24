@@ -68,10 +68,8 @@ export async function initManual() {
                 hasHolderName: true,
                 holderNameRequired: true
             },
-            paymentMethodsConfiguration: {
-                paywithgoogle: {
-                    buttonType: 'plain'
-                }
+            paywithgoogle: {
+                buttonType: 'plain'
             }
         }
     });
