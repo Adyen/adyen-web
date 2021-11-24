@@ -33,7 +33,7 @@ function CardInput(props: CardInputProps) {
 
     const errorFieldId = 'creditCardErrors';
 
-    const { collateErrors = true, moveFocus = false } = props.SRConfig;
+    const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
 
     // Creates access to sfp so we can call functionality on it (like handleOnAutoComplete) directly from the console. Used for testing.
     if (process.env.NODE_ENV === 'development') this.sfp = sfp;
@@ -383,6 +383,7 @@ function CardInput(props: CardInputProps) {
                                     heading={props.i18n.get('errorPanel.title')}
                                     errors={mergedSRErrors}
                                     callbackFn={moveFocus ? handleErrorPanelFocus : null}
+                                    showPanel={showPanel}
                                 />
                             )}
 

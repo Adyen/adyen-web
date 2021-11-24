@@ -11,22 +11,25 @@ export interface ErrorPanelProps {
     heading?: string;
     errors: ErrorPanelObj;
     callbackFn?: (who) => void;
+    showPanel?: boolean;
 }
 
-export function ErrorPanel({ id = 'ariaConsolidatedErrorField', heading = 'Errors:', errors, callbackFn = null }: ErrorPanelProps) {
+export function ErrorPanel({
+    id = 'ariaConsolidatedErrorField',
+    heading = 'Errors:',
+    errors,
+    callbackFn = null,
+    showPanel = false
+}: ErrorPanelProps) {
     if (!errors) return null;
 
     const { errorMessages } = errors;
-
-    // console.log('### ErrorPanel:: errorMessages', errorMessages);
-    // console.log('### ErrorPanel:: callbackFn', callbackFn);
 
     // Perform passed callback, if specified
     callbackFn?.(errors);
 
     return (
-        <div className="adyen-checkout-error-panel" id={id} aria-live="polite">
-            {/*<div className="sr-only" id={id} aria-live="polite">*/}
+        <div className={showPanel ? 'adyen-checkout-error-panel' : 'sr-only'} id={id} aria-live="polite">
             <div className="adl-alert adl-alert--error">
                 <div className="adl-alert__header">
                     <span className="adl-alert__icon">

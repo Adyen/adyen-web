@@ -100,6 +100,7 @@ export interface CardInputState {
 interface ScreenreaderConfig {
     collateErrors: boolean;
     moveFocus: boolean;
+    showPanel: boolean;
 }
 
 interface FieldError {
