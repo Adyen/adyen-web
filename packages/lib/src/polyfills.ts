@@ -25,7 +25,13 @@ import 'core-js/es/promise';
         });
     }
 
-    Element && polyfill(Element.prototype);
-    CharacterData && polyfill(CharacterData.prototype);
-    DocumentType && polyfill(Element.prototype);
+    if (typeof Element !== 'undefined') {
+        polyfill(Element.prototype);
+    }
+    if (typeof CharacterData !== 'undefined') {
+        polyfill(CharacterData.prototype);
+    }
+    if (typeof DocumentType !== 'undefined') {
+        polyfill(DocumentType.prototype);
+    }
 })();
