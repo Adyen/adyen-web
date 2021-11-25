@@ -25,6 +25,8 @@ import useForm from '../../../../utils/useForm';
 import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { getLayout, sortErrorsForPanel } from './utils';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
+import { AddressData } from '../../../../types';
+import Specifications from '../../../internal/Address/Specifications';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -34,6 +36,8 @@ function CardInput(props: CardInputProps) {
     const errorFieldId = 'creditCardErrors';
 
     const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
+
+    const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
     // Creates access to sfp so we can call functionality on it (like handleOnAutoComplete) directly from the console. Used for testing.
     if (process.env.NODE_ENV === 'development') this.sfp = sfp;
@@ -64,7 +68,7 @@ function CardInput(props: CardInputProps) {
     const [selectedBrandValue, setSelectedBrandValue] = useState('');
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(props.billingAddressRequired ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
@@ -268,13 +272,18 @@ function CardInput(props: CardInputProps) {
             billingAddress: formValid.billingAddress ? formValid.billingAddress : false
         });
 
+        // Check if billingAddress errors object has any properties that aren't null
+        const addressHasErrors = formErrors.billingAddress
+            ? Object.entries(formErrors.billingAddress).reduce((acc, [, error]) => acc || error != null, false)
+            : false;
+
         // Errors
         setErrors({
             ...errors,
             holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null,
             socialSecurityNumber: showBrazilianSSN && !!formErrors.socialSecurityNumber ? formErrors.socialSecurityNumber : null,
             taxNumber: showKCP && !!formErrors.taxNumber ? formErrors.taxNumber : null,
-            billingAddress: props.billingAddressRequired && !!formErrors.billingAddress ? formErrors.billingAddress : null
+            billingAddress: props.billingAddressRequired && addressHasErrors ? formErrors.billingAddress : null
         });
     }, [formData, formValid, formErrors]);
 
@@ -297,8 +306,23 @@ function CardInput(props: CardInputProps) {
 
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
 
-        const sortedMergedErrors = sortErrorsForPanel(mergedErrors, getLayout({ props, showKCP, showBrazilianSSN }), props.i18n);
+        // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
+        const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
+        const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
+
+        const sortedMergedErrors = sortErrorsForPanel({
+            errors: errorsForPanel,
+            layout: getLayout({
+                props,
+                showKCP,
+                showBrazilianSSN,
+                countrySpecificSchemas: billingAddress?.country ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
+            }),
+            i18n: props.i18n,
+            countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
+        });
         setMergedSRErrors(sortedMergedErrors);
+        // console.log('### CardInput::sortedMergedErrors:: ', sortedMergedErrors);
 
         props.onChange({
             data,

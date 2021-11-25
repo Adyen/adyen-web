@@ -5,6 +5,8 @@ import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/core/AbstractSecuredField';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
+import Specifications from '../../../internal/Address/Specifications';
+import { AddressSchema, StringObject } from '../../../internal/Address/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -78,6 +80,7 @@ export interface CardInputProps {
     details?: object;
     storedDetails?: object;
     SRConfig?: ScreenreaderConfig;
+    specifications?: Specifications;
 }
 
 export interface CardInputState {
@@ -124,4 +127,18 @@ export interface ErrorObj {
     encryptedBankLocationId?: FieldError;
     encryptedPassword?: FieldError;
     encryptedPin?: FieldError;
+}
+
+export interface LayoutObj {
+    props: CardInputProps;
+    showKCP: boolean;
+    showBrazilianSSN: boolean;
+    countrySpecificSchemas: AddressSchema;
+}
+
+export interface SortErrorsObj {
+    errors: ErrorObj;
+    layout: string[];
+    i18n: Language;
+    countrySpecificLabels: StringObject;
 }
