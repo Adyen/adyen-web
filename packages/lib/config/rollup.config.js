@@ -40,7 +40,6 @@ const polyfillPlugin = [
     {
         corejs: 3,
         absoluteRuntime: true
-        //useESModules: true
     }
 ];
 
