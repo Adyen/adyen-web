@@ -5,19 +5,23 @@ import { getStyle } from '../utils';
 
 export default function PaypalButtons(props: PayPalButtonsProps) {
     const { onInit, onComplete, onClick, onCancel, onError, onShippingChange, onSubmit, paypalRef, style } = props;
+    const isTokenize = props.configuration?.intent === 'tokenize';
     const paypalButtonRef = useRef(null);
     const creditButtonRef = useRef(null);
 
     const createButton = (fundingSource: FundingSource, buttonRef) => {
         const button = paypalRef.Buttons({
+            ...(isTokenize && { createBillingAgreement: onSubmit }),
+            ...(!isTokenize && {
+                createOrder: onSubmit,
+                onShippingChange
+            }),
             fundingSource,
             style: getStyle(fundingSource, style),
             onInit,
             onClick,
             onCancel,
             onError,
-            onShippingChange,
-            createOrder: onSubmit,
             onApprove: onComplete
         });
 
