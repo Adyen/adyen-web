@@ -47,14 +47,16 @@ export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSch
     }
     // w. Billing address
     if (countrySpecificSchemas) {
+        // Flatten array and remove any numbers that describe how fields should be aligned
         const countryBasedAddressLayout: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number');
-        // console.log('### utils::getLayout:: countryBasedAddressLayout', countryBasedAddressLayout);
+
         layout = CREDIT_CARD.concat(countryBasedAddressLayout);
         if (hasRequiredHolderName) {
             layout = props.positionHolderNameOnTop
                 ? CREDIT_CARD_NAME_TOP.concat(countryBasedAddressLayout)
                 : CREDIT_CARD_NAME_BOTTOM.concat(countryBasedAddressLayout);
         }
+        // TODO we are not yet creating a layout for AVS + SSN field (w. or w/o holderName) - is AVS + SSN a real world scenario?
     }
     return layout;
 };
