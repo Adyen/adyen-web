@@ -15,7 +15,6 @@ import {
     SSN_CARD_NAME_TOP
 } from './layouts';
 import { StringObject } from '../../../internal/Address/types';
-import { DATE_POLICY_REQUIRED, ENCRYPTED_EXPIRY_DATE } from '../../../internal/SecuredFields/lib/configuration/constants';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -27,7 +26,7 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
     return getImageUrl(imageOptions)(brand);
 };
 
-export const getLayout = ({ props, showKCP, showBrazilianSSN, expiryDatePolicy, countrySpecificSchemas = null }: LayoutObj): string[] => {
+export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSchemas = null }: LayoutObj): string[] => {
     let layout = CREDIT_CARD;
     const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
 
@@ -61,11 +60,6 @@ export const getLayout = ({ props, showKCP, showBrazilianSSN, expiryDatePolicy, 
         }
         // TODO we are not yet creating a layout for AVS + SSN field (w. or w/o holderName) - is AVS + SSN a real world scenario?
     }
-
-    if (expiryDatePolicy !== DATE_POLICY_REQUIRED) {
-        layout = layout.filter(item => item !== ENCRYPTED_EXPIRY_DATE);
-    }
-    console.log('### utils::getLayout:: layout=', layout);
     return layout;
 };
 

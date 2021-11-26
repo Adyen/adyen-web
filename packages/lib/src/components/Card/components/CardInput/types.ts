@@ -133,7 +133,6 @@ export interface LayoutObj {
     props: CardInputProps;
     showKCP: boolean;
     showBrazilianSSN: boolean;
-    expiryDatePolicy: DatePolicyType;
     countrySpecificSchemas: AddressSchema;
 }
 

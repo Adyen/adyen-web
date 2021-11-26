@@ -310,15 +310,12 @@ function CardInput(props: CardInputProps) {
         const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
-        console.log('### CardInput::errorsForPanel:: ', errorsForPanel);
-
         const sortedMergedErrors = sortErrorsForPanel({
             errors: errorsForPanel,
             layout: getLayout({
                 props,
                 showKCP,
                 showBrazilianSSN,
-                expiryDatePolicy,
                 countrySpecificSchemas: billingAddress?.country ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
             }),
             i18n: props.i18n,
