@@ -68,10 +68,8 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case 'holderName':
         case 'taxNumber':
             return i18n.get(`creditCard.${key}`);
-            break;
         case 'socialSecurityNumber':
             return i18n.get(`boleto.${key}`);
-            break;
         // address related
         case 'street':
         case 'houseNumberOrName':
@@ -79,7 +77,6 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case 'stateOrProvince':
         case 'city':
             return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
-            break;
         // securedFields related
         default: {
             // Map all securedField field types to 'creditCard' - with 2 exceptions
