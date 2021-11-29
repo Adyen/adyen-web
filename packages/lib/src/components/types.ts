@@ -26,6 +26,8 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
+export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+
 export interface UIElementProps extends BaseElementProps {
     session?: {
         id: string;
@@ -54,6 +56,10 @@ export interface UIElementProps extends BaseElementProps {
      */
     showPayButton?: boolean;
 
+    /**
+     *  Set to false to not set the Component status to 'loading' when onSubmit is triggered.
+     *  @defaultValue true
+     */
     setStatusAutomatically?: boolean;
 
     /** @internal */

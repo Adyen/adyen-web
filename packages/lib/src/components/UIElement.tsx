@@ -6,13 +6,18 @@ import PayButton from './internal/PayButton';
 import { UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import type { UIElementStatus } from './types';
+
+const defaultProps = Object.freeze({
+    setStatusAutomatically: true,
+});
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     protected componentRef: any;
     public elementRef: any;
 
     constructor(props: P) {
-        super(props);
+        super({ ...defaultProps, ...props });
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -38,9 +43,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return state;
     }
 
-    onSubmit(): void {
+    private onSubmit(): void {
         if (this.props.isInstantPayment) {
             this.elementRef.closeActivePaymentMethod();
+        }
+
+        if (this.props.setStatusAutomatically) {
+            this.setStatus('loading');
         }
 
         if (this.props.onSubmit) {
@@ -58,7 +67,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         }
     }
 
-    onValid() {
+    private onValid() {
         const state = { data: this.data };
         if (this.props.onValid) this.props.onValid(state, this.elementRef);
         return state;
@@ -71,10 +80,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     /**
      * Submit payment method data. If the form is not valid, it will trigger validation.
      */
-    submit(): void {
+    public submit(): void {
         if (!this.isValid) {
             this.showValidation();
-            return null;
+            return;
         }
 
         this.onSubmit();
@@ -85,21 +94,20 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return this;
     }
 
-    setStatus(status, props?): this {
-        if (this.componentRef && this.componentRef.setStatus) this.componentRef.setStatus(status, props);
+    public setStatus(status: UIElementStatus, props?): this {
+        if (this.props.isDropin && this.elementRef?.setStatus) {
+            this.elementRef.setStatus(status, props);
+        } else if (this.componentRef && this.componentRef.setStatus) {
+            this.componentRef.setStatus(status, props);
+        }
         return this;
     }
 
-    submitPayment(data): Promise<void> {
-        this.setStatus('loading');
-
+    private submitPayment(data): Promise<void> {
         return this._parentInstance.session
             .submitPayment(data)
             .then(this.handleResponse)
-            .catch(error => {
-                this.setStatus('ready');
-                this.handleError(error);
-            });
+            .catch(error => this.handleError(error));
     }
 
     submitAdditionalDetails(data): Promise<void> {
@@ -110,7 +118,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
-        if (this.props.onError) this.props.onError(error, this.elementRef);
+        this.setStatus('ready');
+
+        if (this.props.onError) {
+            this.props.onError(error, this.elementRef);
+        }
     };
 
     protected handleAdditionalDetails = state => {
