@@ -87,6 +87,16 @@ export default class CardPage extends BasePage {
         this.pwdErrorText = Selector(`${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout__error-text`);
 
         /**
+         * AVS
+         */
+        this.addressLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label--focused`);
+        this.houseNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--houseNumberOrName .adyen-checkout__label--focused`);
+        // Country dropdown
+        this.countrySelectBtn = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__button`);
+        this.countrySelectList = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__list`);
+        this.countryListActiveCls = 'adyen-checkout__dropdown__list--active';
+
+        /**
          * iframe utils
          */
         this.iframeSelector = getIframeSelector(`${BASE_EL} iframe`);

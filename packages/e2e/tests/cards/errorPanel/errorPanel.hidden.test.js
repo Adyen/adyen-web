@@ -4,11 +4,10 @@ import { REGULAR_TEST_CARD } from '../utils/constants';
 
 const cardPage = new CardComponentPage();
 
-fixture`Testing card's error panel`
-    .beforeEach(async t => {
-        await t.navigateTo(cardPage.pageUrl);
-    })
-    .clientScripts('./errorPanel.hidden.clientScripts.js');
+fixture`Testing card's error panel`.beforeEach(async t => {
+    await t.navigateTo(cardPage.pageUrl);
+});
+// No clientScript needed since we are working with the default SRConfig values
 
 test('#1 Error panel is not present at start, when there are no errors', async t => {
     // Wait for field to appear in DOM
@@ -41,6 +40,6 @@ test('#2 Click pay with empty fields and hidden error panel is populated', async
     // no 4th element
     await t.expect(cardPage.errorPanelEls.nth(3).exists).notOk();
 
-    // Expect focus to be place on Card number field - since SRConfig for this card comp says it should be
-    await t.expect(cardPage.numLabelWithFocus.exists).ok();
+    // Expect focus not to be place on Card number field - since SRConfig for this card comp says it shouldn't be
+    await t.expect(cardPage.numLabelWithFocus.exists).notOk();
 });
