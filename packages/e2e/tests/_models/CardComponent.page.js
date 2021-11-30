@@ -22,6 +22,7 @@ export default class CardPage extends BasePage {
         //        this.numHolderWithErrorCls = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber.adyen-checkout__field--error`);
 
         this.numLabel = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label`);
+        this.numLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label--focused`);
         // The <span> that holds the label text (first child of the <label>)
         this.numLabelText = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text`);
         this.numLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text--error`);
@@ -43,6 +44,7 @@ export default class CardPage extends BasePage {
         this.dateHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__exp-date--optional`);
 
         this.dateLabel = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label`);
+        this.dateLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label--focused`);
         // The <span> that holds the label text (first child of the <label>)
         this.dateLabelText = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label__text`);
         this.dateLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label__text--error`);
@@ -95,6 +97,13 @@ export default class CardPage extends BasePage {
          * Pay button
          */
         this.payButton = Selector(`${BASE_EL} .adyen-checkout__button--pay`);
+
+        /**
+         * Error panel
+         */
+        this.errorPanelVisible = Selector(`${BASE_EL} .adyen-checkout-error-panel`);
+        this.errorPanelHidden = Selector(`${BASE_EL} .adyen-checkout-error-panel--sr-only`);
+        this.errorPanelEls = Selector('.adyen-checkout-error-panel__error'); // error messages within the panel
     }
 
     getFromState = ClientFunction(path => {
