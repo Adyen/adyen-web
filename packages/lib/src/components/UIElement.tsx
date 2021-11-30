@@ -29,7 +29,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.elementRef = (props && props.elementRef) || this;
     }
 
-    protected setState(newState: object): void {
+    public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
         this.onChange();
     }

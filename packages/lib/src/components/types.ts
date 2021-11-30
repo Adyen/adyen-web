@@ -36,6 +36,7 @@ export interface IUIElement {
     setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;
+    setState(newState: object): void;
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
