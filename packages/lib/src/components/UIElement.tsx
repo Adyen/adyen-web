@@ -156,7 +156,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     };
 
     protected handleFinalResult = result => {
-        if (this.props.setStatusAutomatically !== false) {
+        if (this.props.setStatusAutomatically) {
             const [status, statusProps] = resolveFinalResult(result);
             if (status) this.elementRef.setStatus(status, statusProps);
         }

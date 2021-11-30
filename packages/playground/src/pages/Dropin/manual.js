@@ -21,25 +21,24 @@ export async function initManual() {
         },
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
-            component.setStatus('ready');
 
             // handle actions
-            // if (result.action) {
-            //     // demo only - store paymentData & order
-            //     if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-            //     component.handleAction(result.action);
-            // } else if (result.order && result.order?.remainingAmount?.value > 0) {
-            //     // handle orders
-            //     const order = {
-            //         orderData: result.order.orderData,
-            //         pspReference: result.order.pspReference
-            //     };
-            //
-            //     const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-            //     checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-            // } else {
-            //     handleFinalState(result.resultCode, component);
-            // }
+            if (result.action) {
+                // demo only - store paymentData & order
+                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
+                component.handleAction(result.action);
+            } else if (result.order && result.order?.remainingAmount?.value > 0) {
+                // handle orders
+                const order = {
+                    orderData: result.order.orderData,
+                    pspReference: result.order.pspReference
+                };
+
+                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
+            } else {
+                handleFinalState(result.resultCode, component);
+            }
         },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
