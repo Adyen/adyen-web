@@ -99,6 +99,8 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
 
     if (!fieldList || !fieldList.length) return null;
 
+    console.log('### utils::sortErrorsForPanel:: errors', errors);
+
     // Create array of error messages to display
     const errorMessages = fieldList.map(key => {
         // Get translation for field type
@@ -108,6 +110,8 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
 
         return `${errorKey}: ${errorMsg}.`;
     });
+
+    console.log('### utils::sortErrorsForPanel:: errorMessages', errorMessages);
 
     return !errorMessages.length ? null : { errorMessages, fieldList };
 };
