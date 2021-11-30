@@ -26,6 +26,18 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
+export interface IUIElement {
+    isValid: boolean;
+    displayName: string;
+    accessibleName: string;
+    type: string;
+    elementRef: any;
+    submit(): void;
+    setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
+    handleAction(action: PaymentAction): UIElement | null;
+    showValidation(): void;
+}
+
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
 export interface UIElementProps extends BaseElementProps {

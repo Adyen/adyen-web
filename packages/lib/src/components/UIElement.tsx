@@ -3,7 +3,7 @@ import BaseElement from './BaseElement';
 import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import { UIElementProps } from './types';
+import { IUIElement, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import type { UIElementStatus } from './types';
@@ -12,7 +12,7 @@ const defaultProps = Object.freeze({
     setStatusAutomatically: true,
 });
 
-export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
+export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement{
     protected componentRef: any;
     public elementRef: any;
 
@@ -29,12 +29,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.elementRef = (props && props.elementRef) || this;
     }
 
-    setState(newState: object): void {
+    protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
         this.onChange();
     }
 
-    onChange(): object {
+    protected onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
         if (this.props.onChange) this.props.onChange(state, this.elementRef);
@@ -89,7 +89,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         this.onSubmit();
     }
 
-    showValidation(): this {
+    public showValidation(): this {
         if (this.componentRef && this.componentRef.showValidation) this.componentRef.showValidation();
         return this;
     }
@@ -110,7 +110,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
             .catch(error => this.handleError(error));
     }
 
-    submitAdditionalDetails(data): Promise<void> {
+    private submitAdditionalDetails(data): Promise<void> {
         return this._parentInstance.session
             .submitDetails(data)
             .then(this.handleResponse)
@@ -135,7 +135,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
         return state;
     };
 
-    handleAction(action: PaymentAction, props = {}): UIElement {
+    public handleAction(action: PaymentAction, props = {}): UIElement {
         if (!action || !action.type) throw new Error('Invalid Action');
 
         const paymentAction = this._parentInstance.createFromAction(action, {
@@ -220,7 +220,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     /**
      * Get the payButton component for the current element
      */
-    public payButton = props => {
+    protected payButton = props => {
         return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
     };
 }
