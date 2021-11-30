@@ -27,6 +27,7 @@ import { getLayout, sortErrorsForPanel } from './utils';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
+import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -115,9 +116,7 @@ function CardInput(props: CardInputProps) {
 
     // Callback for ErrorPanel
     const handleErrorPanelFocus = (errors: ErrorPanelObj) => {
-        console.log('### CardInput::handleErrorPanelFocus:: isValidating.current', isValidating.current);
         if (isValidating.current) {
-            console.log('### CardInput::handleErrorPanelFocus:: errors.fieldList', errors.fieldList);
             const who = errors.fieldList[0];
 
             // If not a securedField - find field and set focus on it
@@ -127,8 +126,6 @@ function CardInput(props: CardInputProps) {
                 // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
                 // the value by which the field is referred to internally ('taxNumber')
                 if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
-
-                console.log('### CardInput::handleErrorPanelFocus:: who', who);
 
                 const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
                 field?.focus();
@@ -273,12 +270,14 @@ function CardInput(props: CardInputProps) {
             billingAddress: formValid.billingAddress ? formValid.billingAddress : false
         });
 
-        console.log('### CardInput::formErrors.billingAddress:: ', formErrors.billingAddress);
-
-        // Check if billingAddress errors object has any properties that aren't null
-        const addressHasErrors = formErrors.billingAddress
-            ? Object.entries(formErrors.billingAddress).reduce((acc, [, error]) => acc || error != null, false)
-            : false;
+        // Check if billingAddress errors object has any properties that aren't null or undefined
+        // NOTE: when showValidation is called on the Address component it calls back twice - once, incorrectly, with formErrors.billingAddress as an instance of ValidationRuleResult
+        // and second time round, correctly  with formErrors.billingAddress as an object containing ValidationRuleResults mapped to address keys (street, city etc)
+        // - so we need to ignore the first callback TODO - investigate why this happens
+        const addressHasErrors =
+            formErrors.billingAddress && !(formErrors.billingAddress instanceof ValidationRuleResult)
+                ? Object.entries(formErrors.billingAddress).reduce((acc, [, error]) => acc || error != null, false)
+                : false;
 
         // Errors
         setErrors({
@@ -313,9 +312,6 @@ function CardInput(props: CardInputProps) {
         const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
-        console.log('\n### CardInput::extractedAddressErrors:: ', extractedAddressErrors);
-        console.log('### CardInput::errorsWithoutAddress:: ', errorsWithoutAddress);
-
         const sortedMergedErrors = sortErrorsForPanel({
             errors: errorsForPanel,
             layout: getLayout({
@@ -328,7 +324,7 @@ function CardInput(props: CardInputProps) {
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
         });
         setMergedSRErrors(sortedMergedErrors);
-        console.log('### CardInput::sortedMergedErrors:: ', sortedMergedErrors);
+        // console.log('### CardInput::sortedMergedErrors:: ', sortedMergedErrors);
 
         props.onChange({
             data,
