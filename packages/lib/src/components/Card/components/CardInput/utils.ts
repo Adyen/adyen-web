@@ -76,6 +76,7 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case 'postalCode':
         case 'stateOrProvince':
         case 'city':
+        case 'country':
             return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
         // securedFields related
         default: {

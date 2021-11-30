@@ -316,7 +316,7 @@ function CardInput(props: CardInputProps) {
                 props,
                 showKCP,
                 showBrazilianSSN,
-                countrySpecificSchemas: billingAddress?.country ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
+                countrySpecificSchemas: props.billingAddressRequired ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
             }),
             i18n: props.i18n,
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
