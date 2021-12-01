@@ -90,7 +90,12 @@ export default class CardPage extends BasePage {
          * AVS
          */
         this.addressLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label--focused`);
+        this.addressLabelErrorText = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__error-text`);
+        this.addressLabel = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label`);
+        this.addressInput = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__input--street`);
+
         this.houseNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--houseNumberOrName .adyen-checkout__label--focused`);
+
         // Country dropdown
         this.countrySelectBtn = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__button`);
         this.countrySelectBtnActive = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__button--active`);

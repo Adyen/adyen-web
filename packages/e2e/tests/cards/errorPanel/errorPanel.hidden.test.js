@@ -1,6 +1,4 @@
 import CardComponentPage from '../../_models/CardComponent.page';
-import { Selector } from 'testcafe';
-import { REGULAR_TEST_CARD } from '../utils/constants';
 
 const cardPage = new CardComponentPage();
 

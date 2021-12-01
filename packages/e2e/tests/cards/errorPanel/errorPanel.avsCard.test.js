@@ -1,15 +1,52 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD } from '../utils/constants';
+import { getInputSelector } from '../../utils/commonUtils';
 
 const cardPage = new CardComponentPage();
 
-fixture`Testing card's error panel`
+fixture`Testing avsCard's error panel`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
     .clientScripts('./errorPanel.avsCard.clientScripts.js');
 
-test('#1 Click pay with empty fields and error panel in avsCard is populated', async t => {
+test('#1 avsCard error fields and inputs should have correct aria attributes', async t => {
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    // click pay, to validate & generate errors
+    await t.click(cardPage.payButton);
+
+    // PAN's error field should have correct aria attrs (-hidden="true", -live not set)
+    await t
+        .expect(cardPage.numErrorText.getAttribute('aria-hidden'))
+        .eql('true')
+        .expect(cardPage.numErrorText.getAttribute('aria-live'))
+        .eql(null);
+    //        .expect(cardPage.numErrorText.getAttribute('aria-hidden'))
+    //        .notEql(null);
+    //        .expect(cardPage.numErrorText.getAttribute('aria-live').exists)
+    //        .notOk();
+
+    // PAN input should not have aria-describedby attr
+    await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
+    const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
+    await t.expect(adb).contains('encryptedCardNumber'); // TODO  Remove once sf v3.7.4 is available
+    await t.expect(adb).notEql(null); // TODO Make .eql(null) once sf v3.7.4 is available
+    await t.switchToMainWindow();
+
+    // Address input's error field should have correct aria attrs
+    await t
+        .expect(cardPage.addressLabelErrorText.getAttribute('aria-hidden'))
+        .eql('true')
+        .expect(cardPage.addressLabelErrorText.getAttribute('aria-live'))
+        .eql(null);
+
+    // Address input should not have aria-describedby attr
+    await t.expect(cardPage.addressInput.getAttribute('aria-describedby')).eql(null);
+});
+
+test('#2 Click pay with empty fields and error panel in avsCard is populated', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -46,7 +83,7 @@ test('#1 Click pay with empty fields and error panel in avsCard is populated', a
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test.skip('#2 fill out credit card fields & see that first error in error panel is country related', async t => {
+test('#3 fill out credit card fields & see that first error in error panel is country related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -78,10 +115,10 @@ test.skip('#2 fill out credit card fields & see that first error in error panel 
 
     // Expect focus to be place on country field
     // - focus is move to this field but it seems to be a browser imposed styling rather than a class we add, so it is not possible to test for it
-    await t.expect(cardPage.countrySelectBtnActive.exists).ok();
+    //    await t.expect(cardPage.countrySelectBtnActive.exists).ok();
 });
 
-test('#3 Switch country to US, click pay with empty fields and error panel in avsCard is populated US style', async t => {
+test('#4 Switch country to US, click pay with empty fields and error panel in avsCard is populated US style', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -122,7 +159,7 @@ test('#3 Switch country to US, click pay with empty fields and error panel in av
     await t.expect(cardPage.errorPanelEls.nth(7).exists).notOk();
 });
 
-test('#4 Switch country to US, fill out credit card fields & see that first error in error panel is address related', async t => {
+test('#5 Switch country to US, fill out credit card fields & see that first error in error panel is address related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -163,7 +200,7 @@ test('#4 Switch country to US, fill out credit card fields & see that first erro
     await t.expect(cardPage.addressLabelWithFocus.exists).ok();
 });
 
-test('#5 Switch country to UK, click pay with empty fields and error panel in avsCard is populated UK style', async t => {
+test('#6 Switch country to UK, click pay with empty fields and error panel in avsCard is populated UK style', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -207,7 +244,7 @@ test('#5 Switch country to UK, click pay with empty fields and error panel in av
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test('#6 Switch country to UK, fill out credit card fields & see that first error in error panel is address related', async t => {
+test('#7 Switch country to UK, fill out credit card fields & see that first error in error panel is address related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
