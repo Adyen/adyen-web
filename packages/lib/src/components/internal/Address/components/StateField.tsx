@@ -7,7 +7,7 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { StateFieldItem, StateFieldProps } from '../types';
 
 export default function StateField(props: StateFieldProps) {
-    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value } = props;
+    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value, collateErrors } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -35,14 +35,23 @@ export default function StateField(props: StateFieldProps) {
     if (!loaded || !states.length) return null;
 
     return (
-        <Field label={label} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage} isValid={!!value} showValidIcon={false} name={'stateOrProvince'}>
+        <Field
+            label={label}
+            classNameModifiers={classNameModifiers}
+            errorMessage={props.errorMessage}
+            isValid={!!value}
+            showValidIcon={false}
+            name={'stateOrProvince'}
+            collateErrors={collateErrors}
+        >
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
                 selected: value,
                 placeholder: i18n.get(placeholderKey),
                 items: states,
-                readonly: readOnly && !!value
+                readonly: readOnly && !!value,
+                collateErrors
             })}
         </Field>
     );

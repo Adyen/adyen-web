@@ -22,7 +22,8 @@ function Select({
     isInvalid,
     isValid,
     placeholder,
-    uniqueId
+    uniqueId,
+    collateErrors
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -93,9 +94,9 @@ function Select({
     const handleClickOutside = (e: MouseEvent) => {
         // use composedPath so it can also check when inside a web component
         // if composedPath is not available fallback to e.target
-        const clickIsOutside = e.composedPath ?
-            !e.composedPath().includes(selectContainerRef.current) :
-            !selectContainerRef.current.contains(e.target);
+        const clickIsOutside = e.composedPath
+            ? !e.composedPath().includes(selectContainerRef.current)
+            : !selectContainerRef.current.contains(e.target);
         if (clickIsOutside) {
             setShowList(false);
         }
@@ -195,7 +196,7 @@ function Select({
                 showList={showList}
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
-                ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
+                ariaDescribedBy={!collateErrors && uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
             />
             <SelectList
                 active={active}

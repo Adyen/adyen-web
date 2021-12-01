@@ -485,6 +485,7 @@ function CardInput(props: CardInputProps) {
                                     allowedCountries={props.billingAddressAllowedCountries}
                                     requiredFields={props.billingAddressRequiredFields}
                                     ref={billingAddressRef}
+                                    collateErrors={collateErrors}
                                 />
                             )}
                         </LoadingWrapper>

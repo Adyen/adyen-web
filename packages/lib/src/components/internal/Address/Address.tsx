@@ -75,6 +75,7 @@ export default function Address(props: AddressProps) {
                 onChange={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
+                collateErrors={props.collateErrors}
             />
         );
     };

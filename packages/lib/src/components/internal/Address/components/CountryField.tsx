@@ -7,7 +7,7 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
 
 export default function CountryField(props: CountryFieldProps) {
-    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
+    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value, collateErrors } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [countries, setCountries] = useState<CountryFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -39,6 +39,7 @@ export default function CountryField(props: CountryFieldProps) {
             classNameModifiers={classNameModifiers}
             isValid={!!value}
             showValidIcon={false}
+            collateErrors={collateErrors}
         >
             {renderFormField('select', {
                 onChange: onDropdownChange,
@@ -46,7 +47,8 @@ export default function CountryField(props: CountryFieldProps) {
                 placeholder: i18n.get('select.country'),
                 selected: value,
                 items: countries,
-                readonly: readOnly && !!value
+                readonly: readOnly && !!value,
+                collateErrors
             })}
         </Field>
     );

@@ -8,7 +8,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 
 function FieldContainer(props: FieldContainerProps) {
     const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange, collateErrors } = props;
     const errorMessage = i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -27,6 +27,7 @@ function FieldContainer(props: FieldContainerProps) {
                     errorMessage={errorMessage}
                     onDropdownChange={props.onDropdownChange}
                     value={value}
+                    collateErrors={collateErrors}
                 />
             );
         case 'stateOrProvince':
@@ -39,17 +40,26 @@ function FieldContainer(props: FieldContainerProps) {
                     selectedCountry={selectedCountry}
                     specifications={props.specifications}
                     value={value}
+                    collateErrors={collateErrors}
                 />
             );
         default:
             return (
-                <Field label={label} classNameModifiers={classNameModifiers} errorMessage={errorMessage} isValid={valid[fieldName]} name={fieldName}>
+                <Field
+                    label={label}
+                    classNameModifiers={classNameModifiers}
+                    errorMessage={errorMessage}
+                    isValid={valid[fieldName]}
+                    name={fieldName}
+                    collateErrors={collateErrors}
+                >
                     {renderFormField('text', {
                         classNameModifiers,
                         name: fieldName,
                         value,
                         onInput,
-                        onChange
+                        onChange,
+                        collateErrors
                     })}
                 </Field>
             );
