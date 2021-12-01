@@ -8,11 +8,4 @@ window.cardConfig = {
     // billingAddress config:
     billingAddressRequired: true,
     billingAddressAllowedCountries: ['US', 'CA', 'GB']
-
-    //    // Data:
-    //    data: {
-    //        billingAddress: {
-    //            country: 'US'
-    //        }
-    //    }
 };

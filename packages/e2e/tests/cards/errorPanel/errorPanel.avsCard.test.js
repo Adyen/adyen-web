@@ -3,7 +3,7 @@ import { REGULAR_TEST_CARD } from '../utils/constants';
 
 const cardPage = new CardComponentPage();
 
-fixture.only`Testing card's error panel`
+fixture`Testing card's error panel`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
@@ -42,11 +42,46 @@ test('#1 Click pay with empty fields and error panel in avsCard is populated', a
     // no 9th element
     await t.expect(cardPage.errorPanelEls.nth(8).exists).notOk();
 
-    // Expect focus to be place on Card number field - since SRConfig for this card comp says it should be
+    // Expect focus to be place on Card number field - since SRConfig for this card comp says we should move focus
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test('#2 Switch country to US, click pay with empty fields and error panel in avsCard is populated US style', async t => {
+test.skip('#2 fill out credit card fields & see that first error in error panel is country related', async t => {
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    await cardPage.cardUtils.fillDateAndCVC(t);
+
+    // click pay, to validate & generate errors
+    await t
+        .click(cardPage.payButton)
+        // error panel exists
+        .expect(cardPage.errorPanelVisible.exists)
+        .ok();
+
+    // Expect 5 elements, with default order & text
+    await t
+        .expect(cardPage.errorPanelEls.nth(0).withText('Country:').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(1).withText('Street:').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(2).withText('House number:').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(3).withText('Postal code:').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(4).withText('City:').exists)
+        .ok();
+
+    // no 6th element
+    await t.expect(cardPage.errorPanelEls.nth(5).exists).notOk();
+
+    // Expect focus to be place on country field
+    // - focus is move to this field but it seems to be a browser imposed styling rather than a class we add, so it is not possible to test for it
+    await t.expect(cardPage.countrySelectBtnActive.exists).ok();
+});
+
+test('#3 Switch country to US, click pay with empty fields and error panel in avsCard is populated US style', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -87,7 +122,7 @@ test('#2 Switch country to US, click pay with empty fields and error panel in av
     await t.expect(cardPage.errorPanelEls.nth(7).exists).notOk();
 });
 
-test('#3 Switch country to US, fill out credit card fields & see that first error in error panel is address related', async t => {
+test('#4 Switch country to US, fill out credit card fields & see that first error in error panel is address related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -128,7 +163,7 @@ test('#3 Switch country to US, fill out credit card fields & see that first erro
     await t.expect(cardPage.addressLabelWithFocus.exists).ok();
 });
 
-test('#4 Switch country to UK, click pay with empty fields and error panel in avsCard is populated UK style', async t => {
+test('#5 Switch country to UK, click pay with empty fields and error panel in avsCard is populated UK style', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -168,11 +203,11 @@ test('#4 Switch country to UK, click pay with empty fields and error panel in av
     // no 8th element
     await t.expect(cardPage.errorPanelEls.nth(7).exists).notOk();
 
-    // Expect focus to be place on Card number field - since SRConfig for this card comp says it should be
+    // Expect focus to be place on Card number field
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test('#% Switch country to UK, fill out credit card fields & see that first error in error panel is address related', async t => {
+test('#6 Switch country to UK, fill out credit card fields & see that first error in error panel is address related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 

@@ -127,8 +127,15 @@ function CardInput(props: CardInputProps) {
                 // the value by which the field is referred to internally ('taxNumber')
                 if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
 
-                const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-                field?.focus();
+                if (nameVal === 'country' || nameVal === 'stateOrProvince') {
+                    // Set focus on dropdown
+                    const field = selectOne(sfp.current.rootNode, `.adyen-checkout__field--${nameVal} .adyen-checkout__dropdown__button`);
+                    field?.focus();
+                } else {
+                    // Set focus on input
+                    const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
+                    field?.focus();
+                }
             } else {
                 // Is a securedField - so it has it's own focus procedures
                 handleFocus({ currentFocusObject: who } as CbObjOnFocus);
