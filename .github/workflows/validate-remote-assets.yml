@@ -16,20 +16,24 @@ jobs:
       - name: Testing grep value
         run: |
           grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2
-  
+
       - name: Testing grep value 2
         run: |
-          grep -e 'SF_VERSION' $GITHUB_WORKSPACE/packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2
+          echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
 
-      - name: Get SF version
+      - name: Shwoing version
         run: |
-          echo ::set-env name=SF_VERSION::$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)
+          echo "${{ env.SF_VERSION }}"
+
+      #- name: Get SF version
+      #  run: |
+      #    echo ::set-env name=SF_VERSION::$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)
 
       #- name: Get SF version 2
       #  run: |
       #   echo ::set-env name=SF_VERSION::$(grep -e 'SF_VERSION' $GITHUB_WORKSPACE/packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)
 
-      - name: Show SF version
-        run: |
-          echo ${{ env.SF_VERSION }}
+      #- name: Show SF version
+      #  run: |
+      #    echo ${{ env.SF_VERSION }}
 
