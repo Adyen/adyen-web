@@ -83,6 +83,8 @@ export default class CardPage extends BasePage {
         /**
          * KCP
          */
+        this.kcpTaxNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--kcp-taxNumber .adyen-checkout__label--focused`);
+        this.kcpTaxNumberInput = Selector(`${BASE_EL} .adyen-checkout__field--kcp-taxNumber .adyen-checkout__card__kcp-taxNumber__input`);
         this.pwdSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
         this.pwdErrorText = Selector(`${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout__error-text`);
 
@@ -101,6 +103,10 @@ export default class CardPage extends BasePage {
         this.countrySelectBtnActive = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__button--active`);
         this.countrySelectList = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__list`);
         this.countryListActiveCls = 'adyen-checkout__dropdown__list--active';
+
+        // Holder name
+        this.holderNameLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__card__holderName .adyen-checkout__label--focused`);
+        this.holderNameInput = Selector(`${BASE_EL} .adyen-checkout__card__holderName .adyen-checkout__card__holderName__input`);
 
         /**
          * iframe utils

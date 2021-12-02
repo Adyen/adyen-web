@@ -1,23 +1,15 @@
 import CardComponentPage from '../../_models/CardComponent.page';
-import { REGULAR_TEST_CARD } from '../utils/constants';
+import { KOREAN_TEST_CARD } from '../utils/constants';
 
 const cardPage = new CardComponentPage();
 
-fixture`Testing card's error panel`
+fixture`Testing kcpCard, with holderName, error panel`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
-    .clientScripts('./errorPanel.visible.clientScripts.js');
+    .clientScripts('./errorPanel.kcpCard.visible.clientScripts.js');
 
-test('#1 Error panel is not present at start, when there are no errors', async t => {
-    // Wait for field to appear in DOM
-    await cardPage.numHolder();
-
-    // error panel does not exist
-    await t.expect(cardPage.errorPanelVisible.exists).notOk();
-});
-
-test('#2 Click pay with empty fields and error panel is populated', async t => {
+test('#1 Click pay with empty fields and error panel is populated', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -28,27 +20,36 @@ test('#2 Click pay with empty fields and error panel is populated', async t => {
         .expect(cardPage.errorPanelVisible.exists)
         .ok();
 
-    // Expect 3 elements, in order, with specific text
+    // Expect 6 elements, in order, with specific text
     await t
         .expect(cardPage.errorPanelEls.nth(0).withText('Card number:').exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(1).withText('Expiry date:').exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(2).withText('Security code:').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(3).withText('Name on card:').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(4).withText('Cardholder birthdate').exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(5).withText('First 2 digits').exists)
         .ok();
 
-    // no 4th element
-    await t.expect(cardPage.errorPanelEls.nth(3).exists).notOk();
+    // no 7th element
+    await t.expect(cardPage.errorPanelEls.nth(6).exists).notOk();
 
     // Expect focus to be place on Card number field - since SRConfig for this card comp says it should be
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test('#3 Fill out PAN & see that first error in error panel is date related', async t => {
+test('#2 Fill out PAN & name and see that first error in error panel is tax number related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
+    await cardPage.cardUtils.fillDateAndCVC(t);
+
+    await t.typeText(cardPage.holderNameInput, 'j smith');
 
     // click pay, to validate & generate errors
     await t
@@ -59,14 +60,14 @@ test('#3 Fill out PAN & see that first error in error panel is date related', as
 
     // Expect 2 elements, in order, with specific text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withText('Cardholder birthdate').exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withText('First 2 digits').exists)
         .ok();
 
     // no 3rd element
     await t.expect(cardPage.errorPanelEls.nth(2).exists).notOk();
 
     // Expect focus to be place on Expiry date field
-    await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+    await t.expect(cardPage.kcpTaxNumberLabelWithFocus.exists).ok();
 });
