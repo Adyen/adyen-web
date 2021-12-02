@@ -22,7 +22,7 @@ export interface CardFieldsProps {
     onFocusField?: any;
     showBrandIcon?: boolean;
     valid?: any;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface CardHolderNameProps {
@@ -33,7 +33,7 @@ export interface CardHolderNameProps {
     placeholder?: string;
     required?: boolean;
     value?: string;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface CardNumberProps {
@@ -49,7 +49,7 @@ export interface CardNumberProps {
     label: string;
     onFocusField: (field: string) => void;
     showBrandIcon: boolean;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface CVCProps {
@@ -63,7 +63,7 @@ export interface CVCProps {
     isValid?: any;
     label?: any;
     onFocusField: (field: string) => void;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface CVCHintProps {
@@ -88,7 +88,7 @@ export interface ExpirationDateProps {
     label?: string;
     onFocusField: (fieldName: string) => {};
     expiryDatePolicy?: DatePolicyType;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface InstallmentsProps {
@@ -131,7 +131,7 @@ export interface KCPProps {
     error: boolean;
     isValid: boolean;
     value: string;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;

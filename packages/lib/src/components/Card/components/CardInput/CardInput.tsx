@@ -358,7 +358,7 @@ function CardInput(props: CardInputProps) {
             isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
-            collateErrors={collateErrors}
+            isCollatingErrors={collateErrors}
         />
     );
 
@@ -436,7 +436,7 @@ function CardInput(props: CardInputProps) {
                                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
                                 dualBrandingChangeHandler={extensions.handleDualBrandSelection}
                                 dualBrandingSelected={selectedBrandValue}
-                                collateErrors={collateErrors}
+                                isCollatingErrors={collateErrors}
                             />
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
@@ -455,7 +455,7 @@ function CardInput(props: CardInputProps) {
                                     isValid={!!valid.taxNumber}
                                     onChange={handleChangeFor('taxNumber', 'blur')}
                                     onInput={handleChangeFor('taxNumber', 'input')}
-                                    collateErrors={collateErrors}
+                                    isCollatingErrors={collateErrors}
                                 />
                             )}
 
@@ -468,7 +468,7 @@ function CardInput(props: CardInputProps) {
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
                                         required={true}
-                                        collateErrors={collateErrors}
+                                        isCollatingErrors={collateErrors}
                                     />
                                 </div>
                             )}
@@ -485,7 +485,7 @@ function CardInput(props: CardInputProps) {
                                     allowedCountries={props.billingAddressAllowedCountries}
                                     requiredFields={props.billingAddressRequiredFields}
                                     ref={billingAddressRef}
-                                    collateErrors={collateErrors}
+                                    isCollatingErrors={collateErrors}
                                 />
                             )}
                         </LoadingWrapper>

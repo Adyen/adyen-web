@@ -25,7 +25,7 @@ export default function CardNumber(props: CardNumberProps) {
             dualBrandingElements={dualBrandingElements}
             dir={'ltr'}
             name={'encryptedCardNumber'}
-            collateErrors={props.collateErrors}
+            isCollatingErrors={props.isCollatingErrors}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}

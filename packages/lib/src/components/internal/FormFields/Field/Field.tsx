@@ -61,7 +61,7 @@ class Field extends Component<FieldProps, FieldState> {
         dir,
         name,
         showValidIcon,
-        collateErrors
+        isCollatingErrors
     }) {
         return (
             <div
@@ -143,8 +143,8 @@ class Field extends Component<FieldProps, FieldState> {
                         <span
                             className={'adyen-checkout__error-text'}
                             id={`${this.uniqueId}${ARIA_ERROR_SUFFIX}`}
-                            aria-hidden={collateErrors ? 'true' : null}
-                            aria-live={collateErrors ? null : 'polite'}
+                            aria-hidden={isCollatingErrors ? 'true' : null}
+                            aria-live={isCollatingErrors ? null : 'polite'}
                         >
                             {errorMessage}
                         </span>

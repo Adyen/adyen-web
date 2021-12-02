@@ -18,7 +18,7 @@ export interface AddressProps {
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface AddressStateError {
@@ -43,7 +43,7 @@ export interface FieldContainerProps {
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     specifications: Specifications;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface ReadOnlyAddressProps {
@@ -59,7 +59,7 @@ export interface CountryFieldProps {
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     value: string;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface CountryFieldItem {
@@ -76,7 +76,7 @@ export interface StateFieldProps {
     selectedCountry: string;
     specifications: Specifications;
     value: string;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface StateFieldItem {

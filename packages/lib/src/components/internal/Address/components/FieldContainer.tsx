@@ -8,7 +8,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 
 function FieldContainer(props: FieldContainerProps) {
     const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange, collateErrors } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange, isCollatingErrors } = props;
     const errorMessage = i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -27,7 +27,7 @@ function FieldContainer(props: FieldContainerProps) {
                     errorMessage={errorMessage}
                     onDropdownChange={props.onDropdownChange}
                     value={value}
-                    collateErrors={collateErrors}
+                    isCollatingErrors={isCollatingErrors}
                 />
             );
         case 'stateOrProvince':
@@ -40,7 +40,7 @@ function FieldContainer(props: FieldContainerProps) {
                     selectedCountry={selectedCountry}
                     specifications={props.specifications}
                     value={value}
-                    collateErrors={collateErrors}
+                    isCollatingErrors={isCollatingErrors}
                 />
             );
         default:
@@ -51,7 +51,7 @@ function FieldContainer(props: FieldContainerProps) {
                     errorMessage={errorMessage}
                     isValid={valid[fieldName]}
                     name={fieldName}
-                    collateErrors={collateErrors}
+                    isCollatingErrors={isCollatingErrors}
                 >
                     {renderFormField('text', {
                         classNameModifiers,
@@ -59,7 +59,7 @@ function FieldContainer(props: FieldContainerProps) {
                         value,
                         onInput,
                         onChange,
-                        collateErrors
+                        isCollatingErrors
                     })}
                 </Field>
             );

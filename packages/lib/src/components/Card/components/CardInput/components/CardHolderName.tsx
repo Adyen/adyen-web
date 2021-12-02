@@ -13,7 +13,7 @@ export default function CardHolderName({
     required,
     error = false,
     isValid,
-    collateErrors
+    isCollatingErrors
 }: CardHolderNameProps) {
     const { i18n } = useCoreContext();
 
@@ -24,7 +24,7 @@ export default function CardHolderName({
             errorMessage={error && i18n.get('creditCard.holderName.invalid')}
             isValid={!!isValid}
             name={'holderName'}
-            collateErrors={collateErrors}
+            isCollatingErrors={isCollatingErrors}
         >
             {renderFormField('text', {
                 name: 'holderName',
@@ -34,7 +34,7 @@ export default function CardHolderName({
                 required,
                 onChange,
                 onInput,
-                collateErrors
+                isCollatingErrors
             })}
         </Field>
     );

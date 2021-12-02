@@ -27,7 +27,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.isValid}
                 dir={'ltr'}
                 name={'kcpTaxNumberOrDOB'}
-                collateErrors={props.collateErrors}
+                isCollatingErrors={props.isCollatingErrors}
             >
                 {renderFormField('tel', {
                     name: 'kcpTaxNumberOrDOB',
@@ -40,7 +40,7 @@ export default function KCPAuthentication(props: KCPProps) {
                     required: true,
                     onChange: props.onChange,
                     onInput: props.onInput,
-                    collateErrors: props.collateErrors
+                    isCollatingErrors: props.isCollatingErrors
                 })}
             </Field>
 
@@ -54,7 +54,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.encryptedPasswordState.valid}
                 dir={'ltr'}
                 name={'encryptedPassword'}
-                collateErrors={props.collateErrors}
+                isCollatingErrors={props.isCollatingErrors}
             >
                 <DataSfSpan
                     encryptedFieldType="encryptedPassword"

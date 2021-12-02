@@ -17,7 +17,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
         error = '',
         isValid = false,
         expiryDatePolicy = DATE_POLICY_REQUIRED,
-        collateErrors
+        isCollatingErrors
     } = props;
     const { i18n } = useCoreContext();
 
@@ -41,7 +41,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             isValid={isValid}
             dir={'ltr'}
             name={'encryptedExpiryDate'}
-            collateErrors={collateErrors}
+            isCollatingErrors={isCollatingErrors}
         >
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}

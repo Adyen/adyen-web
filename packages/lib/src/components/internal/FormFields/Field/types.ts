@@ -21,7 +21,7 @@ export interface FieldProps {
     dir?;
     name?: string;
     showValidIcon?: boolean;
-    collateErrors?: boolean;
+    isCollatingErrors?: boolean;
 }
 
 export interface FieldState {

@@ -25,7 +25,7 @@ export default function CVC(props: CVCProps) {
         isValid,
         frontCVC = false,
         cvcPolicy = CVC_POLICY_REQUIRED,
-        collateErrors
+        isCollatingErrors
     } = props;
     const { i18n } = useCoreContext();
 
@@ -59,7 +59,7 @@ export default function CVC(props: CVCProps) {
             isValid={isValid}
             dir={'ltr'}
             name={ENCRYPTED_SECURITY_CODE}
-            collateErrors={collateErrors}
+            isCollatingErrors={isCollatingErrors}
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
