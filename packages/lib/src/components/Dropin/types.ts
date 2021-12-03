@@ -1,6 +1,6 @@
 import { PaymentMethod, StoredPaymentMethod, Order, OrderStatus } from '../../types';
 import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
+import { UIElementProps, UIElementStatus } from '../types';
 import { PaymentMethodsConfiguration } from '../../core/types';
 
 export type InstantPaymentTypes = 'paywithgoogle' | 'applepay';
@@ -72,7 +72,12 @@ export interface DropinComponentProps extends DropinElementProps {
 }
 
 interface DropinStatus {
-    type: 'loading' | 'ready' | 'success' | 'error';
+    type: UIElementStatus;
+    props?: DropinStatusProps;
+}
+
+export interface DropinStatusProps {
+    component?: UIElement;
 }
 
 export interface DropinComponentState {

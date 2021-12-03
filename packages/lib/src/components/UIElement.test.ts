@@ -175,7 +175,7 @@ describe('UIElement', () => {
     describe('submit', () => {
         test('should close active payment method if submit is called by instant payment method', () => {
             const onSubmit = jest.fn();
-            const elementRef = { closeActivePaymentMethod: jest.fn() };
+            const elementRef = { closeActivePaymentMethod: jest.fn(), setStatus: jest.fn() };
             const uiElement = new UIElement({ isInstantPayment: true, onSubmit, elementRef });
 
             jest.spyOn(uiElement, 'isValid', 'get').mockReturnValue(true);

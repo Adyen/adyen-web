@@ -49,7 +49,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         if (this.props.setStatusAutomatically) {
-            this.setStatus('loading');
+            this.elementRef.setStatus('loading');
         }
 
         if (this.props.onSubmit) {
@@ -95,9 +95,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     public setStatus(status: UIElementStatus, props?): this {
-        if (this.props.isDropin && this.elementRef?.setStatus) {
-            this.elementRef.setStatus(status, props);
-        } else if (this.componentRef && this.componentRef.setStatus) {
+        if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
         }
         return this;
