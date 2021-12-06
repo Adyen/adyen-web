@@ -30,15 +30,12 @@ export function ErrorPanel({
 
     return (
         <div className={showPanel ? 'adyen-checkout-error-panel' : 'adyen-checkout-error-panel--sr-only'} id={id} aria-live="polite">
-            <div className="adl-alert adl-alert--error">
-                <div className="adl-alert__header">
-                    <span className="adl-alert__icon">
-                        <i className="adl-icon-triangle"></i>
-                    </span>
-                    <span className="adl-alert__title adyen-checkout-error-panel__title">{heading}</span>
+            <div className="adyen-checkout-error-panel__wrapper">
+                <div className="adyen-checkout-error-panel__header">
+                    <span className="adyen-checkout-error-panel__title">{heading}</span>
                 </div>
                 {errorMessages.map(error => (
-                    <div key={error} className="adl-alert__explanation adyen-checkout-error-panel__error">
+                    <div key={error} className="adyen-checkout-error-panel__error">
                         {error}
                     </div>
                 ))}
