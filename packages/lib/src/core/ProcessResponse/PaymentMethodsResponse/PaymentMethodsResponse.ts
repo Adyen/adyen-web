@@ -13,11 +13,19 @@ class PaymentMethodsResponse {
     }
 
     has(paymentMethod: string): boolean {
-        return Boolean(this.paymentMethods.find(pm => pm.type === paymentMethod));
+        return Boolean(
+            this.paymentMethods.find(pm => {
+                const createdPaymentMethod = paymentMethod === 'card' ? 'scheme' : paymentMethod;
+                return pm.type === createdPaymentMethod;
+            })
+        );
     }
 
     find(paymentMethod: string): PaymentMethod {
-        return this.paymentMethods.find(pm => pm.type === paymentMethod);
+        return this.paymentMethods.find(pm => {
+            const createdPaymentMethod = paymentMethod === 'card' ? 'scheme' : paymentMethod;
+            return pm.type === createdPaymentMethod;
+        });
     }
 }
 
