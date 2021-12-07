@@ -1,6 +1,13 @@
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 
+beforeEach(() => {
+    console.error = jest.fn(error => {
+        throw new Error(error);
+    });
+    console.log = jest.fn(() => {});
+});
+
 describe('Core', () => {
     test('Should default to the FALLBACK_LOCALE', () => {
         const Checkout = new AdyenCheckout({});
@@ -56,6 +63,35 @@ describe('Core', () => {
                 });
                 const component = checkout.create('card', { onSubmit: onSubmitMockComponent });
                 expect(component.props.onSubmit).toBe(onSubmitMockComponent);
+            });
+        });
+
+        describe('Brands from paymentMethods response reach card component regardless of how it is created', () => {
+            const paymentMethodsResponse = {
+                paymentMethods: [
+                    {
+                        brands: ['visa', 'mc', 'amex', 'maestro', 'bcmc', 'cartebancaire'],
+                        name: 'Credit Card',
+                        type: 'scheme'
+                    },
+                    { name: 'Apple Pay', supportsRecurring: true, type: 'applepay' },
+                    { name: 'UnionPay', supportsRecurring: true, type: 'unionpay' },
+                    { name: 'Moneybookers', supportsRecurring: true, type: 'moneybookers' }
+                ]
+            };
+
+            const brandsArray = paymentMethodsResponse.paymentMethods[0].brands;
+
+            test('Card component created as "card" receives brands ', () => {
+                const checkout = new AdyenCheckout({ paymentMethodsResponse });
+                const component = checkout.create('card');
+                expect(component.props.brands).toEqual(brandsArray);
+            });
+
+            test('Card component created as "scheme" receives brands ', () => {
+                const checkout = new AdyenCheckout({ paymentMethodsResponse });
+                const component = checkout.create('scheme');
+                expect(component.props.brands).toEqual(brandsArray);
             });
         });
     });
