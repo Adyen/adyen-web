@@ -12,20 +12,16 @@ class PaymentMethodsResponse {
         this.storedPaymentMethods = response ? processStoredPaymentMethods(response.storedPaymentMethods, options) : [];
     }
 
+    private mapCreatedComponentType(pmType: string): string {
+        return pmType === 'card' ? 'scheme' : pmType;
+    }
+
     has(paymentMethod: string): boolean {
-        return Boolean(
-            this.paymentMethods.find(pm => {
-                const createdPaymentMethod = paymentMethod === 'card' ? 'scheme' : paymentMethod;
-                return pm.type === createdPaymentMethod;
-            })
-        );
+        return Boolean(this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod)));
     }
 
     find(paymentMethod: string): PaymentMethod {
-        return this.paymentMethods.find(pm => {
-            const createdPaymentMethod = paymentMethod === 'card' ? 'scheme' : paymentMethod;
-            return pm.type === createdPaymentMethod;
-        });
+        return this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
     }
 }
 
