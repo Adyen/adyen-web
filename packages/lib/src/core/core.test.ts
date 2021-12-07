@@ -66,7 +66,7 @@ describe('Core', () => {
             });
         });
 
-        describe('Brands from paymentMethods response reach card component regardless of how it is created', () => {
+        describe('Brands from paymentMethods response reach card component regardless of how the component is created', () => {
             const paymentMethodsResponse = {
                 paymentMethods: [
                     {
@@ -92,6 +92,26 @@ describe('Core', () => {
                 const checkout = new AdyenCheckout({ paymentMethodsResponse });
                 const component = checkout.create('scheme');
                 expect(component.props.brands).toEqual(brandsArray);
+            });
+        });
+
+        describe('paymentMethodsConfiguration for card reaches card component regardless of how the component is created', () => {
+            const paymentMethodsConfiguration = {
+                card: {
+                    hasHolderName: true
+                }
+            };
+
+            test('Card component created as "card" receives paymentMethodsConfiguration.card object ', () => {
+                const checkout = new AdyenCheckout({ paymentMethodsConfiguration });
+                const component = checkout.create('card');
+                expect(component.props.hasHolderName).toEqual(true);
+            });
+
+            test('Card component created as "scheme" receives paymentMethodsConfiguration.card object ', () => {
+                const checkout = new AdyenCheckout({ paymentMethodsConfiguration });
+                const component = checkout.create('scheme');
+                expect(component.props.hasHolderName).toEqual(true);
             });
         });
     });
