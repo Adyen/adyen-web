@@ -28,8 +28,8 @@ jobs:
 #            echo "BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)" >> $GITHUB_ENV
 
       - name: Showing base64
-          run: |
-            echo "${{ env.BTOA_TEST_ORIGIN }}"
+        run: |
+          echo "${{ env.BTOA_TEST_ORIGIN }}"
 
       - name: Requesting securedFields
         id: securedFieldsRequest
