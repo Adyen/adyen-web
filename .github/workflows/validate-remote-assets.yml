@@ -20,3 +20,12 @@ jobs:
       - name: Showing SF_VERSION
         run: |
           echo "${{ env.SF_VERSION }}"
+
+      - name: Requesting securedFields
+        id: securedFieldsRequest
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.3/securedFields.html?type=card&d=${{secrets.TEST_ORIGIN}}"
+
+      - name: Log the result
+        run: echo ${{ steps.securedFieldsRequest.outputs.response }}
