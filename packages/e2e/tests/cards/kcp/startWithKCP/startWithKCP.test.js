@@ -38,6 +38,9 @@ test(
         'then check card state for taxNumber & password entries, ' +
         'then replace card number with non-korean card and check taxNumber and password state are cleared',
     async t => {
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
         await cardPage.numHolder();
 
         // Complete form with korean card number
@@ -79,6 +82,9 @@ test(
         'then complete form and expect component to be valid & to be able to pay,' +
         'then replace card number with korean card and expect component to be valid & to be able to pay',
     async t => {
+        // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
+        await t.setTestSpeed(0.9);
+
         await cardPage.numHolder();
 
         // handler for alert that's triggered on successful payment
