@@ -6,6 +6,7 @@ beforeEach(() => {
         throw new Error(error);
     });
     console.log = jest.fn(() => {});
+    console.warn = jest.fn(() => {});
 });
 
 describe('Core', () => {
@@ -112,6 +113,20 @@ describe('Core', () => {
                 const checkout = new AdyenCheckout({ paymentMethodsConfiguration });
                 const component = checkout.create('scheme');
                 expect(component.props.hasHolderName).toEqual(true);
+            });
+        });
+
+        describe('Trying to add a "scheme" property to the paymentMethodsConfiguration throws an error', () => {
+            const paymentMethodsConfiguration = {
+                scheme: {
+                    hasHolderName: true
+                }
+            };
+
+            test('Trying to create a card component with a paymentMethodsConfiguration with a "scheme" property shows a warning in the console ', () => {
+                new AdyenCheckout({ paymentMethodsConfiguration });
+                // expect warning in console
+                expect(console.warn).toHaveBeenCalled();
             });
         });
     });

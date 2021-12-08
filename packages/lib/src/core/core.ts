@@ -11,6 +11,7 @@ import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
+import { hasOwnProperty } from '../utils/hasOwnProperty';
 
 class Core {
     public session: Session;
@@ -158,6 +159,12 @@ class Core {
      * @returns this
      */
     private setOptions = (options): this => {
+        if (hasOwnProperty(options?.paymentMethodsConfiguration, 'scheme')) {
+            console.warn(
+                'WARNING: You cannot define a property "scheme" on the paymentMethodsConfiguration object - it should be defined as "card" otherwise it will be ignored'
+            );
+        }
+
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
         this.options.locale = this.options.locale || this.options.shopperLocale;
