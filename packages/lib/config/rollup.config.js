@@ -39,7 +39,7 @@ const polyfillPlugin = [
     '@babel/plugin-transform-runtime',
     {
         corejs: 3,
-        absoluteRuntime: true
+        absoluteRuntime: false
     }
 ];
 
@@ -103,7 +103,7 @@ function getExternals() {
     const peerDeps = Object.keys(pkg.peerDependencies || {});
     const dependencies = Object.keys(pkg.dependencies || {});
 
-    return [...peerDeps, ...dependencies];
+    return [/@babel\/runtime/, ...peerDeps, ...dependencies];
 }
 
 export default async () => {
