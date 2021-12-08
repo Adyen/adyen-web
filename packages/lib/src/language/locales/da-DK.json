@@ -206,5 +206,6 @@
     "ach.encryptedBankAccountNumber.aria.label": "Felt til bankkonto",
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe til registreringsnummer for sikret bank",
     "ach.encryptedBankLocationId.aria.label": "Felt til registreringsnummer for bank",
-    "twint.saved": "gemt"
+    "twint.saved": "gemt",
+    "orPayWith": "eller betal med"
 }

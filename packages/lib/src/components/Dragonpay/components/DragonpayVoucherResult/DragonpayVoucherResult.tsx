@@ -8,7 +8,8 @@ import { VoucherDetail } from '../../../internal/Voucher/types';
 export default function DragonpayVoucherResult(props: DragonpayVoucherResultProps) {
     const { reference, totalAmount, surcharge, expiresAt, alternativeReference, instructionsUrl, icon, issuer, paymentMethodType } = props;
     const { loadingContext, i18n } = useCoreContext();
-    const issuerImageUrl = getIssuerImageUrl({ loadingContext }, paymentMethodType)(issuer.toLowerCase());
+    const issuerImageUrl =
+        paymentMethodType !== 'dragonpay_otc_philippines' ? getIssuerImageUrl({ loadingContext }, paymentMethodType)(issuer.toLowerCase()) : null;
 
     return (
         <Voucher

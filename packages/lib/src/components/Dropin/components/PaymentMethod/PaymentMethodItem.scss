@@ -55,15 +55,16 @@
     justify-content: space-between;
     font-weight: 400;
     font-size: $font-size-medium;
-    padding: 16px;
-    padding-left: 48px;
+    $payment-button-padding: $spacing-xsmall;
+    padding: $spacing-medium - $payment-button-padding;
+    padding-left: $spacing-xxlarge - $payment-button-padding;
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
 
     [dir='rtl'] & {
-        padding: 16px;
-        padding-right: 48px;
+        padding: $spacing-medium - $payment-button-padding;
+        padding-right: $spacing-xxlarge - $payment-button-padding;
     }
 
     .adyen-checkout__payment-method--standalone & {
@@ -81,7 +82,7 @@
     border: none;
     background: none;
     cursor: pointer;
-    padding: 0;
+    padding: $spacing-xsmall;
     color: $color-black;
     font-size: 1em;
     font-weight: 400;

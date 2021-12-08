@@ -1,7 +1,15 @@
 @supports (-webkit-appearance: -apple-pay-button) {
+
+    /*
+    *  Combination of both classes improve the specificity, avoiding
+    *  overwrite of the -webkit-appearence by the button native css
+    */
+    .apple-pay,
+    .apple-pay-button {
+        -webkit-appearance: -apple-pay-button;
+    }
     .apple-pay-button {
         display: inline-block;
-        -webkit-appearance: -apple-pay-button;
         cursor: pointer;
     }
     .apple-pay-button-black {
@@ -13,7 +21,6 @@
     .apple-pay-button-white-with-line {
         -apple-pay-button-style: white-outline;
     }
-
     /* Apple Pay Button types https://developer.apple.com/documentation/apple_pay_on_the_web/displaying_apple_pay_buttons */
     .apple-pay-button--type-plain {
         -apple-pay-button-type: plain;

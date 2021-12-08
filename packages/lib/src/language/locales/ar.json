@@ -206,5 +206,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "الإطار المضمن لرقم التوجيه البنكي المؤمن",
     "ach.encryptedBankLocationId.aria.label": "حقل رقم التوجيه البنكي",
     "pix.instructions": "افتح التطبيق باستخدام مفتاح PIX المسجل، واختر الدفع باستخدام PIX وامسح رمز الاستجابة السريعة ضوئيًا أو انسخ الرمز والصقه",
-    "twint.saved": "المحفوظة"
+    "twint.saved": "المحفوظة",
+    "orPayWith": "أو الدفع باستخدام"
 }

@@ -14,7 +14,7 @@ declare global {
  * The intent for the transaction. This determines whether the funds are captured immediately, or later.
  * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
  */
-type Intent = 'sale' | 'capture' | 'authorize' | 'order';
+type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
 export type FundingSource = 'paypal' | 'credit';
 
@@ -56,6 +56,8 @@ interface PayPalCommonProps {
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#currency}
      */
     amount?: PaymentAmount;
+
+    configuration?: PayPalConfig;
 
     /**
      * A two-letter ISO 3166 country code which will be passed to the PayPal SDK as the buyer-country.
@@ -146,7 +148,6 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
     paymentMethods?: PaymentMethod[];
-    configuration?: PayPalConfig;
     showPayButton?: boolean;
 }
 
