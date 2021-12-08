@@ -22,9 +22,9 @@ jobs:
           echo "${{ env.SF_VERSION }}"
 
       - name: Encoding base64
-          run: |
-            BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)
-            echo $BTOA_TEST_ORIGIN
+        run: |
+          BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)
+          echo $BTOA_TEST_ORIGIN
 #            echo "BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)" >> $GITHUB_ENV
 
       - name: Showing base64
