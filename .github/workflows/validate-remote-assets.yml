@@ -27,7 +27,7 @@ jobs:
         with:
           url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.3/securedFields.html?type=card&d=${{secrets.TEST_ORIGIN}}"
           method: "GET"
-          customHeaders: "{ 'Access-Control-Allow-Origin': '${{secrets.TEST_ORIGIN}}' }"
+          customHeaders: '{"Access-Control-Allow-Origin": "${{secrets.TEST_ORIGIN}}"}'
 
       - name: Log the result
         run: echo ${{ steps.securedFieldsRequest.outputs.response }}
