@@ -23,7 +23,7 @@ jobs:
 
       - name: Encoding base64
           run: |
-            echo "BTOA_TEST_ORIGIN=$( ${{ secrets.TEST_ORIGIN }} | base64) >> $GITHUB_ENV
+            echo "BTOA_TEST_ORIGIN=$( ${{ secrets.TEST_ORIGIN }} | base64) >> $GITHUB_ENV \
             echo "${{ env.BTOA_TEST_ORIGIN }}"
 
       - name: Requesting securedFields
