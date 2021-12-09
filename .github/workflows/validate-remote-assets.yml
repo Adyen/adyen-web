@@ -38,4 +38,4 @@ jobs:
           customHeaders: '{"Access-Control-Allow-Origin": "${{secrets.TEST_ORIGIN}}"}'
 
       - name: Log the result
-        run: echo ${{ steps.securedFieldsRequest.outputs.response }}
+        run: echo ${{ steps.securedFieldsRequest.outputs }}
