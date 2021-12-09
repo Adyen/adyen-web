@@ -1,11 +1,11 @@
 name: Validate remote assets
 
-on:
-  pull_request:
-    branches:
+on: [pull_request]
+#  pull_request:
+#    branches:
 #      - main # to be removed
 #      - 'releases/**'
-      - 'feature/**'
+#      - 'feature/**'
 
 jobs:
   check-secured-fields-assets:
