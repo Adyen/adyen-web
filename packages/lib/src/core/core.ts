@@ -276,7 +276,7 @@ class Core {
         /**
          * Entry point for Redirect PMs (PaymentMethod is a String).
          * If we are trying to create a payment method that is in the paymentMethods response & does not explicitly
-         * implement a component, it will default to a Redirect component
+         * implement a component (i.e no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
          */
         if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
             const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, this.options.paymentMethodsConfiguration);
@@ -299,7 +299,7 @@ class Core {
                 this.options.paymentMethodsConfiguration,
                 !!PaymentMethod.storedPaymentMethodId
             );
-            // handle rest of the flow normally (creating by string)
+            // Restart the flow in the "usual" way (PaymentMethod is a String)
             return this.handleCreate(PaymentMethod.type, { ...PaymentMethod, ...options, ...paymentMethodsConfiguration });
         }
 
