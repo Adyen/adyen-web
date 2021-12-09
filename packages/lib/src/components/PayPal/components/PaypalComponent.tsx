@@ -30,11 +30,7 @@ export default function PaypalComponent(props: PayPalComponentProps) {
 
         const script = new Script(src, 'body', attributes, dataAttributes);
 
-        if (window.paypal) {
-            handlePaypalLoad();
-        } else {
-            script.load().then(handlePaypalLoad);
-        }
+        script.load().then(handlePaypalLoad);
 
         return () => {
             script.remove();
