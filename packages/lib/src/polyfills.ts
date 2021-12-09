@@ -6,8 +6,9 @@ import 'core-js/es/array/find-index';
 import 'core-js/es/promise';
 
 // ChildNode.remove()
-(function(arr) {
-    arr.forEach(function(item) {
+
+(function() {
+    function polyfill(item) {
         if (item.hasOwnProperty('remove')) {
             return;
         }
@@ -22,5 +23,15 @@ import 'core-js/es/promise';
                 this.parentNode.removeChild(this);
             }
         });
-    });
-})([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+    }
+
+    if (typeof Element !== 'undefined') {
+        polyfill(Element.prototype);
+    }
+    if (typeof CharacterData !== 'undefined') {
+        polyfill(CharacterData.prototype);
+    }
+    if (typeof DocumentType !== 'undefined') {
+        polyfill(DocumentType.prototype);
+    }
+})();
