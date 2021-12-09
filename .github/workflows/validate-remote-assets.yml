@@ -31,7 +31,7 @@ jobs:
 
       - name: Testing status code
         run: |
-          echo "curl -s -o /dev/null -w '%{http_code}' https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.3/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
+          echo "$(curl -s -o /dev/null -w '%{http_code}' https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.3/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}})"
 
 #      - name: Requesting securedFields
 #        id: securedFieldsRequest
