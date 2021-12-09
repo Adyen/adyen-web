@@ -35,7 +35,7 @@ jobs:
 
       - name: Requesting securedFields
         id: securedFieldsRequest
-        continue-on-error: true
+#        continue-on-error: true
         uses: fjogeleit/http-request-action@master
         with:
           url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.9/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
@@ -46,7 +46,7 @@ jobs:
         if: failure()
         run: echo "failed"
 
-      - name: Message if failed
+      - name: Message if success
         if: success()
         run: echo "success"
 
