@@ -32,8 +32,19 @@ jobs:
 
       - name: Message if failed
         if: failure()
-        run: echo "failed"
+        uses: actions/github-script@0.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+            github.issues.createComment({ issue_number, owner, repo, body: '❌ SecuredFields might not be available live ❌' });
+
 
       - name: Message if success
         if: success()
-        run: echo "success"
+        uses: actions/github-script@0.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+            github.issues.createComment({ issue_number, owner, repo, body: '🔒 SecuredFields are available live 🔒' });
