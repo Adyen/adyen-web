@@ -1,11 +1,9 @@
 name: Validate remote assets
 
-on: [pull_request]
-#  pull_request:
-#    branches:
-#      - main # to be removed
-#      - 'releases/**'
-#      - 'feature/**'
+on:
+  pull_request:
+    branches:
+      - 'feature/**'
 
 jobs:
   check-secured-fields-assets:
@@ -27,7 +25,7 @@ jobs:
 #        continue-on-error: true
         uses: fjogeleit/http-request-action@master
         with:
-          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.9.0/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
+          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/${{ env.SF_VERSION }}/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
           method: "GET"
           customHeaders: '{"Origin": "${{secrets.TEST_ORIGIN}}"}'
 
