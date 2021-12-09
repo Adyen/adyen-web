@@ -33,7 +33,7 @@ jobs:
         id: securedFieldsRequest
         uses: fjogeleit/http-request-action@master
         with:
-          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.3/securedFields.html?type=card&d=${{secrets.TEST_ORIGIN}}"
+          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.3/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
           method: "GET"
           customHeaders: '{"Access-Control-Allow-Origin": "${{secrets.TEST_ORIGIN}}"}'
 
