@@ -2,8 +2,9 @@ name: Validate remote assets
 
 on:
   pull_request:
-    branches:
-      - 'feature/**'
+    branches-ignore:
+      - '*'
+      - '!feature/**'
 
 jobs:
   check-secured-fields-assets:
