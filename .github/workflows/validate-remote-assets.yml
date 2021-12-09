@@ -17,28 +17,16 @@ jobs:
         run: |
           echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
 
-      - name: Showing SF_VERSION
-        run: |
-          echo "${{ env.SF_VERSION }}"
-
       - name: Encoding base64
         run: |
           echo "BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)" >> $GITHUB_ENV
-
-      - name: Showing base64
-        run: |
-          echo "${{ env.BTOA_TEST_ORIGIN }}"
-
-      - name: Testing status code
-        run: |
-          echo "$(curl -s -o /dev/null -w '%{http_code}' https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.5/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}})"
 
       - name: Requesting securedFields
         id: securedFieldsRequest
 #        continue-on-error: true
         uses: fjogeleit/http-request-action@master
         with:
-          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/3.7.9/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
+          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/${{ env.SF_VERSION }}/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
           method: "GET"
           customHeaders: '{"Origin": "${{secrets.TEST_ORIGIN}}"}'
 
@@ -49,6 +37,3 @@ jobs:
       - name: Message if success
         if: success()
         run: echo "success"
-
-#      - name: Log the result
-#        run: echo ${{ steps.securedFieldsRequest.outputs.response }}
