@@ -234,16 +234,19 @@ class Core {
          */
         if (isValidClass) {
             /**
-             * Only need to populate these objects if we're *not* creating a Dropin, a PM within the Dropin, or a standalone stored card.
-             * If we are creating one of these then the relevant paymentMethods response, & paymentMethodsConfiguration, objects are already merged
-             * into the passed options object
+             * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone stored card.
              */
-            const needsAdditionalData = options.type !== 'dropin' && !options.isDropin && !options.supportedShopperInteractions;
+            const needsConfigData = options.type !== 'dropin' && !options.isDropin;
+            const needsPMData = needsConfigData && !options.supportedShopperInteractions;
 
-            const paymentMethodsDetails = needsAdditionalData ? this.paymentMethodsResponse.find(options.type) : {};
-            const paymentMethodsConfiguration = needsAdditionalData
-                ? // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at *top* level i.e. in the config object set when a new AdyenCheckout is initialised.
-                  getComponentConfiguration(options.type, this.options.paymentMethodsConfiguration, !!options.storedPaymentMethodId)
+            /**
+             * We only need to populate the objects under certain circumstances.
+             * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
+             * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
+             */
+            const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(options.type) : {};
+            const paymentMethodsConfiguration = needsConfigData
+                ? getComponentConfiguration(options.type, this.options.paymentMethodsConfiguration, !!options.storedPaymentMethodId)
                 : {};
 
             // Filtered global options
@@ -279,12 +282,13 @@ class Core {
          * implement a component (i.e no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
          */
         if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
-            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, this.options.paymentMethodsConfiguration);
-            return this.handleCreate(paymentMethods.redirect, {
-                ...this.paymentMethodsResponse.find(PaymentMethod),
-                ...paymentMethodsConfiguration,
-                ...options
-            });
+            /**
+             * NOTE: Only need the type prop for standalone redirect comps created by checkout.create('\{redirect-pm-txVariant\}'); (a likely scenario?)
+             * - in all other scenarios it is already present.
+             * (Further details: from the paymentMethods response and paymentMethodsConfiguration are added in the next step,
+             *  or, in the Dropin case, are already present)
+             */
+            return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
         }
 
         /**
