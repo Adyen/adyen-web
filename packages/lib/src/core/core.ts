@@ -234,7 +234,7 @@ class Core {
          */
         if (isValidClass) {
             /**
-             * Only need to populate these objects if we're *not* creating a Dropin, a PM within the Dropin, or a stored card.
+             * Only need to populate these objects if we're *not* creating a Dropin, a PM within the Dropin, or a standalone stored card.
              * If we are creating one of these then the relevant paymentMethods response, & paymentMethodsConfiguration, objects are already merged
              * into the passed options object
              */
