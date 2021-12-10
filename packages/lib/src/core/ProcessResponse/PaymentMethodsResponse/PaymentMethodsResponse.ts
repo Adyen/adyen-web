@@ -13,6 +13,7 @@ class PaymentMethodsResponse {
     }
 
     private mapCreatedComponentType(pmType: string): string {
+        // Components created as 'card' need to be matched with paymentMethod response objects with type 'scheme'
         return pmType === 'card' ? 'scheme' : pmType;
     }
 
