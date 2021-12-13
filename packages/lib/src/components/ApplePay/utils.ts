@@ -9,18 +9,24 @@ export function resolveSupportedVersion(latestVersion) {
 
 export function mapBrands(brands) {
     const brandMapping = {
-        mc: 'masterCard',
         amex: 'amex',
-        visa: 'visa',
-        elodebit: 'elo',
-        elo: 'elo',
-        interac: 'interac',
+        cartebancaire: 'cartesBancaires',
+        chinaUnionPay: 'chinaUnionPay', // new
         discover: 'discover',
-        jcb: 'jcb',
+        eftpos: 'eftpos', // new
         electron: 'electron',
-        maestro: 'maestro',
+        elo: 'elo',
+        elodebit: 'elo',
         girocard: 'girocard',
-        cartebancaire: 'cartesBancaires'
+        interac: 'interac',
+        jcb: 'jcb',
+        mada: 'mada', // new
+        maestro: 'maestro',
+        mc: 'masterCard',
+        mir: 'mir', // new
+        privateLabel: 'privateLabel', // new
+        visa: 'visa',
+        vPay: 'vPay' // new
     };
 
     return brands.reduce((accumulator, item) => {
