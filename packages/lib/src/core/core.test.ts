@@ -66,69 +66,6 @@ describe('Core', () => {
                 expect(component.props.onSubmit).toBe(onSubmitMockComponent);
             });
         });
-
-        describe('Brands from paymentMethods response reach card component regardless of how the component is created', () => {
-            const paymentMethodsResponse = {
-                paymentMethods: [
-                    {
-                        brands: ['visa', 'mc', 'amex', 'maestro', 'bcmc', 'cartebancaire'],
-                        name: 'Credit Card',
-                        type: 'scheme'
-                    },
-                    { name: 'Apple Pay', supportsRecurring: true, type: 'applepay' },
-                    { name: 'UnionPay', supportsRecurring: true, type: 'unionpay' },
-                    { name: 'Moneybookers', supportsRecurring: true, type: 'moneybookers' }
-                ]
-            };
-
-            const brandsArray = paymentMethodsResponse.paymentMethods[0].brands;
-
-            test('Card component created as "card" receives brands ', () => {
-                const checkout = new AdyenCheckout({ paymentMethodsResponse });
-                const component = checkout.create('card');
-                expect(component.props.brands).toEqual(brandsArray);
-            });
-
-            test('Card component created as "scheme" receives brands ', () => {
-                const checkout = new AdyenCheckout({ paymentMethodsResponse });
-                const component = checkout.create('scheme');
-                expect(component.props.brands).toEqual(brandsArray);
-            });
-        });
-
-        describe('paymentMethodsConfiguration for card reaches card component regardless of how the component is created', () => {
-            const paymentMethodsConfiguration = {
-                card: {
-                    hasHolderName: true
-                }
-            };
-
-            test('Card component created as "card" receives paymentMethodsConfiguration.card object ', () => {
-                const checkout = new AdyenCheckout({ paymentMethodsConfiguration });
-                const component = checkout.create('card');
-                expect(component.props.hasHolderName).toEqual(true);
-            });
-
-            test('Card component created as "scheme" receives paymentMethodsConfiguration.card object ', () => {
-                const checkout = new AdyenCheckout({ paymentMethodsConfiguration });
-                const component = checkout.create('scheme');
-                expect(component.props.hasHolderName).toEqual(true);
-            });
-        });
-
-        describe('Trying to add a "scheme" property to the paymentMethodsConfiguration throws an error', () => {
-            const paymentMethodsConfiguration = {
-                scheme: {
-                    hasHolderName: true
-                }
-            };
-
-            test('Trying to create a card component with a paymentMethodsConfiguration with a "scheme" property shows a warning in the console ', () => {
-                new AdyenCheckout({ paymentMethodsConfiguration });
-                // expect warning in console
-                expect(console.warn).toHaveBeenCalled();
-            });
-        });
     });
 
     describe('createFromAction', () => {
