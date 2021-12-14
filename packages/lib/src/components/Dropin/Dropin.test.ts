@@ -22,13 +22,16 @@ describe('Dropin', () => {
             expect(dropin.isValid).toEqual(false);
         });
 
-        test('should return the isValid value of the activePaymentMethod', () => {
-            mount(dropin.render());
+        test('should return the isValid value of the activePaymentMethod', async () => {
+            // mount(dropin.render());
+            const dp = await mount(dropin.render());
+            await dp.update();
 
-            setTimeout(() => {
-                dropin.dropinRef.state.activePaymentMethod = { isValid: true };
-                expect(dropin.isValid).toEqual(true);
-            }, 0);
+            // setTimeout(() => {
+            // console.log('### Dropin.test:::: dropin.dropinRef1', dropin.dropinRef.state);
+            dropin.dropinRef.state.activePaymentMethod = { isValid: true };
+            expect(dropin.isValid).toEqual(true);
+            // }, 0);
         });
     });
 
@@ -39,14 +42,17 @@ describe('Dropin', () => {
     });
 
     describe('closeActivePaymentMethod', () => {
-        test('should close active payment method', () => {
-            mount(dropin.render());
+        test('should close active payment method', async () => {
+            // mount(dropin.render());
+            const dp = await mount(dropin.render());
+            await dp.update();
 
-            setTimeout(() => {
-                expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
-                dropin.closeActivePaymentMethod();
-                expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
-            }, 0);
+            // setTimeout(() => {
+            // console.log('### Dropin.test:::: dropin.dropinRef2', dropin.dropinRef.state);
+            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+            dropin.closeActivePaymentMethod();
+            expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+            // }, 0);
         });
     });
 
