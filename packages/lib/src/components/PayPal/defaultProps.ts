@@ -55,7 +55,6 @@ const defaultProps: PayPalElementProps = {
     },
 
     // Events
-    onAdditionalDetails: () => {},
     onInit: () => {},
     onClick: () => {},
     onCancel: () => {},
