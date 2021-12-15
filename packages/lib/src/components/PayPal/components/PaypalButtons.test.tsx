@@ -8,7 +8,8 @@ const render = jest.fn(() => Promise.resolve());
 const paypalRefMock = {
     FUNDING: {
         PAYPAL: 'paypal',
-        CREDIT: 'credit'
+        CREDIT: 'credit',
+        PAYLATER: 'paylater'
     },
     Buttons: jest.fn(() => ({ isEligible, render }))
 };
@@ -19,12 +20,12 @@ describe('PaypalButtons', () => {
     test('Calls to paypalRef.Buttons', async () => {
         jest.clearAllMocks();
         getWrapper();
-        expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(2);
+        expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(3);
     });
 
     test('Calls to paypalRef.Buttons().render', async () => {
         jest.clearAllMocks();
         getWrapper();
-        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(2);
+        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(3);
     });
 });
