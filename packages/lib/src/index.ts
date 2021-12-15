@@ -5,7 +5,6 @@ if (process.env.NODE_ENV === 'development') {
     // require('preact/debug');
 }
 
-import './polyfills';
 import Checkout from './core';
 /* eslint-enable */
 
