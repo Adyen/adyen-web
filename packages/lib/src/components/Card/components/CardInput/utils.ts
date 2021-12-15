@@ -50,7 +50,7 @@ export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSch
     // w. Billing address
     if (countrySpecificSchemas) {
         // Flatten array and remove any numbers that describe how fields should be aligned
-        const countryBasedAddressLayout: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number');
+        const countryBasedAddressLayout: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number') as string[];
 
         layout = CREDIT_CARD.concat(countryBasedAddressLayout);
         if (hasRequiredHolderName) {
