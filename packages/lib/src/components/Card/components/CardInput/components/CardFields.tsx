@@ -26,8 +26,7 @@ export default function CardFields({
     expiryDatePolicy,
     onFocusField,
     showBrandIcon,
-    valid,
-    isCollatingErrors
+    valid
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
@@ -46,7 +45,6 @@ export default function CardFields({
                 dualBrandingElements={dualBrandingElements}
                 dualBrandingChangeHandler={dualBrandingChangeHandler}
                 dualBrandingSelected={dualBrandingSelected}
-                isCollatingErrors={isCollatingErrors}
             />
 
             <div
@@ -63,7 +61,6 @@ export default function CardFields({
                     onFocusField={onFocusField}
                     className={'adyen-checkout__field--50'}
                     expiryDatePolicy={expiryDatePolicy}
-                    isCollatingErrors={isCollatingErrors}
                 />
 
                 {hasCVC && (
@@ -77,7 +74,6 @@ export default function CardFields({
                         onFocusField={onFocusField}
                         className={'adyen-checkout__field--50'}
                         frontCVC={brand === 'amex'}
-                        isCollatingErrors={isCollatingErrors}
                     />
                 )}
             </div>

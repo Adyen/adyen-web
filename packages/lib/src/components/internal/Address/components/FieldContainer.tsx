@@ -7,8 +7,11 @@ import { FieldContainerProps } from '../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
 function FieldContainer(props: FieldContainerProps) {
-    const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange, isCollatingErrors } = props;
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange } = props;
     const errorMessage = i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -27,7 +30,6 @@ function FieldContainer(props: FieldContainerProps) {
                     errorMessage={errorMessage}
                     onDropdownChange={props.onDropdownChange}
                     value={value}
-                    isCollatingErrors={isCollatingErrors}
                 />
             );
         case 'stateOrProvince':
@@ -40,7 +42,6 @@ function FieldContainer(props: FieldContainerProps) {
                     selectedCountry={selectedCountry}
                     specifications={props.specifications}
                     value={value}
-                    isCollatingErrors={isCollatingErrors}
                 />
             );
         default:

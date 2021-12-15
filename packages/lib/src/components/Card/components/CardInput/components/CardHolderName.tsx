@@ -5,17 +5,11 @@ import { renderFormField } from '../../../../internal/FormFields';
 import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
 
-export default function CardHolderName({
-    onChange,
-    onInput,
-    placeholder,
-    value,
-    required,
-    error = false,
-    isValid,
-    isCollatingErrors
-}: CardHolderNameProps) {
-    const { i18n } = useCoreContext();
+export default function CardHolderName({ onChange, onInput, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     return (
         <Field

@@ -7,8 +7,12 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
 
 export default function CountryField(props: CountryFieldProps) {
-    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value, isCollatingErrors } = props;
-    const { i18n, loadingContext } = useCoreContext();
+    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
+    const {
+        i18n,
+        loadingContext,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
     const [countries, setCountries] = useState<CountryFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [readOnly, setReadOnly] = useState(props.readOnly);

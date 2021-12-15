@@ -9,7 +9,10 @@ import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
 
 export default function KCPAuthentication(props: KCPProps) {
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     const taxNumberLabel = useMemo((): string => {
         if (props.value?.length > 6) return i18n.get('creditCard.taxNumber.labelAlt');
@@ -27,7 +30,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.isValid}
                 dir={'ltr'}
                 name={'kcpTaxNumberOrDOB'}
-                isCollatingErrors={props.isCollatingErrors}
+                isCollatingErrors={isCollatingErrors}
             >
                 {renderFormField('tel', {
                     name: 'kcpTaxNumberOrDOB',
@@ -40,7 +43,7 @@ export default function KCPAuthentication(props: KCPProps) {
                     required: true,
                     onChange: props.onChange,
                     onInput: props.onInput,
-                    isCollatingErrors: props.isCollatingErrors
+                    isCollatingErrors
                 })}
             </Field>
 
@@ -54,7 +57,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.encryptedPasswordState.valid}
                 dir={'ltr'}
                 name={'encryptedPassword'}
-                isCollatingErrors={props.isCollatingErrors}
+                isCollatingErrors={isCollatingErrors}
             >
                 <DataSfSpan
                     encryptedFieldType="encryptedPassword"

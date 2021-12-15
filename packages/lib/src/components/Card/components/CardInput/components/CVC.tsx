@@ -24,10 +24,12 @@ export default function CVC(props: CVCProps) {
         filled,
         isValid,
         frontCVC = false,
-        cvcPolicy = CVC_POLICY_REQUIRED,
-        isCollatingErrors
+        cvcPolicy = CVC_POLICY_REQUIRED
     } = props;
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,

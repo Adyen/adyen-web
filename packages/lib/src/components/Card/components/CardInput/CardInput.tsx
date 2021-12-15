@@ -358,7 +358,6 @@ function CardInput(props: CardInputProps) {
             isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
-            isCollatingErrors={collateErrors}
         />
     );
 
@@ -436,7 +435,6 @@ function CardInput(props: CardInputProps) {
                                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
                                 dualBrandingChangeHandler={extensions.handleDualBrandSelection}
                                 dualBrandingSelected={selectedBrandValue}
-                                isCollatingErrors={collateErrors}
                             />
 
                             {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
@@ -455,7 +453,6 @@ function CardInput(props: CardInputProps) {
                                     isValid={!!valid.taxNumber}
                                     onChange={handleChangeFor('taxNumber', 'blur')}
                                     onInput={handleChangeFor('taxNumber', 'input')}
-                                    isCollatingErrors={collateErrors}
                                 />
                             )}
 
@@ -468,7 +465,6 @@ function CardInput(props: CardInputProps) {
                                         valid={valid?.socialSecurityNumber}
                                         data={socialSecurityNumber}
                                         required={true}
-                                        isCollatingErrors={collateErrors}
                                     />
                                 </div>
                             )}
@@ -485,7 +481,6 @@ function CardInput(props: CardInputProps) {
                                     allowedCountries={props.billingAddressAllowedCountries}
                                     requiredFields={props.billingAddressRequiredFields}
                                     ref={billingAddressRef}
-                                    isCollatingErrors={collateErrors}
                                 />
                             )}
                         </LoadingWrapper>

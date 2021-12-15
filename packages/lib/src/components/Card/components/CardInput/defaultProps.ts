@@ -38,8 +38,5 @@ export default {
 
     // Customization
     styles: {},
-    placeholders: {},
-
-    // a11y
-    SRConfig: {}
+    placeholders: {}
 };

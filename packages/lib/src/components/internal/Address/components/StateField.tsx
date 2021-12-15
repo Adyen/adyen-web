@@ -7,8 +7,12 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { StateFieldItem, StateFieldProps } from '../types';
 
 export default function StateField(props: StateFieldProps) {
-    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value, isCollatingErrors } = props;
-    const { i18n, loadingContext } = useCoreContext();
+    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value } = props;
+    const {
+        i18n,
+        loadingContext,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
     const placeholderKey: string = specifications.getPlaceholderKeyForField('stateOrProvince', selectedCountry);

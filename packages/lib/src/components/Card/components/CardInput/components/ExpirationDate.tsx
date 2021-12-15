@@ -8,18 +8,11 @@ import DataSfSpan from './DataSfSpan';
 import { DATE_POLICY_HIDDEN, DATE_POLICY_OPTIONAL, DATE_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
+    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
     const {
-        label,
-        focused,
-        filled,
-        onFocusField,
-        className = '',
-        error = '',
-        isValid = false,
-        expiryDatePolicy = DATE_POLICY_REQUIRED,
-        isCollatingErrors
-    } = props;
-    const { i18n } = useCoreContext();
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__exp-date': true,
