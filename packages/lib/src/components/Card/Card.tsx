@@ -13,12 +13,13 @@ export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     protected static defaultProps = {
-        onBinLookup: () => {}
+        onBinLookup: () => {},
+        SRConfig: {}
     };
 
     formatProps(props: CardElementProps) {
         // Extract &/or set defaults for the screenreader error panel
-        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig ?? {};
+        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
 
         return {
             ...props,

@@ -36,7 +36,7 @@ function CardInput(props: CardInputProps) {
 
     const errorFieldId = 'creditCardErrors';
 
-    const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
+    const { collateErrors, moveFocus, showPanel } = props.SRConfig;
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 

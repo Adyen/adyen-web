@@ -109,10 +109,6 @@ interface ScreenreaderConfig {
 interface FieldError {
     errorMessage?: string;
     errorI18n?: string;
-    // error: string;
-    // rootNode?: HTMLElement;
-    // isValid?: boolean;
-    // shouldValidate?: boolean;
 }
 
 export interface ErrorObj {

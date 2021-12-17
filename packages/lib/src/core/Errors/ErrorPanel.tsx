@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
 import './ErrorPanel.scss';
 
 export interface ErrorPanelObj {
@@ -26,7 +27,9 @@ export function ErrorPanel({
     const { errorMessages } = errors;
 
     // Perform passed callback, if specified
-    callbackFn?.(errors);
+    useEffect(() => {
+        callbackFn?.(errors);
+    }, [errors]);
 
     return (
         <div className={showPanel ? 'adyen-checkout-error-panel' : 'adyen-checkout-error-panel--sr-only'} id={id} aria-live="polite">
