@@ -36,6 +36,18 @@ const paymentMethodsResponse = {
     ]
 };
 
+const amazonPayPMObj = {
+    name: 'Amazon Pay',
+    type: 'amazonpay',
+    configuration: {
+        merchantId: '1000',
+        // @ts-ignore
+        publicKeyId: 'AG77',
+        region: 'eu',
+        storeId: 'amzn1.aaaaa'
+    }
+};
+
 const paymentMethodsConfiguration = {
     card: {
         hasHolderName: true,
@@ -49,6 +61,9 @@ const paymentMethodsConfiguration = {
         foo: 'bar'
     },
     paywithgoogle: {
+        foo: 'bar'
+    },
+    amazonpay: {
         foo: 'bar'
     }
 };
@@ -229,30 +244,33 @@ describe('Core - tests ensuring props reach components', () => {
     });
 
     /**
-     * Cannot get this test to work - I think the async nature of how the Dropin is created means the dropin.dropinRef.state object is not
-     * populated on time (the activePaymentMethod stays as null & the elements array stays empty), so we cannot gain the access to the lower level
-     * props that we need for this test to work.
-     * Leaving it here in case someone know how to get it to works - in the meantime switching to an e2e test for this: dropin.components.props.test.js
+     * DROPIN *created* components ie. items in the PM list
      */
-    describe.skip('Tests for dropin created components', () => {
+    describe('Tests for dropin created components', () => {
         let dropin;
-        // Need to instantiate this way for the async mounting to work
+        let newPmResponsePaymentMethods;
+
         beforeEach(() => {
-            const checkout = new AdyenCheckout({});
+            // @ts-ignore
+            checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj; // Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
+
+            newPmResponsePaymentMethods = checkoutConfig['paymentMethodsResponse'].paymentMethods;
+
+            const checkout = new AdyenCheckout(checkoutConfig);
             dropin = checkout.create('dropin');
         });
 
         test('StoredCard in Dropin receives correct props ', async () => {
-            const wrapper = await mount(dropin.render());
-            wrapper.update();
-
-            console.log('### core.component.props.test::dropin.dropinRef:: ', dropin.dropinRef.state); // Never fully populated
+            mount(dropin.render());
+            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            await flushPromises();
 
             const storedCard = dropin.dropinRef.state.elements[0];
 
             // expect props from core.getPropsForComps()
             expect(storedCard.props._parentInstance).not.toEqual(null);
-            expect(storedCard.props.paymentMethods).toEqual(paymentMethodsResponse.paymentMethods);
+            expect(storedCard.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+            expect(storedCard.props.i18n).not.toEqual(null);
 
             // expect props from core.processGlobalOptions
             expect(storedCard.props.clientKey).toEqual('test_F7_FEKJHF');
@@ -271,6 +289,103 @@ describe('Core - tests ensuring props reach components', () => {
 
             // expect props from relevant paymentMethodsConfiguration object
             expect(storedCard.props.hideCVC).toEqual(true);
+        });
+
+        test('Card in Dropin receives correct props ', async () => {
+            mount(dropin.render());
+            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            await flushPromises();
+
+            const card = dropin.dropinRef.state.elements[1];
+
+            // expect props from core.getPropsForComps()
+            expect(card.props._parentInstance).not.toEqual(null);
+            expect(card.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+
+            // expect props from core.processGlobalOptions
+            expect(card.props.clientKey).toEqual('test_F7_FEKJHF');
+            expect(card.props.amount.value).toEqual(19000);
+
+            // expect props from Dropin.getCommonProps()
+            expect(card.props.showPayButton).toEqual(true);
+            expect(card.props.isDropin).toEqual(true);
+            expect(card.props.oneClick).not.toBeDefined();
+            expect(card.props.elementRef).not.toEqual(null);
+
+            // expect props from card object in paymentMethodsResponse.paymentMethods
+            expect(card.props.brands).toEqual(brandsArray);
+            expect(card.props.name).toEqual('Credit Card');
+
+            // expect props from relevant paymentMethodsConfiguration object
+            expect(card.props.hasHolderName).toEqual(true);
+            expect(card.props.holderNameRequired).toEqual(true);
+            expect(card.props.positionHolderNameOnTop).toEqual(true);
+
+            // expect prop from Card.formatProps()
+            expect(card.props.type).toEqual('card');
+        });
+
+        test('AmazonPay in Dropin receives correct props ', async () => {
+            mount(dropin.render());
+            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            await flushPromises();
+
+            const aPay = dropin.dropinRef.state.elements[2];
+
+            // expect props from core.getPropsForComps()
+            expect(aPay.props._parentInstance).not.toEqual(null);
+            expect(aPay.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+
+            // expect props from core.processGlobalOptions
+            expect(aPay.props.clientKey).toEqual('test_F7_FEKJHF');
+            expect(aPay.props.amount.value).toEqual(19000);
+
+            // expect props from Dropin.getCommonProps()
+            expect(aPay.props.showPayButton).toEqual(true);
+            expect(aPay.props.isDropin).toEqual(true);
+            expect(aPay.props.elementRef).not.toEqual(null);
+
+            // expect props from card object in paymentMethodsResponse.paymentMethods
+            expect(aPay.props.configuration.merchantId).toEqual('1000');
+            expect(aPay.props.configuration.publicKeyId).toEqual('AG77');
+
+            // expect props from relevant paymentMethodsConfiguration object
+            expect(aPay.props.foo).toEqual('bar');
+
+            // expect props from AmazonPay.formatProps()
+            expect(aPay.props.type).toEqual('amazonpay');
+            expect(aPay.props.productType).toEqual('PayOnly');
+            expect(aPay.props.region).toEqual('EU'); // should have reformatted region to upperCase
+        });
+
+        test('Redirect PM in Dropin receives correct props ', async () => {
+            mount(dropin.render());
+            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            await flushPromises();
+
+            const redirect = dropin.dropinRef.state.elements[3];
+
+            // expect props from core.getPropsForComps()
+            expect(redirect.props._parentInstance).not.toEqual(null);
+            expect(redirect.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+
+            // expect props from core.processGlobalOptions
+            expect(redirect.props.clientKey).toEqual('test_F7_FEKJHF');
+            expect(redirect.props.amount.value).toEqual(19000);
+
+            // expect props from Dropin.getCommonProps()
+            expect(redirect.props.showPayButton).toEqual(true);
+            expect(redirect.props.isDropin).toEqual(true);
+            expect(redirect.props.elementRef).not.toEqual(null);
+
+            // expect props from object in paymentMethodsResponse.paymentMethods
+            expect(redirect.props.name).toEqual('UnionPay');
+
+            // expect props from relevant paymentMethodsConfiguration object
+            expect(redirect.props.foo).toEqual('bar');
+
+            // expect props from Redirect.formatProps()
+            expect(redirect.props.type).toEqual('unionpay');
         });
     });
 });
