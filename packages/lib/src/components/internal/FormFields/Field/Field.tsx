@@ -60,7 +60,8 @@ class Field extends Component<FieldProps, FieldState> {
         dualBrandingElements,
         dir,
         name,
-        showValidIcon
+        showValidIcon,
+        isCollatingErrors
     }) {
         return (
             <div
@@ -139,7 +140,12 @@ class Field extends Component<FieldProps, FieldState> {
                     </div>
 
                     {errorMessage && errorMessage.length && (
-                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${this.uniqueId}${ARIA_ERROR_SUFFIX}`}>
+                        <span
+                            className={'adyen-checkout__error-text'}
+                            id={`${this.uniqueId}${ARIA_ERROR_SUFFIX}`}
+                            aria-hidden={isCollatingErrors ? 'true' : null}
+                            aria-live={isCollatingErrors ? null : 'polite'}
+                        >
                             {errorMessage}
                         </span>
                     )}

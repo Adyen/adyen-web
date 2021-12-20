@@ -7,7 +7,10 @@ import { FieldContainerProps } from '../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
 function FieldContainer(props: FieldContainerProps) {
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
     const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange } = props;
     const errorMessage = i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
     const value: string = data[fieldName];
@@ -43,13 +46,21 @@ function FieldContainer(props: FieldContainerProps) {
             );
         default:
             return (
-                <Field label={label} classNameModifiers={classNameModifiers} errorMessage={errorMessage} isValid={valid[fieldName]} name={fieldName}>
+                <Field
+                    label={label}
+                    classNameModifiers={classNameModifiers}
+                    errorMessage={errorMessage}
+                    isValid={valid[fieldName]}
+                    name={fieldName}
+                    isCollatingErrors={isCollatingErrors}
+                >
                     {renderFormField('text', {
                         classNameModifiers,
                         name: fieldName,
                         value,
                         onInput,
-                        onChange
+                        onChange,
+                        isCollatingErrors
                     })}
                 </Field>
             );

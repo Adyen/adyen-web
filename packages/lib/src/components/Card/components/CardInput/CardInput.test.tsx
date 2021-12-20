@@ -59,13 +59,13 @@ describe('CardInput > holderName', () => {
     });
 
     test('holderName required, so valid.holderName is false', () => {
-        mount(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
+        mount(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} i18n={i18n} />);
         // expect(onChange.mock.calls[onChange.mock.calls.length - 1][0].valid.holderName).toBe(false);
         expect(valid.holderName).toBe(false);
     });
 
     test('holderName required, valid.holderName is false, add text to make valid.holderName = true', () => {
-        render(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
+        render(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} i18n={i18n} />);
         expect(valid.holderName).toBe(false);
 
         const placeholderText = i18n.get('creditCard.holderName.placeholder');
@@ -81,20 +81,20 @@ describe('CardInput > holderName', () => {
 
     test('holderName required, data.holderName passed into comp - valid.holderName is true', () => {
         const dataObj = { holderName: 'J Smith' };
-        mount(<CardInput holderNameRequired={true} hasHolderName={true} data={dataObj} onChange={onChange} />);
+        mount(<CardInput holderNameRequired={true} hasHolderName={true} data={dataObj} onChange={onChange} i18n={i18n} />);
         expect(valid.holderName).toBe(true);
         expect(data.holderName).toBe('J Smith');
     });
 
     test('holderName not required, valid.holderName is true', () => {
-        mount(<CardInput hasHolderName={true} onChange={onChange} />);
+        mount(<CardInput hasHolderName={true} onChange={onChange} i18n={i18n} />);
 
         expect(valid.holderName).toBe(true);
     });
 
     test('holderName not required, data.holderName passed into comp - valid.holderName is true', () => {
         const dataObj = { holderName: 'J Smith' };
-        mount(<CardInput hasHolderName={true} data={dataObj} onChange={onChange} />);
+        mount(<CardInput hasHolderName={true} data={dataObj} onChange={onChange} i18n={i18n} />);
 
         expect(valid.holderName).toBe(true);
         expect(data.holderName).toBe('J Smith');
@@ -107,7 +107,7 @@ describe('CardInput > holderName', () => {
     });
 
     test('shows holder name first', () => {
-        const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
+        const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} SRConfig={{ collateErrors: false }} />);
         expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
     });
 });

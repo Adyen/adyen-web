@@ -61,7 +61,8 @@ const setupObj = {
     legacyInputMode: null,
     minimumExpiryDate: null,
     uid: null,
-    implementationType: null
+    implementationType: null,
+    isCollatingErrors: false
 };
 
 /**

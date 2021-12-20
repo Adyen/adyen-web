@@ -13,10 +13,14 @@ export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     protected static defaultProps = {
-        onBinLookup: () => {}
+        onBinLookup: () => {},
+        SRConfig: {}
     };
 
     formatProps(props: CardElementProps) {
+        // Extract &/or set defaults for the screenreader error panel
+        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -35,7 +39,12 @@ export class CardElement extends UIElement<CardElementProps> {
                 socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto'
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
-            icon: props.icon || props.configuration?.icon
+            icon: props.icon || props.configuration?.icon,
+            SRConfig: {
+                collateErrors,
+                moveFocus,
+                showPanel
+            }
         };
     }
 
@@ -151,7 +160,11 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider
+                i18n={this.props.i18n}
+                loadingContext={this.props.loadingContext}
+                commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
+            >
                 <CardInput
                     ref={ref => {
                         this.componentRef = ref;

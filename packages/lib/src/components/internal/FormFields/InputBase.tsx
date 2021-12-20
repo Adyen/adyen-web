@@ -5,7 +5,7 @@ import { convertFullToHalf } from './utils';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export default function InputBase(props) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors } = props;
 
     const [handleChangeHasFired, setHandleChangeHasFired] = useState(false);
     const isOnComposition = useRef<boolean>(false);
@@ -55,8 +55,8 @@ export default function InputBase(props) {
         classNameModifiers.map(m => `adyen-checkout__input--${m}`)
     );
 
-    // Don't spread classNameModifiers to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, uniqueId: uid, ...newProps } = props;
+    // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
+    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, isCollatingErrors: ce, ...newProps } = props;
 
     return (
         <input
@@ -68,9 +68,10 @@ export default function InputBase(props) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
-            aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
+            aria-describedby={isCollatingErrors ? null : `${uniqueId}${ARIA_ERROR_SUFFIX}`}
             onChange={handleChange}
             onBlur={handleBlur}
+            aria-invalid={isInvalid}
             /* eslint-disable react/no-unknown-property */
             oncompositionstart={handleOnCompositionStart}
             oncompositionupdate={handleOnCompositionUpdate}
