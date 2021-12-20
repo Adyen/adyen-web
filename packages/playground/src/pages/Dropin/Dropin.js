@@ -1,4 +1,3 @@
-import '../../../config/polyfills';
 import '../../style.scss';
 import { initSession } from './session';
 import { initManual } from './manual';

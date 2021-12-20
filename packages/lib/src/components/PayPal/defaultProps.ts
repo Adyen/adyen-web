@@ -43,6 +43,8 @@ const defaultProps: PayPalElementProps = {
 
     blockPayPalCreditButton: false,
 
+    blockPayPalPayLaterButton: false,
+
     configuration: {
         /**
          * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
@@ -55,7 +57,6 @@ const defaultProps: PayPalElementProps = {
     },
 
     // Events
-    onAdditionalDetails: () => {},
     onInit: () => {},
     onClick: () => {},
     onCancel: () => {},

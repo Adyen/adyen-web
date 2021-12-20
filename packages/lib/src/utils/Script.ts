@@ -54,7 +54,7 @@ class Script {
             }
         });
 
-    public remove = () => this.script.remove();
+    public remove = () => this.script.parentNode && this.script.parentNode.removeChild(this.script);
 }
 
 export default Script;
