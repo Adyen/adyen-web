@@ -13,10 +13,21 @@ interface HttpOptions {
     errorLevel?: 'silent' | 'info' | 'warn' | 'error' | 'fatal';
 }
 
-export function http(options: HttpOptions, data?): Promise<any> {
+type AdyenErrorResponse = {
+    errorCode: string;
+    message: string;
+    errorType: string;
+    status: number;
+};
+
+function isAdyenErrorResponse(data: any): data is AdyenErrorResponse {
+    return data && data.errorCode && data.errorType && data.message && data.status;
+}
+
+export function http<T>(options: HttpOptions, data?): Promise<T> {
     const { headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path } = options;
 
-    const request = {
+    const request: RequestInit = {
         method,
         mode: 'cors',
         cache: 'default',
@@ -29,21 +40,44 @@ export function http(options: HttpOptions, data?): Promise<any> {
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
         ...(data && { body: JSON.stringify(data) })
-    } as RequestInit;
+    };
 
     const url = `${loadingContext}${path}`;
 
-    return fetch(url, request)
-        .then(response => {
-            if (response.ok) return response.json();
-            const errorMessage = options.errorMessage || `Service at ${url} is not available`;
+    return (
+        fetch(url, request)
+            .then(async response => {
+                const data = await response.json();
 
-            return handleFetchError(errorMessage, errorLevel);
-        })
-        .catch(e => {
-            const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${e}`;
-            return handleFetchError(errorMessage, errorLevel);
-        });
+                if (response.ok) {
+                    return data;
+                }
+
+                if (isAdyenErrorResponse(data)) {
+                    return handleFetchError(data.message, errorLevel);
+                }
+
+                const errorMessage = options.errorMessage || `Service at ${url} is not available`;
+                return handleFetchError(errorMessage, errorLevel);
+            })
+            /**
+             * Catch block handles Network error, CORS error, or exception throw by the `handleFetchError`
+             * inside the `then` block
+             */
+            .catch(error => {
+                /**
+                 * If error is instance of AdyenCheckoutError, which means that it was already
+                 * handled by the `handleFetchError` on the `then` block, then we just throw it.
+                 * There is no need to create it again
+                 */
+                if (error instanceof AdyenCheckoutError) {
+                    throw error;
+                }
+
+                const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
+                return handleFetchError(errorMessage, errorLevel);
+            })
+    );
 }
 
 function handleFetchError(message: string, level: string) {
@@ -60,4 +94,7 @@ function handleFetchError(message: string, level: string) {
 }
 
 export const httpGet = (options: HttpOptions, data?): Promise<any> => http({ ...options, method: 'GET' }, data);
-export const httpPost = (options: HttpOptions, data?): Promise<any> => http({ ...options, method: 'POST' }, data);
+
+export function httpPost<T = any>(options: HttpOptions, data?: any) {
+    return http<T>({ ...options, method: 'POST' }, data);
+}
