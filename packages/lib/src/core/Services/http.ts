@@ -10,8 +10,10 @@ interface HttpOptions {
     loadingContext?: string;
     method?: string;
     path: string;
-    errorLevel?: 'silent' | 'info' | 'warn' | 'error' | 'fatal';
+    errorLevel?: ErrorLevel;
 }
+
+type ErrorLevel = 'silent' | 'info' | 'warn' | 'error' | 'fatal';
 
 type AdyenErrorResponse = {
     errorCode: string;
@@ -24,7 +26,7 @@ function isAdyenErrorResponse(data: any): data is AdyenErrorResponse {
     return data && data.errorCode && data.errorType && data.message && data.status;
 }
 
-export function http<T>(options: HttpOptions, data?): Promise<T> {
+export function http<T>(options: HttpOptions, data?: any): Promise<T> {
     const { headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path } = options;
 
     const request: RequestInit = {
@@ -54,11 +56,13 @@ export function http<T>(options: HttpOptions, data?): Promise<T> {
                 }
 
                 if (isAdyenErrorResponse(data)) {
-                    return handleFetchError(data.message, errorLevel);
+                    handleFetchError(data.message, errorLevel);
+                    return;
                 }
 
                 const errorMessage = options.errorMessage || `Service at ${url} is not available`;
-                return handleFetchError(errorMessage, errorLevel);
+                handleFetchError(errorMessage, errorLevel);
+                return;
             })
             /**
              * Catch block handles Network error, CORS error, or exception throw by the `handleFetchError`
@@ -75,26 +79,31 @@ export function http<T>(options: HttpOptions, data?): Promise<T> {
                 }
 
                 const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
-                return handleFetchError(errorMessage, errorLevel);
+                handleFetchError(errorMessage, errorLevel);
             })
     );
 }
 
-function handleFetchError(message: string, level: string) {
+function handleFetchError(message: string, level: ErrorLevel): void {
     switch (level) {
-        case 'silent':
-            return null;
+        case 'silent': {
+            break;
+        }
         case 'info':
         case 'warn':
-        case 'error':
-            return console[level](message);
+        case 'error': {
+            console[level](message);
+            break;
+        }
         default:
             throw new AdyenCheckoutError('NETWORK_ERROR', message);
     }
 }
 
-export const httpGet = (options: HttpOptions, data?): Promise<any> => http({ ...options, method: 'GET' }, data);
+export function httpGet<T = any>(options: HttpOptions, data?: any): Promise<T> {
+    return http<T>({ ...options, method: 'GET' }, data);
+}
 
-export function httpPost<T = any>(options: HttpOptions, data?: any) {
+export function httpPost<T = any>(options: HttpOptions, data?: any): Promise<T> {
     return http<T>({ ...options, method: 'POST' }, data);
 }
