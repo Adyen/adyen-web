@@ -1,5 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
+import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
@@ -7,6 +7,13 @@ import { getSearchParameters } from '../../utils';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
+    // TODO: Remove this
+    paymentMethodsResponse.paymentMethods.splice(0,0,{
+        brand: 'mealVoucher_FR_natixis',
+        name: 'Natixis MealVoucher',
+        type: 'mealVoucher_FR_natixis'
+    });
+    
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,

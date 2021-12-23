@@ -8,6 +8,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import DataSfSpan from '../../Card/components/CardInput/components/DataSfSpan';
+import styles from '../../Card/components/CardInput/CardInput.module.scss';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -19,6 +20,9 @@ interface GiftcardComponentProps {
     amount: PaymentAmount;
     showPayButton?: boolean;
     payButton: (config) => any;
+
+    pinRequired: boolean;
+    expiryDateRequired?: boolean;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -33,6 +37,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     public static defaultProps = {
         pinRequired: true,
+        expiryDateRequired: false,
         onChange: () => {},
         onFocus: () => {},
         onBlur: () => {}
@@ -111,7 +116,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                         <div ref={setRootNode} className="adyen-checkout__field-wrapper">
                             <Field
                                 label={i18n.get('creditCard.numberField.title')}
-                                classNameModifiers={['number', ...(props.pinRequired ? ['70'] : ['100'])]}
+                                classNameModifiers={['number', ...(props.pinRequired && !props.expiryDateRequired ? ['70'] : ['100'])]}
                                 errorMessage={getCardErrorMessage(sfpState)}
                                 focused={focusedElement === 'encryptedCardNumber'}
                                 onFocusField={() => setFocusOn('encryptedCardNumber')}
@@ -151,6 +156,34 @@ class Giftcard extends Component<GiftcardComponentProps> {
                                             'adyen-checkout__input--error': sfpState.errors.encryptedSecurityCode,
                                             'adyen-checkout__input--focus': focusedElement === 'encryptedSecurityCode'
                                         })}
+                                    />
+                                </Field>
+                            )}
+
+                            {props.expiryDateRequired && (
+                                <Field
+                                    label={i18n.get('creditCard.expiryDateField.title')}
+                                    classNameModifiers={['expireDate']}
+                                    errorMessage={sfpState.errors.encryptedExpiryDate}
+                                    focused={focusedElement === 'encryptedExpiryDate'}
+                                    onFocusField={() => setFocusOn('encryptedExpiryDate')}
+                                    dir={'ltr'}
+                                    name={'encryptedExpiryDate'}
+                                >
+                                    <DataSfSpan
+                                        encryptedFieldType={'encryptedExpiryDate'}
+                                        className={classNames(
+                                            'adyen-checkout__input',
+                                            'adyen-checkout__input--small',
+                                            'adyen-checkout__card__exp-date__input',
+                                            [styles['adyen-checkout__input']],
+                                            {
+                                                'adyen-checkout__input--error': sfpState.errors.encryptedExpiryDate,
+                                                'adyen-checkout__input--focus': focusedElement === 'encryptedExpiryDate',
+                                                'adyen-checkout__input--valid':
+                                                    !!sfpState.valid.encryptedExpiryMonth && !!sfpState.valid.encryptedExpiryYear
+                                            }
+                                        )}
                                     />
                                 </Field>
                             )}

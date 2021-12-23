@@ -46,6 +46,7 @@ import Address from './Address';
 import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
 import Twint from './Twint';
+import MealVoucherFR from './MealVoucherFR';
 
 /**
  * Maps each component with a Component element.
@@ -148,6 +149,9 @@ const componentsMap = {
     swish: Swish,
     affirm: Affirm,
     twint: Twint,
+    mealVoucher_FR_natixis: MealVoucherFR,
+    mealVoucher_FR_sodexo: MealVoucherFR,
+    mealVoucher_FR_groupeup: MealVoucherFR,
     default: null
 };
 
