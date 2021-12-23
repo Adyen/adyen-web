@@ -40,7 +40,9 @@
     margin: 0 0 $spacing-medium;
 }
 
-.adyen-checkout__card__holderName:nth-child(2) {
+/* When holderName is on top & co-exists with an error panel */
+.adyen-checkout-error-panel--sr-only + .adyen-checkout__card__holderName,
+.adyen-checkout-error-panel + .adyen-checkout__card__holderName{
     margin: 0 0 $spacing-medium;
 }
 
