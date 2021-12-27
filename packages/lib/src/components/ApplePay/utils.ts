@@ -11,22 +11,18 @@ export function mapBrands(brands) {
     const brandMapping = {
         amex: 'amex',
         cartebancaire: 'cartesBancaires',
-        chinaUnionPay: 'chinaUnionPay', // new
         discover: 'discover',
-        eftpos: 'eftpos', // new
         electron: 'electron',
         elo: 'elo',
         elodebit: 'elo',
         girocard: 'girocard',
         interac: 'interac',
         jcb: 'jcb',
-        mada: 'mada', // new
+        mada: 'mada',
+        mada_Card: 'mada',
         maestro: 'maestro',
         mc: 'masterCard',
-        mir: 'mir', // new
-        privateLabel: 'privateLabel', // new
-        visa: 'visa',
-        vPay: 'vPay' // new
+        visa: 'visa'
     };
 
     return brands.reduce((accumulator, item) => {
