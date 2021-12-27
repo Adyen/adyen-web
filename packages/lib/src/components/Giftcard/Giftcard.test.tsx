@@ -1,5 +1,5 @@
 import Giftcard from './Giftcard';
-const flushPromises = () => new Promise(setImmediate);
+const flushPromises = () => new Promise((resolve, reject) => setTimeout(resolve, 0));
 
 describe('Giftcard', () => {
     const baseProps = { amount: { value: 1000, currency: 'EUR' }, name: 'My Test Gift Card', type: 'giftcard', brand: 'genericgiftcard' };
@@ -12,6 +12,8 @@ describe('Giftcard', () => {
             giftcard.setState({ isValid: true });
             giftcard.onBalanceCheck();
             await flushPromises();
+
+            // jest.runAllTimers();
 
             expect(onSubmitMock).toHaveBeenCalled();
         });

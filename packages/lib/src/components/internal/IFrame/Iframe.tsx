@@ -55,7 +55,7 @@ class Iframe extends Component<IframeProps> {
         }
     }
 
-    render({ name, src, width, height, minWidth, minHeight, border, allow, title }) {
+    render({ name, src, width, height, minWidth, minHeight, allow, title }) {
         return (
             <iframe
                 ref={ref => {
@@ -71,7 +71,6 @@ class Iframe extends Component<IframeProps> {
                 height={height}
                 min-width={minWidth}
                 min-height={minHeight}
-                border={border}
                 style={{ border: 0 }}
                 frameBorder="0"
                 title={title}

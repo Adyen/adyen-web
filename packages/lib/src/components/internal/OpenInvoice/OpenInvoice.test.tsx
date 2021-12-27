@@ -75,6 +75,6 @@ describe('OpenInvoice', () => {
         const status = 'loading';
         wrapper.instance().setStatus(status);
         wrapper.update();
-        expect(payButton).toHaveBeenCalledWith(jasmine.objectContaining({ status }));
+        expect(payButton).toHaveBeenCalledWith(expect.objectContaining({ status }));
     });
 });
