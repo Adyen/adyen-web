@@ -1,4 +1,5 @@
 import GiftcardElement from '../Giftcard/Giftcard';
+import {MealVoucherFields} from "./components/MealVoucherFields";
 
 export class MealVoucherFRElement extends GiftcardElement {
     public static type = 'mealVoucher_FR_natixis';
@@ -7,7 +8,8 @@ export class MealVoucherFRElement extends GiftcardElement {
         super({
             ...props,
             pinRequired: true,
-            expiryDateRequired: true
+            expiryDateRequired: true,
+            fieldsLayoutComponent: MealVoucherFields
         });
     }
 }
