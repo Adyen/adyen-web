@@ -72,11 +72,9 @@ export default function InputBase(props) {
             onChange={handleChange}
             onBlur={handleBlur}
             aria-invalid={isInvalid}
-            /* eslint-disable react/no-unknown-property */
-            oncompositionstart={handleOnCompositionStart}
-            oncompositionupdate={handleOnCompositionUpdate}
-            oncompositionend={handleOnCompositionEnd}
-            /* eslint-enable react/no-unknown-property */
+            onCompositionStart={handleOnCompositionStart}
+            onCompositionUpdate={handleOnCompositionUpdate}
+            onCompositionEnd={handleOnCompositionEnd}
         />
     );
 }
