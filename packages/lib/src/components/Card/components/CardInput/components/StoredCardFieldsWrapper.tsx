@@ -1,6 +1,3 @@
-import Field from '../../../../internal/FormFields/Field';
-import DataSfSpan from './DataSfSpan';
-// import classNames from 'classnames';
 import { h } from 'preact';
 import styles from '../CardInput.module.scss';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
