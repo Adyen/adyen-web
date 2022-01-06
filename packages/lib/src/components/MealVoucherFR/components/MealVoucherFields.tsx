@@ -33,7 +33,7 @@ export const MealVoucherFields = ({ setRootNode, i18n, sfpState, getCardErrorMes
                 <Field
                     label={i18n.get('creditCard.expiryDateField.title')}
                     classNameModifiers={['expireDate', '50']}
-                    errorMessage={sfpState.errors.encryptedExpiryDate}
+                    errorMessage={sfpState.errors.encryptedExpiryDate && i18n.get(sfpState.errors.encryptedExpiryDate)}
                     focused={focusedElement === 'encryptedExpiryDate'}
                     onFocusField={() => setFocusOn('encryptedExpiryDate')}
                     dir={'ltr'}
@@ -77,7 +77,6 @@ export const MealVoucherFields = ({ setRootNode, i18n, sfpState, getCardErrorMes
                     />
                 </Field>
             </div>
-
         </div>
     );
 };
