@@ -158,6 +158,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         legacyInputMode: this.config.legacyInputMode,
         minimumExpiryDate: this.config.minimumExpiryDate,
         implementationType: this.config.implementationType,
+        bundleType: this.config.bundleType,
         isCollatingErrors: this.config.isCollatingErrors
     };
 

@@ -49,6 +49,7 @@ interface CSFCommonProps {
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     implementationType?: string;
+    bundleType?: string;
     isCollatingErrors?: boolean;
 }
 

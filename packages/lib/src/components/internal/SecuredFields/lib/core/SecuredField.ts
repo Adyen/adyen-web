@@ -151,6 +151,7 @@ class SecuredField extends AbstractSecuredField {
             minimumExpiryDate: this.config.minimumExpiryDate,
             uid: this.config.uid,
             implementationType: this.config.implementationType,
+            bundleType: this.config.bundleType,
             isCollatingErrors: this.config.isCollatingErrors
         };
 
