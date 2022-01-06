@@ -3,26 +3,15 @@ import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
-// import styles from './CardInput.module.scss';
 import './CardInput.scss';
-// import LoadingWrapper from '../../../internal/LoadingWrapper';
-// import StoredCardFields from './components/StoredCardFields';
 import Installments from './components/Installments';
-// import CardFields from './components/CardFields';
-// import KCPAuthentication from './components/KCPAuthentication';
-// import SocialSecurityNumberBrazil from '../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
-// import StoreDetails from '../../../internal/StoreDetails';
-// import Address from '../../../internal/Address/Address';
-// import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
 import { ALL_SECURED_FIELDS, CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
-import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
-// import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { getLayout, sortErrorsForPanel } from './utils';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
@@ -336,7 +325,6 @@ function CardInput(props: CardInputProps) {
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
         });
         setMergedSRErrors(sortedMergedErrors);
-        // console.log('### CardInput::sortedMergedErrors:: ', sortedMergedErrors);
 
         props.onChange({
             data,
@@ -354,18 +342,6 @@ function CardInput(props: CardInputProps) {
     /**
      * RENDER
      */
-    const cardHolderField = (
-        <CardHolderName
-            required={props.holderNameRequired}
-            placeholder={props.placeholders.holderName}
-            value={formData.holderName}
-            error={!!formErrors.holderName && props.holderNameRequired}
-            isValid={!!formValid.holderName}
-            onChange={handleChangeFor('holderName', 'blur')}
-            onInput={handleChangeFor('holderName', 'input')}
-        />
-    );
-
     const getInstallmentsComp = brand => (
         <Installments
             amount={props.amount}
@@ -393,6 +369,7 @@ function CardInput(props: CardInputProps) {
                 isCollatingErrors={collateErrors}
                 render={({ setRootNode, setFocusOn }, sfpState) =>
                     h(FieldToRender, {
+                        ...props,
                         // base
                         data,
                         valid,
@@ -413,7 +390,9 @@ function CardInput(props: CardInputProps) {
                         moveFocus,
                         showPanel,
                         handleErrorPanelFocus,
-                        cardHolderField,
+                        formData,
+                        formErrors,
+                        formValid,
                         expiryDatePolicy,
                         dualBrandSelectElements,
                         extensions,
@@ -428,9 +407,7 @@ function CardInput(props: CardInputProps) {
                         // Address
                         billingAddress,
                         handleAddress,
-                        billingAddressRef,
-                        // props
-                        ...props
+                        billingAddressRef
                     })
                 }
             />

@@ -7,6 +7,7 @@ import KCPAuthentication from './KCPAuthentication';
 import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
+import CardHolderName from './CardHolderName';
 
 export const CardFieldsWrapper = ({
     // base
@@ -29,7 +30,9 @@ export const CardFieldsWrapper = ({
     moveFocus,
     showPanel,
     handleErrorPanelFocus,
-    cardHolderField,
+    formData,
+    formErrors,
+    formValid,
     expiryDatePolicy,
     dualBrandSelectElements,
     extensions,
@@ -48,7 +51,18 @@ export const CardFieldsWrapper = ({
     // props
     ...props
 }) => {
-    console.log('### CardFieldsWrapper::CardFieldsWrapper:: props', props);
+    const cardHolderField = (
+        <CardHolderName
+            required={props.holderNameRequired}
+            placeholder={props.placeholders.holderName}
+            value={formData.holderName}
+            error={!!formErrors.holderName && props.holderNameRequired}
+            isValid={!!formValid.holderName}
+            onChange={handleChangeFor('holderName', 'blur')}
+            onInput={handleChangeFor('holderName', 'input')}
+        />
+    );
+
     return (
         <div
             ref={setRootNode}
