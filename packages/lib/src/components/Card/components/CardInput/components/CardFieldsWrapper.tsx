@@ -7,11 +7,9 @@ import KCPAuthentication from './KCPAuthentication';
 import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
 import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
-import getImage from '../../../../../utils/get-image';
 
 export const CardFieldsWrapper = ({
     // base
-    status,
     data,
     valid,
     errors,
@@ -134,9 +132,6 @@ export const CardFieldsWrapper = ({
                     />
                 )}
             </LoadingWrapper>
-
-            {props.showPayButton &&
-                props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
         </div>
     );
 };

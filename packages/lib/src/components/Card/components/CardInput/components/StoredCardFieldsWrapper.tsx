@@ -2,10 +2,8 @@ import { h } from 'preact';
 import styles from '../CardInput.module.scss';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
-import getImage from '../../../../../utils/get-image';
 
 export const StoredCardFieldsWrapper = ({
-    status,
     i18n,
     setRootNode,
     sfpState,
@@ -40,9 +38,6 @@ export const StoredCardFieldsWrapper = ({
 
                 {hasInstallments && getInstallmentsComp(sfpState.brand)}
             </LoadingWrapper>
-
-            {props.showPayButton &&
-                props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
         </div>
     );
 };

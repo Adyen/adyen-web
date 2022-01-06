@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import defaultProps from './defaultProps';
@@ -31,6 +31,7 @@ import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
+import getImage from '../../../../utils/get-image';
 
 function CardInput(props: CardInputProps) {
     console.log('### CardInputSplit::CardInput:: SPLIT');
@@ -378,61 +379,64 @@ function CardInput(props: CardInputProps) {
     const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
 
     return (
-        <SecuredFieldsProvider
-            ref={sfp}
-            {...props}
-            styles={{ ...defaultStyles, ...props.styles }}
-            koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
-            hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
-            onChange={handleSecuredFieldsChange}
-            onBrand={props.onBrand}
-            onFocus={handleFocus}
-            type={props.brand}
-            isCollatingErrors={collateErrors}
-            render={({ setRootNode, setFocusOn }, sfpState) =>
-                h(FieldToRender, {
-                    // base
-                    status,
-                    data,
-                    valid,
-                    errors,
-                    handleChangeFor,
-                    i18n: props.i18n,
-                    focusedElement: focusedElement,
-                    setRootNode: setRootNode,
-                    setFocusOn: setFocusOn,
-                    sfpState: sfpState,
-                    collateErrors,
-                    errorFieldId,
-                    cvcPolicy,
-                    hasInstallments,
-                    getInstallmentsComp,
-                    // Card
-                    mergedSRErrors,
-                    moveFocus,
-                    showPanel,
-                    handleErrorPanelFocus,
-                    cardHolderField,
-                    expiryDatePolicy,
-                    dualBrandSelectElements,
-                    extensions,
-                    selectedBrandValue,
-                    // KCP
-                    showKCP,
-                    // SSN
-                    showBrazilianSSN,
-                    socialSecurityNumber,
-                    // Store details
-                    handleOnStoreDetails,
-                    // Address
-                    billingAddress,
-                    handleAddress,
-                    billingAddressRef,
-                    // props
-                    ...props
-                })
-            }
-        />
+        <Fragment>
+            <SecuredFieldsProvider
+                ref={sfp}
+                {...props}
+                styles={{ ...defaultStyles, ...props.styles }}
+                koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
+                hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
+                onChange={handleSecuredFieldsChange}
+                onBrand={props.onBrand}
+                onFocus={handleFocus}
+                type={props.brand}
+                isCollatingErrors={collateErrors}
+                render={({ setRootNode, setFocusOn }, sfpState) =>
+                    h(FieldToRender, {
+                        // base
+                        data,
+                        valid,
+                        errors,
+                        handleChangeFor,
+                        i18n: props.i18n,
+                        focusedElement: focusedElement,
+                        setRootNode: setRootNode,
+                        setFocusOn: setFocusOn,
+                        sfpState: sfpState,
+                        collateErrors,
+                        errorFieldId,
+                        cvcPolicy,
+                        hasInstallments,
+                        getInstallmentsComp,
+                        // Card
+                        mergedSRErrors,
+                        moveFocus,
+                        showPanel,
+                        handleErrorPanelFocus,
+                        cardHolderField,
+                        expiryDatePolicy,
+                        dualBrandSelectElements,
+                        extensions,
+                        selectedBrandValue,
+                        // KCP
+                        showKCP,
+                        // SSN
+                        showBrazilianSSN,
+                        socialSecurityNumber,
+                        // Store details
+                        handleOnStoreDetails,
+                        // Address
+                        billingAddress,
+                        handleAddress,
+                        billingAddressRef,
+                        // props
+                        ...props
+                    })
+                }
+            />
+            {props.showPayButton &&
+                props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
+        </Fragment>
     );
 }
 
