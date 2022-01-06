@@ -8,7 +8,11 @@ import { StateFieldItem, StateFieldProps } from '../types';
 
 export default function StateField(props: StateFieldProps) {
     const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value } = props;
-    const { i18n, loadingContext } = useCoreContext();
+    const {
+        i18n,
+        loadingContext,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
     const placeholderKey: string = specifications.getPlaceholderKeyForField('stateOrProvince', selectedCountry);
@@ -35,14 +39,23 @@ export default function StateField(props: StateFieldProps) {
     if (!loaded || !states.length) return null;
 
     return (
-        <Field label={label} classNameModifiers={classNameModifiers} errorMessage={props.errorMessage} isValid={!!value} showValidIcon={false} name={'stateOrProvince'}>
+        <Field
+            label={label}
+            classNameModifiers={classNameModifiers}
+            errorMessage={props.errorMessage}
+            isValid={!!value}
+            showValidIcon={false}
+            name={'stateOrProvince'}
+            isCollatingErrors={isCollatingErrors}
+        >
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
                 selected: value,
                 placeholder: i18n.get(placeholderKey),
                 items: states,
-                readonly: readOnly && !!value
+                readonly: readOnly && !!value,
+                isCollatingErrors
             })}
         </Field>
     );

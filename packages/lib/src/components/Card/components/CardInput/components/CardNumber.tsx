@@ -7,9 +7,13 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardNumberProps } from './types';
 import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
+import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function CardNumber(props: CardNumberProps) {
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
     const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
 
     return (
@@ -18,15 +22,16 @@ export default function CardNumber(props: CardNumberProps) {
             focused={props.focused}
             filled={props.filled}
             classNameModifiers={['cardNumber']}
-            onFocusField={() => onFocusField('encryptedCardNumber')}
+            onFocusField={() => onFocusField(ENCRYPTED_CARD_NUMBER)}
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dualBrandingElements={dualBrandingElements}
             dir={'ltr'}
             name={'encryptedCardNumber'}
+            isCollatingErrors={isCollatingErrors}
         >
             <DataSfSpan
-                encryptedFieldType={'encryptedCardNumber'}
+                encryptedFieldType={ENCRYPTED_CARD_NUMBER}
                 className={classNames({
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,
