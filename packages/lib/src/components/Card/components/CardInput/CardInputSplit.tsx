@@ -4,7 +4,6 @@ import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
-import Installments from './components/Installments';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
 import { ALL_SECURED_FIELDS, CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
@@ -21,6 +20,7 @@ import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
+import styles from './CardInput.module.scss';
 
 function CardInput(props: CardInputProps) {
     console.log('### CardInputSplit::CardInput:: SPLIT');
@@ -342,16 +342,6 @@ function CardInput(props: CardInputProps) {
     /**
      * RENDER
      */
-    const getInstallmentsComp = brand => (
-        <Installments
-            amount={props.amount}
-            brand={brand}
-            installmentOptions={props.installmentOptions}
-            onChange={handleInstallments}
-            type={showAmountsInInstallments ? 'amount' : 'months'}
-        />
-    );
-
     const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
 
     return (
@@ -367,49 +357,62 @@ function CardInput(props: CardInputProps) {
                 onFocus={handleFocus}
                 type={props.brand}
                 isCollatingErrors={collateErrors}
-                render={({ setRootNode, setFocusOn }, sfpState) =>
-                    h(FieldToRender, {
-                        ...props,
-                        // base
-                        data,
-                        valid,
-                        errors,
-                        handleChangeFor,
-                        i18n: props.i18n,
-                        focusedElement: focusedElement,
-                        setRootNode: setRootNode,
-                        setFocusOn: setFocusOn,
-                        sfpState: sfpState,
-                        collateErrors,
-                        errorFieldId,
-                        cvcPolicy,
-                        hasInstallments,
-                        getInstallmentsComp,
-                        // Card
-                        mergedSRErrors,
-                        moveFocus,
-                        showPanel,
-                        handleErrorPanelFocus,
-                        formData,
-                        formErrors,
-                        formValid,
-                        expiryDatePolicy,
-                        dualBrandSelectElements,
-                        extensions,
-                        selectedBrandValue,
-                        // KCP
-                        showKCP,
-                        // SSN
-                        showBrazilianSSN,
-                        socialSecurityNumber,
-                        // Store details
-                        handleOnStoreDetails,
-                        // Address
-                        billingAddress,
-                        handleAddress,
-                        billingAddressRef
-                    })
-                }
+                render={({ setRootNode, setFocusOn }, sfpState) => (
+                    <Fragment>
+                        <div
+                            ref={setRootNode}
+                            className={`adyen-checkout__card-input ${
+                                styles['card-input__wrapper']
+                            } adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`}
+                            role={collateErrors && 'form'}
+                            aria-describedby={collateErrors ? errorFieldId : null}
+                        >
+                            <FieldToRender
+                                // props
+                                {...props}
+                                // base (shared)
+                                data={data}
+                                valid={valid}
+                                errors={errors}
+                                handleChangeFor={handleChangeFor}
+                                i18n={props.i18n}
+                                focusedElement={focusedElement}
+                                setRootNode={setRootNode}
+                                setFocusOn={setFocusOn}
+                                sfpState={sfpState}
+                                collateErrors={collateErrors}
+                                errorFieldId={errorFieldId}
+                                cvcPolicy={cvcPolicy}
+                                hasInstallments={hasInstallments}
+                                showAmountsInInstallments={showAmountsInInstallments}
+                                handleInstallments={handleInstallments}
+                                // Card
+                                mergedSRErrors={mergedSRErrors}
+                                moveFocus={moveFocus}
+                                showPanel={showPanel}
+                                handleErrorPanelFocus={handleErrorPanelFocus}
+                                formData={formData}
+                                formErrors={formErrors}
+                                formValid={formValid}
+                                expiryDatePolicy={expiryDatePolicy}
+                                dualBrandSelectElements={dualBrandSelectElements}
+                                extensions={extensions}
+                                selectedBrandValue={selectedBrandValue}
+                                // KCP
+                                showKCP={showKCP}
+                                // SSN
+                                showBrazilianSSN={showBrazilianSSN}
+                                socialSecurityNumber={socialSecurityNumber}
+                                // Store details
+                                handleOnStoreDetails={handleOnStoreDetails}
+                                // Address
+                                billingAddress={billingAddress}
+                                handleAddress={handleAddress}
+                                billingAddressRef={billingAddressRef}
+                            />
+                        </div>
+                    </Fragment>
+                )}
             />
             {props.showPayButton &&
                 props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
