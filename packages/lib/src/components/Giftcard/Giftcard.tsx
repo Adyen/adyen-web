@@ -29,8 +29,7 @@ export class GiftcardElement extends UIElement {
             paymentMethod: {
                 type: this.constructor['type'],
                 brand: this.props.brand,
-                encryptedCardNumber: this.state.data?.encryptedCardNumber,
-                encryptedSecurityCode: this.state.data?.encryptedSecurityCode
+                ...this.state.data
             }
         };
     }
