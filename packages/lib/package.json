@@ -74,7 +74,7 @@
         "dotenv": "^10.0.0",
         "enzyme": "^3.11.0",
         "enzyme-adapter-preact-pure": "^3.1.0",
-        "esbuild": "^0.12.15",
+        "esbuild": "^0.14.11",
         "eslint": "^7.32.0",
         "eslint-plugin-import": "^2.23.4",
         "eslint-plugin-jsx-a11y": "^6.4.1",
