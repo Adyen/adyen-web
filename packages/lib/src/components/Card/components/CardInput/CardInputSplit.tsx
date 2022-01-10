@@ -23,7 +23,6 @@ import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 
 function CardInput(props: CardInputProps) {
-    console.log('### CardInputSplit::CardInput:: SPLIT');
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
     const isValidating = useRef(false);
@@ -358,60 +357,57 @@ function CardInput(props: CardInputProps) {
                 type={props.brand}
                 isCollatingErrors={collateErrors}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
-                    <Fragment>
-                        <div
-                            ref={setRootNode}
-                            className={`adyen-checkout__card-input ${
-                                styles['card-input__wrapper']
-                            } adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`}
-                            role={collateErrors && 'form'}
-                            aria-describedby={collateErrors ? errorFieldId : null}
-                        >
-                            <FieldToRender
-                                // props
-                                {...props}
-                                // base (shared)
-                                data={data}
-                                valid={valid}
-                                errors={errors}
-                                handleChangeFor={handleChangeFor}
-                                i18n={props.i18n}
-                                focusedElement={focusedElement}
-                                setRootNode={setRootNode}
-                                setFocusOn={setFocusOn}
-                                sfpState={sfpState}
-                                collateErrors={collateErrors}
-                                errorFieldId={errorFieldId}
-                                cvcPolicy={cvcPolicy}
-                                hasInstallments={hasInstallments}
-                                showAmountsInInstallments={showAmountsInInstallments}
-                                handleInstallments={handleInstallments}
-                                // Card
-                                mergedSRErrors={mergedSRErrors}
-                                moveFocus={moveFocus}
-                                showPanel={showPanel}
-                                handleErrorPanelFocus={handleErrorPanelFocus}
-                                formData={formData}
-                                formErrors={formErrors}
-                                formValid={formValid}
-                                expiryDatePolicy={expiryDatePolicy}
-                                dualBrandSelectElements={dualBrandSelectElements}
-                                extensions={extensions}
-                                selectedBrandValue={selectedBrandValue}
-                                // KCP
-                                showKCP={showKCP}
-                                // SSN
-                                showBrazilianSSN={showBrazilianSSN}
-                                socialSecurityNumber={socialSecurityNumber}
-                                // Store details
-                                handleOnStoreDetails={handleOnStoreDetails}
-                                // Address
-                                billingAddress={billingAddress}
-                                handleAddress={handleAddress}
-                                billingAddressRef={billingAddressRef}
-                            />
-                        </div>
-                    </Fragment>
+                    <div
+                        ref={setRootNode}
+                        className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${props.fundingSource ??
+                            'credit'}`}
+                        role={collateErrors && 'form'}
+                        aria-describedby={collateErrors ? errorFieldId : null}
+                    >
+                        <FieldToRender
+                            // props
+                            {...props}
+                            // base (shared)
+                            data={data}
+                            valid={valid}
+                            errors={errors}
+                            handleChangeFor={handleChangeFor}
+                            i18n={props.i18n}
+                            focusedElement={focusedElement}
+                            setRootNode={setRootNode}
+                            setFocusOn={setFocusOn}
+                            sfpState={sfpState}
+                            collateErrors={collateErrors}
+                            errorFieldId={errorFieldId}
+                            cvcPolicy={cvcPolicy}
+                            hasInstallments={hasInstallments}
+                            showAmountsInInstallments={showAmountsInInstallments}
+                            handleInstallments={handleInstallments}
+                            // Card
+                            mergedSRErrors={mergedSRErrors}
+                            moveFocus={moveFocus}
+                            showPanel={showPanel}
+                            handleErrorPanelFocus={handleErrorPanelFocus}
+                            formData={formData}
+                            formErrors={formErrors}
+                            formValid={formValid}
+                            expiryDatePolicy={expiryDatePolicy}
+                            dualBrandSelectElements={dualBrandSelectElements}
+                            extensions={extensions}
+                            selectedBrandValue={selectedBrandValue}
+                            // KCP
+                            showKCP={showKCP}
+                            // SSN
+                            showBrazilianSSN={showBrazilianSSN}
+                            socialSecurityNumber={socialSecurityNumber}
+                            // Store details
+                            handleOnStoreDetails={handleOnStoreDetails}
+                            // Address
+                            billingAddress={billingAddress}
+                            handleAddress={handleAddress}
+                            billingAddressRef={billingAddressRef}
+                        />
+                    </div>
                 )}
             />
             {props.showPayButton &&
