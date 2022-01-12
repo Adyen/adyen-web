@@ -33,10 +33,18 @@ export default class DropinPage extends BasePage {
         this.dualBrandingImages = this.dualBrandingIconHolderActive.find('img');
     }
 
-    getFromState = ClientFunction(path => {
+    getFromActivePM = ClientFunction(path => {
         const splitPath = path.split('.');
         const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
 
-        return splitPath.reduce(reducer, window.dropin.dropinRef.state.activePaymentMethod.state);
+        return splitPath.reduce(reducer, window.dropin.dropinRef.state.activePaymentMethod);
+    });
+
+    // Access the DropinComponent elements array - avoids having to make a PM active in order to inspect it
+    getFromDropinRefStateElements = ClientFunction((index, path) => {
+        const splitPath = path.split('.');
+        const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
+
+        return splitPath.reduce(reducer, window.dropin.dropinRef.state.elements[index]);
     });
 }
