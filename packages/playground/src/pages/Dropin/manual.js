@@ -6,13 +6,6 @@ import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
-
-    // TODO: Remove this
-    paymentMethodsResponse.paymentMethods.splice(0,0,{
-        brand: 'mealVoucher_FR_natixis',
-        name: 'Natixis MealVoucher',
-        type: 'mealVoucher_FR_natixis'
-    });
     
     window.checkout = await AdyenCheckout({
         amount,

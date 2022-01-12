@@ -112,7 +112,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     onFocus={this.handleFocus}
                     type={GIFT_CARD}
                     render={({ setRootNode, setFocusOn }, sfpState) =>
-                        h(this.props.fieldsLayoutComponent, {
+                        this.props.fieldsLayoutComponent({
                             i18n: i18n,
                             pinRequired: this.props.pinRequired,
                             focusedElement: focusedElement,
