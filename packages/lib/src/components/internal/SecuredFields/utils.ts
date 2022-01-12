@@ -11,7 +11,9 @@ import {
     CVC_POLICY_OPTIONAL,
     CVC_POLICY_HIDDEN,
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
-    ENCRYPTED_SECURITY_CODE_4_DIGITS
+    ENCRYPTED_SECURITY_CODE_4_DIGITS,
+    DATE_POLICY_OPTIONAL,
+    DATE_POLICY_HIDDEN
     // TODO Comment out until translations are available
     // ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
     // ENCRYPTED_BANK_LOCATION_FIELD
@@ -58,14 +60,29 @@ const mapDateFields = (field, numDateFields) => {
 };
 
 /**
- * Skip generating an error for an optional CVC field, unless it is already in error
+ * Skip generating an error for an optional field, unless it is already in error
  */
-const mapCVCField = (field, state) => {
-    const isCvcField = field === ENCRYPTED_SECURITY_CODE;
-    const isCvcFieldValid = !state.errors[ENCRYPTED_SECURITY_CODE];
+const skipOptionalFields = (field, state, fieldNames) => {
+    // console.log('\n### utils::skipOptionalField3:: examining field=', field);
+    const { isFieldOfType, fieldIsValid } = fieldNames.reduce(
+        (acc, fieldName) => {
+            if (!acc.isFieldOfType) {
+                // console.log('### utils:: fieldName:: ', fieldName, 'match=', field === fieldName);
+                acc.isFieldOfType = field === fieldName;
+                acc.fieldIsValid = !state.errors[fieldName];
+            }
+            return acc;
+        },
+        { isFieldOfType: false, fieldIsValid: false }
+    );
 
-    // if cvcPolicy != required
-    return (state.cvcPolicy === CVC_POLICY_OPTIONAL || state.cvcPolicy === CVC_POLICY_HIDDEN) && isCvcFieldValid && isCvcField ? null : field;
+    const policyType = field === ENCRYPTED_SECURITY_CODE ? 'cvcPolicy' : 'expiryDatePolicy';
+
+    const policyOptional = policyType === 'cvcPolicy' ? CVC_POLICY_OPTIONAL : DATE_POLICY_OPTIONAL;
+    const policyHidden = policyType === 'cvcPolicy' ? CVC_POLICY_HIDDEN : DATE_POLICY_HIDDEN;
+
+    // if policy != required
+    return (state[policyType] === policyOptional || state[policyType] === policyHidden) && fieldIsValid && isFieldOfType ? null : field;
 };
 
 export const getErrorReducer = (numDateFields, state) => (acc, field) => {
@@ -75,8 +92,10 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
             ? mapDateFields(field, numDateFields) // Map the keys we use for the valid state to the key(s) we use for the error state
             : null;
 
-    // Skip error generation for optional CVC unless field is already in error
-    val = mapCVCField(val, state);
+    // Skip error generation for optional/hidden CVC & Date unless the fields are already in error
+    val = skipOptionalFields(val, state, [ENCRYPTED_SECURITY_CODE, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR]);
+
+    // console.log('### utils:::: ############# val=', val);
 
     if (val && !acc.includes(val)) acc.push(val);
 

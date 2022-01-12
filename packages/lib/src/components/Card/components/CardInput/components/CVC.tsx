@@ -5,7 +5,12 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CVCProps } from './types';
 import styles from '../CardInput.module.scss';
-import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL, CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import {
+    CVC_POLICY_HIDDEN,
+    CVC_POLICY_OPTIONAL,
+    CVC_POLICY_REQUIRED,
+    ENCRYPTED_SECURITY_CODE
+} from '../../../../internal/SecuredFields/lib/configuration/constants';
 import DataSfSpan from './DataSfSpan';
 
 export default function CVC(props: CVCProps) {
@@ -21,7 +26,10 @@ export default function CVC(props: CVCProps) {
         frontCVC = false,
         cvcPolicy = CVC_POLICY_REQUIRED
     } = props;
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
@@ -47,14 +55,15 @@ export default function CVC(props: CVCProps) {
             focused={focused}
             filled={filled}
             classNameModifiers={[...classNameModifiers, 'securityCode']}
-            onFocusField={() => onFocusField('encryptedSecurityCode')}
+            onFocusField={() => onFocusField(ENCRYPTED_SECURITY_CODE)}
             className={fieldClassnames}
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
             dir={'ltr'}
-            name={'encryptedSecurityCode'}
+            name={ENCRYPTED_SECURITY_CODE}
+            isCollatingErrors={isCollatingErrors}
         >
-            <DataSfSpan encryptedFieldType={'encryptedSecurityCode'} className={cvcClassnames} />
+            <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
             <CVCHint frontCVC={frontCVC} />
         </Field>
