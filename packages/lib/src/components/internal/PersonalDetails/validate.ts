@@ -1,6 +1,6 @@
 import { email, telephoneNumber } from '../../../utils/regex';
 import { unformatDate } from '../FormFields/InputDate/utils';
-import { ValidatorRules } from '../../../utils/Validator/Validator';
+import { ValidatorRules } from '../../../utils/Validator/types';
 
 const isDateOfBirthValid = value => {
     if (!value) return false;

@@ -1,4 +1,4 @@
-import { ValidatorRules } from '../../../../utils/Validator/Validator';
+import { ValidatorRules } from '../../../../utils/Validator/types';
 import { formatCPFCNPJ } from '../../../internal/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 

@@ -3,12 +3,14 @@ import { useEffect, useMemo } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
+import { addressFormatters, countrySpecificFormatters } from './validate.formats';
 import { AddressProps } from './types';
 import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
+import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
@@ -17,8 +19,19 @@ export default function Address(props: AddressProps) {
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFields,
         defaultData: props.data,
-        rules: props.validationRules || getAddressValidationRules(specifications)
+        rules: props.validationRules || getAddressValidationRules(specifications),
+        formatters: addressFormatters
     });
+
+    /*
+     * Force re-validation of the postalCode when data.country changes
+     * (since the rules/formatters will also change)
+     */
+    useEffect((): void => {
+        if (data.postalCode) {
+            handleChangeFor('postalCode', 'blur')(data.postalCode);
+        }
+    }, [data.country]);
 
     useEffect((): void => {
         const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
@@ -75,6 +88,7 @@ export default function Address(props: AddressProps) {
                 onChange={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
+                maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
             />
         );
     };

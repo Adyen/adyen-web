@@ -1,6 +1,7 @@
 import { AddressField, AddressData } from '../../../types';
 import Specifications from './Specifications';
-import { ValidatorRules } from '../../../utils/Validator/Validator';
+import { ValidatorRules } from '../../../utils/Validator/types';
+import { ValidationRuleResult } from '../../../utils/Validator/Validator';
 
 // Describes an object with unknown keys whose value is always a string
 export type StringObject = {
@@ -21,12 +22,12 @@ export interface AddressProps {
 }
 
 export interface AddressStateError {
-    street?: boolean;
-    houseNumberOrName?: boolean;
-    postalCode?: boolean;
-    city?: boolean;
-    country?: boolean;
-    stateOrProvince?: boolean;
+    street?: ValidationRuleResult;
+    houseNumberOrName?: ValidationRuleResult;
+    postalCode?: ValidationRuleResult;
+    city?: ValidationRuleResult;
+    country?: ValidationRuleResult;
+    stateOrProvince?: ValidationRuleResult;
 }
 
 export interface FieldContainerProps {
@@ -42,6 +43,7 @@ export interface FieldContainerProps {
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     specifications: Specifications;
+    maxlength?: number;
 }
 
 export interface ReadOnlyAddressProps {
