@@ -5,15 +5,13 @@ import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
-import { ALL_SECURED_FIELDS, CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
-import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { getLayout, sortErrorsForPanel } from './utils';
-import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
@@ -21,6 +19,7 @@ import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
+import { getErrorPanelHandler, getAddressHandler, getFocusHandler } from './handlers';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -102,55 +101,12 @@ function CardInput(props: CardInputProps) {
      * HANDLERS
      */
     // SecuredField-only handler
-    const handleFocus = (e: CbObjOnFocus) => {
-        setFocusedElement(e.currentFocusObject);
-        e.focus === true ? props.onFocus(e) : props.onBlur(e);
-    };
+    const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
     // Callback for ErrorPanel
-    const handleErrorPanelFocus = (errors: ErrorPanelObj) => {
-        if (isValidating.current) {
-            const who = errors.fieldList[0];
+    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
 
-            // If not a securedField - find field and set focus on it
-            if (!ALL_SECURED_FIELDS.includes(who)) {
-                let nameVal = who;
-
-                // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
-                // the value by which the field is referred to internally ('taxNumber')
-                if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
-
-                if (nameVal === 'country' || nameVal === 'stateOrProvince') {
-                    // Set focus on dropdown
-                    const field = selectOne(sfp.current.rootNode, `.adyen-checkout__field--${nameVal} .adyen-checkout__dropdown__button`);
-                    field?.focus();
-                } else {
-                    // Set focus on input
-                    const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-                    field?.focus();
-                }
-            } else {
-                // Is a securedField - so it has it's own focus procedures
-                handleFocus({ currentFocusObject: who } as CbObjOnFocus);
-                this.setFocusOn(who);
-            }
-            isValidating.current = false;
-        }
-    };
-
-    const handleOnStoreDetails = (storeDetails: boolean): void => {
-        setStorePaymentMethod(storeDetails);
-    };
-
-    const handleInstallments = (installments): void => {
-        setInstallments(installments);
-    };
-
-    const handleAddress = address => {
-        setFormData('billingAddress', address.data);
-        setFormValid('billingAddress', address.isValid);
-        setFormErrors('billingAddress', address.errors);
-    };
+    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
@@ -382,7 +338,7 @@ function CardInput(props: CardInputProps) {
                             cvcPolicy={cvcPolicy}
                             hasInstallments={hasInstallments}
                             showAmountsInInstallments={showAmountsInInstallments}
-                            handleInstallments={handleInstallments}
+                            handleInstallments={setInstallments}
                             // Card
                             mergedSRErrors={mergedSRErrors}
                             moveFocus={moveFocus}
@@ -401,7 +357,7 @@ function CardInput(props: CardInputProps) {
                             showBrazilianSSN={showBrazilianSSN}
                             socialSecurityNumber={socialSecurityNumber}
                             // Store details
-                            handleOnStoreDetails={handleOnStoreDetails}
+                            handleOnStoreDetails={setStorePaymentMethod}
                             // Address
                             billingAddress={billingAddress}
                             handleAddress={handleAddress}
