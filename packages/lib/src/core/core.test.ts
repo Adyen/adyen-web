@@ -1,6 +1,14 @@
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 
+beforeEach(() => {
+    console.error = jest.fn(error => {
+        throw new Error(error);
+    });
+    console.log = jest.fn(() => {});
+    console.warn = jest.fn(() => {});
+});
+
 describe('Core', () => {
     test('Should default to the FALLBACK_LOCALE', () => {
         const Checkout = new AdyenCheckout({});
