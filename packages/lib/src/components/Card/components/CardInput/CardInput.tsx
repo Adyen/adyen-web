@@ -1,33 +1,25 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
-import styles from './CardInput.module.scss';
 import './CardInput.scss';
-import LoadingWrapper from '../../../internal/LoadingWrapper';
-import StoredCardFields from './components/StoredCardFields';
-import Installments from './components/Installments';
-import CardFields from './components/CardFields';
-import KCPAuthentication from './components/KCPAuthentication';
-import SocialSecurityNumberBrazil from '../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
-import StoreDetails from '../../../internal/StoreDetails';
-import Address from '../../../internal/Address/Address';
-import getImage from '../../../../utils/get-image';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
-import { ALL_SECURED_FIELDS, CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
-import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
-import CardHolderName from './components/CardHolderName';
 import useForm from '../../../../utils/useForm';
-import { ErrorPanel, ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
+import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { getLayout, sortErrorsForPanel } from './utils';
-import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
+import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
+import { CardFieldsWrapper } from './components/CardFieldsWrapper';
+import getImage from '../../../../utils/get-image';
+import styles from './CardInput.module.scss';
+import { getErrorPanelHandler, getAddressHandler, getFocusHandler } from './handlers';
 
 function CardInput(props: CardInputProps) {
     const sfp = useRef(null);
@@ -109,55 +101,12 @@ function CardInput(props: CardInputProps) {
      * HANDLERS
      */
     // SecuredField-only handler
-    const handleFocus = (e: CbObjOnFocus) => {
-        setFocusedElement(e.currentFocusObject);
-        e.focus === true ? props.onFocus(e) : props.onBlur(e);
-    };
+    const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
     // Callback for ErrorPanel
-    const handleErrorPanelFocus = (errors: ErrorPanelObj) => {
-        if (isValidating.current) {
-            const who = errors.fieldList[0];
+    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
 
-            // If not a securedField - find field and set focus on it
-            if (!ALL_SECURED_FIELDS.includes(who)) {
-                let nameVal = who;
-
-                // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
-                // the value by which the field is referred to internally ('taxNumber')
-                if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
-
-                if (nameVal === 'country' || nameVal === 'stateOrProvince') {
-                    // Set focus on dropdown
-                    const field = selectOne(sfp.current.rootNode, `.adyen-checkout__field--${nameVal} .adyen-checkout__dropdown__button`);
-                    field?.focus();
-                } else {
-                    // Set focus on input
-                    const field = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-                    field?.focus();
-                }
-            } else {
-                // Is a securedField - so it has it's own focus procedures
-                handleFocus({ currentFocusObject: who } as CbObjOnFocus);
-                this.setFocusOn(who);
-            }
-            isValidating.current = false;
-        }
-    };
-
-    const handleOnStoreDetails = (storeDetails: boolean): void => {
-        setStorePaymentMethod(storeDetails);
-    };
-
-    const handleInstallments = (installments): void => {
-        setInstallments(installments);
-    };
-
-    const handleAddress = address => {
-        setFormData('billingAddress', address.data);
-        setFormValid('billingAddress', address.isValid);
-        setFormErrors('billingAddress', address.errors);
-    };
+    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
@@ -331,7 +280,6 @@ function CardInput(props: CardInputProps) {
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
         });
         setMergedSRErrors(sortedMergedErrors);
-        // console.log('### CardInput::sortedMergedErrors:: ', sortedMergedErrors);
 
         props.onChange({
             data,
@@ -349,148 +297,78 @@ function CardInput(props: CardInputProps) {
     /**
      * RENDER
      */
-    const cardHolderField = (
-        <CardHolderName
-            required={props.holderNameRequired}
-            placeholder={props.placeholders.holderName}
-            value={formData.holderName}
-            error={!!formErrors.holderName && props.holderNameRequired}
-            isValid={!!formValid.holderName}
-            onChange={handleChangeFor('holderName', 'blur')}
-            onInput={handleChangeFor('holderName', 'input')}
-        />
-    );
-
-    const getInstallmentsComp = brand => (
-        <Installments
-            amount={props.amount}
-            brand={brand}
-            installmentOptions={props.installmentOptions}
-            onChange={handleInstallments}
-            type={showAmountsInInstallments ? 'amount' : 'months'}
-        />
-    );
+    const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
 
     return (
-        <SecuredFieldsProvider
-            ref={sfp}
-            {...props}
-            styles={{ ...defaultStyles, ...props.styles }}
-            koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
-            hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
-            onChange={handleSecuredFieldsChange}
-            onBrand={props.onBrand}
-            onFocus={handleFocus}
-            type={props.brand}
-            isCollatingErrors={collateErrors}
-            render={({ setRootNode, setFocusOn }, sfpState) => (
-                <div
-                    ref={setRootNode}
-                    className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${props.fundingSource ??
-                        'credit'}`}
-                    role={collateErrors && 'form'}
-                    aria-describedby={collateErrors ? errorFieldId : null}
-                >
-                    {props.storedPaymentMethodId ? (
-                        <LoadingWrapper status={sfpState.status}>
-                            <StoredCardFields
-                                {...props}
-                                errors={sfpState.errors}
-                                brand={sfpState.brand}
-                                hasCVC={props.hasCVC}
-                                cvcPolicy={cvcPolicy}
-                                onFocusField={setFocusOn}
-                                focusedElement={focusedElement}
-                                status={sfpState.status}
-                                valid={sfpState.valid}
-                            />
-
-                            {hasInstallments && getInstallmentsComp(sfpState.brand)}
-                        </LoadingWrapper>
-                    ) : (
-                        <LoadingWrapper status={sfpState.status}>
-                            {collateErrors && (
-                                <ErrorPanel
-                                    id={errorFieldId}
-                                    heading={props.i18n.get('errorPanel.title')}
-                                    errors={mergedSRErrors}
-                                    callbackFn={moveFocus ? handleErrorPanelFocus : null}
-                                    showPanel={showPanel}
-                                />
-                            )}
-
-                            {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
-
-                            <CardFields
-                                {...props}
-                                brand={sfpState.brand}
-                                brandsConfiguration={props.brandsConfiguration}
-                                focusedElement={focusedElement}
-                                onFocusField={setFocusOn}
-                                hasCVC={props.hasCVC}
-                                cvcPolicy={cvcPolicy}
-                                expiryDatePolicy={expiryDatePolicy}
-                                errors={sfpState.errors}
-                                valid={sfpState.valid}
-                                dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
-                                dualBrandingChangeHandler={extensions.handleDualBrandSelection}
-                                dualBrandingSelected={selectedBrandValue}
-                            />
-
-                            {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
-
-                            {showKCP && (
-                                <KCPAuthentication
-                                    onFocusField={setFocusOn}
-                                    focusedElement={focusedElement}
-                                    encryptedPasswordState={{
-                                        data: sfpState.encryptedPassword,
-                                        valid: sfpState.valid ? sfpState.valid.encryptedPassword : false,
-                                        errors: sfpState.errors ? sfpState.errors.encryptedPassword : false
-                                    }}
-                                    value={data.taxNumber}
-                                    error={!!errors.taxNumber}
-                                    isValid={!!valid.taxNumber}
-                                    onChange={handleChangeFor('taxNumber', 'blur')}
-                                    onInput={handleChangeFor('taxNumber', 'input')}
-                                />
-                            )}
-
-                            {showBrazilianSSN && (
-                                <div className="adyen-checkout__card__socialSecurityNumber">
-                                    <SocialSecurityNumberBrazil
-                                        onChange={handleChangeFor('socialSecurityNumber', 'blur')}
-                                        onInput={handleChangeFor('socialSecurityNumber', 'input')}
-                                        error={errors?.socialSecurityNumber}
-                                        valid={valid?.socialSecurityNumber}
-                                        data={socialSecurityNumber}
-                                        required={true}
-                                    />
-                                </div>
-                            )}
-
-                            {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
-
-                            {hasInstallments && getInstallmentsComp(sfpState.brand)}
-
-                            {props.billingAddressRequired && (
-                                <Address
-                                    label="billingAddress"
-                                    data={billingAddress}
-                                    onChange={handleAddress}
-                                    allowedCountries={props.billingAddressAllowedCountries}
-                                    requiredFields={props.billingAddressRequiredFields}
-                                    ref={billingAddressRef}
-                                />
-                            )}
-                        </LoadingWrapper>
-                    )}
-
-                    {props.showPayButton &&
-                        props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
-                </div>
-            )}
-        />
+        <Fragment>
+            <SecuredFieldsProvider
+                ref={sfp}
+                {...props}
+                styles={{ ...defaultStyles, ...props.styles }}
+                koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
+                hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
+                onChange={handleSecuredFieldsChange}
+                onBrand={props.onBrand}
+                onFocus={handleFocus}
+                type={props.brand}
+                isCollatingErrors={collateErrors}
+                render={({ setRootNode, setFocusOn }, sfpState) => (
+                    <div
+                        ref={setRootNode}
+                        className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${props.fundingSource ??
+                            'credit'}`}
+                        role={collateErrors && 'form'}
+                        aria-describedby={collateErrors ? errorFieldId : null}
+                    >
+                        <FieldToRender
+                            // props
+                            {...props}
+                            // base (shared)
+                            data={data}
+                            valid={valid}
+                            errors={errors}
+                            handleChangeFor={handleChangeFor}
+                            i18n={props.i18n}
+                            focusedElement={focusedElement}
+                            setRootNode={setRootNode}
+                            setFocusOn={setFocusOn}
+                            sfpState={sfpState}
+                            collateErrors={collateErrors}
+                            errorFieldId={errorFieldId}
+                            cvcPolicy={cvcPolicy}
+                            hasInstallments={hasInstallments}
+                            showAmountsInInstallments={showAmountsInInstallments}
+                            handleInstallments={setInstallments}
+                            // Card
+                            mergedSRErrors={mergedSRErrors}
+                            moveFocus={moveFocus}
+                            showPanel={showPanel}
+                            handleErrorPanelFocus={handleErrorPanelFocus}
+                            formData={formData}
+                            formErrors={formErrors}
+                            formValid={formValid}
+                            expiryDatePolicy={expiryDatePolicy}
+                            dualBrandSelectElements={dualBrandSelectElements}
+                            extensions={extensions}
+                            selectedBrandValue={selectedBrandValue}
+                            // KCP
+                            showKCP={showKCP}
+                            // SSN
+                            showBrazilianSSN={showBrazilianSSN}
+                            socialSecurityNumber={socialSecurityNumber}
+                            // Store details
+                            handleOnStoreDetails={setStorePaymentMethod}
+                            // Address
+                            billingAddress={billingAddress}
+                            handleAddress={handleAddress}
+                            billingAddressRef={billingAddressRef}
+                        />
+                    </div>
+                )}
+            />
+            {props.showPayButton &&
+                props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
+        </Fragment>
     );
 }
 

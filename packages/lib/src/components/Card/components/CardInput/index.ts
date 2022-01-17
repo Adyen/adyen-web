@@ -1,1 +1,1 @@
-export { default } from './CardInputSplit';
+export { default } from './CardInput';

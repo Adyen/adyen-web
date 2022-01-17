@@ -3,8 +3,12 @@ import { ALL_SECURED_FIELDS } from '../../../internal/SecuredFields/lib/configur
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 
-// Return a function that can act as a callback for the ErrorPanel
+//
+/**
+ * Return a function that can act as a callback for the ErrorPanel
+ */
 export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOnFocus) => void) => {
+    // Return Handler fn:
     return (errors: ErrorPanelObj): void => {
         if (isValidating.current) {
             const who: string = errors.fieldList[0];
@@ -40,6 +44,7 @@ export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOn
 };
 
 export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {
+    // Return Handler fn:
     return address => {
         setFormData('billingAddress', address.data);
         setFormValid('billingAddress', address.isValid);
@@ -48,6 +53,7 @@ export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {
 };
 
 export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
+    // Return Handler fn:
     return (e: CbObjOnFocus) => {
         setFocusedElement(e.currentFocusObject);
         e.focus === true ? onFocus(e) : onBlur(e);
