@@ -23,24 +23,28 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    /*
-     * Force re-validation of the postalCode when data.country changes
-     * (since the rules/formatters will also change)
+    /**
+     * Effect that:
+     * - Resets validation for all fields by triggering handleChangeFor(fieldName, 'input')
+     * - Applies validation on postalCode field in case it has any value
      */
     useEffect((): void => {
-        if (data.postalCode) {
+        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
+        const newData = { ...data, stateOrProvince };
+
+        requiredFields.forEach(fieldName => {
+            handleChangeFor(fieldName, 'input')(newData[fieldName] ?? '');
+        });
+
+        if (newData.postalCode) {
             handleChangeFor('postalCode', 'blur')(data.postalCode);
         }
     }, [data.country]);
 
-    useEffect((): void => {
-        const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
-        const newData = { ...data, stateOrProvince };
-        requiredFields.forEach(fieldName => {
-            handleChangeFor(fieldName, 'input')(newData[fieldName] ?? '');
-        });
-    }, [data.country]);
-
+    /**
+     * Set the value of 'stateOrProvince' during the initial render if
+     * property is provided during the creation of the payment method
+     */
     useEffect((): void => {
         const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
         const countryHasStatesDataset = data.country && specifications.countryHasDataset(data.country);
