@@ -1,10 +1,10 @@
-import { h, Fragment } from 'preact';
+import { h, Fragment, FunctionalComponent } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
-import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState } from './types';
+import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState, CardInputRef } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
@@ -21,10 +21,13 @@ import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getErrorPanelHandler, getAddressHandler, getFocusHandler } from './handlers';
 
-function CardInput(props: CardInputProps) {
+const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
     const isValidating = useRef(false);
+
+    const cardInputRef = useRef<CardInputRef>({});
+    props.setComponentRef(cardInputRef.current);
 
     const errorFieldId = 'creditCardErrors';
 
@@ -33,7 +36,7 @@ function CardInput(props: CardInputProps) {
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
     // Creates access to sfp so we can call functionality on it (like handleOnAutoComplete) directly from the console. Used for testing.
-    if (process.env.NODE_ENV === 'development') this.sfp = sfp;
+    if (process.env.NODE_ENV === 'development') cardInputRef.current.sfp = sfp;
 
     /**
      * STATE HOOKS
@@ -153,7 +156,7 @@ function CardInput(props: CardInputProps) {
     /**
      * EXPECTED METHODS ON CARD.THIS
      */
-    this.showValidation = () => {
+    cardInputRef.current.showValidation = () => {
         // Clear errors so that the screenreader will read them *all* again
         setMergedSRErrors(null);
 
@@ -169,20 +172,20 @@ function CardInput(props: CardInputProps) {
         isValidating.current = true;
     };
 
-    this.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
+    cardInputRef.current.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
         extensions.processBinLookup(binLookupResponse, isReset);
     };
 
-    this.setStatus = setStatus;
+    cardInputRef.current.setStatus = setStatus;
 
     /**
      * EFFECT HOOKS
      */
     useEffect(() => {
         // componentDidMount
-        this.setFocusOn = sfp.current.setFocusOn;
-        this.updateStyles = sfp.current.updateStyles;
-        this.handleUnsupportedCard = sfp.current.handleUnsupportedCard;
+        cardInputRef.current.setFocusOn = sfp.current.setFocusOn;
+        cardInputRef.current.updateStyles = sfp.current.updateStyles;
+        cardInputRef.current.handleUnsupportedCard = sfp.current.handleUnsupportedCard;
 
         // componentWillUnmount
         return () => {
@@ -370,7 +373,7 @@ function CardInput(props: CardInputProps) {
                 props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
         </Fragment>
     );
-}
+};
 
 CardInput.defaultProps = defaultProps;
 
