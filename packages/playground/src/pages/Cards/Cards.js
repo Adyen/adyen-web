@@ -1,5 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
+import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
