@@ -20,6 +20,7 @@ import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getErrorPanelHandler, getAddressHandler, getFocusHandler } from './handlers';
+import { InstallmentsObj } from './components/Installments/Installments';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -58,7 +59,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [isSfpValid, setIsSfpValid] = useState(false);
     const [expiryDatePolicy, setExpiryDatePolicy] = useState(DATE_POLICY_REQUIRED);
     const [cvcPolicy, setCvcPolicy] = useState(CVC_POLICY_REQUIRED);
-    const [issuingCountryCode, setIssuingCountryCode] = useState(null);
+    const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
 
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState('');
@@ -67,7 +68,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [billingAddress, setBillingAddress] = useState<AddressData>(props.billingAddressRequired ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
-    const [installments, setInstallments] = useState({ value: null });
+    const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
 
     /**
      * LOCAL VARS
