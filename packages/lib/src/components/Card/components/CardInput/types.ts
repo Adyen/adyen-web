@@ -82,7 +82,7 @@ export interface CardInputProps {
     storedDetails?: object;
     SRConfig?: ScreenreaderConfig;
     specifications?: Specifications;
-    setComponentRef: (ref) => void;
+    setComponentRef?: (ref) => void;
 }
 
 export interface CardInputState {

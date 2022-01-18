@@ -4,6 +4,8 @@ export default {
     details: [],
     type: 'card',
 
+    setComponentRef: () => {},
+
     // Settings
     hasHolderName: false,
     holderNameRequired: false,
