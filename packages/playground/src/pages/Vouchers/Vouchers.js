@@ -1,5 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
+import '@adyen/adyen-web/dist/es/adyen.css';
 import { shopperLocale } from '../../config/commonConfig';
 import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
