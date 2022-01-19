@@ -12,7 +12,7 @@ describe('Dropin', () => {
 
     beforeEach(() => {
         const checkout = new AdyenCheckout({});
-        dropin = checkout.create('dropin', {});
+        dropin = checkout.create('dropin');
     });
 
     describe('isValid', () => {
@@ -22,13 +22,16 @@ describe('Dropin', () => {
             expect(dropin.isValid).toEqual(false);
         });
 
-        test('should return the isValid value of the activePaymentMethod', () => {
-            mount(dropin.render());
+        test('should return the isValid value of the activePaymentMethod', async () => {
+            // mount(dropin.render());
+            const dp = await mount(dropin.render());
+            await dp.update();
 
-            setTimeout(() => {
-                dropin.dropinRef.state.activePaymentMethod = { isValid: true };
-                expect(dropin.isValid).toEqual(true);
-            }, 0);
+            // setTimeout(() => {
+            // console.log('### Dropin.test:::: dropin.dropinRef1', dropin.dropinRef.state);
+            dropin.dropinRef.state.activePaymentMethod = { isValid: true };
+            expect(dropin.isValid).toEqual(true);
+            // }, 0);
         });
     });
 
@@ -39,14 +42,17 @@ describe('Dropin', () => {
     });
 
     describe('closeActivePaymentMethod', () => {
-        test('should close active payment method', () => {
-            mount(dropin.render());
+        test('should close active payment method', async () => {
+            // mount(dropin.render());
+            const dp = await mount(dropin.render());
+            await dp.update();
 
-            setTimeout(() => {
-                expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
-                dropin.closeActivePaymentMethod();
-                expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
-            }, 0);
+            // setTimeout(() => {
+            // console.log('### Dropin.test:::: dropin.dropinRef2', dropin.dropinRef.state);
+            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+            dropin.closeActivePaymentMethod();
+            expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+            // }, 0);
         });
     });
 
@@ -80,7 +86,7 @@ describe('Dropin', () => {
         test('should handle new challenge action', () => {
             const checkout = new AdyenCheckout({});
 
-            const dropin = checkout.create('dropin', {});
+            const dropin = checkout.create('dropin');
 
             const pa = dropin.handleAction(challengeAction);
             expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
@@ -110,6 +116,50 @@ describe('Dropin', () => {
             });
             expect(pa.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
             expect(pa.componentFromAction.props.challengeWindowSize).toEqual('03');
+        });
+    });
+
+    describe('Instant Payments feature', () => {
+        test('formatProps formats instantPaymentTypes removing duplicates and invalid values', () => {
+            const checkout = new AdyenCheckout({});
+            // @ts-ignore
+            const dropin = checkout.create('dropin', { instantPaymentTypes: ['alipay', 'paywithgoogle', 'paywithgoogle', 'paypal'] });
+
+            expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
+        });
+
+        test('formatProps filter out instantPaymentMethods from paymentMethods list ', () => {
+            const checkout = new AdyenCheckout({
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        { name: 'Google Pay', type: 'paywithgoogle' },
+                        { name: 'AliPay', type: 'alipay' }
+                    ]
+                }
+            });
+            const dropin = checkout.create('dropin', { instantPaymentTypes: ['paywithgoogle'] });
+
+            expect(dropin.props.paymentMethods).toHaveLength(1);
+            expect(dropin.props.paymentMethods[0]).toStrictEqual({ type: 'alipay', name: 'AliPay' });
+            expect(dropin.props.instantPaymentMethods).toHaveLength(1);
+            expect(dropin.props.instantPaymentMethods[0]).toStrictEqual({ name: 'Google Pay', type: 'paywithgoogle' });
+        });
+
+        test('formatProps does not change paymentMethods list if instantPaymentType is not provided', () => {
+            const paymentMethods = [
+                { name: 'Google Pay', type: 'paywithgoogle' },
+                { name: 'AliPay', type: 'alipay' }
+            ];
+
+            const checkout = new AdyenCheckout({
+                paymentMethodsResponse: {
+                    paymentMethods
+                }
+            });
+            const dropin = checkout.create('dropin');
+
+            expect(dropin.props.paymentMethods).toStrictEqual(paymentMethods);
+            expect(dropin.props.instantPaymentMethods).toHaveLength(0);
         });
     });
 });

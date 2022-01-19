@@ -5,8 +5,12 @@ interface CoreProviderProps {
     loadingContext: string;
     i18n: any;
     children?: any;
+    commonProps?: CommonPropsTypes;
 }
 
+export interface CommonPropsTypes {
+    isCollatingErrors?: boolean;
+}
 /**
  * CoreProvider Component
  * Wraps a component delaying the render until after the i18n module is fully loaded
@@ -29,7 +33,9 @@ class CoreProvider extends Component<CoreProviderProps> {
     render({ children }: CoreProviderProps) {
         if (this.state.loaded) {
             return (
-                <CoreContext.Provider value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext }}>
+                <CoreContext.Provider
+                    value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext, commonProps: this.props.commonProps || {} }}
+                >
                     {toChildArray(children)}
                 </CoreContext.Provider>
             );

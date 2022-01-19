@@ -19,8 +19,10 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.numHolder = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber`);
-        //        this.numHolderInError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber.adyen-checkout__field--error`);
+        //        this.numHolderWithErrorCls = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber.adyen-checkout__field--error`);
 
+        this.numLabel = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label`);
+        this.numLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label--focused`);
         // The <span> that holds the label text (first child of the <label>)
         this.numLabelText = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text`);
         this.numLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__label__text--error`);
@@ -39,9 +41,10 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.dateHolder = Selector(`${BASE_EL} .adyen-checkout__field__exp-date`);
-        //        this.dateHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date.adyen-checkout__field--error`);
         this.dateHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__exp-date--optional`);
 
+        this.dateLabel = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label`);
+        this.dateLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label--focused`);
         // The <span> that holds the label text (first child of the <label>)
         this.dateLabelText = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label__text`);
         this.dateLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__label__text--error`);
@@ -57,9 +60,9 @@ export default class CardPage extends BasePage {
          */
         // Top level <div>
         this.cvcHolder = Selector(`${BASE_EL} .adyen-checkout__field__cvc`);
-        //        this.cvcHolderInError = Selector(`${BASE_EL} .adyen-checkout__field__cvc.adyen-checkout__field--error`);
         this.cvcHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__cvc--optional`);
 
+        this.cvcLabel = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label`);
         // The <span> that holds the label text (first child of the <label>)
         this.cvcLabelText = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label__text`);
         this.cvcLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label__text--error`);
@@ -80,8 +83,30 @@ export default class CardPage extends BasePage {
         /**
          * KCP
          */
+        this.kcpTaxNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--kcp-taxNumber .adyen-checkout__label--focused`);
+        this.kcpTaxNumberInput = Selector(`${BASE_EL} .adyen-checkout__field--kcp-taxNumber .adyen-checkout__card__kcp-taxNumber__input`);
         this.pwdSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
         this.pwdErrorText = Selector(`${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout__error-text`);
+
+        /**
+         * AVS
+         */
+        this.addressLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label--focused`);
+        this.addressLabelErrorText = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__error-text`);
+        this.addressLabel = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label`);
+        this.addressInput = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__input--street`);
+
+        this.houseNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--houseNumberOrName .adyen-checkout__label--focused`);
+
+        // Country dropdown
+        this.countrySelectBtn = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__button`);
+        this.countrySelectBtnActive = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__button--active`);
+        this.countrySelectList = Selector(`${BASE_EL} .adyen-checkout__field--country .adyen-checkout__dropdown__list`);
+        this.countryListActiveCls = 'adyen-checkout__dropdown__list--active';
+
+        // Holder name
+        this.holderNameLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__card__holderName .adyen-checkout__label--focused`);
+        this.holderNameInput = Selector(`${BASE_EL} .adyen-checkout__card__holderName .adyen-checkout__card__holderName__input`);
 
         /**
          * iframe utils
@@ -94,6 +119,13 @@ export default class CardPage extends BasePage {
          * Pay button
          */
         this.payButton = Selector(`${BASE_EL} .adyen-checkout__button--pay`);
+
+        /**
+         * Error panel
+         */
+        this.errorPanelVisible = Selector(`${BASE_EL} .adyen-checkout-error-panel`);
+        this.errorPanelHidden = Selector(`${BASE_EL} .adyen-checkout-error-panel--sr-only`);
+        this.errorPanelEls = Selector('.adyen-checkout-error-panel__error'); // error messages within the panel
     }
 
     getFromState = ClientFunction(path => {

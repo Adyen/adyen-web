@@ -1,4 +1,4 @@
-import { AddressModeOptions, AddressSchema, AddressSpecifications } from './types';
+import {  AddressModeOptions, AddressSchema, AddressSpecifications, StringObject } from './types';
 import { ADDRESS_SPECIFICATIONS } from './constants';
 import { AddressField } from '../../../types';
 
@@ -47,6 +47,15 @@ class Specifications {
             return [];
         }
         return this.specifications?.[country]?.[schemaType] || this.specifications.default[schemaType];
+    }
+
+    /**
+     * Returns the address labels of the selected country or the default address labels.
+     * @param country - The selected country
+     * @returns StringObject
+     */
+    getAddressLabelsForCountry(country: string): StringObject {
+        return this.specifications?.[country]?.labels || this.specifications.default.labels;
     }
 
     /**

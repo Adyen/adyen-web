@@ -4,9 +4,12 @@ import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
-import { DropinElementProps } from './types';
+import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
+import createInstantPaymentElements from './elements/createInstantPaymentElements';
+
+const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -17,6 +20,27 @@ class DropinElement extends UIElement<DropinElementProps> {
         super(props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
+    }
+
+    formatProps(props) {
+        const instantPaymentTypes: InstantPaymentTypes[] = Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
+            SUPPORTED_INSTANT_PAYMENTS.includes(value)
+        );
+
+        const instantPaymentMethods = instantPaymentTypes.reduce((memo, paymentType) => {
+            const paymentMethod = props.paymentMethods.find(({ type }) => type === paymentType);
+            if (paymentMethod) return [...memo, paymentMethod];
+            return memo;
+        }, []);
+
+        const paymentMethods = props.paymentMethods.filter(({ type }) => !instantPaymentTypes.includes(type));
+
+        return {
+            ...super.formatProps(props),
+            instantPaymentTypes,
+            instantPaymentMethods,
+            paymentMethods
+        };
     }
 
     get isValid() {
@@ -70,12 +94,15 @@ class DropinElement extends UIElement<DropinElementProps> {
      * Creates the Drop-in elements
      */
     private handleCreate = () => {
-        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods } = this.props;
-        const commonProps = getCommonProps({ ...this.props, /*onSubmit: this.submit,*/ elementRef: this.elementRef });
+        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods, instantPaymentMethods } = this.props;
+
+        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
+
         const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance.create) : [];
         const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance.create) : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, commonProps, this._parentInstance.create);
 
-        return [storedElements, elements];
+        return [storedElements, elements, instantPaymentElements];
     };
 
     handleAction(action: PaymentAction, props = {}) {

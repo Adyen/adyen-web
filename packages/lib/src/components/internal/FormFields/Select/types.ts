@@ -19,6 +19,7 @@ export interface SelectProps {
     readonly: boolean;
     selected: string;
     uniqueId?: string;
+    isCollatingErrors: boolean;
 }
 
 export interface SelectButtonProps {

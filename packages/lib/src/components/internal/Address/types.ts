@@ -2,6 +2,11 @@ import { AddressField, AddressData } from '../../../types';
 import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/Validator';
 
+// Describes an object with unknown keys whose value is always a string
+export type StringObject = {
+    [key: string]: string;
+};
+
 export interface AddressProps {
     allowedCountries?: string[];
     countryCode?: string;
@@ -82,13 +87,9 @@ export type AddressSchema = (AddressField | AddressFieldsGroup)[];
 export interface AddressSpecifications {
     [key: string]: {
         hasDataset?: boolean;
-        labels?: {
-            [key: string]: string;
-        };
+        labels?: StringObject;
         optionalFields?: AddressField[];
-        placeholders?: {
-            [key: string]: string;
-        };
+        placeholders?: StringObject;
         schema?: AddressSchema;
         partialSchema?: AddressSchema;
     };

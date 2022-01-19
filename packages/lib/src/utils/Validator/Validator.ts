@@ -25,7 +25,7 @@ export type ValidatorRules = { [field: string]: ValidatorRule | ValidatorRule[] 
 /**
  * Holds the result of a validation
  */
-class ValidationRuleResult {
+export class ValidationRuleResult {
     private readonly shouldValidate: boolean;
     public isValid: boolean;
     public errorMessage: string;

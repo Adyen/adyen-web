@@ -41,6 +41,8 @@ export interface UIElementProps extends BaseElementProps {
     onPaymentCompleted?: (result: any, element: UIElement) => void;
     beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
+    isInstantPayment?: boolean;
+
     type?: string;
     name?: string;
     icon?: string;

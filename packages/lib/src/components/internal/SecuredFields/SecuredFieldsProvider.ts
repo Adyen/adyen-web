@@ -17,7 +17,7 @@ import {
     CbObjOnLoad
 } from './lib/types';
 import { AddressData } from '../../../types';
-import { CVC_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
 import { BinLookupResponse } from '../../Card/types';
 import { CVCPolicyType, DatePolicyType } from './lib/core/AbstractSecuredField';
 import { getError } from '../../../core/Errors/utils';
@@ -78,8 +78,9 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             valid: {},
             data: {},
             cvcPolicy: CVC_POLICY_REQUIRED,
+            expiryDatePolicy: DATE_POLICY_REQUIRED,
             isSfpValid: false,
-            hasKoreanFields: this.props.hasKoreanFields
+            hasKoreanFields: props.hasKoreanFields
         };
         this.state = stateObj;
 
@@ -112,6 +113,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     public static defaultProps = defaultProps;
 
     public componentDidMount(): void {
+        // When SFP instantiated through SecuredFieldsInput c.f. CardInput
         if (this.props.rootNode) {
             this.setRootNode(this.props.rootNode);
         }
@@ -185,7 +187,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
             minimumExpiryDate: this.props.minimumExpiryDate,
-            implementationType: this.props.implementationType || 'components'
+            implementationType: this.props.implementationType || 'components',
+            isCollatingErrors: this.props.isCollatingErrors
         };
 
         this.csf = initCSF(csfSetupObj);

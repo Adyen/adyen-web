@@ -141,7 +141,7 @@ export interface BrandObject {
     brand: string;
     cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
-    showExpiryDate: boolean;
+    showExpiryDate?: boolean;
     expiryDatePolicy?: DatePolicyType;
     showSocialSecurityNumber?: boolean;
     supported: boolean;

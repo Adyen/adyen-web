@@ -3,15 +3,20 @@ import renderFormField from '../../internal/FormFields';
 import Field from '../../internal/FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
-export default function({ onChange, onInput, valid = false, error = null, data = '' }) {
-    const { i18n } = useCoreContext();
+export default function({ onChange, onInput, valid = false, error = null, data = '', required = false }) {
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     return (
         <Field
             label={`${i18n.get('boleto.socialSecurityNumber')}`}
             classNameModifiers={['socialSecurityNumber']}
-            errorMessage={!!error}
+            errorMessage={error && error.errorMessage ? i18n.get(error.errorMessage) : !!error}
             isValid={Boolean(valid)}
+            name={'socialSecurityNumber'}
+            isCollatingErrors={isCollatingErrors}
         >
             {renderFormField('text', {
                 name: 'socialSecurityNumber',
@@ -20,7 +25,9 @@ export default function({ onChange, onInput, valid = false, error = null, data =
                 value: data,
                 maxLength: 18,
                 onInput,
-                onChange
+                onChange,
+                required,
+                isCollatingErrors
             })}
         </Field>
     );

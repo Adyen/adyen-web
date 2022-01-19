@@ -10,6 +10,6 @@ export const submitChallenge = async t => {
     return t
         .switchToMainWindow()
         .switchToIframe(iframeSelector.nth(0))
-        .click('.button--primary')
+        .click('[type="submit"]')
         .switchToMainWindow();
 };

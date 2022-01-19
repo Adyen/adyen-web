@@ -6,7 +6,10 @@ import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
 
 export default function CardHolderName({ onChange, onInput, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { isCollatingErrors }
+    } = useCoreContext();
 
     return (
         <Field
@@ -15,14 +18,17 @@ export default function CardHolderName({ onChange, onInput, placeholder, value, 
             errorMessage={error && i18n.get('creditCard.holderName.invalid')}
             isValid={!!isValid}
             name={'holderName'}
+            isCollatingErrors={isCollatingErrors}
         >
             {renderFormField('text', {
+                name: 'holderName',
                 className: `adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`,
                 placeholder: placeholder || i18n.get('creditCard.holderName.placeholder'),
                 value,
                 required,
                 onChange,
-                onInput
+                onInput,
+                isCollatingErrors
             })}
         </Field>
     );

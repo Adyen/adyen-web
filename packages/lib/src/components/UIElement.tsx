@@ -39,6 +39,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     }
 
     onSubmit(): void {
+        if (this.props.isInstantPayment) {
+            this.elementRef.closeActivePaymentMethod();
+        }
+
         if (this.props.onSubmit) {
             // Classic flow
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
@@ -110,8 +114,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> {
     };
 
     protected handleAdditionalDetails = state => {
-        if (this.props.onAdditionalDetails) this.props.onAdditionalDetails(state, this.elementRef);
-        if (this.props.session) this.submitAdditionalDetails(state.data);
+        if (this.props.onAdditionalDetails) {
+            this.props.onAdditionalDetails(state, this.elementRef);
+        } else if (this.props.session) {
+            this.submitAdditionalDetails(state.data);
+        }
+
         return state;
     };
 
