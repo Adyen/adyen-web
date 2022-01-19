@@ -71,7 +71,7 @@ function CardInput(props: CardInputProps) {
     const showBillingAddress = props.billingAddressMode !== 'none' && props.billingAddressRequired;
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState(showBillingAddress ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState({ value: null });
