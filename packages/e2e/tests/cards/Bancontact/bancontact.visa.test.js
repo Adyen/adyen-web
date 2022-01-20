@@ -139,7 +139,7 @@ test(
 
         // Expect comp to be valid (also check that it is set on state for this PM)
         await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
-        await t.expect(dropinPage.getFromState('isValid')).eql(true);
+        await t.expect(dropinPage.getFromActivePM('state.isValid')).eql(true);
     }
 );
 
