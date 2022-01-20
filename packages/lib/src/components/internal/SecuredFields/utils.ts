@@ -13,7 +13,7 @@ import {
     // ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
     // ENCRYPTED_BANK_LOCATION_FIELD
 } from './lib/configuration/constants';
-import { SFPlaceholdersObject } from './lib/core/AbstractSecuredField';
+import { SFPlaceholdersObject } from './lib/securedField/AbstractSecuredField';
 
 /**
  * Lookup translated values for the placeholders for the SecuredFields

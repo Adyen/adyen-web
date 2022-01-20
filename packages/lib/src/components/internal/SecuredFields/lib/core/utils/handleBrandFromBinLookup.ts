@@ -126,5 +126,5 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
     /**
      * ...and now re-check if form i.e all the SecuredFields, are valid
      */
-    this.assessFormValidity();
+    this.validateForm();
 }

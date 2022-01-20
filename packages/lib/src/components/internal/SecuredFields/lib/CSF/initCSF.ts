@@ -3,7 +3,7 @@ import cardType from '../utilities/cardType';
 import * as logger from '../utilities/logger';
 import { falsy } from '../utilities/commonUtils';
 import { findRootNode } from '../ui/domUtils';
-import { CSFReturnObject, CSFSetupObject } from '../types';
+import { CSFReturnObject, CSFSetupObject } from './types';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {

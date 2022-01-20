@@ -28,7 +28,7 @@ export function isConfigured(): void {
 
             // If cvc is optional - the form can be considered valid
             if (cvcPolicy !== CVC_POLICY_REQUIRED) {
-                this.assessFormValidity();
+                this.validateForm();
             }
         }
     }

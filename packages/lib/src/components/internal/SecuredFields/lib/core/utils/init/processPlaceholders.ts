@@ -1,5 +1,5 @@
 import { resolvePlaceholders } from '../../../../utils';
-import { SFPlaceholdersObject, SFInternalConfig } from '../../AbstractSecuredField';
+import { SFPlaceholdersObject, SFInternalConfig } from '../../../securedField/AbstractSecuredField';
 import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_SECURITY_CODE_3_DIGITS,

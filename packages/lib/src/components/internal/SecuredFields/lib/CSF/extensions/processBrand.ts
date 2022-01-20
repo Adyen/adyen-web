@@ -1,5 +1,5 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
-import postMessageToIframe from './iframes/postMessageToIframe';
+import postMessageToIframe from '../../core/utils/iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { pick } from '../../../utils';
@@ -16,7 +16,7 @@ const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStora
  *
  * - Create object for onBrand callback aka SFPHandlers.handleOnBrand
  */
-export function handleProcessBrand(pFeedbackObj: SFFeedbackObj): boolean {
+export default function processBrand(pFeedbackObj: SFFeedbackObj): boolean {
     const fieldType: string = pFeedbackObj.fieldType;
 
     if (fieldType === ENCRYPTED_CARD_NUMBER) {

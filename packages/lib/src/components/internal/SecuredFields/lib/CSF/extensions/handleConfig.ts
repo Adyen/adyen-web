@@ -1,6 +1,6 @@
-import { getCardGroupTypes } from '../core/utils/getCardGroupTypes';
-import { NON_CREDIT_CARD_TYPE_SECURED_FIELDS, SF_VERSION } from './constants';
-import * as logger from '../utilities/logger';
+import { getCardGroupTypes } from '../../core/utils/getCardGroupTypes';
+import { NON_CREDIT_CARD_TYPE_SECURED_FIELDS, SF_VERSION } from '../../configuration/constants';
+import * as logger from '../../utilities/logger';
 
 /**
  * Parses this.props to set 'config' type vars on this (CSFComp)

@@ -1,17 +1,17 @@
-import { handleConfig } from '../configuration/handleConfig';
-import { configureCallbacks } from '../configuration/configureCallbacks';
-import { handleProcessBrand } from '../core/utils/processBrand';
-import { handleValidation } from '../core/handleValidation';
-import { handleEncryption } from '../core/handleEncryption';
-import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from '../core/createSecuredFields';
+import { handleConfig } from './extensions/handleConfig';
+import { configureCallbacks } from './extensions/configureCallbacks';
+import processBrand from './extensions/processBrand';
+import { handleValidation } from './extensions/handleValidation';
+import { handleEncryption } from './extensions/handleEncryption';
+import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
 import { setFocusOnFrame } from '../core/utils/iframes/setFocusOnFrame';
 import { postMessageToAllIframes } from '../core/utils/iframes/postMessageToAllIframes';
 import { destroySecuredFields } from '../core/destroySecuredFields';
 import { processAutoComplete } from '../core/utils/processAutoComplete';
 import { handleFocus } from '../core/utils/iframes/handleFocus';
 import { handleIframeConfigFeedback } from '../core/utils/iframes/handleIframeConfigFeedback';
-import { isConfigured } from '../core/utils/isConfigured';
-import { assessFormValidity } from '../core/utils/validateForm';
+import { isConfigured } from './extensions/isConfigured';
+import validateForm from './extensions/validateForm';
 import { handleBinValue } from '../core/utils/handleBinValue';
 import { handleBrandFromBinLookup, sendBrandToCardSF, sendExpiryDatePolicyToSF } from '../core/utils/handleBrandFromBinLookup';
 import handleAdditionalFields from '../core/utils/registerAdditionalField';
@@ -68,9 +68,9 @@ class CSF extends AbstractCSF {
         this.handleIframeConfigFeedback = handleIframeConfigFeedback;
         this.isConfigured = isConfigured;
 
-        this.assessFormValidity = assessFormValidity;
+        this.validateForm = validateForm;
 
-        this.processBrand = handleProcessBrand;
+        this.processBrand = processBrand;
 
         this.handleValidation = handleValidation;
         this.handleEncryption = handleEncryption;

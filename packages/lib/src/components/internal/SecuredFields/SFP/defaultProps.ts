@@ -1,5 +1,5 @@
 import { Language } from '../../../../language/Language';
-import { CVCPolicyType } from '../lib/core/AbstractSecuredField';
+import { CVCPolicyType } from '../lib/securedField/AbstractSecuredField';
 
 export interface SFPProps {
     /**

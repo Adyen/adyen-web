@@ -1,4 +1,4 @@
-import { select, getAttribute } from '../utilities/dom';
+import { select, getAttribute } from '../../utilities/dom';
 import {
     ENCRYPTED_EXPIRY_YEAR,
     DATE_POLICY_REQUIRED,
@@ -6,13 +6,13 @@ import {
     DATA_ENCRYPTED_FIELD_ATTR,
     DATA_INFO,
     DATA_UID
-} from '../configuration/constants';
-import { existy } from '../utilities/commonUtils';
-import cardType from '../utilities/cardType';
-import { CVCPolicyType, SFSetupObject } from './AbstractSecuredField';
-import SecuredField from './SecuredField';
-import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../types';
-import * as logger from '../utilities/logger';
+} from '../../configuration/constants';
+import { existy } from '../../utilities/commonUtils';
+import cardType from '../../utilities/cardType';
+import { CVCPolicyType, SFSetupObject } from '../../securedField/AbstractSecuredField';
+import SecuredField from '../../securedField/SecuredField';
+import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../../types';
+import * as logger from '../../utilities/logger';
 
 /**
  * cvcPolicy - 'required' | 'optional' | 'hidden'

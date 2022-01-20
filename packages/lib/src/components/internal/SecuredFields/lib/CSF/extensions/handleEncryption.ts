@@ -1,11 +1,11 @@
-import { makeCallbackObjectsEncryption } from './utils/callbackUtils';
-import { addEncryptedElements } from '../ui/encryptedElements';
-import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
-import { processErrors } from './utils/processErrors';
-import { truthy } from '../utilities/commonUtils';
-import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../types';
-import postMessageToIframe from './utils/iframes/postMessageToIframe';
-import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { makeCallbackObjectsEncryption } from '../../core/utils/callbackUtils';
+import { addEncryptedElements } from '../../ui/encryptedElements';
+import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
+import { processErrors } from '../../core/utils/processErrors';
+import { truthy } from '../../utilities/commonUtils';
+import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
+import postMessageToIframe from '../../core/utils/iframes/postMessageToIframe';
+import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
@@ -80,5 +80,5 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     //--------------------------------------------
 
     // STORE & BROADCAST VALID STATE OF THE FORM AS A WHOLE ///////
-    this.assessFormValidity();
+    this.validateForm();
 }

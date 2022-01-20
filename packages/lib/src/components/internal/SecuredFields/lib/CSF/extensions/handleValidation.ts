@@ -1,10 +1,10 @@
-import { makeCallbackObjectsValidation } from './utils/callbackUtils';
-import { removeEncryptedElement } from '../ui/encryptedElements';
-import { processErrors } from './utils/processErrors';
-import { existy } from '../utilities/commonUtils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../configuration/constants';
-import { SFFeedbackObj, CbObjOnFieldValid } from '../types';
-import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { makeCallbackObjectsValidation } from '../../core/utils/callbackUtils';
+import { removeEncryptedElement } from '../../ui/encryptedElements';
+import { processErrors } from '../../core/utils/processErrors';
+import { existy } from '../../utilities/commonUtils';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
+import { SFFeedbackObj, CbObjOnFieldValid } from '../../types';
+import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     // --
@@ -64,7 +64,7 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
     /**
      * STORE & BROADCAST VALID STATE OF THE FORM AS A WHOLE
      */
-    this.assessFormValidity();
+    this.validateForm();
 
     /**
      * PROCESS & BROADCAST CARD BRANDS

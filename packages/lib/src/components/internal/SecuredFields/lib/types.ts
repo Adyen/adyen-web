@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CVCPolicyType, DatePolicyType } from './core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from './securedField/AbstractSecuredField';
 import { BrandObject } from '../../../Card/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

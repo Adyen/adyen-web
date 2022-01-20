@@ -1,8 +1,8 @@
 import * as logger from '../utilities/logger';
 import createIframe from '../utilities/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
-import postMessageToIframe from './utils/iframes/postMessageToIframe';
-import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from './utils/iframes/postMessageValidation';
+import postMessageToIframe from '../core/utils/iframes/postMessageToIframe';
+import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from '../core/utils/iframes/postMessageValidation';
 import {
     CVC_POLICY_HIDDEN,
     CVC_POLICY_OPTIONAL,
@@ -26,10 +26,10 @@ import AbstractSecuredField, {
     CVCPolicyType,
     DatePolicyType,
     SFInternalConfig
-} from '../core/AbstractSecuredField';
+} from './AbstractSecuredField';
 import { pick, reject } from '../../utils';
-import { processAriaConfig } from './utils/init/processAriaConfig';
-import { processPlaceholders } from './utils/init/processPlaceholders';
+import { processAriaConfig } from '../core/utils/init/processAriaConfig';
+import { processPlaceholders } from '../core/utils/init/processPlaceholders';
 import Language from '../../../../../language/Language';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 

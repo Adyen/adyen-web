@@ -13,7 +13,7 @@ const checkFormIsValid = (pSecuredFields: object): boolean => {
     return true;
 };
 
-export function assessFormValidity(): void {
+export default function validateForm(): void {
     const isValid: boolean = checkFormIsValid(this.state.securedFields);
 
     const validityHasChanged: boolean = isValid !== this.state.allValid;

@@ -1,6 +1,6 @@
 /* global expect, describe, jest, beforeEach */
 import { processErrors } from './processErrors';
-import SecuredField from '../SecuredField';
+import SecuredField from '../../securedField/SecuredField';
 const ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = 'ERROR_MSG_CARD_TOO_FAR_IN_FUTURE';
 const ERROR_MSG_CARD_TOO_OLD = 'ERROR_MSG_CARD_TOO_OLD';
 const ERROR_MSG_INCOMPLETE_FIELD = 'ERROR_MSG_INCOMPLETE_FIELD';

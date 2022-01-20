@@ -1,5 +1,5 @@
 import { addErrorTranslationsToObject } from '../../../../../../../core/Errors/utils';
-import { AriaConfigObject, AriaConfig, SFInternalConfig } from '../../AbstractSecuredField';
+import { AriaConfigObject, AriaConfig, SFInternalConfig } from '../../../securedField/AbstractSecuredField';
 import Language from '../../../../../../../language/Language';
 
 /**
@@ -13,7 +13,7 @@ import Language from '../../../../../../../language/Language';
  */
 export function processAriaConfig(configObj: SFInternalConfig, fieldType: string, i18n: Language): AriaConfig {
     // txVariant can be the scheme name (VISA, Mastercard...) so we put all of them under creditCard
-    const type = ['ach','giftcard'].includes(configObj.txVariant) ? configObj.txVariant : 'creditCard';
+    const type = ['ach', 'giftcard'].includes(configObj.txVariant) ? configObj.txVariant : 'creditCard';
 
     // Get translation for iframeTitle
     const iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);

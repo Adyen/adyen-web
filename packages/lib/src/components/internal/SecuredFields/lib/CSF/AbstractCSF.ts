@@ -1,6 +1,7 @@
-import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject, SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../types';
-import { createSecuredFields } from '../core/createSecuredFields';
-import { handleProcessBrand } from '../core/utils/processBrand';
+import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject } from './types';
+import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../types';
+import { createSecuredFields } from './extensions/createSecuredFields';
+import processBrand from './extensions/processBrand';
 import { handleBrandFromBinLookup } from '../core/utils/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
@@ -9,7 +10,7 @@ abstract class AbstractCSF {
     protected config: CSFConfigObject;
     protected props: CSFSetupObject;
     protected state: CSFStateObject;
-    protected assessFormValidity: () => void;
+    protected validateForm: () => void;
     protected brandsFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: () => void;
@@ -29,7 +30,7 @@ abstract class AbstractCSF {
     protected isConfigured: () => void;
     protected postMessageToAllIframes: (pDataObj: object) => void;
     protected processAutoComplete: (pFeedbackObj: SFFeedbackObj) => void;
-    protected processBrand: typeof handleProcessBrand;
+    protected processBrand: typeof processBrand;
     protected sendBrandToCardSF: (brandObj: SendBrandObject) => void;
     protected sendExpiryDatePolicyToSF: (dateObj: SendExpiryDateObject) => void;
     protected setFocusOnFrame: (pFieldType: string, doLog?: boolean) => void;
