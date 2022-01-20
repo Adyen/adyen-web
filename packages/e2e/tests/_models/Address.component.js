@@ -22,11 +22,4 @@ export default class AddressComponent {
         const countryDropdownItem = this.countrySelector.find('.adyen-checkout__dropdown__element').withText(value);
         await t.click(countryDropdownItem);
     }
-
-    getFromState = ClientFunction(path => {
-        const splitPath = path.split('.');
-        const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
-
-        return splitPath.reduce(reducer, window.card.state);
-    });
 }
