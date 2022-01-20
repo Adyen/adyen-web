@@ -2,8 +2,9 @@ import { Component, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
-import { DropinComponentProps, DropinComponentState } from '../types';
+import { DropinComponentProps, DropinComponentState, DropinStatusProps } from '../types';
 import './DropinComponent.scss';
+import { UIElementStatus } from '../../types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -11,7 +12,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         instantPaymentElements: [],
         orderStatus: null,
         isDisabling: false,
-        status: { type: 'loading' },
+        status: { type: 'loading', props: undefined },
         activePaymentMethod: null,
         cachedPaymentMethods: {}
     };
@@ -28,7 +29,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
             ([storedElements, elements, instantPaymentElements, orderStatus]) => {
                 this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
-                this.setStatus({ type: 'ready' });
+                this.setStatus('ready');
 
                 if (this.props.modules.analytics) {
                     this.props.modules.analytics.send({
@@ -42,8 +43,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         );
     };
 
-    private setStatus = status => {
-        this.setState({ status });
+    public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
+        this.setState({ status: { type: status, props } });
     };
 
     private setActivePaymentMethod = paymentMethod => {
@@ -103,7 +104,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 return <Status.Error message={status.props?.message} />;
 
             case 'custom':
-                return status.props.component.render();
+                return status.props?.component?.render();
 
             default:
                 return (

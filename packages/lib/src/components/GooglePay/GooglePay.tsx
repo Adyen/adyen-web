@@ -56,8 +56,7 @@ class GooglePay extends UIElement<GooglePayProps> {
                     googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
                     googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
                 });
-
-                this.onSubmit();
+                super.submit();
                 return onAuthorized(paymentData);
             })
             .catch((error: google.payments.api.PaymentsError) => {
