@@ -1,5 +1,5 @@
-import { selectOne } from '../utilities/dom';
-import * as logger from '../utilities/logger';
+import { selectOne } from '../../utilities/dom';
+import * as logger from '../../utilities/logger';
 
 const doLog = false;
 

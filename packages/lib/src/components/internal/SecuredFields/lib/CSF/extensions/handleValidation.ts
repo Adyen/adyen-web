@@ -1,5 +1,5 @@
 import { makeCallbackObjectsValidation } from '../utils/callbackUtils';
-import { removeEncryptedElement } from '../../ui/encryptedElements';
+import { removeEncryptedElement } from '../utils/encryptedElements';
 import { processErrors } from '../utils/processErrors';
 import { existy } from '../../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';

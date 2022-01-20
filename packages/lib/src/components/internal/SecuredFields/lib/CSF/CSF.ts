@@ -1,3 +1,4 @@
+import AbstractCSF from './AbstractCSF';
 import { handleConfig } from './extensions/handleConfig';
 import { configureCallbacks } from './extensions/configureCallbacks';
 import processBrand from './extensions/processBrand';
@@ -17,7 +18,6 @@ import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF }
 import additionalFields from './extensions/additionalFields';
 import handleTab from './extensions/handleTab';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
-import AbstractCSF from './AbstractCSF';
 import { CSFReturnObject, CSFSetupObject, CSFStateObject } from './types';
 import { StylesObject, CbObjOnAdditionalSF } from '../types';
 import * as logger from '../utilities/logger';

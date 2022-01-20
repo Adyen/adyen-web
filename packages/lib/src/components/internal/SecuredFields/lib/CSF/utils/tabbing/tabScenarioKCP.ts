@@ -7,7 +7,7 @@ import {
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_PIN_FIELD
 } from '../../../configuration/constants';
-import { getPreviousTabbableNonSFElement } from '../../../ui/domUtils';
+import { getPreviousTabbableNonSFElement } from './utils';
 import { ShiftTabObject } from '../../../types';
 
 // KCP scenario: Regular credit card but with additional fields -

@@ -1,5 +1,4 @@
 import Language from '../../../../language/Language';
-import { CVCPolicyType, DatePolicyType } from './securedField/AbstractSecuredField';
 import { BrandObject } from '../../../Card/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -208,3 +207,10 @@ export interface SendBrandObject {
 export interface SendExpiryDateObject {
     expiryDatePolicy: DatePolicyType;
 }
+
+export type RtnType_noParamVoidFn = () => void;
+export type RtnType_postMessageListener = (event: Event) => void;
+export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
+
+export type CVCPolicyType = 'required' | 'optional' | 'hidden';
+export type DatePolicyType = 'required' | 'optional' | 'hidden';

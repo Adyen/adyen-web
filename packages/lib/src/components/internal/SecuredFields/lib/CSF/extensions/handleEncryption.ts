@@ -1,5 +1,5 @@
 import { makeCallbackObjectsEncryption } from '../utils/callbackUtils';
-import { addEncryptedElements } from '../../ui/encryptedElements';
+import { addEncryptedElements } from '../utils/encryptedElements';
 import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
 import { processErrors } from '../utils/processErrors';
 import { truthy } from '../../utilities/commonUtils';

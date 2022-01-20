@@ -1,4 +1,4 @@
-import { selectOne, select } from '../utilities/dom';
+import { selectOne, select } from '../../../utilities/dom';
 
 const getPreviousTabbableEl = (matchEl, getPrevious = true) => {
     const selStr =
@@ -38,26 +38,6 @@ const getPreviousTabbableEl = (matchEl, getPrevious = true) => {
     const indexModifier = getPrevious ? -1 : 1;
 
     return actualTabEls[matchElIndex + indexModifier];
-};
-
-export const findRootNode = pRootNode => {
-    let rootNode;
-
-    // Expect to be sent the actual html node...
-    if (typeof pRootNode === 'object') {
-        rootNode = pRootNode;
-    }
-
-    if (typeof pRootNode === 'string') {
-        // ... but if only sent a string - find it ourselves
-        rootNode = selectOne(document, pRootNode);
-
-        if (!rootNode) {
-            return null;
-        }
-    }
-
-    return rootNode;
 };
 
 export const getPreviousTabbableNonSFElement = (passedFieldType, rootNode) => {

@@ -2,9 +2,9 @@ import CSF from './CSF';
 import cardType from '../utilities/cardType';
 import * as logger from '../utilities/logger';
 import { falsy } from '../utilities/commonUtils';
-import { findRootNode } from '../ui/domUtils';
 import { CSFReturnObject, CSFSetupObject } from './types';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { selectOne } from '../utilities/dom';
 
 const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
     if (!pSetupObj) {
@@ -44,6 +44,26 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
 
     const myCSF: CSF = new CSF(setupObj);
     return myCSF.createReturnObject();
+};
+
+const findRootNode = pRootNode => {
+    let rootNode;
+
+    // Expect to be sent the actual html node...
+    if (typeof pRootNode === 'object') {
+        rootNode = pRootNode;
+    }
+
+    if (typeof pRootNode === 'string') {
+        // ... but if only sent a string - find it ourselves
+        rootNode = selectOne(document, pRootNode);
+
+        if (!rootNode) {
+            return null;
+        }
+    }
+
+    return rootNode;
 };
 
 export default initCSF;

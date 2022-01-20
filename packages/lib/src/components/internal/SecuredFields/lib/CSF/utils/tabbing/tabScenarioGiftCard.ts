@@ -1,5 +1,5 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../../configuration/constants';
-import { getPreviousTabbableNonSFElement } from '../../../ui/domUtils';
+import { getPreviousTabbableNonSFElement } from './utils';
 import { ShiftTabObject } from '../../../types';
 
 // GIFT CARD scenario: SecurityCode preceded by CardNumber

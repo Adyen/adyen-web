@@ -5,7 +5,7 @@ import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR
 } from '../../../configuration/constants';
-import { getPreviousTabbableNonSFElement } from '../../../ui/domUtils';
+import { getPreviousTabbableNonSFElement } from './utils';
 import { ShiftTabObject } from '../../../types';
 
 // Regular Credit Card scenario

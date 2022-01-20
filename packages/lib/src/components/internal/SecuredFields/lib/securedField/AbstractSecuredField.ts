@@ -1,4 +1,4 @@
-import { SFFeedbackObj, StylesObject } from '../types';
+import { CVCPolicyType, DatePolicyType, RtnType_callbackFn, RtnType_noParamVoidFn, RtnType_postMessageListener, StylesObject } from '../types';
 import {
     ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
     ENCRYPTED_BANK_LOCATION_FIELD,
@@ -11,13 +11,6 @@ import {
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
     ENCRYPTED_SECURITY_CODE_4_DIGITS
 } from '../configuration/constants';
-
-export type RtnType_noParamVoidFn = () => void;
-export type RtnType_postMessageListener = (event: Event) => void;
-export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
-
-export type CVCPolicyType = 'required' | 'optional' | 'hidden';
-export type DatePolicyType = 'required' | 'optional' | 'hidden';
 
 /**
  * Base interface, props common to both SFSetupObject & IframeConfigObject

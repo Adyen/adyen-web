@@ -9,9 +9,9 @@ import {
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../../utilities/cardType';
-import { CVCPolicyType, SFSetupObject } from '../../securedField/AbstractSecuredField';
+import { SFSetupObject } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
-import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad } from '../../types';
+import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType } from '../../types';
 import * as logger from '../../utilities/logger';
 
 /**

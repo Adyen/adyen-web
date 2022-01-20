@@ -18,7 +18,7 @@ import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
 import { AddressData } from '../../../../types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
-import { CVCPolicyType, DatePolicyType } from '../lib/securedField/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../lib/types';
 import { getError } from '../../../../core/Errors/utils';
 
 export interface SFPState {

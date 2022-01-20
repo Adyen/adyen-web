@@ -15,18 +15,8 @@ import {
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
-import AbstractSecuredField, {
-    SFSetupObject,
-    IframeConfigObject,
-    RtnType_noParamVoidFn,
-    RtnType_postMessageListener,
-    RtnType_callbackFn,
-    AriaConfig,
-    SFPlaceholdersObject,
-    CVCPolicyType,
-    DatePolicyType,
-    SFInternalConfig
-} from './AbstractSecuredField';
+import AbstractSecuredField, { SFSetupObject, IframeConfigObject, AriaConfig, SFPlaceholdersObject, SFInternalConfig } from './AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType, RtnType_noParamVoidFn, RtnType_postMessageListener, RtnType_callbackFn } from '../types';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
