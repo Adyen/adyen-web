@@ -55,7 +55,8 @@ class CSF extends AbstractCSF {
             currentFocusObject: null,
             registerFieldForIos: false,
             securedFields: {},
-            isKCP: false
+            isKCP: false,
+            hasBinDefinedPanLength: false
         } as CSFStateObject;
 
         // Setup 'this' references

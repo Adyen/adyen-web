@@ -146,6 +146,7 @@ export interface BrandObject {
     showSocialSecurityNumber?: boolean;
     supported: boolean;
     brandImageUrl?: string;
+    panLength?: number;
 }
 
 export interface BinLookupResponseRaw {

@@ -59,6 +59,10 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
         if (this.state.type === 'card' && hasOwnProperty(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
             this.state.securedFields[ENCRYPTED_EXPIRY_DATE].expiryDatePolicy = DATE_POLICY_REQUIRED;
         }
+
+        // Reset state var
+        this.hasBinDefinedPanLength = false;
+        console.log('### handleBrandFromBinLookup::reset:: this.hasBinDefinedPanLength:: ', this.hasBinDefinedPanLength);
         return;
     }
 
@@ -68,6 +72,10 @@ export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): 
 
     // Look first for expiryDatePolicy string otherwise use showExpiryDate boolean
     const expiryDatePolicy = binBrandObj.expiryDatePolicy ?? (binBrandObj.showExpiryDate === true ? DATE_POLICY_REQUIRED : DATE_POLICY_HIDDEN);
+
+    this.hasBinDefinedPanLength = binBrandObj?.panLength > 0;
+
+    console.log('### handleBrandFromBinLookup::this.hasBinDefinedPanLength:: ', this.hasBinDefinedPanLength);
 
     const brandObj: object = {
         brand: passedBrand,
