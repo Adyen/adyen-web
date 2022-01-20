@@ -1,11 +1,9 @@
 import { Component } from 'preact';
 import { getErrorObject, getFields, getErrorReducer, validFieldsReducer } from './SFPUtils';
-import initCSF from '../lib';
+import initCSF from '../lib/CSF';
 import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
 import {
-    CSFReturnObject,
-    CSFSetupObject,
     StylesObject,
     CbObjOnError,
     CbObjOnFocus,
@@ -16,6 +14,7 @@ import {
     CbObjOnConfigSuccess,
     CbObjOnLoad
 } from '../lib/types';
+import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
 import { AddressData } from '../../../../types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
