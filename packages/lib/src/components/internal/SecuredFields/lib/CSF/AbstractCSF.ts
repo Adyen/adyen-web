@@ -2,7 +2,7 @@ import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject } f
 import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../types';
 import { createSecuredFields } from './extensions/createSecuredFields';
 import processBrand from './extensions/processBrand';
-import { handleBrandFromBinLookup } from '../core/utils/handleBrandFromBinLookup';
+import handleBrandFromBinLookup from './extensions/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
     // Set in CSF
@@ -11,7 +11,7 @@ abstract class AbstractCSF {
     protected props: CSFSetupObject;
     protected state: CSFStateObject;
     protected validateForm: () => void;
-    protected brandsFromBinLookup: typeof handleBrandFromBinLookup;
+    protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: () => void;
     protected createCardSecuredFields: (securedFields: HTMLElement[]) => number;

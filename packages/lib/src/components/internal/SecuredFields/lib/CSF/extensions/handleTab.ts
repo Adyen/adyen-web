@@ -1,10 +1,10 @@
-import ua from '../../../utilities/userAgent';
-import * as logger from '../../../utilities/logger';
-import { shiftTabCreditCard } from './tabScenarioCreditCard';
-import { shiftTabACH } from './tabScenarioACH';
-import { shiftTabGiftCard } from './tabScenarioGiftCard';
-import { shiftTabKCP } from './tabScenarioKCP';
-import { ShiftTabObject } from '../../../types';
+import ua from '../../utilities/userAgent';
+import * as logger from '../../utilities/logger';
+import { shiftTabCreditCard } from '../utils/tabbing/tabScenarioCreditCard';
+import { shiftTabACH } from '../utils/tabbing/tabScenarioACH';
+import { shiftTabGiftCard } from '../utils/tabbing/tabScenarioGiftCard';
+import { shiftTabKCP } from '../utils/tabbing/tabScenarioKCP';
+import { ShiftTabObject } from '../../types';
 
 const logTab = false;
 

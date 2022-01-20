@@ -4,19 +4,19 @@ import processBrand from './extensions/processBrand';
 import { handleValidation } from './extensions/handleValidation';
 import { handleEncryption } from './extensions/handleEncryption';
 import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
-import { setFocusOnFrame } from '../core/utils/iframes/setFocusOnFrame';
-import { postMessageToAllIframes } from '../core/utils/iframes/postMessageToAllIframes';
-import { destroySecuredFields } from '../core/destroySecuredFields';
-import { processAutoComplete } from '../core/utils/processAutoComplete';
-import { handleFocus } from '../core/utils/iframes/handleFocus';
-import { handleIframeConfigFeedback } from '../core/utils/iframes/handleIframeConfigFeedback';
+import { setFocusOnFrame } from './utils/iframes/setFocusOnFrame';
+import { postMessageToAllIframes } from './utils/iframes/postMessageToAllIframes';
+import { destroySecuredFields } from './utils/destroySecuredFields';
+import { processAutoComplete } from './extensions/processAutoComplete';
+import { handleFocus } from './extensions/handleFocus';
+import { handleIframeConfigFeedback } from './utils/iframes/handleIframeConfigFeedback';
 import { isConfigured } from './extensions/isConfigured';
 import validateForm from './extensions/validateForm';
-import { handleBinValue } from '../core/utils/handleBinValue';
-import { handleBrandFromBinLookup, sendBrandToCardSF, sendExpiryDatePolicyToSF } from '../core/utils/handleBrandFromBinLookup';
-import handleAdditionalFields from '../core/utils/registerAdditionalField';
-import tabHandlers from '../core/utils/tabbing/handleTab';
-import postMessageToIframe from '../core/utils/iframes/postMessageToIframe';
+import { handleBinValue } from './extensions/handleBinValue';
+import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
+import additionalFields from './extensions/additionalFields';
+import handleTab from './extensions/handleTab';
+import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import AbstractCSF from './AbstractCSF';
 import { CSFReturnObject, CSFSetupObject, CSFStateObject } from './types';
 import { StylesObject, CbObjOnAdditionalSF } from '../types';
@@ -85,12 +85,12 @@ class CSF extends AbstractCSF {
         this.setFocusOnFrame = setFocusOnFrame;
         this.handleFocus = handleFocus;
 
-        this.handleAdditionalFields = handleAdditionalFields.handleAdditionalFields;
-        this.touchendListener = handleAdditionalFields.touchendListener.bind(this);
-        this.destroyTouchendListener = handleAdditionalFields.destroyTouchendListener;
+        this.handleAdditionalFields = additionalFields.handleAdditionalFields;
+        this.touchendListener = additionalFields.touchendListener.bind(this);
+        this.destroyTouchendListener = additionalFields.destroyTouchendListener;
 
-        this.handleSFShiftTab = tabHandlers.handleSFShiftTab;
-        this.handleShiftTab = tabHandlers.handleShiftTab;
+        this.handleSFShiftTab = handleTab.handleSFShiftTab;
+        this.handleShiftTab = handleTab.handleShiftTab;
 
         this.destroySecuredFields = destroySecuredFields;
 
@@ -98,7 +98,7 @@ class CSF extends AbstractCSF {
 
         this.handleBinValue = handleBinValue;
 
-        this.brandsFromBinLookup = handleBrandFromBinLookup;
+        this.handleBrandFromBinLookup = handleBrandFromBinLookup;
         this.sendBrandToCardSF = sendBrandToCardSF;
         this.sendExpiryDatePolicyToSF = sendExpiryDatePolicyToSF;
 
@@ -202,7 +202,7 @@ class CSF extends AbstractCSF {
                 if (!this.config.isCreditCardType) return null;
 
                 if (this.state.isConfigured) {
-                    this.brandsFromBinLookup(binLookupResponse);
+                    this.handleBrandFromBinLookup(binLookupResponse);
                 } else {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }

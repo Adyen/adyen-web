@@ -1,4 +1,4 @@
-import postMessageToIframe from './iframes/postMessageToIframe';
+import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR } from '../../configuration/constants';
 import { SFFeedbackObj, CbObjOnAutoComplete } from '../../types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';

@@ -1,10 +1,10 @@
-import { makeCallbackObjectsEncryption } from '../../core/utils/callbackUtils';
+import { makeCallbackObjectsEncryption } from '../utils/callbackUtils';
 import { addEncryptedElements } from '../../ui/encryptedElements';
 import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
-import { processErrors } from '../../core/utils/processErrors';
+import { processErrors } from '../utils/processErrors';
 import { truthy } from '../../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
-import postMessageToIframe from '../../core/utils/iframes/postMessageToIframe';
+import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {

@@ -1,5 +1,5 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
-import postMessageToIframe from '../../core/utils/iframes/postMessageToIframe';
+import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
 import { pick } from '../../../utils';

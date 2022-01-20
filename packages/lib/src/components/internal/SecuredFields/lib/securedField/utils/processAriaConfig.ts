@@ -1,6 +1,6 @@
-import { addErrorTranslationsToObject } from '../../../../../../../core/Errors/utils';
-import { AriaConfigObject, AriaConfig, SFInternalConfig } from '../../../securedField/AbstractSecuredField';
-import Language from '../../../../../../../language/Language';
+import { addErrorTranslationsToObject } from '../../../../../../core/Errors/utils';
+import { AriaConfigObject, AriaConfig, SFInternalConfig } from '../AbstractSecuredField';
+import Language from '../../../../../../language/Language';
 
 /**
  * Checks if the merchant has defined an ariaConfig object and if so enhances it with a iframeTitle and label property, if they don't already exist.

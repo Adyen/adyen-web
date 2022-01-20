@@ -7,7 +7,7 @@ import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR
 } from '../../configuration/constants';
-import postMessageToIframe from './iframes/postMessageToIframe';
+import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../../types';
 import { BinLookupResponse, BrandObject } from '../../../../../Card/types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
@@ -41,7 +41,7 @@ export function sendExpiryDatePolicyToSF(expiryDateObj: SendExpiryDateObject): v
     });
 }
 
-export function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): void {
+export default function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): void {
     const isGenericCard: boolean = this.state.type === 'card';
 
     /**
