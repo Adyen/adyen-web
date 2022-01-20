@@ -8,16 +8,12 @@ import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import type { UIElementStatus } from './types';
 
-const defaultProps = Object.freeze({
-    setStatusAutomatically: true,
-});
-
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement{
     protected componentRef: any;
     public elementRef: any;
 
     constructor(props: P) {
-        super({ ...defaultProps, ...props });
+        super({ setStatusAutomatically: true, ...props});
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -47,7 +43,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (this.props.isInstantPayment) {
             this.elementRef.closeActivePaymentMethod();
         }
-
+        
         if (this.props.setStatusAutomatically) {
             this.elementRef.setStatus('loading');
         }
