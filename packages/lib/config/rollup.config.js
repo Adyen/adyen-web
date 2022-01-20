@@ -1,14 +1,16 @@
-import typescript from 'rollup-plugin-typescript2';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import eslint from '@rollup/plugin-eslint';
-import terserConfig from './terser.config';
+import babel from '@rollup/plugin-babel';
+import { terserConfig, modernTerserConfig } from './terser.config';
 import pkg from '../package.json';
+
 const currentVersion = require('./version')();
 import path from 'path';
+
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
 if (process.env.CI !== 'true') {
@@ -20,7 +22,6 @@ if (process.env.CI !== 'true') {
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isBundleAnalyzer = process.env.NODE_ENV === 'analyze';
-const transformWith = process.env.EXPERIMENTAL_DEVBUILD === 'true' ? 'esbuild' : 'typescript';
 
 const input = 'src/index.ts';
 const watchConfig = {
@@ -32,9 +33,29 @@ const watchConfig = {
     exclude: 'node_modules/**'
 };
 
-async function getPlugins({ compress, analyze, version, useTypescript = true }) {
+const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+
+const polyfillPlugin = [
+    '@babel/plugin-transform-runtime',
+    {
+        corejs: 3,
+        absoluteRuntime: false
+    }
+];
+
+const polyfillPreset = [
+    '@babel/preset-env',
+    {
+        useBuiltIns: false
+    }
+];
+
+async function getPlugins({ compress, analyze, version, modern }) {
+    const babelPlugins = modern ? [] : [polyfillPlugin];
+    const babelPreset = modern ? [] : [polyfillPreset];
+
     return [
-        resolve(),
+        resolve({ extensions }),
         commonjs(),
         eslint({
             include: ['./src/**'],
@@ -51,16 +72,15 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
             },
             preventAssignment: true
         }),
-        useTypescript &&
-            typescript({
-                useTsconfigDeclarationDir: true,
-                check: false,
-                cacheRoot: `./node_modules/.cache/.rts2_cache`
-            }),
-        !useTypescript &&
-            (await import('rollup-plugin-esbuild')).default({
-                target: 'es2017'
-            }),
+        babel({
+            configFile: path.resolve(__dirname, '..', 'babel.config.json'),
+            extensions,
+            exclude: ['node_modules/**', '**/*.test.*'],
+            ignore: [/core-js/, /@babel\/runtime/],
+            babelHelpers: modern ? 'bundled' : 'runtime',
+            plugins: babelPlugins,
+            presets: babelPreset
+        }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
             config: {
@@ -70,8 +90,12 @@ async function getPlugins({ compress, analyze, version, useTypescript = true }) 
             inject: false,
             extract: 'adyen.css'
         }),
-        compress && (await import('rollup-plugin-terser')).terser(terserConfig),
-        analyze && (await import('rollup-plugin-visualizer')).default({ title: 'Adyen Web bundle visualizer', gzipSize: true })
+        compress && (await import('rollup-plugin-terser')).terser(modern ? modernTerserConfig : terserConfig),
+        analyze &&
+            (await import('rollup-plugin-visualizer')).default({
+                title: 'Adyen Web bundle visualizer',
+                gzipSize: true
+            })
     ];
 }
 
@@ -79,18 +103,25 @@ function getExternals() {
     const peerDeps = Object.keys(pkg.peerDependencies || {});
     const dependencies = Object.keys(pkg.dependencies || {});
 
-    return [...peerDeps, ...dependencies];
+    return [/@babel\/runtime/, ...peerDeps, ...dependencies];
 }
 
 export default async () => {
     const plugins = await getPlugins({
-        useTypescript: transformWith === 'typescript',
         compress: isProduction,
         analyze: isBundleAnalyzer,
-        version: currentVersion
+        version: currentVersion,
+        modern: false
     });
 
-    return [
+    const modernPlugins = await getPlugins({
+        compress: isProduction,
+        analyze: isBundleAnalyzer,
+        version: currentVersion,
+        modern: true
+    });
+
+    const build = [
         {
             input,
             external: getExternals(),
@@ -110,8 +141,26 @@ export default async () => {
                 }
             ],
             watch: watchConfig
-        },
-        {
+        }
+    ];
+
+    // only add modern build and umd when building in production
+    if (isProduction) {
+        build.push({
+            input,
+            external: getExternals(),
+            plugins: modernPlugins,
+            output: [
+                {
+                    dir: 'dist/es.modern',
+                    format: 'esm',
+                    chunkFileNames: '[name].js',
+                    ...(!isProduction ? { sourcemap: true } : {})
+                }
+            ],
+            watch: watchConfig
+        });
+        build.push({
             input,
             plugins,
             output: {
@@ -122,6 +171,7 @@ export default async () => {
                 sourcemap: true
             },
             watch: watchConfig
-        }
-    ];
+        });
+    }
+    return build;
 };

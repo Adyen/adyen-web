@@ -42,6 +42,7 @@ export const styles = {
     validated: {
         color: 'green',
         fontWeight: 'bold'
+        //        background: 'blue'
     },
     placeholder: {
         color: '#d8d8d8'
@@ -152,7 +153,7 @@ export function onBrand(pCallbackObj) {
 
     if (optionalCVC && pCallbackObj.cvcPolicy !== 'optional') {
         optionalCVC = false;
-        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC:';
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC';
     }
 
     /**

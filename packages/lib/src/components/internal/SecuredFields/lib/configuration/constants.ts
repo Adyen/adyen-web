@@ -16,19 +16,25 @@ export const GIFT_CARD = 'giftcard';
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.7.2';
+export const SF_VERSION = '3.7.5';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
 export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', GIFT_CARD];
 
-export const CSF_FIELDS_ARRAY = [
+export const SF_FIELDS_ARRAY = [
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_PWD_FIELD,
+    ENCRYPTED_PIN_FIELD,
+    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
+    ENCRYPTED_BANK_LOCATION_FIELD
 ];
+
+export const ALL_SECURED_FIELDS = SF_FIELDS_ARRAY.concat(NON_CREDIT_CARD_TYPE_SECURED_FIELDS);
 
 export const REQUIRED = 'required';
 export const OPTIONAL = 'optional';

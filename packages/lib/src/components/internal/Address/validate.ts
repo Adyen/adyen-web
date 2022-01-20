@@ -8,7 +8,8 @@ export const getAddressValidationRules = (specifications): ValidatorRules => ({
             const isOptional = selectedCountry && specifications.countryHasOptionalField(selectedCountry, 'houseNumberOrName');
             return isOptional || value?.length > 0;
         },
-        modes: ['blur']
+        modes: ['blur'],
+        errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
     },
     default: {
         validate: value => value?.length > 0,

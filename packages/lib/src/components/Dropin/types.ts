@@ -35,7 +35,7 @@ export interface DropinElementProps extends UIElementProps {
      *
      * @defaultValue []
      */
-    instantPaymentTypes: InstantPaymentTypes[];
+    instantPaymentTypes?: InstantPaymentTypes[];
 
     /**
      * Instant Payment methods derived from the instantPaymentTypes property

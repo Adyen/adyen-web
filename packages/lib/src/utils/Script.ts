@@ -33,7 +33,10 @@ class Script {
 
             this.script.src = this.src;
             this.script.async = true;
-            this.script.onload = resolve;
+            this.script.onload = event => {
+                this.script.setAttribute('data-script-loaded', 'true');
+                resolve(event);
+            };
             this.script.onerror = () => {
                 this.remove();
                 reject(new Error(`Unable to load script ${this.src}`));
@@ -43,13 +46,15 @@ class Script {
             const addedScript = container.querySelector(`script[src="${this.src}"]`);
 
             if (addedScript) {
-                addedScript.addEventListener('load', resolve);
+                const isLoaded = addedScript.getAttribute('data-script-loaded');
+                if (isLoaded) resolve(true);
+                else addedScript.addEventListener('load', resolve);
             } else {
                 container.appendChild(this.script);
             }
         });
 
-    public remove = () => this.script.remove();
+    public remove = () => this.script.parentNode && this.script.parentNode.removeChild(this.script);
 }
 
 export default Script;

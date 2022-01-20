@@ -75,6 +75,12 @@ interface PayPalCommonProps {
     blockPayPalCreditButton?: boolean;
 
     /**
+     * Set to true to force the UI to not render PayPal Pay Later button
+     * @defaultValue false
+     */
+    blockPayPalPayLaterButton?: boolean;
+
+    /**
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
      */
     cspNonce?: string;

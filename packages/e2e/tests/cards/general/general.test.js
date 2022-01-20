@@ -50,7 +50,7 @@ test("#2 Value of label's 'for' attr should match value of corresponding secured
 
     // KEEP AS REF - process needed if we actually want to be able to store or log the value of an attr on an iframe
     //    await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
-    //    const idVal = await Selector(getInputSelector('encryptedCardNumber')).getAttribute('id');
+    //    const idVal = await getInputSelector('encryptedCardNumber', true).getAttribute('id');
     //    console.log('### general.test:::: idVal', idVal);
     //    await t.switchToMainWindow();
     //    await t.expect(numAttrVal).eql(idVal);

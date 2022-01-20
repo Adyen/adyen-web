@@ -24,11 +24,11 @@ function isIE() {
     return false;
 }
 
-const __IS_ANDROID = /(android)/i.test(navigator.userAgent);
-const __IS_IE = isIE();
-const __IS_IOS = /iphone|ipod|ipad/i.test(navigator.userAgent);
-const __IS_FIREFOX = /(firefox)/i.test(navigator.userAgent);
-const __IS_SAFARI = /(safari)/i.test(navigator.userAgent) && !/(chrome)/i.test(navigator.userAgent);
+const __IS_ANDROID = typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent);
+const __IS_IE = typeof navigator !== 'undefined' && isIE();
+const __IS_IOS = typeof navigator !== 'undefined' && /iphone|ipod|ipad/i.test(navigator.userAgent);
+const __IS_FIREFOX = typeof navigator !== 'undefined' && /(firefox)/i.test(navigator.userAgent);
+const __IS_SAFARI = typeof navigator !== 'undefined' && /(safari)/i.test(navigator.userAgent) && !/(chrome)/i.test(navigator.userAgent);
 
 export default {
     __IS_ANDROID,
