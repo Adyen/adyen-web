@@ -1,4 +1,4 @@
-import { getCardImageUrl } from './utils';
+import { getCardImageUrl } from '../utils';
 import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_CARD_NUMBER,
@@ -9,7 +9,7 @@ import {
     HIDDEN,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR
-} from './lib/configuration/constants';
+} from '../lib/configuration/constants';
 import {
     CbObjOnError,
     CbObjOnFocus,
@@ -19,8 +19,8 @@ import {
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
     CbObjOnLoad
-} from './lib/types';
-import { existy } from './lib/utilities/commonUtils';
+} from '../lib/types';
+import { existy } from '../lib/utilities/commonUtils';
 
 /**
  * Emits the onConfigSuccess (ready) event

@@ -1,6 +1,6 @@
 import { Component } from 'preact';
-import { getErrorObject, getFields, getErrorReducer, validFieldsReducer } from './utils';
-import initCSF from './lib';
+import { getErrorObject, getFields, getErrorReducer, validFieldsReducer } from './SFPUtils';
+import initCSF from '../lib';
 import handlers from './SecuredFieldsProviderHandlers';
 import defaultProps, { SFPProps } from './defaultProps';
 import {
@@ -15,12 +15,12 @@ import {
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
     CbObjOnLoad
-} from './lib/types';
-import { AddressData } from '../../../types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from './lib/configuration/constants';
-import { BinLookupResponse } from '../../Card/types';
-import { CVCPolicyType, DatePolicyType } from './lib/core/AbstractSecuredField';
-import { getError } from '../../../core/Errors/utils';
+} from '../lib/types';
+import { AddressData } from '../../../../types';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
+import { BinLookupResponse } from '../../../Card/types';
+import { CVCPolicyType, DatePolicyType } from '../lib/core/AbstractSecuredField';
+import { getError } from '../../../../core/Errors/utils';
 
 export interface SFPState {
     status?: string;

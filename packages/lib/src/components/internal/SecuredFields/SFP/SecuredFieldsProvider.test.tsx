@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
-import Language from '../../../language/Language';
-import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../core/Errors/constants';
-import { getError } from '../../../core/Errors/utils';
+import Language from '../../../../language/Language';
+import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../../core/Errors/constants';
+import { getError } from '../../../../core/Errors/utils';
 
 jest.mock('./lib', () => {
     return () => true;

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import AchSecuredFields from './components/AchSecuredFields';
-import SecuredFieldsProvider from '../../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Address from '../../../internal/Address';
 import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../internal/FormFields/Field';
