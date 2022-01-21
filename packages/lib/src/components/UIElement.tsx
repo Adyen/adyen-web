@@ -111,8 +111,14 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             .catch(this.handleError);
     }
 
+
     protected handleError = (error: AdyenCheckoutError): void => {
-        this.setStatus('ready');
+        /**
+         * Set status using elementRef, which:
+         * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
+         * - If Component, it will set its own status
+         */
+        this.elementRef.setStatus('ready');
 
         if (this.props.onError) {
             this.props.onError(error, this.elementRef);
