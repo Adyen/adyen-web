@@ -203,6 +203,24 @@ function notFalsy(x) {
     return !falsy(x);
 }
 
+/**
+ * This function allows us to partially apply any number of variables to functions that take any number of parameters.
+ * @returns {function(): *}
+ */
+function partial(...args) {
+    // Store the args array
+    const myArgs = args;
+
+    // Grab the function (the first argument). myArgs now contains the remaining arguments
+    const fn = myArgs.shift();
+
+    // Return a function that calls fn with myArgs + whatever else is passed when this returned function is called
+    function partialFn(...args2) {
+        return fn.apply(this, myArgs.concat(args2));
+    }
+    return partialFn;
+}
+
 export {
     generateRandomNumber,
     existy,
@@ -210,6 +228,7 @@ export {
     isArray,
     objectsDeepEqual,
     notFalsy,
+    partial,
     truthy
     //    wait
 };

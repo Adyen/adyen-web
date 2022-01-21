@@ -5,14 +5,20 @@ import processBrand from './extensions/processBrand';
 import { handleValidation } from './extensions/handleValidation';
 import { handleEncryption } from './extensions/handleEncryption';
 import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
-import { setFocusOnFrame } from './utils/iframes/setFocusOnFrame';
-import { postMessageToAllIframes } from './utils/iframes/postMessageToAllIframes';
+// import { setFocusOnFrame } from './utils/iframes/setFocusOnFrame';
+import { setFocusOnFrame } from './partials/setFocusOnFrame';
+// import { postMessageToAllIframes } from './utils/iframes/postMessageToAllIframes';
+import { postMessageToAllIframes } from './partials/postMessageToAllIframes';
 import { destroySecuredFields } from './utils/destroySecuredFields';
 import { processAutoComplete } from './extensions/processAutoComplete';
-import { handleFocus } from './extensions/handleFocus';
-import { handleIframeConfigFeedback } from './utils/iframes/handleIframeConfigFeedback';
-import { isConfigured } from './extensions/isConfigured';
-import validateForm from './extensions/validateForm';
+// import { handleFocus } from './extensions/handleFocus';
+import { handleFocus } from './partials/handleFocus';
+// import { handleIframeConfigFeedback } from './utils/iframes/handleIframeConfigFeedback';
+import { handleIframeConfigFeedback } from './partials/handleIframeConfigFeedback';
+// import { isConfigured } from './extensions/isConfigured';
+import { isConfigured } from './partials/isConfigured';
+// import validateForm from './extensions/validateForm';
+import validateForm from './partials/validateForm';
 import { handleBinValue } from './extensions/handleBinValue';
 import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
 import additionalFields from './extensions/additionalFields';
@@ -24,6 +30,7 @@ import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
 import { BinLookupResponse } from '../../../../Card/types';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { partial } from '../utilities/commonUtils';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -56,19 +63,20 @@ class CSF extends AbstractCSF {
             currentFocusObject: null,
             registerFieldForIos: false,
             securedFields: {},
-            isKCP: false,
-            hasBinDefinedPanLength: false
+            isKCP: false
         } as CSFStateObject;
+
+        const thisObj = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
 
         // Setup 'this' references
         this.configHandler = handleConfig;
 
         this.callbacksHandler = configureCallbacks;
 
-        this.handleIframeConfigFeedback = handleIframeConfigFeedback;
-        this.isConfigured = isConfigured;
+        this.validateForm = partial(validateForm, thisObj);
 
-        this.validateForm = validateForm;
+        this.isConfigured = partial(isConfigured, thisObj, this.validateForm);
+        this.handleIframeConfigFeedback = partial(handleIframeConfigFeedback, thisObj, this.isConfigured);
 
         this.processBrand = processBrand;
 
@@ -80,10 +88,10 @@ class CSF extends AbstractCSF {
         this.createCardSecuredFields = createCardSecuredFields;
         this.setupSecuredField = setupSecuredField;
 
-        this.postMessageToAllIframes = postMessageToAllIframes;
+        this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
 
-        this.setFocusOnFrame = setFocusOnFrame;
-        this.handleFocus = handleFocus;
+        this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
+        this.handleFocus = partial(handleFocus, thisObj);
 
         this.handleAdditionalFields = additionalFields.handleAdditionalFields;
         this.touchendListener = additionalFields.touchendListener.bind(this);
