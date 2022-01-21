@@ -1,7 +1,8 @@
 import AbstractCSF from './AbstractCSF';
 import { handleConfig } from './extensions/handleConfig';
 import { configureCallbacks } from './extensions/configureCallbacks';
-import processBrand from './extensions/processBrand';
+// import processBrand from './extensions/processBrand';
+import processBrand from './partials/processBrand';
 import { handleValidation } from './extensions/handleValidation';
 import { handleEncryption } from './extensions/handleEncryption';
 import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
@@ -10,7 +11,8 @@ import { setFocusOnFrame } from './partials/setFocusOnFrame';
 // import { postMessageToAllIframes } from './utils/iframes/postMessageToAllIframes';
 import { postMessageToAllIframes } from './partials/postMessageToAllIframes';
 import { destroySecuredFields } from './utils/destroySecuredFields';
-import { processAutoComplete } from './extensions/processAutoComplete';
+// import { processAutoComplete } from './extensions/processAutoComplete';
+import { processAutoComplete } from './partials/processAutoComplete';
 // import { handleFocus } from './extensions/handleFocus';
 import { handleFocus } from './partials/handleFocus';
 // import { handleIframeConfigFeedback } from './utils/iframes/handleIframeConfigFeedback';
@@ -19,7 +21,8 @@ import { handleIframeConfigFeedback } from './partials/handleIframeConfigFeedbac
 import { isConfigured } from './partials/isConfigured';
 // import validateForm from './extensions/validateForm';
 import validateForm from './partials/validateForm';
-import { handleBinValue } from './extensions/handleBinValue';
+// import { handleBinValue } from './extensions/handleBinValue';
+import { handleBinValue } from './partials/handleBinValue';
 import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
 import additionalFields from './extensions/additionalFields';
 import handleTab from './extensions/handleTab';
@@ -78,7 +81,7 @@ class CSF extends AbstractCSF {
         this.isConfigured = partial(isConfigured, thisObj, this.validateForm);
         this.handleIframeConfigFeedback = partial(handleIframeConfigFeedback, thisObj, this.isConfigured);
 
-        this.processBrand = processBrand;
+        this.processBrand = partial(processBrand, thisObj);
 
         this.handleValidation = handleValidation;
         this.handleEncryption = handleEncryption;
@@ -102,9 +105,9 @@ class CSF extends AbstractCSF {
 
         this.destroySecuredFields = destroySecuredFields;
 
-        this.processAutoComplete = processAutoComplete;
+        this.processAutoComplete = partial(processAutoComplete, thisObj);
 
-        this.handleBinValue = handleBinValue;
+        this.handleBinValue = partial(handleBinValue, thisObj);
 
         this.handleBrandFromBinLookup = handleBrandFromBinLookup;
         this.sendBrandToCardSF = sendBrandToCardSF;
