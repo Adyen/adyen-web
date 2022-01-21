@@ -1,5 +1,5 @@
 import * as logger from '../utilities/logger';
-import createIframe from '../utilities/createIframe';
+import createIframe from './utils/createIframe';
 import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
 import postMessageToIframe from '../CSF/utils/iframes/postMessageToIframe';
 import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from '../CSF/utils/iframes/postMessageValidation';

@@ -8,7 +8,7 @@ import {
     DATA_UID
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
-import cardType from '../../utilities/cardType';
+import cardType from '../utils/cardType';
 import { SFSetupObject } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType } from '../../types';

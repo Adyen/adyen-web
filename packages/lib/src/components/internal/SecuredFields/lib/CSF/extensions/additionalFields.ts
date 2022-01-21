@@ -1,5 +1,5 @@
 import { on, off, selectOne } from '../../utilities/dom';
-import ua from '../../utilities/userAgent';
+import ua from '../utils/userAgent';
 
 import * as logger from '../../utilities/logger';
 

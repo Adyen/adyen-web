@@ -1,5 +1,5 @@
 import CSF from './CSF';
-import cardType from '../utilities/cardType';
+import cardType from './utils/cardType';
 import * as logger from '../utilities/logger';
 import { falsy } from '../utilities/commonUtils';
 import { CSFReturnObject, CSFSetupObject } from './types';

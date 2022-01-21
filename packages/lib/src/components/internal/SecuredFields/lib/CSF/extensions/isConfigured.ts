@@ -1,4 +1,4 @@
-import cardType from '../../utilities/cardType';
+import cardType from '../utils/cardType';
 import { CardObject, CbObjOnConfigSuccess } from '../../types';
 import * as logger from '../../utilities/logger';
 import { CVC_POLICY_REQUIRED } from '../../configuration/constants';

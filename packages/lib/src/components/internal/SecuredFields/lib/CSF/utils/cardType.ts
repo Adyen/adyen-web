@@ -1,5 +1,5 @@
-import { CardObject } from '../types';
-import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { CardObject } from '../../types';
+import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 let shortestPermittedCardLength;
 

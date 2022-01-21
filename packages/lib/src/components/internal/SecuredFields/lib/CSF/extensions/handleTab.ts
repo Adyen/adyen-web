@@ -1,4 +1,4 @@
-import ua from '../../utilities/userAgent';
+import ua from '../utils/userAgent';
 import * as logger from '../../utilities/logger';
 import { shiftTabCreditCard } from '../utils/tabbing/tabScenarioCreditCard';
 import { shiftTabACH } from '../utils/tabbing/tabScenarioACH';

@@ -1,5 +1,6 @@
 import SecuredField from './SecuredField';
-import { AriaConfig, CVCPolicyType, DatePolicyType } from './AbstractSecuredField';
+// import { AriaConfig } from './AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../types';
 import Language from '../../../../../language/Language';
 import LANG from '../../../../../language/locales/en-US.json';
 import { ERROR_CODES, ERROR_MSG_CARD_TOO_OLD, ERROR_MSG_INVALID_FIELD, ERROR_MSG_LUHN_CHECK_FAILED } from '../../../../../core/Errors/constants';
