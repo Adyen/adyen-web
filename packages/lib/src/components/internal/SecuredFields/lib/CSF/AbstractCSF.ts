@@ -1,7 +1,7 @@
 import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject } from './types';
 import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../types';
 import { createSecuredFields } from './extensions/createSecuredFields';
-import processBrand from './extensions/processBrand';
+import processBrand from './partials/processBrand';
 import handleBrandFromBinLookup from './extensions/handleBrandFromBinLookup';
 
 abstract class AbstractCSF {
