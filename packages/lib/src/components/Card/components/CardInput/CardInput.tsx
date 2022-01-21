@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
-import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SecuredFieldsProvider';
+import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import styles from './CardInput.module.scss';

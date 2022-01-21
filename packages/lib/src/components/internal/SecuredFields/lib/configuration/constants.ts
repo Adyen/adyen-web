@@ -1,4 +1,4 @@
-import { CVCPolicyType, DatePolicyType } from '../core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../types';
 
 export const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
@@ -16,7 +16,7 @@ export const GIFT_CARD = 'giftcard';
 export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
 export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
-export const SF_VERSION = '3.7.5';
+export const SF_VERSION = '3.8.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
