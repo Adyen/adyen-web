@@ -5,7 +5,7 @@ import Language from '../../../../language/Language';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../../core/Errors/constants';
 import { getError } from '../../../../core/Errors/utils';
 
-jest.mock('./lib', () => {
+jest.mock('../lib/CSF', () => {
     return () => true;
 });
 
