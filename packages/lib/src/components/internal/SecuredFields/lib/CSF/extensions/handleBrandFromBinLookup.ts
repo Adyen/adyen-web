@@ -11,6 +11,7 @@ import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../../types';
 import { BinLookupResponse, BrandObject } from '../../../../../Card/types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
+import getIframeContentWin from '../utils/iframes/getIframeContentWin';
 
 export function sendBrandToCardSF(brandObj: SendBrandObject): void {
     if (hasOwnProperty(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
@@ -20,7 +21,7 @@ export function sendBrandToCardSF(brandObj: SendBrandObject): void {
             fieldType: ENCRYPTED_CARD_NUMBER,
             numKey: this.state.securedFields[ENCRYPTED_CARD_NUMBER].numKey
         };
-        postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_CARD_NUMBER), this.config.loadingContext);
+        postMessageToIframe(dataObj, getIframeContentWin(this.state, ENCRYPTED_CARD_NUMBER), this.config.loadingContext);
     }
 }
 
@@ -37,7 +38,7 @@ export function sendExpiryDatePolicyToSF(expiryDateObj: SendExpiryDateObject): v
             fieldType: key,
             numKey: this.state.securedFields[key].numKey
         };
-        postMessageToIframe(dataObj, this.getIframeContentWin(key), this.config.loadingContext);
+        postMessageToIframe(dataObj, getIframeContentWin(this.state, key), this.config.loadingContext);
     });
 }
 

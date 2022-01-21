@@ -6,6 +6,7 @@ import { truthy } from '../../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
+import getIframeContentWin from '../utils/iframes/getIframeContentWin';
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
@@ -64,7 +65,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
                 fieldType: ENCRYPTED_EXPIRY_YEAR,
                 numKey: this.state.securedFields[ENCRYPTED_EXPIRY_YEAR].numKey
             };
-            postMessageToIframe(dataObj, this.getIframeContentWin(ENCRYPTED_EXPIRY_YEAR), this.config.loadingContext);
+            postMessageToIframe(dataObj, getIframeContentWin(this.state, ENCRYPTED_EXPIRY_YEAR), this.config.loadingContext);
         }
     }
 

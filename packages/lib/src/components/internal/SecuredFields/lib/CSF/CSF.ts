@@ -1,30 +1,31 @@
 import AbstractCSF from './AbstractCSF';
+import { CSFReturnObject, CSFSetupObject, CSFStateObject } from './types';
+import { StylesObject, CbObjOnAdditionalSF } from '../types';
+import { BinLookupResponse } from '../../../../Card/types';
 import { handleConfig } from './extensions/handleConfig';
 import { configureCallbacks } from './extensions/configureCallbacks';
-import processBrand from './partials/processBrand';
 import { handleValidation } from './extensions/handleValidation';
 import { handleEncryption } from './extensions/handleEncryption';
 import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
+import additionalFields from './extensions/additionalFields';
+import handleTab from './extensions/handleTab';
+import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
 import { setFocusOnFrame } from './partials/setFocusOnFrame';
 import { postMessageToAllIframes } from './partials/postMessageToAllIframes';
-import { destroySecuredFields } from './utils/destroySecuredFields';
+import processBrand from './partials/processBrand';
 import { processAutoComplete } from './partials/processAutoComplete';
 import { handleFocus } from './partials/handleFocus';
 import { handleIframeConfigFeedback } from './partials/handleIframeConfigFeedback';
 import { isConfigured } from './partials/isConfigured';
 import validateForm from './partials/validateForm';
 import { handleBinValue } from './partials/handleBinValue';
-import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
-import additionalFields from './extensions/additionalFields';
-import handleTab from './extensions/handleTab';
+import { destroySecuredFields } from './utils/destroySecuredFields';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
-import { CSFReturnObject, CSFSetupObject, CSFStateObject } from './types';
-import { StylesObject, CbObjOnAdditionalSF } from '../types';
+import getIframeContentWin from './utils/iframes/getIframeContentWin';
 import * as logger from '../utilities/logger';
 import { selectOne } from '../utilities/dom';
-import { BinLookupResponse } from '../../../../Card/types';
-import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import { partial } from '../utilities/commonUtils';
+import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -166,7 +167,7 @@ class CSF extends AbstractCSF {
                             code,
                             numKey: this.state.securedFields[pFieldType].numKey
                         };
-                        postMessageToIframe(dataObj, this.getIframeContentWin(pFieldType), this.config.loadingContext);
+                        postMessageToIframe(dataObj, getIframeContentWin(this.state, pFieldType), this.config.loadingContext);
                     }
                 } else {
                     notConfiguredWarning('You cannot set validated on any secured field');
@@ -187,7 +188,7 @@ class CSF extends AbstractCSF {
                             code,
                             numKey: this.state.securedFields[pFieldType].numKey
                         };
-                        postMessageToIframe(dataObj, this.getIframeContentWin(pFieldType), this.config.loadingContext);
+                        postMessageToIframe(dataObj, getIframeContentWin(this.state, pFieldType), this.config.loadingContext);
                     }
                 } else {
                     notConfiguredWarning('You cannot set hasUnsupportedCard on any secured field');
@@ -232,13 +233,6 @@ class CSF extends AbstractCSF {
         };
 
         return returnObj;
-    }
-
-    /**
-     * Retrieves the iframe, stored by field type, & returns it's contentWindow
-     */
-    private getIframeContentWin(fieldType: string): Window {
-        return this.state.securedFields[fieldType]?.iframeContentWindow || null;
     }
 }
 
