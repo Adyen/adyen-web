@@ -58,9 +58,8 @@ if (apiVersion >= 67) {
         await t
             .click(dropinPage.cc.payButton)
             // Allow time for the ONLY details call, which we expect to be successful
-            .wait(2000)
             .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
-            .ok()
+            .ok({ timeout: 5000 })
             // Allow time for the alert to manifest
             .wait(2000);
 
@@ -90,9 +89,8 @@ if (apiVersion >= 67) {
             /**
              *  Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
              */
-            .wait(2000)
             .expect(logger.contains(r => r.request.url.indexOf('/submitThreeDS2Fingerprint') > -1 && r.response.statusCode === 200))
-            .ok();
+            .ok({ timeout: 5000 });
 
         //        console.log('logger.requests[0].response', logger.requests[0].response);
 
@@ -105,9 +103,8 @@ if (apiVersion >= 67) {
 
         await t
             // Allow time for the /details call, which we expect to be successful
-            .wait(2000)
             .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
-            .ok()
+            .ok({ timeout: 5000 })
             .wait(1000);
 
         // Check request body is in the expected form
@@ -153,9 +150,8 @@ if (apiVersion >= 67) {
 
         await t
             // Allow time for the ONLY details call, which we expect to be successful
-            .wait(2000)
             .expect(logger.contains(r => r.request.url.indexOf('/details') > -1 && r.response.statusCode === 200))
-            .ok()
+            .ok({ timeout: 5000 })
             .wait(2000);
 
         // Check the value of the alert text

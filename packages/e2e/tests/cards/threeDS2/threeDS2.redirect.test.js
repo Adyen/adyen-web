@@ -60,9 +60,8 @@ if (apiVersion >= 67) {
             .expect(dropinPage.cc.numLabelTextError.exists)
             .notOk()
             // Allow time for the ONLY /submitThreeDS2Fingerprint call, which we expect to be successful
-            .wait(2000)
             .expect(logger.contains(r => r.response.statusCode === 200))
-            .ok()
+            .ok({ timeout: 5000 })
             // Allow time for redirect to occur
             .wait(2000);
 
