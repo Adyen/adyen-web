@@ -7,7 +7,7 @@ import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumbe
 import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
-import { getInstallmentsComp } from './Installments/GetInstallmentsComp';
+import Installments from './Installments';
 
 export const CardFieldsWrapper = ({
     // base (shared)
@@ -127,14 +127,15 @@ export const CardFieldsWrapper = ({
 
             {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
 
-            {hasInstallments &&
-                getInstallmentsComp({
-                    brand: sfpState.brand,
-                    amount: props.amount,
-                    installmentOptions: props.installmentOptions,
-                    handleInstallments,
-                    showAmountsInInstallments
-                })}
+            {hasInstallments && (
+                <Installments
+                    amount={props.amount}
+                    brand={sfpState.brand}
+                    installmentOptions={props.installmentOptions}
+                    onChange={handleInstallments}
+                    type={showAmountsInInstallments ? 'amount' : 'months'}
+                />
+            )}
 
             {props.billingAddressRequired && (
                 <Address

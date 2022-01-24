@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
-import { getInstallmentsComp } from './Installments/GetInstallmentsComp';
+import Installments from './Installments';
 
 export const StoredCardFieldsWrapper = ({
     sfpState,
@@ -27,14 +27,15 @@ export const StoredCardFieldsWrapper = ({
                 valid={sfpState.valid}
             />
 
-            {hasInstallments &&
-                getInstallmentsComp({
-                    brand: sfpState.brand,
-                    amount: props.amount,
-                    installmentOptions: props.installmentOptions,
-                    handleInstallments,
-                    showAmountsInInstallments
-                })}
+            {hasInstallments && (
+                <Installments
+                    amount={props.amount}
+                    brand={sfpState.brand}
+                    installmentOptions={props.installmentOptions}
+                    onChange={handleInstallments}
+                    type={showAmountsInInstallments ? 'amount' : 'months'}
+                />
+            )}
         </LoadingWrapper>
     );
 };
