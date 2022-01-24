@@ -28,7 +28,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const isValidating = useRef(false);
 
     const cardInputRef = useRef<CardInputRef>({});
-    props.setComponentRef(cardInputRef.current);
+    // Just call once
+    if (!Object.keys(cardInputRef.current).length) {
+        props.setComponentRef(cardInputRef.current);
+    }
 
     const errorFieldId = 'creditCardErrors';
 
