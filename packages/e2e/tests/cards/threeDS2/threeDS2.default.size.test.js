@@ -63,12 +63,12 @@ test('#1 Fill in card number that will trigger full flow (fingerprint & challeng
         .notOk()
         .expect(loggerSubmitThreeDS2.contains(r => r.response.statusCode === 200))
         // Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
-        .ok({ timeout: 2000 });
+        .ok({ timeout: 5000 });
 
     // console.log(logger.requests[0].response.headers);
 
     // Check challenge window size is read from default config prop
-    await t.expect(cardPage.challengeWindowSize02.exists).ok({ timeout: 3000 });
+    await t.expect(cardPage.challengeWindowSize02.exists).ok({ timeout: 5000 });
 
     // Complete challenge
     await fillChallengeField(t);
@@ -77,14 +77,14 @@ test('#1 Fill in card number that will trigger full flow (fingerprint & challeng
     await t
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         // Allow time for the /details call, which we expect to be successful
-        .ok({ timeout: 2000 })
+        .ok({ timeout: 5000 })
         .wait(1000);
 
     // console.log(logger.requests[1].response.headers);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised', { timeout: 3000 });
+    await t.expect(history[0].text).eql('Authorised', { timeout: 5000 });
 });
 
 test('#2 Fill in card number that will trigger challenge-only flow', async t => {
@@ -107,7 +107,7 @@ test('#2 Fill in card number that will trigger challenge-only flow', async t => 
     await t.click(cardPage.payButton);
 
     // Check challenge window size is read from config prop
-    await t.expect(cardPage.challengeWindowSize02.exists).ok({ timeout: 3000 });
+    await t.expect(cardPage.challengeWindowSize02.exists).ok({ timeout: 5000 });
 
     // Complete challenge
     await fillChallengeField(t);
@@ -116,10 +116,10 @@ test('#2 Fill in card number that will trigger challenge-only flow', async t => 
     await t
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         // Allow time for the ONLY details call, which we expect to be successful
-        .ok({ timeout: 2000 })
+        .ok({ timeout: 5000 })
         .wait(2000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised', { timeout: 3000 });
+    await t.expect(history[0].text).eql('Authorised', { timeout: 5000 });
 });
