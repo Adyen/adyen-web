@@ -111,3 +111,27 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
 
     return !errorMessages.length ? null : { errorMessages, fieldList };
 };
+
+export const extractCardInputProps = props => {
+    return {
+        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
+        amount: props.amount,
+        billingAddressRequired: props.billingAddressRequired,
+        billingAddressRequiredFields: props.billingAddressRequiredFields,
+        billingAddressAllowedCountries: props.billingAddressAllowedCountries,
+        brandsConfiguration: props.brandsConfiguration,
+        enableStoreDetails: props.enableStoreDetails,
+        hasCVC: props.hasCVC,
+        hasHolderName: props.hasHolderName,
+        holderNameRequired: props.holderNameRequired,
+        installmentOptions: props.installmentOptions,
+        placeholders: props.placeholders,
+        positionHolderNameOnTop: props.positionHolderNameOnTop,
+        // Extract props for CardFields > CardNumber
+        showBrandIcon: props.showBrandIcon,
+        // Extract props for StoredCardFields
+        lastFour: props.lastFour,
+        expiryMonth: props.expiryMonth,
+        expiryYear: props.expiryYear
+    };
+};

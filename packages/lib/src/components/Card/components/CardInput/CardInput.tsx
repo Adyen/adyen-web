@@ -11,7 +11,7 @@ import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } f
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { getLayout, sortErrorsForPanel } from './utils';
+import { extractCardInputProps, getLayout, sortErrorsForPanel } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
@@ -328,28 +328,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         aria-describedby={collateErrors ? errorFieldId : null}
                     >
                         <FieldToRender
-                            // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
-                            amount={props.amount}
-                            billingAddressRequired={props.billingAddressRequired}
-                            billingAddressRequiredFields={props.billingAddressRequiredFields}
-                            billingAddressAllowedCountries={props.billingAddressAllowedCountries}
-                            brandsConfiguration={props.brandsConfiguration}
-                            enableStoreDetails={props.enableStoreDetails}
-                            hasCVC={props.hasCVC}
-                            hasHolderName={props.hasHolderName}
-                            holderNameRequired={props.holderNameRequired}
-                            installmentOptions={props.installmentOptions}
-                            placeholders={props.placeholders}
-                            positionHolderNameOnTop={props.positionHolderNameOnTop}
-                            // Extract props for CardFields > CardNumber
-                            showBrandIcon={props.showBrandIcon}
-                            // Extract props for StoredCardFields
-                            lastFour={props.lastFour}
-                            expiryMonth={props.expiryMonth}
-                            expiryYear={props.expiryYear}
-                            // ///////////////////////////
-                            // vars created in CardInput
-                            // ///////////////////////////
+                            // Extract exact props that we need to pass down
+                            {...extractCardInputProps(props)}
+                            // Pass on vars created in CardInput:
                             // Base (shared w. StoredCard)
                             data={data}
                             valid={valid}
@@ -364,7 +345,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             hasInstallments={hasInstallments}
                             showAmountsInInstallments={showAmountsInInstallments}
                             handleInstallments={setInstallments}
-                            // Card
+                            // For Card
                             mergedSRErrors={mergedSRErrors}
                             moveFocus={moveFocus}
                             showPanel={showPanel}
@@ -376,14 +357,14 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             dualBrandSelectElements={dualBrandSelectElements}
                             extensions={extensions}
                             selectedBrandValue={selectedBrandValue}
-                            // KCP
+                            // For KCP
                             showKCP={showKCP}
-                            // SSN
+                            // For SSN
                             showBrazilianSSN={showBrazilianSSN}
                             socialSecurityNumber={socialSecurityNumber}
-                            // Store details
+                            // For Store details
                             handleOnStoreDetails={setStorePaymentMethod}
-                            // Address
+                            // For Address
                             billingAddress={billingAddress}
                             handleAddress={handleAddress}
                             billingAddressRef={billingAddressRef}
