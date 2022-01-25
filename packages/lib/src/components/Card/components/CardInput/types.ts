@@ -83,6 +83,10 @@ export interface CardInputProps {
     SRConfig?: ScreenreaderConfig;
     specifications?: Specifications;
     setComponentRef?: (ref) => void;
+    showBrandIcon?: boolean;
+    lastFour?: string;
+    expiryMonth?: string;
+    expiryYear?: string;
 }
 
 export interface CardInputState {

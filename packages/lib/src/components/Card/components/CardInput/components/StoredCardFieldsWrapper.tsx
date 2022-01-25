@@ -4,6 +4,7 @@ import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
 
 export const StoredCardFieldsWrapper = ({
+    // vars created in CardInput:
     sfpState,
     setFocusOn,
     cvcPolicy,
@@ -11,27 +12,35 @@ export const StoredCardFieldsWrapper = ({
     hasInstallments,
     handleInstallments,
     showAmountsInInstallments,
-    ...props
+    // props passed through from CardInput:
+    amount,
+    hasCVC,
+    installmentOptions,
+    lastFour,
+    expiryMonth,
+    expiryYear
 }) => {
     return (
         <LoadingWrapper status={sfpState.status}>
             <StoredCardFields
-                {...props}
                 errors={sfpState.errors}
                 brand={sfpState.brand}
-                hasCVC={props.hasCVC}
+                hasCVC={hasCVC}
                 cvcPolicy={cvcPolicy}
                 onFocusField={setFocusOn}
                 focusedElement={focusedElement}
                 status={sfpState.status}
                 valid={sfpState.valid}
+                lastFour={lastFour}
+                expiryMonth={expiryMonth}
+                expiryYear={expiryYear}
             />
 
             {hasInstallments && (
                 <Installments
-                    amount={props.amount}
+                    amount={amount}
                     brand={sfpState.brand}
-                    installmentOptions={props.installmentOptions}
+                    installmentOptions={installmentOptions}
                     onChange={handleInstallments}
                     type={showAmountsInInstallments ? 'amount' : 'months'}
                 />

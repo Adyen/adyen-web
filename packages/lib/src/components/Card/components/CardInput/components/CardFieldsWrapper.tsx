@@ -8,14 +8,15 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
 
 export const CardFieldsWrapper = ({
+    // vars created in CardInput:
     // base (shared)
     data,
     valid,
     errors,
     handleChangeFor,
-    i18n,
     sfpState,
     setFocusOn,
     collateErrors,
@@ -48,15 +49,30 @@ export const CardFieldsWrapper = ({
     billingAddress,
     handleAddress,
     billingAddressRef,
-    // props
-    ...props
+    // For this comp (props passed through from CardInput)
+    amount,
+    billingAddressRequired,
+    billingAddressRequiredFields,
+    billingAddressAllowedCountries,
+    brandsConfiguration,
+    enableStoreDetails,
+    hasCVC,
+    hasHolderName,
+    holderNameRequired,
+    installmentOptions,
+    placeholders,
+    positionHolderNameOnTop,
+    // For CardFields > CardNumber
+    showBrandIcon
 }) => {
+    const { i18n } = useCoreContext();
+
     const cardHolderField = (
         <CardHolderName
-            required={props.holderNameRequired}
-            placeholder={props.placeholders.holderName}
+            required={holderNameRequired}
+            placeholder={placeholders.holderName}
             value={formData.holderName}
-            error={!!formErrors.holderName && props.holderNameRequired}
+            error={!!formErrors.holderName && holderNameRequired}
             isValid={!!formValid.holderName}
             onChange={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
@@ -75,15 +91,15 @@ export const CardFieldsWrapper = ({
                 />
             )}
 
-            {props.hasHolderName && props.positionHolderNameOnTop && cardHolderField}
+            {hasHolderName && positionHolderNameOnTop && cardHolderField}
 
             <CardFields
-                {...props}
+                showBrandIcon={showBrandIcon}
                 brand={sfpState.brand}
-                brandsConfiguration={props.brandsConfiguration}
+                brandsConfiguration={brandsConfiguration}
                 focusedElement={focusedElement}
                 onFocusField={setFocusOn}
-                hasCVC={props.hasCVC}
+                hasCVC={hasCVC}
                 cvcPolicy={cvcPolicy}
                 expiryDatePolicy={expiryDatePolicy}
                 errors={sfpState.errors}
@@ -93,7 +109,7 @@ export const CardFieldsWrapper = ({
                 dualBrandingSelected={selectedBrandValue}
             />
 
-            {props.hasHolderName && !props.positionHolderNameOnTop && cardHolderField}
+            {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
             {showKCP && (
                 <KCPAuthentication
@@ -125,25 +141,25 @@ export const CardFieldsWrapper = ({
                 </div>
             )}
 
-            {props.enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
+            {enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
 
             {hasInstallments && (
                 <Installments
-                    amount={props.amount}
+                    amount={amount}
                     brand={sfpState.brand}
-                    installmentOptions={props.installmentOptions}
+                    installmentOptions={installmentOptions}
                     onChange={handleInstallments}
                     type={showAmountsInInstallments ? 'amount' : 'months'}
                 />
             )}
 
-            {props.billingAddressRequired && (
+            {billingAddressRequired && (
                 <Address
                     label="billingAddress"
                     data={billingAddress}
                     onChange={handleAddress}
-                    allowedCountries={props.billingAddressAllowedCountries}
-                    requiredFields={props.billingAddressRequiredFields}
+                    allowedCountries={billingAddressAllowedCountries}
+                    requiredFields={billingAddressRequiredFields}
                     ref={billingAddressRef}
                 />
             )}

@@ -328,16 +328,34 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         aria-describedby={collateErrors ? errorFieldId : null}
                     >
                         <FieldToRender
-                            // props
-                            {...props}
-                            // base (shared)
+                            // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
+                            amount={props.amount}
+                            billingAddressRequired={props.billingAddressRequired}
+                            billingAddressRequiredFields={props.billingAddressRequiredFields}
+                            billingAddressAllowedCountries={props.billingAddressAllowedCountries}
+                            brandsConfiguration={props.brandsConfiguration}
+                            enableStoreDetails={props.enableStoreDetails}
+                            hasCVC={props.hasCVC}
+                            hasHolderName={props.hasHolderName}
+                            holderNameRequired={props.holderNameRequired}
+                            installmentOptions={props.installmentOptions}
+                            placeholders={props.placeholders}
+                            positionHolderNameOnTop={props.positionHolderNameOnTop}
+                            // Extract props for CardFields > CardNumber
+                            showBrandIcon={props.showBrandIcon}
+                            // Extract props for StoredCardFields
+                            lastFour={props.lastFour}
+                            expiryMonth={props.expiryMonth}
+                            expiryYear={props.expiryYear}
+                            // ///////////////////////////
+                            // vars created in CardInput
+                            // ///////////////////////////
+                            // Base (shared w. StoredCard)
                             data={data}
                             valid={valid}
                             errors={errors}
                             handleChangeFor={handleChangeFor}
-                            i18n={props.i18n}
                             focusedElement={focusedElement}
-                            setRootNode={setRootNode}
                             setFocusOn={setFocusOn}
                             sfpState={sfpState}
                             collateErrors={collateErrors}
