@@ -100,13 +100,22 @@ export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
  * @returns PayloadJSON
  */
 export function getPayloadJSON(props): PayloadJSON {
-    const { addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata } = props;
+    const {
+        addressDetails,
+        cancelUrl,
+        checkoutMode,
+        deliverySpecifications,
+        returnUrl,
+        merchantMetadata,
+        chargePermissionType,
+    } = props;
     const { storeId } = props.configuration;
     const isPayNow = checkoutMode === 'ProcessOrder';
     const amount = isPayNow ? getChargeAmount(props.amount) : null;
 
     return {
         storeId,
+        chargePermissionType,
         webCheckoutDetails: {
             ...(isPayNow ? { checkoutResultReturnUrl: returnUrl } : { checkoutReviewReturnUrl: returnUrl }),
             ...(cancelUrl && { checkoutCancelUrl: cancelUrl }),
@@ -122,6 +131,6 @@ export function getPayloadJSON(props): PayloadJSON {
         }),
         ...(merchantMetadata && { merchantMetadata }),
         ...(deliverySpecifications && { deliverySpecifications }),
-        ...(addressDetails && { addressDetails })
+        ...(addressDetails && { addressDetails }),
     };
 }
