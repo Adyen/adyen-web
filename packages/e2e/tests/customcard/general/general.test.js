@@ -36,7 +36,7 @@ test('Can fill out the fields in the regular custom card and make a successful p
         // no visible errors
         .expect(Selector('.pm-form-label__error-text').filterHidden().exists)
         .ok()
-        .wait(1000);
+        .wait(2000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
@@ -63,7 +63,7 @@ test('Can fill out the fields in the separate custom card and make a successful 
         // no visible errors
         .expect(Selector('.pm-form-label__error-text').filterHidden().exists)
         .ok()
-        .wait(1000);
+        .wait(2000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
