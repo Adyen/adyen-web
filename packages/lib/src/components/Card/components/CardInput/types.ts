@@ -44,52 +44,72 @@ type Placeholders = {
 };
 
 /**
- * Should be a subset of the props that can be sent to CardInput that are *actually* used by CardInput
+ * Should be the subset of the props that can be sent to CardInput that are *actually* used by CardInput
+ * - either in the comp itself or are passed on to its children
  */
 export interface CardInputProps {
     amount?: PaymentAmount;
+    allowedDOMAccess?: boolean;
+    autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
     brandsConfiguration?: CardBrandsConfiguration;
+    clientKey?: string;
     configuration?: CardConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
+    // details?: object; //??
     enableStoreDetails?: boolean;
+    expiryMonth?: string;
+    expiryYear?: string;
     fundingSource?: string;
+    groupTypes?: string[]; // TODO deprecate
     hasCVC?: boolean;
     hasHolderName?: boolean;
-    holderName?: string;
+    // holderName?: string; //??
     holderNameRequired?: boolean;
     i18n?: Language;
+    implementationType?: string;
+    isCollatingErrors?: boolean;
     installmentOptions?: InstallmentOptions;
-    socialSecurityNumberMode?: SocialSecurityMode;
+    // socialSecurityNumberMode?: SocialSecurityMode; //??
+    keypadFix?: boolean;
+    lastFour?: string;
     loadingContext?: string;
+    legacyInputMode?: boolean;
+    minimumExpiryDate?: string;
+    onAdditionalSFConfig?: () => {};
+    onAdditionalSFRemoved?: () => {};
+    onAllValid?: () => {};
+    onAutoComplete?: () => {};
+    onBinValue?: () => {};
     onBlur?: (e) => {};
+    onBrand?: () => {};
+    onConfigSuccess?: () => {};
+    onChange?: (state) => {};
+    onError?: () => {};
+    onFieldValid?: () => {};
     onFocus?: (e) => {};
+    onLoad?: () => {};
+    // onSubmit?: () => {}; //??
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
+    showWarnings?: boolean;
     storedPaymentMethodId?: string;
     styles?: object;
+    trimTrailingSeparator?: boolean;
     type?: string;
-    onChange?: (state) => {};
-    onSubmit?: () => {};
-    onBrand?: () => {};
-    onBinValue?: () => {};
-    details?: object;
-    storedDetails?: object;
-    SRConfig?: ScreenreaderConfig;
-    specifications?: Specifications;
+    // storedDetails?: object; //??
     setComponentRef?: (ref) => void;
     showBrandIcon?: boolean;
-    lastFour?: string;
-    expiryMonth?: string;
-    expiryYear?: string;
+    specifications?: Specifications;
+    SRConfig?: ScreenreaderConfig;
 }
 
 export interface CardInputState {

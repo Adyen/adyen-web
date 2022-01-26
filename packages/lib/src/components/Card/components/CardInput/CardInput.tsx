@@ -11,7 +11,7 @@ import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } f
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { extractPropsForCardFields, getLayout, sortErrorsForPanel } from './utils';
+import { extractPropsForCardFields, extractPropsForSFP, getLayout, sortErrorsForPanel } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
@@ -310,7 +310,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         <Fragment>
             <SecuredFieldsProvider
                 ref={sfp}
-                {...props}
+                {...extractPropsForSFP(props)}
                 styles={{ ...defaultStyles, ...props.styles }}
                 koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
