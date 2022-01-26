@@ -14,8 +14,8 @@ export interface SFPProps {
     countryCode: string;
     hasKoreanFields: boolean;
     i18n: Language;
-    isCollatingErrors?: boolean;
     implementationType?: string;
+    isCollatingErrors?: boolean;
     keypadFix?: boolean;
     koreanAuthenticationRequired: boolean;
     legacyInputMode: boolean;
