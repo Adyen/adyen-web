@@ -3,7 +3,8 @@ import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 
 export default function extensions(props, refs, states) {
-    // Destructure refs and state hooks
+    // Destructure props, refs and state hooks
+    const { type, cvcPolicy } = props;
     const { sfp } = refs;
     const { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode } = states;
 
@@ -26,11 +27,11 @@ export default function extensions(props, refs, states) {
 
                 // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon
                 // However for a single-branded card we need to pass the "base" type so the brand logo is reset
-                const brandToReset = isReset && props.type !== 'card' ? props.type : null;
+                const brandToReset = isReset && type !== 'card' ? type : null;
 
                 sfp.current.processBinLookupResponse(binLookupResponse, {
                     brand: brandToReset,
-                    cvcPolicy: props.cvcPolicy // undefined except for Bancontact
+                    cvcPolicy: cvcPolicy // undefined except for Bancontact
                 } as SingleBrandResetObject);
                 return;
             }

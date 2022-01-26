@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
+import { BinLookupResponse, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
@@ -7,6 +7,7 @@ import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/l
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema, StringObject } from '../../../internal/Address/types';
+import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -38,10 +39,13 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-interface Placeholders {
+type Placeholders = {
     holderName?: string;
-}
+};
 
+/**
+ * Should be a subset of the props that can be sent to CardInput that are *actually* used by CardInput
+ */
 export interface CardInputProps {
     amount?: PaymentAmount;
     billingAddressAllowedCountries?: string[];
@@ -81,6 +85,11 @@ export interface CardInputProps {
     storedDetails?: object;
     SRConfig?: ScreenreaderConfig;
     specifications?: Specifications;
+    setComponentRef?: (ref) => void;
+    showBrandIcon?: boolean;
+    lastFour?: string;
+    expiryMonth?: string;
+    expiryYear?: string;
 }
 
 export interface CardInputState {
@@ -98,6 +107,16 @@ export interface CardInputState {
     valid?: object;
     issuingCountryCode: string;
     showSocialSecurityNumber?: boolean;
+}
+
+export interface CardInputRef {
+    sfp?: any;
+    setFocusOn?: (who) => void;
+    showValidation?: (who) => void;
+    processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
+    setStatus?: any;
+    updateStyles?: (stylesObj: StylesObject) => void;
+    handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
 }
 
 interface ScreenreaderConfig {

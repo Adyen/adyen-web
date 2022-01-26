@@ -17,6 +17,10 @@ export class CardElement extends UIElement<CardElementProps> {
         SRConfig: {}
     };
 
+    public setComponentRef = ref => {
+        this.componentRef = ref;
+    };
+
     formatProps(props: CardElementProps) {
         // Extract &/or set defaults for the screenreader error panel
         const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
@@ -166,9 +170,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
                 <CardInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}

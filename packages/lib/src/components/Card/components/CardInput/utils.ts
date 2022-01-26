@@ -2,7 +2,7 @@ import { getImageUrl } from '../../../../utils/get-image';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import Language from '../../../../language/Language';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
-import { LayoutObj, SortErrorsObj } from './types';
+import { CardInputProps, LayoutObj, SortErrorsObj } from './types';
 import {
     CREDIT_CARD,
     CREDIT_CARD_NAME_BOTTOM,
@@ -110,4 +110,28 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
     });
 
     return !errorMessages.length ? null : { errorMessages, fieldList };
+};
+
+export const extractPropsForCardFields = (props: CardInputProps) => {
+    return {
+        // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
+        amount: props.amount,
+        billingAddressRequired: props.billingAddressRequired,
+        billingAddressRequiredFields: props.billingAddressRequiredFields,
+        billingAddressAllowedCountries: props.billingAddressAllowedCountries,
+        brandsConfiguration: props.brandsConfiguration,
+        enableStoreDetails: props.enableStoreDetails,
+        hasCVC: props.hasCVC,
+        hasHolderName: props.hasHolderName,
+        holderNameRequired: props.holderNameRequired,
+        installmentOptions: props.installmentOptions,
+        placeholders: props.placeholders,
+        positionHolderNameOnTop: props.positionHolderNameOnTop,
+        // Extract props for CardFields > CardNumber
+        showBrandIcon: props.showBrandIcon,
+        // Extract props for StoredCardFields
+        lastFour: props.lastFour,
+        expiryMonth: props.expiryMonth,
+        expiryYear: props.expiryYear
+    };
 };

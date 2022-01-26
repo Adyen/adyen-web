@@ -7,11 +7,17 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up, apparently!
 
+import DropinPage from '../../_models/Dropin.page';
+import { turnOffSDKMocking } from '../../_common/cardMocks';
 import { Selector, RequestLogger } from 'testcafe';
-import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
-import cu from '../utils/cardUtils';
 import { THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
-import { BASE_URL } from '../../pages';
+import CardComponentPage from '../../_models/CardComponent.page';
+
+const dropinPage = new DropinPage({
+    components: {
+        cc: new CardComponentPage('.adyen-checkout__payment-method--card')
+    }
+});
 
 const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
 
@@ -25,41 +31,37 @@ const logger = RequestLogger(
 
 const apiVersion = Number(process.env.API_VERSION.substr(1));
 
-const TEST_SPEED = 1;
-
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
-
-const cardUtils = cu(iframeSelector);
-
 fixture`Testing new (v67) 3DS2 Flow (redirect)`
-    .page(`${BASE_URL}?amount=12003`)
+    .beforeEach(async t => {
+        await t.navigateTo(`${dropinPage.pageUrl}?amount=12003`);
+        await turnOffSDKMocking();
+    })
     .clientScripts('threeDS2.clientScripts.js')
     .requestHooks(logger);
 
 if (apiVersion >= 67) {
     test('Fill in card number that will trigger redirect flow', async t => {
-        await start(t, 2000, TEST_SPEED);
+        await dropinPage.cc.numSpan();
 
         // Set handler for the alert window
         await t.setNativeDialogHandler(() => true);
 
         // Fill card fields
-        await cardUtils.fillCardNumber(t, THREEDS2_FULL_FLOW_CARD);
-        await cardUtils.fillDateAndCVC(t);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, THREEDS2_FULL_FLOW_CARD);
+        await dropinPage.cc.cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
 
         // Click pay
         await t
-            .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
+            .click(dropinPage.cc.payButton)
             // Expect no errors
-            .expect(Selector('.adyen-checkout__field--error').exists)
+            .expect(dropinPage.cc.numLabelTextError.exists)
             .notOk()
             // Allow time for the ONLY /submitThreeDS2Fingerprint call, which we expect to be successful
-            .wait(2000)
             .expect(logger.contains(r => r.response.statusCode === 200))
-            .ok()
+            .ok({ timeout: 5000 })
             // Allow time for redirect to occur
             .wait(2000);
 

@@ -205,7 +205,7 @@ function notFalsy(x) {
 
 /**
  * This function allows us to partially apply any number of variables to functions that take any number of parameters.
- * @returns {function(): *}
+ * @returns \{function(): *\}
  */
 function partial(...args) {
     // Store the args array
