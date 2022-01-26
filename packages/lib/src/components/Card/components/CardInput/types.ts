@@ -39,10 +39,13 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-interface Placeholders {
+type Placeholders = {
     holderName?: string;
-}
+};
 
+/**
+ * Should be a subset of the props that can be sent to CardInput that are *actually* used by CardInput
+ */
 export interface CardInputProps {
     amount?: PaymentAmount;
     billingAddressAllowedCountries?: string[];

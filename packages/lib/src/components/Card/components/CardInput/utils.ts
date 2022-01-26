@@ -2,7 +2,7 @@ import { getImageUrl } from '../../../../utils/get-image';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import Language from '../../../../language/Language';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
-import { LayoutObj, SortErrorsObj } from './types';
+import { CardInputProps, LayoutObj, SortErrorsObj } from './types';
 import {
     CREDIT_CARD,
     CREDIT_CARD_NAME_BOTTOM,
@@ -112,7 +112,7 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
     return !errorMessages.length ? null : { errorMessages, fieldList };
 };
 
-export const extractCardInputProps = props => {
+export const extractPropsForCardFields = (props: CardInputProps) => {
     return {
         // Extract props for CardFieldsWrapper & StoredCardFieldsWrapper(just needs amount, hasCVC, installmentOptions)
         amount: props.amount,

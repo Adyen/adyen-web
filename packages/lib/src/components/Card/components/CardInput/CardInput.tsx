@@ -11,7 +11,7 @@ import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } f
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { extractCardInputProps, getLayout, sortErrorsForPanel } from './utils';
+import { extractPropsForCardFields, getLayout, sortErrorsForPanel } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
@@ -329,7 +329,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     >
                         <FieldToRender
                             // Extract exact props that we need to pass down
-                            {...extractCardInputProps(props)}
+                            {...extractPropsForCardFields(props)}
                             // Pass on vars created in CardInput:
                             // Base (shared w. StoredCard)
                             data={data}
