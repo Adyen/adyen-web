@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
-import SecuredFieldsProvider from '../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Field from '../../internal/FormFields/Field';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';

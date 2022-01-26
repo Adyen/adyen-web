@@ -5,7 +5,7 @@ import Language from '../../../../language/Language';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
 
-jest.mock('../../../internal/SecuredFields/lib');
+jest.mock('../../../internal/SecuredFields/lib/CSF');
 
 let valid = {} as CardInputValidState;
 let data = {} as CardInputDataState;

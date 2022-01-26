@@ -16,7 +16,15 @@ function setupSession(session: Session, options): Promise<CheckoutSessionSetupRe
             : {})
     };
 
-    return httpPost({ loadingContext: session.loadingContext, path, errorLevel: 'fatal' }, data);
+    return httpPost<CheckoutSessionSetupResponse>(
+        {
+            loadingContext: session.loadingContext,
+            path,
+            errorLevel: 'fatal',
+            errorMessage: 'ERROR: Invalid ClientKey'
+        },
+        data
+    );
 }
 
 export default setupSession;

@@ -10,7 +10,7 @@ import {
     CbObjOnLoad,
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
-import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
