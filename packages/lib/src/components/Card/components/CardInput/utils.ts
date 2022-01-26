@@ -140,10 +140,10 @@ export const extractPropsForSFP = (props: CardInputProps) => {
     return {
         allowedDOMAccess: props.allowedDOMAccess,
         autoFocus: props.autoFocus,
+        brands: props.brands,
         brandsConfiguration: props.brandsConfiguration,
         clientKey: props.clientKey,
         countryCode: props.clientKey,
-        groupTypes: props.groupTypes,
         i18n: props.i18n,
         implementationType: props.implementationType,
         isCollatingErrors: props.isCollatingErrors,

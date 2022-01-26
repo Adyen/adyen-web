@@ -150,13 +150,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private initializeCSF(root: HTMLElement): void {
         let loadingContext = this.props.loadingContext;
 
-        const pObj = [];
-        for (const p of Object.keys(this.props)) {
-            pObj.push(p);
-        }
-        pObj.sort();
-        console.log('### StoredCardFieldsWrapper::pObj:: ', pObj);
-
         // For loading securedFields from local server during development
         if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
             loadingContext = process.env.__SF_ENV__;
@@ -166,7 +159,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             rootNode: root,
             type: this.props.type,
             clientKey: this.props.clientKey,
-            cardGroupTypes: this.props.groupTypes,
+            cardGroupTypes: this.props.brands,
             allowedDOMAccess: this.props.allowedDOMAccess,
             autoFocus: this.props.autoFocus,
             trimTrailingSeparator: this.props.trimTrailingSeparator,

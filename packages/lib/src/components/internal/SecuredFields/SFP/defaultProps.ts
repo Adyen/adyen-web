@@ -8,10 +8,10 @@ import { CardBrandsConfiguration } from '../../../Card/types';
 export interface SFPProps {
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
+    brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey: string;
     countryCode: string;
-    groupTypes?: string[]; // rename to brands
     hasKoreanFields: boolean;
     i18n: Language;
     isCollatingErrors?: boolean;
@@ -100,7 +100,7 @@ export default {
     keypadFix: true,
     rootNode: null,
     loadingContext: null,
-    groupTypes: [],
+    brands: [],
     allowedDOMAccess: false,
     showWarnings: false,
     autoFocus: true,

@@ -55,6 +55,7 @@ export interface CardInputProps {
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
+    brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey?: string;
     configuration?: CardConfiguration;
@@ -66,7 +67,6 @@ export interface CardInputProps {
     expiryMonth?: string;
     expiryYear?: string;
     fundingSource?: string;
-    groupTypes?: string[]; // TODO deprecate
     hasCVC?: boolean;
     hasHolderName?: boolean;
     // holderName?: string; //??
