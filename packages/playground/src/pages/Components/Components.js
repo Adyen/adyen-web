@@ -13,7 +13,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        onChange: handleChange,
+        //        onChange: handleChange,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: console.error,
@@ -49,9 +49,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .create('ach', {
             // holderNameRequired: false,
             // hasHolderName: false,
-            onConfigSuccess: obj => {
-                console.log('### Components::onConfigSuccess:: obj', obj);
-            },
+            //            onConfigSuccess: obj => {
+            //                console.log('### Components::onConfigSuccess:: obj', obj);
+            //            },
             // billingAddressRequired: false,
             // billingAddressAllowedCountries: ['US', 'PR'],
             data: {

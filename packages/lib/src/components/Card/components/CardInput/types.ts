@@ -44,7 +44,7 @@ type Placeholders = {
 };
 
 /**
- * Should be the subset of the props that can be sent to CardInput that are *actually* used by CardInput
+ * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
  * - either in the comp itself or are passed on to its children
  */
 export interface CardInputProps {
@@ -57,28 +57,25 @@ export interface CardInputProps {
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
-    clientKey?: string;
+    clientKey: string;
     configuration?: CardConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
-    // details?: object; //??
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
     fundingSource?: string;
     hasCVC?: boolean;
     hasHolderName?: boolean;
-    // holderName?: string; //??
     holderNameRequired?: boolean;
     i18n?: Language;
     implementationType?: string;
     isCollatingErrors?: boolean;
     installmentOptions?: InstallmentOptions;
-    // socialSecurityNumberMode?: SocialSecurityMode; //??
     keypadFix?: boolean;
     lastFour?: string;
-    loadingContext?: string;
+    loadingContext: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     onAdditionalSFConfig?: () => {};
@@ -94,22 +91,20 @@ export interface CardInputProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
-    // onSubmit?: () => {}; //??
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
+    setComponentRef?: (ref) => void;
+    showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
     showWarnings?: boolean;
-    storedPaymentMethodId?: string;
-    styles?: object;
-    trimTrailingSeparator?: boolean;
-    type?: string;
-    // storedDetails?: object; //??
-    setComponentRef?: (ref) => void;
-    showBrandIcon?: boolean;
     specifications?: Specifications;
     SRConfig?: ScreenreaderConfig;
+    storedPaymentMethodId?: string;
+    styles?: StylesObject;
+    trimTrailingSeparator?: boolean;
+    type?: string;
 }
 
 export interface CardInputState {
