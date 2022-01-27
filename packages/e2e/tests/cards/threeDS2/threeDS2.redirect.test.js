@@ -61,7 +61,7 @@ if (apiVersion >= 67) {
             .notOk()
             // Allow time for the ONLY /submitThreeDS2Fingerprint call, which we expect to be successful
             .expect(logger.contains(r => r.response.statusCode === 200))
-            .ok({ timeout: 5000 })
+            .ok({ timeout: 10000 })
             // Allow time for redirect to occur
             .wait(2000);
 
