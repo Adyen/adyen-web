@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
+import { BinLookupResponse, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
