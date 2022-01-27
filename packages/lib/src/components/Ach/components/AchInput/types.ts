@@ -41,7 +41,7 @@ export interface ACHInputProps {
     loadingContext: string;
     onAllValid?: () => {};
     onBlur?: (e) => {};
-    onChange?: ({}) => {};
+    onChange?: (obj) => {};
     onConfigSuccess?: () => {};
     onError?: () => {};
     onFieldValid?: () => {};
