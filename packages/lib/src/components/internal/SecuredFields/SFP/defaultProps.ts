@@ -21,9 +21,9 @@ export interface SFPProps {
     legacyInputMode?: boolean;
     loadingContext: string;
     minimumExpiryDate?: string;
-    onAllValid?: () => {};
     onAdditionalSFConfig?: () => {};
     onAdditionalSFRemoved?: () => {};
+    onAllValid?: () => {};
     onAutoComplete?: () => {};
     onBinValue?: () => {};
     onBrand?: () => {};
@@ -33,7 +33,7 @@ export interface SFPProps {
     onFieldValid?: () => {};
     onFocus?: () => {};
     onLoad?: () => {};
-    rootNode: HTMLElement;
+    rootNode: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
