@@ -15,7 +15,7 @@ import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
-import { getPreviousTabbableNonSFElement } from '../utils/tabbing/utils';
+// import { getPreviousTabbableNonSFElement } from '../utils/tabbing/utils';
 
 // const focusExternalField = (pAdditionalField: HTMLElement): void => {
 //     if (pAdditionalField) {
