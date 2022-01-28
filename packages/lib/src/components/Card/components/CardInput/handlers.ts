@@ -60,11 +60,11 @@ export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
     };
 };
 
-export const getAutoJumpHandler = (isAutoJumping, sfp) => {
+export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
     return () => {
         if (!isAutoJumping.current) {
             isAutoJumping.current = true;
-            console.log('### handlers::doPANAutoJump:: set focus on next field');
+            console.log('### handlers::doPANAutoJump:: set focus on next field layout=', layout);
 
             // CardInput can call this more than once in quick succession
             // e.g. if field was in error (error + fieldValid) or other SFs are optional (fieldValid + allValid) etc

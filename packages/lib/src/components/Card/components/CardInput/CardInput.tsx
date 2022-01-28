@@ -119,12 +119,21 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
-    const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp);
+    const doPanAutoJump = getAutoJumpHandler(
+        isAutoJumping,
+        sfp,
+        getLayout({
+            props,
+            showKCP,
+            showBrazilianSSN,
+            countrySpecificSchemas: props.billingAddressRequired ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
+        })
+    );
 
-    const handleSecuredFieldsChange = (sfState: SFPState, who?: string): void => {
+    const handleSecuredFieldsChange = (sfState: SFPState): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
         setMergedSRErrors(null);
-        console.log('### CardInput::handleSecuredFieldsChange:: who=', who);
+
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
          */
