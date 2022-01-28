@@ -19,7 +19,7 @@ import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
-import { getErrorPanelHandler, getAddressHandler, getFocusHandler } from './handlers';
+import { getErrorPanelHandler, getAddressHandler, getFocusHandler, getAutoJumpHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
@@ -32,6 +32,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     if (!Object.keys(cardInputRef.current).length) {
         props.setComponentRef(cardInputRef.current);
     }
+
+    const hasPanLength = useRef(false);
+    const isAutoJumping = useRef(false);
 
     const errorFieldId = 'creditCardErrors';
 
@@ -115,6 +118,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
+    const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp);
+
     const handleSecuredFieldsChange = (sfState: SFPState): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
         setMergedSRErrors(null);
@@ -134,7 +139,14 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             return;
         }
 
-        console.log('### CardInput::handleSecuredFieldsChange:: sfState.valid', sfState.valid);
+        console.log('### CardInput::handleSecuredFieldsChange:: PAN valid', valid.encryptedCardNumber);
+        console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
+
+        // Was invalid but now is valid AND we have a panLength returned from binLookup
+        if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLength.current) {
+            console.log('### CardInput::handleSecuredFieldsChange:: HAS pan length=', hasPanLength.current);
+            doPanAutoJump();
+        }
 
         setData({ ...data, ...sfState.data });
         setErrors({ ...errors, ...sfState.errors });
@@ -154,7 +166,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             CIExtensions(
                 props,
                 { sfp },
-                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode }
+                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode },
+                hasPanLength
             ),
         [dualBrandSelectElements, issuingCountryCode]
     );

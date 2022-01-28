@@ -1,5 +1,5 @@
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { ALL_SECURED_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { ALL_SECURED_FIELDS, ENCRYPTED_EXPIRY_DATE } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 
@@ -57,5 +57,19 @@ export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
     return (e: CbObjOnFocus) => {
         setFocusedElement(e.currentFocusObject);
         e.focus === true ? onFocus(e) : onBlur(e);
+    };
+};
+
+export const getAutoJumpHandler = (isAutoJumping, sfp) => {
+    return () => {
+        if (!isAutoJumping.current) {
+            isAutoJumping.current = true;
+            console.log('### handlers::doPANAutoJump:: set focus on next field');
+
+            Promise.resolve().then(() => {
+                sfp.current.setFocusOn(ENCRYPTED_EXPIRY_DATE);
+                isAutoJumping.current = false;
+            });
+        }
     };
 };
