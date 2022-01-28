@@ -5,7 +5,7 @@ export interface SFPState {
     status?: string;
     brand?: string;
     errors?: object;
-    valid: object;
+    valid: SFPValid;
     data: object;
     cvcPolicy?: CVCPolicyType;
     isSfpValid?: boolean;
@@ -21,4 +21,15 @@ export interface SFPState {
 export interface SingleBrandResetObject {
     brand: string;
     cvcPolicy: CVCPolicyType;
+}
+
+export interface SFPValid {
+    encryptedCardNumber?: boolean;
+    encryptedExpiryMonth?: boolean;
+    encryptedExpiryYear?: boolean;
+    encryptedSecurityCode?: boolean;
+    encryptedPassword?: boolean;
+    encryptedPin?: boolean;
+    encryptedBankAccountNumber?: boolean;
+    encryptedBankLocationId?: boolean;
 }
