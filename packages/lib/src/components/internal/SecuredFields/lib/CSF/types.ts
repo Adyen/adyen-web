@@ -15,6 +15,7 @@ export interface CSFReturnObject {
     removeSecuredField: any;
     setKCPStatus: any;
     sendValueToFrame?: any;
+    sfIsOptionalOrHidden: (f: string) => boolean;
 }
 
 /**

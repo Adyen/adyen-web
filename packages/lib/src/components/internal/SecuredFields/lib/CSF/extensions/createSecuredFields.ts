@@ -124,7 +124,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
      *  encryptedExpiryYear
      *  encryptedSecurityCode
      *  encryptedPassword
-     *  encryptedPin
+     *  encryptedPin???
      *  encryptedBankAccountNumber
      *  encryptedBankLocationId
      *  encryptedIBAN
