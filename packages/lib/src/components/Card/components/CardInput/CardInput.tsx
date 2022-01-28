@@ -134,6 +134,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             return;
         }
 
+        console.log('### CardInput::handleSecuredFieldsChange:: sfState.valid', sfState.valid);
+
         setData({ ...data, ...sfState.data });
         setErrors({ ...errors, ...sfState.errors });
         setValid({ ...valid, ...sfState.valid });
@@ -158,7 +160,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     );
 
     /**
-     * EXPECTED METHODS ON CARD.THIS
+     * EXPOSE METHODS expected by Card.tsx
      */
     cardInputRef.current.showValidation = () => {
         // Clear errors so that the screenreader will read them *all* again
@@ -186,7 +188,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * EFFECT HOOKS
      */
     useEffect(() => {
-        // componentDidMount
+        // componentDidMount - expose more methods expected by Card.tsx
         cardInputRef.current.setFocusOn = sfp.current.setFocusOn;
         cardInputRef.current.updateStyles = sfp.current.updateStyles;
         cardInputRef.current.handleUnsupportedCard = sfp.current.handleUnsupportedCard;

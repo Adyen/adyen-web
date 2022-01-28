@@ -40,8 +40,8 @@ const getPreviousTabbableEl = (matchEl, getPrevious = true) => {
     return actualTabEls[matchElIndex + indexModifier];
 };
 
-export const getPreviousTabbableNonSFElement = (passedFieldType, rootNode) => {
+export const getPreviousTabbableNonSFElement = (passedFieldType, rootNode, getPrevious?) => {
     // --
     const sfEl = selectOne(rootNode, `[data-cse=${passedFieldType}]`);
-    return getPreviousTabbableEl(sfEl);
+    return getPreviousTabbableEl(sfEl, getPrevious);
 };

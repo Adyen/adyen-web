@@ -25,14 +25,16 @@ export default function extensions(props, refs, states) {
                 setDualBrandSelectElements([]);
                 setSelectedBrandValue('');
 
-                // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon
-                // However for a single-branded card we need to pass the "base" type so the brand logo is reset
+                // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon - so set to null
+                // However for a single-branded card we need to pass the "base" type so the brand logo is reset - so set to type
                 const brandToReset = isReset && type !== 'card' ? type : null;
 
                 sfp.current.processBinLookupResponse(binLookupResponse, {
                     brand: brandToReset,
                     cvcPolicy: cvcPolicy // undefined except for Bancontact
                 } as SingleBrandResetObject);
+
+                console.log('### extensions::processBinLookup:: RESET PAN LENGTH');
                 return;
             }
 
@@ -55,6 +57,10 @@ export default function extensions(props, refs, states) {
                         supportedBrands: [switcherObj.leadBrand]
                     });
 
+                    if (switcherObj.leadBrand.panLength > 0) {
+                        console.log('### extensions::processBinLookup:: HAVE PAN LENGTH');
+                    }
+
                     // 2) Single option found (binValueObject.supportedBrands.length === 1)
                 } else {
                     // Reset UI
@@ -69,6 +75,10 @@ export default function extensions(props, refs, states) {
                         issuingCountryCode: binLookupResponse.issuingCountryCode,
                         supportedBrands
                     });
+
+                    if (supportedBrands[0].panLength > 0) {
+                        console.log('### extensions::processBinLookup:: HAVE PAN LENGTH');
+                    }
                 }
             }
         },
