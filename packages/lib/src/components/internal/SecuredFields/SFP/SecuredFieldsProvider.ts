@@ -15,33 +15,10 @@ import {
     CbObjOnLoad
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
-import { AddressData } from '../../../../types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
-import { CVCPolicyType, DatePolicyType } from '../lib/types';
 import { getError } from '../../../../core/Errors/utils';
-
-export interface SFPState {
-    status?: string;
-    brand?: string;
-    errors?: object;
-    valid: object;
-    data: object;
-    cvcPolicy?: CVCPolicyType;
-    isSfpValid?: boolean;
-    autoCompleteName?: string;
-    billingAddress?: AddressData;
-    hasUnsupportedCard?: boolean;
-    hasKoreanFields?: boolean;
-    showSocialSecurityNumber?: boolean;
-    expiryDatePolicy?: DatePolicyType;
-    socialSecurityNumber?: string;
-}
-
-export interface SingleBrandResetObject {
-    brand: string;
-    cvcPolicy: CVCPolicyType;
-}
+import { SFPState, SingleBrandResetObject } from './types';
 
 /**
  * SecuredFieldsProvider:
@@ -159,7 +136,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             rootNode: root,
             type: this.props.type,
             clientKey: this.props.clientKey,
-            cardGroupTypes: this.props.groupTypes,
+            cardGroupTypes: this.props.brands,
             allowedDOMAccess: this.props.allowedDOMAccess,
             autoFocus: this.props.autoFocus,
             trimTrailingSeparator: this.props.trimTrailingSeparator,

@@ -135,3 +135,31 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         expiryYear: props.expiryYear
     };
 };
+
+export const extractPropsForSFP = (props: CardInputProps) => {
+    return {
+        allowedDOMAccess: props.allowedDOMAccess,
+        autoFocus: props.autoFocus,
+        brands: props.brands,
+        brandsConfiguration: props.brandsConfiguration,
+        clientKey: props.clientKey,
+        countryCode: props.countryCode,
+        i18n: props.i18n,
+        implementationType: props.implementationType,
+        keypadFix: props.keypadFix,
+        legacyInputMode: props.legacyInputMode,
+        loadingContext: props.loadingContext,
+        minimumExpiryDate: props.minimumExpiryDate,
+        onAdditionalSFConfig: props.onAdditionalSFConfig,
+        onAdditionalSFRemoved: props.onAdditionalSFRemoved,
+        onAllValid: props.onAllValid,
+        onAutoComplete: props.onAutoComplete,
+        onBinValue: props.onBinValue,
+        onConfigSuccess: props.onConfigSuccess,
+        onError: props.onError,
+        onFieldValid: props.onFieldValid,
+        onLoad: props.onLoad,
+        showWarnings: props.showWarnings,
+        trimTrailingSeparator: props.trimTrailingSeparator
+    };
+};

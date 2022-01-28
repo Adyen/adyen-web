@@ -30,9 +30,6 @@ export interface CardElementProps extends UIElementProps {
      */
     type?: string;
 
-    /** @deprecated use brands instead */
-    groupTypes?: string[];
-
     /** List of brands accepted by the component */
     brands?: string[];
 

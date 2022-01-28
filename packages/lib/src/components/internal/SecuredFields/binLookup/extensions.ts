@@ -1,4 +1,4 @@
-import { SingleBrandResetObject } from '../SFP/SecuredFieldsProvider';
+import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 

@@ -12,7 +12,7 @@ import defaultStyles from './defaultStyles';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './AchInput.module.scss';
 import './AchInput.scss';
-import { ACHInputStateError, ACHInputStateValid } from './types';
+import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -21,16 +21,16 @@ function validateHolderName(holderName, holderNameRequired = false) {
     return true;
 }
 
-function AchInput(props) {
+function AchInput(props: ACHInputProps) {
     const { i18n } = useCoreContext();
 
-    const holderNameIsValid = props.hasHolderName && (props.holderName || props.data.holderName);
+    const holderNameIsValid = props.hasHolderName && (!!props.holderName || !!props.data.holderName);
 
     const [errors, setErrors] = useState<ACHInputStateError>({});
     const [valid, setValid] = useState<ACHInputStateValid>({
         ...(props.holderNameRequired && { holderName: holderNameIsValid })
     });
-    const [data, setData] = useState({
+    const [data, setData] = useState<ACHInputDataState>({
         ...(props.hasHolderName && { holderName: props.holderName || props.data.holderName })
     });
 
@@ -127,7 +127,7 @@ function AchInput(props) {
         <div className="adyen-checkout__ach">
             <SecuredFieldsProvider
                 ref={sfp}
-                {...props}
+                {...extractPropsForSFP(props)}
                 styles={{ ...defaultStyles, ...props.styles }}
                 onChange={handleSecuredFieldsChange}
                 onFocus={handleFocus}
@@ -185,3 +185,24 @@ function AchInput(props) {
 AchInput.defaultProps = defaultProps;
 
 export default AchInput;
+
+const extractPropsForSFP = (props: ACHInputProps) => {
+    return {
+        allowedDOMAccess: props.allowedDOMAccess,
+        autoFocus: props.autoFocus,
+        clientKey: props.clientKey,
+        i18n: props.i18n,
+        keypadFix: props.keypadFix,
+        legacyInputMode: props.legacyInputMode,
+        loadingContext: props.loadingContext,
+        onAllValid: props.onAllValid,
+        onConfigSuccess: props.onConfigSuccess,
+        onError: props.onError,
+        onFieldValid: props.onFieldValid,
+        onFocus: props.onFocus,
+        onLoad: props.onLoad,
+        showWarnings: props.showWarnings,
+        styles: props.styles,
+        type: props.type
+    };
+};
