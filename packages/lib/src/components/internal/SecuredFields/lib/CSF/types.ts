@@ -32,7 +32,7 @@ interface CSFCommonProps {
     iframeUIConfig?: object;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
-    implementationType?: string;
+    implementationType?: 'components' | 'custom';
     isCollatingErrors?: boolean;
 }
 

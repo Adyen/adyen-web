@@ -33,7 +33,7 @@ export class CardElement extends UIElement<CardElementProps> {
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
-            ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
+            // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
@@ -149,7 +149,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get accessibleName(): string {
-        // use display name, unless it's a stored payment method, there inform user
+        // Use display name, unless it's a stored payment method, there inform user
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId

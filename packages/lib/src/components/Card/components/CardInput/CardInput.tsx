@@ -1,6 +1,7 @@
 import { h, Fragment, FunctionalComponent } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
-import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import { SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
@@ -11,7 +12,7 @@ import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } f
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { extractPropsForCardFields, getLayout, sortErrorsForPanel } from './utils';
+import { extractPropsForCardFields, extractPropsForSFP, getLayout, sortErrorsForPanel } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
@@ -325,7 +326,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         <Fragment>
             <SecuredFieldsProvider
                 ref={sfp}
-                {...props}
+                {...extractPropsForSFP(props)}
                 styles={{ ...defaultStyles, ...props.styles }}
                 koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
