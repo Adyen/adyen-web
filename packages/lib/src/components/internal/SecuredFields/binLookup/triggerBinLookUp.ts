@@ -7,7 +7,7 @@ import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
 import { sortBrandsAccordingToRules } from './sortBinLookupBrands';
 
 if (process.env.NODE_ENV === 'development') {
-    window.mockBinCount = 1; // Set to 0 to turn off mocking, 1 to turn it on
+    window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
 }
 
 export default parent => {
@@ -28,12 +28,11 @@ export default parent => {
             httpPost(
                 {
                     loadingContext: parent.props.loadingContext,
-                    path: `v3/bin/binLookup?token=${parent.props.clientKey}`
+                    path: `v2/bin/binLookup?token=${parent.props.clientKey}`
                 },
                 {
                     supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                     encryptedBin: callbackObj.encryptedBin,
-
                     requestId: callbackObj.uuid // Pass id of request
                 }
             ).then((data: BinLookupResponseRaw) => {
@@ -48,14 +47,15 @@ export default parent => {
                                     data.brands = [
                                         {
                                             brand: 'mc',
-                                            cvcPolicy: 'required',
+                                            cvcPolicy: 'optional',
                                             enableLuhnCheck: true,
                                             // showExpiryDate: true, // deprecated in /binLookup v3
-                                            expiryDatePolicy: 'required',
-                                            panLength: 16,
+                                            expiryDatePolicy: 'optional',
+                                            // panLength: 16,
                                             supported: true
                                         }
                                     ];
+                                    // data.issuingCountryCode = 'KR'; // needed to mock korean_local_card
                                     // increment to alter second response
                                     window.mockBinCount++;
 
@@ -71,6 +71,7 @@ export default parent => {
                                             showExpiryDate: true,
                                             supported: true,
                                             showSocialSecurityNumber: false
+                                            // panLength: 16
                                         }
                                     ];
                                     break;

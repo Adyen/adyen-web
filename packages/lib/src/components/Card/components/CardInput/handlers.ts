@@ -15,24 +15,6 @@ export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOn
             // If not a cardInput related securedField - find field and set focus on it
             // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
             if (!CC_SF_FIELDS.includes(who)) {
-                // let nameVal: string = who;
-                //
-                // // We have an exception with the kcp taxNumber where the name of the field ('kcpTaxNumberOrDOB') doesn't match
-                // // the value by which the field is referred to internally ('taxNumber')
-                // if (nameVal === 'taxNumber') nameVal = 'kcpTaxNumberOrDOB';
-                //
-                // if (nameVal === 'country' || nameVal === 'stateOrProvince') {
-                //     // Set focus on dropdown
-                //     const field: HTMLElement = selectOne(
-                //         sfp.current.rootNode,
-                //         `.adyen-checkout__field--${nameVal} .adyen-checkout__dropdown__button`
-                //     );
-                //     field?.focus();
-                // } else {
-                //     // Set focus on input
-                //     const field: HTMLElement = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
-                //     field?.focus();
-                // }
                 setFocusOnNonSF(who, sfp);
             } else {
                 // Is a securedField - so it has it's own focus procedures
