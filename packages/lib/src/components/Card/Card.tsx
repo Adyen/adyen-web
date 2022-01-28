@@ -149,7 +149,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get accessibleName(): string {
-        // use display name, unless it's a stored payment method, there inform user
+        // Use display name, unless it's a stored payment method, there inform user
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId

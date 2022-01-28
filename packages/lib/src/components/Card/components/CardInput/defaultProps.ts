@@ -1,7 +1,6 @@
 import { SocialSecurityMode } from '../../types';
 
 export default {
-    // details: [],
     type: 'card',
 
     setComponentRef: () => {},
@@ -10,10 +9,7 @@ export default {
     hasHolderName: false,
     holderNameRequired: false,
     enableStoreDetails: false,
-    // hideCVC: false,
     hasCVC: true,
-    // hasStoreDetails: false,
-    // storedDetails: null,
     showBrandIcon: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
