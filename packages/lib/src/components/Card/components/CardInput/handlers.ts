@@ -66,6 +66,9 @@ export const getAutoJumpHandler = (isAutoJumping, sfp) => {
             isAutoJumping.current = true;
             console.log('### handlers::doPANAutoJump:: set focus on next field');
 
+            // CardInput can call this more than once in quick succession
+            // e.g. if field was in error (error + fieldValid) or other SFs are optional (fieldValid + allValid) etc
+            // - so make async to avoid double setFocus call
             Promise.resolve().then(() => {
                 sfp.current.setFocusOn(ENCRYPTED_EXPIRY_DATE);
                 isAutoJumping.current = false;

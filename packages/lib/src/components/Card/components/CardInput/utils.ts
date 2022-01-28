@@ -15,6 +15,7 @@ import {
     SSN_CARD_NAME_TOP
 } from './layouts';
 import { StringObject } from '../../../internal/Address/types';
+import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -161,5 +162,5 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         onLoad: props.onLoad,
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator
-    };
+    } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };

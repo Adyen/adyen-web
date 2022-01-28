@@ -2,7 +2,7 @@ import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 
-export default function extensions(props, refs, states, hasPanLength) {
+export default function extensions(props, refs, states, hasPanLengthRef?) {
     // Destructure props, refs and state hooks
     const { type, cvcPolicy } = props;
     const { sfp } = refs;
@@ -35,8 +35,7 @@ export default function extensions(props, refs, states, hasPanLength) {
                 } as SingleBrandResetObject);
 
                 // Reset storage var
-                console.log('### extensions::processBinLookup:: RESET PAN LENGTH');
-                hasPanLength.current = false;
+                hasPanLengthRef.current = false;
                 return;
             }
 
@@ -61,8 +60,7 @@ export default function extensions(props, refs, states, hasPanLength) {
 
                     // Store the fact the binLookup obj has a panLength prop
                     if (switcherObj.leadBrand.panLength > 0) {
-                        console.log('### extensions::processBinLookup:: HAVE PAN LENGTH');
-                        hasPanLength.current = true;
+                        hasPanLengthRef.current = true;
                     }
 
                     // 2) Single option found (binValueObject.supportedBrands.length === 1)
@@ -82,8 +80,7 @@ export default function extensions(props, refs, states, hasPanLength) {
 
                     // Store the fact the binLookup obj has a panLength prop
                     if (supportedBrands[0].panLength > 0) {
-                        console.log('### extensions::processBinLookup:: HAVE PAN LENGTH');
-                        hasPanLength.current = true;
+                        hasPanLengthRef.current = true;
                     }
                 }
             }

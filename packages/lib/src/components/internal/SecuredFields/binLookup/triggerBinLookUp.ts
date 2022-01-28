@@ -33,11 +33,7 @@ export default parent => {
                 {
                     supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                     encryptedBin: callbackObj.encryptedBin,
-                    // TODO - need for testing local SFs
-                    /* prettier-ignore */
-                    // encryptedBin:
-                    // 'adyenjs_0_1_25$Fo8EBVzB482iuYdY2Pw02RziqyxhlrabgTDtIwOQSivLV6onNyoNo++0qfddZIFojbL4j4JOEfmYms8KIu3+IKBPs/HBepglGn80JLlN4GYRQnFQBeKeW49w2cagDLJRCxvQEEHfsOJuI44OPFx0lsOsw99PoI1KPMIKvPo0pmQ7LiZJC5bVLSRWmOSqEVMBQZ+y50wz0wwIF/CYYHUCjh5L5kuw1BHbHDyDdhL+/V5eci++0flo+oE2gB2LKawzmqmRx93j3HYwMAnMiC+hddiYxYZd134YLkfcS0Ld6ynoo8GHgbyG07YXUPskO2soM5Jw9frPq4a2ek331zIZAw==$pn70T6q6rW2cpmUWHt/7ZVECi20hmpV0iowVr+rAxNTM+L8Rs668jlMb2UXjr2+9JfLTNakWFddMcMCmamcow0OGOf8oeaZMGlFIoqia+qgVTwmiKPeRdSnFZiF0RGokEgnfMK/w+JoV6Rw1NnSG6govrjPi2uC0qqgaYgDWmpGa0n8RborvkhRuL/m8dFs0qVN8pJkLIEgupIv05jhkrFfTvGoPC+Guzc+YkfqC8oa/EkmLFZBg6Ps/g1P+k7sLhQl4osViiLRaASju+d1dZcCaZCX5BWydvcRIPRcVg5DCj4wtXUNxYd+oCbomLPTQhrb8N0fptCvT01IXXxfUDvyX4nxSpWxO6fkot+D9S2Q3V2Za/wykMapL0kQdBNNzK2FjwEZOXJOOQ9hfW8rl5oR/Co8Rphm+eOL2HzyE9eWmA8W8IHxxdZ0XcOGf1KDTq9pn+H0ZWwvJwo2EmeXgCurtti/haoof6CdOLf5fmWpzonsKzbG/e+iFpCAyjINi3mw3ri/mAxZFJJj70bY6dylG5JZm9y4PcS1A0hHFkFje4J00l1yKDwwDTzvhes+VwaRfyBlz38Sp08zhxD5qK5fa+PgaaL2/c8ol9xf6wK46xtEIWGxHseGMo0aF49sGilpRJ857beyqe66/AuThWifbqvBSxzppFwV9fkBU9IefzjD/kKOJRUCm10iwAHvzZOFyLyyBh67tQJemdNTQkui1n/Ts6NyF8lAs2jdYPuof9dXJaT68qRx2+TwmnZN+Xi9npa8LWRX6DI1cuCv/BQqOiPCaS3ZLIU6ltUNd',
-                    // end TODO
+
                     requestId: callbackObj.uuid // Pass id of request
                 }
             ).then((data: BinLookupResponseRaw) => {
@@ -50,47 +46,15 @@ export default parent => {
                                 case 1:
                                     console.log('\n### triggerBinLookUp::mock first response:: ');
                                     data.brands = [
-                                        // {
-                                        //     brand: 'maestro',
-                                        //     cvcPolicy: 'optional',
-                                        //     enableLuhnCheck: true,
-                                        //     showExpiryDate: true,
-                                        //     expiryDatePolicy: 'optional',
-                                        //     supported: true
-                                        // },
-                                        // {
-                                        //     brand: 'visa',
-                                        //     cvcPolicy: 'required',
-                                        //     enableLuhnCheck: true,
-                                        //     showExpiryDate: true,
-                                        //     supported: true
-                                        //     // showSocialSecurityNumber: true
-                                        // }
                                         {
                                             brand: 'mc',
-                                            cvcPolicy: 'optional',
+                                            cvcPolicy: 'required',
                                             enableLuhnCheck: true,
                                             // showExpiryDate: true, // deprecated in /binLookup v3
-                                            expiryDatePolicy: 'optional',
+                                            expiryDatePolicy: 'required',
                                             panLength: 16,
                                             supported: true
                                         }
-                                        // {
-                                        //     brand: 'bcmc',
-                                        //     cvcPolicy: 'hidden',
-                                        //     enableLuhnCheck: true,
-                                        //     expiryDatePolicy: 'required',
-                                        //     supported: true,
-                                        //     panLength: 16
-                                        // },
-                                        // {
-                                        //     brand: 'visa',
-                                        //     cvcPolicy: 'required',
-                                        //     enableLuhnCheck: true,
-                                        //     expiryDatePolicy: 'optional',
-                                        //     supported: true,
-                                        //     panLength: 17
-                                        // }
                                     ];
                                     // increment to alter second response
                                     window.mockBinCount++;
@@ -108,13 +72,6 @@ export default parent => {
                                             supported: true,
                                             showSocialSecurityNumber: false
                                         }
-                                        // {
-                                        //     brand: 'cartebancaire',
-                                        //     cvcPolicy: 'required',
-                                        //     enableLuhnCheck: true,
-                                        //     showExpiryDate: false,
-                                        //     supported: true
-                                        // }
                                     ];
                                     break;
                                 default:
