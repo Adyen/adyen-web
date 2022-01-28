@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import Language from '../../../language/Language';
-import SecuredFieldsProvider, { SFPState } from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import { SFPState } from '../../internal/SecuredFields/SFP/types';
 import { BinLookupResponse, CardBrandsConfiguration } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
 import { StylesObject } from '../../internal/SecuredFields/lib/types';

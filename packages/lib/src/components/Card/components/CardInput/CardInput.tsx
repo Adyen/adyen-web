@@ -1,6 +1,7 @@
 import { h, Fragment, FunctionalComponent } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
-import SecuredFieldsProvider, { SFPState } from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import { SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
