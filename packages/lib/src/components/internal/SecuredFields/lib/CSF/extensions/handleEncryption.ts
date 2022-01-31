@@ -30,36 +30,9 @@ import getIframeContentWin from '../utils/iframes/getIframeContentWin';
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
     const fieldType: string = pFeedbackObj.fieldType;
-    console.log('### handleEncryption::handleEncryption:: ');
 
     // SET FOCUS ON OTHER INPUT - If user has just typed a correct expiryDate - set focus on the cvc field OR typed a correct expiryMonth - focus on year field
     if (this.config.autoFocus) {
-        // TODO New - auto-jump fny
-        // console.log('### handleEncryption::autoFocus:: this.hasBinDefinedPanLength=', this.hasBinDefinedPanLength);
-        // console.log('### handleEncryption::autoFocus:: this.state.securedFields=', this.state.securedFields);
-        //
-        // if (fieldType === ENCRYPTED_CARD_NUMBER && this.hasBinDefinedPanLength) {
-        //     if (this.state.securedFields[ENCRYPTED_EXPIRY_DATE].expiryDatePolicy === DATE_POLICY_REQUIRED) {
-        //         this.setFocusOnFrame(ENCRYPTED_EXPIRY_DATE);
-        //     } else if (this.state.securedFields[ENCRYPTED_SECURITY_CODE].cvcPolicy === CVC_POLICY_REQUIRED) {
-        //         this.setFocusOnFrame(ENCRYPTED_SECURITY_CODE);
-        //     } else {
-        //         console.log('### handleEncryption::handleEncryption:: snother field guv!');
-        //         const nextField = getPreviousTabbableNonSFElement(ENCRYPTED_SECURITY_CODE, this.props.rootNode, false);
-        //         console.log('### handleEncryption::nextField:: ', nextField);
-        //         // focusExternalField(nextField);
-        //         nextField.focus();
-        //     }
-        //
-        //     const otherSFs = Object.keys(this.state.securedFields).slice(1);
-        //     console.log('### handleEncryption::otherSFs:: ', otherSFs);
-        //
-        //     // for(const sf of otherSFs){
-        //     //     if(this.state.securedFields[sf])
-        //     // }
-        // }
-        // end TODO
-
         if (pFeedbackObj.type === 'year' || fieldType === ENCRYPTED_EXPIRY_YEAR) {
             this.setFocusOnFrame(ENCRYPTED_SECURITY_CODE);
         }

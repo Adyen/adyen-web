@@ -34,7 +34,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         props.setComponentRef(cardInputRef.current);
     }
 
-    const hasPanLengthRef = useRef(false);
+    const hasPanLengthRef = useRef(0);
     const isAutoJumping = useRef(false);
 
     const errorFieldId = 'creditCardErrors';
@@ -130,9 +130,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         })
     );
 
-    const handleSecuredFieldsChange = (sfState: SFPState): void => {
+    const handleSecuredFieldsChange = (sfState: SFPState, who?: string): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
         setMergedSRErrors(null);
+
+        console.log('### CardInput::handleSecuredFieldsChange:: sfState=', sfState);
 
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
@@ -152,11 +154,13 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         /**
          * If PAN has just become valid - decide if we can shift focus to the next field
          */
-        // console.log('### CardInput::handleSecuredFieldsChange:: PAN valid', valid.encryptedCardNumber);
-        // console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
-        if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLengthRef.current) {
-            // Was invalid but now is valid AND we have a panLength returned from binLookup
-            // console.log('### CardInput::handleSecuredFieldsChange:: HAS pan length=', hasPanLengthRef.current);
+        console.log('### CardInput::handleSecuredFieldsChange:: who=', who);
+        console.log('### CardInput::handleSecuredFieldsChange:: PAN valid', valid.encryptedCardNumber);
+        console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
+        if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLengthRef.current > 0) {
+            //     // Was invalid but now is valid AND we have a panLength returned from binLookup
+            // if (sfState.valid.encryptedCardNumber && hasPanLengthRef.current > 0) {
+            console.log('### CardInput::handleSecuredFieldsChange:: Become valid & HAS pan length=', hasPanLengthRef.current);
 
             if (props.autoFocus) {
                 doPanAutoJump();

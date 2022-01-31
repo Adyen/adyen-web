@@ -35,7 +35,7 @@ export default function extensions(props, refs, states, hasPanLengthRef?) {
                 } as SingleBrandResetObject);
 
                 // Reset storage var
-                hasPanLengthRef.current = false;
+                hasPanLengthRef.current = 0;
                 return;
             }
 
@@ -60,7 +60,7 @@ export default function extensions(props, refs, states, hasPanLengthRef?) {
 
                     // Store the fact the binLookup obj has a panLength prop
                     if (switcherObj.leadBrand.panLength > 0) {
-                        hasPanLengthRef.current = true;
+                        hasPanLengthRef.current = switcherObj.leadBrand.panLength;
                     }
 
                     // 2) Single option found (binValueObject.supportedBrands.length === 1)
@@ -80,7 +80,7 @@ export default function extensions(props, refs, states, hasPanLengthRef?) {
 
                     // Store the fact the binLookup obj has a panLength prop
                     if (supportedBrands[0].panLength > 0) {
-                        hasPanLengthRef.current = true;
+                        hasPanLengthRef.current = supportedBrands[0].panLength;
                     }
                 }
             }
