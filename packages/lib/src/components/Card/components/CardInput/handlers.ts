@@ -1,5 +1,5 @@
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { ENCRYPTED_CARD_NUMBER, CC_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 
@@ -14,7 +14,7 @@ export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOn
 
             // If not a cardInput related securedField - find field and set focus on it
             // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
-            if (!CC_SF_FIELDS.includes(who)) {
+            if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
                 setFocusOnNonSF(who, sfp);
             } else {
                 // Is a securedField - so it has it's own focus procedures
@@ -63,7 +63,7 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
                  */
                 for (const field of subsequentFields) {
                     // Is the next field a credit card related securedField?
-                    if (CC_SF_FIELDS.includes(field)) {
+                    if (CREDIT_CARD_SF_FIELDS.includes(field)) {
                         const isOptionalOrHidden = sfp.current.sfIsOptionalOrHidden(field);
                         console.log('### handlers::autoJumpHandler:: ', field, 'can be skipped=', isOptionalOrHidden);
                         if (!isOptionalOrHidden) {

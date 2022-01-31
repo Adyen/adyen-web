@@ -22,19 +22,19 @@ export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', GIFT_CARD];
 
 // Credit card (CardInput) related securedFields
-export const CC_SF_FIELDS = [
+export const CREDIT_CARD_SF_FIELDS = [
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD
-    // ENCRYPTED_PIN_FIELD,// probably redundant - it was an alt. name for KCP's encryptedPassword
+    // ENCRYPTED_PIN_FIELD,// probably redundant - it was an alt. name for KCP's encryptedPassword. But maybe has a role to play if we ever encrypt ibans.
 ];
 
 export const OTHER_SF_FIELDS = [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD];
 
-export const ALL_SECURED_FIELDS = CC_SF_FIELDS.concat(OTHER_SF_FIELDS);
+export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS.concat(OTHER_SF_FIELDS);
 
 // export const ALL_RELATED_SECURED_FIELDS = ALL_SECURED_FIELDS.concat(NON_CREDIT_CARD_TYPE_SECURED_FIELDS);
 
