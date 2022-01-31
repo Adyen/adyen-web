@@ -64,7 +64,7 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
 
     this.setState({ isSfpValid: status.allValid }, () => {
         // New - fixes maestro-with-error-on-optional-cvc-field bug
-        this.props.onChange(this.state);
+        this.props.onChange(this.state, { event: 'handleOnAllValid' });
         // Propagate onAllValid event
         this.props.onAllValid(status);
     });
@@ -96,7 +96,7 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     });
 
     this.setState(setValidFieldState, () => {
-        this.props.onChange(this.state);
+        this.props.onChange(this.state, { event: 'handleOnFieldValid', fieldType: field.fieldType });
 
         // Propagate onFieldValid event
         this.props.onFieldValid(field);
@@ -156,7 +156,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
             };
         },
         () => {
-            this.props.onChange(this.state);
+            this.props.onChange(this.state, { event: 'handleOnBrand', fieldType: ENCRYPTED_CARD_NUMBER });
 
             // Enhance data object with the url for the brand image, first checking if the merchant has configured their own one for this brand
             const brandImageUrl = this.props.brandsConfiguration[cardInfo.brand]?.icon ?? getCardImageUrl(cardInfo.brand, this.props.loadingContext);
@@ -181,7 +181,7 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
             ...(hasUnsupportedCard && { isSfpValid: false })
         }),
         () => {
-            this.props.onChange(this.state);
+            this.props.onChange(this.state, { event: 'handleOnError', fieldType: cbObj.fieldType });
         }
     );
 
@@ -197,7 +197,7 @@ function handleFocus(cbObj: CbObjOnFocus): void {
 // Only called for holder name
 function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.setState({ autoCompleteName: cbObj.value }, () => {
-        this.props.onChange(this.state);
+        this.props.onChange(this.state, { event: 'handleOnAutoComplete', fieldType: cbObj.fieldType });
         this.setState({ autoCompleteName: null }); // Nullify ref after sending it (lets shopper edit holder name)
     });
     this.props.onAutoComplete(cbObj);

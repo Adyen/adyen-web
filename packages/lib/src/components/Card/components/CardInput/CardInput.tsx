@@ -1,12 +1,12 @@
 import { h, Fragment, FunctionalComponent } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
-import { SFPState } from '../../../internal/SecuredFields/SFP/types';
+import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState, CardInputRef } from './types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
@@ -130,7 +130,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         })
     );
 
-    const handleSecuredFieldsChange = (sfState: SFPState, who?: string): void => {
+    const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
         setMergedSRErrors(null);
 
@@ -154,12 +154,23 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         /**
          * If PAN has just become valid - decide if we can shift focus to the next field
          */
-        console.log('### CardInput::handleSecuredFieldsChange:: who=', who);
-        console.log('### CardInput::handleSecuredFieldsChange:: PAN valid', valid.encryptedCardNumber);
-        console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
-        if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLengthRef.current > 0) {
-            //     // Was invalid but now is valid AND we have a panLength returned from binLookup
-            // if (sfState.valid.encryptedCardNumber && hasPanLengthRef.current > 0) {
+        // console.log('### CardInput::handleSecuredFieldsChange:: eventDetails=', eventDetails);
+        // console.log('### CardInput::handleSecuredFieldsChange:: PAN valid', valid.encryptedCardNumber);
+        // console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
+
+        // Works to limit to feedback about PAN field - but doesn't work for pasted number (when handleOnBrand event, triggered by binLookup, happens after the handleOnFieldValid event)
+        // if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLengthRef.current > 0) {
+
+        // If encryptedCardNumber was invalid but now is valid
+        //     [scenario: shopper has typed in a number and field is now valid]
+        // OR encryptedCardNumber was valid and still is valid and we're handling an onBrand event from SFP (triggered by binLookup which has happened after the handleOnFieldValid event)
+        //     [scenario: shopper has pasted in a full, valid, number]
+        // AND, in both cases, if we have a panLength value from binLookup...
+        if (
+            ((!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber) ||
+                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails.event === 'handleOnBrand')) &&
+            hasPanLengthRef.current > 0
+        ) {
             console.log('### CardInput::handleSecuredFieldsChange:: Become valid & HAS pan length=', hasPanLengthRef.current);
 
             if (props.autoFocus) {

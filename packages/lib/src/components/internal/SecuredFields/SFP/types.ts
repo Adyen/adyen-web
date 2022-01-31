@@ -74,3 +74,8 @@ export interface SFPValid {
     encryptedBankAccountNumber?: boolean;
     encryptedBankLocationId?: boolean;
 }
+
+export interface OnChangeEventDetails {
+    event: string;
+    fieldType?: string;
+}
