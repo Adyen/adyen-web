@@ -25,6 +25,15 @@ export interface CardElementProps extends UIElementProps {
     brandsConfiguration?: CardBrandsConfiguration;
 
     /**
+     * Configuration for Click to Pay
+     * If 'schemas' property has invalid values or not provided, Click to Pay feature is ignored
+     */
+    clickToPayConfiguration?: {
+        schemas: Array<string>;
+        shopperIdentity?: { value: string; type: string };
+    };
+
+    /**
      * type will always be "card" (generic card, stored card)
      * except for a single branded card when it will be the same as the brand prop
      */

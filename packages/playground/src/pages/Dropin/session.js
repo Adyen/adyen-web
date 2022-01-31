@@ -40,7 +40,16 @@ export async function initSession() {
 
                 // billingAddress config:
                 billingAddressRequired: true,
-                billingAddressMode: 'partial'
+                billingAddressMode: 'partial',
+
+                clickToPayConfiguration: {
+                    schemas: ['visa'],
+                    shopperIdentity: {
+                        value: 'guilherme.ribeiro-visaclicktopay1@adyen.com',
+                        // value: 'guilherme-visaclicktopay1@adyen.com',
+                        type: 'email'
+                    }
+                }
             }
         }
     });
