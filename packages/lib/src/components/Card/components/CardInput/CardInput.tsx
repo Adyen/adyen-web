@@ -156,9 +156,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         // console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
         if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLengthRef.current) {
             // Was invalid but now is valid AND we have a panLength returned from binLookup
-            console.log('### CardInput::handleSecuredFieldsChange:: HAS pan length=', hasPanLengthRef.current);
+            // console.log('### CardInput::handleSecuredFieldsChange:: HAS pan length=', hasPanLengthRef.current);
 
-            doPanAutoJump();
+            if (props.autoFocus) {
+                doPanAutoJump();
+            }
         }
 
         /**
