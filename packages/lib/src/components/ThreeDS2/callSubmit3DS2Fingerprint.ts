@@ -15,8 +15,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
             errorLevel: 'fatal'
         },
         {
-            ...data,
-            paymentData: data.paymentData + 'x'
+            ...data
         }
     )
         .then(resData => {
