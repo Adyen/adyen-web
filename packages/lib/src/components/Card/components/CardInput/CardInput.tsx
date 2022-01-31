@@ -6,7 +6,7 @@ import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState, CardInputRef } from './types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';

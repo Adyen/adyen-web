@@ -156,7 +156,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
             };
         },
         () => {
-            this.props.onChange(this.state, { event: 'handleOnBrand', fieldType: ENCRYPTED_CARD_NUMBER });
+            this.props.onChange(this.state, { event: 'handleOnBrand' });
 
             // Enhance data object with the url for the brand image, first checking if the merchant has configured their own one for this brand
             const brandImageUrl = this.props.brandsConfiguration[cardInfo.brand]?.icon ?? getCardImageUrl(cardInfo.brand, this.props.loadingContext);

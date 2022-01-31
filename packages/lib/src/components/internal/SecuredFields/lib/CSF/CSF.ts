@@ -58,8 +58,7 @@ class CSF extends AbstractCSF {
             currentFocusObject: null,
             registerFieldForIos: false,
             securedFields: {},
-            isKCP: false,
-            hasBinDefinedPanLength: false
+            isKCP: false
         } as CSFStateObject;
 
         const thisObj = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };

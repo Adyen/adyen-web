@@ -86,5 +86,4 @@ export interface CSFStateObject {
     registerFieldForIos: boolean;
     securedFields: object;
     isKCP: boolean;
-    hasBinDefinedPanLength: boolean;
 }
