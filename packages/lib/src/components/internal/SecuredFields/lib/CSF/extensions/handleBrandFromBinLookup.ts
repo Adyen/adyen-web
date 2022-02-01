@@ -85,11 +85,12 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
 
     if (isGenericCard) {
         // Pass brand to CardNumber SF
-        this.sendBrandToCardSF({
+        const cardObj: SendBrandObject = {
             brand: passedBrand,
             enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false,
-            panLength: binBrandObj?.panLength
-        });
+            ...(binBrandObj?.panLength && { panLength: binBrandObj?.panLength })
+        };
+        this.sendBrandToCardSF(cardObj);
 
         // Inform the date related securedFields
         // - if expiryDatePolicy is 'optional' or 'hidden' they need to set the aria-required attribute / hide themselves
