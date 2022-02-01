@@ -152,30 +152,21 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         }
 
         /**
-         * If PAN has just become valid - decide if we can shift focus to the next field
+         * If PAN has just become valid: decide if we can shift focus to the next field.
+         *
+         * We can if the config prop, autoFocus, is true AND we have a panLength value from binLookup AND one of the following scenarios is true:
+         *  - If encryptedCardNumber was invalid but now is valid
+         *      [scenario: shopper has typed in a number and field is now valid]
+         *  - If encryptedCardNumber was valid and still is valid and we're handling an onBrand event (triggered by binLookup which has happened after the handleOnFieldValid event)
+         *     [scenario: shopper has pasted in a full, valid, number]
          */
-        // console.log('### CardInput::handleSecuredFieldsChange:: eventDetails=', eventDetails);
-        // console.log('### CardInput::handleSecuredFieldsChange:: PAN valid', valid.encryptedCardNumber);
-        // console.log('### CardInput::handleSecuredFieldsChange:: PAN sfState.valid', sfState.valid.encryptedCardNumber);
-
-        // Works to limit to feedback about PAN field - but doesn't work for pasted number (when handleOnBrand event, triggered by binLookup, happens after the handleOnFieldValid event)
-        // if (!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && hasPanLengthRef.current > 0) {
-
-        // If encryptedCardNumber was invalid but now is valid
-        //     [scenario: shopper has typed in a number and field is now valid]
-        // OR encryptedCardNumber was valid and still is valid and we're handling an onBrand event from SFP (triggered by binLookup which has happened after the handleOnFieldValid event)
-        //     [scenario: shopper has pasted in a full, valid, number]
-        // AND, in both cases, if we have a panLength value from binLookup...
         if (
-            ((!valid.encryptedCardNumber && sfState.valid.encryptedCardNumber) ||
-                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails.event === 'handleOnBrand')) &&
-            hasPanLengthRef.current > 0
+            props.autoFocus &&
+            hasPanLengthRef.current > 0 &&
+            ((!valid.encryptedCardNumber && sfState.valid?.encryptedCardNumber) ||
+                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails.event === 'handleOnBrand'))
         ) {
-            console.log('### CardInput::handleSecuredFieldsChange:: Become valid & HAS pan length=', hasPanLengthRef.current);
-
-            if (props.autoFocus) {
-                doPanAutoJump();
-            }
+            doPanAutoJump();
         }
 
         /**
