@@ -76,15 +76,15 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
  * Saves a field value from CSF in the CardInput state
  * Emits the onFieldValid event
  */
-function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
+function handleOnFieldValid(fieldObj: CbObjOnFieldValid): boolean {
     // A card number field cannot be valid whilst there is an unsupported card
-    if (this.state.hasUnsupportedCard && field.fieldType === ENCRYPTED_CARD_NUMBER) {
+    if (this.state.hasUnsupportedCard && fieldObj.fieldType === ENCRYPTED_CARD_NUMBER) {
         return false;
     }
 
     const setValidFieldState = prevState => ({
-        data: { ...prevState.data, [field.encryptedFieldName]: field.blob },
-        valid: { ...prevState.valid, [field.encryptedFieldName]: field.valid },
+        data: { ...prevState.data, [fieldObj.encryptedFieldName]: fieldObj.blob },
+        valid: { ...prevState.valid, [fieldObj.encryptedFieldName]: fieldObj.valid },
         /**
          * For a field that has just received valid:true (field has just been completed & encrypted) - mark the error state for this field as false
          * For a field that has just received valid:false (field was encrypted, now is not)
@@ -92,14 +92,14 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
          *  or has switched from valid/encrypted state to being in error (digit edited to one that puts the field in error) - so keep any error that
          *  might just have been set
          */
-        errors: { ...prevState.errors, [field.fieldType]: prevState.errors[field.fieldType] ?? false }
+        errors: { ...prevState.errors, [fieldObj.fieldType]: prevState.errors[fieldObj.fieldType] ?? false }
     });
 
     this.setState(setValidFieldState, () => {
-        this.props.onChange(this.state, { event: 'handleOnFieldValid', fieldType: field.fieldType });
+        this.props.onChange(this.state, { event: 'handleOnFieldValid', fieldType: fieldObj.fieldType });
 
         // Propagate onFieldValid event
-        this.props.onFieldValid(field);
+        this.props.onFieldValid(fieldObj);
     });
 
     return true;
