@@ -63,6 +63,7 @@ export default class CardPage extends BasePage {
         this.cvcHolderAsOptional = Selector(`${BASE_EL} .adyen-checkout__field__cvc--optional`);
 
         this.cvcLabel = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label`);
+        this.cvcLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label--focused`);
         // The <span> that holds the label text (first child of the <label>)
         this.cvcLabelText = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label__text`);
         this.cvcLabelTextError = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__label__text--error`);
