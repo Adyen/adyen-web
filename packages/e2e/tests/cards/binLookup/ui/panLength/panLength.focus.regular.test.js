@@ -1,6 +1,6 @@
 import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../../../_common/cardMocks';
 import CardComponentPage from '../../../../_models/CardComponent.page';
-import { REGULAR_TEST_CARD, MULTI_LUHN_MAESTRO } from '../../../utils/constants';
+import { REGULAR_TEST_CARD, MULTI_LUHN_MAESTRO, AMEX_CARD } from '../../../utils/constants';
 import { Selector } from 'testcafe';
 import { mocks } from './mocks';
 import { checkIframeInputContainsValue } from '../../../../utils/commonUtils';
@@ -80,6 +80,14 @@ test('#2 Fill out PAN & see that since binLookup does return a panLength maxLeng
 
     // Expect focus to be place on Expiry date field
     await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+
+    // Then delete card number and see that the maxlength is rest on the iframe
+    await cardPage.cardUtils.deleteCardNumber(t);
+    await t
+        .switchToIframe(cardPage.iframeSelector.nth(0))
+        .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('maxlength'))
+        .eql('24')
+        .switchToMainWindow();
 });
 
 test('#3 Fill out PAN (binLookup w. panLength) see that focus moves to CVC since expiryDate is optional', async t => {
@@ -187,33 +195,54 @@ test('#7 Fill out PAN by pasting number (binLookup w. panLength) & see that maxL
 });
 
 // TODO - this test should start failing once sf 3.9.0 is available - then it can be adjusted to see that the focus *doesn't* jump
-test('#8 Fill out PAN with binLookup panLength of 18 and see that when you fill in the 16th digit the focus jumps', async t => {
-    await removeRequestHook(t);
-    await t.addRequestHooks(getMock('multiLengthMaestro'));
+test(
+    '#8 Fill out PAN with binLookup panLength of 18 and see that when you fill in the 16th digit the focus jumps ' +
+        ' then complete the number to 18n digits and see the focus jump' +
+        ' then delete the number and add an amex one and see the focus now jumps after 15 digits',
+    async t => {
+        await removeRequestHook(t);
+        await t.addRequestHooks(getMock('multiLengthMaestro'));
 
-    // Wait for field to appear in DOM
-    await cardPage.numHolder();
+        // Wait for field to appear in DOM
+        await cardPage.numHolder();
 
-    const firstDigits = MULTI_LUHN_MAESTRO.substring(0, 15);
-    const middleDigits = MULTI_LUHN_MAESTRO.substring(15, 16);
-    //    const lastDigits = MULTI_LUHN_MAESTRO.substring(16, 18);// TODO - For sf 3.9.0
+        let firstDigits = MULTI_LUHN_MAESTRO.substring(0, 15);
+        const middleDigits = MULTI_LUHN_MAESTRO.substring(15, 16);
+        //    let lastDigits = MULTI_LUHN_MAESTRO.substring(16, 18);// TODO - For sf 3.9.0
 
-    await cardPage.cardUtils.fillCardNumber(t, firstDigits);
+        await cardPage.cardUtils.fillCardNumber(t, firstDigits);
 
-    await t.wait(INPUT_DELAY);
+        await t.wait(INPUT_DELAY);
 
-    await cardPage.cardUtils.fillCardNumber(t, middleDigits);
+        await cardPage.cardUtils.fillCardNumber(t, middleDigits);
 
-    // TODO - For sf 3.9.0
-    // Expect focus to be still be on number field
-    //    await t.expect(cardPage.numLabelWithFocus.exists).ok();
-    //    await t.expect(cardPage.dateLabelWithFocus.exists).notOk();
-    //    await t.wait(INPUT_DELAY);
-    //    await cardPage.cardUtils.fillCardNumber(t, lastDigits);
+        // TODO - For sf 3.9.0
+        // Expect focus to be still be on number field
+        //    await t.expect(cardPage.numLabelWithFocus.exists).ok();
+        //    await t.expect(cardPage.dateLabelWithFocus.exists).notOk();
+        //    await t.wait(INPUT_DELAY);
+        //    await cardPage.cardUtils.fillCardNumber(t, lastDigits);
 
-    // Expect focus to be place on Expiry date field
-    await t.expect(cardPage.dateLabelWithFocus.exists).ok();
-});
+        // Expect focus to be place on Expiry date field
+        await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+
+        // Then delete number & enter new number with a different binLookup response to see that focus now jumps after 15 digits
+        await cardPage.cardUtils.deleteCardNumber(t);
+
+        await removeRequestHook(t);
+        await t.addRequestHooks(getMock('amexMock'));
+
+        firstDigits = AMEX_CARD.substring(0, 14);
+        let endDigits = AMEX_CARD.substring(14, 15);
+
+        await cardPage.cardUtils.fillCardNumber(t, firstDigits);
+        await t.wait(INPUT_DELAY);
+        await cardPage.cardUtils.fillCardNumber(t, endDigits);
+
+        // Expect focus to be place on Expiry date field
+        await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+    }
+);
 
 test('#9 Fill out PAN with Visa num that binLookup says has a panLength of 16 - you should not then be able to type more digits in the card number field', async t => {
     await removeRequestHook(t);

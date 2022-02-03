@@ -88,6 +88,18 @@ export const mocks = {
         ],
         ...mockBase
     },
+    amexMock: {
+        brands: [
+            {
+                ...brandBase,
+                brand: 'amex',
+                cvcPolicy: 'required',
+                expiryDatePolicy: 'required',
+                panLength: 15
+            }
+        ],
+        ...mockBase
+    },
     kcpMock: {
         brands: [
             {
