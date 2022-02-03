@@ -126,15 +126,16 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             props,
             showKCP,
             showBrazilianSSN,
-            countrySpecificSchemas: props.billingAddressRequired ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
+            ...(props.billingAddressRequired && {
+                countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
+                billingAddressRequiredFields: props.billingAddressRequiredFields
+            })
         })
     );
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
         setMergedSRErrors(null);
-
-        console.log('### CardInput::handleSecuredFieldsChange:: sfState=', sfState);
 
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
@@ -319,7 +320,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 props,
                 showKCP,
                 showBrazilianSSN,
-                countrySpecificSchemas: props.billingAddressRequired ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
+                ...(props.billingAddressRequired && {
+                    countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
+                    billingAddressRequiredFields: props.billingAddressRequiredFields
+                })
             }),
             i18n: props.i18n,
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
