@@ -174,6 +174,7 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 {this.props.clickToPayConfiguration?.schemas.length > 0 && (
                     <ClickToPay
+                        environment={this.props.environment}
                         schemas={this.props.clickToPayConfiguration.schemas}
                         shopperIdentity={this.props.clickToPayConfiguration.shopperIdentity}
                     />
