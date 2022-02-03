@@ -15,6 +15,8 @@ export const THREEDS2_FRICTIONLESS_CARD = '5201281505129736';
 export const THREEDS2_FULL_FLOW_CARD = '5000550000000029';
 export const THREEDS2_CHALLENGE_ONLY_CARD = '4212345678910006';
 
+export const MULTI_LUHN_MAESTRO = '6771830999991239343'; // maestro that passes luhn check at 16, 18 & 19 digits
+
 export const TEST_DATE_VALUE = '03/30';
 export const TEST_MONTH_VALUE = '03';
 export const TEST_YEAR_VALUE = '30';

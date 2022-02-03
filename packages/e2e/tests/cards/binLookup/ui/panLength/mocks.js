@@ -63,5 +63,29 @@ export const mocks = {
             }
         ],
         ...mockBase
+    },
+    multiLengthMaestro: {
+        brands: [
+            {
+                ...brandBase,
+                brand: 'maestro',
+                cvcPolicy: 'required',
+                expiryDatePolicy: 'required',
+                panLength: 18
+            }
+        ],
+        ...mockBase
+    },
+    visaMock: {
+        brands: [
+            {
+                ...brandBase,
+                brand: 'visa',
+                cvcPolicy: 'required',
+                expiryDatePolicy: 'required',
+                panLength: 16
+            }
+        ],
+        ...mockBase
     }
 };
