@@ -109,6 +109,9 @@ export default class CardPage extends BasePage {
         this.holderNameLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__card__holderName .adyen-checkout__label--focused`);
         this.holderNameInput = Selector(`${BASE_EL} .adyen-checkout__card__holderName .adyen-checkout__card__holderName__input`);
 
+        // SSN
+        this.ssnLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__card__socialSecurityNumber .adyen-checkout__label--focused`);
+
         /**
          * iframe utils
          */

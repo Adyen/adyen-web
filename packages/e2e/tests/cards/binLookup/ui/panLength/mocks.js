@@ -87,5 +87,18 @@ export const mocks = {
             }
         ],
         ...mockBase
+    },
+    kcpMock: {
+        brands: [
+            {
+                ...brandBase,
+                brand: 'korean_local_card',
+                cvcPolicy: 'optional',
+                expiryDatePolicy: 'optional',
+                panLength: 16
+            }
+        ],
+        ...mockBase,
+        issuingCountryCode: 'KR'
     }
 };
