@@ -2,7 +2,7 @@ import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 
-export default function extensions(props, refs, states, hasPanLengthRef?) {
+export default function extensions(props, refs, states, hasPanLengthRef: Partial<{ current }> = {}) {
     // Destructure props, refs and state hooks
     const { type, cvcPolicy } = props;
     const { sfp } = refs;
