@@ -1,31 +1,12 @@
 import { makeCallbackObjectsEncryption } from '../utils/callbackUtils';
 import { addEncryptedElements } from '../utils/encryptedElements';
-import {
-    ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_CARD_NUMBER
-    // ENCRYPTED_EXPIRY_DATE,
-    // DATE_POLICY_REQUIRED,
-    // CVC_POLICY_REQUIRED
-} from '../../configuration/constants';
+import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
 import { processErrors } from '../utils/processErrors';
 import { truthy } from '../../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
-// import { getPreviousTabbableNonSFElement } from '../utils/tabbing/utils';
-
-// const focusExternalField = (pAdditionalField: HTMLElement): void => {
-//     if (pAdditionalField) {
-//         pAdditionalField.focus();
-//
-//         // Quirky! - Needed to work in the Components scenario
-//         // pAdditionalField.blur();
-//         // pAdditionalField.focus();
-//     }
-// };
 
 export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // EXTRACT VARS
