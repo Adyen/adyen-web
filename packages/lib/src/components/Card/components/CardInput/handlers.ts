@@ -47,7 +47,6 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
     return () => {
         if (!isAutoJumping.current) {
             isAutoJumping.current = true;
-            console.log('### handlers::doPANAutoJump:: set focus on next field');
 
             // CardInput can call this more than once in quick succession
             // e.g. if field was in error (error + fieldValid) or other SFs are optional (fieldValid + allValid) etc
@@ -56,8 +55,6 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
                 const panIndex = layout.findIndex(elem => elem === ENCRYPTED_CARD_NUMBER);
                 const subsequentFields = layout.slice(panIndex + 1);
 
-                console.log('### handlers:getAutoJumpHandler::: subsequentFields', subsequentFields);
-
                 /**
                  * Investigate subsequent fields to see if they can/should accept focus
                  */
@@ -65,14 +62,12 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
                     // Is the next field a credit card related securedField?
                     if (CREDIT_CARD_SF_FIELDS.includes(field)) {
                         const isOptionalOrHidden = sfp.current.sfIsOptionalOrHidden(field);
-                        console.log('### handlers::autoJumpHandler:: ', field, 'can be skipped=', isOptionalOrHidden);
                         if (!isOptionalOrHidden) {
                             sfp.current.setFocusOn(field);
                             break;
                         }
                     } else {
                         // If it isn't an SF - shift focus to it (we're currently not concerned with whether the field is optional)
-                        console.log('### handlers::autoJumpHandler:: set focus on', field);
 
                         setFocusOnNonSF(field, sfp);
                         break;
