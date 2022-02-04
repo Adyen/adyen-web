@@ -7,11 +7,13 @@ const IdentityTypeMap = {
     email: 'EMAIL'
 };
 
+const SCHEMA = 'visa';
+
 class VisaSrcSdk extends AbstractSrcInitiator {
     public script: Script;
 
     constructor(environment: string) {
-        super(environment.toLowerCase() === 'test' ? VISA_SDK_TEST : VISA_SDK_PROD);
+        super(SCHEMA, environment.toLowerCase() === 'test' ? VISA_SDK_TEST : VISA_SDK_PROD);
     }
 
     protected assignSdkReference(): void {

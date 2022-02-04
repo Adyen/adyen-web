@@ -11,6 +11,8 @@ import {
 import Script from '../../../../utils/Script';
 
 export interface ISrcInitiator {
+    schemaName: string;
+
     // Loading 3rd party library
     loadSdkScript(): Promise<void>;
     removeSdkScript(): void;
@@ -26,13 +28,17 @@ export interface ISrcInitiator {
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
+    public readonly schemaName: string;
     public schemaSdk: any;
-    public readonly sdkUrl: string;
+
+    private readonly sdkUrl: string;
     private scriptElement: Script = null;
 
-    protected constructor(sdkUrl: string) {
+    protected constructor(schema: string, sdkUrl: string) {
+        if (!schema) throw Error('AbstractSrcInitiator: Inform the schema name');
         if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
         this.sdkUrl = sdkUrl;
+        this.schemaName = schema;
     }
 
     public async loadSdkScript() {

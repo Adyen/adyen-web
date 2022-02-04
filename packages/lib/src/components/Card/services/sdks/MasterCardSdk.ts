@@ -6,9 +6,11 @@ const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS'
 };
 
+const SCHEMA = 'mc';
+
 class MasterCardSdk extends AbstractSrcInitiator {
     constructor(environment: string) {
-        super(environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);
+        super(SCHEMA, environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);
     }
 
     protected assignSdkReference(): void {

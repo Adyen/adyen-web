@@ -1,7 +1,7 @@
-import requestSecureRemoteCommerceInitData from '../../../core/Services/click-to-pay/secure-remote-commerce-init';
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CheckoutResponse, InitiateIdentityValidationResponse, InitParams, IsRecognizedResponse } from './types';
-import { getSchemaSdk } from './utils';
+import { CheckoutResponse, InitiateIdentityValidationResponse, IsRecognizedResponse } from './types';
+import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
+import { SecureRemoteCommerceInitResult } from './configMock';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -26,7 +26,7 @@ interface IClickToPayService {
     initialize(): Promise<void>;
     checkout(srcDigitalCardId: string): Promise<CheckoutResponse>;
 
-    subscribeOnStatusChange(callback): void;
+    subscribeOnStatusChange(callback: CallbackStateSubscriber): void;
 
     // identification flow
     startIdentityValidation(): Promise<InitiateIdentityValidationResponse>;
@@ -35,21 +35,22 @@ interface IClickToPayService {
 }
 
 class ClickToPayService implements IClickToPayService {
-    private schemas: string[];
-    private sdks: ISrcInitiator[];
+    private readonly sdkLoader: ISrcSdkLoader;
+    private readonly schemasConfig: Record<string, SecureRemoteCommerceInitResult>;
     private readonly shopperIdentity?: ShopperIdentity;
 
     private state: CtpState = CtpState.Idle;
     private stateSubscriber: CallbackStateSubscriber;
 
+    private sdks: ISrcInitiator[];
     private srcProfile: any;
     private srcCorrelationId: any;
 
     private validationSchemaSdk: ISrcInitiator = null;
 
-    constructor(schemas: string[], environment: string, shopperIdentity?: ShopperIdentity) {
-        this.schemas = schemas;
-        this.sdks = this.schemas.map(schema => getSchemaSdk(schema, environment));
+    constructor(schemasConfig: Record<string, SecureRemoteCommerceInitResult>, sdkLoader: ISrcSdkLoader, shopperIdentity?: ShopperIdentity) {
+        this.sdkLoader = sdkLoader;
+        this.schemasConfig = schemasConfig;
         this.shopperIdentity = shopperIdentity;
     }
 
@@ -61,9 +62,8 @@ class ClickToPayService implements IClickToPayService {
         this.setState(CtpState.Loading);
 
         try {
-            await this.loadSdkScripts();
-            const initParams = await this.fetchSrcInitParameters();
-            await this.initiateSdks(initParams);
+            this.sdks = await this.sdkLoader.load();
+            await this.initiateSdks();
 
             const { recognized = false, idTokens = null } = await this.recognizeShopper();
 
@@ -198,20 +198,12 @@ class ClickToPayService implements IClickToPayService {
         return this.validationSchemaSdk !== null;
     }
 
-    private async loadSdkScripts() {
-        const promises = this.sdks.map(sdk => sdk.loadSdkScript());
-        return Promise.all(promises);
-    }
-
-    private async initiateSdks(initParams: InitParams[]): Promise<void> {
-        const initResponsesPromise = initParams.map((initParam, index) => this.sdks[index].init(initParam));
-        await Promise.all(initResponsesPromise);
-    }
-
-    private async fetchSrcInitParameters() {
-        const requestSrcPromises = this.schemas.map(schema => requestSecureRemoteCommerceInitData(schema));
-        const responses = await Promise.all(requestSrcPromises);
-        return responses;
+    private async initiateSdks(): Promise<void> {
+        const initPromises = this.sdks.map(sdk => {
+            const cfg = this.schemasConfig[sdk.schemaName];
+            return sdk.init(cfg);
+        });
+        await Promise.all(initPromises);
     }
 }
 

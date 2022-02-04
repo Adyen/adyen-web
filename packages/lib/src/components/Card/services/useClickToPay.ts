@@ -1,19 +1,25 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import ClickToPayService, { CtpState } from './ClickToPayService';
 import { InitiateIdentityValidationResponse } from './types';
+import SrcSdkLoader from './sdks/SrcSdkLoader';
+import { configMock, SecureRemoteCommerceInitResult } from './configMock';
 
 interface IUseClickToPay {
     schemas: Array<string>;
     environment: string;
+    schemasConfig?: Record<string, SecureRemoteCommerceInitResult>; // TODO: optional?
     shopperIdentity?: { value: string; type: string };
 }
 
-const useClickToPay = ({ schemas, shopperIdentity, environment }: IUseClickToPay) => {
+const useClickToPay = ({ schemas, shopperIdentity, environment, schemasConfig = configMock }: IUseClickToPay) => {
     const [status, setStatus] = useState<CtpState>(CtpState.Idle);
     const [ctpService, setCtpService] = useState<ClickToPayService>(null);
 
     useEffect(() => {
-        const ctp = new ClickToPayService(schemas, environment, shopperIdentity);
+        const srcSdkLoader = new SrcSdkLoader(schemas, environment);
+        // TOOD: pass configuration from config object
+        const ctp = new ClickToPayService(schemasConfig, srcSdkLoader, shopperIdentity);
+
         ctp.subscribeOnStatusChange(setStatus);
         ctp.initialize().then();
 
