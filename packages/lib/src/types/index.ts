@@ -116,7 +116,27 @@ export interface PaymentMethod {
     /**
      * The group where this payment method belongs to.
      */
-    group?: object;
+    group?: PaymentMethodGroup;
+}
+
+/**
+ * The group where this payment method belongs to.
+ */
+export interface PaymentMethodGroup {
+    /**
+     * The name of the group.
+     */
+    name: string;
+
+    /**
+     * Echo data to be used if the payment method is displayed as part of this group.
+     */
+    paymentMethodData: string;
+
+    /**
+     * The unique code of the group.
+     */
+    type: string;
 }
 
 export interface StoredPaymentMethod extends PaymentMethod {
