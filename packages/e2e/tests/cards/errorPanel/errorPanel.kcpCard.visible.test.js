@@ -68,6 +68,6 @@ test('#2 Fill out PAN & name and see that first error in error panel is tax numb
     // no 3rd element
     await t.expect(cardPage.errorPanelEls.nth(2).exists).notOk();
 
-    // Expect focus to be place on Expiry date field
+    // Expect focus to be place on tax number field
     await t.expect(cardPage.kcpTaxNumberLabelWithFocus.exists).ok();
 });
