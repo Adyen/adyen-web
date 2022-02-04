@@ -13,7 +13,7 @@ fixture`Testing Giftcard with brandsConfiguration in Dropin`
     })
     .clientScripts('./brandsConfiguration.clientScripts.js');
 
-test.only('#1 Check Giftcard comp receives custom name and icon from brandsConfiguration object', async t => {
+test('#1 Check Giftcard comp receives custom name and icon from brandsConfiguration object', async t => {
     // Wait for el to appear in DOM
     await dropinPage.giftcard.pmHolder();
 
