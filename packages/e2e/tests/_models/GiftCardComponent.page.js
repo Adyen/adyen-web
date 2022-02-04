@@ -8,8 +8,8 @@ import cu from '../cards/utils/cardUtils';
  * abstraction of the tested page, and use it in test code to refer to page elements
  */
 export default class GiftCardPage extends BasePage {
-    constructor(baseEl = '.adyen-checkout__giftcard') {
-        super('cards');
+    constructor(baseEl = '.card-field') {
+        super('giftcards');
 
         const BASE_EL = baseEl;
 
@@ -24,6 +24,8 @@ export default class GiftCardPage extends BasePage {
 
         // The <img> el that holds the card brand logo (actually a child of this.numSpan)
         this.brandingIcon = Selector(`${BASE_EL} .adyen-checkout__payment-method__image`);
+
+        this.balanceDisplay = Selector(`${BASE_EL} .adyen-checkout__giftcard-result__balance`);
 
         /**
          * iframe utils
