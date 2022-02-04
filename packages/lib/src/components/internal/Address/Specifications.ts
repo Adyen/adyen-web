@@ -1,4 +1,4 @@
-import { AddressSchema, AddressSpecifications } from './types';
+import { AddressSchema, AddressSpecifications, StringObject } from './types';
 import { ADDRESS_SPECIFICATIONS } from './constants';
 
 class Specifications {
@@ -34,6 +34,15 @@ class Specifications {
      */
     getAddressSchemaForCountry(country: string): AddressSchema {
         return this.specifications?.[country]?.schema || this.specifications.default.schema;
+    }
+
+    /**
+     * Returns the address labels of the selected country or the default address labels.
+     * @param country - The selected country
+     * @returns StringObject
+     */
+    getAddressLabelsForCountry(country: string): StringObject {
+        return this.specifications?.[country]?.labels || this.specifications.default.labels;
     }
 
     /**

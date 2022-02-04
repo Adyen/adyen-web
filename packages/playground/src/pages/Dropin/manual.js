@@ -1,5 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
+import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
@@ -67,6 +67,9 @@ export async function initManual() {
                 enableStoreDetails: false,
                 hasHolderName: true,
                 holderNameRequired: true
+            },
+            paywithgoogle: {
+                buttonType: 'plain'
             }
         }
     });
@@ -128,7 +131,11 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = checkout.create('dropin').mount('#dropin-container');
+    const dropin = checkout
+        .create('dropin', {
+            instantPaymentTypes: ['paywithgoogle']
+        })
+        .mount('#dropin-container');
 
     handleRedirectResult();
 

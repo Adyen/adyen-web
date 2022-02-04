@@ -1,7 +1,9 @@
 import { PaymentMethod, StoredPaymentMethod, Order, OrderStatus } from '../../types';
 import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
+import { UIElementProps, UIElementStatus } from '../types';
 import { PaymentMethodsConfiguration } from '../../core/types';
+
+export type InstantPaymentTypes = 'paywithgoogle' | 'applepay';
 
 export interface DropinElementProps extends UIElementProps {
     /**
@@ -26,6 +28,20 @@ export interface DropinElementProps extends UIElementProps {
      * @defaultValue true
      */
     showPaymentMethods?: boolean;
+
+    /**
+     * Show wallet payment methods to show on top of the regular payment
+     * method list.
+     *
+     * @defaultValue []
+     */
+    instantPaymentTypes?: InstantPaymentTypes[];
+
+    /**
+     * Instant Payment methods derived from the instantPaymentTypes property
+     * @internal
+     */
+    instantPaymentMethods?: PaymentMethod[];
 
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
@@ -56,11 +72,17 @@ export interface DropinComponentProps extends DropinElementProps {
 }
 
 interface DropinStatus {
-    type: 'loading' | 'ready' | 'success' | 'error';
+    type: UIElementStatus;
+    props?: DropinStatusProps;
+}
+
+export interface DropinStatusProps {
+    component?: UIElement;
 }
 
 export interface DropinComponentState {
     elements: any[];
+    instantPaymentElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;

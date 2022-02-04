@@ -1,6 +1,3 @@
-const checkedAtob = window.atob;
-const checkedBtoa = window.btoa;
-
 const b64DecodeUnicode = str =>
     /**
      * The "Unicode Problem" Since DOMStrings are 16-bit-encoded strings:
@@ -9,7 +6,7 @@ const b64DecodeUnicode = str =>
      * of a 8-bit ASCII-encoded character.
      * This method solves the problem
      */
-    decodeURIComponent(Array.prototype.map.call(checkedAtob(str), c => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`).join(''));
+    decodeURIComponent(Array.prototype.map.call(window.atob(str), c => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`).join(''));
 
 /**
  * @internal
@@ -27,7 +24,7 @@ const base64 = {
         return false;
     },
 
-    encode: pData => checkedBtoa(pData),
+    encode: pData => window.btoa(pData),
 
     isBase64: pDataStr => {
         if (!pDataStr) {
@@ -38,7 +35,7 @@ const base64 = {
             return false;
         }
 
-        return checkedBtoa(checkedAtob(pDataStr)) === pDataStr;
+        return window.btoa(window.atob(pDataStr)) === pDataStr;
     }
 };
 

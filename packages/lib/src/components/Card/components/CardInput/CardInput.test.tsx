@@ -5,7 +5,7 @@ import Language from '../../../../language/Language';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
 
-jest.mock('../../../internal/SecuredFields/lib');
+jest.mock('../../../internal/SecuredFields/lib/CSF');
 
 let valid = {} as CardInputValidState;
 let data = {} as CardInputDataState;
@@ -59,13 +59,13 @@ describe('CardInput > holderName', () => {
     });
 
     test('holderName required, so valid.holderName is false', () => {
-        mount(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
+        mount(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} i18n={i18n} />);
         // expect(onChange.mock.calls[onChange.mock.calls.length - 1][0].valid.holderName).toBe(false);
         expect(valid.holderName).toBe(false);
     });
 
     test('holderName required, valid.holderName is false, add text to make valid.holderName = true', () => {
-        render(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} />);
+        render(<CardInput holderNameRequired={true} hasHolderName={true} onChange={onChange} i18n={i18n} />);
         expect(valid.holderName).toBe(false);
 
         const placeholderText = i18n.get('creditCard.holderName.placeholder');
@@ -81,20 +81,20 @@ describe('CardInput > holderName', () => {
 
     test('holderName required, data.holderName passed into comp - valid.holderName is true', () => {
         const dataObj = { holderName: 'J Smith' };
-        mount(<CardInput holderNameRequired={true} hasHolderName={true} data={dataObj} onChange={onChange} />);
+        mount(<CardInput holderNameRequired={true} hasHolderName={true} data={dataObj} onChange={onChange} i18n={i18n} />);
         expect(valid.holderName).toBe(true);
         expect(data.holderName).toBe('J Smith');
     });
 
     test('holderName not required, valid.holderName is true', () => {
-        mount(<CardInput hasHolderName={true} onChange={onChange} />);
+        mount(<CardInput hasHolderName={true} onChange={onChange} i18n={i18n} />);
 
         expect(valid.holderName).toBe(true);
     });
 
     test('holderName not required, data.holderName passed into comp - valid.holderName is true', () => {
         const dataObj = { holderName: 'J Smith' };
-        mount(<CardInput hasHolderName={true} data={dataObj} onChange={onChange} />);
+        mount(<CardInput hasHolderName={true} data={dataObj} onChange={onChange} i18n={i18n} />);
 
         expect(valid.holderName).toBe(true);
         expect(data.holderName).toBe('J Smith');
@@ -107,27 +107,32 @@ describe('CardInput > holderName', () => {
     });
 
     test('shows holder name first', () => {
-        const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
+        const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} SRConfig={{ collateErrors: false }} />);
         expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
     });
 });
 
 describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is set to true and either countryCode or issuingCountryCode is set to kr', () => {
+    let cardInputRef;
+    const setComponentRef = ref => {
+        cardInputRef = ref;
+    };
+
     test('Renders a card form with kcp fields since countryCode is kr', () => {
         const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
 
     test('Renders a card form with kcp fields since countryCode is kr & issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
-        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" setComponentRef={setComponentRef} />);
+        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
 
     test('Renders a card form with kcp fields since countryCode is not kr but issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
-        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} setComponentRef={setComponentRef} />);
+        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(1);
     });
@@ -138,15 +143,15 @@ describe('CardInput shows/hides KCP fields when koreanAuthenticationRequired is 
     });
 
     test('Renders a card form with no kcp fields since countryCode is kr but issuingCountryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
-        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'us' }, false);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" setComponentRef={setComponentRef} />);
+        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'us' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
 
     test('Renders a card form with no kcp fields since countryCode is not kr & issuingCountryCode is not kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} />);
-        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'us' }, false);
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} setComponentRef={setComponentRef} />);
+        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'us' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });
@@ -160,8 +165,13 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
     });
 
     test('countryCode is kr & issuingCountryCode is kr', () => {
-        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" />);
-        wrapper.instance().processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
+        let cardInputRef;
+        const setComponentRef = ref => {
+            cardInputRef = ref;
+        };
+
+        const wrapper = mount(<CardInput i18n={i18n} configuration={configuration} countryCode="kr" setComponentRef={setComponentRef} />);
+        cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
     });

@@ -6,7 +6,12 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardFieldsProps } from './types';
 import classNames from 'classnames';
 import styles from '../CardInput.module.scss';
-import { DATE_POLICY_HIDDEN } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import {
+    DATE_POLICY_HIDDEN,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_SECURITY_CODE
+} from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function CardFields({
     brand,
@@ -31,7 +36,7 @@ export default function CardFields({
                 brand={brand}
                 brandsConfiguration={brandsConfiguration}
                 error={errors.encryptedCardNumber}
-                focused={focusedElement === 'encryptedCardNumber'}
+                focused={focusedElement === ENCRYPTED_CARD_NUMBER}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.numberField.title')}
                 onFocusField={onFocusField}
@@ -49,7 +54,7 @@ export default function CardFields({
             >
                 <ExpirationDate
                     error={errors.encryptedExpiryDate || errors.encryptedExpiryYear || errors.encryptedExpiryMonth}
-                    focused={focusedElement === 'encryptedExpiryDate'}
+                    focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
                     label={i18n.get('creditCard.expiryDateField.title')}
@@ -61,7 +66,7 @@ export default function CardFields({
                 {hasCVC && (
                     <CVC
                         error={errors.encryptedSecurityCode}
-                        focused={focusedElement === 'encryptedSecurityCode'}
+                        focused={focusedElement === ENCRYPTED_SECURITY_CODE}
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}
                         filled={!!errors.encryptedSecurityCode || !!valid.encryptedSecurityCode}

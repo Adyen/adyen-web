@@ -13,10 +13,18 @@ export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     protected static defaultProps = {
-        onBinLookup: () => {}
+        onBinLookup: () => {},
+        SRConfig: {}
+    };
+
+    public setComponentRef = ref => {
+        this.componentRef = ref;
     };
 
     formatProps(props: CardElementProps) {
+        // Extract &/or set defaults for the screenreader error panel
+        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -25,7 +33,7 @@ export class CardElement extends UIElement<CardElementProps> {
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
-            ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
+            // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
@@ -35,7 +43,12 @@ export class CardElement extends UIElement<CardElementProps> {
                 socialSecurityNumberMode: props.configuration?.socialSecurityNumberMode ?? 'auto'
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
-            icon: props.icon || props.configuration?.icon
+            icon: props.icon || props.configuration?.icon,
+            SRConfig: {
+                collateErrors,
+                moveFocus,
+                showPanel
+            }
         };
     }
 
@@ -136,7 +149,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get accessibleName(): string {
-        // use display name, unless it's a stored payment method, there inform user
+        // Use display name, unless it's a stored payment method, there inform user
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId
@@ -151,11 +164,13 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider
+                i18n={this.props.i18n}
+                loadingContext={this.props.loadingContext}
+                commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
+            >
                 <CardInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}

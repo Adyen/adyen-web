@@ -1,0 +1,50 @@
+name: Validate remote assets
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  check-secured-fields-assets:
+    if: contains(github.head_ref, 'release')
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Getting SF_VERSION in the codebase
+        run: |
+          echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
+
+      - name: Encoding test origin URL to base64
+        run: |
+          echo "BTOA_TEST_ORIGIN=$(echo ${{ secrets.TEST_ORIGIN }} | base64)" >> $GITHUB_ENV
+
+      - name: Requesting securedFields in production
+        id: securedFieldsRequest
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/${{ env.SF_VERSION }}/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
+          method: "GET"
+          customHeaders: '{"Origin": "${{secrets.TEST_ORIGIN}}"}'
+
+      - name: Comment PR that request failed
+        if: failure()
+        uses: actions/github-script@0.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+            github.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️ });
+
+
+      - name: Comment PR that request succeeded
+        if: success()
+        uses: actions/github-script@0.3.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
+            github.issues.createComment({ issue_number, owner, repo, body: '✅ SecuredFields v${{ env.SF_VERSION }} are available live' });

@@ -14,7 +14,7 @@ declare global {
  * The intent for the transaction. This determines whether the funds are captured immediately, or later.
  * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
  */
-type Intent = 'sale' | 'capture' | 'authorize' | 'order';
+type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
 export type FundingSource = 'paypal' | 'credit';
 
@@ -57,6 +57,8 @@ interface PayPalCommonProps {
      */
     amount?: PaymentAmount;
 
+    configuration?: PayPalConfig;
+
     /**
      * A two-letter ISO 3166 country code which will be passed to the PayPal SDK as the buyer-country.
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#buyer-country}
@@ -71,6 +73,12 @@ interface PayPalCommonProps {
     environment?: string;
 
     blockPayPalCreditButton?: boolean;
+
+    /**
+     * Set to true to force the UI to not render PayPal Pay Later button
+     * @defaultValue false
+     */
+    blockPayPalPayLaterButton?: boolean;
 
     /**
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
@@ -146,7 +154,6 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
     paymentMethods?: PaymentMethod[];
-    configuration?: PayPalConfig;
     showPayButton?: boolean;
 }
 

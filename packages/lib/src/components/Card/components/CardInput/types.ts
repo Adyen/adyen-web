@@ -1,9 +1,13 @@
 import Language from '../../../../language/Language';
-import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement, SocialSecurityMode } from '../../types';
+import { BinLookupResponse, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
-import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
+import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
+import Specifications from '../../../internal/Address/Specifications';
+import { AddressSchema, StringObject } from '../../../internal/Address/types';
+import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -35,47 +39,72 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-interface Placeholders {
+type Placeholders = {
     holderName?: string;
-}
+};
 
+/**
+ * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
+ * - either in the comp itself or are passed on to its children
+ */
 export interface CardInputProps {
     amount?: PaymentAmount;
+    allowedDOMAccess?: boolean;
+    autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
     brand?: string;
+    brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
+    clientKey: string;
     configuration?: CardConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
     enableStoreDetails?: boolean;
+    expiryMonth?: string;
+    expiryYear?: string;
     fundingSource?: string;
     hasCVC?: boolean;
     hasHolderName?: boolean;
-    holderName?: string;
     holderNameRequired?: boolean;
     i18n?: Language;
+    implementationType?: string;
+    isCollatingErrors?: boolean;
     installmentOptions?: InstallmentOptions;
-    socialSecurityNumberMode?: SocialSecurityMode;
-    loadingContext?: string;
+    keypadFix?: boolean;
+    lastFour?: string;
+    loadingContext: string;
+    legacyInputMode?: boolean;
+    minimumExpiryDate?: string;
+    onAdditionalSFConfig?: () => {};
+    onAdditionalSFRemoved?: () => {};
+    onAllValid?: () => {};
+    onAutoComplete?: () => {};
+    onBinValue?: () => {};
     onBlur?: (e) => {};
+    onBrand?: () => {};
+    onConfigSuccess?: () => {};
+    onChange?: (state) => {};
+    onError?: () => {};
+    onFieldValid?: () => {};
     onFocus?: (e) => {};
+    onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
+    setComponentRef?: (ref) => void;
+    showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
+    showWarnings?: boolean;
+    specifications?: Specifications;
+    SRConfig?: ScreenreaderConfig;
     storedPaymentMethodId?: string;
-    styles?: object;
+    styles?: StylesObject;
+    trimTrailingSeparator?: boolean;
     type?: string;
-    onChange?: (state) => {};
-    onSubmit?: () => {};
-    onBrand?: () => {};
-    onBinValue?: () => {};
-    details?: object;
-    storedDetails?: object;
 }
 
 export interface CardInputState {
@@ -93,4 +122,53 @@ export interface CardInputState {
     valid?: object;
     issuingCountryCode: string;
     showSocialSecurityNumber?: boolean;
+}
+
+export interface CardInputRef {
+    sfp?: any;
+    setFocusOn?: (who) => void;
+    showValidation?: (who) => void;
+    processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
+    setStatus?: any;
+    updateStyles?: (stylesObj: StylesObject) => void;
+    handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
+}
+
+interface ScreenreaderConfig {
+    collateErrors?: boolean;
+    moveFocus?: boolean;
+    showPanel?: boolean;
+}
+
+interface FieldError {
+    errorMessage?: string;
+    errorI18n?: string;
+}
+
+export interface ErrorObj {
+    holderName?: ValidationRuleResult;
+    socialSecurityNumber?: ValidationRuleResult;
+    taxNumber?: ValidationRuleResult;
+    billingAddress?: ValidationRuleResult;
+    encryptedCardNumber?: FieldError;
+    encryptedExpiryDate?: FieldError;
+    encryptedSecurityCode?: FieldError;
+    encryptedBankAccountNumber?: FieldError;
+    encryptedBankLocationId?: FieldError;
+    encryptedPassword?: FieldError;
+    encryptedPin?: FieldError;
+}
+
+export interface LayoutObj {
+    props: CardInputProps;
+    showKCP: boolean;
+    showBrazilianSSN: boolean;
+    countrySpecificSchemas: AddressSchema;
+}
+
+export interface SortErrorsObj {
+    errors: ErrorObj;
+    layout: string[];
+    i18n: Language;
+    countrySpecificLabels: StringObject;
 }

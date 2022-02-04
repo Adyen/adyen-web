@@ -4,19 +4,48 @@ import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { PaymentAction } from '../../types';
-import { DropinElementProps } from './types';
+import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
+import createInstantPaymentElements from './elements/createInstantPaymentElements';
+
+const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
     protected static defaultProps = defaultProps;
     public dropinRef = null;
 
+    /**
+     * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
+     */
+    public componentFromAction?: UIElement;
+
     constructor(props) {
         super(props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
+    }
+
+    formatProps(props) {
+        const instantPaymentTypes: InstantPaymentTypes[] = Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
+            SUPPORTED_INSTANT_PAYMENTS.includes(value)
+        );
+
+        const instantPaymentMethods = instantPaymentTypes.reduce((memo, paymentType) => {
+            const paymentMethod = props.paymentMethods.find(({ type }) => type === paymentType);
+            if (paymentMethod) return [...memo, paymentMethod];
+            return memo;
+        }, []);
+
+        const paymentMethods = props.paymentMethods.filter(({ type }) => !instantPaymentTypes.includes(type));
+
+        return {
+            ...super.formatProps(props),
+            instantPaymentTypes,
+            instantPaymentMethods,
+            paymentMethods
+        };
     }
 
     get isValid() {
@@ -31,11 +60,8 @@ class DropinElement extends UIElement<DropinElementProps> {
         return this;
     }
 
-    setStatus(status, props = {}) {
-        this.dropinRef?.setStatus({ type: status, props });
-        if (process.env.NODE_ENV === 'test') {
-            this['componentFromAction'] = props['component'];
-        }
+    public setStatus(status, props = {}): this {
+        this.dropinRef?.setStatus(status, props);
         return this;
     }
 
@@ -70,15 +96,18 @@ class DropinElement extends UIElement<DropinElementProps> {
      * Creates the Drop-in elements
      */
     private handleCreate = () => {
-        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods } = this.props;
-        const commonProps = getCommonProps({ ...this.props, /*onSubmit: this.submit,*/ elementRef: this.elementRef });
+        const { paymentMethods, storedPaymentMethods, showStoredPaymentMethods, showPaymentMethods, instantPaymentMethods } = this.props;
+
+        const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
+
         const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance.create) : [];
         const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance.create) : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, commonProps, this._parentInstance.create);
 
-        return [storedElements, elements];
+        return [storedElements, elements, instantPaymentElements];
     };
 
-    handleAction(action: PaymentAction, props = {}) {
+    public handleAction(action: PaymentAction, props = {}): this | null {
         if (!action || !action.type) throw new Error('Invalid Action');
 
         if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
@@ -93,7 +122,9 @@ class DropinElement extends UIElement<DropinElementProps> {
         });
 
         if (paymentAction) {
-            return this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.componentFromAction = paymentAction;
+            return this;
         }
 
         return null;

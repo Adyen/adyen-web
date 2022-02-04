@@ -10,20 +10,23 @@ export const cardInputValidationRules: ValidatorRules = {
     socialSecurityNumber: [
         {
             modes: ['blur'],
-            validate: validateSSN
+            validate: validateSSN,
+            errorMessage: 'boleto.socialSecurityNumber.invalid'
         }
     ],
     taxNumber: [
         {
             modes: ['blur'],
-            validate: value => value?.length === 6 || value?.length === 10
+            validate: value => value?.length === 6 || value?.length === 10,
+            errorMessage: 'creditCard.taxNumber.invalid'
         }
     ],
     holderName: [
         {
             // Will fire at startup and when triggerValidation is called and also applies as text is input
             modes: ['blur'],
-            validate: value => value?.trim().length > 0 // i.e. are there chars other than spaces?
+            validate: value => value?.trim().length > 0, // i.e. are there chars other than spaces?
+            errorMessage: 'creditCard.holderName.invalid'
         }
     ],
     default: [

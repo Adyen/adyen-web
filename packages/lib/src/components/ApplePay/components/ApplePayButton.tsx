@@ -30,6 +30,7 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
                     'adyen-checkout__applepay__button',
                     `adyen-checkout__applepay__button--${buttonColor}`,
                     `adyen-checkout__applepay__button--${buttonType}`,
+                    [styles['apple-pay']],
                     [styles['apple-pay-button']],
                     [styles[`apple-pay-button-${buttonColor}`]],
                     [styles[`apple-pay-button--type-${buttonType}`]]

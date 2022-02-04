@@ -26,6 +26,21 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
+export interface IUIElement {
+    isValid: boolean;
+    displayName: string;
+    accessibleName: string;
+    type: string;
+    elementRef: any;
+    submit(): void;
+    setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
+    handleAction(action: PaymentAction): UIElement | null;
+    showValidation(): void;
+    setState(newState: object): void;
+}
+
+export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+
 export interface UIElementProps extends BaseElementProps {
     session?: {
         id: string;
@@ -41,6 +56,8 @@ export interface UIElementProps extends BaseElementProps {
     onPaymentCompleted?: (result: any, element: UIElement) => void;
     beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
+    isInstantPayment?: boolean;
+
     type?: string;
     name?: string;
     icon?: string;
@@ -52,6 +69,10 @@ export interface UIElementProps extends BaseElementProps {
      */
     showPayButton?: boolean;
 
+    /**
+     *  Set to false to not set the Component status to 'loading' when onSubmit is triggered.
+     *  @defaultValue true
+     */
     setStatusAutomatically?: boolean;
 
     /** @internal */

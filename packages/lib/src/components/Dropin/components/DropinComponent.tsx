@@ -2,15 +2,17 @@ import { Component, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
-import { DropinComponentProps, DropinComponentState } from '../types';
+import { DropinComponentProps, DropinComponentState, DropinStatusProps } from '../types';
 import './DropinComponent.scss';
+import { UIElementStatus } from '../../types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
         elements: [],
+        instantPaymentElements: [],
         orderStatus: null,
         isDisabling: false,
-        status: { type: 'loading' },
+        status: { type: 'loading', props: undefined },
         activePaymentMethod: null,
         cachedPaymentMethods: {}
     };
@@ -21,26 +23,28 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     public prepareDropinData = () => {
         const { order, clientKey, loadingContext } = this.props;
-        const [storedElementsPromises, elementsPromises] = this.props.onCreateElements();
+        const [storedElementsPromises, elementsPromises, instantPaymentsPromises] = this.props.onCreateElements();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        Promise.all([storedElementsPromises, elementsPromises, orderStatusPromise]).then(([storedElements, elements, orderStatus]) => {
-            this.setState({ elements: [...storedElements, ...elements], orderStatus });
-            this.setStatus({ type: 'ready' });
+        Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
+            ([storedElements, elements, instantPaymentElements, orderStatus]) => {
+                this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
+                this.setStatus('ready');
 
-            if (this.props.modules.analytics) {
-                this.props.modules.analytics.send({
-                    containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
-                    paymentMethods: elements.map(e => e.props.type),
-                    component: 'dropin',
-                    flavor: 'dropin'
-                });
+                if (this.props.modules.analytics) {
+                    this.props.modules.analytics.send({
+                        containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
+                        paymentMethods: elements.map(e => e.props.type),
+                        component: 'dropin',
+                        flavor: 'dropin'
+                    });
+                }
             }
-        });
+        );
     };
 
-    private setStatus = status => {
-        this.setState({ status });
+    public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
+        this.setState({ status: { type: status, props } });
     };
 
     private setActivePaymentMethod = paymentMethod => {
@@ -88,7 +92,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.setState({ activePaymentMethod: null });
     }
 
-    render(props, { elements, status, activePaymentMethod, cachedPaymentMethods }) {
+    render(props, { elements, instantPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
 
@@ -100,7 +104,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 return <Status.Error message={status.props?.message} />;
 
             case 'custom':
-                return status.props.component.render();
+                return status.props?.component?.render();
 
             default:
                 return (
@@ -112,6 +116,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 isLoading={isLoading || isRedirecting}
                                 isDisabling={this.state.isDisabling}
                                 paymentMethods={elements}
+                                instantPaymentMethods={instantPaymentElements}
                                 activePaymentMethod={activePaymentMethod}
                                 cachedPaymentMethods={cachedPaymentMethods}
                                 order={this.props.order}
