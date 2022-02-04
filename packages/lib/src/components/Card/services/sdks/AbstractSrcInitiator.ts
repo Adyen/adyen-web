@@ -1,4 +1,6 @@
 import {
+    CheckoutParams,
+    CheckoutResponse,
     CompleteIdentityValidationResponse,
     IdentityLookupParams,
     IdentityLookupResponse,
@@ -19,7 +21,8 @@ export interface ISrcInitiator {
     identityLookup(params: IdentityLookupParams): Promise<IdentityLookupResponse>;
     initiateIdentityValidation(): Promise<InitiateIdentityValidationResponse>;
     completeIdentityValidation(validationData: string): Promise<CompleteIdentityValidationResponse>;
-    getSrcProfile(idTokens: string[]): Promise<any>;
+    getSrcProfile(idTokens: string[]): Promise<any>; // TODO: type
+    checkout(params: CheckoutParams): Promise<CheckoutResponse>;
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
@@ -57,6 +60,20 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     public async init(params: InitParams): Promise<void> {
         try {
             const response = await this.schemaSdk.init(params);
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    /**
+     * This method performs checkout using the specified card. If successful, the
+     * response contains summary checkout information.
+     */
+    public async checkout(params: CheckoutParams): Promise<CheckoutResponse> {
+        try {
+            const response = await this.schemaSdk.checkout(params);
             return response;
         } catch (error) {
             console.error(error);
@@ -108,7 +125,6 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
 
     /**
      * Obtains the masked card and other account profile data associated with the userId.
-     * @param token
      */
     public async getSrcProfile(idTokens: string[]): Promise<any> {
         try {

@@ -1,6 +1,6 @@
 import requestSecureRemoteCommerceInitData from '../../../core/Services/click-to-pay/secure-remote-commerce-init';
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { InitiateIdentityValidationResponse, InitParams, IsRecognizedResponse } from './types';
+import { CheckoutResponse, InitiateIdentityValidationResponse, InitParams, IsRecognizedResponse } from './types';
 import { getSchemaSdk } from './utils';
 
 export enum CtpState {
@@ -24,7 +24,7 @@ interface IClickToPayService {
     maskedCards: any;
 
     initialize(): Promise<void>;
-    // TODO: checkout(): Promise<???>
+    checkout(srcDigitalCardId: string): Promise<CheckoutResponse>;
 
     subscribeOnStatusChange(callback): void;
 
@@ -43,6 +43,7 @@ class ClickToPayService implements IClickToPayService {
     private stateSubscriber: CallbackStateSubscriber;
 
     private srcProfile: any;
+    private srcCorrelationId: any;
 
     private validationSchemaSdk: ISrcInitiator = null;
 
@@ -124,6 +125,25 @@ class ClickToPayService implements IClickToPayService {
         this.validationSchemaSdk = null;
     }
 
+    /**
+     * This method performs checkout using the selected card
+     */
+    public async checkout(srcDigitalCardId: string): Promise<CheckoutResponse> {
+        if (!srcDigitalCardId) {
+            throw Error('checkout: No card ID provided');
+        }
+
+        const params = {
+            srcDigitalCardId,
+            srcCorrelationId: this.srcCorrelationId,
+            idToken: this.srcProfile.idToken
+        };
+
+        // TODO: which SDK to pick up for the checkout? For now, picking up the first one
+        const checkoutResponse = await this.sdks[0].checkout(params);
+        return checkoutResponse;
+    }
+
     private async getSecureRemoteCommerceProfile(idTokens: string[]): Promise<void> {
         const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
         const srcProfiles = await Promise.all(srcProfilesPromises);
@@ -131,7 +151,10 @@ class ClickToPayService implements IClickToPayService {
         // TODO: verify when APi return multiple profiles. What to do with that?
         // For now it is taking only the first one of the first response
         this.srcProfile = srcProfiles[0]?.profiles[0];
-        console.log(srcProfiles[0]);
+        this.srcCorrelationId = srcProfiles[0]?.srcCorrelationId;
+
+        console.log(this.srcProfile, this.srcCorrelationId);
+
         this.setState(CtpState.Ready);
     }
 

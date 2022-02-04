@@ -39,9 +39,22 @@ const useClickToPay = ({ schemas, shopperIdentity, environment }: IUseClickToPay
         [ctpService]
     );
 
+    const onCheckout = useCallback(
+        async (srcDigitalCardId: string) => {
+            try {
+                const payload = await ctpService.checkout(srcDigitalCardId);
+                console.log(payload);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        [ctpService]
+    );
+
     return {
         status,
         cards: ctpService?.maskedCards,
+        doCheckout: onCheckout,
         startIdentityValidation: onStartIdentityValidation,
         cancelIdentityValidation: onCancelIdentityValidation,
         finishIdentityValidation: onFinishIdentityValidation

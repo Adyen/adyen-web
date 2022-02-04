@@ -29,7 +29,7 @@ interface IClickToPayWrapper {
  */
 
 const ClickToPayWrapper = ({ schemas, shopperIdentity, environment }: IClickToPayWrapper) => {
-    const { status, cards, startIdentityValidation, cancelIdentityValidation, finishIdentityValidation } = useClickToPay({
+    const { status, cards, doCheckout, startIdentityValidation, cancelIdentityValidation, finishIdentityValidation } = useClickToPay({
         schemas,
         shopperIdentity,
         environment
@@ -41,8 +41,6 @@ const ClickToPayWrapper = ({ schemas, shopperIdentity, environment }: IClickToPa
         const data = await startIdentityValidation();
         setMaskedData(data.maskedValidationChannel);
     }, [startIdentityValidation]);
-
-    console.log(status);
 
     switch (status) {
         case CtpState.Loading: {
@@ -92,7 +90,7 @@ const ClickToPayWrapper = ({ schemas, shopperIdentity, environment }: IClickToPa
                 <div>
                     <div>Click to pay: select CARD</div>
                     {cards?.map((card, index) => (
-                        <button key={index} style={buttonStyle}>
+                        <button key={index} style={buttonStyle} onClick={() => doCheckout(card.srcDigitalCardId)}>
                             {`XXXX XXXX XXXX ${card.panLastFour} ${card.panExpirationMonth}/${card.panExpirationYear}`}
                         </button>
                     ))}

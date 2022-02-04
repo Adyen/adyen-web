@@ -6,6 +6,12 @@ export interface InitParams {
     dpaData?: DpaData;
 }
 
+export type CheckoutParams = {
+    srcCorrelationId: string;
+    srcDigitalCardId: string;
+    idToken: string;
+};
+
 export interface IdentityLookupParams {
     value: string;
     type: string;
@@ -77,4 +83,11 @@ export type CompleteIdentityValidationResponse = {
 export type IsRecognizedResponse = {
     recognized: boolean;
     idTokens?: string[];
+};
+
+export type CheckoutResponse = {
+    checkoutResponse: string;
+    dcfActionCode: string;
+    idToken: string;
+    unbindAppInstance: boolean;
 };
