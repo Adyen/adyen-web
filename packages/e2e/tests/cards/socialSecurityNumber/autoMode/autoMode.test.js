@@ -1,7 +1,7 @@
 import { ClientFunction, RequestMock } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../../utils/commonUtils';
 import cu from '../../utils/cardUtils';
-import { REGULAR_TEST_CARD, TEST_CPF_VALUE } from '../../utils/constants';
+import { BIN_LOOKUP_VERSION, REGULAR_TEST_CARD, TEST_CPF_VALUE } from '../../utils/constants';
 import { CARDS_URL, BASE_URL } from '../../../pages';
 
 const path = require('path');
@@ -21,7 +21,7 @@ const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
     return t.switchToMainWindow().typeText('.adyen-checkout__field--socialSecurityNumber input', ssnValue, { speed: 0.5 });
 };
 
-const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 const mockedResponse = {
     brands: [

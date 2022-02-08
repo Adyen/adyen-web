@@ -3,10 +3,10 @@ import cu from '../utils/cardUtils';
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
-import { RequestMock, Selector } from 'testcafe';
-import { start, getIsValid, getIframeSelector } from '../../utils/commonUtils';
+import { Selector } from 'testcafe';
+import { start, getIframeSelector } from '../../utils/commonUtils';
 import { BASE_URL } from '../../pages';
-import { DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE, UNKNOWN_VISA_CARD } from '../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, UNKNOWN_VISA_CARD } from '../utils/constants';
 
 const cvcSpan = Selector('.adyen-checkout__dropin .adyen-checkout__field__cvc');
 
@@ -14,72 +14,13 @@ const brandingIcon = Selector('.adyen-checkout__dropin .adyen-checkout__card__ca
 
 const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--bcmc .adyen-checkout__card__dual-branding__buttons--active');
 
-const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
-
-/**
- * NOTE - we are mocking the response until such time as we have the correct BIN in the Test DB
- */
-const mockedResponse = {
-    brands: [
-        {
-            brand: 'bcmc',
-            cvcPolicy: 'hidden',
-            enableLuhnCheck: true,
-            showExpiryDate: true,
-            supported: true
-        },
-        {
-            brand: 'visa',
-            cvcPolicy: 'required',
-            enableLuhnCheck: true,
-            showExpiryDate: true,
-            supported: true
-        }
-    ],
-    issuingCountryCode: 'BE',
-    requestId: null
-};
-
-const mockedNullResponse = {
-    requestId: null
-};
-
-let sendNullResponse = false;
-
-const mock = RequestMock()
-    .onRequestTo(request => {
-        return request.url === requestURL && request.method === 'post';
-    })
-    .respond(
-        (req, res) => {
-            const body = JSON.parse(req.body);
-
-            if (sendNullResponse === false) {
-                mockedResponse.requestId = body.requestId;
-                res.setBody(mockedResponse);
-                sendNullResponse = true;
-            } else {
-                mockedNullResponse.requestId = body.requestId;
-                res.setBody(mockedNullResponse);
-                sendNullResponse = false;
-            }
-        },
-        200,
-        {
-            'Access-Control-Allow-Origin': BASE_URL
-        }
-    );
-
 const TEST_SPEED = 1;
 
 const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--bcmc iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing Bancontact in Dropin`
-    .page(BASE_URL + '?countryCode=BE')
-    .clientScripts('bancontact.clientScripts.js')
-    .requestHooks(mock);
+fixture`Testing Bancontact in Dropin`.page(BASE_URL + '?countryCode=BE').clientScripts('bancontact.clientScripts.js');
 
 test(
     'Enter card number, that we mock to co-branded bcmc/visa ' +
@@ -89,7 +30,7 @@ test(
     async t => {
         await start(t, 2000, TEST_SPEED);
 
-        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+        await cardUtils.fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
 
         await t
             .expect(dualBrandingIconHolderActive.exists)
@@ -141,7 +82,7 @@ test(
     async t => {
         await start(t, 2000, TEST_SPEED);
 
-        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+        await cardUtils.fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
 
         await t
             .expect(dualBrandingIconHolderActive.exists)
