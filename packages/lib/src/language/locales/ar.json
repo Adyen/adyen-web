@@ -212,5 +212,6 @@
     "ach.encryptedBankLocationId.aria.label": "رقم التوجيه البنكي",
     "pix.instructions": "افتح التطبيق باستخدام مفتاح PIX المسجل، واختر الدفع باستخدام PIX وامسح رمز الاستجابة السريعة ضوئيًا أو انسخ الرمز والصقه",
     "twint.saved": "المحفوظة",
-    "orPayWith": "أو الدفع باستخدام"
+    "orPayWith": "أو الدفع باستخدام",
+    "invalidFormatExpects": "تنسيق غير صالح. التنسيق المتوقع: %{format}"
 }

@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pour le numéro de routage du compte avec garantie",
     "ach.encryptedBankLocationId.aria.label": "Numéro de routage",
     "twint.saved": "stocké",
-    "orPayWith": "ou payez avec"
+    "orPayWith": "ou payez avec",
+    "invalidFormatExpects": "Format non valide. Format requis : %{format}"
 }

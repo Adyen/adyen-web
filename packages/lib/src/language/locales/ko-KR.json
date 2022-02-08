@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "은행 라우팅 번호 보안을 위한 Iframe",
     "ach.encryptedBankLocationId.aria.label": "은행 라우팅 번호",
     "twint.saved": "저장됨",
-    "orPayWith": "기타 결제 수단:"
+    "orPayWith": "기타 결제 수단:",
+    "invalidFormatExpects": "유효하지 않은 형식입니다. 예상 형식: %{format}"
 }

@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe za zavarovano kodo banke",
     "ach.encryptedBankLocationId.aria.label": "Usmerjevalna številka banke",
     "twint.saved": "shranjeno",
-    "orPayWith": "ali plačajte s/z"
+    "orPayWith": "ali plačajte s/z",
+    "invalidFormatExpects": "Neveljavna oblika zapisa. Pričakovana oblika zapisa: %{format}"
 }

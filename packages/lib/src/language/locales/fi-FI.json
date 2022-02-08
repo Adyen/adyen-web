@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe suojatulle pankin reititysnumerolle",
     "ach.encryptedBankLocationId.aria.label": "Pankin reititysnumero",
     "twint.saved": "tallennettu",
-    "orPayWith": "tai maksa"
+    "orPayWith": "tai maksa",
+    "invalidFormatExpects": "Ei-kelvollinen muoto. Odotettu muoto: %{format}"
 }

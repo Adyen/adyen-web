@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe för säkrat clearingnummer",
     "ach.encryptedBankLocationId.aria.label": "Clearingnummer",
     "twint.saved": "sparat",
-    "orPayWith": "eller betala med"
+    "orPayWith": "eller betala med",
+    "invalidFormatExpects": "Ogiltigt format. Förväntat format: %{format}"
 }

@@ -209,5 +209,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe per numero di routing bancario sicuro",
     "ach.encryptedBankLocationId.aria.label": "Numero di routing della banca",
     "twint.saved": "memorizzato",
-    "orPayWith": "oppure paga con"
+    "orPayWith": "oppure paga con",
+    "invalidFormatExpects": "Formato non valido. Formato previsto: %{format}"
 }
