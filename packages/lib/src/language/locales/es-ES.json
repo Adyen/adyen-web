@@ -206,5 +206,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe del número de ruta del banco asegurado",
     "ach.encryptedBankLocationId.aria.label": "Número de ruta del banco",
     "twint.saved": "guardado",
-    "orPayWith": "o pague con"
+    "orPayWith": "o pague con",
+    "invalidFormatExpects": "Formato no válido. Formato correcto: %{format}"
 }

@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe a biztonságos bankazonosító kódhoz",
     "ach.encryptedBankLocationId.aria.label": "Bankazonosító kód",
     "twint.saved": "mentve",
-    "orPayWith": "vagy fizessen ezzel:"
+    "orPayWith": "vagy fizessen ezzel:",
+    "invalidFormatExpects": "Érvénytelen formátum. Várt formátum: %{format}"
 }

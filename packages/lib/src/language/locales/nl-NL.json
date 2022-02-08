@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe voor beveiligde BIC-code",
     "ach.encryptedBankLocationId.aria.label": "Routingnummer bank",
     "twint.saved": "opgeslagen",
-    "orPayWith": "of betaal met"
+    "orPayWith": "of betaal met",
+    "invalidFormatExpects": "Ongeldige indeling. Verwachte indeling: %{format}"
 }
