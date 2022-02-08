@@ -4,10 +4,21 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { StoredCardFieldsProps } from './types';
 
-export default function StoredCardFields({ brand, hasCVC, onFocusField, errors, valid, ...props }: StoredCardFieldsProps) {
+export default function StoredCardFields({
+    brand,
+    hasCVC,
+    onFocusField,
+    errors,
+    valid,
+    cvcPolicy,
+    focusedElement,
+    lastFour,
+    expiryMonth,
+    expiryYear
+}: StoredCardFieldsProps) {
     const { i18n } = useCoreContext();
-    const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', props.lastFour);
-    const ariaLabel = `${storedCardDescription} ${i18n.get('creditCard.expiryDateField.title')} ${props.expiryMonth}/${props.expiryYear}`;
+    const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
+    const ariaLabel = `${storedCardDescription} ${i18n.get('creditCard.expiryDateField.title')} ${expiryMonth}/${expiryYear}`;
 
     return (
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick" aria-label={ariaLabel}>
@@ -22,15 +33,15 @@ export default function StoredCardFields({ brand, hasCVC, onFocusField, errors, 
                         className="adyen-checkout__input adyen-checkout__input--disabled adyen-checkout__card__exp-date__input--oneclick"
                         dir={'ltr'}
                     >
-                        {props.expiryMonth} / {props.expiryYear}
+                        {expiryMonth} / {expiryYear}
                     </div>
                 </Field>
 
                 {hasCVC && (
                     <CVC
-                        cvcPolicy={props.cvcPolicy}
+                        cvcPolicy={cvcPolicy}
                         error={errors.encryptedSecurityCode}
-                        focused={props.focusedElement === 'encryptedSecurityCode'}
+                        focused={focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
                         isValid={!!valid.encryptedSecurityCode}
                         label={i18n.get('creditCard.cvcField.title')}
