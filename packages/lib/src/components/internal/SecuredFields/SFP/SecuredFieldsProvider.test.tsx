@@ -170,7 +170,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
     it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
         unsupportedCardErrObj.error = '';
-        delete unsupportedCardErrObj.detectedBrands;
 
         expect(wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj)).toBe(false);
     });
@@ -182,7 +181,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
     it('should clear the previously generated "unsupported card" error & then a regular error is handled correctly', () => {
         unsupportedCardErrObj.error = '';
-        delete unsupportedCardErrObj.detectedBrands;
 
         wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
 
@@ -209,7 +207,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
     it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', () => {
         unsupportedCardErrObj.error = '';
-        delete unsupportedCardErrObj.detectedBrands;
+
         wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
 
         expect(
