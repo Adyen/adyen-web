@@ -1,4 +1,15 @@
-import { ClientFunction, Selector } from 'testcafe';
+import { ClientFunction, Selector, t } from 'testcafe';
+
+export const removeFocusFromElement = async selector => {
+    await t.dispatchEvent(selector, 'blur');
+};
+
+export const removeCharsFromInput = async (selector, numOfChars = 0) => {
+    await t.click(selector);
+    for (let i = 0; i < numOfChars; i++) {
+        await t.pressKey('backspace');
+    }
+};
 
 export const getInputSelector = (fieldType, withSelector = false) => {
     const selStr = `[data-fieldtype="${fieldType}"]`;

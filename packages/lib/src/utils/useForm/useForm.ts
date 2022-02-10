@@ -1,15 +1,18 @@
 import { useCallback, useMemo, useReducer } from 'preact/hooks';
-import Validator, { ValidatorRules } from '../Validator/Validator';
+import Validator from '../Validator/Validator';
 import { getReducer, init } from './reducer';
-import { FormState, DefaultDataState } from './types';
+import { FormState, FormProps, DefaultDataState } from './types';
 
-function useForm<DataState = DefaultDataState>(props: { rules?: ValidatorRules; [key: string]: any }) {
+function useForm<DataState = DefaultDataState>(props: FormProps) {
     const { rules = {}, formatters = {}, defaultData = {} } = props;
-    const validator = useMemo(() => new Validator(rules), []);
+    const validator = useMemo(() => new Validator(rules), [rules]);
 
     /** Formats and validates a field */
     const processField = ({ key, value, mode }, fieldContext) => {
-        const formattedValue = formatters[key] ? formatters[key](value ?? '') : value;
+        // Find a formatting function either stored under 'key' or a level deeper under a 'formatter' property
+        const formatterFn = formatters?.[key]?.formatter ? formatters[key].formatter : formatters?.[key];
+        const formattedValue = formatterFn && typeof formatterFn === 'function' ? formatterFn(value ?? '', fieldContext) : value;
+
         const validationResult = validator.validate({ key, value: formattedValue, mode }, fieldContext);
         return [formattedValue, validationResult];
     };

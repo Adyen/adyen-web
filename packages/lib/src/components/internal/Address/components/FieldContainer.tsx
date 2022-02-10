@@ -3,22 +3,31 @@ import Field from '../../FormFields/Field';
 import StateField from './StateField';
 import CountryField from './CountryField';
 import { renderFormField } from '../../FormFields';
-import { FieldContainerProps } from '../types';
+import { AddressStateError, FieldContainerProps } from '../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
+import Language from '../../../../language/Language';
+
+function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language): string | boolean {
+    if (typeof errors[fieldName]?.errorMessage === 'object') {
+        const { translationKey, translationObject } = errors[fieldName].errorMessage;
+        return i18n.get(translationKey, translationObject);
+    }
+    return i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
+}
 
 function FieldContainer(props: FieldContainerProps) {
     const {
         i18n,
         commonProps: { isCollatingErrors }
     } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange } = props;
-    const errorMessage = i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange, maxlength } = props;
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
     const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName);
     const labelKey: string = props.specifications.getKeyForField(fieldName, selectedCountry);
     const optionalLabel = isOptional ? ` ${i18n.get('field.title.optional')}` : '';
     const label = `${i18n.get(labelKey)}${optionalLabel}`;
+    const errorMessage = getErrorMessage(errors, fieldName, i18n);
 
     switch (fieldName) {
         case 'country':
@@ -60,7 +69,8 @@ function FieldContainer(props: FieldContainerProps) {
                         value,
                         onInput,
                         onChange,
-                        isCollatingErrors
+                        isCollatingErrors,
+                        maxlength
                     })}
                 </Field>
             );

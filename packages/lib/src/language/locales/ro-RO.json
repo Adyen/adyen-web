@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pentru numărul securizat de direcționare bancară (routing number)",
     "ach.encryptedBankLocationId.aria.label": "Codul SWIFT al băncii",
     "twint.saved": "salvat",
-    "orPayWith": "sau plătiți cu"
+    "orPayWith": "sau plătiți cu",
+    "invalidFormatExpects": "Format nevalid. Format solicitat: %{format}"
 }

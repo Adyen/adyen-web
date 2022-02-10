@@ -1,26 +1,5 @@
 import { email } from '../regex';
-
-type ValidatorMode = 'blur' | 'input';
-
-export interface ValidatorRule {
-    validate: (value, context?) => boolean;
-    errorMessage?: string;
-    modes: ValidatorMode[];
-}
-
-interface FieldData {
-    key: string;
-    value: string;
-    mode?: ValidatorMode;
-}
-
-interface FieldContext {
-    state: {
-        [key: string]: any;
-    };
-}
-
-export type ValidatorRules = { [field: string]: ValidatorRule | ValidatorRule[] };
+import { ErrorMessageObject, FieldContext, FieldData, ValidatorRule, ValidatorRules } from './types';
 
 /**
  * Holds the result of a validation
@@ -28,7 +7,7 @@ export type ValidatorRules = { [field: string]: ValidatorRule | ValidatorRule[] 
 export class ValidationRuleResult {
     private readonly shouldValidate: boolean;
     public isValid: boolean;
-    public errorMessage: string;
+    public errorMessage: string | ErrorMessageObject;
 
     constructor(rule, value, mode, context) {
         this.shouldValidate = rule.modes.includes(mode);

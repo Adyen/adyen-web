@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe für gesicherte BLZ",
     "ach.encryptedBankLocationId.aria.label": "BLZ",
     "twint.saved": "hinterlegt",
-    "orPayWith": "oder bezahlen Sie mit"
+    "orPayWith": "oder bezahlen Sie mit",
+    "invalidFormatExpects": "Ungültiges Format. Erwartetes Format: %{format}"
 }
