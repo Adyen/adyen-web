@@ -11,7 +11,7 @@ export interface SFPState {
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressData;
-    hasUnsupportedCard?: boolean;
+    detectedUnsupportedCardsArray?: string[];
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
     expiryDatePolicy?: DatePolicyType;

@@ -58,7 +58,7 @@ function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
  */
 function handleOnAllValid(status: CbObjOnAllValid): boolean {
     // Form cannot be valid whilst there is an unsupported card
-    if (this.state.hasUnsupportedCard) {
+    if (this.state.detectedUnsupportedCardsArray) {
         return false;
     }
 
@@ -78,7 +78,7 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
  */
 function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
     // A card number field cannot be valid whilst there is an unsupported card
-    if (this.state.hasUnsupportedCard && field.fieldType === ENCRYPTED_CARD_NUMBER) {
+    if (this.state.detectedUnsupportedCardsArray && field.fieldType === ENCRYPTED_CARD_NUMBER) {
         return false;
     }
 
@@ -174,7 +174,7 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     this.setState(
         prevState => ({
             errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
-            hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false,
+            detectedUnsupportedCardsArray: !hasUnsupportedCard ? null : cbObj.detectedBrands,
             // If dealing with an unsupported card ensure these card number related fields are reset re. pasting a full, unsupported card straight in
             ...(hasUnsupportedCard && { data: { ...prevState.data, [ENCRYPTED_CARD_NUMBER]: undefined } }),
             ...(hasUnsupportedCard && { valid: { ...prevState.valid, [ENCRYPTED_CARD_NUMBER]: false } }),
