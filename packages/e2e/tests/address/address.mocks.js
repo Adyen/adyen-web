@@ -1,4 +1,4 @@
-import { RequestMock, RequestLogger } from 'testcafe';
+import { RequestMock } from 'testcafe';
 import { BASE_URL } from '../pages';
 
 const countriesDatasetUrl = 'https://checkoutshopper-test.adyen.com/checkoutshopper/datasets/countries/en-US.json';
