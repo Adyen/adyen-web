@@ -16,6 +16,7 @@ export default {
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
     installmentOptions: {},
     configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
+    autoFocus: true,
 
     // Events
     onLoad: (): any => {},

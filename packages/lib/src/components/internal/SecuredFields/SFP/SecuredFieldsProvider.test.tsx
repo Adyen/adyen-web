@@ -164,7 +164,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     });
 
     it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.detectedUnsupportedCardsArray.length).toEqual(1);
+        expect(wrapper.instance().state.detectedUnsupportedBrands.length).toEqual(1);
         expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]);
     });
 
@@ -175,7 +175,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     });
 
     it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.detectedUnsupportedCardsArray).toBe(null);
+        expect(wrapper.instance().state.detectedUnsupportedBrands).toBe(null);
         expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
     });
 
@@ -194,7 +194,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
         unsupportedCardErrObj.detectedBrands = ['cartebancaire'];
 
         wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
-        expect(wrapper.instance().state.detectedUnsupportedCardsArray.length).toEqual(1);
+        expect(wrapper.instance().state.detectedUnsupportedBrands.length).toEqual(1);
 
         expect(wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber' })).toBe(false);
         expect(wrapper.instance().state.valid.encryptedCardNumber).toBe(false);

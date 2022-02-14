@@ -1,7 +1,7 @@
 import { h, Fragment, FunctionalComponent } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
-import { SFPState } from '../../../internal/SecuredFields/SFP/types';
+import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
@@ -20,7 +20,7 @@ import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
-import { getErrorPanelHandler, getAddressHandler, getFocusHandler } from './handlers';
+import { getErrorPanelHandler, getAddressHandler, getFocusHandler, getAutoJumpHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
@@ -33,6 +33,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     if (!Object.keys(cardInputRef.current).length) {
         props.setComponentRef(cardInputRef.current);
     }
+
+    const hasPanLengthRef = useRef(0);
+    const isAutoJumping = useRef(false);
 
     const errorFieldId = 'creditCardErrors';
 
@@ -116,7 +119,21 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
-    const handleSecuredFieldsChange = (sfState: SFPState): void => {
+    const doPanAutoJump = getAutoJumpHandler(
+        isAutoJumping,
+        sfp,
+        getLayout({
+            props,
+            showKCP,
+            showBrazilianSSN,
+            ...(props.billingAddressRequired && {
+                countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
+                billingAddressRequiredFields: props.billingAddressRequiredFields
+            })
+        })
+    );
+
+    const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
         setMergedSRErrors(null);
 
@@ -135,6 +152,27 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             return;
         }
 
+        /**
+         * If PAN has just become valid: decide if we can shift focus to the next field.
+         *
+         * We can if the config prop, autoFocus, is true AND we have a panLength value from binLookup AND one of the following scenarios is true:
+         *  - If encryptedCardNumber was invalid but now is valid
+         *      [scenario: shopper has typed in a number and field is now valid]
+         *  - If encryptedCardNumber was valid and still is valid and we're handling an onBrand event (triggered by binLookup which has happened after the handleOnFieldValid event)
+         *     [scenario: shopper has pasted in a full, valid, number]
+         */
+        if (
+            props.autoFocus &&
+            hasPanLengthRef.current > 0 &&
+            ((!valid.encryptedCardNumber && sfState.valid?.encryptedCardNumber) ||
+                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails.event === 'handleOnBrand'))
+        ) {
+            doPanAutoJump();
+        }
+
+        /**
+         * Process SFP state
+         */
         setData({ ...data, ...sfState.data });
         setErrors({ ...errors, ...sfState.errors });
         setValid({ ...valid, ...sfState.valid });
@@ -153,13 +191,14 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             CIExtensions(
                 props,
                 { sfp },
-                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode }
+                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode },
+                hasPanLengthRef
             ),
         [dualBrandSelectElements, issuingCountryCode]
     );
 
     /**
-     * EXPECTED METHODS ON CARD.THIS
+     * EXPOSE METHODS expected by Card.tsx
      */
     cardInputRef.current.showValidation = () => {
         // Clear errors so that the screenreader will read them *all* again
@@ -187,7 +226,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * EFFECT HOOKS
      */
     useEffect(() => {
-        // componentDidMount
+        // componentDidMount - expose more methods expected by Card.tsx
         cardInputRef.current.setFocusOn = sfp.current.setFocusOn;
         cardInputRef.current.updateStyles = sfp.current.updateStyles;
         cardInputRef.current.handleUnsupportedCard = sfp.current.handleUnsupportedCard;
@@ -269,7 +308,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const isValid: boolean = sfpValid && holderNameValid && addressValid && koreanAuthentication && socialSecurityNumberValid;
 
         const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
-
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
 
         // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
@@ -282,7 +320,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 props,
                 showKCP,
                 showBrazilianSSN,
-                countrySpecificSchemas: props.billingAddressRequired ? specifications.getAddressSchemaForCountry(billingAddress?.country) : null
+                ...(props.billingAddressRequired && {
+                    countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
+                    billingAddressRequiredFields: props.billingAddressRequiredFields
+                })
             }),
             i18n: props.i18n,
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)

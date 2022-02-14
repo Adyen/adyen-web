@@ -164,6 +164,7 @@ export interface LayoutObj {
     showKCP: boolean;
     showBrazilianSSN: boolean;
     countrySpecificSchemas: AddressSchema;
+    billingAddressRequiredFields?: string[];
 }
 
 export interface SortErrorsObj {

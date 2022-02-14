@@ -2,7 +2,7 @@ import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 
-export default function extensions(props, refs, states) {
+export default function extensions(props, refs, states, hasPanLengthRef: Partial<{ current }> = {}) {
     // Destructure props, refs and state hooks
     const { type, cvcPolicy } = props;
     const { sfp } = refs;
@@ -25,14 +25,17 @@ export default function extensions(props, refs, states) {
                 setDualBrandSelectElements([]);
                 setSelectedBrandValue('');
 
-                // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon
-                // However for a single-branded card we need to pass the "base" type so the brand logo is reset
+                // If /binLookup has 'reset' then for a generic card the internal regex will kick in to show the right brand icon - so set to null
+                // However for a single-branded card we need to pass the "base" type so the brand logo is reset - so set to type
                 const brandToReset = isReset && type !== 'card' ? type : null;
 
                 sfp.current.processBinLookupResponse(binLookupResponse, {
                     brand: brandToReset,
                     cvcPolicy: cvcPolicy // undefined except for Bancontact
                 } as SingleBrandResetObject);
+
+                // Reset storage var
+                hasPanLengthRef.current = 0;
                 return;
             }
 
@@ -55,6 +58,11 @@ export default function extensions(props, refs, states) {
                         supportedBrands: [switcherObj.leadBrand]
                     });
 
+                    // Store the fact the binLookup obj has a panLength prop
+                    if (switcherObj.leadBrand.panLength > 0) {
+                        hasPanLengthRef.current = switcherObj.leadBrand.panLength;
+                    }
+
                     // 2) Single option found (binValueObject.supportedBrands.length === 1)
                 } else {
                     // Reset UI
@@ -69,6 +77,11 @@ export default function extensions(props, refs, states) {
                         issuingCountryCode: binLookupResponse.issuingCountryCode,
                         supportedBrands
                     });
+
+                    // Store the fact the binLookup obj has a panLength prop
+                    if (supportedBrands[0].panLength > 0) {
+                        hasPanLengthRef.current = supportedBrands[0].panLength;
+                    }
                 }
             }
         },

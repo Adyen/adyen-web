@@ -229,6 +229,9 @@ class CSF extends AbstractCSF {
             },
             setKCPStatus: (isKCP: boolean): void => {
                 this.state.isKCP = isKCP;
+            },
+            sfIsOptionalOrHidden: (fieldType: string): boolean => {
+                return this.state.securedFields[fieldType].isOptionalOrHidden();
             }
         };
 

@@ -25,11 +25,10 @@ test('#1 avsCard error fields and inputs should have correct aria attributes', a
         .eql(null);
 
     // Card number input should not have aria-describedby attr
-    // TODO Enable once sf v3.7.4 is available
-    //    await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
-    //    const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
-    //    await t.expect(adb).eql(null);
-    //    await t.switchToMainWindow();
+    await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
+    const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
+    await t.expect(adb).eql(null);
+    await t.switchToMainWindow();
 
     // Address input's error field should have correct aria attrs
     await t

@@ -16,6 +16,7 @@ import {
 } from './layouts';
 import { StringObject } from '../../../internal/Address/types';
 import { InstallmentsObj } from './components/Installments/Installments';
+import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -35,7 +36,13 @@ export const hasValidInstallmentsObject = (installments?: InstallmentsObj) => {
     return installments?.plan === 'revolving' || installments?.value > 1;
 };
 
-export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSchemas = null }: LayoutObj): string[] => {
+export const getLayout = ({
+                              props,
+                              showKCP,
+                              showBrazilianSSN,
+                              countrySpecificSchemas = null,
+                              billingAddressRequiredFields = null
+                          }: LayoutObj): string[] => {
     let layout = CREDIT_CARD;
     const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
 
@@ -56,10 +63,18 @@ export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSch
             layout = props.positionHolderNameOnTop ? SSN_CARD_NAME_TOP : SSN_CARD_NAME_BOTTOM;
         }
     }
+
     // w. Billing address
     if (countrySpecificSchemas) {
         // Flatten array and remove any numbers that describe how fields should be aligned
-        const countryBasedAddressLayout: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number') as string[];
+        const countrySpecificSchemasFlat: string[] = countrySpecificSchemas['flat'](2).filter(item => typeof item !== 'number') as string[];
+
+        let countryBasedAddressLayout = countrySpecificSchemasFlat;
+
+        if (billingAddressRequiredFields) {
+            // Get intersection of the 2 arrays
+            countryBasedAddressLayout = countrySpecificSchemasFlat.filter(x => billingAddressRequiredFields.includes(x));
+        }
 
         layout = CREDIT_CARD.concat(countryBasedAddressLayout);
         if (hasRequiredHolderName) {
@@ -170,5 +185,5 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         onLoad: props.onLoad,
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator
-    };
+    } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
