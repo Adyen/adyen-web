@@ -19,6 +19,22 @@ export class MealVoucherFRElement extends GiftcardElement {
             ...props
         };
     }
+
+    /**
+     * Formats the component data output
+     */
+    formatData() {
+        return {
+            paymentMethod: {
+                type: this.constructor['type'],
+                brand: this.props.brand,
+                encryptedCardNumber: this.state.data?.encryptedCardNumber,
+                encryptedSecurityCode: this.state.data?.encryptedSecurityCode,
+                encryptedExpiryMonth: this.state.data?.encryptedExpiryMonth,
+                encryptedExpiryYear: this.state.data?.encryptedExpiryYear,
+            }
+        };
+    }
 }
 
 export default MealVoucherFRElement;
