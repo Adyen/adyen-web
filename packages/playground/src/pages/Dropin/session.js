@@ -18,16 +18,6 @@ export async function initSession() {
         clientKey: process.env.__CLIENT_KEY__,
         session,
 
-        paymentMethodsConfiguration: {
-            card: {
-                enableStoreDetails: false,
-                hasHolderName: true,
-                holderNameRequired: true,
-                billingAddressRequired: true,
-                billingAddressMode: 'partial'
-            }
-        },
-
         // Events
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
@@ -41,6 +31,13 @@ export async function initSession() {
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
+            },
+            card: {
+                enableStoreDetails: false,
+                hasHolderName: true,
+                holderNameRequired: true,
+                billingAddressRequired: true,
+                billingAddressMode: 'partial'
             }
         }
     });
