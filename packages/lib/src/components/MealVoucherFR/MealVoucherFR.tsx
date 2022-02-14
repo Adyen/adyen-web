@@ -12,6 +12,13 @@ export class MealVoucherFRElement extends GiftcardElement {
             fieldsLayoutComponent: MealVoucherFields
         });
     }
+
+    formatProps(props) {
+        return {
+            brand: props.type,
+            ...props
+        };
+    }
 }
 
 export default MealVoucherFRElement;
