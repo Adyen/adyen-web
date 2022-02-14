@@ -15,7 +15,7 @@ const logTelemetry = config => event => {
 
     const telemetryEvent = {
         version: process.env.VERSION,
-        platform: 'web',
+        channel: 'Web',
         locale: config.locale,
         flavor: 'components',
         userAgent: navigator.userAgent,
