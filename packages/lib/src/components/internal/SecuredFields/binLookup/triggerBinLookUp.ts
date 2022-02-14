@@ -28,7 +28,7 @@ export default parent => {
             httpPost(
                 {
                     loadingContext: parent.props.loadingContext,
-                    path: `v2/bin/binLookup?token=${parent.props.clientKey}`
+                    path: `v3/bin/binLookup?token=${parent.props.clientKey}`
                 },
                 {
                     supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,

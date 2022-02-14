@@ -25,7 +25,7 @@ const removeRequestHook = async t => {
     if (currentMock) await t.removeRequestHooks(currentMock); // don't know if this is strictly necessary
 };
 
-fixture`Test how Card Component handles binLookup returning a panLength property (or not)`
+fixture.only`Test how Card Component handles binLookup returning a panLength property (or not)`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
@@ -74,8 +74,7 @@ test('#2 Fill out PAN & see that since binLookup does return a panLength maxLeng
     await t
         .switchToIframe(cardPage.iframeSelector.nth(0))
         .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('maxlength'))
-        //        .eql('19')// 4 blocks of 4 numbers with 3 spaces in between // TODO comment in once sf 3.9.0 is available
-        .eql('24') // TODO comment out once sf 3.9.0 is available
+        .eql('19') // 4 blocks of 4 numbers with 3 spaces in between
         .switchToMainWindow();
 
     // Expect focus to be place on Expiry date field
@@ -186,18 +185,16 @@ test('#7 Fill out PAN by pasting number (binLookup w. panLength) & see that maxL
     await t
         .switchToIframe(cardPage.iframeSelector.nth(0))
         .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('maxlength'))
-        //        .eql('19')// 4 blocks of 4 numbers with 3 spaces in between // TODO comment in once sf 3.9.0 is available
-        .eql('24') // TODO comment out once sf 3.9.0 is available
+        .eql('19') // 4 blocks of 4 numbers with 3 spaces in between
         .switchToMainWindow();
 
     // Expect focus to be place on Expiry date field
     await t.expect(cardPage.dateLabelWithFocus.exists).ok();
 });
 
-// TODO - this test should start failing once sf 3.9.0 is available - then it can be adjusted to see that the focus *doesn't* jump
 test(
-    '#8 Fill out PAN with binLookup panLength of 18 and see that when you fill in the 16th digit the focus jumps ' +
-        ' then complete the number to 18n digits and see the focus jump' +
+    "#8 Fill out PAN with binLookup panLength of 18 and see that when you fill in the 16th digit the focus doesn't jump " +
+        ' then complete the number to 18 digits and see the focus jump' +
         ' then delete the number and add an amex one and see the focus now jumps after 15 digits',
     async t => {
         await removeRequestHook(t);
@@ -208,7 +205,7 @@ test(
 
         let firstDigits = MULTI_LUHN_MAESTRO.substring(0, 15);
         const middleDigits = MULTI_LUHN_MAESTRO.substring(15, 16);
-        //    let lastDigits = MULTI_LUHN_MAESTRO.substring(16, 18);// TODO - For sf 3.9.0
+        let lastDigits = MULTI_LUHN_MAESTRO.substring(16, 18);
 
         await cardPage.cardUtils.fillCardNumber(t, firstDigits);
 
@@ -216,14 +213,13 @@ test(
 
         await cardPage.cardUtils.fillCardNumber(t, middleDigits);
 
-        // TODO - For sf 3.9.0
         // Expect focus to be still be on number field
-        //    await t.expect(cardPage.numLabelWithFocus.exists).ok();
-        //    await t.expect(cardPage.dateLabelWithFocus.exists).notOk();
-        //    await t.wait(INPUT_DELAY);
-        //    await cardPage.cardUtils.fillCardNumber(t, lastDigits);
+        await t.expect(cardPage.numLabelWithFocus.exists).ok();
+        await t.expect(cardPage.dateLabelWithFocus.exists).notOk();
+        await t.wait(INPUT_DELAY);
+        await cardPage.cardUtils.fillCardNumber(t, lastDigits);
 
-        // Expect focus to be place on Expiry date field
+        // Expect focus to be placed on Expiry date field
         await t.expect(cardPage.dateLabelWithFocus.exists).ok();
 
         // Then delete number & enter new number with a different binLookup response to see that focus now jumps after 15 digits
@@ -264,6 +260,6 @@ test('#9 Fill out PAN with Visa num that binLookup says has a panLength of 16 - 
     await t.expect(cardPage.dateLabelWithFocus.exists).ok();
 
     // Should not be able to add more digits to the PAN
-    //    await cardPage.cardUtils.fillCardNumber(t, '6');// TODO comment in for sf 3.9.0
+    await cardPage.cardUtils.fillCardNumber(t, '6');
     await checkIframeInputContainsValue(t, cardPage.iframeSelector, 0, '.js-iframe-input', '5500 0000 0000 0004');
 });
