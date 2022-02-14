@@ -52,7 +52,7 @@ export interface SFPState {
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressData;
-    detectedUnsupportedCardsArray?: string[];
+    detectedUnsupportedBrands?: string[];
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
     expiryDatePolicy?: DatePolicyType;

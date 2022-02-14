@@ -250,7 +250,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
-                this.handleOnError(errorObj, !!state.detectedUnsupportedCardsArray);
+                this.handleOnError(errorObj, !!state.detectedUnsupportedBrands);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
                     this.csf.isValidated(field, errorObj.error);
@@ -273,7 +273,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     errorI18n: this.props.i18n.get(this.state.errors[key]),
                     error: this.state.errors[key],
                     rootNode: this.rootNode,
-                    ...(this.state.detectedUnsupportedCardsArray && { detectedBrands: this.state.detectedUnsupportedCardsArray })
+                    ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })
                 };
             } else {
                 acc[key] = null;
@@ -286,10 +286,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     public processBinLookupResponse(binLookupResponse: BinLookupResponse, resetObject: SingleBrandResetObject): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
-        if (this.state.detectedUnsupportedCardsArray) {
+        if (this.state.detectedUnsupportedBrands) {
             this.setState(prevState => ({
                 errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: false },
-                detectedUnsupportedCardsArray: null
+                detectedUnsupportedBrands: null
             }));
 
             // If we have some sort of binLookupResponse object then this isn't the reset caused by digits dropping below a threshold
