@@ -1,13 +1,43 @@
 import { h } from 'preact';
 import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import Language from '../../../language/Language';
-import SecuredFieldsProvider, { SFPState } from '../../internal/SecuredFields/SecuredFieldsProvider';
-import { BinLookupResponse } from '../../Card/types';
+import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
+import { SFPState } from '../../internal/SecuredFields/SFP/types';
+import { BinLookupResponse, CardBrandsConfiguration } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
+import { StylesObject } from '../../internal/SecuredFields/lib/types';
 
 interface SecuredFieldsProps {
-    onChange: (data) => void;
+    allowedDOMAccess?: boolean;
+    autoFocus?: boolean;
+    brands?: string[];
+    brandsConfiguration?: CardBrandsConfiguration;
+    clientKey?: string;
+    countryCode?: string;
     i18n: Language;
+    implementationType?: string;
+    isCollatingErrors?: boolean;
+    keypadFix?: boolean;
+    loadingContext?: string;
+    legacyInputMode?: boolean;
+    minimumExpiryDate?: string;
+    onAdditionalSFConfig?: () => {};
+    onAdditionalSFRemoved?: () => {};
+    onAllValid?: () => {};
+    onAutoComplete?: () => {};
+    onBinValue?: () => {};
+    onBrand?: () => {};
+    onConfigSuccess?: () => {};
+    onChange: (data) => void;
+    onError?: () => {};
+    onFieldValid?: () => {};
+    onFocus?: (e) => {};
+    onLoad?: () => {};
+    rootNode: HTMLElement;
+    showWarnings?: boolean;
+    styles?: StylesObject;
+    trimTrailingSeparator?: boolean;
+    type: string;
 }
 
 const defaultProps = {
@@ -91,9 +121,45 @@ function SecuredFieldsInput(props: SecuredFieldsProps) {
     /**
      * RENDER
      */
-    return <SecuredFieldsProvider ref={sfp} {...props} onChange={handleSecuredFieldsChange} render={() => null} />;
+    return <SecuredFieldsProvider ref={sfp} {...extractPropsForSFP(props)} onChange={handleSecuredFieldsChange} render={() => null} />;
 }
 
 SecuredFieldsInput.defaultProps = defaultProps;
 
 export default SecuredFieldsInput;
+
+const extractPropsForSFP = (props: SecuredFieldsProps) => {
+    return {
+        allowedDOMAccess: props.allowedDOMAccess,
+        autoFocus: props.autoFocus,
+        brands: props.brands,
+        brandsConfiguration: props.brandsConfiguration,
+        clientKey: props.clientKey,
+        // countryCode: props.countryCode, // only used for korean cards when koreanAuthenticationRequired is true
+        i18n: props.i18n,
+        implementationType: props.implementationType,
+        // isCollatingErrors: props.isCollatingErrors,
+        keypadFix: props.keypadFix,
+        legacyInputMode: props.legacyInputMode,
+        loadingContext: props.loadingContext,
+        minimumExpiryDate: props.minimumExpiryDate,
+        onAdditionalSFConfig: props.onAdditionalSFConfig,
+        onAdditionalSFRemoved: props.onAdditionalSFRemoved,
+        onAllValid: props.onAllValid,
+        onAutoComplete: props.onAutoComplete,
+        onBinValue: props.onBinValue,
+        onBrand: props.onBrand,
+        // onChange // set directly
+        onConfigSuccess: props.onConfigSuccess,
+        onError: props.onError,
+        onFieldValid: props.onFieldValid,
+        onFocus: props.onFocus,
+        onLoad: props.onLoad,
+        // render // set directly
+        rootNode: props.rootNode,
+        showWarnings: props.showWarnings,
+        styles: props.styles,
+        trimTrailingSeparator: props.trimTrailingSeparator,
+        type: props.type
+    };
+};

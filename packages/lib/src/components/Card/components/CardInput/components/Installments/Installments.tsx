@@ -8,6 +8,11 @@ import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import styles from '../../CardInput.module.scss';
 
+export interface InstallmentsObj {
+    value: number;
+    plan?: 'revolving';
+}
+
 /**
  * Installments generic dropdown
  */
@@ -56,7 +61,7 @@ function Installments(props: InstallmentsProps) {
     }, [brand]);
 
     useEffect(() => {
-        const stateObj: any = {
+        const stateObj: InstallmentsObj = {
             value: installmentAmount, // No radio button interface or "installments" radio button selected
             ...(hasRadioButtonUI && radioBtnValue === 'revolving' && { plan: radioBtnValue, value: 1 }),
             ...(hasRadioButtonUI && radioBtnValue === 'onetime' && { value: 1 })

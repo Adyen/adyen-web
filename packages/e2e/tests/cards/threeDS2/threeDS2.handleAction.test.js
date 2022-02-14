@@ -1,12 +1,19 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
-import { Selector, RequestLogger } from 'testcafe';
-import { start, getIframeSelector, getIsValid } from '../../utils/commonUtils';
-import cu from '../utils/cardUtils';
+import DropinPage from '../../_models/Dropin.page';
+import { RequestLogger } from 'testcafe';
 import { fillChallengeField, submitChallenge } from '../utils/threeDS2Utils';
 import { THREEDS2_CHALLENGE_ONLY_CARD, THREEDS2_FULL_FLOW_CARD } from '../utils/constants';
 import { BASE_URL } from '../../pages';
+import CardComponentPage from '../../_models/CardComponent.page';
+import { turnOffSDKMocking } from '../../_common/cardMocks';
+
+const dropinPage = new DropinPage({
+    components: {
+        cc: new CardComponentPage('.adyen-checkout__payment-method--card')
+    }
+});
 
 const detailsURL = `${BASE_URL}/details`;
 const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThreeDS2Fingerprint?token=${process.env.CLIENT_KEY}`;
@@ -25,38 +32,35 @@ const logger = RequestLogger(
 
 const apiVersion = Number(process.env.API_VERSION.substr(1));
 
-const TEST_SPEED = 1;
-
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
-
-const cardUtils = cu(iframeSelector);
-
 fixture`Testing new (v67) 3DS2 Flow (handleAction config)`
-    .page(BASE_URL)
+    .beforeEach(async t => {
+        await t.navigateTo(dropinPage.pageUrl);
+        await turnOffSDKMocking();
+    })
     .clientScripts('threeDS2.handleAction.clientScripts.js')
     .requestHooks(logger);
 
 if (apiVersion >= 67) {
-    test('Fill in card number that will trigger full flow (fingerprint & challenge) with challenge window size set in the call to handleAction', async t => {
+    test('#1 Fill in card number that will trigger full flow (fingerprint & challenge) with challenge window size set in the call to handleAction', async t => {
         logger.clear();
 
-        await start(t, 2000, TEST_SPEED);
+        await dropinPage.cc.numSpan();
 
         // Set handler for the alert window
         await t.setNativeDialogHandler(() => true);
 
         // Fill card fields
-        await cardUtils.fillCardNumber(t, THREEDS2_FULL_FLOW_CARD);
-        await cardUtils.fillDateAndCVC(t);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, THREEDS2_FULL_FLOW_CARD);
+        await dropinPage.cc.cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
 
         // Click pay
         await t
-            .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
+            .click(dropinPage.cc.payButton)
             // Expect no errors
-            .expect(Selector('.adyen-checkout__field--error').exists)
+            .expect(dropinPage.cc.numLabelTextError.exists)
             .notOk()
             /**
              *  Allow time for the /submitThreeDS2Fingerprint call, which we expect to be successful
@@ -68,7 +72,7 @@ if (apiVersion >= 67) {
         //        console.log('logger.requests[0].response', logger.requests[0].response);
 
         // Check challenge window size is read from config prop set in handleAction call
-        await t.expect(Selector('.adyen-checkout__threeds2__challenge--01').exists).ok();
+        await t.expect(dropinPage.challengeWindowSize01.exists).ok({ timeout: 3000 });
 
         // Complete challenge
         await fillChallengeField(t);
@@ -96,30 +100,26 @@ if (apiVersion >= 67) {
         await t.expect(history[0].text).eql('Authorised');
     });
 
-    test('Fill in card number that will trigger challenge-only flow  with challenge window size set in the call to handleAction', async t => {
+    test('#2 Fill in card number that will trigger challenge-only flow  with challenge window size set in the call to handleAction', async t => {
         logger.clear();
 
-        await start(t, 2000, TEST_SPEED);
+        await dropinPage.cc.numSpan();
 
         // Set handler for the alert window
         await t.setNativeDialogHandler(() => true);
 
         // Fill card fields
-        await cardUtils.fillCardNumber(t, THREEDS2_CHALLENGE_ONLY_CARD);
-        await cardUtils.fillDateAndCVC(t);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, THREEDS2_CHALLENGE_ONLY_CARD);
+        await dropinPage.cc.cardUtils.fillDateAndCVC(t);
 
         // Expect card to now be valid
-        await t.expect(getIsValid('dropin')).eql(true);
+        await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
 
         // Click pay
-        await t
-            .click('.adyen-checkout__card-input .adyen-checkout__button--pay')
-            // Expect no errors
-            .expect(Selector('.adyen-checkout__field--error').exists)
-            .notOk();
+        await t.click(dropinPage.cc.payButton);
 
         // Check challenge window size is read from config prop set in handleAction call
-        await t.expect(Selector('.adyen-checkout__threeds2__challenge--01').exists).ok();
+        await t.expect(dropinPage.challengeWindowSize01.exists).ok({ timeout: 3000 });
 
         // Complete challenge
         await fillChallengeField(t);

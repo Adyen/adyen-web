@@ -8,16 +8,16 @@ export default function InputBase(props) {
 
     const [handleChangeHasFired, setHandleChangeHasFired] = useState(false);
 
-    const handleInput = useCallback((event: h.JSX.TargetedCompositionEvent<HTMLInputElement>) => {
+    const handleInput = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
         props.onInput(event);
     }, []);
 
-    const handleChange = useCallback((event: h.JSX.TargetedCompositionEvent<HTMLInputElement>) => {
+    const handleChange = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
         setHandleChangeHasFired(true);
         props?.onChange?.(event);
     }, []);
 
-    const handleBlur = useCallback((event: h.JSX.TargetedCompositionEvent<HTMLInputElement>) => {
+    const handleBlur = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
         if (!handleChangeHasFired) {
             props?.onChange?.(event);
         }

@@ -2,17 +2,15 @@ import { SocialSecurityMode } from '../../types';
 import {AddressModeOptions} from "../../../internal/Address/types";
 
 export default {
-    details: [],
     type: 'card',
+
+    setComponentRef: () => {},
 
     // Settings
     hasHolderName: false,
     holderNameRequired: false,
     enableStoreDetails: false,
-    hideCVC: false,
     hasCVC: true,
-    hasStoreDetails: false,
-    storedDetails: null,
     showBrandIcon: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,

@@ -31,6 +31,13 @@ export default class DropinPage extends BasePage {
         this.dualBrandingIconHolder = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons`);
         this.dualBrandingIconHolderActive = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons--active`);
         this.dualBrandingImages = this.dualBrandingIconHolderActive.find('img');
+
+        /**
+         * 3DS2
+         */
+        this.challengeWindowSize01 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--01`);
+        this.challengeWindowSize02 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--02`);
+        this.challengeWindowSize04 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--04`);
     }
 
     getFromActivePM = ClientFunction(path => {

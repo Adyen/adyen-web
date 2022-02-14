@@ -126,6 +126,12 @@ export default class CardPage extends BasePage {
         this.errorPanelVisible = Selector(`${BASE_EL} .adyen-checkout-error-panel`);
         this.errorPanelHidden = Selector(`${BASE_EL} .adyen-checkout-error-panel--sr-only`);
         this.errorPanelEls = Selector('.adyen-checkout-error-panel__error'); // error messages within the panel
+
+        /**
+         * 3DS2
+         */
+        this.challengeWindowSize01 = Selector(`${BASE_EL} .adyen-checkout__threeds2__challenge--01`);
+        this.challengeWindowSize02 = Selector(`${BASE_EL} .adyen-checkout__threeds2__challenge--02`);
     }
 
     getFromState = ClientFunction(path => {
