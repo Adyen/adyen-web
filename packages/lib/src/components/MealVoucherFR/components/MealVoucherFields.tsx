@@ -11,7 +11,7 @@ export const MealVoucherFields = (props: GiftcardFieldsProps) => {
             <GiftcardNumberField {...props} classNameModifiers={['100']} />
 
             <div className="adyen-checkout__field-wrapper">
-                <MealVoucherExpiryField {...props} classNameModifiers={[]}/>
+                <MealVoucherExpiryField {...props} />
 
                 <GiftcardPinField {...props} classNameModifiers={['50']} />
             </div>

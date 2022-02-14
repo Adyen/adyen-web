@@ -1,4 +1,4 @@
-import { Component, h } from 'preact';
+import {Component, FunctionComponent, h} from 'preact';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
@@ -6,6 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
+import {GiftcardFieldsProps} from "./types";
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -20,7 +21,7 @@ interface GiftcardComponentProps {
 
     pinRequired: boolean;
     expiryDateRequired?: boolean;
-    fieldsLayoutComponent: any;
+    fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
