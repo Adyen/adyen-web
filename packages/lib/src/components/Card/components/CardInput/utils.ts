@@ -15,6 +15,7 @@ import {
     SSN_CARD_NAME_TOP
 } from './layouts';
 import { StringObject } from '../../../internal/Address/types';
+import { InstallmentsObj } from './components/Installments/Installments';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -24,6 +25,14 @@ export const getCardImageUrl = (brand: string, loadingContext: string): string =
     };
 
     return getImageUrl(imageOptions)(brand);
+};
+
+/**
+ * Verifies that installment object is valid to send to the Backend.
+ * Valid means that it has 'revolving' plan set, or the number of installments is bigger than one
+ */
+export const hasValidInstallmentsObject = (installments?: InstallmentsObj) => {
+    return installments?.plan === 'revolving' || installments?.value > 1;
 };
 
 export const getLayout = ({ props, showKCP, showBrazilianSSN, countrySpecificSchemas = null }: LayoutObj): string[] => {
