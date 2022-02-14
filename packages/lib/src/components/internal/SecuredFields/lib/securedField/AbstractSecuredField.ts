@@ -31,6 +31,7 @@ export interface SFInternalConfig {
     minimumExpiryDate: string;
     uid: string;
     implementationType: string;
+    bundleType: string;
     isCollatingErrors: boolean;
 }
 

@@ -31,4 +31,17 @@ import '../../style.scss';
             }
         })
         .mount('#genericgiftcard-container');
+
+    window.giftcard = checkout
+        .create('mealVoucher_FR_natixis', {
+            type: 'mealVoucher_FR_natixis',
+            brand: 'mealVoucher_FR_natixis',
+            onBalanceCheck: async (resolve, reject, data) => {
+                resolve(await checkBalance(data));
+            },
+            onOrderRequest: async (resolve, reject) => {
+                resolve(await createOrder({ amount }));
+            }
+        })
+        .mount('#mealvoucher-fr-container');
 })();

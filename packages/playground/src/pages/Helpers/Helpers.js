@@ -5,8 +5,8 @@ import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale } from '../../config/commonConfig';
 
-getPaymentMethods({ amount, shopperLocale }).then(paymentMethodsResponse => {
-    window.checkout = new AdyenCheckout({
+getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
+    window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,

@@ -2,7 +2,8 @@ import { Component } from 'preact';
 import { getErrorObject, getFields, getErrorReducer, validFieldsReducer } from './SFPUtils';
 import initCSF from '../lib/CSF';
 import handlers from './SecuredFieldsProviderHandlers';
-import defaultProps, { SFPProps } from './defaultProps';
+import defaultProps from './defaultProps';
+import { SFPProps, SFPState, SingleBrandResetObject } from './types';
 import {
     StylesObject,
     CbObjOnError,
@@ -18,7 +19,6 @@ import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
 import { getError } from '../../../../core/Errors/utils';
-import { SFPState, SingleBrandResetObject } from './types';
 
 /**
  * SecuredFieldsProvider:
@@ -234,6 +234,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (this.csf) this.csf.updateStyles(stylesObj);
     }
 
+    public sfIsOptionalOrHidden(fieldType: string): boolean {
+        return this.csf.sfIsOptionalOrHidden(fieldType);
+    }
+
     public destroy(): void {
         if (this.csf) this.csf.destroy();
     }
@@ -246,7 +250,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
                 const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
-                this.handleOnError(errorObj, state.hasUnsupportedCard);
+                this.handleOnError(errorObj, !!state.detectedUnsupportedBrands);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
                     this.csf.isValidated(field, errorObj.error);
@@ -265,10 +269,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                     isValid: false,
                     errorMessage: getError(this.state.errors[key]),
                     // For v5 the object found in state.errors should also contain the additional properties that used to be sent to the onError callback
-                    // namely: translation, errorCode & ref to rootNode
+                    // namely: translation, errorCode, a ref to rootNode &, in the case of failed binLookup, an array of the detectedBrands
                     errorI18n: this.props.i18n.get(this.state.errors[key]),
                     error: this.state.errors[key],
-                    rootNode: this.rootNode
+                    rootNode: this.rootNode,
+                    ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })
                 };
             } else {
                 acc[key] = null;
@@ -281,10 +286,10 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     public processBinLookupResponse(binLookupResponse: BinLookupResponse, resetObject: SingleBrandResetObject): void {
         // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
-        if (this.state.hasUnsupportedCard) {
+        if (this.state.detectedUnsupportedBrands) {
             this.setState(prevState => ({
                 errors: { ...prevState.errors, [ENCRYPTED_CARD_NUMBER]: false },
-                hasUnsupportedCard: false
+                detectedUnsupportedBrands: null
             }));
 
             // If we have some sort of binLookupResponse object then this isn't the reset caused by digits dropping below a threshold

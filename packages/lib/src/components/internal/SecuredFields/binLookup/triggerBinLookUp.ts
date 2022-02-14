@@ -6,6 +6,10 @@ import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../../../core/Errors/cons
 import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
 import { sortBrandsAccordingToRules } from './sortBinLookupBrands';
 
+if (process.env.NODE_ENV === 'development') {
+    window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
+}
+
 export default parent => {
     let currentRequestId = null;
 
@@ -24,7 +28,7 @@ export default parent => {
             httpPost(
                 {
                     loadingContext: parent.props.loadingContext,
-                    path: `v2/bin/binLookup?token=${parent.props.clientKey}`
+                    path: `v3/bin/binLookup?token=${parent.props.clientKey}`
                 },
                 {
                     supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
@@ -34,6 +38,49 @@ export default parent => {
             ).then((data: BinLookupResponseRaw) => {
                 // If response is the one we were waiting for...
                 if (data?.requestId === currentRequestId) {
+                    if (process.env.NODE_ENV === 'development') {
+                        // TODO mocking
+                        if (window.mockBinCount >= 1) {
+                            switch (window.mockBinCount) {
+                                case 1:
+                                    console.log('\n### triggerBinLookUp::mock first response:: ');
+                                    data.brands = [
+                                        {
+                                            brand: 'mc',
+                                            cvcPolicy: 'optional',
+                                            enableLuhnCheck: true,
+                                            // showExpiryDate: true, // deprecated in /binLookup v3
+                                            expiryDatePolicy: 'optional',
+                                            // panLength: 16,
+                                            supported: true
+                                        }
+                                    ];
+                                    // data.issuingCountryCode = 'KR'; // needed to mock korean_local_card
+                                    // increment to alter second response
+                                    window.mockBinCount++;
+
+                                    break;
+                                case 2:
+                                    console.log('\n### triggerBinLookUp::mock second response:: ');
+                                    // data.brands = null;
+                                    data.brands = [
+                                        {
+                                            brand: 'maestro',
+                                            cvcPolicy: 'required',
+                                            enableLuhnCheck: true,
+                                            showExpiryDate: true,
+                                            supported: true,
+                                            showSocialSecurityNumber: false
+                                            // panLength: 16
+                                        }
+                                    ];
+                                    break;
+                                default:
+                            }
+                        }
+                        // TODO end
+                    }
+
                     if (data.brands?.length) {
                         // Sort brands according to rules
                         const sortedBrands = data.brands.length === 2 ? sortBrandsAccordingToRules(data.brands, parent.props.type) : data.brands;

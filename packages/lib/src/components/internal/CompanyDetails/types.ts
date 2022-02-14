@@ -1,5 +1,5 @@
 import { FieldsetVisibility } from '../../../types';
-import { ValidatorRules } from '../../../utils/Validator/Validator';
+import { ValidatorRules } from '../../../utils/Validator/types';
 
 export interface CompanyDetailsSchema {
     name?: string;

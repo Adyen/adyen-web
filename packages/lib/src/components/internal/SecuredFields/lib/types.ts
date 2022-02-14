@@ -201,6 +201,7 @@ export interface ShiftTabObject {
 export interface SendBrandObject {
     brand: string;
     enableLuhnCheck: boolean;
+    panLength?: number;
 }
 
 export interface SendExpiryDateObject {

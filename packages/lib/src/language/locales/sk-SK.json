@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe pre zabezpečené smerovacie číslo banky",
     "ach.encryptedBankLocationId.aria.label": "Smerovacie číslo banky",
     "twint.saved": "uložené",
-    "orPayWith": "alebo zaplatiť pomocou"
+    "orPayWith": "alebo zaplatiť pomocou",
+    "invalidFormatExpects": "Neplatný formát. Očakávaný formát: %{format}"
 }

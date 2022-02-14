@@ -58,13 +58,13 @@ function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
  */
 function handleOnAllValid(status: CbObjOnAllValid): boolean {
     // Form cannot be valid whilst there is an unsupported card
-    if (this.state.hasUnsupportedCard) {
+    if (this.state.detectedUnsupportedBrands) {
         return false;
     }
 
     this.setState({ isSfpValid: status.allValid }, () => {
         // New - fixes maestro-with-error-on-optional-cvc-field bug
-        this.props.onChange(this.state);
+        this.props.onChange(this.state, { event: 'handleOnAllValid' });
         // Propagate onAllValid event
         this.props.onAllValid(status);
     });
@@ -76,15 +76,15 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
  * Saves a field value from CSF in the CardInput state
  * Emits the onFieldValid event
  */
-function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
+function handleOnFieldValid(fieldObj: CbObjOnFieldValid): boolean {
     // A card number field cannot be valid whilst there is an unsupported card
-    if (this.state.hasUnsupportedCard && field.fieldType === ENCRYPTED_CARD_NUMBER) {
+    if (this.state.detectedUnsupportedBrands && fieldObj.fieldType === ENCRYPTED_CARD_NUMBER) {
         return false;
     }
 
     const setValidFieldState = prevState => ({
-        data: { ...prevState.data, [field.encryptedFieldName]: field.blob },
-        valid: { ...prevState.valid, [field.encryptedFieldName]: field.valid },
+        data: { ...prevState.data, [fieldObj.encryptedFieldName]: fieldObj.blob },
+        valid: { ...prevState.valid, [fieldObj.encryptedFieldName]: fieldObj.valid },
         /**
          * For a field that has just received valid:true (field has just been completed & encrypted) - mark the error state for this field as false
          * For a field that has just received valid:false (field was encrypted, now is not)
@@ -92,14 +92,14 @@ function handleOnFieldValid(field: CbObjOnFieldValid): boolean {
          *  or has switched from valid/encrypted state to being in error (digit edited to one that puts the field in error) - so keep any error that
          *  might just have been set
          */
-        errors: { ...prevState.errors, [field.fieldType]: prevState.errors[field.fieldType] ?? false }
+        errors: { ...prevState.errors, [fieldObj.fieldType]: prevState.errors[fieldObj.fieldType] ?? false }
     });
 
     this.setState(setValidFieldState, () => {
-        this.props.onChange(this.state);
+        this.props.onChange(this.state, { event: 'handleOnFieldValid', fieldType: fieldObj.fieldType });
 
         // Propagate onFieldValid event
-        this.props.onFieldValid(field);
+        this.props.onFieldValid(fieldObj);
     });
 
     return true;
@@ -156,7 +156,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
             };
         },
         () => {
-            this.props.onChange(this.state);
+            this.props.onChange(this.state, { event: 'handleOnBrand' });
 
             // Enhance data object with the url for the brand image, first checking if the merchant has configured their own one for this brand
             const brandImageUrl = this.props.brandsConfiguration[cardInfo.brand]?.icon ?? getCardImageUrl(cardInfo.brand, this.props.loadingContext);
@@ -174,14 +174,14 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     this.setState(
         prevState => ({
             errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
-            hasUnsupportedCard: hasUnsupportedCard !== null ? hasUnsupportedCard : false,
+            detectedUnsupportedBrands: !hasUnsupportedCard ? null : cbObj.detectedBrands,
             // If dealing with an unsupported card ensure these card number related fields are reset re. pasting a full, unsupported card straight in
             ...(hasUnsupportedCard && { data: { ...prevState.data, [ENCRYPTED_CARD_NUMBER]: undefined } }),
             ...(hasUnsupportedCard && { valid: { ...prevState.valid, [ENCRYPTED_CARD_NUMBER]: false } }),
             ...(hasUnsupportedCard && { isSfpValid: false })
         }),
         () => {
-            this.props.onChange(this.state);
+            this.props.onChange(this.state, { event: 'handleOnError', fieldType: cbObj.fieldType });
         }
     );
 
@@ -197,7 +197,7 @@ function handleFocus(cbObj: CbObjOnFocus): void {
 // Only called for holder name
 function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.setState({ autoCompleteName: cbObj.value }, () => {
-        this.props.onChange(this.state);
+        this.props.onChange(this.state, { event: 'handleOnAutoComplete', fieldType: cbObj.fieldType });
         this.setState({ autoCompleteName: null }); // Nullify ref after sending it (lets shopper edit holder name)
     });
     this.props.onAutoComplete(cbObj);

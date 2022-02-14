@@ -3,12 +3,14 @@ import { useEffect, useMemo } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
+import { addressFormatters, countrySpecificFormatters } from './validate.formats';
 import { AddressProps } from './types';
 import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
+import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 
 export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility } = props;
@@ -21,17 +23,32 @@ export default function Address(props: AddressProps) {
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFieldsSchema,
         defaultData: props.data,
-        rules: props.validationRules || getAddressValidationRules(specifications)
+        rules: props.validationRules || getAddressValidationRules(specifications),
+        formatters: addressFormatters
     });
 
+    /**
+     * Effect that:
+     * - Resets validation for all fields by triggering handleChangeFor(fieldName, 'input')
+     * - Applies validation on postalCode field in case it has any value
+     */
     useEffect((): void => {
         const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
         const newData = { ...data, stateOrProvince };
+
         requiredFields.forEach(fieldName => {
             handleChangeFor(fieldName, 'input')(newData[fieldName] ?? '');
         });
+
+        if (newData.postalCode) {
+            handleChangeFor('postalCode', 'blur')(data.postalCode);
+        }
     }, [data.country]);
 
+    /**
+     * Set the value of 'stateOrProvince' during the initial render if
+     * property is provided during the creation of the payment method
+     */
     useEffect((): void => {
         const stateFieldIsRequired = requiredFields.includes('stateOrProvince');
         const countryHasStatesDataset = data.country && specifications.countryHasDataset(data.country);
@@ -79,6 +96,7 @@ export default function Address(props: AddressProps) {
                 onChange={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
+                maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
             />
         );
     };

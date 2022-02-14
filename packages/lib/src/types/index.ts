@@ -99,9 +99,44 @@ export interface PaymentMethod {
     configuration?: object;
 
     /**
-     * Brands available for this payment method
+     * Brand for the selected gift card. For example: plastix, hmclub.
+     */
+    brand?: string;
+
+    /**
+     * List of possible brands. For example: visa, mc.
      */
     brands?: string[];
+
+    /**
+     * The funding source of the payment method.
+     */
+    fundingSource?: string;
+
+    /**
+     * The group where this payment method belongs to.
+     */
+    group?: PaymentMethodGroup;
+}
+
+/**
+ * The group where this payment method belongs to.
+ */
+export interface PaymentMethodGroup {
+    /**
+     * The name of the group.
+     */
+    name: string;
+
+    /**
+     * Echo data to be used if the payment method is displayed as part of this group.
+     */
+    paymentMethodData: string;
+
+    /**
+     * The unique code of the group.
+     */
+    type: string;
 }
 
 export interface StoredPaymentMethod extends PaymentMethod {

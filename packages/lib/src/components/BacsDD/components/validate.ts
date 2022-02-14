@@ -1,4 +1,4 @@
-import { ValidatorRules } from '../../../utils/Validator/Validator';
+import { ValidatorRules } from '../../../utils/Validator/types';
 
 const bankAccountNumberRegEx = /^(\d){1,8}$/;
 const bankLocationIdRegEx = /^(\d){6}$/;

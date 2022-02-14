@@ -67,6 +67,8 @@ export function handleConfig(): void {
     let sfBundleType: string = this.config.isCreditCardType ? 'card' : this.props.type;
     if (sfBundleType.indexOf('sepa') > -1) sfBundleType = 'iban';
 
+    this.config.bundleType = sfBundleType;
+
     // Add a hash of the origin to ensure urls are different across domains
     const d = btoa(window.location.origin);
     this.config.iframeSrc = `${this.config.loadingContext}securedfields/${this.props.clientKey}/${SF_VERSION}/securedFields.html?type=${sfBundleType}&d=${d}`;

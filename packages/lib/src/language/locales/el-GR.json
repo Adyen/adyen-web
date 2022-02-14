@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe για ασφαλή αριθμό κωδικού υποκαταστήματος τράπεζας",
     "ach.encryptedBankLocationId.aria.label": "Αριθμός δρομολόγησης τράπεζας",
     "twint.saved": "αποθηκεύτηκε",
-    "orPayWith": "ή πληρώστε με"
+    "orPayWith": "ή πληρώστε με",
+    "invalidFormatExpects": "Μη έγκυρη μορφή. Αναμενόμενη μορφή: %{format}"
 }

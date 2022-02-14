@@ -141,6 +141,7 @@ class SecuredField extends AbstractSecuredField {
             minimumExpiryDate: this.config.minimumExpiryDate,
             uid: this.config.uid,
             implementationType: this.config.implementationType,
+            bundleType: this.config.bundleType,
             isCollatingErrors: this.config.isCollatingErrors
         };
 
@@ -292,6 +293,36 @@ class SecuredField extends AbstractSecuredField {
         off(window, 'message', this.postMessageListener, false);
         this.iframeContentWindow = null;
         removeAllChildren(this.holderEl);
+    }
+
+    /**
+     * Returns whether the securedField is hidden OR whether it is optional and not in error
+     */
+    isOptionalOrHidden(): boolean {
+        if (this.fieldType === ENCRYPTED_EXPIRY_DATE || this.fieldType === ENCRYPTED_EXPIRY_MONTH || this.fieldType === ENCRYPTED_EXPIRY_YEAR) {
+            switch (this.expiryDatePolicy) {
+                case DATE_POLICY_HIDDEN:
+                    return true;
+                case DATE_POLICY_OPTIONAL:
+                    return !this.hasError;
+                default:
+                    return false;
+            }
+        }
+
+        if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
+            switch (this.cvcPolicy) {
+                case CVC_POLICY_HIDDEN:
+                    return true;
+                case CVC_POLICY_OPTIONAL:
+                    return !this.hasError;
+                default:
+                    return false;
+            }
+        }
+
+        // Any other type of securedField is not optional & can't be hidden
+        return false;
     }
 
     // /////// ALLOCATE CALLBACKS /////////

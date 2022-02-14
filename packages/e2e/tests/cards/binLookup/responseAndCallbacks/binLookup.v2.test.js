@@ -5,9 +5,9 @@ import { RequestLogger, Selector } from 'testcafe';
 import { start, getIframeSelector, getFromWindow } from '../../../utils/commonUtils';
 import cu from '../../utils/cardUtils';
 import { CARDS_URL } from '../../../pages';
-import { DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
+import { BIN_LOOKUP_VERSION, DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
 
-const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 const logger = RequestLogger(
     { url, method: 'post' },

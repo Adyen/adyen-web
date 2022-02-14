@@ -1,10 +1,11 @@
 import { ClientFunction, RequestMock } from 'testcafe';
 import { BASE_URL } from '../pages';
+import { BIN_LOOKUP_VERSION } from '../cards/utils/constants';
 
 import path from 'path';
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
-export const binLookupUrl = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+export const binLookupUrl = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 /**
  * Functionality for mocking a /binLookup API response via testcafe's fixture.requestHooks()

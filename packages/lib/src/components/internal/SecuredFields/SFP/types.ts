@@ -1,5 +1,46 @@
-import { CVCPolicyType, DatePolicyType } from '../lib/types';
+import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types';
+import { CardBrandsConfiguration } from '../../../Card/types';
+import { Language } from '../../../../language/Language';
+
+/**
+ * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, AchInput, GiftcardComponent)
+ */
+export interface SFPProps {
+    allowedDOMAccess?: boolean;
+    autoFocus?: boolean;
+    brands?: string[];
+    brandsConfiguration?: CardBrandsConfiguration;
+    clientKey: string;
+    countryCode?: string;
+    hasKoreanFields?: boolean;
+    i18n: Language;
+    implementationType?: string;
+    isCollatingErrors?: boolean;
+    keypadFix?: boolean;
+    koreanAuthenticationRequired?: boolean;
+    legacyInputMode?: boolean;
+    loadingContext: string;
+    minimumExpiryDate?: string;
+    onAdditionalSFConfig?: () => {};
+    onAdditionalSFRemoved?: () => {};
+    onAllValid?: () => {};
+    onAutoComplete?: () => {};
+    onBinValue?: () => {};
+    onBrand?: () => {};
+    onChange: () => {};
+    onConfigSuccess?: () => {};
+    onError?: () => {};
+    onFieldValid?: () => {};
+    onFocus?: () => {};
+    onLoad?: () => {};
+    rootNode: HTMLElement; // Specific to SecuredFieldsInput
+    showWarnings?: boolean;
+    styles?: StylesObject;
+    trimTrailingSeparator?: boolean;
+    type: string;
+    render: () => {};
+}
 
 export interface SFPState {
     status?: string;
@@ -11,7 +52,7 @@ export interface SFPState {
     isSfpValid?: boolean;
     autoCompleteName?: string;
     billingAddress?: AddressData;
-    hasUnsupportedCard?: boolean;
+    detectedUnsupportedBrands?: string[];
     hasKoreanFields?: boolean;
     showSocialSecurityNumber?: boolean;
     expiryDatePolicy?: DatePolicyType;
@@ -32,4 +73,9 @@ export interface SFPValid {
     encryptedPin?: boolean;
     encryptedBankAccountNumber?: boolean;
     encryptedBankLocationId?: boolean;
+}
+
+export interface OnChangeEventDetails {
+    event: string;
+    fieldType?: string;
 }
