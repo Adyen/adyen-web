@@ -1,4 +1,4 @@
-import { CVCPolicyType, DatePolicyType } from '../core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../types';
 
 export const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';

@@ -16,6 +16,11 @@ class DropinElement extends UIElement<DropinElementProps> {
     protected static defaultProps = defaultProps;
     public dropinRef = null;
 
+    /**
+     * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
+     */
+    public componentFromAction?: UIElement;
+
     constructor(props) {
         super(props);
         this.submit = this.submit.bind(this);
@@ -55,11 +60,8 @@ class DropinElement extends UIElement<DropinElementProps> {
         return this;
     }
 
-    setStatus(status, props = {}) {
-        this.dropinRef?.setStatus({ type: status, props });
-        if (process.env.NODE_ENV === 'test') {
-            this['componentFromAction'] = props['component'];
-        }
+    public setStatus(status, props = {}): this {
+        this.dropinRef?.setStatus(status, props);
         return this;
     }
 
@@ -105,7 +107,7 @@ class DropinElement extends UIElement<DropinElementProps> {
         return [storedElements, elements, instantPaymentElements];
     };
 
-    handleAction(action: PaymentAction, props = {}) {
+    public handleAction(action: PaymentAction, props = {}): this | null {
         if (!action || !action.type) throw new Error('Invalid Action');
 
         if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
@@ -120,7 +122,9 @@ class DropinElement extends UIElement<DropinElementProps> {
         });
 
         if (paymentAction) {
-            return this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.componentFromAction = paymentAction;
+            return this;
         }
 
         return null;

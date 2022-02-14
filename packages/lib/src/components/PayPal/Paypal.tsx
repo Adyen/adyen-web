@@ -106,7 +106,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     handleSubmit() {
-        this.onSubmit();
+        super.submit();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;

@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import SecuredFieldsProvider from '../../../components/internal/SecuredFields/SecuredFieldsProvider';
+import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
@@ -20,7 +20,7 @@ interface GiftcardComponentProps {
 
     pinRequired: boolean;
     expiryDateRequired?: boolean;
-    fieldsLayoutComponent: any; //TODO
+    fieldsLayoutComponent: any;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
