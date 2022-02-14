@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "安全銀行匯款路徑編號的 IFrame",
     "ach.encryptedBankLocationId.aria.label": "銀行匯款路徑編號",
     "twint.saved": "儲存的",
-    "orPayWith": "或透過以下方式支付："
+    "orPayWith": "或透過以下方式支付：",
+    "invalidFormatExpects": "格式無效。格式必須為：%{format}"
 }

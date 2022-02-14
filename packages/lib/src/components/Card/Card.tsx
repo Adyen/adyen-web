@@ -8,6 +8,7 @@ import { CardElementData, CardElementProps, BinLookupResponse } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
+import { hasValidInstallmentsObject } from './components/CardInput/utils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -75,7 +76,7 @@ export class CardElement extends UIElement<CardElementProps> {
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
             ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
-            ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
+            ...(hasValidInstallmentsObject(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
         };

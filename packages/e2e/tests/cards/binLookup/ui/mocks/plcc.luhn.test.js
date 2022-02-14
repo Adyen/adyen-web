@@ -5,11 +5,11 @@ import { Selector, RequestMock } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../../../utils/commonUtils';
 import cu from '../../../utils/cardUtils';
 import { BASE_URL, CARDS_URL } from '../../../../pages';
-import { FAILS_LUHN_CARD } from '../../../utils/constants';
+import { BIN_LOOKUP_VERSION, FAILS_LUHN_CARD } from '../../../utils/constants';
 
 const brandingIcon = Selector('.card-field .adyen-checkout__card__cardNumber__brandIcon');
 
-const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 /**
  * NOTE - we are mocking the response until such time as we have a genuine card,

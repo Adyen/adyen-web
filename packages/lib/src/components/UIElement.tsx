@@ -135,7 +135,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     };
 
-    public handleAction(action: PaymentAction, props = {}): UIElement {
+    public handleAction(action: PaymentAction, props = {}): UIElement | null {
         if (!action || !action.type) throw new Error('Invalid Action');
 
         const paymentAction = this._parentInstance.createFromAction(action, {

@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "保護された銀行支店番号の iframe",
     "ach.encryptedBankLocationId.aria.label": "銀行支店番号",
     "twint.saved": "を保存しました",
-    "orPayWith": "または次の方法で支払う"
+    "orPayWith": "または次の方法で支払う",
+    "invalidFormatExpects": "無効な形式です。期待される形式： %{format}"
 }

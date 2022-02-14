@@ -208,5 +208,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe для защиты маршрутного номера банка",
     "ach.encryptedBankLocationId.aria.label": "Маршрутный номер банка",
     "twint.saved": "сохранено",
-    "orPayWith": "или заплатите через"
+    "orPayWith": "или заплатите через",
+    "invalidFormatExpects": "Неверный формат. Ожидаемый формат: %{format}"
 }

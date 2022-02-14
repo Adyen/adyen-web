@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe for sikret bankdirigeringsnummer",
     "ach.encryptedBankLocationId.aria.label": "Bankens routingnummer",
     "twint.saved": "lagret",
-    "orPayWith": "eller betal med"
+    "orPayWith": "eller betal med",
+    "invalidFormatExpects": "Ugyldig format. Forventet format: %{format}"
 }
