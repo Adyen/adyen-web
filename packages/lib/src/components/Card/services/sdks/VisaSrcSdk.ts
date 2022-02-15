@@ -1,4 +1,3 @@
-import Script from '../../../../utils/Script';
 import { VISA_SDK_PROD, VISA_SDK_TEST } from '../config';
 import { IdentityLookupParams, IdentityLookupResponse } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
@@ -7,13 +6,17 @@ const IdentityTypeMap = {
     email: 'EMAIL'
 };
 
-const SCHEMA = 'visa';
-
 class VisaSrcSdk extends AbstractSrcInitiator {
-    public script: Script;
+    public readonly schemaName = 'visa';
 
     constructor(environment: string) {
-        super(SCHEMA, environment.toLowerCase() === 'test' ? VISA_SDK_TEST : VISA_SDK_PROD);
+        super(environment.toLowerCase() === 'test' ? VISA_SDK_TEST : VISA_SDK_PROD);
+    }
+
+    protected isSdkIsAvailableOnWindow(): boolean {
+        // @ts-ignore vAdapters is created by the VISA sdk
+        if (window.vAdapters?.VisaSRCI) return true;
+        return false;
     }
 
     protected assignSdkReference(): void {

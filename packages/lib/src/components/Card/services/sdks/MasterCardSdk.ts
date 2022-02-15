@@ -6,15 +6,21 @@ const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS'
 };
 
-const SCHEMA = 'mc';
-
 class MasterCardSdk extends AbstractSrcInitiator {
+    public readonly schemaName = 'mc';
+
     constructor(environment: string) {
-        super(SCHEMA, environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);
+        super(environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);
+    }
+
+    protected isSdkIsAvailableOnWindow(): boolean {
+        // @ts-ignore SRCSDK_MASTERCARD is created by the MC sdk
+        if (window.SRCSDK_MASTERCARD) return true;
+        return false;
     }
 
     protected assignSdkReference(): void {
-        // @ts-ignore vAdapters is created by the VISA sdk
+        // @ts-ignore SRCSDK_MASTERCARD is created by the MC sdk
         this.schemaSdk = window.SRCSDK_MASTERCARD;
     }
 

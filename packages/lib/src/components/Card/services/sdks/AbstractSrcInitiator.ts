@@ -28,28 +28,34 @@ export interface ISrcInitiator {
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
-    public readonly schemaName: string;
     public schemaSdk: any;
+    public abstract readonly schemaName: string;
 
     private readonly sdkUrl: string;
-    private scriptElement: Script = null;
+    private scriptElement: Script | null = null;
 
-    protected constructor(schema: string, sdkUrl: string) {
-        if (!schema) throw Error('AbstractSrcInitiator: Inform the schema name');
+    protected constructor(sdkUrl: string) {
         if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
         this.sdkUrl = sdkUrl;
-        this.schemaName = schema;
     }
 
     public async loadSdkScript() {
-        this.scriptElement = new Script(this.sdkUrl);
-        await this.scriptElement.load();
+        if (!this.isSdkIsAvailableOnWindow()) {
+            this.scriptElement = new Script(this.sdkUrl);
+            await this.scriptElement.load();
+        }
         this.assignSdkReference();
     }
 
     public removeSdkScript(): void {
         this.scriptElement.remove();
     }
+
+    /**
+     * Verifies if SDK is already loaded on the window object.
+     * Example: Merchant can preload the SDK to speed up the loading time
+     */
+    protected abstract isSdkIsAvailableOnWindow(): boolean;
 
     /**
      * Assign Schema SDK object to 'schemaSdk' property.
