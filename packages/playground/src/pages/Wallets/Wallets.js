@@ -59,7 +59,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (step === 'review') {
         window.amazonpay = checkout
             .create('amazonpay', {
-                //...chargeOptions,
+                ...chargeOptions,
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
