@@ -6,6 +6,8 @@ export function resolveEnvironment(env = 'TEST'): google.payments.api.Environmen
     switch (environment) {
         case 'production':
         case 'live':
+        case 'live-au':
+        case 'live-us':
             return 'PRODUCTION';
         default:
             return 'TEST';
