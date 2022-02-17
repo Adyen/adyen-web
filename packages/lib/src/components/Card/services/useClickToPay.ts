@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import ClickToPayService, { CtpState } from './ClickToPayService';
+import ClickToPayService, { CtpState, IClickToPayService } from './ClickToPayService';
 import { InitiateIdentityValidationResponse } from './types';
 import SrcSdkLoader from './sdks/SrcSdkLoader';
 import { configMock, SecureRemoteCommerceInitResult } from './configMock';
@@ -7,59 +7,61 @@ import { configMock, SecureRemoteCommerceInitResult } from './configMock';
 interface IUseClickToPay {
     schemas: Array<string>;
     environment: string;
+    ctpService: IClickToPayService;
     schemasConfig?: Record<string, SecureRemoteCommerceInitResult>; // TODO: optional?
     shopperIdentity?: { value: string; type: string };
 }
 
-const useClickToPay = ({ schemas, shopperIdentity, environment, schemasConfig = configMock }: IUseClickToPay) => {
-    const [status, setStatus] = useState<CtpState>(CtpState.Idle);
-    const [ctpService, setCtpService] = useState<ClickToPayService>(null);
+const useClickToPay = ({ ctpService, schemas, shopperIdentity, environment /*schemasConfig = configMock  */ }: IUseClickToPay) => {
+    const [state, setState] = useState<CtpState>(ctpService.state);
+    const [ctp, setCtpService] = useState<IClickToPayService>(ctpService);
 
     useEffect(() => {
-        const srcSdkLoader = new SrcSdkLoader(schemas, environment);
-        // TOOD: pass configuration from config object
-        const ctp = new ClickToPayService(schemasConfig, srcSdkLoader, shopperIdentity);
+        // const srcSdkLoader = new SrcSdkLoader(schemas, environment);
+        // // TOOD: pass configuration from config object
+        // const ctp = new ClickToPayService(schemasConfig, srcSdkLoader, shopperIdentity);
+        ctp.subscribeOnStatusChange(setState);
 
-        ctp.subscribeOnStatusChange(setStatus);
-        ctp.initialize().then();
-
-        setCtpService(ctp);
-    }, [schemas, environment, shopperIdentity]);
+        if (ctp.state === CtpState.Idle) {
+            ctp.initialize().then();
+        }
+        // setCtpService(ctp);
+    }, [ctp, schemas, environment, shopperIdentity]);
 
     const onStartIdentityValidation = useCallback(async (): Promise<InitiateIdentityValidationResponse> => {
-        return await ctpService.startIdentityValidation();
-    }, [ctpService]);
+        return await ctp.startIdentityValidation();
+    }, [ctp]);
 
     const onCancelIdentityValidation = useCallback(() => {
-        ctpService.abortIdentityValidation();
-    }, [ctpService]);
+        ctp.abortIdentityValidation();
+    }, [ctp]);
 
     const onFinishIdentityValidation = useCallback(
         async (value: string) => {
             try {
-                await ctpService.finishIdentityValidation(value);
+                await ctp.finishIdentityValidation(value);
             } catch (error) {
                 console.log(error);
             }
         },
-        [ctpService]
+        [ctp]
     );
 
     const onCheckout = useCallback(
         async (srcDigitalCardId: string) => {
             try {
-                const payload = await ctpService.checkout(srcDigitalCardId);
+                const payload = await ctp.checkout(srcDigitalCardId);
                 console.log(payload);
             } catch (error) {
                 console.log(error);
             }
         },
-        [ctpService]
+        [ctp]
     );
 
     return {
-        status,
-        cards: ctpService?.maskedCards,
+        status: state,
+        cards: ctp?.maskedCards,
         doCheckout: onCheckout,
         startIdentityValidation: onStartIdentityValidation,
         cancelIdentityValidation: onCancelIdentityValidation,

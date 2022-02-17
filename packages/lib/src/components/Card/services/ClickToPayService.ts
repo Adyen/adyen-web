@@ -20,8 +20,9 @@ type ShopperIdentity = {
     type: string;
 };
 
-interface IClickToPayService {
+export interface IClickToPayService {
     maskedCards: any;
+    state: CtpState;
 
     initialize(): Promise<void>;
     checkout(srcDigitalCardId: string): Promise<CheckoutResponse>;
@@ -39,7 +40,7 @@ class ClickToPayService implements IClickToPayService {
     private readonly schemasConfig: Record<string, SecureRemoteCommerceInitResult>;
     private readonly shopperIdentity?: ShopperIdentity;
 
-    private state: CtpState = CtpState.Idle;
+    public state: CtpState = CtpState.Idle;
     private stateSubscriber: CallbackStateSubscriber;
 
     private sdks: ISrcInitiator[];

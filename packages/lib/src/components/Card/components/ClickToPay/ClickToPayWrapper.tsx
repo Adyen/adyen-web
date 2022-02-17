@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import useClickToPay from '../../services/useClickToPay';
-import { CtpState } from '../../services/ClickToPayService';
+import { CtpState, IClickToPayService } from '../../services/ClickToPayService';
 import { useCallback, useState } from 'preact/hooks';
 
 const buttonStyle = {
@@ -18,6 +18,7 @@ interface IClickToPayWrapper {
     environment: string;
     schemas: Array<string>;
     shopperIdentity?: { value: string; type: string };
+    ctpService: IClickToPayService;
 }
 
 /**
@@ -28,8 +29,9 @@ interface IClickToPayWrapper {
  * - When getSrcProfile returns multiple profiles? Is it when there are multiple schemas?
  */
 
-const ClickToPayWrapper = ({ schemas, shopperIdentity, environment }: IClickToPayWrapper) => {
+const ClickToPayWrapper = ({ schemas, shopperIdentity, environment, ctpService }: IClickToPayWrapper) => {
     const { status, cards, doCheckout, startIdentityValidation, cancelIdentityValidation, finishIdentityValidation } = useClickToPay({
+        ctpService,
         schemas,
         shopperIdentity,
         environment

@@ -103,7 +103,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     /**
      * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
      */
-    public prefetch = (): void => {
+    public prefetch = (): Promise<void> => {
         return this.googlePay.prefetchPaymentData(this.props);
     };
 

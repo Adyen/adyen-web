@@ -43,6 +43,7 @@ export async function initSession() {
                 billingAddressMode: 'partial',
 
                 clickToPayConfiguration: {
+                    prefetch: true,
                     schemas: ['visa'],
                     shopperIdentity: {
                         value: 'guilherme.ribeiro-visaclicktopay1@adyen.com',
