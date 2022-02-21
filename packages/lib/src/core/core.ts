@@ -15,7 +15,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 
 class Core {
     public session: Session;
-    private paymentMethodsResponse: PaymentMethodsResponse;
+    public paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
     public components = [];
