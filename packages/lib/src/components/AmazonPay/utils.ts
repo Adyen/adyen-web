@@ -7,7 +7,7 @@ import {
     SUPPORTED_LOCALES_EU,
     SUPPORTED_LOCALES_US
 } from './config';
-import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, RecurringMetadata, Region, SupportedLocale } from './types';
+import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
 import { PaymentAmount } from '../../types';
 import { getDecimalAmount } from '../../utils/amount-util';
 
