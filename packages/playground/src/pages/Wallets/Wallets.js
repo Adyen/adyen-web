@@ -20,9 +20,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
-
-    console.log('amount', amount)
-
     // AMAZON PAY
     // Demo only
     const urlSearchParams = new URLSearchParams(window.location.search);
