@@ -30,13 +30,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     const step = urlSearchParams.get('step');
 
     const chargeOptions = {
-        chargePermissionType: 'Recurring',
-        recurringMetadata: {
-            frequency: {
-                unit: 'Month',
-                value: '1'
-            }
-        }
+        // chargePermissionType: 'Recurring',
+        // recurringMetadata: {
+        //     frequency: {
+        //         unit: 'Month',
+        //         value: '1'
+        //     }
+        // }
     };
 
     // Initial state

@@ -2,7 +2,7 @@ import getCurrency from './getCurrency';
 import { getSearchParameters } from '../utils';
 
 const DEFAULT_LOCALE = 'en-US';
-const DEFAULT_COUNTRY = 'GB';
+const DEFAULT_COUNTRY = 'US';
 
 const urlParams = getSearchParameters(window.location.search);
 const merchantAccount = urlParams.merchantAccount;
