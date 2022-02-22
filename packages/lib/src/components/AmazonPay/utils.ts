@@ -7,7 +7,7 @@ import {
     SUPPORTED_LOCALES_EU,
     SUPPORTED_LOCALES_US
 } from './config';
-import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
+import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, RecurringMetadata, Region, SupportedLocale } from './types';
 import { PaymentAmount } from '../../types';
 import { getDecimalAmount } from '../../utils/amount-util';
 
@@ -108,7 +108,9 @@ export function getPayloadJSON(props): PayloadJSON {
         returnUrl,
         merchantMetadata,
         chargePermissionType,
+        recurringMetadata,
     } = props;
+
     const { storeId } = props.configuration;
     const isPayNow = checkoutMode === 'ProcessOrder';
     const amount = isPayNow ? getChargeAmount(props.amount) : null;
@@ -129,8 +131,9 @@ export function getPayloadJSON(props): PayloadJSON {
                 totalOrderAmount: amount
             }
         }),
+        ...(recurringMetadata && { recurringMetadata }),
         ...(merchantMetadata && { merchantMetadata }),
         ...(deliverySpecifications && { deliverySpecifications }),
-        ...(addressDetails && { addressDetails }),
+        ...(addressDetails && { addressDetails })
     };
 }

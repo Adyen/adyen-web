@@ -208,6 +208,7 @@ export interface PayloadJSON {
         presentmentCurrency: Currency;
         totalOrderAmount: ChargeAmount;
     };
+    recurringMetadata?: RecurringMetadata;
     storeId: string;
     webCheckoutDetails: {
         checkoutCancelUrl?: string;
