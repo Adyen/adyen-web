@@ -123,6 +123,15 @@ class Core {
      * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'createFromAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                        'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
+        }
         if (action.type) {
             const paymentMethodsConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
             const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };

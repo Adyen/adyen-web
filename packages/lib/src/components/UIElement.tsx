@@ -7,6 +7,7 @@ import { IUIElement, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import type { UIElementStatus } from './types';
+import { hasOwnProperty } from "../utils/hasOwnProperty";
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement{
     protected componentRef: any;
@@ -136,7 +137,15 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     };
 
     public handleAction(action: PaymentAction, props = {}): UIElement | null {
-        if (!action || !action.type) throw new Error('Invalid Action');
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'handleAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                    'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
+        }
 
         const paymentAction = this._parentInstance.createFromAction(action, {
             ...props,
