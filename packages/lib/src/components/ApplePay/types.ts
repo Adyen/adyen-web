@@ -129,7 +129,7 @@ export interface ApplePayElementProps extends UIElementProps {
 
     onAuthorized?: (resolve, reject, event: ApplePayJS.ApplePayPaymentAuthorizedEvent) => void;
 
-    onValidateMerchant?: (resolve, reject, event: ApplePayJS.ApplePayValidateMerchantEvent) => void;
+    onValidateMerchant?: (resolve, reject, validationURL: string) => void;
 
     /**
      * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected}

@@ -209,5 +209,6 @@
     "ach.encryptedBankLocationId.aria.label": "Número de roteamento do banco",
     "pix.instructions": "Abra o app com sua chave PIX cadastrada, escolha Pagar com Pix e escaneie o QR Code ou copie e cole o código",
     "twint.saved": "salvo",
-    "orPayWith": "ou pague com"
+    "orPayWith": "ou pague com",
+    "invalidFormatExpects": "Formato inválido. Formato esperado: %{format}"
 }

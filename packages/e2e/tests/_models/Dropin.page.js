@@ -31,12 +31,27 @@ export default class DropinPage extends BasePage {
         this.dualBrandingIconHolder = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons`);
         this.dualBrandingIconHolderActive = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons--active`);
         this.dualBrandingImages = this.dualBrandingIconHolderActive.find('img');
+
+        /**
+         * 3DS2
+         */
+        this.challengeWindowSize01 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--01`);
+        this.challengeWindowSize02 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--02`);
+        this.challengeWindowSize04 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--04`);
     }
 
-    getFromState = ClientFunction(path => {
+    getFromActivePM = ClientFunction(path => {
         const splitPath = path.split('.');
         const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
 
-        return splitPath.reduce(reducer, window.dropin.dropinRef.state.activePaymentMethod.state);
+        return splitPath.reduce(reducer, window.dropin.dropinRef.state.activePaymentMethod);
+    });
+
+    // Access the DropinComponent elements array - avoids having to make a PM active in order to inspect it
+    getFromDropinRefStateElements = ClientFunction((index, path) => {
+        const splitPath = path.split('.');
+        const reducer = (xs, x) => (xs && xs[x] !== undefined ? xs[x] : undefined);
+
+        return splitPath.reduce(reducer, window.dropin.dropinRef.state.elements[index]);
     });
 }

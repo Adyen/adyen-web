@@ -1,7 +1,7 @@
 import { PaymentAmount } from '../../../../../types';
 import { CardBrandsConfiguration } from '../../../types';
 import { ComponentChildren } from 'preact';
-import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
 
 export interface BrandIconProps {
     brand: string;

@@ -86,7 +86,25 @@ describe('useForm', () => {
                 result.current.handleChangeFor('firstName')(firstNameValue);
             });
 
-            expect(formatterMock).toHaveBeenCalledWith(firstNameValue);
+            const fieldContext = {
+                state: {
+                    data: {
+                        firstName: null,
+                        lastName: null
+                    },
+                    errors: {
+                        firstName: null,
+                        lastName: null
+                    },
+                    schema: ['firstName', 'lastName'],
+                    valid: {
+                        firstName: false,
+                        lastName: false
+                    }
+                }
+            };
+
+            expect(formatterMock).toHaveBeenCalledWith(firstNameValue, fieldContext);
         });
 
         it('should set the value of a checkbox', () => {

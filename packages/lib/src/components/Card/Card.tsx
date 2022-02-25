@@ -8,6 +8,7 @@ import { CardElementData, CardElementProps, BinLookupResponse } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
+import { hasValidInstallmentsObject } from './components/CardInput/utils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -15,6 +16,10 @@ export class CardElement extends UIElement<CardElementProps> {
     protected static defaultProps = {
         onBinLookup: () => {},
         SRConfig: {}
+    };
+
+    public setComponentRef = ref => {
+        this.componentRef = ref;
     };
 
     formatProps(props: CardElementProps) {
@@ -29,7 +34,7 @@ export class CardElement extends UIElement<CardElementProps> {
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
-            ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
+            // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
@@ -71,7 +76,7 @@ export class CardElement extends UIElement<CardElementProps> {
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
             ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
-            ...(this.state.installments && this.state.installments.value && { installments: this.state.installments }),
+            ...(hasValidInstallmentsObject(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
         };
@@ -145,7 +150,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get accessibleName(): string {
-        // use display name, unless it's a stored payment method, there inform user
+        // Use display name, unless it's a stored payment method, there inform user
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId
@@ -166,9 +171,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
                 <CardInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                     {...this.props}
                     {...this.state}
                     onChange={this.setState}

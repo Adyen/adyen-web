@@ -1,13 +1,12 @@
-import { Component, h } from 'preact';
-import classNames from 'classnames';
-import SecuredFieldsProvider from '../../../components/internal/SecuredFields/SecuredFieldsProvider';
-import Field from '../../internal/FormFields/Field';
+import {Component, FunctionComponent, h} from 'preact';
+import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
-import DataSfSpan from '../../Card/components/CardInput/components/DataSfSpan';
+import { GiftCardFields } from './GiftcardFields';
+import {GiftcardFieldsProps} from "./types";
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -19,6 +18,10 @@ interface GiftcardComponentProps {
     amount: PaymentAmount;
     showPayButton?: boolean;
     payButton: (config) => any;
+
+    pinRequired: boolean;
+    expiryDateRequired?: boolean;
+    fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -33,9 +36,11 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     public static defaultProps = {
         pinRequired: true,
+        expiryDateRequired: false,
         onChange: () => {},
         onFocus: () => {},
-        onBlur: () => {}
+        onBlur: () => {},
+        fieldsLayoutComponent: GiftCardFields
     };
 
     public sfp;
@@ -107,55 +112,17 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     onChange={this.onChange}
                     onFocus={this.handleFocus}
                     type={GIFT_CARD}
-                    render={({ setRootNode, setFocusOn }, sfpState) => (
-                        <div ref={setRootNode} className="adyen-checkout__field-wrapper">
-                            <Field
-                                label={i18n.get('creditCard.numberField.title')}
-                                classNameModifiers={['number', ...(props.pinRequired ? ['70'] : ['100'])]}
-                                errorMessage={getCardErrorMessage(sfpState)}
-                                focused={focusedElement === 'encryptedCardNumber'}
-                                onFocusField={() => setFocusOn('encryptedCardNumber')}
-                                dir={'ltr'}
-                                name={'encryptedCardNumber'}
-                            >
-                                <DataSfSpan
-                                    encryptedFieldType="encryptedCardNumber"
-                                    data-info='{"length":"15-32", "maskInterval":4}'
-                                    className={classNames({
-                                        'adyen-checkout__input': true,
-                                        'adyen-checkout__input--large': true,
-                                        'adyen-checkout__card__cardNumber__input': true,
-                                        'adyen-checkout__input--error': getCardErrorMessage(sfpState),
-                                        'adyen-checkout__input--focus': focusedElement === 'encryptedCardNumber'
-                                    })}
-                                />
-                            </Field>
-
-                            {props.pinRequired && (
-                                <Field
-                                    label={i18n.get('creditCard.pin.title')}
-                                    classNameModifiers={['pin', '30']}
-                                    errorMessage={sfpState.errors.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
-                                    focused={focusedElement === 'encryptedSecurityCode'}
-                                    onFocusField={() => setFocusOn('encryptedSecurityCode')}
-                                    dir={'ltr'}
-                                    name={'encryptedSecurityCode'}
-                                >
-                                    <DataSfSpan
-                                        encryptedFieldType="encryptedSecurityCode"
-                                        data-info='{"length":"3-10", "maskInterval": 0}'
-                                        className={classNames({
-                                            'adyen-checkout__input': true,
-                                            'adyen-checkout__input--large': true,
-                                            'adyen-checkout__card__cvc__input': true,
-                                            'adyen-checkout__input--error': sfpState.errors.encryptedSecurityCode,
-                                            'adyen-checkout__input--focus': focusedElement === 'encryptedSecurityCode'
-                                        })}
-                                    />
-                                </Field>
-                            )}
-                        </div>
-                    )}
+                    render={({ setRootNode, setFocusOn }, sfpState) =>
+                        this.props.fieldsLayoutComponent({
+                            i18n: i18n,
+                            pinRequired: this.props.pinRequired,
+                            focusedElement: focusedElement,
+                            getCardErrorMessage: getCardErrorMessage,
+                            setRootNode: setRootNode,
+                            setFocusOn: setFocusOn,
+                            sfpState: sfpState
+                        })
+                    }
                 />
 
                 {this.props.showPayButton &&

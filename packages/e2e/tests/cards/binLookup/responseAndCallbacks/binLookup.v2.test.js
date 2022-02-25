@@ -5,9 +5,9 @@ import { RequestLogger, Selector } from 'testcafe';
 import { start, getIframeSelector, getFromWindow } from '../../../utils/commonUtils';
 import cu from '../../utils/cardUtils';
 import { CARDS_URL } from '../../../pages';
-import { DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
+import { BIN_LOOKUP_VERSION, DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
 
-const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v2/bin/binLookup?token=${process.env.CLIENT_KEY}`;
+const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 const logger = RequestLogger(
     { url, method: 'post' },
@@ -39,9 +39,8 @@ test('Enter number of known dual branded card, ' + 'then inspect response body f
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     const responseBodyBuffer = logger.requests[0].response.body;
 
@@ -70,9 +69,8 @@ test('Enter number of regular, non dual branded, card, ' + 'then inspect respons
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     const responseBodyBuffer = logger.requests[0].response.body;
 
@@ -99,9 +97,8 @@ test('Enter number of unsupported card, ' + 'then inspect response body for expe
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     const responseBodyBuffer = logger.requests[0].response.body;
 
@@ -136,9 +133,8 @@ test('Enter number of card that is not in the test Dbs, ' + 'then inspect respon
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     const responseBodyBuffer = logger.requests[0].response.body;
 
@@ -166,9 +162,8 @@ test('Enter number of dual branded card, ' + 'then inspect callback for expected
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     await t
         .expect(getFromWindow('binLookupObj', 'type'))
@@ -191,9 +186,8 @@ test('Enter number of regular, non dual branded, card, ' + 'then inspect callbac
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     await t
         .expect(getFromWindow('binLookupObj', 'type'))
@@ -216,9 +210,8 @@ test('Enter number of unsupported card, ' + 'then inspect callbacks for expected
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     await t
         .expect(getFromWindow('binLookupObj', 'type'))
@@ -244,9 +237,8 @@ test('Enter number of card that is not in the test Dbs, ' + 'then inspect callba
 
     await t
         // Allow time for the binLookup call, which we expect to be successful
-        .wait(1000)
         .expect(logger.contains(r => r.response.statusCode === 200))
-        .ok();
+        .ok({ timeout: 5000 });
 
     await t
         .expect(getFromWindow('binLookupObj', 'type'))

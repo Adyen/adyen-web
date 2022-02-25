@@ -11,10 +11,11 @@ import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
+import { hasOwnProperty } from '../utils/hasOwnProperty';
 
 class Core {
     public session: Session;
-    private paymentMethodsResponse: PaymentMethodsResponse;
+    public paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
     public components = [];
@@ -97,8 +98,15 @@ class Core {
 
     /**
      * Instantiates a new UIElement component ready to be mounted
-     * @param paymentMethod - name or class of the paymentMethod
-     * @param options - options that will be merged to the global Checkout props
+     *
+     * @param paymentMethod - either name of the paymentMethod (in theory this can also be a class, but we don't use it this way)
+     *  or object extracted from the paymentMethods response .paymentMethods or .storedPaymentMethods (scenario: Dropin creating components for its PM list)
+     *
+     * @param options - an object whose form varies, can be:
+     *  - the merchant defined config object passed when a component is created via checkout.create
+     *  - the Dropin created object from Dropin/components/utils.getCommonProps()
+     *  - an object extracted from the paymentMethods response .storedPaymentMethods (scenario: standalone storedCard comp)
+     *
      * @returns new UIElement
      */
     public create<T extends keyof PaymentMethods>(paymentMethod: T | string, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
@@ -115,6 +123,15 @@ class Core {
      * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'createFromAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                        'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
+        }
         if (action.type) {
             const paymentMethodsConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
             const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
@@ -153,11 +170,18 @@ class Core {
 
     /**
      * @internal
-     * (Re)Initializes core options (i18n, paymentMethodsResponse, etc...)
-     * @param options -
+     * Enhances the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
+     * (Re)Initializes core properties & processes (i18n, paymentMethodsResponse, etc...)
+     * @param options - the config object passed when AdyenCheckout is initialised
      * @returns this
      */
     private setOptions = (options): this => {
+        if (hasOwnProperty(options?.paymentMethodsConfiguration, 'scheme')) {
+            console.warn(
+                'WARNING: You cannot define a property "scheme" on the paymentMethodsConfiguration object - it should be defined as "card" otherwise it will be ignored'
+            );
+        }
+
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
         this.options.locale = this.options.locale || this.options.shopperLocale;
@@ -194,32 +218,56 @@ class Core {
 
     /**
      * @internal
+     * A recursive creation function that finalises by calling itself with a reference to a valid component class which it then initialises
+     *
+     * @param PaymentMethod - type varies:
+     *  - usually a string
+     *  - but for Dropin, when it starts creating payment methods, will be a fully formed object from the paymentMethods response .paymentMethods or .storedPaymentMethods
+     *  - always finishes up as a reference to a valid component class
+     *
+     * @param options - an object whose form varies, it is *always* enhanced with props from this.getPropsForComponent(), and can also be:
+     *  - the config object passed when a Component is created via checkout.create('card'|'dropin'|'ideal'|etc..) (scenario: usual first point of entry to this function)
+     *  - the internally created props object from Dropin/components/utils.getCommonProps() (scenario: Dropin creating components for its PM list)
+     *  - an object extracted from the paymentMethods response .paymentMethods or .storedPaymentMethods (scenarios: Dropin creating components for its PM list *or* standalone storedCard comp)
+     *  - a combination of the previous 2 + the relevant object from the paymentMethodsConfiguration (scenario: Dropin creating components for its PM list)
+     *
+     *
+     * @returns new UIElement
      */
     private handleCreate(PaymentMethod, options: any = {}): UIElement {
         const isValidClass = PaymentMethod.prototype instanceof UIElement;
 
         /**
+         * Final entry point (PaymentMethod is a Class):
          * Once we receive a valid class for a Component - create a new instance of it
          */
         if (isValidClass) {
-            const paymentMethodsDetails = !options.supportedShopperInteractions ? this.paymentMethodsResponse.find(options.type) : [];
+            /**
+             * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone stored card.
+             */
+            const needsConfigData = options.type !== 'dropin' && !options.isDropin;
+            const needsPMData = needsConfigData && !options.supportedShopperInteractions;
 
-            // NOTE: will only have a value if a paymentMethodsConfiguration object is defined at top level, in the config object set when a
-            // new AdyenCheckout is initialised.
-            const paymentMethodsConfiguration = getComponentConfiguration(
-                options.type,
-                this.options.paymentMethodsConfiguration,
-                !!options.storedPaymentMethodId
-            );
+            /**
+             * We only need to populate the objects under certain circumstances.
+             * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
+             * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
+             */
+            const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(options.type) : {};
+            const paymentMethodsConfiguration = needsConfigData
+                ? getComponentConfiguration(options.type, this.options.paymentMethodsConfiguration, !!options.storedPaymentMethodId)
+                : {};
 
             // Filtered global options
             const globalOptions = processGlobalOptions(this.options);
 
-            // Merge:
-            // 1. global props
-            // 2. props defined on the PaymentMethod in the response object (will not have a value for the 'dropin' component)
-            // 3. a paymentMethodsConfiguration object, if defined at top level
-            // 4. the configuration object defined on this particular component (after it has passed through getPropsForComponent)
+            /**
+             * Merge:
+             * 1. global options (a subset of the original config object sent when AdyenCheckout is initialised)
+             * 2. props defined on the relevant object in the paymentMethods response (will not have a value for the 'dropin' component)
+             * 3. a paymentMethodsConfiguration object, if defined at top level (will not have a value for the 'dropin' component)
+             * 4. the options that have been passed to the final call of this function (see comment on \@param, above)
+             */
             const component = new PaymentMethod({ ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...options });
 
             if (!options.isDropin) {
@@ -230,7 +278,7 @@ class Core {
         }
 
         /**
-         * Most common use case. Usual initial point of entry to this function.
+         * Usual initial point of entry to this function (PaymentMethod is a String).
          * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
          */
         if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
@@ -238,21 +286,24 @@ class Core {
         }
 
         /**
-         * If we are trying to create a payment method that is in the paymentMethodsResponse & does not explicitly
-         * implement a component, it will default to a redirect component
+         * Entry point for Redirect PMs (PaymentMethod is a String).
+         * If we are trying to create a payment method that is in the paymentMethods response & does not explicitly
+         * implement a component (i.e no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
          */
         if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
-            const paymentMethodsConfiguration = getComponentConfiguration(PaymentMethod, this.options.paymentMethodsConfiguration);
-            return this.handleCreate(paymentMethods.redirect, {
-                ...processGlobalOptions(this.options),
-                ...this.paymentMethodsResponse.find(PaymentMethod),
-                ...paymentMethodsConfiguration,
-                ...options
-            });
+            /**
+             * NOTE: Only need the type prop for standalone redirect comps created by checkout.create('\{redirect-pm-txVariant\}'); (a likely scenario?)
+             * - in all other scenarios it is already present.
+             * (Further details: from the paymentMethods response and paymentMethodsConfiguration are added in the next step,
+             *  or, in the Dropin case, are already present)
+             */
+            return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
         }
 
         /**
-         * PaymentMethod is defined as a paymentMethods object (Used internally on Drop-in).
+         * Entry point for Dropin (PaymentMethod is an Object)
+         * Happens internally on Drop-in when relevant object from paymentMethods response (.paymentMethods or .storedPaymentMethods) has been isolated
+         * and is then use to create an element in the paymentMethods list
          */
         if (typeof PaymentMethod === 'object' && typeof PaymentMethod.type === 'string') {
             // paymentMethodsConfiguration object will take precedence here
@@ -261,7 +312,7 @@ class Core {
                 this.options.paymentMethodsConfiguration,
                 !!PaymentMethod.storedPaymentMethodId
             );
-            // handle rest of the flow normally (creating by string)
+            // Restart the flow in the "usual" way (PaymentMethod is a String)
             return this.handleCreate(PaymentMethod.type, { ...PaymentMethod, ...options, ...paymentMethodsConfiguration });
         }
 

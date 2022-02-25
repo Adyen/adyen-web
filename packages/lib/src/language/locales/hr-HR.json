@@ -211,5 +211,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe za identifikacijski broj prepaid banke",
     "ach.encryptedBankLocationId.aria.label": "Identifikacijski broj banke",
     "twint.saved": "spremljeno",
-    "orPayWith": "ili platite s"
+    "orPayWith": "ili platite s",
+    "invalidFormatExpects": "Nevažeći format. Očekivani format: %{format}"
 }

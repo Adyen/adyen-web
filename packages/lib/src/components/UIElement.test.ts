@@ -18,16 +18,30 @@ describe('UIElement', () => {
 
     describe('onChange', () => {
         test('calls the passed onChange function', () => {
+            class MyElement extends UIElement {
+                onChange(): object {
+                    return super.onChange();
+                }
+            }
+
             const onChange = jest.fn();
-            const uiElement = new UIElement({ onChange });
-            uiElement.onChange();
+            const myElement = new MyElement({ onChange });
+            myElement.onChange();
             expect(onChange.mock.calls.length).toBe(1);
         });
 
         test('does not trigger the onValid method if the component is not valid', () => {
+            class MyElement extends UIElement {
+                get isValid() {
+                    return false;
+                }
+                onChange(): object {
+                    return super.onChange();
+                }
+            }
             const onValid = jest.fn();
-            const uiElement = new UIElement({ onValid });
-            uiElement.onChange();
+            const myElement = new MyElement({ onValid });
+            myElement.onChange();
             expect(onValid.mock.calls.length).toBe(0);
         });
 
@@ -36,6 +50,9 @@ describe('UIElement', () => {
             class MyElement extends UIElement {
                 get isValid() {
                     return true;
+                }
+                onChange(): object {
+                    return super.onChange();
                 }
             }
 
@@ -54,9 +71,19 @@ describe('UIElement', () => {
 
     describe('onValid', () => {
         test('calls the passed onValid function', () => {
-            const onValid = jest.fn((state, element) => {});
-            const uiElement = new UIElement({ onValid });
-            uiElement.onValid();
+            class MyElement extends UIElement {
+                get isValid() {
+                    return true;
+                }
+                onChange(): object {
+                    return super.onChange();
+                }
+            }
+
+            const onValid = jest.fn();
+            const myElement = new MyElement({ onValid });
+
+            myElement.onChange();
             expect(onValid.mock.calls.length).toBe(1);
         });
     });
@@ -148,7 +175,7 @@ describe('UIElement', () => {
     describe('submit', () => {
         test('should close active payment method if submit is called by instant payment method', () => {
             const onSubmit = jest.fn();
-            const elementRef = { closeActivePaymentMethod: jest.fn() };
+            const elementRef = { closeActivePaymentMethod: jest.fn(), setStatus: jest.fn() };
             const uiElement = new UIElement({ isInstantPayment: true, onSubmit, elementRef });
 
             jest.spyOn(uiElement, 'isValid', 'get').mockReturnValue(true);

@@ -48,3 +48,23 @@ export interface FingerPrintData {
     threeDSMethodNotificationURL: string;
     postMessageDomain: string;
 }
+
+export type ThreeDS2FingerprintResponse = {
+    type: 'action' | 'completed';
+    action?: CheckoutRedirectAction | CheckoutThreeDS2Action;
+    details?: Record<string, string>;
+};
+
+type CheckoutRedirectAction = {
+    type: 'redirect';
+    data: Record<string, string>;
+    method: string;
+    paymentData: string;
+};
+
+type CheckoutThreeDS2Action = {
+    type: 'threeDS2';
+    token: string;
+    subtype: string;
+    authorisationToken: string;
+};

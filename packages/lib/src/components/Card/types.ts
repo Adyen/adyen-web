@@ -10,7 +10,7 @@ import {
     CbObjOnLoad,
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
-import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/core/AbstractSecuredField';
+import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -29,9 +29,6 @@ export interface CardElementProps extends UIElementProps {
      * except for a single branded card when it will be the same as the brand prop
      */
     type?: string;
-
-    /** @deprecated use brands instead */
-    groupTypes?: string[];
 
     /** List of brands accepted by the component */
     brands?: string[];
@@ -146,6 +143,7 @@ export interface BrandObject {
     showSocialSecurityNumber?: boolean;
     supported: boolean;
     brandImageUrl?: string;
+    panLength?: number;
 }
 
 export interface BinLookupResponseRaw {

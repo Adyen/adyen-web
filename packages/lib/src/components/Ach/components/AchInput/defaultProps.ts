@@ -1,5 +1,4 @@
 export default {
-    details: [],
     type: 'ach',
 
     // Settings
@@ -13,9 +12,7 @@ export default {
     onConfigSuccess: () => {},
     onAllValid: () => {},
     onFieldValid: () => {},
-    onBrand: () => {},
     onError: () => {},
-    onBinValue: () => {},
     onBlur: () => {},
     onFocus: () => {},
     onChange: () => {},

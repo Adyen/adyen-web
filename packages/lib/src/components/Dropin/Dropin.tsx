@@ -8,6 +8,7 @@ import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
+import { hasOwnProperty } from '../../utils/hasOwnProperty';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
 
@@ -15,6 +16,11 @@ class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
     protected static defaultProps = defaultProps;
     public dropinRef = null;
+
+    /**
+     * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
+     */
+    public componentFromAction?: UIElement;
 
     constructor(props) {
         super(props);
@@ -55,11 +61,8 @@ class DropinElement extends UIElement<DropinElementProps> {
         return this;
     }
 
-    setStatus(status, props = {}) {
-        this.dropinRef?.setStatus({ type: status, props });
-        if (process.env.NODE_ENV === 'test') {
-            this['componentFromAction'] = props['component'];
-        }
+    public setStatus(status, props = {}): this {
+        this.dropinRef?.setStatus(status, props);
         return this;
     }
 
@@ -105,8 +108,16 @@ class DropinElement extends UIElement<DropinElementProps> {
         return [storedElements, elements, instantPaymentElements];
     };
 
-    handleAction(action: PaymentAction, props = {}) {
-        if (!action || !action.type) throw new Error('Invalid Action');
+    public handleAction(action: PaymentAction, props = {}): UIElement | null {
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'handleAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                        'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
+        }
 
         if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
@@ -120,7 +131,9 @@ class DropinElement extends UIElement<DropinElementProps> {
         });
 
         if (paymentAction) {
-            return this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.componentFromAction = paymentAction;
+            return this;
         }
 
         return null;

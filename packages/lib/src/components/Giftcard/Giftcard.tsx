@@ -48,7 +48,7 @@ export class GiftcardElement extends UIElement {
     }
 
     get displayName() {
-        return this.props.name;
+        return this.props.brandsConfiguration[this.props.brand]?.name || this.props.name;
     }
 
     private handleBalanceCheck = data => {

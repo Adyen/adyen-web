@@ -1,48 +1,30 @@
 import { h } from 'preact';
-import { useState, useCallback, useRef } from 'preact/hooks';
+import { useState, useCallback } from 'preact/hooks';
 import classNames from 'classnames';
-import { convertFullToHalf } from './utils';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export default function InputBase(props) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors } = props;
 
     const [handleChangeHasFired, setHandleChangeHasFired] = useState(false);
-    const isOnComposition = useRef<boolean>(false);
 
-    const handleInput = e => {
-        if (isOnComposition.current) return;
-
-        e.target.value = convertFullToHalf(e.target.value);
-        props.onInput(e);
-    };
-
-    const handleOnCompositionStart = useCallback(() => {
-        isOnComposition.current = true;
-    }, []);
-
-    const handleOnCompositionUpdate = useCallback((event: h.JSX.TargetedCompositionEvent<HTMLInputElement>) => {
+    const handleInput = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
         props.onInput(event);
     }, []);
 
-    const handleOnCompositionEnd = useCallback((event: h.JSX.TargetedCompositionEvent<HTMLInputElement>) => {
-        isOnComposition.current = false;
-        handleInput(event);
+    const handleChange = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        setHandleChangeHasFired(true);
+        props?.onChange?.(event);
     }, []);
 
-    const handleChange = e => {
-        setHandleChangeHasFired(true);
-        props?.onChange?.(e);
-    };
-
-    const handleBlur = e => {
+    const handleBlur = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
         if (!handleChangeHasFired) {
-            props?.onChange?.(e);
+            props?.onChange?.(event);
         }
         setHandleChangeHasFired(false);
 
-        props?.onBlur?.(e);
-    };
+        props?.onBlur?.(event);
+    }, []);
 
     const inputClassNames = classNames(
         'adyen-checkout__input',
@@ -72,11 +54,6 @@ export default function InputBase(props) {
             onChange={handleChange}
             onBlur={handleBlur}
             aria-invalid={isInvalid}
-            /* eslint-disable react/no-unknown-property */
-            oncompositionstart={handleOnCompositionStart}
-            oncompositionupdate={handleOnCompositionUpdate}
-            oncompositionend={handleOnCompositionEnd}
-            /* eslint-enable react/no-unknown-property */
         />
     );
 }

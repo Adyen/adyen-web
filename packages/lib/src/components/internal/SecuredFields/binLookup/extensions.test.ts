@@ -31,7 +31,7 @@ beforeEach(() => {
         selectedBrandValue = selectVal;
     });
 
-    CIExtensions = extensions({}, { sfp }, { setSelectedBrandValue, setDualBrandSelectElements, setIssuingCountryCode });
+    CIExtensions = extensions({}, { sfp }, { setSelectedBrandValue, setDualBrandSelectElements, setIssuingCountryCode }, {});
 });
 
 describe('Testing CardInput extensions (handling binLookup response related functionality)', () => {

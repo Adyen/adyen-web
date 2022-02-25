@@ -1,8 +1,11 @@
-import { Selector, RequestMock } from 'testcafe';
-import { start, fillIFrame, getIframeSelector } from '../../utils/commonUtils';
+import { RequestMock } from 'testcafe';
+import { fillIFrame, getInputSelector } from '../../utils/commonUtils';
 import { GIFTCARD_NUMBER, GIFTCARD_PIN } from '../utils/constants';
 import { GIFTCARDS_URL } from '../../pages';
-const TEST_SPEED = 1;
+
+import GiftCardPage from '../../_models/GiftCardComponent.page';
+
+const giftCard = new GiftCardPage();
 
 const mock = RequestMock()
     .onRequestTo('http://localhost:3024/paymentMethods/balance')
@@ -14,23 +17,17 @@ const mock = RequestMock()
         resultCode: 'Authorised'
     });
 
-const iframeSelector = getIframeSelector('.card-field iframe');
-
-fixture`Testing gift cards`
-    .page(GIFTCARDS_URL)
-    //    .clientScripts('enoughBalance.clientScripts.js')
-    .requestHooks(mock);
+fixture`Testing gift cards`.page(GIFTCARDS_URL).requestHooks(mock);
 
 test('Should prompt a confirmation when using a gift card with enough balance', async t => {
-    // Start, allow time for iframes to load
-    await start(t, 2000, TEST_SPEED);
+    // Wait for el to appear in DOM
+    await giftCard.pmHolder();
 
-    // Fill card field with dual branded card (visa/cb)
-    await fillIFrame(t, iframeSelector, 0, '[data-fieldtype="encryptedCardNumber"]', GIFTCARD_NUMBER);
-    await fillIFrame(t, iframeSelector, 1, '[data-fieldtype="encryptedSecurityCode"]', GIFTCARD_PIN);
+    await giftCard.cardUtils.fillCardNumber(t, GIFTCARD_NUMBER);
+    await fillIFrame(t, giftCard.iframeSelector, 1, getInputSelector('encryptedSecurityCode'), GIFTCARD_PIN);
 
     await t
-        .click('.card-field .adyen-checkout__button--pay')
-        .expect(Selector('.adyen-checkout__giftcard-result__balance').exists)
+        .click(giftCard.payButton)
+        .expect(giftCard.balanceDisplay.exists)
         .ok();
 });

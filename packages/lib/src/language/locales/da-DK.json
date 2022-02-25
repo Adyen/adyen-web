@@ -212,5 +212,6 @@
     "ach.encryptedBankLocationId.aria.iframeTitle": "Iframe til registreringsnummer for sikret bank",
     "ach.encryptedBankLocationId.aria.label": "Bankregistreringsnummer",
     "twint.saved": "gemt",
-    "orPayWith": "eller betal med"
+    "orPayWith": "eller betal med",
+    "invalidFormatExpects": "Ugyldigt format. Forventet format: %{format}"
 }

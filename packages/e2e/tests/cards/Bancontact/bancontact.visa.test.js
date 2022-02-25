@@ -1,7 +1,6 @@
 import DropinPage from '../../_models/Dropin.page';
 import CardComponentPage from '../../_models/CardComponent.page';
-import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../_common/cardMocks';
-import { DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
 
 const dropinPage = new DropinPage({
     components: {
@@ -9,38 +8,10 @@ const dropinPage = new DropinPage({
     }
 });
 
-/**
- * NOTE - we are mocking the response until such time as we have the correct BIN in the Test DB
- */
-const mockedResponse = {
-    brands: [
-        {
-            brand: 'bcmc',
-            cvcPolicy: 'hidden',
-            enableLuhnCheck: true,
-            showExpiryDate: true,
-            supported: true
-        },
-        {
-            brand: 'visa',
-            cvcPolicy: 'required',
-            enableLuhnCheck: true,
-            showExpiryDate: true,
-            supported: true
-        }
-    ],
-    issuingCountryCode: 'BE',
-    requestId: null
-};
-
-const mock = getBinLookupMock(binLookupUrl, mockedResponse);
-
 fixture`Testing Bancontact in Dropin`
     .beforeEach(async t => {
         await t.navigateTo(`${dropinPage.pageUrl}?countryCode=BE`);
-        await turnOffSDKMocking();
     })
-    .requestHooks(mock)
     .clientScripts('./bancontact.clientScripts.js');
 
 test('#1 Check Bancontact comp is correctly presented at startup', async t => {
@@ -86,7 +57,7 @@ test('#2 Entering digits that our local regEx will recognise as Visa does not af
 test('#3 Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete expiryDate and expect comp to be valid', async t => {
     await dropinPage.cc.numSpan();
 
-    await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+    await dropinPage.cc.cardUtils.fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
 
     // Dual branded with bcmc logo shown first
     await t
@@ -112,7 +83,7 @@ test(
         // Wait for field to appear in DOM
         await dropinPage.cc.numSpan();
 
-        await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
 
         await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
 
@@ -139,7 +110,7 @@ test(
 
         // Expect comp to be valid (also check that it is set on state for this PM)
         await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
-        await t.expect(dropinPage.getFromState('isValid')).eql(true);
+        await t.expect(dropinPage.getFromActivePM('state.isValid')).eql(true);
     }
 );
 
@@ -152,7 +123,7 @@ test(
         // Wait for field to appear in DOM
         await dropinPage.cc.numSpan();
 
-        await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+        await dropinPage.cc.cardUtils.fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
 
         await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
 
