@@ -49,7 +49,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         value: data.name,
                         classNameModifiers: ['name'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         spellCheck: false
                     })}
                 </Field>
@@ -66,7 +66,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         value: data.registrationNumber,
                         classNameModifiers: ['registrationNumber'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         spellCheck: false
                     })}
                 </Field>

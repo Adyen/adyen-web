@@ -66,7 +66,7 @@ export function PhoneInput(props) {
                                         name={props.phoneName}
                                         value={data.phoneNumber}
                                         onInput={handleChangeFor('phoneNumber', 'input')}
-                                        onChange={handleChangeFor('phoneNumber', 'blur')}
+                                        onBlur={handleChangeFor('phoneNumber', 'blur')}
                                         placeholder="123 456 789"
                                         className="adyen-checkout__input adyen-checkout__input--phoneNumber"
                                         autoCorrect="off"

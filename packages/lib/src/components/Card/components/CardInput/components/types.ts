@@ -27,7 +27,7 @@ export interface CardFieldsProps {
 export interface CardHolderNameProps {
     error: boolean;
     isValid: boolean;
-    onChange: (event: Event) => void;
+    onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
     placeholder?: string;
     required?: boolean;
@@ -120,7 +120,7 @@ export interface KCPProps {
     filled?: boolean;
     focusedElement;
     onFocusField: (str: string) => {};
-    onChange: (event: Event) => void;
+    onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
     taxNumber?: string;
     error: boolean;

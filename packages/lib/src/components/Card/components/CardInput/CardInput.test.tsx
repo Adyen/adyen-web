@@ -71,7 +71,7 @@ describe('CardInput > holderName', () => {
         const placeholderText = i18n.get('creditCard.holderName.placeholder');
 
         const field = screen.getByPlaceholderText(placeholderText);
-        fireEvent.change(field, { target: { value: 'joe blogs' } });
+        fireEvent.blur(field, { target: { value: 'joe blogs' } });
 
         // await waitFor(() => {
         expect(data.holderName).toBe('joe blogs');

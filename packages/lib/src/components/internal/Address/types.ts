@@ -39,11 +39,12 @@ export interface FieldContainerProps {
     key: string;
     valid?: object;
     onInput?: (e: Event) => void;
-    onChange?: (e: Event) => void;
+    onBlur?: (e: Event) => void;
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     specifications: Specifications;
     maxlength?: number;
+    trimOnBlur?: boolean;
 }
 
 export interface ReadOnlyAddressProps {

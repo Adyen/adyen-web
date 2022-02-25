@@ -15,12 +15,19 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
     return i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
 }
 
+/**
+ * USAGE: Specifically defined as a util to provide a wrapper for fields created within the Address component
+ *
+ * NOT TO BE USED: if you just want to add a Country or State dropdown outside of an Address component
+ * - then you should implement <CountryField> or <StateField> directly
+ */
 function FieldContainer(props: FieldContainerProps) {
     const {
         i18n,
         commonProps: { isCollatingErrors }
     } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onChange, maxlength } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxlength } = props;
+
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
     const isOptional: boolean = props.specifications.countryHasOptionalField(selectedCountry, fieldName);
@@ -68,9 +75,10 @@ function FieldContainer(props: FieldContainerProps) {
                         name: fieldName,
                         value,
                         onInput,
-                        onChange,
+                        onBlur,
                         isCollatingErrors,
-                        maxlength
+                        maxlength,
+                        trimOnBlur
                     })}
                 </Field>
             );

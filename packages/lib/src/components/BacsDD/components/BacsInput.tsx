@@ -92,7 +92,7 @@ function BacsInput(props: BacsInputProps) {
                     required: true,
                     readonly: status === CONFIRM_STATE || status === 'loading',
                     autocorrect: 'off',
-                    onChange: handleChangeFor('holderName', 'blur'),
+                    onBlur: handleChangeFor('holderName', 'blur'),
                     onInput: handleChangeFor('holderName', 'input')
                 })}
             </Field>
@@ -119,7 +119,7 @@ function BacsInput(props: BacsInputProps) {
                         required: true,
                         readonly: status === CONFIRM_STATE || status === 'loading',
                         autocorrect: 'off',
-                        onChange: handleChangeFor('bankAccountNumber', 'blur'),
+                        onBlur: handleChangeFor('bankAccountNumber', 'blur'),
                         onInput: handleChangeFor('bankAccountNumber', 'input')
                     })}
                 </Field>
@@ -145,7 +145,7 @@ function BacsInput(props: BacsInputProps) {
                         required: true,
                         readonly: status === CONFIRM_STATE || status === 'loading',
                         autocorrect: 'off',
-                        onChange: handleChangeFor('bankLocationId', 'blur'),
+                        onBlur: handleChangeFor('bankLocationId', 'blur'),
                         onInput: handleChangeFor('bankLocationId', 'input')
                     })}
                 </Field>
@@ -175,7 +175,7 @@ function BacsInput(props: BacsInputProps) {
                     readonly: status === CONFIRM_STATE || status === 'loading',
                     autocorrect: 'off',
                     onInput: handleChangeFor('shopperEmail', 'input'),
-                    onChange: handleChangeFor('shopperEmail', 'blur')
+                    onBlur: handleChangeFor('shopperEmail', 'blur')
                 })}
             </Field>
 

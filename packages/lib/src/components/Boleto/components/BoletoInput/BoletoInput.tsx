@@ -81,7 +81,7 @@ function BoletoInput(props) {
                     errors={errors.shopperEmail}
                     onToggle={toggleEmailField}
                     onInput={handleChangeFor('shopperEmail', 'input')}
-                    onChange={handleChangeFor('shopperEmail')}
+                    onBlur={handleChangeFor('shopperEmail', 'blur')}
                 />
             )}
 

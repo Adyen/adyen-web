@@ -111,8 +111,8 @@ class Field extends Component<FieldProps, FieldState> {
                             (child: ComponentChild): ComponentChild => {
                                 const childProps = {
                                     isValid,
-                                    onFocus: this.onFocus,
-                                    onBlur: this.onBlur,
+                                    onFocusHandler: this.onFocus,
+                                    onBlurHandler: this.onBlur,
                                     isInvalid: !!errorMessage,
                                     ...(name && { uniqueId: this.uniqueId })
                                 };

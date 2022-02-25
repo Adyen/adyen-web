@@ -3,7 +3,7 @@ import renderFormField from '../../internal/FormFields';
 import Field from '../../internal/FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
-export default function({ onChange, onInput, valid = false, error = null, data = '', required = false }) {
+export default function({ onBlur, onInput, valid = false, error = null, data = '', required = false }) {
     const {
         i18n,
         commonProps: { isCollatingErrors }
@@ -25,7 +25,7 @@ export default function({ onChange, onInput, valid = false, error = null, data =
                 value: data,
                 maxLength: 18,
                 onInput,
-                onChange,
+                onBlur,
                 required,
                 isCollatingErrors
             })}

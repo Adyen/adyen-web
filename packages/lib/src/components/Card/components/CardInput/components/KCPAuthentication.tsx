@@ -41,7 +41,7 @@ export default function KCPAuthentication(props: KCPProps) {
                     autoComplete: false,
                     value: props.value,
                     required: true,
-                    onChange: props.onChange,
+                    onBlur: props.onBlur,
                     onInput: props.onInput,
                     isCollatingErrors
                 })}
