@@ -17,7 +17,7 @@ export function BrazilPersonalDetail(props) {
                         spellcheck: false,
                         value: data.firstName,
                         onInput: handleChangeFor('firstName', 'input'),
-                        onChange: handleChangeFor('firstName')
+                        onBlur: handleChangeFor('firstName', 'blur')
                     })}
                 </Field>
 
@@ -28,7 +28,7 @@ export function BrazilPersonalDetail(props) {
                         spellcheck: false,
                         value: data.lastName,
                         onInput: handleChangeFor('lastName', 'input'),
-                        onChange: handleChangeFor('lastName')
+                        onBlur: handleChangeFor('lastName', 'blur')
                     })}
                 </Field>
 
@@ -37,7 +37,7 @@ export function BrazilPersonalDetail(props) {
                     error={errors.socialSecurityNumber}
                     valid={valid.socialSecurityNumber}
                     onInput={handleChangeFor('socialSecurityNumber', 'input')}
-                    onChange={handleChangeFor('socialSecurityNumber')}
+                    onBlur={handleChangeFor('socialSecurityNumber', 'blur')}
                 />
             </div>
         </div>

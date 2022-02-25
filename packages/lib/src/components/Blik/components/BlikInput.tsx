@@ -54,7 +54,7 @@ function BlikInput(props: BlikInputProps) {
                     required: true,
                     autocorrect: 'off',
                     onInput: handleChangeFor('blikCode', 'input'),
-                    onChange: handleChangeFor('blikCode', 'blur'),
+                    onBlur: handleChangeFor('blikCode', 'blur'),
                     placeholder: '123456',
                     maxLength: 6
                 })}

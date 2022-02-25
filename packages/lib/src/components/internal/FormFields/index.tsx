@@ -11,10 +11,11 @@ import './FormFields.scss';
 export const renderFormField = (type, props) => {
     const formFieldTypes = {
         boolean: Checkbox,
-        date: InputDate,
-        emailAddress: InputEmail,
         radio: RadioGroup,
         select: Select,
+        // All the following use InputBase
+        date: InputDate,
+        emailAddress: InputEmail,
         tel: InputTelephone,
         text: InputText,
         default: InputText

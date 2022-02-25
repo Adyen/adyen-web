@@ -6,7 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../FormFields/Field';
 
 export default function SendCopyToEmail(props) {
-    const { errors, value, onInput, onChange } = props;
+    const { errors, value, onInput, onBlur } = props;
     const { i18n } = useCoreContext();
     const [sendCopyToEmail, setSendCopyToEmail] = useState(false);
 
@@ -34,7 +34,7 @@ export default function SendCopyToEmail(props) {
                         spellCheck: false,
                         value,
                         onInput,
-                        onChange
+                        onBlur
                     })}
                 </Field>
             )}
