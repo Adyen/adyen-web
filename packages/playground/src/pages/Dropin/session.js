@@ -34,8 +34,8 @@ export async function initSession() {
             },
             card: {
                 enableStoreDetails: false,
-                hasHolderName: true,
-                holderNameRequired: true,
+                //hasHolderName: true,
+                //holderNameRequired: true,
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
             }

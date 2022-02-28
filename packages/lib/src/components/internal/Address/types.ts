@@ -19,7 +19,7 @@ export interface AddressProps {
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
-    mode?: AddressModeOptions;
+    overrideSchema?: AddressSpecifications;
 }
 
 export interface AddressStateError {
@@ -93,12 +93,5 @@ export interface AddressSpecifications {
         optionalFields?: AddressField[];
         placeholders?: StringObject;
         schema?: AddressSchema;
-        partialSchema?: AddressSchema;
     };
-}
-
-export enum AddressModeOptions {
-    full = 'full',
-    partial = 'partial',
-    none = 'none'
 }
