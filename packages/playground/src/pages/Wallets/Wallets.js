@@ -26,13 +26,22 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
     const step = urlSearchParams.get('step');
 
+    const chargeOptions = {
+        // chargePermissionType: 'Recurring',
+        // recurringMetadata: {
+        //     frequency: {
+        //         unit: 'Month',
+        //         value: '1'
+        //     }
+        // }
+    };
+
     // Initial state
     if (!step) {
         window.amazonpay = checkout
             .create('amazonpay', {
-                amount,
                 productType: 'PayOnly',
-
+                ...chargeOptions,
                 // Regular checkout:
                 // returnUrl: 'http://localhost:3020/wallets?step=result',
                 // checkoutMode: 'ProcessOrder'
@@ -47,16 +56,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (step === 'review') {
         window.amazonpay = checkout
             .create('amazonpay', {
+                ...chargeOptions,
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
                 amazonCheckoutSessionId,
                 cancelUrl: 'http://localhost:3020/wallets',
                 returnUrl: 'http://localhost:3020/wallets?step=result',
-                amount: {
-                    currency: 'GBP',
-                    value: 4700
-                }
             })
             .mount('.amazonpay-field');
     }

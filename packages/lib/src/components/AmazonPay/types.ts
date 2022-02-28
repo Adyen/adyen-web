@@ -12,9 +12,22 @@ declare global {
 type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
+type ChargePermissionType = 'OneTime' | 'Recurring';
+type FrequencyUnit = 'Year'| 'Month'| 'Week'| 'Day'| 'Variable';
 export type Currency = 'EUR' | 'GBP' | 'USD';
 export type Region = 'EU' | 'UK' | 'US';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
+
+export interface RecurringMetadata {
+    frequency: {
+        unit: string
+        value: FrequencyUnit
+    },
+    amount: {
+        amount: string
+        currencyCode: Currency
+    }
+}
 
 export interface AmazonPayConfiguration {
     merchantId?: string;
@@ -30,6 +43,7 @@ export interface AmazonPayElementProps {
     amount?: PaymentAmount;
     buttonColor?: ButtonColor;
     cancelUrl?: string;
+    chargePermissionType?: ChargePermissionType;
     clientKey?: string;
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
@@ -44,6 +58,7 @@ export interface AmazonPayElementProps {
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
+    recurringMetadata?: RecurringMetadata;
     region?: Region;
     returnUrl?: string;
     showChangePaymentDetailsButton: boolean;
@@ -65,6 +80,7 @@ export interface AmazonPayButtonProps {
     amazonRef: any;
     buttonColor?: ButtonColor;
     cancelUrl?: string;
+    chargePermissionType?: ChargePermissionType;
     clientKey?: string;
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
@@ -75,6 +91,7 @@ export interface AmazonPayButtonProps {
     onError: (error, component) => void;
     placement?: Placement;
     productType?: ProductType;
+    recurringMetadata?: RecurringMetadata;
     ref: any;
     region?: Region;
     returnUrl?: string;
@@ -100,7 +117,9 @@ export interface OrderButtonProps {
     amazonCheckoutSessionId: string;
     amount: PaymentAmount;
     clientKey: string;
+    chargePermissionType?: ChargePermissionType;
     onError: (error, component) => void;
+    recurringMetadata: RecurringMetadata;
     ref: any;
     region: Region;
     returnUrl: string;
@@ -180,6 +199,7 @@ export type LedgerCurrencies = {
 
 export interface PayloadJSON {
     addressDetails?: AddressDetails;
+    chargePermissionType?: ChargePermissionType;
     deliverySpecifications?: DeliverySpecifications;
     merchantMetadata?: MerchantMetadata;
     paymentDetails?: {
@@ -188,6 +208,7 @@ export interface PayloadJSON {
         presentmentCurrency: Currency;
         totalOrderAmount: ChargeAmount;
     };
+    recurringMetadata?: RecurringMetadata;
     storeId: string;
     webCheckoutDetails: {
         checkoutCancelUrl?: string;
@@ -207,10 +228,12 @@ export interface CheckoutDetailsRequest {
 
 export interface UpdateAmazonCheckoutSessionRequest {
     amount: PaymentAmount;
+    chargePermissionType?: ChargePermissionType;
     checkoutCancelUrl?: string;
     checkoutResultReturnUrl: string;
     checkoutSessionId: string;
     publicKeyId: string;
+    recurringMetadata?: RecurringMetadata;
     region: Region;
 }
 
