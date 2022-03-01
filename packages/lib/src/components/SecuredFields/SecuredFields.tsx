@@ -21,7 +21,7 @@ export class SecuredFieldsElement extends UIElement {
     formatProps(props) {
         return {
             ...props,
-            type: props.type === 'scheme' ? 'card' : props.type
+            type: props.type === 'scheme' || props.type === 'securedfields' ? 'card' : props.type
         };
     }
 

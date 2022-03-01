@@ -36,7 +36,7 @@ const initCheckout = async () => {
 
     window.securedFields2 = checkout
         .create('securedfields', {
-            type: 'card',
+            //            type: 'card',// Deliberately exclude to ensure a default value is set
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,
             onBrand,
