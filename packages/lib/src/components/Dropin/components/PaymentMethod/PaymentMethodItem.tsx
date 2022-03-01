@@ -7,6 +7,7 @@ import styles from '../DropinComponent.module.scss';
 import './PaymentMethodItem.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import UIElement from '../../../UIElement';
+import PaymentMethodBrands from './PaymentMethodBrands';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -78,7 +79,6 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }, { activeBrand = null }) {
-
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -159,18 +159,19 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         </button>
                     )}
 
-                    {showBrands && (
-                        <span className="adyen-checkout__payment-method__brands">
-                            {paymentMethod.brands.map(brand => (
-                                <PaymentMethodIcon
-                                    key={brand.name}
-                                    altDescription={brand.name}
-                                    type={brand.name}
-                                    disabled={activeBrand && brand.name !== activeBrand}
-                                    src={brand.icon}
-                                />
-                            ))}
-                        </span>
+                    {showBrands && !isSelected && (
+                        <PaymentMethodBrands brands={paymentMethod.brands} />
+                        // <span className="adyen-checkout__payment-method__brands">
+                        //     {paymentMethod.brands.map(brand => (
+                        //         <PaymentMethodIcon
+                        //             key={brand.name}
+                        //             altDescription={brand.name}
+                        //             type={brand.name}
+                        //             disabled={activeBrand && brand.name !== activeBrand}
+                        //             src={brand.icon}
+                        //         />
+                        //     ))}
+                        // </span>
                     )}
                 </div>
 
