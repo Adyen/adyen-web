@@ -2,8 +2,9 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import Img from '../../../../../internal/Img';
 import './AvailableBrands.scss';
+import { BrandConfiguration } from '../../../../types';
 
-type AvailableBrands = Array<{ name: string; icon: string }>;
+type AvailableBrands = Array<BrandConfiguration>;
 
 interface PaymentMethodBrandsProps {
     brands: AvailableBrands;

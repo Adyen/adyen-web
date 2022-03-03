@@ -57,18 +57,6 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         this.isMouseDown = false;
     };
 
-    componentDidMount() {
-        this.props.paymentMethod.eventEmitter.on('brand', e => {
-            this.setState({ activeBrand: e.brand });
-        });
-    }
-
-    componentWillUnmount() {
-        this.props.paymentMethod.eventEmitter.off('brand', e => {
-            this.setState({ activeBrand: e.brand });
-        });
-    }
-
     public toggleDisableConfirmation = () => {
         this.setState({ showDisableStoredPaymentMethodConfirmation: !this.state.showDisableStoredPaymentMethodConfirmation });
     };
@@ -78,7 +66,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         this.toggleDisableConfirmation();
     };
 
-    render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }, { activeBrand = null }) {
+    render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -159,20 +147,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         </button>
                     )}
 
-                    {showBrands && !isSelected && (
-                        <PaymentMethodBrands brands={paymentMethod.brands} />
-                        // <span className="adyen-checkout__payment-method__brands">
-                        //     {paymentMethod.brands.map(brand => (
-                        //         <PaymentMethodIcon
-                        //             key={brand.name}
-                        //             altDescription={brand.name}
-                        //             type={brand.name}
-                        //             disabled={activeBrand && brand.name !== activeBrand}
-                        //             src={brand.icon}
-                        //         />
-                        //     ))}
-                        // </span>
-                    )}
+                    {showBrands && !isSelected && <PaymentMethodBrands brands={paymentMethod.brands} />}
                 </div>
 
                 <div
