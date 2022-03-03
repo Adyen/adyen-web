@@ -11,10 +11,16 @@ describe('Specifications', () => {
                 postalCode: '90210'
             },
             optionalFields: ['houseNumberOrName'],
-            schema: ['country', 'postalCode'],
+            schema: ['country', 'postalCode']
         },
         CA: {
-            schema: ['country', [ ['postalCode', 50],  ['city', 50] ] ]
+            schema: [
+                'country',
+                [
+                    ['postalCode', 50],
+                    ['city', 50]
+                ]
+            ]
         },
         default: {
             placeholders: {
@@ -52,5 +58,10 @@ describe('Specifications', () => {
         expect(specifications.getPlaceholderKeyForField('stateOrProvince', 'US')).toBe(
             addressSpecificationsMock.default.placeholders.stateOrProvince
         );
+    });
+
+    test('getFlatSchemaForCountry', () => {
+        expect(specifications.getAddressSchemaForCountryFlat('CA')).toStrictEqual(['country', 'postalCode', 'city']);
+        expect(specifications.getAddressSchemaForCountryFlat('PT')).toStrictEqual(['country', 'city', 'postalCode']);
     });
 });

@@ -1,5 +1,8 @@
 import { AddressSchema, AddressSpecifications, StringObject } from './types';
 import { ADDRESS_SPECIFICATIONS } from './constants';
+import { AddressField } from 'src/types';
+
+const SCHEMA_MAX_DEPTH = 2;
 
 class Specifications {
     private specifications: AddressSpecifications;
@@ -70,6 +73,19 @@ class Specifications {
      */
     getPlaceholderKeyForField(fieldName: string, country: string): string {
         return this.specifications?.[country]?.placeholders?.[fieldName] || this.specifications?.default?.placeholders?.[fieldName];
+    }
+
+    /**
+     * Returns an array with the address schema of the selected country or the default address schema
+     * Flat version of getAddressSchemaForCountry
+     * @param country - The selected country
+     * @param mode - Address schema mode, can be 'full', 'partial' or 'none'
+     * @returns Array
+     */
+    getAddressSchemaForCountryFlat(country: string): AddressField[] {
+        return this.getAddressSchemaForCountry(country)
+            .flat(SCHEMA_MAX_DEPTH)
+            .filter((element): element is AddressField => typeof element === 'string');
     }
 }
 
