@@ -27,6 +27,7 @@ export const CardFieldsWrapper = ({
     handleInstallments,
     showAmountsInInstallments,
     // Card
+    brandsIcons,
     mergedSRErrors,
     moveFocus,
     showPanel,
@@ -63,7 +64,8 @@ export const CardFieldsWrapper = ({
     placeholders,
     positionHolderNameOnTop,
     // For CardFields > CardNumber
-    showBrandIcon
+    showBrandIcon,
+    showAvailableBrands
 }) => {
     const { i18n } = useCoreContext();
 
@@ -95,7 +97,9 @@ export const CardFieldsWrapper = ({
 
             <CardFields
                 showBrandIcon={showBrandIcon}
+                showAvailableBrands={showAvailableBrands}
                 brand={sfpState.brand}
+                brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
                 focusedElement={focusedElement}
                 onFocusField={setFocusOn}

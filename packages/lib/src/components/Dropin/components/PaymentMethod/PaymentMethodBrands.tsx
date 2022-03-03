@@ -1,13 +1,12 @@
 import { h } from 'preact';
 import PaymentMethodIcon from './PaymentMethodIcon';
-
-type Brands = Array<{ name: string; icon: string }>;
+import { BrandConfiguration } from '../../../Card/types';
 
 interface PaymentMethodBrandsProps {
-    brands: Brands;
+    brands: Array<BrandConfiguration>;
 }
 
-const prepareVisibleBrands = (brands: Brands) => {
+const prepareVisibleBrands = (brands: Array<BrandConfiguration>) => {
     const visibleBrands = brands.length <= 4 ? brands : brands.slice(0, 3);
     return {
         visibleBrands,

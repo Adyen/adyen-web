@@ -37,12 +37,12 @@ export const hasValidInstallmentsObject = (installments?: InstallmentsObj) => {
 };
 
 export const getLayout = ({
-                              props,
-                              showKCP,
-                              showBrazilianSSN,
-                              countrySpecificSchemas = null,
-                              billingAddressRequiredFields = null
-                          }: LayoutObj): string[] => {
+    props,
+    showKCP,
+    showBrazilianSSN,
+    countrySpecificSchemas = null,
+    billingAddressRequiredFields = null
+}: LayoutObj): string[] => {
     let layout = CREDIT_CARD;
     const hasRequiredHolderName = props.hasHolderName && props.holderNameRequired;
 
@@ -153,6 +153,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         positionHolderNameOnTop: props.positionHolderNameOnTop,
         // Extract props for CardFields > CardNumber
         showBrandIcon: props.showBrandIcon,
+        showAvailableBrands: props.showAvailableBrands,
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,

@@ -28,6 +28,8 @@ export class CardElement extends UIElement<CardElementProps> {
 
         return {
             ...props,
+            // `true` for Drop-in, otherwise fallback to `false` if property isn't set
+            showAvailableBrands: props.isDropin || props.showAvailableBrands || false,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
             holderNameRequired: !props.hasHolderName ? false : props.holderNameRequired,
             // False for *stored* BCMC cards & if merchant explicitly wants to hide the CVC field
@@ -180,6 +182,7 @@ export class CardElement extends UIElement<CardElementProps> {
                     onBrand={this.onBrand}
                     onBinValue={this.onBinValue}
                     brand={this.brand}
+                    brandsIcons={this.brands}
                 />
             </CoreProvider>
         );

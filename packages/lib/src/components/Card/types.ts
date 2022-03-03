@@ -33,6 +33,18 @@ export interface CardElementProps extends UIElementProps {
     /** List of brands accepted by the component */
     brands?: string[];
 
+    /**
+     * Show/hide available card brands beneath the Card number field
+     * @defaultValue `true` if Drop-in / `false` if normal Card component
+     */
+    showAvailableBrands?: boolean;
+
+    /**
+     * Show/hide the brand logo when the card brand has been recognized
+     * @defaultValue `true`
+     */
+    showBrandIcon?: boolean;
+
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
@@ -107,10 +119,13 @@ export interface CardConfiguration {
     brandsConfiguration?: CardBrandsConfiguration;
 }
 
+export interface BrandConfiguration {
+    name: string;
+    icon?: string;
+}
+
 export interface CardBrandsConfiguration {
-    [key: string]: {
-        icon?: string;
-    };
+    [key: string]: BrandConfiguration;
 }
 
 interface CardPaymentMethodData {
