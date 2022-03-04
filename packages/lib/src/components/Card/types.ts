@@ -106,22 +106,22 @@ export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 /** If the merchant wishes to set any of these properties in their local config they should do so via a "configuration" object */
 export interface CardConfiguration {
     // GooglePay
-    merchantIdentifier: string;
-    merchantOrigin: string;
-    gatewayMerchantId: string;
+    merchantIdentifier?: string;
+    merchantOrigin?: string;
+    gatewayMerchantId?: string;
 
     // AmazonPay
-    publicKeyId: string;
-    region: string;
+    publicKeyId?: string;
+    region?: string;
 
     // Common to GooglePay & ApplePay
-    merchantName: string;
+    merchantName?: string;
 
     // Common to GooglePay & AmazonPay
-    merchantId: string;
+    merchantId?: string;
 
     // Paypal
-    intent: string;
+    intent?: string;
 
     // KCP
     koreanAuthenticationRequired?: boolean;
