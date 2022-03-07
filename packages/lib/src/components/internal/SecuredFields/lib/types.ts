@@ -93,6 +93,7 @@ export interface CbObjOnFieldValid {
     rootNode: HTMLElement;
     blob?: string;
     endDigits?: string;
+    issuerBin?: number;
 }
 
 export interface CbObjOnAutoComplete {
@@ -170,6 +171,7 @@ export interface SFFeedbackObj {
     maxLength?: number;
     error?: string;
     endDigits?: string;
+    issuerBin?: string;
     type?: string;
     binValue?: string;
     focus?: boolean;

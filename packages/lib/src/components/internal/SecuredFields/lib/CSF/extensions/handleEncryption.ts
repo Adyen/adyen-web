@@ -74,6 +74,11 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
         callbackObjectsArr[0].endDigits = pFeedbackObj.endDigits;
     }
 
+    // For number field - add the 8 digit issuerBin to the encryption object
+    if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.issuerBin)) {
+        callbackObjectsArr[0].issuerBin = +pFeedbackObj.issuerBin;
+    }
+
     // BROADCAST VALID STATE OF INDIVIDUAL INPUTS - passing the encryption objects
     for (i = 0, len = callbackObjectsArr.length; i < len; i += 1) {
         this.callbacks.onFieldValid(callbackObjectsArr[i]);
