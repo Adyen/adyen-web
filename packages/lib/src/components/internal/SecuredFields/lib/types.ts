@@ -117,8 +117,8 @@ export interface CbObjOnBinLookup {
     brands?: string[];
     // New for CustomCard
     supportedBrandsRaw?: BrandObject[];
-    isReset?: boolean;
     rootNode?: HTMLElement;
+    isReset?: boolean; // Used internally - not propagated to merchant callback
 }
 
 export interface CbObjOnError {
