@@ -52,6 +52,7 @@ export interface CardElementProps extends UIElementProps {
     /** Whether the card holder name field will be required */
     holderNameRequired?: boolean;
 
+    /** An object sent in the /paymentMethods response */
     configuration?: CardConfiguration;
 
     /**
@@ -100,9 +101,35 @@ export interface CardElementProps extends UIElementProps {
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 
+// TODO clarify exact properties that can be in this object
+//  - should only be ones that can be sent in the configuration object in the /paymentMethods response
+/** If the merchant wishes to set any of these properties in their local config they should do so via a "configuration" object */
 export interface CardConfiguration {
+    // GooglePay
+    merchantIdentifier?: string;
+    merchantOrigin?: string;
+    gatewayMerchantId?: string;
+
+    // AmazonPay
+    publicKeyId?: string;
+    region?: string;
+
+    // Common to GooglePay & ApplePay
+    merchantName?: string;
+
+    // Common to GooglePay & AmazonPay
+    merchantId?: string;
+
+    // Paypal
+    intent?: string;
+
+    // KCP
     koreanAuthenticationRequired?: boolean;
+
+    // Card?
     socialSecurityNumberMode?: SocialSecurityMode;
+
+    // Remove?
     icon?: string;
     brandsConfiguration?: CardBrandsConfiguration;
 }

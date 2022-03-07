@@ -195,6 +195,12 @@ class Core {
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
         delete this.options.paymentMethods;
 
+        // Check for clientKey/environment mismatch
+        const clientKeyType = this.options.clientKey?.substr(0, 4);
+        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.options.loadingContext.includes(clientKeyType)) {
+            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
+        }
+
         return this;
     };
 
