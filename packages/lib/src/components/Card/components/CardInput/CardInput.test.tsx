@@ -52,18 +52,18 @@ describe('CardInput', () => {
     });
 });
 
-describe('CardInput - Available Brands', () => {
-    test('should not render brands if property `showAvailableBrands` isnt set', () => {
+describe('CardInput - Brands beneath Card Number field', () => {
+    test('should not render brands if property `showBrandsInCard` isnt set', () => {
         const wrapper = mount(<CardInput i18n={i18n} />);
         expect(wrapper.find('span.adyen-checkout__card__brands').exists()).toBeFalsy();
     });
 
-    test('should render brands if property `showAvailableBrands` is set', () => {
+    test('should render brands if property `showBrandsInCard` is set', () => {
         const brandsIcons = [
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' }
         ];
-        const wrapper = mount(<CardInput i18n={i18n} showAvailableBrands brandsIcons={brandsIcons} />);
+        const wrapper = mount(<CardInput i18n={i18n} showBrandsInCard brandsIcons={brandsIcons} />);
         expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper')).toHaveLength(2);
         expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper--disabled')).toHaveLength(0);
     });
@@ -75,7 +75,7 @@ describe('CardInput - Available Brands', () => {
             { name: 'mc', icon: 'mc.png' },
             { name: 'amex', icon: 'amex.png' }
         ];
-        const wrapper = mount(<CardInput i18n={i18n} brand={detectedBrand} showAvailableBrands brandsIcons={brandsIcons} />);
+        const wrapper = mount(<CardInput i18n={i18n} brand={detectedBrand} showBrandsInCard brandsIcons={brandsIcons} />);
         const brands = wrapper.find('.adyen-checkout__card__brands__brand-wrapper');
 
         expect(brands.at(0).is('.adyen-checkout__card__brands__brand-wrapper--disabled')).toBeFalsy();
