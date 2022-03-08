@@ -153,7 +153,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         positionHolderNameOnTop: props.positionHolderNameOnTop,
         // Extract props for CardFields > CardNumber
         showBrandIcon: props.showBrandIcon,
-        showAvailableBrands: props.showAvailableBrands,
+        showBrandsInCard: props.showBrandsInCard,
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,

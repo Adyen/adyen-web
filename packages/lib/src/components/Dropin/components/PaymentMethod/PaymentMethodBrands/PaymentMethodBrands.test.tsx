@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import PaymentMethodBrands from './PaymentMethodBrands';
-import PaymentMethodIcon from './PaymentMethodIcon';
+import PaymentMethodIcon from '../PaymentMethodIcon';
 
 const brands = [
     { name: 'visa', icon: 'visa.png' },

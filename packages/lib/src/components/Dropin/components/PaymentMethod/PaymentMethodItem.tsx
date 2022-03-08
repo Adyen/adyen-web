@@ -7,7 +7,7 @@ import styles from '../DropinComponent.module.scss';
 import './PaymentMethodItem.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import UIElement from '../../../UIElement';
-import PaymentMethodBrands from './PaymentMethodBrands';
+import PaymentMethodBrands from './PaymentMethodBrands/PaymentMethodBrands';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -33,7 +33,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     public state = {
-        showDisableStoredPaymentMethodConfirmation: false
+        showDisableStoredPaymentMethodConfirmation: false,
+        activeBrand: null
     };
 
     public isMouseDown = false;
@@ -57,6 +58,18 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         this.isMouseDown = false;
     };
 
+    componentDidMount() {
+        this.props.paymentMethod.eventEmitter.on('brand', e => {
+            this.setState({ activeBrand: e.brand });
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.paymentMethod.eventEmitter.off('brand', e => {
+            this.setState({ activeBrand: e.brand });
+        });
+    }
+
     public toggleDisableConfirmation = () => {
         this.setState({ showDisableStoredPaymentMethodConfirmation: !this.state.showDisableStoredPaymentMethodConfirmation });
     };
@@ -66,7 +79,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         this.toggleDisableConfirmation();
     };
 
-    render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }) {
+    render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }, { activeBrand }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -147,7 +160,14 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         </button>
                     )}
 
-                    {showBrands && !isSelected && <PaymentMethodBrands brands={paymentMethod.brands} />}
+                    {showBrands && (
+                        <PaymentMethodBrands
+                            activeBrand={activeBrand}
+                            brands={paymentMethod.brands}
+                            isPaymentMethodSelected={isSelected}
+                            isCompactView={paymentMethod.props.showBrandsInCard}
+                        />
+                    )}
                 </div>
 
                 <div

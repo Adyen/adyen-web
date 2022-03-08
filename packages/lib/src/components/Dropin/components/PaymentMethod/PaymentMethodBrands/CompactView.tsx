@@ -1,9 +1,10 @@
 import { h } from 'preact';
-import PaymentMethodIcon from './PaymentMethodIcon';
-import { BrandConfiguration } from '../../../Card/types';
+import PaymentMethodIcon from '../PaymentMethodIcon';
+import { BrandConfiguration } from '../../../../Card/types';
 
-interface PaymentMethodBrandsProps {
+interface CompactViewProps {
     brands: Array<BrandConfiguration>;
+    isPaymentMethodSelected: boolean;
 }
 
 const prepareVisibleBrands = (brands: Array<BrandConfiguration>) => {
@@ -14,8 +15,8 @@ const prepareVisibleBrands = (brands: Array<BrandConfiguration>) => {
     };
 };
 
-const PaymentMethodBrands = ({ brands }: PaymentMethodBrandsProps) => {
-    if (!brands.length) {
+const CompactView = ({ brands, isPaymentMethodSelected }: CompactViewProps) => {
+    if (isPaymentMethodSelected) {
         return null;
     }
 
@@ -30,4 +31,4 @@ const PaymentMethodBrands = ({ brands }: PaymentMethodBrandsProps) => {
     );
 };
 
-export default PaymentMethodBrands;
+export default CompactView;

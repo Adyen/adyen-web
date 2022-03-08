@@ -35,9 +35,9 @@ export interface CardElementProps extends UIElementProps {
 
     /**
      * Show/hide available card brands beneath the Card number field
-     * @defaultValue `true` if Drop-in / `false` if normal Card component
+     * @defaultValue `false`
      */
-    showAvailableBrands?: boolean;
+    showBrandsInCard?: boolean;
 
     /**
      * Show/hide the brand logo when the card brand has been recognized

@@ -28,7 +28,7 @@ export default function CardFields({
     expiryDatePolicy,
     onFocusField,
     showBrandIcon,
-    showAvailableBrands,
+    showBrandsInCard,
     valid
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
@@ -50,7 +50,7 @@ export default function CardFields({
                 dualBrandingSelected={dualBrandingSelected}
             />
 
-            {showAvailableBrands && <AvailableBrands activeBrand={brand} brands={brandsIcons} />}
+            {showBrandsInCard && <AvailableBrands activeBrand={brand} brands={brandsIcons} />}
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {

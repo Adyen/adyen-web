@@ -31,6 +31,9 @@ export async function initSession() {
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
+            },
+            card: {
+                showBrandsInCard: true
             }
         }
     });

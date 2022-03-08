@@ -65,7 +65,7 @@ export const CardFieldsWrapper = ({
     positionHolderNameOnTop,
     // For CardFields > CardNumber
     showBrandIcon,
-    showAvailableBrands
+    showBrandsInCard
 }) => {
     const { i18n } = useCoreContext();
 
@@ -97,7 +97,7 @@ export const CardFieldsWrapper = ({
 
             <CardFields
                 showBrandIcon={showBrandIcon}
-                showAvailableBrands={showAvailableBrands}
+                showBrandsInCard={showBrandsInCard}
                 brand={sfpState.brand}
                 brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
