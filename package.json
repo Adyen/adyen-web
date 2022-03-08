@@ -23,6 +23,9 @@
         "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e",
         "type-check": "yarn workspace @adyen/adyen-web type-check"
     },
+    "resolutions": {
+        "**/regenerator-runtime": "^0.13.9"
+    },
     "dependencies": {
         "concurrently": "^6.2.0"
     }
