@@ -4,9 +4,9 @@ import { BrandConfiguration } from '../../../../Card/types';
 import CompactView from './CompactView';
 
 interface PaymentMethodBrandsProps {
-    activeBrand: string;
     brands: Array<BrandConfiguration>;
     isPaymentMethodSelected: boolean;
+    activeBrand?: string;
     isCompactView?: boolean;
 }
 

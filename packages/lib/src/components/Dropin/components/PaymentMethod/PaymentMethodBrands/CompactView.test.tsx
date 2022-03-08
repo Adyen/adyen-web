@@ -12,7 +12,7 @@ const brands = [
     { name: 'maestro', icon: 'maestro.png' }
 ];
 
-describe('PaymentMethodBrands', () => {
+describe('CompactView', () => {
     test('should render the 4 brands', () => {
         const wrapper = mount(<CompactView brands={brands.slice(0, 4)} isPaymentMethodSelected={false} />);
         expect(wrapper.find(PaymentMethodIcon)).toHaveLength(4);
