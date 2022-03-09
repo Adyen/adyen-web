@@ -1,15 +1,13 @@
 import { Selector } from 'testcafe';
 import { DROPIN_SESSIONS_URL } from '../../../pages';
-import { mock, loggers } from './availableBrands.mocks';
+import { mock } from './availableBrands.mocks';
 import DropinPage from '../../../_models/Dropin.page';
-
-const { setupLogger, paymentLogger } = loggers;
 
 let dropinPage = null;
 
-fixture.only`Cards - Available Brands (Default view)`
+fixture`Cards - Available Brands (Default view)`
     .page(DROPIN_SESSIONS_URL)
-    .requestHooks([mock, setupLogger, paymentLogger])
+    .requestHooks([mock])
     .beforeEach(() => {
         dropinPage = new DropinPage({});
     });

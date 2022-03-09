@@ -1,4 +1,4 @@
-import { RequestMock, RequestLogger } from 'testcafe';
+import { RequestMock } from 'testcafe';
 import { BASE_URL } from '../../../pages';
 
 const path = require('path');
@@ -59,11 +59,6 @@ const paymentResponse = {
     sessionData: MOCK_SESSION_DATA
 };
 
-const loggers = {
-    setupLogger: RequestLogger({ url: setupUrl, method: 'post' }, { logRequestBody: true }),
-    paymentLogger: RequestLogger({ url: paymentUrl, method: 'post' }, { logRequestBody: true })
-};
-
 const mock = RequestMock()
     .onRequestTo(request => request.url === sessionsUrl)
     .respond(sessionsResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL })
@@ -72,4 +67,4 @@ const mock = RequestMock()
     .onRequestTo(request => request.url === paymentUrl && request.method === 'post')
     .respond(paymentResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL });
 
-export { mock, loggers, MOCK_SESSION_DATA };
+export { mock, MOCK_SESSION_DATA };
