@@ -9,7 +9,6 @@ const MOCK_SESSION_DATA = 'Ab02b4c0!BQABAgChW9EQ6U';
 
 const sessionsUrl = 'http://localhost:3024/sessions';
 const setupUrl = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/sessions/${MOCK_SESSION_ID}/setup?clientKey=${process.env.CLIENT_KEY}`;
-const paymentUrl = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/sessions/${MOCK_SESSION_ID}/payments?clientKey=${process.env.CLIENT_KEY}`;
 
 const sessionsResponse = {
     amount: {
@@ -54,17 +53,10 @@ const setupResponse = {
     sessionData: MOCK_SESSION_DATA
 };
 
-const paymentResponse = {
-    resultCode: 'Authorised',
-    sessionData: MOCK_SESSION_DATA
-};
-
 const mock = RequestMock()
     .onRequestTo(request => request.url === sessionsUrl)
     .respond(sessionsResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL })
     .onRequestTo(request => request.url === setupUrl && request.method === 'post')
-    .respond(setupResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL })
-    .onRequestTo(request => request.url === paymentUrl && request.method === 'post')
-    .respond(paymentResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL });
+    .respond(setupResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL });
 
 export { mock, MOCK_SESSION_DATA };
