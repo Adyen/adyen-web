@@ -161,6 +161,12 @@
     flex-shrink: 1;
     text-align: right;
     overflow: hidden;
+
+    & .adyen-checkout__payment-method__brand-number {
+        color: #99A3AD;
+        font-size: 13px;
+    }
+
 }
 
 .adyen-checkout__payment-method--selected .adyen-checkout__payment-method__brands {

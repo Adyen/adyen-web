@@ -55,6 +55,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                         plans: ['regular', 'revolving']
                     }
                 },
+                showBrandsInCard: true,
                 showInstallmentAmounts: true,
                 onError: obj => {
                     console.log('### Cards::onError:: obj=', obj);
