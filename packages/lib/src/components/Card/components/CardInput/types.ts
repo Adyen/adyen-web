@@ -96,7 +96,7 @@ export interface CardInputProps {
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
     setComponentRef?: (ref) => void;
-    showBrandsInCard: boolean;
+    showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;

@@ -15,7 +15,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     protected static defaultProps = {
         onBinLookup: () => {},
-        showBrandsInCard: false,
+        showBrandsUnderCardNumber: false,
         SRConfig: {}
     };
 

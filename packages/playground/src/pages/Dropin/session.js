@@ -33,7 +33,7 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             card: {
-                showBrandsInCard: true
+                showBrandsUnderCardNumber: true
             }
         }
     });
