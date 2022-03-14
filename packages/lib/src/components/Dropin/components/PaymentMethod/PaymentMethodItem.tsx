@@ -165,7 +165,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             activeBrand={activeBrand}
                             brands={paymentMethod.brands}
                             isPaymentMethodSelected={isSelected}
-                            isCompactView={paymentMethod.props.showBrandsInCard}
+                            isCompactView={paymentMethod.props.showBrandsUnderCardNumber}
                         />
                     )}
                 </div>

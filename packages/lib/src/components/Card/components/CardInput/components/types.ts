@@ -22,7 +22,7 @@ export interface CardFieldsProps {
     expiryDatePolicy?: DatePolicyType;
     onFocusField?: any;
     showBrandIcon?: boolean;
-    showBrandsInCard: boolean;
+    showBrandsUnderCardNumber: boolean;
     valid?: any;
 }
 
