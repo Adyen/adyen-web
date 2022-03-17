@@ -66,8 +66,8 @@ class ApplePayService {
      */
     onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized) {
         return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
-            .then(() => {
-                this.session.completePayment(ApplePaySession.STATUS_SUCCESS);
+            .then(response => {
+                this.session.completePayment(response);
             })
             .catch(() => {
                 this.session.completePayment(ApplePaySession.STATUS_FAILURE);
