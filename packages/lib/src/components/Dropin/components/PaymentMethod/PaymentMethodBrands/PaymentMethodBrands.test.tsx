@@ -19,8 +19,13 @@ describe('PaymentMethodBrands', () => {
         expect(wrapper.find(CompactView)).toHaveLength(1);
     });
 
-    test('should render all brands if compact view is not set', () => {
+    test('should render compact view if prop is not', () => {
         const wrapper = mount(<PaymentMethodBrands brands={brands} isPaymentMethodSelected />);
+        expect(wrapper.find(CompactView)).toHaveLength(1);
+    });
+
+    test('should not render compact view if prop is set to false', () => {
+        const wrapper = mount(<PaymentMethodBrands brands={brands} isPaymentMethodSelected isCompactView={false} />);
         expect(wrapper.find(PaymentMethodIcon)).toHaveLength(6);
     });
 });
