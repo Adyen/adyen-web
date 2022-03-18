@@ -5,7 +5,7 @@
   flex-basis: auto;
   flex-shrink: 1;
   flex-wrap: wrap;
-  height: 16px;
+  gap: 4px;
   margin-top: -8px;
   margin-bottom: 16px;
 }
@@ -22,7 +22,6 @@
 .adyen-checkout__card__brands__brand-wrapper {
   display: inline-block;
   height: 16px;
-  margin-right: 4px;
   transition: opacity .2s ease-out;
   width: 24px;
   position: relative;

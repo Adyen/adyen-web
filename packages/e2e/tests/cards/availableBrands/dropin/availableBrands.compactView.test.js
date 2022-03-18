@@ -8,7 +8,6 @@ let dropinPage = null;
 fixture`Cards - Available Brands (Compact view)`
     .page(DROPIN_SESSIONS_URL)
     .requestHooks([mock])
-    .clientScripts('availableBrands.clientScripts.js')
     .beforeEach(() => {
         dropinPage = new DropinPage({});
     });
