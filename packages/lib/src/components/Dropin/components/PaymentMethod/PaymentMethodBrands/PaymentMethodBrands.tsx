@@ -10,7 +10,7 @@ interface PaymentMethodBrandsProps {
     isCompactView?: boolean;
 }
 
-const PaymentMethodBrands = ({ activeBrand, brands, isPaymentMethodSelected, isCompactView = false }: PaymentMethodBrandsProps) => {
+const PaymentMethodBrands = ({ activeBrand, brands, isPaymentMethodSelected, isCompactView = true }: PaymentMethodBrandsProps) => {
     if (isCompactView) {
         return <CompactView brands={brands} isPaymentMethodSelected={isPaymentMethodSelected} />;
     }

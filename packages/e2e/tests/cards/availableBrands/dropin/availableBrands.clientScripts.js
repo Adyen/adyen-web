@@ -1,7 +1,7 @@
 window.mainConfiguration = {
     paymentMethodsConfiguration: {
         card: {
-            showBrandsUnderCardNumber: true
+            showBrandsUnderCardNumber: false
         }
     }
 };

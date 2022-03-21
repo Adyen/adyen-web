@@ -12,7 +12,7 @@ interface PaymentMethodBrandsProps {
 }
 
 const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
-    if (!brands.length) {
+    if (!brands?.length) {
         return null;
     }
 
