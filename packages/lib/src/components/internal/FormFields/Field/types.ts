@@ -13,7 +13,6 @@ export interface FieldProps {
     isLoading?: boolean;
     isValid?: boolean;
     label?: string | Component;
-    dualBrandingElements?: any;
     onBlur?;
     onFocus?;
     onFocusField?;

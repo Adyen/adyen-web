@@ -25,10 +25,10 @@ export default function CardNumber(props: CardNumberProps) {
             onFocusField={() => onFocusField(ENCRYPTED_CARD_NUMBER)}
             errorMessage={error && i18n.get(error)}
             isValid={isValid}
-            dualBrandingElements={dualBrandingElements}
             dir={'ltr'}
             name={'encryptedCardNumber'}
             isCollatingErrors={isCollatingErrors}
+            showValidIcon={false}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}

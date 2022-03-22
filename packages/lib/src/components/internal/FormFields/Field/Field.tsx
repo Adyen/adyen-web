@@ -47,20 +47,7 @@ class Field extends Component<FieldProps, FieldState> {
         return null;
     }
 
-    renderContent({
-        name,
-        children,
-        errorMessage,
-        helper,
-        inputWrapperModifiers,
-        isLoading,
-        isValid,
-        label,
-        showValidIcon,
-        dualBrandingElements,
-        isCollatingErrors,
-        dir
-    }) {
+    renderContent({ name, children, errorMessage, helper, inputWrapperModifiers, isLoading, isValid, label, showValidIcon, isCollatingErrors, dir }) {
         return (
             <Fragment>
                 {typeof label === 'string' && (
@@ -104,7 +91,7 @@ class Field extends Component<FieldProps, FieldState> {
                         </span>
                     )}
 
-                    {isValid && showValidIcon !== false && !dualBrandingElements && (
+                    {isValid && showValidIcon !== false && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
                             <Icon type="checkmark" />
                         </span>
@@ -143,7 +130,6 @@ class Field extends Component<FieldProps, FieldState> {
         isValid,
         label,
         useLabelElement = true,
-        dualBrandingElements,
         dir,
         showValidIcon,
         isCollatingErrors
@@ -179,7 +165,6 @@ class Field extends Component<FieldProps, FieldState> {
                         isValid,
                         label,
                         showValidIcon,
-                        dualBrandingElements,
                         isCollatingErrors,
                         dir
                     })}
