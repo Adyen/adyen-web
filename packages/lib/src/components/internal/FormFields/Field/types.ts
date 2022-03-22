@@ -22,6 +22,7 @@ export interface FieldProps {
     name?: string;
     showValidIcon?: boolean;
     isCollatingErrors?: boolean;
+    useLabelElement?: boolean;
 }
 
 export interface FieldState {
