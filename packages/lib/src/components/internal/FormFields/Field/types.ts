@@ -13,7 +13,6 @@ export interface FieldProps {
     isLoading?: boolean;
     isValid?: boolean;
     label?: string | Component;
-    dualBrandingElements?: any;
     onBlur?;
     onFocus?;
     onFocusField?;
@@ -22,6 +21,7 @@ export interface FieldProps {
     name?: string;
     showValidIcon?: boolean;
     isCollatingErrors?: boolean;
+    useLabelElement?: boolean;
 }
 
 export interface FieldState {
