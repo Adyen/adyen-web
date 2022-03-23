@@ -82,7 +82,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             )}
 
             {requiredFields.includes('gender') && (
-                <Field errorMessage={!!errors.gender} classNameModifiers={['gender']} name={'gender'}>
+                <Field errorMessage={!!errors.gender} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
                     {renderFormField('radio', {
                         i18n,
                         name: generateFieldName('gender'),
