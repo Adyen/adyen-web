@@ -5,10 +5,12 @@ export interface ButtonProps {
      */
     classNameModifiers?: string[];
 
+    variant: 'primary' | 'secondary' | 'ghost' | 'action';
+
     disabled?: boolean;
     label?: string;
     icon?: string;
-    secondary?: boolean;
+    // secondary?: boolean;
     inline?: boolean;
     href?: string;
     target?: string;

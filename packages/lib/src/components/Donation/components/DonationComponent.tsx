@@ -100,7 +100,8 @@ export default function DonationComponent(props) {
 
                 {showCancelButton && (
                     <Button
-                        classNameModifiers={['ghost', 'decline']}
+                        classNameModifiers={['decline']}
+                        variant="ghost"
                         onClick={handleDecline}
                         disabled={status === 'loading'}
                         label={`${i18n.get('notNowButton')} ›`}

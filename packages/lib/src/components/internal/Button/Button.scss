@@ -87,6 +87,41 @@
 
     &.adyen-checkout__button--secondary {
         padding: 10px 12px;
+        background: $color-white;
+        border: 1px solid $color-black;
+        color: $color-black;
+
+        &:hover {
+            background: $color-gray-lighter;
+            box-shadow: 0px 2px 4px rgba(27, 42, 60, 0.2), 0px 4px 5px rgba(27, 42, 60, 0.14);;
+        }
+
+        &:active,
+        &:active:hover {
+            background: $color-gray-lighter;
+            box-shadow: none;
+        }
+
+        &:disabled {
+            &,
+            &:hover {
+                box-shadow: none;
+                cursor: not-allowed;
+                border-color: #99A3AD;
+                background-color: $color-gray-lighter;
+                opacity: 0.5;
+                user-select: all;
+            }
+        }
+
+        .adyen-checkout__spinner {
+            border-color: $color-black;
+            border-top-color: transparent;
+        }
+    }
+
+    &.adyen-checkout__button--action {
+        padding: 10px 12px;
         background: rgba(0, 102, 255, 0.1);
         border: 1px solid transparent;
         color: $color-blue;
