@@ -1,4 +1,4 @@
-import AdyenCheckout from '@adyen/adyen-web/dist/es/index.js';
+import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import '../../style.scss';
 

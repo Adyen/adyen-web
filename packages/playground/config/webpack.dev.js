@@ -4,7 +4,6 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const webpackConfig = require('./webpack.config');
 const checkoutDevServer = require('@adyen/adyen-web-server');
-// const {devServer} = require("@adyen/adyen-web-e2e/app/config/webpack.config");
 const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || '3020';
 const resolve = dir => path.resolve(__dirname, dir);
@@ -104,59 +103,23 @@ module.exports = merge(webpackConfig, {
         ]
     },
     devServer: {
-        // before: app => checkoutDevServer(app),
-        onBeforeSetupMiddleware: devServer => checkoutDevServer(devServer.app),
+        setupMiddlewares: (middlewares, devServer) => {
+            checkoutDevServer(devServer.app);
+            return middlewares;
+        },
         port,
         host,
         https: false,
-        // inline: true, ??
-
-        // Enable hot reloading server. It will provide /sockjs-node/ endpoint
-        // for the WebpackDevServer client so it can learn when the files were
-        // updated. The WebpackDevServer client is included as an entry point
-        // in the Webpack development configuration. Note that only changes
-        // to CSS are currently hot reloaded. JS changes will refresh the browser.
-        // hot: true,
         hot: true,
-
-        // Enable gzip compression of generated files.
         compress: true,
-
-        // // Tells dev-server to suppress messages like the webpack bundle information.
-        // // Errors and warnings will still be shown.
-        // noInfo: true,
-
-        // // By default files from `contentBase` will not trigger a page reload.
-        // watchContentBase: false,
-
-        // // Reportedly, this avoids CPU overload on some systems.
-        // // https://github.com/facebook/create-react-app/issues/293
-        // // src/node_modules is not ignored to support absolute imports
-        // // https://github.com/facebook/create-react-app/issues/1065
-        // watchOptions: {
-        //     ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-        //     aggregateTimeout: 200,
-        //     poll: 500
-        // },
-
         static: {
-            // Reportedly, this avoids CPU overload on some systems.
-            // https://github.com/facebook/create-react-app/issues/293
-            // src/node_modules is not ignored to support absolute imports
-            // https://github.com/facebook/create-react-app/issues/1065
             watch: {
-                ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-                aggregateTimeout: 200,
-                poll: 500
+                ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/]
             }
         },
-
         client: {
-            // Silence WebpackDevServer's own logs since they're generally not useful.
-            // It will still show compile warnings and errors with this setting.
             logging: 'none',
-            overlay: false,
-            progress: true
+            overlay: false
         }
     }
 });
