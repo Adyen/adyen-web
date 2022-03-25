@@ -208,32 +208,27 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
                 {this.props.instructions && <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>}
 
-                {/*{this.props.copyBtn && (*/}
-                <div className="adyen-checkout__qr-loader__actions">
-                    <Button
-                        inline
-                        variant="action"
-                        onClick={(e, { complete }) => {
-                            copyToClipboard(this.props.qrCodeData);
-                            complete();
-                        }}
-                        icon={getImageUrl({ loadingContext, imageFolder: 'components/' })('copy')}
-                        label={i18n.get('button.copy')}
-                    />
-                </div>
-                {/*)}*/}
+                {this.props.copyBtn && (
+                    <div className="adyen-checkout__qr-loader__actions">
+                        <Button
+                            inline
+                            variant="action"
+                            onClick={(e, { complete }) => {
+                                copyToClipboard(this.props.qrCodeData);
+                                complete();
+                            }}
+                            icon={getImageUrl({ loadingContext, imageFolder: 'components/' })('copy')}
+                            label={i18n.get('button.copy')}
+                        />
+                    </div>
+                )}
 
-                {/*{url && (*/}
-                <div className="adyen-checkout__qr-loader__app-link">
-                    <span className="adyen-checkout__qr-loader__separator__label">{i18n.get('or')}</span>
-                    <Button
-                        variant="secondary"
-                        classNameModifiers={['qr-loader']}
-                        onClick={() => this.redirectToApp(url)}
-                        label={i18n.get('openApp')}
-                    />
-                </div>
-                {/*)}*/}
+                {url && (
+                    <div className="adyen-checkout__qr-loader__app-link">
+                        <span className="adyen-checkout__qr-loader__separator__label">{i18n.get('or')}</span>
+                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get('openApp')} />
+                    </div>
+                )}
             </div>
         );
     }
