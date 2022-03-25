@@ -39,7 +39,7 @@ module.exports = {
     mode: 'development',
     plugins: [
         ...htmlPages.map(htmlPageGenerator),
-        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 __SF_ENV__: JSON.stringify(process.env.SF_ENV || 'build'),
@@ -93,11 +93,11 @@ module.exports = {
         ]
     },
     devServer: {
-        before: app => checkoutDevServer(app),
+        onBeforeSetupMiddleware: devServer => checkoutDevServer(devServer.app),
         port,
         host,
         https: false,
-        inline: true,
+        // inline: true,??
 
         // Enable hot reloading server. It will provide /sockjs-node/ endpoint
         // for the WebpackDevServer client so it can learn when the files were
@@ -109,27 +109,45 @@ module.exports = {
         // Enable gzip compression of generated files.
         compress: true,
 
-        // Silence WebpackDevServer's own logs since they're generally not useful.
-        // It will still show compile warnings and errors with this setting.
-        clientLogLevel: 'none',
+        // // Silence WebpackDevServer's own logs since they're generally not useful.
+        // // It will still show compile warnings and errors with this setting.
+        // clientLogLevel: 'none',
 
-        // Tells dev-server to suppress messages like the webpack bundle information.
-        // Errors and warnings will still be shown.
-        noInfo: true,
-
-        // By default files from `contentBase` will not trigger a page reload.
-        watchContentBase: false,
+        // // Tells dev-server to suppress messages like the webpack bundle information.
+        // // Errors and warnings will still be shown.
+        // noInfo: true,
+        //
+        // // By default files from `contentBase` will not trigger a page reload.
+        // watchContentBase: false,
 
         // Reportedly, this avoids CPU overload on some systems.
         // https://github.com/facebook/create-react-app/issues/293
         // src/node_modules is not ignored to support absolute imports
-        // https://github.com/facebook/create-react-app/issues/1065
-        watchOptions: {
-            ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-            aggregateTimeout: 200,
-            poll: 500
+        // // https://github.com/facebook/create-react-app/issues/1065
+        // watchOptions: {
+        //     ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
+        //     aggregateTimeout: 200,
+        //     poll: 500
+        // },
+
+        static: {
+            // Reportedly, this avoids CPU overload on some systems.
+            // https://github.com/facebook/create-react-app/issues/293
+            // src/node_modules is not ignored to support absolute imports
+            // https://github.com/facebook/create-react-app/issues/1065
+            watch: {
+                ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
+                aggregateTimeout: 200,
+                poll: 500
+            }
         },
 
-        overlay: false
+        client: {
+            // Silence WebpackDevServer's own logs since they're generally not useful.
+            // It will still show compile warnings and errors with this setting.
+            logging: 'none',
+            overlay: false,
+            progress: true
+        }
     }
 };
