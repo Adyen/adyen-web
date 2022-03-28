@@ -3,11 +3,11 @@ import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods, makePayment } from '../../services';
 import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { checkPaymentResult } from '../../utils';
-import { amount, shopperLocale } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 
-getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
+getPaymentMethods({ amount, shopperLocale, countryCode }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,
@@ -19,7 +19,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError: console.error,
         showPayButton: true
     });
-
+    // console.log('hii');
     // AMAZON PAY
     // Demo only
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -62,7 +62,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                  */
                 amazonCheckoutSessionId,
                 cancelUrl: 'http://localhost:3020/wallets',
-                returnUrl: 'http://localhost:3020/wallets?step=result',
+                returnUrl: 'http://localhost:3020/wallets?step=result'
             })
             .mount('.amazonpay-field');
     }

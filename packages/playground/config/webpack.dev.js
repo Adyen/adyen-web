@@ -55,11 +55,6 @@ module.exports = merge(webpackConfig, {
     entry: {
         ...htmlPages.reduce(entriesReducer, {})
     },
-    output: {
-        filename: '[name].bundle.js',
-        chunkFilename: '[id].chunk.js',
-        path: resolve('../dist')
-    },
     module: {
         rules: [
             {
@@ -113,18 +108,14 @@ module.exports = merge(webpackConfig, {
         },
         port,
         host,
-        https: false,
         hot: true,
-        static: resolve('../dist'),
-        // compress: true,
-        // watchFiles: {
-        //     paths: [resolve('../src')]
-        // },
-        // static: {
-        //     watch: {
-        //         ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/]
-        //     }
-        // },
+        static: {
+            watch: {
+                ignored: [/!(@adyen\/adyen-web\/dist)/],
+                aggregateTimeout: 200,
+                poll: 500
+            }
+        },
         client: {
             logging: 'verbose',
             overlay: false
