@@ -6,7 +6,7 @@ import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
-    
+
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,

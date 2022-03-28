@@ -43,7 +43,6 @@ module.exports = merge(webpackConfig, {
     mode: 'development',
     plugins: [
         ...htmlPages.map(htmlPageGenerator),
-        // new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
                 __SF_ENV__: JSON.stringify(process.env.SF_ENV || 'build'),
@@ -55,6 +54,11 @@ module.exports = merge(webpackConfig, {
     devtool: 'cheap-module-source-map',
     entry: {
         ...htmlPages.reduce(entriesReducer, {})
+    },
+    output: {
+        filename: '[name].bundle.js',
+        chunkFilename: '[id].chunk.js',
+        path: resolve('../dist')
     },
     module: {
         rules: [
@@ -111,14 +115,18 @@ module.exports = merge(webpackConfig, {
         host,
         https: false,
         hot: true,
-        compress: true,
-        static: {
-            watch: {
-                ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/]
-            }
-        },
+        static: resolve('../dist'),
+        // compress: true,
+        // watchFiles: {
+        //     paths: [resolve('../src')]
+        // },
+        // static: {
+        //     watch: {
+        //         ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/]
+        //     }
+        // },
         client: {
-            logging: 'none',
+            logging: 'verbose',
             overlay: false
         }
     }
