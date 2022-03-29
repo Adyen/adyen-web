@@ -95,7 +95,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     // RATEPAY
     window.ratepay = checkout
         .create('ratepay', {
-            countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+            countryCode: 'US', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
                 billingAddress: 'editable',
