@@ -27,6 +27,7 @@ export const CardFieldsWrapper = ({
     handleInstallments,
     showAmountsInInstallments,
     // Card
+    brandsIcons,
     mergedSRErrors,
     moveFocus,
     showPanel,
@@ -63,7 +64,8 @@ export const CardFieldsWrapper = ({
     placeholders,
     positionHolderNameOnTop,
     // For CardFields > CardNumber
-    showBrandIcon
+    showBrandIcon,
+    showBrandsUnderCardNumber
 }) => {
     const { i18n } = useCoreContext();
 
@@ -74,7 +76,7 @@ export const CardFieldsWrapper = ({
             value={formData.holderName}
             error={!!formErrors.holderName && holderNameRequired}
             isValid={!!formValid.holderName}
-            onChange={handleChangeFor('holderName', 'blur')}
+            onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
         />
     );
@@ -95,7 +97,9 @@ export const CardFieldsWrapper = ({
 
             <CardFields
                 showBrandIcon={showBrandIcon}
+                showBrandsUnderCardNumber={showBrandsUnderCardNumber}
                 brand={sfpState.brand}
+                brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
                 focusedElement={focusedElement}
                 onFocusField={setFocusOn}
@@ -123,7 +127,7 @@ export const CardFieldsWrapper = ({
                     value={data.taxNumber}
                     error={!!errors.taxNumber}
                     isValid={!!valid.taxNumber}
-                    onChange={handleChangeFor('taxNumber', 'blur')}
+                    onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
                 />
             )}
@@ -131,7 +135,7 @@ export const CardFieldsWrapper = ({
             {showBrazilianSSN && (
                 <div className="adyen-checkout__card__socialSecurityNumber">
                     <SocialSecurityNumberBrazil
-                        onChange={handleChangeFor('socialSecurityNumber', 'blur')}
+                        onBlur={handleChangeFor('socialSecurityNumber', 'blur')}
                         onInput={handleChangeFor('socialSecurityNumber', 'input')}
                         error={errors?.socialSecurityNumber}
                         valid={valid?.socialSecurityNumber}

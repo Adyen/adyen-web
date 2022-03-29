@@ -28,7 +28,8 @@ const initCheckout = async () => {
         },
         onError: (error, component) => {
             console.error(error.message, component);
-        }
+        },
+        ...window.mainConfiguration
     });
 
     window.dropin = checkout.create('dropin', window.dropinConfig).mount('#dropin-sessions-container');

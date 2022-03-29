@@ -1,5 +1,5 @@
 import { PaymentAmount } from '../../../../../types';
-import { CardBrandsConfiguration } from '../../../types';
+import { BrandConfiguration, CardBrandsConfiguration } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
 
@@ -10,6 +10,7 @@ export interface BrandIconProps {
 
 export interface CardFieldsProps {
     brand?: string;
+    brandsIcons?: Array<BrandConfiguration>;
     brandsConfiguration?: CardBrandsConfiguration;
     dualBrandingChangeHandler?: any;
     dualBrandingElements?: any;
@@ -21,13 +22,14 @@ export interface CardFieldsProps {
     expiryDatePolicy?: DatePolicyType;
     onFocusField?: any;
     showBrandIcon?: boolean;
+    showBrandsUnderCardNumber: boolean;
     valid?: any;
 }
 
 export interface CardHolderNameProps {
     error: boolean;
     isValid: boolean;
-    onChange: (event: Event) => void;
+    onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
     placeholder?: string;
     required?: boolean;
@@ -120,7 +122,7 @@ export interface KCPProps {
     filled?: boolean;
     focusedElement;
     onFocusField: (str: string) => {};
-    onChange: (event: Event) => void;
+    onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
     taxNumber?: string;
     error: boolean;

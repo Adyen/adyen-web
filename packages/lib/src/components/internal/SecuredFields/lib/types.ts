@@ -93,6 +93,7 @@ export interface CbObjOnFieldValid {
     rootNode: HTMLElement;
     blob?: string;
     endDigits?: string;
+    issuerBin?: number;
 }
 
 export interface CbObjOnAutoComplete {
@@ -116,8 +117,8 @@ export interface CbObjOnBinLookup {
     brands?: string[];
     // New for CustomCard
     supportedBrandsRaw?: BrandObject[];
-    isReset?: boolean;
     rootNode?: HTMLElement;
+    isReset?: boolean; // Used internally - not propagated to merchant callback
 }
 
 export interface CbObjOnError {
@@ -170,6 +171,7 @@ export interface SFFeedbackObj {
     maxLength?: number;
     error?: string;
     endDigits?: string;
+    issuerBin?: string;
     type?: string;
     binValue?: string;
     focus?: boolean;

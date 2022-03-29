@@ -8,6 +8,7 @@ import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
+import { hasOwnProperty } from '../../utils/hasOwnProperty';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
 
@@ -108,7 +109,15 @@ class DropinElement extends UIElement<DropinElementProps> {
     };
 
     public handleAction(action: PaymentAction, props = {}): UIElement | null {
-        if (!action || !action.type) throw new Error('Invalid Action');
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'handleAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                        'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
+        }
 
         if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);

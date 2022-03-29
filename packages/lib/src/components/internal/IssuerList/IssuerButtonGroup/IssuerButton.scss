@@ -7,7 +7,7 @@
   border-radius: $border-radius-medium;
   padding: $spacing-none $spacing-medium-small;
   cursor: pointer;
-  flex-basis: 48%;
+  flex-basis: 47%;
   flex-grow: 2;
   height: 40px;
 
@@ -19,12 +19,26 @@
 
   transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
-  &:not(&--selected):focus,
-  &:not(&--selected):focus-visible,
-  &:not(&--selected):hover {
+  &:active {
+    color: black;
+  }
+
+  &:not(&--selected):focus {
     outline: none;
     box-shadow: inset 0 0 0 2px #99A3AD;
   }
+
+  &:not(&--selected):focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px #99A3AD;
+  }
+
+
+  &:not(&--selected):hover {
+    outline: none;
+    box-shadow: inset 0 0 0 2px #99A3AD;
+  };
+
 
   &--selected {
     background: $color-white;

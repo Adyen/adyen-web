@@ -1,6 +1,7 @@
 import DropinPage from '../../_models/Dropin.page';
 import CardComponentPage from '../../_models/CardComponent.page';
 import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
+import { Selector } from 'testcafe';
 
 const dropinPage = new DropinPage({
     components: {
@@ -18,17 +19,17 @@ test('#1 Check Bancontact comp is correctly presented at startup', async t => {
     // Wait for field to appear in DOM
     await t.wait(1000);
 
-    await t.expect(dropinPage.brandsImages.count).eql(3);
+    const brandsInsidePaymentMethod = Selector('.adyen-checkout__card__brands');
+    const images = brandsInsidePaymentMethod.find('img');
 
     // Expect 3 card brand logos to be displayed (not concerned about order)
+    await t.expect(images.count).eql(3);
     await t
-        .expect(dropinPage.brandsHolder.exists)
+        .expect(images.nth(0).withAttribute('alt', 'bcmc').exists)
         .ok()
-        .expect(dropinPage.brandsImages.withAttribute('alt', 'bcmc').exists)
+        .expect(images.nth(1).withAttribute('alt', 'visa').exists)
         .ok()
-        .expect(dropinPage.brandsImages.withAttribute('alt', 'visa').exists)
-        .ok()
-        .expect(dropinPage.brandsImages.withAttribute('alt', 'maestro').exists)
+        .expect(images.nth(2).withAttribute('alt', 'maestro').exists)
         .ok();
 
     // Hidden cvc field

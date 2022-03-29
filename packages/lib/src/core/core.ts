@@ -15,7 +15,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 
 class Core {
     public session: Session;
-    private paymentMethodsResponse: PaymentMethodsResponse;
+    public paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
     public components = [];
@@ -123,6 +123,15 @@ class Core {
      * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options = {}): UIElement {
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'createFromAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                        'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
+        }
         if (action.type) {
             const paymentMethodsConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
             const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
@@ -185,6 +194,12 @@ class Core {
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
         delete this.options.paymentMethods;
+
+        // Check for clientKey/environment mismatch
+        const clientKeyType = this.options.clientKey?.substr(0, 4);
+        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.options.loadingContext.includes(clientKeyType)) {
+            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
+        }
 
         return this;
     };

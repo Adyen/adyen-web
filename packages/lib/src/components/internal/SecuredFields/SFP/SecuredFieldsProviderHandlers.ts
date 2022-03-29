@@ -23,21 +23,28 @@ import {
 import { existy } from '../lib/utilities/commonUtils';
 
 /**
- * Emits the onConfigSuccess (ready) event
+ * Emits the onLoad  event
  * Here we can assume CSF is loaded and ready to be used
  */
 function handleOnLoad(cbObj: CbObjOnLoad): void {
     // Propagate onLoad event
     this.props.onLoad(cbObj);
 
+    /**
+     * Having seen that the securedFields iframes have loaded some kind of content (we don't know what, yet)
+     * - setTimeout since we expect to get a successful configuration message "within a reasonable time"
+     */
     // eslint-disable-next-line
-    this.originKeyErrorTimeout = setTimeout(() => {
+    this.invalidOriginErrorTimeout = setTimeout(() => {
         if (this.state.status !== 'ready') {
-            // Hide the spinner and lets look at the inputs
-            this.setState({ status: 'originKeyError' });
-            this.props.onError({ error: 'originKeyError', fieldType: 'defaultError' });
+            // Hide the spinner
+            this.setState({ status: 'invalidOriginError' });
+
+            // Now we catch clientKey & environment mismatch in core.ts - this error is indicative of a
+            // clientKey error: the requesting domain is not in the “Allowed origins” for the clientKey in the CA
+            this.props.onError({ error: 'invalidOriginError', fieldType: 'defaultError' });
         }
-    }, this.originKeyTimeoutMS);
+    }, this.invalidOriginTimeoutMS);
 }
 
 /**
@@ -45,7 +52,7 @@ function handleOnLoad(cbObj: CbObjOnLoad): void {
  * Here we can assume CSF is loaded, configured and ready to be used
  */
 function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
-    clearTimeout(this.originKeyErrorTimeout);
+    clearTimeout(this.invalidOriginErrorTimeout);
 
     this.setState({ status: 'ready' }, () => {
         // Propagate onConfigSuccess event

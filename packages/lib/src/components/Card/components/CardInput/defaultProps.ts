@@ -11,6 +11,7 @@ export default {
     enableStoreDetails: false,
     hasCVC: true,
     showBrandIcon: true,
+    showBrandsUnderCardNumber: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],

@@ -25,7 +25,7 @@ const removeRequestHook = async t => {
     if (currentMock) await t.removeRequestHooks(currentMock); // don't know if this is strictly necessary
 };
 
-fixture.only`Test how Card Component handles binLookup returning a panLength property (or not)`
+fixture`Test how Card Component handles binLookup returning a panLength property (or not)`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)

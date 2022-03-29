@@ -1,29 +1,35 @@
 import { h } from 'preact';
-import { useState, useCallback } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export default function InputBase(props) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors } = props;
 
-    const [handleChangeHasFired, setHandleChangeHasFired] = useState(false);
+    /**
+     * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.
+     * The first 2 being the means by which we expect useForm--handleChangeFor validation functionality to be applied.
+     */
+    if (Object.prototype.hasOwnProperty.call(props, 'onChange')) {
+        console.error('Error: Form fields that rely on InputBase may not have an onChange property');
+    }
 
     const handleInput = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
         props.onInput(event);
     }, []);
 
-    const handleChange = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        setHandleChangeHasFired(true);
-        props?.onChange?.(event);
-    }, []);
-
     const handleBlur = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        if (!handleChangeHasFired) {
-            props?.onChange?.(event);
+        props?.onBlurHandler?.(event); // From Field component
+
+        if (props.trimOnBlur) {
+            (event.target as HTMLInputElement).value = (event.target as HTMLInputElement).value.trim(); // needed to trim trailing spaces in field (leading spaces can be done via formatting)
         }
-        setHandleChangeHasFired(false);
 
         props?.onBlur?.(event);
+    }, []);
+
+    const handleFocus = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        props?.onFocusHandler?.(event); // From Field component
     }, []);
 
     const inputClassNames = classNames(
@@ -46,14 +52,14 @@ export default function InputBase(props) {
             {...newProps}
             type={type}
             className={inputClassNames}
-            onInput={handleInput}
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
             aria-describedby={isCollatingErrors ? null : `${uniqueId}${ARIA_ERROR_SUFFIX}`}
-            onChange={handleChange}
-            onBlur={handleBlur}
             aria-invalid={isInvalid}
+            onInput={handleInput}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
         />
     );
 }
