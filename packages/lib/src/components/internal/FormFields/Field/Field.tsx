@@ -1,53 +1,62 @@
-import { Component, cloneElement, toChildArray, h, ComponentChild, VNode, Fragment } from 'preact';
 import classNames from 'classnames';
-import './Field.scss';
+import { cloneElement, ComponentChild, Fragment, FunctionalComponent, h, toChildArray, VNode } from 'preact';
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
-import { FieldProps, FieldState } from './types';
-import { getUniqueId } from '../../../../utils/idGenerator';
 import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { useCallback, useRef, useState } from 'preact/hooks';
+import { getUniqueId } from '../../../../utils/idGenerator';
+import { FieldProps } from './types';
 
-class Field extends Component<FieldProps, FieldState> {
-    private readonly uniqueId: string;
+const Field: FunctionalComponent<FieldProps> = props => {
+    //
+    const {
+        children,
+        className,
+        classNameModifiers,
+        dir,
+        disabled,
+        errorMessage,
+        helper,
+        inputWrapperModifiers,
+        isCollatingErrors,
+        isLoading,
+        isValid,
+        label,
+        name,
+        onBlur,
+        onFieldBlur,
+        onFocus,
+        onFocusField,
+        showValidIcon,
+        useLabelElement,
+        // Redeclare prop names to avoid internal clashes
+        filled: propsFilled,
+        focused: propsFocused
+    } = props;
 
-    constructor(props) {
-        super(props);
+    const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
 
-        this.state = { focused: false };
+    const [focused, setFocused] = useState(false);
+    const [filled, setFilled] = useState(false);
 
-        this.onFocus = this.onFocus.bind(this);
-        this.onBlur = this.onBlur.bind(this);
+    // The means by which focussed/filled is set for securedFields
+    if (propsFocused != null) setFocused(!!propsFocused);
+    if (propsFilled != null) setFilled(!!propsFilled);
 
-        this.uniqueId = getUniqueId(`adyen-checkout-${this.props.name}`);
-    }
+    // The means by which focussed/filled is set for other fields - this function is passed down to them and triggered
+    const onFocusHandler = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        setFocused(true);
+        onFocus?.(event);
+    }, []);
 
-    onFocus(e) {
-        this.setState({ focused: true }, () => {
-            if (this.props.onFocus) this.props.onFocus(e);
-        });
-    }
+    const onBlurHandler = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        setFocused(false);
+        onBlur?.(event);
+        // When we also need to fire a specific function when a field blurs
+        onFieldBlur?.(event);
+    }, []);
 
-    onBlur(e) {
-        this.setState({ focused: false }, () => {
-            if (this.props.onBlur) this.props.onBlur(e);
-            // When we also need to fire a specific function when a field blurs
-            if (this.props.onFieldBlur) this.props.onFieldBlur(e);
-        });
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.focused !== undefined && nextProps.focused !== prevState.focused) {
-            return { focused: nextProps.focused };
-        }
-
-        if (nextProps.filled !== undefined && nextProps.filled !== prevState.filled) {
-            return { filled: nextProps.filled };
-        }
-
-        return null;
-    }
-
-    renderContent({ name, children, errorMessage, helper, inputWrapperModifiers, isLoading, isValid, label, showValidIcon, isCollatingErrors, dir }) {
+    const renderContent = useCallback(() => {
         return (
             <Fragment>
                 {typeof label === 'string' && (
@@ -61,10 +70,10 @@ class Field extends Component<FieldProps, FieldState> {
                     </span>
                 )}
 
+                {/*@ts-ignore - function is callable*/}
                 {typeof label === 'function' && label()}
 
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
-
                 <div
                     className={classNames([
                         'adyen-checkout__input-wrapper',
@@ -76,10 +85,10 @@ class Field extends Component<FieldProps, FieldState> {
                         (child: ComponentChild): ComponentChild => {
                             const childProps = {
                                 isValid,
-                                onFocusHandler: this.onFocus,
-                                onBlurHandler: this.onBlur,
+                                onFocusHandler,
+                                onBlurHandler,
                                 isInvalid: !!errorMessage,
-                                ...(name && { uniqueId: this.uniqueId })
+                                ...(name && { uniqueId: uniqueId.current })
                             };
                             return cloneElement(child as VNode, childProps);
                         }
@@ -103,11 +112,10 @@ class Field extends Component<FieldProps, FieldState> {
                         </span>
                     )}
                 </div>
-
-                {errorMessage && errorMessage.length && (
+                {errorMessage && typeof errorMessage === 'string' && errorMessage.length && (
                     <span
                         className={'adyen-checkout__error-text'}
-                        id={`${this.uniqueId}${ARIA_ERROR_SUFFIX}`}
+                        id={`${uniqueId.current}${ARIA_ERROR_SUFFIX}`}
                         aria-hidden={isCollatingErrors ? 'true' : null}
                         aria-live={isCollatingErrors ? null : 'polite'}
                     >
@@ -116,84 +124,71 @@ class Field extends Component<FieldProps, FieldState> {
                 )}
             </Fragment>
         );
-    }
-
-    render({
-        name,
-        className = '',
-        classNameModifiers = [],
+    }, [
+        // Original list: name, children, errorMessage, helper, inputWrapperModifiers, isLoading, isValid, label, showValidIcon, isCollatingErrors, dir
         children,
         errorMessage,
-        helper,
-        inputWrapperModifiers = [],
         isLoading,
-        isValid,
-        label,
-        useLabelElement = true,
-        dir,
-        showValidIcon,
-        isCollatingErrors
-    }) {
-        return (
-            <div
-                className={classNames(
-                    'adyen-checkout__field',
-                    className,
-                    classNameModifiers.map(m => `adyen-checkout__field--${m}`),
-                    {
-                        'adyen-checkout__field--error': errorMessage,
-                        'adyen-checkout__field--valid': isValid
-                    }
-                )}
-            >
-                <LabelOrDiv
-                    onFocusField={this.props.onFocusField}
-                    name={name}
-                    disabled={this.props.disabled}
-                    filled={this.state.filled}
-                    focused={this.state.focused}
-                    useLabelElement={useLabelElement}
-                    uniqueId={this.uniqueId}
-                >
-                    {this.renderContent({
-                        name,
-                        children,
-                        errorMessage,
-                        helper,
-                        inputWrapperModifiers,
-                        isLoading,
-                        isValid,
-                        label,
-                        showValidIcon,
-                        isCollatingErrors,
-                        dir
-                    })}
-                </LabelOrDiv>
+        isValid
+    ]);
+
+    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, children }) => {
+        const defaultWrapperProps = {
+            onClick: onFocusField,
+            className: classNames({
+                'adyen-checkout__label': true,
+                'adyen-checkout__label--focused': focused,
+                'adyen-checkout__label--filled': filled,
+                'adyen-checkout__label--disabled': disabled
+            })
+        };
+
+        return useLabelElement ? (
+            <label {...defaultWrapperProps} htmlFor={name && uniqueId}>
+                {children}
+            </label>
+        ) : (
+            <div {...defaultWrapperProps} role={'form'}>
+                {children}
             </div>
         );
-    }
-}
+    }, []);
 
-const LabelOrDiv = ({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, children }) => {
-    const defaultWrapperProps = {
-        onClick: onFocusField,
-        className: classNames({
-            'adyen-checkout__label': true,
-            'adyen-checkout__label--focused': focused,
-            'adyen-checkout__label--filled': filled,
-            'adyen-checkout__label--disabled': disabled
-        })
-    };
-
-    return useLabelElement ? (
-        <label {...defaultWrapperProps} htmlFor={name && uniqueId}>
-            {children}
-        </label>
-    ) : (
-        <div {...defaultWrapperProps} role={'form'}>
-            {children}
+    /**
+     * RENDER
+     */
+    return (
+        <div
+            className={classNames(
+                'adyen-checkout__field',
+                className,
+                classNameModifiers.map(m => `adyen-checkout__field--${m}`),
+                {
+                    'adyen-checkout__field--error': errorMessage,
+                    'adyen-checkout__field--valid': isValid
+                }
+            )}
+        >
+            <LabelOrDiv
+                onFocusField={onFocusField}
+                name={name}
+                disabled={disabled}
+                filled={filled}
+                focused={focused}
+                useLabelElement={useLabelElement}
+                uniqueId={uniqueId.current}
+            >
+                {renderContent()}
+            </LabelOrDiv>
         </div>
     );
+};
+
+Field.defaultProps = {
+    className: '',
+    classNameModifiers: [],
+    inputWrapperModifiers: [],
+    useLabelElement: true
 };
 
 export default Field;
