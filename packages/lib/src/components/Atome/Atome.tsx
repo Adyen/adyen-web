@@ -11,7 +11,7 @@ export default class Atome extends OpenInvoiceContainer {
                 deliveryAddress: 'hidden',
                 companyDetails: 'hidden'
             },
-            allowedCountries: props.countryCode ? [props.countryCode] : ALLOWED_COUNTRIES,
+            allowedCountries: ALLOWED_COUNTRIES,
             personalDetailsRequiredFields: ['firstName', 'lastName', 'telephoneNumber'],
             billingAddressRequiredFields: ['country', 'street', 'postalCode'],
             billingAddressSpecification: BILLING_ADDRESS_SPECIFICATION

@@ -31,25 +31,20 @@ export async function initSession() {
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
-            },
-            atome: {
-                data: {
-                    personalDetails: {
-                        firstName: 'Jan',
-                        lastName: 'Jansen',
-                        shopperEmail: 'shopper@testemail.com',
-                        telephoneNumber: '+17203977880'
-                    },
-                    billingAddress: {
-                        city: 'Boulder',
-                        country: 'SG',
-                        houseNumberOrName: '242',
-                        postalCode: '803022',
-                        stateOrProvince: 'CO',
-                        street: 'Silver Cloud Lane'
-                    }
-                }
             }
+            // atome: {
+            //     data: {
+            //         personalDetails: {
+            //             firstName: 'Jan',
+            //             lastName: 'Jansen',
+            //             telephoneNumber: '80002018'
+            //         },
+            //         billingAddress: {
+            //             postalCode: '803022',
+            //             street: 'Silver Cloud Lane'
+            //         }
+            //     }
+            // }
         }
     });
 

@@ -95,7 +95,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     // RATEPAY
     window.ratepay = checkout
         .create('ratepay', {
-            countryCode: 'US', // 'DE' / 'AT' / 'CH'
+            countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
                 billingAddress: 'editable',
@@ -112,11 +112,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
                 personalDetails: {
                     firstName: 'Robert',
                     lastName: 'Jahnsen',
-                    shopperEmail: 'shopper@testemail.com',
-                    telephoneNumber: '+17203977880'
+                    telephoneNumber: '80002018'
                 },
                 billingAddress: {
-                    postalCode: '803022',
+                    postalCode: '111111',
                     street: 'Silver Cloud Lane'
                 }
             }
