@@ -2,8 +2,19 @@ import { h } from 'preact';
 import UIElement from '../../UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
+import { UIElementProps } from '../../types';
+import { AddressSpecifications } from '../../internal/Address/types';
 
-export default class OpenInvoiceContainer extends UIElement {
+interface OpenInvoiceElementProps extends UIElementProps {
+    consentCheckboxLabel?: h.JSX.Element;
+    billingAddressRequiredFields?: string[];
+    billingAddressSpecification?: AddressSpecifications;
+
+    // TODO: add other props for OpenInvoiceElement
+    [key: string]: any;
+}
+
+export default class OpenInvoiceContainer extends UIElement<OpenInvoiceElementProps> {
     protected static defaultProps = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
@@ -76,7 +87,6 @@ export default class OpenInvoiceContainer extends UIElement {
                     }}
                     {...this.props}
                     {...this.state}
-                    consentCheckbox={this.props.consentCheckbox}
                     onChange={this.setState}
                     onSubmit={this.submit}
                     payButton={this.payButton}
