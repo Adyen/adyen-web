@@ -48,6 +48,7 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
+import RatePayDirectDebit from "./RatePay/RatePayDirectDebit";
 
 /**
  * Maps each component with a Component element.
@@ -135,6 +136,7 @@ const componentsMap = {
     pix: Pix,
     qiwiwallet: QiwiWallet,
     ratepay: RatePay,
+    ratepay_directdebit: RatePayDirectDebit,
     redirect: Redirect,
     securedfields: SecuredFields,
     sepadirectdebit: Sepa,

@@ -21,86 +21,98 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         amount // Optional. Used to display the amount in the Pay Button.
     });
 
-    // AFTERPAY
-    window.afterpay = checkout
-        .create('afterpay_default', {
-            countryCode: 'NL', // 'NL' / 'BE'
-            visibility: {
-                personalDetails: 'editable', // editable [default] / readOnly / hidden
-                billingAddress: 'readOnly',
-                deliveryAddress: 'hidden'
-            },
-            data: {
-                billingAddress: {
-                    city: 'Gravenhage',
-                    country: 'NL',
-                    houseNumberOrName: '1',
-                    postalCode: '2521VA',
-                    street: 'Neherkade'
-                }
-            }
-        })
-        .mount('.afterpay-field');
-
-    // AFTERPAY B2B
-    window.afterpayb2b = checkout
-        .create('afterpay_b2b', {
-            countryCode: 'NL', // 'NL' / 'BE'
-            visibility: {
-                companyDetails: 'editable' // editable [default] / readOnly / hidden
-            }
-        })
-        .mount('.afterpayb2b-field');
-
-    // AFFIRM
-    window.affirm = checkout
-        .create('affirm', {
-            countryCode: 'US', // 'US' / 'CA'
-            visibility: {
-                personalDetails: 'editable', // editable [default] / readOnly / hidden
-                billingAddress: 'editable',
-                deliveryAddress: 'editable'
-            },
-            data: {
-                personalDetails: {
-                    firstName: 'Jan',
-                    lastName: 'Jansen',
-                    shopperEmail: 'shopper@testemail.com',
-                    telephoneNumber: '+17203977880'
-                },
-                billingAddress: {
-                    city: 'Boulder',
-                    country: 'US',
-                    houseNumberOrName: '242',
-                    postalCode: '80302',
-                    stateOrProvince: 'CO',
-                    street: 'Silver Cloud Lane'
-                }
-            }
-        })
-        .mount('.affirm-field');
-
-    // FACILYPAY_3x
-    window.facilypay_3x = checkout
-        .create('facilypay_3x', {
-            countryCode: 'ES', // 'ES' / 'FR'
-            visibility: {
-                personalDetails: 'editable', // editable [default] / readOnly / hidden
-                billingAddress: 'editable',
-                deliveryAddress: 'editable'
-            }
-        })
-        .mount('.facilypay_3x-field');
+    // // AFTERPAY
+    // window.afterpay = checkout
+    //     .create('afterpay_default', {
+    //         countryCode: 'NL', // 'NL' / 'BE'
+    //         visibility: {
+    //             personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //             billingAddress: 'readOnly',
+    //             deliveryAddress: 'hidden'
+    //         },
+    //         data: {
+    //             billingAddress: {
+    //                 city: 'Gravenhage',
+    //                 country: 'NL',
+    //                 houseNumberOrName: '1',
+    //                 postalCode: '2521VA',
+    //                 street: 'Neherkade'
+    //             }
+    //         }
+    //     })
+    //     .mount('.afterpay-field');
+    //
+    // // AFTERPAY B2B
+    // window.afterpayb2b = checkout
+    //     .create('afterpay_b2b', {
+    //         countryCode: 'NL', // 'NL' / 'BE'
+    //         visibility: {
+    //             companyDetails: 'editable' // editable [default] / readOnly / hidden
+    //         }
+    //     })
+    //     .mount('.afterpayb2b-field');
+    //
+    // // AFFIRM
+    // window.affirm = checkout
+    //     .create('affirm', {
+    //         countryCode: 'US', // 'US' / 'CA'
+    //         visibility: {
+    //             personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //             billingAddress: 'editable',
+    //             deliveryAddress: 'editable'
+    //         },
+    //         data: {
+    //             personalDetails: {
+    //                 firstName: 'Jan',
+    //                 lastName: 'Jansen',
+    //                 shopperEmail: 'shopper@testemail.com',
+    //                 telephoneNumber: '+17203977880'
+    //             },
+    //             billingAddress: {
+    //                 city: 'Boulder',
+    //                 country: 'US',
+    //                 houseNumberOrName: '242',
+    //                 postalCode: '80302',
+    //                 stateOrProvince: 'CO',
+    //                 street: 'Silver Cloud Lane'
+    //             }
+    //         }
+    //     })
+    //     .mount('.affirm-field');
+    //
+    // // FACILYPAY_3x
+    // window.facilypay_3x = checkout
+    //     .create('facilypay_3x', {
+    //         countryCode: 'ES', // 'ES' / 'FR'
+    //         visibility: {
+    //             personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //             billingAddress: 'editable',
+    //             deliveryAddress: 'editable'
+    //         }
+    //     })
+    //     .mount('.facilypay_3x-field');
+    //
+    // // RATEPAY
+    // window.ratepay = checkout
+    //     .create('ratepay', {
+    //         countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+    //         visibility: {
+    //             personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //             billingAddress: 'editable',
+    //             deliveryAddress: 'editable'
+    //         }
+    //     })
+    //     .mount('.ratepay-field');
 
     // RATEPAY
     window.ratepay = checkout
-        .create('ratepay', {
-            countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+        .create('ratepay_directdebit', {
+            //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
                 billingAddress: 'editable',
                 deliveryAddress: 'editable'
             }
         })
-        .mount('.ratepay-field');
+        .mount('.ratepay-direct-field');
 });

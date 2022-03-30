@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import IbanInput from './components/IbanInput';
+import IbanInput from '../internal/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { SepaElementData } from './types';
 
@@ -25,6 +25,7 @@ class SepaElement extends UIElement {
      */
     formatData(): SepaElementData {
         return {
+            // TODO: simplify this
             paymentMethod: {
                 type: SepaElement.type,
                 iban: this.state.data['sepa.ibanNumber'],

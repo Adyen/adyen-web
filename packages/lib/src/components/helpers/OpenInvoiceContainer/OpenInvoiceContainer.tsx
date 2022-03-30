@@ -6,12 +6,13 @@ import CoreProvider from '../../../core/Context/CoreProvider';
 export default class OpenInvoiceContainer extends UIElement {
     protected static defaultProps = {
         onChange: () => {},
-        data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
+        data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
         visibility: {
             companyDetails: 'hidden',
             personalDetails: 'editable',
             billingAddress: 'editable',
-            deliveryAddress: 'editable'
+            deliveryAddress: 'editable',
+            bankAccount: 'hidden'
         }
     };
 
@@ -54,7 +55,7 @@ export default class OpenInvoiceContainer extends UIElement {
      */
     formatData() {
         const { data = {} } = this.state;
-        const { companyDetails = {}, personalDetails = {}, billingAddress, deliveryAddress } = data;
+        const { companyDetails = {}, personalDetails = {}, billingAddress, deliveryAddress, bankAccount } = data;
 
         return {
             paymentMethod: {
@@ -62,6 +63,13 @@ export default class OpenInvoiceContainer extends UIElement {
             },
             ...personalDetails,
             ...companyDetails,
+            ...(bankAccount && {
+                bankAccount: {
+                    iban: bankAccount.ibanNumber,
+                    ownerName: bankAccount.ownerName,
+                    countryCode: bankAccount.countryCode
+                }
+            }),
             ...(billingAddress && { billingAddress }),
             ...((deliveryAddress || billingAddress) && { deliveryAddress: deliveryAddress || billingAddress })
         };

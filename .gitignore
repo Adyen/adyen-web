@@ -4,6 +4,7 @@ coverage
 
 *.log*
 .env
+.env*
 stats.json
 stats.html
 .DS_Store

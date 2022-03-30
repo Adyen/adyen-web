@@ -6,6 +6,13 @@ export interface OpenInvoiceVisibility {
     personalDetails?: FieldsetVisibility;
     billingAddress?: FieldsetVisibility;
     deliveryAddress?: FieldsetVisibility;
+    bankAccount?: FieldsetVisibility;
+}
+
+export interface BankDetailsSchema {
+    countryCode: any, //TODO
+    iban: any,
+    ownerName: string
 }
 
 export interface OpenInvoiceProps {
@@ -17,6 +24,7 @@ export interface OpenInvoiceProps {
         personalDetails?: PersonalDetailsSchema;
         billingAddress?: AddressData;
         deliveryAddress?: AddressData;
+        bankAccount?: BankDetailsSchema
     };
     onChange: Function;
     payButton: any;
@@ -30,6 +38,7 @@ export interface OpenInvoiceStateData {
     personalDetails?: PersonalDetailsSchema;
     billingAddress?: AddressData;
     deliveryAddress?: AddressData;
+    bankAccount?: BankDetailsSchema
     consentCheckbox?: boolean;
 }
 
@@ -39,6 +48,7 @@ export interface OpenInvoiceStateError {
     billingAddress?: boolean;
     deliveryAddress?: boolean;
     personalDetails?: boolean;
+    bankAccount?: boolean;
 }
 
 export interface OpenInvoiceStateValid {
@@ -47,6 +57,7 @@ export interface OpenInvoiceStateValid {
     billingAddress?: boolean;
     deliveryAddress?: boolean;
     personalDetails?: boolean;
+    bankAccount?: boolean;
 }
 
 export interface OpenInvoiceActiveFieldsets {
@@ -54,6 +65,7 @@ export interface OpenInvoiceActiveFieldsets {
     personalDetails: boolean;
     billingAddress: boolean;
     deliveryAddress: boolean;
+    bankAccount: boolean;
 }
 
 export interface OpenInvoiceFieldsetsRefs {
@@ -61,4 +73,5 @@ export interface OpenInvoiceFieldsetsRefs {
     personalDetails?;
     billingAddress?;
     deliveryAddress?;
+    bankAccount?;
 }
