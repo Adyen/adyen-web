@@ -32,19 +32,6 @@ export async function initSession() {
             paywithgoogle: {
                 buttonType: 'plain'
             }
-            // atome: {
-            //     data: {
-            //         personalDetails: {
-            //             firstName: 'Jan',
-            //             lastName: 'Jansen',
-            //             telephoneNumber: '80002018'
-            //         },
-            //         billingAddress: {
-            //             postalCode: '803022',
-            //             street: 'Silver Cloud Lane'
-            //         }
-            //     }
-            // }
         }
     });
 
