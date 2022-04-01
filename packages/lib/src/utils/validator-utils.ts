@@ -21,5 +21,5 @@ export const SPECIAL_CHARS = '?\\-\\+_=!@#$%^&*(){}~<>\\[\\]\\/\\\\'; // N.B. di
 // Generates a regEx ideal for use in a String.replace call for use in a formatter
 export const getFormattingRegEx = (specChars: string, flags = 'g') => new RegExp(`[${specChars}]`, flags);
 
-// Trim start and never allow more than 1 space on the end
-export const trimValWithOneSpace = (val: string) => val.trimStart().replace(/\s+/g, ' ');
+// Trim start, end, and never allow more than 1 space between
+export const trimValWithOneSpace = (val: string) => val.trimStart().trimEnd().replace(/\s+/g, ' ');
