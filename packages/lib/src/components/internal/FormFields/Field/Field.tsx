@@ -6,6 +6,7 @@ import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
+import './Field.scss';
 
 const Field: FunctionalComponent<FieldProps> = props => {
     //
@@ -44,17 +45,23 @@ const Field: FunctionalComponent<FieldProps> = props => {
     if (propsFilled != null) setFilled(!!propsFilled);
 
     // The means by which focussed/filled is set for other fields - this function is passed down to them and triggered
-    const onFocusHandler = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        setFocused(true);
-        onFocus?.(event);
-    }, []);
+    const onFocusHandler = useCallback(
+        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            setFocused(true);
+            onFocus?.(event);
+        },
+        [onFocus]
+    );
 
-    const onBlurHandler = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        setFocused(false);
-        onBlur?.(event);
-        // When we also need to fire a specific function when a field blurs
-        onFieldBlur?.(event);
-    }, []);
+    const onBlurHandler = useCallback(
+        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            setFocused(false);
+            onBlur?.(event);
+            // When we also need to fire a specific function when a field blurs
+            onFieldBlur?.(event);
+        },
+        [onBlur, onFieldBlur]
+    );
 
     const renderContent = useCallback(() => {
         return (
@@ -124,13 +131,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 )}
             </Fragment>
         );
-    }, [
-        // Original list: name, children, errorMessage, helper, inputWrapperModifiers, isLoading, isValid, label, showValidIcon, isCollatingErrors, dir
-        children,
-        errorMessage,
-        isLoading,
-        isValid
-    ]);
+    }, [label, onFocusHandler, onBlurHandler, children, errorMessage, isLoading, isValid]);
 
     const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, children }) => {
         const defaultWrapperProps = {
