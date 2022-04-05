@@ -83,7 +83,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                             <li className="adyen-checkout__voucher-result__actions__item">
                                 <Button
                                     inline
-                                    secondary
+                                    variant="action"
                                     onClick={(e, { complete }) => {
                                         copyToClipboard(props.reference);
                                         complete();
@@ -98,7 +98,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                             <li className="adyen-checkout__voucher-result__actions__item">
                                 <Button
                                     inline
-                                    secondary
+                                    variant="action"
                                     href={props.downloadUrl}
                                     icon={getImage({ loadingContext, imageFolder: 'components/' })('download')}
                                     label={props.downloadButtonText || i18n.get('button.download')}
