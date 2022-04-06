@@ -131,7 +131,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 )}
             </Fragment>
         );
-    }, [label, onFocusHandler, onBlurHandler, children, errorMessage, isLoading, isValid]);
+    }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
 
     const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, children }) => {
         const defaultWrapperProps = {
