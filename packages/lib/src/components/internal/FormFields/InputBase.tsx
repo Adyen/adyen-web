@@ -14,23 +14,32 @@ export default function InputBase(props) {
         console.error('Error: Form fields that rely on InputBase may not have an onChange property');
     }
 
-    const handleInput = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        props.onInput(event);
-    }, []);
+    const handleInput = useCallback(
+        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            props.onInput(event);
+        },
+        [props.onInput]
+    );
 
-    const handleBlur = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        props?.onBlurHandler?.(event); // From Field component
+    const handleBlur = useCallback(
+        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            props?.onBlurHandler?.(event); // From Field component
 
-        if (props.trimOnBlur) {
-            (event.target as HTMLInputElement).value = (event.target as HTMLInputElement).value.trim(); // needed to trim trailing spaces in field (leading spaces can be done via formatting)
-        }
+            if (props.trimOnBlur) {
+                (event.target as HTMLInputElement).value = (event.target as HTMLInputElement).value.trim(); // needed to trim trailing spaces in field (leading spaces can be done via formatting)
+            }
 
-        props?.onBlur?.(event);
-    }, []);
+            props?.onBlur?.(event);
+        },
+        [props.onBlur, props.onBlurHandler]
+    );
 
-    const handleFocus = useCallback((event: h.JSX.TargetedEvent<HTMLInputElement>) => {
-        props?.onFocusHandler?.(event); // From Field component
-    }, []);
+    const handleFocus = useCallback(
+        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            props?.onFocusHandler?.(event); // From Field component
+        },
+        [props.onFocusHandler]
+    );
 
     const inputClassNames = classNames(
         'adyen-checkout__input',
