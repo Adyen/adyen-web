@@ -77,6 +77,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
 
+    const [shouldDisableInputForIOS, setShouldDisableInputForIOS] = useState(false);
+
     /**
      * LOCAL VARS
      */
@@ -114,15 +116,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // SecuredField-only handler
     const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
-    // Callback for ErrorPanel
-    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
-
-    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
-
-    const doPanAutoJump = getAutoJumpHandler(
-        isAutoJumping,
-        sfp,
-        getLayout({
+    const retrieveLayout = () => {
+        return getLayout({
             props,
             showKCP,
             showBrazilianSSN,
@@ -130,8 +125,26 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
                 billingAddressRequiredFields: props.billingAddressRequiredFields
             })
-        })
-    );
+        });
+    };
+
+    /**
+     * re. Disabling arrow keys in iOS:
+     * Only by disabling all fields in the Card PM except for the active securedField input can we force the iOS soft keyboard arrow keys to disable
+     *
+     * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
+     * or due to an internal action ('additionalField')
+     */
+    const handleTouchstartIOS = obj => {
+        setShouldDisableInputForIOS(obj.fieldType !== 'additionalField');
+    };
+
+    // Callback for ErrorPanel
+    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
+
+    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
+
+    const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
@@ -316,15 +329,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         const sortedMergedErrors = sortErrorsForPanel({
             errors: errorsForPanel,
-            layout: getLayout({
-                props,
-                showKCP,
-                showBrazilianSSN,
-                ...(props.billingAddressRequired && {
-                    countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
-                    billingAddressRequiredFields: props.billingAddressRequiredFields
-                })
-            }),
+            layout: retrieveLayout(),
             i18n: props.i18n,
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
         });
@@ -361,6 +366,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onFocus={handleFocus}
                 type={props.brand}
                 isCollatingErrors={collateErrors}
+                onTouchstartIOS={handleTouchstartIOS}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}
@@ -411,6 +417,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             billingAddress={billingAddress}
                             handleAddress={handleAddress}
                             billingAddressRef={billingAddressRef}
+                            //
+                            disabled={shouldDisableInputForIOS}
                         />
                     </div>
                 )}

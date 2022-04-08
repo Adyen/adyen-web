@@ -65,7 +65,9 @@ export const CardFieldsWrapper = ({
     positionHolderNameOnTop,
     // For CardFields > CardNumber
     showBrandIcon,
-    showBrandsUnderCardNumber
+    showBrandsUnderCardNumber,
+    //
+    disabled
 }) => {
     const { i18n } = useCoreContext();
 
@@ -78,6 +80,7 @@ export const CardFieldsWrapper = ({
             isValid={!!formValid.holderName}
             onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
+            disabled={disabled}
         />
     );
 

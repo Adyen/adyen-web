@@ -34,6 +34,7 @@ export interface CardHolderNameProps {
     placeholder?: string;
     required?: boolean;
     value?: string;
+    disabled?: boolean;
 }
 
 export interface CardNumberProps {

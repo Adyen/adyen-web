@@ -93,6 +93,11 @@ function handleAdditionalFields(): void {
 
     // Store the fact we have set the listener
     this.state.registerFieldForIos = true;
+
+    // re. Disabling arrow keys in iOS - need to enable all fields in the form
+    on(document, 'touchstart', () => {
+        this.callbacks.onTouchstartIOS({ fieldType: 'additionalField' });
+    });
 }
 
 function destroyTouchendListener(): void {
