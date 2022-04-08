@@ -2,9 +2,12 @@ import { h } from 'preact';
 import UIElement from '../../UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
+import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
+
+export type OpenInvoiceContainerProps = Partial<OpenInvoiceProps>;
 
 export default class OpenInvoiceContainer extends UIElement {
-    protected static defaultProps = {
+    protected static defaultProps: OpenInvoiceContainerProps = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
         visibility: {

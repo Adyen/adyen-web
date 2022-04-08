@@ -3,7 +3,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
-import { electronicFormat, formatIban, getIbanPlaceHolder, getNextCursorPosition } from './utils';
+import {electronicFormat, formatIban, getCountryCode, getIbanPlaceHolder, getNextCursorPosition} from './utils';
 import './IbanInput.scss';
 import Fieldset from "../FormFields/Fieldset";
 
@@ -36,7 +36,8 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
             status: 'ready',
             data: {
                 'ownerName': props?.data?.ownerName || '',
-                'ibanNumber': props?.data?.ibanNumber || ''
+                'ibanNumber': props?.data?.ibanNumber || '',
+                'countryCode': props?.data?.countryCode || ''
             },
             isValid: false,
             cursor: 0,
@@ -108,6 +109,8 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         const iban = formatIban(electronicFormatIban); // example: NL13 TEST 0123 4567 89
         const validationStatus = checkIbanStatus(iban).status;
 
+        const countryCode = getCountryCode(electronicFormatIban);
+
         // calculate cursor's new position
         const cursor = e.target.selectionStart;
         const previousIban = this.state.data['ibanNumber'];
@@ -115,7 +118,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
 
         this.setState(
             prevState => ({
-                data: { ...prevState.data, 'ibanNumber': iban },
+                data: { ...prevState.data, 'ibanNumber': iban, 'countryCode': countryCode },
                 errors: { ...prevState.errors, iban: validationStatus === 'invalid' ? 'sepaDirectDebit.ibanField.invalid' : null },
                 valid: { ...prevState.valid, iban: validationStatus === 'valid' }
             }),

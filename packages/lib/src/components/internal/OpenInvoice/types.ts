@@ -10,9 +10,9 @@ export interface OpenInvoiceVisibility {
 }
 
 export interface BankDetailsSchema {
-    countryCode: any, //TODO
-    iban: any,
-    ownerName: string
+    countryCode?: string,
+    iban?: any,
+    ownerName?: string
 }
 
 export interface OpenInvoiceProps {

@@ -25,11 +25,10 @@ class SepaElement extends UIElement {
      */
     formatData(): SepaElementData {
         return {
-            // TODO: simplify this
             paymentMethod: {
                 type: SepaElement.type,
-                iban: this.state.data['sepa.ibanNumber'],
-                ownerName: this.state.data['sepa.ownerName']
+                iban: this.state.data['ibanNumber'],
+                ownerName: this.state.data['ownerName']
             }
         };
     }
