@@ -201,7 +201,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         .onBinValue((pFeedbackObj: SFFeedbackObj): void => {
             this.handleBinValue(pFeedbackObj);
         })
-        .onClick((pFeedbackObj: SFFeedbackObj): void => {
+        .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
             // re. Disabling arrow keys in iOS - need to disable all other fields in the form
             this.callbacks.onTouchstartIOS(pFeedbackObj);
 
