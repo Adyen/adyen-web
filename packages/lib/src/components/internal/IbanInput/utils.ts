@@ -185,7 +185,7 @@ export const getNextCursorPosition = (cursor, iban, previousIban) => {
 };
 
 /**
- * @param electronicFormatIban
- * @return countryCode string
+ * @param electronicFormatIban -
+ * @returns countryCode string
  */
 export const getCountryCode = electronicFormatIban => electronicFormatIban.slice(0, 2);
