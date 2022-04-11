@@ -1,15 +1,24 @@
 import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 import { AddressSpecifications } from '../Address/types';
+import {UIElementProps} from "../../types";
+import UIElement from "../../UIElement";
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
     personalDetails?: FieldsetVisibility;
     billingAddress?: FieldsetVisibility;
     deliveryAddress?: FieldsetVisibility;
+    bankAccount?: FieldsetVisibility;
 }
 
-export interface OpenInvoiceProps {
+export interface BankDetailsSchema {
+    countryCode?: string,
+    ibanNumber?: any,
+    ownerName?: string
+}
+
+export interface OpenInvoiceProps extends UIElementProps{
     allowedCountries?: string[];
     consentCheckboxLabel: any;
     countryCode?: string;
@@ -18,8 +27,9 @@ export interface OpenInvoiceProps {
         personalDetails?: PersonalDetailsSchema;
         billingAddress?: AddressData;
         deliveryAddress?: AddressData;
+        bankAccount?: BankDetailsSchema
     };
-    onChange: Function;
+    onChange: (state: any, element?: UIElement) => void;
     payButton: any;
     showPayButton?: boolean;
     visibility?: OpenInvoiceVisibility;
@@ -33,6 +43,7 @@ export interface OpenInvoiceStateData {
     personalDetails?: PersonalDetailsSchema;
     billingAddress?: AddressData;
     deliveryAddress?: AddressData;
+    bankAccount?: BankDetailsSchema
     consentCheckbox?: boolean;
 }
 
@@ -42,6 +53,7 @@ export interface OpenInvoiceStateError {
     billingAddress?: boolean;
     deliveryAddress?: boolean;
     personalDetails?: boolean;
+    bankAccount?: boolean;
 }
 
 export interface OpenInvoiceStateValid {
@@ -50,6 +62,7 @@ export interface OpenInvoiceStateValid {
     billingAddress?: boolean;
     deliveryAddress?: boolean;
     personalDetails?: boolean;
+    bankAccount?: boolean;
 }
 
 export interface OpenInvoiceActiveFieldsets {
@@ -57,6 +70,7 @@ export interface OpenInvoiceActiveFieldsets {
     personalDetails: boolean;
     billingAddress: boolean;
     deliveryAddress: boolean;
+    bankAccount: boolean;
 }
 
 export interface OpenInvoiceFieldsetsRefs {
@@ -64,4 +78,5 @@ export interface OpenInvoiceFieldsetsRefs {
     personalDetails?;
     billingAddress?;
     deliveryAddress?;
+    bankAccount?;
 }

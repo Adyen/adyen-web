@@ -104,6 +104,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         })
         .mount('.ratepay-field');
 
+    // RATEPAY
+    window.ratepay = checkout
+        .create('ratepay_directdebit', {
+            //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+            visibility: {
+                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                billingAddress: 'editable',
+                deliveryAddress: 'editable'
+            }
+        })
+        .mount('.ratepay-direct-field');
+
     // ATOME
     window.atome = checkout
         .create('atome', {

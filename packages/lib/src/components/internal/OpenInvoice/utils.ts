@@ -1,6 +1,12 @@
 import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
 
-export const fieldsetsSchema: Array<keyof OpenInvoiceStateData> = ['companyDetails', 'personalDetails', 'billingAddress', 'deliveryAddress'];
+export const fieldsetsSchema: Array<keyof OpenInvoiceStateData> = [
+    'companyDetails',
+    'personalDetails',
+    'billingAddress',
+    'deliveryAddress',
+    'bankAccount'
+];
 
 const isPrefilled = (fieldsetData: object = {}): boolean => Object.keys(fieldsetData).length > 1;
 

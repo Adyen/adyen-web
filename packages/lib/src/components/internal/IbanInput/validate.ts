@@ -1,4 +1,11 @@
-import { iso13616Prepare, iso7064Mod97_10, electronicFormat, regex, getIbanCountrySpecification } from './utils';
+import {
+    iso13616Prepare,
+    iso7064Mod97_10,
+    electronicFormat,
+    regex,
+    getIbanCountrySpecification,
+    getCountryCode
+} from './utils';
 
 /**
  * Contains a validation status
@@ -46,7 +53,7 @@ export const checkIbanStatus = iban => {
         return new ValidationStatus('no-validate', 'TOO_SHORT'); // A
     }
 
-    const countryCode = electronicFormatIban.slice(0, 2);
+    const countryCode = getCountryCode(electronicFormatIban);
     const countrySpecification = getIbanCountrySpecification(countryCode);
 
     if (!countrySpecification) {
