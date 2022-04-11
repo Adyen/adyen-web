@@ -32,7 +32,6 @@
     },
     "scripts": {
         "start": "npm run dev-server",
-        "start:fast": "EXPERIMENTAL_DEVBUILD=true npm run dev-server",
         "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.config.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && npm run type-check-generate && cross-env NODE_ENV=production rollup --config config/rollup.config.js",
