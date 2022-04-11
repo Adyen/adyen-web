@@ -14,7 +14,7 @@ export interface OpenInvoiceVisibility {
 
 export interface BankDetailsSchema {
     countryCode?: string,
-    iban?: any,
+    ibanNumber?: any,
     ownerName?: string
 }
 

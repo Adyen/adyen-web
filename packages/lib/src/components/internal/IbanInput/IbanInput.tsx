@@ -3,9 +3,9 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
-import {electronicFormat, formatIban, getCountryCode, getIbanPlaceHolder, getNextCursorPosition} from './utils';
+import { electronicFormat, formatIban, getCountryCode, getIbanPlaceHolder, getNextCursorPosition } from './utils';
 import './IbanInput.scss';
-import Fieldset from "../FormFields/Fieldset";
+import Fieldset from '../FormFields/Fieldset';
 
 interface IbanInputProps {
     holderName?: boolean;
@@ -14,8 +14,14 @@ interface IbanInputProps {
     showPayButton?: any;
     payButton?: any;
     onChange: (data) => void;
-    label: string,
-    data: any
+    label: string;
+    data: IbanData;
+}
+
+interface IbanData {
+    ownerName?: string;
+    ibanNumber?: string;
+    countryCode?: string;
 }
 
 interface IbanInputState {
@@ -26,6 +32,7 @@ interface IbanInputState {
     isValid: boolean;
     cursor: number;
 }
+
 class IbanInput extends Component<IbanInputProps, IbanInputState> {
     private ibanNumber: RefObject<any>;
 
@@ -35,9 +42,9 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         this.state = {
             status: 'ready',
             data: {
-                'ownerName': props?.data?.ownerName || '',
-                'ibanNumber': props?.data?.ibanNumber || '',
-                'countryCode': props?.data?.countryCode || ''
+                ownerName: props?.data?.ownerName || '',
+                ibanNumber: props?.data?.ibanNumber || '',
+                countryCode: props?.data?.countryCode || ''
             },
             isValid: false,
             cursor: 0,
@@ -95,7 +102,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
 
     public handleHolderInput = holder => {
         this.setState(
-            prevState => ({ data: { ...prevState.data, 'ownerName': holder } }),
+            prevState => ({ data: { ...prevState.data, ownerName: holder } }),
             () => {
                 this.setError('holder', !isValidHolder(this.state.data['ownerName']));
                 this.onChange(); // propagate state
@@ -118,8 +125,11 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
 
         this.setState(
             prevState => ({
-                data: { ...prevState.data, 'ibanNumber': iban, 'countryCode': countryCode },
-                errors: { ...prevState.errors, iban: validationStatus === 'invalid' ? 'sepaDirectDebit.ibanField.invalid' : null },
+                data: { ...prevState.data, ibanNumber: iban, countryCode: countryCode },
+                errors: {
+                    ...prevState.errors,
+                    iban: validationStatus === 'invalid' ? 'sepaDirectDebit.ibanField.invalid' : null
+                },
                 valid: { ...prevState.valid, iban: validationStatus === 'valid' }
             }),
             () => {
