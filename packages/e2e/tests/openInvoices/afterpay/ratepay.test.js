@@ -16,7 +16,7 @@ const mockAddressGermany = {
     street: 'Street'
 };
 
-test('should make an RatePay Direct Debit payment', async t => {
+test.skip('should make an RatePay Direct Debit payment', async t => {
     const checkboxLabelGender = Selector('.ratepay-direct-field .adyen-checkout__field--gender .adyen-checkout__radio_group__label');
     const payButton = Selector('.ratepay-direct-field adyen-checkout__button--pay');
 
