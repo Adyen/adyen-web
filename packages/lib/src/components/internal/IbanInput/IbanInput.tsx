@@ -4,7 +4,6 @@ import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
 import { electronicFormat, formatIban, getCountryCode, getIbanPlaceHolder, getNextCursorPosition } from './utils';
-import './IbanInput.scss';
 import Fieldset from '../FormFields/Fieldset';
 
 interface IbanInputProps {
