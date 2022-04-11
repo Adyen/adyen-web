@@ -1,5 +1,6 @@
 import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
+import { AddressSpecifications } from '../Address/types';
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
@@ -23,6 +24,8 @@ export interface OpenInvoiceProps {
     showPayButton?: boolean;
     visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
+    billingAddressRequiredFields?: string[];
+    billingAddressSpecification?: AddressSpecifications;
 }
 
 export interface OpenInvoiceStateData {

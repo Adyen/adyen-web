@@ -60,7 +60,7 @@ class Specifications {
      * @param country - The selected country
      */
     getKeyForField(fieldName: string, country: string): string {
-        return this.specifications?.[country]?.labels?.[fieldName] || fieldName;
+        return this.specifications?.[country]?.labels?.[fieldName] || this.specifications?.default?.labels?.[fieldName] || fieldName;
     }
 
     /**

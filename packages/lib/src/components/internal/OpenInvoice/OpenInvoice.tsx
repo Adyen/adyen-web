@@ -105,6 +105,8 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                 <Address
                     allowedCountries={props.allowedCountries}
                     countryCode={countryCode}
+                    requiredFields={props.billingAddressRequiredFields}
+                    specifications={props.billingAddressSpecification}
                     data={data.billingAddress}
                     label="billingAddress"
                     onChange={handleFieldset('billingAddress')}
