@@ -1,5 +1,8 @@
 import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
+import { AddressSpecifications } from '../Address/types';
+import {UIElementProps} from "../../types";
+import UIElement from "../../UIElement";
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
@@ -15,7 +18,7 @@ export interface BankDetailsSchema {
     ownerName?: string
 }
 
-export interface OpenInvoiceProps {
+export interface OpenInvoiceProps extends UIElementProps{
     allowedCountries?: string[];
     consentCheckboxLabel: any;
     countryCode?: string;
@@ -26,11 +29,13 @@ export interface OpenInvoiceProps {
         deliveryAddress?: AddressData;
         bankAccount?: BankDetailsSchema
     };
-    onChange: Function;
+    onChange: (state: any, element?: UIElement) => void;
     payButton: any;
     showPayButton?: boolean;
     visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
+    billingAddressRequiredFields?: string[];
+    billingAddressSpecification?: AddressSpecifications;
 }
 
 export interface OpenInvoiceStateData {

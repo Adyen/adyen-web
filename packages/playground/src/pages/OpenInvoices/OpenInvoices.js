@@ -115,4 +115,22 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
             }
         })
         .mount('.ratepay-direct-field');
+
+    // ATOME
+    window.atome = checkout
+        .create('atome', {
+            countryCode: 'SG',
+            data: {
+                personalDetails: {
+                    firstName: 'Robert',
+                    lastName: 'Jahnsen',
+                    telephoneNumber: '80002018'
+                },
+                billingAddress: {
+                    postalCode: '111111',
+                    street: 'Silver Cloud Lane'
+                }
+            }
+        })
+        .mount('.atome-field');
 });

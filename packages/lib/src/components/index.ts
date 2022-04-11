@@ -1,6 +1,7 @@
 import { AfterPay, AfterPayB2B } from './AfterPay';
 import AmazonPay from './AmazonPay';
 import ApplePay from './ApplePay';
+import Atome from './Atome';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
 import Bancontact from './Card/Bancontact';
@@ -63,6 +64,7 @@ const componentsMap = {
     amazonpay: AmazonPay,
     amex: Card,
     applepay: ApplePay,
+    atome: Atome,
     bankTransfer_IBAN: BankTransfer,
     bcmc: Bancontact,
     bcmc_mobile: BcmcMobile,

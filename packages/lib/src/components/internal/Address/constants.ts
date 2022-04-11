@@ -2,7 +2,7 @@ import { AddressSpecifications } from './types';
 
 export const FALLBACK_VALUE = 'N/A';
 export const ADDRESS_SCHEMA = ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'] as const;
-const [STREET, HOUSE_NUMBER_OR_NAME, POSTAL_CODE, CITY, STATE_OR_PROVINCE, COUNTRY] = ADDRESS_SCHEMA;
+export const [STREET, HOUSE_NUMBER_OR_NAME, POSTAL_CODE, CITY, STATE_OR_PROVINCE, COUNTRY] = ADDRESS_SCHEMA;
 
 // prettier-ignore
 export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {

@@ -388,6 +388,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             showAmountsInInstallments={showAmountsInInstallments}
                             handleInstallments={setInstallments}
                             // For Card
+                            brandsIcons={props.brandsIcons}
                             mergedSRErrors={mergedSRErrors}
                             moveFocus={moveFocus}
                             showPanel={showPanel}

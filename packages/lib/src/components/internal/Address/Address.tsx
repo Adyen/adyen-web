@@ -93,6 +93,7 @@ export default function Address(props: AddressProps) {
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
                 maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
+                trimOnBlur={true}
             />
         );
     };

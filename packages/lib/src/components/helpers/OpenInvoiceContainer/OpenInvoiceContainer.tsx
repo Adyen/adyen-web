@@ -3,10 +3,15 @@ import UIElement from '../../UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
 import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
+import { AddressSpecifications } from '../../internal/Address/types';
 
-export type OpenInvoiceContainerProps = Partial<OpenInvoiceProps>;
+export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps>{
+    consentCheckboxLabel?: h.JSX.Element;
+    billingAddressRequiredFields?: string[];
+    billingAddressSpecification?: AddressSpecifications;
+}
 
-export default class OpenInvoiceContainer extends UIElement {
+export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainerProps> {
     protected static defaultProps: OpenInvoiceContainerProps = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
@@ -87,7 +92,6 @@ export default class OpenInvoiceContainer extends UIElement {
                     }}
                     {...this.props}
                     {...this.state}
-                    consentCheckbox={this.props.consentCheckbox}
                     onChange={this.setState}
                     onSubmit={this.submit}
                     payButton={this.payButton}
