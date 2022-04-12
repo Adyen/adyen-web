@@ -19,6 +19,7 @@ abstract class AbstractCSF {
     protected createSecuredFields: typeof createSecuredFields;
     protected destroySecuredFields: () => void;
     protected destroyTouchendListener: () => void;
+    protected destroyTouchstartListener: () => void;
     protected handleAdditionalFields: () => void;
     protected handleBinValue: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleEncryption: (pFeedbackObj: SFFeedbackObj) => void;
@@ -36,6 +37,7 @@ abstract class AbstractCSF {
     protected setFocusOnFrame: (pFieldType: string, doLog?: boolean) => void;
     protected setupSecuredField: (pItem: HTMLElement) => void;
     protected touchendListener: (e: Event) => void;
+    protected touchstartListener: () => void;
     // Set in createSecuredFields
     protected encryptedAttrName: string;
     protected hasRedundantCVCField: boolean;

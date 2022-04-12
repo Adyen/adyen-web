@@ -132,6 +132,7 @@ export const CardFieldsWrapper = ({
                     isValid={!!valid.taxNumber}
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
+                    disabled={disabled}
                 />
             )}
 

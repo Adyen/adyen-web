@@ -207,7 +207,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
 
             // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
             // - pass information about which field has just been clicked (gained focus) to the other iframes
-            this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, click: true });
+            this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
         })
         .onShiftTab((pFeedbackObj: SFFeedbackObj): void => {
             // Only happens for Firefox & IE <= 11

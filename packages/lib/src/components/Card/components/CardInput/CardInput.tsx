@@ -133,10 +133,13 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * Only by disabling all fields in the Card PM except for the active securedField input can we force the iOS soft keyboard arrow keys to disable
      *
      * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
-     * or due to an internal action ('additionalField')
+     * - in which case we should disable all non-SF fields
+     * or,
+     * due to an internal action ('additionalField') - in which case we can enable all non-SF fields
      */
     const handleTouchstartIOS = obj => {
-        setShouldDisableInputForIOS(obj.fieldType !== 'additionalField');
+        setShouldDisableInputForIOS(obj.fieldType !== 'webInternalElement');
+        // TODO if the next field in the layout is not a SF - then we don't need to disable?
     };
 
     // Callback for ErrorPanel

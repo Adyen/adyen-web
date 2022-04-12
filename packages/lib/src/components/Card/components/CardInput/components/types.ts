@@ -129,6 +129,7 @@ export interface KCPProps {
     error: boolean;
     isValid: boolean;
     value: string;
+    disabled?: boolean;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;

@@ -91,6 +91,8 @@ class CSF extends AbstractCSF {
         this.handleAdditionalFields = additionalFields.handleAdditionalFields;
         this.touchendListener = additionalFields.touchendListener.bind(this);
         this.destroyTouchendListener = additionalFields.destroyTouchendListener;
+        this.touchstartListener = additionalFields.touchstartListener.bind(this);
+        this.destroyTouchstartListener = additionalFields.destroyTouchstartListener;
 
         this.handleSFShiftTab = handleTab.handleSFShiftTab;
         this.handleShiftTab = handleTab.handleShiftTab;

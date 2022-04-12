@@ -12,6 +12,16 @@ const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
     return 0;
 };
 
+/**
+ * Detect if touched element is an input or textArea.
+ * - If it is do some quirky shit to set focus and caret position on this element
+ * - Else do some quirky shit to make the iOS keyboard retract
+ *
+ * Always then remove this listener and set var saying we have done so (read in CSF...handleFocus)
+ * Tell all securedFields some other element now has focus so they can blur themselves
+ *
+ * @param e -
+ */
 function touchendListener(e: Event): void {
     if (process.env.NODE_ENV === 'development' && doLog) logger.log('### registerAdditionalField::BODY CLICK:: e=', e);
 
@@ -56,36 +66,46 @@ function touchendListener(e: Event): void {
             // Create an input we can add focus to.
             // Otherwise 2nd & sub times the caret gets left in the SF even though it has lost focus and cannot be typed into
             const rootNode: HTMLElement = this.props.rootNode;
-            const nuDiv: HTMLInputElement = document.createElement('input');
-            nuDiv.style.width = '1px';
-            nuDiv.style.height = '1px';
-            nuDiv.style.opacity = '0';
-            nuDiv.style.fontSize = '18px'; // prevents zoom
-            rootNode.appendChild(nuDiv);
-            nuDiv.focus(); // Takes caret from SF
-            rootNode.removeChild(nuDiv); // Without this numpad will be replaced with text pad
+            const nuInput: HTMLInputElement = document.createElement('input');
+            nuInput.style.width = '1px';
+            nuInput.style.height = '1px';
+            nuInput.style.opacity = '0';
+            nuInput.style.fontSize = '18px'; // prevents zoom
+            rootNode.appendChild(nuInput);
+            nuInput.focus(); // Takes caret from SF
+            rootNode.removeChild(nuInput); // Without this numpad will be replaced with text pad
         }
     }
 
-    // Remove listener
+    // Remove listener - it gets reset by next call to handleAdditionalFields from handleFocus
     this.destroyTouchendListener(); // eslint-disable-line no-use-before-define
 
     // Store the fact we have unset the listener
     this.state.registerFieldForIos = false;
 
-    // Clear focus on secured field inputs now this additional field has gained focus
-    this.postMessageToAllIframes({ fieldType: 'additionalField', click: true });
+    // Clear focus on secured field inputs now this checkout element has gained focus
+    this.postMessageToAllIframes({ fieldType: 'webInternalElement', fieldClick: true });
 }
 
-function handleAdditionalFields(): void {
-    // Only do for iOS
-    if (!ua.__IS_IOS) return;
+// re. Disabling arrow keys in iOS - need to enable all fields in the form and tell SFs to disable
+function touchstartListener(): void {
+    this.destroyTouchstartListener();
+    this.postMessageToAllIframes({ fieldType: 'webInternalElement', checkoutTouchEvent: true });
+    this.callbacks.onTouchstartIOS?.({ fieldType: 'webInternalElement' });
+}
 
-    // This works with the touchend handler, below, to allow us to catch click events on non-securedFields elements.
-    // re. http://gravitydept.com/blog/js-click-event-bubbling-on-ios
-    // We can use this event to:
-    // 1. Set focus on these other elements, and
-    // 2. Tell SecuredFields that this has happened so they can blur themselves
+/**
+ * This works with the touchend handler to allow us to catch (click) events on non-securedFields elements
+ * (re. http://gravitydept.com/blog/js-click-event-bubbling-on-ios - events don't bubble unless the click takes place on a link or input)
+ *
+ * We can use this event to:
+ * 1. Set focus on these other elements, and
+ * 2. Tell SecuredFields that this has happened so they can blur themselves
+ * (see note in adyen-secured-fields...inputBase.js - "Blur event never fires on input field")
+ *
+ * NOTE: Only called when iOS detected
+ */
+function handleAdditionalFields(): void {
     const bodyEl: HTMLBodyElement = selectOne(document, 'body');
     bodyEl.style.cursor = 'pointer';
 
@@ -94,10 +114,8 @@ function handleAdditionalFields(): void {
     // Store the fact we have set the listener
     this.state.registerFieldForIos = true;
 
-    // re. Disabling arrow keys in iOS - need to enable all fields in the form
-    on(document, 'touchstart', () => {
-        this.callbacks.onTouchstartIOS({ fieldType: 'additionalField' });
-    });
+    // re. Disabling arrow keys in iOS
+    on(document, 'touchstart', this.touchstartListener);
 }
 
 function destroyTouchendListener(): void {
@@ -108,8 +126,16 @@ function destroyTouchendListener(): void {
     off(bodyEl, 'touchend', this.touchendListener);
 }
 
+function destroyTouchstartListener(): void {
+    if (!ua.__IS_IOS) return; // For when fn is called as result of destroy being called on main csf instance
+
+    off(document, 'touchstart', this.touchstartListener);
+}
+
 export default {
     touchendListener,
+    touchstartListener,
     handleAdditionalFields,
-    destroyTouchendListener
+    destroyTouchendListener,
+    destroyTouchstartListener
 };

@@ -258,8 +258,7 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
-            // TODO rename 'click' since this actually is triggered by a 'touchstart' action
-            case 'click':
+            case 'touch':
                 this.onTouchstartCallback(feedbackObj);
                 break;
 
