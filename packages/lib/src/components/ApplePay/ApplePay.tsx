@@ -73,11 +73,13 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                 onShippingMethodSelected,
                 onShippingContactSelected,
                 onValidateMerchant: onValidateMerchant || this.validateMerchant,
-                onPaymentAuthorized: (resolve, reject, event) => {
+                onPaymentAuthorized: async (resolve, reject, event) => {
                     if (!!event.payment.token && !!event.payment.token.paymentData) {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
-                    onAuthorizedBeforeSubmit(resolve, reject, event);
+                    if(onAuthorizedBeforeSubmit) {
+                        await new Promise((resolve, reject) => onAuthorizedBeforeSubmit(resolve, reject, event));
+                    }
                     super.submit();
                     onPaymentAuthorized(resolve, reject, event);
                 }
