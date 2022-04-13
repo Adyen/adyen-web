@@ -170,6 +170,7 @@ export const CardFieldsWrapper = ({
                     allowedCountries={billingAddressAllowedCountries}
                     requiredFields={billingAddressRequiredFields}
                     ref={billingAddressRef}
+                    disablingTrigger={disablingTrigger}
                 />
             )}
         </LoadingWrapper>

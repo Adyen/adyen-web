@@ -19,6 +19,7 @@ export interface AddressProps {
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
+    disablingTrigger?: string;
 }
 
 export interface AddressStateError {
@@ -45,6 +46,7 @@ export interface FieldContainerProps {
     specifications: Specifications;
     maxlength?: number;
     trimOnBlur?: boolean;
+    disabled?: boolean;
 }
 
 export interface ReadOnlyAddressProps {

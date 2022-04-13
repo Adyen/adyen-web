@@ -13,7 +13,7 @@ import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 
 export default function Address(props: AddressProps) {
-    const { label = '', requiredFields, visibility } = props;
+    const { label = '', requiredFields, visibility, disablingTrigger = null } = props;
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
@@ -94,6 +94,7 @@ export default function Address(props: AddressProps) {
                 specifications={specifications}
                 maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
+                disabled={disablingTrigger && disablingTrigger !== fieldName}
             />
         );
     };
