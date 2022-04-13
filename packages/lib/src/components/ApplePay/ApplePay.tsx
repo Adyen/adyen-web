@@ -58,7 +58,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     }
 
     private startSession(onPaymentAuthorized) {
-        const { version, onValidateMerchant, onCancel, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
+        const { version, onValidateMerchant, onCancel, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onAuthorizedBeforeSubmit } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {
             const paymentRequest = preparePaymentRequest({
@@ -77,7 +77,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                     if (!!event.payment.token && !!event.payment.token.paymentData) {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
-
+                    onAuthorizedBeforeSubmit(resolve, reject, event);
                     super.submit();
                     onPaymentAuthorized(resolve, reject, event);
                 }
