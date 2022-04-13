@@ -78,7 +78,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
                     if(onAuthorizedBeforeSubmit) {
-                        await new Promise((resolve, reject) => onAuthorizedBeforeSubmit(resolve, reject, event));
+                        await new Promise((resolve) => onAuthorizedBeforeSubmit(resolve, reject, event));
                     }
                     super.submit();
                     onPaymentAuthorized(resolve, reject, event);
