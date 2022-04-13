@@ -87,11 +87,18 @@ function touchendListener(e: Event): void {
     this.postMessageToAllIframes({ fieldType: 'webInternalElement', fieldClick: true });
 }
 
-// re. Disabling arrow keys in iOS - need to enable all fields in the form and tell SFs to disable
-function touchstartListener(): void {
-    this.destroyTouchstartListener();
-    this.postMessageToAllIframes({ fieldType: 'webInternalElement', checkoutTouchEvent: true });
-    this.callbacks.onTouchstartIOS?.({ fieldType: 'webInternalElement' });
+/**
+ * re. Disabling arrow keys in iOS - need to enable all fields in the form and tell SFs to disable
+ *
+ * NOTE: Only called when iOS detected
+ */
+function touchstartListener(e: Event): void {
+    const targetEl: EventTarget = e.target;
+    // If other element is Input TODO apply to other types of el?
+    if (targetEl instanceof HTMLInputElement) {
+        this.postMessageToAllIframes({ fieldType: 'webInternalElement', checkoutTouchEvent: true });
+        this.callbacks.onTouchstartIOS?.({ fieldType: 'webInternalElement', name: targetEl.getAttribute('name') });
+    }
 }
 
 /**
@@ -113,9 +120,6 @@ function handleAdditionalFields(): void {
 
     // Store the fact we have set the listener
     this.state.registerFieldForIos = true;
-
-    // re. Disabling arrow keys in iOS
-    on(document, 'touchstart', this.touchstartListener);
 }
 
 function destroyTouchendListener(): void {

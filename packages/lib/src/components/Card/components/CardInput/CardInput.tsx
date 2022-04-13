@@ -1,5 +1,5 @@
 import { h, Fragment, FunctionalComponent } from 'preact';
-import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
@@ -77,7 +77,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
 
-    const [shouldDisableInputForIOS, setShouldDisableInputForIOS] = useState(false);
+    // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
+    // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
+    // or else the name of an internal, Adyen-web, element (like 'holderName')
+    const [elementTriggeringIOSFieldDisable, setElementTriggeringIOSFieldDisable] = useState(null);
 
     /**
      * LOCAL VARS
@@ -137,10 +140,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * or,
      * due to an internal action ('additionalField') - in which case we can enable all non-SF fields
      */
-    const handleTouchstartIOS = obj => {
-        setShouldDisableInputForIOS(obj.fieldType !== 'webInternalElement');
-        // TODO if the next field in the layout is not a SF - then we don't need to disable?
-    };
+    const handleTouchstartIOS = useCallback(obj => {
+        const elementType = obj.fieldType !== 'webInternalElement' ? obj.fieldType : obj.name;
+        setElementTriggeringIOSFieldDisable(elementType);
+    }, []);
 
     // Callback for ErrorPanel
     const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
@@ -421,7 +424,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             handleAddress={handleAddress}
                             billingAddressRef={billingAddressRef}
                             //
-                            disabled={shouldDisableInputForIOS}
+                            disablingTrigger={elementTriggeringIOSFieldDisable}
                         />
                     </div>
                 )}

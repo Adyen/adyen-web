@@ -23,9 +23,10 @@ import { destroySecuredFields } from './utils/destroySecuredFields';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import getIframeContentWin from './utils/iframes/getIframeContentWin';
 import * as logger from '../utilities/logger';
-import { selectOne } from '../utilities/dom';
+import { on, selectOne } from '../utilities/dom';
 import { partial } from '../utilities/commonUtils';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import ua from './utils/userAgent';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -123,6 +124,14 @@ class CSF extends AbstractCSF {
         this.state.numIframes = this.state.originalNumIframes = numIframes;
 
         this.state.isKCP = !!this.props.isKCP;
+
+        /**
+         * Add touchstart listener
+         * re. Disabling arrow keys in iOS
+         */
+        if (ua.__IS_IOS) {
+            on(document, 'touchstart', this.touchstartListener);
+        }
     }
 
     // Expose functions that can be called on the CSF instance

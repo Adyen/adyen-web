@@ -76,7 +76,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnError = handlers.handleOnError.bind(this);
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
-        this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this);
+        this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 

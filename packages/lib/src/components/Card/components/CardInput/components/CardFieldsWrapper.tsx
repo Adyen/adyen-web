@@ -67,7 +67,7 @@ export const CardFieldsWrapper = ({
     showBrandIcon,
     showBrandsUnderCardNumber,
     //
-    disabled
+    disablingTrigger
 }) => {
     const { i18n } = useCoreContext();
 
@@ -80,7 +80,7 @@ export const CardFieldsWrapper = ({
             isValid={!!formValid.holderName}
             onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
-            disabled={disabled}
+            disabled={disablingTrigger && disablingTrigger !== 'holderName'}
         />
     );
 
@@ -132,7 +132,7 @@ export const CardFieldsWrapper = ({
                     isValid={!!valid.taxNumber}
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
-                    disabled={disabled}
+                    disabled={disablingTrigger && disablingTrigger !== 'kcpTaxNumberOrDOB'}
                 />
             )}
 
@@ -145,6 +145,7 @@ export const CardFieldsWrapper = ({
                         valid={valid?.socialSecurityNumber}
                         data={socialSecurityNumber}
                         required={true}
+                        disabled={disablingTrigger && disablingTrigger !== 'socialSecurityNumber'}
                     />
                 </div>
             )}
