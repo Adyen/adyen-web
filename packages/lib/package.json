@@ -23,7 +23,7 @@
         "./dist/adyen.css": "./dist/adyen.css",
         "./package.json": "./package.json"
     },
-    "version": "5.12.0",
+    "version": "5.13.1",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -32,7 +32,6 @@
     },
     "scripts": {
         "start": "npm run dev-server",
-        "start:fast": "EXPERIMENTAL_DEVBUILD=true npm run dev-server",
         "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.config.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && npm run type-check-generate && cross-env NODE_ENV=production rollup --config config/rollup.config.js",
@@ -60,7 +59,7 @@
         "@rollup/plugin-commonjs": "^21.0.1",
         "@rollup/plugin-eslint": "^8.0.1",
         "@rollup/plugin-json": "^4.1.0",
-        "@rollup/plugin-node-resolve": "^13.0.0",
+        "@rollup/plugin-node-resolve": "^13.1.3",
         "@rollup/plugin-replace": "^4.0.0",
         "@testing-library/preact": "^2.0.1",
         "@testing-library/preact-hooks": "^1.1.0",
@@ -87,7 +86,7 @@
         "postcss": "^8.4.7",
         "postcss-reporter": "^7.0.5",
         "prettier": "^1.19.1",
-        "rollup": "^2.61.1",
+        "rollup": "^2.70.1",
         "rollup-plugin-esbuild": "^4.5.0",
         "rollup-plugin-postcss": "^4.0.2",
         "rollup-plugin-terser": "^7.0.2",
@@ -102,7 +101,7 @@
     "dependencies": {
         "@babel/runtime": "^7.15.4",
         "@babel/runtime-corejs3": "^7.16.3",
-        "@types/applepayjs": "^3.0.2",
+        "@types/applepayjs": "^3.0.4",
         "@types/googlepay": "^0.6.2",
         "classnames": "^2.3.1",
         "core-js-pure": "^3.18.1",

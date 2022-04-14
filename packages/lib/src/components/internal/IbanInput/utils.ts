@@ -66,12 +66,13 @@ export const formatIban = iban =>
         .replace(/(.{4})(?!$)/g, '$1 ')
         .trim();
 
+export type ElectronicFormat = string;
 /**
  * Returns any non alphanumeric characters and uppercases them
  *
  * @internal
  */
-export const electronicFormat = iban => {
+export const electronicFormat = (iban: string): ElectronicFormat => {
     const NON_ALPHANUM = /[^a-zA-Z0-9]/g;
     return iban.replace(NON_ALPHANUM, '').toUpperCase();
 };
@@ -183,3 +184,9 @@ export const getNextCursorPosition = (cursor, iban, previousIban) => {
 
     return cursor;
 };
+
+/**
+ * @param electronicFormatIban -
+ * @returns countryCode string
+ */
+export const getCountryCode = (electronicFormatIban: ElectronicFormat) => electronicFormatIban.slice(0, 2);
