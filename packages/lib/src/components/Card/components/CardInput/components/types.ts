@@ -156,3 +156,8 @@ export interface SfSpanProps {
     children?: ComponentChildren; // as above
     ['data-info']?: string; // optional
 }
+
+export interface TouchStartEventObj {
+    fieldType: string;
+    name?: string;
+}

@@ -203,7 +203,7 @@ export function setupSecuredField(pItem: HTMLElement): void {
         })
         .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
             // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-            this.callbacks.onTouchstartIOS(pFeedbackObj);
+            this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
 
             // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
             // - pass information about which field has just been clicked (gained focus) to the other iframes

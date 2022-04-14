@@ -22,6 +22,7 @@ import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getErrorPanelHandler, getAddressHandler, getFocusHandler, getAutoJumpHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
+import { TouchStartEventObj } from './components/types';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -140,7 +141,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * or,
      * due to an internal action ('additionalField') - in which case we can enable all non-SF fields
      */
-    const handleTouchstartIOS = useCallback(obj => {
+    const handleTouchstartIOS = useCallback((obj: TouchStartEventObj) => {
         const elementType = obj.fieldType !== 'webInternalElement' ? obj.fieldType : obj.name;
         setElementTriggeringIOSFieldDisable(elementType);
     }, []);
