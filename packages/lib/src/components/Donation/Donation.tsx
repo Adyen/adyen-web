@@ -7,7 +7,7 @@ import DonationComponent from './components/DonationComponent';
  * DonationElement
  */
 class DonationElement extends UIElement {
-    public static type = 'donation';
+    public static type = 'dondation';
 
     constructor(props) {
         super(props);

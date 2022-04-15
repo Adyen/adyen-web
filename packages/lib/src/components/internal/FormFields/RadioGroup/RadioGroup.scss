@@ -57,7 +57,7 @@
   border-radius: 50%;
   transform: scale(0);
   transition: transform 0.2s ease-out;
-  box-shadow: 0 1px 1px rgb(0 15 45 / 25%);
+  box-shadow: 0 1px 1px rgba(0, 15, 45, 25%);
 }
 
 .adyen-checkout__radio_group__label:hover {
@@ -78,13 +78,13 @@
 
 .adyen-checkout__radio_group__input:focus + .adyen-checkout__radio_group__label::before {
   border-color: $color-primary;
-  box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 40%);
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label:hover::before,
 .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__input:checked:active + .adyen-checkout__radio_group__label::before {
-  box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 40%);
 }
 
 .adyen-checkout__radio_group__label.adyen-checkout__radio_group__label--invalid::before {
