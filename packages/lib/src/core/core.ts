@@ -109,9 +109,10 @@ class Core {
      *
      * @returns new UIElement
      */
-    public create<T extends keyof PaymentMethods>(paymentMethod: T | string, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
+    public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
     public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
-    public create(paymentMethod, options) {
+    public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
+    public create(paymentMethod: any, options?: any): any {
         const props = this.getPropsForComponent(options);
         return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
     }

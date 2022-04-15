@@ -13,7 +13,7 @@ const payButton = Selector('.adyen-checkout__bacs .adyen-checkout__button--pay')
 const validTicks = Selector('.adyen-checkout-input__inline-validation--valid');
 
 const voucher = Selector('.adyen-checkout__voucher-result--directdebit_GB');
-const voucherButton = Selector('.adyen-checkout__voucher-result--directdebit_GB .adyen-checkout__button--secondary');
+const voucherButton = Selector('.adyen-checkout__voucher-result--directdebit_GB .adyen-checkout__button--action');
 
 const TEST_SPEED = 1;
 
