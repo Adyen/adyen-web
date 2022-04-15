@@ -28,7 +28,7 @@ export function handleFocus({ csfState, csfProps, csfCallbacks }, pFeedbackObj: 
 
             // If iOS detected AND we don't have a (touchend) listener
             if (ua.__IS_IOS && !csfState.registerFieldForIos) {
-                this.handleAdditionalFields();
+                this.handleIOSTouchEvents();
             }
         }
     } else {

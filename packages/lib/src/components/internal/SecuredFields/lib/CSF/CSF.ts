@@ -7,7 +7,7 @@ import { configureCallbacks } from './extensions/configureCallbacks';
 import { handleValidation } from './extensions/handleValidation';
 import { handleEncryption } from './extensions/handleEncryption';
 import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
-import additionalFields from './extensions/additionalFields';
+import handleIOSTouchEvents from './extensions/handleIOSTouchEvents';
 import handleTab from './extensions/handleTab';
 import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
 import { setFocusOnFrame } from './partials/setFocusOnFrame';
@@ -89,11 +89,11 @@ class CSF extends AbstractCSF {
         this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
         this.handleFocus = partial(handleFocus, thisObj);
 
-        this.handleAdditionalFields = additionalFields.handleAdditionalFields;
-        this.touchendListener = additionalFields.touchendListener.bind(this);
-        this.destroyTouchendListener = additionalFields.destroyTouchendListener;
-        this.touchstartListener = additionalFields.touchstartListener.bind(this);
-        this.destroyTouchstartListener = additionalFields.destroyTouchstartListener;
+        this.handleIOSTouchEvents = handleIOSTouchEvents.handleTouchend;
+        this.touchendListener = handleIOSTouchEvents.touchendListener.bind(this);
+        this.destroyTouchendListener = handleIOSTouchEvents.destroyTouchendListener;
+        this.touchstartListener = handleIOSTouchEvents.touchstartListener.bind(this);
+        this.destroyTouchstartListener = handleIOSTouchEvents.destroyTouchstartListener;
 
         this.handleSFShiftTab = handleTab.handleSFShiftTab;
         this.handleShiftTab = handleTab.handleShiftTab;

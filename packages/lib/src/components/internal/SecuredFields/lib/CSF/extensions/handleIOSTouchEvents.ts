@@ -106,7 +106,7 @@ function touchstartListener(e: Event): void {
  *
  * NOTE: Only called when iOS detected
  */
-function handleAdditionalFields(): void {
+function handleTouchend(): void {
     const bodyEl: HTMLBodyElement = selectOne(document, 'body');
     bodyEl.style.cursor = 'pointer';
 
@@ -133,7 +133,7 @@ function destroyTouchstartListener(): void {
 export default {
     touchendListener,
     touchstartListener,
-    handleAdditionalFields,
+    handleTouchend,
     destroyTouchendListener,
     destroyTouchstartListener
 };

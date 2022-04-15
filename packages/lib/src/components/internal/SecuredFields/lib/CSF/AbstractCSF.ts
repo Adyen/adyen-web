@@ -18,9 +18,9 @@ abstract class AbstractCSF {
     protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => number;
     protected createSecuredFields: typeof createSecuredFields;
     protected destroySecuredFields: () => void;
+    protected handleIOSTouchEvents: () => void;
     protected destroyTouchendListener: () => void;
     protected destroyTouchstartListener: () => void;
-    protected handleAdditionalFields: () => void;
     protected handleBinValue: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleEncryption: (pFeedbackObj: SFFeedbackObj) => void;
     protected handleFocus: (pFeedbackObj: SFFeedbackObj) => void;
