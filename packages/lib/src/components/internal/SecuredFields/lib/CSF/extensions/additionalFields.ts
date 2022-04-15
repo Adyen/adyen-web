@@ -1,10 +1,6 @@
 import { on, off, selectOne } from '../../utilities/dom';
 import ua from '../utils/userAgent';
 
-import * as logger from '../../utilities/logger';
-
-const doLog = false;
-
 const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
     if ('selectionStart' in pNode) {
         return pNode.selectionStart;
@@ -23,8 +19,6 @@ const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
  * @param e -
  */
 function touchendListener(e: Event): void {
-    if (process.env.NODE_ENV === 'development' && doLog) logger.log('### registerAdditionalField::BODY CLICK:: e=', e);
-
     const targetEl: EventTarget = e.target;
 
     // If other element is Input or TextArea
