@@ -58,7 +58,15 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     }
 
     private startSession(onPaymentAuthorized) {
-        const { version, onValidateMerchant, onCancel, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected, onAuthorizedBeforeSubmit } = this.props;
+        const { 
+            version, 
+            onValidateMerchant,
+            onCancel, 
+            onPaymentMethodSelected, 
+            onShippingMethodSelected, 
+            onShippingContactSelected,
+            onAuthorizedBeforeSubmit
+        } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {
             const paymentRequest = preparePaymentRequest({
@@ -73,15 +81,20 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                 onShippingMethodSelected,
                 onShippingContactSelected,
                 onValidateMerchant: onValidateMerchant || this.validateMerchant,
-                onPaymentAuthorized: async (resolve, reject, event) => {
+                onPaymentAuthorized: (resolve, reject, event) => {
                     if (!!event.payment.token && !!event.payment.token.paymentData) {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
-                    if(onAuthorizedBeforeSubmit) {
-                        await new Promise((resolve) => onAuthorizedBeforeSubmit(resolve, reject, event));
-                    }
-                    super.submit();
-                    onPaymentAuthorized(resolve, reject, event);
+                    
+                    new Promise((res, rej) => {
+                        if(!onAuthorizedBeforeSubmit) return res(true);
+                        onAuthorizedBeforeSubmit(res, rej, event)
+                    })
+                    .then(() => {
+                        super.submit();
+                        onPaymentAuthorized(resolve, reject, event);
+                    })
+                    .catch(reject)
                 }
             });
 
