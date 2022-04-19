@@ -1,12 +1,7 @@
-import { h, Fragment } from 'preact';
+import { h, RefObject } from 'preact';
 import UIElement from '../UIElement';
-// import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import VpaInput from './components/VpaInput';
-import Button from '../internal/Button';
-import ContentSeparator from '../internal/ContentSeparator';
-// import { formatP?refixName, selectItem } from './utils';
-// import COUNTRIES from './countries';
+import UPIComponent from './components/UPIComponent';
 
 class UPICollect extends UIElement {
     public static type = 'upi_collect';
@@ -42,12 +37,21 @@ class UPICollect extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <Fragment>
-                    <VpaInput />
-                    {this.props.showPayButton && this.payButton({ label: `${this.props.i18n.get('continue')}` })}
-                    <ContentSeparator label="or" />
-                    <Button variant="secondary" label="Generate QR code" />
-                </Fragment>
+                <UPIComponent
+                    ref={(ref: RefObject<typeof UPIComponent>) => {
+                        this.componentRef = ref;
+                    }}
+                    showPayButton={this.props.showPayButton}
+                    payButton={this.payButton}
+                    onChange={this.setState}
+                    onSubmit={this.submit}
+                />
+                {/*<Fragment>*/}
+                {/*    <VpaInput />*/}
+                {/*    {this.props.showPayButton && this.payButton({ label: `${this.props.i18n.get('continue')}` })}*/}
+                {/*    <ContentSeparator label="or" />*/}
+                {/*    <Button variant="secondary" label="Generate QR code" />*/}
+                {/*</Fragment>*/}
             </CoreProvider>
         );
     }

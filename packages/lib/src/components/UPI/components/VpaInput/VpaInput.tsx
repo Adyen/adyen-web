@@ -9,7 +9,7 @@ import renderFormField from '../../../internal/FormFields';
 import { vpaValidationRules } from './validate';
 
 interface VpaInputProps {
-    data: {};
+    data?: {};
 }
 
 interface VpaInputDataState {
