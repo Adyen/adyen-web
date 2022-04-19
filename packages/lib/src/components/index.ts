@@ -49,7 +49,8 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
-import RatePayDirectDebit from "./RatePay/RatePayDirectDebit";
+import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
+import UPICollect from './UPI/UPICollect';
 
 /**
  * Maps each component with a Component element.
@@ -145,6 +146,7 @@ const componentsMap = {
     scheme: Card,
     threeDS2Challenge: ThreeDS2Challenge,
     threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
+    upi_collect: UPICollect,
     visa: Card,
     wechatpay: WeChat,
     wechatpayQR: WeChat,

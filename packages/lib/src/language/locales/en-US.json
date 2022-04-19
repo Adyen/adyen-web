@@ -217,5 +217,6 @@
     "invalidFormatExpects": "Invalid format. Expected format: %{format}",
     "ownerName": "Holder Name",
     "ibanNumber": "Account Number (IBAN)",
-    "bankAccount": "Bank Details"
+    "bankAccount": "Bank Details",
+    "virtualPaymentAddress": "Virtual Payment Address"
 }
