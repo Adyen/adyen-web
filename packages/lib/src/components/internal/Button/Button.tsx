@@ -8,9 +8,9 @@ import { ButtonProps, ButtonState } from './types';
 class Button extends Component<ButtonProps, ButtonState> {
     public static defaultProps = {
         status: 'default',
+        variant: 'primary',
         disabled: false,
         label: '',
-        secondary: false,
         inline: false,
         target: '_self',
         onClick: () => {}
@@ -31,16 +31,16 @@ class Button extends Component<ButtonProps, ButtonState> {
         }, delay);
     };
 
-    render({ classNameModifiers = [], disabled, href, icon, secondary, inline, label, status }, { completed }) {
+    render({ classNameModifiers = [], disabled, href, icon, inline, label, status, variant }, { completed }) {
         const { i18n } = useCoreContext();
 
         const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="" aria-hidden="true" /> : '';
 
         const modifiers = [
             ...classNameModifiers,
+            ...(variant !== 'primary' ? [variant] : []),
             ...(inline ? ['inline'] : []),
             ...(completed ? ['completed'] : []),
-            ...(secondary ? ['secondary'] : []),
             ...(status === 'loading' || status === 'redirect' ? ['loading'] : [])
         ];
 
@@ -50,7 +50,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             loading: <Spinner size="medium" />,
             redirect: (
                 <span className="adyen-checkout__button__content">
-                    <Spinner size="small" inline />
+                    <Spinner size="medium" inline />
                     {i18n.get('payButton.redirecting')}
                 </span>
             ),

@@ -60,7 +60,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         value: data.firstName,
                         classNameModifiers: ['firstName'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         placeholder: placeholders.firstName,
                         spellCheck: false
                     })}
@@ -74,7 +74,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         value: data.lastName,
                         classNameModifiers: ['lastName'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         placeholder: placeholders.lastName,
                         spellCheck: false
                     })}
@@ -82,7 +82,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             )}
 
             {requiredFields.includes('gender') && (
-                <Field errorMessage={!!errors.gender} classNameModifiers={['gender']} name={'gender'}>
+                <Field errorMessage={!!errors.gender} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
                     {renderFormField('radio', {
                         i18n,
                         name: generateFieldName('gender'),
@@ -111,7 +111,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         value: data.dateOfBirth,
                         classNameModifiers: ['dateOfBirth'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         placeholder: placeholders.dateOfBirth
                     })}
                 </Field>
@@ -130,7 +130,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         value: data.shopperEmail,
                         classNameModifiers: ['shopperEmail'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         placeholder: placeholders.shopperEmail
                     })}
                 </Field>
@@ -149,7 +149,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         value: data.telephoneNumber,
                         classNameModifiers: ['telephoneNumber'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur'),
+                        onBlur: eventHandler('blur'),
                         placeholder: placeholders.telephoneNumber
                     })}
                 </Field>

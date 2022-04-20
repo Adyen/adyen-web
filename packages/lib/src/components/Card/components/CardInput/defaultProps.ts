@@ -12,6 +12,7 @@ export default {
     enableStoreDetails: false,
     hasCVC: true,
     showBrandIcon: true,
+    showBrandsUnderCardNumber: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
     billingAddressMode: AddressModeOptions.full,

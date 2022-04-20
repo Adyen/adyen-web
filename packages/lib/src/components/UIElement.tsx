@@ -6,14 +6,15 @@ import PayButton from './internal/PayButton';
 import { IUIElement, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-import type { UIElementStatus } from './types';
+import { UIElementStatus } from './types';
+import { hasOwnProperty } from '../utils/hasOwnProperty';
 
-export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement{
+export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
     public elementRef: any;
 
     constructor(props: P) {
-        super({ setStatusAutomatically: true, ...props});
+        super({ setStatusAutomatically: true, ...props });
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -43,7 +44,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (this.props.isInstantPayment) {
             this.elementRef.closeActivePaymentMethod();
         }
-        
+
         if (this.props.setStatusAutomatically) {
             this.elementRef.setStatus('loading');
         }
@@ -111,7 +112,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             .catch(this.handleError);
     }
 
-
     protected handleError = (error: AdyenCheckoutError): void => {
         /**
          * Set status using elementRef, which:
@@ -136,7 +136,15 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     };
 
     public handleAction(action: PaymentAction, props = {}): UIElement | null {
-        if (!action || !action.type) throw new Error('Invalid Action');
+        if (!action || !action.type) {
+            if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
+                throw new Error(
+                    'handleAction::Invalid Action - the passed action object itself has an "action" property and ' +
+                        'a "resultCode": have you passed in the whole response object by mistake?'
+                );
+            }
+            throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
+        }
 
         const paymentAction = this._parentInstance.createFromAction(action, {
             ...props,

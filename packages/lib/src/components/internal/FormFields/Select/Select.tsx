@@ -98,6 +98,7 @@ function Select({
             ? !e.composedPath().includes(selectContainerRef.current)
             : !selectContainerRef.current.contains(e.target);
         if (clickIsOutside) {
+            setTextFilter(null);
             setShowList(false);
         }
     };

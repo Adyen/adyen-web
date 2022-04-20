@@ -93,10 +93,11 @@ export default function Address(props: AddressProps) {
                 valid={valid}
                 fieldName={fieldName}
                 onInput={handleChangeFor(fieldName, 'input')}
-                onChange={handleChangeFor(fieldName, 'blur')}
+                onBlur={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
                 maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
+                trimOnBlur={true}
             />
         );
     };

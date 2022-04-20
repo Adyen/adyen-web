@@ -1,5 +1,5 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
+import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
 import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
@@ -58,6 +58,7 @@ export interface CardInputProps {
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
+    brandsIcons: Array<BrandConfiguration>;
     clientKey: string;
     configuration?: CardConfiguration;
     countryCode?: string;
@@ -96,6 +97,7 @@ export interface CardInputProps {
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
     setComponentRef?: (ref) => void;
+    showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;

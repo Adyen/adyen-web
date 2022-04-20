@@ -16,6 +16,7 @@ import {
     OpenInvoiceStateValid
 } from './types';
 import './OpenInvoice.scss';
+import IbanInput from '../IbanInput';
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
@@ -58,7 +59,10 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     };
 
     const handleSeparateDeliveryAddress = () => {
-        setActiveFieldsets(prevActiveFields => ({ ...prevActiveFields, deliveryAddress: !activeFieldsets.deliveryAddress }));
+        setActiveFieldsets(prevActiveFields => ({
+            ...prevActiveFields,
+            deliveryAddress: !activeFieldsets.deliveryAddress
+        }));
     };
 
     const handleConsentCheckbox = e => {
@@ -101,10 +105,22 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                 />
             )}
 
+            {activeFieldsets.bankAccount && (
+                <IbanInput
+                    holderName={true}
+                    label="bankAccount"
+                    data={data.bankAccount}
+                    onChange={handleFieldset('bankAccount')}
+                    ref={fieldsetsRefs.bankAccount}
+                />
+            )}
+
             {activeFieldsets.billingAddress && (
                 <Address
                     allowedCountries={props.allowedCountries}
                     countryCode={countryCode}
+                    requiredFields={props.billingAddressRequiredFields}
+                    specifications={props.billingAddressSpecification}
                     data={data.billingAddress}
                     label="billingAddress"
                     onChange={handleFieldset('billingAddress')}

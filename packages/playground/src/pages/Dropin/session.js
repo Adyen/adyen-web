@@ -33,9 +33,12 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             card: {
-                enableStoreDetails: false,
-                //hasHolderName: true,
-                //holderNameRequired: true,
+                hasHolderName: true,
+                holderNameRequired: true,
+                holderName: 'J. Smith',
+                positionHolderNameOnTop: true,
+
+                // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
             }

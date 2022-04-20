@@ -1,5 +1,6 @@
 import { ClientFunction, Selector } from 'testcafe';
 import BasePage from './BasePage';
+import PaymentMethodItem from './Dropin/PaymentMethodItem';
 
 /**
  * Expects a 'components' property in the object sent to the constructor containing instances of other Page models
@@ -14,9 +15,9 @@ export default class DropinPage extends BasePage {
     constructor({ components }) {
         super('');
 
-        Object.assign(this, components);
+        this.baseEl = '.adyen-checkout__dropin';
 
-        const BASE_EL = '.adyen-checkout__dropin';
+        Object.assign(this, components);
 
         /**
          * ###############################################
@@ -24,12 +25,12 @@ export default class DropinPage extends BasePage {
          * ###############################################
          */
         // Regular branding
-        this.brandsHolder = Selector(`${BASE_EL} .adyen-checkout__payment-method__brands`);
+        this.brandsHolder = Selector(`${this.baseEl} .adyen-checkout__payment-method__brands`);
         this.brandsImages = this.brandsHolder.find('img');
 
         // Dual branding
-        this.dualBrandingIconHolder = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons`);
-        this.dualBrandingIconHolderActive = Selector(`${BASE_EL} .adyen-checkout__card__dual-branding__buttons--active`);
+        this.dualBrandingIconHolder = Selector(`${this.baseEl} .adyen-checkout__card__dual-branding__buttons`);
+        this.dualBrandingIconHolderActive = Selector(`${this.baseEl} .adyen-checkout__card__dual-branding__buttons--active`);
         this.dualBrandingImages = this.dualBrandingIconHolderActive.find('img');
 
         /**
@@ -38,6 +39,10 @@ export default class DropinPage extends BasePage {
         this.challengeWindowSize01 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--01`);
         this.challengeWindowSize02 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--02`);
         this.challengeWindowSize04 = Selector(`#dropin-container .adyen-checkout__threeds2__challenge--04`);
+    }
+
+    getPaymentMethodItemSelector(paymentMethodName) {
+        return new PaymentMethodItem(this.baseEl, paymentMethodName);
     }
 
     getFromActivePM = ClientFunction(path => {

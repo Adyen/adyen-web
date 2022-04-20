@@ -15,6 +15,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     protected static defaultProps = {
         onBinLookup: () => {},
+        showBrandsUnderCardNumber: true,
         SRConfig: {}
     };
 
@@ -180,6 +181,7 @@ export class CardElement extends UIElement<CardElementProps> {
                     onBrand={this.onBrand}
                     onBinValue={this.onBinValue}
                     brand={this.brand}
+                    brandsIcons={this.brands}
                 />
             </CoreProvider>
         );

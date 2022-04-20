@@ -36,7 +36,7 @@ function BankTransferInput(props) {
                 errors={errors.shopperEmail}
                 onToggle={toggleEmailField}
                 onInput={handleChangeFor('shopperEmail', 'input')}
-                onChange={handleChangeFor('shopperEmail', 'blur')}
+                onBlur={handleChangeFor('shopperEmail', 'blur')}
             />
         </div>
     );

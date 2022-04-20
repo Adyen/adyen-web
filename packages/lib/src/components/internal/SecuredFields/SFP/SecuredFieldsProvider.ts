@@ -25,8 +25,8 @@ import { getError } from '../../../../core/Errors/utils';
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private originKeyErrorTimeout: number;
-    private originKeyTimeoutMS: number;
+    private invalidOriginErrorTimeout: number;
+    private invalidOriginTimeoutMS: number;
     private numCharsInField: object;
     private rootNode;
     private numDateFields: number;
@@ -60,8 +60,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         };
         this.state = stateObj;
 
-        this.originKeyErrorTimeout = null;
-        this.originKeyTimeoutMS = 15000;
+        this.invalidOriginErrorTimeout = null;
+        this.invalidOriginTimeoutMS = 15000;
 
         this.numCharsInField = {};
 

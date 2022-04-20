@@ -33,6 +33,18 @@ export interface CardElementProps extends UIElementProps {
     /** List of brands accepted by the component */
     brands?: string[];
 
+    /**
+     * Show/hide available card brands under the Card number field
+     * @defaultValue `false`
+     */
+    showBrandsUnderCardNumber?: boolean;
+
+    /**
+     * Show/hide the brand logo when the card brand has been recognized
+     * @defaultValue `true`
+     */
+    showBrandIcon?: boolean;
+
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
@@ -52,6 +64,7 @@ export interface CardElementProps extends UIElementProps {
     /** Whether the card holder name field will be required */
     holderNameRequired?: boolean;
 
+    /** An object sent in the /paymentMethods response */
     configuration?: CardConfiguration;
 
     /**
@@ -100,17 +113,46 @@ export interface CardElementProps extends UIElementProps {
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 
+// TODO clarify exact properties that can be in this object
+//  - should only be ones that can be sent in the configuration object in the /paymentMethods response
+/** If the merchant wishes to set any of these properties in their local config they should do so via a "configuration" object */
 export interface CardConfiguration {
+    // GooglePay
+    merchantIdentifier?: string;
+    merchantOrigin?: string;
+    gatewayMerchantId?: string;
+
+    // AmazonPay
+    publicKeyId?: string;
+    region?: string;
+
+    // Common to GooglePay & ApplePay
+    merchantName?: string;
+
+    // Common to GooglePay & AmazonPay
+    merchantId?: string;
+
+    // Paypal
+    intent?: string;
+
+    // KCP
     koreanAuthenticationRequired?: boolean;
+
+    // Card?
     socialSecurityNumberMode?: SocialSecurityMode;
+
+    // Remove?
     icon?: string;
     brandsConfiguration?: CardBrandsConfiguration;
 }
 
+export interface BrandConfiguration {
+    name: string;
+    icon?: string;
+}
+
 export interface CardBrandsConfiguration {
-    [key: string]: {
-        icon?: string;
-    };
+    [key: string]: BrandConfiguration;
 }
 
 interface CardPaymentMethodData {

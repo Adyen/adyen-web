@@ -52,7 +52,7 @@ function MBWayInput(props: MBWayInputProps) {
                     placeholder: props.placeholders.telephoneNumber,
                     required: true,
                     autoCorrect: 'off',
-                    onChange: handleChangeFor('telephoneNumber', 'blur'),
+                    onBlur: handleChangeFor('telephoneNumber', 'blur'),
                     onInput: handleChangeFor('telephoneNumber', 'input')
                 })}
             </Field>

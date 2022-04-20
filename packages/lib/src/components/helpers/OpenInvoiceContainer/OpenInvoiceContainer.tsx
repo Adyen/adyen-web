@@ -2,16 +2,25 @@ import { h } from 'preact';
 import UIElement from '../../UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
+import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
+import { AddressSpecifications } from '../../internal/Address/types';
 
-export default class OpenInvoiceContainer extends UIElement {
-    protected static defaultProps = {
+export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps>{
+    consentCheckboxLabel?: h.JSX.Element;
+    billingAddressRequiredFields?: string[];
+    billingAddressSpecification?: AddressSpecifications;
+}
+
+export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainerProps> {
+    protected static defaultProps: OpenInvoiceContainerProps = {
         onChange: () => {},
-        data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
+        data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
         visibility: {
             companyDetails: 'hidden',
             personalDetails: 'editable',
             billingAddress: 'editable',
-            deliveryAddress: 'editable'
+            deliveryAddress: 'editable',
+            bankAccount: 'hidden'
         }
     };
 
@@ -54,7 +63,7 @@ export default class OpenInvoiceContainer extends UIElement {
      */
     formatData() {
         const { data = {} } = this.state;
-        const { companyDetails = {}, personalDetails = {}, billingAddress, deliveryAddress } = data;
+        const { companyDetails = {}, personalDetails = {}, billingAddress, deliveryAddress, bankAccount } = data;
 
         return {
             paymentMethod: {
@@ -62,6 +71,13 @@ export default class OpenInvoiceContainer extends UIElement {
             },
             ...personalDetails,
             ...companyDetails,
+            ...(bankAccount && {
+                bankAccount: {
+                    iban: bankAccount.ibanNumber,
+                    ownerName: bankAccount.ownerName,
+                    countryCode: bankAccount.countryCode
+                }
+            }),
             ...(billingAddress && { billingAddress }),
             ...((deliveryAddress || billingAddress) && { deliveryAddress: deliveryAddress || billingAddress })
         };
@@ -76,7 +92,6 @@ export default class OpenInvoiceContainer extends UIElement {
                     }}
                     {...this.props}
                     {...this.state}
-                    consentCheckbox={this.props.consentCheckbox}
                     onChange={this.setState}
                     onSubmit={this.submit}
                     payButton={this.payButton}

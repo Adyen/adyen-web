@@ -181,6 +181,7 @@ export interface PaypalSettings {
     vault?: boolean;
     'client-id': string;
     'integration-date': string;
+    'enable-funding': string;
     components: string;
 }
 

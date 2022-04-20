@@ -12,9 +12,11 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE
 } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import AvailableBrands from './AvailableBrands';
 
 export default function CardFields({
     brand,
+    brandsIcons,
     brandsConfiguration,
     dualBrandingElements,
     dualBrandingChangeHandler,
@@ -26,6 +28,7 @@ export default function CardFields({
     expiryDatePolicy,
     onFocusField,
     showBrandIcon,
+    showBrandsUnderCardNumber,
     valid
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
@@ -46,6 +49,8 @@ export default function CardFields({
                 dualBrandingChangeHandler={dualBrandingChangeHandler}
                 dualBrandingSelected={dualBrandingSelected}
             />
+
+            {showBrandsUnderCardNumber && <AvailableBrands activeBrand={brand} brands={brandsIcons} />}
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {

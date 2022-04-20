@@ -9,7 +9,7 @@ export interface CoreOptions {
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | string;
+    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | string;
 
     /**
      * A public key linked to your web service user, used for {@link https://docs.adyen.com/user-management/client-side-authentication | client-side authentication}.

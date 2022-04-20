@@ -32,9 +32,12 @@ export const makeDetailsCall = data =>
         })
         .catch(err => console.error(err));
 
-export const createSession = (data, config = {}) => {
-    // NOTE: Merging data object. DO NOT do this in production.
-    return httpPost('sessions', data)
+export const createSession = data => {
+    const payload = {
+        ...data,
+        lineItems: paymentsConfig.lineItems
+    };
+    return httpPost('sessions', payload)
         .then(response => {
             if (response.error) throw 'Session initiation failed';
             return response;

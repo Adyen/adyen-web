@@ -1,6 +1,7 @@
 import { AfterPay, AfterPayB2B } from './AfterPay';
 import AmazonPay from './AmazonPay';
 import ApplePay from './ApplePay';
+import Atome from './Atome';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
 import Bancontact from './Card/Bancontact';
@@ -47,6 +48,8 @@ import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
+import OnlineBankingINElement from './OnlineBankingIN';
+import RatePayDirectDebit from "./RatePay/RatePayDirectDebit";
 
 /**
  * Maps each component with a Component element.
@@ -61,6 +64,7 @@ const componentsMap = {
     amazonpay: AmazonPay,
     amex: Card,
     applepay: ApplePay,
+    atome: Atome,
     bankTransfer_IBAN: BankTransfer,
     bcmc: Bancontact,
     bcmc_mobile: BcmcMobile,
@@ -123,6 +127,7 @@ const componentsMap = {
     molpay_ebanking_fpx_MY: MolPayEBankingMY,
     molpay_ebanking_TH: MolPayEBankingTH,
     molpay_ebanking_VN: MolPayEBankingVN,
+    onlinebanking_IN: OnlineBankingINElement,
     openbanking_UK: OpenBankingUK,
     paypal: PayPal,
     payu_IN_cashcard: PayuCashcard,
@@ -133,6 +138,7 @@ const componentsMap = {
     pix: Pix,
     qiwiwallet: QiwiWallet,
     ratepay: RatePay,
+    ratepay_directdebit: RatePayDirectDebit,
     redirect: Redirect,
     securedfields: SecuredFields,
     sepadirectdebit: Sepa,

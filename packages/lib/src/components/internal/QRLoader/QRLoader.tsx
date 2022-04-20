@@ -212,7 +212,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     <div className="adyen-checkout__qr-loader__actions">
                         <Button
                             inline
-                            secondary
+                            variant="action"
                             onClick={(e, { complete }) => {
                                 copyToClipboard(this.props.qrCodeData);
                                 complete();
