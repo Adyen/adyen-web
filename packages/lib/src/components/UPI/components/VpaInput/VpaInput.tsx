@@ -1,22 +1,27 @@
+import { h } from 'preact';
+import { forwardRef } from 'preact/compat';
+import { useCallback, useEffect, useImperativeHandle } from 'preact/hooks';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import Field from '../../../internal/FormFields/Field';
-import { h } from 'preact';
 import useForm from '../../../../utils/useForm';
-// import { PixInputDataState } from '../../../Pix/types';
-// import { pixValidationRules } from '../../../Pix/PixInput/validate';
-// import { pixFormatters } from '../../../Pix/PixInput/utils';
 import renderFormField from '../../../internal/FormFields';
 import { vpaValidationRules } from './validate';
+import './VpaInput.scss';
 
 interface VpaInputProps {
     data?: {};
+    onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
 }
 
 interface VpaInputDataState {
     virtualPaymentAddress?: string;
 }
 
-export default function VpaInput(props: VpaInputProps) {
+export type VpaInputHandlers = {
+    validateInput(): void;
+};
+
+const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
     const { i18n } = useCoreContext();
     const formSchema = ['virtualPaymentAddress'];
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<VpaInputDataState>({
@@ -26,14 +31,20 @@ export default function VpaInput(props: VpaInputProps) {
         // formatters: pixFormatters
     });
 
-    console.log(valid, isValid);
-
-    this.showValidation = () => {
+    const validateInput = useCallback(() => {
         triggerValidation();
-    };
+    }, [triggerValidation]);
+
+    useImperativeHandle(ref, () => ({
+        validateInput
+    }));
+
+    useEffect(() => {
+        props.onChange({ data, valid, errors, isValid });
+    }, [data, valid, errors]);
 
     return (
-        <Field label={i18n.get('virtualPaymentAddress')} errorMessage={!!errors.virtualPaymentAddress}>
+        <Field label={i18n.get('virtualPaymentAddress')} errorMessage={!!errors.virtualPaymentAddress} classNameModifiers={['vpa']}>
             {renderFormField('text', {
                 name: 'virtualPaymentAddress',
                 autocorrect: 'off',
@@ -44,4 +55,6 @@ export default function VpaInput(props: VpaInputProps) {
             })}
         </Field>
     );
-}
+});
+
+export default VpaInput;

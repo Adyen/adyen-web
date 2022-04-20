@@ -3,11 +3,12 @@ import BaseElement from './BaseElement';
 import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import { IUIElement, UIElementProps } from './types';
+import { IUIElement, PayButtonFunctionProps, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
+import { PayButtonProps } from './internal/PayButton/PayButton';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -28,6 +29,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
 
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
+        console.log(this.state);
         this.onChange();
     }
 
@@ -228,7 +230,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     /**
      * Get the payButton component for the current element
      */
-    protected payButton = props => {
+    protected payButton = (props: PayButtonFunctionProps) => {
         return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
     };
 }

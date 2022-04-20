@@ -46,12 +46,6 @@ class UPICollect extends UIElement {
                     onChange={this.setState}
                     onSubmit={this.submit}
                 />
-                {/*<Fragment>*/}
-                {/*    <VpaInput />*/}
-                {/*    {this.props.showPayButton && this.payButton({ label: `${this.props.i18n.get('continue')}` })}*/}
-                {/*    <ContentSeparator label="or" />*/}
-                {/*    <Button variant="secondary" label="Generate QR code" />*/}
-                {/*</Fragment>*/}
             </CoreProvider>
         );
     }

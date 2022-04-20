@@ -9,10 +9,10 @@ export interface PayButtonProps {
      * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
      */
     classNameModifiers?: string[];
-
     label?: string;
     amount: PaymentAmount;
     status?: string;
+    onClick(): void;
 }
 
 const payAmountLabel = (i18n: Language, amount) =>
