@@ -13,10 +13,11 @@ interface UPIComponentProps {
     payButton: (props: PayButtonFunctionProps) => h.JSX.Element;
     ref: (ref: RefObject<typeof UPIComponent>) => void;
     onChange: ({ data: VpaInputDataState, valid, errors, isValid: boolean }) => void;
-    onSubmit: () => void;
+    onSubmit(): void;
+    onGenerateQrCodeClick(): void;
 }
 
-export default function UPIComponent({ onChange, showPayButton, payButton }: UPIComponentProps): h.JSX.Element {
+export default function UPIComponent({ onChange, onGenerateQrCodeClick, showPayButton, payButton }: UPIComponentProps): h.JSX.Element {
     const { i18n, loadingContext } = useCoreContext();
     const inputRef = useRef<VpaInputHandlers>(null);
 
@@ -33,6 +34,7 @@ export default function UPIComponent({ onChange, showPayButton, payButton }: UPI
                 icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr')}
                 variant="secondary"
                 label="Generate QR code"
+                onClick={onGenerateQrCodeClick}
             />
         </Fragment>
     );

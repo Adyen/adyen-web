@@ -22,6 +22,7 @@ export async function initManual() {
             const result = await makePayment(state.data);
 
             // handle actions
+            debugger;
             if (result.action) {
                 // demo only - store paymentData & order
                 if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
