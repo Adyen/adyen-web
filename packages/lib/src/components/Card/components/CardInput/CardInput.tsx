@@ -139,7 +139,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
      * - in which case we should disable all non-SF fields
      * or,
-     * due to an internal action ('additionalField') - in which case we can enable all non-SF fields
+     * due to an internal action ('webInternalElement') - in which case we can enable all non-SF fields
      */
     const handleTouchstartIOS = useCallback((obj: TouchStartEventObj) => {
         const elementType = obj.fieldType !== 'webInternalElement' ? obj.fieldType : obj.name;
