@@ -1,8 +1,10 @@
 import Validator from './Validator';
 
+const mockRules = {};
+
 describe('Validator', () => {
     test('Fields are valid by default', () => {
-        const validator = new Validator();
+        const validator = new Validator(mockRules);
 
         // defaults validation for unknown fields
         expect(validator.validate({ key: 'aNewField', value: '123' }).hasError()).toBe(false);
