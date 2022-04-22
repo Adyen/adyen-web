@@ -4,7 +4,7 @@ import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
-import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
+import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema, StringObject } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';

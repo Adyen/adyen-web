@@ -1,7 +1,7 @@
 import { AddressField, AddressData } from '../../../types';
 import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/types';
-import { ValidationRuleResult } from '../../../utils/Validator/Validator';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 
 // Describes an object with unknown keys whose value is always a string
 export type StringObject = {
