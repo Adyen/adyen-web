@@ -4,12 +4,13 @@ import './BankTransferInput.scss';
 import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
+import { BankTransferSchema } from '../../types';
 
 function BankTransferInput(props) {
     const { i18n } = useCoreContext();
     const [showingEmail, setShowingEmail] = useState(false);
 
-    const { handleChangeFor, triggerValidation, data, valid, errors, isValid, setSchema } = useForm({
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid, setSchema } = useForm<BankTransferSchema>({
         schema: [],
         defaultData: props.data
     });

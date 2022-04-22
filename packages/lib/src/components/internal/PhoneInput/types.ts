@@ -30,3 +30,8 @@ export interface PhoneInputState {
     };
     isValid?: boolean;
 }
+
+export interface PhoneInputSchema {
+    phoneNumber?: string;
+    phonePrefix?: string;
+}
