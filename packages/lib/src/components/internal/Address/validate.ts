@@ -1,6 +1,7 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../../../core/Errors/constants';
+import { isEmpty } from '../SecuredFields/lib/utilities/commonUtils';
 
 const createPatternByDigits = (digits: number) => {
     return {
@@ -70,12 +71,13 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
                         }
                     };
 
+                    if (isEmpty(val)) return null;
+
                     const pattern = postalCodePatterns[country]?.pattern;
                     return pattern ? pattern.test(val) : !!val; // No pattern? Accept any, filled, value.
                 }
-
                 // Default rule
-                return !!val;
+                return isEmpty(val) ? null : true;
             },
             errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
         },
@@ -83,13 +85,13 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
             validate: (value, context) => {
                 const selectedCountry = context.state?.data?.country;
                 const isOptional = selectedCountry && specifications.countryHasOptionalField(selectedCountry, 'houseNumberOrName');
-                return isOptional || value?.length > 0;
+                return isOptional || (isEmpty(value) ? null : true);
             },
             modes: ['blur'],
             errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
         },
         default: {
-            validate: value => value?.length > 0,
+            validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
             modes: ['blur'],
             errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
         }

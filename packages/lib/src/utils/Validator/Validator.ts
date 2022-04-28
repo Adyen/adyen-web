@@ -1,28 +1,5 @@
-import { email } from '../regex';
-import { ErrorMessageObject, FieldContext, FieldData, ValidatorRule, ValidatorRules } from './types';
-
-/**
- * Holds the result of a validation
- */
-export class ValidationRuleResult {
-    private readonly shouldValidate: boolean;
-    public isValid: boolean;
-    public errorMessage: string | ErrorMessageObject;
-
-    constructor(rule, value, mode, context) {
-        this.shouldValidate = rule.modes.includes(mode);
-        this.isValid = rule.validate(value, context);
-        this.errorMessage = rule.errorMessage;
-    }
-
-    /**
-     * Whether the validation is considered an error.
-     * A field is only considered to be an error if the validation rule applies to the current mode.
-     */
-    hasError(): boolean {
-        return !this.isValid && this.shouldValidate;
-    }
-}
+import { ValidatorRules, ValidatorRule, FieldContext, FieldData } from './types';
+import { ValidationRuleResult } from './ValidationRuleResult';
 
 class ValidationResult {
     private validationResults: ValidationRuleResult[];
@@ -33,17 +10,17 @@ class ValidationResult {
 
     /** Checks if all validation rules have passed */
     get isValid(): boolean {
-        return this.validationResults.every(result => result.isValid);
+        return this.validationResults.reduce((acc, result) => acc && result.isValid, true);
     }
 
     /** Checks if any validation rule returned an error */
-    hasError(): boolean {
-        return Boolean(this.getError());
+    hasError(isValidatingForm = false): boolean {
+        return Boolean(this.getError(isValidatingForm));
     }
 
     /** Returns the first validation result that returned an error */
-    getError() {
-        return this.validationResults.find(result => result.hasError());
+    getError(isValidatingForm = false) {
+        return this.validationResults.find(result => result.hasError(isValidatingForm));
     }
 
     /** Returns all validation results that returned an error */
@@ -54,18 +31,13 @@ class ValidationResult {
 
 class Validator {
     public rules: ValidatorRules = {
-        shopperEmail: {
-            validate: value => email.test(value),
-            errorMessage: 'error.va.gen.01',
-            modes: ['blur']
-        },
         default: {
             validate: () => true,
             modes: ['blur', 'input']
         }
     };
 
-    constructor(rules = {}) {
+    constructor(rules) {
         this.setRules(rules);
     }
 

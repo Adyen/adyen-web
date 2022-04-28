@@ -1,8 +1,13 @@
 import useForm from './useForm';
 import { renderHook, act } from '@testing-library/preact-hooks';
+import { Form } from './types';
 
 describe('useForm', () => {
     const defaultSchema = ['firstName', 'lastName'];
+    type defaultSchemaType = {
+        firstName: string;
+        lastName: string;
+    };
     const defaultData = { firstName: 'John' };
 
     describe('schema', () => {
@@ -36,7 +41,7 @@ describe('useForm', () => {
 
     describe('defaultData', () => {
         it('should set defaultData', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }));
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema, defaultData }));
 
             expect(result.current.data.firstName).toEqual(defaultData.firstName);
             expect(result.current.data.lastName).toEqual(null);
@@ -67,7 +72,7 @@ describe('useForm', () => {
         const firstNameValue = 'John';
 
         it('should handle changes for a field', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }));
 
             act(() => {
                 result.current.handleChangeFor('firstName')(firstNameValue);
@@ -100,6 +105,10 @@ describe('useForm', () => {
                     valid: {
                         firstName: false,
                         lastName: false
+                    },
+                    fieldProblems: {
+                        firstName: null,
+                        lastName: null
                     }
                 }
             };
@@ -108,7 +117,7 @@ describe('useForm', () => {
         });
 
         it('should set the value of a checkbox', () => {
-            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }));
             const mockEvent = { target: { type: 'checkbox' } };
 
             // call once to set to "checked"

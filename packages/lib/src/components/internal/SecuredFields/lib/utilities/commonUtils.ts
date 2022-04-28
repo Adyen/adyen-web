@@ -19,7 +19,7 @@ const objToString = Object.prototype.toString;
  * // => false
  * ```
  */
-function isArray(prop) {
+export function isArray(prop) {
     return typeof prop === 'object' && prop !== null && Object.prototype.toString.call(prop) === '[object Array]';
 }
 
@@ -28,7 +28,7 @@ function isArray(prop) {
  *
  * @returns Number
  */
-function generateRandomNumber() {
+export function generateRandomNumber() {
     if (!window.crypto) {
         // eslint-disable-next-line
         return (Math.random() * 0x100000000) | 0;
@@ -60,7 +60,7 @@ function generateRandomNumber() {
  * @param x -
  * @returns
  */
-function existy(x) {
+export function existy(x) {
     return x != null;
 }
 
@@ -73,7 +73,7 @@ function existy(x) {
  * @param x -
  * @returns
  */
-function truthy(x) {
+export function truthy(x) {
     return x !== false && existy(x);
 }
 
@@ -91,7 +91,7 @@ function isObjectLike(value) {
 /**
  * Recursively compare 2 objects
  */
-function objectsDeepEqual(x, y) {
+export function objectsDeepEqual(x, y) {
     const xType = typeof x;
     const yType = typeof y;
     if (x && y && xType === 'object' && xType === yType) {
@@ -169,7 +169,7 @@ function isString(value) {
  * falsy(true) // => false
  * ```
  */
-function falsy(x) {
+export function falsy(x) {
     // Is null, undefined or false
     if (!truthy(x)) {
         return true;
@@ -199,7 +199,7 @@ function falsy(x) {
  * Inverse of falsy - returns true if x is NOT null, undefined, false, 0, NaN, empty object or array, empty string
  * @param x -
  */
-function notFalsy(x) {
+export function notFalsy(x) {
     return !falsy(x);
 }
 
@@ -207,7 +207,7 @@ function notFalsy(x) {
  * This function allows us to partially apply any number of variables to functions that take any number of parameters.
  * @returns \{function(): *\}
  */
-function partial(...args) {
+export function partial(...args) {
     // Store the args array
     const myArgs = args;
 
@@ -221,14 +221,5 @@ function partial(...args) {
     return partialFn;
 }
 
-export {
-    generateRandomNumber,
-    existy,
-    falsy,
-    isArray,
-    objectsDeepEqual,
-    notFalsy,
-    partial,
-    truthy
-    //    wait
-};
+// Not null or undefined or only spaces
+export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
