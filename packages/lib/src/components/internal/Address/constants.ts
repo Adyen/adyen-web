@@ -66,3 +66,5 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE]
     }
 };
+
+export const COUNTRIES_WITH_CUSTOM_SPECIFICATION = Object.keys(ADDRESS_SPECIFICATIONS);
