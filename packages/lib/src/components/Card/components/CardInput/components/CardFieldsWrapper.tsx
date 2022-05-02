@@ -50,6 +50,7 @@ export const CardFieldsWrapper = ({
     billingAddress,
     handleAddress,
     billingAddressRef,
+    partialAddressSchema,
     // For this comp (props passed through from CardInput)
     amount,
     billingAddressRequired,
@@ -165,6 +166,7 @@ export const CardFieldsWrapper = ({
                     allowedCountries={billingAddressAllowedCountries}
                     requiredFields={billingAddressRequiredFields}
                     ref={billingAddressRef}
+                    specifications={partialAddressSchema}
                 />
             )}
         </LoadingWrapper>

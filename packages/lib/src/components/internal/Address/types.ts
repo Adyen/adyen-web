@@ -19,6 +19,7 @@ export interface AddressProps {
     specifications?: AddressSpecifications;
     validationRules?: ValidatorRules;
     visibility?: string;
+    overrideSchema?: AddressSpecifications;
 }
 
 export interface AddressStateError {

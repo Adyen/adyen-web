@@ -54,6 +54,7 @@ export interface CardInputProps {
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
+    billingAddressMode?: AddressModeOptions;
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
@@ -174,4 +175,10 @@ export interface SortErrorsObj {
     layout: string[];
     i18n: Language;
     countrySpecificLabels: StringObject;
+}
+
+export enum AddressModeOptions {
+    full = 'full',
+    partial = 'partial',
+    none = 'none'
 }

@@ -11,7 +11,8 @@ const showComps = {
     card: true,
     bcmcCard: true,
     avsCard: true,
-    kcpCard: true
+    avsPartialCard: true,
+    kcpCard: true,
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -108,6 +109,21 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 }
             })
             .mount('.card-avs-field');
+    }
+
+    if(showComps.avsPartialCard) {
+        window.avsPartialCard = checkout
+            .create('card', {
+                type: 'scheme',
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                // billingAddress config:
+                billingAddressRequired: true,
+                billingAddressMode: 'partial',
+                onError: objdobj => {
+                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+                }
+            })
+            .mount('.card-avs-partial-field');
     }
 
     // Credit card with KCP Authentication
