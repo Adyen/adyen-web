@@ -5,6 +5,7 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -92,6 +93,25 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.setState({ activePaymentMethod: null });
     }
 
+    private onOrderCancel = data => {
+        if (this.props.onOrderCancel) {
+            return new Promise(() => {
+                return this.props.onOrderCancel(data);
+            });
+        }
+        if (this.props.session) {
+            return this.props.session
+                .cancelOrder(data)
+                .then(data => {
+                    console.log('response', data);
+                    this.props._parentInstance.update({ order: null });
+                })
+                .catch(error => {
+                    this.setStatus(error?.message || 'error');
+                });
+        }
+    };
+
     render(props, { elements, instantPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
@@ -121,7 +141,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 cachedPaymentMethods={cachedPaymentMethods}
                                 order={this.props.order}
                                 orderStatus={this.state.orderStatus}
-                                onOrderCancel={this.props.onOrderCancel}
+                                onOrderCancel={this.onOrderCancel}
                                 onSelect={this.handleOnSelectPaymentMethod}
                                 openFirstPaymentMethod={this.props.openFirstPaymentMethod}
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
