@@ -5,7 +5,6 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
