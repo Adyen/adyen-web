@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
@@ -9,35 +9,37 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
-import ClickToPay from './components/ClickToPay';
-import ClickToPayService from './services/ClickToPayService';
-import SrcSdkLoader from './services/sdks/SrcSdkLoader';
-import { configMock } from './services/configMock';
+import ClickToPayComponent from './components/ClickToPay';
+import { CtpState } from './services/ClickToPayService';
+// import SrcSdkLoader from './services/sdks/SrcSdkLoader';
+// import { configMock } from './services/configMock';
+import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
+import ContentSeparator from '../internal/ContentSeparator';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
-    private clickToPayService?: ClickToPayService;
+    // private clickToPayService?: ClickToPayService;
 
     constructor(props) {
         super(props);
 
-        if (props.clickToPayConfiguration?.schemas.length) {
-            const { schemas, shopperIdentity } = props.clickToPayConfiguration;
-            const srcSdkLoader = new SrcSdkLoader(schemas, props.environment);
-            this.clickToPayService = new ClickToPayService(configMock, srcSdkLoader, shopperIdentity);
-        }
-
-        if (props.clickToPayConfiguration?.prefetch) {
-            this.prefetch();
-        }
+        // if (props.clickToPayConfiguration?.schemas.length) {
+        //     const { schemas, shopperIdentity } = props.clickToPayConfiguration;
+        //     const srcSdkLoader = new SrcSdkLoader(schemas, props.environment);
+        //     this.clickToPayService = new ClickToPayService(configMock, srcSdkLoader, shopperIdentity);
+        // }
+        //
+        // if (props.clickToPayConfiguration?.prefetch) {
+        //     this.prefetch();
+        // }
     }
 
-    public async prefetch(): Promise<void> {
-        if (this.clickToPayService) {
-            await this.clickToPayService.initialize();
-        }
-    }
+    // public async prefetch(): Promise<void> {
+    //     if (this.clickToPayService) {
+    //         await this.clickToPayService.initialize();
+    //     }
+    // }
 
     protected static defaultProps = {
         onBinLookup: () => {},
@@ -197,27 +199,34 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                {this.props.clickToPayConfiguration?.schemas.length > 0 && (
-                    <ClickToPay
-                        ctpService={this.clickToPayService}
-                        environment={this.props.environment}
-                        schemas={this.props.clickToPayConfiguration.schemas}
-                        shopperIdentity={this.props.clickToPayConfiguration.shopperIdentity}
-                    />
-                )}
+                <ClickToPayProvider environment={this.props.environment} configuration={this.props.clickToPayConfiguration}>
+                    {({ ctpState }) => {
+                        console.log(ctpState);
+                        return (
+                            <div>
+                                {ctpState !== CtpState.NotAvailable && (
+                                    <Fragment>
+                                        <ClickToPayComponent />
+                                        <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
+                                    </Fragment>
+                                )}
 
-                <CardInput
-                    setComponentRef={this.setComponentRef}
-                    {...this.props}
-                    {...this.state}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                    onBrand={this.onBrand}
-                    onBinValue={this.onBinValue}
-                    brand={this.brand}
-                    brandsIcons={this.brands}
-                />
+                                <CardInput
+                                    setComponentRef={this.setComponentRef}
+                                    {...this.props}
+                                    {...this.state}
+                                    onChange={this.setState}
+                                    onSubmit={this.submit}
+                                    payButton={this.payButton}
+                                    onBrand={this.onBrand}
+                                    onBinValue={this.onBinValue}
+                                    brand={this.brand}
+                                    brandsIcons={this.brands}
+                                />
+                            </div>
+                        );
+                    }}
+                </ClickToPayProvider>
             </CoreProvider>
         );
     }

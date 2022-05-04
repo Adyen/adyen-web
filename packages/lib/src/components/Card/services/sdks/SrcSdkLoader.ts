@@ -4,7 +4,7 @@ import MasterCardSdk from './MasterCardSdk';
 
 const sdkMap = {
     visa: VisaSrcSdk,
-    mastercard: MasterCardSdk,
+    mc: MasterCardSdk,
     default: null
 };
 

@@ -23,6 +23,8 @@ import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHa
 import { InstallmentsObj } from './components/Installments/Installments';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
+    console.log('CardInput render');
+
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
     const isValidating = useRef(false);

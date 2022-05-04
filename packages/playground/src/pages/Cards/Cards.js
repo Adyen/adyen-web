@@ -12,7 +12,7 @@ const showComps = {
     bcmcCard: true,
     avsCard: true,
     avsPartialCard: true,
-    kcpCard: true,
+    kcpCard: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -111,7 +111,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-avs-field');
     }
 
-    if(showComps.avsPartialCard) {
+    if (showComps.avsPartialCard) {
         window.avsPartialCard = checkout
             .create('card', {
                 type: 'scheme',

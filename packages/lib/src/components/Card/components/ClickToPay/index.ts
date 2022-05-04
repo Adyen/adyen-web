@@ -1,1 +1,1 @@
-export { default } from './ClickToPayWrapper';
+export { default } from './ClickToPayComponent';

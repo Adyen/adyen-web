@@ -22,6 +22,7 @@ type ShopperIdentity = {
 
 export interface IClickToPayService {
     maskedCards: any;
+    maskedShopperData: any;
     state: CtpState;
 
     initialize(): Promise<void>;
@@ -30,7 +31,7 @@ export interface IClickToPayService {
     subscribeOnStatusChange(callback: CallbackStateSubscriber): void;
 
     // identification flow
-    startIdentityValidation(): Promise<InitiateIdentityValidationResponse>;
+    startIdentityValidation(): Promise<any>;
     abortIdentityValidation(): void;
     finishIdentityValidation(otpCode: string): Promise<any>;
 }
@@ -45,6 +46,7 @@ class ClickToPayService implements IClickToPayService {
 
     private sdks: ISrcInitiator[];
     private srcProfile: any;
+    private shopperMaskedValidationData: any;
     private srcCorrelationId: any;
 
     private validationSchemaSdk: ISrcInitiator = null;
@@ -57,6 +59,10 @@ class ClickToPayService implements IClickToPayService {
 
     public get maskedCards() {
         return this.srcProfile?.maskedCards;
+    }
+
+    public get maskedShopperContact(): string | undefined {
+        return this.shopperMaskedValidationData?.maskedValidationChannel || 'gui****@adyen.com';
     }
 
     public async initialize(): Promise<void> {
@@ -81,8 +87,19 @@ class ClickToPayService implements IClickToPayService {
 
             const isEnrolled = await this.identifyShopper();
 
-            if (isEnrolled) this.setState(CtpState.AwaitingSignIn);
-            else this.setState(CtpState.NotAvailable);
+            debugger;
+
+            if (isEnrolled) {
+                // TODO: maybe to the startvALIDATION here and store the masked data
+                await this.startIdentityValidation();
+                this.setState(CtpState.OneTimePassword);
+                return;
+            } else {
+                this.setState(CtpState.NotAvailable);
+            }
+
+            // if (isEnrolled) this.setState(CtpState.AwaitingSignIn);
+            // else this.setState(CtpState.NotAvailable);
         } catch (error) {
             console.error(error);
             this.setState(CtpState.NotAvailable);
@@ -99,14 +116,14 @@ class ClickToPayService implements IClickToPayService {
      *
      * This method uses only the SDK that responded first on identifyShopper() call. There is no need to use all SDK's
      */
-    public async startIdentityValidation(): Promise<InitiateIdentityValidationResponse> {
+    public async startIdentityValidation(): Promise<any> {
         if (!this.validationSchemaSdk) {
             throw Error('initiateIdentityValidation: No schema set for the validation process');
         }
-
-        const maskedData = await this.validationSchemaSdk.initiateIdentityValidation();
-        this.setState(CtpState.OneTimePassword);
-        return maskedData;
+        this.shopperMaskedValidationData = await this.validationSchemaSdk.initiateIdentityValidation();
+        // this.shopperMaskedValidationData = {};
+        // return Promise.resolve(true);
+        return this.shopperMaskedValidationData;
     }
 
     public abortIdentityValidation() {
@@ -196,7 +213,7 @@ class ClickToPayService implements IClickToPayService {
         const schemaIndex = identifyLookupResponses.findIndex(response => response.consumerPresent);
         this.validationSchemaSdk = this.sdks[schemaIndex];
 
-        return this.validationSchemaSdk !== null;
+        return this.validationSchemaSdk !== undefined;
     }
 
     private async initiateSdks(): Promise<void> {
