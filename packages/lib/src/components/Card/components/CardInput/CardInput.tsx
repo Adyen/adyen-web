@@ -15,7 +15,6 @@ import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, sortErrorsForPanel } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
-import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
