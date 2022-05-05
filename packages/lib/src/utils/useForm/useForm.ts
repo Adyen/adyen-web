@@ -1,10 +1,11 @@
-import { useCallback, useMemo, useReducer } from 'preact/hooks';
-import Validator from '../Validator/Validator';
+import { useCallback, useEffect, useMemo, useReducer } from 'preact/hooks';
+import Validator from '../Validator';
 import { getReducer, init } from './reducer';
-import { FormState, FormProps, DefaultDataState } from './types';
+import { Form, FormState, FormProps } from './types';
 
-function useForm<DataState = DefaultDataState>(props: FormProps) {
-    const { rules = {}, formatters = {}, defaultData = {} } = props;
+function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
+    const { rules = {}, formatters = {}, defaultData = {}, fieldProblems = {}, schema = [] } = props;
+
     const validator = useMemo(() => new Validator(rules), [rules]);
 
     /** Formats and validates a field */
@@ -17,35 +18,46 @@ function useForm<DataState = DefaultDataState>(props: FormProps) {
         return [formattedValue, validationResult];
     };
 
-    const [state, dispatch] = useReducer<FormState<DataState>, any, any>(
+    const [state, dispatch] = useReducer<FormState<FormSchema>, any, any>(
         getReducer(processField),
-        { defaultData, schema: props.schema ?? [], processField },
+        { defaultData, schema: schema ?? [], processField, fieldProblems },
         init
     );
-
-    const isValid = useMemo(() => state.schema.every(key => state.valid[key]), [state.schema, state.valid]);
+    const isValid = useMemo(() => state.schema.reduce((acc, val) => acc && state.valid[val], true), [state.schema, state.valid]);
 
     const getTargetValue = (key, e) => {
         if (!e.target) return e;
-        if (e.target.type === 'checkbox') return !state.data[key];
+
+        if (e.target.type === 'checkbox') {
+            return !state.data[key];
+        }
         return e.target.value;
     };
 
     /** Formats, validates, and stores a new value for a form field */
-    const handleChangeFor = (key, mode = 'blur') => e => {
-        const value = getTargetValue(key, e);
-        dispatch({ type: 'updateField', key, value, mode });
+    const handleChangeFor = (key, mode) => {
+        return e => {
+            const value = getTargetValue(key, e);
+            dispatch({ type: 'updateField', key, value, mode });
+        };
     };
 
-    /** Validates every field in the form */
-    const triggerValidation = useCallback(() => {
-        dispatch({ type: 'validateForm' });
+    /** Validates every field in the form OR just those in selectedSchema */
+    const triggerValidation = useCallback((selectedSchema = null) => {
+        dispatch({ type: 'validateForm', selectedSchema });
     }, []);
 
     const setErrors = useCallback((key, value) => dispatch({ type: 'setErrors', key, value }), []);
     const setValid = useCallback((key, value) => dispatch({ type: 'setValid', key, value }), []);
     const setData = useCallback((key, value) => dispatch({ type: 'setData', key, value }), []);
     const setSchema = useCallback(schema => dispatch({ type: 'setSchema', schema, defaultData }), [state.schema]);
+    const mergeForm = useCallback(formValue => dispatch({ type: 'mergeForm', formValue }), []);
+    const setFieldProblems = useCallback(fieldProblems => dispatch({ type: 'setFieldProblems', fieldProblems }), [state.schema]);
+
+    // Set reducer fields problems if fieldProblems prop changes
+    useEffect(() => {
+        setFieldProblems(fieldProblems ?? {});
+    }, [JSON.stringify(fieldProblems)]);
 
     return {
         handleChangeFor,
@@ -55,10 +67,13 @@ function useForm<DataState = DefaultDataState>(props: FormProps) {
         setValid,
         setErrors,
         isValid,
+        mergeForm,
+        setFieldProblems,
         schema: state.schema,
         valid: state.valid,
         errors: state.errors,
-        data: state.data
+        data: state.data,
+        fieldProblems: state.fieldProblems
     };
 }
 

@@ -16,8 +16,12 @@ export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility, disablingTrigger = null } = props;
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
+    const requiredFieldsSchema = specifications
+        .getAddressSchemaForCountryFlat(props.countryCode)
+        .filter(field => requiredFields.includes(field));
+
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
-        schema: requiredFields,
+        schema: requiredFieldsSchema,
         defaultData: props.data,
         rules: props.validationRules || getAddressValidationRules(specifications),
         formatters: addressFormatters

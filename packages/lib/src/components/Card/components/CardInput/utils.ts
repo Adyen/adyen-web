@@ -2,7 +2,7 @@ import { getImageUrl } from '../../../../utils/get-image';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import Language from '../../../../language/Language';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
-import { CardInputProps, LayoutObj, SortErrorsObj } from './types';
+import { AddressModeOptions, CardInputProps, LayoutObj, SortErrorsObj } from './types';
 import {
     CREDIT_CARD,
     CREDIT_CARD_NAME_BOTTOM,
@@ -15,6 +15,7 @@ import {
     SSN_CARD_NAME_TOP
 } from './layouts';
 import { StringObject } from '../../../internal/Address/types';
+import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 
@@ -187,4 +188,8 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
+};
+
+export const handlePartialAddressMode = (addressMode: AddressModeOptions) => {
+    return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : [];
 };

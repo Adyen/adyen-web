@@ -4,7 +4,7 @@ import { PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
-import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
+import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema, StringObject } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
@@ -54,6 +54,7 @@ export interface CardInputProps {
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
+    billingAddressMode?: AddressModeOptions;
     brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
@@ -174,4 +175,10 @@ export interface SortErrorsObj {
     layout: string[];
     i18n: Language;
     countrySpecificLabels: StringObject;
+}
+
+export enum AddressModeOptions {
+    full = 'full',
+    partial = 'partial',
+    none = 'none'
 }

@@ -63,6 +63,17 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         placeholders: {
             [STATE_OR_PROVINCE]: 'select.provinceOrTerritory'
         },
-        schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE]
+        schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE],
     }
 };
+
+export const PARTIAL_ADDRESS_SCHEMA = {
+    default: {
+        labels: {
+            [POSTAL_CODE]: 'zipCode'
+        },
+        schema: [POSTAL_CODE]
+    }
+};
+
+export const COUNTRIES_WITH_CUSTOM_SPECIFICATION = Object.keys(ADDRESS_SPECIFICATIONS);

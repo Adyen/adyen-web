@@ -66,8 +66,9 @@ describe('IssuerList', () => {
 
         let callbackData = { data: { issuer: null }, valid: { issuer: false }, errors: { issuer: null }, isValid: false };
 
-        expect(onChangeCb).toBeCalledTimes(1);
+        expect(onChangeCb).toBeCalledTimes(2);
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
+        expect(onChangeCb.mock.calls[1][0]).toStrictEqual(callbackData);
 
         wrapper
             .find('.adyen-checkout__issuer-button-group button')
@@ -76,8 +77,8 @@ describe('IssuerList', () => {
 
         callbackData = { data: { issuer: '3' }, valid: { issuer: true }, errors: { issuer: null }, isValid: true };
 
-        expect(onChangeCb).toBeCalledTimes(2);
-        expect(onChangeCb.mock.calls[1][0]).toStrictEqual(callbackData);
+        expect(onChangeCb).toBeCalledTimes(3);
+        expect(onChangeCb.mock.calls[2][0]).toStrictEqual(callbackData);
     });
 
     test('UI should not render invalid highlighted issuers', () => {

@@ -16,3 +16,7 @@ export interface BankTransferState extends UIElementProps {
     };
     isValid: boolean;
 }
+
+export interface BankTransferSchema {
+    shopperEmail?: string;
+}
