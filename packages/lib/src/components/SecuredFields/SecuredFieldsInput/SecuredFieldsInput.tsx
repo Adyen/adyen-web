@@ -121,15 +121,7 @@ function SecuredFieldsInput(props: SecuredFieldsProps) {
     /**
      * RENDER
      */
-    return (
-        <SecuredFieldsProvider
-            ref={sfp}
-            {...extractPropsForSFP(props)}
-            onChange={handleSecuredFieldsChange}
-            onTouchstartIOS={() => null}
-            render={() => null}
-        />
-    );
+    return <SecuredFieldsProvider ref={sfp} {...extractPropsForSFP(props)} onChange={handleSecuredFieldsChange} render={() => null} />;
 }
 
 SecuredFieldsInput.defaultProps = defaultProps;

@@ -22,6 +22,7 @@ export default {
     onBinValue: () => {},
     onFocus: () => {},
     onAutoComplete: () => {},
+    onTouchstartIOS: () => null,
 
     // Customization
     styles: {}
