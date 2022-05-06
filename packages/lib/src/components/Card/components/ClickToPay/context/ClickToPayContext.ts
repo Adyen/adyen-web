@@ -4,9 +4,8 @@ const ClickToPayContext = createContext({
     ctpState: null,
     cards: [],
     otpMaskedContact: null,
-    doCheckout: null,
     startIdentityValidation: null,
-    onFinishIdentityValidation: null
+    finishIdentityValidation: null
 });
 
 export { ClickToPayContext };

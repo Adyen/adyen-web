@@ -1,9 +1,10 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { CtpState } from '../../services/ClickToPayService';
 import useClickToPayContext from './context/useClickToPayContext';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
 import CtPCardsList from './components/CtPCardsList';
 import CtPSection from './components/CtPSection';
+import ContentSeparator from '../../../internal/ContentSeparator';
 
 /**
  * TODO:
@@ -21,10 +22,13 @@ const ClickToPayComponent = () => {
     }
 
     return (
-        <CtPSection isLoading={context.ctpState === CtpState.Loading}>
-            {context.ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-            {context.ctpState === CtpState.Ready && <CtPCardsList />}
-        </CtPSection>
+        <Fragment>
+            <CtPSection isLoading={context.ctpState === CtpState.Loading}>
+                {context.ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
+                {context.ctpState === CtpState.Ready && <CtPCardsList />}
+            </CtPSection>
+            <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
+        </Fragment>
     );
 };
 

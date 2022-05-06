@@ -45,53 +45,54 @@ export async function initSession() {
                 clickToPayConfiguration: {
                     prefetch: true,
                     schemas: {
-                        mc: {
-                            srciTransactionId: 'adyen-id-290202020',
-                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
-                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                            dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
-                                paymentOptions: {
-                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
-                                }
-                            }
-                        }
-                        // visa: {
+                        // mc: {
                         //     srciTransactionId: 'adyen-id-290202020',
-                        //     srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
-                        //     srciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
-                        //     dpaData: {
-                        //         //  "srcDpaId": "8e6e347c-254e-863f-0e6a-196bf2d9df02",
-                        //         dpaPresentationName: 'Adyen Visa Click to Play Sandbox',
-                        //         dpaUri: 'https://www.adyen.com',
-                        //         dpaThreeDsPreference: 'UNKNOWN'
-                        //     },
+                        //     srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
+                        //     srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
                         //     dpaTransactionOptions: {
                         //         dpaLocale: 'en_US',
-                        //         dpaAcceptedBillingCountries: ['US', 'CA', 'NL'],
-                        //         dpaAcceptedShippingCountries: ['US', 'CA', 'NL'],
-                        //         dpaBillingPreference: 'ALL',
-                        //         dpaShippingPreference: 'ALL',
-                        //         consumerNameRequested: true,
-                        //         consumerEmailAddressRequested: true,
-                        //         consumerPhoneNumberRequested: true,
                         //         paymentOptions: {
-                        //             dynamicDataType: 'TAVV',
-                        //             dpaPanRequested: false
-                        //         },
-                        //         reviewAction: 'continue',
-                        //         checkoutDescription: 'Sample checkout',
-                        //         transactionType: 'PURCHASE',
-                        //         orderType: 'REAUTHORIZATION',
-                        //         payloadTypeIndicator: 'PAYMENT',
-                        //         //  "merchantOrderId": "order-id-" + txId,
-                        //         merchantCategoryCode: '5734',
-                        //         merchantCountryCode: 'US'
+                        //             dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
+                        //         }
                         //     }
-                        // }
+                        // },
+                        visa: {
+                            srciTransactionId: 'adyen-id-290202020',
+                            srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
+                            srciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                            dpaData: {
+                                //  "srcDpaId": "8e6e347c-254e-863f-0e6a-196bf2d9df02",
+                                dpaPresentationName: 'Adyen Visa Click to Play Sandbox',
+                                dpaUri: 'https://www.adyen.com',
+                                dpaThreeDsPreference: 'UNKNOWN'
+                            },
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                dpaAcceptedBillingCountries: ['US', 'CA', 'NL'],
+                                dpaAcceptedShippingCountries: ['US', 'CA', 'NL'],
+                                dpaBillingPreference: 'ALL',
+                                dpaShippingPreference: 'ALL',
+                                consumerNameRequested: true,
+                                consumerEmailAddressRequested: true,
+                                consumerPhoneNumberRequested: true,
+                                paymentOptions: {
+                                    dynamicDataType: 'TAVV',
+                                    dpaPanRequested: false
+                                },
+                                reviewAction: 'continue',
+                                checkoutDescription: 'Sample checkout',
+                                transactionType: 'PURCHASE',
+                                orderType: 'REAUTHORIZATION',
+                                payloadTypeIndicator: 'PAYMENT',
+                                //  "merchantOrderId": "order-id-" + txId,
+                                merchantCategoryCode: '5734',
+                                merchantCountryCode: 'US'
+                            }
+                        }
                     },
                     shopperIdentity: {
-                        value: 'guilherme.ribeiro-visaclicktopay1@adyen.com',
+                        // value: 'guilherme.ribeiro-visaclicktopay1@adyen.com', // WITH LEONARD PHONE
+                        value: 'guilherme.ribeiro-ctp1@adyen.com',
                         // value: 'guilherme-visaclicktopay1@adyen.com',
                         type: 'email'
                     }

@@ -1,5 +1,5 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CheckoutResponse, InitiateIdentityValidationResponse, IsRecognizedResponse } from './types';
+import { CheckoutResponse, IsRecognizedResponse } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { SecureRemoteCommerceInitResult } from './configMock';
 
@@ -22,7 +22,7 @@ type ShopperIdentity = {
 
 export interface IClickToPayService {
     maskedCards: any;
-    maskedShopperData: any;
+    maskedShopperContact: any;
     state: CtpState;
 
     initialize(): Promise<void>;
@@ -62,7 +62,7 @@ class ClickToPayService implements IClickToPayService {
     }
 
     public get maskedShopperContact(): string | undefined {
-        return this.shopperMaskedValidationData?.maskedValidationChannel || 'gui****@adyen.com';
+        return this.shopperMaskedValidationData?.maskedValidationChannel;
     }
 
     public async initialize(): Promise<void> {
@@ -87,10 +87,7 @@ class ClickToPayService implements IClickToPayService {
 
             const isEnrolled = await this.identifyShopper();
 
-            debugger;
-
             if (isEnrolled) {
-                // TODO: maybe to the startvALIDATION here and store the masked data
                 await this.startIdentityValidation();
                 this.setState(CtpState.OneTimePassword);
                 return;

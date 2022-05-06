@@ -201,15 +201,10 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 <ClickToPayProvider environment={this.props.environment} configuration={this.props.clickToPayConfiguration}>
                     {({ ctpState }) => {
-                        console.log(ctpState);
+                        console.log('CtP State', ctpState);
                         return (
                             <div>
-                                {ctpState !== CtpState.NotAvailable && (
-                                    <Fragment>
-                                        <ClickToPayComponent />
-                                        <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
-                                    </Fragment>
-                                )}
+                                {ctpState !== CtpState.NotAvailable && ctpState !== CtpState.Idle && <ClickToPayComponent />}
 
                                 <CardInput
                                     setComponentRef={this.setComponentRef}

@@ -21,9 +21,10 @@ import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
+import { memo } from 'preact/compat';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
-    console.log('CardInput render');
+    console.log('render');
 
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
@@ -434,4 +435,4 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
 CardInput.defaultProps = defaultProps;
 
-export default CardInput;
+export default memo(CardInput);

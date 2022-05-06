@@ -17,12 +17,9 @@ const buttonStyle = {
 const CtPCardsList = () => {
     const context = useClickToPayContext();
 
-    const onCheckout = useCallback(
-        async (srcDigitalCardId: string) => {
-            await context.doCheckout(srcDigitalCardId);
-        },
-        [context.doCheckout]
-    );
+    const onCheckout = useCallback(async (srcDigitalCardId: string) => {
+        console.log('do checkout', srcDigitalCardId);
+    }, []);
 
     return (
         <Fragment>

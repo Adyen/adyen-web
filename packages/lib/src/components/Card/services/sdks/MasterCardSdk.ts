@@ -1,5 +1,5 @@
 import { MC_SDK_PROD, MC_SDK_TEST } from '../config';
-import { IdentityLookupParams, IdentityLookupResponse } from '../types';
+import { CompleteIdentityValidationResponse, IdentityLookupParams, IdentityLookupResponse } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 
 const IdentityTypeMap = {
@@ -32,6 +32,17 @@ class MasterCardSdk extends AbstractSrcInitiator {
             };
 
             const response = await this.schemaSdk.identityLookup({ consumerIdentity });
+            return response;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    public async completeIdentityValidation(validationData: string): Promise<CompleteIdentityValidationResponse> {
+        try {
+            const completeIdentityValidationParams = { validationData };
+            const response = await this.schemaSdk.completeIdentityValidation(completeIdentityValidationParams);
             return response;
         } catch (error) {
             console.error(error);

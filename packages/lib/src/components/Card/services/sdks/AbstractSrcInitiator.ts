@@ -130,7 +130,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
             const response = await this.schemaSdk.completeIdentityValidation(validationData);
             return response;
         } catch (error) {
-            console.error(error);
+            console.error(`[${this.schemaName}] SecureRemoteCommerceInitiator #completeIdentityValidation`, error);
             throw error;
         }
     }
