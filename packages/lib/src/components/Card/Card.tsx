@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
@@ -14,7 +14,6 @@ import { CtpState } from './services/ClickToPayService';
 // import SrcSdkLoader from './services/sdks/SrcSdkLoader';
 // import { configMock } from './services/configMock';
 import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
-import ContentSeparator from '../internal/ContentSeparator';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
