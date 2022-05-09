@@ -1,6 +1,6 @@
 import { AddressSchema, AddressSpecifications, StringObject } from './types';
 import { ADDRESS_SPECIFICATIONS } from './constants';
-import { AddressField } from 'src/types';
+import { AddressField } from '../../../types';
 
 const SCHEMA_MAX_DEPTH = 2;
 
