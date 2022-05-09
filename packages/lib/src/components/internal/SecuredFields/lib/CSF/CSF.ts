@@ -7,7 +7,7 @@ import { configureCallbacks } from './extensions/configureCallbacks';
 import { handleValidation } from './extensions/handleValidation';
 import { handleEncryption } from './extensions/handleEncryption';
 import { createSecuredFields, createNonCardSecuredFields, createCardSecuredFields, setupSecuredField } from './extensions/createSecuredFields';
-import additionalFields from './extensions/additionalFields';
+import handleIOSTouchEvents from './extensions/handleIOSTouchEvents';
 import handleTab from './extensions/handleTab';
 import handleBrandFromBinLookup, { sendBrandToCardSF, sendExpiryDatePolicyToSF } from './extensions/handleBrandFromBinLookup';
 import { setFocusOnFrame } from './partials/setFocusOnFrame';
@@ -23,9 +23,10 @@ import { destroySecuredFields } from './utils/destroySecuredFields';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import getIframeContentWin from './utils/iframes/getIframeContentWin';
 import * as logger from '../utilities/logger';
-import { selectOne } from '../utilities/dom';
+import { on, selectOne } from '../utilities/dom';
 import { partial } from '../utilities/commonUtils';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import ua from './utils/userAgent';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -88,9 +89,11 @@ class CSF extends AbstractCSF {
         this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
         this.handleFocus = partial(handleFocus, thisObj);
 
-        this.handleAdditionalFields = additionalFields.handleAdditionalFields;
-        this.touchendListener = additionalFields.touchendListener.bind(this);
-        this.destroyTouchendListener = additionalFields.destroyTouchendListener;
+        this.handleIOSTouchEvents = handleIOSTouchEvents.handleTouchend;
+        this.touchendListener = handleIOSTouchEvents.touchendListener.bind(this);
+        this.destroyTouchendListener = handleIOSTouchEvents.destroyTouchendListener;
+        this.touchstartListener = handleIOSTouchEvents.touchstartListener.bind(this);
+        this.destroyTouchstartListener = handleIOSTouchEvents.destroyTouchstartListener;
 
         this.handleSFShiftTab = handleTab.handleSFShiftTab;
         this.handleShiftTab = handleTab.handleShiftTab;
@@ -121,6 +124,14 @@ class CSF extends AbstractCSF {
         this.state.numIframes = this.state.originalNumIframes = numIframes;
 
         this.state.isKCP = !!this.props.isKCP;
+
+        /**
+         * Add touchstart listener
+         * re. Disabling arrow keys in iOS
+         */
+        if (ua.__IS_IOS) {
+            on(document, 'touchstart', this.touchstartListener);
+        }
     }
 
     // Expose functions that can be called on the CSF instance

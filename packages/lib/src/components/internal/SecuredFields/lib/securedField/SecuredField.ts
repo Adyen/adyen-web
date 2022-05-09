@@ -248,7 +248,7 @@ class SecuredField extends AbstractSecuredField {
                 if (process.env.NODE_ENV === 'development' && window.location.origin.indexOf('3024') > -1) {
                     if (window['testCafeForceClick'] === true) {
                         window['testCafeForceClick'] = false;
-                        this.onClickCallback(feedbackObj);
+                        this.onTouchstartCallback(feedbackObj);
                     }
                 }
                 break;
@@ -258,8 +258,8 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
-            case 'click':
-                this.onClickCallback(feedbackObj);
+            case 'touch':
+                this.onTouchstartCallback(feedbackObj);
                 break;
 
             // Only happens for Firefox & IE <= 11
@@ -356,8 +356,8 @@ class SecuredField extends AbstractSecuredField {
         return this;
     }
 
-    onClick(callbackFn: RtnType_callbackFn): SecuredField {
-        this.onClickCallback = callbackFn;
+    onTouchstart(callbackFn: RtnType_callbackFn): SecuredField {
+        this.onTouchstartCallback = callbackFn;
         return this;
     }
 

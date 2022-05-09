@@ -201,10 +201,13 @@ export function setupSecuredField(pItem: HTMLElement): void {
         .onBinValue((pFeedbackObj: SFFeedbackObj): void => {
             this.handleBinValue(pFeedbackObj);
         })
-        .onClick((pFeedbackObj: SFFeedbackObj): void => {
+        .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
+            // re. Disabling arrow keys in iOS - need to disable all other fields in the form
+            this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+
             // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
             // - pass information about which field has just been clicked (gained focus) to the other iframes
-            this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, click: true });
+            this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
         })
         .onShiftTab((pFeedbackObj: SFFeedbackObj): void => {
             // Only happens for Firefox & IE <= 11

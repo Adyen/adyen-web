@@ -20,6 +20,7 @@ export interface AddressProps {
     validationRules?: ValidatorRules;
     visibility?: string;
     overrideSchema?: AddressSpecifications;
+    disablingTrigger?: string;
 }
 
 export interface AddressStateError {
@@ -46,6 +47,7 @@ export interface FieldContainerProps {
     specifications: Specifications;
     maxlength?: number;
     trimOnBlur?: boolean;
+    disabled?: boolean;
 }
 
 export interface ReadOnlyAddressProps {

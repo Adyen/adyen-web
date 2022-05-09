@@ -34,6 +34,7 @@ export interface CardHolderNameProps {
     placeholder?: string;
     required?: boolean;
     value?: string;
+    disabled?: boolean;
 }
 
 export interface CardNumberProps {
@@ -128,6 +129,7 @@ export interface KCPProps {
     error: boolean;
     isValid: boolean;
     value: string;
+    disabled?: boolean;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;
@@ -153,4 +155,9 @@ export interface SfSpanProps {
     uniqueId?: string; // not optional - but added in DataSfSpan comp rather than passed to it
     children?: ComponentChildren; // as above
     ['data-info']?: string; // optional
+}
+
+export interface TouchStartEventObj {
+    fieldType: string;
+    name?: string;
 }

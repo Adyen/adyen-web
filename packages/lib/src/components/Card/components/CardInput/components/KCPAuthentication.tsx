@@ -43,7 +43,8 @@ export default function KCPAuthentication(props: KCPProps) {
                     required: true,
                     onBlur: props.onBlur,
                     onInput: props.onInput,
-                    isCollatingErrors
+                    isCollatingErrors,
+                    disabled: props.disabled
                 })}
             </Field>
 

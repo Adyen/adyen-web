@@ -5,7 +5,7 @@ import { renderFormField } from '../../../../internal/FormFields';
 import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
 
-export default function CardHolderName({ onBlur, onInput, placeholder, value, required, error = false, isValid }: CardHolderNameProps) {
+export default function CardHolderName({ onBlur, onInput, placeholder, value, required, error = false, isValid, disabled }: CardHolderNameProps) {
     const {
         i18n,
         commonProps: { isCollatingErrors }
@@ -28,7 +28,8 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
                 required,
                 onBlur,
                 onInput,
-                isCollatingErrors
+                isCollatingErrors,
+                disabled
             })}
         </Field>
     );

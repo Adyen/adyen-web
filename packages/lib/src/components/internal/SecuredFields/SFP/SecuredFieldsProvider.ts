@@ -40,6 +40,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnError: (obj: CbObjOnError, hasUnsupportedCard?: boolean) => void;
     private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
     private handleOnNoDataRequired: () => void;
+    private handleOnTouchstartIOS: (obj) => void;
     public state: SFPState;
     public props;
     private issuingCountryCode;
@@ -75,6 +76,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnError = handlers.handleOnError.bind(this);
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
+        this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 
@@ -158,7 +160,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onBinValue: this.props.onBinValue,
                 onAutoComplete: this.handleOnAutoComplete,
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
-                onAdditionalSFRemoved: this.props.onAdditionalSFRemoved
+                onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
+                onTouchstartIOS: this.handleOnTouchstartIOS
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,

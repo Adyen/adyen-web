@@ -70,6 +70,7 @@ export interface CSFCallbacksConfig {
     onAutoComplete?: (callbackObj: object) => void;
     onAdditionalSFConfig?: (callbackObj: object) => void;
     onAdditionalSFRemoved?: (callbackObj: object) => void;
+    onTouchstartIOS?: (callbackObj: object) => void;
 }
 
 export interface CSFStateObject {

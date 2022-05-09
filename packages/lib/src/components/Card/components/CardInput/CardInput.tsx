@@ -1,5 +1,5 @@
-import { Fragment, FunctionalComponent, h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { h, Fragment, FunctionalComponent } from 'preact';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
@@ -21,6 +21,7 @@ import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
+import { TouchStartEventObj } from './components/types';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -80,6 +81,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
 
+    // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
+    // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
+    // or else the name of an internal, Adyen-web, element (like 'holderName')
+    const [elementTriggeringIOSFieldDisable, setElementTriggeringIOSFieldDisable] = useState(null);
+
     /**
      * LOCAL VARS
      */
@@ -117,15 +123,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // SecuredField-only handler
     const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
-    // Callback for ErrorPanel
-    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
-
-    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
-
-    const doPanAutoJump = getAutoJumpHandler(
-        isAutoJumping,
-        sfp,
-        getLayout({
+    const retrieveLayout = () => {
+        return getLayout({
             props,
             showKCP,
             showBrazilianSSN,
@@ -133,8 +132,29 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
                 billingAddressRequiredFields: props.billingAddressRequiredFields
             })
-        })
-    );
+        });
+    };
+
+    /**
+     * re. Disabling arrow keys in iOS:
+     * Only by disabling all fields in the Card PM except for the active securedField input can we force the iOS soft keyboard arrow keys to disable
+     *
+     * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
+     * - in which case we should disable all non-SF fields
+     * or,
+     * due to an internal action ('webInternalElement') - in which case we can enable all non-SF fields
+     */
+    const handleTouchstartIOS = useCallback((obj: TouchStartEventObj) => {
+        const elementType = obj.fieldType !== 'webInternalElement' ? obj.fieldType : obj.name;
+        setElementTriggeringIOSFieldDisable(elementType);
+    }, []);
+
+    // Callback for ErrorPanel
+    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
+
+    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
+
+    const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
@@ -194,13 +214,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             CIExtensions(
                 props,
                 { sfp },
-                {
-                    dualBrandSelectElements,
-                    setDualBrandSelectElements,
-                    setSelectedBrandValue,
-                    issuingCountryCode,
-                    setIssuingCountryCode
-                },
+                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode },
                 hasPanLengthRef
             ),
         [dualBrandSelectElements, issuingCountryCode]
@@ -321,15 +335,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         const sortedMergedErrors = sortErrorsForPanel({
             errors: errorsForPanel,
-            layout: getLayout({
-                props,
-                showKCP,
-                showBrazilianSSN,
-                ...(props.billingAddressRequired && {
-                    countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
-                    billingAddressRequiredFields: props.billingAddressRequiredFields
-                })
-            }),
+            layout: retrieveLayout(),
             i18n: props.i18n,
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
         });
@@ -366,6 +372,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onFocus={handleFocus}
                 type={props.brand}
                 isCollatingErrors={collateErrors}
+                onTouchstartIOS={handleTouchstartIOS}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}
@@ -417,6 +424,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             handleAddress={handleAddress}
                             billingAddressRef={billingAddressRef}
                             partialAddressSchema={partialAddressSchema}
+                            //
+                            disablingTrigger={elementTriggeringIOSFieldDisable}
                         />
                     </div>
                 )}
