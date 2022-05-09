@@ -68,7 +68,7 @@ export const CardFieldsWrapper = ({
     showBrandIcon,
     showBrandsUnderCardNumber,
     //
-    disablingTrigger
+    iOSFocusedField
 }) => {
     const { i18n } = useCoreContext();
 
@@ -81,7 +81,7 @@ export const CardFieldsWrapper = ({
             isValid={!!formValid.holderName}
             onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
-            disabled={disablingTrigger && disablingTrigger !== 'holderName'}
+            disabled={iOSFocusedField && iOSFocusedField !== 'holderName'}
         />
     );
 
@@ -133,7 +133,7 @@ export const CardFieldsWrapper = ({
                     isValid={!!valid.taxNumber}
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
-                    disabled={disablingTrigger && disablingTrigger !== 'kcpTaxNumberOrDOB'}
+                    disabled={iOSFocusedField && iOSFocusedField !== 'kcpTaxNumberOrDOB'}
                 />
             )}
 
@@ -146,7 +146,7 @@ export const CardFieldsWrapper = ({
                         valid={valid?.socialSecurityNumber}
                         data={socialSecurityNumber}
                         required={true}
-                        disabled={disablingTrigger && disablingTrigger !== 'socialSecurityNumber'}
+                        disabled={iOSFocusedField && iOSFocusedField !== 'socialSecurityNumber'}
                     />
                 </div>
             )}
@@ -172,7 +172,7 @@ export const CardFieldsWrapper = ({
                     requiredFields={billingAddressRequiredFields}
                     ref={billingAddressRef}
                     specifications={partialAddressSchema}
-                    disablingTrigger={disablingTrigger}
+                    iOSFocusedField={iOSFocusedField}
                 />
             )}
         </LoadingWrapper>
