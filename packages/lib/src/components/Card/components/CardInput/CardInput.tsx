@@ -84,7 +84,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
     // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
     // or else the name of an internal, Adyen-web, element (like 'holderName')
-    const [elementTriggeringIOSFieldDisable, setElementTriggeringIOSFieldDisable] = useState(null);
+    const [iOSFocusedField, setIOSFocusedField] = useState(null);
 
     /**
      * LOCAL VARS
@@ -146,7 +146,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      */
     const handleTouchstartIOS = useCallback((obj: TouchStartEventObj) => {
         const elementType = obj.fieldType !== 'webInternalElement' ? obj.fieldType : obj.name;
-        setElementTriggeringIOSFieldDisable(elementType);
+        setIOSFocusedField(elementType);
     }, []);
 
     // Callback for ErrorPanel
@@ -425,7 +425,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             billingAddressRef={billingAddressRef}
                             partialAddressSchema={partialAddressSchema}
                             //
-                            disablingTrigger={elementTriggeringIOSFieldDisable}
+                            iOSFocusedField={iOSFocusedField}
                         />
                     </div>
                 )}

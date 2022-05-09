@@ -20,7 +20,7 @@ export interface AddressProps {
     validationRules?: ValidatorRules;
     visibility?: string;
     overrideSchema?: AddressSpecifications;
-    disablingTrigger?: string;
+    iOSFocusedField?: string;
 }
 
 export interface AddressStateError {
