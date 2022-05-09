@@ -28,9 +28,6 @@ export async function initSession() {
         onError: (error, component) => {
             console.error(error.message, component);
         },
-        // onOrderCancel: data => {
-        //     console.error('onOrderCancel', data);
-        // },
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
