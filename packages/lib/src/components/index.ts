@@ -50,6 +50,7 @@ import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
 import RatePayDirectDebit from "./RatePay/RatePayDirectDebit";
+import WalletINElement from './WalletIN';
 
 /**
  * Maps each component with a Component element.
@@ -146,6 +147,7 @@ const componentsMap = {
     threeDS2Challenge: ThreeDS2Challenge,
     threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
     visa: Card,
+    wallet_IN: WalletINElement,
     wechatpay: WeChat,
     wechatpayQR: WeChat,
     oxxo: Oxxo,
