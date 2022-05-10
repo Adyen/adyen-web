@@ -8,6 +8,7 @@ export interface MBWayInputProps extends UIElementProps {
     data?: MBWayInputData;
     placeholders?: MBWayInputData;
     onChange: (state) => void;
+    allowedCountries: string[];
 }
 
 export interface MBWayDataState {
