@@ -41,6 +41,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 }
             }
         );
+
+        this.onOrderCancel = this.getOnOrderCancel();
     };
 
     public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
@@ -93,12 +95,12 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     }
 
     /**
-     * onOrderCancelBuilder decides which onOrderCancel logic should be used, manual or sessions
+     * getOnOrderCancel decides which onOrderCancel logic should be used, manual or sessions
      */
-    private onOrderCancelBuilder = () => {
+    private getOnOrderCancel = () => {
         if (this.props.onOrderCancel) {
             return (data: onOrderCancelData) => {
-                return this.props.onOrderCancel(data);
+                this.props.onOrderCancel(data);
             };
         }
         if (this.props.session) {
@@ -110,6 +112,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         }
         return null;
     };
+
+    private onOrderCancel: (data: onOrderCancelData) => void;
 
     render(props, { elements, instantPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
@@ -140,7 +144,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 cachedPaymentMethods={cachedPaymentMethods}
                                 order={this.props.order}
                                 orderStatus={this.state.orderStatus}
-                                onOrderCancel={this.onOrderCancelBuilder()}
+                                onOrderCancel={this.onOrderCancel}
                                 onSelect={this.handleOnSelectPaymentMethod}
                                 openFirstPaymentMethod={this.props.openFirstPaymentMethod}
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
