@@ -5,8 +5,7 @@ import Field from '../FormFields/Field';
 import renderFormField from '../FormFields';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
-// import './PhoneInput.scss';
-import '../PhoneInput/PhoneInput.scss';
+import './PhoneInput.scss';
 import { phoneFormatters, phoneValidationRules } from './validate';
 // import { PhoneInputProps, PhoneInputSchema } from './types';
 import { PhoneInputSchema } from './types';
@@ -62,12 +61,12 @@ function PhoneInput(props) {
      * The <Field> element assigns a uniqueId which it uses for the \<label for=\> attribute.
      * This uniqueId is then passed as a prop to the first child of the field
      *  (which is usually an element created by renderFormField) where it is assigned to the id attribute of that element.
-     * However here we have a different use case and the uniqueId is written to the <div class="adyen-kyc-input"> which in this case
+     * However here we have a different use case and the uniqueId is written to the <div class="adyen-checkout__input"> which in this case
      *  is the first child of the <Field>.
      * In order to retrieve this uniqueId and assign it to the phoneNumber input (to thus link <label> and <input> - we need this function.
      */
     const getRelatedUniqueId = () => {
-        const holder = document.querySelector('.adyen-kyc-phone-input [uniqueid]');
+        const holder = document.querySelector('.adyen-checkout__phone-input [uniqueid]');
         return holder ? holder.getAttribute('uniqueid') : null;
     };
 
@@ -80,31 +79,31 @@ function PhoneInput(props) {
     );
 
     const uniqueIDPhonePrefix = useMemo(() => {
-        return getUniqueId('adyen-kyc-phonePrefix');
+        return getUniqueId('adyen-checkout-phonePrefix');
     }, []);
 
     return (
-        <div className="adyen-kyc-phone-input">
+        <div className="adyen-checkout__phone-input">
             <Field
                 name={'phoneNumber'}
                 label={i18n.get('mobileNumber')}
                 className={classNames({
-                    'adyen-kyc-phone-input__holder': true
+                    'adyen-checkout__input--phone-number': true
                 })}
                 inputWrapperModifiers={['phoneInput']}
                 isValid={valid.phoneNumber}
             >
                 <div
                     className={classNames({
-                        'adyen-kyc-input': true,
-                        'adyen-kyc-input--invalid': !!errors.phoneNumber || !!errors.phonePrefix,
-                        'adyen-kyc-field--valid': (showPrefix ? valid.phonePrefix : true) && valid.phoneNumber,
-                        'adyen-kyc-input__phoneInput': true // Better BEM naming
+                        'adyen-checkout__input': true,
+                        'adyen-checkout__input--invalid': !!errors.phoneNumber || !!errors.phonePrefix,
+                        'adyen-checkout__input--valid': (showPrefix ? valid.phonePrefix : true) && valid.phoneNumber,
+                        'adyen-checkout-input__phoneInput': true // Better BEM naming
                     })}
                 >
                     {showPrefix &&
                         renderFormField('select', {
-                            className: 'adyen-kyc-countrycode-selector ',
+                            className: 'adyen-checkout-countrycode-selector ',
                             items: mappedPrefixes,
                             onChange: handleChangeFor('phonePrefix'),
                             // readonly: formUtils.isReadOnly('phonePrefix'),
@@ -115,7 +114,7 @@ function PhoneInput(props) {
                         })}
 
                     {showNumber && (
-                        <div className="adyen-kyc-phone-number">
+                        <div className="adyen-checkout-phone-number">
                             <input
                                 id={getRelatedUniqueId()}
                                 type="tel"
@@ -124,7 +123,7 @@ function PhoneInput(props) {
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
                                 // readOnly={formUtils.isReadOnly('phoneNumber')}
                                 // placeholder={formUtils.getPlaceholder('phoneNumber', '123456789')}
-                                className="adyen-kyc-input adyen-kyc-input__phone-number"
+                                className="adyen-checkout__input adyen-checkout-input__phone-number"
                                 autoCorrect="off"
                                 aria-required={true}
                                 aria-label={i18n.get('mobileNumber')}
@@ -135,15 +134,15 @@ function PhoneInput(props) {
                     )}
                 </div>
             </Field>
-            {props.showInlineErrors && (
-                <div className="adyen-kyc-phone-input__error-holder">
+            {!isCollatingErrors && (
+                <div className="adyen-checkout-phone-input__error-holder">
                     {showPrefix && getPhoneFieldError('phonePrefix') && (
-                        <span className={'adyen-kyc-error-text'} aria-live="polite" id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}>
+                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}>
                             {getPhoneFieldError('phonePrefix')}
                         </span>
                     )}
                     {showNumber && getPhoneFieldError('phoneNumber') && (
-                        <span className={'adyen-kyc-error-text'} aria-live="polite" id={`${getRelatedUniqueId()}${ARIA_ERROR_SUFFIX}`}>
+                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${getRelatedUniqueId()}${ARIA_ERROR_SUFFIX}`}>
                             {getPhoneFieldError('phoneNumber')}
                         </span>
                     )}

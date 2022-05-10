@@ -1,0 +1,89 @@
+
+
+/* NEW */
+.adyen-checkout__phone-input {
+    .adyen-checkout__input-wrapper {
+        width: 100%;
+
+        .adyen-checkout__input {
+            height: auto;
+            padding: 0;
+            /* stylelint-disable */
+            &:focus-within {
+                border: 1px solid #06f;
+
+                .adyen-checkout-countrycode-selector {
+                    border-right: 1px solid #06f;
+                }
+            }
+            /* stylelint-enable */
+        }
+
+
+        .adyen-kyc-field {
+            margin-bottom: 0;
+        }
+
+        .adyen-checkout__dropdown__button {
+            border: 0;
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            height: 40px;
+            width: auto;
+
+            &::after {
+                box-sizing: revert;
+                height: 10px;
+            }
+        }
+
+        .adyen-checkout-input__phone-number {
+            //@include adl-inline-component-box($adl-inline-components-height-medium, false, 0);
+            height: 40px;
+            line-height: 40px;
+            min-height: 40px;
+            padding-bottom: 0;
+            padding-top: 0;
+            border: 1px solid transparent;
+            padding-left: 15px;
+
+            &:focus-within {
+                border: 1px solid transparent;
+            }
+        }
+
+        .adyen-checkout-countrycode-selector {
+            border-right: 1px solid #dce0e5;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .adyen-checkout-input__phoneInput {
+            align-items: center;
+            display: flex;
+        }
+
+        .adyen-checkout-phone-number {
+            align-items: center;
+            display: flex;
+            flex: 3;
+        }
+
+        .adyen-kyc__countryFlag {
+            position: absolute;
+        }
+
+        .adyen-checkout__dropdown__button--active {
+            box-shadow: none;
+
+            &:hover {
+                box-shadow: none;
+            }
+        }
+
+    }
+
+    .adyen-checkout-phone-input__error-holder {
+        margin-top: -10px;
+    }
+}
