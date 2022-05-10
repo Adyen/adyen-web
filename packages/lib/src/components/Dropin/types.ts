@@ -65,10 +65,14 @@ export interface DropinElementProps extends UIElementProps {
     onDisableStoredPaymentMethod?: (storedPaymentMethod, resolve, reject) => void;
 }
 
+export interface onOrderCancelData {
+    order: Order;
+}
+
 export interface DropinComponentProps extends DropinElementProps {
     onCreateElements: any;
     onChange: (newState?: object) => void;
-    onOrderCancel?: (order: Order) => void;
+    onOrderCancel?: (data: onOrderCancelData) => void;
 }
 
 interface DropinStatus {
