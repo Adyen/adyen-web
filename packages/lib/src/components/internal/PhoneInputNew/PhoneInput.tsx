@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import classNames from 'classnames';
 import Field from '../FormFields/Field';
 import renderFormField from '../FormFields';
@@ -9,7 +9,6 @@ import './PhoneInput.scss';
 import { phoneFormatters, phoneValidationRules } from './validate';
 // import { PhoneInputProps, PhoneInputSchema } from './types';
 import { PhoneInputSchema } from './types';
-// import formUtilities from '../../../utils/formUtils';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import { getUniqueId } from '../../../utils/idGenerator';
 
@@ -21,7 +20,6 @@ function PhoneInput(props) {
         i18n,
         commonProps: { isCollatingErrors }
     } = useCoreContext();
-    const [mappedPrefixes, setMappedPrefixes] = useState([]);
 
     const schema = props.requiredFields || [...(props?.items?.length ? ['phonePrefix'] : []), 'phoneNumber'];
     const showPrefix = schema.includes('phonePrefix') && !!props?.items?.length;
@@ -35,17 +33,6 @@ function PhoneInput(props) {
         rules: props.validators || phoneValidationRules,
         formatters: phoneFormatters
     });
-
-    useEffect(() => {
-        if (showPrefix) {
-            setMappedPrefixes(
-                props.items.map(item => ({
-                    ...item,
-                    sprite: `#adl-flag-${item.id.toLowerCase()}`
-                }))
-            );
-        }
-    }, [showPrefix]);
 
     useEffect(() => {
         setSchema(schema);
@@ -66,7 +53,7 @@ function PhoneInput(props) {
      * In order to retrieve this uniqueId and assign it to the phoneNumber input (to thus link <label> and <input> - we need this function.
      */
     const getRelatedUniqueId = () => {
-        const holder = document.querySelector('.adyen-checkout__phone-input [uniqueid]');
+        const holder = document.querySelector('.adyen-checkout__phone-input-new [uniqueid]');
         return holder ? holder.getAttribute('uniqueid') : null;
     };
 
@@ -83,10 +70,10 @@ function PhoneInput(props) {
     }, []);
 
     return (
-        <div className="adyen-checkout__phone-input">
+        <div className="adyen-checkout__phone-input-new">
             <Field
                 name={'phoneNumber'}
-                label={i18n.get('mobileNumber')}
+                label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                 className={classNames({
                     'adyen-checkout__input--phone-number': true
                 })}
@@ -104,10 +91,10 @@ function PhoneInput(props) {
                     {showPrefix &&
                         renderFormField('select', {
                             className: 'adyen-checkout-countrycode-selector ',
-                            items: mappedPrefixes,
+                            items: props.items,
                             onChange: handleChangeFor('phonePrefix'),
-                            // readonly: formUtils.isReadOnly('phonePrefix'),
-                            // placeholder: formUtils.getPlaceholder('phonePrefix', 'code'),
+                            // readonly: props.phonePrefixIsReadonly,
+                            placeholder: i18n.get('infix'),
                             selected: data.phonePrefix,
                             isCollatingErrors,
                             uniqueId: uniqueIDPhonePrefix
@@ -121,12 +108,12 @@ function PhoneInput(props) {
                                 value={data.phoneNumber}
                                 onInput={handleChangeFor('phoneNumber', 'input')}
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
-                                // readOnly={formUtils.isReadOnly('phoneNumber')}
-                                // placeholder={formUtils.getPlaceholder('phoneNumber', '123456789')}
+                                // readOnly={props.phoneNumberIsReadonly}
+                                placeholder={props.placeholders.phoneNumber || '123456789'}
                                 className="adyen-checkout__input adyen-checkout-input__phone-number"
                                 autoCorrect="off"
                                 aria-required={true}
-                                aria-label={i18n.get('mobileNumber')}
+                                aria-label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                                 aria-invalid={!valid.phoneNumber}
                                 aria-describedby={`${getRelatedUniqueId()}${ARIA_ERROR_SUFFIX}`}
                             />
