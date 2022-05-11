@@ -14,10 +14,11 @@ export class MBWayElement extends UIElement {
         return {
             ...props,
             data: {
-                telephoneNumber: data.telephoneNumber || data.phoneNumber
+                phoneNumber: data.telephoneNumber || data.phoneNumber,
+                phonePrefix: data.phonePrefix || '+351' // if not specified default to Portuguese country code
             },
             placeholders: {
-                telephoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '+351 932 123 456'
+                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '932 123 456'
             }
         };
     }
@@ -29,7 +30,7 @@ export class MBWayElement extends UIElement {
         return {
             paymentMethod: {
                 type: MBWayElement.type,
-                ...(this.state.data?.telephoneNumber && { telephoneNumber: this.state.data.telephoneNumber })
+                ...(this.state.data?.phoneNumber && { telephoneNumber: this.state.data.phoneNumber })
             }
         };
     }
