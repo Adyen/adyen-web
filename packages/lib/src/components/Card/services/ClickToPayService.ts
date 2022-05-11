@@ -31,7 +31,7 @@ export interface IClickToPayService {
     subscribeOnStatusChange(callback: CallbackStateSubscriber): void;
 
     // identification flow
-    startIdentityValidation(): Promise<any>;
+    // startIdentityValidation(): Promise<any>;
     abortIdentityValidation(): void;
     finishIdentityValidation(otpCode: string): Promise<any>;
 }
@@ -70,6 +70,7 @@ class ClickToPayService implements IClickToPayService {
 
         try {
             this.sdks = await this.sdkLoader.load();
+
             await this.initiateSdks();
 
             const { recognized = false, idTokens = null } = await this.recognizeShopper();
@@ -113,7 +114,7 @@ class ClickToPayService implements IClickToPayService {
      *
      * This method uses only the SDK that responded first on identifyShopper() call. There is no need to use all SDK's
      */
-    public async startIdentityValidation(): Promise<any> {
+    private async startIdentityValidation(): Promise<any> {
         if (!this.validationSchemaSdk) {
             throw Error('initiateIdentityValidation: No schema set for the validation process');
         }
@@ -135,6 +136,7 @@ class ClickToPayService implements IClickToPayService {
         if (!this.validationSchemaSdk) {
             throw Error('finishIdentityValidation: No schema set for the validation process');
         }
+
         const validationToken = await this.validationSchemaSdk.completeIdentityValidation(otpCode);
         await this.getSecureRemoteCommerceProfile([validationToken.idToken]);
         this.validationSchemaSdk = null;
@@ -187,6 +189,7 @@ class ClickToPayService implements IClickToPayService {
      */
     private async recognizeShopper(): Promise<IsRecognizedResponse> {
         const recognizingPromises = this.sdks.map(sdk => sdk.isRecognized());
+
         const recognizeResponses = await Promise.all(recognizingPromises);
 
         const isRecognizedResp = recognizeResponses.find(response => response.recognized);

@@ -1,6 +1,7 @@
 import { MC_SDK_PROD, MC_SDK_TEST } from '../config';
 import { CompleteIdentityValidationResponse, IdentityLookupParams, IdentityLookupResponse } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
+import SrciError from './SrciError';
 
 const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS'
@@ -34,19 +35,18 @@ class MasterCardSdk extends AbstractSrcInitiator {
             const response = await this.schemaSdk.identityLookup({ consumerIdentity });
             return response;
         } catch (error) {
-            console.error(error);
+            // console.error(error);
+            console.log(JSON.stringify(error, null, 2));
             throw error;
         }
     }
 
-    public async completeIdentityValidation(validationData: string): Promise<CompleteIdentityValidationResponse> {
+    public async completeIdentityValidation(otp: string): Promise<CompleteIdentityValidationResponse> {
         try {
-            const completeIdentityValidationParams = { validationData };
-            const response = await this.schemaSdk.completeIdentityValidation(completeIdentityValidationParams);
+            const response = await this.schemaSdk.completeIdentityValidation({ validationData: otp });
             return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
+        } catch (err) {
+            throw new SrciError(err?.message, err?.reason);
         }
     }
 }

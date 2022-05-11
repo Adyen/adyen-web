@@ -35,8 +35,7 @@ const CtPOneTimePassword = () => {
         try {
             await context.finishIdentityValidation(otp);
         } catch (error) {
-            console.log(error);
-            setErrorCode(error?.error?.reason);
+            setErrorCode(error?.reason);
             setIsLoading(false);
         }
     }, [otp, isValid, inputRef.current]);

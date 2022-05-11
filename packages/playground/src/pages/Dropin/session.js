@@ -45,17 +45,17 @@ export async function initSession() {
                 clickToPayConfiguration: {
                     prefetch: true,
                     schemas: {
-                        // mc: {
-                        //     srciTransactionId: 'adyen-id-290202020',
-                        //     srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
-                        //     srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                        //     dpaTransactionOptions: {
-                        //         dpaLocale: 'en_US',
-                        //         paymentOptions: {
-                        //             dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
-                        //         }
-                        //     }
-                        // },
+                        mc: {
+                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
+                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                paymentOptions: {
+                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
+                                }
+                            }
+                        },
                         visa: {
                             srciTransactionId: 'adyen-id-290202020',
                             srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
@@ -93,6 +93,7 @@ export async function initSession() {
                     shopperIdentity: {
                         // value: 'guilherme.ribeiro-visaclicktopay1@adyen.com', // WITH LEONARD PHONE
                         value: 'guilherme.ribeiro-ctp1@adyen.com',
+                        // value: 'maximilian.maldacker-ctp2@adyen.com',
                         // value: 'guilherme-visaclicktopay1@adyen.com',
                         type: 'email'
                     }

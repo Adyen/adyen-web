@@ -9,6 +9,7 @@ import {
     IsRecognizedResponse
 } from '../types';
 import Script from '../../../../utils/Script';
+import SrciError from './SrciError';
 
 export interface ISrcInitiator {
     schemaName: string;
@@ -70,13 +71,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * is synchronous in operation.
      */
     public async init(params: InitParams): Promise<void> {
-        try {
-            const response = await this.schemaSdk.init(params);
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        await this.schemaSdk.init(params);
     }
 
     /**
@@ -122,20 +117,6 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     }
 
     /**
-     * This method completes the identity validation by receiving the one-time password (OTP) sent to the
-     * consumer to start validation.
-     */
-    public async completeIdentityValidation(validationData: string): Promise<CompleteIdentityValidationResponse> {
-        try {
-            const response = await this.schemaSdk.completeIdentityValidation(validationData);
-            return response;
-        } catch (error) {
-            console.error(`[${this.schemaName}] SecureRemoteCommerceInitiator #completeIdentityValidation`, error);
-            throw error;
-        }
-    }
-
-    /**
      * Obtains the masked card and other account profile data associated with the userId.
      */
     public async getSrcProfile(idTokens: string[]): Promise<any> {
@@ -153,4 +134,10 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * number).
      */
     public abstract identityLookup(params: IdentityLookupParams): Promise<IdentityLookupResponse>;
+
+    /**
+     * This method completes the identity validation by receiving the one-time password (OTP) sent to the
+     * consumer to start validation.
+     */
+    public abstract completeIdentityValidation(otp: string): Promise<CompleteIdentityValidationResponse>;
 }

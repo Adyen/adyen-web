@@ -1,6 +1,7 @@
 import { VISA_SDK_PROD, VISA_SDK_TEST } from '../config';
-import { IdentityLookupParams, IdentityLookupResponse } from '../types';
+import { CompleteIdentityValidationResponse, IdentityLookupParams, IdentityLookupResponse } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
+import SrciError from './SrciError';
 
 const IdentityTypeMap = {
     email: 'EMAIL'
@@ -36,6 +37,16 @@ class VisaSrcSdk extends AbstractSrcInitiator {
         } catch (error) {
             console.error(error);
             throw error;
+        }
+    }
+
+    public async completeIdentityValidation(otp: string): Promise<CompleteIdentityValidationResponse> {
+        try {
+            const response = await this.schemaSdk.completeIdentityValidation(otp);
+            return response;
+        } catch (err) {
+            console.error(`[${this.schemaName}] # ${this.completeIdentityValidation.name}`, err);
+            throw new SrciError(err?.error?.message, err?.error?.reason);
         }
     }
 }
