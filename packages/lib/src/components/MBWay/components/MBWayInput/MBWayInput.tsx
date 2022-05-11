@@ -1,9 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect, useLayoutEffect, useRef } from 'preact/hooks';
-import classNames from 'classnames';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import Field from '../../../internal/FormFields/Field';
-import { renderFormField } from '../../../internal/FormFields';
 import { MBWayDataState, MBWayInputProps } from './types';
 import './MBWayInput.scss';
 import useForm from '../../../../utils/useForm';
@@ -13,11 +10,7 @@ import PhoneInput from '../../../internal/PhoneInputNew';
 const phoneNumberRegEx = /^[+]*[0-9]{1,4}[\s/0-9]*$/;
 
 function MBWayInput(props: MBWayInputProps) {
-    const {
-        i18n,
-        loadingContext
-        // commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
 
     const phoneInputRef = useRef(null);
 
@@ -42,15 +35,27 @@ function MBWayInput(props: MBWayInputProps) {
     const [status, setStatus] = useState('ready');
 
     this.setStatus = setStatus;
-    this.showValidation = triggerValidation;
+    this.showValidation = phoneInputRef?.current?.triggerValidation;
 
     useLayoutEffect(() => {
         getDataset('phonenumbers', loadingContext)
             .then(response => {
                 const countriesFilter = country => allowedCountries.includes(country.id);
-                const newCountries = allowedCountries.length ? response.filter(countriesFilter) : response;
-                console.log('### MBWayInput::newCountries:: ', newCountries);
-                setPhonePrefixes(newCountries || []);
+                const filteredCountries = allowedCountries.length ? response.filter(countriesFilter) : response;
+                const mappedCountries = filteredCountries.map(item => {
+                    // Get country flags (magic! - shifts the country code characters to the correct position of the emoji in the unicode space)
+                    const codePoints: number[] = item.id
+                        .toUpperCase()
+                        .split('')
+                        .map(char => 127397 + char.charCodeAt(0));
+
+                    // Get flag emoji + space at end (it doesn't work to add spaces in the template literal, below)
+                    const flag = String.fromCodePoint ? String.fromCodePoint(...codePoints) + '\u00A0\u00A0' : '';
+
+                    return { id: item.prefix, name: `${flag} ${item.prefix} (${item.id})`, selectedOptionName: `${flag} ${item.prefix}` };
+                });
+
+                setPhonePrefixes(mappedCountries || []);
                 // setLoaded(true);
             })
             .catch(error => {
@@ -64,28 +69,14 @@ function MBWayInput(props: MBWayInputProps) {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
+    const onChange = ({ data, valid, errors, isValid }) => {
+        console.log('### MBWayInput::onChange:: data=', data);
+        props.onChange({ data, valid, errors, isValid });
+    };
+
     return (
         <div className="adyen-checkout__mb-way">
-            {/*<Field*/}
-            {/*    errorMessage={!!errors.telephoneNumber && i18n.get('mobileNumber.invalid')}*/}
-            {/*    label={i18n.get('mobileNumber')}*/}
-            {/*    className={classNames('adyen-checkout__input--phone-number')}*/}
-            {/*    isValid={valid.telephoneNumber}*/}
-            {/*    dir={'ltr'}*/}
-            {/*    name={'telephoneNumber'}*/}
-            {/*>*/}
-            {/*{renderFormField('tel', {
-                    value: data.telephoneNumber,
-                    className: 'adyen-checkout__pm__phoneNumber__input',
-                    placeholder: props.placeholders.telephoneNumber,
-                    required: true,
-                    autoCorrect: 'off',
-                    onBlur: handleChangeFor('telephoneNumber', 'blur'),
-                    onInput: handleChangeFor('telephoneNumber', 'input')
-                })}*/}
-
-            <PhoneInput {...props} items={phonePrefixes} ref={phoneInputRef} />
-            {/*</Field>*/}
+            <PhoneInput {...props} items={phonePrefixes} ref={phoneInputRef} onChange={onChange} data={props.data} />
 
             {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
@@ -93,7 +84,8 @@ function MBWayInput(props: MBWayInputProps) {
 }
 
 MBWayInput.defaultProps = {
-    onChange: () => {}
+    onChange: () => {},
+    phoneNumberErrorKey: 'mobileNumber.invalid'
 };
 
 export default MBWayInput;
