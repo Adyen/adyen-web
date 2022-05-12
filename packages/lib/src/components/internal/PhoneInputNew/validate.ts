@@ -1,13 +1,12 @@
 import { FormatRules, ValidatorRules } from '../../../utils/Validator/types';
-// import { getFormattingRegEx } from '../../../utils/validatorUtils';
-
-// Generates a regEx ideal for use in a String.replace call for use in a formatter
-export const getFormattingRegEx = (specChars: string, flags = 'g') => new RegExp(`[${specChars}]`, flags);
+import { isEmpty, getFormattingRegEx } from '../../../utils/validator-utils';
 
 export const phoneValidationRules: ValidatorRules = {
     phoneNumber: {
         modes: ['blur'],
-        validate: phoneNumber => /^(\d){4,12}$/.test(phoneNumber),
+        validate: value => {
+            return isEmpty(value) ? null : /^(\d){4,12}$/.test(value);
+        },
         errorMessage: 'invalidPhoneNumber'
     },
     phonePrefix: {
