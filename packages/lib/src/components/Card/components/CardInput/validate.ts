@@ -1,7 +1,7 @@
 import { ValidatorRules } from '../../../../utils/Validator/types';
 import { formatCPFCNPJ } from '../../../internal/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
-import { isEmpty } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
+import { isEmpty } from '../../../../utils/validator-utils';
 
 export const cardInputFormatters = {
     socialSecurityNumber: formatCPFCNPJ

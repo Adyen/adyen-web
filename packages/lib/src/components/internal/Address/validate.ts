@@ -1,7 +1,7 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../../../core/Errors/constants';
-import { isEmpty } from '../SecuredFields/lib/utilities/commonUtils';
+import { isEmpty } from '../../../utils/validator-utils';
 
 const createPatternByDigits = (digits: number) => {
     return {

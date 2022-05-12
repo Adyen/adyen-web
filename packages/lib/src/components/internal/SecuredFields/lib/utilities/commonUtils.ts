@@ -222,4 +222,4 @@ export function partial(...args) {
 }
 
 // Not null or undefined or only spaces
-export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
+// export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
