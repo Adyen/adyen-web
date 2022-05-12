@@ -31,6 +31,8 @@ export class MBWayElement extends UIElement {
             paymentMethod: {
                 type: MBWayElement.type,
                 ...(this.state.data?.phoneNumber && { telephoneNumber: this.state.data.phoneNumber })
+                // TODO - add once the backend can handle it & we know exactly what the key should be called
+                // ...(this.state.data?.phonePrefix && { telephoneNumberPrefix: this.state.data.phonePrefix })
             }
         };
     }

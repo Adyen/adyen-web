@@ -80,10 +80,16 @@ function PhoneInput(props) {
                 name={'phoneNumber'}
                 label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                 className={classNames({
-                    'adyen-checkout__input--phone-number': true
+                    'adyen-checkout-field--phone-input': true
                 })}
-                inputWrapperModifiers={['phoneInput']}
+                inputWrapperModifiers={['phone-input']}
                 isValid={valid.phoneNumber}
+                // Note we don't pass a string to the errorMessage prop because the phoneInput comp can potentially have 2 errors (one for prefix, one for number)
+                // - so we want to handle both those errors here in this comp rather than within the Field comp.
+                // However we do want to take advantage of the error icon that Field can provide - so we pass a boolean if errors exist
+                errorMessage={(errors.phoneNumber || errors.phonePrefix) && true}
+                // Avoids the situation where the phoneNumber is valid but the phonePrefix is not and we see the valid icon showing underneath the error icon
+                showValidIcon={errors.phonePrefix ? false : true}
             >
                 <div
                     className={classNames({
@@ -91,8 +97,8 @@ function PhoneInput(props) {
                         'adyen-checkout__input': true,
                         'adyen-checkout__input--invalid': !!errors.phoneNumber || !!errors.phonePrefix,
                         'adyen-checkout__input--valid': (showPrefix ? valid.phonePrefix : true) && valid.phoneNumber,
-                        // Style from local PhoneInput.scss with better BEM naming i.e. 'adyen-checkout-input' as the Base, 'phoneInput' as the Modifier
-                        'adyen-checkout-input--phoneInput': true
+                        // Style from local PhoneInput.scss with better BEM naming - see PhoneInput.scss
+                        'adyen-checkout-field__input-holder--phone-input': true
                     })}
                 >
                     {showPrefix &&
@@ -117,7 +123,7 @@ function PhoneInput(props) {
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
                                 // readOnly={props.phoneNumberIsReadonly}
                                 placeholder={props.placeholders.phoneNumber || '123456789'}
-                                className="adyen-checkout__input adyen-checkout-input__phone-number"
+                                className="adyen-checkout__input adyen-checkout-field__input--phone-number"
                                 autoCorrect="off"
                                 aria-required={true}
                                 aria-label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}

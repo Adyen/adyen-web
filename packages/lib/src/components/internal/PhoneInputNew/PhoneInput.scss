@@ -43,7 +43,7 @@
         }
 
         // Example of better BEM naming i.e. 'adyen-checkout-input' as the Base
-        .adyen-checkout-input__phone-number {
+        .adyen-checkout-field__input--phone-number {
             height: 35px;
             line-height: 35px;
             min-height: 35px;
@@ -64,7 +64,8 @@
             min-width: 140px;
         }
 
-        .adyen-checkout-input--phoneInput {
+        // Style with better BEM naming i.e. 'adyen-checkout-field' as the Base, 'input-holder' as the element, 'phone-input' as the Modifier
+        .adyen-checkout-field__input-holder--phone-input {
             align-items: center;
             display: flex;
         }
