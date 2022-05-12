@@ -53,7 +53,7 @@ function PhoneInput(props) {
      * In order to retrieve this uniqueId and assign it to the phoneNumber input (to thus link <label> and <input> - we need this function.
      */
     const getRelatedUniqueId = () => {
-        const holder = document.querySelector('.adyen-checkout__phone-input-new [uniqueid]');
+        const holder = document.querySelector('.adyen-checkout-phone-input--new [uniqueid]');
         return holder ? holder.getAttribute('uniqueid') : null;
     };
 
@@ -75,7 +75,7 @@ function PhoneInput(props) {
     }, []);
 
     return (
-        <div className="adyen-checkout__phone-input-new">
+        <div className="adyen-checkout-phone-input--new">
             <Field
                 name={'phoneNumber'}
                 label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
@@ -87,15 +87,17 @@ function PhoneInput(props) {
             >
                 <div
                     className={classNames({
+                        // Styles from FormFields.scss
                         'adyen-checkout__input': true,
                         'adyen-checkout__input--invalid': !!errors.phoneNumber || !!errors.phonePrefix,
                         'adyen-checkout__input--valid': (showPrefix ? valid.phonePrefix : true) && valid.phoneNumber,
-                        'adyen-checkout-input__phoneInput': true // Better BEM naming
+                        // Style from local PhoneInput.scss with better BEM naming i.e. 'adyen-checkout-input' as the Base, 'phoneInput' as the Modifier
+                        'adyen-checkout-input--phoneInput': true
                     })}
                 >
                     {showPrefix &&
                         renderFormField('select', {
-                            className: 'adyen-checkout-countrycode-selector ',
+                            className: 'adyen-checkout-dropdown--countrycode-selector',
                             items: props.items,
                             onChange: handleChangeFor('phonePrefix'),
                             // readonly: props.phonePrefixIsReadonly,

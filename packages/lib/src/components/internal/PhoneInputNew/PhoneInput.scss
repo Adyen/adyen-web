@@ -1,23 +1,25 @@
-.adyen-checkout__phone-input-new {
+.adyen-checkout-phone-input--new {
     direction: ltr;
 
+    // inherited style (FormFields.scss)
     .adyen-checkout__input-wrapper {
         width: 100%;
 
+        // inherited style (FormFields.scss)
         .adyen-checkout__input {
             padding: 0;
             height: auto;
-            /* stylelint-disable */
-            &:focus-within {
-                border: 1px solid #06f;
 
-                .adyen-checkout-countrycode-selector {
-                    border-right: 1px solid #06f;
-                }
-            }
-            /* stylelint-enable */
+            &:focus-within {
+                 border: 1px solid #06f;
+
+                 .adyen-checkout-dropdown--countrycode-selector {
+                     border-right: 1px solid #06f;
+                 }
+             }
         }
 
+        // inherited style (Select.scss)
         .adyen-checkout__dropdown__button {
             width: auto;
             border: 0;
@@ -25,14 +27,23 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
 
-            &::after {
+            &:after {
                 box-sizing: revert;
                 height: 10px;
             }
         }
 
+        // inherited style (Select.scss)
+        .adyen-checkout__dropdown__button--active {
+            box-shadow: none;
+
+            &:hover {
+                box-shadow: none;
+            }
+        }
+
+        // Example of better BEM naming i.e. 'adyen-checkout-input' as the Base
         .adyen-checkout-input__phone-number {
-            //@include adl-inline-component-box($adl-inline-components-height-medium, false, 0);
             height: 35px;
             line-height: 35px;
             min-height: 35px;
@@ -42,17 +53,18 @@
             padding-left: 15px;
 
             &:focus-within {
-                border: 1px solid transparent;
+                border: 1px solid #06f;
+                box-shadow: 0 0 0 2px #99c2ff;
             }
         }
 
-        .adyen-checkout-countrycode-selector {
+        .adyen-checkout-dropdown--countrycode-selector {
             border-right: 1px solid #dce0e5;
             flex: 1;
             min-width: 140px;
         }
 
-        .adyen-checkout-input__phoneInput {
+        .adyen-checkout-input--phoneInput {
             align-items: center;
             display: flex;
         }
@@ -61,14 +73,6 @@
             align-items: center;
             display: flex;
             flex: 3;
-        }
-
-        .adyen-checkout__dropdown__button--active {
-            box-shadow: none;
-
-            &:hover {
-                box-shadow: none;
-            }
         }
     }
 
