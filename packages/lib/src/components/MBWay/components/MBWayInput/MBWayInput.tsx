@@ -48,10 +48,6 @@ function MBWayInput(props: MBWayInputProps) {
     }, []);
 
     const onChange = ({ data, valid, errors, isValid }) => {
-        console.log('\n### MBWayInput::onChange:: data=', data);
-        // console.log('### MBWayInput::onChange:: valid=', valid);
-        // console.log('### MBWayInput::onChange:: errors=', errors);
-        // console.log('### MBWayInput::onChange:: isValid=', isValid);
         props.onChange({ data, valid, errors, isValid });
     };
 
