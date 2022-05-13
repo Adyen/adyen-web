@@ -80,6 +80,7 @@ function PhoneInput(props) {
                 name={'phoneNumber'}
                 label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                 className={classNames({
+                    'adyen-checkout-field': true,
                     'adyen-checkout-field--phone-input': true
                 })}
                 inputWrapperModifiers={['phone-input']}
@@ -95,6 +96,7 @@ function PhoneInput(props) {
                  A special situation exists here - normally the first element inside a Field comp is an <input> element which receives
                  'adyen-checkout__input' type styling (to set width, borders, valid and invalid styling etc).
                  Here it is a <div> - however we still need the "input-type" styling on this div for the same reasons (width, borders, showing validity etc)
+                 TODO - should probably have some specific 'adyen-checkout-input-holder' styling selectors
                  */}
                 <div
                     className={classNames({
@@ -102,13 +104,15 @@ function PhoneInput(props) {
                         'adyen-checkout__input': true,
                         'adyen-checkout__input--invalid': !!errors.phoneNumber || !!errors.phonePrefix,
                         'adyen-checkout__input--valid': (showPrefix ? valid.phonePrefix : true) && valid.phoneNumber,
+                        // Proposed renaming
+                        'adyen-checkout-input': true,
                         // Style from local PhoneInput.scss
                         'adyen-checkout-input-holder--phone-input': true
                     })}
                 >
                     {showPrefix &&
                         renderFormField('select', {
-                            className: 'adyen-checkout-dropdown--countrycode-selector',
+                            className: 'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector',
                             items: props.items,
                             onChange: handleChangeFor('phonePrefix'),
                             // readonly: props.phonePrefixIsReadonly,
@@ -128,7 +132,7 @@ function PhoneInput(props) {
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
                                 // readOnly={props.phoneNumberIsReadonly}
                                 placeholder={props.placeholders.phoneNumber || '123456789'}
-                                className="adyen-checkout__input adyen-checkout-input--phone-number"
+                                className="adyen-checkout__input adyen-checkout-input adyen-checkout-input--phone-number"
                                 autoCorrect="off"
                                 aria-required={true}
                                 aria-label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
