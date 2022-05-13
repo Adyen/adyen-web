@@ -38,6 +38,13 @@ function PhoneInput(props) {
         setSchema(schema);
     }, [schema.toString()]);
 
+    // Force re-validation of the phoneNumber when data.phonePrefix changes (since the validation rules will also change)
+    useEffect((): void => {
+        if (data.phoneNumber) {
+            handleChangeFor('phoneNumber', 'blur')(data.phoneNumber);
+        }
+    }, [data.phonePrefix]);
+
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
