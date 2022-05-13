@@ -2,13 +2,17 @@ import { UIElementProps } from '../../../types';
 
 export interface MBWayInputData {
     telephoneNumber?: string;
+    phoneNumber?: string;
+    phonePrefix?: string;
 }
 
 export interface MBWayInputProps extends UIElementProps {
     data?: MBWayInputData;
     placeholders?: MBWayInputData;
     onChange: (state) => void;
-    allowedCountries: string[];
+    allowedCountries?: string[];
+    requiredFields?: string[];
+    phoneNumberKey?: string;
 }
 
 export interface MBWayDataState {

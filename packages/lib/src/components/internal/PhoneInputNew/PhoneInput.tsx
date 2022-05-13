@@ -7,15 +7,11 @@ import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
 import { phoneFormatters, phoneValidationRules } from './validate';
-// import { PhoneInputProps, PhoneInputSchema } from './types';
-import { PhoneInputSchema } from './types';
+import { PhoneInputProps, PhoneInputSchema } from './types';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import { getUniqueId } from '../../../utils/idGenerator';
 
-export const phoneFields: Array<keyof PhoneInputSchema> = ['phonePrefix', 'phoneNumber'];
-
-// function PhoneInput(props: PhoneInputProps) {
-function PhoneInput(props) {
+function PhoneInput(props: PhoneInputProps) {
     const {
         i18n,
         commonProps: { isCollatingErrors }
@@ -30,7 +26,7 @@ function PhoneInput(props) {
         ...props,
         schema,
         defaultData: props.data,
-        rules: props.validators || phoneValidationRules,
+        rules: phoneValidationRules,
         formatters: phoneFormatters
     });
 
