@@ -18,7 +18,7 @@ export class MBWayElement extends UIElement {
                 phonePrefix: data.phonePrefix || '+351' // if not specified default to Portuguese country code
             },
             placeholders: {
-                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '932 123 456'
+                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '932123456'
             }
         };
     }
@@ -30,9 +30,7 @@ export class MBWayElement extends UIElement {
         return {
             paymentMethod: {
                 type: MBWayElement.type,
-                ...(this.state.data?.phoneNumber && { telephoneNumber: this.state.data.phoneNumber })
-                // TODO - add once the backend can handle it & we know exactly what the key should be called
-                // ...(this.state.data?.phonePrefix && { telephoneNumberPrefix: this.state.data.phonePrefix })
+                ...(this.state.data?.phoneNumber && { telephoneNumber: this.state.data.phonePrefix + this.state.data.phoneNumber })
             }
         };
     }
