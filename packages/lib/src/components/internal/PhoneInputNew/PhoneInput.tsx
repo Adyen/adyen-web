@@ -91,14 +91,19 @@ function PhoneInput(props) {
                 // Avoids the situation where the phoneNumber is valid but the phonePrefix is not and we see the valid icon showing underneath the error icon
                 showValidIcon={errors.phonePrefix ? false : true}
             >
+                {/**
+                 A special situation exists here - normally the first element inside a Field comp is an <input> element which receives
+                 'adyen-checkout__input' type styling (to set width, borders, valid and invalid styling etc).
+                 Here it is a <div> - however we still need the "input-type" styling on this div for the same reasons (width, borders, showing validity etc)
+                 */}
                 <div
                     className={classNames({
                         // Styles from FormFields.scss
                         'adyen-checkout__input': true,
                         'adyen-checkout__input--invalid': !!errors.phoneNumber || !!errors.phonePrefix,
                         'adyen-checkout__input--valid': (showPrefix ? valid.phonePrefix : true) && valid.phoneNumber,
-                        // Style from local PhoneInput.scss with better BEM naming - see PhoneInput.scss
-                        'adyen-checkout-field__input-holder--phone-input': true
+                        // Style from local PhoneInput.scss
+                        'adyen-checkout-input-holder--phone-input': true
                     })}
                 >
                     {showPrefix &&
@@ -123,7 +128,7 @@ function PhoneInput(props) {
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
                                 // readOnly={props.phoneNumberIsReadonly}
                                 placeholder={props.placeholders.phoneNumber || '123456789'}
-                                className="adyen-checkout__input adyen-checkout-field__input--phone-number"
+                                className="adyen-checkout__input adyen-checkout-input--phone-number"
                                 autoCorrect="off"
                                 aria-required={true}
                                 aria-label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
