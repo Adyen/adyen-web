@@ -7,6 +7,7 @@ import getDataset from '../../../../core/Services/get-dataset';
 import { DataSet } from '../../../../core/Services/data-set';
 import PhoneInput from '../../../internal/PhoneInputNew';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import LoadingWrapper from '../../../internal/LoadingWrapper';
 
 function MBWayInput(props: MBWayInputProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -16,7 +17,7 @@ function MBWayInput(props: MBWayInputProps) {
     const { allowedCountries = [] } = props;
 
     const [phonePrefixes, setPhonePrefixes] = useState<DataSet>([]);
-    const [status, setStatus] = useState<string>('ready');
+    const [status, setStatus] = useState<string>('loading');
 
     this.setStatus = setStatus;
     this.showValidation = phoneInputRef?.current?.triggerValidation;
@@ -40,10 +41,12 @@ function MBWayInput(props: MBWayInputProps) {
                 });
 
                 setPhonePrefixes(mappedCountries || []);
+                setStatus('ready');
             })
             .catch(error => {
                 props.onError(new AdyenCheckoutError('ERROR', error));
                 setPhonePrefixes([]);
+                setStatus('ready');
             });
     }, []);
 
@@ -52,11 +55,13 @@ function MBWayInput(props: MBWayInputProps) {
     };
 
     return (
-        <div className="adyen-checkout__mb-way">
-            <PhoneInput {...props} items={phonePrefixes} ref={phoneInputRef} onChange={onChange} data={props.data} />
+        <LoadingWrapper status={status}>
+            <div className="adyen-checkout__mb-way">
+                <PhoneInput {...props} items={phonePrefixes} ref={phoneInputRef} onChange={onChange} data={props.data} />
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
-        </div>
+                {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+            </div>
+        </LoadingWrapper>
     );
 }
 
