@@ -7,10 +7,10 @@ import './CtPOneTimePassword.scss';
 import { CtPOneTimePasswordInputHandlers } from '../CtPOneTimePasswordInput/CtPOneTimePasswordInput';
 
 const CtPOneTimePassword = () => {
-    const context = useClickToPayContext();
+    const { finishIdentityValidation, otpMaskedContact } = useClickToPayContext();
     const [otp, setOtp] = useState<string>(null);
     const [isValid, setIsValid] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isValidatingOtp, setIsValidatingOtp] = useState<boolean>(false);
     const [errorCode, setErrorCode] = useState<string>(null);
     const inputRef = useRef<CtPOneTimePasswordInputHandlers>(null);
 
@@ -30,13 +30,13 @@ const CtPOneTimePassword = () => {
             return;
         }
 
-        setIsLoading(true);
+        setIsValidatingOtp(true);
 
         try {
-            await context.finishIdentityValidation(otp);
+            await finishIdentityValidation(otp);
         } catch (error) {
             setErrorCode(error?.reason);
-            setIsLoading(false);
+            setIsValidatingOtp(false);
         }
     }, [otp, isValid, inputRef.current]);
 
@@ -44,11 +44,11 @@ const CtPOneTimePassword = () => {
         <Fragment>
             <div className="adyen-checkout-ctp__otp-title">We need to verify you</div>
             <div className="adyen-checkout-ctp__otp-subtitle">
-                Enter the code we sent to <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{context.otpMaskedContact}</span> to confirm
+                Enter the code we sent to <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span> to confirm
                 it&lsquo;s you
             </div>
-            <CtPOneTimePasswordInput ref={inputRef} onChange={onChangeOtpInput} disabled={isLoading} errorCode={errorCode} />
-            <Button label="Continue" onClick={onSubmitPassword} status={isLoading && 'loading'} />
+            <CtPOneTimePasswordInput ref={inputRef} onChange={onChangeOtpInput} disabled={isValidatingOtp} errorCode={errorCode} />
+            <Button label="Continue" onClick={onSubmitPassword} status={isValidatingOtp && 'loading'} />
         </Fragment>
     );
 };

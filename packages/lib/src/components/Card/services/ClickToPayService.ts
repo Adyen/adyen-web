@@ -6,11 +6,12 @@ import { SecureRemoteCommerceInitResult } from './configMock';
 export enum CtpState {
     Idle = 'Idle',
     Loading = 'Loading',
-    NotAvailable = 'NotAvailable',
-    AwaitingSignIn = 'AwaitingSignIn',
+    ShopperIdentified = 'ShopperIdentified',
     OneTimePassword = 'OneTimePassword',
     Ready = 'Ready',
-    Checkout = 'Checkout'
+    Login = 'Login',
+    NotAvailable = 'NotAvailable'
+    // Checkout = 'Checkout'
 }
 
 type CallbackStateSubscriber = (state: CtpState) => void;
@@ -31,8 +32,8 @@ export interface IClickToPayService {
     subscribeOnStatusChange(callback: CallbackStateSubscriber): void;
 
     // identification flow
-    // startIdentityValidation(): Promise<any>;
-    abortIdentityValidation(): void;
+    startIdentityValidation(): Promise<any>;
+    // abortIdentityValidation(): void;
     finishIdentityValidation(otpCode: string): Promise<any>;
 }
 
@@ -62,6 +63,7 @@ class ClickToPayService implements IClickToPayService {
     }
 
     public get maskedShopperContact(): string | undefined {
+        console.log(this.shopperMaskedValidationData);
         return this.shopperMaskedValidationData?.maskedValidationChannel;
     }
 
@@ -89,15 +91,10 @@ class ClickToPayService implements IClickToPayService {
             const isEnrolled = await this.identifyShopper();
 
             if (isEnrolled) {
-                await this.startIdentityValidation();
-                this.setState(CtpState.OneTimePassword);
+                this.setState(CtpState.ShopperIdentified);
                 return;
-            } else {
-                this.setState(CtpState.NotAvailable);
             }
-
-            // if (isEnrolled) this.setState(CtpState.AwaitingSignIn);
-            // else this.setState(CtpState.NotAvailable);
+            this.setState(CtpState.NotAvailable);
         } catch (error) {
             console.error(error);
             this.setState(CtpState.NotAvailable);
@@ -114,19 +111,17 @@ class ClickToPayService implements IClickToPayService {
      *
      * This method uses only the SDK that responded first on identifyShopper() call. There is no need to use all SDK's
      */
-    private async startIdentityValidation(): Promise<any> {
+    public async startIdentityValidation(): Promise<void> {
         if (!this.validationSchemaSdk) {
             throw Error('initiateIdentityValidation: No schema set for the validation process');
         }
         this.shopperMaskedValidationData = await this.validationSchemaSdk.initiateIdentityValidation();
-        // this.shopperMaskedValidationData = {};
-        // return Promise.resolve(true);
-        return this.shopperMaskedValidationData;
+        this.setState(CtpState.OneTimePassword);
     }
 
-    public abortIdentityValidation() {
-        this.setState(CtpState.AwaitingSignIn);
-    }
+    // public abortIdentityValidation() {
+    //     this.setState(CtpState.AwaitingSignIn);
+    // }
 
     /**
      * Completes the validation of a Consumer Identity, by evaluating the supplied OTP.

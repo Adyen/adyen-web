@@ -1,48 +1,30 @@
 import { h } from 'preact';
-import ClickToPayService, { CtpState } from '../../../services/ClickToPayService';
-import SrcSdkLoader from '../../../services/sdks/SrcSdkLoader';
+import { CtpState, IClickToPayService } from '../../../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
 type ClickToPayProviderProps = {
-    configuration: any;
-    environment: string;
+    clickToPayService: IClickToPayService | null;
     children: any;
 };
 
-const ClickToPayProvider = (props: ClickToPayProviderProps) => {
-    const [ctpState, setCtpState] = useState<CtpState>(CtpState.Idle);
-    const [ctpService, setCtpService] = useState<ClickToPayService>(null);
+const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderProps) => {
+    const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
+    const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
 
     useEffect(() => {
-        if (!props.configuration) {
-            setCtpState(CtpState.NotAvailable);
-            return;
-        }
-
-        const { schemas, shopperIdentity } = props.configuration;
-        const schemaNames = Object.keys(schemas);
-        const srcSdkLoader = new SrcSdkLoader(schemaNames, props.environment);
-        const service = new ClickToPayService(schemas, srcSdkLoader, shopperIdentity);
-        setCtpService(service);
-    }, []);
-
-    useEffect(() => {
-        if (ctpService) {
-            ctpService.subscribeOnStatusChange(status => setCtpState(status));
-            ctpService.initialize();
-        }
+        ctpService?.subscribeOnStatusChange(status => setCtpState(status));
     }, [ctpService]);
 
     const handleFinishIdentityValidation = useCallback(
         async (otpValue: string) => {
-            await ctpService.finishIdentityValidation(otpValue);
+            await ctpService?.finishIdentityValidation(otpValue);
         },
         [ctpService]
     );
 
     const startIdentityValidation = useCallback(async () => {
-        const data = await ctpService.startIdentityValidation();
+        const data = await ctpService?.startIdentityValidation();
         return data;
     }, [ctpService]);
 
@@ -56,7 +38,7 @@ const ClickToPayProvider = (props: ClickToPayProviderProps) => {
                 finishIdentityValidation: handleFinishIdentityValidation
             }}
         >
-            <ClickToPayContext.Consumer>{props.children}</ClickToPayContext.Consumer>
+            <ClickToPayContext.Consumer>{children}</ClickToPayContext.Consumer>
         </ClickToPayContext.Provider>
     );
 };

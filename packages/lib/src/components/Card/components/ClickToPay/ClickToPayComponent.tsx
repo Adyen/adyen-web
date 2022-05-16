@@ -5,6 +5,7 @@ import CtPOneTimePassword from './components/CtPOneTimePassword';
 import CtPCardsList from './components/CtPCardsList';
 import CtPSection from './components/CtPSection';
 import ContentSeparator from '../../../internal/ContentSeparator';
+import { useEffect } from 'preact/hooks';
 
 /**
  * TODO:
@@ -15,17 +16,21 @@ import ContentSeparator from '../../../internal/ContentSeparator';
  */
 
 const ClickToPayComponent = () => {
-    const context = useClickToPayContext();
+    const { ctpState, startIdentityValidation } = useClickToPayContext();
 
-    if (context.ctpState === CtpState.NotAvailable) {
+    useEffect(() => {
+        if (ctpState === CtpState.ShopperIdentified) startIdentityValidation();
+    }, [ctpState]);
+
+    if (ctpState === CtpState.NotAvailable) {
         return null;
     }
 
     return (
         <Fragment>
-            <CtPSection isLoading={context.ctpState === CtpState.Loading}>
-                {context.ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-                {context.ctpState === CtpState.Ready && <CtPCardsList />}
+            <CtPSection isLoading={[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState)}>
+                {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
+                {ctpState === CtpState.Ready && <CtPCardsList />}
             </CtPSection>
             <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
         </Fragment>

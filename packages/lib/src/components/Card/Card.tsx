@@ -10,35 +10,21 @@ import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import ClickToPayComponent from './components/ClickToPay';
-import { CtpState } from './services/ClickToPayService';
-// import SrcSdkLoader from './services/sdks/SrcSdkLoader';
-// import { configMock } from './services/configMock';
+import { CtpState, IClickToPayService } from './services/ClickToPayService';
 import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
+import { createClickToPayService } from './components/ClickToPay/utils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
-    // private clickToPayService?: ClickToPayService;
+    private readonly clickToPayService: IClickToPayService | null;
 
     constructor(props) {
         super(props);
 
-        // if (props.clickToPayConfiguration?.schemas.length) {
-        //     const { schemas, shopperIdentity } = props.clickToPayConfiguration;
-        //     const srcSdkLoader = new SrcSdkLoader(schemas, props.environment);
-        //     this.clickToPayService = new ClickToPayService(configMock, srcSdkLoader, shopperIdentity);
-        // }
-        //
-        // if (props.clickToPayConfiguration?.prefetch) {
-        //     this.prefetch();
-        // }
+        this.clickToPayService = createClickToPayService(props.clickToPayConfiguration, props.environment);
+        this.clickToPayService?.initialize();
     }
-
-    // public async prefetch(): Promise<void> {
-    //     if (this.clickToPayService) {
-    //         await this.clickToPayService.initialize();
-    //     }
-    // }
 
     protected static defaultProps = {
         onBinLookup: () => {},
@@ -192,13 +178,15 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     render() {
+        console.log('rendered Card');
+
         return (
             <CoreProvider
                 i18n={this.props.i18n}
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <ClickToPayProvider environment={this.props.environment} configuration={this.props.clickToPayConfiguration}>
+                <ClickToPayProvider clickToPayService={this.clickToPayService}>
                     {({ ctpState }) => {
                         console.log('CtP State', ctpState);
                         return (
