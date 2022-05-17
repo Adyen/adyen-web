@@ -178,7 +178,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     render() {
-        console.log('rendered Card');
+        // console.log('rendered Card');
 
         return (
             <CoreProvider
@@ -188,7 +188,7 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 <ClickToPayProvider clickToPayService={this.clickToPayService}>
                     {({ ctpState }) => {
-                        console.log('CtP State', ctpState);
+                        // console.log('CtP State', ctpState);
                         return (
                             <div>
                                 {ctpState !== CtpState.NotAvailable && ctpState !== CtpState.Idle && <ClickToPayComponent />}

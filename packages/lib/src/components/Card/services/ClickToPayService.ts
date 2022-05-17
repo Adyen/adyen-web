@@ -50,7 +50,7 @@ class ClickToPayService implements IClickToPayService {
     private shopperMaskedValidationData: any;
     private srcCorrelationId: any;
 
-    private validationSchemaSdk: ISrcInitiator = null;
+    private validationSchemaSdk: ISrcInitiator | null = null;
 
     constructor(schemasConfig: Record<string, SecureRemoteCommerceInitResult>, sdkLoader: ISrcSdkLoader, shopperIdentity?: ShopperIdentity) {
         this.sdkLoader = sdkLoader;
@@ -58,12 +58,16 @@ class ClickToPayService implements IClickToPayService {
         this.shopperIdentity = shopperIdentity;
     }
 
+    private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
+        console.log('SDK chosen:', sdk.schemaName);
+        this.validationSchemaSdk = sdk;
+    }
+
     public get maskedCards() {
         return this.srcProfile?.maskedCards;
     }
 
     public get maskedShopperContact(): string | undefined {
-        console.log(this.shopperMaskedValidationData);
         return this.shopperMaskedValidationData?.maskedValidationChannel;
     }
 
@@ -133,6 +137,8 @@ class ClickToPayService implements IClickToPayService {
         }
 
         const validationToken = await this.validationSchemaSdk.completeIdentityValidation(otpCode);
+        console.log(validationToken);
+
         await this.getSecureRemoteCommerceProfile([validationToken.idToken]);
         this.validationSchemaSdk = null;
     }
@@ -183,32 +189,46 @@ class ClickToPayService implements IClickToPayService {
      * If recognized, it takes the first one in the response and uses its token
      */
     private async recognizeShopper(): Promise<IsRecognizedResponse> {
-        const recognizingPromises = this.sdks.map(sdk => sdk.isRecognized());
+        return new Promise((resolve, reject) => {
+            const promises = this.sdks.map(sdk => {
+                const isRecognizedPromise = sdk.isRecognized();
+                isRecognizedPromise.then(response => response.recognized && resolve(response));
+                return isRecognizedPromise;
+            });
 
-        const recognizeResponses = await Promise.all(recognizingPromises);
-
-        const isRecognizedResp = recognizeResponses.find(response => response.recognized);
-        return isRecognizedResp || { recognized: false };
+            Promise.all(promises)
+                .then(() => resolve({ recognized: false }))
+                .catch(error => reject(error));
+        });
     }
 
     /**
      * Call the identityLookup() method of each SRC SDK.
      *
-     * Based on the responses from the Click to Pay Systems, we should call the
-     * initiateIdentityValidation() SDK method of the Click to Pay System that
-     * responds first with consumerPresent response to the identityLookup() call
+     * Based on the responses from the Click to Pay Systems, we should call the initiateIdentityValidation() SDK method
+     * of the Click to Pay System that responds first with consumerPresent response to the identityLookup() call.
      */
-    private async identifyShopper(): Promise<boolean> {
-        const identifyLookupPromises = this.sdks.map(sdk =>
-            sdk.identityLookup({ value: this.shopperIdentity.value, type: this.shopperIdentity.type })
-        );
-        const identifyLookupResponses = await Promise.all(identifyLookupPromises);
+    private async identifyShopper(): Promise<{ isEnrolled: boolean }> {
+        return new Promise((resolve, reject) => {
+            const lookupPromises = this.sdks.map(sdk => {
+                const identityLookupPromise = sdk.identityLookup({ value: this.shopperIdentity.value, type: this.shopperIdentity.type });
 
-        // Find the index of the first schema that returns consumerPresent
-        const schemaIndex = identifyLookupResponses.findIndex(response => response.consumerPresent);
-        this.validationSchemaSdk = this.sdks[schemaIndex];
+                identityLookupPromise.then(response => {
+                    console.log(sdk.schemaName, response);
+                    if (response.consumerPresent && !this.validationSchemaSdk) {
+                        this.setSdkForPerformingShopperIdentityValidation(sdk);
+                        resolve({ isEnrolled: true });
+                    }
+                });
 
-        return this.validationSchemaSdk !== undefined;
+                return identityLookupPromise;
+            });
+
+            Promise.all(lookupPromises)
+                .then(() => resolve({ isEnrolled: false }))
+                .catch(error => reject(error));
+            // Error can be: FRAUD, ID_FORMAT_UNSUPPORTED, CONSUMER_ID_MISSING, ACCT_INACCESSIBLE
+        });
     }
 
     private async initiateSdks(): Promise<void> {

@@ -9,7 +9,6 @@ import {
     IsRecognizedResponse
 } from '../types';
 import Script from '../../../../utils/Script';
-import SrciError from './SrciError';
 
 export interface ISrcInitiator {
     schemaName: string;
@@ -93,13 +92,8 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * the browser environment.
      */
     public async isRecognized(): Promise<IsRecognizedResponse> {
-        try {
-            const response = await this.schemaSdk.isRecognized();
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const response = await this.schemaSdk.isRecognized();
+        return response;
     }
 
     /**
