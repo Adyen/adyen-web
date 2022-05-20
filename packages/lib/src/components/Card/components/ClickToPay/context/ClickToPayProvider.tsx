@@ -32,7 +32,7 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
         <ClickToPayContext.Provider
             value={{
                 ctpState: ctpState,
-                cards: ctpService?.maskedCards,
+                cards: ctpService?.shopperCards,
                 otpMaskedContact: ctpService?.maskedShopperContact,
                 startIdentityValidation: startIdentityValidation,
                 finishIdentityValidation: handleFinishIdentityValidation

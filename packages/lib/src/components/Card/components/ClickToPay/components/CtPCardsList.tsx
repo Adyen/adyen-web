@@ -15,7 +15,7 @@ const buttonStyle = {
 };
 
 const CtPCardsList = () => {
-    const context = useClickToPayContext();
+    const { cards } = useClickToPayContext();
 
     const onCheckout = useCallback(async (srcDigitalCardId: string) => {
         console.log('do checkout', srcDigitalCardId);
@@ -24,9 +24,9 @@ const CtPCardsList = () => {
     return (
         <Fragment>
             <div>
-                {context.cards?.map((card, index) => (
+                {cards?.map((card, index) => (
                     <button key={index} style={buttonStyle} onClick={() => onCheckout(card.srcDigitalCardId)}>
-                        {`XXXX XXXX XXXX ${card.panLastFour} ${card.panExpirationMonth}/${card.panExpirationYear}`}
+                        {card.paymentCardDescriptor} {`•••• ${card.panLastFour}`}
                     </button>
                 ))}
             </div>

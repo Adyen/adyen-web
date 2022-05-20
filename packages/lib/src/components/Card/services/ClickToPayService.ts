@@ -25,6 +25,7 @@ export interface IClickToPayService {
     maskedCards: any;
     maskedShopperContact: any;
     state: CtpState;
+    shopperCards: any;
 
     initialize(): Promise<void>;
     checkout(srcDigitalCardId: string): Promise<CheckoutResponse>;
@@ -46,6 +47,9 @@ class ClickToPayService implements IClickToPayService {
     private stateSubscriber: CallbackStateSubscriber;
 
     private sdks: ISrcInitiator[];
+    public shopperCards: any;
+
+    // be removed maybe?
     private srcProfile: any;
     private shopperMaskedValidationData: any;
     private srcCorrelationId: any;
@@ -137,7 +141,6 @@ class ClickToPayService implements IClickToPayService {
         }
 
         const validationToken = await this.validationSchemaSdk.completeIdentityValidation(otpCode);
-        console.log(validationToken);
 
         await this.getSecureRemoteCommerceProfile([validationToken.idToken]);
         this.validationSchemaSdk = null;
@@ -163,15 +166,36 @@ class ClickToPayService implements IClickToPayService {
     }
 
     private async getSecureRemoteCommerceProfile(idTokens: string[]): Promise<void> {
+        function createShopperMaskedCardsData(memo, srcProfile) {
+            const { profiles, srcCorrelationId } = srcProfile;
+
+            const cards = profiles.reduce((memo, profile) => {
+                const profileCards = profile.maskedCards.map(maskedCard => ({
+                    dateOfCardLastUsed: maskedCard.dateOfCardLastUsed,
+                    panLastFour: maskedCard.panLastFour,
+                    srcDigitalCardId: maskedCard.srcDigitalCardId,
+                    paymentCardDescriptor: maskedCard.paymentCardDescriptor,
+                    srcCorrelationId
+                }));
+                return [...memo, ...profileCards];
+            }, []);
+
+            return [...memo, ...cards];
+        }
+
         const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
         const srcProfiles = await Promise.all(srcProfilesPromises);
+
+        console.log('srcProfiles', srcProfiles);
+
+        const data = srcProfiles.reduce(createShopperMaskedCardsData, []);
+        console.log('cards', data);
+        this.shopperCards = data;
 
         // TODO: verify when APi return multiple profiles. What to do with that?
         // For now it is taking only the first one of the first response
         this.srcProfile = srcProfiles[0]?.profiles[0];
         this.srcCorrelationId = srcProfiles[0]?.srcCorrelationId;
-
-        console.log(this.srcProfile, this.srcCorrelationId);
 
         this.setState(CtpState.Ready);
     }

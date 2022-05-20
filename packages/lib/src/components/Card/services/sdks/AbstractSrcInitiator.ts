@@ -116,6 +116,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     public async getSrcProfile(idTokens: string[]): Promise<any> {
         try {
             const response = await this.schemaSdk.getSrcProfile({ idTokens });
+            // attach the schema name here maybe?
             return response;
         } catch (error) {
             console.error(`[${this.schemaName}] SecureRemoteCommerceInitiator #getSrcProfile`, error);
