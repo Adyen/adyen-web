@@ -52,6 +52,9 @@ To run the development environment:
   yarn start
   ```
 
+## Analytics and data tracking
+Starting [v5.16.0](link to release) the Drop-in and Components integrations contain analytics and tracking features that are turned on by default. Find out more about [what we track and how you can control it](https://docs-admin.is.adyen.com/online-payments/analytics-and-data-tracking).
+
 ## Contributing
 
 We merge every pull request into the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.

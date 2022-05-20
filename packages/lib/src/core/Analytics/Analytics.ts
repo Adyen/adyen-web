@@ -8,12 +8,11 @@ class Analytics {
     private static defaultProps = {
         enabled: true,
         telemetry: true,
-        conversion: false,
         checkoutAttemptId: null,
         experiments: []
     };
 
-    public checkoutAttemptId = null;
+    public checkoutAttemptId: string = null;
     public props;
     private readonly logEvent;
     private readonly logTelemetry;
@@ -26,8 +25,8 @@ class Analytics {
         this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
         this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });
 
-        const { conversion, enabled } = this.props;
-        if (conversion === true && enabled === true) {
+        const { telemetry, enabled } = this.props;
+        if (telemetry === true && enabled === true) {
             if (this.props.checkoutAttemptId) {
                 // handle prefilled checkoutAttemptId
                 this.checkoutAttemptId = this.props.checkoutAttemptId;
@@ -37,10 +36,10 @@ class Analytics {
     }
 
     send(event) {
-        const { conversion, enabled, payload, telemetry } = this.props;
+        const { enabled, payload, telemetry } = this.props;
 
         if (enabled === true) {
-            if (conversion === true && !this.checkoutAttemptId) {
+            if (telemetry === true && !this.checkoutAttemptId) {
                 // fetch a new checkoutAttemptId if none is already available
                 this.collectId().then(checkoutAttemptId => {
                     this.checkoutAttemptId = checkoutAttemptId;
@@ -51,10 +50,10 @@ class Analytics {
             if (telemetry === true) {
                 const telemetryTask = checkoutAttemptId =>
                     this.logTelemetry({ ...event, ...(payload && { ...payload }), checkoutAttemptId }).catch(() => {});
+
                 this.queue.add(telemetryTask);
 
-                // Not waiting for checkoutAttemptId
-                if (!conversion || this.checkoutAttemptId) {
+                if (this.checkoutAttemptId) {
                     this.queue.run(this.checkoutAttemptId);
                 }
             }
