@@ -26,7 +26,7 @@ const CtPCardsList = () => {
             <div>
                 {cards?.map((card, index) => (
                     <button key={index} style={buttonStyle} onClick={() => onCheckout(card.srcDigitalCardId)}>
-                        {card.paymentCardDescriptor} {`•••• ${card.panLastFour}`}
+                        {card.cardTitle} {`•••• ${card.panLastFour}`}
                     </button>
                 ))}
             </div>
