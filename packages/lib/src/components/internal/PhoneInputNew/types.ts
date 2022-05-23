@@ -1,4 +1,4 @@
-import { DataSet } from '../../../core/Services/data-set';
+import { DataSet, DataSetItem } from '../../../core/Services/data-set';
 
 export interface PhoneInputSchema {
     phoneNumber?: string;
@@ -20,4 +20,10 @@ export interface PhoneInputProps {
         phoneNumber?: string;
     };
     ref?;
+}
+
+export interface PhonePrefixes {
+    phonePrefixes: DataSetItem[];
+    loadingStatus: string;
+    error?;
 }

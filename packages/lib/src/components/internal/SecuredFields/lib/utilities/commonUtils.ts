@@ -220,6 +220,3 @@ export function partial(...args) {
     }
     return partialFn;
 }
-
-// Not null or undefined or only spaces
-// export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
