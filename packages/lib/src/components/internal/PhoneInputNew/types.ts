@@ -25,5 +25,4 @@ export interface PhoneInputProps {
 export interface PhonePrefixes {
     phonePrefixes: DataSetItem[];
     loadingStatus: string;
-    error?;
 }

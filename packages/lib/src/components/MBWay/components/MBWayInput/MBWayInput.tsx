@@ -4,7 +4,6 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import { MBWayInputProps } from './types';
 import './MBWayInput.scss';
 import PhoneInput from '../../../internal/PhoneInputNew';
-import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 import usePhonePrefixes from '../../../internal/PhoneInputNew/usePhonePrefixes';
 
@@ -20,11 +19,7 @@ function MBWayInput(props: MBWayInputProps) {
     this.setStatus = setStatus;
     this.showValidation = phoneInputRef?.current?.triggerValidation;
 
-    const { loadingStatus: prefixLoadingStatus, phonePrefixes, error } = usePhonePrefixes({ allowedCountries, loadingContext });
-
-    if (error) {
-        props.onError(new AdyenCheckoutError('ERROR', error));
-    }
+    const { loadingStatus: prefixLoadingStatus, phonePrefixes } = usePhonePrefixes({ allowedCountries, loadingContext, handleError: props.onError });
 
     const onChange = ({ data, valid, errors, isValid }) => {
         props.onChange({ data, valid, errors, isValid });
