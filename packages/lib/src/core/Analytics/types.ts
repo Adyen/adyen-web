@@ -16,11 +16,6 @@ export interface AnalyticsOptions {
     telemetry?: boolean;
 
     /**
-     * Enable/Disable conversion events
-     */
-    conversion?: boolean;
-
-    /**
      * Reuse a previous checkoutAttemptId from a previous page
      */
     checkoutAttemptId?: string;
