@@ -53,7 +53,7 @@ To run the development environment:
   ```
 
 ## Analytics and data tracking
-Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the Drop-in and Components integrations contain analytics and tracking features that are turned on by default. Find out more about [what we track and how you can control it](https://docs-admin.is.adyen.com/online-payments/analytics-and-data-tracking).
+Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the Drop-in and Components integrations contain analytics and tracking features that are turned on by default. Find out more about [what we track and how you can control it](https://docs.adyen.com/online-payments/analytics-and-data-tracking).
 
 ## Contributing
 
