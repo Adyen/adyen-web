@@ -1,8 +1,8 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CheckoutResponse, IsRecognizedResponse } from './types';
+import { CallbackStateSubscriber, CheckoutResponse, IsRecognizedResponse, ShopperIdentity } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { SecureRemoteCommerceInitResult } from './configMock';
-import { createShopperCardsList } from './utils';
+import { createShopperCardsList, ShopperCard } from './utils';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -10,32 +10,17 @@ export enum CtpState {
     ShopperIdentified = 'ShopperIdentified',
     OneTimePassword = 'OneTimePassword',
     Ready = 'Ready',
-    Login = 'Login',
     NotAvailable = 'NotAvailable'
-    // Checkout = 'Checkout'
 }
 
-type CallbackStateSubscriber = (state: CtpState) => void;
-
-type ShopperIdentity = {
-    value: string;
-    type: string;
-};
-
 export interface IClickToPayService {
-    maskedCards: any;
-    maskedShopperContact: any;
     state: CtpState;
-    shopperCards: any;
-
+    shopperCards: ShopperCard[];
+    shopperValidationContact: string;
     initialize(): Promise<void>;
-    checkout(srcDigitalCardId: string): Promise<CheckoutResponse>;
-
+    checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<CheckoutResponse>;
     subscribeOnStatusChange(callback: CallbackStateSubscriber): void;
-
-    // identification flow
     startIdentityValidation(): Promise<any>;
-    // abortIdentityValidation(): void;
     finishIdentityValidation(otpCode: string): Promise<any>;
 }
 
@@ -43,19 +28,13 @@ class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
     private readonly schemasConfig: Record<string, SecureRemoteCommerceInitResult>;
     private readonly shopperIdentity?: ShopperIdentity;
-
-    public state: CtpState = CtpState.Idle;
+    private sdks: ISrcInitiator[];
+    private validationSchemaSdk: ISrcInitiator = null;
     private stateSubscriber: CallbackStateSubscriber;
 
-    private sdks: ISrcInitiator[];
-    public shopperCards: any;
-
-    // be removed maybe?
-    private srcProfile: any;
-    private shopperMaskedValidationData: any;
-    private srcCorrelationId: any;
-
-    private validationSchemaSdk: ISrcInitiator | null = null;
+    public state: CtpState = CtpState.Idle;
+    public shopperCards: ShopperCard[] = null;
+    public shopperValidationContact: string;
 
     constructor(schemasConfig: Record<string, SecureRemoteCommerceInitResult>, sdkLoader: ISrcSdkLoader, shopperIdentity?: ShopperIdentity) {
         this.sdkLoader = sdkLoader;
@@ -66,14 +45,6 @@ class ClickToPayService implements IClickToPayService {
     private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
         console.log('SDK chosen:', sdk.schemaName);
         this.validationSchemaSdk = sdk;
-    }
-
-    public get maskedCards() {
-        return this.srcProfile?.maskedCards;
-    }
-
-    public get maskedShopperContact(): string | undefined {
-        return this.shopperMaskedValidationData?.maskedValidationChannel;
     }
 
     public async initialize(): Promise<void> {
@@ -97,7 +68,7 @@ class ClickToPayService implements IClickToPayService {
                 return;
             }
 
-            const isEnrolled = await this.identifyShopper();
+            const { isEnrolled } = await this.identifyShopper();
 
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);
@@ -118,23 +89,22 @@ class ClickToPayService implements IClickToPayService {
      * Initiates Consumer Identity validation with one Click to Pay System.
      * The Click to Pay System sends a one-time-password (OTP) to the registered email address or mobile number.
      *
-     * This method uses only the SDK that responded first on identifyShopper() call. There is no need to use all SDK's
+     * This method uses only the SDK that responded first on identifyShopper() call
      */
     public async startIdentityValidation(): Promise<void> {
         if (!this.validationSchemaSdk) {
-            throw Error('initiateIdentityValidation: No schema set for the validation process');
+            throw Error('startIdentityValidation: No schema set for the validation process');
         }
-        this.shopperMaskedValidationData = await this.validationSchemaSdk.initiateIdentityValidation();
+
+        const { maskedValidationChannel } = await this.validationSchemaSdk.initiateIdentityValidation();
+        this.shopperValidationContact = maskedValidationChannel;
+
         this.setState(CtpState.OneTimePassword);
     }
 
-    // public abortIdentityValidation() {
-    //     this.setState(CtpState.AwaitingSignIn);
-    // }
-
     /**
      * Completes the validation of a Consumer Identity, by evaluating the supplied OTP.
-     * This method uses only the SDK that responded first on identifyShopper() call. There is no need to use all SDK's
+     * This method uses only the SDK that responded first on identifyShopper() call
      */
     public async finishIdentityValidation(otpCode: string): Promise<any> {
         if (!this.validationSchemaSdk) {
@@ -150,36 +120,29 @@ class ClickToPayService implements IClickToPayService {
     /**
      * This method performs checkout using the selected card
      */
-    public async checkout(srcDigitalCardId: string): Promise<CheckoutResponse> {
-        if (!srcDigitalCardId) {
-            throw Error('checkout: No card ID provided');
+    public async checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<CheckoutResponse> {
+        if (!srcDigitalCardId || !schema || !srcCorrelationId) {
+            throw Error('checkout: Missing parameter');
         }
 
-        const params = {
+        const checkoutParameters = {
             srcDigitalCardId,
-            srcCorrelationId: this.srcCorrelationId,
-            idToken: this.srcProfile.idToken
+            srcCorrelationId
         };
 
-        // TODO: which SDK to pick up for the checkout? For now, picking up the first one
-        const checkoutResponse = await this.sdks[0].checkout(params);
+        const checkoutSdk = this.sdks.find(sdk => sdk.schemaName === schema);
+        const checkoutResponse = await checkoutSdk.checkout(checkoutParameters);
+
+        // TODO: figure out what happens if dcfActionCode !== COMPLETED
+        console.log(checkoutResponse);
         return checkoutResponse;
     }
 
     private async getSecureRemoteCommerceProfile(idTokens: string[]): Promise<void> {
         const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
         const srcProfiles = await Promise.all(srcProfilesPromises);
-
-        console.log('srcProfiles', srcProfiles);
-
         const cards = createShopperCardsList(srcProfiles);
-        console.log('cards', cards);
         this.shopperCards = cards;
-
-        // TODO: verify when APi return multiple profiles. What to do with that?
-        // // For now it is taking only the first one of the first response
-        // this.srcProfile = srcProfiles[0]?.profiles[0];
-        // this.srcCorrelationId = srcProfiles[0]?.srcCorrelationId;
 
         this.setState(CtpState.Ready);
     }

@@ -30,7 +30,6 @@ export function handleError(obj) {
 }
 
 export function handleSubmit(state, component) {
-    debugger;
     component.setStatus('loading');
 
     return makePayment(state.data)

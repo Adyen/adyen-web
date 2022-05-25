@@ -15,17 +15,25 @@ const buttonStyle = {
 };
 
 const CtPCardsList = () => {
-    const { cards } = useClickToPayContext();
+    const { cards, checkout } = useClickToPayContext();
 
-    const onCheckout = useCallback(async (srcDigitalCardId: string) => {
-        console.log('do checkout', srcDigitalCardId);
-    }, []);
+    const onCheckout = useCallback(
+        async (srcDigitalCardId: string, paymentCardDescriptor: string, srcCorrelationId: string) => {
+            console.log('do checkout', srcDigitalCardId, paymentCardDescriptor, srcCorrelationId);
+            checkout(srcDigitalCardId, paymentCardDescriptor, srcCorrelationId);
+        },
+        [checkout]
+    );
 
     return (
         <Fragment>
             <div>
                 {cards?.map((card, index) => (
-                    <button key={index} style={buttonStyle} onClick={() => onCheckout(card.srcDigitalCardId)}>
+                    <button
+                        key={index}
+                        style={buttonStyle}
+                        onClick={() => onCheckout(card.srcDigitalCardId, card.paymentCardDescriptor, card.srcCorrelationId)}
+                    >
                         {card.cardTitle} {`•••• ${card.panLastFour}`}
                     </button>
                 ))}

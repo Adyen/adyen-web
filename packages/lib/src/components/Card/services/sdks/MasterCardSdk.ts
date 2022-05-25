@@ -8,7 +8,7 @@ const IdentityTypeMap = {
 };
 
 class MasterCardSdk extends AbstractSrcInitiator {
-    public readonly schemaName = 'mc';
+    public readonly schemaName = 'mastercard';
 
     constructor(environment: string) {
         super(environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);

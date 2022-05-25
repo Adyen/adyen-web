@@ -27,6 +27,7 @@ class Analytics {
         this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });
 
         const { conversion, enabled } = this.props;
+
         if (conversion === true && enabled === true) {
             if (this.props.checkoutAttemptId) {
                 // handle prefilled checkoutAttemptId

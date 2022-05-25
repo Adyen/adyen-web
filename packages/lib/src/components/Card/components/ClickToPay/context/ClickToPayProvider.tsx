@@ -28,12 +28,20 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
         return data;
     }, [ctpService]);
 
+    const checkout = useCallback(
+        async (srcDigitalCardId: string, schema: string, srcCorrelationId: string) => {
+            await ctpService?.checkout(srcDigitalCardId, schema, srcCorrelationId);
+        },
+        [ctpService]
+    );
+
     return (
         <ClickToPayContext.Provider
             value={{
                 ctpState: ctpState,
                 cards: ctpService?.shopperCards,
-                otpMaskedContact: ctpService?.maskedShopperContact,
+                otpMaskedContact: ctpService?.shopperValidationContact,
+                checkout: checkout,
                 startIdentityValidation: startIdentityValidation,
                 finishIdentityValidation: handleFinishIdentityValidation
             }}

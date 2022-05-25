@@ -1,3 +1,5 @@
+import { CtpState } from './ClickToPayService';
+
 export interface InitParams {
     srcInitiatorId: string;
     srciTransactionId: string;
@@ -9,7 +11,7 @@ export interface InitParams {
 export type CheckoutParams = {
     srcCorrelationId: string;
     srcDigitalCardId: string;
-    idToken: string;
+    // idToken: string;
 };
 
 export interface IdentityLookupParams {
@@ -86,8 +88,12 @@ export type IsRecognizedResponse = {
 };
 
 export type CheckoutResponse = {
-    checkoutResponse: string;
     dcfActionCode: string;
-    idToken: string;
-    unbindAppInstance: boolean;
+};
+
+export type CallbackStateSubscriber = (state: CtpState) => void;
+
+export type ShopperIdentity = {
+    value: string;
+    type: string;
 };
