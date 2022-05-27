@@ -1,7 +1,8 @@
 import { h } from 'preact';
-import { CtpState, IClickToPayService } from '../../../services/ClickToPayService';
+import { CtpState } from '../../../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useState } from 'preact/hooks';
+import { IClickToPayService } from '../../../services/types';
 
 type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
@@ -13,7 +14,7 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
 
     useEffect(() => {
-        ctpService?.subscribeOnStatusChange(status => setCtpState(status));
+        ctpService?.subscribeOnStateChange(status => setCtpState(status));
     }, [ctpService]);
 
     const handleFinishIdentityValidation = useCallback(
@@ -30,7 +31,7 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
 
     const checkout = useCallback(
         async (srcDigitalCardId: string, schema: string, srcCorrelationId: string) => {
-            await ctpService?.checkout(srcDigitalCardId, schema, srcCorrelationId);
+            return await ctpService?.checkout(srcDigitalCardId, schema, srcCorrelationId);
         },
         [ctpService]
     );

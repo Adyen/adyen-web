@@ -11,6 +11,8 @@ import {
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
+import { IdentityLookupParams } from './services/types';
+import { SrcInitParams } from './services/sdks/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -28,10 +30,7 @@ export interface CardElementProps extends UIElementProps {
      * Configuration for Click to Pay
      * If 'schemas' property has invalid values or not provided, Click to Pay feature is ignored
      */
-    clickToPayConfiguration?: {
-        schemas: Array<string>;
-        shopperIdentity?: { value: string; type: string };
-    };
+    clickToPayConfiguration?: ClickToPayConfiguration;
 
     /**
      * type will always be "card" (generic card, stored card)
@@ -119,6 +118,11 @@ export interface CardElementProps extends UIElementProps {
 
     [key: string]: any;
 }
+
+export type ClickToPayConfiguration = {
+    schemas: Record<'mastercard' | 'visa', SrcInitParams>;
+    shopperIdentity?: IdentityLookupParams;
+};
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 

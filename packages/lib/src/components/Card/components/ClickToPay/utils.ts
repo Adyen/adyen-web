@@ -1,7 +1,9 @@
 import SrcSdkLoader from '../../services/sdks/SrcSdkLoader';
-import ClickToPayService, { IClickToPayService } from '../../services/ClickToPayService';
+import ClickToPayService from '../../services/ClickToPayService';
+import { IClickToPayService } from '../../services/types';
+import { ClickToPayConfiguration } from '../../types';
 
-function createClickToPayService(configuration: any, environment: string): IClickToPayService | null {
+function createClickToPayService(configuration: ClickToPayConfiguration, environment: string): IClickToPayService | null {
     if (!configuration) {
         return null;
     }

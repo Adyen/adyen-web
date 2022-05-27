@@ -1,11 +1,11 @@
 import { h } from 'preact';
-// import useCoreContext from '../../../core/Context/useCoreContext';
-import './CtPSection.scss';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import getImage from '../../../../../../utils/get-image';
 import Img from '../../../../../internal/Img';
 import Spinner from '../../../../../internal/Spinner';
+import './CtPSection.scss';
 
+// TODO: filter available brands
 const brands = ['mc', 'visa', 'amex', 'discover'];
 
 interface CtPSectionProps {

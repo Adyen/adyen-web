@@ -1,30 +1,29 @@
-import {
-    CheckoutParams,
-    CheckoutResponse,
-    CompleteIdentityValidationResponse,
-    IdentityLookupParams,
-    IdentityLookupResponse,
-    InitiateIdentityValidationResponse,
-    InitParams,
-    IsRecognizedResponse
-} from '../types';
+import { IdentityLookupParams } from '../types';
 import Script from '../../../../utils/Script';
+import {
+    SrcCheckoutParams,
+    SrciCheckoutResponse,
+    SrciCompleteIdentityValidationResponse,
+    SrciIdentityLookupResponse,
+    SrciInitiateIdentityValidationResponse,
+    SrciIsRecognizedResponse,
+    SrcInitParams,
+    SrcProfile
+} from './types';
 
 export interface ISrcInitiator {
     schemaName: string;
-
     // Loading 3rd party library
     loadSdkScript(): Promise<void>;
     removeSdkScript(): void;
-
     // SRCi specification methods
-    init(params: InitParams): Promise<void>;
-    isRecognized(): Promise<IsRecognizedResponse>;
-    identityLookup(params: IdentityLookupParams): Promise<IdentityLookupResponse>;
-    initiateIdentityValidation(): Promise<InitiateIdentityValidationResponse>;
-    completeIdentityValidation(validationData: string): Promise<CompleteIdentityValidationResponse>;
-    getSrcProfile(idTokens: string[]): Promise<any>; // TODO: type
-    checkout(params: CheckoutParams): Promise<CheckoutResponse>;
+    init(params: SrcInitParams): Promise<void>;
+    isRecognized(): Promise<SrciIsRecognizedResponse>;
+    identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse>;
+    initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse>;
+    completeIdentityValidation(validationData: string): Promise<SrciCompleteIdentityValidationResponse>;
+    getSrcProfile(idTokens: string[]): Promise<SrcProfile>;
+    checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse>;
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
@@ -69,7 +68,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * Initializes the app with common state. The init method must be called before any other methods. It
      * is synchronous in operation.
      */
-    public async init(params: InitParams): Promise<void> {
+    public async init(params: SrcInitParams): Promise<void> {
         await this.schemaSdk.init(params);
     }
 
@@ -77,7 +76,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * This method performs checkout using the specified card. If successful, the
      * response contains summary checkout information.
      */
-    public async checkout(params: CheckoutParams): Promise<CheckoutResponse> {
+    public async checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse> {
         try {
             const response = await this.schemaSdk.checkout(params);
             return response;
@@ -91,7 +90,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * Determines whether the consumer is recognized, e.g. by detecting the presence of a local cookie in
      * the browser environment.
      */
-    public async isRecognized(): Promise<IsRecognizedResponse> {
+    public async isRecognized(): Promise<SrciIsRecognizedResponse> {
         const response = await this.schemaSdk.isRecognized();
         return response;
     }
@@ -100,7 +99,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * Sends a validation code to the specified consumer.
      * This method sends a one-time password (OTP) to the consumer to start validation
      */
-    public async initiateIdentityValidation(): Promise<InitiateIdentityValidationResponse> {
+    public async initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse> {
         try {
             const response = await this.schemaSdk.initiateIdentityValidation();
             return response;
@@ -128,11 +127,11 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * Obtains the user account associated with the consumer’s identity (an email address or phone
      * number).
      */
-    public abstract identityLookup(params: IdentityLookupParams): Promise<IdentityLookupResponse>;
+    public abstract identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse>;
 
     /**
      * This method completes the identity validation by receiving the one-time password (OTP) sent to the
      * consumer to start validation.
      */
-    public abstract completeIdentityValidation(otp: string): Promise<CompleteIdentityValidationResponse>;
+    public abstract completeIdentityValidation(otp: string): Promise<SrciCompleteIdentityValidationResponse>;
 }

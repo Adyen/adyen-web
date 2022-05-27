@@ -1,7 +1,8 @@
 import { VISA_SDK_PROD, VISA_SDK_TEST } from '../config';
-import { CompleteIdentityValidationResponse, IdentityLookupParams, IdentityLookupResponse, IsRecognizedResponse } from '../types';
+import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
+import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse } from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL'
@@ -25,7 +26,7 @@ class VisaSrcSdk extends AbstractSrcInitiator {
         this.schemaSdk = new window.vAdapters.VisaSRCI();
     }
 
-    public async identityLookup(params: IdentityLookupParams): Promise<IdentityLookupResponse> {
+    public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {
         try {
             const consumerIdentity = {
                 identityValue: params.value,
@@ -40,7 +41,7 @@ class VisaSrcSdk extends AbstractSrcInitiator {
         }
     }
 
-    public async completeIdentityValidation(otp: string): Promise<CompleteIdentityValidationResponse> {
+    public async completeIdentityValidation(otp: string): Promise<SrciCompleteIdentityValidationResponse> {
         try {
             const response = await this.schemaSdk.completeIdentityValidation(otp);
             return response;

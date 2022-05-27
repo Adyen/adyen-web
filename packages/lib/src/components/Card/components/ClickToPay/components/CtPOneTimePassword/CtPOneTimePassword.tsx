@@ -1,10 +1,10 @@
 import { Fragment, h } from 'preact';
-import Button from '../../../../../internal/Button';
 import { useCallback, useRef, useState } from 'preact/hooks';
+import Button from '../../../../../internal/Button';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPOneTimePasswordInput from '../CtPOneTimePasswordInput';
-import './CtPOneTimePassword.scss';
 import { CtPOneTimePasswordInputHandlers } from '../CtPOneTimePasswordInput/CtPOneTimePasswordInput';
+import './CtPOneTimePassword.scss';
 
 const CtPOneTimePassword = () => {
     const { finishIdentityValidation, otpMaskedContact } = useClickToPayContext();

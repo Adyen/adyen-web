@@ -1,17 +1,16 @@
 import { h } from 'preact';
 import { useCallback, useEffect, useImperativeHandle } from 'preact/hooks';
+import { forwardRef } from 'preact/compat';
 import { otpValidationRules } from './validate';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../utils/useForm';
 import Field from '../../../../../internal/FormFields/Field';
 import renderFormField from '../../../../../internal/FormFields';
 import './CtPOneTimePasswordInput.scss';
-import { forwardRef } from 'preact/compat';
 
 interface Props {
     disabled: boolean;
     errorCode?: string;
-    data?: {}; //  TODO REMOVE
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
 }
 
@@ -28,7 +27,6 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, Prop
     const formSchema = ['otp'];
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPOneTimePasswordInputDataState>({
         schema: formSchema,
-        defaultData: props.data,
         rules: otpValidationRules
     });
 

@@ -13,6 +13,17 @@ const getSchemaSdk = (schema: string, environment: string) => {
     return SchemaSdkClass ? new SchemaSdkClass(environment) : null;
 };
 
+const validateSchemaNames = (schemas: string[]): string[] => {
+    const validNames = Object.keys(sdkMap);
+    return schemas.reduce((memo, schema) => {
+        if (!validNames.includes(schema)) {
+            console.warn(`SrcSdkLoader: '${schema}' is not a valid name`);
+            return memo;
+        }
+        return [...memo, schema];
+    }, []);
+};
+
 export interface ISrcSdkLoader {
     load(): Promise<ISrcInitiator[]>;
 }
@@ -22,12 +33,15 @@ class SrcSdkLoader implements ISrcSdkLoader {
     private readonly environment: string;
 
     constructor(schemas: string[], environment: string) {
-        this.schemas = schemas; //TODO:  validate schemas first
+        this.schemas = validateSchemaNames(schemas);
         this.environment = environment;
     }
 
     public async load(): Promise<ISrcInitiator[]> {
-        // TODO: ideia: return Map<schema, sdk>
+        if (!this.schemas) {
+            throw Error('SrcSdkLoader: There are no schemas set to be loaded');
+        }
+
         const sdks = this.schemas.map(schema => getSchemaSdk(schema, this.environment));
         const promises = sdks.map(sdk => sdk.loadSdkScript());
         await Promise.all(promises);

@@ -1,6 +1,6 @@
-import Button from '../../../../internal/Button';
 import { Fragment, h } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
+import Button from '../../../../internal/Button';
 import useClickToPayContext from '../context/useClickToPayContext';
 
 const buttonStyle = {
@@ -16,11 +16,15 @@ const buttonStyle = {
 
 const CtPCardsList = () => {
     const { cards, checkout } = useClickToPayContext();
+    const [isDoingCheckout, setIsDoingCheckout] = useState<boolean>(false);
 
     const onCheckout = useCallback(
         async (srcDigitalCardId: string, paymentCardDescriptor: string, srcCorrelationId: string) => {
-            console.log('do checkout', srcDigitalCardId, paymentCardDescriptor, srcCorrelationId);
-            checkout(srcDigitalCardId, paymentCardDescriptor, srcCorrelationId);
+            console.log('Checkout', srcDigitalCardId, paymentCardDescriptor, srcCorrelationId);
+            setIsDoingCheckout(true);
+            await checkout(srcDigitalCardId, paymentCardDescriptor || 'visa', srcCorrelationId);
+            setIsDoingCheckout(false);
+            // TODO: Figure out if Visa is going to be returned as part of the paymentCardDescriptor
         },
         [checkout]
     );
@@ -38,7 +42,7 @@ const CtPCardsList = () => {
                     </button>
                 ))}
             </div>
-            <Button label="Pay" />
+            <Button label="Pay" status={isDoingCheckout && 'loading'} />
         </Fragment>
     );
 };

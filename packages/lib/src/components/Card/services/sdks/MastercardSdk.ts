@@ -1,7 +1,8 @@
 import { MC_SDK_PROD, MC_SDK_TEST } from '../config';
-import { CompleteIdentityValidationResponse, IdentityLookupParams, IdentityLookupResponse } from '../types';
+import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
+import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse } from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS'
@@ -25,7 +26,7 @@ class MasterCardSdk extends AbstractSrcInitiator {
         this.schemaSdk = window.SRCSDK_MASTERCARD;
     }
 
-    public async identityLookup(params: IdentityLookupParams): Promise<IdentityLookupResponse> {
+    public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {
         try {
             const consumerIdentity = {
                 identityValue: params.value,
@@ -41,7 +42,7 @@ class MasterCardSdk extends AbstractSrcInitiator {
         }
     }
 
-    public async completeIdentityValidation(otp: string): Promise<CompleteIdentityValidationResponse> {
+    public async completeIdentityValidation(otp: string): Promise<SrciCompleteIdentityValidationResponse> {
         try {
             const response = await this.schemaSdk.completeIdentityValidation({ validationData: otp });
             return response;

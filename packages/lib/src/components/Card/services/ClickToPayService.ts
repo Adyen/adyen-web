@@ -1,8 +1,8 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, CheckoutResponse, IsRecognizedResponse, ShopperIdentity } from './types';
+import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
-import { SecureRemoteCommerceInitResult } from './configMock';
-import { createShopperCardsList, ShopperCard } from './utils';
+import { createShopperCardsList } from './utils';
+import { SrciCheckoutResponse, SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -13,21 +13,10 @@ export enum CtpState {
     NotAvailable = 'NotAvailable'
 }
 
-export interface IClickToPayService {
-    state: CtpState;
-    shopperCards: ShopperCard[];
-    shopperValidationContact: string;
-    initialize(): Promise<void>;
-    checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<CheckoutResponse>;
-    subscribeOnStatusChange(callback: CallbackStateSubscriber): void;
-    startIdentityValidation(): Promise<any>;
-    finishIdentityValidation(otpCode: string): Promise<any>;
-}
-
 class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
-    private readonly schemasConfig: Record<string, SecureRemoteCommerceInitResult>;
-    private readonly shopperIdentity?: ShopperIdentity;
+    private readonly schemasConfig: Record<string, SrcInitParams>;
+    private readonly shopperIdentity?: IdentityLookupParams;
     private sdks: ISrcInitiator[];
     private validationSchemaSdk: ISrcInitiator = null;
     private stateSubscriber: CallbackStateSubscriber;
@@ -36,15 +25,10 @@ class ClickToPayService implements IClickToPayService {
     public shopperCards: ShopperCard[] = null;
     public shopperValidationContact: string;
 
-    constructor(schemasConfig: Record<string, SecureRemoteCommerceInitResult>, sdkLoader: ISrcSdkLoader, shopperIdentity?: ShopperIdentity) {
+    constructor(schemasConfig: Record<'mastercard' | 'visa', SrcInitParams>, sdkLoader: ISrcSdkLoader, shopperIdentity?: IdentityLookupParams) {
         this.sdkLoader = sdkLoader;
         this.schemasConfig = schemasConfig;
         this.shopperIdentity = shopperIdentity;
-    }
-
-    private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
-        console.log('SDK chosen:', sdk.schemaName);
-        this.validationSchemaSdk = sdk;
     }
 
     public async initialize(): Promise<void> {
@@ -58,7 +42,7 @@ class ClickToPayService implements IClickToPayService {
             const { recognized = false, idTokens = null } = await this.recognizeShopper();
 
             if (recognized) {
-                await this.getSecureRemoteCommerceProfile(idTokens);
+                await this.getShopperProfile(idTokens);
                 this.setState(CtpState.Ready);
                 return;
             }
@@ -74,53 +58,53 @@ class ClickToPayService implements IClickToPayService {
                 this.setState(CtpState.ShopperIdentified);
                 return;
             }
+
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            console.error(error);
+            console.warn(error);
             this.setState(CtpState.NotAvailable);
         }
     }
 
-    public subscribeOnStatusChange(callback): void {
+    /**
+     * Set the callback for notifying when the CtPState changes
+     */
+    public subscribeOnStateChange(callback: CallbackStateSubscriber): void {
         this.stateSubscriber = callback;
     }
 
     /**
      * Initiates Consumer Identity validation with one Click to Pay System.
      * The Click to Pay System sends a one-time-password (OTP) to the registered email address or mobile number.
-     *
-     * This method uses only the SDK that responded first on identifyShopper() call
-     */
+     **/
     public async startIdentityValidation(): Promise<void> {
         if (!this.validationSchemaSdk) {
-            throw Error('startIdentityValidation: No schema set for the validation process');
+            throw Error('startIdentityValidation: No ValidationSDK set for the validation process');
         }
 
         const { maskedValidationChannel } = await this.validationSchemaSdk.initiateIdentityValidation();
-        this.shopperValidationContact = maskedValidationChannel;
+        this.shopperValidationContact = maskedValidationChannel.replaceAll('*', '•');
 
         this.setState(CtpState.OneTimePassword);
     }
 
     /**
-     * Completes the validation of a Consumer Identity, by evaluating the supplied OTP.
-     * This method uses only the SDK that responded first on identifyShopper() call
+     * Completes the  validation of the Shopper by evaluating the supplied OTP.
      */
-    public async finishIdentityValidation(otpCode: string): Promise<any> {
+    public async finishIdentityValidation(otpCode: string): Promise<void> {
         if (!this.validationSchemaSdk) {
-            throw Error('finishIdentityValidation: No schema set for the validation process');
+            throw Error('finishIdentityValidation: No ValidationSDK set for the validation process');
         }
-
         const validationToken = await this.validationSchemaSdk.completeIdentityValidation(otpCode);
+        await this.getShopperProfile([validationToken.idToken]);
 
-        await this.getSecureRemoteCommerceProfile([validationToken.idToken]);
         this.validationSchemaSdk = null;
     }
 
     /**
      * This method performs checkout using the selected card
      */
-    public async checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<CheckoutResponse> {
+    public async checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<SrciCheckoutResponse> {
         if (!srcDigitalCardId || !schema || !srcCorrelationId) {
             throw Error('checkout: Missing parameter');
         }
@@ -138,28 +122,36 @@ class ClickToPayService implements IClickToPayService {
         return checkoutResponse;
     }
 
-    private async getSecureRemoteCommerceProfile(idTokens: string[]): Promise<void> {
+    private setState(state: CtpState): void {
+        this.state = state;
+        this.stateSubscriber?.(this.state);
+    }
+
+    private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
+        console.log('SDK chosen:', sdk.schemaName);
+        this.validationSchemaSdk = sdk;
+    }
+
+    /**
+     * Based on the given idToken, this method goes through each SRCi SDK and fetches the shopper
+     * profile with his cards
+     */
+    private async getShopperProfile(idTokens: string[]): Promise<void> {
         const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
         const srcProfiles = await Promise.all(srcProfilesPromises);
         const cards = createShopperCardsList(srcProfiles);
         this.shopperCards = cards;
-
         this.setState(CtpState.Ready);
-    }
 
-    private setState(state: CtpState): void {
-        this.state = state;
-
-        if (this.stateSubscriber) {
-            this.stateSubscriber(this.state);
-        }
+        console.log(srcProfiles);
     }
 
     /**
-     * Checks if the consumer is recognized by any of the Click to Pay System
-     * If recognized, it takes the first one in the response and uses its token
+     * Calls the 'isRecognized()' method of each SRC SDK in order to verify if the shopper is
+     * recognized on the device. The shopper is recognized if he/she has the Cookies stored
+     * on their browser
      */
-    private async recognizeShopper(): Promise<IsRecognizedResponse> {
+    private async recognizeShopper(): Promise<SrciIsRecognizedResponse> {
         return new Promise((resolve, reject) => {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = sdk.isRecognized();
@@ -174,10 +166,10 @@ class ClickToPayService implements IClickToPayService {
     }
 
     /**
-     * Call the identityLookup() method of each SRC SDK.
+     * Call the 'identityLookup()' method of each SRC SDK in order to verify if the shopper has an account.
      *
-     * Based on the responses from the Click to Pay Systems, we should call the initiateIdentityValidation() SDK method
-     * of the Click to Pay System that responds first with consumerPresent response to the identityLookup() call.
+     * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
+     * that responds faster with 'consumerPresent=true'
      */
     private async identifyShopper(): Promise<{ isEnrolled: boolean }> {
         return new Promise((resolve, reject) => {
@@ -198,7 +190,7 @@ class ClickToPayService implements IClickToPayService {
             Promise.all(lookupPromises)
                 .then(() => resolve({ isEnrolled: false }))
                 .catch(error => reject(error));
-            // Error can be: FRAUD, ID_FORMAT_UNSUPPORTED, CONSUMER_ID_MISSING, ACCT_INACCESSIBLE
+            // TODO: Error can be: FRAUD, ID_FORMAT_UNSUPPORTED, CONSUMER_ID_MISSING, ACCT_INACCESSIBLE
         });
     }
 
