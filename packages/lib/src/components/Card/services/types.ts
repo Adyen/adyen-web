@@ -1,5 +1,4 @@
 import { CtpState } from './ClickToPayService';
-import { SrciCheckoutResponse } from './sdks/types';
 
 export interface IClickToPayService {
     state: CtpState;
@@ -7,7 +6,7 @@ export interface IClickToPayService {
     shopperValidationContact: string;
     initialize(): Promise<void>;
     subscribeOnStateChange(callback: CallbackStateSubscriber): void;
-    checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<SrciCheckoutResponse>;
+    checkout(card: ShopperCard): Promise<CheckoutPayload>;
     startIdentityValidation(): Promise<void>;
     finishIdentityValidation(otpCode: string): Promise<void>;
 }
@@ -26,4 +25,19 @@ export type ShopperCard = {
     cardTitle: string;
     paymentCardDescriptor: string;
     srcCorrelationId: string;
+    tokenId?: string;
 };
+
+type MastercardCheckout = {
+    digitalCardId: string;
+    correlationId: string;
+    scheme: string;
+};
+
+type VisaCheckout = {
+    tokenId?: string;
+    checkoutPayload?: string;
+    scheme: string;
+};
+
+export type CheckoutPayload = VisaCheckout | MastercardCheckout;

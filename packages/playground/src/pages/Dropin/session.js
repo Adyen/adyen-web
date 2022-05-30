@@ -47,7 +47,7 @@ export async function initSession() {
 
                 clickToPayConfiguration: {
                     schemas: {
-                        mastercard: {
+                        mc: {
                             srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
                             srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
                             srciTransactionId: 'adyen-id-' + new Date().getTime(),
@@ -71,6 +71,10 @@ export async function initSession() {
                                 dpaThreeDsPreference: 'UNKNOWN'
                             },
                             dpaTransactionOptions: {
+                                // Start
+                                // Mandatory to specify:
+                                payloadTypeIndicator: 'NON_PAYMENT',
+                                // End
                                 dpaLocale: 'en_US',
                                 dpaAcceptedBillingCountries: ['US', 'CA', 'NL'],
                                 dpaAcceptedShippingCountries: ['US', 'CA', 'NL'],
@@ -87,7 +91,6 @@ export async function initSession() {
                                 checkoutDescription: 'Sample checkout',
                                 transactionType: 'PURCHASE',
                                 orderType: 'REAUTHORIZATION',
-                                payloadTypeIndicator: 'PAYMENT',
                                 //  "merchantOrderId": "order-id-" + txId,
                                 merchantCategoryCode: '5734',
                                 merchantCountryCode: 'US'

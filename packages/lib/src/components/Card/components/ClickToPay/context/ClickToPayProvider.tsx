@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { CtpState } from '../../../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { IClickToPayService } from '../../../services/types';
+import { IClickToPayService, ShopperCard } from '../../../services/types';
 
 type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
@@ -30,8 +30,8 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
     }, [ctpService]);
 
     const checkout = useCallback(
-        async (srcDigitalCardId: string, schema: string, srcCorrelationId: string) => {
-            return await ctpService?.checkout(srcDigitalCardId, schema, srcCorrelationId);
+        async (card: ShopperCard) => {
+            return await ctpService?.checkout(card);
         },
         [ctpService]
     );
@@ -39,7 +39,7 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
     return (
         <ClickToPayContext.Provider
             value={{
-                ctpState: ctpState,
+                ctpState,
                 cards: ctpService?.shopperCards,
                 otpMaskedContact: ctpService?.shopperValidationContact,
                 checkout: checkout,
@@ -47,7 +47,7 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
                 finishIdentityValidation: handleFinishIdentityValidation
             }}
         >
-            <ClickToPayContext.Consumer>{children}</ClickToPayContext.Consumer>
+            {children}
         </ClickToPayContext.Provider>
     );
 };

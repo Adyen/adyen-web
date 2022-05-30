@@ -1,14 +1,11 @@
 import { createContext } from 'preact';
 import { CtpState } from '../../../services/ClickToPayService';
-import { ShopperCard, SrciCheckoutResponse } from '../../../services/types';
+import { IClickToPayService, ShopperCard } from '../../../services/types';
 
-export interface ClickToPayContextInterface {
+export interface ClickToPayContextInterface extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation'> {
     ctpState: CtpState;
     cards: ShopperCard[];
     otpMaskedContact: string;
-    checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<SrciCheckoutResponse>;
-    startIdentityValidation(): Promise<void>;
-    finishIdentityValidation(otpCode: string): Promise<void>;
 }
 
 const ClickToPayContext = createContext<ClickToPayContextInterface>({

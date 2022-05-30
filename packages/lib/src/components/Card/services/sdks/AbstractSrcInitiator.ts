@@ -12,7 +12,7 @@ import {
 } from './types';
 
 export interface ISrcInitiator {
-    schemaName: string;
+    schemeName: string;
     // Loading 3rd party library
     loadSdkScript(): Promise<void>;
     removeSdkScript(): void;
@@ -27,8 +27,8 @@ export interface ISrcInitiator {
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
-    public schemaSdk: any;
-    public abstract readonly schemaName: string;
+    public schemeSdk: any;
+    public abstract readonly schemeName: string;
 
     private readonly sdkUrl: string;
     private scriptElement: Script | null = null;
@@ -57,19 +57,18 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     protected abstract isSdkIsAvailableOnWindow(): boolean;
 
     /**
-     * Assign Schema SDK object to 'schemaSdk' property.
-     * Each schema creates its own object reference on 'window' using different naming,
+     * Assign SchemeSDK object to 'schemeSdk' property.
+     * Each scheme creates its own object reference on 'window' using different naming,
      * therefore this method should be implemented by the subclass to assign the property
      * accordingly
      */
     protected abstract assignSdkReference(): void;
 
     /**
-     * Initializes the app with common state. The init method must be called before any other methods. It
-     * is synchronous in operation.
+     * Initializes the app with common state. The init method must be called before any other methods.
      */
     public async init(params: SrcInitParams): Promise<void> {
-        await this.schemaSdk.init(params);
+        await this.schemeSdk.init(params);
     }
 
     /**
@@ -77,13 +76,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * response contains summary checkout information.
      */
     public async checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse> {
-        try {
-            const response = await this.schemaSdk.checkout(params);
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        return await this.schemeSdk.checkout(params);
     }
 
     /**
@@ -91,8 +84,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * the browser environment.
      */
     public async isRecognized(): Promise<SrciIsRecognizedResponse> {
-        const response = await this.schemaSdk.isRecognized();
-        return response;
+        return await this.schemeSdk.isRecognized();
     }
 
     /**
@@ -100,27 +92,14 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * This method sends a one-time password (OTP) to the consumer to start validation
      */
     public async initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse> {
-        try {
-            const response = await this.schemaSdk.initiateIdentityValidation();
-            return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        return await this.schemeSdk.initiateIdentityValidation();
     }
 
     /**
      * Obtains the masked card and other account profile data associated with the userId.
      */
     public async getSrcProfile(idTokens: string[]): Promise<any> {
-        try {
-            const response = await this.schemaSdk.getSrcProfile({ idTokens });
-            // attach the schema name here maybe?
-            return response;
-        } catch (error) {
-            console.error(`[${this.schemaName}] SecureRemoteCommerceInitiator #getSrcProfile`, error);
-            throw error;
-        }
+        return await this.schemeSdk.getSrcProfile({ idTokens });
     }
 
     /**

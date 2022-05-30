@@ -5,9 +5,13 @@ import useClickToPayContext from './context/useClickToPayContext';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
 import CtPCardsList from './components/CtPCardsList';
 import CtPSection from './components/CtPSection';
-import ContentSeparator from '../../../internal/ContentSeparator';
+import { CheckoutPayload } from '../../services/types';
 
-const ClickToPayComponent = () => {
+type ClickToPayComponentProps = {
+    onSubmit(payload: CheckoutPayload): void;
+};
+
+const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps) => {
     const { ctpState, startIdentityValidation } = useClickToPayContext();
 
     useEffect(() => {
@@ -22,9 +26,8 @@ const ClickToPayComponent = () => {
         <Fragment>
             <CtPSection isLoading={[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState)}>
                 {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-                {ctpState === CtpState.Ready && <CtPCardsList />}
+                {ctpState === CtpState.Ready && <CtPCardsList onSubmit={onSubmit} />}
             </CtPSection>
-            <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
         </Fragment>
     );
 };

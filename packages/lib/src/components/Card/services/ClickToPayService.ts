@@ -1,8 +1,8 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams } from './types';
+import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams, CheckoutPayload } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
-import { createShopperCardsList } from './utils';
-import { SrciCheckoutResponse, SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
+import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
+import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -15,19 +15,19 @@ export enum CtpState {
 
 class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
-    private readonly schemasConfig: Record<string, SrcInitParams>;
+    private readonly schemesConfig: Record<string, SrcInitParams>;
     private readonly shopperIdentity?: IdentityLookupParams;
     private sdks: ISrcInitiator[];
-    private validationSchemaSdk: ISrcInitiator = null;
+    private validationSchemeSdk: ISrcInitiator = null;
     private stateSubscriber: CallbackStateSubscriber;
 
     public state: CtpState = CtpState.Idle;
     public shopperCards: ShopperCard[] = null;
     public shopperValidationContact: string;
 
-    constructor(schemasConfig: Record<'mastercard' | 'visa', SrcInitParams>, sdkLoader: ISrcSdkLoader, shopperIdentity?: IdentityLookupParams) {
+    constructor(schemesConfig: Record<'mastercard' | 'visa', SrcInitParams>, sdkLoader: ISrcSdkLoader, shopperIdentity?: IdentityLookupParams) {
         this.sdkLoader = sdkLoader;
-        this.schemasConfig = schemasConfig;
+        this.schemesConfig = schemesConfig;
         this.shopperIdentity = shopperIdentity;
     }
 
@@ -78,11 +78,11 @@ class ClickToPayService implements IClickToPayService {
      * The Click to Pay System sends a one-time-password (OTP) to the registered email address or mobile number.
      **/
     public async startIdentityValidation(): Promise<void> {
-        if (!this.validationSchemaSdk) {
+        if (!this.validationSchemeSdk) {
             throw Error('startIdentityValidation: No ValidationSDK set for the validation process');
         }
 
-        const { maskedValidationChannel } = await this.validationSchemaSdk.initiateIdentityValidation();
+        const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
         this.shopperValidationContact = maskedValidationChannel.replaceAll('*', '•');
 
         this.setState(CtpState.OneTimePassword);
@@ -92,34 +92,37 @@ class ClickToPayService implements IClickToPayService {
      * Completes the  validation of the Shopper by evaluating the supplied OTP.
      */
     public async finishIdentityValidation(otpCode: string): Promise<void> {
-        if (!this.validationSchemaSdk) {
+        if (!this.validationSchemeSdk) {
             throw Error('finishIdentityValidation: No ValidationSDK set for the validation process');
         }
-        const validationToken = await this.validationSchemaSdk.completeIdentityValidation(otpCode);
+        const validationToken = await this.validationSchemeSdk.completeIdentityValidation(otpCode);
         await this.getShopperProfile([validationToken.idToken]);
 
-        this.validationSchemaSdk = null;
+        this.validationSchemeSdk = null;
     }
 
     /**
      * This method performs checkout using the selected card
      */
-    public async checkout(srcDigitalCardId: string, schema: string, srcCorrelationId: string): Promise<SrciCheckoutResponse> {
-        if (!srcDigitalCardId || !schema || !srcCorrelationId) {
-            throw Error('checkout: Missing parameter');
+    public async checkout(card: ShopperCard): Promise<CheckoutPayload> {
+        if (!card) {
+            throw Error('ClickToPayService # checkout: Missing card data');
         }
 
         const checkoutParameters = {
-            srcDigitalCardId,
-            srcCorrelationId
+            srcDigitalCardId: card.srcDigitalCardId,
+            srcCorrelationId: card.srcCorrelationId
         };
 
-        const checkoutSdk = this.sdks.find(sdk => sdk.schemaName === schema);
+        // TODO: fix schema
+        const scheme = card.paymentCardDescriptor || 'visa';
+
+        const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === scheme);
         const checkoutResponse = await checkoutSdk.checkout(checkoutParameters);
 
-        // TODO: figure out what happens if dcfActionCode !== COMPLETED
         console.log(checkoutResponse);
-        return checkoutResponse;
+
+        return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
     }
 
     private setState(state: CtpState): void {
@@ -128,8 +131,8 @@ class ClickToPayService implements IClickToPayService {
     }
 
     private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
-        console.log('SDK chosen:', sdk.schemaName);
-        this.validationSchemaSdk = sdk;
+        console.log('SDK chosen:', sdk.schemeName);
+        this.validationSchemeSdk = sdk;
     }
 
     /**
@@ -177,8 +180,8 @@ class ClickToPayService implements IClickToPayService {
                 const identityLookupPromise = sdk.identityLookup({ value: this.shopperIdentity.value, type: this.shopperIdentity.type });
 
                 identityLookupPromise.then(response => {
-                    console.log(sdk.schemaName, response);
-                    if (response.consumerPresent && !this.validationSchemaSdk) {
+                    console.log(sdk.schemeName, response);
+                    if (response.consumerPresent && !this.validationSchemeSdk) {
                         this.setSdkForPerformingShopperIdentityValidation(sdk);
                         resolve({ isEnrolled: true });
                     }
@@ -196,7 +199,7 @@ class ClickToPayService implements IClickToPayService {
 
     private async initiateSdks(): Promise<void> {
         const initPromises = this.sdks.map(sdk => {
-            const cfg = this.schemasConfig[sdk.schemaName];
+            const cfg = this.schemesConfig[sdk.schemeName];
             return sdk.init(cfg);
         });
         await Promise.all(initPromises);

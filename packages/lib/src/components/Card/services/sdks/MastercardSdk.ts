@@ -8,8 +8,8 @@ const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS'
 };
 
-class MasterCardSdk extends AbstractSrcInitiator {
-    public readonly schemaName = 'mastercard';
+class MastercardSdk extends AbstractSrcInitiator {
+    public readonly schemeName = 'mc';
 
     constructor(environment: string) {
         super(environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);
@@ -23,28 +23,21 @@ class MasterCardSdk extends AbstractSrcInitiator {
 
     protected assignSdkReference(): void {
         // @ts-ignore SRCSDK_MASTERCARD is created by the MC sdk
-        this.schemaSdk = window.SRCSDK_MASTERCARD;
+        this.schemeSdk = window.SRCSDK_MASTERCARD;
     }
 
     public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {
-        try {
-            const consumerIdentity = {
-                identityValue: params.value,
-                identityType: IdentityTypeMap[params.type]
-            };
+        const consumerIdentity = {
+            identityValue: params.value,
+            identityType: IdentityTypeMap[params.type]
+        };
 
-            const response = await this.schemaSdk.identityLookup({ consumerIdentity });
-            return response;
-        } catch (error) {
-            // console.error(error);
-            console.log(JSON.stringify(error, null, 2));
-            throw error;
-        }
+        return await this.schemeSdk.identityLookup({ consumerIdentity });
     }
 
     public async completeIdentityValidation(otp: string): Promise<SrciCompleteIdentityValidationResponse> {
         try {
-            const response = await this.schemaSdk.completeIdentityValidation({ validationData: otp });
+            const response = await this.schemeSdk.completeIdentityValidation({ validationData: otp });
             return response;
         } catch (err) {
             throw new SrciError(err?.message, err?.reason);
@@ -52,4 +45,4 @@ class MasterCardSdk extends AbstractSrcInitiator {
     }
 }
 
-export default MasterCardSdk;
+export default MastercardSdk;

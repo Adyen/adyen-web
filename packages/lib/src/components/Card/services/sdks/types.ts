@@ -16,6 +16,8 @@ export type SrciIsRecognizedResponse = {
 
 export type SrciCheckoutResponse = {
     dcfActionCode: string;
+    encryptedPayload?: string;
+    idToken?: string;
 };
 
 export type SrciIdentityLookupResponse = {
@@ -35,6 +37,7 @@ type SrcCard = {
     digitalCardData: {
         descriptorName: string;
     };
+    tokenId?: string;
 };
 
 export type SrcCheckoutParams = {

@@ -1,26 +1,26 @@
 import { ISrcInitiator } from './AbstractSrcInitiator';
-import VisaSrcSdk from './VisaSrcSdk';
-import MasterCardSdk from './MasterCardSdk';
+import VisaSdk from './VisaSdk';
+import MastercardSdk from './MastercardSdk';
 
 const sdkMap = {
-    visa: VisaSrcSdk,
-    mastercard: MasterCardSdk,
+    visa: VisaSdk,
+    mc: MastercardSdk,
     default: null
 };
 
-const getSchemaSdk = (schema: string, environment: string) => {
-    const SchemaSdkClass = sdkMap[schema] || sdkMap.default;
-    return SchemaSdkClass ? new SchemaSdkClass(environment) : null;
+const getSchemeSdk = (scheme: string, environment: string) => {
+    const SchemeSdkClass = sdkMap[scheme] || sdkMap.default;
+    return SchemeSdkClass ? new SchemeSdkClass(environment) : null;
 };
 
-const validateSchemaNames = (schemas: string[]): string[] => {
+const validateSchemeNames = (schemes: string[]): string[] => {
     const validNames = Object.keys(sdkMap);
-    return schemas.reduce((memo, schema) => {
-        if (!validNames.includes(schema)) {
-            console.warn(`SrcSdkLoader: '${schema}' is not a valid name`);
+    return schemes.reduce((memo, scheme) => {
+        if (!validNames.includes(scheme)) {
+            console.warn(`SrcSdkLoader: '${scheme}' is not a valid name`);
             return memo;
         }
-        return [...memo, schema];
+        return [...memo, scheme];
     }, []);
 };
 
@@ -29,20 +29,20 @@ export interface ISrcSdkLoader {
 }
 
 class SrcSdkLoader implements ISrcSdkLoader {
-    private readonly schemas: string[];
+    private readonly schemes: string[];
     private readonly environment: string;
 
-    constructor(schemas: string[], environment: string) {
-        this.schemas = validateSchemaNames(schemas);
+    constructor(schemes: string[], environment: string) {
+        this.schemes = validateSchemeNames(schemes);
         this.environment = environment;
     }
 
     public async load(): Promise<ISrcInitiator[]> {
-        if (!this.schemas) {
-            throw Error('SrcSdkLoader: There are no schemas set to be loaded');
+        if (!this.schemes) {
+            throw Error('SrcSdkLoader: There are no schemes set to be loaded');
         }
 
-        const sdks = this.schemas.map(schema => getSchemaSdk(schema, this.environment));
+        const sdks = this.schemes.map(scheme => getSchemeSdk(scheme, this.environment));
         const promises = sdks.map(sdk => sdk.loadSdkScript());
         await Promise.all(promises);
         return sdks;

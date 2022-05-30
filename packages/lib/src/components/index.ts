@@ -49,7 +49,8 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
-import RatePayDirectDebit from "./RatePay/RatePayDirectDebit";
+import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
+import ClickToPay from './ClickToPay';
 
 /**
  * Maps each component with a Component element.
@@ -80,6 +81,7 @@ const componentsMap = {
     boletobancario_santander: Boleto,
     primeiropay_boleto: Boleto,
     card: Card,
+    clickToPay: ClickToPay,
     storedCard: Card,
     diners: Card,
     directdebit_GB: BacsDD,

@@ -2,6 +2,7 @@ import { Fragment, h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import Button from '../../../../internal/Button';
 import useClickToPayContext from '../context/useClickToPayContext';
+import { CheckoutPayload, ShopperCard } from '../../../services/types';
 
 const buttonStyle = {
     width: '100%',
@@ -14,17 +15,23 @@ const buttonStyle = {
     cursor: 'pointer'
 };
 
-const CtPCardsList = () => {
+type CtPCardsListProps = {
+    onSubmit(payload: CheckoutPayload): void;
+};
+
+const CtPCardsList = ({ onSubmit }: CtPCardsListProps) => {
     const { cards, checkout } = useClickToPayContext();
     const [isDoingCheckout, setIsDoingCheckout] = useState<boolean>(false);
 
     const onCheckout = useCallback(
-        async (srcDigitalCardId: string, paymentCardDescriptor: string, srcCorrelationId: string) => {
-            console.log('Checkout', srcDigitalCardId, paymentCardDescriptor, srcCorrelationId);
+        async (card: ShopperCard) => {
             setIsDoingCheckout(true);
-            await checkout(srcDigitalCardId, paymentCardDescriptor || 'visa', srcCorrelationId);
+            const payload = await checkout(card);
             setIsDoingCheckout(false);
+
             // TODO: Figure out if Visa is going to be returned as part of the paymentCardDescriptor
+
+            onSubmit(payload);
         },
         [checkout]
     );
@@ -33,11 +40,7 @@ const CtPCardsList = () => {
         <Fragment>
             <div>
                 {cards?.map((card, index) => (
-                    <button
-                        key={index}
-                        style={buttonStyle}
-                        onClick={() => onCheckout(card.srcDigitalCardId, card.paymentCardDescriptor, card.srcCorrelationId)}
-                    >
+                    <button key={index} style={buttonStyle} onClick={() => onCheckout(card)}>
                         {card.cardTitle} {`•••• ${card.panLastFour}`}
                     </button>
                 ))}
