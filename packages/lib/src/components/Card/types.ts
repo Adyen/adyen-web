@@ -119,8 +119,10 @@ export interface CardElementProps extends UIElementProps {
     [key: string]: any;
 }
 
+export type ClickToPayScheme = 'mc' | 'visa';
+
 export type ClickToPayConfiguration = {
-    schemas: Record<'mastercard' | 'visa', SrcInitParams>;
+    schemas: Record<ClickToPayScheme, SrcInitParams>;
     shopperIdentity?: IdentityLookupParams;
 };
 

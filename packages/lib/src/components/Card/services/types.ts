@@ -1,5 +1,6 @@
 import { CtpState } from './ClickToPayService';
 import { SrcProfile } from './sdks/types';
+import { ClickToPayScheme } from '../types';
 
 export interface IClickToPayService {
     state: CtpState;
@@ -26,7 +27,7 @@ export type ShopperCard = {
     cardTitle: string;
     srcCorrelationId: string;
     tokenId?: string;
-    scheme: string;
+    scheme: ClickToPayScheme;
 };
 
 type MastercardCheckout = {
@@ -42,7 +43,7 @@ type VisaCheckout = {
 };
 
 export interface SrcProfileWithScheme extends SrcProfile {
-    scheme: string;
+    scheme: ClickToPayScheme;
 }
 
 export type CheckoutPayload = VisaCheckout | MastercardCheckout;

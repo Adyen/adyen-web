@@ -7,7 +7,7 @@ function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse:
     switch (scheme) {
         case 'visa':
             return tokenId ? { scheme, tokenId } : { scheme, checkoutPayload: checkoutResponse.encryptedPayload };
-        case 'mastercard':
+        case 'mc':
         default:
             return { scheme, digitalCardId: srcDigitalCardId, correlationId: srcCorrelationId };
     }

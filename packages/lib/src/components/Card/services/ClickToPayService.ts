@@ -3,6 +3,7 @@ import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLooku
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
+import { ClickToPayScheme } from '../types';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -25,7 +26,7 @@ class ClickToPayService implements IClickToPayService {
     public shopperCards: ShopperCard[] = null;
     public shopperValidationContact: string;
 
-    constructor(schemesConfig: Record<'mastercard' | 'visa', SrcInitParams>, sdkLoader: ISrcSdkLoader, shopperIdentity?: IdentityLookupParams) {
+    constructor(schemesConfig: Record<ClickToPayScheme, SrcInitParams>, sdkLoader: ISrcSdkLoader, shopperIdentity?: IdentityLookupParams) {
         this.sdkLoader = sdkLoader;
         this.schemesConfig = schemesConfig;
         this.shopperIdentity = shopperIdentity;

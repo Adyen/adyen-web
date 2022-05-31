@@ -10,9 +10,10 @@ import {
     SrcInitParams,
     SrcProfile
 } from './types';
+import { ClickToPayScheme } from '../../types';
 
 export interface ISrcInitiator {
-    schemeName: string;
+    schemeName: ClickToPayScheme;
     // Loading 3rd party library
     loadSdkScript(): Promise<void>;
     removeSdkScript(): void;
@@ -28,7 +29,7 @@ export interface ISrcInitiator {
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     public schemeSdk: any;
-    public abstract readonly schemeName: string;
+    public abstract readonly schemeName: ClickToPayScheme;
 
     private readonly sdkUrl: string;
     private scriptElement: Script | null = null;
