@@ -1,8 +1,8 @@
 import { h } from 'preact';
-import { CtpState } from '../../../services/ClickToPayService';
+import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { IClickToPayService, ShopperCard } from '../../../services/types';
+import { IClickToPayService, ShopperCard } from '../services/types';
 
 type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;

@@ -2,7 +2,7 @@ import { Fragment, h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import Button from '../../../../../internal/Button';
 import useClickToPayContext from '../../context/useClickToPayContext';
-import { CheckoutPayload, ShopperCard } from '../../../../services/types';
+import { CheckoutPayload, ShopperCard } from '../../services/types';
 import './CtPCardsList.scss';
 
 type CtPCardsListProps = {

@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import ClickToPayProvider from '../Card/components/ClickToPay/context/ClickToPayProvider';
 import ClickToPayComponent from '../Card/components/ClickToPay';
-import { CheckoutPayload, IClickToPayService } from '../Card/services/types';
+import { CheckoutPayload, IClickToPayService } from '../Card/components/ClickToPay/services/types';
 import { createClickToPayService } from '../Card/components/ClickToPay/utils';
 
 export class ClickToPayElement extends UIElement {

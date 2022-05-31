@@ -1,7 +1,7 @@
 import { useContext } from 'preact/hooks';
-import { ClickToPayContext } from './ClickToPayContext';
+import { ClickToPayContext, ClickToPayContextInterface } from './ClickToPayContext';
 
-function useClickToPayContext() {
+function useClickToPayContext(): ClickToPayContextInterface {
     return useContext(ClickToPayContext);
 }
 

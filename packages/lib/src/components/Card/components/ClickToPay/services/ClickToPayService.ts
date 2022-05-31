@@ -3,7 +3,7 @@ import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLooku
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
-import { ClickToPayScheme } from '../types';
+import { ClickToPayScheme } from '../../../types';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -40,7 +40,7 @@ class ClickToPayService implements IClickToPayService {
 
             await this.initiateSdks();
 
-            const { recognized = false, idTokens = null } = await this.recognizeShopper();
+            const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
 
             if (recognized) {
                 await this.getShopperProfile(idTokens);
@@ -53,7 +53,7 @@ class ClickToPayService implements IClickToPayService {
                 return;
             }
 
-            const { isEnrolled } = await this.identifyShopper();
+            const { isEnrolled } = await this.verifyIfShopperIsEnrolled();
 
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);
@@ -151,7 +151,7 @@ class ClickToPayService implements IClickToPayService {
      * recognized on the device. The shopper is recognized if he/she has the Cookies stored
      * on their browser
      */
-    private async recognizeShopper(): Promise<SrciIsRecognizedResponse> {
+    private async verifyIfShopperIsRecognized(): Promise<SrciIsRecognizedResponse> {
         return new Promise((resolve, reject) => {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = sdk.isRecognized();
@@ -171,7 +171,7 @@ class ClickToPayService implements IClickToPayService {
      * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
      * that responds faster with 'consumerPresent=true'
      */
-    private async identifyShopper(): Promise<{ isEnrolled: boolean }> {
+    private async verifyIfShopperIsEnrolled(): Promise<{ isEnrolled: boolean }> {
         return new Promise((resolve, reject) => {
             const lookupPromises = this.sdks.map(sdk => {
                 const identityLookupPromise = sdk.identityLookup({ value: this.shopperIdentity.value, type: this.shopperIdentity.type });

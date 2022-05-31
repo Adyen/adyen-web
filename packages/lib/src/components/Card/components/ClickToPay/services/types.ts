@@ -1,6 +1,6 @@
 import { CtpState } from './ClickToPayService';
 import { SrcProfile } from './sdks/types';
-import { ClickToPayScheme } from '../types';
+import { ClickToPayScheme } from '../../../types';
 
 export interface IClickToPayService {
     state: CtpState;

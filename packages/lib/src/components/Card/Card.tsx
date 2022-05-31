@@ -10,10 +10,10 @@ import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import ClickToPayComponent from './components/ClickToPay';
-import { CtpState } from './services/ClickToPayService';
+import { CtpState } from './components/ClickToPay/services/ClickToPayService';
 import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
 import { createClickToPayService } from './components/ClickToPay/utils';
-import { CheckoutPayload, IClickToPayService } from './services/types';
+import { CheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
 import ContentSeparator from '../internal/ContentSeparator';
 import { ClickToPayContext } from './components/ClickToPay/context/ClickToPayContext';
 

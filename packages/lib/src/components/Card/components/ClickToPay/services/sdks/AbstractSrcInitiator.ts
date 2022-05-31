@@ -1,5 +1,5 @@
 import { IdentityLookupParams } from '../types';
-import Script from '../../../../utils/Script';
+import Script from '../../../../../../utils/Script';
 import {
     SrcCheckoutParams,
     SrciCheckoutResponse,
@@ -10,7 +10,7 @@ import {
     SrcInitParams,
     SrcProfile
 } from './types';
-import { ClickToPayScheme } from '../../types';
+import { ClickToPayScheme } from '../../../../types';
 
 export interface ISrcInitiator {
     schemeName: ClickToPayScheme;

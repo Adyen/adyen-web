@@ -1,6 +1,6 @@
 import { createContext } from 'preact';
-import { CtpState } from '../../../services/ClickToPayService';
-import { IClickToPayService, ShopperCard } from '../../../services/types';
+import { CtpState } from '../services/ClickToPayService';
+import { IClickToPayService, ShopperCard } from '../services/types';
 
 export interface ClickToPayContextInterface extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation'> {
     ctpState: CtpState;
