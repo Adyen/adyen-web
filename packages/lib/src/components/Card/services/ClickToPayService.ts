@@ -1,5 +1,5 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams, CheckoutPayload } from './types';
+import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams, CheckoutPayload, SrcProfileWithScheme } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
@@ -114,10 +114,7 @@ class ClickToPayService implements IClickToPayService {
             srcCorrelationId: card.srcCorrelationId
         };
 
-        // TODO: fix schema
-        const scheme = card.paymentCardDescriptor || 'visa';
-
-        const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === scheme);
+        const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === card.scheme);
         const checkoutResponse = await checkoutSdk.checkout(checkoutParameters);
 
         console.log(checkoutResponse);
@@ -142,11 +139,10 @@ class ClickToPayService implements IClickToPayService {
     private async getShopperProfile(idTokens: string[]): Promise<void> {
         const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
         const srcProfiles = await Promise.all(srcProfilesPromises);
-        const cards = createShopperCardsList(srcProfiles);
+        const profilesWithScheme = srcProfiles.map<SrcProfileWithScheme>((profile, index) => ({ ...profile, scheme: this.sdks[index].schemeName }));
+        const cards = createShopperCardsList(profilesWithScheme);
         this.shopperCards = cards;
         this.setState(CtpState.Ready);
-
-        console.log(srcProfiles);
     }
 
     /**

@@ -47,18 +47,6 @@ export async function initSession() {
 
                 clickToPayConfiguration: {
                     schemas: {
-                        mc: {
-                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
-                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
-                            dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
-                                paymentOptions: {
-                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
-                                },
-                                consumerNameRequested: true
-                            }
-                        },
                         discovery: '',
                         visa: {
                             srciTransactionId: 'adyen-id-290202020',
@@ -94,6 +82,18 @@ export async function initSession() {
                                 //  "merchantOrderId": "order-id-" + txId,
                                 merchantCategoryCode: '5734',
                                 merchantCountryCode: 'US'
+                            }
+                        },
+                        mc: {
+                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
+                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                paymentOptions: {
+                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
+                                },
+                                consumerNameRequested: true
                             }
                         }
                     },

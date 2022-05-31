@@ -1,19 +1,9 @@
 import { Fragment, h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import Button from '../../../../internal/Button';
-import useClickToPayContext from '../context/useClickToPayContext';
-import { CheckoutPayload, ShopperCard } from '../../../services/types';
-
-const buttonStyle = {
-    width: '100%',
-    height: '40px',
-    backgroundColor: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    marginBottom: '20px',
-    boxShadow: '0 0 0 2px #999595',
-    cursor: 'pointer'
-};
+import Button from '../../../../../internal/Button';
+import useClickToPayContext from '../../context/useClickToPayContext';
+import { CheckoutPayload, ShopperCard } from '../../../../services/types';
+import './CtPCardsList.scss';
 
 type CtPCardsListProps = {
     onSubmit(payload: CheckoutPayload): void;
@@ -28,9 +18,6 @@ const CtPCardsList = ({ onSubmit }: CtPCardsListProps) => {
             setIsDoingCheckout(true);
             const payload = await checkout(card);
             setIsDoingCheckout(false);
-
-            // TODO: Figure out if Visa is going to be returned as part of the paymentCardDescriptor
-
             onSubmit(payload);
         },
         [checkout]
@@ -40,7 +27,7 @@ const CtPCardsList = ({ onSubmit }: CtPCardsListProps) => {
         <Fragment>
             <div>
                 {cards?.map((card, index) => (
-                    <button key={index} style={buttonStyle} onClick={() => onCheckout(card)}>
+                    <button type="button" key={index} className={'adyen-checkout-ctp__card'} onClick={() => onCheckout(card)}>
                         {card.cardTitle} {`•••• ${card.panLastFour}`}
                     </button>
                 ))}

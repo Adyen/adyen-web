@@ -3,7 +3,7 @@ import { useEffect } from 'preact/hooks';
 import { CtpState } from '../../services/ClickToPayService';
 import useClickToPayContext from './context/useClickToPayContext';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
-import CtPCardsList from './components/CtPCardsList';
+import CtPCardsList from './components/CtPCardsList/CtPCardsList';
 import CtPSection from './components/CtPSection';
 import { CheckoutPayload } from '../../services/types';
 
