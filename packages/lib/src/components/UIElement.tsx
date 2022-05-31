@@ -24,21 +24,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.handleOrder = this.handleOrder.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.elementRef = (props && props.elementRef) || this;
-
-        // if (props.prefetch) {
-        //     this.prefetch();
-        // }
     }
 
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
         this.onChange();
-    }
-
-
-    protected async prefetch(): Promise<void> {
-        console.warn(`'prefetch' not implemented for ${this.constructor['type']}`)
-        return;
     }
 
     protected onChange(): object {

@@ -43,11 +43,11 @@ class GooglePayService {
         return this.paymentsClient.then(client => client.isReadyToPay(isReadyToPayRequest(props)));
     }
 
-    prefetchPaymentData(props): Promise<void> {
+    prefetchPaymentData(props): void {
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
         const paymentDataRequest = initiatePaymentRequest(props);
-        return this.paymentsClient.then(client => client.prefetchPaymentData(paymentDataRequest));
+        this.paymentsClient.then(client => client.prefetchPaymentData(paymentDataRequest));
     }
 
     /**

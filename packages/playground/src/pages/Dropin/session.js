@@ -16,9 +16,6 @@ export async function initSession() {
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
-        analytics: {
-            checkoutAttemptId: '123456'
-        },
         session,
 
         // Events
