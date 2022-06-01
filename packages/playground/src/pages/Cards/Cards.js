@@ -7,12 +7,13 @@ import '../../../config/polyfills';
 import '../../style.scss';
 
 const showComps = {
-    storedCard: true,
-    card: true,
-    bcmcCard: true,
-    avsCard: true,
-    avsPartialCard: true,
-    kcpCard: true
+    storedCard: false,
+    card: false,
+    bcmcCard: false,
+    avsCard: false,
+    avsPartialCard: false,
+    kcpCard: false,
+    ctp: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -138,5 +139,34 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 countryCode: 'KR'
             })
             .mount('.card-kcp-field');
+    }
+
+    if (showComps.ctp) {
+        window.ctpCard = checkout
+            .create('card', {
+                type: 'scheme',
+                brands: ['mc', 'visa', 'amex'],
+                clickToPayConfiguration: {
+                    schemes: {
+                        mc: {
+                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
+                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                paymentOptions: {
+                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
+                                },
+                                consumerNameRequested: true
+                            }
+                        }
+                    },
+                    shopperIdentity: {
+                        value: 'guilherme.ribeiro-ctp1@adyen.com',
+                        type: 'email'
+                    }
+                }
+            })
+            .mount('.card-ctp-field');
     }
 });
