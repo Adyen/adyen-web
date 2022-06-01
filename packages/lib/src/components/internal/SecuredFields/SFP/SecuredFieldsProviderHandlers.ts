@@ -201,6 +201,10 @@ function handleFocus(cbObj: CbObjOnFocus): void {
     this.props.onFocus(cbObj);
 }
 
+function handleOnTouchstartIOS(cbObj): void {
+    this.props.onTouchstartIOS(cbObj);
+}
+
 // Only called for holder name
 function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.setState({ autoCompleteName: cbObj.value }, () => {
@@ -227,5 +231,6 @@ export default {
     handleOnConfigSuccess,
     handleOnBrand,
     handleOnError,
-    handleOnNoDataRequired
+    handleOnNoDataRequired,
+    handleOnTouchstartIOS
 };

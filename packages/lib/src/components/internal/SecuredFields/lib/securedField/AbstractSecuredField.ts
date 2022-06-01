@@ -107,7 +107,7 @@ abstract class AbstractSecuredField {
     protected onValidationCallback: RtnType_callbackFn;
     protected onFocusCallback: RtnType_callbackFn;
     protected onBinValueCallback: RtnType_callbackFn;
-    protected onClickCallback: RtnType_callbackFn;
+    protected onTouchstartCallback: RtnType_callbackFn;
     protected onShiftTabCallback: RtnType_callbackFn;
     protected onAutoCompleteCallback: RtnType_callbackFn;
 

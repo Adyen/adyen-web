@@ -4,6 +4,7 @@ import UIElement from './UIElement';
 import Core from '../core';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
+import Session from "../core/CheckoutSession";
 
 export interface PaymentResponse {
     action?: PaymentAction;
@@ -42,10 +43,7 @@ export interface IUIElement {
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
 export interface UIElementProps extends BaseElementProps {
-    session?: {
-        id: string;
-        data: string;
-    };
+    session?: Session;
     onChange?: (state: any, element: UIElement) => void;
     onValid?: (state: any, element: UIElement) => void;
     beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;

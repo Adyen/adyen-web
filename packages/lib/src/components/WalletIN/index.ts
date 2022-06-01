@@ -1,8 +1,8 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
 import collectBrowserInfo from '../../utils/browserInfo';
 
-class OnlineBankingINElement extends IssuerListContainer {
-    public static type = 'onlinebanking_IN';
+class WalletINElement extends IssuerListContainer {
+    public static type = 'wallet_IN';
 
     formatProps(props) {
         return {
@@ -26,4 +26,4 @@ class OnlineBankingINElement extends IssuerListContainer {
     }
 }
 
-export default OnlineBankingINElement;
+export default WalletINElement;

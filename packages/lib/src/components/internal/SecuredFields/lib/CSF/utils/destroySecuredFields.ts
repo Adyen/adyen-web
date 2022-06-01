@@ -19,6 +19,8 @@ export function destroySecuredFields(): void {
 
     // Stop listening to touchend event on body (iOS only)
     this.destroyTouchendListener();
+    // Stop listening to touchstart event on document (iOS only)
+    this.destroyTouchstartListener();
 
     // Clear SecuredField storage object
     this.state.securedFields = {};

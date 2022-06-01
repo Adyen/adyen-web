@@ -26,7 +26,7 @@ const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
                         'adyen-checkout__card__brands__brand-wrapper--disabled': isValidBrand && activeBrand !== name
                     })}
                 >
-                    <Img src={icon} alt={name} />
+                    <Img src={icon} alt='' />
                 </span>
             ))}
         </span>

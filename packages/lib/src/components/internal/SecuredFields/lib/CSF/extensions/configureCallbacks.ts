@@ -25,4 +25,6 @@ export function configureCallbacks(callbacksObj: CSFCallbacksConfig = ({} as any
     this.callbacks.onAdditionalSFConfig = callbacksObj.onAdditionalSFConfig ? callbacksObj.onAdditionalSFConfig : noop;
 
     this.callbacks.onAdditionalSFRemoved = callbacksObj.onAdditionalSFRemoved ? callbacksObj.onAdditionalSFRemoved : noop;
+
+    this.callbacks.onTouchstartIOS = callbacksObj.onTouchstartIOS ? callbacksObj.onTouchstartIOS : noop;
 }

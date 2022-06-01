@@ -1,4 +1,5 @@
 import { SFFeedbackObj, CbObjOnFocus } from '../../types';
+import ua from '../utils/userAgent';
 
 /**
  * Call focus callback and store which field currently has focus
@@ -20,25 +21,25 @@ export function handleFocus({ csfState, csfProps, csfCallbacks }, pFeedbackObj: 
     // Store which field has focus
     const focusString: string = feedbackObj.fieldType;
 
-    // Focus event - store, if this isn't the field that already has focus
+    // FOCUS EVENT - store who has focus, if it differs to the current value
     if (feedbackObj.focus) {
         if (csfState.currentFocusObject !== focusString) {
             csfState.currentFocusObject = focusString;
 
-            // iOS ONLY thing (fn returns if not iOS)
-            if (!csfState.registerFieldForIos) {
-                this.handleAdditionalFields();
+            // If iOS detected AND we don't have a (touchend) listener
+            if (ua.__IS_IOS && !csfState.registerFieldForIos) {
+                this.handleIOSTouchEvents();
             }
         }
     } else {
-        // Blur event - remove stored focus
+        // BLUR EVENT - remove stored focus
         const focusObjectMatches: boolean = csfState.currentFocusObject === focusString;
         if (focusObjectMatches) {
             csfState.currentFocusObject = null;
         }
     }
 
-    // Call callback
+    // Call callback (SecuredFieldsProviderHandlers > onFocus)
     const callbackObj: CbObjOnFocus = feedbackObj as CbObjOnFocus;
     callbackObj.currentFocusObject = csfState.currentFocusObject;
     csfCallbacks.onFocus(callbackObj);
