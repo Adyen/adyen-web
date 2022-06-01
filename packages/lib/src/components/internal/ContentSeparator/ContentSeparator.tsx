@@ -8,10 +8,9 @@ interface ContentSeparatorProps {
     classNames?: string[];
 }
 
-// TODO: update classname
 function ContentSeparator({ label = 'qrCodeOrApp', classNames = [] }: ContentSeparatorProps) {
     const { i18n } = useCoreContext();
-    return <div className={classnames('adyen-checkout__field--issuer-list-separator', ...classNames)}>{i18n.get(label)}</div>;
+    return <div className={classnames('adyen-checkout__content-separator', ...classNames)}>{i18n.get(label)}</div>;
 }
 
 export default ContentSeparator;
