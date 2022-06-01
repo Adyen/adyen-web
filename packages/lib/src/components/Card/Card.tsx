@@ -125,6 +125,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     handleClickToPaySubmit(payload: CheckoutPayload) {
+        // TODO
         console.log(payload);
     }
 
@@ -193,31 +194,29 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 <ClickToPayProvider clickToPayService={this.clickToPayService}>
                     <ClickToPayContext.Consumer>
-                        {({ ctpState }) => {
-                            return (
-                                <div>
-                                    {ctpState !== CtpState.NotAvailable && ctpState !== CtpState.Idle && (
-                                        <Fragment>
-                                            <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
-                                            <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
-                                        </Fragment>
-                                    )}
+                        {({ ctpState }) => (
+                            <div>
+                                {ctpState !== CtpState.NotAvailable && ctpState !== CtpState.Idle && (
+                                    <Fragment>
+                                        <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
+                                        <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
+                                    </Fragment>
+                                )}
 
-                                    <CardInput
-                                        setComponentRef={this.setComponentRef}
-                                        {...this.props}
-                                        {...this.state}
-                                        onChange={this.setState}
-                                        onSubmit={this.submit}
-                                        payButton={this.payButton}
-                                        onBrand={this.onBrand}
-                                        onBinValue={this.onBinValue}
-                                        brand={this.brand}
-                                        brandsIcons={this.brands}
-                                    />
-                                </div>
-                            );
-                        }}
+                                <CardInput
+                                    setComponentRef={this.setComponentRef}
+                                    {...this.props}
+                                    {...this.state}
+                                    onChange={this.setState}
+                                    onSubmit={this.submit}
+                                    payButton={this.payButton}
+                                    onBrand={this.onBrand}
+                                    onBinValue={this.onBinValue}
+                                    brand={this.brand}
+                                    brandsIcons={this.brands}
+                                />
+                            </div>
+                        )}
                     </ClickToPayContext.Consumer>
                 </ClickToPayProvider>
             </CoreProvider>
