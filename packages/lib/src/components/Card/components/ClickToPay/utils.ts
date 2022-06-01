@@ -8,10 +8,10 @@ function createClickToPayService(configuration: ClickToPayConfiguration, environ
         return null;
     }
 
-    const { schemas, shopperIdentity } = configuration;
-    const schemaNames = Object.keys(schemas);
-    const srcSdkLoader = new SrcSdkLoader(schemaNames, environment);
-    const service = new ClickToPayService(schemas, srcSdkLoader, shopperIdentity);
+    const { schemes, shopperIdentity } = configuration;
+    const schemeNames = Object.keys(schemes);
+    const srcSdkLoader = new SrcSdkLoader(schemeNames, environment);
+    const service = new ClickToPayService(schemes, srcSdkLoader, shopperIdentity);
 
     return service;
 }

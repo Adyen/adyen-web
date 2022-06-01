@@ -28,7 +28,6 @@ export interface CardElementProps extends UIElementProps {
 
     /**
      * Configuration for Click to Pay
-     * If 'schemas' property has invalid values or not provided, Click to Pay feature is ignored
      */
     clickToPayConfiguration?: ClickToPayConfiguration;
 
@@ -122,7 +121,7 @@ export interface CardElementProps extends UIElementProps {
 export type ClickToPayScheme = 'mc' | 'visa';
 
 export type ClickToPayConfiguration = {
-    schemas: Record<ClickToPayScheme, SrcInitParams>;
+    schemes: Record<ClickToPayScheme, SrcInitParams>;
     shopperIdentity?: IdentityLookupParams;
 };
 

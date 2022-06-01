@@ -43,7 +43,7 @@ export async function initSession() {
                 // billingAddressMode: 'partial',
 
                 clickToPayConfiguration: {
-                    schemas: {
+                    schemes: {
                         discovery: '',
                         visa: {
                             srciTransactionId: 'adyen-id-290202020',
