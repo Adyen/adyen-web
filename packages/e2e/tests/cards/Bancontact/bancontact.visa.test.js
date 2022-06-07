@@ -25,12 +25,12 @@ test('#1 Check Bancontact comp is correctly presented at startup', async t => {
     // Expect 3 card brand logos to be displayed (not concerned about order)
     await t.expect(images.count).eql(3);
     await t
-        .expect(images.nth(0).withAttribute('alt', 'bcmc').exists)
-        .ok()
-        .expect(images.nth(1).withAttribute('alt', 'visa').exists)
-        .ok()
-        .expect(images.nth(2).withAttribute('alt', 'maestro').exists)
-        .ok();
+        .expect(images.nth(0).getAttribute('src'))
+        .contains('bcmc.svg')
+        .expect(images.nth(1).getAttribute('src'))
+        .contains('visa.svg')
+        .expect(images.nth(2).getAttribute('src'))
+        .contains('maestro.svg');
 
     // Hidden cvc field
     await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
