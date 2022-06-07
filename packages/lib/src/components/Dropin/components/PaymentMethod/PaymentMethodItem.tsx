@@ -127,6 +127,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         aria-expanded={isSelected}
                         aria-controls={containerId}
                         onClick={onSelect}
+                        type="button"
                     >
                         <span
                             className={classNames({
