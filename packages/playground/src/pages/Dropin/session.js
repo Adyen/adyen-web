@@ -39,7 +39,8 @@ export async function initSession() {
                 positionHolderNameOnTop: true,
 
                 // billingAddress config:
-                billingAddressRequired: true
+                billingAddressRequired: true,
+                billingAddressMode: 'partial'
             }
         }
     });

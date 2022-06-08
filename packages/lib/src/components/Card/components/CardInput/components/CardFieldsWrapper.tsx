@@ -50,6 +50,7 @@ export const CardFieldsWrapper = ({
     billingAddress,
     handleAddress,
     billingAddressRef,
+    partialAddressSchema,
     // For this comp (props passed through from CardInput)
     amount,
     billingAddressRequired,
@@ -65,7 +66,9 @@ export const CardFieldsWrapper = ({
     positionHolderNameOnTop,
     // For CardFields > CardNumber
     showBrandIcon,
-    showBrandsUnderCardNumber
+    showBrandsUnderCardNumber,
+    //
+    iOSFocusedField
 }) => {
     const { i18n } = useCoreContext();
 
@@ -78,6 +81,7 @@ export const CardFieldsWrapper = ({
             isValid={!!formValid.holderName}
             onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
+            disabled={iOSFocusedField && iOSFocusedField !== 'holderName'}
         />
     );
 
@@ -129,6 +133,7 @@ export const CardFieldsWrapper = ({
                     isValid={!!valid.taxNumber}
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
+                    disabled={iOSFocusedField && iOSFocusedField !== 'kcpTaxNumberOrDOB'}
                 />
             )}
 
@@ -141,6 +146,7 @@ export const CardFieldsWrapper = ({
                         valid={valid?.socialSecurityNumber}
                         data={socialSecurityNumber}
                         required={true}
+                        disabled={iOSFocusedField && iOSFocusedField !== 'socialSecurityNumber'}
                     />
                 </div>
             )}
@@ -165,6 +171,8 @@ export const CardFieldsWrapper = ({
                     allowedCountries={billingAddressAllowedCountries}
                     requiredFields={billingAddressRequiredFields}
                     ref={billingAddressRef}
+                    specifications={partialAddressSchema}
+                    iOSFocusedField={iOSFocusedField}
                 />
             )}
         </LoadingWrapper>

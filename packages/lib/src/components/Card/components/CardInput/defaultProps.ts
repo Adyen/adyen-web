@@ -1,4 +1,5 @@
 import { SocialSecurityMode } from '../../types';
+import { AddressModeOptions } from './types';
 
 export default {
     type: 'card',
@@ -14,6 +15,7 @@ export default {
     showBrandsUnderCardNumber: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
+    billingAddressMode: AddressModeOptions.full,
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
     installmentOptions: {},
     configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },

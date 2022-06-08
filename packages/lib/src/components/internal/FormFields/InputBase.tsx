@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export default function InputBase(props) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors, disabled } = props;
 
     /**
      * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.
@@ -69,6 +69,7 @@ export default function InputBase(props) {
             onInput={handleInput}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            disabled={disabled}
         />
     );
 }

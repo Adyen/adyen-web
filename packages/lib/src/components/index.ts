@@ -51,6 +51,7 @@ import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPICollect from './UPI/UPICollect';
+import WalletINElement from './WalletIN';
 
 /**
  * Maps each component with a Component element.
@@ -148,6 +149,7 @@ const componentsMap = {
     threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
     upi_collect: UPICollect,
     visa: Card,
+    wallet_IN: WalletINElement,
     wechatpay: WeChat,
     wechatpayQR: WeChat,
     oxxo: Oxxo,

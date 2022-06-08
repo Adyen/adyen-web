@@ -1,3 +1,5 @@
+import { ValidationRuleResult } from './ValidationRuleResult';
+
 type ValidatorMode = 'blur' | 'input';
 
 export type ErrorMessageObject = {
@@ -46,3 +48,5 @@ export interface FieldContext {
         [key: string]: any;
     };
 }
+
+export type ValidationRuleResults = { [key: string]: ValidationRuleResult };

@@ -18,7 +18,7 @@ interface BlikInputDataState {
 
 function BlikInput(props: BlikInputProps) {
     const { i18n, loadingContext } = useCoreContext();
-    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({
         schema: ['blikCode'],
         rules: {
             blikCode: {

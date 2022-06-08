@@ -1,27 +1,27 @@
 import { h, Fragment, FunctionalComponent } from 'preact';
-import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
-import { CardInputProps, CardInputValidState, CardInputErrorState, CardInputDataState, CardInputRef } from './types';
+import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { extractPropsForCardFields, extractPropsForSFP, getLayout, sortErrorsForPanel } from './utils';
+import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, sortErrorsForPanel } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
-import { ValidationRuleResult } from '../../../../utils/Validator/Validator';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
-import { getErrorPanelHandler, getAddressHandler, getFocusHandler, getAutoJumpHandler } from './handlers';
+import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
+import { TouchStartEventObj } from './components/types';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -71,11 +71,20 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
     const [selectedBrandValue, setSelectedBrandValue] = useState('');
 
+    const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
+
+    const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
+
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-    const [billingAddress, setBillingAddress] = useState<AddressData>(props.billingAddressRequired ? props.data.billingAddress : null);
+    const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
     const [installments, setInstallments] = useState<InstallmentsObj>({ value: null });
+
+    // re. Disable arrows for iOS: The name of the element calling for other elements to be disabled
+    // - either a securedField type (like 'encryptedCardNumber') when call is coming from SF
+    // or else the name of an internal, Adyen-web, element (like 'holderName')
+    const [iOSFocusedField, setIOSFocusedField] = useState(null);
 
     /**
      * LOCAL VARS
@@ -114,15 +123,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // SecuredField-only handler
     const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
-    // Callback for ErrorPanel
-    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
-
-    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
-
-    const doPanAutoJump = getAutoJumpHandler(
-        isAutoJumping,
-        sfp,
-        getLayout({
+    const retrieveLayout = () => {
+        return getLayout({
             props,
             showKCP,
             showBrazilianSSN,
@@ -130,8 +132,29 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
                 billingAddressRequiredFields: props.billingAddressRequiredFields
             })
-        })
-    );
+        });
+    };
+
+    /**
+     * re. Disabling arrow keys in iOS:
+     * Only by disabling all fields in the Card PM except for the active securedField input can we force the iOS soft keyboard arrow keys to disable
+     *
+     * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
+     * - in which case we should disable all non-SF fields
+     * or,
+     * due to an internal action ('webInternalElement') - in which case we can enable all non-SF fields
+     */
+    const handleTouchstartIOS = useCallback((obj: TouchStartEventObj) => {
+        const elementType = obj.fieldType !== 'webInternalElement' ? obj.fieldType : obj.name;
+        setIOSFocusedField(elementType);
+    }, []);
+
+    // Callback for ErrorPanel
+    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
+
+    const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
+
+    const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
@@ -207,8 +230,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         // Validate SecuredFields
         sfp.current.showValidation();
 
-        // Validates holderName & SSN & KCP (taxNumber)
-        triggerValidation();
+        // Validate holderName & SSN & KCP (taxNumber) but *not* billingAddress
+        triggerValidation(['holderName', 'socialSecurityNumber', 'taxNumber']);
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
@@ -245,7 +268,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             ...(props.hasHolderName ? ['holderName'] : []),
             ...(showBrazilianSSN ? ['socialSecurityNumber'] : []),
             ...(showKCP ? ['taxNumber'] : []),
-            ...(props.billingAddressRequired ? ['billingAddress'] : [])
+            ...(showBillingAddress ? ['billingAddress'] : [])
         ];
         setSchema(newSchema);
     }, [props.hasHolderName, showBrazilianSSN, showKCP]);
@@ -261,7 +284,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         setSocialSecurityNumber(formData.socialSecurityNumber);
 
-        if (props.billingAddressRequired) setBillingAddress({ ...formData.billingAddress });
+        if (showBillingAddress) setBillingAddress({ ...formData.billingAddress });
 
         setValid({
             ...valid,
@@ -274,13 +297,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         });
 
         // Check if billingAddress errors object has any properties that aren't null or undefined
-        // NOTE: when showValidation is called on the Address component it calls back twice - once, incorrectly, with formErrors.billingAddress as an instance of ValidationRuleResult
-        // and second time round, correctly  with formErrors.billingAddress as an object containing ValidationRuleResults mapped to address keys (street, city etc)
-        // - so we need to ignore the first callback TODO - investigate why this happens
-        const addressHasErrors =
-            formErrors.billingAddress && !(formErrors.billingAddress instanceof ValidationRuleResult)
-                ? Object.entries(formErrors.billingAddress).reduce((acc, [, error]) => acc || error != null, false)
-                : false;
+        const addressHasErrors = formErrors.billingAddress
+            ? Object.entries(formErrors.billingAddress).reduce((acc, [, error]) => acc || error != null, false)
+            : false;
 
         // Errors
         setErrors({
@@ -288,7 +307,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             holderName: props.holderNameRequired && !!formErrors.holderName ? formErrors.holderName : null,
             socialSecurityNumber: showBrazilianSSN && !!formErrors.socialSecurityNumber ? formErrors.socialSecurityNumber : null,
             taxNumber: showKCP && !!formErrors.taxNumber ? formErrors.taxNumber : null,
-            billingAddress: props.billingAddressRequired && addressHasErrors ? formErrors.billingAddress : null
+            billingAddress: showBillingAddress && addressHasErrors ? formErrors.billingAddress : null
         });
     }, [formData, formValid, formErrors]);
 
@@ -299,7 +318,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const holderNameValid: boolean = valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
-        const addressValid: boolean = props.billingAddressRequired ? valid.billingAddress : true;
+        const addressValid: boolean = showBillingAddress ? valid.billingAddress : true;
 
         const koreanAuthentication: boolean = showKCP ? !!valid.taxNumber && !!valid.encryptedPassword : true;
 
@@ -316,15 +335,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         const sortedMergedErrors = sortErrorsForPanel({
             errors: errorsForPanel,
-            layout: getLayout({
-                props,
-                showKCP,
-                showBrazilianSSN,
-                ...(props.billingAddressRequired && {
-                    countrySpecificSchemas: specifications.getAddressSchemaForCountry(billingAddress?.country),
-                    billingAddressRequiredFields: props.billingAddressRequiredFields
-                })
-            }),
+            layout: retrieveLayout(),
             i18n: props.i18n,
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
         });
@@ -361,6 +372,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onFocus={handleFocus}
                 type={props.brand}
                 isCollatingErrors={collateErrors}
+                onTouchstartIOS={handleTouchstartIOS}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}
@@ -411,12 +423,18 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             billingAddress={billingAddress}
                             handleAddress={handleAddress}
                             billingAddressRef={billingAddressRef}
+                            partialAddressSchema={partialAddressSchema}
+                            //
+                            iOSFocusedField={iOSFocusedField}
                         />
                     </div>
                 )}
             />
             {props.showPayButton &&
-                props.payButton({ status, icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock') })}
+                props.payButton({
+                    status,
+                    icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
+                })}
         </Fragment>
     );
 };

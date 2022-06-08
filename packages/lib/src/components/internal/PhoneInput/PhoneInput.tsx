@@ -6,12 +6,13 @@ import Field from '../FormFields/Field';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
+import { PhoneInputSchema } from './types';
 
 export function PhoneInput(props) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const showPrefix = !!props?.items?.length;
-    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
+    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PhoneInputSchema>({
         schema: [...(showPrefix ? ['phonePrefix'] : []), 'phoneNumber'],
         defaultData: { ...(showPrefix ? { phonePrefix: props.selected } : {}) },
         rules: {

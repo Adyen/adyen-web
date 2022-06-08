@@ -6,7 +6,7 @@ Adyen Web provides you with the building blocks to create a checkout experience 
 
 You can integrate with Adyen Web in two ways:
 * [Web Drop-in](https://docs.adyen.com/online-payments/web-drop-in/): an all-in-one solution, the quickest way to accept payments on your website.
-* [Web Components](https://docs.adyen.com/checkout/components-web/): one Component per payment method and combine with your own payments form logic.
+* [Web Components](https://docs.adyen.com/online-payments/web-components): one Component per payment method and combine with your own payments form logic.
 
 ## Prerequisites
 
@@ -51,6 +51,9 @@ To run the development environment:
   ```sh
   yarn start
   ```
+
+## Analytics and data tracking
+Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the Drop-in and Components integrations contain analytics and tracking features that are turned on by default. Find out more about [what we track and how you can control it](https://docs.adyen.com/online-payments/analytics-and-data-tracking).
 
 ## Contributing
 

@@ -26,7 +26,7 @@ function FieldContainer(props: FieldContainerProps) {
         i18n,
         commonProps: { isCollatingErrors }
     } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxlength } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxlength, disabled } = props;
 
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -78,7 +78,8 @@ function FieldContainer(props: FieldContainerProps) {
                         onBlur,
                         isCollatingErrors,
                         maxlength,
-                        trimOnBlur
+                        trimOnBlur,
+                        disabled
                     })}
                 </Field>
             );

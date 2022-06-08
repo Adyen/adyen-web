@@ -1,69 +1,45 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
-import classNames from 'classnames';
+import { useState, useRef } from 'preact/hooks';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import Field from '../../../internal/FormFields/Field';
-import { renderFormField } from '../../../internal/FormFields';
-import { MBWayDataState, MBWayInputProps } from './types';
+import { MBWayInputProps } from './types';
 import './MBWayInput.scss';
-import useForm from '../../../../utils/useForm';
-const phoneNumberRegEx = /^[+]*[0-9]{1,4}[\s/0-9]*$/;
+import PhoneInput from '../../../internal/PhoneInputNew';
+import LoadingWrapper from '../../../internal/LoadingWrapper';
+import usePhonePrefixes from '../../../internal/PhoneInputNew/usePhonePrefixes';
 
 function MBWayInput(props: MBWayInputProps) {
-    const { i18n } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
 
-    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<MBWayDataState>({
-        schema: ['telephoneNumber'],
-        defaultData: props.data,
-        rules: {
-            telephoneNumber: {
-                validate: num => phoneNumberRegEx.test(num) && num.length >= 7,
-                errorMessage: 'mobileNumber.invalid',
-                modes: ['blur']
-            }
-        },
-        formatters: {
-            telephoneNumber: num => num.replace(/[^0-9+\s]/g, '')
-        }
-    });
+    const phoneInputRef = useRef(null);
 
-    const [status, setStatus] = useState('ready');
+    const { allowedCountries = [] } = props;
+
+    const [status, setStatus] = useState<string>('ready');
 
     this.setStatus = setStatus;
-    this.showValidation = triggerValidation;
+    this.showValidation = phoneInputRef?.current?.triggerValidation;
 
-    useEffect(() => {
+    const { loadingStatus: prefixLoadingStatus, phonePrefixes } = usePhonePrefixes({ allowedCountries, loadingContext, handleError: props.onError });
+
+    const onChange = ({ data, valid, errors, isValid }) => {
         props.onChange({ data, valid, errors, isValid });
-    }, [data, valid, errors, isValid]);
+    };
 
     return (
-        <div className="adyen-checkout__mb-way">
-            <Field
-                errorMessage={!!errors.telephoneNumber && i18n.get('mobileNumber.invalid')}
-                label={i18n.get('mobileNumber')}
-                className={classNames('adyen-checkout__input--phone-number')}
-                isValid={valid.telephoneNumber}
-                dir={'ltr'}
-                name={'telephoneNumber'}
-            >
-                {renderFormField('tel', {
-                    value: data.telephoneNumber,
-                    className: 'adyen-checkout__pm__phoneNumber__input',
-                    placeholder: props.placeholders.telephoneNumber,
-                    required: true,
-                    autoCorrect: 'off',
-                    onBlur: handleChangeFor('telephoneNumber', 'blur'),
-                    onInput: handleChangeFor('telephoneNumber', 'input')
-                })}
-            </Field>
+        <LoadingWrapper status={prefixLoadingStatus}>
+            <div className="adyen-checkout__mb-way">
+                <PhoneInput {...props} items={phonePrefixes} ref={phoneInputRef} onChange={onChange} data={props.data} />
 
-            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
-        </div>
+                {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+            </div>
+        </LoadingWrapper>
     );
 }
 
 MBWayInput.defaultProps = {
-    onChange: () => {}
+    onChange: () => {},
+    phoneNumberKey: 'mobileNumber',
+    phoneNumberErrorKey: 'mobileNumber.invalid'
 };
 
 export default MBWayInput;

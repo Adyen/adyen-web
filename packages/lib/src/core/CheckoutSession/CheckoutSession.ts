@@ -11,8 +11,10 @@ import {
     CheckoutSessionDetailsResponse,
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
-    CheckoutSessionSetupResponse
+    CheckoutSessionSetupResponse,
 } from '../../types';
+import cancelOrder from '../Services/sessions/cancel-order';
+import {onOrderCancelData} from "../../components/Dropin/types";
 
 class Session {
     private readonly session: CheckoutSession;
@@ -110,6 +112,20 @@ class Session {
             return response;
         });
     }
+
+    /**
+     * Cancels an order for the current session
+     */
+    cancelOrder(data: onOrderCancelData): Promise<CheckoutSessionOrdersResponse> {
+        return cancelOrder(data.order, this).then(response => {
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
+            return response;
+        });
+    }
+
 
     /**
      * Gets the stored session but only if the current id and the stored id match

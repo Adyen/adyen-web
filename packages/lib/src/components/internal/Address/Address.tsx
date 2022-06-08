@@ -13,14 +13,24 @@ import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 
 export default function Address(props: AddressProps) {
-    const { label = '', requiredFields, visibility } = props;
+    const { label = '', requiredFields, visibility, iOSFocusedField = null } = props;
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
+    const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
+
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
-        schema: requiredFields,
+        schema: requiredFieldsSchema,
         defaultData: props.data,
         rules: props.validationRules || getAddressValidationRules(specifications),
         formatters: addressFormatters
+    });
+
+    /**
+     * For iOS: iOSFocusedField is the name of the element calling for other elements to be disabled
+     * - so if it is set (meaning we are in iOS *and* an input has been focussed) only enable the field that corresponds to this element
+     */
+    const enabledFields: string[] = requiredFieldsSchema.filter(item => {
+        return !iOSFocusedField ? true : item === iOSFocusedField;
     });
 
     /**
@@ -94,6 +104,7 @@ export default function Address(props: AddressProps) {
                 specifications={specifications}
                 maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
+                disabled={!enabledFields.includes(fieldName)}
             />
         );
     };

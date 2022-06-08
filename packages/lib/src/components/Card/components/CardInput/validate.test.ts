@@ -5,9 +5,9 @@ const taxNumValidationFn = getRuleByNameAndMode('taxNumber', 'blur');
 
 describe('validate holder name', () => {
     test('validates a card holder name', () => {
-        expect(holderNameValidationFn('')).toBe(false);
+        expect(holderNameValidationFn('')).toBe(null);
         expect(holderNameValidationFn('John Smith')).toBe(true);
-        expect(holderNameValidationFn('   ')).toBe(false);
+        expect(holderNameValidationFn('   ')).toBe(null);
         // expect(validateHolderName(undefined)).toBe(false);
         // expect(validateHolderName(null)).toBe(false);
     });
@@ -15,7 +15,7 @@ describe('validate holder name', () => {
 
 describe('validate tax number', () => {
     test('validates a tax number is 6 or 10 digits', () => {
-        expect(taxNumValidationFn('')).toBe(false);
+        expect(taxNumValidationFn('')).toBe(null);
         expect(taxNumValidationFn('12345')).toBe(false);
         expect(taxNumValidationFn('123456')).toBe(true);
         expect(taxNumValidationFn('1234567')).toBe(false);

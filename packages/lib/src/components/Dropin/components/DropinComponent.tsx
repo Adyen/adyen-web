@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
-import { DropinComponentProps, DropinComponentState, DropinStatusProps } from '../types';
+import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../types';
 
@@ -41,6 +41,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 }
             }
         );
+
+        this.onOrderCancel = this.getOnOrderCancel();
     };
 
     public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
@@ -92,6 +94,27 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.setState({ activePaymentMethod: null });
     }
 
+    /**
+     * getOnOrderCancel decides which onOrderCancel logic should be used, manual or sessions
+     */
+    private getOnOrderCancel = () => {
+        if (this.props.onOrderCancel) {
+            return (data: onOrderCancelData) => {
+                this.props.onOrderCancel(data);
+            };
+        }
+        if (this.props.session) {
+            return (data: onOrderCancelData) =>
+                this.props.session
+                    .cancelOrder(data)
+                    .then(() => this.props._parentInstance.update({ order: null }))
+                    .catch(error => this.setStatus(error?.message || 'error'));
+        }
+        return null;
+    };
+
+    private onOrderCancel: (data: onOrderCancelData) => void;
+
     render(props, { elements, instantPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
@@ -121,7 +144,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 cachedPaymentMethods={cachedPaymentMethods}
                                 order={this.props.order}
                                 orderStatus={this.state.orderStatus}
-                                onOrderCancel={this.props.onOrderCancel}
+                                onOrderCancel={this.onOrderCancel}
                                 onSelect={this.handleOnSelectPaymentMethod}
                                 openFirstPaymentMethod={this.props.openFirstPaymentMethod}
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
