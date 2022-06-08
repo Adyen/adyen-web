@@ -4,7 +4,7 @@ import DonationComponent from './DonationComponent';
 
 const amounts = {
     currency: 'EUR',
-    values: [1000, 2000, 3000]
+    values: [50, 199, 300]
 };
 const createWrapper = (props = {}) => mount(<DonationComponent amounts={amounts} {...props} />);
 
@@ -57,5 +57,41 @@ describe('DonationComponent', () => {
     test('Hides the Cancel button', () => {
         const wrapper = createWrapper({ amounts, showCancelButton: false });
         expect(wrapper.find('.adyen-checkout__button--decline')).toHaveLength(0);
+    });
+
+    test('Should show number fractions in the labels', () => {
+        const wrapper = createWrapper();
+        expect(
+            wrapper
+                .find('label.adyen-checkout__button')
+                .at(0)
+                .text()
+        ).toEqual('€0.50');
+        expect(
+            wrapper
+                .find('label.adyen-checkout__button')
+                .at(1)
+                .text()
+        ).toEqual('€1.99');
+        expect(
+            wrapper
+                .find('label.adyen-checkout__button')
+                .at(2)
+                .text()
+        ).toEqual('€3.00');
+    });
+
+    test('Should submit the right amount', () => {
+        const onDonateMock = jest.fn();
+        const wrapper = createWrapper({ onDonate: onDonateMock });
+
+        wrapper
+            .find('.adyen-checkout__button-group__input')
+            .first()
+            .simulate('change');
+        wrapper.find('.adyen-checkout__button--donate').simulate('click');
+
+        const callbackData = onDonateMock.mock.calls[0][0];
+        expect(callbackData.data.amount.value).toBe(50);
     });
 });
