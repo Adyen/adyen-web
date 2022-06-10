@@ -14,7 +14,6 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
-
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);

@@ -7,6 +7,9 @@ import config from './config';
 import QRLoader from '../internal/QRLoader';
 import { UIElementStatus } from '../types';
 
+const UPI_COLLECT = 'upi_collect';
+const UPI_QR = 'upi_qr';
+
 class UPI extends UIElement {
     public static type = 'upi';
 
@@ -23,7 +26,7 @@ class UPI extends UIElement {
         const { isQrCodeFlow, virtualPaymentAddress } = this.state.data;
         return {
             paymentMethod: {
-                type: isQrCodeFlow ? 'upi_qr' : 'upi_collect',
+                type: isQrCodeFlow ? UPI_QR : UPI_COLLECT,
                 ...(virtualPaymentAddress && { virtualPaymentAddress })
             }
         };
@@ -48,13 +51,13 @@ class UPI extends UIElement {
                             this.componentRef = ref;
                         }}
                         {...this.props}
-                        shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
-                        type={this.constructor['type']}
+                        // shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
+                        type={UPI_QR}
                         brandLogo={this.props.brandLogo || this.icon}
-                        delay={this.props.delay}
+                        // delay={this.props.delay}
                         onComplete={this.onComplete}
-                        countdownTime={this.props.countdownTime}
-                        instructions={this.props.instructions}
+                        // countdownTime={this.props.countdownTime}
+                        // instructions={this.props.instructions}
                     />
                 );
             case 'await':
@@ -68,7 +71,7 @@ class UPI extends UIElement {
                         onError={this.handleError}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
-                        type={config.type}
+                        type={UPI_COLLECT}
                         messageText={this.props.i18n.get(config.messageTextId)}
                         awaitText={this.props.i18n.get(config.awaitTextId)}
                         showCountdownTimer={config.showCountdownTimer}

@@ -8,7 +8,6 @@ export default {
     COUNTDOWN_MINUTES,
     THROTTLE_TIME,
     THROTTLE_INTERVAL,
-    type: 'blik',
     messageTextId: 'blik.confirmPayment', // identifier for a translation string
     awaitTextId: 'await.waitForConfirmation',
     showCountdownTimer: true
