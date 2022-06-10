@@ -12,6 +12,7 @@ export interface PayButtonProps {
     label?: string;
     amount: PaymentAmount;
     status?: string;
+    disabled?: boolean;
     onClick(): void;
 }
 
@@ -24,7 +25,12 @@ const PayButton = ({ amount, classNameModifiers = [], label, ...props }: PayButt
     const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
 
     return (
-        <Button {...props} disabled={props.status === 'loading'} classNameModifiers={[...classNameModifiers, 'pay']} label={label || defaultLabel} />
+        <Button
+            {...props}
+            disabled={props.disabled || props.status === 'loading'}
+            classNameModifiers={[...classNameModifiers, 'pay']}
+            label={label || defaultLabel}
+        />
     );
 };
 

@@ -14,6 +14,7 @@ export async function initSession() {
     });
 
     const checkout = await AdyenCheckout({
+        // allowPaymentMethods: ['upi'],
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,

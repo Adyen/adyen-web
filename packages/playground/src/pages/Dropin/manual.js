@@ -7,6 +7,7 @@ import { getSearchParameters } from '../../utils';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
     window.checkout = await AdyenCheckout({
+        allowPaymentMethods: ['upi'],
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
@@ -22,7 +23,6 @@ export async function initManual() {
             const result = await makePayment(state.data);
 
             // handle actions
-            debugger;
             if (result.action) {
                 // demo only - store paymentData & order
                 if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);

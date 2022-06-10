@@ -29,7 +29,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
 
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
-        console.log(this.state);
         this.onChange();
     }
 
