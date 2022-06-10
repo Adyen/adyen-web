@@ -220,6 +220,12 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public handleUnsupportedCard(errObj: CbObjOnError): boolean {
         const hasUnsupportedCard = !!errObj.error;
+
+        // Store the brand(s) we detected and which we don't support
+        if (hasUnsupportedCard) {
+            this.setState({ detectedUnsupportedBrands: errObj.detectedBrands });
+        }
+
         errObj.rootNode = this.rootNode; // Needed for CustomCard
         this.handleOnError(errObj, hasUnsupportedCard);
         // Inform CSF that the number field has an unsupportedCard error (or that it has been cleared)
@@ -262,7 +268,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     /**
-     * Map SF errors to ValidationRuleResult like objects, for CardInput component
+     * Map SF errors to ValidationRuleResult-like objects, for CardInput component
      */
     public mapErrorsToValidationRuleResult(): object {
         const errorKeys = Object.keys(this.state.errors);
@@ -287,7 +293,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     }
 
     public processBinLookupResponse(binLookupResponse: BinLookupResponse, resetObject: SingleBrandResetObject): void {
-        // If we were dealing with an unsupported card and now we have a valid /binLookup response - reset state and inform CSF
+        // If we were dealing with an unsupported card & now we have a valid /binLookup response (or a response triggering a reset of the UI),
+        // - reset state to clear the error & the stored unsupportedBrands and, in the case of a valid /binLookup response, inform CSF (via handleUnsupportedCard)
         // (Scenario: from an unsupportedCard state the shopper has pasted another number long enough to trigger a /binLookup)
         if (this.state.detectedUnsupportedBrands) {
             this.setState(prevState => ({

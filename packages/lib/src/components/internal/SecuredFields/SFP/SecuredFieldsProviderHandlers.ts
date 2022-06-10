@@ -181,7 +181,6 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     this.setState(
         prevState => ({
             errors: { ...prevState.errors, [cbObj.fieldType]: errorCode || false },
-            detectedUnsupportedBrands: !hasUnsupportedCard ? null : cbObj.detectedBrands,
             // If dealing with an unsupported card ensure these card number related fields are reset re. pasting a full, unsupported card straight in
             ...(hasUnsupportedCard && { data: { ...prevState.data, [ENCRYPTED_CARD_NUMBER]: undefined } }),
             ...(hasUnsupportedCard && { valid: { ...prevState.valid, [ENCRYPTED_CARD_NUMBER]: false } }),
