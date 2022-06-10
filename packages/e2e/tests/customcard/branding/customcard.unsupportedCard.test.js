@@ -1,5 +1,5 @@
 import { start, getAriaErrorField, checkIframeElHasExactText } from '../../utils/commonUtils';
-import { REGULAR_TEST_CARD, MAESTRO_CARD } from '../../cards/utils/constants';
+import { REGULAR_TEST_CARD, MAESTRO_CARD, JWE_ALG, JWE_CONTENT_ALG, JWE_VERSION } from '../../cards/utils/constants';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
@@ -113,7 +113,26 @@ test(
         await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(true);
 
         // ...with encrypted blob
-        await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
+
+        // Extract & decode JWE header
+        const JWEToken = await cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber');
+        const JWETokenArr = JWEToken.split('.');
+        const blobHeader = JWETokenArr[0];
+        const base64Decoded = await cardPage.decodeBase64(blobHeader);
+        const headerObj = JSON.parse(base64Decoded);
+
+        // Look for expected properties
+        await t.expect(JWETokenArr.length).eql(5); // Expected number of components in the JWE token
+
+        await t
+            .expect(headerObj.alg)
+            .eql(JWE_ALG)
+            .expect(headerObj.enc)
+            .eql(JWE_CONTENT_ALG)
+            .expect(headerObj.version)
+            .eql(JWE_VERSION);
+
+        // await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
 
         /**
          * Validity received & processed at SF level
@@ -169,7 +188,26 @@ test(
         await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(true);
 
         // ...with encrypted blob
-        await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
+
+        // Extract & decode JWE header
+        const JWEToken = await cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber');
+        const JWETokenArr = JWEToken.split('.');
+        const blobHeader = JWETokenArr[0];
+        const base64Decoded = await cardPage.decodeBase64(blobHeader);
+        const headerObj = JSON.parse(base64Decoded);
+
+        // Look for expected properties
+        await t.expect(JWETokenArr.length).eql(5); // Expected number of components in the JWE token
+
+        await t
+            .expect(headerObj.alg)
+            .eql(JWE_ALG)
+            .expect(headerObj.enc)
+            .eql(JWE_CONTENT_ALG)
+            .expect(headerObj.version)
+            .eql(JWE_VERSION);
+
+        // await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
 
         /**
          * Validity received & processed at SF level
