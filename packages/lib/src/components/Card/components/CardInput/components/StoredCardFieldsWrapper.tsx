@@ -2,8 +2,13 @@ import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
+import { ErrorPanel } from '../../../../../core/Errors/ErrorPanel';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
 
 export const StoredCardFieldsWrapper = ({
+    // base (shared)
+    collateErrors,
+    errorFieldId,
     // vars created in CardInput:
     sfpState,
     setFocusOn,
@@ -18,10 +23,27 @@ export const StoredCardFieldsWrapper = ({
     installmentOptions,
     lastFour,
     expiryMonth,
-    expiryYear
+    expiryYear,
+    // Card
+    mergedSRErrors,
+    handleErrorPanelFocus,
+    moveFocus,
+    showPanel
 }) => {
+    const { i18n } = useCoreContext();
+
     return (
         <LoadingWrapper status={sfpState.status}>
+            {collateErrors && (
+                <ErrorPanel
+                    id={errorFieldId}
+                    heading={i18n.get('errorPanel.title')}
+                    errors={mergedSRErrors}
+                    callbackFn={moveFocus ? handleErrorPanelFocus : null}
+                    showPanel={showPanel}
+                />
+            )}
+
             <StoredCardFields
                 errors={sfpState.errors}
                 brand={sfpState.brand}
