@@ -25,11 +25,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Adyen Giving
     window.donation = checkout
         .create('donation', {
-            onDonate: (state, component) => console.log({ state, component }),
+            onDonate: (state, component) => {
+                console.log({ state, component });
+                setTimeout(() => component.setStatus('ready'), 1000);
+            },
             url: 'https://example.org',
             amounts: {
                 currency: 'EUR',
-                values: [300, 500, 1000]
+                values: [50, 199, 300]
             },
             backgroundUrl:
                 'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',

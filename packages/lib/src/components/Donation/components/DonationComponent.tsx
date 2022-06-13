@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import CampaignContainer from './CampaignContainer';
 import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
@@ -23,7 +23,7 @@ export default function DonationComponent(props) {
         setStatus(status);
     };
 
-    const getAmount = (value, currency) => i18n.amount(value, currency, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    const getAmount = useCallback((value: number, currency: string) => i18n.amount(value, currency), [i18n]);
 
     const handleAmountSelected = ({ target }) => {
         const value = parseInt(target.value, 10);
