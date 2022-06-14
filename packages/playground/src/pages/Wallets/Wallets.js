@@ -119,9 +119,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // style: {},
 
             // Events
-            onShippingChange: (data, actions) => {
-                console.log(data, actions);
-            },
             onError: (error, component) => {
                 component.setStatus('ready');
                 console.log('paypal onError', error);

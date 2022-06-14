@@ -5,10 +5,11 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UIElementStatus } from '../types';
+import { UpiPaymentData } from './types';
 
 /**
  * 'upi' tx variant is the parent one.
- * 'upi_collect' and 'upi_qr' are the sub variants which are hardcoded
+ * 'upi_collect' and 'upi_qr' are the sub variants which are submitted according to the shopper interaction.
  */
 const UPI_COLLECT = 'upi_collect';
 const UPI_QR = 'upi_qr';
@@ -21,11 +22,11 @@ class UPI extends UIElement {
         this.handleGenerateQrCodeClick = this.handleGenerateQrCodeClick.bind(this);
     }
 
-    get isValid() {
+    public get isValid(): boolean {
         return !!this.state.isValid;
     }
 
-    formatData() {
+    public formatData(): UpiPaymentData {
         const { isQrCodeFlow, virtualPaymentAddress } = this.state.data;
         return {
             paymentMethod: {
