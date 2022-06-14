@@ -28,7 +28,6 @@ const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
         schema: formSchema,
         defaultData: props.data,
         rules: vpaValidationRules
-        // formatters: pixFormatters
     });
 
     const validateInput = useCallback(() => {

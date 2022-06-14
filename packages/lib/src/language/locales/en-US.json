@@ -218,5 +218,7 @@
     "ownerName": "Holder Name",
     "ibanNumber": "Account Number (IBAN)",
     "bankAccount": "Bank Details",
-    "virtualPaymentAddress": "Virtual Payment Address"
+    "virtualPaymentAddress": "Virtual Payment Address",
+    "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
+    "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment"
 }

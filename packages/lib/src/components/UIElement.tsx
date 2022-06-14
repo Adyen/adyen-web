@@ -8,7 +8,6 @@ import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
-import { PayButtonProps } from './internal/PayButton/PayButton';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;

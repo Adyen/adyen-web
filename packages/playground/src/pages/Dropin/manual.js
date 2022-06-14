@@ -7,7 +7,6 @@ import { getSearchParameters } from '../../utils';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
     window.checkout = await AdyenCheckout({
-        allowPaymentMethods: ['upi'],
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,

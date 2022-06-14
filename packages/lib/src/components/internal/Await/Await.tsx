@@ -211,6 +211,7 @@ Await.defaultProps = {
     countdownTime: 15,
     onError: () => {},
     onComplete: () => {},
+    delay: 2000,
     throttleTime: 60000,
     throttleInterval: 10000,
     showCountdownTimer: true,

@@ -11,7 +11,7 @@ export interface StatusObject {
 
 export interface AwaitComponentProps {
     type: string;
-    delay: number;
+    delay?: number;
     countdownTime: number;
     throttleTime: number;
     showCountdownTimer: boolean;

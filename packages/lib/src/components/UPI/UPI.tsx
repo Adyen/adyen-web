@@ -1,12 +1,15 @@
 import { h, RefObject } from 'preact';
 import UIElement from '../UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
 import UPIComponent from './components/UPIComponent';
+import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
-import config from './config';
 import QRLoader from '../internal/QRLoader';
 import { UIElementStatus } from '../types';
 
+/**
+ * 'upi' tx variant is the parent one.
+ * 'upi_collect' and 'upi_qr' are the sub variants which are hardcoded
+ */
 const UPI_COLLECT = 'upi_collect';
 const UPI_QR = 'upi_qr';
 
@@ -42,7 +45,7 @@ class UPI extends UIElement {
         this.submit();
     }
 
-    private renderContent(type: string) {
+    private renderContent(type: string): h.JSX.Element {
         switch (type) {
             case 'qrCode':
                 return (
@@ -51,13 +54,10 @@ class UPI extends UIElement {
                             this.componentRef = ref;
                         }}
                         {...this.props}
-                        // shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
                         type={UPI_QR}
                         brandLogo={this.props.brandLogo || this.icon}
-                        // delay={this.props.delay}
                         onComplete={this.onComplete}
-                        // countdownTime={this.props.countdownTime}
-                        // instructions={this.props.instructions}
+                        introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
                     />
                 );
             case 'await':
@@ -72,13 +72,9 @@ class UPI extends UIElement {
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                         type={UPI_COLLECT}
-                        messageText={this.props.i18n.get(config.messageTextId)}
-                        awaitText={this.props.i18n.get(config.awaitTextId)}
-                        showCountdownTimer={config.showCountdownTimer}
-                        delay={config.STATUS_INTERVAL}
-                        countdownTime={config.COUNTDOWN_MINUTES}
-                        throttleTime={config.THROTTLE_TIME}
-                        throttleInterval={config.THROTTLE_INTERVAL}
+                        messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
+                        awaitText={this.props.i18n.get('await.waitForConfirmation')}
+                        showCountdownTimer
                     />
                 );
             default:
@@ -96,7 +92,7 @@ class UPI extends UIElement {
         }
     }
 
-    public render() {
+    public render(): h.JSX.Element {
         const { type } = this.props;
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>

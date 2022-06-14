@@ -1,4 +1,4 @@
-qimport { Selector } from 'testcafe';
+import { Selector } from 'testcafe';
 import { DROPIN_SESSIONS_URL } from '../../../pages';
 import { mock } from './availableBrands.mocks';
 import DropinPage from '../../../_models/Dropin.page';
