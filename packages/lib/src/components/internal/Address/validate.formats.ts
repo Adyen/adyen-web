@@ -41,8 +41,8 @@ export const addressFormatters: FormatRules = {
 };
 
 // TODO make proper formatter fns for those entries that don't just have a straightforward, x number of digits, no spaces, format
-//  check against https://hub.is.adyen.com/engineering/platform/webapps/mam/validations/address/#postal-code--zip-code
-//  whiich, for example, says BR isn't just 8 digits (it can be spilt by a hyphen) & CZ can also be 5 digits, no spaces
+//  check against our internal documentation on address postal code
+//  which, for example, says BR isn't just 8 digits (it can be spilt by a hyphen) & CZ can also be 5 digits, no spaces
 export const countrySpecificFormatters: CountryFormatRules = {
     AT: {
         postalCode: createFormatByDigits(4)
