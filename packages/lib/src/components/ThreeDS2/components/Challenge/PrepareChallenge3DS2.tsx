@@ -94,7 +94,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     <Img
                         className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
                         src={getImageUrl({ loadingContext: this.props.loadingContext, imageFolder: 'components/' })('error')}
-                        alt={this.props.i18n.get('error.message.unknown')}
+                        alt={''}
                     />
                     <div className="adyen-checkout__status__text">{this.props.i18n.get('error.message.unknown')}</div>
                 </div>
