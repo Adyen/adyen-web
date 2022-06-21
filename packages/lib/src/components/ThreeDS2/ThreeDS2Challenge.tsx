@@ -5,6 +5,7 @@ import { ErrorObject } from './components/utils';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
+import Language from '../../language';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -15,7 +16,9 @@ export interface ThreeDS2ChallengeProps {
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
     type?: string;
+    loadingContext?: string;
     useOriginalFlow?: boolean;
+    i18n?: Language;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {

@@ -1,5 +1,7 @@
 /**
- * Centralised window.postMessage processing function used in 3DS2 components
+ * Centralised window.postMessage processing function used in 3DS2 components and also by the deviceFingerprinting process
+ * NOTE: this latter use case means that while the deviceFingerprinting is still completing this component is also listening to
+ *  securedFields related postMessaging
  *
  * @param domain - expected domain for the postMesssage to have originated from
  * @param resolve - the resolve function from the Promise that called this function
@@ -7,6 +9,8 @@
  * @param rejectObj - an object to reject the promise with if origins don't match
  * @param expectedType - string to check that the passed data has the expected type
  */
+import { hasOwnProperty } from './hasOwnProperty';
+
 const getProcessMessageHandler = (
     domain: string,
     resolve: Function,
@@ -32,7 +36,7 @@ const getProcessMessageHandler = (
     // Try to parse the data
     try {
         const feedbackObj = JSON.parse(event.data);
-        if (Object.prototype.hasOwnProperty.call(feedbackObj, 'type') && feedbackObj.type === expectedType) {
+        if (hasOwnProperty(feedbackObj, 'type') && feedbackObj.type === expectedType) {
             resolve(feedbackObj);
         } else {
             return 'Event data was not of expected type';
