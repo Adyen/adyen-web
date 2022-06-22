@@ -16,7 +16,6 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 export const GIFT_CARD = 'giftcard';
 
 export const SF_VERSION = '4.0.0';
-export const SF_VERSION_CSE_DOWNGRADE = '3.10.2'; // Edge >= 18 & IE11 can't handle...the truth, I mean, JWE
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 

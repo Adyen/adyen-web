@@ -73,8 +73,6 @@ export function handleConfig(): void {
     const d = btoa(window.location.origin);
 
     /** Detect Edge vn \<= 18 & IE11 - who don't support TextEncoder; and use this as an indicator to load a different, compatible, version of SF */
-    // const sfVersion = typeof window.TextEncoder === 'function' ? SF_VERSION : SF_VERSION_CSE_DOWNGRADE;
-
     const needsJWECompatVersion = !(typeof window.TextEncoder === 'function');
     const bundleType = `${sfBundleType}${needsJWECompatVersion ? 'Compat' : ''}`; // e.g. 'card' or 'cardCompat'
 
