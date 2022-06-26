@@ -1,5 +1,14 @@
 @import '../../../../style/index';
 
+.adyen-checkout__card-ctp {
+    display: flex;
+    flex-direction: column;
+
+    &--reverse {
+        flex-direction: column-reverse;
+    }
+}
+
 .adyen-checkout__card-input__form {
     transition: opacity 0.25s ease-out;
 }

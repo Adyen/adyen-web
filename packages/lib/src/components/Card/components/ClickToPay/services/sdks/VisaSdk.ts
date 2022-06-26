@@ -5,7 +5,8 @@ import SrciError from './SrciError';
 import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse } from './types';
 
 const IdentityTypeMap = {
-    email: 'EMAIL'
+    email: 'EMAIL',
+    mobilePhone: 'MOBILE_NUMBER'
 };
 
 class VisaSdk extends AbstractSrcInitiator {
@@ -35,9 +36,8 @@ class VisaSdk extends AbstractSrcInitiator {
 
             const response = await this.schemeSdk.identityLookup(consumerIdentity);
             return response;
-        } catch (error) {
-            console.error(error);
-            throw error;
+        } catch (err) {
+            throw new SrciError(err?.error?.message, err?.error?.reason);
         }
     }
 

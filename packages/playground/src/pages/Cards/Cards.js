@@ -12,7 +12,7 @@ const showComps = {
     bcmcCard: false,
     avsCard: false,
     avsPartialCard: false,
-    kcpCard: false,
+    kcpCard: true,
     ctp: true
 };
 
@@ -149,8 +149,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 clickToPayConfiguration: {
                     schemes: {
                         mc: {
-                            srcInitiatorId: 'xxxxx',
-                            srciDpaId: 'xxxxxx',
+                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
+                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
                             srciTransactionId: 'adyen-id-' + new Date().getTime(),
                             dpaTransactionOptions: {
                                 dpaLocale: 'en_US',

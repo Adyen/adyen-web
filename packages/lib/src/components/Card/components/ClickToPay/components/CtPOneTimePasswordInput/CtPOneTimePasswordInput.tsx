@@ -7,6 +7,7 @@ import useForm from '../../../../../../utils/useForm';
 import Field from '../../../../../internal/FormFields/Field';
 import renderFormField from '../../../../../internal/FormFields';
 import './CtPOneTimePasswordInput.scss';
+import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface Props {
     disabled: boolean;
@@ -41,7 +42,12 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, Prop
     }, [data, valid, errors]);
 
     return (
-        <Field label={i18n.get('One time code')} errorMessage={props.errorCode || !!errors.otp} classNameModifiers={['otp']}>
+        <Field
+            label={i18n.get('ctp.otp.fieldLabel')}
+            labelEndAdornment={<CtPResendOtpLink />}
+            errorMessage={props.errorCode || !!errors.otp}
+            classNameModifiers={['otp']}
+        >
             {renderFormField('text', {
                 name: 'otp',
                 autocorrect: 'off',

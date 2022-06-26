@@ -23,6 +23,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         isLoading,
         isValid,
         label,
+        labelEndAdornment,
         name,
         onBlur,
         onFieldBlur,
@@ -79,6 +80,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
                 {/*@ts-ignore - function is callable*/}
                 {typeof label === 'function' && label()}
+
+                {labelEndAdornment && <span className="adyen-checkout__label-adornment--end">{labelEndAdornment}</span>}
 
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
                 <div

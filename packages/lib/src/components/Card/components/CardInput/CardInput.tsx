@@ -433,6 +433,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             {props.showPayButton &&
                 props.payButton({
                     status,
+                    variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
                     icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
                 })}
         </Fragment>

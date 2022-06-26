@@ -1,10 +1,10 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { CardElementData, CardElementProps, BinLookupResponse } from './types';
+import { BinLookupResponse, CardElementData, CardElementProps } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
@@ -15,7 +15,9 @@ import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvid
 import { createClickToPayService } from './components/ClickToPay/utils';
 import { CheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
 import ContentSeparator from '../internal/ContentSeparator';
-import { ClickToPayContext } from './components/ClickToPay/context/ClickToPayContext';
+import CardUiManager from './components/CardInput/CardUiManager';
+import Button from '../internal/Button';
+import classnames from 'classnames';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -185,6 +187,24 @@ export class CardElement extends UIElement<CardElementProps> {
         return collectBrowserInfo();
     }
 
+    private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
+        return (
+            <CardInput
+                setComponentRef={this.setComponentRef}
+                {...this.props}
+                {...this.state}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+                onBrand={this.onBrand}
+                onBinValue={this.onBinValue}
+                brand={this.brand}
+                brandsIcons={this.brands}
+                isPayButtonPrimaryVariant={isCardPrimaryInput}
+            />
+        );
+    }
+
     render() {
         return (
             <CoreProvider
@@ -193,31 +213,55 @@ export class CardElement extends UIElement<CardElementProps> {
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
                 <ClickToPayProvider clickToPayService={this.clickToPayService}>
-                    <ClickToPayContext.Consumer>
-                        {({ ctpState }) => (
-                            <div>
-                                {ctpState !== CtpState.NotAvailable && ctpState !== CtpState.Idle && (
-                                    <Fragment>
-                                        <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
-                                        <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
-                                    </Fragment>
-                                )}
+                    <CardUiManager>
+                        {/*<ClickToPayContext.Consumer>*/}
+                        {data => {
+                            console.log(data);
+                            const { ctpState, isCardPositionedOnTop, isCardInputVisible, isCardPrimaryInput, showCardInput } = data;
 
-                                <CardInput
-                                    setComponentRef={this.setComponentRef}
-                                    {...this.props}
-                                    {...this.state}
-                                    onChange={this.setState}
-                                    onSubmit={this.submit}
-                                    payButton={this.payButton}
-                                    onBrand={this.onBrand}
-                                    onBinValue={this.onBinValue}
-                                    brand={this.brand}
-                                    brandsIcons={this.brands}
-                                />
-                            </div>
-                        )}
-                    </ClickToPayContext.Consumer>
+                            if (ctpState === CtpState.NotAvailable) {
+                                return this.renderCardInput();
+                            }
+
+                            if (ctpState === CtpState.Loading || ctpState === CtpState.ShopperIdentified) {
+                                return <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />;
+                            }
+
+                            return (
+                                <div
+                                    className={classnames('adyen-checkout__card-ctp', {
+                                        'adyen-checkout__card-ctp--reverse': isCardPositionedOnTop
+                                    })}
+                                >
+                                    <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
+
+                                    <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="or" />
+
+                                    {isCardInputVisible ? (
+                                        <div className="adyen-checkout__card-ctp">{this.renderCardInput(isCardPrimaryInput)}</div>
+                                    ) : (
+                                        <Button variant="secondary" label="Use a different card" onClick={showCardInput} />
+                                    )}
+
+                                    {/*{ctpState !== CtpState.Loading && (*/}
+                                    {/*    <CardInput*/}
+                                    {/*        setComponentRef={this.setComponentRef}*/}
+                                    {/*        {...this.props}*/}
+                                    {/*        {...this.state}*/}
+                                    {/*        onChange={this.setState}*/}
+                                    {/*        onSubmit={this.submit}*/}
+                                    {/*        payButton={this.payButton}*/}
+                                    {/*        onBrand={this.onBrand}*/}
+                                    {/*        onBinValue={this.onBinValue}*/}
+                                    {/*        brand={this.brand}*/}
+                                    {/*        brandsIcons={this.brands}*/}
+                                    {/*    />*/}
+                                    {/*)}*/}
+                                </div>
+                            );
+                        }}
+                        {/*</ClickToPayContext.Consumer>*/}
+                    </CardUiManager>
                 </ClickToPayProvider>
             </CoreProvider>
         );

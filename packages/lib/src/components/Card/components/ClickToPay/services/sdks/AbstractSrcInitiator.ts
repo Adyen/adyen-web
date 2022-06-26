@@ -25,6 +25,7 @@ export interface ISrcInitiator {
     completeIdentityValidation(validationData: string): Promise<SrciCompleteIdentityValidationResponse>;
     getSrcProfile(idTokens: string[]): Promise<SrcProfile>;
     checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse>;
+    unbindAppInstance(): Promise<void>;
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
@@ -78,6 +79,13 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      */
     public async checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse> {
         return await this.schemeSdk.checkout(params);
+    }
+
+    /**
+     * This method disassociates the Consumer application / Consumer Device from the Consumer’s SRC Profile.
+     */
+    public async unbindAppInstance(): Promise<void> {
+        return await this.schemeSdk.unbindAppInstance();
     }
 
     /**

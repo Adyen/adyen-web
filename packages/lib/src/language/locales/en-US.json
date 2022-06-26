@@ -217,5 +217,16 @@
     "invalidFormatExpects": "Invalid format. Expected format: %{format}",
     "ownerName": "Holder Name",
     "ibanNumber": "Account Number (IBAN)",
-    "bankAccount": "Bank Details"
+    "bankAccount": "Bank Details",
+    "ctp.loading.poweredBy": "Powered by",
+    "ctp.loading.intro": "The fastest and most secure way to pay at merchants worldwide.",
+    "ctp.login.title": "Continue to Click to Pay",
+    "ctp.login.subtitle": "Enter your Click to Pay credentials to continue.",
+    "ctp.login.inputLabel": "Email or mobile number",
+    "ctp.logout.notYou": "Not you?",
+    "ctp.logout.notYouCards": "Not your cards?",
+    "ctp.otp.fieldLabel": "Verification code",
+    "ctp.otp.resendCode": "Resend code",
+    "ctp.otp.title": "We ned to verify you",
+    "ctp.otp.subtitle": "Enter the code we sent to %{maskedContact} to confirm it‘s you."
 }

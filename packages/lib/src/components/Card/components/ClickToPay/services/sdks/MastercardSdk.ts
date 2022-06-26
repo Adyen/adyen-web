@@ -5,7 +5,8 @@ import SrciError from './SrciError';
 import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse } from './types';
 
 const IdentityTypeMap = {
-    email: 'EMAIL_ADDRESS'
+    email: 'EMAIL_ADDRESS',
+    mobilePhone: 'MOBILE_PHONE_NUMBER'
 };
 
 class MastercardSdk extends AbstractSrcInitiator {
@@ -27,12 +28,17 @@ class MastercardSdk extends AbstractSrcInitiator {
     }
 
     public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {
-        const consumerIdentity = {
-            identityValue: params.value,
-            identityType: IdentityTypeMap[params.type]
-        };
+        try {
+            const consumerIdentity = {
+                identityValue: params.value,
+                identityType: IdentityTypeMap[params.type]
+            };
 
-        return await this.schemeSdk.identityLookup({ consumerIdentity });
+            const response = await this.schemeSdk.identityLookup({ consumerIdentity });
+            return response;
+        } catch (err) {
+            throw new SrciError(err?.message, err?.reason);
+        }
     }
 
     public async completeIdentityValidation(otp: string): Promise<SrciCompleteIdentityValidationResponse> {
