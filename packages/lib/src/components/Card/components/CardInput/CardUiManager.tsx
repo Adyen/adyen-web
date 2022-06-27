@@ -3,12 +3,11 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import useClickToPayContext from '../ClickToPay/context/useClickToPayContext';
 import { CtpState } from '../ClickToPay/services/ClickToPayService';
 
-type CardUiManagerProps = {
+type Props = {
     children: any;
 };
 
-const CardUiManager = ({ children }: CardUiManagerProps) => {
-    // const [isCardPositionedOnTop, setIsCardPositionOnTop] = useState<boolean>(null);
+const CardUiManager = ({ children }: Props): h.JSX.Element => {
     const [isCardInputVisible, setIsCardInputVisible] = useState<boolean>(null);
     const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod } = useClickToPayContext();
 
@@ -17,18 +16,16 @@ const CardUiManager = ({ children }: CardUiManagerProps) => {
     useEffect(() => {
         if (areFieldsNotSet) {
             if (ctpState === CtpState.ShopperIdentified || ctpState === CtpState.Ready) {
-                // setIsCardPositionOnTop(false);
                 setIsCardInputVisible(false);
                 setIsCtpPrimaryPaymentMethod(true);
                 return;
             }
-            if (ctpState === CtpState.Login) {
-                // setIsCardPositionOnTop(true);
+            if (ctpState === CtpState.NotAvailable) {
                 setIsCardInputVisible(true);
                 setIsCtpPrimaryPaymentMethod(false);
             }
         }
-    }, [ctpState]);
+    }, [ctpState, areFieldsNotSet]);
 
     const handleOnShowCardButtonClick = useCallback(() => {
         setIsCardInputVisible(true);
@@ -39,10 +36,9 @@ const CardUiManager = ({ children }: CardUiManagerProps) => {
         <div>
             {children({
                 ctpState,
-                // isCardPositionedOnTop,
                 isCardInputVisible,
                 isCardPrimaryInput: !isCtpPrimaryPaymentMethod,
-                showCardInput: handleOnShowCardButtonClick
+                makeCardInputVisible: handleOnShowCardButtonClick
             })}
         </div>
     );

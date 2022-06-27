@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
@@ -17,7 +17,6 @@ import { CheckoutPayload, IClickToPayService } from './components/ClickToPay/ser
 import ContentSeparator from '../internal/ContentSeparator';
 import CardUiManager from './components/CardInput/CardUiManager';
 import Button from '../internal/Button';
-import classnames from 'classnames';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -214,7 +213,7 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 <ClickToPayProvider clickToPayService={this.clickToPayService}>
                     <CardUiManager>
-                        {({ ctpState, isCardInputVisible, isCardPrimaryInput, showCardInput }) => {
+                        {({ ctpState, isCardInputVisible, isCardPrimaryInput, makeCardInputVisible }) => {
                             if (ctpState === CtpState.NotAvailable) {
                                 return this.renderCardInput();
                             }
@@ -224,20 +223,17 @@ export class CardElement extends UIElement<CardElementProps> {
                             }
 
                             return (
-                                <div className={classnames('adyen-checkout__card-ctp')}>
+                                <Fragment>
                                     <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
-
                                     <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="or" />
-
                                     {isCardInputVisible ? (
                                         this.renderCardInput(isCardPrimaryInput)
                                     ) : (
-                                        <Button variant="secondary" label="Use a different card" onClick={showCardInput} />
+                                        <Button variant="secondary" label="Use a different card" onClick={makeCardInputVisible} />
                                     )}
-                                </div>
+                                </Fragment>
                             );
                         }}
-                        {/*</ClickToPayContext.Consumer>*/}
                     </CardUiManager>
                 </ClickToPayProvider>
             </CoreProvider>

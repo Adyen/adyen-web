@@ -9,7 +9,7 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 
 const CtPOneTimePassword = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
-    const { finishIdentityValidation, otpMaskedContact } = useClickToPayContext();
+    const { finishIdentityValidation, otpMaskedContact, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [otp, setOtp] = useState<string>(null);
     const [isValid, setIsValid] = useState<boolean>(false);
     const [isValidatingOtp, setIsValidatingOtp] = useState<boolean>(false);
@@ -52,7 +52,12 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 disabled={isValidatingOtp}
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
             />
-            <Button label="Continue" onClick={onSubmitPassword} status={isValidatingOtp && 'loading'} />
+            <Button
+                label="Continue"
+                variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
+                onClick={onSubmitPassword}
+                status={isValidatingOtp && 'loading'}
+            />
         </Fragment>
     );
 };
