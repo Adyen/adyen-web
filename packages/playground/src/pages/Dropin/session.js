@@ -72,7 +72,7 @@ export async function initSession() {
                         }
                     },
                     shopperIdentity: {
-                        value: 'guilherme.ribeiro-ctp31@adyen.com',
+                        value: 'guilherme.ribeiro-ctp1@adyen.com',
                         // value: 'guilherme-visaclicktopay1@adyen.com',
                         type: 'email'
                     }

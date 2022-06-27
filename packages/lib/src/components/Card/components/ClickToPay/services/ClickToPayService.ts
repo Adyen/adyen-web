@@ -61,7 +61,7 @@ class ClickToPayService implements IClickToPayService {
                 return;
             }
 
-            this.setState(CtpState.Login);
+            this.setState(CtpState.NotAvailable);
         } catch (error) {
             console.warn(error);
             this.setState(CtpState.NotAvailable);
