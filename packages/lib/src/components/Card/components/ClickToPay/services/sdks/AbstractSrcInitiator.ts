@@ -105,9 +105,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
         try {
             return await this.schemeSdk.initiateIdentityValidation();
         } catch (error) {
-            const reason = error?.error?.reason || error?.reason;
-            const message = error?.error?.message || error?.message;
-            throw new SrciError(message, reason);
+            throw new SrciError(error);
         }
     }
 

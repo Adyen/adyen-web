@@ -37,7 +37,7 @@ class MastercardSdk extends AbstractSrcInitiator {
             const response = await this.schemeSdk.identityLookup({ consumerIdentity });
             return response;
         } catch (err) {
-            throw new SrciError(err?.message, err?.reason);
+            throw new SrciError(err);
         }
     }
 
@@ -46,8 +46,7 @@ class MastercardSdk extends AbstractSrcInitiator {
             const response = await this.schemeSdk.completeIdentityValidation({ validationData: otp });
             return response;
         } catch (err) {
-            console.log(JSON.stringify(err));
-            throw new SrciError(err?.message, err?.reason);
+            throw new SrciError(err);
         }
     }
 }
