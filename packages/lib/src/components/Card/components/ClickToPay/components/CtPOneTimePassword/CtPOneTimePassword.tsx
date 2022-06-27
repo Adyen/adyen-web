@@ -46,7 +46,12 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 Enter the code we sent to <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span> to confirm
                 it&lsquo;s you
             </div>
-            <CtPOneTimePasswordInput ref={inputRef} onChange={onChangeOtpInput} disabled={isValidatingOtp} errorCode={errorCode} />
+            <CtPOneTimePasswordInput
+                ref={inputRef}
+                onChange={onChangeOtpInput}
+                disabled={isValidatingOtp}
+                errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+            />
             <Button label="Continue" onClick={onSubmitPassword} status={isValidatingOtp && 'loading'} />
         </Fragment>
     );

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useImperativeHandle } from 'preact/hooks';
+import { useCallback, useEffect, useImperativeHandle, useState } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 import { otpValidationRules } from './validate';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
@@ -11,7 +11,7 @@ import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface Props {
     disabled: boolean;
-    errorCode?: string;
+    errorMessage?: string;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
 }
 
@@ -26,10 +26,19 @@ export type CtPOneTimePasswordInputHandlers = {
 const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, Props>((props, ref) => {
     const { i18n } = useCoreContext();
     const formSchema = ['otp'];
+    const [resendOtpError, setResendOtpError] = useState<string>(null);
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPOneTimePasswordInputDataState>({
         schema: formSchema,
         rules: otpValidationRules
     });
+
+    const handleOnResendOtpError = useCallback(
+        (errorCode: string) => {
+            const message = i18n.get(`ctp.errors.${errorCode}`);
+            if (message) setResendOtpError(message);
+        },
+        [i18n]
+    );
 
     const validateInput = useCallback(() => {
         triggerValidation();
@@ -44,8 +53,8 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, Prop
     return (
         <Field
             label={i18n.get('ctp.otp.fieldLabel')}
-            labelEndAdornment={<CtPResendOtpLink />}
-            errorMessage={props.errorCode || !!errors.otp}
+            labelEndAdornment={<CtPResendOtpLink onError={handleOnResendOtpError} />}
+            errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
             classNameModifiers={['otp']}
         >
             {renderFormField('text', {

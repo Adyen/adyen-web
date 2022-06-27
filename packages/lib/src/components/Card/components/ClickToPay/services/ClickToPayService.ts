@@ -124,23 +124,6 @@ class ClickToPayService implements IClickToPayService {
         return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
     }
 
-    // public async login(value: string, type = 'email'): Promise<void> {
-    //     const identity: IdentityLookupParams = { value, type };
-    //
-    //     try {
-    //         const { isEnrolled } = await this.verifyIfShopperIsEnrolled(identity);
-    //
-    //         if (isEnrolled) {
-    //             await this.startIdentityValidation();
-    //         } else {
-    //
-    //             console.log('not enrolled');
-    //         }
-    //     } catch (error) {
-    //         console.log(JSON.stringify(error));
-    //     }
-    // }
-
     public async logout(): Promise<void> {
         const logoutPromises = this.sdks.map(sdk => sdk.unbindAppInstance());
 
@@ -188,19 +171,6 @@ class ClickToPayService implements IClickToPayService {
                 console.log('second exception', promises);
                 resolve({ isEnrolled: false });
             });
-
-            // Promise.all(lookupPromises)
-            //     .then(data => {
-            //         console.log(data);
-            //         resolve({ isEnrolled: false });
-            //     })
-            //     .catch(error => {
-            //         console.log('second');
-            //         console.log(JSON.stringify(error));
-            //         reject(error);
-            //     });
-
-            // TODO: Error can be: FRAUD, ID_FORMAT_UNSUPPORTED, CONSUMER_ID_MISSING, ACCT_INACCESSIBLE
         });
     }
 

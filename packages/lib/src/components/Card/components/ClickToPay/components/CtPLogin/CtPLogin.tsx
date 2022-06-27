@@ -53,7 +53,12 @@ const CtPLogin = (): h.JSX.Element => {
         <Fragment>
             <div className="adyen-checkout-ctp__login-title">{i18n.get('ctp.login.title')}</div>
             <div className="adyen-checkout-ctp__login-subtitle">{i18n.get('ctp.login.subtitle')}</div>
-            <CtPLoginInput ref={inputRef} onChange={handleOnLoginChange} disabled={isLoggingIn} errorCode={errorCode} />
+            <CtPLoginInput
+                ref={inputRef}
+                onChange={handleOnLoginChange}
+                disabled={isLoggingIn}
+                errorCode={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+            />
             <Button
                 label="Continue"
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}

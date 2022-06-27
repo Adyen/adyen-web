@@ -11,6 +11,7 @@ import {
     SrcProfile
 } from './types';
 import { ClickToPayScheme } from '../../../../types';
+import SrciError from './SrciError';
 
 export interface ISrcInitiator {
     schemeName: ClickToPayScheme;
@@ -101,7 +102,13 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * This method sends a one-time password (OTP) to the consumer to start validation
      */
     public async initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse> {
-        return await this.schemeSdk.initiateIdentityValidation();
+        try {
+            return await this.schemeSdk.initiateIdentityValidation();
+        } catch (error) {
+            const reason = error?.error?.reason || error?.reason;
+            const message = error?.error?.message || error?.message;
+            throw new SrciError(message, reason);
+        }
     }
 
     /**
