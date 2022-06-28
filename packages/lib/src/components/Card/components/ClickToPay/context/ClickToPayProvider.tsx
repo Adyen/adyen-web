@@ -18,7 +18,7 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
         ctpService?.subscribeOnStateChange(status => setCtpState(status));
     }, [ctpService]);
 
-    const handleFinishIdentityValidation = useCallback(
+    const finishIdentityValidation = useCallback(
         async (otpValue: string) => {
             await ctpService?.finishIdentityValidation(otpValue);
         },
@@ -57,10 +57,10 @@ const ClickToPayProvider = ({ clickToPayService, children }: ClickToPayProviderP
                 verifyIfShopperIsEnrolled,
                 cards: ctpService?.shopperCards,
                 otpMaskedContact: ctpService?.shopperValidationContact,
-                checkout: checkout,
-                logoutShopper: logoutShopper,
-                startIdentityValidation: startIdentityValidation,
-                finishIdentityValidation: handleFinishIdentityValidation
+                checkout,
+                logoutShopper,
+                startIdentityValidation,
+                finishIdentityValidation
             }}
         >
             {children}

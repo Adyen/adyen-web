@@ -12,7 +12,7 @@ const showComps = {
     bcmcCard: false,
     avsCard: false,
     avsPartialCard: false,
-    kcpCard: true,
+    kcpCard: false,
     ctp: true
 };
 

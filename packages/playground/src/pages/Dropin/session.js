@@ -11,13 +11,9 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         countryCode,
-        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
-        telephoneNumber: '+31633958357',
-        allowedPaymentMethods: ['scheme']
     });
 
     const checkout = await AdyenCheckout({
-        allowedPaymentMethods: ['scheme'],
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
@@ -73,12 +69,10 @@ export async function initSession() {
                     },
                     shopperIdentity: {
                         value: 'guilherme.ribeiro-ctp1@adyen.com',
-                        // value: 'guilherme-visaclicktopay1@adyen.com',
                         type: 'email'
                     }
                     // shopperIdentity: {
                     //     value: '+31633958357',
-                    //     // value: 'guilherme-visaclicktopay1@adyen.com',
                     //     type: 'mobilePhone'
                     // }
                 }
@@ -86,6 +80,6 @@ export async function initSession() {
         }
     });
 
-    const dropin = checkout.create('dropin').mount('#dropin-container');
+    const dropin = checkout.create('dropin', { instantPaymentTypes: ['paywithgoogle'] }).mount('#dropin-container');
     return [checkout, dropin];
 }

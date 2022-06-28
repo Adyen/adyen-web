@@ -8,7 +8,7 @@ const CtPLogoutLink = (): h.JSX.Element => {
     const { ctpState, logoutShopper } = useClickToPayContext();
     const { i18n } = useCoreContext();
 
-    if (![CtpState.Ready, CtpState.OneTimePassword].includes(ctpState)) {
+    if ([CtpState.Ready, CtpState.OneTimePassword].includes(ctpState) === false) {
         return;
     }
 

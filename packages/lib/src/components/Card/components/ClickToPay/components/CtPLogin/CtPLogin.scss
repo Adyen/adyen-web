@@ -1,19 +1,21 @@
 @import '../../../../../../style/index';
 
-.adyen-checkout-ctp__login-title {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
-  margin-bottom: 8px;
-  color: $color-black;
-}
+.adyen-checkout-ctp__login {
+  &-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    margin-bottom: 8px;
+    color: $color-black;
+  }
 
-.adyen-checkout-ctp__login-subtitle {
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 19px;
-  margin-bottom: 16px;
-  color: $color-gray-darker;
+  &-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 19px;
+    margin-bottom: 16px;
+    color: $color-gray-darker;
+  }
 }
 
 .adyen-checkout__field.adyen-checkout__field--shopperLogin {

@@ -4,8 +4,8 @@ import Button from '../../../../../internal/Button';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPOneTimePasswordInput from '../CtPOneTimePasswordInput';
 import { CtPOneTimePasswordInputHandlers } from '../CtPOneTimePasswordInput/CtPOneTimePasswordInput';
-import './CtPOneTimePassword.scss';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import './CtPOneTimePassword.scss';
 
 const CtPOneTimePassword = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -53,7 +53,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
             />
             <Button
-                label="Continue"
+                label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 onClick={onSubmitPassword}
                 status={isValidatingOtp && 'loading'}

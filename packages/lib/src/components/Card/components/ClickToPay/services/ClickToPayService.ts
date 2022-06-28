@@ -124,14 +124,14 @@ class ClickToPayService implements IClickToPayService {
         return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
     }
 
+    /**
+     * Call the 'unbindAppInstance()' method of each SRC SDK in order to remove the shopper cookies.
+     * Besides, it deletes all information stored about the shopper.
+     */
     public async logout(): Promise<void> {
         const logoutPromises = this.sdks.map(sdk => sdk.unbindAppInstance());
 
-        try {
-            await Promise.all(logoutPromises);
-        } catch (error) {
-            console.log('Exception from sdk:', error);
-        }
+        await Promise.all(logoutPromises);
 
         this.shopperCards = null;
         this.shopperValidationContact = null;
@@ -159,16 +159,12 @@ class ClickToPayService implements IClickToPayService {
                             resolve({ isEnrolled: true });
                         }
                     })
-                    .catch(error => {
-                        console.log('first exception');
-                        reject(error);
-                    });
+                    .catch(error =>  reject(error));
 
                 return identityLookupPromise;
             });
 
-            Promise.allSettled(lookupPromises).then(promises => {
-                console.log('second exception', promises);
+            Promise.allSettled(lookupPromises).then(() => {
                 resolve({ isEnrolled: false });
             });
         });

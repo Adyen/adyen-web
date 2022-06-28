@@ -3,11 +3,18 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import useClickToPayContext from '../ClickToPay/context/useClickToPayContext';
 import { CtpState } from '../ClickToPay/services/ClickToPayService';
 
-type Props = {
-    children: any;
+type CardUiManagerValues = {
+    ctpState: CtpState;
+    isCardInputVisible: boolean;
+    isCardPrimaryInput: boolean;
+    makeCardInputVisible(): void;
+}
+
+type CardUiManagerProps = {
+    children(data: CardUiManagerValues): h.JSX.Element;
 };
 
-const CardUiManager = ({ children }: Props): h.JSX.Element => {
+const CardUiManager = ({ children }: CardUiManagerProps): h.JSX.Element => {
     const [isCardInputVisible, setIsCardInputVisible] = useState<boolean>(null);
     const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod } = useClickToPayContext();
 

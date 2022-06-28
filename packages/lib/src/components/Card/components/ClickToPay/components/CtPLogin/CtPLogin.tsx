@@ -57,10 +57,10 @@ const CtPLogin = (): h.JSX.Element => {
                 ref={inputRef}
                 onChange={handleOnLoginChange}
                 disabled={isLoggingIn}
-                errorCode={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+                errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
             />
             <Button
-                label="Continue"
+                label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 onClick={handleOnLoginButtonClick}
                 status={isLoggingIn && 'loading'}

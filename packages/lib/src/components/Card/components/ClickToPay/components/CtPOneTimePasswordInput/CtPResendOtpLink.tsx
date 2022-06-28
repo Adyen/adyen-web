@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useClickToPayContext from '../../context/useClickToPayContext';
 
-interface Props {
+interface CtPResendOtpLinkProps {
     onError(errorCode: string): void;
 }
 
-const CtPResendOtpLink = ({ onError }: Props): h.JSX.Element => {
+const CtPResendOtpLink = ({ onError }: CtPResendOtpLinkProps): h.JSX.Element => {
     const [counter, setCounter] = useState<number>(null);
     const { i18n } = useCoreContext();
     const { startIdentityValidation } = useClickToPayContext();
@@ -22,7 +22,6 @@ const CtPResendOtpLink = ({ onError }: Props): h.JSX.Element => {
 
     const handleResendCodeClick = useCallback(
         async event => {
-            event.stopPropagation();
             event.preventDefault();
             setCounter(60);
 

@@ -7,9 +7,9 @@ import useForm from '../../../../../../utils/useForm';
 import Field from '../../../../../internal/FormFields/Field';
 import renderFormField from '../../../../../internal/FormFields';
 
-interface Props {
+interface CtPLoginInputProps {
     disabled: boolean;
-    errorCode?: string;
+    errorMessage?: string;
     onChange({ data: CtPLoginInputDataState, valid, errors, isValid: boolean }): void;
 }
 
@@ -21,7 +21,7 @@ export type CtPLoginInputHandlers = {
     validateInput(): void;
 };
 
-const CtPLoginInput = forwardRef<CtPLoginInputHandlers, Props>((props, ref) => {
+const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((props, ref) => {
     const { i18n } = useCoreContext();
     const formSchema = ['shopperLogin'];
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPLoginInputDataState>({
@@ -40,7 +40,7 @@ const CtPLoginInput = forwardRef<CtPLoginInputHandlers, Props>((props, ref) => {
     }, [data, valid, errors]);
 
     return (
-        <Field label={i18n.get('ctp.login.inputLabel')} errorMessage={props.errorCode || !!errors.shopperLogin} classNameModifiers={['shopperLogin']}>
+        <Field name='shopperLogin' label={i18n.get('ctp.login.inputLabel')} errorMessage={props.errorMessage || !!errors.shopperLogin} classNameModifiers={['shopperLogin']}>
             {renderFormField('text', {
                 name: 'shopperLogin',
                 autocorrect: 'off',

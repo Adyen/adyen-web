@@ -11,7 +11,7 @@ const CtPLoader = (): h.JSX.Element => {
             <div className="adyen-checkout-ctp__loading-loader">
                 <Spinner size="medium" />
             </div>
-            <div className="adyen-checkout-ctp__loading-title">{i18n.get('ctp.loading.poweredBy')} Click to Pay</div>
+            <div className="adyen-checkout-ctp__loading-title">{i18n.get('ctp.loading.poweredByCtp')}</div>
             <div className="adyen-checkout-ctp__loading-subtitle">{i18n.get('ctp.loading.intro')}</div>
         </Fragment>
     );

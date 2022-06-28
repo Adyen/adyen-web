@@ -9,7 +9,7 @@ import renderFormField from '../../../../../internal/FormFields';
 import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
 
-interface Props {
+interface CtPOneTimePasswordInputProps {
     disabled: boolean;
     errorMessage?: string;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
@@ -23,7 +23,7 @@ export type CtPOneTimePasswordInputHandlers = {
     validateInput(): void;
 };
 
-const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, Props>((props, ref) => {
+const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPOneTimePasswordInputProps>((props, ref) => {
     const { i18n } = useCoreContext();
     const formSchema = ['otp'];
     const [resendOtpError, setResendOtpError] = useState<string>(null);
@@ -52,6 +52,7 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, Prop
 
     return (
         <Field
+            name='oneTimePassword'
             label={i18n.get('ctp.otp.fieldLabel')}
             labelEndAdornment={<CtPResendOtpLink onError={handleOnResendOtpError} />}
             errorMessage={resendOtpError || props.errorMessage || !!errors.otp}

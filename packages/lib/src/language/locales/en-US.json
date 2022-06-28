@@ -218,7 +218,8 @@
     "ownerName": "Holder Name",
     "ibanNumber": "Account Number (IBAN)",
     "bankAccount": "Bank Details",
-    "ctp.loading.poweredBy": "Powered by",
+
+    "ctp.loading.poweredBy": "Powered by Click to Pay",
     "ctp.loading.intro": "The fastest and most secure way to pay at merchants worldwide.",
     "ctp.login.title": "Continue to Click to Pay",
     "ctp.login.subtitle": "Enter your Click to Pay credentials to continue.",
