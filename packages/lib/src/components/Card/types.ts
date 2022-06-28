@@ -11,6 +11,8 @@ import {
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
+import { IdentityLookupParams } from './components/ClickToPay/services/types';
+import { SrcInitParams } from './components/ClickToPay/services/sdks/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -23,6 +25,11 @@ export interface CardElementProps extends UIElementProps {
      * Configuration specific to brands
      */
     brandsConfiguration?: CardBrandsConfiguration;
+
+    /**
+     * Configuration for Click to Pay
+     */
+    clickToPayConfiguration?: ClickToPayConfiguration;
 
     /**
      * type will always be "card" (generic card, stored card)
@@ -110,6 +117,13 @@ export interface CardElementProps extends UIElementProps {
 
     [key: string]: any;
 }
+
+export type ClickToPayScheme = 'mc' | 'visa';
+
+export type ClickToPayConfiguration = {
+    schemes: Record<ClickToPayScheme, SrcInitParams>;
+    shopperIdentity?: IdentityLookupParams;
+};
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 

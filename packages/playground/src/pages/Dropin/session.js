@@ -33,14 +33,48 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             card: {
-                hasHolderName: true,
-                holderNameRequired: true,
-                holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
+                // hasHolderName: true,
+                // holderNameRequired: true,
+                // holderName: 'J. Smith',
+                // positionHolderNameOnTop: true,
 
                 // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial'
+                // billingAddressRequired: true,
+                // billingAddressMode: 'partial',
+
+                clickToPayConfiguration: {
+                    schemes: {
+                        discovery: '',
+                        visa: {
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+                            srcInitiatorId: 'xxxxxxxx',
+                            srciDpaId: 'xxxxxxxx',
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                payloadTypeIndicator: 'NON_PAYMENT'
+                            }
+                        },
+                        mc: {
+                            srcInitiatorId: 'xxxxxxxx',
+                            srciDpaId: 'xxxxxxxx',
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                paymentOptions: {
+                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
+                                },
+                                consumerNameRequested: true
+                            }
+                        }
+                    },
+                    shopperIdentity: {
+                        // value: 'guilherme.ribeiro-visaclicktopay1@adyen.com', // WITH LEONARD PHONE
+                        value: 'guilherme.ribeiro-ctp1@adyen.com',
+                        // value: 'maximilian.maldacker-ctp2@adyen.com',
+                        // value: 'guilherme-visaclicktopay1@adyen.com',
+                        type: 'email'
+                    }
+                }
             }
         }
     });

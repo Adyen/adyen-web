@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
@@ -9,9 +9,25 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
+import ClickToPayComponent from './components/ClickToPay';
+import { CtpState } from './components/ClickToPay/services/ClickToPayService';
+import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
+import { createClickToPayService } from './components/ClickToPay/utils';
+import { CheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
+import ContentSeparator from '../internal/ContentSeparator';
+import { ClickToPayContext } from './components/ClickToPay/context/ClickToPayContext';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
+
+    private readonly clickToPayService: IClickToPayService | null;
+
+    constructor(props) {
+        super(props);
+
+        this.clickToPayService = createClickToPayService(props.clickToPayConfiguration, props.environment);
+        this.clickToPayService?.initialize();
+    }
 
     protected static defaultProps = {
         onBinLookup: () => {},
@@ -108,6 +124,11 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
+    handleClickToPaySubmit(payload: CheckoutPayload) {
+        // TODO
+        console.log(payload);
+    }
+
     onBinLookup(obj: CbObjOnBinLookup) {
         // Handler for regular card comp doesn't need this 'raw' data or to know about 'resets'
         if (!obj.isReset) {
@@ -171,18 +192,33 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <CardInput
-                    setComponentRef={this.setComponentRef}
-                    {...this.props}
-                    {...this.state}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                    onBrand={this.onBrand}
-                    onBinValue={this.onBinValue}
-                    brand={this.brand}
-                    brandsIcons={this.brands}
-                />
+                <ClickToPayProvider clickToPayService={this.clickToPayService}>
+                    <ClickToPayContext.Consumer>
+                        {({ ctpState }) => (
+                            <div>
+                                {ctpState !== CtpState.NotAvailable && ctpState !== CtpState.Idle && (
+                                    <Fragment>
+                                        <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
+                                        <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="Or enter card details manually" />
+                                    </Fragment>
+                                )}
+
+                                <CardInput
+                                    setComponentRef={this.setComponentRef}
+                                    {...this.props}
+                                    {...this.state}
+                                    onChange={this.setState}
+                                    onSubmit={this.submit}
+                                    payButton={this.payButton}
+                                    onBrand={this.onBrand}
+                                    onBinValue={this.onBinValue}
+                                    brand={this.brand}
+                                    brandsIcons={this.brands}
+                                />
+                            </div>
+                        )}
+                    </ClickToPayContext.Consumer>
+                </ClickToPayProvider>
             </CoreProvider>
         );
     }

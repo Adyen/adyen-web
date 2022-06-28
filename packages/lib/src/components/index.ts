@@ -49,7 +49,7 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
-import RatePayDirectDebit from "./RatePay/RatePayDirectDebit";
+import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import WalletINElement from './WalletIN';
 
 /**
