@@ -46,7 +46,7 @@ export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButto
             <ContentSeparator label="or" />
 
             <Button
-                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr')}
+                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr_dark')}
                 status={isSubmittingAndFlowIsQrCode ? 'loading' : 'default'}
                 disabled={status === 'loading' && isQrCodeFlow === false}
                 variant="secondary"
