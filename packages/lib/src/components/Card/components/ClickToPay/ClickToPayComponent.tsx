@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useCallback, useEffect } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import useClickToPayContext from './context/useClickToPayContext';
 import { CtpState } from './services/ClickToPayService';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
@@ -14,21 +14,21 @@ type ClickToPayComponentProps = {
 };
 
 const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps): h.JSX.Element => {
-    const { ctpState, startIdentityValidation } = useClickToPayContext();
-
-    const handleStartShopperValidation = useCallback(async () => {
-        try {
-            await startIdentityValidation();
-        } catch (error) {
-            console.log('error', error);
-        }
-    }, []);
+    const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
 
     useEffect(() => {
-        if (ctpState === CtpState.ShopperIdentified) {
-            handleStartShopperValidation();
+        async function sendOneTimePassword() {
+            try {
+                await startIdentityValidation();
+            } catch (error){
+                console.warn(error);
+                logoutShopper();
+            }
         }
-    }, [ctpState, handleStartShopperValidation]);
+        if (ctpState === CtpState.ShopperIdentified) {
+            sendOneTimePassword();
+        }
+    }, [ctpState]);
 
     if (ctpState === CtpState.NotAvailable) {
         return null;
