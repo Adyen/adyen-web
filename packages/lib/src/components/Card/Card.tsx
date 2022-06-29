@@ -1,4 +1,4 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
@@ -9,14 +9,10 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
-import ClickToPayComponent from './components/ClickToPay';
-import { CtpState } from './components/ClickToPay/services/ClickToPayService';
 import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
 import { createClickToPayService } from './components/ClickToPay/utils';
 import { CheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
-import ContentSeparator from '../internal/ContentSeparator';
-import CardUiManager from './components/CardInput/CardUiManager';
-import Button from '../internal/Button';
+import ClickToPayWrapper from './ClickToPayWrapper';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -212,29 +208,9 @@ export class CardElement extends UIElement<CardElementProps> {
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
                 <ClickToPayProvider clickToPayService={this.clickToPayService}>
-                    <CardUiManager>
-                        {({ ctpState, isCardInputVisible, isCardPrimaryInput, makeCardInputVisible }) => {
-                            if (ctpState === CtpState.NotAvailable) {
-                                return this.renderCardInput();
-                            }
-
-                            if (ctpState === CtpState.Loading || ctpState === CtpState.ShopperIdentified) {
-                                return <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />;
-                            }
-
-                            return (
-                                <Fragment>
-                                    <ClickToPayComponent onSubmit={this.handleClickToPaySubmit} />
-                                    <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label="or" />
-                                    {isCardInputVisible ? (
-                                        this.renderCardInput(isCardPrimaryInput)
-                                    ) : (
-                                        <Button variant="secondary" label="Use a different card" onClick={makeCardInputVisible} />
-                                    )}
-                                </Fragment>
-                            );
-                        }}
-                    </CardUiManager>
+                    <ClickToPayWrapper onSubmit={this.handleClickToPaySubmit}>
+                        {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+                    </ClickToPayWrapper>
                 </ClickToPayProvider>
             </CoreProvider>
         );

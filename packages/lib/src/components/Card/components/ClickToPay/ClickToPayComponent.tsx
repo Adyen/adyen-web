@@ -10,7 +10,7 @@ import CtPLogin from './components/CtPLogin/CtPLogin';
 import { CheckoutPayload } from './services/types';
 
 type ClickToPayComponentProps = {
-    onSubmit(payload: CheckoutPayload): void;
+    onSubmit?(payload: CheckoutPayload): void;
 };
 
 const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps): h.JSX.Element => {

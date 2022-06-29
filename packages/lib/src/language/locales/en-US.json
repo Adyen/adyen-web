@@ -231,6 +231,9 @@
     "ctp.otp.title": "We ned to verify you",
     "ctp.otp.subtitle": "Enter the code we sent to %{maskedContact} to confirm it‘s you.",
 
+    "ctp.useAnotherCard": "Use a different card",
+    "ctp.manualCardEntry": "Manual card entry",
+
     "ctp.errors.NOT_FOUND": "User not found",
     "ctp.errors.ID_FORMAT_UNSUPPORTED": "Format not supported",
     "ctp.errors.FRAUD": "The user account was locked or disabled",
