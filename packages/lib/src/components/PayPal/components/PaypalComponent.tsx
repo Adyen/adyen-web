@@ -18,7 +18,7 @@ export default function PaypalComponent(props: PayPalComponentProps) {
         props.onComplete(data);
     };
 
-    cxt handlePaypalLoad = () => {
+    const handlePaypalLoad = () => {
         setStatus('ready');
     };
 
