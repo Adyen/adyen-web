@@ -44,7 +44,7 @@ export interface IUIElement {
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
-export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount' | 'onClick'>;
+export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
 export interface UIElementProps extends BaseElementProps {
     session?: Session;

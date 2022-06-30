@@ -13,6 +13,7 @@ export interface PayButtonProps {
     amount: PaymentAmount;
     status?: string;
     disabled?: boolean;
+    icon?: string;
     onClick(): void;
 }
 
