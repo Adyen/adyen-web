@@ -43,14 +43,14 @@ export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButto
                 disabled: isSubmittingAndFlowIsQrCode
             })}
 
-            <ContentSeparator label="or" />
+            <ContentSeparator label={i18n.get('qrCodeOrApp')} />
 
             <Button
                 icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr_dark')}
                 status={isSubmittingAndFlowIsQrCode ? 'loading' : 'default'}
                 disabled={status === 'loading' && isQrCodeFlow === false}
                 variant="secondary"
-                label="Generate QR code"
+                label={i18n.get('generateQRCode')}
                 onClick={onGenerateQrCodeClick}
             />
         </Fragment>

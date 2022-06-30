@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useCallback, useEffect, useImperativeHandle } from 'preact/hooks';
-import useCoreContext from '../../../../core/Context/useCoreContext';
 import Field from '../../../internal/FormFields/Field';
 import useForm from '../../../../utils/useForm';
 import renderFormField from '../../../internal/FormFields';
@@ -22,7 +21,6 @@ export type VpaInputHandlers = {
 };
 
 const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
-    const { i18n } = useCoreContext();
     const formSchema = ['virtualPaymentAddress'];
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<VpaInputDataState>({
         schema: formSchema,
@@ -43,7 +41,12 @@ const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
     }, [data, valid, errors]);
 
     return (
-        <Field label={i18n.get('virtualPaymentAddress')} errorMessage={!!errors.virtualPaymentAddress} classNameModifiers={['vpa']}>
+        <Field
+            label="Virtual Payment Address"
+            errorMessage={!!errors.virtualPaymentAddress}
+            classNameModifiers={['vpa']}
+            name="virtualPaymentAddress"
+        >
             {renderFormField('text', {
                 name: 'virtualPaymentAddress',
                 autocorrect: 'off',

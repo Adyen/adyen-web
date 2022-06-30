@@ -27,8 +27,8 @@
     "installments.revolving": "Toistuva maksu",
     "sepaDirectDebit.ibanField.invalid": "Väärä tilin numero",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "Haltijan nimi",
-    "ibanNumber": "Tilinumero (IBAN)",
+    "sepa.ownerName": "Haltijan nimi",
+    "sepa.ibanNumber": "Tilinumero (IBAN)",
     "error.title": "Virhe",
     "error.subtitle.redirect": "Uuteen kohteeseen siirto epäonnistui",
     "error.subtitle.payment": "Maksu epännistui",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Pankin reititysnumero",
     "twint.saved": "tallennettu",
     "orPayWith": "tai maksa",
-    "invalidFormatExpects": "Ei-kelvollinen muoto. Odotettu muoto: %{format}"
+    "invalidFormatExpects": "Ei-kelvollinen muoto. Odotettu muoto: %{format}",
+    "upi.qrCodeWaitingMessage": "Suorita maksu loppuun skannaamalla QR-koodi haluamallasi UPI-sovelluksella",
+    "upi.vpaWaitingMessage": "Avaa UPI-sovellus vahvistaaksesi maksun"
 }

@@ -27,8 +27,8 @@
     "installments.revolving": "Uppdelad betalning",
     "sepaDirectDebit.ibanField.invalid": "Ogiltigt kontonummer",
     "sepaDirectDebit.nameField.placeholder": "A. Andersson",
-    "ownerName": "Känt av kontoinnehavaren",
-    "ibanNumber": "Kontonummer (IBAN)",
+    "sepa.ownerName": "Känt av kontoinnehavaren",
+    "sepa.ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fel",
     "error.subtitle.redirect": "Omdirigering misslyckades",
     "error.subtitle.payment": "Betalning misslyckades",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Clearingnummer",
     "twint.saved": "sparat",
     "orPayWith": "eller betala med",
-    "invalidFormatExpects": "Ogiltigt format. Förväntat format: %{format}"
+    "invalidFormatExpects": "Ogiltigt format. Förväntat format: %{format}",
+    "upi.qrCodeWaitingMessage": "Skanna QR-koden med valfri UPI-app för att slutföra betalningen",
+    "upi.vpaWaitingMessage": "Öppna din UPI-app för att bekräfta betalningen"
 }

@@ -27,8 +27,8 @@
     "installments.revolving": "Paiement en plusieurs fois",
     "sepaDirectDebit.ibanField.invalid": "Numéro de compte non valide",
     "sepaDirectDebit.nameField.placeholder": "N. Bernard",
-    "ownerName": "Au nom de",
-    "ibanNumber": "Numéro de compte (IBAN)",
+    "sepa.ownerName": "Au nom de",
+    "sepa.ibanNumber": "Numéro de compte (IBAN)",
     "error.title": "Erreur",
     "error.subtitle.redirect": "Échec de la redirection",
     "error.subtitle.payment": "Échec du paiement",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Numéro de routage",
     "twint.saved": "stocké",
     "orPayWith": "ou payez avec",
-    "invalidFormatExpects": "Format non valide. Format requis : %{format}"
+    "invalidFormatExpects": "Format non valide. Format requis : %{format}",
+    "upi.qrCodeWaitingMessage": "Scannez le code QR à l'aide de votre application UPI préférée pour effectuer le paiement",
+    "upi.vpaWaitingMessage": "Ouvrez votre application UPI pour confirmer le paiement"
 }

@@ -27,8 +27,8 @@
     "installments.revolving": "循环支付",
     "sepaDirectDebit.ibanField.invalid": "无效的账号",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "持卡人姓名",
-    "ibanNumber": "账号 (IBAN)",
+    "sepa.ownerName": "持卡人姓名",
+    "sepa.ibanNumber": "账号 (IBAN)",
     "error.title": "错误",
     "error.subtitle.redirect": "重定向失败",
     "error.subtitle.payment": "支付失败",
@@ -211,5 +211,7 @@
     "ach.encryptedBankLocationId.aria.label": "银行路由电汇编码",
     "twint.saved": "已保存",
     "orPayWith": "或使用以下方式支付",
-    "invalidFormatExpects": "无效的格式。预期格式：%{format}"
+    "invalidFormatExpects": "无效的格式。预期格式：%{format}",
+    "upi.qrCodeWaitingMessage": "使用您首选的 UPI 应用扫描二维码以完成付款",
+    "upi.vpaWaitingMessage": "打开您的 UPI 应用以确认付款"
 }

@@ -59,6 +59,7 @@ class UPI extends UIElement {
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
+                        countdownTime={5}
                     />
                 );
             case 'await':
@@ -76,6 +77,7 @@ class UPI extends UIElement {
                         messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}
                         showCountdownTimer
+                        countdownTime={5}
                     />
                 );
             default:
