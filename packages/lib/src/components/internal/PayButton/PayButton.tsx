@@ -14,7 +14,7 @@ export interface PayButtonProps {
     status?: string;
     disabled?: boolean;
     icon?: string;
-    onClick(): void;
+    onClick?(): void;
 }
 
 const payAmountLabel = (i18n: Language, amount) =>
