@@ -38,7 +38,6 @@ const initCheckout = async () => {
             type: 'giftcard',
             brand: 'valuelink',
             onOrderCreated: async (resolve, reject, data) => {
-                console.log(data);
                 window.onOrderCreatedTestData = data;
                 resolve();
             }
