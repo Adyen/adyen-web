@@ -27,8 +27,6 @@
     "installments.revolving": "Løbende betaling",
     "sepaDirectDebit.ibanField.invalid": "Ugyldigt kontonummer",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "sepa.ownerName": "Kontohavernavn",
-    "sepa.ibanNumber": "Kontonummer (IBAN)",
     "ownerName": "Kontohavernavn",
     "ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fejl",

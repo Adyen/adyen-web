@@ -27,8 +27,6 @@
     "installments.revolving": "Повторяющаяся оплата",
     "sepaDirectDebit.ibanField.invalid": "Недействительный номер счета",
     "sepaDirectDebit.nameField.placeholder": "И. Петров",
-    "sepa.ownerName": "Имя владельца",
-    "sepa.ibanNumber": "Номер счета (IBAN)",
     "ownerName": "Имя владельца",
     "ibanNumber": "Номер счета (IBAN)",
     "error.title": "Ошибка",

@@ -27,8 +27,6 @@
     "installments.revolving": "Ratenzahlung",
     "sepaDirectDebit.ibanField.invalid": "Ungültige Kontonummer",
     "sepaDirectDebit.nameField.placeholder": "A. Müller",
-    "sepa.ownerName": "Name des Kontoinhabers",
-    "sepa.ibanNumber": "Kontonummer (IBAN)",
     "ownerName": "Name des Kontoinhabers",
     "ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fehler",

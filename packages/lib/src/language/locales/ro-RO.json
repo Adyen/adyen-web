@@ -27,8 +27,6 @@
     "installments.revolving": "Plată recurentă",
     "sepaDirectDebit.ibanField.invalid": "Numărul de cont este incorect",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "sepa.ownerName": "Nume posesor",
-    "sepa.ibanNumber": "Număr cont (IBAN)",
     "ownerName": "Nume posesor",
     "ibanNumber": "Număr cont (IBAN)",
     "error.title": "Eroare",

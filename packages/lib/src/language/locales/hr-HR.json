@@ -27,8 +27,6 @@
     "installments.revolving": "Obnovljivo plaćanje",
     "sepaDirectDebit.ibanField.invalid": "Nevažeći broj računa",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "sepa.ownerName": "Ime vlasnika",
-    "sepa.ibanNumber": "Broj računa (IBAN)",
     "ownerName": "Ime vlasnika",
     "ibanNumber": "Broj računa (IBAN)",
     "error.title": "Greška",

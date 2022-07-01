@@ -27,8 +27,6 @@
     "installments.revolving": "延期付款",
     "sepaDirectDebit.ibanField.invalid": "帳戶號碼無效",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "sepa.ownerName": "持有人名稱",
-    "sepa.ibanNumber": "帳戶號碼 (IBAN)",
     "ownerName": "持有人名稱",
     "ibanNumber": "帳戶號碼 (IBAN)",
     "error.title": "錯誤",

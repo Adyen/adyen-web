@@ -27,8 +27,6 @@
     "installments.revolving": "리볼빙 결제",
     "sepaDirectDebit.ibanField.invalid": "유효하지 않은 계좌 번호",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "sepa.ownerName": "소유자 이름",
-    "sepa.ibanNumber": "계좌 번호(IBAN)",
     "ownerName": "소유자 이름",
     "ibanNumber": "계좌 번호(IBAN)",
     "error.title": "오류",
