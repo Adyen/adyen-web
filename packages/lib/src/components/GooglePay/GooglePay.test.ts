@@ -60,5 +60,10 @@ describe('GooglePay', () => {
             });
             expect(gpay.props.configuration.merchantOrigin).toEqual('example.com');
         });
+
+        test('Retrieves authJwt from configuration', () => {
+            const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' } });
+            expect(gpay.props.configuration.authJwt).toEqual('jwt.code');
+        });
     });
 });
