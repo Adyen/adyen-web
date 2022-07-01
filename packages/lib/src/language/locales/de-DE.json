@@ -29,6 +29,8 @@
     "sepaDirectDebit.nameField.placeholder": "A. Müller",
     "sepa.ownerName": "Name des Kontoinhabers",
     "sepa.ibanNumber": "Kontonummer (IBAN)",
+    "ownerName": "Name des Kontoinhabers",
+    "ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fehler",
     "error.subtitle.redirect": "Weiterleitung fehlgeschlagen",
     "error.subtitle.payment": "Zahlung fehlgeschlagen",

@@ -29,6 +29,8 @@
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "소유자 이름",
     "sepa.ibanNumber": "계좌 번호(IBAN)",
+    "ownerName": "소유자 이름",
+    "ibanNumber": "계좌 번호(IBAN)",
     "error.title": "오류",
     "error.subtitle.redirect": "리디렉션 실패",
     "error.subtitle.payment": "결제 실패",

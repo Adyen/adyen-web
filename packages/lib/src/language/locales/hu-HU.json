@@ -29,6 +29,8 @@
     "sepaDirectDebit.nameField.placeholder": "Gipsz Jakab",
     "sepa.ownerName": "Számlatulajdonos neve",
     "sepa.ibanNumber": "Számlaszám (IBAN)",
+    "ownerName": "Számlatulajdonos neve",
+    "ibanNumber": "Számlaszám (IBAN)",
     "error.title": "Hiba",
     "error.subtitle.redirect": "Sikertelen átirányítás",
     "error.subtitle.payment": "Sikertelen fizetés",

@@ -29,6 +29,8 @@
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "持卡人姓名",
     "sepa.ibanNumber": "账号 (IBAN)",
+    "ownerName": "持卡人姓名",
+    "ibanNumber": "账号 (IBAN)",
     "error.title": "错误",
     "error.subtitle.redirect": "重定向失败",
     "error.subtitle.payment": "支付失败",

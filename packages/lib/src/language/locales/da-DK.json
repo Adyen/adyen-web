@@ -29,6 +29,8 @@
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Kontohavernavn",
     "sepa.ibanNumber": "Kontonummer (IBAN)",
+    "ownerName": "Kontohavernavn",
+    "ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fejl",
     "error.subtitle.redirect": "Omdirigering fejlede",
     "error.subtitle.payment": "Betaling fejlede",

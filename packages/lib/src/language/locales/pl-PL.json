@@ -29,6 +29,8 @@
     "sepaDirectDebit.nameField.placeholder": "J. Kowalski",
     "sepa.ownerName": "Imię i nazwisko posiadacza karty",
     "sepa.ibanNumber": "Numer rachunku (IBAN)",
+    "ownerName": "Imię i nazwisko posiadacza karty",
+    "ibanNumber": "Numer rachunku (IBAN)",
     "error.title": "Błąd",
     "error.subtitle.redirect": "Przekierowanie nie powiodło się",
     "error.subtitle.payment": "Płatność nie powiodła się",
