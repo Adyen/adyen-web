@@ -64,7 +64,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             const errorObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
                             this.props.onError(errorObject);
                             // Proceed with call to onAdditionalDetails
-                            this.setStatusComplete(challenge);
+                            this.setStatusComplete(challenge.result);
                             return;
                         }
 
