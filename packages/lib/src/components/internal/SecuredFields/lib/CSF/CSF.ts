@@ -152,6 +152,8 @@ class CSF extends AbstractCSF {
             setFocusOnFrame: (pFieldType: string): void => {
                 if (this.state.isConfigured) {
                     this.setFocusOnFrame(pFieldType);
+                    // Comment in a quick way to test destroying secured fields (also see comment in destroySecuredFields)
+                    // this.destroySecuredFields();
                 } else {
                     notConfiguredWarning('You cannot set focus on any secured field');
                 }
