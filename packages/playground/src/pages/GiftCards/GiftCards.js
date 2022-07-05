@@ -85,24 +85,6 @@ import '../../style.scss';
 
 
     const afterGiftCard = async (order) => {
-        const checkout = await AdyenCheckout({
-            environment: process.env.__CLIENT_ENV__,
-            clientKey: process.env.__CLIENT_KEY__,
-            session,
-            showPayButton: true,
-            order,
-
-            // Events
-            beforeSubmit: (data, component, actions) => {
-                actions.resolve(data);
-            },
-            onPaymentCompleted: (result, component) => {
-                console.info(result, component);
-            },
-            onError: (error, component) => {
-                console.error(error.message, component);
-            }
-        });
-        checkout.create('card').mount('#payment-method-container');
+        sessionCheckout.create('card').mount('#payment-method-container');
     }
 })();
