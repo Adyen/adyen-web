@@ -59,12 +59,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 <DoChallenge3DS2
                     onCompleteChallenge={(challenge: ThreeDS2FlowObject) => {
                         // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
-                        if (hasOwnProperty(challenge.result, 'errorCode')) {
+                        if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
                             // Tell the merchant there's been an error
-                            const errorObject = handleErrorCode(challenge.result.errorCode);
+                            const errorObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
                             this.props.onError(errorObject);
                             // Proceed with call to onAdditionalDetails
-                            this.setStatusComplete(challenge);
+                            this.setStatusComplete(challenge.result);
                             return;
                         }
 
