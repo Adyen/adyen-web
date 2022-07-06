@@ -17,6 +17,8 @@ function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfil
     const { profiles, srcCorrelationId } = srcProfile;
 
     const cards: ShopperCard[] = profiles.reduce((memo: ShopperCard[], profile) => {
+        console.log(profile.maskedCards);
+
         const profileCards: ShopperCard[] = profile.maskedCards.map(maskedCard => ({
             dateOfCardLastUsed: maskedCard.dateOfCardLastUsed,
             panLastFour: maskedCard.panLastFour,
@@ -24,6 +26,7 @@ function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfil
             cardTitle: maskedCard.digitalCardData.descriptorName,
             tokenId: maskedCard.tokenId,
             scheme: srcProfile.scheme,
+            artUri: maskedCard.digitalCardData.artUri,
             srcCorrelationId
         }));
         return [...memo, ...profileCards];

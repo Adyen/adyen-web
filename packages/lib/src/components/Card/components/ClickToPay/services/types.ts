@@ -28,6 +28,7 @@ export type ShopperCard = {
     srcDigitalCardId: string;
     cardTitle: string;
     srcCorrelationId: string;
+    artUri: string;
     tokenId?: string;
     scheme: ClickToPayScheme;
 };

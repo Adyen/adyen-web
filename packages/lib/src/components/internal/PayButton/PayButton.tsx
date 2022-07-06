@@ -2,9 +2,10 @@ import { h } from 'preact';
 import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
-import Language from '../../../language/Language';
+import { ButtonProps } from '../Button/types';
+import { payAmountLabel } from './utils';
 
-export interface PayButtonProps {
+export interface PayButtonProps extends ButtonProps {
     /**
      * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
      */
@@ -14,9 +15,6 @@ export interface PayButtonProps {
     amount: PaymentAmount;
     status?: string;
 }
-
-const payAmountLabel = (i18n: Language, amount) =>
-    `${i18n.get('payButton')} ${!!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency) : ''}`;
 
 const PayButton = ({ amount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
     const { i18n } = useCoreContext();

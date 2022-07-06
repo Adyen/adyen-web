@@ -207,7 +207,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <ClickToPayProvider clickToPayService={this.clickToPayService}>
+                <ClickToPayProvider amount={this.props.amount} clickToPayService={this.clickToPayService}>
                     <ClickToPayWrapper onSubmit={this.handleClickToPaySubmit}>
                         {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
                     </ClickToPayWrapper>

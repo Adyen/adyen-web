@@ -36,6 +36,7 @@ type SrcCard = {
     paymentCardDescriptor: string;
     digitalCardData: {
         descriptorName: string;
+        artUri: string;
     };
     tokenId?: string;
 };

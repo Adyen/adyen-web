@@ -1,0 +1,13 @@
+.adyen-checkout-ctp__cards-list-dropdown > ul > li {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.adyen-checkout-ctp__cards-list-dropdown > button {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+
+  & > .adyen-checkout__dropdown__button__icon {
+    margin-left: 0;
+  }
+}

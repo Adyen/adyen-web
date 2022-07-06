@@ -1,1 +1,1 @@
-export { default } from './CtPCardsList';
+export { default } from './CtPCards';

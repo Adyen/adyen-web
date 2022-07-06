@@ -1,6 +1,7 @@
 {
     "payButton": "Pay",
     "payButton.redirecting": "Redirecting...",
+    "payButton.with": "Pay %{value} with %{maskedData}",
     "storeDetails": "Save for my next payment",
     "creditCard.holderName": "Name on card",
     "creditCard.holderName.placeholder": "J. Smith",
