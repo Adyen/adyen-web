@@ -96,6 +96,14 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                     status,
                     label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
                 })}
+
+            {props.termsAndConditionsUrl && (
+                <div>
+                    <p>
+                        By clicking continue you agree with the <a href={props.termsAndConditionsUrl}>term and conditions</a>
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
