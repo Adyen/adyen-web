@@ -20,6 +20,7 @@ export interface SelectProps {
     selected: string;
     uniqueId?: string;
     isCollatingErrors: boolean;
+    isIconOnLeftSide?: boolean;
 }
 
 export interface SelectButtonProps {
@@ -38,6 +39,7 @@ export interface SelectButtonProps {
     toggleList: (e: Event) => void;
     id?: string;
     ariaDescribedBy: string;
+    isIconOnLeftSide: boolean;
 }
 
 export interface SelectListProps {
@@ -49,11 +51,13 @@ export interface SelectListProps {
     selectListRef;
     showList: boolean;
     textFilter: string;
+    isIconOnLeftSide: boolean;
 }
 
 export interface SelectItemProps {
     item: SelectItem;
     selected: boolean;
+    isIconOnLeftSide: boolean;
     onKeyDown: (e: KeyboardEvent) => void;
     onSelect: (e: Event) => void;
 }

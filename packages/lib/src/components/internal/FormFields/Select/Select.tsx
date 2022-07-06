@@ -23,7 +23,8 @@ function Select({
     isValid,
     placeholder,
     uniqueId,
-    isCollatingErrors
+    isCollatingErrors,
+    isIconOnLeftSide = false
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -189,6 +190,7 @@ function Select({
                 filterable={filterable}
                 isInvalid={isInvalid}
                 isValid={isValid}
+                isIconOnLeftSide={isIconOnLeftSide}
                 onButtonKeyDown={handleButtonKeyDown}
                 onInput={handleTextFilter}
                 placeholder={placeholder}
@@ -202,6 +204,7 @@ function Select({
             <SelectList
                 active={active}
                 items={items}
+                isIconOnLeftSide={isIconOnLeftSide}
                 onKeyDown={handleListKeyDown}
                 onSelect={handleSelect}
                 selectListId={selectListId}

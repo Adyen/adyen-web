@@ -4,7 +4,6 @@ import renderFormField from '../../../../../../internal/FormFields';
 import { useEffect, useMemo } from 'preact/hooks';
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
-import './CtPCardsList.scss';
 import ShopperCard from '../../../models/ShopperCard';
 
 type CtPCardsListProps = {
@@ -46,7 +45,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
                 selected: data['srcDigitalCardId'],
                 name: 'cards',
                 filterable: false,
-                className: 'adyen-checkout-ctp__cards-list-dropdown',
+                isIconOnLeftSide: true,
                 onChange: handleChangeFor('srcDigitalCardId')
             })}
         </Field>
