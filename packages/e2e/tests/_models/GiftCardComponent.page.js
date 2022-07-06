@@ -46,3 +46,9 @@ export default class GiftCardPage extends BasePage {
         return splitPath.reduce(reducer, window.card.state);
     });
 }
+
+export class GiftCardSessionPage extends GiftCardPage {
+    constructor(baseEl = '.card-field') {
+        super();
+    }
+}

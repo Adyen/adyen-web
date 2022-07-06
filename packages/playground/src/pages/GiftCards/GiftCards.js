@@ -1,8 +1,8 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { handleChange, handleSubmit } from '../../handlers';
-import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
-import { checkBalance, createOrder } from '../../services';
+import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';
+import { checkBalance, createOrder, createSession } from '../../services';
 import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
@@ -44,4 +44,47 @@ import '../../style.scss';
             }
         })
         .mount('#mealvoucher-fr-container');
+
+    const session = await createSession({
+        amount,
+        reference: 'ABC123',
+        returnUrl,
+        shopperLocale,
+        shopperReference,
+        countryCode
+    });
+
+    const sessionCheckout = await AdyenCheckout({
+        environment: process.env.__CLIENT_ENV__,
+        clientKey: process.env.__CLIENT_KEY__,
+        session,
+        showPayButton: true,
+
+        // Events
+        beforeSubmit: (data, component, actions) => {
+            actions.resolve(data);
+        },
+        onPaymentCompleted: (result, component) => {
+            console.info(result, component);
+        },
+        onError: (error, component) => {
+            console.error(error.message, component);
+        }
+    });
+
+    window.giftcard = sessionCheckout
+        .create('giftcard', {
+            type: 'giftcard',
+            brand: 'svs',
+            onOrderCreated: async (resolve, reject, data) => {
+                await afterGiftCard(data);
+                resolve();
+            }
+        })
+        .mount('#giftcard-session-container');
+
+
+    const afterGiftCard = async (order) => {
+        sessionCheckout.create('card').mount('#payment-method-container');
+    }
 })();

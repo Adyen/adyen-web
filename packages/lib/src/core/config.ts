@@ -27,6 +27,7 @@ export const GENERIC_OPTIONS = [
     'onError',
     'onBalanceCheck',
     'onOrderRequest',
+    'onOrderCreated',
     'setStatusAutomatically'
 ];
 

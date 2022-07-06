@@ -17,6 +17,7 @@ const htmlPages = [
     { name: 'Issuer Lists', id: 'IssuerLists' },
     { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'Drop-in Sessions', id: 'DropinSessions' },
+    { name: 'Gift Cards Sessions', id: 'GiftCardsSessions' },
     { name: 'Vouchers', id: 'Vouchers' }
 ];
 
