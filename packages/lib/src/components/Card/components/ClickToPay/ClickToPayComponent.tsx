@@ -3,10 +3,10 @@ import { useEffect } from 'preact/hooks';
 import useClickToPayContext from './context/useClickToPayContext';
 import { CtpState } from './services/ClickToPayService';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
-import CtPCards from './components/CtPCardsList/CtPCards';
+import CtPCards from './components/CtPCards';
 import CtPSection from './components/CtPSection';
 import CtPLoader from './components/CtPLoader';
-import CtPLogin from './components/CtPLogin/CtPLogin';
+import CtPLogin from './components/CtPLogin';
 import { CheckoutPayload } from './services/types';
 
 type ClickToPayComponentProps = {

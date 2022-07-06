@@ -1,5 +1,6 @@
-import { CheckoutPayload, ShopperCard, SrcProfileWithScheme } from './types';
+import { CheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
+import ShopperCard from '../models/ShopperCard';
 
 function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): CheckoutPayload {
     const { scheme, tokenId, srcDigitalCardId, srcCorrelationId } = card;
@@ -17,18 +18,7 @@ function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfil
     const { profiles, srcCorrelationId } = srcProfile;
 
     const cards: ShopperCard[] = profiles.reduce((memo: ShopperCard[], profile) => {
-        console.log(profile.maskedCards);
-
-        const profileCards: ShopperCard[] = profile.maskedCards.map(maskedCard => ({
-            dateOfCardLastUsed: maskedCard.dateOfCardLastUsed,
-            panLastFour: maskedCard.panLastFour,
-            srcDigitalCardId: maskedCard.srcDigitalCardId,
-            cardTitle: maskedCard.digitalCardData.descriptorName,
-            tokenId: maskedCard.tokenId,
-            scheme: srcProfile.scheme,
-            artUri: maskedCard.digitalCardData.artUri,
-            srcCorrelationId
-        }));
+        const profileCards: ShopperCard[] = profile.maskedCards.map(maskedCard => new ShopperCard(maskedCard, srcProfile.scheme, srcCorrelationId));
         return [...memo, ...profileCards];
     }, []);
 

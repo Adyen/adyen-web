@@ -1,21 +1,18 @@
 import { Fragment, h } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import useClickToPayContext from '../../context/useClickToPayContext';
-import { CheckoutPayload, ShopperCard } from '../../services/types';
+import { CheckoutPayload } from '../../services/types';
 import CtPSingleCard from './CtPSingleCard/CtPSingleCard';
 import getImage from '../../../../../../utils/get-image';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import PayButton from '../../../../../internal/PayButton';
 import { amountLabel } from '../../../../../internal/PayButton/utils';
-import './CtPCards.scss';
 import CtPCardsList from './CtPCardsList';
+import ShopperCard from '../../models/ShopperCard';
+import './CtPCards.scss';
 
 /**
  * TODO:
- * - Finalize the layout for single card
- * - Finalize the layout for cards list
- * - Align with Arjen about the design
- * - Check what to render when payment descriptor is undefined
  * - Do payments call
  * - Add new text to i18n
  */
@@ -28,13 +25,7 @@ const CtPCards = ({ onSubmit }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [isDoingCheckout, setIsDoingCheckout] = useState<boolean>(false);
-    const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(null);
-
-    useEffect(() => {
-        if (cards.length) {
-            setCheckoutCard(cards[0]);
-        }
-    }, [cards]);
+    const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
 
     const doCheckout = useCallback(async () => {
         if (!checkoutCard) return;
@@ -51,6 +42,9 @@ const CtPCards = ({ onSubmit }: CtPCardsProps) => {
 
     return (
         <Fragment>
+            <div className="adyen-checkout-ctp__cards-title">{i18n.get('ctp.cards.title')}</div>
+            <div className="adyen-checkout-ctp__cards-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
+
             {cards.length === 1 ? <CtPSingleCard card={cards[0]} /> : <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} />}
 
             <PayButton

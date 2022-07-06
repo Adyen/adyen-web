@@ -2,8 +2,9 @@ import { h } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { IClickToPayService, ShopperCard } from '../services/types';
+import { IClickToPayService } from '../services/types';
 import { PaymentAmount } from '../../../../../types';
+import ShopperCard from '../models/ShopperCard';
 
 type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
@@ -15,9 +16,6 @@ const ClickToPayProvider = ({ clickToPayService, amount, children }: ClickToPayP
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(null);
-    // const [amount] = useState<PaymentAmount>(amount);
-
-    console.log(amount);
 
     useEffect(() => {
         ctpService?.subscribeOnStateChange(status => setCtpState(status));

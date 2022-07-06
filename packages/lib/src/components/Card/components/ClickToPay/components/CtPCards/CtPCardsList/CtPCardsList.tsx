@@ -1,11 +1,11 @@
 import { h } from 'preact';
-import { ShopperCard } from '../../../services/types';
 import Field from '../../../../../../internal/FormFields/Field';
 import renderFormField from '../../../../../../internal/FormFields';
 import { useEffect, useMemo } from 'preact/hooks';
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
 import './CtPCardsList.scss';
+import ShopperCard from '../../../models/ShopperCard';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -28,7 +28,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     const items = useMemo(() => {
         return cards.map(card => ({
             icon: card.artUri,
-            name: `${card.cardTitle ? card.cardTitle : ''} •••• ${card.panLastFour}`,
+            name: `${card.title ? card.title : ''} •••• ${card.panLastFour}`,
             id: card.srcDigitalCardId
         }));
     }, [cards]);
@@ -40,7 +40,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     }, [data, onChangeCard]);
 
     return (
-        <Field label={i18n.get('Click to Pay cards')} name="clickToPayCards">
+        <Field label={i18n.get('ctp.cards.cardSelector')} name="clickToPayCards">
             {renderFormField('select', {
                 items,
                 selected: data['srcDigitalCardId'],

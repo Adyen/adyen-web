@@ -232,6 +232,10 @@
     "ctp.otp.title": "We ned to verify you",
     "ctp.otp.subtitle": "Enter the code we sent to %{maskedContact} to confirm it‘s you.",
 
+    "ctp.cards.title": "Complete your payment",
+    "ctp.cards.subtitle": "Continue with your Click to Pay card to complete the payment.",
+    "ctp.cards.cardSelector": "Click to Pay cards",
+
     "ctp.useAnotherCard": "Use a different card",
     "ctp.manualCardEntry": "Manual card entry",
 

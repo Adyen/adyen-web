@@ -1,6 +1,7 @@
 import { CtpState } from './ClickToPayService';
 import { SrcProfile } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
+import ShopperCard from '../models/ShopperCard';
 
 export interface IClickToPayService {
     state: CtpState;
@@ -21,17 +22,6 @@ export interface IdentityLookupParams {
     value: string;
     type: string;
 }
-
-export type ShopperCard = {
-    dateOfCardLastUsed: string;
-    panLastFour: string;
-    srcDigitalCardId: string;
-    cardTitle: string;
-    srcCorrelationId: string;
-    artUri: string;
-    tokenId?: string;
-    scheme: ClickToPayScheme;
-};
 
 type MastercardCheckout = {
     digitalCardId: string;

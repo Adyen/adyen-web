@@ -1,9 +1,10 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams, CheckoutPayload, SrcProfileWithScheme } from './types';
+import { CallbackStateSubscriber, IClickToPayService, IdentityLookupParams, CheckoutPayload, SrcProfileWithScheme } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
+import ShopperCard from '../models/ShopperCard';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -159,7 +160,7 @@ class ClickToPayService implements IClickToPayService {
                             resolve({ isEnrolled: true });
                         }
                     })
-                    .catch(error =>  reject(error));
+                    .catch(error => reject(error));
 
                 return identityLookupPromise;
             });

@@ -29,7 +29,7 @@ export type SrcProfile = {
     srcCorrelationId: string;
 };
 
-type SrcCard = {
+export type SrcCard = {
     srcDigitalCardId: string;
     panLastFour: string;
     dateOfCardLastUsed: string;
