@@ -7,8 +7,10 @@ export interface IClickToPayService {
     shopperCards: ShopperCard[];
     shopperValidationContact: string;
     initialize(): Promise<void>;
-    subscribeOnStateChange(callback: CallbackStateSubscriber): void;
     checkout(card: ShopperCard): Promise<CheckoutPayload>;
+    logout(): Promise<void>;
+    verifyIfShopperIsEnrolled(value: string, type?: string): Promise<{ isEnrolled: boolean }>;
+    subscribeOnStateChange(callback: CallbackStateSubscriber): void;
     startIdentityValidation(): Promise<void>;
     finishIdentityValidation(otpCode: string): Promise<void>;
 }

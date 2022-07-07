@@ -11,6 +11,7 @@ import {
     SrcProfile
 } from './types';
 import { ClickToPayScheme } from '../../../../types';
+import SrciError from './SrciError';
 
 export interface ISrcInitiator {
     schemeName: ClickToPayScheme;
@@ -25,6 +26,7 @@ export interface ISrcInitiator {
     completeIdentityValidation(validationData: string): Promise<SrciCompleteIdentityValidationResponse>;
     getSrcProfile(idTokens: string[]): Promise<SrcProfile>;
     checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse>;
+    unbindAppInstance(): Promise<void>;
 }
 
 export default abstract class AbstractSrcInitiator implements ISrcInitiator {
@@ -81,6 +83,13 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     }
 
     /**
+     * This method disassociates the Consumer application / Consumer Device from the Consumer’s SRC Profile.
+     */
+    public async unbindAppInstance(): Promise<void> {
+        return await this.schemeSdk.unbindAppInstance();
+    }
+
+    /**
      * Determines whether the consumer is recognized, e.g. by detecting the presence of a local cookie in
      * the browser environment.
      */
@@ -93,7 +102,11 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * This method sends a one-time password (OTP) to the consumer to start validation
      */
     public async initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse> {
-        return await this.schemeSdk.initiateIdentityValidation();
+        try {
+            return await this.schemeSdk.initiateIdentityValidation();
+        } catch (error) {
+            throw new SrciError(error);
+        }
     }
 
     /**

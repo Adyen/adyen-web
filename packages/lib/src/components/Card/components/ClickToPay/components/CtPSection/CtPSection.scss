@@ -3,10 +3,9 @@
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-    border-radius: 6px;
+    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
     padding: 16px;
-    min-height: 271px;
 
     .adyen-checkout__fieldset {
         margin-bottom: 24px;
@@ -23,14 +22,8 @@
 .adyen-checkout-ctp__section-header {
     display: flex;
     align-items: center;
-    margin-bottom: 26px;
-}
-
-.adyen-checkout-ctp__section-loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    height: 18px;
+    margin-bottom: 16px;
 }
 
 .adyen-checkout-ctp__section-header-scheme {

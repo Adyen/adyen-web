@@ -217,5 +217,31 @@
     "invalidFormatExpects": "Invalid format. Expected format: %{format}",
     "ownerName": "Holder Name",
     "ibanNumber": "Account Number (IBAN)",
-    "bankAccount": "Bank Details"
+    "bankAccount": "Bank Details",
+
+    "ctp.loading.poweredByCtp": "Powered by Click to Pay",
+    "ctp.loading.intro": "The fastest and most secure way to pay at merchants worldwide.",
+    "ctp.login.title": "Continue to Click to Pay",
+    "ctp.login.subtitle": "Enter your Click to Pay credentials to continue.",
+    "ctp.login.inputLabel": "Email or mobile number",
+    "ctp.logout.notYou": "Not you?",
+    "ctp.logout.notYouCards": "Not your cards?",
+    "ctp.otp.fieldLabel": "Verification code",
+    "ctp.otp.resendCode": "Resend code",
+    "ctp.otp.title": "We ned to verify you",
+    "ctp.otp.subtitle": "Enter the code we sent to %{maskedContact} to confirm it‘s you.",
+
+    "ctp.useAnotherCard": "Use a different card",
+    "ctp.manualCardEntry": "Manual card entry",
+
+    "ctp.errors.NOT_FOUND": "User not found",
+    "ctp.errors.ID_FORMAT_UNSUPPORTED": "Format not supported",
+    "ctp.errors.FRAUD": "The user account was locked or disabled",
+    "ctp.errors.CONSUMER_ID_MISSING": "Consumer identity is missing in the request",
+    "ctp.errors.ACCT_INACCESSIBLE": "The account exists but is not currently accessible, e.g. it is locked",
+    "ctp.errors.UNKNOWN_ERROR": "Unknown error",
+    "ctp.errors.CODE_INVALID": "Invalid code",
+    "ctp.errors.INVALID_PARAMETER": "Something went wrong",
+    "ctp.errors.RETRIES_EXCEEDED": "The limit for the number of retries for OTP generation was exceeded",
+    "ctp.errors.OTP_SEND_FAILED": "The OTP could not be sent to the recipient"
 }

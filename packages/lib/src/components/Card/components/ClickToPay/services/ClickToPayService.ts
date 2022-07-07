@@ -11,6 +11,7 @@ export enum CtpState {
     ShopperIdentified = 'ShopperIdentified',
     OneTimePassword = 'OneTimePassword',
     Ready = 'Ready',
+    Login = 'Login',
     NotAvailable = 'NotAvailable'
 }
 
@@ -53,7 +54,7 @@ class ClickToPayService implements IClickToPayService {
                 return;
             }
 
-            const { isEnrolled } = await this.verifyIfShopperIsEnrolled();
+            const { isEnrolled } = await this.verifyIfShopperIsEnrolled(this.shopperIdentity.value, this.shopperIdentity.type);
 
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);
@@ -123,6 +124,52 @@ class ClickToPayService implements IClickToPayService {
         return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
     }
 
+    /**
+     * Call the 'unbindAppInstance()' method of each SRC SDK in order to remove the shopper cookies.
+     * Besides, it deletes all information stored about the shopper.
+     */
+    public async logout(): Promise<void> {
+        const logoutPromises = this.sdks.map(sdk => sdk.unbindAppInstance());
+
+        await Promise.all(logoutPromises);
+
+        this.shopperCards = null;
+        this.shopperValidationContact = null;
+        this.validationSchemeSdk = null;
+
+        this.setState(CtpState.Login);
+    }
+
+    /**
+     * Call the 'identityLookup()' method of each SRC SDK in order to verify if the shopper has an account.
+     *
+     * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
+     * that responds faster with 'consumerPresent=true'
+     */
+    public async verifyIfShopperIsEnrolled(value: string, type = 'email'): Promise<{ isEnrolled: boolean }> {
+        return new Promise((resolve, reject) => {
+            const lookupPromises = this.sdks.map(sdk => {
+                const identityLookupPromise = sdk.identityLookup({ value, type });
+
+                identityLookupPromise
+                    .then(response => {
+                        console.log(sdk.schemeName, response);
+                        if (response.consumerPresent && !this.validationSchemeSdk) {
+                            this.setSdkForPerformingShopperIdentityValidation(sdk);
+                            resolve({ isEnrolled: true });
+                        }
+                    })
+                    .catch(error =>  reject(error));
+
+                return identityLookupPromise;
+            });
+
+            Promise.allSettled(lookupPromises).then(() => {
+                resolve({ isEnrolled: false });
+            });
+        });
+    }
+
     private setState(state: CtpState): void {
         this.state = state;
         this.stateSubscriber?.(this.state);
@@ -162,35 +209,6 @@ class ClickToPayService implements IClickToPayService {
             Promise.all(promises)
                 .then(() => resolve({ recognized: false }))
                 .catch(error => reject(error));
-        });
-    }
-
-    /**
-     * Call the 'identityLookup()' method of each SRC SDK in order to verify if the shopper has an account.
-     *
-     * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
-     * that responds faster with 'consumerPresent=true'
-     */
-    private async verifyIfShopperIsEnrolled(): Promise<{ isEnrolled: boolean }> {
-        return new Promise((resolve, reject) => {
-            const lookupPromises = this.sdks.map(sdk => {
-                const identityLookupPromise = sdk.identityLookup({ value: this.shopperIdentity.value, type: this.shopperIdentity.type });
-
-                identityLookupPromise.then(response => {
-                    console.log(sdk.schemeName, response);
-                    if (response.consumerPresent && !this.validationSchemeSdk) {
-                        this.setSdkForPerformingShopperIdentityValidation(sdk);
-                        resolve({ isEnrolled: true });
-                    }
-                });
-
-                return identityLookupPromise;
-            });
-
-            Promise.all(lookupPromises)
-                .then(() => resolve({ isEnrolled: false }))
-                .catch(error => reject(error));
-            // TODO: Error can be: FRAUD, ID_FORMAT_UNSUPPORTED, CONSUMER_ID_MISSING, ACCT_INACCESSIBLE
         });
     }
 

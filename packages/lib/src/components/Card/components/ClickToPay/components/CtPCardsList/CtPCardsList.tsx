@@ -10,7 +10,7 @@ type CtPCardsListProps = {
 };
 
 const CtPCardsList = ({ onSubmit }: CtPCardsListProps) => {
-    const { cards, checkout } = useClickToPayContext();
+    const { cards, checkout, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [isDoingCheckout, setIsDoingCheckout] = useState<boolean>(false);
 
     const onCheckout = useCallback(
@@ -32,7 +32,7 @@ const CtPCardsList = ({ onSubmit }: CtPCardsListProps) => {
                     </button>
                 ))}
             </div>
-            <Button label="Pay" status={isDoingCheckout && 'loading'} />
+            <Button label="Pay" status={isDoingCheckout && 'loading'} variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'} />
         </Fragment>
     );
 };
