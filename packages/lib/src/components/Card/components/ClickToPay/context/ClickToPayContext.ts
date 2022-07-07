@@ -2,6 +2,7 @@ import { createContext } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { IClickToPayService } from '../services/types';
 import { PaymentAmount } from '../../../../../types';
+import ShopperCard from '../models/ShopperCard';
 
 export interface ClickToPayContextInterface
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
