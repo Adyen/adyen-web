@@ -1,6 +1,6 @@
 import { createContext } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
-import { IClickToPayService, ShopperCard } from '../services/types';
+import { IClickToPayService } from '../services/types';
 import { PaymentAmount } from '../../../../../types';
 
 export interface ClickToPayContextInterface
