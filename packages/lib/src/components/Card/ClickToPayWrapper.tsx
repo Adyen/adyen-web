@@ -8,14 +8,13 @@ import Button from '../internal/Button';
 import useCoreContext from '../../core/Context/useCoreContext';
 
 type ClickToPayWrapperProps = {
-    onSubmit(payload: any): void;
     children(isCardPrimaryInput?: boolean): h.JSX.Element;
 };
 
-const ClickToPayWrapper = ({ onSubmit, children }: ClickToPayWrapperProps) => {
+const ClickToPayWrapper = ({ children }: ClickToPayWrapperProps) => {
     const { i18n } = useCoreContext();
     const [isCardInputVisible, setIsCardInputVisible] = useState<boolean>(null);
-    const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod } = useClickToPayContext();
+    const { ctpState, isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod, status } = useClickToPayContext();
 
     const areFieldsNotSet = isCardInputVisible === null && isCtpPrimaryPaymentMethod === null;
 
@@ -48,7 +47,8 @@ const ClickToPayWrapper = ({ onSubmit, children }: ClickToPayWrapperProps) => {
 
     return (
         <Fragment>
-            <ClickToPayComponent onSubmit={onSubmit} />
+            <ClickToPayComponent />
+
             <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label={i18n.get('qrCodeOrApp')} />
 
             {isCardInputVisible ? (
@@ -56,6 +56,7 @@ const ClickToPayWrapper = ({ onSubmit, children }: ClickToPayWrapperProps) => {
             ) : (
                 <Button
                     variant="secondary"
+                    disabled={status === 'loading'}
                     label={ctpState === CtpState.Ready ? i18n.get('ctp.useAnotherCard') : i18n.get('ctp.manualCardEntry')}
                     onClick={handleOnShowCardButtonClick}
                 />

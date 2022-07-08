@@ -4,7 +4,7 @@ import UIElement from './UIElement';
 import Core from '../core';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
-import Session from "../core/CheckoutSession";
+import Session from '../core/CheckoutSession';
 
 export interface PaymentResponse {
     action?: PaymentAction;
@@ -34,6 +34,7 @@ export interface IUIElement {
     type: string;
     elementRef: any;
     submit(): void;
+    setElementStatus(status: UIElementStatus, props: any): UIElement;
     setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;

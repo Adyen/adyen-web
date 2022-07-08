@@ -1,10 +1,12 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, IClickToPayService, IdentityLookupParams, CheckoutPayload, SrcProfileWithScheme } from './types';
+import { CallbackStateSubscriber, IClickToPayService, IdentityLookupParams, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
+import SrciError from './sdks/SrciError';
+import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -107,7 +109,7 @@ class ClickToPayService implements IClickToPayService {
     /**
      * This method performs checkout using the selected card
      */
-    public async checkout(card: ShopperCard): Promise<CheckoutPayload> {
+    public async checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload> {
         if (!card) {
             throw Error('ClickToPayService # checkout: Missing card data');
         }
@@ -119,6 +121,13 @@ class ClickToPayService implements IClickToPayService {
 
         const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === card.scheme);
         const checkoutResponse = await checkoutSdk.checkout(checkoutParameters);
+
+        if (checkoutResponse.dcfActionCode !== 'COMPLETE') {
+            throw new AdyenCheckoutError(
+                'ERROR',
+                `Checkout through Scheme DCF did not complete. DCF Action code received: ${checkoutResponse.dcfActionCode}`
+            );
+        }
 
         console.log(checkoutResponse);
 

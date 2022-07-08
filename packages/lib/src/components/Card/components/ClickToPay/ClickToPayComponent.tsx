@@ -7,13 +7,8 @@ import CtPCards from './components/CtPCards';
 import CtPSection from './components/CtPSection';
 import CtPLoader from './components/CtPLoader';
 import CtPLogin from './components/CtPLogin';
-import { CheckoutPayload } from './services/types';
 
-type ClickToPayComponentProps = {
-    onSubmit?(payload: CheckoutPayload): void;
-};
-
-const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps): h.JSX.Element => {
+const ClickToPayComponent = (): h.JSX.Element => {
     const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
 
     useEffect(() => {
@@ -39,7 +34,7 @@ const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps): h.JSX.Elem
             <CtPSection>
                 {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
                 {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-                {ctpState === CtpState.Ready && <CtPCards onSubmit={onSubmit} />}
+                {ctpState === CtpState.Ready && <CtPCards />}
                 {ctpState === CtpState.Login && <CtPLogin />}
             </CtPSection>
         </Fragment>

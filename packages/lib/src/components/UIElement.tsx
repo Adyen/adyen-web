@@ -23,6 +23,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
+        this.setElementStatus = this.setElementStatus.bind(this);
+
         this.elementRef = (props && props.elementRef) || this;
     }
 
@@ -91,6 +93,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return this;
     }
 
+    public setElementStatus(status: UIElementStatus, props?: any): this {
+        this.elementRef?.setStatus(status, props);
+        return this;
+    }
+
     public setStatus(status: UIElementStatus, props?): this {
         if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
@@ -99,6 +106,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private submitPayment(data): Promise<void> {
+        console.log(data);
+
         return this._parentInstance.session
             .submitPayment(data)
             .then(this.handleResponse)

@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'preact/hooks';
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
 import ShopperCard from '../../../models/ShopperCard';
+import useClickToPayContext from '../../../context/useClickToPayContext';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -19,6 +20,7 @@ const schema = ['srcDigitalCardId'];
 
 const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     const { i18n } = useCoreContext();
+    const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,
         defaultData: { srcDigitalCardId: cards[0].srcDigitalCardId }
@@ -46,6 +48,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
                 name: 'cards',
                 filterable: false,
                 isIconOnLeftSide: true,
+                readonly: status === 'loading',
                 onChange: handleChangeFor('srcDigitalCardId')
             })}
         </Field>

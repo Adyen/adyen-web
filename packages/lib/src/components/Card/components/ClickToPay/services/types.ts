@@ -8,7 +8,7 @@ export interface IClickToPayService {
     shopperCards: ShopperCard[];
     shopperValidationContact: string;
     initialize(): Promise<void>;
-    checkout(card: ShopperCard): Promise<CheckoutPayload>;
+    checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;
     verifyIfShopperIsEnrolled(value: string, type?: string): Promise<{ isEnrolled: boolean }>;
     subscribeOnStateChange(callback: CallbackStateSubscriber): void;
@@ -39,4 +39,4 @@ export interface SrcProfileWithScheme extends SrcProfile {
     scheme: ClickToPayScheme;
 }
 
-export type CheckoutPayload = VisaCheckout | MastercardCheckout;
+export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;

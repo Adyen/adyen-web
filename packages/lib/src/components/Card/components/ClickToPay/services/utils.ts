@@ -1,8 +1,8 @@
-import { CheckoutPayload, SrcProfileWithScheme } from './types';
+import { ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 
-function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): CheckoutPayload {
+function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): ClickToPayCheckoutPayload {
     const { scheme, tokenId, srcDigitalCardId, srcCorrelationId } = card;
 
     switch (scheme) {
