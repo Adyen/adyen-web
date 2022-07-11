@@ -76,9 +76,8 @@ import '../../style.scss';
         .create('giftcard', {
             type: 'giftcard',
             brand: 'svs',
-            onOrderCreated: async (resolve, reject, data) => {
+            onOrderCreated: async (data) => {
                 await afterGiftCard(data);
-                resolve();
             }
         })
         .mount('#giftcard-session-container');

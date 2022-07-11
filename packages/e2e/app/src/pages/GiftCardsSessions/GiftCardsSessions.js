@@ -37,9 +37,8 @@ const initCheckout = async () => {
         .create('giftcard', {
             type: 'giftcard',
             brand: 'valuelink',
-            onOrderCreated: async (resolve, reject, data) => {
+            onOrderCreated: (data) => {
                 window.onOrderCreatedTestData = data;
-                resolve();
             }
         })
         .mount('.card-field');
