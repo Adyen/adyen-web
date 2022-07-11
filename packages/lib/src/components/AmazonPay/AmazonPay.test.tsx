@@ -27,12 +27,14 @@ describe('AmazonPay', () => {
         const props = {
             environment: 'test',
             locale: 'en-US',
-            region: 'eu'
+            configuration: {
+                region: 'EU',
+            }
         };
         const amazonPay = getElement(props);
         expect(amazonPay.props.environment).toBe('TEST');
         expect(amazonPay.props.locale).toBe('en_US');
-        expect(amazonPay.props.region).toBe('EU');
+        expect(amazonPay.props.configuration.region).toBe('EU');
     });
 
     describe('getShopperDetails', () => {
