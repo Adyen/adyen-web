@@ -76,14 +76,14 @@ import '../../style.scss';
         .create('giftcard', {
             type: 'giftcard',
             brand: 'svs',
-            onOrderCreated: async (data) => {
-                await afterGiftCard(data);
+            onOrderCreated: (data) => {
+                afterGiftCard(data);
             }
         })
         .mount('#giftcard-session-container');
 
 
-    const afterGiftCard = async (order) => {
+    const afterGiftCard = (order) => {
         sessionCheckout.create('card').mount('#payment-method-container');
     }
 })();
