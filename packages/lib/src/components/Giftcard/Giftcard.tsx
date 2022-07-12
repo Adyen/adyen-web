@@ -77,9 +77,7 @@ export class GiftcardElement extends UIElement {
     protected handleOrder = (order: Order) => {
         this.elementRef._parentInstance.update({ order });
         if (this.props.session && this.props.onOrderCreated) {
-            return new Promise((resolve, reject) => {
-                return this.props.onOrderCreated(resolve, reject, order);
-            });
+            return this.props.onOrderCreated(order);
         }
     };
 

@@ -52,7 +52,7 @@ test.requestHooks([mock])('Test if orderStatus is retrieved on success', async t
 });
 
 // set up request hooks for different scenarios
-test.requestHooks([noCallbackMock]).only('Test if onOrderCreated is not called if giftcard has enough balance for the payment', async t => {
+test.requestHooks([noCallbackMock])('Test if onOrderCreated is not called if giftcard has enough balance for the payment', async t => {
     await giftCard.cardUtils.fillCardNumber(t, GIFTCARD_NUMBER);
     await fillIFrame(t, giftCard.iframeSelector, 1, getInputSelector('encryptedSecurityCode'), GIFTCARD_PIN);
 
