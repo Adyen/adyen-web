@@ -25,6 +25,8 @@
     "installments.revolving": "Pagamento ricorrente",
     "sepaDirectDebit.ibanField.invalid": "Numero di conto non valido",
     "sepaDirectDebit.nameField.placeholder": "A. Bianchi",
+    "sepa.ownerName": "Nome Intestatario Conto",
+    "sepa.ibanNumber": "Numero di conto (IBAN)",
     "ownerName": "Nome Intestatario Conto",
     "ibanNumber": "Numero di conto (IBAN)",
     "error.title": "Errore",

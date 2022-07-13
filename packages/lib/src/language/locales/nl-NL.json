@@ -27,6 +27,8 @@
     "installments.revolving": "Terugkerende betaling",
     "sepaDirectDebit.ibanField.invalid": "Ongeldig rekeningnummer",
     "sepaDirectDebit.nameField.placeholder": "J. Janssen",
+    "sepa.ownerName": "Ten name van",
+    "sepa.ibanNumber": "Rekeningnummer (IBAN)",
     "ownerName": "Ten name van",
     "ibanNumber": "Rekeningnummer (IBAN)",
     "error.title": "Fout",

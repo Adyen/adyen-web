@@ -27,6 +27,8 @@
     "installments.revolving": "Ανακυκλούμενη πληρωμή",
     "sepaDirectDebit.ibanField.invalid": "Μη έγκυρος αριθμός λογαριασμού",
     "sepaDirectDebit.nameField.placeholder": "Γ. Παπαδάκης",
+    "sepa.ownerName": "Όνομα κατόχου",
+    "sepa.ibanNumber": "Αριθμός λογαριασμού (IBAN)",
     "ownerName": "Όνομα κατόχου",
     "ibanNumber": "Αριθμός λογαριασμού (IBAN)",
     "error.title": "Σφάλμα",

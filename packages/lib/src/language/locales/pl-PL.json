@@ -27,6 +27,8 @@
     "installments.revolving": "Płatność odnawialna",
     "sepaDirectDebit.ibanField.invalid": "Nieprawidłowy numer rachunku",
     "sepaDirectDebit.nameField.placeholder": "J. Kowalski",
+    "sepa.ownerName": "Imię i nazwisko posiadacza karty",
+    "sepa.ibanNumber": "Numer rachunku (IBAN)",
     "ownerName": "Imię i nazwisko posiadacza karty",
     "ibanNumber": "Numer rachunku (IBAN)",
     "error.title": "Błąd",

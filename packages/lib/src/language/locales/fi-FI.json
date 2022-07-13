@@ -27,6 +27,8 @@
     "installments.revolving": "Toistuva maksu",
     "sepaDirectDebit.ibanField.invalid": "Väärä tilin numero",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
+    "sepa.ownerName": "Haltijan nimi",
+    "sepa.ibanNumber": "Tilinumero (IBAN)",
     "ownerName": "Haltijan nimi",
     "ibanNumber": "Tilinumero (IBAN)",
     "error.title": "Virhe",

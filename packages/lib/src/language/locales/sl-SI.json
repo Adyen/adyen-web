@@ -27,6 +27,8 @@
     "installments.revolving": "Revolving plačilo",
     "sepaDirectDebit.ibanField.invalid": "Neveljavna številka računa",
     "sepaDirectDebit.nameField.placeholder": "J. Novak",
+    "sepa.ownerName": "Ime imetnika",
+    "sepa.ibanNumber": "Številka računa (IBAN)",
     "ownerName": "Ime imetnika",
     "ibanNumber": "Številka računa (IBAN)",
     "error.title": "Napaka",
