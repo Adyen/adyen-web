@@ -45,7 +45,7 @@ const CtPCards = () => {
                 })}
                 status={status}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_dark')}
+                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
                 onClick={doCheckout}
             />
         </Fragment>

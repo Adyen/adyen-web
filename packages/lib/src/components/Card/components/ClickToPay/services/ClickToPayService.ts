@@ -128,8 +128,6 @@ class ClickToPayService implements IClickToPayService {
             );
         }
 
-        console.log(checkoutResponse);
-
         return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
     }
 
@@ -211,15 +209,11 @@ class ClickToPayService implements IClickToPayService {
         return new Promise((resolve, reject) => {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = sdk.isRecognized();
-                isRecognizedPromise.then(response => response.recognized && resolve(response));
+                isRecognizedPromise.then(response => response.recognized && resolve(response)).catch(error => reject(error));
                 return isRecognizedPromise;
             });
 
-            Promise.all(promises)
-                .then(() => resolve({ recognized: false }))
-                .catch(error => {
-                    reject(error);
-                });
+            Promise.allSettled(promises).then(() => resolve({ recognized: false }));
         });
     }
 
