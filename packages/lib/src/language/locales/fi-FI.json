@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Haltijan nimi",
     "sepa.ibanNumber": "Tilinumero (IBAN)",
-    "ownerName": "Haltijan nimi",
-    "ibanNumber": "Tilinumero (IBAN)",
     "error.title": "Virhe",
     "error.subtitle.redirect": "Uuteen kohteeseen siirto epäonnistui",
     "error.subtitle.payment": "Maksu epännistui",

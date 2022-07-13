@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "Holder Name",
     "sepa.ibanNumber": "Account Number (IBAN)",
-    "ownerName": "Holder Name",
-    "ibanNumber": "Account Number (IBAN)",
     "error.title": "Error",
     "error.subtitle.redirect": "Redirect failed",
     "error.subtitle.payment": "Payment failed",

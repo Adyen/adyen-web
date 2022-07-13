@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "И. Петров",
     "sepa.ownerName": "Имя владельца",
     "sepa.ibanNumber": "Номер счета (IBAN)",
-    "ownerName": "Имя владельца",
-    "ibanNumber": "Номер счета (IBAN)",
     "error.title": "Ошибка",
     "error.subtitle.redirect": "Сбой перенаправления",
     "error.subtitle.payment": "Сбой оплаты",

@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "جميل سعيد",
     "sepa.ownerName": "صاحب الحساب",
     "sepa.ibanNumber": "رقم الحساب (IBAN)",
-    "ownerName": "صاحب الحساب",
-    "ibanNumber": "رقم الحساب (IBAN)",
     "error.title": "خطأ",
     "error.subtitle.redirect": "فشل إعادة التوجيه",
     "error.subtitle.payment": "فشل الدفع",

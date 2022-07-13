@@ -27,8 +27,6 @@
     "sepaDirectDebit.nameField.placeholder": "J. Silva",
     "sepa.ownerName": "Nome do titular da conta bancária",
     "sepa.ibanNumber": "Número de conta (NIB)",
-    "ownerName": "Nome do titular da conta bancária",
-    "ibanNumber": "Número de conta (NIB)",
     "error.title": "Erro",
     "error.subtitle.redirect": "Falha no redirecionamento",
     "error.subtitle.payment": "Falha no pagamento",

@@ -27,8 +27,6 @@
     "sepaDirectDebit.nameField.placeholder": "A. Bianchi",
     "sepa.ownerName": "Nome Intestatario Conto",
     "sepa.ibanNumber": "Numero di conto (IBAN)",
-    "ownerName": "Nome Intestatario Conto",
-    "ibanNumber": "Numero di conto (IBAN)",
     "error.title": "Errore",
     "error.subtitle.redirect": "Reindirizzamento non riuscito",
     "error.subtitle.payment": "Pagamento non riuscito",

@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "J. Janssen",
     "sepa.ownerName": "Ten name van",
     "sepa.ibanNumber": "Rekeningnummer (IBAN)",
-    "ownerName": "Ten name van",
-    "ibanNumber": "Rekeningnummer (IBAN)",
     "error.title": "Fout",
     "error.subtitle.redirect": "Doorsturen niet gelukt",
     "error.subtitle.payment": "Betaling is niet geslaagd",

@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
     "sepa.ownerName": "名義",
     "sepa.ibanNumber": "口座番号 (IBAN)",
-    "ownerName": "名義",
-    "ibanNumber": "口座番号 (IBAN)",
     "error.title": "エラー",
     "error.subtitle.redirect": "画面の切り替え失敗にしました",
     "error.subtitle.payment": "支払できませんでした",

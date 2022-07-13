@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "A. Andersson",
     "sepa.ownerName": "Känt av kontoinnehavaren",
     "sepa.ibanNumber": "Kontonummer (IBAN)",
-    "ownerName": "Känt av kontoinnehavaren",
-    "ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fel",
     "error.subtitle.redirect": "Omdirigering misslyckades",
     "error.subtitle.payment": "Betalning misslyckades",

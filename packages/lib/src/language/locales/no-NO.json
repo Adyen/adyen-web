@@ -29,8 +29,6 @@
     "sepaDirectDebit.nameField.placeholder": "O. Nordmann",
     "sepa.ownerName": "Kortholders navn",
     "sepa.ibanNumber": "Kontonummer (IBAN)",
-    "ownerName": "Kortholders navn",
-    "ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Feil",
     "error.subtitle.redirect": "Videresending feilet",
     "error.subtitle.payment": "Betaling feilet",
