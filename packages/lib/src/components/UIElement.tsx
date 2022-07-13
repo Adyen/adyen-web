@@ -48,7 +48,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         if (this.props.setStatusAutomatically) {
-            this.elementRef.setStatus('loading');
+            this.setElementStatus('loading');
         }
 
         if (this.props.onSubmit) {
@@ -106,8 +106,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private submitPayment(data): Promise<void> {
-        console.log(data);
-
         return this._parentInstance.session
             .submitPayment(data)
             .then(this.handleResponse)
@@ -127,7 +125,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
          * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
          * - If Component, it will set its own status
          */
-        this.elementRef.setStatus('ready');
+        this.setElementStatus('ready');
 
         if (this.props.onError) {
             this.props.onError(error, this.elementRef);
@@ -175,7 +173,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     protected handleFinalResult = result => {
         if (this.props.setStatusAutomatically) {
             const [status, statusProps] = resolveFinalResult(result);
-            if (status) this.elementRef.setStatus(status, statusProps);
+            if (status) this.setElementStatus(status, statusProps);
         }
 
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);

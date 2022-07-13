@@ -157,11 +157,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                                 paymentOptions: {
                                     dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
                                 },
-                                consumerNameRequested: true,
-                                customInputData: {
-                                    'com.mastercard.dcfExperience': 'PAYMENT_SETTINGS'
-                                },
-                                confirmPayment: false
+                                consumerNameRequested: true
+                                // customInputData: {
+                                //     'com.mastercard.dcfExperience': 'PAYMENT_SETTINGS'
+                                // },
+                                // confirmPayment: false
                             }
                         },
                         visa: {

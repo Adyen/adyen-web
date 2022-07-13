@@ -63,7 +63,7 @@ export async function initSession() {
                             srciTransactionId: 'adyen-id-' + new Date().getTime(),
 
                             dpaTransactionOptions: {
-                                dpaLocale: 'pt_BR',
+                                dpaLocale: 'en_US',
                                 paymentOptions: {
                                     dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
                                 },
