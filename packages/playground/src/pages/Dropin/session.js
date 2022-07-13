@@ -10,7 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
-        countryCode,
+        countryCode
     });
 
     const checkout = await AdyenCheckout({
@@ -46,9 +46,11 @@ export async function initSession() {
                     schemes: {
                         discovery: '',
                         visa: {
-                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
                             srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
                             srciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+
                             dpaTransactionOptions: {
                                 dpaLocale: 'en_US',
                                 payloadTypeIndicator: 'NON_PAYMENT'
@@ -57,13 +59,19 @@ export async function initSession() {
                         mc: {
                             srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
                             srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+
                             srciTransactionId: 'adyen-id-' + new Date().getTime(),
+
                             dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
+                                dpaLocale: 'pt_BR',
                                 paymentOptions: {
                                     dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
                                 },
-                                consumerNameRequested: true
+                                consumerNameRequested: true,
+                                customInputData: {
+                                    'com.mastercard.dcfExperience': 'PAYMENT_SETTINGS'
+                                },
+                                confirmPayment: false
                             }
                         }
                     },

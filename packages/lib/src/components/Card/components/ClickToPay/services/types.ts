@@ -24,15 +24,15 @@ export interface IdentityLookupParams {
 }
 
 type MastercardCheckout = {
-    digitalCardId: string;
-    correlationId: string;
-    scheme: string;
+    srcDigitalCardId: string;
+    srcCorrelationId: string;
+    srcScheme: string;
 };
 
 type VisaCheckout = {
-    tokenId?: string;
-    checkoutPayload?: string;
-    scheme: string;
+    srcCheckoutPayload?: string;
+    srcTokenReference?: string;
+    srcScheme: string;
 };
 
 export interface SrcProfileWithScheme extends SrcProfile {

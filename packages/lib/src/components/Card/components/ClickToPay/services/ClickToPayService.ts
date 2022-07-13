@@ -5,7 +5,6 @@ import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './ut
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
-import SrciError from './sdks/SrciError';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 
 export enum CtpState {
@@ -218,7 +217,9 @@ class ClickToPayService implements IClickToPayService {
 
             Promise.all(promises)
                 .then(() => resolve({ recognized: false }))
-                .catch(error => reject(error));
+                .catch(error => {
+                    reject(error);
+                });
         });
     }
 
