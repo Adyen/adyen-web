@@ -30,17 +30,17 @@
 }
 
 .adyen-checkout-ctp__section-header-scheme {
-    width: 30px;
-    object-fit: cover;
-}
+    object-fit: none;
+    margin-right: 6px;
 
-//.adyen-checkout-ctp__section-header-divider {
-//    background-color: black;
-//    width: 1px;
-//    height: 15px;
-//    border-radius: 1px;
-//    margin-right: 6px;
-//}
+    &-mc {
+        width: 27px;
+    }
+
+    &-visa {
+        width: 35px;
+    }
+}
 
 .adyen-checkout-ctp__separator {
     color: $color-black;

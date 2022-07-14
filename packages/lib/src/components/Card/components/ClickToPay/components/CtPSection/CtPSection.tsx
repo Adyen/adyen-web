@@ -3,6 +3,7 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import getImage from '../../../../../../utils/get-image';
 import Img from '../../../../../internal/Img';
 import CtPLogoutLink from './CtPLogoutLink';
+import classnames from 'classnames';
 import './CtPSection.scss';
 
 // TODO: filter available brands
@@ -24,9 +25,13 @@ const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
 
                 <Img className="adyen-checkout-ctp__section-header-pipe" src={pipe} alt={pipe} />
 
-                {/*<span className="adyen-checkout-ctp__section-header-divider" />*/}
                 {brands.map(brand => (
-                    <Img key={brand} className="adyen-checkout-ctp__section-header-scheme" src={getImage({ loadingContext })(brand)} alt={brand} />
+                    <Img
+                        key={brand}
+                        className={classnames('adyen-checkout-ctp__section-header-scheme', `adyen-checkout-ctp__section-header-scheme-${brand}`)}
+                        src={getImage({ loadingContext })(brand)}
+                        alt={brand}
+                    />
                 ))}
                 <CtPLogoutLink />
             </div>
