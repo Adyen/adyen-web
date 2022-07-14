@@ -37,7 +37,7 @@ class UPI extends UIElement {
     }
 
     public setStatus(status: UIElementStatus): this {
-        this.componentRef?.setStatus(status, this.state.isQrCodeFlow);
+        this.componentRef?.setStatus(status, this.state.data.isQrCodeFlow);
         return this;
     }
 

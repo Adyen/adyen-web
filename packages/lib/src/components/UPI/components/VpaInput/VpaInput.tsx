@@ -9,6 +9,7 @@ import './VpaInput.scss';
 
 interface VpaInputProps {
     data?: {};
+    disabled?: boolean;
     onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
 }
 
@@ -51,6 +52,7 @@ const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
                 name: 'virtualPaymentAddress',
                 autocorrect: 'off',
                 spellcheck: false,
+                disabled: props.disabled,
                 value: data.virtualPaymentAddress,
                 onInput: handleChangeFor('virtualPaymentAddress', 'input'),
                 onBlur: handleChangeFor('virtualPaymentAddress', 'blur')

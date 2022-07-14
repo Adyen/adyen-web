@@ -23,8 +23,8 @@ export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButto
     const [isQrCodeFlow, setIsQrCodeFlow] = useState<boolean>(false);
 
     this.setStatus = (status, isQrCodeFlow) => {
-        setStatus(status);
         setIsQrCodeFlow(isQrCodeFlow);
+        setStatus(status);
     };
 
     this.showValidation = () => {
@@ -35,12 +35,12 @@ export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButto
 
     return (
         <Fragment>
-            <VpaInput ref={inputRef} onChange={onChange} />
+            <VpaInput disabled={status === 'loading'} ref={inputRef} onChange={onChange} />
 
             {payButton({
                 label: `${i18n.get('continue')}`,
                 status: isSubmittingAndFlowIsQrCode ? 'default' : status,
-                disabled: isSubmittingAndFlowIsQrCode
+                disabled: status === 'loading'
             })}
 
             <ContentSeparator label={i18n.get('qrCodeOrApp')} />
@@ -48,7 +48,7 @@ export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButto
             <Button
                 icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr_dark')}
                 status={isSubmittingAndFlowIsQrCode ? 'loading' : 'default'}
-                disabled={status === 'loading' && isQrCodeFlow === false}
+                disabled={status === 'loading'}
                 variant="secondary"
                 label={i18n.get('generateQRCode')}
                 onClick={onGenerateQrCodeClick}
