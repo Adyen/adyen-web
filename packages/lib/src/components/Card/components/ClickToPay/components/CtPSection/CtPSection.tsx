@@ -15,13 +15,16 @@ interface CtPSectionProps {
 const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
     const { loadingContext } = useCoreContext();
 
-    const url = getImage({ loadingContext })('visacheckout');
-
+    const url = getImage({ loadingContext })('ctp');
+    const pipe = getImage({ loadingContext, imageFolder: 'components/' })('pipe');
     return (
         <div className="adyen-checkout-ctp__section">
             <div className="adyen-checkout-ctp__section-header">
                 <Img className="adyen-checkout-ctp__section-header-logo" src={url} alt={url} />
-                <span className="adyen-checkout-ctp__section-header-divider" />
+
+                <Img className="adyen-checkout-ctp__section-header-pipe" src={pipe} alt={pipe} />
+
+                {/*<span className="adyen-checkout-ctp__section-header-divider" />*/}
                 {brands.map(brand => (
                     <Img key={brand} className="adyen-checkout-ctp__section-header-scheme" src={getImage({ loadingContext })(brand)} alt={brand} />
                 ))}

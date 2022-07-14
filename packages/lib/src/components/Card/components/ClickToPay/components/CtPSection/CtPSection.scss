@@ -13,9 +13,12 @@
 }
 
 .adyen-checkout-ctp__section-header-logo {
-    height: 20px;
-    width: 19px;
-    object-fit: cover;
+    width: 24px;
+    margin-right: 6px;
+}
+
+.adyen-checkout-ctp__section-header-pipe {
+    height: 15px;
     margin-right: 6px;
 }
 
@@ -31,13 +34,13 @@
     object-fit: cover;
 }
 
-.adyen-checkout-ctp__section-header-divider {
-    background-color: black;
-    width: 1px;
-    height: 15px;
-    border-radius: 1px;
-    margin-right: 6px;
-}
+//.adyen-checkout-ctp__section-header-divider {
+//    background-color: black;
+//    width: 1px;
+//    height: 15px;
+//    border-radius: 1px;
+//    margin-right: 6px;
+//}
 
 .adyen-checkout-ctp__separator {
     color: $color-black;
