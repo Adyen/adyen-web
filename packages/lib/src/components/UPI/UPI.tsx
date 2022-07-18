@@ -55,6 +55,7 @@ class UPI extends UIElement {
                             this.componentRef = ref;
                         }}
                         {...this.props}
+                        qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
                         type={UPI_QR}
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
