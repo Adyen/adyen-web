@@ -27,8 +27,8 @@
     "installments.revolving": "Ratenzahlung",
     "sepaDirectDebit.ibanField.invalid": "Ungültige Kontonummer",
     "sepaDirectDebit.nameField.placeholder": "A. Müller",
-    "ownerName": "Name des Kontoinhabers",
-    "ibanNumber": "Kontonummer (IBAN)",
+    "sepa.ownerName": "Name des Kontoinhabers",
+    "sepa.ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Fehler",
     "error.subtitle.redirect": "Weiterleitung fehlgeschlagen",
     "error.subtitle.payment": "Zahlung fehlgeschlagen",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "BLZ",
     "twint.saved": "hinterlegt",
     "orPayWith": "oder bezahlen Sie mit",
-    "invalidFormatExpects": "Ungültiges Format. Erwartetes Format: %{format}"
+    "invalidFormatExpects": "Ungültiges Format. Erwartetes Format: %{format}",
+    "upi.qrCodeWaitingMessage": "Scannen Sie den QR-Code mit Ihrer bevorzugten UPI-App, um die Zahlung abzuschließen.",
+    "upi.vpaWaitingMessage": "Öffnen Sie Ihre UPI-App, um die Zahlung zu bestätigen."
 }

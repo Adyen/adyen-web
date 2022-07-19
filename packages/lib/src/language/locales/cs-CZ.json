@@ -27,8 +27,8 @@
     "installments.revolving": "Opakující se platba",
     "sepaDirectDebit.ibanField.invalid": "Neplatné číslo účtu",
     "sepaDirectDebit.nameField.placeholder": "Jan Novák",
-    "ownerName": "Jméno držitele účtu",
-    "ibanNumber": "Číslo účtu (IBAN)",
+    "sepa.ownerName": "Jméno držitele účtu",
+    "sepa.ibanNumber": "Číslo účtu (IBAN)",
     "error.title": "Chyba",
     "error.subtitle.redirect": "Přesměrování selhalo",
     "error.subtitle.payment": "Platba selhala",
@@ -41,7 +41,7 @@
     "loading": "Načítání…",
     "continue": "Pokračovat",
     "continueTo": "Pokračovat k",
-    "wechatpay.timetopay": "Na zaplacení vám zbývá %@",
+    "wechatpay.timetopay": "Na zaplacení vám zbývá %@",
     "wechatpay.scanqrcode": "Naskenovat QR kód",
     "personalDetails": "Osobní údaje",
     "companyDetails": "Údaje o společnosti",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Směrovací kód banky",
     "twint.saved": "uloženo",
     "orPayWith": "nebo zaplaťte pomocí",
-    "invalidFormatExpects": "Neplatný formát. Očekávaný formát: %{format}"
+    "invalidFormatExpects": "Neplatný formát. Očekávaný formát: %{format}",
+    "upi.qrCodeWaitingMessage": "Platbu dokončete naskenováním QR kódu ve své oblíbené platební UPI aplikaci",
+    "upi.vpaWaitingMessage": "Otevřete platební aplikaci UPI a potvrďte platbu"
 }

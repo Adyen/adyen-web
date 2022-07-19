@@ -27,8 +27,8 @@
     "installments.revolving": "Gjentakende betaling",
     "sepaDirectDebit.ibanField.invalid": "Ugyldig kontonummer",
     "sepaDirectDebit.nameField.placeholder": "O. Nordmann",
-    "ownerName": "Kortholders navn",
-    "ibanNumber": "Kontonummer (IBAN)",
+    "sepa.ownerName": "Kortholders navn",
+    "sepa.ibanNumber": "Kontonummer (IBAN)",
     "error.title": "Feil",
     "error.subtitle.redirect": "Videresending feilet",
     "error.subtitle.payment": "Betaling feilet",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Bankens routingnummer",
     "twint.saved": "lagret",
     "orPayWith": "eller betal med",
-    "invalidFormatExpects": "Ugyldig format. Forventet format: %{format}"
+    "invalidFormatExpects": "Ugyldig format. Forventet format: %{format}",
+    "upi.qrCodeWaitingMessage": "Skann QR-koden ved å bruke din foretrukne UPI-app for å fullføre betalingen",
+    "upi.vpaWaitingMessage": "Åpne UPI-appen for å bekrefte betalingen"
 }

@@ -27,8 +27,8 @@
     "installments.revolving": "Revolving payment",
     "sepaDirectDebit.ibanField.invalid": "Invalid account number",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "Holder Name",
-    "ibanNumber": "Account Number (IBAN)",
+    "sepa.ownerName": "Holder Name",
+    "sepa.ibanNumber": "Account Number (IBAN)",
     "error.title": "Error",
     "error.subtitle.redirect": "Redirect failed",
     "error.subtitle.payment": "Payment failed",
@@ -215,7 +215,6 @@
     "twint.saved": "saved",
     "orPayWith": "or pay with",
     "invalidFormatExpects": "Invalid format. Expected format: %{format}",
-    "ownerName": "Holder Name",
-    "ibanNumber": "Account Number (IBAN)",
-    "bankAccount": "Bank Details"
+    "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
+    "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment"
 }

@@ -27,8 +27,8 @@
     "installments.revolving": "リボ払い",
     "sepaDirectDebit.ibanField.invalid": "口座番号の入力間違い",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "名義",
-    "ibanNumber": "口座番号 (IBAN)",
+    "sepa.ownerName": "名義",
+    "sepa.ibanNumber": "口座番号 (IBAN)",
     "error.title": "エラー",
     "error.subtitle.redirect": "画面の切り替え失敗にしました",
     "error.subtitle.payment": "支払できませんでした",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "銀行支店番号",
     "twint.saved": "を保存しました",
     "orPayWith": "または次の方法で支払う",
-    "invalidFormatExpects": "無効な形式です。期待される形式： %{format}"
+    "invalidFormatExpects": "無効な形式です。期待される形式： %{format}",
+    "upi.qrCodeWaitingMessage": "お好みのUPIアプリを使用してQRコードをスキャンし、支払を完了してください",
+    "upi.vpaWaitingMessage": "UPIアプリを開いて、支払を確認してください"
 }

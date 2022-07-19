@@ -27,8 +27,8 @@
     "installments.revolving": "Revolvingová platba",
     "sepaDirectDebit.ibanField.invalid": "Neplatné číslo účtu",
     "sepaDirectDebit.nameField.placeholder": "J. Novák",
-    "ownerName": "Meno držiteľa",
-    "ibanNumber": "Číslo účtu (IBAN)",
+    "sepa.ownerName": "Meno držiteľa",
+    "sepa.ibanNumber": "Číslo účtu (IBAN)",
     "error.title": "Chyba",
     "error.subtitle.redirect": "Nepodarilo sa presmerovať",
     "error.subtitle.payment": "Platba zlyhala",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Smerovacie číslo banky",
     "twint.saved": "uložené",
     "orPayWith": "alebo zaplatiť pomocou",
-    "invalidFormatExpects": "Neplatný formát. Očakávaný formát: %{format}"
+    "invalidFormatExpects": "Neplatný formát. Očakávaný formát: %{format}",
+    "upi.qrCodeWaitingMessage": "Naskenujte QR kód pomocou preferovanej aplikácie UPI a dokončite platbu",
+    "upi.vpaWaitingMessage": "Otvorte aplikáciu UPI a potvrďte platbu"
 }

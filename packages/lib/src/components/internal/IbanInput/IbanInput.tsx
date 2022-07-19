@@ -161,7 +161,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                 {this.props.holderName && (
                     <Field
                         className={'adyen-checkout__field--owner-name'}
-                        label={i18n.get('ownerName')}
+                        label={i18n.get('sepa.ownerName')}
                         filled={data['ownerName'] && data['ownerName'].length}
                         errorMessage={errors.holder ? i18n.get('creditCard.holderName.invalid') : false}
                         dir={'ltr'}
@@ -172,7 +172,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                             placeholder: 'ownerName' in placeholders ? placeholders.ownerName : i18n.get('sepaDirectDebit.nameField.placeholder'),
                             value: data['ownerName'],
                             'aria-invalid': !!this.state.errors.holder,
-                            'aria-label': i18n.get('ownerName'),
+                            'aria-label': i18n.get('sepa.ownerName'),
                             onInput: e => this.handleHolderInput(e.target.value)
                         })}
                     </Field>
@@ -180,7 +180,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
 
                 <Field
                     className={'adyen-checkout__field--iban-number'}
-                    label={i18n.get('ibanNumber')}
+                    label={i18n.get('sepa.ibanNumber')}
                     errorMessage={errors.iban ? i18n.get(errors.iban) : false}
                     filled={data['ibanNumber'] && data['ibanNumber'].length}
                     isValid={valid.iban}
@@ -198,7 +198,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         value: data['ibanNumber'],
                         onInput: this.handleIbanInput,
                         'aria-invalid': !!this.state.errors.iban,
-                        'aria-label': i18n.get('ibanNumber'),
+                        'aria-label': i18n.get('sepa.ibanNumber'),
                         autocorrect: 'off',
                         spellcheck: false
                     })}

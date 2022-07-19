@@ -25,8 +25,8 @@
     "installments.revolving": "Pago rotativo",
     "sepaDirectDebit.ibanField.invalid": "Número de cuenta no válido",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "Nombre del titular de cuenta",
-    "ibanNumber": "Número de cuenta (IBAN)",
+    "sepa.ownerName": "Nombre del titular de cuenta",
+    "sepa.ibanNumber": "Número de cuenta (IBAN)",
     "error.title": "Error",
     "error.subtitle.redirect": "Redirección fallida",
     "error.subtitle.payment": "Pago fallido",
@@ -207,5 +207,7 @@
     "ach.encryptedBankLocationId.aria.label": "Número de ruta del banco",
     "twint.saved": "guardado",
     "orPayWith": "o pague con",
-    "invalidFormatExpects": "Formato no válido. Formato correcto: %{format}"
+    "invalidFormatExpects": "Formato no válido. Formato correcto: %{format}",
+    "upi.qrCodeWaitingMessage": "Escanee el código QR con la aplicación UPI que prefiera para completar el pago",
+    "upi.vpaWaitingMessage": "Abra la aplicación UPI para confirmar el pago"
 }
