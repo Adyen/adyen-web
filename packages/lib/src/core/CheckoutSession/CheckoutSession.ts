@@ -12,6 +12,7 @@ import {
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
+    SessionConfiguration,
 } from '../../types';
 import cancelOrder from '../Services/sessions/cancel-order';
 import {onOrderCancelData} from "../../components/Dropin/types";
@@ -21,6 +22,7 @@ class Session {
     private readonly storage: Storage;
     public readonly clientKey: string;
     public readonly loadingContext: string;
+    public configuration: SessionConfiguration;
 
     constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
