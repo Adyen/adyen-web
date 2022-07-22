@@ -88,6 +88,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Giropay
     window.giropay = checkout.create('giropay').mount('.giropay-field');
 
+    // UPI
+    window.upi = checkout.create('upi').mount('.upi-field');
+
     // Redirect
     // window.redirect = checkout.create('paypal').mount('.redirect-field');
 });

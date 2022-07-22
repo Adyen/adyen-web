@@ -21,14 +21,14 @@
     "creditCard.taxNumber.placeholder": "年月日／0123456789",
     "installments": "分期付款的期數",
     "installmentOption": "%{times}x %{partialValue}",
-    "installmentOptionMonths": "％{times} 個月",
+    "installmentOptionMonths": "%{times} 個月",
     "installments.oneTime": "一次性付款",
     "installments.installments": "分期付款",
     "installments.revolving": "延期付款",
     "sepaDirectDebit.ibanField.invalid": "帳戶號碼無效",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "持有人名稱",
-    "ibanNumber": "帳戶號碼 (IBAN)",
+    "sepa.ownerName": "持有人名稱",
+    "sepa.ibanNumber": "帳戶號碼 (IBAN)",
     "error.title": "錯誤",
     "error.subtitle.redirect": "無法重新導向",
     "error.subtitle.payment": "付款失敗",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "銀行匯款路徑編號",
     "twint.saved": "儲存的",
     "orPayWith": "或透過以下方式支付：",
-    "invalidFormatExpects": "格式無效。格式必須為：%{format}"
+    "invalidFormatExpects": "格式無效。格式必須為：%{format}",
+    "upi.qrCodeWaitingMessage": "使用您偏好的 UPI 應用程式掃描 QR 代碼以完成付款",
+    "upi.vpaWaitingMessage": "開啟您的 UPI 應用程式以確認付款"
 }

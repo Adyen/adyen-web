@@ -27,8 +27,8 @@
     "installments.revolving": "Obnovljivo plaćanje",
     "sepaDirectDebit.ibanField.invalid": "Nevažeći broj računa",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "Ime vlasnika",
-    "ibanNumber": "Broj računa (IBAN)",
+    "sepa.ownerName": "Ime vlasnika",
+    "sepa.ibanNumber": "Broj računa (IBAN)",
     "error.title": "Greška",
     "error.subtitle.redirect": "Preusmjeravanje nije uspjelo",
     "error.subtitle.payment": "Plaćanje nije uspjelo",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Identifikacijski broj banke",
     "twint.saved": "spremljeno",
     "orPayWith": "ili platite s",
-    "invalidFormatExpects": "Nevažeći format. Očekivani format: %{format}"
+    "invalidFormatExpects": "Nevažeći format. Očekivani format: %{format}",
+    "upi.qrCodeWaitingMessage": "Skenirajte QR kôd pomoću željene UPI aplikacije kako biste dovršili plaćanje",
+    "upi.vpaWaitingMessage": "Otvorite svoju UPI aplikaciju kako biste potvrdili plaćanje"
 }

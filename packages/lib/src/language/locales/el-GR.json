@@ -27,8 +27,8 @@
     "installments.revolving": "Ανακυκλούμενη πληρωμή",
     "sepaDirectDebit.ibanField.invalid": "Μη έγκυρος αριθμός λογαριασμού",
     "sepaDirectDebit.nameField.placeholder": "Γ. Παπαδάκης",
-    "ownerName": "Όνομα κατόχου",
-    "ibanNumber": "Αριθμός λογαριασμού (IBAN)",
+    "sepa.ownerName": "Όνομα κατόχου",
+    "sepa.ibanNumber": "Αριθμός λογαριασμού (IBAN)",
     "error.title": "Σφάλμα",
     "error.subtitle.redirect": "Η ανακατεύθυνση απέτυχε",
     "error.subtitle.payment": "Η πληρωμή απέτυχε",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Αριθμός δρομολόγησης τράπεζας",
     "twint.saved": "αποθηκεύτηκε",
     "orPayWith": "ή πληρώστε με",
-    "invalidFormatExpects": "Μη έγκυρη μορφή. Αναμενόμενη μορφή: %{format}"
+    "invalidFormatExpects": "Μη έγκυρη μορφή. Αναμενόμενη μορφή: %{format}",
+    "upi.qrCodeWaitingMessage": "Σαρώστε τον κωδικό QR χρησιμοποιώντας την προτιμώμενη εφαρμογή UPI για ολοκλήρωση της πληρωμής",
+    "upi.vpaWaitingMessage": "Ανοίξτε την εφαρμογή UPI για επιβεβαίωση της πληρωμής"
 }

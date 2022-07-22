@@ -9,6 +9,7 @@ export function resolveEnvironment(env = 'TEST'): google.payments.api.Environmen
         case 'live-au':
         case 'live-apse':
         case 'live-us':
+        case 'live-in':
             return 'PRODUCTION';
         default:
             return 'TEST';

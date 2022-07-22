@@ -62,7 +62,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                  */
                 amazonCheckoutSessionId,
                 cancelUrl: 'http://localhost:3020/wallets',
-                returnUrl: 'http://localhost:3020/wallets?step=result',
+                returnUrl: 'http://localhost:3020/wallets?step=result'
             })
             .mount('.amazonpay-field');
     }

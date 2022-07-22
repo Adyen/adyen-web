@@ -27,8 +27,8 @@
     "installments.revolving": "Płatność odnawialna",
     "sepaDirectDebit.ibanField.invalid": "Nieprawidłowy numer rachunku",
     "sepaDirectDebit.nameField.placeholder": "J. Kowalski",
-    "ownerName": "Imię i nazwisko posiadacza karty",
-    "ibanNumber": "Numer rachunku (IBAN)",
+    "sepa.ownerName": "Imię i nazwisko posiadacza karty",
+    "sepa.ibanNumber": "Numer rachunku (IBAN)",
     "error.title": "Błąd",
     "error.subtitle.redirect": "Przekierowanie nie powiodło się",
     "error.subtitle.payment": "Płatność nie powiodła się",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Numer rozliczeniowy banku",
     "twint.saved": "zapisano",
     "orPayWith": "lub zapłać",
-    "invalidFormatExpects": "Niepoprawny format. Oczekiwany format: %{format}"
+    "invalidFormatExpects": "Niepoprawny format. Oczekiwany format: %{format}",
+    "upi.qrCodeWaitingMessage": "Zeskanuj kod QR za pomocą preferowanej aplikacji UPI, aby dokończyć płatność",
+    "upi.vpaWaitingMessage": "Otwórz aplikację UPI, aby potwierdzić płatność"
 }

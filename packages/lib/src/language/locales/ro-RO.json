@@ -27,8 +27,8 @@
     "installments.revolving": "Plată recurentă",
     "sepaDirectDebit.ibanField.invalid": "Numărul de cont este incorect",
     "sepaDirectDebit.nameField.placeholder": "J. Smith",
-    "ownerName": "Nume posesor",
-    "ibanNumber": "Număr cont (IBAN)",
+    "sepa.ownerName": "Nume posesor",
+    "sepa.ibanNumber": "Număr cont (IBAN)",
     "error.title": "Eroare",
     "error.subtitle.redirect": "Redirecționare eșuată",
     "error.subtitle.payment": "Plată eșuată",
@@ -212,5 +212,7 @@
     "ach.encryptedBankLocationId.aria.label": "Codul SWIFT al băncii",
     "twint.saved": "salvat",
     "orPayWith": "sau plătiți cu",
-    "invalidFormatExpects": "Format nevalid. Format solicitat: %{format}"
+    "invalidFormatExpects": "Format nevalid. Format solicitat: %{format}",
+    "upi.qrCodeWaitingMessage": "Scanați codul QR folosind aplicația UPI preferată pentru a finaliza plata",
+    "upi.vpaWaitingMessage": "Deschideți aplicația UPI pentru a confirma plata"
 }

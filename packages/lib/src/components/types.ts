@@ -1,10 +1,12 @@
+import { h } from 'preact';
 import { Order, PaymentAction, PaymentAmount } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
 import Core from '../core';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
-import Session from "../core/CheckoutSession";
+import { PayButtonProps } from './internal/PayButton/PayButton';
+import Session from '../core/CheckoutSession';
 
 export interface PaymentResponse {
     action?: PaymentAction;
@@ -42,6 +44,8 @@ export interface IUIElement {
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
+export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
+
 export interface UIElementProps extends BaseElementProps {
     session?: Session;
     onChange?: (state: any, element: UIElement) => void;
@@ -74,7 +78,7 @@ export interface UIElementProps extends BaseElementProps {
     setStatusAutomatically?: boolean;
 
     /** @internal */
-    payButton?: (options) => any;
+    payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
 
     /** @internal */
     loadingContext?: string;
