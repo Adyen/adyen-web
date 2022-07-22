@@ -3,7 +3,7 @@ import IssuerListContainer from '../helpers/IssuerListContainer';
 const TERMS_AND_CONDITIONS = 'https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf';
 
 class OnlineBankingCZElement extends IssuerListContainer {
-    public static type = 'onlinebanking_SK';
+    public static type = 'onlinebanking_CK';
 
     formatProps(props) {
         return {
