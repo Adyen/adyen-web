@@ -135,7 +135,7 @@ export const loadTranslations = async (locale: string, customTranslations: objec
  * @param translation - Translation string
  * @param renderFunctions - An array function that renders JSX elements
  */
-export const interpolateElement = (translation: string, renderFunctions: Array<(string) => h.JSX.Element>) => {
+export const interpolateElement = (translation: string, renderFunctions: Array<(translation: string) => h.JSX.Element>) => {
     // splits by regex group, it guarantees that it only splits with 2 tokens (%#)
     const matches = translation.split(/%#(.*?)%#/gm);
     // the map will create an array of JSX / string elements, this syntax in accepted in JSX/react to render elements
