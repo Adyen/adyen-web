@@ -78,6 +78,7 @@
     "field.title.optional": "(optional)",
     "creditCard.cvcField.title.optional": "CVC / CVV (optional)",
     "issuerList.wallet.placeholder": "Select your wallet",
+    "onlineBanking.termsAndConditions": "By clicking continue you agree with the %#terms and conditions%#",
     "privacyPolicy": "Privacy policy",
     "afterPay.agreement": "I agree with the %@ of AfterPay",
     "paymentConditions": "payment conditions",

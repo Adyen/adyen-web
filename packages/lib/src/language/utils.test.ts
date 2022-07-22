@@ -1,6 +1,6 @@
-import { formatCustomTranslations, formatLocale, getTranslation, loadTranslations, matchLocale, parseLocale } from './utils';
+import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement, loadTranslations, matchLocale, parseLocale } from './utils';
 import locales from './locales';
-
+import {createElement, h} from 'preact';
 const defaultSupportedLocales = Object.keys(locales);
 
 describe('parseLocale()', () => {
@@ -233,5 +233,16 @@ describe('loadTranslations()', () => {
         }).then(translations => {
             expect(translations['creditCard.numberField.title']).toBe('ca-CA');
         });
+    });
+});
+
+describe('interpolateElement()', () => {
+    test('it should interpolate the element properly', () => {
+        const renderLink = translation => createElement('a', { href: 'example.com' }, [translation]);
+        const result = interpolateElement('By clicking continue %#you%# agree with the %#term and conditions%#', [renderLink, renderLink]);
+        expect(typeof result[0] === 'string');
+        expect(result[1] === 'a');
+        expect(typeof result[2] === 'string');
+        expect(result[3] === 'a');
     });
 });
