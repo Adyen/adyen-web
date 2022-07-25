@@ -58,7 +58,7 @@ import '../../style.scss';
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
-        showPayButton: true,
+        showPayButton: false,
 
         // Events
         beforeSubmit: (data, component, actions) => {
@@ -78,10 +78,17 @@ import '../../style.scss';
             brand: 'svs',
             onOrderCreated: (data) => {
                 afterGiftCard(data);
+            },
+            onSuccessBalance: (data) => {
+                console.log(data);
             }
         })
         .mount('#giftcard-session-container');
 
+    document.querySelector('#checkout-button').addEventListener('click', (e) => {
+        console.log(e);
+        window.giftcard.submit();
+    })
 
     const afterGiftCard = (order) => {
         sessionCheckout.create('card').mount('#payment-method-container');

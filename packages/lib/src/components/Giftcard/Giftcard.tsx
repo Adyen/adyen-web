@@ -81,6 +81,18 @@ export class GiftcardElement extends UIElement {
         }
     };
 
+    public submit(): void {
+        if (!this.isValid) {
+            this.showValidation();
+            return;
+        }
+
+        const transactionAmount = this.componentRef.transactionAmount();
+        const hasEnoughBalance = this.componentRef.hasEnoughBalance(transactionAmount);
+
+        hasEnoughBalance ? super.submit() : this.onBalanceCheck();
+    }
+
     public onBalanceCheck = () => {
         // skip balance check if no onBalanceCheck event has been defined
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
@@ -99,9 +111,14 @@ export class GiftcardElement extends UIElement {
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
 
+                if(this.props.onSuccessBalance) {
+                    this.props.onSuccessBalance({balance, transactionLimit})
+                }
+
                 this.componentRef.setBalance({ balance, transactionLimit });
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
+                    console.log('making order')
                     if (this.props.order) {
                         return this.submit();
                     }

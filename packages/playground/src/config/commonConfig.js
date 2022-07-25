@@ -2,10 +2,11 @@ import getCurrency from './getCurrency';
 import { getSearchParameters } from '../utils';
 
 const DEFAULT_LOCALE = 'en-US';
-const DEFAULT_COUNTRY = 'US';
+const DEFAULT_COUNTRY = 'CZ';
+const DEFAULT_MERCHANT_ACCOUNT = 'TestMerchantCheckout';
 
 const urlParams = getSearchParameters(window.location.search);
-const merchantAccount = urlParams.merchantAccount;
+const merchantAccount = urlParams.merchantAccount || DEFAULT_MERCHANT_ACCOUNT;
 export const shopperLocale = urlParams.shopperLocale || DEFAULT_LOCALE;
 export const countryCode = urlParams.countryCode || DEFAULT_COUNTRY;
 export const currency = getCurrency(countryCode);

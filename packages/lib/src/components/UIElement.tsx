@@ -188,10 +188,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         const response = getSanitizedResponse(rawResponse);
 
         if (response.action) {
+            console.log('handleAction');
             this.elementRef.handleAction(response.action);
         } else if (response.order?.remainingAmount?.value > 0) {
+            console.log('handleOrder');
             this.elementRef.handleOrder(response.order);
         } else {
+            console.log('handleFinalResult');
             this.elementRef.handleFinalResult(response);
         }
     }

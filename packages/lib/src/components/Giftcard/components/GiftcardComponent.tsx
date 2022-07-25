@@ -1,4 +1,4 @@
-import {Component, FunctionComponent, h} from 'preact';
+import { Component, FunctionComponent, h } from 'preact';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
@@ -6,7 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
-import {GiftcardFieldsProps} from "./types";
+import { GiftcardFieldsProps } from './types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -75,11 +75,20 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.setState({ balance, transactionLimit });
     };
 
+    public transactionAmount() {
+        const { transactionLimit, balance } = this.state;
+        return transactionLimit?.value < balance?.value ? transactionLimit : balance;
+    }
+
+    public hasEnoughBalance(transactionAmount) {
+        return transactionAmount?.value >= this.props.amount?.value;
+    }
+
     render(props, { focusedElement, balance, transactionLimit }) {
         const { i18n } = useCoreContext();
 
-        const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
-        const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
+        const transactionAmount = this.transactionAmount();
+        const hasEnoughBalance = this.hasEnoughBalance(transactionAmount);
 
         if (transactionAmount && hasEnoughBalance) {
             return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
