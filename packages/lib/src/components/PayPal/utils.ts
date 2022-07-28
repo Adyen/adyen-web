@@ -56,7 +56,7 @@ const getPaypalSettings = ({
         vault,
         'client-id': clientId,
         'integration-date': INTEGRATION_DATE,
-        'enable-funding': 'paylater',
+        'enable-funding': 'paylater,venmo',
         components: 'buttons,funding-eligibility'
     };
 };

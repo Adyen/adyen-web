@@ -9,6 +9,7 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
     const paypalButtonRef = useRef<HTMLDivElement>(null);
     const creditButtonRef = useRef<HTMLDivElement>(null);
     const payLaterButtonRef = useRef<HTMLDivElement>(null);
+    const venmoButtonRef = useRef<HTMLDivElement>(null);
 
     const createButton = (fundingSource: FundingSource, buttonRef) => {
         const button = paypalRef.Buttons({
@@ -32,10 +33,12 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
     };
 
     useEffect(() => {
-        const { PAYPAL, CREDIT, PAYLATER } = paypalRef.FUNDING;
+        const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;
         createButton(PAYPAL, paypalButtonRef);
+
         if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);
         if (!props.blockPayPalPayLaterButton) createButton(PAYLATER, payLaterButtonRef);
+        if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
     }, []);
 
     return (
@@ -43,6 +46,7 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--paypal" ref={paypalButtonRef} />
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--credit" ref={creditButtonRef} />
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--pay-later" ref={payLaterButtonRef} />
+            <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--venmo" ref={venmoButtonRef} />
         </div>
     );
 }

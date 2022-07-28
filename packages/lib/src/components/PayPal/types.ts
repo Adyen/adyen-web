@@ -81,6 +81,12 @@ interface PayPalCommonProps {
     blockPayPalPayLaterButton?: boolean;
 
     /**
+     * Set to true to force the UI to not render PayPal Venmo button
+     * @defaultValue false
+     */
+    blockPayPalVenmoButton?: boolean;
+
+    /**
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
      */
     cspNonce?: string;
