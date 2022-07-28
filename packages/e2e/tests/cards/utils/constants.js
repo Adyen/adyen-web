@@ -28,3 +28,7 @@ export const TEST_CVC_VALUE = '737';
 export const TEST_PWD_VALUE = '12';
 export const TEST_TAX_NUMBER_VALUE = '123456';
 export const TEST_CPF_VALUE = '22936094488';
+
+export const JWE_VERSION = '1';
+export const JWE_CONTENT_ALG = 'A256CBC-HS512';
+export const JWE_ALG = 'RSA-OAEP';

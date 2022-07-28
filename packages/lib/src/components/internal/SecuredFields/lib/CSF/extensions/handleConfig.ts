@@ -71,7 +71,12 @@ export function handleConfig(): void {
 
     // Add a hash of the origin to ensure urls are different across domains
     const d = btoa(window.location.origin);
-    this.config.iframeSrc = `${this.config.loadingContext}securedfields/${this.props.clientKey}/${SF_VERSION}/securedFields.html?type=${sfBundleType}&d=${d}`;
+
+    /** Detect Edge vn \<= 18 & IE11 - who don't support TextEncoder; and use this as an indicator to load a different, compatible, version of SF */
+    const needsJWECompatVersion = !(typeof window.TextEncoder === 'function');
+    const bundleType = `${sfBundleType}${needsJWECompatVersion ? 'Compat' : ''}`; // e.g. 'card' or 'cardCompat'
+
+    this.config.iframeSrc = `${this.config.loadingContext}securedfields/${this.props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`;
 
     // TODO###### FOR QUICK LOCAL TESTING of sf
     if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {

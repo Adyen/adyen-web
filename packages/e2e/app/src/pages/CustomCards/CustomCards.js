@@ -7,6 +7,7 @@ import './customcards.style.scss';
 import { setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
 
 const initCheckout = async () => {
+    // window.TextEncoder = null; // Comment in to force use of "compat" version
     window.checkout = await AdyenCheckout({
         amount,
         clientKey: process.env.__CLIENT_KEY__,

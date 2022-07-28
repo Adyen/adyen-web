@@ -5,6 +5,7 @@ import { amount, shopperLocale, countryCode } from '../../services/commonConfig'
 import '../../style.scss';
 
 const initCheckout = async () => {
+    // window.TextEncoder = null; // Comment in to force use of "compat" version
     window.checkout = await AdyenCheckout({
         amount,
         clientKey: process.env.__CLIENT_KEY__,

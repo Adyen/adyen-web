@@ -22,4 +22,8 @@ export default class BasePage {
     setForceClick = ClientFunction(val => {
         window.testCafeForceClick = val;
     });
+
+    decodeBase64 = ClientFunction(val => {
+        return window.atob(val);
+    });
 }
