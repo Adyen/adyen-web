@@ -8,7 +8,7 @@ export interface IClickToPayService {
     shopperCards: ShopperCard[];
     shopperValidationContact: string;
     initialize(): Promise<void>;
-    checkout(card: ShopperCard): Promise<CheckoutPayload>;
+    checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;
     verifyIfShopperIsEnrolled(value: string, type?: string): Promise<{ isEnrolled: boolean }>;
     subscribeOnStateChange(callback: CallbackStateSubscriber): void;
@@ -24,19 +24,19 @@ export interface IdentityLookupParams {
 }
 
 type MastercardCheckout = {
-    digitalCardId: string;
-    correlationId: string;
-    scheme: string;
+    srcDigitalCardId: string;
+    srcCorrelationId: string;
+    srcScheme: string;
 };
 
 type VisaCheckout = {
-    tokenId?: string;
-    checkoutPayload?: string;
-    scheme: string;
+    srcCheckoutPayload?: string;
+    srcTokenReference?: string;
+    srcScheme: string;
 };
 
 export interface SrcProfileWithScheme extends SrcProfile {
     scheme: ClickToPayScheme;
 }
 
-export type CheckoutPayload = VisaCheckout | MastercardCheckout;
+export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;

@@ -1,21 +1,38 @@
 import { h } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
-import { useCallback, useEffect, useState } from 'preact/hooks';
-import { IClickToPayService } from '../services/types';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { ClickToPayCheckoutPayload, IClickToPayService } from '../services/types';
 import { PaymentAmount } from '../../../../../types';
 import ShopperCard from '../models/ShopperCard';
+import { UIElementStatus } from '../../../../types';
+import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
+
+type ClickToPayProviderRef = {
+    setStatus?(status: UIElementStatus): void;
+};
 
 type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
     amount: PaymentAmount;
     children: any;
+    setClickToPayRef(ref): void;
+    onSubmit(payload: ClickToPayCheckoutPayload): void;
+    onSetStatus(status: UIElementStatus): void;
+    onError(error: AdyenCheckoutError): void;
 };
 
-const ClickToPayProvider = ({ clickToPayService, amount, children }: ClickToPayProviderProps) => {
+const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPayRef, onSubmit, onSetStatus, onError }: ClickToPayProviderProps) => {
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(null);
+    const [status, setStatus] = useState<UIElementStatus>('ready');
+    const clickToPayRef = useRef<ClickToPayProviderRef>({});
+
+    useEffect(() => {
+        setClickToPayRef(clickToPayRef.current);
+        clickToPayRef.current.setStatus = setStatus;
+    }, []);
 
     useEffect(() => {
         ctpService?.subscribeOnStateChange(status => setCtpState(status));
@@ -54,6 +71,10 @@ const ClickToPayProvider = ({ clickToPayService, amount, children }: ClickToPayP
     return (
         <ClickToPayContext.Provider
             value={{
+                status,
+                onSubmit,
+                onError,
+                onSetStatus,
                 amount,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,

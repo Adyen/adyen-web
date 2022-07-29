@@ -1,16 +1,19 @@
-import { CheckoutPayload, SrcProfileWithScheme } from './types';
+import { ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 
-function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): CheckoutPayload {
+function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): ClickToPayCheckoutPayload {
     const { scheme, tokenId, srcDigitalCardId, srcCorrelationId } = card;
 
     switch (scheme) {
         case 'visa':
-            return tokenId ? { scheme, tokenId } : { scheme, checkoutPayload: checkoutResponse.encryptedPayload };
+            // For testing, using hardcoded value for tokenId: 987654321
+            return tokenId
+                ? { srcScheme: scheme, srcTokenReference: '987654321' } //  TODO: srcTokenReference: tokenId
+                : { srcScheme: scheme, srcCheckoutPayload: checkoutResponse.encryptedPayload };
         case 'mc':
         default:
-            return { scheme, digitalCardId: srcDigitalCardId, correlationId: srcCorrelationId };
+            return { srcScheme: scheme, srcDigitalCardId, srcCorrelationId };
     }
 }
 

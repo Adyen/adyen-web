@@ -13,7 +13,7 @@ class VisaSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'visa';
 
     constructor(environment: string) {
-        super(environment.toLowerCase() === 'test' ? VISA_SDK_TEST : VISA_SDK_PROD);
+        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {

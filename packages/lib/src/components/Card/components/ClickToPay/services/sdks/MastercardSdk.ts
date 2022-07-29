@@ -13,7 +13,7 @@ class MastercardSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'mc';
 
     constructor(environment: string) {
-        super(environment.toLowerCase() === 'test' ? MC_SDK_TEST : MC_SDK_PROD);
+        super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {

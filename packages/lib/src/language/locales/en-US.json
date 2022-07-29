@@ -239,6 +239,7 @@
     "ctp.useAnotherCard": "Use a different card",
     "ctp.manualCardEntry": "Manual card entry",
 
+    "ctp.errors.AUTH_INVALID": "Authentication Invalid ",
     "ctp.errors.NOT_FOUND": "User not found",
     "ctp.errors.ID_FORMAT_UNSUPPORTED": "Format not supported",
     "ctp.errors.FRAUD": "The user account was locked or disabled",

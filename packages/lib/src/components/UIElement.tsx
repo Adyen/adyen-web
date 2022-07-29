@@ -23,6 +23,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
+        this.setElementStatus = this.setElementStatus.bind(this);
+
         this.elementRef = (props && props.elementRef) || this;
     }
 
@@ -46,7 +48,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         if (this.props.setStatusAutomatically) {
-            this.elementRef.setStatus('loading');
+            this.setElementStatus('loading');
         }
 
         if (this.props.onSubmit) {
@@ -91,6 +93,11 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return this;
     }
 
+    public setElementStatus(status: UIElementStatus, props?: any): this {
+        this.elementRef?.setStatus(status, props);
+        return this;
+    }
+
     public setStatus(status: UIElementStatus, props?): this {
         if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
@@ -118,7 +125,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
          * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
          * - If Component, it will set its own status
          */
-        this.elementRef.setStatus('ready');
+        this.setElementStatus('ready');
 
         if (this.props.onError) {
             this.props.onError(error, this.elementRef);
@@ -166,7 +173,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     protected handleFinalResult = result => {
         if (this.props.setStatusAutomatically) {
             const [status, statusProps] = resolveFinalResult(result);
-            if (status) this.elementRef.setStatus(status, statusProps);
+            if (status) this.setElementStatus(status, statusProps);
         }
 
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);
