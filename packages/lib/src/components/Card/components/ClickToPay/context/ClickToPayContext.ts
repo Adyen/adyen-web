@@ -13,6 +13,7 @@ export interface ClickToPayContextInterface
     logoutShopper(): void;
     ctpState: CtpState;
     cards: ShopperCard[];
+    schemes: string[];
     otpMaskedContact: string;
     amount: PaymentAmount;
     status: UIElementStatus;
@@ -32,6 +33,7 @@ const ClickToPayContext = createContext<ClickToPayContextInterface>({
     logoutShopper: null,
     ctpState: null,
     cards: [],
+    schemes: [],
     otpMaskedContact: null,
     checkout: null,
     verifyIfShopperIsEnrolled: null,
