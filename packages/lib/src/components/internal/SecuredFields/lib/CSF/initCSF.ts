@@ -13,7 +13,10 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
 
     const setupObj: CSFSetupObject = { ...pSetupObj };
 
-    // Ensure there is always a default type & map the generic types (e.g. 'card', 'scheme') to 'card'
+    // Ensure there is always a default type
+    setupObj.type = setupObj.type || 'card';
+
+    // Map the generic types (i.e. 'card', 'scheme') to 'card'
     const isGenericCardType: boolean = cardType.isGenericCardType(setupObj.type);
     setupObj.type = isGenericCardType ? 'card' : setupObj.type;
 

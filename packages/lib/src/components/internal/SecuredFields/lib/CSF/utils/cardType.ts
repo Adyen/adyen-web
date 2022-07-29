@@ -285,7 +285,7 @@ const getCardByBrand = pBrand => {
     return cardType[0];
 };
 
-const isGenericCardType = (type = 'card') => type === 'card' || type === 'scheme';
+const isGenericCardType = type => type === 'card' || type === 'scheme';
 
 export default {
     detectCard,
