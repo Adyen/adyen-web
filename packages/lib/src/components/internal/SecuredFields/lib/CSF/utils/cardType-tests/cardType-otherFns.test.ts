@@ -37,7 +37,7 @@ describe('Tests for cardType.getShortestPermittedCardLength & getCardByBrand fun
         expect(() => {
             /* @ts-ignore */
             CardType.isGenericCardType();
-        }).toThrow('Error: isGenericCardType type param has not been specified');
+        }).toThrow('Error: isGenericCardType: type param has not been specified');
     });
 
     test('Should not recognise "visa" as being of "generic" type', () => {
