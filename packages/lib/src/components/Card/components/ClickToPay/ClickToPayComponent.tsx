@@ -3,24 +3,19 @@ import { useEffect } from 'preact/hooks';
 import useClickToPayContext from './context/useClickToPayContext';
 import { CtpState } from './services/ClickToPayService';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
-import CtPCardsList from './components/CtPCardsList/CtPCardsList';
+import CtPCards from './components/CtPCards';
 import CtPSection from './components/CtPSection';
 import CtPLoader from './components/CtPLoader';
-import CtPLogin from './components/CtPLogin/CtPLogin';
-import { CheckoutPayload } from './services/types';
+import CtPLogin from './components/CtPLogin';
 
-type ClickToPayComponentProps = {
-    onSubmit?(payload: CheckoutPayload): void;
-};
-
-const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps): h.JSX.Element => {
+const ClickToPayComponent = (): h.JSX.Element => {
     const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
 
     useEffect(() => {
         async function sendOneTimePassword() {
             try {
                 await startIdentityValidation();
-            } catch (error){
+            } catch (error) {
                 console.warn(error);
                 logoutShopper();
             }
@@ -39,7 +34,7 @@ const ClickToPayComponent = ({ onSubmit }: ClickToPayComponentProps): h.JSX.Elem
             <CtPSection>
                 {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
                 {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-                {ctpState === CtpState.Ready && <CtPCardsList onSubmit={onSubmit} />}
+                {ctpState === CtpState.Ready && <CtPCards />}
                 {ctpState === CtpState.Login && <CtPLogin />}
             </CtPSection>
         </Fragment>

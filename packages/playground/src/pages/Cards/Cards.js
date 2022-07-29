@@ -158,6 +158,19 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                                     dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
                                 },
                                 consumerNameRequested: true
+                                // customInputData: {
+                                //     'com.mastercard.dcfExperience': 'PAYMENT_SETTINGS'
+                                // },
+                                // confirmPayment: false
+                            }
+                        },
+                        visa: {
+                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
+                            srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
+                            srciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                            dpaTransactionOptions: {
+                                dpaLocale: 'en_US',
+                                payloadTypeIndicator: 'NON_PAYMENT'
                             }
                         }
                     },

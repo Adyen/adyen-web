@@ -11,13 +11,19 @@ import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
 import { createClickToPayService } from './components/ClickToPay/utils';
-import { CheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
+import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
 import ClickToPayWrapper from './ClickToPayWrapper';
+import { UIElementStatus } from '../types';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     private readonly clickToPayService: IClickToPayService | null;
+
+    /**
+     * Reference to the 'ClickToPayComponent'
+     */
+    private clickToPayRef = null;
 
     constructor(props) {
         super(props);
@@ -32,8 +38,22 @@ export class CardElement extends UIElement<CardElementProps> {
         SRConfig: {}
     };
 
+    public setStatus(status: UIElementStatus, props?): this {
+        if (this.componentRef?.setStatus) {
+            this.componentRef.setStatus(status, props);
+        }
+        if (this.clickToPayRef?.setStatus) {
+            this.clickToPayRef.setStatus(status, props);
+        }
+        return this;
+    }
+
     public setComponentRef = ref => {
         this.componentRef = ref;
+    };
+
+    private setClickToPayRef = ref => {
+        this.clickToPayRef = ref;
     };
 
     formatProps(props: CardElementProps) {
@@ -121,10 +141,10 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
-    handleClickToPaySubmit(payload: CheckoutPayload) {
-        // TODO
-        console.log(payload);
-    }
+    private handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
+        this.setState({ data: { ...payload }, valid: {}, errors: {}, isValid: true });
+        this.submit();
+    };
 
     onBinLookup(obj: CbObjOnBinLookup) {
         // Handler for regular card comp doesn't need this 'raw' data or to know about 'resets'
@@ -207,10 +227,15 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <ClickToPayProvider clickToPayService={this.clickToPayService}>
-                    <ClickToPayWrapper onSubmit={this.handleClickToPaySubmit}>
-                        {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
-                    </ClickToPayWrapper>
+                <ClickToPayProvider
+                    amount={this.props.amount}
+                    clickToPayService={this.clickToPayService}
+                    setClickToPayRef={this.setClickToPayRef}
+                    onSetStatus={this.setElementStatus}
+                    onSubmit={this.handleClickToPaySubmit}
+                    onError={this.handleError}
+                >
+                    <ClickToPayWrapper>{isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}</ClickToPayWrapper>
                 </ClickToPayProvider>
             </CoreProvider>
         );

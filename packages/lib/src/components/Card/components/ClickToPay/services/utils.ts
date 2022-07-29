@@ -1,15 +1,19 @@
-import { CheckoutPayload, ShopperCard, SrcProfileWithScheme } from './types';
+import { ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
+import ShopperCard from '../models/ShopperCard';
 
-function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): CheckoutPayload {
+function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): ClickToPayCheckoutPayload {
     const { scheme, tokenId, srcDigitalCardId, srcCorrelationId } = card;
 
     switch (scheme) {
         case 'visa':
-            return tokenId ? { scheme, tokenId } : { scheme, checkoutPayload: checkoutResponse.encryptedPayload };
+            // For testing, using hardcoded value for tokenId: 987654321
+            return tokenId
+                ? { srcScheme: scheme, srcTokenReference: '987654321' } //  TODO: srcTokenReference: tokenId
+                : { srcScheme: scheme, srcCheckoutPayload: checkoutResponse.encryptedPayload };
         case 'mc':
         default:
-            return { scheme, digitalCardId: srcDigitalCardId, correlationId: srcCorrelationId };
+            return { srcScheme: scheme, srcDigitalCardId, srcCorrelationId };
     }
 }
 
@@ -17,15 +21,7 @@ function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfil
     const { profiles, srcCorrelationId } = srcProfile;
 
     const cards: ShopperCard[] = profiles.reduce((memo: ShopperCard[], profile) => {
-        const profileCards: ShopperCard[] = profile.maskedCards.map(maskedCard => ({
-            dateOfCardLastUsed: maskedCard.dateOfCardLastUsed,
-            panLastFour: maskedCard.panLastFour,
-            srcDigitalCardId: maskedCard.srcDigitalCardId,
-            cardTitle: maskedCard.digitalCardData.descriptorName,
-            tokenId: maskedCard.tokenId,
-            scheme: srcProfile.scheme,
-            srcCorrelationId
-        }));
+        const profileCards: ShopperCard[] = profile.maskedCards.map(maskedCard => new ShopperCard(maskedCard, srcProfile.scheme, srcCorrelationId));
         return [...memo, ...profileCards];
     }, []);
 

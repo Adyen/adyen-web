@@ -1,9 +1,11 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, IClickToPayService, ShopperCard, IdentityLookupParams, CheckoutPayload, SrcProfileWithScheme } from './types';
+import { CallbackStateSubscriber, IClickToPayService, IdentityLookupParams, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
 import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
+import ShopperCard from '../models/ShopperCard';
+import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -106,7 +108,7 @@ class ClickToPayService implements IClickToPayService {
     /**
      * This method performs checkout using the selected card
      */
-    public async checkout(card: ShopperCard): Promise<CheckoutPayload> {
+    public async checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload> {
         if (!card) {
             throw Error('ClickToPayService # checkout: Missing card data');
         }
@@ -119,7 +121,12 @@ class ClickToPayService implements IClickToPayService {
         const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === card.scheme);
         const checkoutResponse = await checkoutSdk.checkout(checkoutParameters);
 
-        console.log(checkoutResponse);
+        if (checkoutResponse.dcfActionCode !== 'COMPLETE') {
+            throw new AdyenCheckoutError(
+                'ERROR',
+                `Checkout through Scheme DCF did not complete. DCF Action code received: ${checkoutResponse.dcfActionCode}`
+            );
+        }
 
         return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
     }
@@ -159,7 +166,7 @@ class ClickToPayService implements IClickToPayService {
                             resolve({ isEnrolled: true });
                         }
                     })
-                    .catch(error =>  reject(error));
+                    .catch(error => reject(error));
 
                 return identityLookupPromise;
             });
@@ -202,13 +209,11 @@ class ClickToPayService implements IClickToPayService {
         return new Promise((resolve, reject) => {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = sdk.isRecognized();
-                isRecognizedPromise.then(response => response.recognized && resolve(response));
+                isRecognizedPromise.then(response => response.recognized && resolve(response)).catch(error => reject(error));
                 return isRecognizedPromise;
             });
 
-            Promise.all(promises)
-                .then(() => resolve({ recognized: false }))
-                .catch(error => reject(error));
+            Promise.allSettled(promises).then(() => resolve({ recognized: false }));
         });
     }
 

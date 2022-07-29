@@ -29,13 +29,14 @@ export type SrcProfile = {
     srcCorrelationId: string;
 };
 
-type SrcCard = {
+export type SrcCard = {
     srcDigitalCardId: string;
     panLastFour: string;
     dateOfCardLastUsed: string;
     paymentCardDescriptor: string;
     digitalCardData: {
         descriptorName: string;
+        artUri: string;
     };
     tokenId?: string;
 };
