@@ -33,9 +33,11 @@ describe('Tests for cardType.getShortestPermittedCardLength & getCardByBrand fun
         expect(isGenericCardType).toBe(true);
     });
 
-    test('Should recognise undefined as being of "generic" type (since it is force to the default, "card")', () => {
-        const isGenericCardType = CardType.isGenericCardType();
-        expect(isGenericCardType).toBe(true);
+    test('Should throw error since a type argument has not been passed', () => {
+        expect(() => {
+            /* @ts-ignore */
+            CardType.isGenericCardType();
+        }).toThrow('Error: isGenericCardType type param has not been specified');
     });
 
     test('Should not recognise "visa" as being of "generic" type', () => {

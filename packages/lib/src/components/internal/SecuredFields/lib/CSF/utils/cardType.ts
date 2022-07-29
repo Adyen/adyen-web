@@ -285,7 +285,10 @@ const getCardByBrand = pBrand => {
     return cardType[0];
 };
 
-const isGenericCardType = type => type === 'card' || type === 'scheme';
+const isGenericCardType = type => {
+    if (!type) throw new Error('Error: isGenericCardType: type param has not been specified');
+    return type === 'card' || type === 'scheme';
+};
 
 export default {
     detectCard,
