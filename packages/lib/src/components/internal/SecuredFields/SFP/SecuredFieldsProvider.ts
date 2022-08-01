@@ -16,7 +16,13 @@ import {
     CbObjOnLoad
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
+import {
+    CVC_POLICY_REQUIRED,
+    DATE_POLICY_REQUIRED,
+    DEDICATED_CARD_COMPONENTS,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_PWD_FIELD
+} from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
 import { getError } from '../../../../core/Errors/utils';
 
@@ -316,17 +322,31 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
 
-        // If "resetting" /binLookup for a single-branded card, resetObject.brand will be the value of the brand whose logo we want to reshow
-        if (resetObject?.brand) {
+        const hasBrandedResetObj = resetObject?.brand;
+
+        /**
+         * Are we dealing with a "dedicated" card scenario i.e a card component created as: checkout.create('bcmc') but which can accept multiple brands
+         * - in which case we will need to reset brand and pass on the resetObj to CSF
+         */
+        const mustResetDedicatedBrand = hasBrandedResetObj && DEDICATED_CARD_COMPONENTS.includes(resetObject.brand);
+
+        if (mustResetDedicatedBrand) {
+            // resetObject.brand will be the value of the brand whose logo we want to reshow in the UI
             this.setState(resetObject, () => {
                 this.props.onChange(this.state);
             });
         }
 
-        // Scenarios:
-        // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
-        // RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
-        if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse);
+        /**
+         * Scenarios:
+         *
+         * - RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
+         * - RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
+         *
+         * In the RESET scenario, for "dedicated" card components we also need to pass on the resetObject since this contains information about
+         * the brand that CSF needs to reset to, internally.
+         */
+        if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse, mustResetDedicatedBrand ? resetObject : null);
     }
 
     private setRootNode = (input: HTMLElement): void => {
