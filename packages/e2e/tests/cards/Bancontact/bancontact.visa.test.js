@@ -144,3 +144,31 @@ test(
         await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
     }
 );
+
+test(
+    '#6 Enter Visa card number ' +
+        'then delete it' +
+        'then re-add it' +
+        'and expect Visa logo to be shown a second time (showing CSF has reset state)',
+    async t => {
+        // Wait for field to appear in DOM
+        await dropinPage.cc.numSpan();
+
+        // Add Visa num (dual branded, but with Carte Bancaire, so only recognised as Visa)
+        await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+
+        // Expect Visa logo in number field
+        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'visa').exists).ok();
+
+        await dropinPage.cc.cardUtils.deleteCardNumber(t);
+
+        // Expect BCMC logo in number field
+        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'bcmc').exists).ok();
+
+        // Re-add Visa num
+        await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+
+        // Expect Visa logo in number field again
+        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'visa').exists).ok();
+    }
+);

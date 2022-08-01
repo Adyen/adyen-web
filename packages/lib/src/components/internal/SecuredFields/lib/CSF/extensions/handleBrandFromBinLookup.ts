@@ -12,6 +12,7 @@ import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../../type
 import { BinLookupResponse, BrandObject } from '../../../../../Card/types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
+import { SingleBrandResetObject } from '../../../SFP/types';
 
 export function sendBrandToCardSF(brandObj: SendBrandObject): void {
     if (hasOwnProperty(this.state.securedFields, ENCRYPTED_CARD_NUMBER)) {
@@ -42,7 +43,7 @@ export function sendExpiryDatePolicyToSF(expiryDateObj: SendExpiryDateObject): v
     });
 }
 
-export default function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse): void {
+export default function handleBrandFromBinLookup(binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject): void {
     const isGenericCard: boolean = this.state.type === 'card';
 
     /**
@@ -54,6 +55,16 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
             // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast (which will reset cvcPolicy)
             this.sendBrandToCardSF({ brand: 'reset' });
             this.sendExpiryDatePolicyToSF({ expiryDatePolicy: DATE_POLICY_REQUIRED });
+        } else {
+            /**
+             * For "dedicated" card components, i.e a card component created as: checkout.create('bcmc') but which can accept multiple brands,
+             * there will be no to-and-fro with the securedField iframe to reset brand.
+             * The presence of a resetObj indicates we are in this "dedicated"" scenario, so we need to use the information contained within this object
+             * to internally reset the brand
+             */
+            if (resetObj) {
+                this.processBrand({ ...resetObj, fieldType: ENCRYPTED_CARD_NUMBER } as SFFeedbackObj);
+            }
         }
 
         // Reset expiryDatePolicy - which never comes from SF
