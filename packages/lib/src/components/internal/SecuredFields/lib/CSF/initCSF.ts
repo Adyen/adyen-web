@@ -13,9 +13,14 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
 
     const setupObj: CSFSetupObject = { ...pSetupObj };
 
-    // Ensure there is always a default type & map the generic types (e.g. 'card', 'scheme') to 'card'
-    const isGenericCardType: boolean = cardType.isGenericCardType(setupObj.type);
-    setupObj.type = isGenericCardType ? 'card' : setupObj.type;
+    try {
+        // Map the generic types (i.e. 'card', 'scheme') to 'card'
+        const isGenericCardType: boolean = cardType.isGenericCardType(setupObj.type);
+        setupObj.type = isGenericCardType ? 'card' : setupObj.type;
+    } catch (e) {
+        // If type has not been specified - ensure there is a default
+        setupObj.type = 'card';
+    }
 
     // //////// 1. Check passed config object has minimum expected properties //////////
     if (!hasOwnProperty(setupObj, 'rootNode')) {
