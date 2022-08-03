@@ -147,6 +147,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex'],
+                // 'configuration' is returned from the Backend. These values are here so we can 'test' without the Backend configuration
+                configuration: {
+                    visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                    visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
+                    mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                    mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+                },
                 clickToPayConfiguration: {
                     shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
                 }
