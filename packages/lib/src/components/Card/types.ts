@@ -122,9 +122,15 @@ export type ClickToPayScheme = 'mc' | 'visa';
 
 export type ClickToPayConfiguration = {
     shopperIdentityValue: string;
-    shopperIdentityType: 'email' | 'mobilePhone';
-
-    // shopperIdentity?: IdentityLookupParams;
+    shopperIdentityType?: 'email' | 'mobilePhone';
+    /**
+     * Used to ensure the correct language and user experience if DCF screen is displayed. As a fallback, it uses the main locale
+     * defined during the creation of the Checkout.
+     * Format: ISO language_country pair (e.g., en_US )
+     *
+     * @default en_US
+     */
+    locale?: string;
 };
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';

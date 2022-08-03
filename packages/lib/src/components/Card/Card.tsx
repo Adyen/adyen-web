@@ -88,7 +88,8 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
-                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail
+                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,
+                locale: props.clickToPayConfiguration?.locale || props.i18n.locale.replace('-', '_')
             }
         };
     }

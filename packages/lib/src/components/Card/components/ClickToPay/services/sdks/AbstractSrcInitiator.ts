@@ -33,12 +33,15 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     public schemeSdk: any;
     public abstract readonly schemeName: ClickToPayScheme;
 
+    protected readonly dpaLocale: string;
+
     private readonly sdkUrl: string;
     private scriptElement: Script | null = null;
 
-    protected constructor(sdkUrl: string) {
+    protected constructor(sdkUrl: string, dpaLocale: string) {
         if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
         this.sdkUrl = sdkUrl;
+        this.dpaLocale = dpaLocale;
     }
 
     public async loadSdkScript() {

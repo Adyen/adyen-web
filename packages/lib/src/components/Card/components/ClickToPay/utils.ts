@@ -9,7 +9,7 @@ function createClickToPayService(
     clickToPayConfiguration: ClickToPayConfiguration | undefined,
     environment: string
 ): IClickToPayService | null {
-    const schemesConfig = parseConfigurationObject(configuration);
+    const schemesConfig = createSchemesInitConfiguration(configuration);
 
     if (!schemesConfig) {
         return null;
@@ -18,7 +18,7 @@ function createClickToPayService(
     const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperIdentityValue, clickToPayConfiguration?.shopperIdentityType);
 
     const schemeNames = Object.keys(schemesConfig);
-    const srcSdkLoader = new SrcSdkLoader(schemeNames, environment);
+    const srcSdkLoader = new SrcSdkLoader(schemeNames, environment, clickToPayConfiguration?.locale);
     const service = new ClickToPayService(schemesConfig, srcSdkLoader, shopperIdentity);
 
     return service;
@@ -34,7 +34,7 @@ const createShopperIdentityObject = (value: string, type?: 'email' | 'mobilePhon
     };
 };
 
-const parseConfigurationObject = (configuration: CardConfiguration): Record<ClickToPayScheme, SrcInitParams> => {
+const createSchemesInitConfiguration = (configuration: CardConfiguration): Record<ClickToPayScheme, SrcInitParams> => {
     if (!configuration) {
         return null;
     }

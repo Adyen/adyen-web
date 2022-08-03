@@ -12,8 +12,8 @@ const IdentityTypeMap = {
 class MastercardSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'mc';
 
-    constructor(environment: string) {
-        super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST);
+    constructor(environment: string, locale: string) {
+        super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST, locale);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {
@@ -28,7 +28,7 @@ class MastercardSdk extends AbstractSrcInitiator {
     }
 
     public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
-        const sdkProps = { ...params, ...getMastercardSettings({}), srciTransactionId };
+        const sdkProps = { ...params, ...getMastercardSettings({ dpaLocale: this.dpaLocale }), srciTransactionId };
         await this.schemeSdk.init(sdkProps);
     }
 

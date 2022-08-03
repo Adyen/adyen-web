@@ -12,8 +12,8 @@ const IdentityTypeMap = {
 class VisaSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'visa';
 
-    constructor(environment: string) {
-        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST);
+    constructor(environment: string, locale: string) {
+        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST, locale);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {
@@ -28,7 +28,7 @@ class VisaSdk extends AbstractSrcInitiator {
     }
 
     public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
-        const sdkProps = { ...params, ...getVisaSetttings({}), srciTransactionId };
+        const sdkProps = { ...params, ...getVisaSetttings({ dpaLocale: this.dpaLocale }), srciTransactionId };
         await this.schemeSdk.init(sdkProps);
     }
 
