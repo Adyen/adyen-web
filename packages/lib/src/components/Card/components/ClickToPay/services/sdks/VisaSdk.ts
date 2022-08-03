@@ -1,8 +1,8 @@
-import { VISA_SDK_PROD, VISA_SDK_TEST } from './config';
+import { getVisaSetttings, VISA_SDK_PROD, VISA_SDK_TEST } from './config';
 import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
-import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse } from './types';
+import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse, SrcInitParams } from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL',
@@ -25,6 +25,11 @@ class VisaSdk extends AbstractSrcInitiator {
     protected assignSdkReference(): void {
         // @ts-ignore vAdapters is created by the VISA sdk
         this.schemeSdk = new window.vAdapters.VisaSRCI();
+    }
+
+    public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
+        const sdkProps = { ...params, ...getVisaSetttings({}), srciTransactionId };
+        await this.schemeSdk.init(sdkProps);
     }
 
     public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {

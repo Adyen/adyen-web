@@ -53,36 +53,33 @@ export type SrcCheckoutParams = {
 
 export interface SrcInitParams {
     srcInitiatorId: string;
-    srciTransactionId: string;
     srciDpaId: string;
-    dpaTransactionOptions: DpaTransactionOptions;
-    dpaData?: DpaData;
 }
 
-interface DpaTransactionOptions {
-    dpaAcceptedBillingCountries?: string[];
-    dpaAcceptedShippingCountries?: string[];
-    dpaBillingPreference?: string;
-    dpaShippingPreference?: string;
-    dpaLocale?: string;
-    consumerNameRequested?: boolean;
-    consumerEmailAddressRequested?: boolean;
-    consumerPhoneNumberRequested?: boolean;
-    checkoutDescription: string;
-    paymentOptions?: PaymentOptions;
-    reviewAction: string; // visa
-    transactionType?: string; // Not supported by MC
-    transactionAmount: TransactionAmount;
-    orderType?: string; // visa
-    isGuestCheckout?: boolean;
-    payloadTypeIndicator: string; // visa
-    payloadTypeIndicatorCheckout?: string; // Not supported by MC
-    payloadTypeIndicatorPayload?: string; // Not supported by MC
-    merchantOrderId: string; //visa
-    merchantCategoryCode: string;
-    merchantCountryCode: string;
-    threeDSInputData?: ThreeDSInputData;
-}
+// interface DpaTransactionOptions {
+//     dpaAcceptedBillingCountries?: string[];
+//     dpaAcceptedShippingCountries?: string[];
+//     dpaBillingPreference?: string;
+//     dpaShippingPreference?: string;
+//     dpaLocale?: string;
+//     consumerNameRequested?: boolean;
+//     consumerEmailAddressRequested?: boolean;
+//     consumerPhoneNumberRequested?: boolean;
+//     checkoutDescription: string;
+//     paymentOptions?: PaymentOptions;
+//     reviewAction: string; // visa
+//     transactionType?: string; // Not supported by MC
+//     transactionAmount: TransactionAmount;
+//     orderType?: string; // visa
+//     isGuestCheckout?: boolean;
+//     payloadTypeIndicator: string; // visa
+//     payloadTypeIndicatorCheckout?: string; // Not supported by MC
+//     payloadTypeIndicatorPayload?: string; // Not supported by MC
+//     merchantOrderId: string; //visa
+//     merchantCategoryCode: string;
+//     merchantCountryCode: string;
+//     threeDSInputData?: ThreeDSInputData;
+// }
 
 interface ThreeDSInputData {
     requestorId: string;

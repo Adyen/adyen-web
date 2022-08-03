@@ -23,6 +23,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
@@ -147,37 +148,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex'],
                 clickToPayConfiguration: {
-                    schemes: {
-                        mc: {
-                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
-                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
-                            dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
-                                paymentOptions: {
-                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
-                                },
-                                consumerNameRequested: true
-                                // customInputData: {
-                                //     'com.mastercard.dcfExperience': 'PAYMENT_SETTINGS'
-                                // },
-                                // confirmPayment: false
-                            }
-                        },
-                        visa: {
-                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
-                            srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
-                            srciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
-                            dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
-                                payloadTypeIndicator: 'NON_PAYMENT'
-                            }
-                        }
-                    },
-                    shopperIdentity: {
-                        value: 'guilherme.ribeiro-ctp1@adyen.com',
-                        type: 'email'
-                    }
+                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
                 }
             })
             .mount('.card-ctp-field');

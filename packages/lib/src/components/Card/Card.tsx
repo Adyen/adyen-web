@@ -28,7 +28,9 @@ export class CardElement extends UIElement<CardElementProps> {
     constructor(props) {
         super(props);
 
-        this.clickToPayService = createClickToPayService(props.clickToPayConfiguration, props.environment);
+        console.log(this.props);
+
+        this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
         this.clickToPayService?.initialize();
     }
 
@@ -83,6 +85,10 @@ export class CardElement extends UIElement<CardElementProps> {
                 collateErrors,
                 moveFocus,
                 showPanel
+            },
+            clickToPayConfiguration: {
+                ...props.clickToPayConfiguration,
+                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail
             }
         };
     }

@@ -10,6 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
+        shopperEmail: 'guilherme.ribeiro-ctp2@adyen.com',
         countryCode
     });
 
@@ -20,6 +21,7 @@ export async function initSession() {
 
         // Events
         beforeSubmit: (data, component, actions) => {
+            data.browserInfo.userAgent = 'wechat';
             actions.resolve(data);
         },
         onPaymentCompleted: (result, component) => {
@@ -43,46 +45,7 @@ export async function initSession() {
                 // billingAddressMode: 'partial',
 
                 clickToPayConfiguration: {
-                    schemes: {
-                        discovery: '',
-                        visa: {
-                            srcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
-                            srciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
-
-                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
-
-                            dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
-                                payloadTypeIndicator: 'NON_PAYMENT'
-                            }
-                        },
-                        mc: {
-                            srcInitiatorId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1',
-                            srciDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-
-                            srciTransactionId: 'adyen-id-' + new Date().getTime(),
-
-                            dpaTransactionOptions: {
-                                dpaLocale: 'en_US',
-                                paymentOptions: {
-                                    dynamicDataType: 'CARD_APPLICATION_CRYPTOGRAM_SHORT_FORM'
-                                },
-                                consumerNameRequested: true,
-                                customInputData: {
-                                    'com.mastercard.dcfExperience': 'PAYMENT_SETTINGS'
-                                },
-                                confirmPayment: false
-                            }
-                        }
-                    },
-                    shopperIdentity: {
-                        value: 'guilherme.ribeiro-ctp1@adyen.com',
-                        type: 'email'
-                    }
-                    // shopperIdentity: {
-                    //     value: '+31633958357',
-                    //     type: 'mobilePhone'
-                    // }
+                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
                 }
             }
         }

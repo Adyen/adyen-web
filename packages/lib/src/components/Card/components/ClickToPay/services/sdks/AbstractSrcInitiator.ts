@@ -19,7 +19,7 @@ export interface ISrcInitiator {
     loadSdkScript(): Promise<void>;
     removeSdkScript(): void;
     // SRCi specification methods
-    init(params: SrcInitParams): Promise<void>;
+    init(params: SrcInitParams, srciTransactionId: string): Promise<void>;
     isRecognized(): Promise<SrciIsRecognizedResponse>;
     identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse>;
     initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse>;
@@ -70,9 +70,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     /**
      * Initializes the app with common state. The init method must be called before any other methods.
      */
-    public async init(params: SrcInitParams): Promise<void> {
-        await this.schemeSdk.init(params);
-    }
+    public abstract init(params: SrcInitParams, srciTransactionId: string): Promise<void>;
 
     /**
      * This method performs checkout using the specified card. If successful, the
