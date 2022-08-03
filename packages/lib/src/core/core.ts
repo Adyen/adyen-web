@@ -42,7 +42,6 @@ class Core {
                 .setupSession(this.options)
                 .then(sessionResponse => {
                     const amount = this.options.order ? this.options.order.remainingAmount : sessionResponse.amount;
-                    this.session.configuration = sessionResponse.configuration
                     this.setOptions({ ...sessionResponse, amount });
                     return this;
                 })

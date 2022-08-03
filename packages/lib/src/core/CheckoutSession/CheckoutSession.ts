@@ -60,7 +60,13 @@ class Session {
      * Fetches data from a session
      */
     setupSession(options): Promise<CheckoutSessionSetupResponse> {
-        return setupSession(this, options);
+        return setupSession(this, options).then(response => {
+            if (response.configuration) {
+                this.configuration = { ...response.configuration };
+            }
+
+            return response;
+        });
     }
 
     /**

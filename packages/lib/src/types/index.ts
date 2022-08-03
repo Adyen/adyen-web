@@ -1,7 +1,7 @@
 import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import {InstallmentOptions} from "../components/Card/components/CardInput/components/types";
+import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
