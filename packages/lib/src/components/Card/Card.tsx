@@ -27,10 +27,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     constructor(props) {
         super(props);
-
-        console.log(this.props);
-
-        this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+        this.clickToPayService = createClickToPayService({}, this.props.clickToPayConfiguration, this.props.environment);
         this.clickToPayService?.initialize();
     }
 

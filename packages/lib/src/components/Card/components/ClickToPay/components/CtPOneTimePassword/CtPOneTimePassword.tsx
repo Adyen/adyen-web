@@ -51,6 +51,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 onChange={onChangeOtpInput}
                 disabled={isValidatingOtp}
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+                onPressEnter={onSubmitPassword}
             />
             <Button
                 label={i18n.get('continue')}

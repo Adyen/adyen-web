@@ -58,6 +58,7 @@ const CtPLogin = (): h.JSX.Element => {
                 onChange={handleOnLoginChange}
                 disabled={isLoggingIn}
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
+                onPressEnter={handleOnLoginButtonClick}
             />
             <Button
                 label={i18n.get('continue')}
