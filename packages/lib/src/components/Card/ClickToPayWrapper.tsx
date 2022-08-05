@@ -49,7 +49,7 @@ const ClickToPayWrapper = ({ children }: ClickToPayWrapperProps) => {
         <Fragment>
             <ClickToPayComponent />
 
-            <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label={i18n.get('qrCodeOrApp')} />
+            <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label={i18n.get('ctp.separatorText')} />
 
             {isCardInputVisible ? (
                 children(!isCtpPrimaryPaymentMethod)
@@ -57,7 +57,7 @@ const ClickToPayWrapper = ({ children }: ClickToPayWrapperProps) => {
                 <Button
                     variant="secondary"
                     disabled={status === 'loading'}
-                    label={ctpState === CtpState.Ready ? i18n.get('ctp.useAnotherCard') : i18n.get('ctp.manualCardEntry')}
+                    label={i18n.get('ctp.manualCardEntry')}
                     onClick={handleOnShowCardButtonClick}
                 />
             )}

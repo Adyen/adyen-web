@@ -155,7 +155,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 //     mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
                 // },
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'guilherme.ribeiro-ctp31@adyen.com'
+                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
                 }
             })
             .mount('.card-ctp-field');
