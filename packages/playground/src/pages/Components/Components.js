@@ -16,7 +16,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         //        onChange: handleChange,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: console.error,
+        onError: (error, component) => {
+            console.log(error, component);
+        },
         showPayButton: true
     });
 
