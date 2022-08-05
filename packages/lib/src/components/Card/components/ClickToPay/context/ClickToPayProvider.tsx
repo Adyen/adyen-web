@@ -81,6 +81,7 @@ const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPay
                 ctpState,
                 verifyIfShopperIsEnrolled,
                 cards: ctpService?.shopperCards,
+                schemes: ctpService?.schemes,
                 otpMaskedContact: ctpService?.shopperValidationContact,
                 checkout,
                 logoutShopper,

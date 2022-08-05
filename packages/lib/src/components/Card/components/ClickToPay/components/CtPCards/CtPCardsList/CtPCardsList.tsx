@@ -6,6 +6,7 @@ import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
 import ShopperCard from '../../../models/ShopperCard';
 import useClickToPayContext from '../../../context/useClickToPayContext';
+import getImage from '../../../../../../../utils/get-image';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -19,7 +20,7 @@ type CardsSelectorDataState = {
 const schema = ['srcDigitalCardId'];
 
 const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
-    const { i18n } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,
@@ -28,7 +29,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
 
     const items = useMemo(() => {
         return cards.map(card => ({
-            icon: card.artUri,
+            icon: card.artUri || getImage({ loadingContext })(card.scheme),
             name: `${card.title ? card.title : ''} •••• ${card.panLastFour}`,
             id: card.srcDigitalCardId
         }));

@@ -26,10 +26,11 @@ const validateSchemeNames = (schemes: string[]): string[] => {
 
 export interface ISrcSdkLoader {
     load(): Promise<ISrcInitiator[]>;
+    schemes: string[];
 }
 
 class SrcSdkLoader implements ISrcSdkLoader {
-    private readonly schemes: string[];
+    public readonly schemes: string[];
     private readonly environment: string;
 
     constructor(schemes: string[], environment: string) {

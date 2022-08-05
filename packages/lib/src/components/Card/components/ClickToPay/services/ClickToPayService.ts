@@ -35,6 +35,10 @@ class ClickToPayService implements IClickToPayService {
         this.shopperIdentity = shopperIdentity;
     }
 
+    public get schemes(): string[] {
+        return this.sdkLoader.schemes;
+    }
+
     public async initialize(): Promise<void> {
         this.setState(CtpState.Loading);
 

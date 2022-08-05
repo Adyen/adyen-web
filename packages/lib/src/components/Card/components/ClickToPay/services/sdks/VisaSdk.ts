@@ -1,4 +1,4 @@
-import { VISA_SDK_PROD, VISA_SDK_TEST } from '../config';
+import { VISA_SDK_PROD, VISA_SDK_TEST } from './config';
 import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';

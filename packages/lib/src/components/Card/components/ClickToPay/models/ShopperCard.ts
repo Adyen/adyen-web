@@ -1,10 +1,6 @@
 import { SrcCard } from '../services/sdks/types';
 import { ClickToPayScheme } from '../../../types';
-
-const schemeNames = {
-    mc: 'Mastercard',
-    visa: 'Visa'
-};
+import { SchemeNames } from '../services/sdks/utils';
 
 class ShopperCard {
     public dateOfCardLastUsed: string;
@@ -29,7 +25,7 @@ class ShopperCard {
     }
 
     get title() {
-        return this.descriptorName || schemeNames[this.scheme];
+        return this.descriptorName || SchemeNames[this.scheme];
     }
 }
 

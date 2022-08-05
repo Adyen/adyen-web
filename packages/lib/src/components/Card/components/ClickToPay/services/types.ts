@@ -7,6 +7,7 @@ export interface IClickToPayService {
     state: CtpState;
     shopperCards: ShopperCard[];
     shopperValidationContact: string;
+    schemes: string[];
     initialize(): Promise<void>;
     checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;

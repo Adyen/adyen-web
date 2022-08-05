@@ -1,4 +1,4 @@
-import { MC_SDK_PROD, MC_SDK_TEST } from '../config';
+import { MC_SDK_PROD, MC_SDK_TEST } from './config';
 import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
