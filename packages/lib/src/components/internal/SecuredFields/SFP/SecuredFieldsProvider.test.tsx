@@ -71,6 +71,19 @@ const regularErrObj = {
     type: 'card'
 };
 
+const mockBinLookupObj = {
+    issuingCountryCode: 'US',
+    supportedBrands: [
+        {
+            brand: 'mc',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            showExpiryDate: true,
+            supported: true
+        }
+    ]
+};
+
 const nodeHolder = document.createElement('div');
 nodeHolder.innerHTML = mockNode;
 
@@ -175,7 +188,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     });
 
     it('should see that the cleared "unsupported card" error has reset state on the SecuredFieldsProvider', () => {
-        expect(wrapper.instance().state.detectedUnsupportedBrands).toBe(null);
         expect(wrapper.instance().state.errors.encryptedCardNumber).toBe(false);
     });
 
@@ -208,7 +220,13 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     it('should clear the previously generated "unsupported card" error & then a handleOnFieldValid call is handled correctly', () => {
         unsupportedCardErrObj.error = '';
 
-        wrapper.instance().handleUnsupportedCard(unsupportedCardErrObj);
+        // Clear the error by mocking a drop in the number of digits in the PAN to below a /binLookup threshold
+        // wrapper.instance().processBinLookupResponse(null, true);
+
+        // Clear the error by mocking a successful /binLookup response
+        wrapper.instance().processBinLookupResponse(mockBinLookupObj);
+
+        expect(wrapper.instance().state.detectedUnsupportedBrands).toBe(null);
 
         expect(
             wrapper.instance().handleOnFieldValid({ fieldType: 'encryptedCardNumber', encryptedFieldName: 'encryptedCardNumber', valid: true })
@@ -225,19 +243,6 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 });
 
 describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
-    const mockBinLookupObj = {
-        issuingCountryCode: 'US',
-        supportedBrands: [
-            {
-                brand: 'mc',
-                cvcPolicy: 'required',
-                enableLuhnCheck: true,
-                showExpiryDate: true,
-                supported: true
-            }
-        ]
-    };
-
     it(
         'should receive a populated binLookup object and set the issuingCountryCode' +
             'then receive a "reset" object and reset the issuingCountryCode',
@@ -262,13 +267,13 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             sfp.processBinLookupResponse(mockBinLookupObj);
 
             expect(sfp.issuingCountryCode).toEqual('us');
-            expect(brandsFromBinLookup).toHaveBeenCalledTimes(1);
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
 
             // reset
             sfp.processBinLookupResponse(null);
 
             expect(sfp.issuingCountryCode).toBe(undefined);
-            expect(brandsFromBinLookup).toHaveBeenCalledTimes(2);
+            expect(brandsFromBinLookup).toHaveBeenCalledTimes(3);
         }
     );
 });

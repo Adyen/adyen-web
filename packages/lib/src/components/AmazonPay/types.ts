@@ -59,7 +59,6 @@ export interface AmazonPayElementProps {
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
-    region?: Region;
     returnUrl?: string;
     showChangePaymentDetailsButton: boolean;
     showOrderButton: boolean;

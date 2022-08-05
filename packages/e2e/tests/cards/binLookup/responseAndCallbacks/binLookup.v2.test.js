@@ -30,7 +30,7 @@ fixture`Testing binLookup v2 response`
     .clientScripts('binLookup.clientScripts.js')
     .requestHooks(logger);
 
-test('Enter number of known dual branded card, ' + 'then inspect response body for expected properties ', async t => {
+test('#1 Enter number of known dual branded card, ' + 'then inspect response body for expected properties ', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -59,7 +59,7 @@ test('Enter number of known dual branded card, ' + 'then inspect response body f
         .notEql(0);
 });
 
-test('Enter number of regular, non dual branded, card, ' + 'then inspect response body for expected properties ', async t => {
+test('#2 Enter number of regular, non dual branded, card, ' + 'then inspect response body for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -87,7 +87,7 @@ test('Enter number of regular, non dual branded, card, ' + 'then inspect respons
         .notEql(0);
 });
 
-test('Enter number of unsupported card, ' + 'then inspect response body for expected properties ' + 'then check UI shows an error', async t => {
+test('#3 Enter number of unsupported card, ' + 'then inspect response body for expected properties ' + 'then check UI shows an error', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -123,7 +123,7 @@ test('Enter number of unsupported card, ' + 'then inspect response body for expe
         .ok();
 });
 
-test('Enter number of card that is not in the test Dbs, ' + 'then inspect response body for expected properties ', async t => {
+test('#4 Enter number of card that is not in the test Dbs, ' + 'then inspect response body for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -152,7 +152,7 @@ test('Enter number of card that is not in the test Dbs, ' + 'then inspect respon
 /**
  * TEST CALLBACKS
  */
-test('Enter number of dual branded card, ' + 'then inspect callback for expected properties ', async t => {
+test('#5 Enter number of dual branded card, ' + 'then inspect callback for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -176,7 +176,7 @@ test('Enter number of dual branded card, ' + 'then inspect callback for expected
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 });
 
-test('Enter number of regular, non dual branded, card, ' + 'then inspect callback for expected properties ', async t => {
+test('#6 Enter number of regular, non dual branded, card, ' + 'then inspect callback for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -200,7 +200,7 @@ test('Enter number of regular, non dual branded, card, ' + 'then inspect callbac
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 });
 
-test('Enter number of unsupported card, ' + 'then inspect callbacks for expected properties ', async t => {
+test('#7 Enter number of unsupported card, ' + 'then inspect callbacks for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);
@@ -227,7 +227,7 @@ test('Enter number of unsupported card, ' + 'then inspect callbacks for expected
     await t.expect(cardError.errorMessage).eql('Unsupported card entered');
 });
 
-test('Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {
+test('#8 Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {
     logger.clear();
 
     await start(t, 2000, TEST_SPEED);

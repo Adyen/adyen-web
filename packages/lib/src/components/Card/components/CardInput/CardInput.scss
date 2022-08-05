@@ -36,6 +36,10 @@
     margin-top: $spacing-medium;
 }
 
+.adyen-checkout__card-input.adyen-checkout__card-input--loading{
+    pointer-events: none;
+}
+
 .adyen-checkout__card__holderName:first-child {
     margin: 0 0 $spacing-medium;
 }

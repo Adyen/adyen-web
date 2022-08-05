@@ -145,9 +145,9 @@ export const createOldChallengeResolveData = (dataKey: string, transStatus: stri
     }
 });
 
-export const handleErrorCode = (errorCode: string): ErrorObject => {
+export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorObject => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
-    const message = ERROR_MESSAGES[errorCode] || unknownMessage;
+    const message = ERROR_MESSAGES[errorCode] || errorDescription || unknownMessage;
     return { errorCode, message };
 };
 
@@ -203,6 +203,7 @@ export const get3DS2FlowProps = (actionSubtype, props) => {
 
     // Challenge
     return {
-        statusType: 'custom'
+        statusType: 'custom',
+        i18n: props.i18n
     };
 };

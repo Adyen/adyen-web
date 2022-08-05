@@ -3,7 +3,7 @@ import BaseElement from './BaseElement';
 import { Order, PaymentAction } from '../types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import { IUIElement, UIElementProps } from './types';
+import { IUIElement, PayButtonFunctionProps, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
@@ -56,11 +56,17 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this._parentInstance.session) {
             // Session flow
+            // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
                 ? new Promise((resolve, reject) => this.props.beforeSubmit(this.data, this.elementRef, { resolve, reject }))
                 : Promise.resolve(this.data);
 
-            beforeSubmitEvent.then(data => this.submitPayment(data)).catch(() => {});
+            beforeSubmitEvent
+                .then(data => this.submitPayment(data))
+                .catch(() => {
+                    // set state as ready to submit if the merchant cancels the action
+                    this.elementRef.setStatus('ready');
+                });
         } else {
             this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
         }
@@ -235,7 +241,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     /**
      * Get the payButton component for the current element
      */
-    protected payButton = props => {
+    protected payButton = (props: PayButtonFunctionProps) => {
         return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
     };
 }

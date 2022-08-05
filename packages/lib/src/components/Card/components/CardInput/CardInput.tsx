@@ -22,6 +22,7 @@ import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
+import classNames from 'classnames';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -376,8 +377,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}
-                        className={`adyen-checkout__card-input ${styles['card-input__wrapper']} adyen-checkout__card-input--${props.fundingSource ??
-                            'credit'}`}
+                        className={classNames({
+                            'adyen-checkout__card-input': true,
+                            [styles['card-input__wrapper']]: true,
+                            [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
+                            'adyen-checkout__card-input--loading': status === 'loading'
+                        })}
                         role={collateErrors && 'form'}
                         aria-describedby={collateErrors ? errorFieldId : null}
                     >

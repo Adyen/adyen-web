@@ -21,14 +21,18 @@ export interface ChallengeData {
 }
 
 export interface ResultObject {
+    threeDSCompInd?: ResultValue; // Fingerprint
+    // Challenge
     transStatus?: ResultValue;
-    threeDSCompInd?: ResultValue;
+    errorCode?: string;
+    errorDescription?: string;
 }
 
 export interface ThreeDS2FlowObject {
     result: ResultObject;
     type: 'ChallengeShopper' | 'IdentifyShopper' | 'challengeResult' | 'fingerPrintResult';
     errorCode?: string;
+    threeDSServerTransID?: string;
 }
 
 // One token fits all - Fingerprint & Challenge

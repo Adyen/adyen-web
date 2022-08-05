@@ -16,7 +16,7 @@ fixture`Cards (Installments)`
         cardComponent = new CardComponentPage('.card-field', { installments: new InstallmentsComponent() });
     });
 
-test('should not add installments property to payload if one-time payment is selected', async t => {
+test('#1 should not add installments property to payload if one-time payment is selected', async t => {
     await cardComponent.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     await cardComponent.cardUtils.fillDateAndCVC(t);
 
@@ -33,7 +33,7 @@ test('should not add installments property to payload if one-time payment is sel
         .ok('payment payload has the expected payload');
 });
 
-test('should not add installments property to payload if 1x installment is selected', async t => {
+test('#2 should not add installments property to payload if 1x installment is selected', async t => {
     await cardComponent.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     await cardComponent.cardUtils.fillDateAndCVC(t);
     await cardComponent.installments.selectInstallment(1);
@@ -51,7 +51,7 @@ test('should not add installments property to payload if 1x installment is selec
         .ok('payment payload has the expected payload');
 });
 
-test('should add revolving plan to payload if selected', async t => {
+test('#3 should add revolving plan to payload if selected', async t => {
     await cardComponent.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     await cardComponent.cardUtils.fillDateAndCVC(t);
     await cardComponent.installments.selectRevolving();
@@ -69,7 +69,7 @@ test('should add revolving plan to payload if selected', async t => {
         .ok('payment payload has the expected payload');
 });
 
-test('should add installments value property if regular installment > 1 is selected', async t => {
+test('#4 should add installments value property if regular installment > 1 is selected', async t => {
     await cardComponent.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     await cardComponent.cardUtils.fillDateAndCVC(t);
     await cardComponent.installments.selectInstallment(2);
