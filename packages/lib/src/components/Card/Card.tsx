@@ -50,7 +50,9 @@ export class CardElement extends UIElement<CardElementProps> {
                 collateErrors,
                 moveFocus,
                 showPanel
-            }
+            },
+            // installmentOptions of a session should be used before falling back to the merchant configuration
+            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions ,
         };
     }
 
