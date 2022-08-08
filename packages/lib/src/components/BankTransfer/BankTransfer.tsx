@@ -58,8 +58,6 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
                 )}
             </CoreProvider>
         );
-
-        return null;
     }
 }
 
