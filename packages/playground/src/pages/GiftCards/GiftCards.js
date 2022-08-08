@@ -74,14 +74,14 @@ import '../../style.scss';
 
     const checkoutButton = document.querySelector('#custom-checkout-button');
 
-    const checkBalance = () => window.giftcard.balanceCheck();
+    const giftcardCheckBalance = () => window.giftcard.balanceCheck();
     const giftcardSubmit = () => window.giftcard.submit();
     const cardSubmit = () => window.card.submit();
 
-    checkoutButton.addEventListener('click', checkBalance);
+    checkoutButton.addEventListener('click', giftcardCheckBalance);
 
     const setupGiftCardSubmit = () => {
-        checkoutButton.removeEventListener('click', checkBalance);
+        checkoutButton.removeEventListener('click', giftcardCheckBalance);
         checkoutButton.addEventListener('click', giftcardSubmit);
     };
     const setupCardSubmit = () => {
