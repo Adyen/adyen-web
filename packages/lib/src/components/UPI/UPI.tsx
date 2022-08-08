@@ -37,7 +37,7 @@ class UPI extends UIElement {
     }
 
     public setStatus(status: UIElementStatus): this {
-        this.componentRef?.setStatus(status, this.state.data.isQrCodeFlow);
+        this.componentRef?.setStatus?.(status, this.state.data?.isQrCodeFlow);
         return this;
     }
 
@@ -69,9 +69,9 @@ class UPI extends UIElement {
                         ref={ref => {
                             this.componentRef = ref;
                         }}
+                        onError={this.props.onError}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
-                        onError={this.handleError}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
                         type={UPI_COLLECT}
