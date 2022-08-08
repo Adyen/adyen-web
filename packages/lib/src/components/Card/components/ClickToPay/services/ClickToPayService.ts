@@ -51,29 +51,21 @@ class ClickToPayService implements IClickToPayService {
 
         try {
             this.sdks = await this.sdkLoader.load();
-
             await this.initiateSdks();
-            console.log('after initiate');
-
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
-            console.log('after verifyIfShopperIsRecognized');
 
             if (recognized) {
                 await this.getShopperProfile(idTokens);
-                console.log('after getShopperProfile');
-
                 this.setState(CtpState.Ready);
                 return;
             }
 
             if (!this.shopperIdentity) {
                 this.setState(CtpState.NotAvailable);
-                console.log('after !this.shopperIdentity)');
                 return;
             }
 
             const { isEnrolled } = await this.verifyIfShopperIsEnrolled(this.shopperIdentity.value, this.shopperIdentity.type);
-            console.log('after this.verifyIfShopperIsEnrolled)');
 
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);

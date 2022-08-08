@@ -5,7 +5,7 @@ import { amount, shopperLocale, countryCode, returnUrl } from '../../config/comm
 import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
-    const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale, shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com' });
+    const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
@@ -65,7 +65,10 @@ export async function initManual() {
             card: {
                 enableStoreDetails: false,
                 hasHolderName: true,
-                holderNameRequired: true
+                holderNameRequired: true,
+                clickToPayConfiguration: {
+                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
+                }
             },
             paywithgoogle: {
                 buttonType: 'plain'

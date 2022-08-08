@@ -10,7 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
-        shopperEmail: 'guilherme.ribeiro-ctp2@adyen.com',
+        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         countryCode
     });
 
@@ -33,21 +33,19 @@ export async function initSession() {
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
-            },
-            card: {
-                // hasHolderName: true,
-                // holderNameRequired: true,
-                // holderName: 'J. Smith',
-                // positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                // billingAddressRequired: true,
-                // billingAddressMode: 'partial',
-
-                clickToPayConfiguration: {
-                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
-                }
             }
+            // card: {
+            // hasHolderName: true,
+            // holderNameRequired: true,
+            // holderName: 'J. Smith',
+            // positionHolderNameOnTop: true,
+            // billingAddress config:
+            // billingAddressRequired: true,
+            // billingAddressMode: 'partial',
+            // clickToPayConfiguration: {
+            //     shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
+            // }
+            // }
         }
     });
 
