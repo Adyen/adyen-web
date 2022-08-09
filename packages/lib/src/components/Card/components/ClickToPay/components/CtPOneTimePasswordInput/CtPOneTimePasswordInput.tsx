@@ -11,6 +11,7 @@ import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface CtPOneTimePasswordInputProps {
     disabled: boolean;
+    isValidatingOtp: boolean;
     errorMessage?: string;
     onPressEnter(): Promise<void>;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
@@ -64,7 +65,7 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         <Field
             name="oneTimePassword"
             label={i18n.get('ctp.otp.fieldLabel')}
-            labelEndAdornment={<CtPResendOtpLink onError={handleOnResendOtpError} />}
+            labelEndAdornment={<CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} />}
             errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
             classNameModifiers={['otp']}
         >

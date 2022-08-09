@@ -47,7 +47,7 @@ const ClickToPayWrapper = ({ children }: ClickToPayWrapperProps) => {
 
     return (
         <Fragment>
-            <ClickToPayComponent />
+            <ClickToPayComponent onShowCardButtonClick={handleOnShowCardButtonClick} />
 
             <ContentSeparator classNames={['adyen-checkout-ctp__separator']} label={i18n.get('ctp.separatorText')} />
 

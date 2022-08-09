@@ -228,8 +228,13 @@
     "ctp.logout.notYouCards": "Not your cards?",
     "ctp.otp.fieldLabel": "Verification code",
     "ctp.otp.resendCode": "Resend code",
-    "ctp.otp.title": "We need to verify you",
-    "ctp.otp.subtitle": "Enter the code we've sent to %{maskedContact} to verify it‘s you.",
+    "ctp.otp.codeResent": "Code resent",
+    "ctp.otp.title": "Verify yourself",
+    "ctp.otp.subtitle": "Enter the code we've sent to %@ to verify it‘s you.",
+
+    "ctp.emptyCardsView.title": "Complete your payment",
+    "ctp.emptyCardsView.subtitle": "There are no cards registered in your Click to Pay profile.",
+    "ctp.emptyCardsView.button": "Manually enter card details",
 
     "ctp.separatorText": "or use",
 
