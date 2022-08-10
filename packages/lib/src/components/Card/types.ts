@@ -11,8 +11,6 @@ import {
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
-import { IdentityLookupParams } from './components/ClickToPay/services/types';
-import { SrcInitParams } from './components/ClickToPay/services/sdks/types';
 
 export interface CardElementProps extends UIElementProps {
     /**

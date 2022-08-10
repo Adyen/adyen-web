@@ -28,7 +28,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        // onChange: handleChange,
+        onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
                 hasHolderName: true
