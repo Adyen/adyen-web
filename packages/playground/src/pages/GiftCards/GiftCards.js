@@ -58,7 +58,7 @@ import '../../style.scss';
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
-        showPayButton: true,
+        showPayButton: false,
 
         // Events
         beforeSubmit: (data, component, actions) => {
@@ -72,18 +72,41 @@ import '../../style.scss';
         }
     });
 
+    const checkoutButton = document.querySelector('#custom-checkout-button');
+
+    const giftcardCheckBalance = () => window.giftcard.balanceCheck();
+    const giftcardSubmit = () => window.giftcard.submit();
+    const cardSubmit = () => window.card.submit();
+
+    checkoutButton.addEventListener('click', giftcardCheckBalance);
+
+    const setupGiftCardSubmit = () => {
+        checkoutButton.removeEventListener('click', giftcardCheckBalance);
+        checkoutButton.addEventListener('click', giftcardSubmit);
+    };
+    const setupCardSubmit = () => {
+        checkoutButton.removeEventListener('click', setupGiftCardSubmit);
+        checkoutButton.addEventListener('click', cardSubmit);
+    };
+
     window.giftcard = sessionCheckout
         .create('giftcard', {
             type: 'giftcard',
             brand: 'svs',
-            onOrderCreated: (data) => {
-                afterGiftCard(data);
+            onSubmit: () => {
+                afterGiftCard();
+            },
+            onOrderCreated: () => {
+                afterGiftCard();
+            },
+            onRequiringConfirmation: () => {
+                setupGiftCardSubmit();
             }
         })
         .mount('#giftcard-session-container');
 
-
-    const afterGiftCard = (order) => {
-        sessionCheckout.create('card').mount('#payment-method-container');
-    }
+    const afterGiftCard = () => {
+        window.card = sessionCheckout.create('card').mount('#payment-method-container');
+        setupCardSubmit();
+    };
 })();

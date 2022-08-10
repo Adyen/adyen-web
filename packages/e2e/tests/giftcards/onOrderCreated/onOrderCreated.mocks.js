@@ -94,7 +94,8 @@ const noCallbackPaymentResponse = {
 const loggers = {
     setupLogger: RequestLogger({ url: setupUrl, method: 'post' }, { logRequestBody: true }),
     balanceLogger: RequestLogger({ url: balanceUrl, method: 'post' }, { logRequestBody: true }),
-    ordersLogger: RequestLogger({ url: ordersUrl, method: 'post' }, { logRequestBody: true })
+    ordersLogger: RequestLogger({ url: ordersUrl, method: 'post' }, { logRequestBody: true }),
+    paymentLogger: RequestLogger({ url: paymentsUrl, method: 'post' }, { logRequestBody: true })
 };
 
 const mock = RequestMock()
