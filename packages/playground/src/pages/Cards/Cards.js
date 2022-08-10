@@ -155,6 +155,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
                     mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
                 },
+                useClickToPay: true,
                 clickToPayConfiguration: {
                     shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
                 }
