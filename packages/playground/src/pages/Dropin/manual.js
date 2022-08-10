@@ -59,7 +59,7 @@ export async function initManual() {
             checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
         },
         onError: (error, component) => {
-            console.error(error.name, error.message, error.stack, component);
+            console.info(error.name, error.message, error.stack, component);
         },
         paymentMethodsConfiguration: {
             card: {

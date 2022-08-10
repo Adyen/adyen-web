@@ -28,7 +28,7 @@ export async function initSession() {
             console.info(result, component);
         },
         onError: (error, component) => {
-            console.error(error.message, component);
+            console.info(error, component);
         },
         paymentMethodsConfiguration: {
             paywithgoogle: {

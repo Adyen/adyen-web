@@ -83,6 +83,8 @@ export class CardElement extends UIElement<CardElementProps> {
                 moveFocus,
                 showPanel
             },
+            // installmentOptions of a session should be used before falling back to the merchant configuration
+            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,
