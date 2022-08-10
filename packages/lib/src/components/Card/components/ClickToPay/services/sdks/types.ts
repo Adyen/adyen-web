@@ -46,63 +46,7 @@ export type SrcCheckoutParams = {
     srcDigitalCardId: string;
 };
 
-/**
- * Initialization parameters (TBD)
- * TODO: clean this up and use only necessary props
- */
-
 export interface SrcInitParams {
     srcInitiatorId: string;
     srciDpaId: string;
-}
-
-// interface DpaTransactionOptions {
-//     dpaAcceptedBillingCountries?: string[];
-//     dpaAcceptedShippingCountries?: string[];
-//     dpaBillingPreference?: string;
-//     dpaShippingPreference?: string;
-//     dpaLocale?: string;
-//     consumerNameRequested?: boolean;
-//     consumerEmailAddressRequested?: boolean;
-//     consumerPhoneNumberRequested?: boolean;
-//     checkoutDescription: string;
-//     paymentOptions?: PaymentOptions;
-//     reviewAction: string; // visa
-//     transactionType?: string; // Not supported by MC
-//     transactionAmount: TransactionAmount;
-//     orderType?: string; // visa
-//     isGuestCheckout?: boolean;
-//     payloadTypeIndicator: string; // visa
-//     payloadTypeIndicatorCheckout?: string; // Not supported by MC
-//     payloadTypeIndicatorPayload?: string; // Not supported by MC
-//     merchantOrderId: string; //visa
-//     merchantCategoryCode: string;
-//     merchantCountryCode: string;
-//     threeDSInputData?: ThreeDSInputData;
-// }
-
-interface ThreeDSInputData {
-    requestorId: string;
-    acquirerId: string;
-    acquirerMid: string;
-}
-
-interface TransactionAmount {
-    transactionAmount: number;
-    transactionCurrencyCode: string;
-}
-
-interface PaymentOptions {
-    // Visa
-    dpaPanRequested?: string;
-    // Mastercard docs
-    dpaDynamicDataTTLMinutes?: string; // Not supported by MC
-    dynamicDataType?: string;
-}
-
-interface DpaData {
-    srcdpaId: string; // might not be needed
-    dpaPresentationName?: string;
-    dpaUri: string;
-    dpaThreeDsPreference: 'ONBEHALF' | 'SELF' | 'NONE' | 'UNKNOWN';
 }
