@@ -254,4 +254,10 @@ describe('interpolateElement()', () => {
         expect(typeof result[2] === 'string');
         expect(result[3] === 'a');
     });
+
+    test('it should throw an error when wrong amount elements', () => {
+        const renderLink = translation => createElement('a', { href: 'example.com' }, [translation]);
+        const resultFn = () => interpolateElement('By clicking continue %#you%# agree with the %#term and conditions%#',  [renderLink]);
+        expect(resultFn).toThrow(Error);
+    });
 });
