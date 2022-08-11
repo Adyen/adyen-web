@@ -12,7 +12,6 @@ import cardType from '../utils/cardType';
 import { SFSetupObject } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType } from '../../types';
-import * as logger from '../../utilities/logger';
 
 /**
  * cvcPolicy - 'required' | 'optional' | 'hidden'
@@ -30,11 +29,6 @@ let cvcPolicy: CVCPolicyType;
 export function createSecuredFields(): number {
     this.encryptedAttrName = DATA_ENCRYPTED_FIELD_ATTR;
 
-    if (process.env.NODE_ENV === 'development' && window._b$dl) {
-        logger.log('\n### CreateSF::createSecuredFields:: this.state.type=', this.state.type);
-        logger.log('\n### CreateSF::createSecuredFields:: this.config.iframeSrc=', this.config.iframeSrc);
-    }
-
     // Detect DOM elements that qualify as securedField holders
     const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
 
@@ -42,7 +36,8 @@ export function createSecuredFields(): number {
 
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
-        return this.createNonCardSecuredFields(securedFields);
+        this.createNonCardSecuredFields(securedFields);
+        return securedFields.length;
     }
 
     // CONTINUE AS CREDIT-CARD TYPE...
@@ -50,16 +45,25 @@ export function createSecuredFields(): number {
 
     this.securityCode = '';
 
-    return this.createCardSecuredFields(securedFields);
-}
+    this.createCardSecuredFields(securedFields);
 
-export function createNonCardSecuredFields(securedFields: HTMLElement[]): number {
-    // Create a new SecuredField for each detected holding element
-    securedFields.forEach(this.setupSecuredField.bind(this));
+    // Return the number of iframes we're going to create
     return securedFields.length;
 }
 
-export function createCardSecuredFields(securedFields: HTMLElement[]): number {
+/**
+ * i.e. giftcard and ach fields
+ *
+ * Create a new SecuredField for each detected holding element
+ */
+export async function createNonCardSecuredFields(securedFields: HTMLElement[]): Promise<any> {
+    for (let i = 0; i < securedFields.length; i++) {
+        const securedField = securedFields[i];
+        await this.setupSecuredField(securedField);
+    }
+}
+
+export async function createCardSecuredFields(securedFields: HTMLElement[]): Promise<any> {
     // Declared card type from the initialisation of CSF
     let type: string = this.state.type;
 
@@ -90,12 +94,34 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
         }
     }
 
-    // Create a new SecuredField for each detected holding element
-    securedFields.forEach(this.setupSecuredField.bind(this));
+    /**
+     * Create a new SecuredField for each detected holding element
+     *
+     * - we do this in sequence, waiting until one has configured before creating the next.
+     * We do it this way to avoid the 'bug' whereby if something interrupts the loading of an iframe the listener we have for its load event
+     * never fires; which means the iframe never configures.
+     * (NB - you can recreate this 'bug' by creating the securedFields in a synchronous loop:
+     *      securedFields.forEach(this.setupSecuredField.bind(this));
+     *  and putting a breakpoint on the line where we declare the setupSecuredField function)
+     *
+     *  Also note we tried the Array.map/Promise.all way of asynchronously looping through an array - but it didn't fix the issue,
+     *  - so we fall back to a good old for-loop
+     */
+    for (let i = 0; i < securedFields.length; i++) {
+        const securedField = securedFields[i];
+        if (window._b$dl) console.log('\nAbout to set up securedField:', securedField);
+        await this.setupSecuredField(securedField);
+        if (window._b$dl) console.log('Finished setting up securedField:', securedField);
+    }
+    if (window._b$dl) console.log('Finished setting up all securedFields');
 
-    // For single branded card we call to onBrand callback once.
-    // This allows the ui to set the correct logo if they haven't already and we also pass the cvcPolicy
-    // - so the UI can hide the CVC iframe holder if necessary
+    /**
+     * Now the securedFields have all been created and configured...
+     *
+     * For a single branded card we call to onBrand callback once.
+     * This allows the ui to set the correct logo if they haven't already,
+     * and we also pass the cvcPolicy so the UI can hide the CVC iframe holder if necessary
+     */
     if (this.isSingleBrandedCard) {
         const callbackObj: CbObjOnBrand = {
             type: this.state.type,
@@ -105,124 +131,106 @@ export function createCardSecuredFields(securedFields: HTMLElement[]): number {
             cvcText: this.securityCode
         };
 
+        // Allow a tick for the securedField to finish rendering
         setTimeout(() => {
             this.callbacks.onBrand(callbackObj);
         }, 0);
     }
-
-    // Return the number of iframes we've created
-    return securedFields.length;
 }
 
-// forEach detected holder for a securedField...
-export function setupSecuredField(pItem: HTMLElement): void {
-    /**
-     *  possible values:
-     *  encryptedCardNumber
-     *  encryptedExpiryDate
-     *  encryptedExpiryMonth
-     *  encryptedExpiryYear
-     *  encryptedSecurityCode
-     *  encryptedPassword
-     *  encryptedPin???
-     *  encryptedBankAccountNumber
-     *  encryptedBankLocationId
-     *  encryptedIBAN
-     */
-    const fieldType: string = getAttribute(pItem, this.encryptedAttrName);
+// Run for each detected holder of a securedField...
+export function setupSecuredField(pItem: HTMLElement): Promise<any> {
+    return new Promise(resolve => {
+        /**
+         *  possible values:
+         *  encryptedCardNumber
+         *  encryptedExpiryDate
+         *  encryptedExpiryMonth
+         *  encryptedExpiryYear
+         *  encryptedSecurityCode
+         *  encryptedPassword
+         *  encryptedPin???
+         *  encryptedBankAccountNumber
+         *  encryptedBankLocationId
+         *  encryptedIBAN
+         */
+        const fieldType: string = getAttribute(pItem, this.encryptedAttrName);
 
-    if (fieldType === ENCRYPTED_EXPIRY_YEAR) {
-        this.state.hasSeparateDateFields = true;
-    }
+        if (fieldType === ENCRYPTED_EXPIRY_YEAR) {
+            this.state.hasSeparateDateFields = true;
+        }
 
-    const extraFieldData: string = getAttribute(pItem, DATA_INFO);
-    const uid = getAttribute(pItem, DATA_UID);
+        const extraFieldData: string = getAttribute(pItem, DATA_INFO);
+        const uid = getAttribute(pItem, DATA_UID);
 
-    // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
-    const setupObj: SFSetupObject = {
-        fieldType,
-        extraFieldData,
-        uid,
-        txVariant: this.state.type,
-        cardGroupTypes: this.config.cardGroupTypes,
-        iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
-        sfLogAtStart: this.config.sfLogAtStart,
-        trimTrailingSeparator: this.config.trimTrailingSeparator,
-        cvcPolicy,
-        expiryDatePolicy: DATE_POLICY_REQUIRED,
-        isCreditCardType: this.config.isCreditCardType,
-        iframeSrc: this.config.iframeSrc,
-        loadingContext: this.config.loadingContext,
-        showWarnings: this.config.showWarnings,
-        holderEl: pItem,
-        legacyInputMode: this.config.legacyInputMode,
-        minimumExpiryDate: this.config.minimumExpiryDate,
-        implementationType: this.config.implementationType,
-        bundleType: this.config.bundleType,
-        isCollatingErrors: this.config.isCollatingErrors
-    };
+        // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
+        const setupObj: SFSetupObject = {
+            fieldType,
+            extraFieldData,
+            uid,
+            txVariant: this.state.type,
+            cardGroupTypes: this.config.cardGroupTypes,
+            iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
+            sfLogAtStart: this.config.sfLogAtStart,
+            trimTrailingSeparator: this.config.trimTrailingSeparator,
+            cvcPolicy,
+            expiryDatePolicy: DATE_POLICY_REQUIRED,
+            isCreditCardType: this.config.isCreditCardType,
+            iframeSrc: this.config.iframeSrc,
+            loadingContext: this.config.loadingContext,
+            showWarnings: this.config.showWarnings,
+            holderEl: pItem,
+            legacyInputMode: this.config.legacyInputMode,
+            minimumExpiryDate: this.config.minimumExpiryDate,
+            implementationType: this.config.implementationType,
+            bundleType: this.config.bundleType,
+            isCollatingErrors: this.config.isCollatingErrors
+        };
 
-    const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)
-        .onIframeLoaded((): void => {
-            // Count
-            this.state.iframeCount += 1;
+        const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)
+            .onIframeLoaded((): void => {
+                // Count
+                this.state.iframeCount += 1;
 
-            if (process.env.NODE_ENV === 'development' && window._b$dl) {
-                logger.log('### createSecuredFields:::: onIframeLoaded::type=', this.state.type, 'iframeCount=', this.state.iframeCount);
-                logger.log(
-                    '### createSecuredFields:::: onIframeLoaded::type=',
-                    this.state.type,
-                    'this.state.originalNumIframes=',
-                    this.state.originalNumIframes
-                );
-            }
-
-            // If all iframes are loaded - call onLoad callback
-            if (this.state.iframeCount === this.state.originalNumIframes) {
-                if (process.env.NODE_ENV === 'development' && window._b$dl) {
-                    logger.log(
-                        '\n### createSecuredFields:::: onIframeLoaded:: ALL IFRAMES LOADED type=',
-                        this.state.type,
-                        'DO CALLBACK callbacks=',
-                        this.callbacks
-                    );
+                // If all iframes are loaded - call onLoad callback
+                if (this.state.iframeCount === this.state.originalNumIframes) {
+                    const callbackObj: CbObjOnLoad = { iframesLoaded: true };
+                    this.callbacks.onLoad(callbackObj);
                 }
+            })
+            .onConfig((pFeedbackObj: SFFeedbackObj): void => {
+                this.handleIframeConfigFeedback(pFeedbackObj);
+                resolve(pFeedbackObj);
+            })
+            .onFocus((pFeedbackObj: SFFeedbackObj): void => {
+                this.handleFocus(pFeedbackObj);
+            })
+            .onBinValue((pFeedbackObj: SFFeedbackObj): void => {
+                this.handleBinValue(pFeedbackObj);
+            })
+            .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
+                // re. Disabling arrow keys in iOS - need to disable all other fields in the form
+                this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
 
-                const callbackObj: CbObjOnLoad = { iframesLoaded: true };
-                this.callbacks.onLoad(callbackObj);
-            }
-        })
-        .onConfig((pFeedbackObj: SFFeedbackObj): void => {
-            this.handleIframeConfigFeedback(pFeedbackObj);
-        })
-        .onFocus((pFeedbackObj: SFFeedbackObj): void => {
-            this.handleFocus(pFeedbackObj);
-        })
-        .onBinValue((pFeedbackObj: SFFeedbackObj): void => {
-            this.handleBinValue(pFeedbackObj);
-        })
-        .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
-            // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-            this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
+                // - pass information about which field has just been clicked (gained focus) to the other iframes
+                this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
+            })
+            .onShiftTab((pFeedbackObj: SFFeedbackObj): void => {
+                // Only happens for Firefox & IE <= 11
+                this.handleSFShiftTab(pFeedbackObj.fieldType);
+            })
+            .onEncryption((pFeedbackObj: SFFeedbackObj): void => {
+                this.handleEncryption(pFeedbackObj);
+            })
+            .onValidation((pFeedbackObj: SFFeedbackObj): void => {
+                this.handleValidation(pFeedbackObj);
+            })
+            .onAutoComplete((pFeedbackObj: SFFeedbackObj): void => {
+                this.processAutoComplete(pFeedbackObj);
+            });
 
-            // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
-            // - pass information about which field has just been clicked (gained focus) to the other iframes
-            this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
-        })
-        .onShiftTab((pFeedbackObj: SFFeedbackObj): void => {
-            // Only happens for Firefox & IE <= 11
-            this.handleSFShiftTab(pFeedbackObj.fieldType);
-        })
-        .onEncryption((pFeedbackObj: SFFeedbackObj): void => {
-            this.handleEncryption(pFeedbackObj);
-        })
-        .onValidation((pFeedbackObj: SFFeedbackObj): void => {
-            this.handleValidation(pFeedbackObj);
-        })
-        .onAutoComplete((pFeedbackObj: SFFeedbackObj): void => {
-            this.processAutoComplete(pFeedbackObj);
-        });
-
-    // Store reference to securedField in this.state (under fieldType)
-    this.state.securedFields[fieldType] = sf;
+        // Store reference to securedField in this.state (under fieldType)
+        this.state.securedFields[fieldType] = sf;
+    });
 }
