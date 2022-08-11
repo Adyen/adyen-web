@@ -1,7 +1,7 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
-import useClickToPayContext from './context/useClickToPayContext';
 import { CtpState } from './services/ClickToPayService';
+import useClickToPayContext from './context/useClickToPayContext';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
 import CtPCards from './components/CtPCards';
 import CtPSection from './components/CtPSection';
@@ -34,14 +34,12 @@ const ClickToPayComponent = ({ onShowCardButtonClick }: ClickToPayComponentProps
     }
 
     return (
-        <Fragment>
-            <CtPSection>
-                {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
-                {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-                {ctpState === CtpState.Ready && <CtPCards onShowCardButtonClick={onShowCardButtonClick} />}
-                {ctpState === CtpState.Login && <CtPLogin />}
-            </CtPSection>
-        </Fragment>
+        <CtPSection>
+            {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
+            {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
+            {ctpState === CtpState.Ready && <CtPCards onShowCardButtonClick={onShowCardButtonClick} />}
+            {ctpState === CtpState.Login && <CtPLogin />}
+        </CtPSection>
     );
 };
 

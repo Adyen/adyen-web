@@ -51,8 +51,8 @@ const CtPLogin = (): h.JSX.Element => {
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__login-title">{i18n.get('ctp.login.title')}</div>
-            <div className="adyen-checkout-ctp__login-subtitle">{i18n.get('ctp.login.subtitle')}</div>
+            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.login.title')}</div>
+            <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.login.subtitle')}</div>
             <CtPLoginInput
                 ref={inputRef}
                 onChange={handleOnLoginChange}

@@ -3,6 +3,7 @@ import useClickToPayContext from '../../context/useClickToPayContext';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { CtpState } from '../../services/ClickToPayService';
 import classnames from 'classnames';
+import { useMemo } from 'preact/hooks';
 import './CtPLogoutLink.scss';
 
 const CtPLogoutLink = (): h.JSX.Element => {
@@ -13,9 +14,10 @@ const CtPLogoutLink = (): h.JSX.Element => {
         return null;
     }
 
-    if (CtpState.Ready === ctpState && cards.length === 0) {
-        return null;
-    }
+    const label = useMemo(() => {
+        if (ctpState === CtpState.Ready && cards.length !== 0) return i18n.get('ctp.logout.notYouCards');
+        else return i18n.get('ctp.logout.notYou');
+    }, [i18n, ctpState]);
 
     return (
         <span
@@ -26,7 +28,7 @@ const CtPLogoutLink = (): h.JSX.Element => {
             })}
             onClick={logoutShopper}
         >
-            {ctpState === CtpState.Ready ? i18n.get('ctp.logout.notYouCards') : i18n.get('ctp.logout.notYou')}
+            {label}
         </span>
     );
 };

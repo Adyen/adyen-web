@@ -10,7 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
-        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
+        shopperEmail: 'shopper@domain.com',
         countryCode
     });
 
@@ -21,7 +21,6 @@ export async function initSession() {
 
         // Events
         beforeSubmit: (data, component, actions) => {
-            data.browserInfo.userAgent = 'wechat';
             actions.resolve(data);
         },
         onPaymentCompleted: (result, component) => {
@@ -33,19 +32,17 @@ export async function initSession() {
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
+            },
+            card: {
+                hasHolderName: true,
+                holderNameRequired: true,
+                holderName: 'J. Smith',
+                positionHolderNameOnTop: true,
+
+                // billingAddress config:
+                billingAddressRequired: true,
+                billingAddressMode: 'partial'
             }
-            // card: {
-            // hasHolderName: true,
-            // holderNameRequired: true,
-            // holderName: 'J. Smith',
-            // positionHolderNameOnTop: true,
-            // billingAddress config:
-            // billingAddressRequired: true,
-            // billingAddressMode: 'partial',
-            // clickToPayConfiguration: {
-            //     shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
-            // }
-            // }
         }
     });
 

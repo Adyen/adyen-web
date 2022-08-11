@@ -2,10 +2,10 @@ import { h } from 'preact';
 import { useCallback, useEffect, useImperativeHandle, useState } from 'preact/hooks';
 import { forwardRef } from 'preact/compat';
 import { otpValidationRules } from './validate';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
-import useForm from '../../../../../../utils/useForm';
-import Field from '../../../../../internal/FormFields/Field';
-import renderFormField from '../../../../../internal/FormFields';
+import useCoreContext from '../../../../../../../core/Context/useCoreContext';
+import useForm from '../../../../../../../utils/useForm';
+import Field from '../../../../../../internal/FormFields/Field';
+import renderFormField from '../../../../../../internal/FormFields';
 import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
 
