@@ -8,9 +8,14 @@ import PayButton from '../../../../../internal/PayButton';
 import { amountLabel } from '../../../../../internal/PayButton/utils';
 import CtPCardsList from './CtPCardsList';
 import ShopperCard from '../../models/ShopperCard';
+import CtPEmptyCardsList from './CtPEmptyCardsList';
 import './CtPCards.scss';
 
-const CtPCards = () => {
+type CtPCardsProps = {
+    onShowCardButtonClick(): void;
+};
+
+const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
@@ -30,6 +35,10 @@ const CtPCards = () => {
     const handleOnChangeCard = useCallback((card: ShopperCard) => {
         setCheckoutCard(card);
     }, []);
+
+    if (cards.length === 0) {
+        return <CtPEmptyCardsList onShowCardButtonClick={onShowCardButtonClick} />;
+    }
 
     return (
         <Fragment>

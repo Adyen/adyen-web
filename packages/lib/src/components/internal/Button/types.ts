@@ -6,7 +6,7 @@ export interface ButtonProps {
      * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
      */
     classNameModifiers?: string[];
-    variant: ButtonVariant;
+    variant?: ButtonVariant;
     disabled?: boolean;
     label?: string;
     icon?: string;

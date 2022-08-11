@@ -10,6 +10,7 @@ import renderFormField from '../../../../../internal/FormFields';
 interface CtPLoginInputProps {
     disabled: boolean;
     errorMessage?: string;
+    onPressEnter(): void;
     onChange({ data: CtPLoginInputDataState, valid, errors, isValid: boolean }): void;
 }
 
@@ -33,6 +34,15 @@ const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((pro
         triggerValidation();
     }, [triggerValidation]);
 
+    const handleOnKeyUp = useCallback(
+        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (event.key === 'Enter') {
+                props.onPressEnter();
+            }
+        },
+        [props.onPressEnter]
+    );
+
     useImperativeHandle(ref, () => ({ validateInput }));
 
     useEffect(() => {
@@ -40,7 +50,12 @@ const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((pro
     }, [data, valid, errors]);
 
     return (
-        <Field name='shopperLogin' label={i18n.get('ctp.login.inputLabel')} errorMessage={props.errorMessage || !!errors.shopperLogin} classNameModifiers={['shopperLogin']}>
+        <Field
+            name="shopperLogin"
+            label={i18n.get('ctp.login.inputLabel')}
+            errorMessage={props.errorMessage || !!errors.shopperLogin}
+            classNameModifiers={['shopperLogin']}
+        >
             {renderFormField('text', {
                 name: 'shopperLogin',
                 autocorrect: 'off',
@@ -48,7 +63,8 @@ const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((pro
                 value: data.shopperLogin,
                 disabled: props.disabled,
                 onInput: handleChangeFor('shopperLogin', 'input'),
-                onBlur: handleChangeFor('shopperLogin', 'blur')
+                onBlur: handleChangeFor('shopperLogin', 'blur'),
+                onKeyUp: handleOnKeyUp
             })}
         </Field>
     );

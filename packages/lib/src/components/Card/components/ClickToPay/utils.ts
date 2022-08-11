@@ -1,19 +1,62 @@
 import SrcSdkLoader from './services/sdks/SrcSdkLoader';
 import ClickToPayService from './services/ClickToPayService';
-import { IClickToPayService } from './services/types';
-import { ClickToPayConfiguration } from '../../types';
+import { IClickToPayService, IdentityLookupParams } from './services/types';
+import { CardConfiguration, ClickToPayConfiguration, ClickToPayScheme } from '../../types';
+import { SrcInitParams } from './services/sdks/types';
 
-function createClickToPayService(configuration: ClickToPayConfiguration, environment: string): IClickToPayService | null {
+/**
+ * Creates the Click to Pay service in case the required configuration is provided
+ */
+function createClickToPayService(
+    configuration: CardConfiguration,
+    clickToPayConfiguration: ClickToPayConfiguration | undefined,
+    environment: string
+): IClickToPayService | null {
+    const schemesConfig = createSchemesInitConfiguration(configuration);
+
+    if (!schemesConfig) {
+        return null;
+    }
+
+    const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperIdentityValue, clickToPayConfiguration?.shopperIdentityType);
+
+    const schemeNames = Object.keys(schemesConfig);
+    const srcSdkLoader = new SrcSdkLoader(schemeNames, environment, clickToPayConfiguration?.locale);
+    return new ClickToPayService(schemesConfig, srcSdkLoader, shopperIdentity);
+}
+
+const createShopperIdentityObject = (value: string, type?: 'email' | 'mobilePhone'): IdentityLookupParams => {
+    if (!value) {
+        return null;
+    }
+    return {
+        value,
+        type: type || 'email'
+    };
+};
+
+/**
+ * Parses 'configuration' object that comes from the Card payment method config, and try to create the Click to Pay
+ * initialization object in case the values are provided.
+ */
+const createSchemesInitConfiguration = (configuration: CardConfiguration): Record<ClickToPayScheme, SrcInitParams> => {
     if (!configuration) {
         return null;
     }
 
-    const { schemes, shopperIdentity } = configuration;
-    const schemeNames = Object.keys(schemes);
-    const srcSdkLoader = new SrcSdkLoader(schemeNames, environment);
-    const service = new ClickToPayService(schemes, srcSdkLoader, shopperIdentity);
+    const { visaSrciDpaId, visaSrcInitiatorId, mcDpaId, mcSrcClientId } = configuration;
 
-    return service;
-}
+    const schemesConfig: Record<ClickToPayScheme, SrcInitParams> = {
+        ...(mcDpaId && mcSrcClientId && { mc: { srciDpaId: mcDpaId, srcInitiatorId: mcSrcClientId } }),
+        ...(visaSrciDpaId &&
+            visaSrcInitiatorId && {
+                visa: {
+                    srciDpaId: visaSrciDpaId,
+                    srcInitiatorId: visaSrcInitiatorId
+                }
+            })
+    };
+    return Object.keys(schemesConfig).length === 0 ? null : schemesConfig;
+};
 
 export { createClickToPayService };

@@ -28,8 +28,10 @@ export class CardElement extends UIElement<CardElementProps> {
     constructor(props) {
         super(props);
 
-        this.clickToPayService = createClickToPayService(props.clickToPayConfiguration, props.environment);
-        this.clickToPayService?.initialize();
+        if (this.props.useClickToPay) {
+            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService?.initialize();
+        }
     }
 
     protected static defaultProps = {
@@ -85,7 +87,12 @@ export class CardElement extends UIElement<CardElementProps> {
                 showPanel
             },
             // installmentOptions of a session should be used before falling back to the merchant configuration
-            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions ,
+            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
+            clickToPayConfiguration: {
+                ...props.clickToPayConfiguration,
+                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,
+                locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
+            }
         };
     }
 

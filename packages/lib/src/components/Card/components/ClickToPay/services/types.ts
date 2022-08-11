@@ -21,7 +21,7 @@ export type CallbackStateSubscriber = (state: CtpState) => void;
 
 export interface IdentityLookupParams {
     value: string;
-    type: string;
+    type?: 'email' | 'mobilePhone';
 }
 
 type MastercardCheckout = {

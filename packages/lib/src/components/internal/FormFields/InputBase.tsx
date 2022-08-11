@@ -21,6 +21,13 @@ export default function InputBase(props) {
         [props.onInput]
     );
 
+    const handleKeyUp = useCallback(
+        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (props?.onKeyUp) props.onKeyUp(event);
+        },
+        [props?.onKeyUp]
+    );
+
     const handleBlur = useCallback(
         (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
             props?.onBlurHandler?.(event); // From Field component
@@ -69,6 +76,7 @@ export default function InputBase(props) {
             onInput={handleInput}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            onKeyUp={handleKeyUp}
             disabled={disabled}
         />
     );

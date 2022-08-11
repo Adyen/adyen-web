@@ -1,8 +1,8 @@
-import { MC_SDK_PROD, MC_SDK_TEST } from './config';
+import { getMastercardSettings, MC_SDK_PROD, MC_SDK_TEST } from './config';
 import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
-import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse } from './types';
+import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse, SrcInitParams } from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS',
@@ -12,8 +12,8 @@ const IdentityTypeMap = {
 class MastercardSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'mc';
 
-    constructor(environment: string) {
-        super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST);
+    constructor(environment: string, locale: string) {
+        super(environment.toLowerCase().includes('live') ? MC_SDK_PROD : MC_SDK_TEST, locale);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {
@@ -25,6 +25,11 @@ class MastercardSdk extends AbstractSrcInitiator {
     protected assignSdkReference(): void {
         // @ts-ignore SRCSDK_MASTERCARD is created by the MC sdk
         this.schemeSdk = window.SRCSDK_MASTERCARD;
+    }
+
+    public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
+        const sdkProps = { ...params, ...getMastercardSettings({ dpaLocale: this.dpaLocale }), srciTransactionId };
+        await this.schemeSdk.init(sdkProps);
     }
 
     public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {

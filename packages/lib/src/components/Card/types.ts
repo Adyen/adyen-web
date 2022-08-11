@@ -11,8 +11,6 @@ import {
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
-import { IdentityLookupParams } from './components/ClickToPay/services/types';
-import { SrcInitParams } from './components/ClickToPay/services/sdks/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -25,6 +23,12 @@ export interface CardElementProps extends UIElementProps {
      * Configuration specific to brands
      */
     brandsConfiguration?: CardBrandsConfiguration;
+
+    /**
+     * Flag indicating if merchant really intent to use Click to Pay
+     * Will be removed when we Click to Pay goes live
+     */
+    useClickToPay: boolean;
 
     /**
      * Configuration for Click to Pay
@@ -121,8 +125,16 @@ export interface CardElementProps extends UIElementProps {
 export type ClickToPayScheme = 'mc' | 'visa';
 
 export type ClickToPayConfiguration = {
-    schemes: Record<ClickToPayScheme, SrcInitParams>;
-    shopperIdentity?: IdentityLookupParams;
+    shopperIdentityValue: string;
+    shopperIdentityType?: 'email' | 'mobilePhone';
+    /**
+     * Used to ensure the correct language and user experience if DCF screen is displayed. As a fallback, it uses the main locale
+     * defined during the creation of the Checkout.
+     * Format: ISO language_country pair (e.g., en_US )
+     *
+     * @default en_US
+     */
+    locale?: string;
 };
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
@@ -131,6 +143,12 @@ export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 //  - should only be ones that can be sent in the configuration object in the /paymentMethods response
 /** If the merchant wishes to set any of these properties in their local config they should do so via a "configuration" object */
 export interface CardConfiguration {
+    // Click to Pay
+    visaSrciDpaId?: string;
+    visaSrcInitiatorId?: string;
+    mcSrcClientId?: string;
+    mcDpaId?: string;
+
     // GooglePay
     merchantIdentifier?: string;
     merchantOrigin?: string;

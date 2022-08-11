@@ -6,6 +6,7 @@ import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
+import uuidv4 from '../../../../../utils/uuid';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -21,6 +22,12 @@ class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
     private readonly schemesConfig: Record<string, SrcInitParams>;
     private readonly shopperIdentity?: IdentityLookupParams;
+
+    /**
+     * Mandatory unique ID passed to all the networks (Click to Pay systems), used to track user journey
+     */
+    private readonly srciTransactionId: string = uuidv4();
+
     private sdks: ISrcInitiator[];
     private validationSchemeSdk: ISrcInitiator = null;
     private stateSubscriber: CallbackStateSubscriber;
@@ -44,9 +51,7 @@ class ClickToPayService implements IClickToPayService {
 
         try {
             this.sdks = await this.sdkLoader.load();
-
             await this.initiateSdks();
-
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
 
             if (recognized) {
@@ -157,7 +162,7 @@ class ClickToPayService implements IClickToPayService {
      * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
      * that responds faster with 'consumerPresent=true'
      */
-    public async verifyIfShopperIsEnrolled(value: string, type = 'email'): Promise<{ isEnrolled: boolean }> {
+    public async verifyIfShopperIsEnrolled(value: string, type: 'email' | 'mobilePhone' = 'email'): Promise<{ isEnrolled: boolean }> {
         return new Promise((resolve, reject) => {
             const lookupPromises = this.sdks.map(sdk => {
                 const identityLookupPromise = sdk.identityLookup({ value, type });
@@ -224,7 +229,7 @@ class ClickToPayService implements IClickToPayService {
     private async initiateSdks(): Promise<void> {
         const initPromises = this.sdks.map(sdk => {
             const cfg = this.schemesConfig[sdk.schemeName];
-            return sdk.init(cfg);
+            return sdk.init(cfg, this.srciTransactionId);
         });
         await Promise.all(initPromises);
     }

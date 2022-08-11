@@ -12,7 +12,7 @@ export async function initManual() {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        environment: 'test',
+        environment: process.env.__CLIENT_ENV__,
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
@@ -65,7 +65,10 @@ export async function initManual() {
             card: {
                 enableStoreDetails: false,
                 hasHolderName: true,
-                holderNameRequired: true
+                holderNameRequired: true,
+                clickToPayConfiguration: {
+                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
+                }
             },
             paywithgoogle: {
                 buttonType: 'plain'

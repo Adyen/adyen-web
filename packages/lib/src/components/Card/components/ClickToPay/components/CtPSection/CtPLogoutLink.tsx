@@ -6,11 +6,15 @@ import classnames from 'classnames';
 import './CtPLogoutLink.scss';
 
 const CtPLogoutLink = (): h.JSX.Element => {
-    const { ctpState, logoutShopper, status } = useClickToPayContext();
+    const { ctpState, logoutShopper, status, cards } = useClickToPayContext();
     const { i18n } = useCoreContext();
 
     if ([CtpState.Ready, CtpState.OneTimePassword].includes(ctpState) === false) {
-        return;
+        return null;
+    }
+
+    if (CtpState.Ready === ctpState && cards.length === 0) {
+        return null;
     }
 
     return (

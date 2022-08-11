@@ -11,7 +11,9 @@ import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface CtPOneTimePasswordInputProps {
     disabled: boolean;
+    isValidatingOtp: boolean;
     errorMessage?: string;
+    onPressEnter(): Promise<void>;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
 }
 
@@ -44,6 +46,15 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         triggerValidation();
     }, [triggerValidation]);
 
+    const handleOnKeyUp = useCallback(
+        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (event.key === 'Enter') {
+                props.onPressEnter();
+            }
+        },
+        [props.onPressEnter]
+    );
+
     useImperativeHandle(ref, () => ({ validateInput }));
 
     useEffect(() => {
@@ -52,9 +63,9 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
 
     return (
         <Field
-            name='oneTimePassword'
+            name="oneTimePassword"
             label={i18n.get('ctp.otp.fieldLabel')}
-            labelEndAdornment={<CtPResendOtpLink onError={handleOnResendOtpError} />}
+            labelEndAdornment={<CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} />}
             errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
             classNameModifiers={['otp']}
         >
@@ -65,7 +76,8 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
                 value: data.otp,
                 disabled: props.disabled,
                 onInput: handleChangeFor('otp', 'input'),
-                onBlur: handleChangeFor('otp', 'blur')
+                onBlur: handleChangeFor('otp', 'blur'),
+                onKeyUp: handleOnKeyUp
             })}
         </Field>
     );

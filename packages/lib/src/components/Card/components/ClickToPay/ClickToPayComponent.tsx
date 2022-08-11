@@ -8,7 +8,11 @@ import CtPSection from './components/CtPSection';
 import CtPLoader from './components/CtPLoader';
 import CtPLogin from './components/CtPLogin';
 
-const ClickToPayComponent = (): h.JSX.Element => {
+type ClickToPayComponentProps = {
+    onShowCardButtonClick?(): void;
+};
+
+const ClickToPayComponent = ({ onShowCardButtonClick }: ClickToPayComponentProps): h.JSX.Element => {
     const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
 
     useEffect(() => {
@@ -34,7 +38,7 @@ const ClickToPayComponent = (): h.JSX.Element => {
             <CtPSection>
                 {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
                 {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-                {ctpState === CtpState.Ready && <CtPCards />}
+                {ctpState === CtpState.Ready && <CtPCards onShowCardButtonClick={onShowCardButtonClick} />}
                 {ctpState === CtpState.Login && <CtPLogin />}
             </CtPSection>
         </Fragment>
