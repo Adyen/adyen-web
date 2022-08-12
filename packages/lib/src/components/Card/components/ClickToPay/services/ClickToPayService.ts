@@ -22,6 +22,7 @@ class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
     private readonly schemesConfig: Record<string, SrcInitParams>;
     private readonly shopperIdentity?: IdentityLookupParams;
+    private readonly environment: string;
 
     /**
      * Mandatory unique ID passed to all the networks (Click to Pay systems), used to track user journey
@@ -36,10 +37,16 @@ class ClickToPayService implements IClickToPayService {
     public shopperCards: ShopperCard[] = null;
     public shopperValidationContact: string;
 
-    constructor(schemesConfig: Record<ClickToPayScheme, SrcInitParams>, sdkLoader: ISrcSdkLoader, shopperIdentity?: IdentityLookupParams) {
+    constructor(
+        schemesConfig: Record<ClickToPayScheme, SrcInitParams>,
+        sdkLoader: ISrcSdkLoader,
+        environment: string,
+        shopperIdentity?: IdentityLookupParams
+    ) {
         this.sdkLoader = sdkLoader;
         this.schemesConfig = schemesConfig;
         this.shopperIdentity = shopperIdentity;
+        this.environment = environment;
     }
 
     public get schemes(): string[] {
@@ -50,7 +57,7 @@ class ClickToPayService implements IClickToPayService {
         this.setState(CtpState.Loading);
 
         try {
-            this.sdks = await this.sdkLoader.load();
+            this.sdks = await this.sdkLoader.load(this.environment);
             await this.initiateSdks();
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
 
@@ -137,7 +144,7 @@ class ClickToPayService implements IClickToPayService {
             );
         }
 
-        return createCheckoutPayloadBasedOnScheme(card, checkoutResponse);
+        return createCheckoutPayloadBasedOnScheme(card, checkoutResponse, this.environment);
     }
 
     /**
@@ -169,7 +176,6 @@ class ClickToPayService implements IClickToPayService {
 
                 identityLookupPromise
                     .then(response => {
-                        console.log(sdk.schemeName, response);
                         if (response.consumerPresent && !this.validationSchemeSdk) {
                             this.setSdkForPerformingShopperIdentityValidation(sdk);
                             resolve({ isEnrolled: true });
@@ -192,7 +198,6 @@ class ClickToPayService implements IClickToPayService {
     }
 
     private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
-        console.log('SDK chosen:', sdk.schemeName);
         this.validationSchemeSdk = sdk;
     }
 
@@ -204,8 +209,7 @@ class ClickToPayService implements IClickToPayService {
         const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
         const srcProfiles = await Promise.all(srcProfilesPromises);
         const profilesWithScheme = srcProfiles.map<SrcProfileWithScheme>((profile, index) => ({ ...profile, scheme: this.sdks[index].schemeName }));
-        const cards = createShopperCardsList(profilesWithScheme);
-        this.shopperCards = cards;
+        this.shopperCards = createShopperCardsList(profilesWithScheme);
         this.setState(CtpState.Ready);
     }
 

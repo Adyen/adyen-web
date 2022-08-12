@@ -1,4 +1,4 @@
-import { ValidatorRules } from '../../../../../../utils/Validator/types';
+import { ValidatorRules } from '../../../../../../../utils/Validator/types';
 
 export const otpValidationRules: ValidatorRules = {
     otp: {

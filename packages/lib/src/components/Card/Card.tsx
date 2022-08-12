@@ -37,6 +37,7 @@ export class CardElement extends UIElement<CardElementProps> {
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
+        useClickToPay: false,
         SRConfig: {}
     };
 
@@ -88,6 +89,10 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
+            /**
+             * Click to Pay configuration
+             * - If email is set explicitly in the configuration, then it can override the one used in the session creation
+             */
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,

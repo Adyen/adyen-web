@@ -12,6 +12,21 @@
     }
 }
 
+.adyen-checkout-ctp__section-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    margin-bottom: 4px;
+}
+
+.adyen-checkout-ctp__section-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: $color-gray-darker;
+    line-height: 19px;
+    margin-bottom: 16px;
+}
+
 .adyen-checkout-ctp__section-header-logo {
     width: 24px;
     margin-right: 6px;

@@ -65,10 +65,7 @@ export async function initManual() {
             card: {
                 enableStoreDetails: false,
                 hasHolderName: true,
-                holderNameRequired: true,
-                clickToPayConfiguration: {
-                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
-                }
+                holderNameRequired: true
             },
             paywithgoogle: {
                 buttonType: 'plain'

@@ -21,8 +21,8 @@ function createClickToPayService(
     const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperIdentityValue, clickToPayConfiguration?.shopperIdentityType);
 
     const schemeNames = Object.keys(schemesConfig);
-    const srcSdkLoader = new SrcSdkLoader(schemeNames, environment, clickToPayConfiguration?.locale);
-    return new ClickToPayService(schemesConfig, srcSdkLoader, shopperIdentity);
+    const srcSdkLoader = new SrcSdkLoader(schemeNames, clickToPayConfiguration?.locale);
+    return new ClickToPayService(schemesConfig, srcSdkLoader, environment, shopperIdentity);
 }
 
 const createShopperIdentityObject = (value: string, type?: 'email' | 'mobilePhone'): IdentityLookupParams => {

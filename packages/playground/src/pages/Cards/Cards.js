@@ -7,13 +7,13 @@ import '../../../config/polyfills';
 import '../../style.scss';
 
 const showComps = {
-    storedCard: false,
-    card: false,
-    bcmcCard: false,
-    avsCard: false,
-    avsPartialCard: false,
-    kcpCard: false,
-    ctp: true
+    storedCard: true,
+    card: true,
+    bcmcCard: true,
+    avsCard: true,
+    avsPartialCard: true,
+    kcpCard: true,
+    clickToPay: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -142,22 +142,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-kcp-field');
     }
 
-    if (showComps.ctp) {
+    if (showComps.clickToPay) {
+        /**
+         * Make sure that the initialization values are being set in the /paymentMethods response,
+         * as part of the 'scheme' configuration object
+         */
         window.ctpCard = checkout
             .create('card', {
                 type: 'scheme',
-                brands: ['mc', 'visa', 'amex'],
-                // 'configuration' must be returned from the Backend. Here we are overriding it
-                // so we can 'test' without the Backend configuration
-                configuration: {
-                    visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
-                    visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
-                    mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                    mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
-                },
+                brands: ['mc', 'visa'],
                 useClickToPay: true,
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'guilherme.ribeiro-ctp1@adyen.com'
+                    shopperIdentityValue: 'shopper.email@domain.com'
                 }
             })
             .mount('.card-ctp-field');

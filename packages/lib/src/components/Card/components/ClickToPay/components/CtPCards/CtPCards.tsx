@@ -42,8 +42,8 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__cards-title">{i18n.get('ctp.cards.title')}</div>
-            <div className="adyen-checkout-ctp__cards-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
+            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
+            <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
 
             {cards.length === 1 ? <CtPSingleCard card={cards[0]} /> : <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} />}
 

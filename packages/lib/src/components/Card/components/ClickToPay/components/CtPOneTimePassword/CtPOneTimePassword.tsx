@@ -2,8 +2,8 @@ import { Fragment, h } from 'preact';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import Button from '../../../../../internal/Button';
 import useClickToPayContext from '../../context/useClickToPayContext';
-import CtPOneTimePasswordInput from '../CtPOneTimePasswordInput';
-import { CtPOneTimePasswordInputHandlers } from '../CtPOneTimePasswordInput/CtPOneTimePasswordInput';
+import CtPOneTimePasswordInput from './CtPOneTimePasswordInput';
+import { CtPOneTimePasswordInputHandlers } from './CtPOneTimePasswordInput/CtPOneTimePasswordInput';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import './CtPOneTimePassword.scss';
 
@@ -42,8 +42,8 @@ const CtPOneTimePassword = (): h.JSX.Element => {
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__otp-title">{i18n.get('ctp.otp.title')}</div>
-            <div className="adyen-checkout-ctp__otp-subtitle">
+            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.otp.title')}</div>
+            <div className="adyen-checkout-ctp__section-subtitle">
                 {subtitleParts[0]}
                 <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span>
                 {subtitleParts[1]}

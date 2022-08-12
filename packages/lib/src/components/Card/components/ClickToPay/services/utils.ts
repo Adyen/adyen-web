@@ -2,14 +2,20 @@ import { ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 
-function createCheckoutPayloadBasedOnScheme(card: ShopperCard, checkoutResponse: SrciCheckoutResponse): ClickToPayCheckoutPayload {
+function createCheckoutPayloadBasedOnScheme(
+    card: ShopperCard,
+    checkoutResponse: SrciCheckoutResponse,
+    environment: string
+): ClickToPayCheckoutPayload {
     const { scheme, tokenId, srcDigitalCardId, srcCorrelationId } = card;
 
     switch (scheme) {
         case 'visa':
-            // For testing, using hardcoded value for tokenId: 987654321
+            /**
+             * For test environment, we are using hardcoded tokenId
+             */
             return tokenId
-                ? { srcScheme: scheme, srcTokenReference: '987654321' } //  TODO: srcTokenReference: tokenId
+                ? { srcScheme: scheme, srcTokenReference: environment.toLowerCase().includes('live') ? tokenId : '987654321' }
                 : { srcScheme: scheme, srcCheckoutPayload: checkoutResponse.encryptedPayload };
         case 'mc':
         default:
