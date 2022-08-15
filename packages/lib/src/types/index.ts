@@ -1,6 +1,7 @@
 import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
+import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -263,6 +264,10 @@ export type CheckoutSession = {
     sessionData: string;
 };
 
+export type SessionConfiguration = {
+    installmentOptions: InstallmentOptions;
+}
+
 export type CheckoutSessionSetupResponse = {
     id: string;
     sessionData: string;
@@ -271,6 +276,7 @@ export type CheckoutSessionSetupResponse = {
     expiresAt: string;
     paymentMethods: any;
     returnUrl: string;
+    configuration: SessionConfiguration;
 };
 
 export type CheckoutSessionPaymentResponse = {

@@ -1,4 +1,4 @@
-import { KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
+import { JWE_ALG, JWE_CONTENT_ALG, JWE_VERSION, KOREAN_TEST_CARD, REGULAR_TEST_CARD, TEST_TAX_NUMBER_VALUE } from '../../utils/constants';
 import CardComponentPage from '../../../_models/CardComponent.page';
 import { turnOffSDKMocking } from '../../../_common/cardMocks';
 
@@ -54,7 +54,26 @@ test(
 
         // Expect card state to have tax and pwd elements
         await t.expect(cardPage.getFromState('data.taxNumber')).eql(TEST_TAX_NUMBER_VALUE);
-        await t.expect(cardPage.getFromState('data.encryptedPassword')).contains('adyenjs_0_1_');
+
+        // Extract & decode JWE header
+        const JWEToken = await cardPage.getFromState('data.encryptedPassword');
+        const JWETokenArr = JWEToken.split('.');
+        const blobHeader = JWETokenArr[0];
+        const base64Decoded = await cardPage.decodeBase64(blobHeader);
+        const headerObj = JSON.parse(base64Decoded);
+
+        // Look for expected properties
+        await t.expect(JWETokenArr.length).eql(5); // Expected number of components in the JWE token
+
+        await t
+            .expect(headerObj.alg)
+            .eql(JWE_ALG)
+            .expect(headerObj.enc)
+            .eql(JWE_CONTENT_ALG)
+            .expect(headerObj.version)
+            .eql(JWE_VERSION);
+
+        // await t.expect(cardPage.getFromState('data.encryptedPassword')).contains('adyenjs_0_1_');
 
         await t.expect(cardPage.getFromState('valid.taxNumber')).eql(true);
         await t.expect(cardPage.getFromState('valid.encryptedPassword')).eql(true);

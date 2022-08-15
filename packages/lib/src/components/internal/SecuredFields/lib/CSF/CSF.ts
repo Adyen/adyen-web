@@ -27,6 +27,7 @@ import { on, selectOne } from '../utilities/dom';
 import { partial } from '../utilities/commonUtils';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import ua from './utils/userAgent';
+import { SingleBrandResetObject } from '../../SFP/types';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -152,6 +153,8 @@ class CSF extends AbstractCSF {
             setFocusOnFrame: (pFieldType: string): void => {
                 if (this.state.isConfigured) {
                     this.setFocusOnFrame(pFieldType);
+                    // Comment in a quick way to test destroying secured fields (also see comment in destroySecuredFields)
+                    // this.destroySecuredFields();
                 } else {
                     notConfiguredWarning('You cannot set focus on any secured field');
                 }
@@ -212,11 +215,11 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot destroy secured fields');
                 }
             },
-            brandsFromBinLookup: (binLookupResponse: BinLookupResponse): void => {
+            brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject): void => {
                 if (!this.config.isCreditCardType) return null;
 
                 if (this.state.isConfigured) {
-                    this.handleBrandFromBinLookup(binLookupResponse);
+                    this.handleBrandFromBinLookup(binLookupResponse, resetObj);
                 } else {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }

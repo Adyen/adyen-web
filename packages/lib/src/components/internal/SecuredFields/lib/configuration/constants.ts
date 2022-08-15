@@ -15,11 +15,12 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '3.10.2';
+export const SF_VERSION = '4.1.1';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
-export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['sepa', 'sepadirectdebit', 'ach', GIFT_CARD];
+// export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['ach', GIFT_CARD, 'sepa', 'sepadirectdebit']; //Maybe, sometime in the future
+export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['ach', GIFT_CARD];
 
 // Credit card (CardInput) related securedFields
 export const CREDIT_CARD_SF_FIELDS = [
@@ -32,11 +33,15 @@ export const CREDIT_CARD_SF_FIELDS = [
     // ENCRYPTED_PIN_FIELD,// probably redundant - it was an alt. name for KCP's encryptedPassword. But maybe has a role to play if we ever encrypt ibans.
 ];
 
-export const OTHER_SF_FIELDS = [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD];
+export const OTHER_SF_FIELDS = [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD]; // ACH fields
 
 export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS.concat(OTHER_SF_FIELDS);
 
 // export const ALL_RELATED_SECURED_FIELDS = ALL_SECURED_FIELDS.concat(NON_CREDIT_CARD_TYPE_SECURED_FIELDS);
+
+// Card components created as: checkout.create({BRAND}) e.g. checkout.create('bcmc')
+// - which are dedicated to a single, core, brand e.g. 'bcmc' BUT which can in effect handle multiple brands e.g. "bcmc", "maestro", "visa"
+export const DEDICATED_CARD_COMPONENTS = ['bcmc'];
 
 export const REQUIRED = 'required';
 export const OPTIONAL = 'optional';

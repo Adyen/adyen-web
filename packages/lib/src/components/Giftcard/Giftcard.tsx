@@ -81,6 +81,11 @@ export class GiftcardElement extends UIElement {
         }
     };
 
+    public balanceCheck() {
+        return this.onBalanceCheck();
+    }
+
+
     public onBalanceCheck = () => {
         // skip balance check if no onBalanceCheck event has been defined
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
@@ -110,6 +115,11 @@ export class GiftcardElement extends UIElement {
                         this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
                         this.submit();
                     });
+                }
+                else {
+                    if (this.props.onRequiringConfirmation) {
+                        this.props.onRequiringConfirmation();
+                    }
                 }
             })
             .catch(error => {
