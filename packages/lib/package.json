@@ -23,7 +23,7 @@
         "./dist/adyen.css": "./dist/adyen.css",
         "./package.json": "./package.json"
     },
-    "version": "5.21.0",
+    "version": "5.21.1",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
