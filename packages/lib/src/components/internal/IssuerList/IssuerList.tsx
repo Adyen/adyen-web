@@ -99,10 +99,14 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 })}
 
             {props.termsAndConditionsUrl && (
-                <div className='adyen-checkout__issuer-list__termsAndConditions'>
-                    <p className='adyen-checkout__helper-text'>
+                <div className="adyen-checkout__issuer-list__termsAndConditions">
+                    <p className="adyen-checkout__helper-text">
                         {interpolateElement(i18n.get('onlineBanking.termsAndConditions'), [
-                            translation => <a href={props.termsAndConditionsUrl}>{translation}</a>
+                            translation => (
+                                <a href={props.termsAndConditionsUrl} target="_blank" rel="noopener noreferrer">
+                                    {translation}
+                                </a>
+                            )
                         ])}
                     </p>
                 </div>
