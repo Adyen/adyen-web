@@ -52,6 +52,8 @@ import OnlineBankingINElement from './OnlineBankingIN';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
 import WalletINElement from './WalletIN';
+import OnlineBankingCZElement from './OnlineBankingCZ';
+import OnlineBankingSKElement from './OnlineBankingSK';
 
 /**
  * Maps each component with a Component element.
@@ -165,6 +167,8 @@ const componentsMap = {
     mealVoucher_FR_natixis: MealVoucherFR,
     mealVoucher_FR_sodexo: MealVoucherFR,
     mealVoucher_FR_groupeup: MealVoucherFR,
+    onlineBanking_CZ: OnlineBankingCZElement,
+    onlineBanking_SK: OnlineBankingSKElement,
     default: null
 };
 

@@ -214,5 +214,6 @@
     "orPayWith": "eller betala med",
     "invalidFormatExpects": "Ogiltigt format. Förväntat format: %{format}",
     "upi.qrCodeWaitingMessage": "Skanna QR-koden med valfri UPI-app för att slutföra betalningen",
-    "upi.vpaWaitingMessage": "Öppna din UPI-app för att bekräfta betalningen"
+    "upi.vpaWaitingMessage": "Öppna din UPI-app för att bekräfta betalningen",
+    "onlineBanking.termsAndConditions": "Genom att klicka på Fortsätt godkänner du %#villkoren%#"
 }

@@ -218,6 +218,8 @@
     "invalidFormatExpects": "Invalid format. Expected format: %{format}",
     "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
+    "onlineBanking.termsAndConditions": "By clicking continue you agree with the %#terms and conditions%#",
+
 
     "ctp.loading.poweredByCtp": "Powered by Click to Pay",
     "ctp.loading.intro": "A smart, secure way to pay with merchants worldwide",
@@ -231,19 +233,14 @@
     "ctp.otp.codeResent": "Code resent",
     "ctp.otp.title": "Verify yourself",
     "ctp.otp.subtitle": "Enter the code we've sent to %@ to verify it‘s you.",
-
     "ctp.emptyCardsView.title": "Complete your payment",
     "ctp.emptyCardsView.subtitle": "There are no cards registered in your Click to Pay profile.",
     "ctp.emptyCardsView.button": "Manually enter card details",
-
     "ctp.separatorText": "or use",
-
     "ctp.cards.title": "Complete your payment",
     "ctp.cards.subtitle": "Continue with your Click to Pay card to complete the payment.",
     "ctp.cards.cardSelector": "Click to Pay cards",
-
     "ctp.manualCardEntry": "Manual card entry",
-
     "ctp.errors.AUTH_INVALID": "Authentication Invalid ",
     "ctp.errors.NOT_FOUND": "No account found with this email address",
     "ctp.errors.ID_FORMAT_UNSUPPORTED": "Format not supported",
