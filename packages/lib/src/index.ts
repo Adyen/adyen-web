@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === 'development') {
     // require('preact/debug');
 }
 
-import { CoreOptions } from 'src/core/types';
+import { CoreOptions } from './core/types';
 import Checkout from './core';
 /* eslint-enable */
 
