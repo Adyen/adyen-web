@@ -249,6 +249,7 @@
     "ctp.errors.ACCT_INACCESSIBLE": "The account exists but is not currently accessible, e.g. it is locked",
     "ctp.errors.UNKNOWN_ERROR": "Unknown error",
     "ctp.errors.CODE_INVALID": "Incorrect verification code",
+    "ctp.errors.CODE_EXPIRED": "This code has expired",
     "ctp.errors.INVALID_PARAMETER": "Something went wrong",
     "ctp.errors.RETRIES_EXCEEDED": "The limit for the number of retries for OTP generation was exceeded",
     "ctp.errors.OTP_SEND_FAILED": "The OTP could not be sent to the recipient"
