@@ -63,8 +63,8 @@ export interface UIElementProps extends BaseElementProps {
     type?: string;
     name?: string;
     icon?: string;
-    amount?: PaymentAmount | PaymentAmountExtended;
-    secondaryAmount?: PaymentAmount | PaymentAmountExtended;
+    amount?: PaymentAmount;
+    secondaryAmount?: PaymentAmountExtended;
 
     /**
      * Show/Hide pay button
