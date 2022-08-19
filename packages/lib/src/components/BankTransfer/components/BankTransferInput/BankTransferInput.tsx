@@ -30,8 +30,6 @@ function BankTransferInput(props) {
 
     useEffect(() => {
         props.onChange({ data, errors, valid, isValid });
-        console.log('### BankTransferInput::data:: ', data);
-        console.log('### BankTransferInput::errors:: ', errors);
     }, [data, valid, errors, showingEmail, isValid]);
 
     return (
