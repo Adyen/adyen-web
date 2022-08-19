@@ -1,4 +1,4 @@
-import { Component, h } from 'preact';
+import { cloneElement, Component, ComponentChild, h, toChildArray, VNode } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
@@ -31,7 +31,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }, delay);
     };
 
-    render({ classNameModifiers = [], disabled, href, icon, inline, label, secondaryLabel, status, variant }, { completed }) {
+    render({ classNameModifiers = [], disabled, href, icon, inline, label, status, variant }, { completed }) {
         const { i18n } = useCoreContext();
 
         const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="" aria-hidden="true" /> : '';
@@ -58,7 +58,6 @@ class Button extends Component<ButtonProps, ButtonState> {
                 <span className="adyen-checkout__button__content">
                     {buttonIcon}
                     <span className="adyen-checkout__button__text">{label}</span>
-                    {secondaryLabel && <span className="adyen-checkout__button__text adyen-checkout__button__text--secondary">{secondaryLabel}</span>}
                 </span>
             )
         };
@@ -76,6 +75,11 @@ class Button extends Component<ButtonProps, ButtonState> {
         return (
             <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
                 {buttonText}
+                {toChildArray(this.props.children).map(
+                    (child: ComponentChild): ComponentChild => {
+                        return cloneElement(child as VNode);
+                    }
+                )}
             </button>
         );
     }

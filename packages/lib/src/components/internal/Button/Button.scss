@@ -55,6 +55,8 @@
         &:disabled {
             opacity: 1;
         }
+        display: flex;
+        justify-content: center;
     }
 
     &.adyen-checkout__button--standalone {
@@ -189,11 +191,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-
-        &--secondary{
-            margin-left: 5px;
-            font-size: 0.85em;
-        }
     }
 
     .adyen-checkout__spinner {

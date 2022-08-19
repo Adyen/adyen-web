@@ -3,6 +3,7 @@ import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmountExtended } from '../../../types';
 import Language from '../../../language/Language';
+import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 
 export interface PayButtonProps {
     /**
@@ -53,8 +54,9 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
             disabled={props.disabled || props.status === 'loading'}
             classNameModifiers={[...classNameModifiers, 'pay']}
             label={label || defaultLabel}
-            secondaryLabel={secondaryLabel}
-        />
+        >
+            {secondaryLabel && <SecondaryButtonLabel label={secondaryLabel} />}
+        </Button>
     );
 };
 
