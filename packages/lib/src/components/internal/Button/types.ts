@@ -7,6 +7,7 @@ export interface ButtonProps {
     variant: 'primary' | 'secondary' | 'ghost' | 'action';
     disabled?: boolean;
     label?: string;
+    secondaryLabel?: string;
     icon?: string;
     inline?: boolean;
     href?: string;
