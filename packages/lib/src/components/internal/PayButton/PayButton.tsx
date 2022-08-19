@@ -18,7 +18,7 @@ export interface PayButtonProps {
     onClick?(): void;
 }
 
-const payAmountLabel = (i18n: Language, amount) => {
+const payAmountLabel = (i18n: Language, amount: PaymentAmountExtended) => {
     const payStr = `${i18n.get('payButton')}`;
 
     const primaryAmount =
@@ -29,7 +29,7 @@ const payAmountLabel = (i18n: Language, amount) => {
     return `${payStr} ${primaryAmount}`;
 };
 
-const secondaryAmountLabel = (i18n: Language, secondaryAmount) => {
+const secondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmountExtended) => {
     const convertedSecondaryAmount =
         secondaryAmount && !!secondaryAmount?.value && !!secondaryAmount?.currency
             ? i18n.amount(secondaryAmount.value, secondaryAmount.currency, { currencyDisplay: secondaryAmount.currencyDisplay || 'symbol' })
