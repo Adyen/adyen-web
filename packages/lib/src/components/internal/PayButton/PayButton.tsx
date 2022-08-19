@@ -11,7 +11,7 @@ export interface PayButtonProps {
     classNameModifiers?: string[];
     label?: string;
     amount: PaymentAmountExtended;
-    secondaryAmount: PaymentAmountExtended;
+    secondaryAmount?: PaymentAmountExtended;
     status?: string;
     disabled?: boolean;
     icon?: string;
