@@ -126,10 +126,14 @@ class BaseElement<P extends BaseElementProps> {
 
     /**
      * Unmounts a payment element from the DOM
+     * @param nullifyNode - needs to be set to true if there is an intention to remount the component using mount() instead of remount()
+     *  (Mostly of use to merchants performing multiple mount & unmount actions on a component)
      */
-    public unmount(): this {
+    public unmount(nullifyNode?): this {
         if (this._node) {
             render(null, this._node);
+
+            if (nullifyNode) this._node = null;
         }
 
         return this;
