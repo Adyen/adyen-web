@@ -5,6 +5,7 @@ import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
 import { BankTransferSchema } from '../../types';
+import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
 
 function BankTransferInput(props) {
     const { i18n } = useCoreContext();
@@ -12,7 +13,10 @@ function BankTransferInput(props) {
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid, setSchema } = useForm<BankTransferSchema>({
         schema: [],
-        defaultData: props.data
+        defaultData: props.data,
+        rules: {
+            shopperEmail: personalDetailsValidationRules.shopperEmail
+        }
     });
 
     const toggleEmailField = () => setShowingEmail(!showingEmail);
@@ -26,6 +30,8 @@ function BankTransferInput(props) {
 
     useEffect(() => {
         props.onChange({ data, errors, valid, isValid });
+        console.log('### BankTransferInput::data:: ', data);
+        console.log('### BankTransferInput::errors:: ', errors);
     }, [data, valid, errors, showingEmail, isValid]);
 
     return (
