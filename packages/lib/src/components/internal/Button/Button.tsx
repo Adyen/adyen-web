@@ -75,11 +75,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         return (
             <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
                 {buttonText}
-                {toChildArray(this.props.children).map(
-                    (child: ComponentChild): ComponentChild => {
-                        return cloneElement(child as VNode);
-                    }
-                )}
+                {this.props.children}
             </button>
         );
     }
