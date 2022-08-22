@@ -11,7 +11,7 @@ import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import { createClickToPayService } from './components/ClickToPay/utils';
 import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
-import ClickToPayHolder from './ClickToPayHolder';
+import ClickToPayWrapper from './ClickToPayWrapper';
 import { UIElementStatus } from '../types';
 
 export class CardElement extends UIElement<CardElementProps> {
@@ -240,7 +240,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <ClickToPayHolder
+                <ClickToPayWrapper
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}
                     setClickToPayRef={this.setClickToPayRef}
@@ -249,7 +249,7 @@ export class CardElement extends UIElement<CardElementProps> {
                     onError={this.handleError}
                 >
                     {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
-                </ClickToPayHolder>
+                </ClickToPayWrapper>
             </CoreProvider>
         );
     }

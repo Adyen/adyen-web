@@ -12,7 +12,7 @@ type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
 };
 
-type ClickToPayProviderProps = {
+export type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
     amount: PaymentAmount;
     children: any;
