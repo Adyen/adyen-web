@@ -235,7 +235,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonFunctionProps) => {
-        return <PayButton {...props} amount={this.props.amount} onClick={this.submit} />;
+        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
     };
 }
 

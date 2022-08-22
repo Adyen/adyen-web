@@ -187,6 +187,15 @@ export interface PaymentAmount {
     currency: string;
 }
 
+export interface PaymentAmountExtended extends PaymentAmount {
+    /**
+     * Adds currencyDisplay prop - as a way for the merchant to influence the final display of the amount on the pay button.
+     * Defaults to 'symbol'.
+     * see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#currencydisplay
+     */
+    currencyDisplay?: string;
+}
+
 export type AddressField = typeof ADDRESS_SCHEMA[number];
 
 export type AddressData = {
@@ -266,7 +275,7 @@ export type CheckoutSession = {
 
 export type SessionConfiguration = {
     installmentOptions: InstallmentOptions;
-}
+};
 
 export type CheckoutSessionSetupResponse = {
     id: string;
