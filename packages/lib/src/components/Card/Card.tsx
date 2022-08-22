@@ -9,10 +9,9 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
-import ClickToPayProvider from './components/ClickToPay/context/ClickToPayProvider';
 import { createClickToPayService } from './components/ClickToPay/utils';
 import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
-import ClickToPayWrapper from './ClickToPayWrapper';
+import ClickToPayHolder from './ClickToPayHolder';
 import { UIElementStatus } from '../types';
 
 export class CardElement extends UIElement<CardElementProps> {
@@ -241,7 +240,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <ClickToPayProvider
+                <ClickToPayHolder
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}
                     setClickToPayRef={this.setClickToPayRef}
@@ -249,8 +248,8 @@ export class CardElement extends UIElement<CardElementProps> {
                     onSubmit={this.handleClickToPaySubmit}
                     onError={this.handleError}
                 >
-                    <ClickToPayWrapper>{isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}</ClickToPayWrapper>
-                </ClickToPayProvider>
+                    {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+                </ClickToPayHolder>
             </CoreProvider>
         );
     }
