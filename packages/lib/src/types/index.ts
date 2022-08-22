@@ -275,6 +275,7 @@ export type CheckoutSession = {
 
 export type SessionConfiguration = {
     installmentOptions: InstallmentOptions;
+    enableStoreDetails: boolean;
 };
 
 export type CheckoutSessionSetupResponse = {
