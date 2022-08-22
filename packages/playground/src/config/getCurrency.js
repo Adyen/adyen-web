@@ -9,6 +9,7 @@ const currencies = {
     DK: 'DKK',
     GB: 'GBP',
     HK: 'HKD',
+    HR: 'HRK',
     HU: 'HUN',
     ID: 'IDR',
     IN: 'INR',

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Order, PaymentAction, PaymentAmount } from '../types';
+import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
 import Core from '../core';
@@ -65,6 +65,7 @@ export interface UIElementProps extends BaseElementProps {
     name?: string;
     icon?: string;
     amount?: PaymentAmount;
+    secondaryAmount?: PaymentAmountExtended;
 
     /**
      * Show/Hide pay button

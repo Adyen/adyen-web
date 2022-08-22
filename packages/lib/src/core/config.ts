@@ -5,6 +5,7 @@ export const FALLBACK_CONTEXT = 'https://checkoutshopper-live.adyen.com/checkout
 
 export const GENERIC_OPTIONS = [
     'amount',
+    'secondaryAmount',
     'countryCode',
     'environment',
     'loadingContext',

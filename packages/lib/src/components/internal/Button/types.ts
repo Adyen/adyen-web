@@ -9,6 +9,7 @@ export interface ButtonProps {
     variant?: ButtonVariant;
     disabled?: boolean;
     label?: string;
+    secondaryLabel?: string;
     icon?: string;
     inline?: boolean;
     href?: string;
