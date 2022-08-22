@@ -24,6 +24,7 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
                 name: 'holderName',
                 className: `adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`,
                 placeholder: placeholder || i18n.get('creditCard.holderName.placeholder'),
+                autocomplete: 'cc-name',
                 value,
                 required,
                 onBlur,
