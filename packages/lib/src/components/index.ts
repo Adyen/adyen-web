@@ -103,6 +103,7 @@ const componentsMap = {
     doku_wallet: Doku,
     donation: Donation,
     dotpay: Dotpay,
+    onlineBanking: Dotpay,
     dragonpay_ebanking: Dragonpay,
     dragonpay_otc_banking: Dragonpay,
     dragonpay_otc_non_banking: Dragonpay,

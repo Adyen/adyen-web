@@ -54,7 +54,9 @@ class Script {
             }
         });
 
-    public remove = () => this.script.parentNode && this.script.parentNode.removeChild(this.script);
+    public remove = (): HTMLScriptElement => {
+        return this.script.parentNode && this.script.parentNode.removeChild(this.script);
+    };
 }
 
 export default Script;
