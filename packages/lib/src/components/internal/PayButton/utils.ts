@@ -1,6 +1,8 @@
 import Language from '../../../language';
 import { PaymentAmountExtended } from '../../../types';
 
+export const PAY_BTN_DIVIDER = '/ ';
+
 const amountLabel = (i18n, amount: PaymentAmountExtended) =>
     !!amount?.value && !!amount?.currency ? i18n.amount(amount.value, amount.currency, { currencyDisplay: amount.currencyDisplay || 'symbol' }) : '';
 
@@ -12,7 +14,7 @@ const secondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmountExte
             ? i18n.amount(secondaryAmount.value, secondaryAmount.currency, { currencyDisplay: secondaryAmount.currencyDisplay || 'symbol' })
             : '';
 
-    const divider = convertedSecondaryAmount.length ? '/ ' : '';
+    const divider = convertedSecondaryAmount.length ? PAY_BTN_DIVIDER : '';
 
     return `${divider}${convertedSecondaryAmount}`;
 };
