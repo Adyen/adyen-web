@@ -5,6 +5,8 @@ import { PaymentAmountExtended } from '../../../types';
 import Language from '../../../language/Language';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 
+export const PAY_BTN_DIVIDER = '/ ';
+
 export interface PayButtonProps {
     /**
      * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
@@ -36,7 +38,7 @@ const secondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmountExte
             ? i18n.amount(secondaryAmount.value, secondaryAmount.currency, { currencyDisplay: secondaryAmount.currencyDisplay || 'symbol' })
             : '';
 
-    const divider = convertedSecondaryAmount.length ? '/ ' : '';
+    const divider = convertedSecondaryAmount.length ? PAY_BTN_DIVIDER : '';
 
     return `${divider}${convertedSecondaryAmount}`;
 };
