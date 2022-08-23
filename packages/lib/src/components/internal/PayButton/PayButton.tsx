@@ -25,7 +25,17 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
     const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
     const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
 
-    const secondaryLabel = secondaryAmount && Object.keys(secondaryAmount).length ? secondaryAmountLabel(i18n, secondaryAmount) : null;
+    /**
+     * Show the secondaryLabel if:
+     *  - it's not zero auth, and
+     *  - we don't have a predefined label (i.e. redirect, qrcode, await based comps...), and
+     *  - we do have an amount object (merchant might not be passing this in order to not show the amount on the button), and
+     *  - we have a secondaryAmount object with some properties
+     */
+    const secondaryLabel =
+        !isZeroAuth && !label && amount && secondaryAmount && Object.keys(secondaryAmount).length
+            ? secondaryAmountLabel(i18n, secondaryAmount)
+            : null;
 
     return (
         <Button
