@@ -59,7 +59,9 @@ export function createSecuredFields(): number {
 export async function createNonCardSecuredFields(securedFields: HTMLElement[]): Promise<any> {
     for (let i = 0; i < securedFields.length; i++) {
         const securedField = securedFields[i];
-        await this.setupSecuredField(securedField);
+        await this.setupSecuredField(securedField).catch(e => {
+            if (window._b$dl) console.log('Secured fields setup failure. e=', e);
+        });
     }
 }
 
