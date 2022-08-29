@@ -25,6 +25,7 @@ import {
 } from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
 import { getError } from '../../../../core/Errors/utils';
+import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 
 /**
  * SecuredFieldsProvider:
@@ -194,7 +195,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 // Hide the spinner
                 this.setState({ status: 'csfLoadFailure' });
                 // Report the error
-                this.props.onError({ error: 'secured fields have failed to load', fieldType: 'csfLoadFailure' });
+                this.props.onError(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
             }
         }, this.csfLoadFailTimeoutMS);
     }

@@ -21,6 +21,7 @@ import {
     CbObjOnLoad
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
+import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 
 /**
  * Emits the onLoad event
@@ -46,7 +47,7 @@ function handleOnLoad(cbObj: CbObjOnLoad): void {
             // Hide the spinner
             this.setState({ status: 'csfConfigFailure' });
             // Report the error
-            this.props.onError({ error: 'secured fields have failed to configure', fieldType: 'csfConfigFailure' });
+            this.props.onError(new AdyenCheckoutError('ERROR', 'secured fields have failed to configure'));
         }
     }, this.csfConfigFailTimeoutMS);
 }
