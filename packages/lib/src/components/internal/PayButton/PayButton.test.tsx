@@ -24,7 +24,7 @@ describe('PayButton', () => {
             secondaryAmount: { currency: 'HRK', value: 7534 }
         });
         // secondary amount indicators
-        expect(wrapper.text()).toContain('/');
+        expect(wrapper.text()).toContain(PAY_BTN_DIVIDER);
         expect(wrapper.text()).toContain('75.34');
 
         expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
