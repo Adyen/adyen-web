@@ -76,7 +76,7 @@ test('#1 Testing optional expiryDatePolicy - how UI & state respond', async t =>
         .eql(false);
 });
 
-test('#2 Testing optional expiryDatePolicy - how securedFields respond', async t => {
+test('#2 Testing optional expiryDatePolicy, in Custom Card w. separate date fields - how securedFields respond', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
