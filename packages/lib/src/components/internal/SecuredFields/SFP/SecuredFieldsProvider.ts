@@ -31,8 +31,10 @@ import { getError } from '../../../../core/Errors/utils';
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private invalidOriginErrorTimeout: number;
-    private invalidOriginTimeoutMS: number;
+    private csfLoadFailTimeout: number;
+    private csfLoadFailTimeoutMS: number;
+    private csfConfigFailTimeout: number;
+    private csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
     private rootNode;
     private numDateFields: number;
@@ -67,8 +69,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         };
         this.state = stateObj;
 
-        this.invalidOriginErrorTimeout = null;
-        this.invalidOriginTimeoutMS = 15000;
+        this.csfLoadFailTimeout = null;
+        this.csfLoadFailTimeoutMS = 30000;
+
+        this.csfConfigFailTimeout = null;
+        this.csfConfigFailTimeoutMS = 15000;
 
         this.numCharsInField = {};
 
@@ -172,11 +177,26 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
             minimumExpiryDate: this.props.minimumExpiryDate,
-            implementationType: this.props.implementationType || 'components',
+            implementationType: this.props.implementationType || 'components', // to distinguish between 'regular' and 'custom' card component
             isCollatingErrors: this.props.isCollatingErrors
         };
 
         this.csf = initCSF(csfSetupObj);
+
+        /**
+         * Expect to at least have had the handleOnLoad callback called within this time
+         * - if this hasn't happened then something has happened to interrupt the loading of the securedFields
+         * So we need to clear the loading spinner to see if the securedFields are reporting anything
+         */
+        // @ts-ignore - timout 'type' is a number
+        this.csfLoadFailTimeout = setTimeout(() => {
+            if (this.state.status !== 'ready') {
+                // Hide the spinner
+                this.setState({ status: 'csfLoadFailure' });
+                // Report the error
+                this.props.onError({ error: 'secured fields have failed to load', fieldType: 'csfLoadFailure' });
+            }
+        }, this.csfLoadFailTimeoutMS);
     }
 
     private checkForKCPFields() {

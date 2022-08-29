@@ -110,7 +110,9 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
     for (let i = 0; i < securedFields.length; i++) {
         const securedField = securedFields[i];
         if (window._b$dl) console.log('\nAbout to set up securedField:', securedField);
-        await this.setupSecuredField(securedField);
+        await this.setupSecuredField(securedField).catch(e => {
+            if (window._b$dl) console.log('Secured fields setup failure. e=', e);
+        });
         if (window._b$dl) console.log('Finished setting up securedField:', securedField);
     }
     if (window._b$dl) console.log('Finished setting up all securedFields');
@@ -140,7 +142,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
 
 // Run for each detected holder of a securedField...
 export function setupSecuredField(pItem: HTMLElement): Promise<any> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         /**
          *  possible values:
          *  encryptedCardNumber
@@ -192,6 +194,14 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
                 // Count
                 this.state.iframeCount += 1;
 
+                if (window._b$dl) console.log('### createSecuredFields::onIframeLoaded:: this.state.iframeCount=', this.state.iframeCount);
+
+                /** Create timeout within which time we expect the securedField to configure */
+                // @ts-ignore - timeout 'type' *is* a number
+                sf.loadToConfigTimeout = setTimeout(() => {
+                    reject({ type: sf.fieldType, failReason: 'sf took too long to config' });
+                }, 6000);
+
                 // If all iframes are loaded - call onLoad callback
                 if (this.state.iframeCount === this.state.originalNumIframes) {
                     const callbackObj: CbObjOnLoad = { iframesLoaded: true };
@@ -200,6 +210,11 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             })
             .onConfig((pFeedbackObj: SFFeedbackObj): void => {
                 this.handleIframeConfigFeedback(pFeedbackObj);
+
+                // Clear timeout since the securedField has configured
+                clearTimeout(sf.loadToConfigTimeout);
+                sf.loadToConfigTimeout = null;
+
                 resolve(pFeedbackObj);
             })
             .onFocus((pFeedbackObj: SFFeedbackObj): void => {
