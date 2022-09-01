@@ -9,7 +9,7 @@ import '../../style.scss';
     const session = await createSession({
         amount: {
             value: 123,
-            currency: 'EUR'
+            currency: 'PLN'
         },
         reference: 'ABC123',
         returnUrl,
@@ -47,6 +47,9 @@ import '../../style.scss';
 
     // Dotpay
     window.dotpay = checkout.create('dotpay').mount('.dotpay-field');
+
+    // P24
+    window.dotpay = checkout.create('p24').mount('.p24-field');
 
     // Entercash
     window.entercash = checkout.create('entercash').mount('.entercash-field');

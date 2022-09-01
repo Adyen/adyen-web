@@ -28,6 +28,7 @@ import Boleto from './Boleto';
 import Oxxo from './Oxxo';
 import Multibanco from './Multibanco';
 import Dotpay from './Dotpay';
+import P24 from './P24';
 import Eps from './EPS';
 import Giftcard from './Giftcard';
 import Vipps from './Vipps';
@@ -131,6 +132,7 @@ const componentsMap = {
     molpay_ebanking_VN: MolPayEBankingVN,
     onlinebanking_IN: OnlineBankingINElement,
     openbanking_UK: OpenBankingUK,
+    p24: P24,
     paypal: PayPal,
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
