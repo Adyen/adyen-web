@@ -2,6 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import AchInput from './components/AchInput';
 import CoreProvider from '../../core/Context/CoreProvider';
+import RedirectButton from '../internal/RedirectButton';
 
 export class AchElement extends UIElement {
     public static type = 'ach';
@@ -21,11 +22,14 @@ export class AchElement extends UIElement {
      * Formats the component data output
      */
     formatData() {
+        const recurringPayment = !!this.props.storedPaymentMethodId;
+
         // Map holderName to ownerName
         const paymentMethod = {
             type: AchElement.type,
             ...this.state.data,
-            ownerName: this.state.data?.holderName
+            ownerName: this.state.data?.holderName,
+            ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
         };
 
         delete paymentMethod.holderName;
@@ -47,6 +51,10 @@ export class AchElement extends UIElement {
     }
 
     get isValid() {
+        if (this.props.storedPaymentMethodId) {
+            return true;
+        }
+
         return !!this.state.isValid;
     }
 
@@ -57,15 +65,27 @@ export class AchElement extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <AchInput
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                />
+                {this.props.storedPaymentMethodId ? (
+                    <RedirectButton
+                        name={this.displayName}
+                        amount={this.props.amount}
+                        payButton={this.payButton}
+                        onSubmit={this.submit}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
+                ) : (
+                    <AchInput
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        onChange={this.setState}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                    />
+                )}
             </CoreProvider>
         );
     }
