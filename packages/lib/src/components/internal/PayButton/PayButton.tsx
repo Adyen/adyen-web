@@ -1,11 +1,12 @@
 import { h } from 'preact';
 import Button from '../Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import { ButtonProps } from '../Button/types';
+import { payAmountLabel, secondaryAmountLabel } from './utils';
 import { PaymentAmountExtended } from '../../../types';
-import Language from '../../../language/Language';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 
-export interface PayButtonProps {
+export interface PayButtonProps extends ButtonProps {
     /**
      * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
      */
@@ -19,34 +20,22 @@ export interface PayButtonProps {
     onClick?(): void;
 }
 
-const payAmountLabel = (i18n: Language, amount: PaymentAmountExtended) => {
-    const payStr = `${i18n.get('payButton')}`;
-
-    const primaryAmount =
-        !!amount?.value && !!amount?.currency
-            ? i18n.amount(amount.value, amount.currency, { currencyDisplay: amount.currencyDisplay || 'symbol' })
-            : '';
-
-    return `${payStr} ${primaryAmount}`;
-};
-
-const secondaryAmountLabel = (i18n: Language, secondaryAmount: PaymentAmountExtended) => {
-    const convertedSecondaryAmount =
-        secondaryAmount && !!secondaryAmount?.value && !!secondaryAmount?.currency
-            ? i18n.amount(secondaryAmount.value, secondaryAmount.currency, { currencyDisplay: secondaryAmount.currencyDisplay || 'symbol' })
-            : '';
-
-    const divider = convertedSecondaryAmount.length ? '/ ' : '';
-
-    return `${divider}${convertedSecondaryAmount}`;
-};
-
 const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
     const { i18n } = useCoreContext();
     const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
     const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
 
-    const secondaryLabel = secondaryAmount && Object.keys(secondaryAmount).length ? secondaryAmountLabel(i18n, secondaryAmount) : null;
+    /**
+     * Show the secondaryLabel if:
+     *  - it's not zero auth, and
+     *  - we don't have a predefined label (i.e. redirect, qrcode, await based comps...), and
+     *  - we do have an amount object (merchant might not be passing this in order to not show the amount on the button), and
+     *  - we have a secondaryAmount object with some properties
+     */
+    const secondaryLabel =
+        !isZeroAuth && !label && amount && secondaryAmount && Object.keys(secondaryAmount).length
+            ? secondaryAmountLabel(i18n, secondaryAmount)
+            : null;
 
     return (
         <Button

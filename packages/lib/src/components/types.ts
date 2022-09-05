@@ -36,6 +36,7 @@ export interface IUIElement {
     type: string;
     elementRef: any;
     submit(): void;
+    setElementStatus(status: UIElementStatus, props: any): UIElement;
     setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;

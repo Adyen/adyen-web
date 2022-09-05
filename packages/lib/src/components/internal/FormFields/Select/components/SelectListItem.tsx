@@ -4,7 +4,7 @@ import { SelectItemProps } from '../types';
 import styles from '../Select.module.scss';
 import Img from '../../../Img';
 
-const SelectListItem = ({ item, selected, ...props }: SelectItemProps) => (
+const SelectListItem = ({ item, selected, isIconOnLeftSide, ...props }: SelectItemProps) => (
     <li
         aria-disabled={!!item.disabled}
         aria-selected={selected}
@@ -13,7 +13,8 @@ const SelectListItem = ({ item, selected, ...props }: SelectItemProps) => (
             styles['adyen-checkout__dropdown__element'],
             {
                 'adyen-checkout__dropdown__element--active': selected,
-                'adyen-checkout__dropdown__element--disabled': !!item.disabled
+                'adyen-checkout__dropdown__element--disabled': !!item.disabled,
+                'adyen-checkout__dropdown__element-icon--left': isIconOnLeftSide
             }
         ])}
         data-disabled={!!item.disabled}

@@ -1,5 +1,14 @@
 @import '../../../../style/index';
 
+.adyen-checkout__dropdown__button-icon--left {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    > img {
+        margin-left: 0;
+        margin-right: 12px;
+    }
+}
+
 .adyen-checkout__dropdown {
     max-width: 100%;
     width: 100%;
@@ -131,6 +140,11 @@
     margin-right: 8px;
     max-width: 40px;
     max-height: 26px;
+}
+
+.adyen-checkout__dropdown__element-icon--left {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
 }
 
 .adyen-checkout__dropdown__element__flag {

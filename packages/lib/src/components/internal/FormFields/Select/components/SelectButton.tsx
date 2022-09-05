@@ -13,7 +13,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
 
 function SelectButton(props: SelectButtonProps) {
     const { i18n } = useCoreContext();
-    const { active, readonly, showList } = props;
+    const { active, readonly, showList, isIconOnLeftSide } = props;
 
     return (
         <SelectButtonElement
@@ -27,7 +27,8 @@ function SelectButton(props: SelectButtonProps) {
                 'adyen-checkout__dropdown__button--active': showList,
                 [styles['adyen-checkout__dropdown__button--active']]: showList,
                 'adyen-checkout__dropdown__button--invalid': props.isInvalid,
-                'adyen-checkout__dropdown__button--valid': props.isValid
+                'adyen-checkout__dropdown__button--valid': props.isValid,
+                'adyen-checkout__dropdown__button-icon--left': isIconOnLeftSide
             })}
             filterable={props.filterable}
             onClick={!readonly ? props.toggleList : null}
