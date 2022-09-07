@@ -32,6 +32,7 @@ export interface ACHInputProps {
     billingAddressRequiredFields?: string[];
     clientKey: string;
     data?: ACHInputDataState;
+    enableStoreDetails: boolean;
     hasHolderName?: boolean;
     holderName?: string;
     holderNameRequired?: boolean;
