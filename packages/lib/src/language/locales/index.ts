@@ -23,6 +23,7 @@ export default {
     'sk-SK': () => import('./sk-SK.json'),
     'sl-SI': () => import('./sl-SI.json'),
     'sv-SE': () => import('./sv-SE.json'),
+    'ua-UK': () => import('./ua-UK.json'),
     'zh-CN': () => import('./zh-CN.json'),
     'zh-TW': () => import('./zh-TW.json')
 };
