@@ -5,7 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UIElementStatus } from '../types';
-import { UpiPaymentData } from './types';
+import { UpiFlow, UpiPaymentData } from './types';
 
 /**
  * 'upi' tx variant is the parent one.
@@ -17,13 +17,19 @@ const UPI_QR = 'upi_qr';
 class UPI extends UIElement {
     public static type = 'upi';
 
-    constructor(props: any) {
-        super(props);
-        this.handleGenerateQrCodeClick = this.handleGenerateQrCodeClick.bind(this);
-    }
+    private useQrCodeVariant: boolean;
+
+    protected static defaultProps = {
+        preselectVpaFlow: true // or defaultMode?
+    };
+
+    // constructor(props: any) {
+    //     super(props);
+    // this.handleGenerateQrCodeClick = this.handleGenerateQrCodeClick.bind(this);
+    // }
 
     public get isValid(): boolean {
-        return !!this.state.isValid;
+        return this.useQrCodeVariant || !!this.state.isValid;
     }
 
     public formatData(): UpiPaymentData {
@@ -41,10 +47,10 @@ class UPI extends UIElement {
         return this;
     }
 
-    private handleGenerateQrCodeClick(): void {
-        this.setState({ data: { isQrCodeFlow: true }, valid: {}, errors: {}, isValid: true });
-        this.submit();
-    }
+    private onUpdatePaymentFlow = (flow: UpiFlow): void => {
+        if (flow === UpiFlow.QR_CODE) this.useQrCodeVariant = true;
+        else this.useQrCodeVariant = false;
+    };
 
     private renderContent(type: string): h.JSX.Element {
         switch (type) {
@@ -90,7 +96,8 @@ class UPI extends UIElement {
                         payButton={this.payButton}
                         onChange={this.setState}
                         onSubmit={this.submit}
-                        onGenerateQrCodeClick={this.handleGenerateQrCodeClick}
+                        onUpdatePaymentFlow={this.onUpdatePaymentFlow}
+                        // onGenerateQrCodeClick={this.handleGenerateQrCodeClick}
                     />
                 );
         }

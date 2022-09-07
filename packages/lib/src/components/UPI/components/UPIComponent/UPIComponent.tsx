@@ -1,29 +1,28 @@
-import { h, Fragment, RefObject } from 'preact';
-import { useMemo, useRef, useState } from 'preact/hooks';
-import VpaInput from '../VpaInput';
+import { Fragment, h, RefObject } from 'preact';
+import { useCallback, useRef, useState } from 'preact/hooks';
 import ContentSeparator from '../../../internal/ContentSeparator';
-import Button from '../../../internal/Button';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import getImage from '../../../../utils/get-image';
 import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { VpaInputHandlers } from '../VpaInput/VpaInput';
+import ButtonGroup from '../ButtonGroup';
+import { UpiFlow } from '../../types';
 
 interface UPIComponentProps {
     payButton: (props: PayButtonFunctionProps) => h.JSX.Element;
     ref: (ref: RefObject<typeof UPIComponent>) => void;
     onChange: ({ data: VpaInputDataState, valid, errors, isValid: boolean }) => void;
     onSubmit(): void;
-    onGenerateQrCodeClick(): void;
+    onUpdatePaymentFlow(flow: UpiFlow): void;
 }
 
-export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButton }: UPIComponentProps): h.JSX.Element {
+export default function UPIComponent({ onChange, onUpdatePaymentFlow, payButton }: UPIComponentProps): h.JSX.Element {
     const { i18n, loadingContext } = useCoreContext();
     const inputRef = useRef<VpaInputHandlers>(null);
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const [isQrCodeFlow, setIsQrCodeFlow] = useState<boolean>(false);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<UpiFlow>();
 
     this.setStatus = (status, isQrCodeFlow) => {
-        setIsQrCodeFlow(isQrCodeFlow);
+        // setIsQrCodeFlow(isQrCodeFlow);
         setStatus(status);
     };
 
@@ -31,28 +30,47 @@ export default function UPIComponent({ onChange, onGenerateQrCodeClick, payButto
         inputRef.current.validateInput();
     };
 
-    const isSubmittingAndFlowIsQrCode = useMemo(() => status === 'loading' && isQrCodeFlow, [status, isQrCodeFlow]);
+    // const isSubmittingAndFlowIsQrCode = useMemo(() => status === 'loading' && isQrCodeFlow, [status, isQrCodeFlow]);
+    //
+    const onSelectPaymentMethodType = useCallback(
+        (flow: UpiFlow) => {
+            onUpdatePaymentFlow(flow);
+            setSelectedPaymentMethod(flow);
+        },
+        [onUpdatePaymentFlow]
+    );
 
     return (
         <Fragment>
-            <VpaInput disabled={status === 'loading'} ref={inputRef} onChange={onChange} />
-
-            {payButton({
-                label: `${i18n.get('continue')}`,
-                status: isSubmittingAndFlowIsQrCode ? 'default' : status,
-                disabled: status === 'loading'
-            })}
+            <ButtonGroup>
+                <ButtonGroup.Button selected={selectedPaymentMethod === UpiFlow.VPA} onClick={() => onSelectPaymentMethodType(UpiFlow.VPA)}>
+                    Virtual Payment Address
+                </ButtonGroup.Button>
+                <ButtonGroup.Button selected={selectedPaymentMethod === UpiFlow.QR_CODE} onClick={() => onSelectPaymentMethodType(UpiFlow.QR_CODE)}>
+                    QR Code
+                </ButtonGroup.Button>
+            </ButtonGroup>
 
             <ContentSeparator label={i18n.get('qrCodeOrApp')} />
 
-            <Button
-                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr_dark')}
-                status={isSubmittingAndFlowIsQrCode ? 'loading' : 'default'}
-                disabled={status === 'loading'}
-                variant="secondary"
-                label={i18n.get('generateQRCode')}
-                onClick={onGenerateQrCodeClick}
-            />
+            {/*<VpaInput disabled={status === 'loading'} ref={inputRef} onChange={onChange} />*/}
+
+            {/*{payButton({*/}
+            {/*    label: `${i18n.get('continue')}`,*/}
+            {/*    status: isSubmittingAndFlowIsQrCode ? 'default' : status,*/}
+            {/*    disabled: status === 'loading'*/}
+            {/*})}*/}
+
+            {/*<ContentSeparator label={i18n.get('qrCodeOrApp')} />*/}
+
+            {/*<Button*/}
+            {/*    icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr_dark')}*/}
+            {/*    status={isSubmittingAndFlowIsQrCode ? 'loading' : 'default'}*/}
+            {/*    disabled={status === 'loading'}*/}
+            {/*    variant="secondary"*/}
+            {/*    label={i18n.get('generateQRCode')}*/}
+            {/*    onClick={onGenerateQrCodeClick}*/}
+            {/*/>*/}
         </Fragment>
     );
 }

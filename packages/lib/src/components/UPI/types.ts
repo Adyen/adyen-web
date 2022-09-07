@@ -4,3 +4,8 @@ export type UpiPaymentData = {
         virtualPaymentAddress?: string;
     };
 };
+
+export enum UpiFlow {
+    VPA = 'vpa',
+    QR_CODE = 'qr_code'
+}
