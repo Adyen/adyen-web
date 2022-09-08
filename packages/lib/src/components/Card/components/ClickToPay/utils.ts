@@ -21,7 +21,10 @@ function createClickToPayService(
     const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperIdentityValue, clickToPayConfiguration?.shopperIdentityType);
 
     const schemeNames = Object.keys(schemesConfig);
-    const srcSdkLoader = new SrcSdkLoader(schemeNames, clickToPayConfiguration?.locale);
+    const srcSdkLoader = new SrcSdkLoader(schemeNames, {
+        dpaLocale: clickToPayConfiguration?.locale,
+        dpaPresentationName: clickToPayConfiguration?.merchantDisplayName
+    });
     return new ClickToPayService(schemesConfig, srcSdkLoader, environment, shopperIdentity);
 }
 

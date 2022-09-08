@@ -33,6 +33,7 @@ type MastercardCheckout = {
 type VisaCheckout = {
     srcCheckoutPayload?: string;
     srcTokenReference?: string;
+    srcCorrelationId: string;
     srcScheme: string;
 };
 

@@ -128,6 +128,10 @@ export type ClickToPayConfiguration = {
     shopperIdentityValue: string;
     shopperIdentityType?: 'email' | 'mobilePhone';
     /**
+     * Used to display the merchant name in case the DCF appears (ex: first time doing transaction in the device),
+     */
+    merchantDisplayName: string;
+    /**
      * Used to ensure the correct language and user experience if DCF screen is displayed. As a fallback, it uses the main locale
      * defined during the creation of the Checkout.
      * Format: ISO language_country pair (e.g., en_US )

@@ -2,7 +2,7 @@ import { getVisaSetttings, VISA_SDK_PROD, VISA_SDK_TEST } from './config';
 import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
-import { SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse, SrcInitParams } from './types';
+import { CustomSdkConfiguration, SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse, SrcInitParams } from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL',
@@ -12,8 +12,8 @@ const IdentityTypeMap = {
 class VisaSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'visa';
 
-    constructor(environment: string, locale: string) {
-        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST, locale);
+    constructor(environment: string, customSdkConfig: CustomSdkConfiguration) {
+        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST, customSdkConfig);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {
@@ -28,7 +28,12 @@ class VisaSdk extends AbstractSrcInitiator {
     }
 
     public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
-        const sdkProps = { ...params, ...getVisaSetttings({ dpaLocale: this.dpaLocale }), srciTransactionId };
+        const sdkProps = {
+            ...params,
+            ...getVisaSetttings(this.customSdkConfiguration),
+            srciTransactionId
+        };
+
         await this.schemeSdk.init(sdkProps);
     }
 
