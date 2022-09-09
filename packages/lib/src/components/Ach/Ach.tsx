@@ -3,11 +3,12 @@ import UIElement from '../UIElement';
 import AchInput from './components/AchInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
+import { AchElementProps } from './types';
 
-export class AchElement extends UIElement {
+export class AchElement extends UIElement<AchElementProps> {
     public static type = 'ach';
 
-    formatProps(props) {
+    formatProps(props: AchElementProps) {
         return {
             ...props,
             // Fix mismatch between passed hasHolderName & holderNameRequired props
@@ -37,7 +38,7 @@ export class AchElement extends UIElement {
         return {
             paymentMethod,
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
-            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod  })
+            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
         };
     }
 

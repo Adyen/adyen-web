@@ -40,7 +40,6 @@ function AchInput(props: ACHInputProps) {
     const [focusedElement, setFocusedElement] = useState('');
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
 
-
     const handleFocus = e => {
         const isFocused = e.focus === true;
 
