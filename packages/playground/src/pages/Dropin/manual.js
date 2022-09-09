@@ -69,12 +69,6 @@ export async function initManual() {
             },
             paywithgoogle: {
                 buttonType: 'plain'
-            },
-            paypal: {
-                configuration: {
-                    intent: 'tokenize'
-                },
-                vault: true
             }
         }
     });
