@@ -16,8 +16,7 @@ export const makePayment = (data, config = {}) => {
     if (paymentRequest.order) {
         delete paymentRequest.amount;
     }
-
-    return httpPost('payments')
+    return httpPost('payments', paymentRequest)
         .then(response => {
             if (response.error) throw 'Payment initiation failed';
             return response;

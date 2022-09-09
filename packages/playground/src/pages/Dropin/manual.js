@@ -63,7 +63,6 @@ export async function initManual() {
         },
         paymentMethodsConfiguration: {
             card: {
-                enableStoreDetails: true,
                 hasHolderName: true,
                 holderNameRequired: true
             },
