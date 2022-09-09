@@ -4,7 +4,6 @@ import UPIComponent from './components/UPIComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { UIElementStatus } from '../types';
 import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
 
 /**
