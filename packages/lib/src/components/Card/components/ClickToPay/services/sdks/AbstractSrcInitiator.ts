@@ -1,6 +1,7 @@
 import { IdentityLookupParams } from '../types';
 import Script from '../../../../../../utils/Script';
 import {
+    CustomSdkConfiguration,
     SrcCheckoutParams,
     SrciCheckoutResponse,
     SrciCompleteIdentityValidationResponse,
@@ -33,15 +34,16 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     public schemeSdk: any;
     public abstract readonly schemeName: ClickToPayScheme;
 
-    protected readonly dpaLocale: string;
+    protected readonly customSdkConfiguration: CustomSdkConfiguration;
 
     private readonly sdkUrl: string;
     private scriptElement: Script | null = null;
 
-    protected constructor(sdkUrl: string, dpaLocale: string) {
+    protected constructor(sdkUrl: string, customSdkConfiguration: CustomSdkConfiguration) {
         if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
+
         this.sdkUrl = sdkUrl;
-        this.dpaLocale = dpaLocale;
+        this.customSdkConfiguration = customSdkConfiguration;
     }
 
     public async loadSdkScript() {

@@ -1,4 +1,12 @@
 /**
+ * Type that represent the object which contains the customizable properties of the SDK initialization
+ */
+export type CustomSdkConfiguration = {
+    dpaLocale: string;
+    dpaPresentationName: string;
+};
+
+/**
  * Types used to define the interface with the SRCi SDK
  */
 export type SrciInitiateIdentityValidationResponse = {

@@ -1,6 +1,7 @@
 import { ISrcInitiator } from './AbstractSrcInitiator';
 import VisaSdk from './VisaSdk';
 import MastercardSdk from './MastercardSdk';
+import { CustomSdkConfiguration } from './types';
 
 const sdkMap = {
     visa: VisaSdk,
@@ -8,9 +9,9 @@ const sdkMap = {
     default: null
 };
 
-const getSchemeSdk = (scheme: string, environment: string, locale: string) => {
+const getSchemeSdk = (scheme: string, environment: string, customConfig: CustomSdkConfiguration) => {
     const SchemeSdkClass = sdkMap[scheme] || sdkMap.default;
-    return SchemeSdkClass ? new SchemeSdkClass(environment, locale) : null;
+    return SchemeSdkClass ? new SchemeSdkClass(environment, customConfig) : null;
 };
 
 export interface ISrcSdkLoader {
@@ -20,11 +21,11 @@ export interface ISrcSdkLoader {
 
 class SrcSdkLoader implements ISrcSdkLoader {
     public readonly schemes: string[];
-    private readonly locale: string;
+    private readonly customSdkConfiguration: CustomSdkConfiguration;
 
-    constructor(schemes: string[], locale = 'en_US') {
+    constructor(schemes: string[], { dpaLocale = 'en_US', dpaPresentationName = '' }) {
         this.schemes = schemes;
-        this.locale = locale;
+        this.customSdkConfiguration = { dpaLocale, dpaPresentationName };
     }
 
     public async load(environment: string): Promise<ISrcInitiator[]> {
@@ -32,7 +33,7 @@ class SrcSdkLoader implements ISrcSdkLoader {
             throw Error('SrcSdkLoader: There are no schemes set to be loaded');
         }
 
-        const sdks = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.locale));
+        const sdks = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration));
         const promises = sdks.map(sdk => sdk.loadSdkScript());
         await Promise.all(promises);
         return sdks;

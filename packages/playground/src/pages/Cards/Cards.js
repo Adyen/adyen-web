@@ -153,7 +153,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa'],
                 useClickToPay: true,
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'shopper.email@domain.com'
+                    shopperIdentityValue: 'shopper-ctp1@adyen.com',
+                    merchantDisplayName: 'Adyen Merchant Name '
                 }
             })
             .mount('.card-ctp-field');

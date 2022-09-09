@@ -2,6 +2,9 @@ import { ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 
+/**
+ * Creates the payload for the /payments call
+ */
 function createCheckoutPayloadBasedOnScheme(
     card: ShopperCard,
     checkoutResponse: SrciCheckoutResponse,
@@ -15,8 +18,12 @@ function createCheckoutPayloadBasedOnScheme(
              * For test environment, we are using hardcoded tokenId
              */
             return tokenId
-                ? { srcScheme: scheme, srcTokenReference: environment.toLowerCase().includes('live') ? tokenId : '987654321' }
-                : { srcScheme: scheme, srcCheckoutPayload: checkoutResponse.encryptedPayload };
+                ? {
+                      srcScheme: scheme,
+                      srcCorrelationId,
+                      srcTokenReference: environment.toLowerCase().includes('live') ? tokenId : '987654321'
+                  }
+                : { srcScheme: scheme, srcCheckoutPayload: checkoutResponse.encryptedPayload, srcCorrelationId };
         case 'mc':
         default:
             return { srcScheme: scheme, srcDigitalCardId, srcCorrelationId };
