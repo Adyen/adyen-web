@@ -35,7 +35,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     const [mode, setMode] = useState<UpiMode>(defaultMode);
     const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
 
-    this.setStatus = status => {
+    this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
     };
 

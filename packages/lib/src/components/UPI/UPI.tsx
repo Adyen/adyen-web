@@ -39,11 +39,6 @@ class UPI extends UIElement<UPIElementProps> {
         };
     }
 
-    public setStatus(status: UIElementStatus): this {
-        this.componentRef?.setStatus?.(status);
-        return this;
-    }
-
     private onUpdateMode = (mode: UpiMode): void => {
         if (mode === UpiMode.QrCode) {
             this.useQrCodeVariant = true;
