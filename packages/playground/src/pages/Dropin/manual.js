@@ -63,12 +63,18 @@ export async function initManual() {
         },
         paymentMethodsConfiguration: {
             card: {
-                enableStoreDetails: false,
+                enableStoreDetails: true,
                 hasHolderName: true,
                 holderNameRequired: true
             },
             paywithgoogle: {
                 buttonType: 'plain'
+            },
+            paypal: {
+                configuration: {
+                    intent: 'tokenize'
+                },
+                vault: true
             }
         }
     });

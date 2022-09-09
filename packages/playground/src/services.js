@@ -16,7 +16,19 @@ export const makePayment = (data, config = {}) => {
     if (paymentRequest.order) {
         delete paymentRequest.amount;
     }
-    return httpPost('payments', paymentRequest)
+
+    const extraData = {
+        shopperReference: 'YOUR_UNIQUE_SHOPPER_ID_IOfW3k9G2PvXFu2j',
+        storePaymentMethod: true,
+        shopperInteraction: 'Ecommerce',
+        recurringProcessingModel: 'CardOnFile'
+    };
+
+    const finalPaymentsRequest = { ...paymentRequest, ...extraData };
+    // const finalPaymentsRequest = { ...paymentRequest };
+    console.log(finalPaymentsRequest);
+
+    return httpPost('payments', finalPaymentsRequest)
         .then(response => {
             if (response.error) throw 'Payment initiation failed';
             return response;

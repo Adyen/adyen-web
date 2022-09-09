@@ -5,51 +5,51 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UIElementStatus } from '../types';
-import { UpiFlow, UpiPaymentData } from './types';
+import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
 
 /**
  * 'upi' tx variant is the parent one.
  * 'upi_collect' and 'upi_qr' are the sub variants which are submitted according to the shopper interaction.
  */
-const UPI_COLLECT = 'upi_collect';
-const UPI_QR = 'upi_qr';
+enum TX_VARIANT {
+    UpiCollect = 'upi_collect',
+    UpiQr = 'upi_qr'
+}
 
-class UPI extends UIElement {
+class UPI extends UIElement<UPIElementProps> {
     public static type = 'upi';
 
     private useQrCodeVariant: boolean;
 
     protected static defaultProps = {
-        preselectVpaFlow: true // or defaultMode?
+        defaultMode: UpiMode.Vpa
     };
-
-    // constructor(props: any) {
-    //     super(props);
-    // this.handleGenerateQrCodeClick = this.handleGenerateQrCodeClick.bind(this);
-    // }
 
     public get isValid(): boolean {
         return this.useQrCodeVariant || !!this.state.isValid;
     }
 
     public formatData(): UpiPaymentData {
-        const { isQrCodeFlow, virtualPaymentAddress } = this.state.data;
+        const { virtualPaymentAddress } = this.state.data;
         return {
             paymentMethod: {
-                type: isQrCodeFlow ? UPI_QR : UPI_COLLECT,
-                ...(virtualPaymentAddress && { virtualPaymentAddress })
+                type: this.useQrCodeVariant ? TX_VARIANT.UpiQr : TX_VARIANT.UpiCollect,
+                ...(virtualPaymentAddress && !this.useQrCodeVariant && { virtualPaymentAddress })
             }
         };
     }
 
     public setStatus(status: UIElementStatus): this {
-        this.componentRef?.setStatus?.(status, this.state.data?.isQrCodeFlow);
+        this.componentRef?.setStatus?.(status);
         return this;
     }
 
-    private onUpdatePaymentFlow = (flow: UpiFlow): void => {
-        if (flow === UpiFlow.QR_CODE) this.useQrCodeVariant = true;
-        else this.useQrCodeVariant = false;
+    private onUpdateMode = (mode: UpiMode): void => {
+        if (mode === UpiMode.QrCode) {
+            this.useQrCodeVariant = true;
+        } else {
+            this.useQrCodeVariant = false;
+        }
     };
 
     private renderContent(type: string): h.JSX.Element {
@@ -62,7 +62,7 @@ class UPI extends UIElement {
                         }}
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
-                        type={UPI_QR}
+                        type={TX_VARIANT.UpiQr}
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
@@ -80,7 +80,7 @@ class UPI extends UIElement {
                         paymentData={this.props.paymentData}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
-                        type={UPI_COLLECT}
+                        type={TX_VARIANT.UpiCollect}
                         messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}
                         showCountdownTimer
@@ -95,9 +95,8 @@ class UPI extends UIElement {
                         }}
                         payButton={this.payButton}
                         onChange={this.setState}
-                        onSubmit={this.submit}
-                        onUpdatePaymentFlow={this.onUpdatePaymentFlow}
-                        // onGenerateQrCodeClick={this.handleGenerateQrCodeClick}
+                        onUpdateMode={this.onUpdateMode}
+                        defaultMode={this.props.defaultMode}
                     />
                 );
         }

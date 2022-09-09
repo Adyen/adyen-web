@@ -1,25 +1,42 @@
 import { h } from 'preact';
-import classnames from 'classnames';
-import './ButtonGroup.scss';
+import cx from 'classnames';
+import './SegmentedControl.scss';
 
-const Button = ({ selected = false, children, ...props }) => {
+interface SegmentedControlProps<T> {
+    classNameModifiers?: string[];
+    selectedValue: T;
+    options: Array<{ label: string; value: T; htmlProps: any }>;
+    onChange(value: T, event: MouseEvent): void;
+}
+
+function SegmentedControl<T>({ classNameModifiers, options, selectedValue, onChange }: SegmentedControlProps<T>) {
+    if (!options || options.length === 0) {
+        return null;
+    }
+
     return (
-        <button
-            className={classnames('adyen-checkout__button-group-button', { 'adyen-checkout__button-group-button--selected': selected })}
-            type="button"
-            {...props}
+        <div
+            className={cx(
+                'adyen-checkout__segmented-control',
+                ...classNameModifiers.map(modifier => `adyen-checkout__segmented-control--${modifier}`)
+            )}
+            role="group"
         >
-            {children}
-        </button>
+            {options.map(({ label, value, htmlProps }) => (
+                <button
+                    key={value}
+                    onClick={(event: MouseEvent) => onChange(value, event)}
+                    className={cx('adyen-checkout__segmented-control-segment', {
+                        'adyen-checkout__segmented-control-segment--selected': selectedValue === value
+                    })}
+                    type="button"
+                    {...htmlProps}
+                >
+                    {label}
+                </button>
+            ))}
+        </div>
     );
-};
+}
 
-const ButtonGroup = ({ children }) => {
-    if (!children) return null;
-
-    return <div className="adyen-checkout__button-group-new">{children}</div>;
-};
-
-ButtonGroup.Button = Button;
-
-export default ButtonGroup;
+export default SegmentedControl;

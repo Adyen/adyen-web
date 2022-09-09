@@ -42,6 +42,12 @@ export async function initSession() {
                 // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
+            },
+            paypal: {
+                configuration: {
+                    intent: 'tokenize'
+                },
+                vault: true
             }
         }
     });

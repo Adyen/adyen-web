@@ -1,3 +1,5 @@
+import { UIElementProps } from '../types';
+
 export type UpiPaymentData = {
     paymentMethod: {
         type: 'upi_qr' | 'upi_collect';
@@ -5,7 +7,16 @@ export type UpiPaymentData = {
     };
 };
 
-export enum UpiFlow {
-    VPA = 'vpa',
-    QR_CODE = 'qr_code'
+export enum UpiMode {
+    Vpa = 'vpa',
+    QrCode = 'qrCode'
+}
+
+export interface UPIElementProps extends UIElementProps {
+    defaultMode: UpiMode;
+    // Await
+    paymentData?: string;
+    // QR code
+    qrCodeData?: string;
+    brandLogo?: string;
 }
