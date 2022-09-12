@@ -89,6 +89,7 @@ abstract class AbstractSecuredField {
     protected iframeSrc: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;
+    protected iframeRef: HTMLElement;
     public loadToConfigTimeout: number;
     // From getters/setters with the same name
     protected _errorType: string;
