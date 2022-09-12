@@ -107,12 +107,12 @@ class SecuredField extends AbstractSecuredField {
             on(iframe, 'load', this.iframeOnLoadListener, false);
         }
 
+        this.iframeRef = iframe;
+
         return this;
     }
 
     iframeOnLoadListenerFn(): void {
-        off(window, 'load', this.iframeOnLoadListener, false);
-
         // Create reference to bound fn (see getters/setters for binding)
         this.postMessageListener = this.postMessageListenerFn;
 
@@ -287,6 +287,7 @@ class SecuredField extends AbstractSecuredField {
 
     destroy(): void {
         off(window, 'message', this.postMessageListener, false);
+        off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
         removeAllChildren(this.holderEl);
     }

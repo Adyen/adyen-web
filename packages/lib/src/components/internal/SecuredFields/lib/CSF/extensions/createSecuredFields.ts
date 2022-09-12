@@ -12,6 +12,7 @@ import cardType from '../utils/cardType';
 import { SFSetupObject } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType } from '../../types';
+import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 
 /**
  * cvcPolicy - 'required' | 'optional' | 'hidden'
@@ -197,6 +198,16 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
                 this.state.iframeCount += 1;
 
                 if (window._b$dl) console.log('### createSecuredFields::onIframeLoaded:: this.state.iframeCount=', this.state.iframeCount);
+
+                // One of our existing securedFields has just loaded new content!
+                if (this.state.iframeCount > this.state.numIframes) {
+                    this.destroySecuredFields();
+                    throw new AdyenCheckoutError(
+                        'ERROR',
+                        `One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.
+                        iframe load count=${this.state.iframeCount}. Expected count:${this.state.numIframes}`
+                    );
+                }
 
                 /** Create timeout within which time we expect the securedField to configure */
                 // @ts-ignore - timeout 'type' *is* a number
