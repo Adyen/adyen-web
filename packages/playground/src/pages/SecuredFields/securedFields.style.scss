@@ -357,7 +357,7 @@
 }
 
 .material-input-label--error {
-    color: #d10244;
+    color: #C12424;
 }
 
 .material-input-label--focus,
@@ -368,16 +368,16 @@
 }
 
 .pm-input-field-mat--focus {
-    border: 1px solid #0066ff;
+    border: 1px solid #0075FF;
 }
 
 .pm-input-field-mat--valid {
     border: 1px solid #b9c4c9;
-    border-bottom: 1px solid #0abf53;
+    border-bottom: 1px solid #089A43;
 }
 
 .pm-input-field-mat--error {
-    border: 1px solid #d10244;
+    border: 1px solid #C12424;
 }
 
 .pm-input-field-mat .js-iframe {
@@ -393,11 +393,11 @@
 }
 
 .valid-icon {
-    fill: #0abf53;
+    fill: #089A43;
 }
 
 .error-icon {
-    fill: #d10244;
+    fill: #C12424;
 }
 
 .pm-input-field-mat--valid .valid-icon {
