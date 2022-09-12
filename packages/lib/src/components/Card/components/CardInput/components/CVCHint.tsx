@@ -26,7 +26,7 @@ export default function CVCHint({ frontCVC = false }: CVCHintProps) {
                 />
                 <rect x="4" y="12" width="19" height="2" fill="#B9C4C9" />
                 <rect x="4" y="4" width="4" height="4" rx="1" fill="white" />
-                <rect className={'adyen-checkout__card__cvc__hint__location'} x="16.5" y="4.5" width="7" height="5" rx="2.5" stroke="#D10244" />
+                <rect className={'adyen-checkout__card__cvc__hint__location'} x="16.5" y="4.5" width="7" height="5" rx="2.5" stroke="#C12424" />
             </svg>
 
             <svg
@@ -50,7 +50,7 @@ export default function CVCHint({ frontCVC = false }: CVCHintProps) {
                     d="M4 11C4 10.4477 4.44772 10 5 10H21C22.1046 10 23 10.8954 23 12C23 13.1046 22.1046 14 21 14H5C4.44771 14 4 13.5523 4 13V11Z"
                     fill="white"
                 />
-                <rect className={'adyen-checkout__card__cvc__hint__location'} x="16.5" y="9.5" width="7" height="5" rx="2.5" stroke="#D10244" />
+                <rect className={'adyen-checkout__card__cvc__hint__location'} x="16.5" y="9.5" width="7" height="5" rx="2.5" stroke="#C12424" />
             </svg>
         </div>
     );
