@@ -26,6 +26,12 @@ export type ApplePayButtonType =
     | 'tip'
     | 'top-up';
 
+export type OnAuthorizedFunction = (
+    resolve: (authorizationResult?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
+    reject: (authorizationResult?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
+    event: ApplePayJS.ApplePayPaymentAuthorizedEvent
+) => Promise<void>;
+
 export interface ApplePayElementProps extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
@@ -127,7 +133,7 @@ export interface ApplePayElementProps extends UIElementProps {
     /** @internal */
     onCancel?: () => void;
 
-    onAuthorized?: (resolve, reject, event: ApplePayJS.ApplePayPaymentAuthorizedEvent) => void;
+    onAuthorized?: OnAuthorizedFunction;
 
     onValidateMerchant?: (resolve, reject, validationURL: string) => void;
 
