@@ -10,7 +10,7 @@ export function filterEcomStoredPaymentMethods(pm) {
     return !!pm && !!pm.supportedShopperInteractions && pm.supportedShopperInteractions.includes('Ecommerce');
 }
 
-const supportedStoredPaymentMethods = ['scheme', 'blik', 'twint'];
+const supportedStoredPaymentMethods = ['scheme', 'blik', 'twint', 'ach'];
 
 export function filterSupportedStoredPaymentMethods(pm) {
     return !!pm && !!pm.type && supportedStoredPaymentMethods.includes(pm.type);
