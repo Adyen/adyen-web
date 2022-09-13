@@ -3,6 +3,22 @@ import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/configuration/constants';
 
+// Externally testable utils // TODO - make unit tests
+export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {
+    return brandsArr.reduce((acc, brandObj) => acc || excludedBrands.includes(brandObj.brand), false);
+};
+
+export const cloneBrandsArr = (brandsArr: BrandObject[]): BrandObject[] => brandsArr.map(item => ({ ...item }));
+
+export const removeExcludedBrand = (brandsArr: BrandObject[], mainBrand1 = 'mc', mainBrand2 = 'visa'): BrandObject[] => {
+    const clonedBrands: BrandObject[] = cloneBrandsArr(brandsArr);
+
+    if (clonedBrands[0].brand !== mainBrand1 && clonedBrands[0].brand !== mainBrand2) clonedBrands.reverse();
+    clonedBrands.length = 1;
+    return clonedBrands;
+};
+// --
+
 export default function extensions(props, refs, states, hasPanLengthRef: Partial<{ current }> = {}) {
     // Destructure props, refs and state hooks
     const { type, cvcPolicy } = props;
@@ -42,23 +58,14 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
 
             // RESULT: binLookup has found a result so proceed accordingly
             if (binLookupResponse.supportedBrands?.length) {
-                // TODO - make unit tests for these assertions
-                const hasExcludedBrand = binLookupResponse.supportedBrands.reduce(
-                    (acc, brandObj) => acc || BRAND_ICON_UI_EXCLUSION_LIST.includes(brandObj.brand),
-                    false
-                );
+                const hasExcludedBrand: boolean = containsExcludedBrand(binLookupResponse.supportedBrands, BRAND_ICON_UI_EXCLUSION_LIST);
                 console.log('### extensions::hasExcludedBrand:: ', hasExcludedBrand);
 
-                // Clone - don't mutate the original
-                const supportedBrands = binLookupResponse.supportedBrands.map(item => ({ ...item }));
+                const supportedBrands: BrandObject[] = hasExcludedBrand
+                    ? removeExcludedBrand(binLookupResponse.supportedBrands)
+                    : cloneBrandsArr(binLookupResponse.supportedBrands);
 
-                if (hasExcludedBrand) {
-                    if (supportedBrands[0].brand !== 'mc' && supportedBrands[0].brand !== 'visa') supportedBrands.reverse();
-                    supportedBrands.length = 1;
-                }
                 console.log('### extensions::supportedBrands:: ', supportedBrands);
-
-                // TODO - end
 
                 // 1) Multiple options found - add to the UI & inform SFP
                 if (supportedBrands.length > 1) {

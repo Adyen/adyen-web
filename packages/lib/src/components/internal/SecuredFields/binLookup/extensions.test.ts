@@ -60,6 +60,14 @@ describe('Test mock binLookup results on CardInput.state', () => {
         supported: 'true'
     };
 
+    const dualBrandObj3 = {
+        brand: 'star',
+        cvcPolicy: 'required',
+        enableLuhnCheck: 'true',
+        showExpiryDate: 'true',
+        supported: 'true'
+    };
+
     const mockBinLookupObj_dual = {
         issuingCountryCode: 'FR',
         supportedBrands: [dualBrandObj1, dualBrandObj2]
