@@ -7,6 +7,7 @@ import { CardFieldsProps } from './types';
 import classNames from 'classnames';
 import styles from '../CardInput.module.scss';
 import {
+    BRAND_ICON_UI_EXCLUSION_LIST,
     DATE_POLICY_HIDDEN,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
@@ -50,7 +51,9 @@ export default function CardFields({
                 dualBrandingSelected={dualBrandingSelected}
             />
 
-            {showBrandsUnderCardNumber && <AvailableBrands activeBrand={brand} brands={brandsIcons} />}
+            {showBrandsUnderCardNumber && (
+                <AvailableBrands activeBrand={brand} brands={brandsIcons} excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST} />
+            )}
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {

@@ -9,9 +9,10 @@ type AvailableBrands = Array<BrandConfiguration>;
 interface PaymentMethodBrandsProps {
     brands: AvailableBrands;
     activeBrand: string;
+    excludedUIBrands: Array<string>; // A list of brands that can never appear in the UI
 }
 
-const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
+const AvailableBrands = ({ brands, activeBrand, excludedUIBrands }: PaymentMethodBrandsProps) => {
     if (!brands?.length) {
         return null;
     }
@@ -19,16 +20,19 @@ const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
     const isValidBrand = activeBrand !== 'card';
     return (
         <span className="adyen-checkout__card__brands">
-            {brands.map(({ name, icon }) => (
-                <span
-                    key={name}
-                    className={classNames('adyen-checkout__card__brands__brand-wrapper', {
-                        'adyen-checkout__card__brands__brand-wrapper--disabled': isValidBrand && activeBrand !== name
-                    })}
-                >
-                    <Img src={icon} alt='' />
-                </span>
-            ))}
+            {brands.map(
+                ({ name, icon }) =>
+                    !excludedUIBrands.includes(name) && (
+                        <span
+                            key={name}
+                            className={classNames('adyen-checkout__card__brands__brand-wrapper', {
+                                'adyen-checkout__card__brands__brand-wrapper--disabled': isValidBrand && activeBrand !== name
+                            })}
+                        >
+                            <Img src={icon} alt="" />
+                        </span>
+                    )
+            )}
         </span>
     );
 };
