@@ -91,6 +91,7 @@ class UPI extends UIElement<UPIElementProps> {
                         onChange={this.setState}
                         onUpdateMode={this.onUpdateMode}
                         defaultMode={this.props.defaultMode}
+                        showPayButton={this.props.showPayButton}
                     />
                 );
         }

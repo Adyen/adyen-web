@@ -11,6 +11,7 @@ import './UPIComponent.scss';
 
 interface UPIComponentProps {
     defaultMode: UpiMode;
+    showPayButton: boolean;
     ref(ref: RefObject<typeof UPIComponent>): void;
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
     onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
@@ -28,7 +29,7 @@ const A11Y = {
     }
 };
 
-export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton }: UPIComponentProps): h.JSX.Element {
+export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton }: UPIComponentProps): h.JSX.Element {
     const { i18n, loadingContext } = useCoreContext();
     const inputRef = useRef<VpaInputHandlers>(null);
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -53,11 +54,12 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
 
     return (
         <Fragment>
-            <p className="adyen-checkout_upi-mode-selection-text">Make a selection on how you would like to use UPI.</p>
+            <p className="adyen-checkout_upi-mode-selection-text">{i18n.get('upi.modeSelection')}</p>
 
             <SegmentedControl
                 onChange={onChangeUpiMode}
                 selectedValue={mode}
+                disabled={status === 'loading'}
                 classNameModifiers={['upi-margin-bottom']}
                 options={[
                     {
@@ -79,20 +81,22 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
 
             {mode === UpiMode.Vpa ? (
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} role="region">
-                    {mode === UpiMode.Vpa && <VpaInput disabled={status === 'loading'} ref={inputRef} onChange={onChange} />}
+                    <VpaInput disabled={status === 'loading'} ref={inputRef} onChange={onChange} />
 
-                    {payButton({
-                        label: i18n.get('continue'),
-                        status
-                    })}
+                    {showPayButton &&
+                        payButton({
+                            label: i18n.get('continue'),
+                            status
+                        })}
                 </div>
             ) : (
                 <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} role="region">
-                    {payButton({
-                        label: i18n.get('generateQRCode'),
-                        icon: getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr'),
-                        status
-                    })}
+                    {showPayButton &&
+                        payButton({
+                            label: i18n.get('generateQRCode'),
+                            icon: getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr'),
+                            status
+                        })}
                 </div>
             )}
         </Fragment>
