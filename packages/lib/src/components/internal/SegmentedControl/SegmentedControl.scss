@@ -11,6 +11,15 @@
 
   &--disabled {
     pointer-events: none;
+
+    >  .adyen-checkout__segmented-control-segment {
+      color: #8390A3;
+    }
+
+    > .adyen-checkout__segmented-control-segment--selected {
+      background: #F3F6F9;
+      border: 1.5px solid #8390A3;
+    }
   }
 }
 
@@ -43,13 +52,4 @@
     color: #0075FF;
     font-weight: 700;
   }
-}
-
-.adyen-checkout__segmented-control--disabled > .adyen-checkout__segmented-control-segment {
-  color: #8390A3;
-}
-
-.adyen-checkout__segmented-control--disabled > .adyen-checkout__segmented-control-segment--selected {
-  background: #F3F6F9;
-  border: 1.5px solid #8390A3;
 }

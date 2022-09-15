@@ -8,6 +8,7 @@ import SegmentedControl from '../../../internal/SegmentedControl';
 import getImage from '../../../../utils/get-image';
 import { UpiMode } from '../../types';
 import './UPIComponent.scss';
+import isMobile from '../../../../utils/isMobile';
 
 interface UPIComponentProps {
     defaultMode: UpiMode;
@@ -34,7 +35,6 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     const inputRef = useRef<VpaInputHandlers>(null);
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
-    const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -63,7 +63,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 classNameModifiers={['upi-margin-bottom']}
                 options={[
                     {
-                        label: isMobile ? 'VPA' : 'Virtual Payment Address',
+                        label: isMobile() ? 'VPA' : 'Virtual Payment Address',
                         value: UpiMode.Vpa,
                         htmlProps: { id: A11Y.ButtonId.VPA, 'aria-expanded': mode === UpiMode.Vpa, 'aria-controls': A11Y.AreaId.VPA }
                     },
