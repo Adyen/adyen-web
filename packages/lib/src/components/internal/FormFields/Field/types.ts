@@ -1,4 +1,5 @@
-import { Component, ComponentChildren } from 'preact';
+import { h, Component, ComponentChildren } from 'preact';
+import Language from '../../../../language';
 
 export interface FieldProps {
     className?: string;
@@ -13,6 +14,7 @@ export interface FieldProps {
     isLoading?: boolean;
     isValid?: boolean;
     label?: string | Component;
+    labelEndAdornment?: string | h.JSX.Element;
     onBlur?;
     onFocus?;
     onFocusField?;
@@ -22,6 +24,7 @@ export interface FieldProps {
     showValidIcon?: boolean;
     isCollatingErrors?: boolean;
     useLabelElement?: boolean;
+    i18n?: Language;
 }
 
 export interface FieldState {

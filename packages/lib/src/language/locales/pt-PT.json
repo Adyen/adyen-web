@@ -216,5 +216,7 @@
     "orPayWith": "ou pague com",
     "invalidFormatExpects": "Formato inválido. Formato esperado: %{format}",
     "upi.qrCodeWaitingMessage": "Digitalize o código QR usando a sua aplicação UPI preferida para concluir o pagamento",
-    "upi.vpaWaitingMessage": "Abra a aplicação UPI para confirmar o pagamento"
+    "upi.vpaWaitingMessage": "Abra a aplicação UPI para confirmar o pagamento",
+    "upi.modeSelection": "Faça uma seleção de como gostaria de usar a UPI.",
+    "onlineBanking.termsAndConditions": "Ao clicar em continuar, concorda com os %#termos e condições%#"
 }

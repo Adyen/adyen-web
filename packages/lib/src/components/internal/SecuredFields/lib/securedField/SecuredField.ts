@@ -107,16 +107,12 @@ class SecuredField extends AbstractSecuredField {
             on(iframe, 'load', this.iframeOnLoadListener, false);
         }
 
+        this.iframeRef = iframe;
+
         return this;
     }
 
     iframeOnLoadListenerFn(): void {
-        if (process.env.NODE_ENV === 'development' && window._b$dl) {
-            logger.log('\n### SecuredField:::: onIframeLoaded:: this type=', this.config.txVariant);
-        }
-
-        off(window, 'load', this.iframeOnLoadListener, false);
-
         // Create reference to bound fn (see getters/setters for binding)
         this.postMessageListener = this.postMessageListenerFn;
 
@@ -145,9 +141,7 @@ class SecuredField extends AbstractSecuredField {
             isCollatingErrors: this.config.isCollatingErrors
         };
 
-        if (process.env.NODE_ENV === 'development' && window._b$dl) {
-            logger.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
-        }
+        if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
         //--
@@ -238,6 +232,8 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             case 'config':
+                if (window._b$dl)
+                    console.log('### SecuredField::postMessageListenerFn:: configured - calling onConfigCallback', feedbackObj.fieldType);
                 this.onConfigCallback(feedbackObj);
                 break;
 
@@ -291,6 +287,7 @@ class SecuredField extends AbstractSecuredField {
 
     destroy(): void {
         off(window, 'message', this.postMessageListener, false);
+        off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
         removeAllChildren(this.holderEl);
     }

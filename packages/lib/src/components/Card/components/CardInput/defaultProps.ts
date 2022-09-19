@@ -20,6 +20,7 @@ export default {
     installmentOptions: {},
     configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
     autoFocus: true,
+    isPayButtonPrimaryVariant: true,
 
     // Events
     onLoad: (): any => {},

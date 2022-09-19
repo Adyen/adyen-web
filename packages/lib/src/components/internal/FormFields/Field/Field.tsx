@@ -23,6 +23,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         isLoading,
         isValid,
         label,
+        labelEndAdornment,
         name,
         onBlur,
         onFieldBlur,
@@ -32,7 +33,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         useLabelElement,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
-        focused: propsFocused
+        focused: propsFocused,
+        i18n
     } = props;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
@@ -80,6 +82,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 {/*@ts-ignore - function is callable*/}
                 {typeof label === 'function' && label()}
 
+                {labelEndAdornment && <span className="adyen-checkout__label-adornment--end">{labelEndAdornment}</span>}
+
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
                 <div
                     className={classNames([
@@ -109,13 +113,13 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
                     {isValid && showValidIcon !== false && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
-                            <Icon type="checkmark" />
+                            <Icon type="checkmark" alt={i18n?.get('field.valid')} />
                         </span>
                     )}
 
                     {errorMessage && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--invalid">
-                            <Icon type="field_error" />
+                            <Icon type="field_error" alt={i18n?.get('field.invalid')} />
                         </span>
                     )}
                 </div>

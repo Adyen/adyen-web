@@ -211,5 +211,7 @@
     "orPayWith": "или заплатите через",
     "invalidFormatExpects": "Неверный формат. Ожидаемый формат: %{format}",
     "upi.qrCodeWaitingMessage": "Для завершения платежа отсканируйте QR-код с помощью предпочитаемого приложения UPI",
-    "upi.vpaWaitingMessage": "Откройте приложение UPI для подтверждения платежа"
+    "upi.vpaWaitingMessage": "Откройте приложение UPI для подтверждения платежа",
+    "upi.modeSelection": "Укажите, как вы собираетесь использовать UPI.",
+    "onlineBanking.termsAndConditions": "Нажимая кнопку «Продолжить», вы соглашаетесь с %#условиями%#"
 }

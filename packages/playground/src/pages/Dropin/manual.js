@@ -12,7 +12,7 @@ export async function initManual() {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        environment: 'test',
+        environment: process.env.__CLIENT_ENV__,
         installmentOptions: {
             mc: {
                 values: [1, 2, 3, 4]
@@ -59,7 +59,7 @@ export async function initManual() {
             checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
         },
         onError: (error, component) => {
-            console.error(error.name, error.message, error.stack, component);
+            console.info(error.name, error.message, error.stack, component);
         },
         paymentMethodsConfiguration: {
             card: {

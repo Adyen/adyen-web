@@ -53,6 +53,8 @@ import OnlinebankingPL from './OnlinebankingPL';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
 import WalletINElement from './WalletIN';
+import OnlineBankingCZElement from './OnlineBankingCZ';
+import OnlineBankingSKElement from './OnlineBankingSK';
 
 /**
  * Maps each component with a Component element.
@@ -102,6 +104,7 @@ const componentsMap = {
     doku_wallet: Doku,
     donation: Donation,
     dotpay: Dotpay,
+    onlineBanking: Dotpay,
     dragonpay_ebanking: Dragonpay,
     dragonpay_otc_banking: Dragonpay,
     dragonpay_otc_non_banking: Dragonpay,
@@ -166,6 +169,8 @@ const componentsMap = {
     mealVoucher_FR_natixis: MealVoucherFR,
     mealVoucher_FR_sodexo: MealVoucherFR,
     mealVoucher_FR_groupeup: MealVoucherFR,
+    onlineBanking_CZ: OnlineBankingCZElement,
+    onlineBanking_SK: OnlineBankingSKElement,
     default: null
 };
 

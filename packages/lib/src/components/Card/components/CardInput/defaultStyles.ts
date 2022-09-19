@@ -1,5 +1,5 @@
 export default {
     base: {
-        caretColor: '#0066FF'
+        caretColor: '#0075FF'
     }
 };

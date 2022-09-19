@@ -214,5 +214,7 @@
     "orPayWith": "of betaal met",
     "invalidFormatExpects": "Ongeldige indeling. Verwachte indeling: %{format}",
     "upi.qrCodeWaitingMessage": "Scan de QR-code met je favoriete UPI-app om de betaling te voltooien",
-    "upi.vpaWaitingMessage": "Open je UPI-app om de betaling te bevestigen"
+    "upi.vpaWaitingMessage": "Open je UPI-app om de betaling te bevestigen",
+    "upi.modeSelection": "Maak een selectie over hoe u UPI wilt gebruiken.",
+    "onlineBanking.termsAndConditions": "Door op Doorgaan te klikken, gaat u akkoord met de %#algemene voorwaarden%#"
 }

@@ -13,6 +13,7 @@ const showComps = {
     avsCard: true,
     avsPartialCard: true,
     kcpCard: true,
+    clickToPay: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -22,6 +23,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
@@ -111,7 +113,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-avs-field');
     }
 
-    if(showComps.avsPartialCard) {
+    if (showComps.avsPartialCard) {
         window.avsPartialCard = checkout
             .create('card', {
                 type: 'scheme',
@@ -138,5 +140,23 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 countryCode: 'KR'
             })
             .mount('.card-kcp-field');
+    }
+
+    if (showComps.clickToPay) {
+        /**
+         * Make sure that the initialization values are being set in the /paymentMethods response,
+         * as part of the 'scheme' configuration object
+         */
+        window.ctpCard = checkout
+            .create('card', {
+                type: 'scheme',
+                brands: ['mc', 'visa'],
+                useClickToPay: true,
+                clickToPayConfiguration: {
+                    shopperIdentityValue: 'shopper-ctp1@adyen.com',
+                    merchantDisplayName: 'Adyen Merchant Name '
+                }
+            })
+            .mount('.card-ctp-field');
     }
 });

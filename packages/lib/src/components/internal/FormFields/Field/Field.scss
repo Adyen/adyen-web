@@ -12,6 +12,7 @@
 
 .adyen-checkout__label {
     display: block;
+    position: relative;
 }
 
 .adyen-checkout__label__text,
@@ -22,6 +23,12 @@
     font-weight: normal;
     line-height: 13px;
     padding-bottom: 5px;
+}
+
+.adyen-checkout__label-adornment--end {
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .adyen-checkout__helper-text {

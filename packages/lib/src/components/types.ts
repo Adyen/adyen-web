@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Order, PaymentAction, PaymentAmount } from '../types';
+import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
 import Core from '../core';
@@ -36,6 +36,7 @@ export interface IUIElement {
     type: string;
     elementRef: any;
     submit(): void;
+    setElementStatus(status: UIElementStatus, props: any): UIElement;
     setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;
@@ -64,6 +65,7 @@ export interface UIElementProps extends BaseElementProps {
     name?: string;
     icon?: string;
     amount?: PaymentAmount;
+    secondaryAmount?: PaymentAmountExtended;
 
     /**
      * Show/Hide pay button

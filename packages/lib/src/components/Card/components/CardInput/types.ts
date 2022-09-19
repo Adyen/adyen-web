@@ -49,6 +49,7 @@ type Placeholders = {
  */
 export interface CardInputProps {
     amount?: PaymentAmount;
+    isPayButtonPrimaryVariant?: boolean;
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];

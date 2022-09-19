@@ -236,6 +236,7 @@ class CSF extends AbstractCSF {
                     this.state.securedFields[pFieldType].destroy();
                     delete this.state.securedFields[pFieldType];
                     this.state.numIframes -= 1;
+                    this.state.iframeCount -= 1;
 
                     const callbackObj: CbObjOnAdditionalSF = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
                     this.callbacks.onAdditionalSFRemoved(callbackObj);

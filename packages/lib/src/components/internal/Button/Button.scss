@@ -55,6 +55,8 @@
         &:disabled {
             opacity: 1;
         }
+        display: flex;
+        justify-content: center;
     }
 
     &.adyen-checkout__button--standalone {
