@@ -134,7 +134,7 @@ const componentsMap = {
     molpay_ebanking_TH: MolPayEBankingTH,
     molpay_ebanking_VN: MolPayEBankingVN,
     onlinebanking_IN: OnlineBankingINElement,
-    onlinebanking_PL: OnlinebankingPL,
+    onlineBanking_PL: OnlinebankingPL,
     openbanking_UK: OpenBankingUK,
     paypal: PayPal,
     payu_IN_cashcard: PayuCashcard,
