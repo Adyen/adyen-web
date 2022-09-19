@@ -213,5 +213,6 @@
     "invalidFormatExpects": "Formato non valido. Formato previsto: %{format}",
     "upi.qrCodeWaitingMessage": "Per completare il pagamento, scansiona il codice QR utilizzando la tua app UPI preferita",
     "upi.vpaWaitingMessage": "Apri l'app UPI per confermare il pagamento",
+    "upi.modeSelection": "Scegli la modalità di utilizzo di UPI.",
     "onlineBanking.termsAndConditions": "Facendo clic su Continua, accetti %#i termini e le condizioni%#"
 }

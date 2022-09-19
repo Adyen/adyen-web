@@ -214,5 +214,6 @@
     "invalidFormatExpects": "无效的格式。预期格式：%{format}",
     "upi.qrCodeWaitingMessage": "使用您首选的 UPI 应用扫描二维码以完成付款",
     "upi.vpaWaitingMessage": "打开您的 UPI 应用以确认付款",
+    "upi.modeSelection": "请选择您希望如何使用 UPI。",
     "onlineBanking.termsAndConditions": "点击“继续”，即表示您同意%#条款和细则%#"
 }
