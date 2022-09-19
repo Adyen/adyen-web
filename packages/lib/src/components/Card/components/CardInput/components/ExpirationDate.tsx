@@ -35,6 +35,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             dir={'ltr'}
             name={'encryptedExpiryDate'}
             isCollatingErrors={isCollatingErrors}
+            i18n={i18n}
         >
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}

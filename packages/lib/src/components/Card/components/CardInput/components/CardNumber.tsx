@@ -29,6 +29,7 @@ export default function CardNumber(props: CardNumberProps) {
             name={'encryptedCardNumber'}
             isCollatingErrors={isCollatingErrors}
             showValidIcon={false}
+            i18n={i18n}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}

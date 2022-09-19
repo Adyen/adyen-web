@@ -19,6 +19,7 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
             isValid={!!isValid}
             name={'holderName'}
             isCollatingErrors={isCollatingErrors}
+            i18n={i18n}
         >
             {renderFormField('text', {
                 name: 'holderName',
