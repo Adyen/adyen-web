@@ -70,7 +70,6 @@ export default function CardFields({
                 })}
             >
                 <ExpirationDate
-                    // error={errors.encryptedExpiryDate || errors.encryptedExpiryYear || errors.encryptedExpiryMonth}
                     error={getErrorWithLabel(errors, ENCRYPTED_EXPIRY_DATE)}
                     focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
