@@ -228,7 +228,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * Return the type of an element
      */
     get type(): string {
-        console.log(this.props.type || this.constructor['type']);
         return this.props.type || this.constructor['type'];
     }
 
