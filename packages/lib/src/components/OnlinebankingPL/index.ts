@@ -9,7 +9,7 @@ class OnlineBankingPL extends IssuerListContainer {
             ...super.formatProps(props),
             showImage: false,
             type,
-            issuers: props.paymentMethods.find(paymentMethod => paymentMethod.type === type)?.issuers
+            issuers: props.paymentMethods.find(paymentMethod => paymentMethod.type === type)?.issuers || [],
         };
     }
 }
