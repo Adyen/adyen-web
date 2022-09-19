@@ -215,5 +215,6 @@
     "invalidFormatExpects": "Nevažeći format. Očekivani format: %{format}",
     "upi.qrCodeWaitingMessage": "Skenirajte QR kôd pomoću željene UPI aplikacije kako biste dovršili plaćanje",
     "upi.vpaWaitingMessage": "Otvorite svoju UPI aplikaciju kako biste potvrdili plaćanje",
-    "upi.modeSelection": "Odaberite kako želite koristiti UPI."
+    "upi.modeSelection": "Odaberite kako želite koristiti UPI.",
+    "onlineBanking.termsAndConditions": "Klikom na nastavak slažete se s %#uvjetima i odredbama%#"
 }

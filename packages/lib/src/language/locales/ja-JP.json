@@ -215,5 +215,6 @@
     "invalidFormatExpects": "無効な形式です。期待される形式： %{format}",
     "upi.qrCodeWaitingMessage": "お好みのUPIアプリを使用してQRコードをスキャンし、支払を完了してください",
     "upi.vpaWaitingMessage": "UPIアプリを開いて、支払を確認してください",
-    "upi.modeSelection": "UPIの使用方法を選択します。"
+    "upi.modeSelection": "UPIの使用方法を選択します。",
+    "onlineBanking.termsAndConditions": "[続行] をクリックすると、%#利用規約%#に同意したことになります"
 }

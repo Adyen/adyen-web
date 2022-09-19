@@ -215,5 +215,6 @@
     "invalidFormatExpects": "Ugyldig format. Forventet format: %{format}",
     "upi.qrCodeWaitingMessage": "Skann QR-koden ved å bruke din foretrukne UPI-app for å fullføre betalingen",
     "upi.vpaWaitingMessage": "Åpne UPI-appen for å bekrefte betalingen",
-    "upi.modeSelection": "Velg hvordan du vil bruke UPI."
+    "upi.modeSelection": "Velg hvordan du vil bruke UPI.",
+    "onlineBanking.termsAndConditions": "Ved å klikke på Fortsett godtar du %#vilkårene%#"
 }

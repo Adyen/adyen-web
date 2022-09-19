@@ -215,5 +215,6 @@
     "invalidFormatExpects": "유효하지 않은 형식입니다. 예상 형식: %{format}",
     "upi.qrCodeWaitingMessage": "즐겨 쓰는 UPI 앱으로 QR 코드를 스캔하여 결제하세요",
     "upi.vpaWaitingMessage": "UPI 앱을 열어 결제를 확인하세요",
-    "upi.modeSelection": "UPI를 사용할 방식을 선택하세요."
+    "upi.modeSelection": "UPI를 사용할 방식을 선택하세요.",
+    "onlineBanking.termsAndConditions": "%#이용약관%#에 동의하는 경우 계속을 클릭합니다"
 }

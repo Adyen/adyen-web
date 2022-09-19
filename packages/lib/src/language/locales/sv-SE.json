@@ -215,5 +215,6 @@
     "invalidFormatExpects": "Ogiltigt format. Förväntat format: %{format}",
     "upi.qrCodeWaitingMessage": "Skanna QR-koden med valfri UPI-app för att slutföra betalningen",
     "upi.vpaWaitingMessage": "Öppna din UPI-app för att bekräfta betalningen",
-    "upi.modeSelection": "Välj hur du vill använda UPI."
+    "upi.modeSelection": "Välj hur du vill använda UPI.",
+    "onlineBanking.termsAndConditions": "Genom att klicka på Fortsätt godkänner du %#villkoren%#"
 }
