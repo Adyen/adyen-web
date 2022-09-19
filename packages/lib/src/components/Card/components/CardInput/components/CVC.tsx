@@ -57,7 +57,7 @@ export default function CVC(props: CVCProps) {
             classNameModifiers={[...classNameModifiers, 'securityCode']}
             onFocusField={() => onFocusField(ENCRYPTED_SECURITY_CODE)}
             className={fieldClassnames}
-            errorMessage={error && i18n.get(error)}
+            errorMessage={error}
             isValid={isValid}
             dir={'ltr'}
             name={ENCRYPTED_SECURITY_CODE}

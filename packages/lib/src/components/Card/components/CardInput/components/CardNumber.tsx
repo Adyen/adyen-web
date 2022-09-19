@@ -11,7 +11,6 @@ import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/co
 
 export default function CardNumber(props: CardNumberProps) {
     const {
-        i18n,
         commonProps: { isCollatingErrors }
     } = useCoreContext();
     const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
@@ -23,10 +22,10 @@ export default function CardNumber(props: CardNumberProps) {
             filled={props.filled}
             classNameModifiers={['cardNumber']}
             onFocusField={() => onFocusField(ENCRYPTED_CARD_NUMBER)}
-            errorMessage={error && i18n.get(error)}
+            errorMessage={error}
             isValid={isValid}
             dir={'ltr'}
-            name={'encryptedCardNumber'}
+            name={ENCRYPTED_CARD_NUMBER}
             isCollatingErrors={isCollatingErrors}
             showValidIcon={false}
         >
