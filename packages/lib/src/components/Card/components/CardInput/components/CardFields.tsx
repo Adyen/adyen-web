@@ -33,12 +33,24 @@ export default function CardFields({
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
+    // Prepend a label to the errorMessage so that it matches the error read by the screenreader
+    const getErrorWithLabel = (errors, fieldType) => {
+        let errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
+
+        if (errorMessage) {
+            const label = i18n.get(`creditCard.${fieldType}.aria.label`);
+            errorMessage = `${label}: ${errorMessage}`;
+        }
+
+        return errorMessage;
+    };
+
     return (
         <div className="adyen-checkout__card__form">
             <CardNumber
                 brand={brand}
                 brandsConfiguration={brandsConfiguration}
-                error={errors.encryptedCardNumber}
+                error={getErrorWithLabel(errors, ENCRYPTED_CARD_NUMBER)}
                 focused={focusedElement === ENCRYPTED_CARD_NUMBER}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.numberField.title')}
@@ -58,7 +70,8 @@ export default function CardFields({
                 })}
             >
                 <ExpirationDate
-                    error={errors.encryptedExpiryDate || errors.encryptedExpiryYear || errors.encryptedExpiryMonth}
+                    // error={errors.encryptedExpiryDate || errors.encryptedExpiryYear || errors.encryptedExpiryMonth}
+                    error={getErrorWithLabel(errors, ENCRYPTED_EXPIRY_DATE)}
                     focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
@@ -70,7 +83,7 @@ export default function CardFields({
 
                 {hasCVC && (
                     <CVC
-                        error={errors.encryptedSecurityCode}
+                        error={getErrorWithLabel(errors, ENCRYPTED_SECURITY_CODE)}
                         focused={focusedElement === ENCRYPTED_SECURITY_CODE}
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}

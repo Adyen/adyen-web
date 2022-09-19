@@ -23,10 +23,10 @@ export default function CardNumber(props: CardNumberProps) {
             filled={props.filled}
             classNameModifiers={['cardNumber']}
             onFocusField={() => onFocusField(ENCRYPTED_CARD_NUMBER)}
-            errorMessage={error && i18n.get(error)}
+            errorMessage={error}
             isValid={isValid}
             dir={'ltr'}
-            name={'encryptedCardNumber'}
+            name={ENCRYPTED_CARD_NUMBER}
             isCollatingErrors={isCollatingErrors}
             showValidIcon={false}
         >

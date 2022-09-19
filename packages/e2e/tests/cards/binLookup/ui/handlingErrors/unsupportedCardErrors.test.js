@@ -28,7 +28,7 @@ test('#1 Enter number of unsupported card, ' + 'then check UI shows an error ' +
         .expect(cardPage.numErrorText.exists)
         .ok()
         // with text
-        .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+        .expect(cardPage.numErrorText.withExactText('Card number: Unsupported card entered').exists)
         .ok();
 
     // Past card field with supported number
@@ -56,7 +56,7 @@ test(
             .expect(cardPage.numErrorText.exists)
             .ok()
             // with text
-            .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+            .expect(cardPage.numErrorText.withExactText('Card number: Unsupported card entered').exists)
             .ok();
 
         // Click Pay (which will call showValidation on all fields)
@@ -99,7 +99,7 @@ test('#3 Enter number of unsupported card, ' + 'then check UI shows an error ' +
         .expect(cardPage.numErrorText.exists)
         .ok()
         // with text
-        .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+        .expect(cardPage.numErrorText.withExactText('Card number: Unsupported card entered').exists)
         .ok();
 
     // Past card field with supported number
@@ -121,7 +121,7 @@ test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' +
         .expect(cardPage.numErrorText.exists)
         .ok()
         // with text
-        .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+        .expect(cardPage.numErrorText.withExactText('Card number: Unsupported card entered').exists)
         .ok();
 
     // Past card field with supported number

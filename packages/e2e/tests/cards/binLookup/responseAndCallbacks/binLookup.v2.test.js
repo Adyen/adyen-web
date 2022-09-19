@@ -119,7 +119,7 @@ test('#3 Enter number of unsupported card, ' + 'then inspect response body for e
         .expect(errorLabel.exists)
         .ok()
         // with text
-        .expect(errorLabel.withExactText('Unsupported card entered').exists)
+        .expect(errorLabel.withExactText('Card number: Unsupported card entered').exists)
         .ok();
 });
 
