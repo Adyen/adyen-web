@@ -49,6 +49,7 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
+import OnlinebankingPL from './OnlinebankingPL';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
 import WalletINElement from './WalletIN';
@@ -133,6 +134,7 @@ const componentsMap = {
     molpay_ebanking_TH: MolPayEBankingTH,
     molpay_ebanking_VN: MolPayEBankingVN,
     onlinebanking_IN: OnlineBankingINElement,
+    onlinebanking_PL: OnlinebankingPL,
     openbanking_UK: OpenBankingUK,
     paypal: PayPal,
     payu_IN_cashcard: PayuCashcard,
