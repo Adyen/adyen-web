@@ -28,7 +28,6 @@ import Boleto from './Boleto';
 import Oxxo from './Oxxo';
 import Multibanco from './Multibanco';
 import Dotpay from './Dotpay';
-import P24 from './P24';
 import Eps from './EPS';
 import Giftcard from './Giftcard';
 import Vipps from './Vipps';
@@ -50,6 +49,7 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
+import OnlinebankingPL from './OnlinebankingPL';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
 import WalletINElement from './WalletIN';
@@ -131,8 +131,8 @@ const componentsMap = {
     molpay_ebanking_TH: MolPayEBankingTH,
     molpay_ebanking_VN: MolPayEBankingVN,
     onlinebanking_IN: OnlineBankingINElement,
+    onlinebanking_PL: OnlinebankingPL,
     openbanking_UK: OpenBankingUK,
-    p24: P24,
     paypal: PayPal,
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
