@@ -215,5 +215,5 @@
     "invalidFormatExpects": "Ei-kelvollinen muoto. Odotettu muoto: %{format}",
     "upi.qrCodeWaitingMessage": "Suorita maksu loppuun skannaamalla QR-koodi haluamallasi UPI-sovelluksella",
     "upi.vpaWaitingMessage": "Avaa UPI-sovellus vahvistaaksesi maksun",
-    "onlineBanking.termsAndConditions": "Napsauttamalla Jatka hyväksyt %#käyttöehdot%#"
+    "upi.modeSelection": "Valitse, kuinka haluat käyttää UPI-sovellusta."
 }

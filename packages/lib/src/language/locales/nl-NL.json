@@ -215,5 +215,5 @@
     "invalidFormatExpects": "Ongeldige indeling. Verwachte indeling: %{format}",
     "upi.qrCodeWaitingMessage": "Scan de QR-code met je favoriete UPI-app om de betaling te voltooien",
     "upi.vpaWaitingMessage": "Open je UPI-app om de betaling te bevestigen",
-    "onlineBanking.termsAndConditions": "Door op Doorgaan te klikken, gaat u akkoord met de %#algemene voorwaarden%#"
+    "upi.modeSelection": "Maak een selectie over hoe u UPI wilt gebruiken."
 }

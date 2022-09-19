@@ -215,5 +215,5 @@
     "invalidFormatExpects": "Neplatný formát. Očakávaný formát: %{format}",
     "upi.qrCodeWaitingMessage": "Naskenujte QR kód pomocou preferovanej aplikácie UPI a dokončite platbu",
     "upi.vpaWaitingMessage": "Otvorte aplikáciu UPI a potvrďte platbu",
-    "onlineBanking.termsAndConditions": "Kliknutím na tlačidlo pokračovať súhlasíte so %#zmluvnými podmienkami%#"
+    "upi.modeSelection": "Vyberte si, ako by ste chceli používať UPI."
 }
