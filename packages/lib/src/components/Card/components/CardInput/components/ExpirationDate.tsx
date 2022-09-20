@@ -5,7 +5,12 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { ExpirationDateProps } from './types';
 import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
-import { DATE_POLICY_HIDDEN, DATE_POLICY_OPTIONAL, DATE_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import {
+    DATE_POLICY_HIDDEN,
+    DATE_POLICY_OPTIONAL,
+    DATE_POLICY_REQUIRED,
+    ENCRYPTED_EXPIRY_DATE
+} from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
@@ -29,15 +34,16 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             className={fieldClassnames}
             focused={focused}
             filled={filled}
-            onFocusField={() => onFocusField('encryptedExpiryDate')}
-            errorMessage={error && i18n.get(error)}
+            onFocusField={() => onFocusField(ENCRYPTED_EXPIRY_DATE)}
+            errorMessage={error}
             isValid={isValid}
             dir={'ltr'}
             name={'encryptedExpiryDate'}
             isCollatingErrors={isCollatingErrors}
+            i18n={i18n}
         >
             <DataSfSpan
-                encryptedFieldType={'encryptedExpiryDate'}
+                encryptedFieldType={ENCRYPTED_EXPIRY_DATE}
                 className={classNames(
                     'adyen-checkout__input',
                     'adyen-checkout__input--small',

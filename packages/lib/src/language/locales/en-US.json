@@ -156,6 +156,8 @@
     "blik.code": "6-digit code",
     "blik.help": "Get the code from your banking app.",
     "swish.pendingMessage": "After you scan, the status can be pending for up to 10 minutes. Attempting to pay again within this time may result in multiple charges.",
+    "field.valid": "Field valid",
+    "field.invalid": "Field not valid",
     "error.va.gen.01": "Incomplete field",
     "error.va.gen.02": "Field not valid",
     "error.va.sf-cc-num.01": "Invalid card number",
@@ -218,8 +220,9 @@
     "invalidFormatExpects": "Invalid format. Expected format: %{format}",
     "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
-    "onlineBanking.termsAndConditions": "By clicking continue you agree with the %#terms and conditions%#",
+    "upi.modeSelection": "Make a selection on how you would like to use UPI.",
 
+    "onlineBanking.termsAndConditions": "By clicking continue you agree with the %#terms and conditions%#",
 
     "ctp.loading.poweredByCtp": "Powered by Click to Pay",
     "ctp.loading.intro": "A smart, secure way to pay with merchants worldwide",

@@ -215,5 +215,6 @@
     "invalidFormatExpects": "Neveljavna oblika zapisa. Pričakovana oblika zapisa: %{format}",
     "upi.qrCodeWaitingMessage": "Za dokončanje plačila optično preberite kodo QR z želeno aplikacijo UPI",
     "upi.vpaWaitingMessage": "Za potrditev plačila odprite svojo aplikacijo UPI",
+    "upi.modeSelection": "Izberite, kako želite uporabljati aplikacijo UPI.",
     "onlineBanking.termsAndConditions": "Če kliknete »Nadaljuj«, to pomeni, da se strinjate s %#pogoji in določili%#"
 }

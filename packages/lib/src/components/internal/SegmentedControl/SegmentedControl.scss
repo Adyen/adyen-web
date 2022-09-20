@@ -1,0 +1,55 @@
+@import '../../../style/index';
+
+.adyen-checkout__segmented-control {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px 5px;
+  background: $color-white;
+  border: 1px solid $color-gray-dark;
+  border-radius: 6px;
+
+  &--disabled {
+    pointer-events: none;
+
+    >  .adyen-checkout__segmented-control-segment {
+      color: #8390A3;
+    }
+
+    > .adyen-checkout__segmented-control-segment--selected {
+      background: #F3F6F9;
+      border: 1.5px solid #8390A3;
+    }
+  }
+}
+
+.adyen-checkout__segmented-control-segment {
+  font-weight: 500;
+  color: #0075FF;
+  width: 100%;
+  height: 40px;
+  flex-grow: 1;
+  cursor: pointer;
+  background: $color-white;
+  border-radius: 6px;
+  border: 0;
+  text-align: center;
+  transition: background 0.3s ease-out;
+
+
+  &:not(&--selected):hover {
+    background-color: $color-gray-lighter;
+  }
+
+  &:active {
+    background-color: $color-gray-lighter;
+    border: 1.5px solid $color-gray-darker;
+  }
+
+  &--selected {
+    background: #E5F1FF;
+    border: 1.5px solid #0075FF;
+    color: #0075FF;
+    font-weight: 700;
+  }
+}
