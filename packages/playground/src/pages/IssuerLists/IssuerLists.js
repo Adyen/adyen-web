@@ -49,7 +49,7 @@ import '../../style.scss';
     window.dotpay = checkout.create('dotpay').mount('.dotpay-field');
 
     // Online banking PL
-    window.onlineBanking_PL = checkout.create('onlinebanking_PL').mount('.onlinebanking_PL-field');
+    window.onlineBanking_PL = checkout.create('onlineBanking_PL').mount('.onlinebanking_PL-field');
 
     // Entercash
     window.entercash = checkout.create('entercash').mount('.entercash-field');
