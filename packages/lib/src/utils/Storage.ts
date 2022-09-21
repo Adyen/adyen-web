@@ -1,14 +1,14 @@
-class Storage {
+class Storage<T> {
     private readonly prefix = 'adyen-checkout__';
     private readonly key: string;
-    private storage;
+    private storage: globalThis.Storage;
 
     constructor(key: string, storage = window.localStorage) {
         this.storage = storage;
         this.key = this.prefix + key;
     }
 
-    public get() {
+    public get(): T {
         try {
             return JSON.parse(this.storage.getItem(this.key));
         } catch (err) {
@@ -16,7 +16,7 @@ class Storage {
         }
     }
 
-    public set(value: any) {
+    public set(value: T) {
         this.storage.setItem(this.key, JSON.stringify(value));
     }
 

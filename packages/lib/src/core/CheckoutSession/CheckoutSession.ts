@@ -12,14 +12,14 @@ import {
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
-    SessionConfiguration,
+    SessionConfiguration
 } from '../../types';
 import cancelOrder from '../Services/sessions/cancel-order';
-import {onOrderCancelData} from "../../components/Dropin/types";
+import { onOrderCancelData } from '../../components/Dropin/types';
 
 class Session {
     private readonly session: CheckoutSession;
-    private readonly storage: Storage;
+    private readonly storage: Storage<CheckoutSession>;
     public readonly clientKey: string;
     public readonly loadingContext: string;
     public configuration: SessionConfiguration;
@@ -133,7 +133,6 @@ class Session {
             return response;
         });
     }
-
 
     /**
      * Gets the stored session but only if the current id and the stored id match
