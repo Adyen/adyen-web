@@ -3,7 +3,7 @@ import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/configuration/constants';
 
-// Externally testable utils // TODO - make unit tests
+// Externally testable utils
 export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {
     return brandsArr.reduce((acc, brandObj) => acc || excludedBrands.includes(brandObj.brand), false);
 };
@@ -59,13 +59,10 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
             // RESULT: binLookup has found a result so proceed accordingly
             if (binLookupResponse.supportedBrands?.length) {
                 const hasExcludedBrand: boolean = containsExcludedBrand(binLookupResponse.supportedBrands, BRAND_ICON_UI_EXCLUSION_LIST);
-                console.log('### extensions::hasExcludedBrand:: ', hasExcludedBrand);
 
                 const supportedBrands: BrandObject[] = hasExcludedBrand
                     ? removeExcludedBrand(binLookupResponse.supportedBrands)
                     : cloneBrandsArr(binLookupResponse.supportedBrands);
-
-                console.log('### extensions::supportedBrands:: ', supportedBrands);
 
                 // 1) Multiple options found - add to the UI & inform SFP
                 if (supportedBrands.length > 1) {
