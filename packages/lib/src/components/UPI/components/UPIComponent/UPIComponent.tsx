@@ -1,5 +1,5 @@
 import { Fragment, h, RefObject } from 'preact';
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { VpaInputHandlers } from '../VpaInput/VpaInput';
@@ -32,7 +32,7 @@ const A11Y = {
 
 export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton }: UPIComponentProps): h.JSX.Element {
     const { i18n, loadingContext } = useCoreContext();
-    const inputRef = useRef<VpaInputHandlers>(null);
+    const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
 
@@ -41,8 +41,12 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     };
 
     this.showValidation = () => {
-        inputRef.current.validateInput();
+        vpaInputHandlers.validateInput();
     };
+
+    const onSetVpaInputHandlers = useCallback((handlers: VpaInputHandlers) => {
+        setVpaInputHandlers(handlers);
+    }, []);
 
     const onChangeUpiMode = useCallback(
         (newMode: UpiMode) => {
@@ -81,7 +85,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
 
             {mode === UpiMode.Vpa ? (
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} role="region">
-                    <VpaInput disabled={status === 'loading'} ref={inputRef} onChange={onChange} />
+                    <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
 
                     {showPayButton &&
                         payButton({

@@ -1,6 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useImperativeHandle, useState } from 'preact/hooks';
-import { forwardRef } from 'preact/compat';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { otpValidationRules } from './validate';
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
@@ -13,6 +12,7 @@ interface CtPOneTimePasswordInputProps {
     disabled: boolean;
     isValidatingOtp: boolean;
     errorMessage?: string;
+    onSetInputHandlers(handlers: CtPOneTimePasswordInputHandlers): void;
     onPressEnter(): Promise<void>;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
 }
@@ -25,7 +25,7 @@ export type CtPOneTimePasswordInputHandlers = {
     validateInput(): void;
 };
 
-const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPOneTimePasswordInputProps>((props, ref) => {
+const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const formSchema = ['otp'];
     const [resendOtpError, setResendOtpError] = useState<string>(null);
@@ -33,6 +33,16 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         schema: formSchema,
         rules: otpValidationRules
     });
+    const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
+
+    const validateInput = useCallback(() => {
+        triggerValidation();
+    }, [triggerValidation]);
+
+    useEffect(() => {
+        otpInputHandlersRef.current.validateInput = validateInput;
+        props.onSetInputHandlers(otpInputHandlersRef.current);
+    }, [validateInput, props.onSetInputHandlers]);
 
     const handleOnResendOtpError = useCallback(
         (errorCode: string) => {
@@ -42,10 +52,6 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         [i18n]
     );
 
-    const validateInput = useCallback(() => {
-        triggerValidation();
-    }, [triggerValidation]);
-
     const handleOnKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
@@ -54,8 +60,6 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         },
         [props.onPressEnter]
     );
-
-    useImperativeHandle(ref, () => ({ validateInput }));
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
@@ -81,6 +85,6 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
             })}
         </Field>
     );
-});
+};
 
 export default CtPOneTimePasswordInput;

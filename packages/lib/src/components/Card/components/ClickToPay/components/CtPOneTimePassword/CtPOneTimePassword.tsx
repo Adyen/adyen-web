@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import Button from '../../../../../internal/Button';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPOneTimePasswordInput from './CtPOneTimePasswordInput';
@@ -14,8 +14,12 @@ const CtPOneTimePassword = (): h.JSX.Element => {
     const [isValid, setIsValid] = useState<boolean>(false);
     const [isValidatingOtp, setIsValidatingOtp] = useState<boolean>(false);
     const [errorCode, setErrorCode] = useState<string>(null);
-    const inputRef = useRef<CtPOneTimePasswordInputHandlers>(null);
+    const [otpInputHandlers, setOtpInputHandlers] = useState<CtPOneTimePasswordInputHandlers>(null);
     const subtitleParts = i18n.get('ctp.otp.subtitle').split('%@');
+
+    const onSetOtpInputHandlers = useCallback((handlers: CtPOneTimePasswordInputHandlers) => {
+        setOtpInputHandlers(handlers);
+    }, []);
 
     const onChangeOtpInput = useCallback(({ data, isValid }) => {
         setOtp(data.otp);
@@ -26,7 +30,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
         setErrorCode(null);
 
         if (!isValid) {
-            inputRef.current.validateInput();
+            otpInputHandlers.validateInput();
             return;
         }
 
@@ -38,7 +42,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
             setErrorCode(error?.reason);
             setIsValidatingOtp(false);
         }
-    }, [otp, isValid, inputRef.current]);
+    }, [otp, isValid, otpInputHandlers]);
 
     return (
         <Fragment>
@@ -49,8 +53,8 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 {subtitleParts[1]}
             </div>
             <CtPOneTimePasswordInput
-                ref={inputRef}
                 onChange={onChangeOtpInput}
+                onSetInputHandlers={onSetOtpInputHandlers}
                 disabled={isValidatingOtp}
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
                 onPressEnter={onSubmitPassword}

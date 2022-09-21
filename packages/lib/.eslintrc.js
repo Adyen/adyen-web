@@ -33,6 +33,13 @@ module.exports = {
         }
     },
     rules: {
+        'no-restricted-imports': [
+            'error',
+            {
+                name: 'preact/compat',
+                message: 'preact/compat should be used to leverage a React app to start using Preact, which it is not the case for adyen-web SDK.'
+            }
+        ],
         'no-console': 0,
         'class-methods-use-this': 'off', // TODO
         'no-underscore-dangle': 'off', // TODO
