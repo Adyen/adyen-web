@@ -133,6 +133,34 @@ test(
 
 test(
     '#5 Fill in card number that will get dual branding result from binLookup, ' +
+        'then check that the icons/buttons are active,' +
+        'then delete the number,' +
+        'then check that the icons/buttons have gone',
+    async t => {
+        // Start, allow time for iframes to load
+        await start(t, 2000, TEST_SPEED);
+
+        // Fill card field with dual branded card (visa/cb)
+        await cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
+
+        await t
+            .expect(dualBrandingIconHolder.exists)
+            .ok()
+            .expect(dualBrandingIconHolderActive.exists)
+            .ok();
+
+        await cardUtils.deleteCardNumber(t);
+
+        await t
+            .expect(dualBrandingIconHolder.exists)
+            .notOk()
+            .expect(dualBrandingIconHolderActive.exists)
+            .notOk();
+    }
+);
+
+test(
+    '#6 Fill in card number that will get dual branding result from binLookup, ' +
         'then select one of the dual brands,' +
         'then check the other brand icon is at reduced alpha,' +
         'then repeat with the other icon',
@@ -185,7 +213,7 @@ test(
 );
 
 test(
-    '#6 Fill in card number that will get single branding result from binLookup, ' +
+    '#7 Fill in card number that will get single branding result from binLookup, ' +
         'then enter a dual branded card number,' +
         'check both brand icons are at full alpha,' +
         'then click icons and make sure they go to the expected alpha',
@@ -262,7 +290,7 @@ test(
 );
 
 test(
-    '#7 Fill in card number that will get single branding result from binLookup, ' +
+    '#8 Fill in card number that will get single branding result from binLookup, ' +
         'then enter a partial dual branded card number,' +
         'check both brand icons are at reduced alpha,' +
         'complete card number,' +
@@ -354,11 +382,12 @@ test(
 );
 
 test(
-    '#8 Fill in card number that will get dual branding result from binLookup, ' +
+    '#9 Fill in card number that will get dual branding result from binLookup, ' +
         'but one of the brands should be excluded from the UI, ' +
         '(but meaning also that no brand should be set in the PM data), ' +
         'then check it is valid,' +
-        'then check PM data does not have a brand property',
+        'then check PM data does not have a brand property,' +
+        'and check there are no dual branding icons/buttons',
     async t => {
         // Start, allow time for iframes to load
         await start(t, 2000, TEST_SPEED);
@@ -373,5 +402,12 @@ test(
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
+
+        // Should be no dual branding icons/buttons
+        await t
+            .expect(dualBrandingIconHolder.exists)
+            .notOk()
+            .expect(dualBrandingIconHolderActive.exists)
+            .notOk();
     }
 );
