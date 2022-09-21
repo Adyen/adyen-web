@@ -37,25 +37,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         activeBrand: null
     };
 
-    public isMouseDown = false;
-    public onFocus = () => {
-        // Prevent a focus event when the user is clicking with a mouse.
-        // TODO find a solution where we can remove this if-clause (and just call this.props.onSelect()) so that the screenreader reads the same "stored card ends in..." message for clicking on a PM as it does when tabbing between them
-        if (!this.isMouseDown) {
-            this.props.onSelect();
-        }
-    };
-
     public onClick = () => {
         this.props.onSelect();
-    };
-
-    public onMouseDown = () => {
-        this.isMouseDown = true;
-    };
-
-    public onMouseUp = () => {
-        this.isMouseDown = false;
     };
 
     componentDidMount() {
@@ -113,10 +96,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
             <li
                 key={paymentMethod._id}
                 className={paymentMethodClassnames}
-                onFocus={this.onFocus}
                 onClick={onSelect}
-                onMouseDown={this.onMouseDown}
-                onMouseUp={this.onMouseUp}
                 aria-labelledby={buttonId}
             >
                 <div className="adyen-checkout__payment-method__header">
