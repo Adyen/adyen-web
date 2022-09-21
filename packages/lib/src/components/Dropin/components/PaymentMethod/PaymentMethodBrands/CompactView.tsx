@@ -9,7 +9,8 @@ interface CompactViewProps {
 }
 
 const prepareVisibleBrands = (brands: Array<BrandConfiguration>, excludedUIBrands: Array<string>) => {
-    const allowedBrands = brands.filter(brand => !excludedUIBrands.includes(brand.name));
+    const allowedBrands = brands.filter(brand => !excludedUIBrands?.includes(brand.name));
+
     const visibleBrands = allowedBrands.length <= 4 ? allowedBrands : allowedBrands.slice(0, 3);
     return {
         visibleBrands,

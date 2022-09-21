@@ -20,7 +20,7 @@ const PaymentMethodBrands = ({ activeBrand, brands, excludedUIBrands, isPaymentM
         <span className="adyen-checkout__payment-method__brands">
             {brands.map(
                 brand =>
-                    !excludedUIBrands.includes(brand.name) && (
+                    !excludedUIBrands?.includes(brand.name) && (
                         <PaymentMethodIcon
                             key={brand.name}
                             altDescription={brand.name}
