@@ -13,7 +13,7 @@ const prepareVisibleBrands = (brands: Array<BrandConfiguration>, excludedUIBrand
     const visibleBrands = allowedBrands.length <= 4 ? allowedBrands : allowedBrands.slice(0, 3);
     return {
         visibleBrands,
-        leftBrandsAmount: brands.length - visibleBrands.length
+        leftBrandsAmount: allowedBrands.length - visibleBrands.length
     };
 };
 
