@@ -13,7 +13,6 @@ const CtPLogin = (): h.JSX.Element => {
     const [isValid, setIsValid] = useState<boolean>(false);
     const [errorCode, setErrorCode] = useState<string>(null);
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
-    // const inputRef = useRef<CtPLoginInputHandlers>(null);
     const [loginInputHandlers, setLoginInputHandlers] = useState<CtPLoginInputHandlers>(null);
 
     const onSetLoginInputHandlers = useCallback((handlers: CtPLoginInputHandlers) => {
