@@ -96,10 +96,6 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
  * Create an object suitable for sending to our handleOnError function
  */
 export const getErrorObject = (fieldType, rootNode, state) => {
-    // const error = getProp(state, `errors.${fieldType}`) || DEFAULT_ERROR; // Get existing error OR it's empty
-    // console.log('### SFPUtils::getErrorObject:: fieldType', fieldType);
-    // console.log('### SFPUtils::getErrorObject:: error', EMPTY_FIELD_ERROR_MESSAGES[fieldType]);
-
     // Get existing error OR field is empty in which case get field specific msg OR use default
     const error = getProp(state, `errors.${fieldType}`) || EMPTY_FIELD_ERROR_MESSAGES[fieldType] || DEFAULT_ERROR;
     return {
