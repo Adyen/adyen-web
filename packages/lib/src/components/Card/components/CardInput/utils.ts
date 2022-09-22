@@ -18,6 +18,12 @@ import { StringObject } from '../../../internal/Address/types';
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
+import {
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_PWD_FIELD,
+    ENCRYPTED_SECURITY_CODE
+} from '../../../internal/SecuredFields/lib/configuration/constants';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -89,6 +95,7 @@ export const getLayout = ({
 };
 
 const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
+    // console.log('### utils::mapFieldKey:: key', key);
     switch (key) {
         case 'holderName':
         case 'taxNumber':
@@ -104,6 +111,12 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case 'country':
             return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
         // securedFields related
+        case ENCRYPTED_CARD_NUMBER:
+        case ENCRYPTED_EXPIRY_DATE:
+        case ENCRYPTED_SECURITY_CODE:
+        case ENCRYPTED_PWD_FIELD:
+            return null;
+
         default: {
             // Map all securedField field types to 'creditCard' - with 2 exceptions
             const type = ['ach', 'giftcard'].includes(key) ? key : 'creditCard';
@@ -128,10 +141,12 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
     const errorMessages = fieldList.map(key => {
         // Get translation for field type
         const errorKey: string = mapFieldKey(key, i18n, countrySpecificLabels);
+        // console.log('### sortErrorsForPanel::errorKey:: ', errorKey);
         // Get corresponding error msg
         const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n : i18n.get(errors[key].errorMessage);
 
-        return `${errorKey}: ${errorMsg}.`;
+        return errorKey ? `${errorKey}: ${errorMsg}.` : errorMsg;
+        // return `${errorKey}: ${errorMsg}.`;
     });
 
     return !errorMessages.length ? null : { errorMessages, fieldList };

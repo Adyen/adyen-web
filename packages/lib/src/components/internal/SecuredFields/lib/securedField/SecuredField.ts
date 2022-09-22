@@ -273,7 +273,8 @@ class SecuredField extends AbstractSecuredField {
              *  'brand'
              *  'delete'
              *  'luhnCheck'
-             *  'incomplete field' (an error that follows from a focus (blur) event)
+             *              //'incomplete field' (an error that follows from a focus (blur) event)
+             *  'incorrectly filled field' (an error that follows from a focus (blur) event) // NEW
              *  'numberKeyPressed' (or date-, month-, year-, cvc-, pin-, or iban- KeyPressed)
              *    - since we have no "error" action "...KeyPressed" is the action type on most error events (other than "incomplete field" or "luhnCheck")
              *    and often these error events representing the clearing of an existing error

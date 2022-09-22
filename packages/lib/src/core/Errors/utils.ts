@@ -30,7 +30,7 @@ export const addAriaErrorTranslationsObject = i18n => {
         return acc;
     }, {});
 
-    // console.log('### utils::addAriaErrorTranslationsObject:: transObj', transObj);
+    console.log('### utils::addAriaErrorTranslationsObject:: transObj', transObj);
 
     return transObj;
 };
