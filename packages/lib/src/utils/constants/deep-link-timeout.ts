@@ -1,0 +1,3 @@
+const DEEP_LINK_TIMEOUT = 1000;
+
+export { DEEP_LINK_TIMEOUT };

@@ -10,6 +10,8 @@ import { QRLoaderProps, QRLoaderState } from './types';
 import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import { DEEP_LINK_TIMEOUT } from '../../../utils/constants/deep-link-timeout';
+
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
@@ -67,12 +69,13 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         }
     }
 
-    public redirectToApp = (url, fallback = () => {}) => {
+    public redirectToApp = (url: string, fallback = (): void => {}) => {
         setTimeout(() => {
             // Redirect to the APP failed
             this.props.onError(new AdyenCheckoutError('ERROR', `${this.props.type} App was not found`));
             fallback();
-        }, 25);
+        }, DEEP_LINK_TIMEOUT);
+
         window.location.assign(url);
     };
 

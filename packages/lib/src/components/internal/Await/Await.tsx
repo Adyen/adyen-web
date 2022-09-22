@@ -11,6 +11,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { DEEP_LINK_TIMEOUT } from '../../../utils/constants/deep-link-timeout';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -86,12 +87,13 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url, fallback = (): void => {}): void => {
+    const redirectToApp = (url: string, fallback = (): void => {}): void => {
         setTimeout((): void => {
             // Redirect to the APP failed
             props.onError(new AdyenCheckoutError('ERROR', `${props.type} App was not found`));
             fallback();
-        }, 25);
+        }, DEEP_LINK_TIMEOUT);
+
         window.location.assign(url);
     };
 
