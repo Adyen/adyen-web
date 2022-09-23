@@ -56,33 +56,33 @@ export const ERROR_CODES = {
     [ERROR_MSG_INVALID_FIELD]: 'error.va.gen.02',
 
     [ERROR_MSG_LUHN_CHECK_FAILED]: 'error.va.sf-cc-num.01',
-    [ERROR_MSG_INCORRECTLY_FILLED_PAN]: 'error.va.sf-cc-num.02',
+    [ERROR_MSG_EMPTY_PAN]: 'error.va.sf-cc-num.02', // All "empty field" errors are triggered in Components
     [ERROR_MSG_UNSUPPORTED_CARD_ENTERED]: 'error.va.sf-cc-num.03', // Triggered in Components
-    [ERROR_MSG_EMPTY_PAN]: 'error.va.sf-cc-num.04', // All "empty field" errors are triggered in Components
+    [ERROR_MSG_INCORRECTLY_FILLED_PAN]: 'error.va.sf-cc-num.04',
 
     [ERROR_MSG_CARD_TOO_OLD]: 'error.va.sf-cc-dat.01',
     [ERROR_MSG_CARD_TOO_FAR_IN_FUTURE]: 'error.va.sf-cc-dat.02',
     [ERROR_MSG_CARD_EXPIRES_TOO_SOON]: 'error.va.sf-cc-dat.03',
-    [ERROR_MSG_INCORRECTLY_FILLED__DATE]: 'error.va.sf-cc-dat.04',
-    [ERROR_MSG_EMPTY_DATE]: 'error.va.sf-cc-dat.05',
+    [ERROR_MSG_EMPTY_DATE]: 'error.va.sf-cc-dat.04',
+    [ERROR_MSG_INCORRECTLY_FILLED__DATE]: 'error.va.sf-cc-dat.05',
 
-    [ERROR_MSG_INCORRECTLY_FILLED_YEAR]: 'error.va.sf-cc-yr.01',
-    [ERROR_MSG_EMPTY_YEAR]: 'error.va.sf-cc-yr.02',
+    [ERROR_MSG_EMPTY_YEAR]: 'error.va.sf-cc-yr.01',
+    [ERROR_MSG_INCORRECTLY_FILLED_YEAR]: 'error.va.sf-cc-yr.02',
 
     // [ERROR_MSG_INCORRECTLY_FILLED_MONTH]: 'error.va.sf-cc-mth.02',
     [ERROR_MSG_EMPTY_MONTH]: 'error.va.sf-cc-mth.01',
 
-    [ERROR_MSG_INCORRECTLY_FILLED_CVC]: 'error.va.sf-cc-cvc.01',
-    [ERROR_MSG_EMPTY_CVC]: 'error.va.sf-cc-cvc.02',
+    [ERROR_MSG_EMPTY_CVC]: 'error.va.sf-cc-cvc.01',
+    [ERROR_MSG_INCORRECTLY_FILLED_CVC]: 'error.va.sf-cc-cvc.02',
 
-    [ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD]: 'error.va.sf-kcp-pwd.01',
-    [ERROR_MSG_EMPTY_KCP_PWD]: 'error.va.sf-kcp-pwd.02',
+    [ERROR_MSG_EMPTY_KCP_PWD]: 'error.va.sf-kcp-pwd.01',
+    [ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD]: 'error.va.sf-kcp-pwd.02',
 
-    [ERROR_MSG_INCORRECTLY_FILLED_ACH_ACCOUNT_NUMBER]: 'error.va.sf-ach-num.01',
-    [ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER]: 'error.va.sf-ach-num.02',
+    [ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER]: 'error.va.sf-ach-num.01',
+    [ERROR_MSG_INCORRECTLY_FILLED_ACH_ACCOUNT_NUMBER]: 'error.va.sf-ach-num.02',
 
-    [ERROR_MSG_INCORRECTLY_FILLED_ACH_BANK_LOCATION_ID]: 'error.va.sf-ach-loc.01',
-    [ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID]: 'error.va.sf-ach-loc.02'
+    [ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID]: 'error.va.sf-ach-loc.01',
+    [ERROR_MSG_INCORRECTLY_FILLED_ACH_BANK_LOCATION_ID]: 'error.va.sf-ach-loc.02'
 };
 
 export const DEFAULT_ERROR = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
