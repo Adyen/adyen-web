@@ -1,6 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useImperativeHandle } from 'preact/hooks';
-import { forwardRef } from 'preact/compat';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import { loginValidationRules } from './validate';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../utils/useForm';
@@ -12,6 +11,7 @@ interface CtPLoginInputProps {
     errorMessage?: string;
     onPressEnter(): void;
     onChange({ data: CtPLoginInputDataState, valid, errors, isValid: boolean }): void;
+    onSetInputHandlers(handlers: CtPLoginInputHandlers): void;
 }
 
 interface CtPLoginInputDataState {
@@ -22,17 +22,23 @@ export type CtPLoginInputHandlers = {
     validateInput(): void;
 };
 
-const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((props, ref) => {
+const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const formSchema = ['shopperLogin'];
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPLoginInputDataState>({
         schema: formSchema,
         rules: loginValidationRules
     });
+    const loginInputHandlersRef = useRef<CtPLoginInputHandlers>({ validateInput: null });
 
     const validateInput = useCallback(() => {
         triggerValidation();
     }, [triggerValidation]);
+
+    useEffect(() => {
+        loginInputHandlersRef.current.validateInput = validateInput;
+        props.onSetInputHandlers(loginInputHandlersRef.current);
+    }, [validateInput, props.onSetInputHandlers]);
 
     const handleOnKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
@@ -42,8 +48,6 @@ const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((pro
         },
         [props.onPressEnter]
     );
-
-    useImperativeHandle(ref, () => ({ validateInput }));
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
@@ -68,6 +72,6 @@ const CtPLoginInput = forwardRef<CtPLoginInputHandlers, CtPLoginInputProps>((pro
             })}
         </Field>
     );
-});
+};
 
 export default CtPLoginInput;
