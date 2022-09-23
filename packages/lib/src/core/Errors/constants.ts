@@ -34,7 +34,7 @@ export const ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID = 'ACH bank location field emp
 
 export const ERROR_MSG_INCORRECTLY_FILLED_PAN = 'Card number not filled correctly';
 export const ERROR_MSG_INCORRECTLY_FILLED__DATE = 'Expiry date not filled correctly';
-export const ERROR_MSG_INCORRECTLY_FILLED_MONTH = 'Expiry month not filled correctly';
+// export const ERROR_MSG_INCORRECTLY_FILLED_MONTH = 'Expiry month not filled correctly';
 export const ERROR_MSG_INCORRECTLY_FILLED_YEAR = 'Expiry year not filled correctly';
 export const ERROR_MSG_INCORRECTLY_FILLED_CVC = 'Security code not filled correctly';
 export const ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD = 'KCP password not filled correctly';
@@ -69,8 +69,8 @@ export const ERROR_CODES = {
     [ERROR_MSG_INCORRECTLY_FILLED_YEAR]: 'error.va.sf-cc-yr.01',
     [ERROR_MSG_EMPTY_YEAR]: 'error.va.sf-cc-yr.02',
 
-    [ERROR_MSG_INCORRECTLY_FILLED_MONTH]: 'error.va.sf-cc-mth.01',
-    [ERROR_MSG_EMPTY_MONTH]: 'error.va.sf-cc-mth.02',
+    // [ERROR_MSG_INCORRECTLY_FILLED_MONTH]: 'error.va.sf-cc-mth.02',
+    [ERROR_MSG_EMPTY_MONTH]: 'error.va.sf-cc-mth.01',
 
     [ERROR_MSG_INCORRECTLY_FILLED_CVC]: 'error.va.sf-cc-cvc.01',
     [ERROR_MSG_EMPTY_CVC]: 'error.va.sf-cc-cvc.02',
