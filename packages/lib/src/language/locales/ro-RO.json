@@ -154,6 +154,8 @@
     "blik.code": "Cod din 6 cifre",
     "blik.help": "Obțineți codul din aplicația dvs. de banking.",
     "swish.pendingMessage": "După ce scanați, starea poate fi „în așteptare” timp de maximum 10 minute. Încercările de a plăti din nou în acest răstimp pot genera prelevări multiple de fonduri.",
+    "field.valid": "Câmp valid",
+    "field.invalid": "Câmp incorect",
     "error.va.gen.01": "Câmp incomplet",
     "error.va.gen.02": "Câmp incorect",
     "error.va.sf-cc-num.01": "Număr de card incorect",

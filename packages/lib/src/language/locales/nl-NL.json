@@ -154,6 +154,8 @@
     "blik.code": "6-cijferige code",
     "blik.help": "Haal de code op in uw bankapp.",
     "swish.pendingMessage": "Nadat u hebt gescand, kan de status maximaal 10 minuten in behandeling zijn. Als u binnen deze periode opnieuw probeert te betalen, kunnen er meerdere keren kosten in rekening worden gebracht.",
+    "field.valid": "Geldig veld",
+    "field.invalid": "Veld niet geldig",
     "error.va.gen.01": "Onvolledig veld",
     "error.va.gen.02": "Veld niet geldig",
     "error.va.sf-cc-num.01": "Ongeldig kaartnummer",

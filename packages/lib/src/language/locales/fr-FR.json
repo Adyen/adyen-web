@@ -154,6 +154,8 @@
     "blik.code": "Code à 6 chiffres",
     "blik.help": "Ouvrez votre application bancaire pour obtenir le code.",
     "swish.pendingMessage": "Après avoir scanné le code QR, la mise à jour du statut de paiement peut prendre jusqu'à 10 minutes. Si vous effectuez une nouvelle tentative de paiement dans ce délai, cela pourrait occasionner plusieurs débits.",
+    "field.valid": "Champ valide",
+    "field.invalid": "Champ non valide",
     "error.va.gen.01": "Champ incomplet",
     "error.va.gen.02": "Champ non valide",
     "error.va.sf-cc-num.01": "Numéro de carte non valide",

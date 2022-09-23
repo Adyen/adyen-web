@@ -155,6 +155,8 @@
     "blik.code": "6-cifret kode",
     "blik.help": "Få koden fra din bankapp.",
     "swish.pendingMessage": "Visning af status kan tage op til 10 minutter efter scanning. Et nyt forsøg på betaling inden for dette tidsrum kan muligvis medføre flere gebyrer.",
+    "field.valid": "Gyldigt felt",
+    "field.invalid": "Ugyldigt felt",
     "error.va.gen.01": "Felt ikke udfyldt",
     "error.va.gen.02": "Ugyldigt felt",
     "error.va.sf-cc-num.01": "Ugyldigt kortnummer",

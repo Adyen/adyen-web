@@ -155,6 +155,8 @@
     "blik.code": "Código de 6 dígitos",
     "blik.help": "Obtenha o código da sua aplicação bancária.",
     "swish.pendingMessage": "Após a leitura, o estado pode estar pendente por até 10 minutos. Tentar pagar novamente dentro desse prazo pode resultar em várias cobranças.",
+    "field.valid": "Campo válido",
+    "field.invalid": "Campo inválido",
     "error.va.gen.01": "Campo incompleto",
     "error.va.gen.02": "Campo inválido",
     "error.va.sf-cc-num.01": "Número de cartão inválido",

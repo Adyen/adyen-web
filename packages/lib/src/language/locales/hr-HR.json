@@ -154,6 +154,8 @@
     "blik.code": "6-znamenkasti kôd",
     "blik.help": "Preuzmite kôd iz bankovne aplikacije.",
     "swish.pendingMessage": "Nakon skeniranja status može biti na čekanju do 10 minuta. Pokušaj ponovnog plaćanja u istom periodu može rezultirati višestrukim naplatama.",
+    "field.valid": "Valjano polje",
+    "field.invalid": "Nevažeće polje",
     "error.va.gen.01": "Nepotpuno polje",
     "error.va.gen.02": "Nevažeće polje",
     "error.va.sf-cc-num.01": "Nevažeći broj kartice",

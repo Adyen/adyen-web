@@ -154,6 +154,8 @@
     "blik.code": "6-ciferný kód",
     "blik.help": "Získajte kód zo svojej bankovej aplikácie.",
     "swish.pendingMessage": "Po nasnímaní môže spracovanie trvať až 10 minút. Pokus o opätovné zaplatenie v tejto lehote môže viesť k niekoľkým poplatkom.",
+    "field.valid": "Pole je platné",
+    "field.invalid": "Pole je neplatné",
     "error.va.gen.01": "Neúplné pole",
     "error.va.gen.02": "Pole je neplatné",
     "error.va.sf-cc-num.01": "Neplatné číslo karty",

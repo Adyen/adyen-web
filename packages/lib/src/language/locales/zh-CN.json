@@ -153,6 +153,8 @@
     "blik.code": "6 位数代码",
     "blik.help": "从您的银行应用中获取代码。",
     "swish.pendingMessage": "扫描后，状态可能会保持最多 10 分钟。在此时间内再次尝试付款可能会导致多次收费。",
+    "field.valid": "字段有效",
+    "field.invalid": "无效字段",
     "error.va.gen.01": "不完整字段",
     "error.va.gen.02": "无效字段",
     "error.va.sf-cc-num.01": "无效的卡号",
