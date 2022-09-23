@@ -46,6 +46,9 @@ export default function CardFields({
         return errorMessage;
     };
 
+    // A set of brands filtered to exclude those that can never appear in the UI
+    const allowedBrands = brandsIcons.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
+
     return (
         <div className="adyen-checkout__card__form">
             <CardNumber
@@ -63,9 +66,7 @@ export default function CardFields({
                 dualBrandingSelected={dualBrandingSelected}
             />
 
-            {showBrandsUnderCardNumber && (
-                <AvailableBrands activeBrand={brand} brands={brandsIcons} excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST} />
-            )}
+            {showBrandsUnderCardNumber && <AvailableBrands activeBrand={brand} brands={allowedBrands} />}
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {
