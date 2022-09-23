@@ -8,6 +8,7 @@ import './PaymentMethodItem.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import UIElement from '../../../UIElement';
 import PaymentMethodBrands from './PaymentMethodBrands/PaymentMethodBrands';
+import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../internal/SecuredFields/lib/configuration/constants';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -145,6 +146,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         <PaymentMethodBrands
                             activeBrand={activeBrand}
                             brands={paymentMethod.brands}
+                            excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
                             isPaymentMethodSelected={isSelected}
                             isCompactView={paymentMethod.props.showBrandsUnderCardNumber}
                         />
