@@ -154,6 +154,8 @@
     "blik.code": "6자리 코드",
     "blik.help": "뱅킹 앱에서 코드를 가져오세요.",
     "swish.pendingMessage": "스캔 후 최대 10분 동안 상태가 보류될 수 있습니다. 10분 내에 다시 시도할 경우 금액이 여러 번 청구될 수 있습니다.",
+    "field.valid": "필드가 유효합니다",
+    "field.invalid": "필드가 유효하지 않습니다",
     "error.va.gen.01": "미완료 필드",
     "error.va.gen.02": "필드가 유효하지 않습니다",
     "error.va.sf-cc-num.01": "유효하지 않은 카드 번호입니다",

@@ -154,6 +154,8 @@
     "blik.code": "6 számjegyű kód",
     "blik.help": "Kód lekérése a banki alkalmazásból.",
     "swish.pendingMessage": "A QR-kód beolvasását követően az állapot akár 10 percig is függőben lehet. Ha eközben újból fizetést kísérel meg, az többszöri fizetést eredményezhet.",
+    "field.valid": "Érvényes mező",
+    "field.invalid": "Érvénytelen mező",
     "error.va.gen.01": "Hiányos mező",
     "error.va.gen.02": "Érvénytelen mező",
     "error.va.sf-cc-num.01": "Érvénytelen kártyaszám",

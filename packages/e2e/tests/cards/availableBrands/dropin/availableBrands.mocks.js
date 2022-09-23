@@ -26,7 +26,7 @@ const sessionsResponse = {
     sessionData: MOCK_SESSION_DATA
 };
 
-const setupResponse = {
+const setupResponseRegular = {
     amount: {
         currency: 'USD',
         value: 25900
@@ -44,7 +44,7 @@ const setupResponse = {
                 type: 'giftcard'
             },
             {
-                brands: ['visa', 'mc', 'amex', 'discover', 'cup', 'maestro', 'bijcard', 'dineXrs', 'jcb', 'synchrony_cbcc'],
+                brands: ['visa', 'mc', 'amex', 'discover', 'cup', 'maestro', 'bijcard', 'diners', 'jcb', 'synchrony_cbcc'],
                 name: 'Credit Card',
                 type: 'scheme'
             }
@@ -53,10 +53,41 @@ const setupResponse = {
     sessionData: MOCK_SESSION_DATA
 };
 
-const mock = RequestMock()
-    .onRequestTo(request => request.url === sessionsUrl)
-    .respond(sessionsResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL })
-    .onRequestTo(request => request.url === setupUrl && request.method === 'post')
-    .respond(setupResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL });
+const setupResponseWithExcludedBrands = {
+    amount: {
+        currency: 'USD',
+        value: 25900
+    },
+    countryCode: 'US',
+    expiresAt: '2021-10-15T13:02:27+02:00',
+    id: MOCK_SESSION_ID,
+    returnUrl: 'http://localhost:3024/result',
+    shopperLocale: 'en-US',
+    paymentMethods: {
+        paymentMethods: [
+            {
+                brand: 'genericgiftcard',
+                name: 'Generic GiftCard',
+                type: 'giftcard'
+            },
+            {
+                brands: ['visa', 'mc', 'amex', 'discover', 'cup', 'maestro', 'nyce', 'accel', 'star', 'pulse'],
+                name: 'Credit Card',
+                type: 'scheme'
+            }
+        ]
+    },
+    sessionData: MOCK_SESSION_DATA
+};
 
-export { mock, MOCK_SESSION_DATA };
+const setUpResponseObject = { setupResponseRegular, setupResponseWithExcludedBrands };
+
+const getMock = (setupResponse = 'setupResponseRegular') => {
+    return RequestMock()
+        .onRequestTo(request => request.url === sessionsUrl)
+        .respond(sessionsResponse, 200, { 'Access-Control-Allow-Origin': BASE_URL })
+        .onRequestTo(request => request.url === setupUrl && request.method === 'post')
+        .respond(setUpResponseObject[setupResponse], 200, { 'Access-Control-Allow-Origin': BASE_URL });
+};
+
+export { getMock, MOCK_SESSION_DATA };

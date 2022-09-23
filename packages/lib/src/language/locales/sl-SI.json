@@ -154,6 +154,8 @@
     "blik.code": "6-mestna koda",
     "blik.help": "Pridobite kodo iz bančne aplikacije.",
     "swish.pendingMessage": "Ko optično preberete, lahko čakanje traja do 10 minut. Poskus ponovnega plačila v tem času lahko povzroči več odtegljajev.",
+    "field.valid": "Polje je veljavno",
+    "field.invalid": "Polje ni veljavno",
     "error.va.gen.01": "Nepopolno polje",
     "error.va.gen.02": "Polje ni veljavno",
     "error.va.sf-cc-num.01": "Neveljavna številka kartice",

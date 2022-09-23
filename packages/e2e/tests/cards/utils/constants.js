@@ -10,6 +10,8 @@ export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the te
 export const UNKNOWN_VISA_CARD = '4111111111111111'; // card that is not in the test DBs (visa)
 export const AMEX_CARD = '370000000000002';
 
+export const DUAL_BRANDED_CARD_EXCLUDED = '4001230000000004'; // dual branded visa/star
+
 export const SYNCHRONY_PLCC_NO_LUHN = '6044100018023838';
 export const SYNCHRONY_PLCC_WITH_LUHN = '6044141000018769';
 

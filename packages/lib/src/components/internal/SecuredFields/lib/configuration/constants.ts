@@ -58,3 +58,5 @@ export const DATE_POLICY_HIDDEN: DatePolicyType = HIDDEN;
 export const DATA_ENCRYPTED_FIELD_ATTR = 'data-cse';
 export const DATA_INFO = 'data-info';
 export const DATA_UID = 'data-uid';
+
+export const BRAND_ICON_UI_EXCLUSION_LIST = ['accel', 'pulse', 'star', 'nyce'];

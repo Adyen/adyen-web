@@ -154,6 +154,8 @@
     "blik.code": "6-stelliger Code",
     "blik.help": "Rufen Sie den Code über Ihre Banking-App ab.",
     "swish.pendingMessage": "Es kann sein, dass der Status bis zu 10 Minuten nach dem Scan „ausstehend“ lautet. Wenn Sie währenddessen einen neuen Zahlungsversuch unternehmen, kann es sein, dass Ihnen mehrere Beträge in Rechnung gestellt werden.",
+    "field.valid": "Feld gültig",
+    "field.invalid": "Feld ungültig",
     "error.va.gen.01": "Feld nicht ausgefüllt",
     "error.va.gen.02": "Feld ungültig",
     "error.va.sf-cc-num.01": "Ungültige Kartennummer",

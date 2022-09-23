@@ -154,6 +154,8 @@
     "blik.code": "6 位數代碼",
     "blik.help": "從您的銀行應用程式中獲取代碼。",
     "swish.pendingMessage": "掃描後，該待完成狀態可能持續長達 10 分鐘。試圖在這段時間內再次付款可能會導致多重收費。",
+    "field.valid": "欄位有效",
+    "field.invalid": "欄位無效",
     "error.va.gen.01": "不完整欄位",
     "error.va.gen.02": "欄位無效",
     "error.va.sf-cc-num.01": "信用卡號碼無效",

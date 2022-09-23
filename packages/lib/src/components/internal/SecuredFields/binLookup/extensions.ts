@@ -1,6 +1,23 @@
 import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
+import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/configuration/constants';
+
+// Externally testable utils
+export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {
+    return brandsArr.reduce((acc, brandObj) => acc || excludedBrands.includes(brandObj.brand), false);
+};
+
+export const cloneBrandsArr = (brandsArr: BrandObject[]): BrandObject[] => brandsArr.map(item => ({ ...item }));
+
+export const removeExcludedBrand = (brandsArr: BrandObject[], mainBrand1 = 'mc', mainBrand2 = 'visa'): BrandObject[] => {
+    const clonedBrands: BrandObject[] = cloneBrandsArr(brandsArr);
+
+    if (clonedBrands[0].brand !== mainBrand1 && clonedBrands[0].brand !== mainBrand2) clonedBrands.reverse();
+    clonedBrands.length = 1;
+    return clonedBrands;
+};
+// --
 
 export default function extensions(props, refs, states, hasPanLengthRef: Partial<{ current }> = {}) {
     // Destructure props, refs and state hooks
@@ -41,7 +58,11 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
 
             // RESULT: binLookup has found a result so proceed accordingly
             if (binLookupResponse.supportedBrands?.length) {
-                const supportedBrands = binLookupResponse.supportedBrands;
+                const hasExcludedBrand: boolean = containsExcludedBrand(binLookupResponse.supportedBrands, BRAND_ICON_UI_EXCLUSION_LIST);
+
+                const supportedBrands: BrandObject[] = hasExcludedBrand
+                    ? removeExcludedBrand(binLookupResponse.supportedBrands)
+                    : cloneBrandsArr(binLookupResponse.supportedBrands);
 
                 // 1) Multiple options found - add to the UI & inform SFP
                 if (supportedBrands.length > 1) {
@@ -50,7 +71,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
 
                     // Set properties on state to trigger the dual branding icons in the UI
                     setDualBrandSelectElements(switcherObj.dualBrandSelectElements);
-                    setSelectedBrandValue(switcherObj.selectedBrandValue);
+                    setSelectedBrandValue(switcherObj.selectedBrandValue); // initially this value from switcherObj will be ''
 
                     // Pass an object through to SFP
                     sfp.current.processBinLookupResponse({
@@ -70,7 +91,8 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                     setSelectedBrandValue('');
 
                     // Set (single) value from binLookup so it will be added to the 'brand' property in the paymentMethod object
-                    setSelectedBrandValue(supportedBrands[0].brand);
+                    // EXCEPT - if we are dealing with a brand that we exclude from the UI
+                    if (!hasExcludedBrand) setSelectedBrandValue(supportedBrands[0].brand);
 
                     // Pass object through to SFP
                     sfp.current.processBinLookupResponse({

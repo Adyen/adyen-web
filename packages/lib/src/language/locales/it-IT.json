@@ -152,6 +152,8 @@
     "blik.code": "Codice a 6 cifre",
     "blik.help": "Ottieni il codice dalla app della tua banca.",
     "swish.pendingMessage": "In seguito alla scansione, lo stato della transazione può rimanere in sospeso per un massimo di 10 minuti. Un nuovo tentativo di pagamento durante questo lasso di tempo può comportare pagamenti multipli.",
+    "field.valid": "Campo valido",
+    "field.invalid": "Campo non valido",
     "error.va.gen.01": "Campo incompleto",
     "error.va.gen.02": "Campo non valido",
     "error.va.sf-cc-num.01": "Numero carta non valido",

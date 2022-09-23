@@ -154,6 +154,8 @@
     "blik.code": "Šestimístný kód",
     "blik.help": "Získejte kód z bankovní aplikace.",
     "swish.pendingMessage": "Po naskenování QR kódu může trvat až 10 minut, než se stav změní. Pokud budete zkoušet během této doby platbu opakovat, může být částka zaplacena vícekrát.",
+    "field.valid": "Platné pole",
+    "field.invalid": "Pole není platné",
     "error.va.gen.01": "Neúplné pole",
     "error.va.gen.02": "Pole není platné",
     "error.va.sf-cc-num.01": "Neplatné číslo karty",

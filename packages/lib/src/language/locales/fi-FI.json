@@ -154,6 +154,8 @@
     "blik.code": "6-numeroinen koodi",
     "blik.help": "Hanki koodi pankkisovelluksestasi.",
     "swish.pendingMessage": "Skannattuasi, tila voi odottaa jopa 10 minuuttia. Yritys maksaa uudelleen tässä ajassa voi tuottaa moninkertaisia maksuja.",
+    "field.valid": "Kenttä kelvollinen",
+    "field.invalid": "Kenttä ei kelpaa",
     "error.va.gen.01": "Täydentämätön kenttä",
     "error.va.gen.02": "Kenttä ei kelpaa",
     "error.va.sf-cc-num.01": "Väärä kortin numero",

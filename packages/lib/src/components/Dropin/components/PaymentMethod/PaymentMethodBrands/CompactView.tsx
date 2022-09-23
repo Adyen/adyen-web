@@ -3,24 +3,24 @@ import PaymentMethodIcon from '../PaymentMethodIcon';
 import { BrandConfiguration } from '../../../../Card/types';
 
 interface CompactViewProps {
-    brands: Array<BrandConfiguration>;
+    allowedBrands: Array<BrandConfiguration>; // A set of brands filtered to exclude those that can never appear in the UI
     isPaymentMethodSelected: boolean;
 }
 
-const prepareVisibleBrands = (brands: Array<BrandConfiguration>) => {
-    const visibleBrands = brands.length <= 4 ? brands : brands.slice(0, 3);
+const prepareVisibleBrands = (allowedBrands: Array<BrandConfiguration>) => {
+    const visibleBrands = allowedBrands.length <= 4 ? allowedBrands : allowedBrands.slice(0, 3);
     return {
         visibleBrands,
-        leftBrandsAmount: brands.length - visibleBrands.length
+        leftBrandsAmount: allowedBrands.length - visibleBrands.length
     };
 };
 
-const CompactView = ({ brands, isPaymentMethodSelected }: CompactViewProps) => {
+const CompactView = ({ allowedBrands, isPaymentMethodSelected }: CompactViewProps) => {
     if (isPaymentMethodSelected) {
         return null;
     }
 
-    const { visibleBrands, leftBrandsAmount } = prepareVisibleBrands(brands);
+    const { visibleBrands, leftBrandsAmount } = prepareVisibleBrands(allowedBrands);
     return (
         <span className="adyen-checkout__payment-method__brands">
             {visibleBrands.map(brand => (
