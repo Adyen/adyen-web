@@ -154,6 +154,8 @@
     "blik.code": "6-cyfrowy kod",
     "blik.help": "Uzyskaj kod ze swojej aplikacji bankowej.",
     "swish.pendingMessage": "Po zeskanowaniu transakcja może mieć status „Oczekująca” do 10 minut. Próba ponownego dokonania płatności w tym czasie może spowodować wielokrotne naliczenie opłaty.",
+    "field.valid": "Pole prawidłowe",
+    "field.invalid": "Dane w polu są nieprawidłowe",
     "error.va.gen.01": "Niekompletne dane w polu",
     "error.va.gen.02": "Dane w polu są nieprawidłowe",
     "error.va.sf-cc-num.01": "Nieprawidłowy numer karty",

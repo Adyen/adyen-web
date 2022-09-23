@@ -154,6 +154,8 @@
     "blik.code": "Sexsiffrig kod",
     "blik.help": "Hämta koden från din bankapp.",
     "swish.pendingMessage": "När du har skannat kan statusen vara väntande i upp till tio minuter. Att försöka betala igen inom denna tid kan leda till flera debiteringar.",
+    "field.valid": "Fältet är giltigt",
+    "field.invalid": "Fältet ogiltigt",
     "error.va.gen.01": "Ofullständigt fält",
     "error.va.gen.02": "Fältet ogiltigt",
     "error.va.sf-cc-num.01": "Ogiltigt kortnummer",

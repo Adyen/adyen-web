@@ -151,6 +151,8 @@
     "blik.code": "Código de 6 dígitos",
     "blik.help": "Consiga el código en la aplicación de su banco.",
     "swish.pendingMessage": "Tras escanearlo, su estado puede seguir en pendiente hasta 10 minutos. Podrían realizarse varios cargos si se intenta pagar de nuevo durante este periodo.",
+    "field.valid": "Campo válido",
+    "field.invalid": "Campo no válido",
     "error.va.gen.01": "Campo incompleto",
     "error.va.gen.02": "Campo no válido",
     "error.va.sf-cc-num.01": "Número de tarjeta no válido",

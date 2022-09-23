@@ -151,6 +151,8 @@
     "blik.code": "Código de 6 dígitos",
     "blik.help": "Obtenha o código no aplicativo do seu banco.",
     "swish.pendingMessage": "Depois de escanear o QR, o status pode ficar pendente por até 10 minutos. Não tente refazer o pagamento antes desse período para evitar cobrança duplicada.",
+    "field.valid": "Campo válido",
+    "field.invalid": "Campo inválido",
     "error.va.gen.01": "Campo incompleto",
     "error.va.gen.02": "Campo inválido",
     "error.va.sf-cc-num.01": "Número de cartão inválido",
