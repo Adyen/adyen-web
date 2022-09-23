@@ -47,7 +47,7 @@ export default function CardFields({
     };
 
     // A set of brands filtered to exclude those that can never appear in the UI
-    const allowedBrands = brandsIcons.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
+    const allowedBrands = brandsIcons?.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
 
     return (
         <div className="adyen-checkout__card__form">
