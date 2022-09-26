@@ -68,11 +68,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     }
 
     public redirectToApp = (url, fallback = () => {}) => {
-        setTimeout(() => {
-            // Redirect to the APP failed
-            this.props.onError(new AdyenCheckoutError('ERROR', `${this.props.type} App was not found`));
-            fallback();
-        }, 25);
+        setTimeout(fallback, 25);
         window.location.assign(url);
     };
 
