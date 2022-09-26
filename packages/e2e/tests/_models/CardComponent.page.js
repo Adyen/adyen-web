@@ -14,8 +14,8 @@ export default class CardPage extends BasePage {
      */
     installments = null;
 
-    constructor(baseEl = '.card-field', internalComponents = {}) {
-        super('cards');
+    constructor(baseEl = '.card-field', internalComponents = {}, url = 'cards') {
+        super(url);
 
         Object.assign(this, internalComponents);
 
