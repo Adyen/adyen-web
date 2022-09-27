@@ -87,7 +87,7 @@ function Await(props: AwaitComponentProps) {
     };
 
     const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout(fallback, 25);
+        setTimeout(fallback, 1000);
         window.location.assign(url);
     };
 

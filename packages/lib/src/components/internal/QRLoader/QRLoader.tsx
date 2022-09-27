@@ -68,7 +68,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     }
 
     public redirectToApp = (url, fallback = () => {}) => {
-        setTimeout(fallback, 25);
+        setTimeout(fallback, 1000);
         window.location.assign(url);
     };
 
