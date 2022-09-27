@@ -160,7 +160,7 @@
     "field.invalid": "Field not valid",
     "error.va.gen.01": "Incomplete field",
     "error.va.gen.02": "Field not valid",
-    "error.va.sf-cc-num.01": "Invalid card number",
+    "error.va.sf-cc-num.01": "Card number is not valid",
     "error.va.sf-cc-num.02": "Card number field is empty",
     "error.va.sf-cc-num.03": "Unsupported card number entered",
     "error.va.sf-cc-num.04": "Card number is the wrong length",
