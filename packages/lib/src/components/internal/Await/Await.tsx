@@ -87,11 +87,7 @@ function Await(props: AwaitComponentProps) {
     };
 
     const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout((): void => {
-            // Redirect to the APP failed
-            props.onError(new AdyenCheckoutError('ERROR', `${props.type} App was not found`));
-            fallback();
-        }, 25);
+        setTimeout(fallback, 1000);
         window.location.assign(url);
     };
 
