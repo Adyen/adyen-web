@@ -78,21 +78,22 @@ class BaseElement<P extends BaseElementProps> {
         }
 
         if (this._node) {
-            throw new Error('Component is already mounted.');
+            this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
+        } else {
+            // Set up analytics, once
+            if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
+                this.props.modules.analytics.send({
+                    containerWidth: this._node && this._node.offsetWidth,
+                    component: this.constructor['analyticsType'] ?? this.constructor['type'],
+                    flavor: 'components'
+                });
+            }
         }
 
         this._node = node;
         this._component = this.render();
 
         render(this._component, node);
-
-        if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
-            this.props.modules.analytics.send({
-                containerWidth: this._node && this._node.offsetWidth,
-                component: this.constructor['analyticsType'] ?? this.constructor['type'],
-                flavor: 'components'
-            });
-        }
 
         return this;
     }
@@ -106,11 +107,13 @@ class BaseElement<P extends BaseElementProps> {
         this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
 
-        return this.unmount().remount();
+        return this.unmount().mount(this._node); // for new mount fny
     }
 
     /**
-     * Unmounts an element and mounts it again on the same node
+     * Unmounts an element and mounts it again on the same node i.e. allows mount w/o having to pass a node.
+     * Should be "private" & undocumented (although being a public function is useful for testing).
+     * Left in for legacy reasons
      */
     public remount(component?): this {
         if (!this._node) {
@@ -137,6 +140,7 @@ class BaseElement<P extends BaseElementProps> {
 
     /**
      * Unmounts an element and removes it from the parent instance
+     * For "destroy" type cleanup - when you don't intend to use the component again
      */
     public remove() {
         this.unmount();
