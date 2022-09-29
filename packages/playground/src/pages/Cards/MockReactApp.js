@@ -54,12 +54,12 @@ function MockReactComp(props) {
         if (props.mountAtStart) {
             setIsMounted(true);
             // New mount/unmount/mount fny
-            props.docWindow[props.type].mount(ref.current); //  = window.card.mount(ref.current)
+            props.docWindow[props.type].mount(ref.current); // = window.card.mount(ref.current)
         }
     }, []);
 
     React.useEffect(() => {
-        console.log('### MockReactComp:::: RENDERING isMounted=', isMounted);
+        // console.log('### MockReactComp:::: RENDERING isMounted=', isMounted);
     }, [isMounted]);
 
     return [
