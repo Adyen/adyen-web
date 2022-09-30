@@ -97,9 +97,6 @@ export const getLayout = ({
 const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
     // console.log('### utils::mapFieldKey:: key', key);
     switch (key) {
-        case 'holderName':
-        case 'taxNumber':
-            return i18n.get(`creditCard.${key}`);
         case 'socialSecurityNumber':
             return i18n.get(`boleto.${key}`);
         // address related
@@ -115,6 +112,8 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case ENCRYPTED_EXPIRY_DATE:
         case ENCRYPTED_SECURITY_CODE:
         case ENCRYPTED_PWD_FIELD:
+        case 'holderName':
+        case 'taxNumber':
             return null;
 
         default: {
