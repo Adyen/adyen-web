@@ -34,7 +34,6 @@ export default function CardFields({
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
-    // Prepend a label to the errorMessage so that it matches the error read by the screenreader
     const getError = (errors, fieldType) => {
         const errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
         return errorMessage;
