@@ -81,36 +81,6 @@
     display: none;
 }
 
-.adyen-checkout__await__separator__label {
-    position: relative;
-    font-size: 13px;
-    color: $color-gray-darker;
-    overflow: hidden;
-    text-align: center;
-    z-index: 1;
-    display: block;
-}
-
-.adyen-checkout__await__separator__label:before,
-.adyen-checkout__await__separator__label:after {
-    position: absolute;
-    top: 51%;
-    overflow: hidden;
-    width: 50%;
-    height: 1px;
-    content: '\a0';
-    background-color: $color-gray-light;
-}
-
-.adyen-checkout__await__separator__label:before {
-    margin-left: -52%;
-    text-align: right;
-}
-
-.adyen-checkout__await__separator__label:after {
-    margin-left: 2%;
-}
-
 @media only screen and (max-device-width: 1200px) {
     .adyen-checkout__await__app-link {
         display: block;
