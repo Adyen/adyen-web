@@ -23,7 +23,7 @@
         "./dist/adyen.css": "./dist/adyen.css",
         "./package.json": "./package.json"
     },
-    "version": "5.25.0",
+    "version": "5.26.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -79,7 +79,7 @@
         "eslint-plugin-jsx-a11y": "^6.6.1",
         "eslint-plugin-react": "^7.31.8",
         "eslint-plugin-tsdoc": "^0.2.16",
-        "filesize": "^8.0.6",
+        "filesize": "^9.0.11",
         "gzip-size": "^6.0.0",
         "jest": "^26.6.3",
         "node-sass": "^6.0.1",
@@ -104,7 +104,7 @@
         "@types/applepayjs": "^3.0.4",
         "@types/googlepay": "^0.6.2",
         "classnames": "^2.3.1",
-        "core-js-pure": "^3.18.1",
+        "core-js-pure": "^3.25.3",
         "preact": "^10.5.13"
     },
     "files": [
