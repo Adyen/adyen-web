@@ -1,5 +1,13 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 
+import LANG from '../../../../lib/src/language/locales/en-US.json';
+
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
+
+const INVALID_NAME = LANG['creditCard.holderName.invalid'];
+
 const cardPage = new CardComponentPage();
 
 fixture`Testing card, with holder name on top, error panel`
@@ -29,13 +37,13 @@ test('#2 Click pay with empty fields and hidden error panel is populated', async
 
     // Expect 4 elements, in order, with specific text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Name on card:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(INVALID_NAME).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Card number:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(CARD_NUMBER_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(CVC_EMPTY).exists)
         .ok();
 
     // no 5th element
