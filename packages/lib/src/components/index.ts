@@ -21,7 +21,6 @@ import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge } from './ThreeDS2';
 import WeChat from './WeChat';
 import BcmcMobile from './BcmcMobile';
 import { MolPayEBankingMY, MolPayEBankingTH, MolPayEBankingVN } from './MolPayEBanking';
-import OpenBankingUK from './OpenBankingUK';
 import Dragonpay from './Dragonpay';
 import Doku from './Doku';
 import Boleto from './Boleto';
@@ -55,6 +54,7 @@ import UPI from './UPI';
 import WalletINElement from './WalletIN';
 import OnlineBankingCZElement from './OnlineBankingCZ';
 import OnlineBankingSKElement from './OnlineBankingSK';
+import PayByBank from "./PayByBank";
 
 /**
  * Maps each component with a Component element.
@@ -135,7 +135,7 @@ const componentsMap = {
     molpay_ebanking_VN: MolPayEBankingVN,
     onlinebanking_IN: OnlineBankingINElement,
     onlineBanking_PL: OnlinebankingPL,
-    openbanking_UK: OpenBankingUK,
+    paybybank: PayByBank,
     paypal: PayPal,
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
