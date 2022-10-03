@@ -88,6 +88,7 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
+            enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation
