@@ -10,6 +10,7 @@ import { QRLoaderProps, QRLoaderState } from './types';
 import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import ContentSeparator from '../ContentSeparator';
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
@@ -221,7 +222,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
-                        <span className="adyen-checkout__qr-loader__separator__label">{i18n.get('or')}</span>
+                        <ContentSeparator />
                         <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get('openApp')} />
                     </div>
                 )}

@@ -11,6 +11,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import ContentSeparator from '../ContentSeparator';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -195,7 +196,7 @@ function Await(props: AwaitComponentProps) {
 
             {props.url && (
                 <div className="adyen-checkout__await__app-link">
-                    <span className="adyen-checkout__await__separator__label">{i18n.get('or')}</span>
+                    <ContentSeparator />
                     <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} label={i18n.get('openApp')} />
                 </div>
             )}
