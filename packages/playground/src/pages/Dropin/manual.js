@@ -39,6 +39,9 @@ export async function initManual() {
                 handleFinalState(result.resultCode, component);
             }
         },
+        onChange: state => {
+            console.log('onChange', state);
+        },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
 

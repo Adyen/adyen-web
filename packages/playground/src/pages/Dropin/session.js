@@ -29,6 +29,9 @@ export async function initSession() {
         onError: (error, component) => {
             console.info(error, component);
         },
+        onChange: (state, component) => {
+            console.log('onChange', state);
+        },
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
