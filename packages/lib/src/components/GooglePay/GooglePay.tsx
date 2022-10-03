@@ -61,7 +61,6 @@ class GooglePay extends UIElement<GooglePayProps> {
             })
             .catch((error: google.payments.api.PaymentsError) => {
                 this.handleError(new AdyenCheckoutError('ERROR', error.toString()));
-                return Promise.reject(error);
             });
     };
 

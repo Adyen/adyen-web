@@ -41,7 +41,7 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
-    }, [data, valid, errors]);
+    }, [data, valid, errors, isValid]);
 
     return (
         <Field

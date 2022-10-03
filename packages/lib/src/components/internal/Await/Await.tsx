@@ -11,6 +11,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import ContentSeparator from '../ContentSeparator';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -87,11 +88,7 @@ function Await(props: AwaitComponentProps) {
     };
 
     const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout((): void => {
-            // Redirect to the APP failed
-            props.onError(new AdyenCheckoutError('ERROR', `${props.type} App was not found`));
-            fallback();
-        }, 25);
+        setTimeout(fallback, 1000);
         window.location.assign(url);
     };
 
@@ -199,7 +196,7 @@ function Await(props: AwaitComponentProps) {
 
             {props.url && (
                 <div className="adyen-checkout__await__app-link">
-                    <span className="adyen-checkout__await__separator__label">{i18n.get('or')}</span>
+                    <ContentSeparator />
                     <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} label={i18n.get('openApp')} />
                 </div>
             )}
