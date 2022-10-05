@@ -170,6 +170,7 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         brandsConfiguration: props.brandsConfiguration,
         clientKey: props.clientKey,
         countryCode: props.countryCode,
+        forceCompat: props.forceCompat,
         i18n: props.i18n,
         implementationType: props.implementationType,
         keypadFix: props.keypadFix,

@@ -13,6 +13,7 @@ export interface SFPProps {
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey: string;
     countryCode?: string;
+    forceCompat?: boolean;
     hasKoreanFields?: boolean;
     i18n: Language;
     implementationType?: string;

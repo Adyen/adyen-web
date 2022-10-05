@@ -46,6 +46,7 @@ export interface CSFSetupObject extends CSFCommonProps {
     rootNode: string | HTMLElement;
     callbacks?: object;
     i18n?: Language;
+    forceCompat: boolean;
 }
 
 /**
