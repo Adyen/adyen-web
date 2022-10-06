@@ -36,11 +36,20 @@ export async function initSession() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
+            upi: {
+                onSubmit: () => {
+                    console.log('upi');
+                }
+            },
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,
                 holderName: 'J. Smith',
                 positionHolderNameOnTop: true,
+
+                onSubmit: () => {
+                    console.log('card');
+                },
 
                 // billingAddress config:
                 billingAddressRequired: true,
