@@ -5,7 +5,7 @@
     "storeDetails": "Save for my next payment",
     "creditCard.holderName": "Name on card",
     "creditCard.holderName.placeholder": "J. Smith",
-    "creditCard.holderName.invalid": "Name on card field is empty",
+    "creditCard.holderName.invalid": "Invalid cardholder name",
     "creditCard.numberField.title": "Card number",
     "creditCard.numberField.placeholder": "1234 5678 9012 3456",
     "creditCard.expiryDateField.title": "Expiry date",
@@ -234,7 +234,7 @@
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
     "upi.modeSelection": "Make a selection on how you would like to use UPI.",
 
-    "onlineBanking.termsAndConditions": "By clicking continue you agree with the %#terms and conditions%#",
+    "onlineBanking.termsAndConditions": "By continuing you agree with the %#terms and conditions%#",
 
     "ctp.loading.poweredByCtp": "Powered by Click to Pay",
     "ctp.loading.intro": "A smart, secure way to pay with merchants worldwide",
