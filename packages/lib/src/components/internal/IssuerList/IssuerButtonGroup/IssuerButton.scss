@@ -10,13 +10,10 @@
   flex-basis: 47%;
   flex-grow: 2;
   height: 40px;
-
   font-size: $font-size-small;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
   &:active {

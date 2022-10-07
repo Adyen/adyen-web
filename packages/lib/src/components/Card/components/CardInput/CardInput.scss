@@ -67,7 +67,7 @@
     opacity: 0;
 }
 
-@keyframes cvcIndicateLocation {
+@keyframes cvc-indicate-location {
     from {
         opacity: 1;
     }
@@ -82,7 +82,7 @@
     .adyen-checkout__field__cvc--back-hint .adyen-checkout__card__cvc__hint--back {
         .adyen-checkout__card__cvc__hint__location {
             animation-duration: 1s;
-            animation-name: cvcIndicateLocation;
+            animation-name: cvc-indicate-location;
             animation-iteration-count: infinite;
             animation-direction: alternate;
         }
@@ -95,10 +95,8 @@
     top: 0;
     height: 100%;
     width: 27px;
-
     display: flex;
     align-items: center;
-
     margin: 0 10px;
 
     // Card Flip animation

@@ -21,7 +21,7 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
 
-            &:after {
+            &::after {
                 left: 40px;
                 box-sizing: revert;
                 height: 10px;

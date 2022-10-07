@@ -1,6 +1,9 @@
 module.exports = {
-    extends: 'stylelint-config-recommended',
+    extends: ['stylelint-config-standard-scss', 'stylelint-config-prettier'],
     rules: {
-        'no-descending-specificity': null
+        'color-function-notation': 'legacy',
+        'no-descending-specificity': null,
+        'selector-class-pattern': null,
+        'max-line-length': 180
     }
 };

@@ -28,39 +28,39 @@
 
     &:checked {
         + .adyen-checkout__checkbox__label {
-            &:before {
+            &::before {
                 opacity: 1;
             }
 
-            &:after {
+            &::after {
                 border: 1px solid $color-primary;
                 background-color: $color-primary;
             }
         }
 
-        &:hover + .adyen-checkout__checkbox__label:after {
-            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.4);
+        &:hover + .adyen-checkout__checkbox__label::after {
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 40%);
             border-color: $color-primary;
         }
     }
 
-    &:focus + .adyen-checkout__checkbox__label:after {
+    &:focus + .adyen-checkout__checkbox__label::after {
         border: 1px solid $color-primary;
         box-shadow: 0 0 0 2px $color-blue-light;
     }
 
-    &:hover:not(:focus) + .adyen-checkout__checkbox__label:after {
+    &:hover:not(:focus) + .adyen-checkout__checkbox__label::after {
         border-color: #99a3ad;
         box-shadow: 0 0 0 2px $color-gray;
     }
 
     /* Check */
-    + .adyen-checkout__checkbox__label:before {
+    + .adyen-checkout__checkbox__label::before {
         border-left: 1px solid transparent;
         border-top: 1px solid transparent;
         border-bottom: 2px solid $color-white;
         border-right: 2px solid $color-white;
-        border-radius: 0 2px 1px 2px;
+        border-radius: 0 2px 1px;
         content: '';
         height: 11px;
         left: 1px;
@@ -80,7 +80,7 @@
     }
 
     /* Box */
-    + .adyen-checkout__checkbox__label:after {
+    + .adyen-checkout__checkbox__label::after {
         content: '';
         position: absolute;
         top: 0;
@@ -104,10 +104,10 @@
     background: $color-gray-light;
     border: 1px solid $color-gray-light;
     border-radius: $border-radius-medium;
-    padding: 14px 14px 13px 14px;
+    padding: 14px 14px 13px;
 
     [dir='rtl'] & {
-        padding: 14px 14px 13px 14px;
+        padding: 14px 14px 13px;
     }
 
     &.adyen-checkout__field--error {

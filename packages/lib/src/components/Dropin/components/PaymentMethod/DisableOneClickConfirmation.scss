@@ -1,14 +1,15 @@
+@use "sass:color";
 @import '../../../../style/index';
 
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
     font-size: $font-size-small;
     color: $color-white;
-    border-right: 1px solid darken($color-alert, 2%);
-    border-left: 1px solid darken($color-alert, 2%);
+    border-right: 1px solid color.adjust($color-alert,$lightness: 2%);
+    border-left: 1px solid color.adjust($color-alert,$lightness: 2%);
     overflow: hidden;
     opacity: 0;
-    margin: 0 -17px 0;
+    margin: 0 -17px;
     max-height: 0;
     transition: opacity 0.15s ease-out, max-height 0.15s linear, margin-bottom 0.1s linear;
 
@@ -46,12 +47,12 @@
     &:hover,
     &:hover:focus {
         box-shadow: none;
-        background: darken($color-alert, 5%);
+        background: color.adjust($color-alert,$lightness: 5%);
     }
 
     &:active,
     &:hover:active {
-        background: darken($color-alert, 10%);
+        background: color.adjust($color-alert,$lightness: 10%);
         box-shadow: none;
     }
 }

@@ -3,6 +3,7 @@
 .adyen-checkout__dropdown__button-icon--left {
     flex-direction: row-reverse;
     justify-content: flex-end;
+
     > img {
         margin-left: 0;
         margin-right: 12px;
@@ -67,7 +68,7 @@
     }
 }
 
-.adyen-checkout__dropdown__button--readonly:after {
+.adyen-checkout__dropdown__button--readonly::after {
     background-image: url("data:image/svg+xml,%3Csvg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.19471 6.5646C3.59429 7.09797 4.39396 7.0986 4.79439 6.56587L7.78716 2.58424C8.28257 1.92514 7.81232 0.983398 6.98779 0.983398L1.01209 0.983398C0.188292 0.983398 -0.282154 1.92367 0.211778 2.58298L3.19471 6.5646Z' fill='%23B9C4C9'/%3E%3C/svg%3E%0A");
 }
 
@@ -90,7 +91,7 @@
     z-index: 2;
     border-radius: $border-radius-medium;
     max-height: 375px;
-    box-shadow: 0 2px 7px rgba(0, 15, 45, 0.3);
+    box-shadow: 0 2px 7px rgba(0, 15, 45, 30%);
 }
 
 .adyen-checkout__dropdown__list.adyen-checkout__dropdown__list--active {
@@ -117,17 +118,17 @@
 .adyen-checkout__dropdown__element:hover,
 .adyen-checkout__dropdown__element:focus,
 .adyen-checkout__dropdown__element:active {
-    background: rgba(230, 233, 235, 0.6);
+    background: rgba(230, 233, 235, 60%);
 }
 
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
-    background: rgba(0, 102, 255, 0.1);
+    background: rgba(0, 102, 255, 10%);
 }
 
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:hover,
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:focus,
 .adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:active {
-    background: rgba(0, 102, 255, 0.15);
+    background: rgba(0, 102, 255, 15%);
 }
 
 .adyen-checkout__dropdown__element--disabled {

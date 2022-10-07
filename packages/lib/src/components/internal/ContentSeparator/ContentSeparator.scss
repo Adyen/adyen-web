@@ -11,8 +11,8 @@
   font-size: 13px;
   line-height: 19px;
 
-  &:after,
-  &:before {
+  &::after,
+  &::before {
     content: "";
     display: block;
     background: $color-gray-light;
@@ -20,11 +20,11 @@
     height: 1px;
   }
 
-  &:after {
+  &::after {
     margin-left: 20px
   }
 
-  &:before {
+  &::before {
     margin-right: 20px;
   }
 

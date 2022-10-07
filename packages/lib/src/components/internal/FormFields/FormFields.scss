@@ -56,6 +56,7 @@
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:nth-child(2) {
     margin-left: 8px;
+
     [dir='rtl'] & {
         margin-left: 0;
         margin-right: 8px;
@@ -122,6 +123,7 @@
         right: auto;
         left: 14px;
     }
+
     [dir='ltr'] & {
         right: 14px;
         left: auto;

@@ -30,7 +30,7 @@
 }
 
 .adyen-checkout__campaign-logo {
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 40%);
     border-radius: $border-radius-small;
     display: block;
     height: 48px;
@@ -48,7 +48,7 @@
 
 .adyen-checkout__campaign-link {
     .adyen-checkout__campaign-background-image {
-        &:before {
+        &::before {
             background: inherit;
             content: '';
             height: 100%;
@@ -57,7 +57,7 @@
             width: 100%;
         }
 
-        &:hover:before {
+        &:hover::before {
             transform: scale(1.1);
         }
     }

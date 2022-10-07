@@ -1,7 +1,6 @@
 @import '../../../style/index';
 
 .adyen-checkout__bacs{
-
   &--confirm {
     position: relative;
 
@@ -11,17 +10,15 @@
   }
 
   .adyen-checkout__field {
-
     &--inactive {
       pointer-events: none;
     }
   }
 
   .adyen-checkout__bacs--edit {
-
     position: absolute;
     top: -25px;
-    right: 0px;
+    right: 0;
     cursor: pointer;
     width: 20%;
 

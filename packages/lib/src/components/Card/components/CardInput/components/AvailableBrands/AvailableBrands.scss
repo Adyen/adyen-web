@@ -9,6 +9,7 @@
   margin-top: -8px;
   margin-bottom: 16px;
 }
+
 .adyen-checkout__card__brands img {
   border-radius: 3px;
   height: 16px;
@@ -27,7 +28,7 @@
   position: relative;
 }
 
-.adyen-checkout__card__brands__brand-wrapper:after {
+.adyen-checkout__card__brands__brand-wrapper::after {
   content: '';
   position: absolute;
   top: 0;
@@ -35,5 +36,5 @@
   height: 100%;
   left: 0;
   border-radius: $border-radius-small;
-  border: 1px solid rgba(0, 27, 43, 0.17);
+  border: 1px solid rgba(0, 27, 43, 17%);
 }

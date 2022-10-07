@@ -55,7 +55,9 @@
     justify-content: space-between;
     font-weight: 400;
     font-size: $font-size-medium;
+
     $payment-button-padding: $spacing-xsmall;
+
     padding: $spacing-medium - $payment-button-padding;
     padding-left: $spacing-xxlarge - $payment-button-padding;
     padding-right: $spacing-medium;
@@ -79,6 +81,7 @@
     flex-shrink: 0;
     margin-right: 16px;
     max-width: 100%;
+
     // reset button styles
     border: none;
     background: none;
@@ -123,7 +126,7 @@
 }
 
 .adyen-checkout__payment-method__details {
-    padding: 0 16px 0;
+    padding: 0 16px;
     position: relative;
 }
 
@@ -137,7 +140,7 @@
     position: relative;
 }
 
-.adyen-checkout__payment-method__image__wrapper--outline:after {
+.adyen-checkout__payment-method__image__wrapper--outline::after {
     content: '';
     position: absolute;
     top: 0;
@@ -145,7 +148,7 @@
     height: 100%;
     left: 0;
     border-radius: $border-radius-small;
-    border: 1px solid rgba(0, 27, 43, 0.17);
+    border: 1px solid rgba(0, 27, 43, 17%);
 }
 
 .adyen-checkout__payment-method__image {
@@ -216,12 +219,13 @@
         right: 16px;
         left: auto;
     }
+
     .adyen-checkout__payment-method--standalone & {
         display: none;
     }
 }
 
-.adyen-checkout__payment-method__radio:after {
+.adyen-checkout__payment-method__radio::after {
     content: '';
     display: block;
     position: absolute;
@@ -250,9 +254,9 @@
 }
 
 .adyen-checkout__payment-method__radio--selected:hover {
-    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.4);
+    box-shadow: 0 0 0 2px rgba(0, 102, 255, 40%);
 }
 
-.adyen-checkout__payment-method__radio--selected:after {
+.adyen-checkout__payment-method__radio--selected::after {
     transform: translateY(-50%) scale(1);
 }

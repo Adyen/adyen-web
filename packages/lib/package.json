@@ -45,6 +45,7 @@
         "type-check-generate": "tsc --emitDeclarationOnly",
         "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
         "lint:fix": "npm run lint -- --fix",
+        "lint:styles": "stylelint --config 'config/stylelint.config.js' 'src/**/*.scss'",
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
@@ -82,7 +83,6 @@
         "filesize": "^9.0.11",
         "gzip-size": "^6.0.0",
         "jest": "^26.6.3",
-        "node-sass": "^6.0.1",
         "postcss": "^8.4.7",
         "postcss-reporter": "^7.0.5",
         "prettier": "^1.19.1",
@@ -91,8 +91,11 @@
         "rollup-plugin-postcss": "^4.0.2",
         "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-visualizer": "^5.8.2",
+        "sass": "^1.55.0",
         "stylelint": "^14.13.0",
+        "stylelint-config-prettier": "^9.0.3",
         "stylelint-config-recommended": "^9.0.0",
+        "stylelint-config-standard-scss": "^5.0.0",
         "ts-jest": "^26.5.6",
         "tslib": "^2.4.1",
         "typescript": "^4.4.4",
