@@ -1,29 +1,28 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__alert-message {
-    display: flex;
-    border-radius: $border-radius-medium;
-    margin: 0 0 $spacing-medium;
-    text-align: left;
-    padding: $spacing-medium-small;
-    font-size: $font-size-small;
+  display: flex;
+  border-radius: $border-radius-medium;
+  margin: 0 0 $spacing-medium;
+  text-align: left;
+  padding: $spacing-medium-small;
+  font-size: $font-size-small;
 }
 
 .adyen-checkout__alert-message--error {
-    background: $color-red-light;
+  background: $color-red-light;
 }
 
-
 .adyen-checkout__alert-message--warning {
-    background: $color-orange-light;
+  background: $color-orange-light;
 }
 
 .adyen-checkout__alert-message--info {
-    background: $color-blue-lighter;
+  background: $color-blue-lighter;
 }
 
 .adyen-checkout__alert-message__icon {
-    width: 14px;
-    height: 14px;
-    margin-right: $spacing-small;
+  width: 14px;
+  height: 14px;
+  margin-right: $spacing-small;
 }

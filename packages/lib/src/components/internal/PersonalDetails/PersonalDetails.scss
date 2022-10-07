@@ -1,18 +1,18 @@
-@import './../../../style/index';
+@import "./../../../style/index";
 
 .adyen-checkout__fieldset--personalDetails .adyen-checkout__field--gender .adyen-checkout__radio_group {
-    display: flex;
+  display: flex;
 }
 
 .adyen-checkout__fieldset--personalDetails .adyen-checkout__radio_group {
-    display: flex;
-    margin: 8px 0;
+  display: flex;
+  margin: 8px 0;
 }
 
 .adyen-checkout__fieldset--personalDetails .adyen-checkout__radio_group__input-wrapper {
-    margin-right: 20px;
+  margin-right: 20px;
 
-    &:last-child {
-        margin: 0;
-    }
+  &:last-child {
+    margin: 0;
+  }
 }

@@ -1,8 +1,8 @@
 .adyen-checkout__image {
-    opacity: 0;
-    transition: opacity 0.6s ease-out;
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
 
-    &--loaded {
-        opacity: 1;
-    }
+  &--loaded {
+    opacity: 1;
+  }
 }

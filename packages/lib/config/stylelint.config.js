@@ -3,6 +3,7 @@ module.exports = {
     rules: {
         'color-function-notation': 'legacy',
         'no-descending-specificity': null,
-        'selector-class-pattern': null
+        'selector-class-pattern': null,
+        'max-line-length': 180
     }
 };

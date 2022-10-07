@@ -1,55 +1,55 @@
-@import '../../../style/index';
-
+@import "../../../style/index";
 
 .adyen-checkout__giftcard-result__header {
-    align-items: center;
-    display: flex;
-    flex-wrap: nowrap;
-    font-size: 1em;
-    font-weight: 400;
-    justify-content: space-between;
-    position: relative;
-    width: 100%;
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: 1em;
+  font-weight: 400;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
 }
 
 .adyen-checkout__giftcard-result__header__title {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .adyen-checkout__giftcard-result__name {
-    margin-left: $spacing-small;
+  margin-left: $spacing-small;
 }
 
 .adyen-checkout__giftcard-result__balance {
-    padding: 0;
-    list-style: none;
-    margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  margin: 16px 0 0;
 }
 
 .adyen-checkout__giftcard-result__balance__item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: $spacing-small;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-small;
 
-    .adyen-checkout__giftcard-result__balance__title--transactionLimit {
-        color: $color-gray-darker;
-    }
+  .adyen-checkout__giftcard-result__balance__title--transactionLimit {
+    color: $color-gray-darker;
+  }
 
-    &:last-child {
-        margin-bottom: 0;
-    }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .adyen-checkout__giftcard-result__balance__value {
-    &--amount {
-        font-weight: bold;
-    }
+  &--amount {
+    font-weight: bold;
+  }
 }
+
 .adyen-checkout__giftcard-result__remaining-balance {
-    font-size: 13px;
-    line-height: 19px;
-    text-align: center;
-    color: #687282;
-    margin: 8px auto 0;
+  font-size: 13px;
+  line-height: 19px;
+  text-align: center;
+  color: #687282;
+  margin: 8px auto 0;
 }

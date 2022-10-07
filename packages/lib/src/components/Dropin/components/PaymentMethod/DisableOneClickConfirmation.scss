@@ -1,67 +1,68 @@
-@import '../../../../style/index';
+@use "sass:color";
+@import "../../../../style/index";
 
 .adyen-checkout__payment-method__disable-confirmation {
-    background: $color-alert;
-    font-size: $font-size-small;
-    color: $color-white;
-    border-right: 1px solid darken($color-alert, 2%);
-    border-left: 1px solid darken($color-alert, 2%);
-    overflow: hidden;
-    opacity: 0;
-    margin: 0 -17px 0;
-    max-height: 0;
-    transition: opacity 0.15s ease-out, max-height 0.15s linear, margin-bottom 0.1s linear;
+  background: $color-alert;
+  font-size: $font-size-small;
+  color: $color-white;
+  border-right: 1px solid color.adjust($color-alert, $lightness: -2%);
+  border-left: 1px solid color.adjust($color-alert, $lightness: -2%);
+  overflow: hidden;
+  opacity: 0;
+  margin: 0 -17px;
+  max-height: 0;
+  transition: opacity 0.15s ease-out, max-height 0.15s linear, margin-bottom 0.1s linear;
 
-    &.adyen-checkout__payment-method__disable-confirmation--open {
-        max-height: 62px;
-        opacity: 1;
-        margin-bottom: 16px;
-    }
+  &.adyen-checkout__payment-method__disable-confirmation--open {
+    max-height: 62px;
+    opacity: 1;
+    margin-bottom: 16px;
+  }
 }
 
 .adyen-checkout__payment-method__disable-confirmation__content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
 }
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
-    display: flex;
+  display: flex;
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
-    background: $color-alert;
-    border: 1px solid transparent;
-    border-radius: $border-radius-medium;
-    color: $color-white;
-    cursor: pointer;
-    display: block;
-    height: auto;
-    line-height: 14px;
-    margin: 0 0 0 8px;
-    padding: 8px;
-    width: auto;
+  background: $color-alert;
+  border: 1px solid transparent;
+  border-radius: $border-radius-medium;
+  color: $color-white;
+  cursor: pointer;
+  display: block;
+  height: auto;
+  line-height: 14px;
+  margin: 0 0 0 8px;
+  padding: 8px;
+  width: auto;
 
-    &:hover,
-    &:hover:focus {
-        box-shadow: none;
-        background: darken($color-alert, 5%);
-    }
+  &:hover,
+  &:hover:focus {
+    box-shadow: none;
+    background: color.adjust($color-alert, $lightness: -5%);
+  }
 
-    &:active,
-    &:hover:active {
-        background: darken($color-alert, 10%);
-        box-shadow: none;
-    }
+  &:active,
+  &:hover:active {
+    background: color.adjust($color-alert, $lightness: -10%);
+    box-shadow: none;
+  }
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: $color-white;
+  border-color: $color-white;
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,
 .adyen-checkout__payment-method__disable-confirmation__button--cancel:disabled {
-    border-color: transparent;
+  border-color: transparent;
 }

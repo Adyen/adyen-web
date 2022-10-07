@@ -1,16 +1,16 @@
-@import 'src/style/index';
+@import "src/style/index";
 
 .adyen-checkout__field--issuer-list-separator {
   margin-top: $spacing-medium;
   margin-bottom: $spacing-medium;
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
   align-items: center;
   color: $color-gray-darker;
   white-space: nowrap;
 
-  &:after,
-  &:before {
+  &::after,
+  &::before {
     content: "";
     display: block;
     background: $color-gray-light;
@@ -18,12 +18,11 @@
     height: 1px;
   }
 
-  &:after {
-    margin-left: 20px
+  &::after {
+    margin-left: 20px;
   }
 
-  &:before {
+  &::before {
     margin-right: 20px;
   }
-
 }

@@ -1,31 +1,28 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
-.adyen-checkout__bacs{
-
+.adyen-checkout__bacs {
   &--confirm {
     position: relative;
 
     .adyen-checkout-input__inline-validation--valid {
-      display: none
+      display: none;
     }
   }
 
   .adyen-checkout__field {
-
     &--inactive {
       pointer-events: none;
     }
   }
 
   .adyen-checkout__bacs--edit {
-
     position: absolute;
     top: -25px;
-    right: 0px;
+    right: 0;
     cursor: pointer;
     width: 20%;
 
-    &-dropin{
+    &-dropin {
       top: -50px;
     }
 
