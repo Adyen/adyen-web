@@ -1,5 +1,10 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD } from '../utils/constants';
+import LANG from '../../../../lib/src/language/locales/en-US.json';
+
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
 
 const cardPage = new CardComponentPage();
 
@@ -30,11 +35,11 @@ test('#2 Click pay with empty fields and error panel is populated', async t => {
 
     // Expect 3 elements, in order, with specific text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Card number:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(CARD_NUMBER_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok();
 
     // no 4th element
@@ -59,9 +64,9 @@ test('#3 Fill out PAN & see that first error in error panel is date related', as
 
     // Expect 2 elements, in order, with specific text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(CVC_EMPTY).exists)
         .ok();
 
     // no 3rd element

@@ -21,14 +21,8 @@ export default function StoredCardFields({
     const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
     const ariaLabel = `${storedCardDescription} ${i18n.get('creditCard.expiryDateField.title')} ${expiryMonth}/${expiryYear}`;
 
-    const getErrorWithLabel = (errors, fieldType) => {
-        let errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
-
-        if (errorMessage) {
-            const label = i18n.get(`creditCard.${fieldType}.aria.label`);
-            errorMessage = `${label}: ${errorMessage}`;
-        }
-
+    const getError = (errors, fieldType) => {
+        const errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
         return errorMessage;
     };
 
@@ -52,7 +46,7 @@ export default function StoredCardFields({
                 {hasCVC && (
                     <CVC
                         cvcPolicy={cvcPolicy}
-                        error={getErrorWithLabel(errors, ENCRYPTED_SECURITY_CODE)}
+                        error={getError(errors, ENCRYPTED_SECURITY_CODE)}
                         focused={focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
                         isValid={!!valid.encryptedSecurityCode}

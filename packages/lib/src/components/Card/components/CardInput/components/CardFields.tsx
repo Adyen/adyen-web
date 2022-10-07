@@ -34,15 +34,8 @@ export default function CardFields({
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
-    // Prepend a label to the errorMessage so that it matches the error read by the screenreader
-    const getErrorWithLabel = (errors, fieldType) => {
-        let errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
-
-        if (errorMessage) {
-            const label = i18n.get(`creditCard.${fieldType}.aria.label`);
-            errorMessage = `${label}: ${errorMessage}`;
-        }
-
+    const getError = (errors, fieldType) => {
+        const errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
         return errorMessage;
     };
 
@@ -54,7 +47,7 @@ export default function CardFields({
             <CardNumber
                 brand={brand}
                 brandsConfiguration={brandsConfiguration}
-                error={getErrorWithLabel(errors, ENCRYPTED_CARD_NUMBER)}
+                error={getError(errors, ENCRYPTED_CARD_NUMBER)}
                 focused={focusedElement === ENCRYPTED_CARD_NUMBER}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.numberField.title')}
@@ -74,7 +67,7 @@ export default function CardFields({
                 })}
             >
                 <ExpirationDate
-                    error={getErrorWithLabel(errors, ENCRYPTED_EXPIRY_DATE)}
+                    error={getError(errors, ENCRYPTED_EXPIRY_DATE)}
                     focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
@@ -86,7 +79,7 @@ export default function CardFields({
 
                 {hasCVC && (
                     <CVC
-                        error={getErrorWithLabel(errors, ENCRYPTED_SECURITY_CODE)}
+                        error={getError(errors, ENCRYPTED_SECURITY_CODE)}
                         focused={focusedElement === ENCRYPTED_SECURITY_CODE}
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}
