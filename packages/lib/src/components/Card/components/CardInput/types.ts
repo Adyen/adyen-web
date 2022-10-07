@@ -68,6 +68,7 @@ export interface CardInputProps {
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
+    forceCompat?: boolean;
     fundingSource?: string;
     hasCVC?: boolean;
     hasHolderName?: boolean;

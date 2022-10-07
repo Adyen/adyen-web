@@ -72,8 +72,12 @@ export function handleConfig(): void {
     // Add a hash of the origin to ensure urls are different across domains
     const d = btoa(window.location.origin);
 
-    /** Detect Edge vn \<= 18 & IE11 - who don't support TextEncoder; and use this as an indicator to load a different, compatible, version of SF */
-    const needsJWECompatVersion = !(typeof window.TextEncoder === 'function');
+    /**
+     * Unless we are forcing the use of the compat version via card config
+     * - detect Edge vn \<= 18 & IE11 - who don't support TextEncoder; and use this as an indicator to load a different, compatible, version of SF
+     */
+    const needsJWECompatVersion = this.props.forceCompat ? true : !(typeof window.TextEncoder === 'function');
+
     const bundleType = `${sfBundleType}${needsJWECompatVersion ? 'Compat' : ''}`; // e.g. 'card' or 'cardCompat'
 
     this.config.iframeSrc = `${this.config.loadingContext}securedfields/${this.props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`;
