@@ -140,12 +140,11 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
     const errorMessages = fieldList.map(key => {
         // Get translation for field type
         const errorKey: string = mapFieldKey(key, i18n, countrySpecificLabels);
-        // console.log('### sortErrorsForPanel::errorKey:: ', errorKey);
+
         // Get corresponding error msg
         const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n : i18n.get(errors[key].errorMessage);
 
         return errorKey ? `${errorKey}: ${errorMsg}.` : errorMsg;
-        // return `${errorKey}: ${errorMsg}.`;
     });
 
     return !errorMessages.length ? null : { errorMessages, fieldList };
