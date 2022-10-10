@@ -55,6 +55,7 @@
     }
 
     /* Check */
+
     + .adyen-checkout__checkbox__label::before {
         border-left: 1px solid transparent;
         border-top: 1px solid transparent;
@@ -80,6 +81,7 @@
     }
 
     /* Box */
+
     + .adyen-checkout__checkbox__label::after {
         content: '';
         position: absolute;

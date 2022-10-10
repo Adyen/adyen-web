@@ -36,7 +36,7 @@
     margin-top: $spacing-medium;
 }
 
-.adyen-checkout__card-input.adyen-checkout__card-input--loading{
+.adyen-checkout__card-input.adyen-checkout__card-input--loading {
     pointer-events: none;
 }
 
@@ -45,17 +45,20 @@
 }
 
 /* When holderName is on top & co-exists with an error panel */
+
 .adyen-checkout-error-panel--sr-only + .adyen-checkout__card__holderName,
-.adyen-checkout-error-panel + .adyen-checkout__card__holderName{
+.adyen-checkout-error-panel + .adyen-checkout__card__holderName {
     margin: 0 0 $spacing-medium;
 }
 
 /* Hide card brand icon when cardNumber is in an error state */
+
 .adyen-checkout__field--cardNumber .adyen-checkout__input--error .adyen-checkout__card__cardNumber__brandIcon {
     display: none;
 }
 
 /* Hide checkmark when cardNumber is in a valid state (only show brand icon) */
+
 .adyen-checkout__field--cardNumber
     .adyen-checkout__input--valid:not(.adyen-checkout__card__cardNumber__input--noBrand)
     + .adyen-checkout-input__inline-validation--valid {
@@ -109,6 +112,7 @@
 }
 
 // Flip the card
+
 .adyen-checkout__field__cvc--front-hint.adyen-checkout__card__cvc__hint__wrapper {
     transform: rotateY(180deg);
 }
@@ -120,6 +124,7 @@
 }
 
 // Front of the card is our back
+
 .adyen-checkout__card__cvc__hint--front {
     transform: rotateY(180deg);
 }

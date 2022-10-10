@@ -2,10 +2,12 @@
     direction: ltr;
 
     // inherited style (FormFields.scss)
+
     .adyen-checkout__input-wrapper {
         width: 100%;
 
         // inherited style (FormFields.scss)
+
         .adyen-checkout__input {
             padding: 0;
             height: auto;
@@ -20,6 +22,7 @@
         }
 
         // inherited style (Select.scss)
+
         .adyen-checkout__dropdown__button {
             width: auto;
             border: 0;
@@ -34,6 +37,7 @@
         }
 
         // inherited style (Select.scss)
+
         .adyen-checkout__dropdown__button--active {
             box-shadow: none;
 
@@ -43,6 +47,7 @@
         }
 
         // Example of better BEM naming i.e. 'adyen-checkout-input' as the Base
+
         .adyen-checkout-input--phone-number {
             height: 35px;
             line-height: 35px;

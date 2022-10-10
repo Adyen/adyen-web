@@ -6,14 +6,21 @@ import renderFormField from '../../../internal/FormFields';
 import { vpaValidationRules } from './validate';
 import './VpaInput.scss';
 
+type onChangeProps = {
+    data: VpaInputDataState;
+    valid: any;
+    errors: any;
+    isValid: boolean;
+};
+
 interface VpaInputProps {
     data?: {};
     disabled?: boolean;
-    onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
+    onChange({ data, valid, errors, isValid }: onChangeProps): void;
     onSetInputHandlers(handlers: VpaInputHandlers): void;
 }
 
-interface VpaInputDataState {
+export interface VpaInputDataState {
     virtualPaymentAddress?: string;
 }
 

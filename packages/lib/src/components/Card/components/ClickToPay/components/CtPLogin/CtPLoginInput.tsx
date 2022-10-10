@@ -6,11 +6,18 @@ import useForm from '../../../../../../utils/useForm';
 import Field from '../../../../../internal/FormFields/Field';
 import renderFormField from '../../../../../internal/FormFields';
 
+type onChangeProps = {
+    data: CtPLoginInputDataState;
+    valid: any;
+    errors: any;
+    isValid: boolean;
+};
+
 interface CtPLoginInputProps {
     disabled: boolean;
     errorMessage?: string;
     onPressEnter(): void;
-    onChange({ data: CtPLoginInputDataState, valid, errors, isValid: boolean }): void;
+    onChange({ data, valid, errors, isValid }: onChangeProps): void;
     onSetInputHandlers(handlers: CtPLoginInputHandlers): void;
 }
 

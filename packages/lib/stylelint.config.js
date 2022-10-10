@@ -5,6 +5,11 @@ module.exports = {
         'no-descending-specificity': null,
         'selector-class-pattern': null,
         'max-line-length': 180,
-        'rule-empty-line-before': 'always'
+        'rule-empty-line-before': [
+            'always',
+            {
+                except: ['first-nested']
+            }
+        ]
     }
 };
