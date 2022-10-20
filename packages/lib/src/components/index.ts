@@ -60,16 +60,18 @@ import PayByBank from './PayByBank';
  * Maps each component with a Component element.
  */
 const componentsMap = {
+    /** internal */
     address: Address,
     bankTransfer_IBAN: BankTransfer,
     donation: Donation,
     dropin: Dropin,
     personal_details: PersonalDetails,
+    /** internal */
 
     /** Card */
+    amex: Card,
     bcmc: Bancontact,
     card: Card,
-    amex: Card,
     diners: Card,
     discover: Card,
     jcb: Card,
@@ -86,8 +88,8 @@ const componentsMap = {
 
     /** Direct debit */
     ach: Ach,
-    sepadirectdebit: Sepa,
     directdebit_GB: BacsDD,
+    sepadirectdebit: Sepa,
     /** Direct debit */
 
     /** Open Invoice */
@@ -167,10 +169,10 @@ const componentsMap = {
     /** Dragonpay */
 
     /** Econtext */
-    econtext_seven_eleven: Econtext,
     econtext_atm: Econtext,
-    econtext_stores: Econtext,
     econtext_online: Econtext,
+    econtext_seven_eleven: Econtext,
+    econtext_stores: Econtext,
     /** Econtext */
 
     /** Redirect */
@@ -183,17 +185,17 @@ const componentsMap = {
 
     /** Klarna */
     klarna: Klarna,
-    klarna_paynow: Klarna,
     klarna_account: Klarna,
+    klarna_paynow: Klarna,
     /** Klarna */
 
     /** QRLoader */
     bcmc_mobile: BcmcMobile,
     bcmc_mobile_QR: BcmcMobile,
     pix: Pix,
+    swish: Swish,
     wechatpay: WeChat,
     wechatpayQR: WeChat,
-    swish: Swish,
     /** QRLoader */
 
     /** Await */
