@@ -1,6 +1,6 @@
 import Language from '../../../../language/Language';
 import { StylesObject } from '../../../internal/SecuredFields/lib/types';
-import UIElement from "../../../UIElement";
+import UIElement from '../../../UIElement';
 
 export interface ACHInputStateValid {
     holderName?: boolean;
@@ -52,9 +52,10 @@ export interface ACHInputProps {
     onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
-    ref? : any;
+    ref?: any;
     showPayButton?: boolean;
     showWarnings?: boolean;
     styles?: StylesObject;
     type?: string;
+    forceCompat?: boolean;
 }

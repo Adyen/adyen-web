@@ -13,7 +13,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './AchInput.module.scss';
 import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
-import StoreDetails from "../../../internal/StoreDetails";
+import StoreDetails from '../../../internal/StoreDetails';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -177,11 +177,9 @@ function AchInput(props: ACHInputProps) {
                             )}
 
                             {props.enableStoreDetails && <StoreDetails onChange={setStorePaymentMethod} />}
-
                         </LoadingWrapper>
                     </div>
                 )}
-
             />
             {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
@@ -209,6 +207,7 @@ const extractPropsForSFP = (props: ACHInputProps) => {
         onLoad: props.onLoad,
         showWarnings: props.showWarnings,
         styles: props.styles,
-        type: props.type
+        type: props.type,
+        forceCompat: props.forceCompat
     };
 };
