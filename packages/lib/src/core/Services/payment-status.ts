@@ -12,10 +12,9 @@ export default function checkPaymentStatus(paymentData, clientKey, loadingContex
         throw new Error('Could not check the payment status');
     }
 
-    const options = {
+    return httpPost({
         loadingContext,
-        path: `services/PaymentInitiation/v1/status?clientKey=${clientKey}`
-    };
-
-    return httpPost(options, { paymentData });
+        path: `services/PaymentInitiation/v1/status?clientKey=${clientKey}`,
+        errorLevel: 'silent'
+    }, { paymentData });
 }
