@@ -44,8 +44,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
-    // Creates access to sfp so we can call functionality on it (like handleOnAutoComplete) directly from the console. Used for testing.
-    if (process.env.NODE_ENV === 'development') cardInputRef.current.sfp = sfp;
+    // Store ref to sfp (useful for 'deep' debugging)
+    cardInputRef.current.sfp = sfp;
 
     /**
      * STATE HOOKS
