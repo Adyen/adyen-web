@@ -72,4 +72,23 @@ import './QRCodes.scss';
         .catch(error => {
             throw Error(error);
         });
+
+    makePayment({
+        paymentMethod: {
+            type: 'promptpay'
+        },
+        countryCode: 'TH',
+        amount: {
+            currency: 'THB',
+            value: 101
+        }
+    })
+        .then(result => {
+            if (result.action) {
+                window.promptpay = checkout.createFromAction(result.action).mount('#promptpay-container');
+            }
+        })
+        .catch(error => {
+            throw Error(error);
+        });
 })();

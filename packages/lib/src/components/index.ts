@@ -55,6 +55,7 @@ import WalletINElement from './WalletIN';
 import OnlineBankingCZElement from './OnlineBankingCZ';
 import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
+import PromptPay from "./PromptPay";
 
 /**
  * Maps each component with a Component element.
@@ -196,6 +197,7 @@ const componentsMap = {
     swish: Swish,
     wechatpay: WeChat,
     wechatpayQR: WeChat,
+    promptpay: PromptPay,
     /** QRLoader */
 
     /** Await */
