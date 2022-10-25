@@ -17,7 +17,10 @@ const SelectListItem = ({ item, selected, isIconOnLeftSide, ...props }: SelectIt
                 'adyen-checkout__dropdown__element-icon--left': isIconOnLeftSide
             }
         ])}
-        data-disabled={!!item.disabled}
+        // A change in Preact v10.11.1 means that all falsy values are assessed and set on data attributes.
+        // In the case of data-disabled we only ever want it set if item.disabled is actually true, since the presence of the data-disabled attr,
+        // regardless of its value, will disable the select list item
+        data-disabled={item.disabled === true ? true : null}
         data-value={item.id}
         onClick={props.onSelect}
         onKeyDown={props.onKeyDown}
