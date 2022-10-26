@@ -13,8 +13,9 @@ type VisaError = {
 class SrciError extends Error {
     public reason: string;
     public message: string;
+    public source: string;
 
-    constructor(schemeError: VisaError | MastercardError) {
+    constructor(schemeError: VisaError | MastercardError, source: string) {
         super();
 
         const message = 'error' in schemeError ? schemeError?.error?.message : schemeError?.message;
@@ -22,6 +23,7 @@ class SrciError extends Error {
 
         this.message = message;
         this.reason = reason;
+        this.source = source;
     }
 }
 

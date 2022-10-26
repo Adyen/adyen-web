@@ -7,6 +7,7 @@ import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import uuidv4 from '../../../../../utils/uuid';
+import SrciError from './sdks/SrciError';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -73,7 +74,6 @@ class ClickToPayService implements IClickToPayService {
             }
 
             const { isEnrolled } = await this.verifyIfShopperIsEnrolled(this.shopperIdentity.value, this.shopperIdentity.type);
-
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);
                 return;
@@ -81,7 +81,9 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            console.warn(error);
+            if (error instanceof SrciError) console.warn(`Error at ClickToPayService: Reason: ${error.reason} - Source: ${error.source}`);
+            else console.warn(error);
+
             this.setState(CtpState.NotAvailable);
         }
     }
@@ -176,12 +178,15 @@ class ClickToPayService implements IClickToPayService {
 
                 identityLookupPromise
                     .then(response => {
+                        console.log(response);
                         if (response.consumerPresent && !this.validationSchemeSdk) {
                             this.setSdkForPerformingShopperIdentityValidation(sdk);
                             resolve({ isEnrolled: true });
                         }
                     })
-                    .catch(error => reject(error));
+                    .catch(error => {
+                        reject(error);
+                    });
 
                 return identityLookupPromise;
             });
