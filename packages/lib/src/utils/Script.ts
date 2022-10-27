@@ -1,4 +1,4 @@
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+// import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 /**
  * Custom function used to verify if the object instance loaded by the script is available
@@ -40,7 +40,7 @@ class Script implements IScript {
         this.dataAttributes = dataAttributes;
     }
 
-    public load = (scriptInstanceValidator = () => true): Promise<void> => {
+    public load = (): Promise<void> => {
         if (this.isScriptLoadCalled) {
             if (process.env.NODE_ENV === 'development') console.warn(`[Warning] script.load called more than once for ${this.src}`);
             return;
@@ -48,25 +48,8 @@ class Script implements IScript {
 
         return new Promise((resolve, reject) => {
             const handleOnLoad = () => {
-                console.log('handleLoad');
-                /**
-                 * In certain scenarios (ex: slow network connection) the 'onload' is triggered but the 3rd party
-                 * SDK instance isn't ready yet. This function handles this scenario in a more defensive way, which
-                 * it tries to verify if the object is available couple of times before throwing an error.
-                 */
-                let attemptsToVerifyScriptObject = 0;
-                const verifyIfScriptObjectIsAvailable = () => {
-                    if (scriptInstanceValidator()) {
-                        this.script.setAttribute('data-script-loaded', 'true');
-                        return resolve();
-                    }
-
-                    if (++attemptsToVerifyScriptObject === 4) {
-                        return reject(new AdyenCheckoutError('ERROR', "Script object wasn't load successfully"));
-                    }
-                    setTimeout(verifyIfScriptObjectIsAvailable, 500);
-                };
-                verifyIfScriptObjectIsAvailable();
+                this.script.setAttribute('data-script-loaded', 'true');
+                resolve();
             };
 
             const handleOnError = () => {
