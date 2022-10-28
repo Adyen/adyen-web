@@ -43,6 +43,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              */
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+
+            // For 3DS2InMDFlow - we need to remove the unload listener that has been set on the window
+            if (this.props.threeDS2MDFlowUnloadListener) {
+                window.removeEventListener('beforeunload', this.props.threeDS2MDFlowUnloadListener, { capture: true });
+            }
+
             this.props.onComplete(data); // (equals onAdditionalDetails)
         });
     }
