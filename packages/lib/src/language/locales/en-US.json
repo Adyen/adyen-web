@@ -166,7 +166,7 @@
     "error.va.sf-cc-num.04": "Card number is the wrong length",
     "error.va.sf-cc-dat.01": "Expiry date: card too old",
     "error.va.sf-cc-dat.02": "Expiry date: date too far in the future",
-    "error.va.sf-cc-dat.03": "Expiry date: Your card expires before check out date",
+    "error.va.sf-cc-dat.03": "Expiry date: your card expires before check out date",
     "error.va.sf-cc-dat.04": "Expiry date field is empty",
     "error.va.sf-cc-dat.05": "Expiry date is the wrong length",
     "error.va.sf-cc-mth.01": "Expiry month field is empty",
@@ -233,9 +233,7 @@
     "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
     "upi.modeSelection": "Make a selection on how you would like to use UPI.",
-
     "onlineBanking.termsAndConditions": "By continuing you agree with the %#terms and conditions%#",
-
     "ctp.loading.poweredByCtp": "Powered by Click to Pay",
     "ctp.loading.intro": "A smart, secure way to pay with merchants worldwide",
     "ctp.login.title": "Continue to Click to Pay",
@@ -256,7 +254,7 @@
     "ctp.cards.subtitle": "Continue with your Click to Pay card to complete the payment.",
     "ctp.cards.cardSelector": "Click to Pay cards",
     "ctp.manualCardEntry": "Manual card entry",
-    "ctp.errors.AUTH_INVALID": "Authentication Invalid ",
+    "ctp.errors.AUTH_INVALID": "Authentication Invalid",
     "ctp.errors.NOT_FOUND": "No account found with this email address",
     "ctp.errors.ID_FORMAT_UNSUPPORTED": "Format not supported",
     "ctp.errors.FRAUD": "The user account was locked or disabled",
