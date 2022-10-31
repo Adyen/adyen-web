@@ -19,6 +19,7 @@ export interface ThreeDS2ChallengeProps {
     loadingContext?: string;
     useOriginalFlow?: boolean;
     i18n?: Language;
+    threeDS2MDFlowUnloadListener?: any;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
