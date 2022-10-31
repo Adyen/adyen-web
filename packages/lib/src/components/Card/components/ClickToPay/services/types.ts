@@ -24,7 +24,7 @@ export interface IdentityLookupParams {
     type?: 'email' | 'mobilePhone';
 }
 
-type MastercardCheckout = {
+export type MastercardCheckout = {
     srcDigitalCardId: string;
     srcCorrelationId: string;
     srcScheme: string;

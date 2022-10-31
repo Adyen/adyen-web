@@ -31,7 +31,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     const items = useMemo(() => {
         return cards.map(card => ({
             icon: card.artUri || getImage({ loadingContext })(card.scheme),
-            name: `${card.title ? card.title : ''} •••• ${card.panLastFour}`,
+            name: `${card.title ? card.title : ''} •••• ${card.panLastFour} `,
             secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
             id: card.srcDigitalCardId,
             disabled: card.isExpired
