@@ -1,11 +1,12 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc', 'jsx-a11y'],
+    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc', 'jsx-a11y', 'testing-library'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
         'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended' /*'prettier/@typescript-eslint'*/
+        'plugin:@typescript-eslint/recommended' /*'prettier/@typescript-eslint'*/,
+        'plugin:testing-library/react'
     ],
     parserOptions: {
         ecmaVersion: 2018,

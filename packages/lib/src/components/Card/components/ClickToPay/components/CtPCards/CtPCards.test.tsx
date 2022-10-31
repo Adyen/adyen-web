@@ -9,9 +9,8 @@ import { MastercardCheckout, VisaCheckout } from '../../services/types';
 
 const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
     return render(
-        <ClickToPayContext.Provider value={{ ...providerProps }} children={children}>
-            {children}
-        </ClickToPayContext.Provider>
+        // eslint-disable-next-line react/no-children-prop
+        <ClickToPayContext.Provider value={{ ...providerProps }} children={children} />
     );
 };
 
@@ -79,7 +78,6 @@ test('should not be able to checkout with expired card (single card)', async () 
     const contextProps = mock<IClickToPayContext>();
     contextProps.onSetStatus.mockReturnValue();
     contextProps.amount = { value: 2000, currency: 'EUR' };
-
     contextProps.cards = [
         new ShopperCard(
             {
@@ -113,7 +111,6 @@ test('should not be able to checkout with expired card (card list)', async () =>
     const contextProps = mock<IClickToPayContext>();
     contextProps.onSetStatus.mockReturnValue();
     contextProps.amount = { value: 2000, currency: 'EUR' };
-
     contextProps.cards = [
         new ShopperCard(
             {
@@ -226,7 +223,7 @@ test('should be able to checkout (card list)', async () => {
 
     // Selects Mastercard, then pay button label gets updated
     await user.selectOptions(screen.getByRole('listbox'), screen.getByRole('option', { name: /Mastercard •••• 3456/i }));
-    waitFor(() => expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeTruthy());
+    expect(await screen.findByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeTruthy();
 
     // Shopper checkout with Mastercard card
     await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' }));
