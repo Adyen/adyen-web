@@ -251,6 +251,7 @@
     "ctp.cards.title": "Dokončite svoju platbu",
     "ctp.cards.subtitle": "Pokračujte v platbe kartou zaregistrovanou v službe Click to Pay a dokončite platbu.",
     "ctp.cards.cardSelector": "Karty v službe Click to Pay",
+    "ctp.cards.expiredCard": "Platnosť uplynula",
     "ctp.manualCardEntry": "Manuálne zadanie karty",
     "ctp.errors.AUTH_INVALID": "Overenie bolo neplatné",
     "ctp.errors.NOT_FOUND": "Nenašiel sa žiadny účet s touto e-mailovou adresou",

@@ -252,6 +252,7 @@
     "ctp.cards.title": "Gennemfør din betaling",
     "ctp.cards.subtitle": "Fortsæt med dit Click to Pay-kort for at gennemføre betalingen.",
     "ctp.cards.cardSelector": "Click to Pay-kort",
+    "ctp.cards.expiredCard": "Udløbet",
     "ctp.manualCardEntry": "Manuel kortindtastning",
     "ctp.errors.AUTH_INVALID": "Ugyldig godkendelse",
     "ctp.errors.NOT_FOUND": "Ingen konto fundet med denne e-mailadresse",

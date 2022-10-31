@@ -251,6 +251,7 @@
     "ctp.cards.title": "Sfinalizuj płatność",
     "ctp.cards.subtitle": "Kontynuuj za pomocą karty Click to Pay, aby sfinalizować płatność.",
     "ctp.cards.cardSelector": "Karty Click to Pay",
+    "ctp.cards.expiredCard": "Okres ważności minął",
     "ctp.manualCardEntry": "Ręczne wprowadzanie kart",
     "ctp.errors.AUTH_INVALID": "Nieprawidłowe dane uwierzytelniające",
     "ctp.errors.NOT_FOUND": "Nie znaleziono konta z tym adresem e-mail",

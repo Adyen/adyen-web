@@ -251,6 +251,7 @@
     "ctp.cards.title": "Fullfør betalingen",
     "ctp.cards.subtitle": "Fortsett med Click to Pay-kortet ditt for å fullføre betalingen.",
     "ctp.cards.cardSelector": "Click to Pay-kort",
+    "ctp.cards.expiredCard": "Utløpt",
     "ctp.manualCardEntry": "Manuell inntasting av kort",
     "ctp.errors.AUTH_INVALID": "Autentiseringen er ugyldig",
     "ctp.errors.NOT_FOUND": "Finner ingen konto med denne e-postadressen",

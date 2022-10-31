@@ -251,6 +251,7 @@
     "ctp.cards.title": "支払いを完了する",
     "ctp.cards.subtitle": "引き続きClick to Payカードでお支払いを完了させてください。",
     "ctp.cards.cardSelector": "Click to Payカード",
+    "ctp.cards.expiredCard": "期限切れ",
     "ctp.manualCardEntry": "手動カード入力",
     "ctp.errors.AUTH_INVALID": "認証が無効です",
     "ctp.errors.NOT_FOUND": "このメールアドレスのアカウントが見つかりません",

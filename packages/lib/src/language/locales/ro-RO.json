@@ -251,6 +251,7 @@
     "ctp.cards.title": "Finalizați plata",
     "ctp.cards.subtitle": "Continuați cu cardul dvs. Click to Pay pentru a finaliza plata.",
     "ctp.cards.cardSelector": "Carduri Click to Pay",
+    "ctp.cards.expiredCard": "Expirat",
     "ctp.manualCardEntry": "Introducere manuală a cardului",
     "ctp.errors.AUTH_INVALID": "Autentificare incorectă",
     "ctp.errors.NOT_FOUND": "Nu a fost găsit niciun cont cu această adresă de e-mail",

@@ -248,6 +248,7 @@
     "ctp.cards.title": "Завершите платеж",
     "ctp.cards.subtitle": "Для завершения выберите оплату картой Click to Pay.",
     "ctp.cards.cardSelector": "Карты Click to Pay",
+    "ctp.cards.expiredCard": "Просрочена",
     "ctp.manualCardEntry": "Ввод данных карты вручную",
     "ctp.errors.AUTH_INVALID": "Аутентификация недействительна",
     "ctp.errors.NOT_FOUND": "Уч. запись с таким адресом эл. почты не найдена",

@@ -251,6 +251,7 @@
     "ctp.cards.title": "Suorita maksusi loppuun",
     "ctp.cards.subtitle": "Suorita maksu loppuun jatkamalla maksua Click to Pay -kortillasi.",
     "ctp.cards.cardSelector": "Click to Pay -kortit",
+    "ctp.cards.expiredCard": "Vanhentunut",
     "ctp.manualCardEntry": "Manuaalinen kortin syöttö",
     "ctp.errors.AUTH_INVALID": "Virheellinen todennus",
     "ctp.errors.NOT_FOUND": "Tällä sähköpostiosoitteella ei löytynyt tiliä",

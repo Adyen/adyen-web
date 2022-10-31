@@ -251,6 +251,7 @@
     "ctp.cards.title": "U betaling afronden",
     "ctp.cards.subtitle": "Ga verder met uw Click to Pay-kaart om de betaling af te ronden.",
     "ctp.cards.cardSelector": "Click to Pay-kaarten",
+    "ctp.cards.expiredCard": "Verlopen",
     "ctp.manualCardEntry": "Handmatige kaartinvoer",
     "ctp.errors.AUTH_INVALID": "Authenticatie ongeldig",
     "ctp.errors.NOT_FOUND": "Geen account gevonden met dit e-mailadres",
