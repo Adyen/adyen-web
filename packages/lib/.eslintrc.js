@@ -5,8 +5,7 @@ module.exports = {
         'eslint:recommended',
         'plugin:react/recommended',
         'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended' /*'prettier/@typescript-eslint'*/,
-        'plugin:testing-library/react'
+        'plugin:@typescript-eslint/recommended' /*'prettier/@typescript-eslint'*/
     ],
     parserOptions: {
         ecmaVersion: 2018,
@@ -134,6 +133,11 @@ module.exports = {
             rules: {
                 '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'off', overrides: { properties: 'explicit' } }]
             }
+        },
+        {
+            // Enable eslint-plugin-testing-library rules or preset only for matching testing files
+            files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+            extends: ['plugin:testing-library/react']
         }
     ]
 };
