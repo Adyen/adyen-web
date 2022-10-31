@@ -178,7 +178,6 @@ class ClickToPayService implements IClickToPayService {
 
                 identityLookupPromise
                     .then(response => {
-                        console.log(response);
                         if (response.consumerPresent && !this.validationSchemeSdk) {
                             this.setSdkForPerformingShopperIdentityValidation(sdk);
                             resolve({ isEnrolled: true });
