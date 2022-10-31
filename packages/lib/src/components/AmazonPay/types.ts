@@ -48,7 +48,6 @@ export interface AmazonPayElementProps {
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
-    design?: string;
     environment?: string;
     i18n: Language;
     loadingContext?: string;
@@ -84,6 +83,7 @@ export interface AmazonPayButtonProps {
     configuration?: AmazonPayConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
+    design?: string;
     environment?: string;
     locale?: string;
     onClick: (resolve, reject) => Promise<void>;
@@ -92,7 +92,6 @@ export interface AmazonPayButtonProps {
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
     ref: any;
-    region?: Region;
     returnUrl?: string;
     showPayButton: boolean;
 }
