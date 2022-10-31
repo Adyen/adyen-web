@@ -34,6 +34,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
+    // For 3DS2InMDFlow - we need to remove the unload listener that has been set on the window
+    remove3DS2MDFlowUnloadListener() {
+        if (this.props.threeDS2MDFlowUnloadListener) {
+            window.removeEventListener('beforeunload', this.props.threeDS2MDFlowUnloadListener, { capture: true });
+        }
+    }
+
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
             /**
@@ -44,10 +51,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            // For 3DS2InMDFlow - we need to remove the unload listener that has been set on the window
-            if (this.props.threeDS2MDFlowUnloadListener) {
-                window.removeEventListener('beforeunload', this.props.threeDS2MDFlowUnloadListener, { capture: true });
-            }
+            this.remove3DS2MDFlowUnloadListener();
 
             this.props.onComplete(data); // (equals onAdditionalDetails)
         });
@@ -55,6 +59,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
     setStatusError(errorObj) {
         this.setState({ status: 'error' }, () => {
+            this.remove3DS2MDFlowUnloadListener();
             this.props.onError(errorObj);
         });
     }
