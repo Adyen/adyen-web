@@ -1,13 +1,5 @@
-// import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-
-/**
- * Custom function used to verify if the object instance loaded by the script is available
- * in the browser context
- */
-type ScriptInstanceValidator = () => boolean;
-
 interface IScript {
-    load(scriptInstanceValidator?: ScriptInstanceValidator): Promise<any>;
+    load(): Promise<any>;
     remove(): HTMLScriptElement;
 }
 
@@ -62,8 +54,8 @@ class Script implements IScript {
             const scriptContainer: Element = document.querySelector(this.node);
             this.script = scriptContainer.querySelector(`script[src="${this.src}"]`);
 
+            // Script element exists in the browser and is already loaded
             if (this.script && this.script.getAttribute('data-script-loaded')) {
-                // Script element exists in the browser and is already loaded
                 resolve();
                 return;
             } else if (this.script) {

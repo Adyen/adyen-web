@@ -30,8 +30,6 @@ export default function PaypalComponent(props: PayPalComponentProps) {
 
         const script = new Script(src, 'body', attributes, dataAttributes);
 
-        // const paypalInstanceValidator = () => window.paypal !== undefined;
-        // script.load(paypalInstanceValidator).then(handlePaypalLoad);
         script.load().then(handlePaypalLoad);
 
         return () => {
