@@ -59,7 +59,8 @@ class Script implements IScript {
                 resolve();
                 return;
             } else if (this.script) {
-                // Script element exists in the browser, but it is not loaded yet. Use-case:  Multiple PayPal components in different parts of the screen.
+                // Script element exists in the browser, but it is not loaded yet
+                // Use-case:  Multiple PayPal standalone components being loaded in different parts of the screen.
                 this.script.addEventListener('load', handleOnLoad);
                 this.script.addEventListener('error', handleOnError);
                 return;
