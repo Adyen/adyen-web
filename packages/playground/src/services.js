@@ -12,7 +12,7 @@ export const getPaymentMethods = configuration =>
 
 export const makePayment = (data, config = {}) => {
     // NOTE: Merging data object. DO NOT do this in production.
-    const paymentRequest = { ...paymentsConfig, ...config, ...data, amount: window.amount };
+    const paymentRequest = { ...paymentsConfig, ...config, ...data };
     if (paymentRequest.order) {
         delete paymentRequest.amount;
     }
