@@ -6,23 +6,28 @@
   flex-shrink: 1;
   flex-wrap: wrap;
   gap: 4px;
+  height: 16px;
+  overflow: hidden;
   margin-top: -8px;
   margin-bottom: 16px;
+  will-change: height;
+  transition: all .2s ease-out;
 }
+.adyen-checkout__card__brands--hidden {
+  opacity: 0;
+  height: 0;
+}
+
 .adyen-checkout__card__brands img {
   border-radius: 3px;
   height: 16px;
   width: 24px;
 }
 
-.adyen-checkout__card__brands__brand-wrapper--disabled {
-  opacity: 0.25;
-}
 
 .adyen-checkout__card__brands__brand-wrapper {
   display: inline-block;
   height: 16px;
-  transition: opacity .2s ease-out;
   width: 24px;
   position: relative;
 }
