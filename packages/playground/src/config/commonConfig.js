@@ -11,12 +11,10 @@ export const countryCode = urlParams.countryCode || DEFAULT_COUNTRY;
 export const currency = getCurrency(countryCode);
 export const amountValue = urlParams.amount ?? 25900;
 export const shopperReference = 'newshoppert';
-window.amount = {
+export const amount = {
     currency,
     value: Number(amountValue)
 };
-
-export const amount = window.amount;
 
 export const useSession = urlParams.session !== 'manual';
 
