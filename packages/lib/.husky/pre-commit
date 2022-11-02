@@ -1,4 +1,8 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#. "$(dirname "$0")/_/husky.sh"
 
-cd pathToYourProject && npx lint-staged
+vagrant ssh -- -t <<HEREDOC
+  cd workspace/adyen-web/packages/lib;
+  echo "head -n -1 ~/.bashrc > temp.txt ; mv temp.txt ~/.bashrc && npx lint-staged;" >> ~/.bashrc;
+  /bin/bash -i
+HEREDOC
