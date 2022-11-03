@@ -41,4 +41,9 @@ export interface SrcProfileWithScheme extends SrcProfile {
     scheme: ClickToPayScheme;
 }
 
+export type CardTypes = {
+    availableCards: ShopperCard[];
+    expiredCards: ShopperCard[];
+};
+
 export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;
