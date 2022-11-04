@@ -253,6 +253,7 @@
     "ctp.cards.title": "Complete your payment",
     "ctp.cards.subtitle": "Continue with your Click to Pay card to complete the payment.",
     "ctp.cards.cardSelector": "Click to Pay cards",
+    "ctp.cards.expiredCard": "Expired",
     "ctp.manualCardEntry": "Manual card entry",
     "ctp.errors.AUTH_INVALID": "Authentication Invalid",
     "ctp.errors.NOT_FOUND": "No account found with this email address",

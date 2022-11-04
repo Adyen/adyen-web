@@ -252,6 +252,7 @@
     "ctp.cards.title": "أكمل عملية الدفع",
     "ctp.cards.subtitle": "تابع باستخدام بطاقة Click to Pay الخاصة بك لإكمال الدفع.",
     "ctp.cards.cardSelector": "بطاقات Click to Pay",
+    "ctp.cards.expiredCard": "منتهي الصلاحية",
     "ctp.manualCardEntry": "الإدخال اليدوي للبطاقة",
     "ctp.errors.AUTH_INVALID": "المصادقة غير صحيحة",
     "ctp.errors.NOT_FOUND": "لم يتم العثور على حساب مقترن بعنوان البريد الإلكتروني هذا",

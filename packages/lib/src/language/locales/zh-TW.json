@@ -251,6 +251,7 @@
     "ctp.cards.title": "完成您的付款",
     "ctp.cards.subtitle": "繼續使用您的 Click to Pay 卡完成付款。",
     "ctp.cards.cardSelector": "Click to Pay 卡",
+    "ctp.cards.expiredCard": "已過期",
     "ctp.manualCardEntry": "手動卡輸入",
     "ctp.errors.AUTH_INVALID": "驗證無效",
     "ctp.errors.NOT_FOUND": "找不到使用此電子郵件地址的帳戶",

@@ -246,6 +246,7 @@
     "ctp.cards.title": "Complete su pago",
     "ctp.cards.subtitle": "Continúe con su tarjeta de Click to Pay para completar el pago.",
     "ctp.cards.cardSelector": "Tarjetas de Click to Pay",
+    "ctp.cards.expiredCard": "Caducada",
     "ctp.manualCardEntry": "Introducción manual de tarjeta",
     "ctp.errors.AUTH_INVALID": "Autenticación no válida",
     "ctp.errors.NOT_FOUND": "No se ha encontrado ninguna cuenta con esta dirección de correo electrónico",

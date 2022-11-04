@@ -251,6 +251,7 @@
     "ctp.cards.title": "Schließen Sie Ihre Zahlung ab",
     "ctp.cards.subtitle": "Fahren Sie mit Ihrer Click-to-Pay-Karte fort, um die Zahlung abzuschließen.",
     "ctp.cards.cardSelector": "Click-to-Pay-Karten",
+    "ctp.cards.expiredCard": "Abgelaufen",
     "ctp.manualCardEntry": "Manuelle Karteneingabe",
     "ctp.errors.AUTH_INVALID": "Authentifizierung ungültig",
     "ctp.errors.NOT_FOUND": "Kein Konto mit dieser E-Mail-Adresse gefunden",

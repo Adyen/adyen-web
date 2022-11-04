@@ -42,6 +42,8 @@ export type SrcCard = {
     panLastFour: string;
     dateOfCardLastUsed: string;
     paymentCardDescriptor: string;
+    panExpirationMonth: string;
+    panExpirationYear: string;
     digitalCardData: {
         descriptorName: string;
         artUri: string;

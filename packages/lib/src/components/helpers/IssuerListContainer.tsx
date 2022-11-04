@@ -76,7 +76,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         return !!this.state?.isValid;
     }
 
-
     /**
      * Returns brands array (similar to card) depending on showPaymentMethodItemImages
      * This is used to show the brands in the PaymentMethodItem
@@ -92,7 +91,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
 
         return [];
     }
-
 
     render() {
         return (

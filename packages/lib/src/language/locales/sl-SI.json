@@ -251,6 +251,7 @@
     "ctp.cards.title": "Dokončaj plačilo",
     "ctp.cards.subtitle": "Za dokončanje plačila nadaljujte s svojo kartico Click to Pay.",
     "ctp.cards.cardSelector": "Kartice Click to Pay",
+    "ctp.cards.expiredCard": "Veljavnost potekla",
     "ctp.manualCardEntry": "Ročni vnos kartice",
     "ctp.errors.AUTH_INVALID": "Preverjanje pristnosti ni veljavno",
     "ctp.errors.NOT_FOUND": "Računa s tem e-poštnim naslovom ni bilo mogoče najti",

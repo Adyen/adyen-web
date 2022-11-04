@@ -1,6 +1,6 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc', 'jsx-a11y'],
+    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc', 'jsx-a11y', 'testing-library'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
@@ -133,6 +133,11 @@ module.exports = {
             rules: {
                 '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'off', overrides: { properties: 'explicit' } }]
             }
+        },
+        {
+            // Enable eslint-plugin-testing-library rules or preset only for matching testing files
+            files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+            extends: ['plugin:testing-library/react']
         }
     ]
 };

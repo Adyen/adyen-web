@@ -30,7 +30,6 @@ function SelectList({ active, items, showList, textFilter, ...props }: SelectLis
                         onKeyDown={props.onKeyDown}
                         onSelect={props.onSelect}
                         selected={item.id === active.id}
-                        isIconOnLeftSide={props.isIconOnLeftSide}
                     />
                 ))
             ) : (

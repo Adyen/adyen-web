@@ -251,6 +251,7 @@
     "ctp.cards.title": "Slutför din betalning",
     "ctp.cards.subtitle": "Fortsätt med ditt Click to Pay-kort för att slutföra betalningen.",
     "ctp.cards.cardSelector": "Click to Pay-kort",
+    "ctp.cards.expiredCard": "Utgångna",
     "ctp.manualCardEntry": "Manuell kortinmatning",
     "ctp.errors.AUTH_INVALID": "Autentisering ogiltig",
     "ctp.errors.NOT_FOUND": "Inget konto hittades med denna e-postadress",

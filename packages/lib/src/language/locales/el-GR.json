@@ -251,6 +251,7 @@
     "ctp.cards.title": "Ολοκλήρωση της πληρωμής",
     "ctp.cards.subtitle": "Συνεχίστε με την κάρτα Click to Pay σας για να ολοκληρώσετε την πληρωμή.",
     "ctp.cards.cardSelector": "Κάρτες Click to Pay",
+    "ctp.cards.expiredCard": "Έληξε",
     "ctp.manualCardEntry": "Χειροκίνητη καταχώριση κάρτας",
     "ctp.errors.AUTH_INVALID": "Ο έλεγχος ταυτότητας δεν ήταν έγκυρος",
     "ctp.errors.NOT_FOUND": "Δεν βρέθηκε λογαριασμός με αυτήν τη διεύθυνση email",

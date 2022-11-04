@@ -251,6 +251,7 @@
     "ctp.cards.title": "Fizetés végrehajtása",
     "ctp.cards.subtitle": "A fizetés végrehajtásához használja a Click to Pay-kártyát.",
     "ctp.cards.cardSelector": "Click to Pay-kártyák",
+    "ctp.cards.expiredCard": "Lejárt",
     "ctp.manualCardEntry": "Kártya adatainak kézi megadása",
     "ctp.errors.AUTH_INVALID": "Érvénytelen hitelesítés",
     "ctp.errors.NOT_FOUND": "Nem található fiók ezzel az e-mail-címmel",

@@ -251,6 +251,7 @@
     "ctp.cards.title": "결제를 완료하세요",
     "ctp.cards.subtitle": "Click to Pay 카드를 계속 사용하여 결제를 완료하세요.",
     "ctp.cards.cardSelector": "Click to Pay 카드",
+    "ctp.cards.expiredCard": "만료됨",
     "ctp.manualCardEntry": "카드 직접 입력",
     "ctp.errors.AUTH_INVALID": "유효하지 않은 인증입니다",
     "ctp.errors.NOT_FOUND": "해당 이메일 주소로 계정을 찾을 수 없습니다",
