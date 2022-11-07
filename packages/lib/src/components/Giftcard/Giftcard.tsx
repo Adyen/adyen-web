@@ -77,7 +77,6 @@ export class GiftcardElement extends UIElement {
 
     protected handleOrder = (response: PaymentResponse) => {
         const order: Order = response.order;
-        debugger;
         this._parentInstance.update({ order });
         if (this.props.session && this.props.onOrderCreated) {
             return this.props.onOrderCreated(order);
