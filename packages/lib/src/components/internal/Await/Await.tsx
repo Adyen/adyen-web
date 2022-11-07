@@ -44,7 +44,7 @@ function Await(props: AwaitComponentProps) {
                     paymentData: props.paymentData
                 }
             };
-
+            // Send success response to onAdditionalDetails
             return props.onComplete(state, this);
         }
 
@@ -64,7 +64,6 @@ function Await(props: AwaitComponentProps) {
                     paymentData: props.paymentData
                 }
             };
-
             // Send error response to onAdditionalDetails
             return props.onComplete(state, this);
         }
