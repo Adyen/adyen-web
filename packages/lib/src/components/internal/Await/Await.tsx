@@ -80,7 +80,7 @@ function Await(props: AwaitComponentProps) {
             .catch(({ message, ...response }) => ({
                 type: 'network-error',
                 props: {
-                    ...(message && { message: props.getI18n(message) }),
+                    ...(message && { message: i18n.get(message) }),
                     ...response
                 }
             }))
