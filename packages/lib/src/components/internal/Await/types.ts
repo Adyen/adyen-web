@@ -27,4 +27,5 @@ export interface AwaitComponentProps {
     messageText: string;
     awaitText: string;
     ref: any;
+    getI18n?: (key: string, options?) => string; // Should equate to the Language.get method
 }

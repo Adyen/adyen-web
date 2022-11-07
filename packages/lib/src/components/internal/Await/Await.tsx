@@ -35,28 +35,42 @@ function Await(props: AwaitComponentProps) {
     };
 
     const onComplete = (status: StatusObject): void => {
-        setCompleted(true);
-        const state = {
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: props.paymentData
-            }
-        };
+        // Only make details call if we have a payload
+        if (status.props.payload) {
+            setCompleted(true);
+            const state = {
+                data: {
+                    details: { payload: status.props.payload },
+                    paymentData: props.paymentData
+                }
+            };
 
-        props.onComplete(state, this);
+            return props.onComplete(state, this);
+        }
+
+        // Show error state & call merchant defined error callback if we do not have a payload
+        setExpired(true);
+        props.onError(new AdyenCheckoutError('ERROR', 'successful result, but no payload in response'));
     };
 
     const onError = (status: StatusObject): void => {
         setExpired(true);
-        const state = {
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: props.paymentData
-            }
-        };
 
-        // Send error response to onAdditionalDetails
-        props.onComplete(state, this);
+        // Only make details call if we have a payload
+        if (status.props.payload) {
+            const state = {
+                data: {
+                    details: { payload: status.props.payload },
+                    paymentData: props.paymentData
+                }
+            };
+
+            // Send error response to onAdditionalDetails
+            return props.onComplete(state, this);
+        }
+
+        // Call merchant defined error callback if we do not have a payload
+        props.onError(new AdyenCheckoutError('ERROR', 'error result with no payload in response'));
     };
 
     const checkStatus = (): void => {
@@ -67,7 +81,7 @@ function Await(props: AwaitComponentProps) {
             .catch(({ message, ...response }) => ({
                 type: 'network-error',
                 props: {
-                    ...(message && { message: this.props.i18n.get(message) }),
+                    ...(message && { message: props.getI18n(message) }),
                     ...response
                 }
             }))
@@ -97,7 +111,7 @@ function Await(props: AwaitComponentProps) {
         const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
 
         if (shouldRedirectOnMobile && url && isMobile) {
-            this.redirectToApp(url, checkStatus);
+            redirectToApp(url, checkStatus);
         } else {
             checkStatus();
         }
@@ -127,9 +141,13 @@ function Await(props: AwaitComponentProps) {
                 }
             };
 
+            // Reset 'loading' to ensure that it is changes to this value that are the main "engine" that drives this useEffect
+            setLoading(true);
+
+            // Create (another) interval to poll for a result
             setStoredTimeout(setTimeout(statusInterval, delay));
         }
-    }, [loading, timePassed, expired, completed]);
+    }, [loading, expired, completed]);
 
     const finalState = (image, message) => (
         <div className="adyen-checkout__await adyen-checkout__await--result">
