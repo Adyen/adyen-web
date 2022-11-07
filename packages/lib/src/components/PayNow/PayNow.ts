@@ -1,7 +1,7 @@
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
 import { delay, countdownTime } from './config';
 
-class WeChatPayElement extends QRLoaderContainer {
+class PayNowElement extends QRLoaderContainer {
     public static type = 'paynow';
 
     formatProps(props) {
@@ -13,4 +13,4 @@ class WeChatPayElement extends QRLoaderContainer {
     }
 }
 
-export default WeChatPayElement;
+export default PayNowElement;
