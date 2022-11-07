@@ -132,6 +132,7 @@ function Await(props: AwaitComponentProps) {
                 checkStatus();
 
                 const actualTimePassed = timePassed + delay;
+                // timePassed is the value that is the main "engine" that drives this useEffect/polling
                 setTimePassed(actualTimePassed);
 
                 if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
@@ -140,13 +141,10 @@ function Await(props: AwaitComponentProps) {
                 }
             };
 
-            // Reset 'loading' to ensure that it is changes to this value that are the main "engine" that drives this useEffect
-            setLoading(true);
-
             // Create (another) interval to poll for a result
             setStoredTimeout(setTimeout(statusInterval, delay));
         }
-    }, [loading, expired, completed]);
+    }, [loading, expired, completed, timePassed]);
 
     const finalState = (image, message) => (
         <div className="adyen-checkout__await adyen-checkout__await--result">
