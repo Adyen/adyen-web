@@ -82,7 +82,6 @@ import './QRCodes.scss';
             currency: 'THB',
             value: 101
         },
-        }
     })
         .then(result => {
             if (result.action) {
