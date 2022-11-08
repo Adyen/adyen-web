@@ -18,13 +18,15 @@ const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
 
     const isValidBrand = activeBrand !== 'card';
     return (
-        <span className="adyen-checkout__card__brands">
+        <span
+            className={classNames('adyen-checkout__card__brands', {
+                'adyen-checkout__card__brands--hidden': isValidBrand
+            })}
+        >
             {brands.map(({ name, icon }) => (
                 <span
                     key={name}
-                    className={classNames('adyen-checkout__card__brands__brand-wrapper', {
-                        'adyen-checkout__card__brands__brand-wrapper--disabled': isValidBrand && activeBrand !== name
-                    })}
+                    className="adyen-checkout__card__brands__brand-wrapper"
                 >
                     <Img src={icon} alt="" />
                 </span>
