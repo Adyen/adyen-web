@@ -1,4 +1,4 @@
-import { ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
+import { CardTypes, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 
@@ -45,8 +45,21 @@ function sortCardByLastTimeUsed(card1: ShopperCard, card2: ShopperCard) {
     return new Date(card2.dateOfCardLastUsed).getTime() - new Date(card1.dateOfCardLastUsed).getTime();
 }
 
+function splitAvailableAndExpiredCards(memo: CardTypes, card: ShopperCard): CardTypes {
+    if (card.isExpired) memo.expiredCards.push(card);
+    else memo.availableCards.push(card);
+    return memo;
+}
+
+/**
+ * Creates the Shopper card list. The available cards are placed before the expired cards
+ */
 function createShopperCardsList(srcProfiles: SrcProfileWithScheme[]): ShopperCard[] {
-    return srcProfiles.reduce(createShopperMaskedCardsData, []).sort(sortCardByLastTimeUsed);
+    const { availableCards, expiredCards } = srcProfiles
+        .reduce(createShopperMaskedCardsData, [])
+        .reduce(splitAvailableAndExpiredCards, { availableCards: [], expiredCards: [] });
+
+    return [...availableCards.sort(sortCardByLastTimeUsed), ...expiredCards.sort(sortCardByLastTimeUsed)];
 }
 
 export { createShopperCardsList, createCheckoutPayloadBasedOnScheme };

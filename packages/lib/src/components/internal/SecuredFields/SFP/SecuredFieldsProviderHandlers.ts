@@ -211,7 +211,7 @@ function handleOnTouchstartIOS(cbObj): void {
     this.props.onTouchstartIOS(cbObj);
 }
 
-// Only called for holder name
+// Only called for holder name (from CSF>partials>processAutoComplete)
 function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.setState({ autoCompleteName: cbObj.value }, () => {
         this.props.onChange(this.state, { event: 'handleOnAutoComplete', fieldType: cbObj.fieldType });

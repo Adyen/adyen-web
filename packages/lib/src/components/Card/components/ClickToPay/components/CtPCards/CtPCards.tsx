@@ -40,6 +40,8 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
         return <CtPEmptyCardsList onShowCardButtonClick={onShowCardButtonClick} />;
     }
 
+    const hasAvailableCards = cards.some(card => card.isExpired === false);
+
     return (
         <Fragment>
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
@@ -48,6 +50,7 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
             {cards.length === 1 ? <CtPSingleCard card={cards[0]} /> : <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} />}
 
             <PayButton
+                disabled={!hasAvailableCards}
                 amount={amount}
                 label={i18n.get('payButton.with', {
                     values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }

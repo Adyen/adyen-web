@@ -81,11 +81,31 @@ import './QRCodes.scss';
         amount: {
             currency: 'THB',
             value: 101
+        },
         }
     })
         .then(result => {
             if (result.action) {
                 window.promptpay = checkout.createFromAction(result.action).mount('#promptpay-container');
+            }
+        })
+        .catch(error => {
+            throw Error(error);
+        });
+
+    makePayment({
+        paymentMethod: {
+            type: 'paynow'
+        },
+        countryCode: 'SG',
+        amount: {
+            currency: 'SGD',
+            value: 200
+        }
+    })
+        .then(result => {
+            if (result.action) {
+                window.paynow = checkout.createFromAction(result.action).mount('#paynow-container');
             }
         })
         .catch(error => {

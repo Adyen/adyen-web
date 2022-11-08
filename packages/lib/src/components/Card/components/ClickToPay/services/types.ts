@@ -24,13 +24,13 @@ export interface IdentityLookupParams {
     type?: 'email' | 'mobilePhone';
 }
 
-type MastercardCheckout = {
+export type MastercardCheckout = {
     srcDigitalCardId: string;
     srcCorrelationId: string;
     srcScheme: string;
 };
 
-type VisaCheckout = {
+export type VisaCheckout = {
     srcCheckoutPayload?: string;
     srcTokenReference?: string;
     srcCorrelationId: string;
@@ -40,5 +40,10 @@ type VisaCheckout = {
 export interface SrcProfileWithScheme extends SrcProfile {
     scheme: ClickToPayScheme;
 }
+
+export type CardTypes = {
+    availableCards: ShopperCard[];
+    expiredCards: ShopperCard[];
+};
 
 export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;
