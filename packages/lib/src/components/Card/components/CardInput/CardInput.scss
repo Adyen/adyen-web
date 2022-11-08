@@ -121,6 +121,20 @@
     transition: opacity 0.1s linear;
 }
 
+.adyen-checkout__field__exp-date_hint_wrapper {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    display: flex;
+    align-items: center;
+}
+.adyen-checkout__field__exp-date_hint {
+    width: 27px;
+    height: 18px;
+    margin: 0 10px 0 0;
+}
+
 // Front of the card is our back
 .adyen-checkout__card__cvc__hint--front {
     transform: rotateY(180deg);

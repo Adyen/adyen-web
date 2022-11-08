@@ -5,6 +5,7 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { ExpirationDateProps } from './types';
 import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
+
 import {
     DATE_POLICY_HIDDEN,
     DATE_POLICY_OPTIONAL,
@@ -56,6 +57,13 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     }
                 )}
             />
+            <div className="adyen-checkout__field__exp-date_hint_wrapper">
+                <img
+                    src="https://picsum.photos/24/16"
+                    className="adyen-checkout__field__exp-date_hint"
+                    alt={'Expiry date hint'}
+                />
+            </div>
         </Field>
     );
 }
