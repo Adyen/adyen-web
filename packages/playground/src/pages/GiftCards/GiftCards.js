@@ -95,8 +95,8 @@ import '../../style.scss';
             },
             onRequiringConfirmation: () => {
                 console.log('onRequiringConfirmation');
-                checkoutConfirmButton.style.display = 'none';
-                checkoutAddButton.style.display = '';
+                checkoutConfirmButton.style.display = '';
+                checkoutAddButton.style.display = 'none';
             }
         })
         .mount('#giftcard-session-container');
