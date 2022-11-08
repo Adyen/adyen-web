@@ -1,5 +1,5 @@
 import { CustomTranslations, Locales } from '../language/types';
-import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended } from '../types';
+import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -74,6 +74,9 @@ export interface CoreOptions {
 
     risk?: RiskModuleOptions;
 
+    order?: Order;
+
+    //TODO: discuss if can remove this
     [key: string]: any;
 }
 

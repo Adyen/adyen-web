@@ -10,6 +10,8 @@ import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
+import { CoreOptions } from '../core/types';
+import Core from '../core';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -208,10 +210,21 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (response.action) {
             this.elementRef.handleAction(response.action);
         } else if (response.order?.remainingAmount?.value > 0) {
-            this.elementRef.handleOrder(response);
+            // we don't want to call elementRef here, use the component handler
+            // we do this way so the logic on handlingOrder is associated with payment method
+            this.handleOrder(response);
         } else {
             this.elementRef.handleFinalResult(response);
         }
+    }
+
+    /**
+     * Call update on parent instance
+     * This function exist to make safe access to the protect _parentInstance
+     * @param options - CoreOptions
+     */
+    public updateParent(options: CoreOptions = {}): Promise<Core> {
+        return this.elementRef._parentInstance.update(options);
     }
 
     /**
