@@ -9,6 +9,7 @@ import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
+import { PaymentResponse } from '../types';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
 
@@ -138,6 +139,14 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         return null;
     }
+
+    /**
+     * handleOrder is implemented so we don't trigger a callback like in the components
+     * @param response - PaymentResponse
+     */
+    protected handleOrder = ({ order }: PaymentResponse): void => {
+        this.updateParent({ order });
+    };
 
     closeActivePaymentMethod() {
         this.dropinRef.closeActivePaymentMethod();
