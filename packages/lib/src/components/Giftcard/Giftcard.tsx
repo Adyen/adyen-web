@@ -5,7 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { Order, PaymentAmount } from '../../types';
+import { PaymentAmount } from '../../types';
 import { PaymentResponse } from '../types';
 
 export class GiftcardElement extends UIElement {
