@@ -144,8 +144,8 @@ class DropinElement extends UIElement<DropinElementProps> {
      * handleOrder is implemented so we don't trigger a callback like in the components
      * @param response - PaymentResponse
      */
-    protected handleOrder = (response: PaymentResponse): void => {
-        this.updateParent({ order: response.order });
+    protected handleOrder = ({ order }: PaymentResponse): void => {
+        this.updateParent({ order });
     };
 
     closeActivePaymentMethod() {

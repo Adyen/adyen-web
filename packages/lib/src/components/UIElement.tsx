@@ -184,7 +184,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     protected handleOrder = (response: PaymentResponse): void => {
-        this.elementRef._parentInstance.update({ order: response.order });
+        this.updateParent({ order: response.order });
         // in case we receive an order in any other component then a GiftCard trigger handleFinalResult
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(response, this.elementRef);
     };
