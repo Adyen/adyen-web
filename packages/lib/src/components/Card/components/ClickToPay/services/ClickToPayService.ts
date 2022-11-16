@@ -2,12 +2,13 @@ import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
 import { CallbackStateSubscriber, IClickToPayService, IdentityLookupParams, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
-import { SrciIsRecognizedResponse, SrcInitParams } from './sdks/types';
+import { SrciIsRecognizedResponse, SrcInitParams, SrcProfile } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import uuidv4 from '../../../../../utils/uuid';
 import SrciError from './sdks/SrciError';
+import { isFulfilled, isRejected } from '../../../../../utils/promise-util';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -119,6 +120,7 @@ class ClickToPayService implements IClickToPayService {
         }
         const validationToken = await this.validationSchemeSdk.completeIdentityValidation(otpCode);
         await this.getShopperProfile([validationToken.idToken]);
+        this.setState(CtpState.Ready);
 
         this.validationSchemeSdk = null;
     }
@@ -206,15 +208,27 @@ class ClickToPayService implements IClickToPayService {
     }
 
     /**
-     * Based on the given idToken, this method goes through each SRCi SDK and fetches the shopper
-     * profile with his cards
+     * Based on the given 'idToken', this method goes through each SRCi SDK and fetches the shopper
+     * profile with his cards.
      */
     private async getShopperProfile(idTokens: string[]): Promise<void> {
-        const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
-        const srcProfiles = await Promise.all(srcProfilesPromises);
-        const profilesWithScheme = srcProfiles.map<SrcProfileWithScheme>((profile, index) => ({ ...profile, scheme: this.sdks[index].schemeName }));
-        this.shopperCards = createShopperCardsList(profilesWithScheme);
-        this.setState(CtpState.Ready);
+        return new Promise((resolve, reject) => {
+            const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
+
+            Promise.allSettled(srcProfilesPromises).then(srcProfilesResponses => {
+                if (srcProfilesResponses.every(isRejected)) {
+                    reject(srcProfilesResponses[0].reason);
+                }
+
+                const createProfileWithScheme = (promiseResult: PromiseSettledResult<SrcProfile>, index) =>
+                    isFulfilled(promiseResult) && { ...promiseResult.value, scheme: this.sdks[index].schemeName };
+
+                const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses.map(createProfileWithScheme).filter(profile => !!profile);
+
+                this.shopperCards = createShopperCardsList(profilesWithScheme);
+                resolve();
+            });
+        });
     }
 
     /**

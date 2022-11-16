@@ -108,7 +108,8 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
         try {
             return await this.schemeSdk.initiateIdentityValidation();
         } catch (error) {
-            throw new SrciError(error, 'initiateIdentityValidation');
+            const srciError = new SrciError(error, 'initiateIdentityValidation', this.schemeName);
+            throw srciError;
         }
     }
 
@@ -116,7 +117,12 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * Obtains the masked card and other account profile data associated with the userId.
      */
     public async getSrcProfile(idTokens: string[]): Promise<any> {
-        return await this.schemeSdk.getSrcProfile({ idTokens });
+        try {
+            return await this.schemeSdk.getSrcProfile({ idTokens });
+        } catch (error) {
+            const srciError = new SrciError(error, 'getSrcProfile', this.schemeName);
+            throw srciError;
+        }
     }
 
     /**
