@@ -30,9 +30,7 @@ function createCheckoutPayloadBasedOnScheme(
     }
 }
 
-function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile?: SrcProfileWithScheme): ShopperCard[] {
-    if (!srcProfile) return memo;
-
+function createShopperMaskedCardsData(memo: ShopperCard[], srcProfile: SrcProfileWithScheme): ShopperCard[] {
     const { profiles, srcCorrelationId } = srcProfile;
 
     const cards: ShopperCard[] = profiles.reduce((memo: ShopperCard[], profile) => {
@@ -56,7 +54,7 @@ function splitAvailableAndExpiredCards(memo: CardTypes, card: ShopperCard): Card
 /**
  * Creates the Shopper card list. The available cards are placed before the expired cards
  */
-function createShopperCardsList(srcProfiles?: SrcProfileWithScheme[]): ShopperCard[] {
+function createShopperCardsList(srcProfiles: SrcProfileWithScheme[]): ShopperCard[] {
     const { availableCards, expiredCards } = srcProfiles
         .reduce(createShopperMaskedCardsData, [])
         .reduce(splitAvailableAndExpiredCards, { availableCards: [], expiredCards: [] });
