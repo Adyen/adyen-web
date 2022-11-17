@@ -58,6 +58,8 @@ class Iframe extends Component<IframeProps> {
     }
 
     render({ name, src, width, height, minWidth, minHeight, allow, title, classNameModifiers }: IframeProps) {
+        const validClassNameModifiers = classNameModifiers.filter(m => !!m);
+
         return (
             <iframe
                 ref={ref => {
@@ -67,7 +69,7 @@ class Iframe extends Component<IframeProps> {
                 className={classNames(
                     'adyen-checkout__iframe',
                     `adyen-checkout__iframe--${name}`,
-                    classNameModifiers.map(m => `adyen-checkout__iframe--${name}-${m}`)
+                    validClassNameModifiers.length && classNameModifiers.map(m => `adyen-checkout__iframe--${name}-${m}`)
                 )}
                 name={name}
                 src={src}
