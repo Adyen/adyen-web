@@ -57,6 +57,7 @@ export type SrcCard = {
 export type SrcCheckoutParams = {
     srcCorrelationId: string;
     srcDigitalCardId: string;
+    windowRef?: Window;
 };
 
 export interface SrcInitParams {

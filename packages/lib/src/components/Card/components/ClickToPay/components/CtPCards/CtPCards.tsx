@@ -14,6 +14,8 @@ import isMobile from '../../../../../../utils/isMobile';
 import SrciError from '../../services/sdks/SrciError';
 import Language from '../../../../../../language';
 import CtPSection from '../CtPSection';
+import { CTP_IFRAME_NAME } from '../../services/utils';
+import Iframe from '../../../../../internal/IFrame';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -40,6 +42,8 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         }
     }, [onDisplayCardComponent, isEveryCardExpired, cards]);
 
+    console.log(checkoutCard);
+
     const doCheckout = useCallback(async () => {
         if (!checkoutCard) return;
 
@@ -64,29 +68,37 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
 
     return (
         <Fragment>
-            <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
-            <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
+            <Iframe name={CTP_IFRAME_NAME} height="600" width="100%" classNameModifiers={[status !== 'loading' ? 'hidden' : '']} />
 
-            {cards.length === 1 ? (
-                <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />
-            ) : (
-                <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} errorMessage={getErrorLabel(errorCode, i18n)} />
+            {status !== 'loading' && (
+                <Fragment>
+                    <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
+                    <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
+
+                    {cards.length === 1 ? (
+                        <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />
+                    ) : (
+                        <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} errorMessage={getErrorLabel(errorCode, i18n)} />
+                    )}
+
+                    <PayButton
+                        disabled={isEveryCardExpired}
+                        amount={amount}
+                        label={
+                            !isMobile() &&
+                            i18n.get('payButton.with', {
+                                values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }
+                            })
+                        }
+                        status={status}
+                        variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
+                        icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(
+                            isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black'
+                        )}
+                        onClick={doCheckout}
+                    />
+                </Fragment>
             )}
-
-            <PayButton
-                disabled={isEveryCardExpired}
-                amount={amount}
-                label={
-                    !isMobile() &&
-                    i18n.get('payButton.with', {
-                        values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }
-                    })
-                }
-                status={status}
-                variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
-                onClick={doCheckout}
-            />
         </Fragment>
     );
 };

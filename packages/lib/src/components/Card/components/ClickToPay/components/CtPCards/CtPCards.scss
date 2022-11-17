@@ -10,3 +10,11 @@
   box-shadow: 0 0 0 2px #999595;
   cursor: pointer;
 }
+
+.adyen-checkout__iframe--ctpIframe {
+  pointer-events: auto;
+}
+
+.adyen-checkout__iframe--ctpIframe-hidden {
+  display: none;
+}
