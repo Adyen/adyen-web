@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>Adyen Web | Custom Cards</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+</head>
+
+<body>
+<header></header>
+<main>
+    <!-- Custom Card w. unified date field -->
+    <div class="merchant-checkout__form">
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h3 class="card-text sf-text">CustomCard #1</h3>
+            </div>
+            <div class="merchant-checkout__payment-method__details secured-fields" >
+                <span class="pm-image">
+                    <img
+                        class="pm-image-1"
+                        width="40"
+                        src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/nocard.svg"
+                        alt="card"
+                    />
+                </span>
+                <span class="pm-image-dual">
+                    <img
+                        class="pm-image-dual-1"
+                        width="40"
+                        alt=""
+                    />
+                    <img
+                        class="pm-image-dual-2"
+                        width="40"
+                        alt=""
+                    />
+                </span>
+                <label class="pm-form-label pm-form-label-pan">
+                    <span class="pm-form-label__text">Card number:</span>
+                    <span class="pm-input-field" data-cse="encryptedCardNumber"></span>
+                    <span class="pm-form-label__error-text">Please enter a valid credit card number</span>
+                </label>
+                <label class="pm-form-label pm-form-label--exp-date">
+                    <span class="pm-form-label__text">Expiry date:</span>
+                    <span class="pm-input-field" data-cse="encryptedExpiryDate"></span>
+                    <span class="pm-form-label__error-text">Date error text</span>
+                </label>
+                </label>
+                <label class="pm-form-label pm-form-label--cvc">
+                    <span class="pm-form-label__text">CVV/CVC:</span>
+                    <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
+                    <span class="pm-form-label__error-text">CVC Error text</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Card w. separate date fields -->
+    <div class="merchant-checkout__form">
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h3 class="card-text sf-text">CustomCard #2</h3>
+            </div>
+            <div class="merchant-checkout__payment-method__details secured-fields-2">
+                <span class="pm-image">
+                    <img
+                        class="pm-image-1"
+                        width="40"
+                        src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/nocard.svg"
+                        alt=""
+                    />
+                </span>
+                <span class="pm-image-dual">
+                    <img
+                            class="pm-image-dual-1"
+                            width="40"
+                            alt=""
+                    />
+                    <img
+                            class="pm-image-dual-2"
+                            width="40"
+                            alt=""
+                    />
+                </span>
+                <label class="pm-form-label pm-form-label-pan">
+                    <span class="pm-form-label__text">Card number:</span>
+                    <span class="pm-input-field" data-cse="encryptedCardNumber"></span>
+                    <span class="pm-form-label__error-text">Please enter a valid credit card number</span>
+                </label>
+                <label class="pm-form-label pm-form-label--exp-month">
+                    <span class="pm-form-label__text">Expiry month:</span>
+                    <span class="pm-input-field" data-cse="encryptedExpiryMonth"></span>
+                    <span class="pm-form-label__error-text">Date error text</span>
+                </label>
+                <label class="pm-form-label pm-form-label--exp-year">
+                    <span class="pm-form-label__text">Expiry year:</span>
+                    <span class="pm-input-field" data-cse="encryptedExpiryYear"></span>
+                    <span class="pm-form-label__error-text">Date error text</span>
+                </label>
+                <label class="pm-form-label pm-form-label--cvc">
+                    <span class="pm-form-label__text">CVV/CVC:</span>
+                    <span class="pm-input-field" data-cse="encryptedSecurityCode"></span>
+                    <span class="pm-form-label__error-text">CVC Error text</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+<script type="text/javascript">
+    window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
+</script>
+</body>
+</html>

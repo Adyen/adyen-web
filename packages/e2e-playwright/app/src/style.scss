@@ -1,0 +1,16 @@
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+html,
+body {
+    font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    margin: 0;
+}
+
+.merchant-checkout__form {
+    max-width: 540px;
+    margin: 5vh auto;
+}
