@@ -82,7 +82,8 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            if (error instanceof SrciError) console.warn(`Error at ClickToPayService: Reason: ${error.reason} - Source: ${error.source}`);
+            if (error instanceof SrciError)
+                console.warn(`Error at ClickToPayService: Reason: ${error.reason} / Source: ${error.source} / Scheme: ${error.scheme}`);
             else console.warn(error);
 
             this.setState(CtpState.NotAvailable);
