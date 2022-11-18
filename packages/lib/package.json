@@ -72,7 +72,7 @@
         "babel-jest": "^27.3.1",
         "cross-env": "^7.0.3",
         "cssnano": "^5.0.6",
-        "dotenv": "^16.0.2",
+        "dotenv": "^16.0.3",
         "enzyme": "^3.11.0",
         "enzyme-adapter-preact-pure": "^4.0.1",
         "esbuild": "^0.15.8",
