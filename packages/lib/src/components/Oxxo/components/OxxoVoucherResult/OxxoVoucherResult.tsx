@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import Voucher from '../../../../components/internal/Voucher';
 import { VoucherDetail } from '../../../internal/Voucher/types';
-import getImage from '../../../../utils/get-image';
+
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { OxxoVoucherResultProps } from '../../types';
 import './OxxoVoucherResult.scss';
 
 const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n, loadingContext, resources } = useCoreContext();
     const { alternativeReference, reference, expiresAt, merchantReference, totalAmount, paymentMethodType, downloadUrl } = props;
 
     const barcodeUrl = `${loadingContext}barcode.shtml?data=${reference}&barcodeType=BT_Code128C&fileType=png`;
@@ -44,7 +44,7 @@ const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
             barcode={barcodeUrl}
             copyBtn
             downloadUrl={downloadUrl}
-            imageUrl={getImage({ loadingContext })(paymentMethodType)}
+            imageUrl={resources.getImage({ loadingContext })(paymentMethodType)}
             introduction={i18n.get('voucher.introduction')}
             paymentMethodType={'oxxo'}
             reference={reference}

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import getImage from '../../utils/get-image';
+
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
@@ -42,7 +42,7 @@ class RedirectElement extends UIElement {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.type);
     }
 
     render() {

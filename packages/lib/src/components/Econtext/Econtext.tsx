@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
-import getImage from '../../utils/get-image';
+
 import { UIElementProps } from '../types';
 import { PersonalDetailsSchema } from '../../types';
 
@@ -40,12 +40,12 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.type);
     }
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.reference ? (
                     <EcontextVoucherResult
                         ref={ref => {

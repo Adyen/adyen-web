@@ -4,6 +4,7 @@ import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import Core from '../core';
 import { BaseElementProps } from './types';
+import { Resources } from '../core/Context/Resources';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -15,11 +16,14 @@ class BaseElement<P extends BaseElementProps> {
     public eventEmitter = new EventEmitter();
     protected readonly _parentInstance: Core;
 
+    protected resources: Resources;
+
     protected constructor(props: P) {
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
         this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};
+        this.resources = this.props.modules ? this.props.modules.resources : undefined;
     }
 
     /**

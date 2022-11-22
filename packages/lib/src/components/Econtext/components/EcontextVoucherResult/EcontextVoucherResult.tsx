@@ -1,19 +1,19 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
-import getImage from '../../../../utils/get-image';
+
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { EcontextVoucherResultProps } from '../../types';
 
 const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
     const { reference, totalAmount, expiresAt, paymentMethodType, maskedTelephoneNumber, instructionsUrl, collectionInstitutionNumber } = props;
-    const { loadingContext, i18n } = useCoreContext();
+    const { loadingContext, i18n, resources } = useCoreContext();
 
     return (
         <Voucher
             paymentMethodType={paymentMethodType}
             reference={reference}
             introduction={i18n.get('voucher.introduction.econtext')}
-            imageUrl={getImage({ loadingContext })(paymentMethodType)}
+            imageUrl={resources.getImage({ loadingContext })(paymentMethodType)}
             instructionsUrl={instructionsUrl}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[

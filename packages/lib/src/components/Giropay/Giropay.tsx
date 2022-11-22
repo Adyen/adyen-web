@@ -31,7 +31,7 @@ class GiropayElement extends RedirectElement {
     render() {
         if (this.props.showPayButton) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
                         {...this.props}
                         name={this.displayName}

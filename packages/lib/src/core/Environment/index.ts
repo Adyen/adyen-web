@@ -1,1 +1,1 @@
-export { default } from './Environment';
+export { resolveCDNEnvironment, resolveEnvironment } from './Environment';

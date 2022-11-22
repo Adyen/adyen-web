@@ -8,6 +8,7 @@ import Img from '../../../internal/Img';
 import { getImageUrl } from '../../../../utils/get-image';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
+import { CoreConsumer } from '../../../../core/Context/CoreContext';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -101,14 +102,20 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
         if (this.state.status === 'error') {
             return (
-                <div className="adyen-checkout__threeds2-challenge-error">
-                    <Img
-                        className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                        src={getImageUrl({ loadingContext: this.props.loadingContext, imageFolder: 'components/' })('error')}
-                        alt={''}
-                    />
-                    <div className="adyen-checkout__status__text">{this.props.i18n.get('error.message.unknown')}</div>
-                </div>
+                <CoreConsumer>
+                    {props => (
+                        <div className="adyen-checkout__threeds2-challenge-error">
+                            <Img
+                                className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
+                                src={props.resources.getImage({
+                                    imageFolder: 'components/'
+                                })('error')}
+                                alt={''}
+                            />
+                            <div className="adyen-checkout__status__text">{this.props.i18n.get('error.message.unknown')}</div>
+                        </div>
+                    )}
+                </CoreConsumer>
             );
         }
 

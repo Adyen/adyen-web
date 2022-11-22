@@ -17,17 +17,18 @@ import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
-import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
     const isValidating = useRef(false);
+    const { resources } = useCoreContext();
 
     const cardInputRef = useRef<CardInputRef>({});
     // Just call once
@@ -215,7 +216,13 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             CIExtensions(
                 props,
                 { sfp },
-                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode },
+                {
+                    dualBrandSelectElements,
+                    setDualBrandSelectElements,
+                    setSelectedBrandValue,
+                    issuingCountryCode,
+                    setIssuingCountryCode
+                },
                 hasPanLengthRef
             ),
         [dualBrandSelectElements, issuingCountryCode]
@@ -439,7 +446,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
-                    icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
+                    icon: resources.getImage({ imageFolder: 'components/' })('lock')
                 })}
         </Fragment>
     );

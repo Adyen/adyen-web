@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
-import getImage from '../../../utils/get-image';
+
 import { renderFormField } from '../../internal/FormFields';
 import { UIElementProps } from '../../types';
 import './BlikInput.scss';
@@ -17,7 +17,7 @@ interface BlikInputDataState {
 }
 
 function BlikInput(props: BlikInputProps) {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n, loadingContext, resources } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({
         schema: ['blikCode'],
         rules: {
@@ -60,7 +60,11 @@ function BlikInput(props: BlikInputProps) {
                 })}
             </Field>
 
-            {props.showPayButton && props.payButton({ status, icon: getImage({ loadingContext, imageFolder: 'components/' })('lock') })}
+            {props.showPayButton &&
+                props.payButton({
+                    status,
+                    icon: resources.getImage({ loadingContext, imageFolder: 'components/' })('lock')
+                })}
         </div>
     );
 }

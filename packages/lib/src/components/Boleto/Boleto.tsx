@@ -36,7 +36,7 @@ export class BoletoElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.reference ? (
                     <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} />
                 ) : (

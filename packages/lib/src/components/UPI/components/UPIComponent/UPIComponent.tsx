@@ -5,7 +5,6 @@ import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { VpaInputHandlers } from '../VpaInput/VpaInput';
 import VpaInput from '../VpaInput';
 import SegmentedControl from '../../../internal/SegmentedControl';
-import getImage from '../../../../utils/get-image';
 import { UpiMode } from '../../types';
 import './UPIComponent.scss';
 import isMobile from '../../../../utils/isMobile';
@@ -13,9 +12,13 @@ import isMobile from '../../../../utils/isMobile';
 interface UPIComponentProps {
     defaultMode: UpiMode;
     showPayButton: boolean;
+
     ref(ref: RefObject<typeof UPIComponent>): void;
+
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
+
     onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
+
     onUpdateMode(mode: UpiMode): void;
 }
 
@@ -31,7 +34,7 @@ const A11Y = {
 };
 
 export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton }: UPIComponentProps): h.JSX.Element {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n, resources } = useCoreContext();
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
@@ -69,7 +72,11 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                     {
                         label: isMobile() ? 'VPA' : 'Virtual Payment Address',
                         value: UpiMode.Vpa,
-                        htmlProps: { id: A11Y.ButtonId.VPA, 'aria-expanded': mode === UpiMode.Vpa, 'aria-controls': A11Y.AreaId.VPA }
+                        htmlProps: {
+                            id: A11Y.ButtonId.VPA,
+                            'aria-expanded': mode === UpiMode.Vpa,
+                            'aria-controls': A11Y.AreaId.VPA
+                        }
                     },
                     {
                         label: 'QR Code',
@@ -98,7 +105,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),
-                            icon: getImage({ loadingContext: loadingContext, imageFolder: 'components/' })('qr'),
+                            icon: resources.getImage({ imageFolder: 'components/' })('qr'),
                             status
                         })}
                 </div>

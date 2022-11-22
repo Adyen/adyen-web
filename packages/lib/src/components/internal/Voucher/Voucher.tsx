@@ -2,13 +2,13 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import Button from '../Button';
 import { copyToClipboard } from '../../../utils/clipboard';
-import getImage from '../../../utils/get-image';
+
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './Voucher.scss';
 import { VoucherProps } from './types';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n, loadingContext, resources } = useCoreContext();
 
     return (
         <div className={classNames('adyen-checkout__voucher-result', `adyen-checkout__voucher-result--${props.paymentMethodType}`, className)}>
@@ -88,7 +88,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                         copyToClipboard(props.reference);
                                         complete();
                                     }}
-                                    icon={getImage({ loadingContext, imageFolder: 'components/' })('copy')}
+                                    icon={resources.getImage({ loadingContext, imageFolder: 'components/' })('copy')}
                                     label={i18n.get('button.copy')}
                                 />
                             </li>
@@ -100,7 +100,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     inline
                                     variant="action"
                                     href={props.downloadUrl}
-                                    icon={getImage({ loadingContext, imageFolder: 'components/' })('download')}
+                                    icon={resources.getImage({ loadingContext, imageFolder: 'components/' })('download')}
                                     label={props.downloadButtonText || i18n.get('button.download')}
                                     target="_blank"
                                     rel="noopener noreferrer"

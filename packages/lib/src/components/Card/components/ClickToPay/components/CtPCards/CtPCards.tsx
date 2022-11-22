@@ -2,7 +2,7 @@ import { Fragment, h } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPSingleCard from './CtPSingleCard/CtPSingleCard';
-import getImage from '../../../../../../utils/get-image';
+
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import PayButton from '../../../../../internal/PayButton';
 import { amountLabel } from '../../../../../internal/PayButton/utils';
@@ -16,7 +16,7 @@ type CtPCardsProps = {
 };
 
 const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
-    const { loadingContext, i18n } = useCoreContext();
+    const { loadingContext, i18n, resources } = useCoreContext();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
 
@@ -57,7 +57,9 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
                 })}
                 status={status}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
+                icon={resources.getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(
+                    isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black'
+                )}
                 onClick={doCheckout}
             />
         </Fragment>

@@ -51,7 +51,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
     // Makes possible to extend the final QR code step
     public renderQRCode() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <QRLoader
                     ref={ref => {
                         this.componentRef = ref;
@@ -76,7 +76,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
 
         if (this.props.showPayButton) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
                         name={this.displayName}
                         onSubmit={this.submit}

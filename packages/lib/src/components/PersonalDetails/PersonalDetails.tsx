@@ -14,7 +14,7 @@ export class PersonalDetailsElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PersonalDetails
                     ref={ref => {
                         this.componentRef = ref;

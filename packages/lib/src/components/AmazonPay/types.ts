@@ -2,6 +2,7 @@ import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import { BrowserInfo, PaymentAmount } from '../../types';
 import UIElement from '../UIElement';
+import { BaseElementProps, UIElementProps } from '../types';
 
 declare global {
     interface Window {
@@ -13,20 +14,20 @@ type ButtonColor = 'Gold' | 'LightGray' | 'DarkGray';
 type Placement = 'Home' | 'Product' | 'Cart' | 'Checkout' | 'Other';
 type ProductType = 'PayOnly' | 'PayAndShip';
 type ChargePermissionType = 'OneTime' | 'Recurring';
-type FrequencyUnit = 'Year'| 'Month'| 'Week'| 'Day'| 'Variable';
+type FrequencyUnit = 'Year' | 'Month' | 'Week' | 'Day' | 'Variable';
 export type Currency = 'EUR' | 'GBP' | 'USD';
 export type Region = 'EU' | 'UK' | 'US';
 export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
 
 export interface RecurringMetadata {
     frequency: {
-        unit: string
-        value: FrequencyUnit
-    },
+        unit: string;
+        value: FrequencyUnit;
+    };
     amount: {
-        amount: string
-        currencyCode: Currency
-    }
+        amount: string;
+        currencyCode: Currency;
+    };
 }
 
 export interface AmazonPayConfiguration {
@@ -36,7 +37,7 @@ export interface AmazonPayConfiguration {
     storeId?: string;
 }
 
-export interface AmazonPayElementProps {
+export interface AmazonPayElementProps extends UIElementProps {
     addressDetails?: AddressDetails;
     amazonPayToken?: string;
     amazonCheckoutSessionId?: string;

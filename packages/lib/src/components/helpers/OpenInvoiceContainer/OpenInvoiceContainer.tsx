@@ -5,7 +5,7 @@ import CoreProvider from '../../../core/Context/CoreProvider';
 import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
 import { AddressSpecifications } from '../../internal/Address/types';
 
-export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps>{
+export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
     consentCheckboxLabel?: h.JSX.Element;
     billingAddressRequiredFields?: string[];
     billingAddressSpecification?: AddressSpecifications;
@@ -85,7 +85,7 @@ export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainer
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <OpenInvoice
                     ref={ref => {
                         this.componentRef = ref;

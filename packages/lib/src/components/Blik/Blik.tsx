@@ -44,7 +44,7 @@ class BlikElement extends UIElement {
     render() {
         if (this.props.paymentData) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <Await
                         ref={ref => {
                             this.componentRef = ref;
@@ -68,7 +68,7 @@ class BlikElement extends UIElement {
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
                         name={this.displayName}

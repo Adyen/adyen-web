@@ -94,7 +94,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.issuers.length > 0 ? (
                     <IssuerList
                         ref={ref => {

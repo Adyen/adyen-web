@@ -37,7 +37,7 @@ export class MultibancoElement extends UIElement {
     render() {
         if (this.props.reference) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <MultibancoVoucherResult ref={this.handleRef} {...this.props} />
                 </CoreProvider>
             );
@@ -45,7 +45,7 @@ export class MultibancoElement extends UIElement {
 
         if (this.props.showPayButton) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
                         name={this.displayName}
                         amount={this.props.amount}

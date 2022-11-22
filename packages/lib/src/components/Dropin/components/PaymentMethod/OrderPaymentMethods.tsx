@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import PaymentMethodIcon from './PaymentMethodIcon';
-import getImage from '../../../../utils/get-image';
+
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import './OrderPaymentMethods.scss';
 
 export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
-    const { loadingContext, i18n } = useCoreContext();
+    const { loadingContext, i18n, resources } = useCoreContext();
 
     return (
         <div>
@@ -17,7 +17,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
                                 <PaymentMethodIcon
                                     altDescription={orderPaymentMethod.name}
                                     type={orderPaymentMethod.type}
-                                    src={getImage({ loadingContext })(orderPaymentMethod.type)}
+                                    src={resources.getImage({ loadingContext })(orderPaymentMethod.type)}
                                 />
                                 •••• {orderPaymentMethod.lastFour}
                             </div>

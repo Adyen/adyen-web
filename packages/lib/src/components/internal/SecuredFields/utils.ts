@@ -1,5 +1,4 @@
 import Language from '../../../language/Language';
-import { getImageUrl } from '../../../utils/get-image';
 import {
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
@@ -14,6 +13,7 @@ import {
     // ENCRYPTED_BANK_LOCATION_FIELD
 } from './lib/configuration/constants';
 import { SFPlaceholdersObject } from './lib/securedField/AbstractSecuredField';
+import { Resources } from '../../../core/Context/Resources';
 
 /**
  * Lookup translated values for the placeholders for the SecuredFields
@@ -36,16 +36,15 @@ export const resolvePlaceholders = (i18n?: Language): SFPlaceholdersObject => ({
 /**
  * Used by SecuredFieldsProviderHandlers
  */
-export const getCardImageUrl = (brand, loadingContext) => {
+export const getCardImageUrl = (brand, resources: Resources) => {
     const type = brand === 'card' ? 'nocard' : brand || 'nocard';
 
     const imageOptions = {
         type,
-        extension: 'svg',
-        loadingContext
+        extension: 'svg'
     };
 
-    return getImageUrl(imageOptions)(type);
+    return resources.getImage(imageOptions)(type);
 };
 
 // REGULAR "UTIL" UTILS

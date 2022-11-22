@@ -70,6 +70,12 @@ export interface CoreOptions {
      * */
     loadingContext?: string;
 
+    /**
+     * @internal
+     */
+    //TODO: maybe type this?
+    cdnContext?: string;
+
     analytics?: AnalyticsOptions;
 
     risk?: RiskModuleOptions;

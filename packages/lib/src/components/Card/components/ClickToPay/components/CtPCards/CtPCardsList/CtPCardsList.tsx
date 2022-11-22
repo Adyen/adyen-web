@@ -6,7 +6,6 @@ import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
 import ShopperCard from '../../../models/ShopperCard';
 import useClickToPayContext from '../../../context/useClickToPayContext';
-import getImage from '../../../../../../../utils/get-image';
 import './CtPCardsList.scss';
 
 type CtPCardsListProps = {
@@ -21,7 +20,7 @@ type CardsSelectorDataState = {
 const schema = ['srcDigitalCardId'];
 
 const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n, loadingContext, resources } = useCoreContext();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,
@@ -30,7 +29,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
 
     const items = useMemo(() => {
         return cards.map(card => ({
-            icon: card.artUri || getImage({ loadingContext })(card.scheme),
+            icon: card.artUri || resources.getImage({ loadingContext })(card.scheme),
             name: `${card.title ? card.title : ''} •••• ${card.panLastFour} `,
             secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
             id: card.srcDigitalCardId,

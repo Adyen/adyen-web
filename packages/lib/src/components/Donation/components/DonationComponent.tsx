@@ -4,13 +4,13 @@ import CampaignContainer from './CampaignContainer';
 import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
-import { getImageUrl } from '../../../utils/get-image';
+
 import useCoreContext from '../../../core/Context/useCoreContext';
 import '../Donation.scss';
 
 export default function DonationComponent(props) {
     const { amounts, onCancel, onDonate, showCancelButton = true } = props;
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n, loadingContext, resources } = useCoreContext();
     const { currency } = amounts;
     const [status, setStatus] = useState('ready');
     const [isValid, setIsValid] = useState(false);
@@ -50,7 +50,7 @@ export default function DonationComponent(props) {
             <div className="adyen-checkout__adyen-giving">
                 <Img
                     className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                    src={getImageUrl({ loadingContext, imageFolder: 'components/' })('error')}
+                    src={resources.getImage({ loadingContext, imageFolder: 'components/' })('error')}
                     alt={i18n.get('error.message.unknown')}
                 />
                 <div className="adyen-checkout__status__text">{i18n.get('error.message.unknown')}</div>
@@ -63,7 +63,7 @@ export default function DonationComponent(props) {
             <div className="adyen-checkout__adyen-giving">
                 <Img
                     className="adyen-checkout__status__icon adyen-checkout__status__icon--success"
-                    src={getImageUrl({ loadingContext, imageFolder: 'components/' })('heart')}
+                    src={resources.getImage({ loadingContext, imageFolder: 'components/' })('heart')}
                     alt={i18n.get('thanksForYourSupport')}
                 />
 

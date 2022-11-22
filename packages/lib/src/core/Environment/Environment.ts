@@ -1,6 +1,6 @@
 export const FALLBACK_CONTEXT = 'https://checkoutshopper-live.adyen.com/checkoutshopper/';
 
-const resolveEnvironment = (env: string = FALLBACK_CONTEXT): string => {
+export const resolveEnvironment = (env: string = FALLBACK_CONTEXT): string => {
     const environments = {
         test: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
         live: 'https://checkoutshopper-live.adyen.com/checkoutshopper/',
@@ -13,4 +13,13 @@ const resolveEnvironment = (env: string = FALLBACK_CONTEXT): string => {
     return environments[env] || environments[env.toLowerCase()] || env;
 };
 
-export default resolveEnvironment;
+export const FALLBACK_CDN_CONTEXT = 'https://checkoutshopper-beta.static.adyen.com/checkoutshopper/';
+
+export const resolveCDNEnvironment = (env: string = FALLBACK_CDN_CONTEXT) => {
+    const environments = {
+        beta: 'https://checkoutshopper-beta.static.adyen.com/checkoutshopper/',
+        test: 'https://checkoutshopper-beta.static.adyen.com/checkoutshopper/'
+    };
+
+    return environments[env] || environments[env.toLowerCase()] || env;
+};

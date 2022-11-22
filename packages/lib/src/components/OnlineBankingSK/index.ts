@@ -1,5 +1,4 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
-import getImage from '../../utils/get-image';
 
 const TERMS_AND_CONDITIONS = 'https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf';
 const ICON = 'bankTransfer_IBAN';
@@ -16,7 +15,7 @@ class OnlineBankingSKElement extends IssuerListContainer {
     }
 
     get icon(): string {
-        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(ICON);
+        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(ICON);
     }
 }
 

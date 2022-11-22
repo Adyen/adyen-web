@@ -4,7 +4,7 @@ import RiskModule from './RiskModule';
 import paymentMethods, { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import resolveEnvironment from './Environment';
+import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
@@ -12,6 +12,7 @@ import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
+import { Resources } from './Context/Resources';
 
 class Core {
     public session: Session;
@@ -185,11 +186,13 @@ class Core {
 
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
+        this.options.cdnContext = resolveCDNEnvironment(this.options.environment);
         this.options.locale = this.options.locale || this.options.shopperLocale;
 
         this.modules = {
             risk: new RiskModule(this.options),
             analytics: new Analytics(this.options),
+            resources: new Resources(this.options.cdnContext, this.options.loadingContext),
             i18n: new Language(this.options.locale, this.options.translations)
         };
 

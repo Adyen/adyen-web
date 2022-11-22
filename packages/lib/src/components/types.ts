@@ -7,6 +7,7 @@ import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
+import { Resources } from '../core/Context/Resources';
 
 export interface PaymentResponse {
     action?: PaymentAction;
@@ -24,6 +25,7 @@ export interface BaseElementProps {
     order?: Order;
     modules?: {
         analytics: Analytics;
+        resources: Resources;
         risk: RiskElement;
     };
     isDropin?: boolean;

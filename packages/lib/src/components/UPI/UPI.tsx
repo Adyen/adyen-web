@@ -104,7 +104,7 @@ class UPI extends UIElement<UPIElementProps> {
     public render(): h.JSX.Element {
         const { type } = this.props;
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.renderContent(type)}
             </CoreProvider>
         );

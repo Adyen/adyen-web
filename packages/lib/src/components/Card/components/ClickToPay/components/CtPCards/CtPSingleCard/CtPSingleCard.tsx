@@ -2,7 +2,7 @@ import { h } from 'preact';
 import classnames from 'classnames';
 import Img from '../../../../../../internal/Img';
 import ShopperCard from '../../../models/ShopperCard';
-import getImage from '../../../../../../../utils/get-image';
+
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import './CtPSingleCard.scss';
 
@@ -11,8 +11,8 @@ type CtPSingleCardProps = {
 };
 
 const CtPSingleCard = ({ card }: CtPSingleCardProps) => {
-    const { loadingContext, i18n } = useCoreContext();
-    const cardImage = card.artUri || getImage({ loadingContext })(card.scheme);
+    const { loadingContext, i18n, resources } = useCoreContext();
+    const cardImage = card.artUri || resources.getImage({ loadingContext })(card.scheme);
 
     return (
         <div className="adyen-checkout-ctp__card-list-single-card">
