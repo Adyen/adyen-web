@@ -1,9 +1,15 @@
 import { ISrcInitiator } from './sdks/AbstractSrcInitiator';
-import { CallbackStateSubscriber, IClickToPayService, IdentityLookupParams, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
+import {
+    CallbackStateSubscriber,
+    IClickToPayService,
+    IdentityLookupParams,
+    ClickToPayCheckoutPayload,
+    SrcProfileWithScheme,
+    SchemesConfiguration
+} from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
-import { SrciIsRecognizedResponse, SrcInitParams, SrcProfile } from './sdks/types';
-import { ClickToPayScheme } from '../../../types';
+import { SrciIsRecognizedResponse, SrcProfile } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import uuidv4 from '../../../../../utils/uuid';
@@ -22,7 +28,7 @@ export enum CtpState {
 
 class ClickToPayService implements IClickToPayService {
     private readonly sdkLoader: ISrcSdkLoader;
-    private readonly schemesConfig: Record<string, SrcInitParams>;
+    private readonly schemesConfig: SchemesConfiguration;
     private readonly shopperIdentity?: IdentityLookupParams;
     private readonly environment: string;
 
@@ -39,12 +45,7 @@ class ClickToPayService implements IClickToPayService {
     public shopperCards: ShopperCard[] = null;
     public shopperValidationContact: string;
 
-    constructor(
-        schemesConfig: Record<ClickToPayScheme, SrcInitParams>,
-        sdkLoader: ISrcSdkLoader,
-        environment: string,
-        shopperIdentity?: IdentityLookupParams
-    ) {
+    constructor(schemesConfig: SchemesConfiguration, sdkLoader: ISrcSdkLoader, environment: string, shopperIdentity?: IdentityLookupParams) {
         this.sdkLoader = sdkLoader;
         this.schemesConfig = schemesConfig;
         this.shopperIdentity = shopperIdentity;
@@ -105,10 +106,8 @@ class ClickToPayService implements IClickToPayService {
         if (!this.validationSchemeSdk) {
             throw Error('startIdentityValidation: No ValidationSDK set for the validation process');
         }
-
         const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
-        this.shopperValidationContact = maskedValidationChannel.replaceAll('*', '•');
-
+        this.shopperValidationContact = maskedValidationChannel.replace(/\*/g, '•');
         this.setState(CtpState.OneTimePassword);
     }
 
@@ -157,6 +156,10 @@ class ClickToPayService implements IClickToPayService {
      * Besides, it deletes all information stored about the shopper.
      */
     public async logout(): Promise<void> {
+        if (!this.sdks) {
+            throw new AdyenCheckoutError('ERROR', 'ClickToPayService is not initialized');
+        }
+
         const logoutPromises = this.sdks.map(sdk => sdk.unbindAppInstance());
 
         await Promise.all(logoutPromises);
@@ -225,7 +228,6 @@ class ClickToPayService implements IClickToPayService {
                     isFulfilled(promiseResult) && { ...promiseResult.value, scheme: this.sdks[index].schemeName };
 
                 const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses.map(createProfileWithScheme).filter(profile => !!profile);
-
                 this.shopperCards = createShopperCardsList(profilesWithScheme);
                 resolve();
             });

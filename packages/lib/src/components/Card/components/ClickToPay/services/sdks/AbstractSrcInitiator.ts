@@ -97,7 +97,13 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * the browser environment.
      */
     public async isRecognized(): Promise<SrciIsRecognizedResponse> {
-        return await this.schemeSdk.isRecognized();
+        try {
+            const isRecognizedResponse = await this.schemeSdk.isRecognized();
+            return isRecognizedResponse;
+        } catch (error) {
+            const srciError = new SrciError(error, 'isRecognized', this.schemeName);
+            throw srciError;
+        }
     }
 
     /**
@@ -106,7 +112,8 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      */
     public async initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse> {
         try {
-            return await this.schemeSdk.initiateIdentityValidation();
+            const identityValidationResponse = await this.schemeSdk.initiateIdentityValidation();
+            return identityValidationResponse;
         } catch (error) {
             const srciError = new SrciError(error, 'initiateIdentityValidation', this.schemeName);
             throw srciError;
@@ -116,9 +123,10 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
     /**
      * Obtains the masked card and other account profile data associated with the userId.
      */
-    public async getSrcProfile(idTokens: string[]): Promise<any> {
+    public async getSrcProfile(idTokens: string[]): Promise<SrcProfile> {
         try {
-            return await this.schemeSdk.getSrcProfile({ idTokens });
+            const getSrcProfileResponse = await this.schemeSdk.getSrcProfile({ idTokens });
+            return getSrcProfileResponse;
         } catch (error) {
             const srciError = new SrciError(error, 'getSrcProfile', this.schemeName);
             throw srciError;
