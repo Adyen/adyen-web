@@ -5,7 +5,6 @@ import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
-import { getImageUrl } from '../../../../utils/get-image';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import { CoreConsumer } from '../../../../core/Context/CoreContext';

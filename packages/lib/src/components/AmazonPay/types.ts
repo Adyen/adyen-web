@@ -2,7 +2,7 @@ import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import { BrowserInfo, PaymentAmount } from '../../types';
 import UIElement from '../UIElement';
-import { BaseElementProps, UIElementProps } from '../types';
+import { UIElementProps } from '../types';
 
 declare global {
     interface Window {
