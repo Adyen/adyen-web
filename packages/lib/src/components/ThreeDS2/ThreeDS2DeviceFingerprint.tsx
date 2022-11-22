@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
-import { ErrorObject } from './components/utils';
+import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 
@@ -9,7 +9,7 @@ export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
     token: string;
     notificationURL: string;
-    onError: (error?: string | ErrorObject) => void;
+    onError: (error?: string | ErrorCodeObject) => void;
     paymentData: string;
     showSpinner: boolean;
     type: string;
