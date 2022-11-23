@@ -15,10 +15,11 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
 
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "strictPropertyInitialization": false,
         "suppressImplicitAnyIndexErrors": true,
         "stripInternal": true,
+        "strictNullChecks": true,
 
         "importHelpers": true,
 

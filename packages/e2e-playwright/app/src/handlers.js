@@ -1,10 +1,21 @@
 import { makePayment, makeDetailsCall } from './services';
 
+function removeComponent(component) {
+    component.remove();
+}
+
+function showAuthorised() {
+    const resultElement = document.getElementById('result-message');
+    resultElement.classList.remove('hide');
+    resultElement.innerText = 'Authorised';
+}
+
 export function handleResponse(response, component) {
     if (response.action) {
         component.handleAction(response.action, window.actionConfigObject || {});
     } else if (response.resultCode) {
-        alert(response.resultCode);
+        component.remove();
+        showAuthorised();
     }
 }
 
