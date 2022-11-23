@@ -19,7 +19,7 @@
     },
     "devDependencies": {
         "cross-env": "^7.0.3",
-        "dotenv": "^16.0.2",
+        "dotenv": "^16.0.3",
         "express": "^4.18.2",
         "prettier": "^1.19.1",
         "request": "^2.81.0"
