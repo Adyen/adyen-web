@@ -8,13 +8,11 @@ import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 
-type DataWithCheckoutAttemptId = {
-    [key: string]: any;
-    checkoutAttemptId?: string;
-};
-
 export interface PaymentMethodData {
-    paymentMethod: DataWithCheckoutAttemptId;
+    paymentMethod: {
+        [key: string]: any;
+        checkoutAttemptId?: string;
+    };
     browserInfo?: {
         acceptHeader: string;
         colorDepth: number;

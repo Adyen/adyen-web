@@ -34,7 +34,8 @@ class BaseElement<P extends BaseElementProps> {
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
      *
-     * TODO: Replace 'any' by type 'PaymentMethodData<T>'
+     * TODO: Replace 'any' by type PaymentMethodData<T> - this change requires updating all payment methods,
+     *       properly adding the type of the formatData function
      */
     protected formatData(): any {
         return {};
@@ -54,17 +55,14 @@ class BaseElement<P extends BaseElementProps> {
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
+        if (componentData.paymentMethod && checkoutAttemptId) {
+            componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
+        }
 
         return {
             ...(clientData && { riskData: { clientData } }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
             ...componentData,
-            ...(componentData.paymentMethod && {
-                paymentMethod: {
-                    ...componentData.paymentMethod,
-                    ...(checkoutAttemptId && { checkoutAttemptId })
-                }
-            }),
             clientStateDataIndicator: true
         };
     }
