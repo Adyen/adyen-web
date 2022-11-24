@@ -8,6 +8,41 @@ import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 
+type DataWithCheckoutAttemptId = {
+    [key: string]: any;
+    checkoutAttemptId?: string;
+};
+
+export interface PaymentMethodData {
+    paymentMethod: DataWithCheckoutAttemptId;
+    browserInfo?: {
+        acceptHeader: string;
+        colorDepth: number;
+        javaEnabled: boolean;
+        language: string;
+        screenHeight: number;
+        screenWidth: number;
+        timeZoneOffset: number;
+        userAgent: string;
+    };
+}
+
+/**
+ * Represents the payment data that will be submitted to the /payments endpoint
+ */
+export interface PaymentData extends PaymentMethodData {
+    riskData?: {
+        clientData: string;
+    };
+    order?: {
+        orderData: string;
+        pspReference: string;
+    };
+    clientStateDataIndicator: boolean;
+    sessionData?: string;
+    storePaymentMethod?: boolean;
+}
+
 export interface PaymentResponse {
     action?: PaymentAction;
     resultCode: string;

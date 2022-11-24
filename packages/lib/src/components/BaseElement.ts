@@ -3,7 +3,7 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import Core from '../core';
-import { BaseElementProps } from './types';
+import { BaseElementProps, PaymentData } from './types';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -33,8 +33,10 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
+     *
+     * TODO: Replace 'any' by type 'PaymentMethodData<T>'
      */
-    protected formatData() {
+    protected formatData(): any {
         return {};
     }
 
@@ -46,16 +48,23 @@ class BaseElement<P extends BaseElementProps> {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    get data(): any {
+    get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const checkoutAttemptId = getProp(this.props, 'modules.analytics.checkoutAttemptId');
         const order = this.state.order || this.props.order;
 
+        const componentData = this.formatData();
+
         return {
             ...(clientData && { riskData: { clientData } }),
-            ...(checkoutAttemptId && { checkoutAttemptId }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
-            ...this.formatData(),
+            ...componentData,
+            ...(componentData.paymentMethod && {
+                paymentMethod: {
+                    ...componentData.paymentMethod,
+                    ...(checkoutAttemptId && { checkoutAttemptId })
+                }
+            }),
             clientStateDataIndicator: true
         };
     }
