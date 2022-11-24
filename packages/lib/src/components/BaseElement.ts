@@ -4,6 +4,7 @@ import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import Core from '../core';
 import { BaseElementProps, PaymentData } from './types';
+import { RiskData } from '../core/RiskModule/RiskModule';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -49,7 +50,7 @@ class BaseElement<P extends BaseElementProps> {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    get data(): PaymentData {
+    get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const checkoutAttemptId = getProp(this.props, 'modules.analytics.checkoutAttemptId');
         const order = this.state.order || this.props.order;
