@@ -41,6 +41,7 @@ export interface SFPProps {
     trimTrailingSeparator?: boolean;
     type: string;
     render: () => {};
+    maskSecurityCode: boolean;
 }
 
 export interface SFPState {

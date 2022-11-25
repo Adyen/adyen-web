@@ -110,6 +110,7 @@ export interface CardInputProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type?: string;
+    maskSecurityCode?: boolean;
 }
 
 export interface CardInputState {
