@@ -110,4 +110,23 @@ import './QRCodes.scss';
         .catch(error => {
             throw Error(error);
         });
+
+    makePayment({
+        paymentMethod: {
+            type: 'duitnow'
+        },
+        countryCode: 'MY',
+        amount: {
+            currency: 'MYR',
+            value: 101
+        }
+    })
+        .then(result => {
+            if (result.action) {
+                window.paynow = checkout.createFromAction(result.action).mount('#duitnow-container');
+            }
+        })
+        .catch(error => {
+            throw Error(error);
+        });
 })();
