@@ -54,24 +54,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     };
 
     componentDidMount() {
-        const { shouldRedirectOnMobile, url } = this.props;
-        const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
-
-        const startPolling = () => {
-            this.interval = setInterval(this.statusInterval, this.state.delay);
-        };
-
-        if (shouldRedirectOnMobile && url && isMobile) {
-            this.redirectToApp(url, startPolling);
-        } else {
-            startPolling();
-        }
+        this.interval = setInterval(this.statusInterval, this.state.delay);
     }
-
-    public redirectToApp = (url, fallback = () => {}) => {
-        setTimeout(fallback, 1000);
-        window.location.assign(url);
-    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.delay !== this.state.delay) {
@@ -219,7 +203,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                         />
                     </div>
                 )}
-
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
                         <ContentSeparator />
