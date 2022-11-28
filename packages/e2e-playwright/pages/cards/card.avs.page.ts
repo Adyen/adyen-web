@@ -1,25 +1,21 @@
 import { Locator, Page } from '@playwright/test';
-import { Card } from '../../models/card';
+import { CardWithAvs } from '../../models/card-avs';
 
-class CardPage {
+class CardAvsPage {
     readonly page: Page;
 
-    readonly card: Card;
+    readonly cardWithAvs: CardWithAvs;
     readonly payButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.card = new Card(page);
+        this.cardWithAvs = new CardWithAvs(page);
         this.payButton = page.getByRole('button', { name: /Pay/i });
     }
 
     async goto(url?: string) {
         await this.page.goto('http://localhost:3024/');
     }
-
-    async pay() {
-        await this.payButton.click();
-    }
 }
 
-export { CardPage };
+export { CardAvsPage };

@@ -15,7 +15,9 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
 
+        "noImplicitReturns": true,
         "noImplicitAny": true,
+
         "strictPropertyInitialization": false,
         "suppressImplicitAnyIndexErrors": true,
         "stripInternal": true,
@@ -25,6 +27,6 @@
 
         "baseUrl": "./"
     },
-    "include": ["app/"],
+    "include": ["app/", "tests/", "mocks/", "models/", "pages/"],
     "exclude": ["node_modules"]
 }

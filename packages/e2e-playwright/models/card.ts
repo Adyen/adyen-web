@@ -1,14 +1,17 @@
 import { Locator, Page } from '@playwright/test';
+import { USER_TYPE_DELAY } from '../tests/utils/constants';
 
 class Card {
     readonly rootElement: Locator;
+    readonly rootElementSelector: string;
 
     readonly cardNumberInput: Locator;
     readonly expiryDateInput: Locator;
     readonly cvcInput: Locator;
 
-    constructor(page: Page, rootElement: string = '.adyen-checkout__card-input') {
-        this.rootElement = page.locator(rootElement);
+    constructor(page: Page, rootElementSelector: string = '.adyen-checkout__card-input') {
+        this.rootElement = page.locator(rootElementSelector);
+        this.rootElementSelector = rootElementSelector;
 
         this.cardNumberInput = this.rootElement.frameLocator('[title="Iframe for secured card number"]').locator('input[aria-label="Card number"]');
         this.expiryDateInput = this.rootElement
@@ -17,16 +20,22 @@ class Card {
         this.cvcInput = this.rootElement.frameLocator('[title="Iframe for secured card security code"]').locator('input[aria-label="Security code"]');
     }
 
-    async fillCardNumber(cardNumber: string) {
-        await this.cardNumberInput.fill(cardNumber);
+    async isComponentVisible() {
+        await this.cardNumberInput.waitFor({ state: 'visible' });
+        await this.expiryDateInput.waitFor({ state: 'visible' });
+        await this.cvcInput.waitFor({ state: 'visible' });
     }
 
-    async fillExpiryDate(expiryDate: string) {
-        await this.expiryDateInput.fill(expiryDate);
+    async typeCardNumber(cardNumber: string) {
+        await this.cardNumberInput.type(cardNumber, { delay: USER_TYPE_DELAY });
     }
 
-    async fillCvcInput(cvc: string) {
-        await this.cvcInput.fill(cvc);
+    async typeExpiryDate(expiryDate: string) {
+        await this.expiryDateInput.type(expiryDate, { delay: USER_TYPE_DELAY });
+    }
+
+    async typeCvc(cvc: string) {
+        await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
     }
 }
 

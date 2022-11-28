@@ -1,5 +1,9 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+dotenv.config({ path: path.resolve('../../', '.env') });
 
 /**
  * Read environment variables from file.
@@ -13,13 +17,13 @@ import { devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
   testDir: './tests',
   /* Maximum time one test can run for. */
-  timeout: 10 * 1000,
+  timeout: 10 * 1500,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5000
+    timeout: 10000
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
