@@ -128,6 +128,11 @@
     bottom: 0px;
     display: flex;
     align-items: center;
+    transition: opacity 0.1s linear;
+
+    &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
+        opacity: 0;
+    }    
 }
 .adyen-checkout__field__exp-date_hint {
     width: 27px;

@@ -41,13 +41,6 @@ export default function StoredCardFields({
                     >
                         {expiryMonth} / {expiryYear}
                     </div>
-                    <div className="adyen-checkout__field__exp-date_hint_wrapper">
-                        <img
-                            src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/components/expiry_date_hint.svg"
-                            className="adyen-checkout__field__exp-date_hint"
-                            alt={i18n.get('creditCard.expiryDateField.title')}
-                        />
-                    </div>
                 </Field>
 
                 {hasCVC && (
