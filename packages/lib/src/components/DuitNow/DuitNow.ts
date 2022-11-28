@@ -1,7 +1,7 @@
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
 import { delay, countdownTime } from './config';
 
-class PromptPayElement extends QRLoaderContainer {
+class DuitNowElement extends QRLoaderContainer {
     public static type = 'duitnow';
 
     formatProps(props) {
@@ -13,4 +13,4 @@ class PromptPayElement extends QRLoaderContainer {
     }
 }
 
-export default PromptPayElement;
+export default DuitNowElement;
