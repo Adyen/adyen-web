@@ -57,6 +57,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         this.interval = setInterval(this.statusInterval, this.state.delay);
     }
 
+    public redirectToApp = (url, fallback = () => {}) => {
+        window.location.assign(url);
+    };
+
     componentDidUpdate(prevProps, prevState) {
         if (prevState.delay !== this.state.delay) {
             clearInterval(this.interval);
