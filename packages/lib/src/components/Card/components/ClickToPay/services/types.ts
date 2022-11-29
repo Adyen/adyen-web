@@ -1,5 +1,5 @@
 import { CtpState } from './ClickToPayService';
-import { SrcProfile } from './sdks/types';
+import { SrcInitParams, SrcProfile } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
 
@@ -45,5 +45,7 @@ export type CardTypes = {
     availableCards: ShopperCard[];
     expiredCards: ShopperCard[];
 };
+
+export type SchemesConfiguration = Partial<Record<ClickToPayScheme, SrcInitParams>>;
 
 export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;
