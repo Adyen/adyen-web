@@ -26,6 +26,10 @@ const CtPOneTimePassword = (): h.JSX.Element => {
         setIsValid(isValid);
     }, []);
 
+    const onResendCode = useCallback(() => {
+        setErrorCode(null);
+    }, []);
+
     const onSubmitPassword = useCallback(async () => {
         setErrorCode(null);
 
@@ -58,6 +62,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 disabled={isValidatingOtp}
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
                 onPressEnter={onSubmitPassword}
+                onResendCode={onResendCode}
                 isValidatingOtp={isValidatingOtp}
             />
             <Button

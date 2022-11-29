@@ -1,10 +1,22 @@
 import { h } from 'preact';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
-export default function InputBase(props) {
+export interface InputBaseProps {
+    /** Callback used to return the input element reference to parent component (Ex: Used to trigger focus programmatically) */
+    onCreateRef?(reference: HTMLInputElement): void;
+    // TODO: add missing types
+    [key: string]: any;
+}
+
+export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors, disabled } = props;
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        onCreateRef?.(inputRef.current);
+    }, [inputRef.current, onCreateRef]);
 
     /**
      * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.
@@ -78,6 +90,7 @@ export default function InputBase(props) {
             onFocus={handleFocus}
             onKeyUp={handleKeyUp}
             disabled={disabled}
+            ref={inputRef}
         />
     );
 }
