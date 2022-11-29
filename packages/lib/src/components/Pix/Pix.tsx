@@ -45,23 +45,19 @@ class PixElement extends QRLoaderContainer<PixProps> {
             return this.renderQRCode();
         }
 
-        if (this.props.showPayButton) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                    <PixInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        {...this.props}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
-                </CoreProvider>
-            );
-        }
-
-        return null;
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <PixInput
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    {...this.props}
+                    onChange={this.setState}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                />
+            </CoreProvider>
+        );
     }
 }
 
