@@ -17,7 +17,7 @@ export type FormState<FormSchema> = {
 };
 
 export interface Formatter {
-    formatter?: FormatterFn;
+    formatterFn?: FormatterFn;
     format?: string;
     maxlength?: number;
 }
