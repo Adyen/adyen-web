@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer } from 'preact/hooks';
 import Validator from '../Validator';
 import { getReducer, init } from './reducer';
-import { Form, FormState, FormProps } from './types';
+import { Form, FormState, FormProps, Formatter } from './types';
 
 function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
     const { rules = {}, formatters = {}, defaultData = {}, fieldProblems = {}, schema = [] } = props;
@@ -11,7 +11,7 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
     /** Formats and validates a field */
     const processField = ({ key, value, mode }, fieldContext) => {
         // Find a formatting function either stored under 'key' or a level deeper under a 'formatter' property
-        const formatterFn = formatters?.[key]?.formatter ? formatters[key].formatter : formatters?.[key];
+        const formatterFn = (formatters as Formatter)?.[key]?.formatter ? (formatters as Formatter)[key].formatter : formatters?.[key];
         const formattedValue = formatterFn && typeof formatterFn === 'function' ? formatterFn(value ?? '', fieldContext) : value;
 
         const validationResult = validator.validate({ key, value: formattedValue, mode }, fieldContext);

@@ -7,6 +7,7 @@ import { renderFormField } from '../../internal/FormFields';
 import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
+import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -26,7 +27,10 @@ function BlikInput(props: BlikInputProps) {
                 errorMessage: 'blik.invalid',
                 modes: ['blur']
             }
-        }
+        },
+        formatters: {
+            blikCode: digitsOnlyFormatter,
+        },
     });
 
     useEffect(() => {
@@ -56,6 +60,7 @@ function BlikInput(props: BlikInputProps) {
                     onInput: handleChangeFor('blikCode', 'input'),
                     onBlur: handleChangeFor('blikCode', 'blur'),
                     placeholder: '123456',
+                    inputMode: 'number',
                     maxLength: 6
                 })}
             </Field>

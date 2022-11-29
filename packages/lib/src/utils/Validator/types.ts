@@ -1,4 +1,5 @@
 import { ValidationRuleResult } from './ValidationRuleResult';
+import { Formatter } from '../useForm/types'
 
 type ValidatorMode = 'blur' | 'input';
 
@@ -15,15 +16,7 @@ export type CountryRuleset = {
     [country: string]: Ruleset;
 };
 
-type FormatterFn = (value, context?) => string;
-
-export interface Format {
-    formatter?: FormatterFn;
-    format?: string;
-    maxlength?: number;
-}
-
-export type FormatRules = { [field: string]: Format };
+export type FormatRules = { [field: string]: Formatter };
 
 export type CountryFormatRules = { [country: string]: FormatRules };
 

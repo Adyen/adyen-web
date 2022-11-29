@@ -1,7 +1,8 @@
-import { CountryFormatRules, FormatRules, Format } from '../../../utils/Validator/types';
+import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
+import { Formatter } from '../../../utils/useForm/types';
 import { getFormattingRegEx, SPECIAL_CHARS, trimValWithOneSpace } from '../../../utils/validator-utils';
 
-const createFormatByDigits = (digits): Format => {
+const createFormatByDigits = (digits: number): Formatter => {
     const format = new Array(digits).fill('9').join('');
     return {
         // Formatter - excludes non digits and limits to maxlength
