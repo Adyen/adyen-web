@@ -47,7 +47,7 @@ import '../../style.scss';
 
     const session = await createSession({
         amount,
-        reference: 'ABC123',
+        reference: 'antonio_giftcard_test',
         returnUrl,
         shopperLocale,
         shopperReference,
@@ -72,18 +72,34 @@ import '../../style.scss';
         }
     });
 
+    const checkoutAddButton = document.querySelector('#custom-checkout-add-button');
+    const checkoutConfirmButton = document.querySelector('#custom-checkout-confirm-button');
+    const checkoutCardButton = document.querySelector('#custom-checkout-card-button');
+
+    checkoutConfirmButton.style.display = 'none';
+
+    const giftcardCheckBalance = () => window.giftcard.balanceCheck();
+    const giftcardSubmit = () => window.giftcard.submit();
+    const cardSubmit = () => window.card.submit();
+
+    checkoutAddButton.addEventListener('click', giftcardCheckBalance);
+    checkoutConfirmButton.addEventListener('click', giftcardSubmit);
+    checkoutCardButton.addEventListener('click', cardSubmit);
+
     window.giftcard = sessionCheckout
         .create('giftcard', {
             type: 'giftcard',
             brand: 'svs',
-            onOrderCreated: (data) => {
-                afterGiftCard(data);
+            onOrderCreated: () => {
+                console.log('onOrderCreated');
+            },
+            onRequiringConfirmation: () => {
+                console.log('onRequiringConfirmation');
+                checkoutConfirmButton.style.display = '';
+                checkoutAddButton.style.display = 'none';
             }
         })
         .mount('#giftcard-session-container');
 
-
-    const afterGiftCard = (order) => {
-        sessionCheckout.create('card').mount('#payment-method-container');
-    }
+    window.card = sessionCheckout.create('card').mount('#payment-method-container');
 })();

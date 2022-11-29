@@ -75,6 +75,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         return (
             <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
                 {buttonText}
+                {status !== 'loading' && status !== 'redirect' && this.props.children}
             </button>
         );
     }

@@ -5,14 +5,17 @@ import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
+import { MockReactApp } from './MockReactApp';
 
 const showComps = {
+    clickToPay: true,
     storedCard: true,
     card: true,
+    cardInReact: true,
     bcmcCard: true,
     avsCard: true,
     avsPartialCard: true,
-    kcpCard: true,
+    kcpCard: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -22,6 +25,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
@@ -68,6 +72,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-field');
     }
 
+    // Card mounted in a React app
+    if (showComps.cardInReact) {
+        window.cardReact = checkout.create('card', {});
+        MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
+    }
+
     // Bancontact card
     if (showComps.bcmcCard) {
         window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
@@ -111,7 +121,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-avs-field');
     }
 
-    if(showComps.avsPartialCard) {
+    if (showComps.avsPartialCard) {
         window.avsPartialCard = checkout
             .create('card', {
                 type: 'scheme',
@@ -132,11 +142,31 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
+                // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
+                // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
                 configuration: {
                     koreanAuthenticationRequired: true
                 },
                 countryCode: 'KR'
             })
             .mount('.card-kcp-field');
+    }
+
+    if (showComps.clickToPay) {
+        /**
+         * Make sure that the initialization values are being set in the /paymentMethods response,
+         * as part of the 'scheme' configuration object
+         */
+        window.ctpCard = checkout
+            .create('card', {
+                type: 'scheme',
+                brands: ['mc', 'visa'],
+                useClickToPay: true,
+                clickToPayConfiguration: {
+                    shopperIdentityValue: 'shopper-ctp1@adyen.com',
+                    merchantDisplayName: 'Adyen Merchant Name '
+                }
+            })
+            .mount('.card-ctp-field');
     }
 });

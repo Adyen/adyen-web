@@ -7,9 +7,6 @@ import Language from '../../../../../../language/Language';
  * If the ariaConfig object doesn't exist at all we create one with these 2 properties.
  * The iframeTitle and label properties, where they don't previously exist are populated with values read from the translation file.
  * In both cases we then add an error object containing the possible errors for any securedField read from the translation file and stored under error-codes
- *
- * NOTE: whilst we allow the merchant to overwrite the translated strings with their own iframeTitle and label we currently don't support this for the error object
- * since this is a more complex object involving special, specific codes
  */
 export function processAriaConfig(configObj: SFInternalConfig, fieldType: string, i18n: Language): AriaConfig {
     // txVariant can be the scheme name (VISA, Mastercard...) so we put all of them under creditCard

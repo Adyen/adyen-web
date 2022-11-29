@@ -9,6 +9,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
 import './IssuerList.scss';
+import { interpolateElement } from '../../../language/utils';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -96,6 +97,20 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                     status,
                     label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
                 })}
+
+            {props.termsAndConditionsUrl && (
+                <div className="adyen-checkout__issuer-list__termsAndConditions">
+                    <p className="adyen-checkout__helper-text">
+                        {interpolateElement(i18n.get('onlineBanking.termsAndConditions'), [
+                            translation => (
+                                <a href={props.termsAndConditionsUrl} target="_blank" rel="noopener noreferrer">
+                                    {translation}
+                                </a>
+                            )
+                        ])}
+                    </p>
+                </div>
+            )}
         </div>
     );
 }

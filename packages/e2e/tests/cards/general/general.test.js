@@ -1,5 +1,9 @@
 import { REGULAR_TEST_CARD } from '../utils/constants';
 import CardComponentPage from '../../_models/CardComponent.page';
+import LANG from '../../../../lib/src/language/locales/en-US.json';
+
+const EMPTY_PAN = LANG['error.va.sf-cc-num.02'];
+const INCORRECTLY_FILLED_PAN = LANG['error.va.sf-cc-num.04'];
 
 const cardPage = new CardComponentPage();
 
@@ -69,5 +73,39 @@ test('#3 PAN that consists of the same digit (but passes luhn) causes an error',
         .click(cardPage.dateLabelText)
         // visible error
         .expect(cardPage.numLabelTextError.exists)
+        .ok();
+});
+
+test('#4 Clicking pay button with an empty PAN causes an "empty" error on the PAN field', async t => {
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    // Click pay
+    await t
+        .click(cardPage.payButton)
+        // visible error
+        .expect(cardPage.numLabelTextError.exists)
+        .ok()
+        // with text
+        .expect(cardPage.numErrorText.withExactText(EMPTY_PAN).exists)
+        .ok();
+});
+
+test('#5 PAN that consists of the 1 digit causes a "wrong length" error ', async t => {
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    await cardPage.cardUtils.fillCardNumber(t, '4');
+
+    await cardPage.setForceClick(true);
+
+    // Click label text to force the blur event on the card field
+    await t
+        .click(cardPage.dateLabelText)
+        // visible error
+        .expect(cardPage.numLabelTextError.exists)
+        .ok()
+        // with text
+        .expect(cardPage.numErrorText.withExactText(INCORRECTLY_FILLED_PAN).exists)
         .ok();
 });

@@ -1,131 +1,145 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <title>Adyen Web | Gift Cards</title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    </head>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>Adyen Web | Gift Cards</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+</head>
 
-    <body class="giftcard-demo">
-        <header></header>
-        <main>
-            <div class="merchant-checkout__form">
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Giftcard</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div id="genericgiftcard-container"></div>
-                    </div>
-                </div>
+<body class="giftcard-demo">
+<header></header>
+<main>
+    <div class="merchant-checkout__form">
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Giftcard</h2>
             </div>
-
-            <div class="merchant-checkout__form">
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Mealvoucher</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div id="mealvoucher-fr-container"></div>
-                    </div>
-                </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div id="genericgiftcard-container"></div>
             </div>
+        </div>
+    </div>
 
-            <div class="merchant-checkout__form">
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Gift Card Component (w/ Sessions)</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div id="giftcard-session-container"></div>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div id="payment-method-container"></div>
-                    </div>
-                </div>
+    <div class="merchant-checkout__form">
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Mealvoucher</h2>
             </div>
-
-            <div class="info">
-                <table>
-                    <caption>
-                        Test gift cards
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Card Type</th>
-                            <th scope="col">Card Number</th>
-                            <th scope="col">PIN</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Gall & Gall Card</td>
-                            <td>60643650100000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Baby Gift Card</td>
-                            <td>60643622000000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Gift Card</td>
-                            <td>62805011000000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Kado Wereld</td>
-                            <td>60643625100000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Entertainment Card</td>
-                            <td>60643611000000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Plastix</td>
-                            <td>4010100000000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Webshop Giftcard</td>
-                            <td>60643620700000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>Leasure Giftcard</td>
-                            <td>60643622800000000000</td>
-                            <td>73737</td>
-                        </tr>
-                        <tr>
-                            <td>VVV Giftcard</td>
-                            <td>6064364240000000000</td>
-                            <td>737373</td>
-                        </tr>
-                        <tr>
-                            <td>GiftForYou (Bloemen)</td>
-                            <td>60643647103300000000</td>
-                            <td>737373</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>
-                    <a
-                        href="https://docs.adyen.com/development-resources/test-cards/test-card-numbers#gift-cards"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        More information →
-                    </a>
-                </p>
+            <div class="merchant-checkout__payment-method__details">
+                <div id="mealvoucher-fr-container"></div>
             </div>
-        </main>
-        <script type="text/javascript">
-            window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
-        </script>
-    </body>
+        </div>
+    </div>
+
+    <div class="merchant-checkout__form">
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Gift Card Component (w/ Sessions)</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div id="giftcard-session-container"></div>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div id="payment-method-container"></div>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <button class="adyen-checkout__button adyen-checkout__button--pay" id="custom-checkout-add-button">
+                    Custom Add Gift Card
+                </button>
+
+                <button class="adyen-checkout__button adyen-checkout__button--pay" id="custom-checkout-confirm-button">
+                    Custom Confirm Gift Card
+                </button>
+
+                <button class="adyen-checkout__button adyen-checkout__button--pay" id="custom-checkout-card-button">
+                    Custom Card Button
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="info">
+        <table>
+            <caption>
+                Test gift cards
+            </caption>
+            <thead>
+            <tr>
+                <th scope="col">Card Type</th>
+                <th scope="col">Card Number</th>
+                <th scope="col">PIN</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Gall & Gall Card</td>
+                <td>60643650100000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Baby Gift Card</td>
+                <td>60643622000000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Gift Card</td>
+                <td>62805011000000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Kado Wereld</td>
+                <td>60643625100000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Entertainment Card</td>
+                <td>60643611000000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Plastix</td>
+                <td>4010100000000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Webshop Giftcard</td>
+                <td>60643620700000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>Leasure Giftcard</td>
+                <td>60643622800000000000</td>
+                <td>73737</td>
+            </tr>
+            <tr>
+                <td>VVV Giftcard</td>
+                <td>6064364240000000000</td>
+                <td>737373</td>
+            </tr>
+            <tr>
+                <td>GiftForYou (Bloemen)</td>
+                <td>60643647103300000000</td>
+                <td>737373</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p>
+            <a
+                    href="https://docs.adyen.com/development-resources/test-cards/test-card-numbers#gift-cards"
+                    target="_blank"
+                    rel="noopener noreferrer"
+            >
+                More information →
+            </a>
+        </p>
+    </div>
+</main>
+
+<script type="text/javascript">
+    window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
+</script>
+</body>
 </html>

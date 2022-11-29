@@ -19,6 +19,7 @@ export interface ThreeDS2ChallengeProps {
     loadingContext?: string;
     useOriginalFlow?: boolean;
     i18n?: Language;
+    threeDS2MDFlowUnloadListener?: any;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
@@ -29,6 +30,11 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
         size: DEFAULT_CHALLENGE_WINDOW_SIZE,
         type: 'ChallengeShopper'
     };
+
+    onComplete(state) {
+        super.onComplete(state);
+        this.unmount(); // re. fixing issue around back to back challenge calls
+    }
 
     render() {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this

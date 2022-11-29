@@ -29,6 +29,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
+    onComplete(state) {
+        super.onComplete(state);
+        this.unmount(); // re. fixing issue around back to back fingerprinting calls
+    }
+
     render() {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {

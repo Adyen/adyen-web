@@ -17,6 +17,8 @@ interface RiskModuleProps extends BaseElementProps {
     loadingContext: string;
 }
 
+export type RiskData = string | boolean;
+
 export default class RiskElement extends BaseElement<RiskModuleProps> {
     public static type = 'risk';
     public static defaultProps = {
@@ -77,7 +79,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         return this.state.isValid;
     }
 
-    get data() {
+    get data(): RiskData {
         if (this.isValid) {
             const dataObj = { version: RISK_DATA_VERSION, ...this.state.data };
             return base64.encode(JSON.stringify(dataObj));

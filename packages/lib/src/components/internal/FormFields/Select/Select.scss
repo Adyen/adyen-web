@@ -1,5 +1,14 @@
 @import '../../../../style/index';
 
+.adyen-checkout__dropdown__button-icon--left {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    > img {
+        margin-left: 0;
+        margin-right: 12px;
+    }
+}
+
 .adyen-checkout__dropdown {
     max-width: 100%;
     width: 100%;
@@ -31,11 +40,14 @@
 }
 
 .adyen-checkout__dropdown__button__icon {
-    margin-right: 8px;
-    margin-left: auto;
+    margin-right: 12px;
     max-width: 40px;
     height: 26px;
     border-radius: 3px;
+}
+
+.adyen-checkout__dropdown__button--disabled {
+    opacity: 0.4;
 }
 
 .adyen-checkout__dropdown__button--active,
@@ -75,6 +87,12 @@
     pointer-events: none;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.adyen-checkout__dropdown__button__secondary-text {
+    margin-right: 16px;
 }
 
 .adyen-checkout__dropdown__list {
@@ -128,9 +146,17 @@
 
 .adyen-checkout__dropdown__element__icon {
     border-radius: $border-radius-small;
-    margin-right: 8px;
+    margin-right: 12px;
     max-width: 40px;
     max-height: 26px;
+}
+
+.adyen-checkout__dropdown__element__text {
+    flex-grow: 1;
+}
+
+.adyen-checkout__dropdown__element__secondary-text:not(:last-child) {
+    margin-right: 8px;
 }
 
 .adyen-checkout__dropdown__element__flag {

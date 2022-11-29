@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { Order, PaymentAction, PaymentAmount } from '../types';
+import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
 import Core from '../core';
@@ -7,6 +7,39 @@ import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
+
+export interface PaymentMethodData {
+    paymentMethod: {
+        [key: string]: any;
+        checkoutAttemptId?: string;
+    };
+    browserInfo?: {
+        acceptHeader: string;
+        colorDepth: number;
+        javaEnabled: boolean;
+        language: string;
+        screenHeight: number;
+        screenWidth: number;
+        timeZoneOffset: number;
+        userAgent: string;
+    };
+}
+
+/**
+ * Represents the payment data that will be submitted to the /payments endpoint
+ */
+export interface PaymentData extends PaymentMethodData {
+    riskData?: {
+        clientData: string;
+    };
+    order?: {
+        orderData: string;
+        pspReference: string;
+    };
+    clientStateDataIndicator: boolean;
+    sessionData?: string;
+    storePaymentMethod?: boolean;
+}
 
 export interface PaymentResponse {
     action?: PaymentAction;
@@ -36,6 +69,7 @@ export interface IUIElement {
     type: string;
     elementRef: any;
     submit(): void;
+    setElementStatus(status: UIElementStatus, props: any): UIElement;
     setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;
@@ -64,6 +98,7 @@ export interface UIElementProps extends BaseElementProps {
     name?: string;
     icon?: string;
     amount?: PaymentAmount;
+    secondaryAmount?: PaymentAmountExtended;
 
     /**
      * Show/Hide pay button

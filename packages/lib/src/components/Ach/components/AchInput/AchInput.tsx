@@ -13,6 +13,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './AchInput.module.scss';
 import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
+import StoreDetails from '../../../internal/StoreDetails';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -37,6 +38,7 @@ function AchInput(props: ACHInputProps) {
     const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
     const [isSfpValid, setIsSfpValid] = useState(false);
     const [focusedElement, setFocusedElement] = useState('');
+    const [storePaymentMethod, setStorePaymentMethod] = useState(false);
 
     const handleFocus = e => {
         const isFocused = e.focus === true;
@@ -120,8 +122,8 @@ function AchInput(props: ACHInputProps) {
 
         const isValid = sfpValid && holderNameValid && billingAddressValid;
 
-        props.onChange({ data, isValid, billingAddress });
-    }, [data, valid, errors]);
+        props.onChange({ data, isValid, billingAddress, storePaymentMethod });
+    }, [data, valid, errors, storePaymentMethod]);
 
     return (
         <div className="adyen-checkout__ach">
@@ -173,6 +175,8 @@ function AchInput(props: ACHInputProps) {
                                     ref={billingAddressRef}
                                 />
                             )}
+
+                            {props.enableStoreDetails && <StoreDetails onChange={setStorePaymentMethod} />}
                         </LoadingWrapper>
                     </div>
                 )}
@@ -203,6 +207,7 @@ const extractPropsForSFP = (props: ACHInputProps) => {
         onLoad: props.onLoad,
         showWarnings: props.showWarnings,
         styles: props.styles,
-        type: props.type
+        type: props.type,
+        forceCompat: props.forceCompat
     };
 };

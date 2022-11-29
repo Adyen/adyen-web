@@ -13,6 +13,11 @@ import getIframeContentWin from '../utils/iframes/getIframeContentWin';
  * @param pFeedbackObj -
  */
 export function processAutoComplete({ csfState, csfConfig, csfCallbacks }, pFeedbackObj: SFFeedbackObj): void {
+    /**
+     * NOTE: It seems Chrome has started autofilling across cross-origin iframes. Have tested as far back as v104 but have no resources to test further back
+     * So, in theory for Chrome \>= v104 we don't need to do any of this, including having special listeners in the securedFields
+     */
+
     // Specifically for cc-name (but no reason not to propagate all AC objects to the merchant)
     if (pFeedbackObj.name === 'cc-name') {
         const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };

@@ -7,6 +7,7 @@ import { CardFieldsProps } from './types';
 import classNames from 'classnames';
 import styles from '../CardInput.module.scss';
 import {
+    BRAND_ICON_UI_EXCLUSION_LIST,
     DATE_POLICY_HIDDEN,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
@@ -33,12 +34,20 @@ export default function CardFields({
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
+    const getError = (errors, fieldType) => {
+        const errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
+        return errorMessage;
+    };
+
+    // A set of brands filtered to exclude those that can never appear in the UI
+    const allowedBrands = brandsIcons?.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
+
     return (
         <div className="adyen-checkout__card__form">
             <CardNumber
                 brand={brand}
                 brandsConfiguration={brandsConfiguration}
-                error={errors.encryptedCardNumber}
+                error={getError(errors, ENCRYPTED_CARD_NUMBER)}
                 focused={focusedElement === ENCRYPTED_CARD_NUMBER}
                 isValid={!!valid.encryptedCardNumber}
                 label={i18n.get('creditCard.numberField.title')}
@@ -50,7 +59,7 @@ export default function CardFields({
                 dualBrandingSelected={dualBrandingSelected}
             />
 
-            {showBrandsUnderCardNumber && <AvailableBrands activeBrand={brand} brands={brandsIcons} />}
+            {showBrandsUnderCardNumber && <AvailableBrands activeBrand={brand} brands={allowedBrands} />}
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {
@@ -58,7 +67,7 @@ export default function CardFields({
                 })}
             >
                 <ExpirationDate
-                    error={errors.encryptedExpiryDate || errors.encryptedExpiryYear || errors.encryptedExpiryMonth}
+                    error={getError(errors, ENCRYPTED_EXPIRY_DATE)}
                     focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
@@ -70,7 +79,7 @@ export default function CardFields({
 
                 {hasCVC && (
                     <CVC
-                        error={errors.encryptedSecurityCode}
+                        error={getError(errors, ENCRYPTED_SECURITY_CODE)}
                         focused={focusedElement === ENCRYPTED_SECURITY_CODE}
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}

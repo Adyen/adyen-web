@@ -1,4 +1,4 @@
-import { PaymentResponse, RawPaymentResponse } from './types';
+import {PaymentResponse, RawPaymentResponse, UIElementStatus} from './types';
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order'];
 
@@ -19,7 +19,7 @@ export function getSanitizedResponse(response: RawPaymentResponse): PaymentRespo
     return sanitizedObject as PaymentResponse;
 }
 
-export function resolveFinalResult(result: PaymentResponse) {
+export function resolveFinalResult(result: PaymentResponse): [status: UIElementStatus, statusProps?: any] {
     switch (result.resultCode) {
         case 'Authorised':
         case 'Received':

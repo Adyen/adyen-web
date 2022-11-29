@@ -27,7 +27,8 @@ function SelectButton(props: SelectButtonProps) {
                 'adyen-checkout__dropdown__button--active': showList,
                 [styles['adyen-checkout__dropdown__button--active']]: showList,
                 'adyen-checkout__dropdown__button--invalid': props.isInvalid,
-                'adyen-checkout__dropdown__button--valid': props.isValid
+                'adyen-checkout__dropdown__button--valid': props.isValid,
+                'adyen-checkout__dropdown__button--disabled': active.disabled
             })}
             filterable={props.filterable}
             onClick={!readonly ? props.toggleList : null}
@@ -42,8 +43,9 @@ function SelectButton(props: SelectButtonProps) {
         >
             {!showList || !props.filterable ? (
                 <Fragment>
-                    <span className="adyen-checkout__dropdown__button__text">{active.selectedOptionName || active.name || props.placeholder}</span>
                     {active.icon && <Img className="adyen-checkout__dropdown__button__icon" src={active.icon} alt={active.name} />}
+                    <span className="adyen-checkout__dropdown__button__text">{active.selectedOptionName || active.name || props.placeholder}</span>
+                    {active.secondaryText && <span className="adyen-checkout__dropdown__button__secondary-text">{active.secondaryText}</span>}
                 </Fragment>
             ) : (
                 <input

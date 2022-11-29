@@ -1,6 +1,7 @@
 import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
+import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -186,6 +187,15 @@ export interface PaymentAmount {
     currency: string;
 }
 
+export interface PaymentAmountExtended extends PaymentAmount {
+    /**
+     * Adds currencyDisplay prop - as a way for the merchant to influence the final display of the amount on the pay button.
+     * Defaults to 'symbol'.
+     * see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#currencydisplay
+     */
+    currencyDisplay?: string;
+}
+
 export type AddressField = typeof ADDRESS_SCHEMA[number];
 
 export type AddressData = {
@@ -263,6 +273,11 @@ export type CheckoutSession = {
     sessionData: string;
 };
 
+export type SessionConfiguration = {
+    installmentOptions: InstallmentOptions;
+    enableStoreDetails: boolean;
+};
+
 export type CheckoutSessionSetupResponse = {
     id: string;
     sessionData: string;
@@ -271,19 +286,20 @@ export type CheckoutSessionSetupResponse = {
     expiresAt: string;
     paymentMethods: any;
     returnUrl: string;
+    configuration: SessionConfiguration;
 };
 
 export type CheckoutSessionPaymentResponse = {
     sessionData: string;
     status?: string;
-    resultCode?: string;
+    resultCode: string;
     action?: PaymentAction;
 };
 
 export type CheckoutSessionDetailsResponse = {
     sessionData: string;
     status?: string;
-    resultCode?: string;
+    resultCode: string;
     action?: PaymentAction;
 };
 

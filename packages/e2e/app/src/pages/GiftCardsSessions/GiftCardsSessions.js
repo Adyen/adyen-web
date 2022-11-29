@@ -39,6 +39,9 @@ const initCheckout = async () => {
             brand: 'valuelink',
             onOrderCreated: (data) => {
                 window.onOrderCreatedTestData = data;
+            },
+            onRequiringConfirmation: () => {
+                window.onRequiringConfirmationTestData = true;
             }
         })
         .mount('.card-field');

@@ -4,23 +4,58 @@ import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { CardElementData, CardElementProps, BinLookupResponse } from './types';
+import { BinLookupResponse, CardElementData, CardElementProps } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
+import { createClickToPayService } from './components/ClickToPay/utils';
+import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
+import ClickToPayWrapper from './ClickToPayWrapper';
+import { UIElementStatus } from '../types';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
+    private readonly clickToPayService: IClickToPayService | null;
+
+    /**
+     * Reference to the 'ClickToPayComponent'
+     */
+    private clickToPayRef = null;
+
+    constructor(props) {
+        super(props);
+
+        if (this.props.useClickToPay) {
+            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService?.initialize();
+        }
+    }
+
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
+        useClickToPay: false,
         SRConfig: {}
     };
 
+    public setStatus(status: UIElementStatus, props?): this {
+        if (this.componentRef?.setStatus) {
+            this.componentRef.setStatus(status, props);
+        }
+        if (this.clickToPayRef?.setStatus) {
+            this.clickToPayRef.setStatus(status, props);
+        }
+        return this;
+    }
+
     public setComponentRef = ref => {
         this.componentRef = ref;
+    };
+
+    private setClickToPayRef = ref => {
+        this.clickToPayRef = ref;
     };
 
     formatProps(props: CardElementProps) {
@@ -50,6 +85,18 @@ export class CardElement extends UIElement<CardElementProps> {
                 collateErrors,
                 moveFocus,
                 showPanel
+            },
+            // installmentOptions of a session should be used before falling back to the merchant configuration
+            installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
+            enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
+            /**
+             * Click to Pay configuration
+             * - If email is set explicitly in the configuration, then it can override the one used in the session creation
+             */
+            clickToPayConfiguration: {
+                ...props.clickToPayConfiguration,
+                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,
+                locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };
     }
@@ -108,6 +155,11 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
+    private handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
+        this.setState({ data: { ...payload }, valid: {}, errors: {}, isValid: true });
+        this.submit();
+    };
+
     onBinLookup(obj: CbObjOnBinLookup) {
         // Handler for regular card comp doesn't need this 'raw' data or to know about 'resets'
         if (!obj.isReset) {
@@ -164,6 +216,24 @@ export class CardElement extends UIElement<CardElementProps> {
         return collectBrowserInfo();
     }
 
+    private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
+        return (
+            <CardInput
+                setComponentRef={this.setComponentRef}
+                {...this.props}
+                {...this.state}
+                onChange={this.setState}
+                onSubmit={this.submit}
+                payButton={this.payButton}
+                onBrand={this.onBrand}
+                onBinValue={this.onBinValue}
+                brand={this.brand}
+                brandsIcons={this.brands}
+                isPayButtonPrimaryVariant={isCardPrimaryInput}
+            />
+        );
+    }
+
     render() {
         return (
             <CoreProvider
@@ -171,18 +241,16 @@ export class CardElement extends UIElement<CardElementProps> {
                 loadingContext={this.props.loadingContext}
                 commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
             >
-                <CardInput
-                    setComponentRef={this.setComponentRef}
-                    {...this.props}
-                    {...this.state}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                    onBrand={this.onBrand}
-                    onBinValue={this.onBinValue}
-                    brand={this.brand}
-                    brandsIcons={this.brands}
-                />
+                <ClickToPayWrapper
+                    amount={this.props.amount}
+                    clickToPayService={this.clickToPayService}
+                    setClickToPayRef={this.setClickToPayRef}
+                    onSetStatus={this.setElementStatus}
+                    onSubmit={this.handleClickToPaySubmit}
+                    onError={this.handleError}
+                >
+                    {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+                </ClickToPayWrapper>
             </CoreProvider>
         );
     }

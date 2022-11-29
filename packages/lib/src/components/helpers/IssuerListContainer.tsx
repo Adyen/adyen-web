@@ -7,6 +7,7 @@ import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
 import { IssuerItem } from '../internal/IssuerList/types';
+import RedirectButton from '../internal/RedirectButton';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -15,6 +16,7 @@ interface IssuerListContainerProps extends UIElementProps {
     highlightedIssuers: string[];
     i18n: Language;
     loadingContext: string;
+    showPaymentMethodItemImages?: boolean;
 }
 
 interface IssuerListData {
@@ -43,7 +45,8 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         onValid: () => {},
         issuers: [],
         highlightedIssuers: [],
-        loadingContext: FALLBACK_CONTEXT
+        loadingContext: FALLBACK_CONTEXT,
+        showPaymentMethodItemImages: false
     };
 
     formatProps(props) {
@@ -67,24 +70,55 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
      * Returns whether the component state is valid or not
      */
     get isValid() {
+        if (this.props.issuers.length === 0) {
+            return true;
+        }
         return !!this.state?.isValid;
+    }
+
+    /**
+     * Returns brands array (similar to card) depending on showPaymentMethodItemImages
+     * This is used to show the brands in the PaymentMethodItem
+     * Requires brands icons to be loaded in the payment method
+     */
+    get brands(): { icon: any; name: string }[] {
+        if (this.props.showPaymentMethodItemImages) {
+            return this.props.issuers.map(brand => {
+                const brandIcon = brand.icon;
+                return { icon: brandIcon, name: brand.id };
+            });
+        }
+
+        return [];
     }
 
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <IssuerList
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    items={this.props.issuers}
-                    highlightedIds={this.props.highlightedIssuers}
-                    {...this.props}
-                    {...this.state}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                />
+                {this.props.issuers.length > 0 ? (
+                    <IssuerList
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        items={this.props.issuers}
+                        highlightedIds={this.props.highlightedIssuers}
+                        {...this.props}
+                        {...this.state}
+                        onChange={this.setState}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                    />
+                ) : (
+                    <RedirectButton
+                        name={this.props.name}
+                        {...this.props}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
+                )}
             </CoreProvider>
         );
     }

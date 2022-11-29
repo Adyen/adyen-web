@@ -19,9 +19,9 @@ import SecuredFields from './SecuredFields';
 import Sepa from './Sepa';
 import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge } from './ThreeDS2';
 import WeChat from './WeChat';
+import PayNow from './PayNow';
 import BcmcMobile from './BcmcMobile';
 import { MolPayEBankingMY, MolPayEBankingTH, MolPayEBankingVN } from './MolPayEBanking';
-import OpenBankingUK from './OpenBankingUK';
 import Dragonpay from './Dragonpay';
 import Doku from './Doku';
 import Boleto from './Boleto';
@@ -49,43 +49,82 @@ import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingINElement from './OnlineBankingIN';
+import OnlinebankingPL from './OnlinebankingPL';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
 import WalletINElement from './WalletIN';
+import OnlineBankingCZElement from './OnlineBankingCZ';
+import OnlineBankingSKElement from './OnlineBankingSK';
+import PayByBank from './PayByBank';
+import PromptPay from "./PromptPay";
 
 /**
  * Maps each component with a Component element.
  */
 const componentsMap = {
-    dropin: Dropin,
-    ach: Ach,
+    /** internal */
     address: Address,
+    bankTransfer_IBAN: BankTransfer,
+    donation: Donation,
+    dropin: Dropin,
+    personal_details: PersonalDetails,
+    /** internal */
+
+    /** Card */
+    amex: Card,
+    bcmc: Bancontact,
+    card: Card,
+    diners: Card,
+    discover: Card,
+    jcb: Card,
+    kcp: Card,
+    maestro: Card,
+    mc: Card,
+    scheme: Card,
+    storedCard: Card,
+    securedfields: SecuredFields,
+    threeDS2Challenge: ThreeDS2Challenge,
+    threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
+    visa: Card,
+    /** Card */
+
+    /** Direct debit */
+    ach: Ach,
+    directdebit_GB: BacsDD,
+    sepadirectdebit: Sepa,
+    /** Direct debit */
+
+    /** Open Invoice */
+    affirm: Affirm,
     afterpay: AfterPay,
     afterpay_default: AfterPay,
     afterpay_b2b: AfterPayB2B,
-    amazonpay: AmazonPay,
-    amex: Card,
-    applepay: ApplePay,
     atome: Atome,
-    bankTransfer_IBAN: BankTransfer,
-    bcmc: Bancontact,
-    bcmc_mobile: BcmcMobile,
-    bcmc_mobile_QR: BcmcMobile,
-    blik: Blik,
-    billdesk_online: BillDeskOnline,
-    billdesk_wallet: BillDeskWallet,
+    facilypay_3x: FacilyPay3x,
+    facilypay_4x: FacilyPay4x,
+    facilypay_6x: FacilyPay6x,
+    facilypay_10x: FacilyPay10x,
+    facilypay_12x: FacilyPay12x,
+    ratepay: RatePay,
+    ratepay_directdebit: RatePayDirectDebit,
+    /** Open Invoice */
+
+    /** Wallets */
+    amazonpay: AmazonPay,
+    applepay: ApplePay,
+    googlepay: GooglePay,
+    paypal: PayPal,
+    paywithgoogle: GooglePay,
+    qiwiwallet: QiwiWallet,
+    /** Wallets */
+
+    /** Voucher */
     boletobancario: Boleto,
     boletobancario_bancodobrasil: Boleto,
     boletobancario_bradesco: Boleto,
     boletobancario_hsbc: Boleto,
     boletobancario_itau: Boleto,
     boletobancario_santander: Boleto,
-    primeiropay_boleto: Boleto,
-    card: Card,
-    storedCard: Card,
-    diners: Card,
-    directdebit_GB: BacsDD,
-    discover: Card,
     doku: Doku,
     doku_alfamart: Doku,
     doku_permata_lite_atm: Doku,
@@ -99,71 +138,85 @@ const componentsMap = {
     doku_bni_va: Doku,
     doku_bca_va: Doku,
     doku_wallet: Doku,
-    donation: Donation,
+    oxxo: Oxxo,
+    primeiropay_boleto: Boleto,
+    /** Voucher */
+
+    /** issuerList */
+    billdesk_online: BillDeskOnline,
+    billdesk_wallet: BillDeskWallet,
     dotpay: Dotpay,
+    entercash: Entercash,
+    eps: Eps,
+    ideal: Ideal,
+    molpay_ebanking_fpx_MY: MolPayEBankingMY,
+    molpay_ebanking_TH: MolPayEBankingTH,
+    molpay_ebanking_VN: MolPayEBankingVN,
+    onlineBanking: Dotpay,
+    onlineBanking_CZ: OnlineBankingCZElement,
+    onlinebanking_IN: OnlineBankingINElement, // NOTE : the txVariant does have a lowercase "b"
+    onlineBanking_PL: OnlinebankingPL,
+    onlineBanking_SK: OnlineBankingSKElement,
+    paybybank: PayByBank,
+    payu_IN_cashcard: PayuCashcard,
+    payu_IN_nb: PayuNetBanking,
+    wallet_IN: WalletINElement,
+    /** issuerList */
+
+    /** Dragonpay */
     dragonpay_ebanking: Dragonpay,
     dragonpay_otc_banking: Dragonpay,
     dragonpay_otc_non_banking: Dragonpay,
     dragonpay_otc_philippines: Dragonpay,
-    econtext_seven_eleven: Econtext,
+    /** Dragonpay */
+
+    /** Econtext */
     econtext_atm: Econtext,
-    econtext_stores: Econtext,
     econtext_online: Econtext,
-    entercash: Entercash,
-    eps: Eps,
-    facilypay_3x: FacilyPay3x,
-    facilypay_4x: FacilyPay4x,
-    facilypay_6x: FacilyPay6x,
-    facilypay_10x: FacilyPay10x,
-    facilypay_12x: FacilyPay12x,
+    econtext_seven_eleven: Econtext,
+    econtext_stores: Econtext,
+    /** Econtext */
+
+    /** Redirect */
     giropay: Giropay,
-    ideal: Ideal,
-    jcb: Card,
-    kcp: Card,
-    klarna: Klarna,
-    klarna_paynow: Klarna,
-    klarna_account: Klarna,
-    maestro: Card,
-    mbway: MBWay,
-    mc: Card,
-    molpay_ebanking_fpx_MY: MolPayEBankingMY,
-    molpay_ebanking_TH: MolPayEBankingTH,
-    molpay_ebanking_VN: MolPayEBankingVN,
-    onlinebanking_IN: OnlineBankingINElement,
-    openbanking_UK: OpenBankingUK,
-    paypal: PayPal,
-    payu_IN_cashcard: PayuCashcard,
-    payu_IN_nb: PayuNetBanking,
-    paywithgoogle: GooglePay,
-    personal_details: PersonalDetails,
-    googlepay: GooglePay,
-    pix: Pix,
-    qiwiwallet: QiwiWallet,
-    ratepay: RatePay,
-    ratepay_directdebit: RatePayDirectDebit,
+    multibanco: Multibanco,
     redirect: Redirect,
-    securedfields: SecuredFields,
-    sepadirectdebit: Sepa,
-    scheme: Card,
-    threeDS2Challenge: ThreeDS2Challenge,
-    threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
-    upi: UPI,
-    upi_qr: UPI,
-    upi_collect: UPI,
-    visa: Card,
-    wallet_IN: WalletINElement,
+    twint: Twint,
+    vipps: Vipps,
+    /** Redirect */
+
+    /** Klarna */
+    klarna: Klarna,
+    klarna_account: Klarna,
+    klarna_paynow: Klarna,
+    /** Klarna */
+
+    /** QRLoader */
+    bcmc_mobile: BcmcMobile,
+    bcmc_mobile_QR: BcmcMobile,
+    pix: Pix,
+    swish: Swish,
     wechatpay: WeChat,
     wechatpayQR: WeChat,
-    oxxo: Oxxo,
-    multibanco: Multibanco,
+    promptpay: PromptPay,
+    paynow: PayNow,
+    /** QRLoader */
+
+    /** Await */
+    blik: Blik,
+    mbway: MBWay,
+    upi: UPI, // also QR
+    upi_qr: UPI, // also QR
+    upi_collect: UPI, // also QR
+    /** Await */
+
+    /** Giftcard */
     giftcard: Giftcard,
-    vipps: Vipps,
-    swish: Swish,
-    affirm: Affirm,
-    twint: Twint,
     mealVoucher_FR_natixis: MealVoucherFR,
     mealVoucher_FR_sodexo: MealVoucherFR,
     mealVoucher_FR_groupeup: MealVoucherFR,
+    /** Giftcard */
+
     default: null
 };
 

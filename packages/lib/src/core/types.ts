@@ -1,5 +1,5 @@
 import { CustomTranslations, Locales } from '../language/types';
-import { PaymentAmount, PaymentMethods, PaymentMethodOptions, PaymentActionsType } from '../types';
+import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -38,7 +38,12 @@ export interface CoreOptions {
     /**
      * Amount of the payment
      */
-    amount?: PaymentAmount;
+    amount?: PaymentAmountExtended;
+
+    /**
+     * Secondary amount of the payment - alternative currency & value converted according to rate
+     */
+    secondaryAmount?: PaymentAmountExtended;
 
     /**
      * The shopper's country code. A valid value is an ISO two-character country code (e.g. 'NL').
@@ -69,6 +74,9 @@ export interface CoreOptions {
 
     risk?: RiskModuleOptions;
 
+    order?: Order;
+
+    //TODO: discuss if can remove this
     [key: string]: any;
 }
 

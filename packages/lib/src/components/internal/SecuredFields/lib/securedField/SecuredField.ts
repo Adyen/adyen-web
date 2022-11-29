@@ -15,7 +15,13 @@ import {
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { SFFeedbackObj } from '../types';
-import AbstractSecuredField, { SFSetupObject, IframeConfigObject, AriaConfig, SFPlaceholdersObject, SFInternalConfig } from './AbstractSecuredField';
+import AbstractSecuredField, {
+    SecuredFieldInitObj,
+    IframeConfigObject,
+    AriaConfig,
+    SFPlaceholdersObject,
+    SFInternalConfig
+} from './AbstractSecuredField';
 import { CVCPolicyType, DatePolicyType, RtnType_noParamVoidFn, RtnType_postMessageListener, RtnType_callbackFn } from '../types';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
@@ -28,17 +34,21 @@ const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
     // --
-    constructor(pSetupObj: SFSetupObject, i18n: Language) {
+    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language) {
         super();
 
         // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
         const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'expiryDatePolicy', 'loadingContext', 'holderEl'];
 
-        // Copy passed setup object values to this.config...
+        // Copy passed setup object values to this.sfConfig...
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
 
         // ...breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
-        this.config = { ...this.config, ...configVarsFromSetUpObj, iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig } } as SFInternalConfig;
+        this.sfConfig = {
+            ...this.sfConfig,
+            ...configVarsFromSetUpObj,
+            iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig }
+        } as SFInternalConfig;
 
         // Copy passed setup object values to this
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
@@ -70,16 +80,16 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
-        const processedAriaConfig: AriaConfig = processAriaConfig(this.config, this.fieldType, i18n);
+        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig, this.fieldType, i18n);
         // Set result back onto config object
-        this.config.iframeUIConfig.ariaConfig = processedAriaConfig;
+        this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
         /**
          * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
          */
-        const processedPlaceholders: SFPlaceholdersObject = processPlaceholders(this.config, this.fieldType, i18n);
+        const processedPlaceholders: SFPlaceholdersObject = processPlaceholders(this.sfConfig, this.fieldType, i18n);
         // Set result back onto config object
-        this.config.iframeUIConfig.placeholders = processedPlaceholders;
+        this.sfConfig.iframeUIConfig.placeholders = processedPlaceholders;
 
         /**
          * Configure, create & reference iframe and add load listener
@@ -107,16 +117,12 @@ class SecuredField extends AbstractSecuredField {
             on(iframe, 'load', this.iframeOnLoadListener, false);
         }
 
+        this.iframeRef = iframe;
+
         return this;
     }
 
     iframeOnLoadListenerFn(): void {
-        if (process.env.NODE_ENV === 'development' && window._b$dl) {
-            logger.log('\n### SecuredField:::: onIframeLoaded:: this type=', this.config.txVariant);
-        }
-
-        off(window, 'load', this.iframeOnLoadListener, false);
-
         // Create reference to bound fn (see getters/setters for binding)
         this.postMessageListener = this.postMessageListenerFn;
 
@@ -126,28 +132,26 @@ class SecuredField extends AbstractSecuredField {
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
             fieldType: this.fieldType,
+            extraFieldData: this.sfConfig.extraFieldData,
+            uid: this.sfConfig.uid,
             cvcPolicy: this.cvcPolicy,
             expiryDatePolicy: this.expiryDatePolicy,
             numKey: this.numKey,
-            txVariant: this.config.txVariant,
-            extraFieldData: this.config.extraFieldData,
-            cardGroupTypes: this.config.cardGroupTypes,
-            iframeUIConfig: this.config.iframeUIConfig,
-            sfLogAtStart: this.config.sfLogAtStart,
-            showWarnings: this.config.showWarnings,
-            trimTrailingSeparator: this.config.trimTrailingSeparator,
-            isCreditCardType: this.config.isCreditCardType,
-            legacyInputMode: this.config.legacyInputMode,
-            minimumExpiryDate: this.config.minimumExpiryDate,
-            uid: this.config.uid,
-            implementationType: this.config.implementationType,
-            bundleType: this.config.bundleType,
-            isCollatingErrors: this.config.isCollatingErrors
+            txVariant: this.sfConfig.txVariant,
+            cardGroupTypes: this.sfConfig.cardGroupTypes,
+            iframeUIConfig: this.sfConfig.iframeUIConfig,
+            sfLogAtStart: this.sfConfig.sfLogAtStart,
+            trimTrailingSeparator: this.sfConfig.trimTrailingSeparator,
+            isCreditCardType: this.sfConfig.isCreditCardType,
+            showWarnings: this.sfConfig.showWarnings,
+            legacyInputMode: this.sfConfig.legacyInputMode,
+            minimumExpiryDate: this.sfConfig.minimumExpiryDate,
+            implementationType: this.sfConfig.implementationType,
+            isCollatingErrors: this.sfConfig.isCollatingErrors,
+            maskSecurityCode: this.sfConfig.maskSecurityCode
         };
 
-        if (process.env.NODE_ENV === 'development' && window._b$dl) {
-            logger.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
-        }
+        if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
 
         postMessageToIframe(configObj, this.iframeContentWindow, this.loadingContext);
         //--
@@ -158,7 +162,7 @@ class SecuredField extends AbstractSecuredField {
 
     postMessageListenerFn(event: MessageEvent): void {
         // Check message is from expected domain
-        if (!originCheckPassed(event, this.loadingContext, this.config.showWarnings)) {
+        if (!originCheckPassed(event, this.loadingContext, this.sfConfig.showWarnings)) {
             return;
         }
 
@@ -170,7 +174,7 @@ class SecuredField extends AbstractSecuredField {
                 '\n###CSF SecuredField::postMessageListener:: DOMAIN & ORIGIN MATCH, NO WEBPACK WEIRDNESS fieldType=',
                 this.fieldType,
                 'txVariant=',
-                this.config.txVariant,
+                this.sfConfig.txVariant,
                 'this.numKey=',
                 this.numKey
             );
@@ -184,17 +188,17 @@ class SecuredField extends AbstractSecuredField {
         } catch (e) {
             // Was the message generated by webpack?
             if (isWebpackPostMsg(event)) {
-                if (this.config.showWarnings) logger.log('### SecuredField::postMessageListenerFn:: PARSE FAIL - WEBPACK');
+                if (this.sfConfig.showWarnings) logger.log('### SecuredField::postMessageListenerFn:: PARSE FAIL - WEBPACK');
                 return;
             }
 
             // Was the message generated by ChromeVox?
             if (isChromeVoxPostMsg(event)) {
-                if (this.config.showWarnings) logger.log('### SecuredField::postMessageListenerFn:: PARSE FAIL - CHROMEVOX');
+                if (this.sfConfig.showWarnings) logger.log('### SecuredField::postMessageListenerFn:: PARSE FAIL - CHROMEVOX');
                 return;
             }
 
-            if (this.config.showWarnings)
+            if (this.sfConfig.showWarnings)
                 logger.log('### SecuredField::postMessageListenerFn:: PARSE FAIL - UNKNOWN REASON: event.data=', event.data);
             return;
         }
@@ -203,7 +207,7 @@ class SecuredField extends AbstractSecuredField {
         const hasMainProps: boolean = hasOwnProperty(feedbackObj, 'action') && hasOwnProperty(feedbackObj, 'numKey');
 
         if (!hasMainProps) {
-            if (this.config.showWarnings) logger.warn('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!');
+            if (this.sfConfig.showWarnings) logger.warn('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!');
             return;
         }
 
@@ -212,7 +216,7 @@ class SecuredField extends AbstractSecuredField {
         }
 
         if (this.numKey !== feedbackObj.numKey) {
-            if (this.config.showWarnings) {
+            if (this.sfConfig.showWarnings) {
                 logger.warn(
                     'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! ' +
                         '(Probably a message from an unrelated securedField)'
@@ -227,7 +231,7 @@ class SecuredField extends AbstractSecuredField {
                 '### SecuredField::postMessageListener:: numkeys match PROCEED WITH POST MESSAGE PROCESSING fieldType=',
                 this.fieldType,
                 'txVariant=',
-                this.config.txVariant
+                this.sfConfig.txVariant
             );
         }
 
@@ -238,6 +242,8 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             case 'config':
+                if (window._b$dl)
+                    console.log('### SecuredField::postMessageListenerFn:: configured - calling onConfigCallback', feedbackObj.fieldType);
                 this.onConfigCallback(feedbackObj);
                 break;
 
@@ -277,7 +283,8 @@ class SecuredField extends AbstractSecuredField {
              *  'brand'
              *  'delete'
              *  'luhnCheck'
-             *  'incomplete field' (an error that follows from a focus (blur) event)
+             *              //'incomplete field' (an error that follows from a focus (blur) event)
+             *  'incorrectly filled field' (an error that follows from a focus (blur) event) // NEW
              *  'numberKeyPressed' (or date-, month-, year-, cvc-, pin-, or iban- KeyPressed)
              *    - since we have no "error" action "...KeyPressed" is the action type on most error events (other than "incomplete field" or "luhnCheck")
              *    and often these error events representing the clearing of an existing error
@@ -291,6 +298,7 @@ class SecuredField extends AbstractSecuredField {
 
     destroy(): void {
         off(window, 'message', this.postMessageListener, false);
+        off(this.iframeRef, 'load', this.iframeOnLoadListener, false);
         this.iframeContentWindow = null;
         removeAllChildren(this.holderEl);
     }

@@ -17,6 +17,7 @@ export default {
     'no-NO': () => import('./no-NO.json'),
     'pl-PL': () => import('./pl-PL.json'),
     'pt-BR': () => import('./pt-BR.json'),
+    'pt-PT': () => import('./pt-PT.json'),
     'ro-RO': () => import('./ro-RO.json'),
     'ru-RU': () => import('./ru-RU.json'),
     'sk-SK': () => import('./sk-SK.json'),

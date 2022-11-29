@@ -21,30 +21,35 @@ import {
     CbObjOnLoad
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
+import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 
 /**
- * Emits the onLoad  event
- * Here we can assume CSF is loaded and ready to be used
+ * Emits the onLoad event
+ * Here we can assume all securedFields iframes have fired their 'load' event
  */
 function handleOnLoad(cbObj: CbObjOnLoad): void {
+    // Clear 'loading' timeout
+    clearTimeout(this.csfLoadFailTimeout);
+    this.csfLoadFailTimeout = null;
+
     // Propagate onLoad event
     this.props.onLoad(cbObj);
 
     /**
      * Having seen that the securedFields iframes have loaded some kind of content (we don't know what, yet)
      * - setTimeout since we expect to get a successful configuration message "within a reasonable time"
+     *
+     * Now we catch clientKey & environment mismatch in core.ts - this timeout being called indicates that the securedFields have not all configured
+     * - so we need to clear the loading spinner to see if the securedFields are reporting anything
      */
-    // eslint-disable-next-line
-    this.invalidOriginErrorTimeout = setTimeout(() => {
+    this.csfConfigFailTimeout = setTimeout(() => {
         if (this.state.status !== 'ready') {
             // Hide the spinner
-            this.setState({ status: 'invalidOriginError' });
-
-            // Now we catch clientKey & environment mismatch in core.ts - this error is indicative of a
-            // clientKey error: the requesting domain is not in the “Allowed origins” for the clientKey in the CA
-            this.props.onError({ error: 'invalidOriginError', fieldType: 'defaultError' });
+            this.setState({ status: 'csfConfigFailure' });
+            // Report the error
+            this.props.onError(new AdyenCheckoutError('ERROR', 'secured fields have failed to configure'));
         }
-    }, this.invalidOriginTimeoutMS);
+    }, this.csfConfigFailTimeoutMS);
 }
 
 /**
@@ -52,7 +57,9 @@ function handleOnLoad(cbObj: CbObjOnLoad): void {
  * Here we can assume CSF is loaded, configured and ready to be used
  */
 function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
-    clearTimeout(this.invalidOriginErrorTimeout);
+    // Clear 'config' timeout
+    clearTimeout(this.csfConfigFailTimeout);
+    this.csfConfigFailTimeout = null;
 
     this.setState({ status: 'ready' }, () => {
         // Propagate onConfigSuccess event
@@ -204,7 +211,7 @@ function handleOnTouchstartIOS(cbObj): void {
     this.props.onTouchstartIOS(cbObj);
 }
 
-// Only called for holder name
+// Only called for holder name (from CSF>partials>processAutoComplete)
 function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.setState({ autoCompleteName: cbObj.value }, () => {
         this.props.onChange(this.state, { event: 'handleOnAutoComplete', fieldType: cbObj.fieldType });

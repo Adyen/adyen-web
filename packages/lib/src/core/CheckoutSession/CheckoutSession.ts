@@ -12,15 +12,17 @@ import {
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
+    SessionConfiguration
 } from '../../types';
 import cancelOrder from '../Services/sessions/cancel-order';
-import {onOrderCancelData} from "../../components/Dropin/types";
+import { onOrderCancelData } from '../../components/Dropin/types';
 
 class Session {
     private readonly session: CheckoutSession;
-    private readonly storage: Storage;
+    private readonly storage: Storage<CheckoutSession>;
     public readonly clientKey: string;
     public readonly loadingContext: string;
+    public configuration: SessionConfiguration;
 
     constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
@@ -58,7 +60,13 @@ class Session {
      * Fetches data from a session
      */
     setupSession(options): Promise<CheckoutSessionSetupResponse> {
-        return setupSession(this, options);
+        return setupSession(this, options).then(response => {
+            if (response.configuration) {
+                this.configuration = { ...response.configuration };
+            }
+
+            return response;
+        });
     }
 
     /**
@@ -125,7 +133,6 @@ class Session {
             return response;
         });
     }
-
 
     /**
      * Gets the stored session but only if the current id and the stored id match

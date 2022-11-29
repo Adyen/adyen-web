@@ -16,17 +16,26 @@ import {
     CbObjOnLoad
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/configuration/constants';
+import {
+    CVC_POLICY_REQUIRED,
+    DATE_POLICY_REQUIRED,
+    DEDICATED_CARD_COMPONENTS,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_PWD_FIELD
+} from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
 import { getError } from '../../../../core/Errors/utils';
+import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 
 /**
  * SecuredFieldsProvider:
  * Initialises & handles the client-side part of SecuredFields
  */
 class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
-    private invalidOriginErrorTimeout: number;
-    private invalidOriginTimeoutMS: number;
+    private csfLoadFailTimeout: number;
+    private csfLoadFailTimeoutMS: number;
+    private csfConfigFailTimeout: number;
+    private csfConfigFailTimeoutMS: number;
     private numCharsInField: object;
     private rootNode;
     private numDateFields: number;
@@ -61,8 +70,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         };
         this.state = stateObj;
 
-        this.invalidOriginErrorTimeout = null;
-        this.invalidOriginTimeoutMS = 15000;
+        this.csfLoadFailTimeout = null;
+        this.csfLoadFailTimeoutMS = 30000;
+
+        this.csfConfigFailTimeout = null;
+        this.csfConfigFailTimeoutMS = 15000;
 
         this.numCharsInField = {};
 
@@ -166,11 +178,28 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
             minimumExpiryDate: this.props.minimumExpiryDate,
-            implementationType: this.props.implementationType || 'components',
-            isCollatingErrors: this.props.isCollatingErrors
+            implementationType: this.props.implementationType || 'components', // to distinguish between 'regular' and 'custom' card component
+            isCollatingErrors: this.props.isCollatingErrors,
+            forceCompat: this.props.forceCompat,
+            maskSecurityCode: this.props.maskSecurityCode
         };
 
         this.csf = initCSF(csfSetupObj);
+
+        /**
+         * Expect to at least have had the handleOnLoad callback called within this time
+         * - if this hasn't happened then something has happened to interrupt the loading of the securedFields
+         * So we need to clear the loading spinner to see if the securedFields are reporting anything
+         */
+        // @ts-ignore - timout 'type' is a number
+        this.csfLoadFailTimeout = setTimeout(() => {
+            if (this.state.status !== 'ready') {
+                // Hide the spinner
+                this.setState({ status: 'csfLoadFailure' });
+                // Report the error
+                this.props.onError(new AdyenCheckoutError('ERROR', 'secured field iframes have failed to load'));
+            }
+        }, this.csfLoadFailTimeoutMS);
     }
 
     private checkForKCPFields() {
@@ -316,17 +345,31 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
         this.issuingCountryCode = binLookupResponse?.issuingCountryCode?.toLowerCase();
 
-        // If "resetting" /binLookup for a single-branded card, resetObject.brand will be the value of the brand whose logo we want to reshow
-        if (resetObject?.brand) {
+        const hasBrandedResetObj = resetObject?.brand;
+
+        /**
+         * Are we dealing with a "dedicated" card scenario i.e a card component created as: checkout.create('bcmc') but which can accept multiple brands
+         * - in which case we will need to reset brand and pass on the resetObj to CSF
+         */
+        const mustResetDedicatedBrand = hasBrandedResetObj && DEDICATED_CARD_COMPONENTS.includes(resetObject.brand);
+
+        if (mustResetDedicatedBrand) {
+            // resetObject.brand will be the value of the brand whose logo we want to reshow in the UI
             this.setState(resetObject, () => {
                 this.props.onChange(this.state);
             });
         }
 
-        // Scenarios:
-        // RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
-        // RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
-        if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse);
+        /**
+         * Scenarios:
+         *
+         * - RESET (binLookupResponse === null): The number of digits in number field has dropped below threshold for BIN lookup
+         * - RESULT (binLookupResponse.supportedBrands.length === 1): binLookup has found a result so inform CSF
+         *
+         * In the RESET scenario, for "dedicated" card components we also need to pass on the resetObject since this contains information about
+         * the brand that CSF needs to reset to, internally.
+         */
+        if (this.csf) this.csf.brandsFromBinLookup(binLookupResponse, mustResetDedicatedBrand ? resetObject : null);
     }
 
     private setRootNode = (input: HTMLElement): void => {

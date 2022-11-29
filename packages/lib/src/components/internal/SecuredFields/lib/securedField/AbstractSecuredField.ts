@@ -13,40 +13,53 @@ import {
 } from '../configuration/constants';
 
 /**
- * Base interface, props common to both SFSetupObject & IframeConfigObject
+ * Base interface, props common to both SecuredFieldInitObj & IframeConfigObject
+ *
+ * These are the props that are passed from CSF.createSecuredFields when SecuredField.ts is initialised
+ * but which also end up as props in the IframeConfigObject
  */
 export interface SFInternalConfig {
-    fieldType: string; // extracted in createSecuredFields
-    extraFieldData: string; // extracted in createSecuredFields
+    // originally extracted in createSecuredFields
+    fieldType: string;
+    extraFieldData: string;
+    uid: string;
+    // originally calculated in createSecuredFields, for single branded cards, based on initial assessment of brand info; else defaults to true
+    cvcPolicy: CVCPolicyType;
+    // originally set in createSecuredFields
+    expiryDatePolicy: DatePolicyType;
+    // originally read from CSF->this.state
     txVariant: string;
+    // originally from CSF->this.config
     cardGroupTypes: string[];
     iframeUIConfig: IframeUIConfigObject;
     sfLogAtStart: boolean;
     trimTrailingSeparator: boolean;
     isCreditCardType: boolean;
     showWarnings: boolean;
-    cvcPolicy: CVCPolicyType;
-    expiryDatePolicy: DatePolicyType;
     legacyInputMode: boolean;
     minimumExpiryDate: string;
-    uid: string;
     implementationType: string;
-    bundleType: string;
     isCollatingErrors: boolean;
+    maskSecurityCode: boolean;
 }
 
 /**
- * The object passed from createSecuredFields to a new instance of SecuredField.ts
+ * The object sent when createSecuredFields initialises a new instance of SecuredField.ts
+ *
+ * Properties defined directly in *this* interface c.f. SFInternalConfig are ones
+ * that are needed by SecuredField.ts but are *not* required in the IframeConfigObject
  */
-export interface SFSetupObject extends SFInternalConfig {
-    expiryDatePolicy: DatePolicyType;
+export interface SecuredFieldInitObj extends SFInternalConfig {
     iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
 }
 
 /**
- * Object sent via postMessage to a SecuredField iframe
+ * Object sent via postMessage to a SecuredField iframe in order to configure that iframe
+ *
+ * Properties defined directly in *this* interface are ones that are calculated by SecuredField.ts
+ * instead of just being read directly from the SecuredFieldInitObj
  */
 export interface IframeConfigObject extends SFInternalConfig {
     numKey: number;
@@ -84,11 +97,13 @@ export interface AriaConfigObject {
 }
 
 abstract class AbstractSecuredField {
-    public config: SFInternalConfig; // could be protected but needs to be public for tests to run
-    protected fieldType: string;
+    public sfConfig: SFInternalConfig; // could be protected but needs to be public for tests to run
+    public fieldType: string;
     protected iframeSrc: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;
+    protected iframeRef: HTMLElement;
+    public loadToConfigTimeout: number;
     // From getters/setters with the same name
     protected _errorType: string;
     protected _hasError: boolean;
@@ -112,7 +127,7 @@ abstract class AbstractSecuredField {
     protected onAutoCompleteCallback: RtnType_callbackFn;
 
     protected constructor() {
-        this.config = ({} as any) as SFInternalConfig;
+        this.sfConfig = ({} as any) as SFInternalConfig;
     }
 }
 

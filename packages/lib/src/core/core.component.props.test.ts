@@ -355,7 +355,6 @@ describe('Core - tests ensuring props reach components', () => {
             // expect props from AmazonPay.formatProps()
             expect(aPay.props.type).toEqual('amazonpay');
             expect(aPay.props.productType).toEqual('PayOnly');
-            expect(aPay.props.region).toEqual('EU'); // should have reformatted region to upperCase
         });
 
         test('Redirect PM in Dropin receives correct props ', async () => {

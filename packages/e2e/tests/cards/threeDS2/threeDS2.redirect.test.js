@@ -31,7 +31,8 @@ const logger = RequestLogger(
 
 const apiVersion = Number(process.env.API_VERSION.substr(1));
 
-fixture`Testing new (v67) 3DS2 Flow (redirect)`
+// This "3DS1 fallback" has been deprecated and is now only available in a limited number of countries // TODO confirm
+fixture.skip`Testing new (v67) 3DS2 Flow (redirect)`
     .beforeEach(async t => {
         await t.navigateTo(`${dropinPage.pageUrl}?amount=12003`);
         await turnOffSDKMocking();

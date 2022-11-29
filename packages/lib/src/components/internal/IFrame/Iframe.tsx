@@ -60,20 +60,20 @@ class Iframe extends Component<IframeProps> {
                 ref={ref => {
                     this.iframeEl = ref;
                 }}
-                /*
-                // @ts-ignore experimental */
                 allow={allow}
                 className={`adyen-checkout__iframe adyen-checkout__iframe--${name}`}
                 name={name}
                 src={src}
                 width={width}
                 height={height}
-                min-width={minWidth}
-                min-height={minHeight}
                 style={{ border: 0 }}
                 frameBorder="0"
                 title={title}
+                /* eslint-disable react/no-unknown-property */
                 referrerpolicy="origin"
+                min-width={minWidth}
+                min-height={minHeight}
+                /* eslint-enable react/no-unknown-property */
             />
         );
     }

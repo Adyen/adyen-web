@@ -1,5 +1,6 @@
 import Language from '../../../../language/Language';
 import { StylesObject } from '../../../internal/SecuredFields/lib/types';
+import UIElement from '../../../UIElement';
 
 export interface ACHInputStateValid {
     holderName?: boolean;
@@ -30,27 +31,31 @@ export interface ACHInputProps {
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
     billingAddressRequiredFields?: string[];
-    clientKey: string;
+    clientKey?: string;
     data?: ACHInputDataState;
+    enableStoreDetails: boolean;
     hasHolderName?: boolean;
     holderName?: string;
     holderNameRequired?: boolean;
     i18n?: Language;
     keypadFix?: boolean;
     legacyInputMode?: boolean;
-    loadingContext: string;
+    loadingContext?: string;
     onAllValid?: () => {};
     onBlur?: (e) => {};
-    onChange?: (obj) => {};
+    onChange?: (obj) => void;
+    onSubmit?: (obj) => void;
     onConfigSuccess?: () => {};
-    onError?: () => {};
+    onError?: (error: any, element?: UIElement<any>) => void;
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
+    ref?: any;
     showPayButton?: boolean;
     showWarnings?: boolean;
     styles?: StylesObject;
     type?: string;
+    forceCompat?: boolean;
 }

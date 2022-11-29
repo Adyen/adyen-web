@@ -94,14 +94,7 @@ const replaceTranslationValues = (translation, values) => {
  *
  * @internal
  */
-export const getTranslation = (
-    translations: object,
-    key: string,
-    options: { [key: string]: any } = {
-        values: {},
-        count: 0
-    }
-): string => {
+export const getTranslation = (translations: object, key: string, options: { [key: string]: any } = { values: {}, count: 0 }): string => {
     const keyPlural = `${key}__plural`;
     const keyForCount = count => `${key}__${count}`;
 

@@ -12,6 +12,9 @@ const initCheckout = async () => {
     });
 
     const checkout = await AdyenCheckout({
+        analytics: {
+            enabled: false
+        },
         amount,
         paymentMethodsResponse,
         clientKey: process.env.__CLIENT_KEY__,

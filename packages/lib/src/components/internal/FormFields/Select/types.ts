@@ -3,6 +3,7 @@ export interface SelectItem {
     icon?: string;
     id: string;
     name: string;
+    secondaryText?: string;
     selectedOptionName?: string;
 }
 

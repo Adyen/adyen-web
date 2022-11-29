@@ -27,6 +27,7 @@ import { on, selectOne } from '../utilities/dom';
 import { partial } from '../utilities/commonUtils';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import ua from './utils/userAgent';
+import { SingleBrandResetObject } from '../../SFP/types';
 
 const notConfiguredWarning = (str = 'You cannot use secured fields') => {
     logger.warn(`${str} - they are not yet configured. Use the 'onConfigSuccess' callback to know when this has happened.`);
@@ -35,6 +36,15 @@ const notConfiguredWarning = (str = 'You cannot use secured fields') => {
 class CSF extends AbstractCSF {
     // --
     constructor(setupObj: CSFSetupObject) {
+        /**
+         * Initialises:
+         *  - this.props = setupObj: CSFSetupObject
+         *
+         * and empty objects for:
+         *  - this.config: CSFConfigObject (populated in handleConfig.ts)
+         *  - this.callbacks: CSFCallbacksConfig (populated in configureCallbacks.ts
+         *  - this.state: CSFStateObject (populated below)
+         */
         super(setupObj);
 
         this.state = {
@@ -113,7 +123,7 @@ class CSF extends AbstractCSF {
     }
 
     private init(): void {
-        this.configHandler();
+        this.configHandler(this.props);
         this.callbacksHandler(this.props.callbacks);
 
         /**
@@ -214,11 +224,11 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot destroy secured fields');
                 }
             },
-            brandsFromBinLookup: (binLookupResponse: BinLookupResponse): void => {
+            brandsFromBinLookup: (binLookupResponse: BinLookupResponse, resetObj: SingleBrandResetObject): void => {
                 if (!this.config.isCreditCardType) return null;
 
                 if (this.state.isConfigured) {
-                    this.handleBrandFromBinLookup(binLookupResponse);
+                    this.handleBrandFromBinLookup(binLookupResponse, resetObj);
                 } else {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }
@@ -235,6 +245,7 @@ class CSF extends AbstractCSF {
                     this.state.securedFields[pFieldType].destroy();
                     delete this.state.securedFields[pFieldType];
                     this.state.numIframes -= 1;
+                    this.state.iframeCount -= 1;
 
                     const callbackObj: CbObjOnAdditionalSF = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
                     this.callbacks.onAdditionalSFRemoved(callbackObj);

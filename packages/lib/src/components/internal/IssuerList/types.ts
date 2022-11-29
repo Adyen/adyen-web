@@ -9,7 +9,10 @@ export interface IssuerListProps {
     highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;
+    termsAndConditionsUrl?: string;
 }
+
+
 
 export interface IssuerItem {
     id: string;

@@ -25,6 +25,17 @@ export interface CardElementProps extends UIElementProps {
     brandsConfiguration?: CardBrandsConfiguration;
 
     /**
+     * Flag indicating if merchant really intent to use Click to Pay
+     * Will be removed when we Click to Pay goes live
+     */
+    useClickToPay: boolean;
+
+    /**
+     * Configuration for Click to Pay
+     */
+    clickToPayConfiguration?: ClickToPayConfiguration;
+
+    /**
      * type will always be "card" (generic card, stored card)
      * except for a single branded card when it will be the same as the brand prop
      */
@@ -111,12 +122,37 @@ export interface CardElementProps extends UIElementProps {
     [key: string]: any;
 }
 
+export type ClickToPayScheme = 'mc' | 'visa';
+
+export type ClickToPayConfiguration = {
+    shopperIdentityValue: string;
+    shopperIdentityType?: 'email' | 'mobilePhone';
+    /**
+     * Used to display the merchant name in case the DCF appears (ex: first time doing transaction in the device),
+     */
+    merchantDisplayName: string;
+    /**
+     * Used to ensure the correct language and user experience if DCF screen is displayed. As a fallback, it uses the main locale
+     * defined during the creation of the Checkout.
+     * Format: ISO language_country pair (e.g., en_US )
+     *
+     * @default en_US
+     */
+    locale?: string;
+};
+
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 
 // TODO clarify exact properties that can be in this object
 //  - should only be ones that can be sent in the configuration object in the /paymentMethods response
 /** If the merchant wishes to set any of these properties in their local config they should do so via a "configuration" object */
 export interface CardConfiguration {
+    // Click to Pay
+    visaSrciDpaId?: string;
+    visaSrcInitiatorId?: string;
+    mcSrcClientId?: string;
+    mcDpaId?: string;
+
     // GooglePay
     merchantIdentifier?: string;
     merchantOrigin?: string;

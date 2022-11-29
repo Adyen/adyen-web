@@ -14,7 +14,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 label={i18n.get('ach.accountNumberField.title')}
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedBankAccountNumber || !!valid.encryptedBankAccountNumber}
-                errorMessage={!!errors.encryptedBankAccountNumber && i18n.get('ach.accountNumberField.invalid')}
+                errorMessage={!!errors.encryptedBankAccountNumber && i18n.get(errors.encryptedBankAccountNumber)}
                 dataInfo='{"length":"4-17", "maskInterval": 4}'
                 className={'adyen-checkout__field--50'}
                 dir={'ltr'}
@@ -26,7 +26,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 label={i18n.get('ach.accountLocationField.title')}
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedBankLocationId || !!valid.encryptedBankLocationId}
-                errorMessage={!!errors.encryptedBankLocationId && i18n.get('ach.accountLocationField.invalid')}
+                errorMessage={!!errors.encryptedBankLocationId && i18n.get(errors.encryptedBankLocationId)}
                 dataInfo='{"length":9}'
                 className={'adyen-checkout__field--50'}
                 dir={'ltr'}

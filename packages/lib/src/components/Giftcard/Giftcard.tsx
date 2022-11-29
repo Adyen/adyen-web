@@ -5,7 +5,8 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import getImage from '../../utils/get-image';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { Order, PaymentAmount } from '../../types';
+import { PaymentAmount } from '../../types';
+import { PaymentResponse } from '../types';
 
 export class GiftcardElement extends UIElement {
     public static type = 'giftcard';
@@ -74,12 +75,16 @@ export class GiftcardElement extends UIElement {
         }
     };
 
-    protected handleOrder = (order: Order) => {
-        this.elementRef._parentInstance.update({ order });
+    protected handleOrder = ({ order }: PaymentResponse) => {
+        this.updateParent({ order });
         if (this.props.session && this.props.onOrderCreated) {
             return this.props.onOrderCreated(order);
         }
     };
+
+    public balanceCheck() {
+        return this.onBalanceCheck();
+    }
 
     public onBalanceCheck = () => {
         // skip balance check if no onBalanceCheck event has been defined
@@ -110,6 +115,10 @@ export class GiftcardElement extends UIElement {
                         this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
                         this.submit();
                     });
+                } else {
+                    if (this.props.onRequiringConfirmation) {
+                        this.props.onRequiringConfirmation();
+                    }
                 }
             })
             .catch(error => {

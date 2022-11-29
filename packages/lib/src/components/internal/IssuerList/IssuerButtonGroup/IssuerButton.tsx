@@ -21,8 +21,8 @@ function IssuerButton({ name, id, icon, onClick, selected = false }: IssuerButto
             onClick={onClick}
             value={id}
         >
-            <span className="adyen-checkout__issuer-button-text">{name}</span>
             {!!icon && <Img className="adyen-checkout__issuer-button-img" alt={name} src={icon} />}
+            <span className="adyen-checkout__issuer-button-text">{name}</span>
         </button>
     );
 }
