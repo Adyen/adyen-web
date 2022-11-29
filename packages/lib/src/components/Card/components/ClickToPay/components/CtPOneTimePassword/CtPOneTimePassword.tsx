@@ -9,13 +9,12 @@ import './CtPOneTimePassword.scss';
 
 const CtPOneTimePassword = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
-    const { finishIdentityValidation, otpMaskedContact, isCtpPrimaryPaymentMethod } = useClickToPayContext();
+    const { finishIdentityValidation, otpMaskedContact, otpNetwork, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [otp, setOtp] = useState<string>(null);
     const [isValid, setIsValid] = useState<boolean>(false);
     const [isValidatingOtp, setIsValidatingOtp] = useState<boolean>(false);
     const [errorCode, setErrorCode] = useState<string>(null);
     const [otpInputHandlers, setOtpInputHandlers] = useState<CtPOneTimePasswordInputHandlers>(null);
-    const subtitleParts = i18n.get('ctp.otp.subtitle').split('%@');
 
     const onSetOtpInputHandlers = useCallback((handlers: CtPOneTimePasswordInputHandlers) => {
         setOtpInputHandlers(handlers);
@@ -48,13 +47,15 @@ const CtPOneTimePassword = (): h.JSX.Element => {
         }
     }, [otp, isValid, otpInputHandlers]);
 
+    const subtitleParts = i18n.get('ctp.otp.subtitle').split('%@');
+
     return (
         <Fragment>
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.otp.title')}</div>
             <div className="adyen-checkout-ctp__section-subtitle">
-                {subtitleParts[0]}
+                {subtitleParts[0]} {otpNetwork} {subtitleParts[1]}
                 <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span>
-                {subtitleParts[1]}
+                {subtitleParts[2]}
             </div>
             <CtPOneTimePasswordInput
                 onChange={onChangeOtpInput}

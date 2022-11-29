@@ -45,7 +45,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     }, [data, onChangeCard]);
 
     return (
-        <Field label={i18n.get('ctp.cards.cardSelector')} name="clickToPayCards">
+        <Field name="clickToPayCards">
             {renderFormField('select', {
                 items,
                 selected: data['srcDigitalCardId'],

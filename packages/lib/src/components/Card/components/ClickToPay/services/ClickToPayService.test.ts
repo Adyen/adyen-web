@@ -420,7 +420,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
     expect(visa.initiateIdentityValidation).toHaveBeenCalledTimes(0);
     expect(mc.initiateIdentityValidation).toHaveBeenCalledTimes(1);
     expect(service.state).toBe(CtpState.OneTimePassword);
-    expect(service.shopperValidationContact).toBe('+31•••••••55');
+    expect(service.identityValidationData).toEqual({ maskedShopperContact: '+31•••••••55', selectedNetwork: 'Mastercard' });
 
     // Resend OTP
     await service.startIdentityValidation();
@@ -428,7 +428,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
     expect(visa.initiateIdentityValidation).toHaveBeenCalledTimes(0);
     expect(mc.initiateIdentityValidation).toHaveBeenCalledTimes(2);
     expect(service.state).toBe(CtpState.OneTimePassword);
-    expect(service.shopperValidationContact).toBe('+31•••••••55');
+    expect(service.identityValidationData).toEqual({ maskedShopperContact: '+31•••••••55', selectedNetwork: 'Mastercard' });
 
     await service.finishIdentityValidation(otp);
 

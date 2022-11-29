@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPSingleCard from './CtPSingleCard/CtPSingleCard';
 import getImage from '../../../../../../utils/get-image';
@@ -20,6 +20,12 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
 
+    useEffect(() => {
+        if (cards.length === 0) {
+            onShowCardButtonClick();
+        }
+    }, [onShowCardButtonClick, cards]);
+
     const doCheckout = useCallback(async () => {
         if (!checkoutCard) return;
 
@@ -37,7 +43,7 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
     }, []);
 
     if (cards.length === 0) {
-        return <CtPEmptyCardsList onShowCardButtonClick={onShowCardButtonClick} />;
+        return <CtPEmptyCardsList />;
     }
 
     const hasAvailableCards = cards.some(card => card.isExpired === false);

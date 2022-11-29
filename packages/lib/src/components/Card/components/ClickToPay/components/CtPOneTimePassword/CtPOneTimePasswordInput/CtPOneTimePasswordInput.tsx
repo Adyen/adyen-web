@@ -42,6 +42,10 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     }, [triggerValidation]);
 
     useEffect(() => {
+        if (inputRef) inputRef.focus();
+    }, [inputRef]);
+
+    useEffect(() => {
         otpInputHandlersRef.current.validateInput = validateInput;
         props.onSetInputHandlers(otpInputHandlersRef.current);
     }, [validateInput, props.onSetInputHandlers]);
