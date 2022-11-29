@@ -31,6 +31,11 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
         type: 'ChallengeShopper'
     };
 
+    onComplete(state) {
+        super.onComplete(state);
+        this.unmount(); // re. fixing issue around back to back challenge calls
+    }
+
     render() {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {
