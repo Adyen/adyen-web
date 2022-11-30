@@ -1,8 +1,13 @@
 #!/bin/sh
 #. "$(dirname "$0")/_/husky.sh"
 
-vagrant ssh -- -t <<HEREDOC
+# helper if you are running repo inside a container
+if which vagrant; then
+  vagrant ssh -- -t <<HEREDOC
   cd workspace/adyen-web/packages/lib;
   echo "head -n -1 ~/.bashrc > temp.txt ; mv temp.txt ~/.bashrc && npx lint-staged;" >> ~/.bashrc;
   /bin/bash -i
 HEREDOC
+else
+  npx lint-staged
+fi
