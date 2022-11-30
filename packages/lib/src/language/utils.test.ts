@@ -1,6 +1,15 @@
-import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement, loadTranslations, matchLocale, parseLocale } from './utils';
+import {
+    formatCustomTranslations,
+    formatLocale,
+    getTranslation,
+    interpolateElement,
+    loadTranslations,
+    matchLocale,
+    parseLocale
+} from './utils';
 import locales from './locales';
-import {createElement, h} from 'preact';
+import {createElement} from "preact";
+
 const defaultSupportedLocales = Object.keys(locales);
 
 describe('parseLocale()', () => {
@@ -244,5 +253,11 @@ describe('interpolateElement()', () => {
         expect(result[1] === 'a');
         expect(typeof result[2] === 'string');
         expect(result[3] === 'a');
+    });
+
+    test('it should throw an error when wrong amount elements', () => {
+        const renderLink = translation => createElement('a', { href: 'example.com' }, [translation]);
+        const resultFn = () => interpolateElement('By clicking continue %#you%# agree with the %#term and conditions%#',  [renderLink]);
+        expect(resultFn).toThrow(Error);
     });
 });
