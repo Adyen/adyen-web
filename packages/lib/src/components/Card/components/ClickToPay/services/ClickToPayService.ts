@@ -236,6 +236,7 @@ class ClickToPayService implements IClickToPayService {
                     isFulfilled(promiseResult) && { ...promiseResult.value, scheme: this.sdks[index].schemeName };
 
                 const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses.map(createProfileWithScheme).filter(profile => !!profile);
+
                 this.shopperCards = createShopperCardsList(profilesWithScheme);
                 resolve();
             });

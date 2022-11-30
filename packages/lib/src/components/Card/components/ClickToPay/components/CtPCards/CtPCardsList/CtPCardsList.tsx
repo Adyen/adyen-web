@@ -11,6 +11,7 @@ import './CtPCardsList.scss';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
+    errorMessage?: string;
     onChangeCard(card: ShopperCard): void;
 };
 
@@ -20,7 +21,7 @@ type CardsSelectorDataState = {
 
 const schema = ['srcDigitalCardId'];
 
-const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
+const CtPCardsList = ({ cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
     const { i18n, loadingContext } = useCoreContext();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
@@ -45,7 +46,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     }, [data, onChangeCard]);
 
     return (
-        <Field name="clickToPayCards">
+        <Field name="clickToPayCards" errorMessage={errorMessage}>
             {renderFormField('select', {
                 items,
                 selected: data['srcDigitalCardId'],

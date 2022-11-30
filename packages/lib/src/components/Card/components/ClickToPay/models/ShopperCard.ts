@@ -1,4 +1,4 @@
-import { SrcCard } from '../services/sdks/types';
+import { DigitalCardStatus, SrcCard } from '../services/sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import { SchemeNames } from '../services/sdks/utils';
 
@@ -15,6 +15,7 @@ class ShopperCard {
     private panExpirationMonth: string;
     private panExpirationYear: string;
     private descriptorName?: string;
+    private status?: DigitalCardStatus;
 
     constructor(maskedCard: SrcCard, scheme: ClickToPayScheme, srcCorrelationId: string) {
         this.dateOfCardLastUsed = maskedCard.dateOfCardLastUsed;
@@ -27,6 +28,8 @@ class ShopperCard {
         this.srcCorrelationId = srcCorrelationId;
         this.panExpirationMonth = maskedCard.panExpirationMonth;
         this.panExpirationYear = maskedCard.panExpirationYear;
+        this.status = maskedCard.digitalCardData.status;
+
         this.isExpired = this.verifyIfCardIsExpired();
     }
 
@@ -35,6 +38,10 @@ class ShopperCard {
     }
 
     private verifyIfCardIsExpired(): boolean {
+        if (this.status === 'ACTIVE') return false;
+        if (this.status === 'EXPIRED') return true;
+        if (!this.panExpirationYear && !this.panExpirationMonth) return true;
+
         const [currentMonth, currentYear] = [new Date().getMonth() + 1, new Date().getFullYear()];
 
         if (Number(this.panExpirationYear) > currentYear) return false;

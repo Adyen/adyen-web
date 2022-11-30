@@ -11,15 +11,26 @@ import ShopperCard from '../../models/ShopperCard';
 import CtPEmptyCardsList from './CtPEmptyCardsList';
 import './CtPCards.scss';
 import isMobile from '../../../../../../utils/isMobile';
+import SrciError from '../../services/sdks/SrciError';
+import Language from '../../../../../../language';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
 };
 
+function getErrorLabel(errorCode: string, i18n: Language): string {
+    if (!errorCode) return null;
+
+    const errorLabel = i18n.get(`ctp.errors.${errorCode}`);
+    if (errorLabel.includes('ctp.errors')) return i18n.get(`ctp.errors.UNKNOWN_ERROR`);
+    return errorLabel;
+}
+
 const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
+    const [errorCode, setErrorCode] = useState<string>(null);
     const isEveryCardExpired = cards.every(card => card.isExpired);
 
     useEffect(() => {
@@ -32,10 +43,12 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         if (!checkoutCard) return;
 
         try {
+            setErrorCode(null);
             onSetStatus('loading');
             const payload = await checkout(checkoutCard);
             onSubmit(payload);
         } catch (error) {
+            if (error instanceof SrciError) setErrorCode(error?.reason);
             onError(error);
         }
     }, [checkout, checkoutCard]);
@@ -53,7 +66,11 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
             <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
 
-            {cards.length === 1 ? <CtPSingleCard card={cards[0]} /> : <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} />}
+            {cards.length === 1 ? (
+                <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />
+            ) : (
+                <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} errorMessage={getErrorLabel(errorCode, i18n)} />
+            )}
 
             <PayButton
                 disabled={isEveryCardExpired}
