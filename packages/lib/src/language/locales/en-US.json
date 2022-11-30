@@ -249,7 +249,7 @@
     "ctp.otp.codeResent": "Code resent",
     "ctp.otp.title": "Access your Click to Pay cards",
     "ctp.otp.subtitle": "Enter the code %@ sent to %@ to verify it‘s you.",
-    "ctp.emptyCardsView.message": "No cards registered in this Click to Pay profile",
+    "ctp.emptyProfile.message": "No cards registered in this Click to Pay profile",
     "ctp.separatorText": "or use",
     "ctp.cards.title": "Complete payment with Click to Pay",
     "ctp.cards.subtitle": "Select a card to use.",
@@ -260,12 +260,12 @@
     "ctp.infoPopup.benefit1": "Click to Pay uses encryption to keep your information safe and secure",
     "ctp.infoPopup.benefit2": "Use it with merchants worldwide",
     "ctp.infoPopup.benefit3": "Set up once for hassle-free payments in the future",
-    "ctp.errors.AUTH_INVALID": "Authentication invalid",
+    "ctp.errors.AUTH_INVALID": "Authentication Invalid",
     "ctp.errors.NOT_FOUND": "No account found, enter a valid email or continue using manual card entry",
     "ctp.errors.ID_FORMAT_UNSUPPORTED": "Format not supported",
     "ctp.errors.FRAUD": "The user account was locked or disabled",
     "ctp.errors.CONSUMER_ID_MISSING": "Consumer identity is missing in the request",
-    "ctp.errors.ACCT_INACCESSIBLE": "The account exists but is not currently accessible, e.g. it is locked",
+    "ctp.errors.ACCT_INACCESSIBLE": "This account is currently not available, e.g it is locked",
     "ctp.errors.CODE_INVALID": "Incorrect verification code",
     "ctp.errors.CODE_EXPIRED": "This code has expired",
     "ctp.errors.RETRIES_EXCEEDED": "The limit for the number of retries for OTP generation was exceeded",
@@ -273,5 +273,6 @@
     "ctp.errors.REQUEST_TIMEOUT": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.UNKNOWN_ERROR": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.SERVICE_ERROR": "Something went wrong, try again or use the manual card entry",
-    "ctp.errors.SERVER_ERROR": "Something went wrong, try again or use the manual card entry"
+    "ctp.errors.SERVER_ERROR": "Something went wrong, try again or use the manual card entry",
+    "ctp.errors.INVALID_PARAMETER": "Something went wrong, try again or use the manual card entry"
 }

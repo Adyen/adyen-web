@@ -7,7 +7,10 @@ import { CtPOneTimePasswordInputHandlers } from './CtPOneTimePasswordInput/CtPOn
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import './CtPOneTimePassword.scss';
 
-const CtPOneTimePassword = (): h.JSX.Element => {
+type CtPOneTimePasswordProps = {
+    onDisplayRegularCardComponent(): void;
+};
+const CtPOneTimePassword = ({ onDisplayRegularCardComponent }: CtPOneTimePasswordProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const { finishIdentityValidation, otpMaskedContact, otpNetwork, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [otp, setOtp] = useState<string>(null);
@@ -15,6 +18,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
     const [isValidatingOtp, setIsValidatingOtp] = useState<boolean>(false);
     const [errorCode, setErrorCode] = useState<string>(null);
     const [otpInputHandlers, setOtpInputHandlers] = useState<CtPOneTimePasswordInputHandlers>(null);
+    const [isAccountLocked, setIsAccountLocked] = useState<boolean>(false);
 
     const onSetOtpInputHandlers = useCallback((handlers: CtPOneTimePasswordInputHandlers) => {
         setOtpInputHandlers(handlers);
@@ -44,8 +48,13 @@ const CtPOneTimePassword = (): h.JSX.Element => {
         } catch (error) {
             setErrorCode(error?.reason);
             setIsValidatingOtp(false);
+
+            if (error?.reason === 'ACCT_INACCESSIBLE') {
+                setIsAccountLocked(true);
+                onDisplayRegularCardComponent();
+            }
         }
-    }, [otp, isValid, otpInputHandlers]);
+    }, [otp, isValid, otpInputHandlers, onDisplayRegularCardComponent]);
 
     const subtitleParts = i18n.get('ctp.otp.subtitle').split('%@');
 
@@ -58,6 +67,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 {subtitleParts[2]}
             </div>
             <CtPOneTimePasswordInput
+                hideResendOtpButton={isAccountLocked}
                 onChange={onChangeOtpInput}
                 onSetInputHandlers={onSetOtpInputHandlers}
                 disabled={isValidatingOtp}
@@ -67,6 +77,7 @@ const CtPOneTimePassword = (): h.JSX.Element => {
                 isValidatingOtp={isValidatingOtp}
             />
             <Button
+                disabled={isAccountLocked}
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 onClick={onSubmitPassword}

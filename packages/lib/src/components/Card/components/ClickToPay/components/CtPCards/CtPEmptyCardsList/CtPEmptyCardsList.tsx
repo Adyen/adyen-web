@@ -13,7 +13,7 @@ const CtPEmptyCardsList = () => {
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
             <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
 
-            <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyCardsView.message')}</div>
+            <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>
 
             <Button disabled label={i18n.get('payButton')} variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'} />
         </Fragment>

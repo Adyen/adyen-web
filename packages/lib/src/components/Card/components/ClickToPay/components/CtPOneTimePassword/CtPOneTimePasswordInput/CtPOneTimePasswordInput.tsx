@@ -9,6 +9,7 @@ import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface CtPOneTimePasswordInputProps {
+    hideResendOtpButton: boolean;
     disabled: boolean;
     isValidatingOtp: boolean;
     errorMessage?: string;
@@ -83,7 +84,9 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
             name="oneTimePassword"
             label={i18n.get('ctp.otp.fieldLabel')}
             labelEndAdornment={
-                <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
+                !props.hideResendOtpButton && (
+                    <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
+                )
             }
             errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
             classNameModifiers={['otp']}

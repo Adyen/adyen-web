@@ -36,7 +36,7 @@ const ClickToPayComponent = ({ onShowCardButtonClick }: ClickToPayComponentProps
     return (
         <CtPSection>
             {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
-            {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
+            {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword onDisplayRegularCardComponent={onShowCardButtonClick} />}
             {ctpState === CtpState.Ready && <CtPCards onShowCardButtonClick={onShowCardButtonClick} />}
             {ctpState === CtpState.Login && <CtPLogin />}
         </CtPSection>
