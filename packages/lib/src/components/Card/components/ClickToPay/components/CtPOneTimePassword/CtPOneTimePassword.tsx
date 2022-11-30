@@ -8,9 +8,9 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import './CtPOneTimePassword.scss';
 
 type CtPOneTimePasswordProps = {
-    onDisplayRegularCardComponent(): void;
+    onDisplayCardComponent?(): void;
 };
-const CtPOneTimePassword = ({ onDisplayRegularCardComponent }: CtPOneTimePasswordProps): h.JSX.Element => {
+const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const { finishIdentityValidation, otpMaskedContact, otpNetwork, isCtpPrimaryPaymentMethod } = useClickToPayContext();
     const [otp, setOtp] = useState<string>(null);
@@ -51,10 +51,10 @@ const CtPOneTimePassword = ({ onDisplayRegularCardComponent }: CtPOneTimePasswor
 
             if (error?.reason === 'ACCT_INACCESSIBLE') {
                 setIsAccountLocked(true);
-                onDisplayRegularCardComponent();
+                onDisplayCardComponent?.();
             }
         }
-    }, [otp, isValid, otpInputHandlers, onDisplayRegularCardComponent]);
+    }, [otp, isValid, otpInputHandlers, onDisplayCardComponent]);
 
     const subtitleParts = i18n.get('ctp.otp.subtitle').split('%@');
 

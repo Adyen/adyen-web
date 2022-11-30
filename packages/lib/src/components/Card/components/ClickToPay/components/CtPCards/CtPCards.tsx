@@ -12,19 +12,20 @@ import CtPEmptyCardsList from './CtPEmptyCardsList';
 import './CtPCards.scss';
 
 type CtPCardsProps = {
-    onShowCardButtonClick(): void;
+    onDisplayCardComponent?(): void;
 };
 
-const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
+const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
+    const isEveryCardExpired = cards.every(card => card.isExpired);
 
     useEffect(() => {
-        if (cards.length === 0) {
-            onShowCardButtonClick();
+        if (cards.length === 0 || isEveryCardExpired) {
+            onDisplayCardComponent?.();
         }
-    }, [onShowCardButtonClick, cards]);
+    }, [onDisplayCardComponent, isEveryCardExpired, cards]);
 
     const doCheckout = useCallback(async () => {
         if (!checkoutCard) return;
@@ -46,8 +47,6 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
         return <CtPEmptyCardsList />;
     }
 
-    const hasAvailableCards = cards.some(card => card.isExpired === false);
-
     return (
         <Fragment>
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
@@ -56,7 +55,7 @@ const CtPCards = ({ onShowCardButtonClick }: CtPCardsProps) => {
             {cards.length === 1 ? <CtPSingleCard card={cards[0]} /> : <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} />}
 
             <PayButton
-                disabled={!hasAvailableCards}
+                disabled={isEveryCardExpired}
                 amount={amount}
                 label={i18n.get('payButton.with', {
                     values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }

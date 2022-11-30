@@ -163,7 +163,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa'],
                 useClickToPay: true,
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'guilherme.ribeiro-ctp4@adyen.com',
+                    shopperIdentityValue: 'guilherme.ribeiro-ctp3@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name '
                 }
             })
