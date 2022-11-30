@@ -10,6 +10,7 @@ import CtPCardsList from './CtPCardsList';
 import ShopperCard from '../../models/ShopperCard';
 import CtPEmptyCardsList from './CtPEmptyCardsList';
 import './CtPCards.scss';
+import isMobile from '../../../../../../utils/isMobile';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -57,9 +58,12 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
             <PayButton
                 disabled={isEveryCardExpired}
                 amount={amount}
-                label={i18n.get('payButton.with', {
-                    values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }
-                })}
+                label={
+                    !isMobile() &&
+                    i18n.get('payButton.with', {
+                        values: { value: amountLabel(i18n, amount), maskedData: `•••• ${checkoutCard?.panLastFour}` }
+                    })
+                }
                 status={status}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 icon={getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
