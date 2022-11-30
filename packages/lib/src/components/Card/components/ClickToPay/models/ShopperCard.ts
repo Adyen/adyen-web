@@ -30,20 +30,18 @@ class ShopperCard {
         this.panExpirationYear = maskedCard.panExpirationYear;
         this.status = maskedCard.digitalCardData.status;
 
-        this.isExpired = this.verifyIfCardIsExpired();
+        this.isExpired = this.confirmCardIsExpired();
     }
 
     get title() {
         return this.descriptorName || SchemeNames[this.scheme];
     }
 
-    private verifyIfCardIsExpired(): boolean {
-        if (this.status === 'ACTIVE') return false;
-        if (this.status === 'EXPIRED') return true;
-        if (!this.panExpirationYear && !this.panExpirationMonth) return true;
+    private confirmCardIsExpired(): boolean {
+        if (this.status !== 'ACTIVE') return true;
+        if (!this.panExpirationYear && !this.panExpirationMonth) return false;
 
         const [currentMonth, currentYear] = [new Date().getMonth() + 1, new Date().getFullYear()];
-
         if (Number(this.panExpirationYear) > currentYear) return false;
         if (Number(this.panExpirationYear) === currentYear && Number(this.panExpirationMonth) >= currentMonth) return false;
 
