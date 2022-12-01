@@ -46,7 +46,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
         this.customSdkConfiguration = customSdkConfiguration;
     }
 
-    public async loadSdkScript() {
+    public async loadSdkScript(): Promise<void> {
         if (!this.isSdkIsAvailableOnWindow()) {
             this.scriptElement = new Script(this.sdkUrl);
             await this.scriptElement.load();
