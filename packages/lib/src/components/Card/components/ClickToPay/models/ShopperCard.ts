@@ -15,7 +15,7 @@ class ShopperCard {
     private panExpirationMonth: string;
     private panExpirationYear: string;
     private descriptorName?: string;
-    private status?: DigitalCardStatus;
+    private status?: DigitalCardStatus = null;
 
     constructor(maskedCard: SrcCard, scheme: ClickToPayScheme, srcCorrelationId: string) {
         this.dateOfCardLastUsed = maskedCard.dateOfCardLastUsed;
