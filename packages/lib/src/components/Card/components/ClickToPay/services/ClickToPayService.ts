@@ -115,7 +115,6 @@ class ClickToPayService implements IClickToPayService {
             selectedNetwork: SchemeNames[this.validationSchemeSdk.schemeName]
         };
 
-        this.validationSchemeSdk.schemeName;
         this.setState(CtpState.OneTimePassword);
     }
 
