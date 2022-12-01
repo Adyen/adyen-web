@@ -25,7 +25,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        // shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
@@ -163,7 +162,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa'],
                 useClickToPay: true,
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'guilherme.ribeiro-ctp3@adyen.com',
+                    shopperIdentityValue: 'shopper-ctp1@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name '
                 }
             })
