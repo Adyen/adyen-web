@@ -1,18 +1,17 @@
-import { ThreeDS2FlowObject } from './types';
+import { ThreeDS2FlowObject, ThreeDS2ChallengeRejectObject } from './types';
 
 export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT: ThreeDS2FlowObject = {
-    result: {
-        transStatus: 'U'
-    },
-    type: 'challengeResult'
+export const CHALLENGE_UNKNOWN_ERROR_REJECT_OBJECT: ThreeDS2ChallengeRejectObject = {
+    type: 'challengeError',
+    comment: 'something unexpected happened',
+    extraInfo: 'any info about what happened'
 };
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
+export const CHALLENGE_TIMEOUT_REJECT_OBJECT: ThreeDS2FlowObject = {
     result: {
         transStatus: 'U'
     },

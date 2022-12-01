@@ -1,17 +1,18 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import Challenge from './components/Challenge';
-import { ErrorObject } from './components/utils';
+import { ErrorCodeObject } from './components/utils';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
+import { ThreeDS2ChallengeRejectObject } from './types';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
     dataKey?: string;
     notificationURL?: string;
-    onError?: (error: string | ErrorObject) => void;
+    onError?: (error: string | ErrorCodeObject | ThreeDS2ChallengeRejectObject) => void;
     paymentData?: string;
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
@@ -19,7 +20,6 @@ export interface ThreeDS2ChallengeProps {
     loadingContext?: string;
     useOriginalFlow?: boolean;
     i18n?: Language;
-    threeDS2MDFlowUnloadListener?: any;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {

@@ -6,7 +6,7 @@ import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { encodeBase64URL } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
-import { CHALLENGE_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT } from '../../config';
+import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT, CHALLENGE_UNKNOWN_ERROR_REJECT_OBJECT } from '../../config';
 import { DoChallenge3DS2Props, DoChallenge3DS2State } from './types';
 
 const iframeName = 'threeDSIframe';
@@ -39,7 +39,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
                 this.props.postMessageDomain,
                 resolve,
                 reject,
-                UNKNOWN_CHALLENGE_RESOLVE_OBJECT,
+                CHALLENGE_UNKNOWN_ERROR_REJECT_OBJECT,
                 'challengeResult'
             );
 
@@ -50,12 +50,13 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
 
     componentDidMount() {
         // Render challenge
-        this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT);
+        this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), CHALLENGE_TIMEOUT_REJECT_OBJECT);
         this.challengePromise.promise
             .then(resolveObject => {
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onCompleteChallenge(resolveObject);
             })
+            // Catch, for when... Challenge times-out OR get3DS2ChallengePromise rejects (un-parseable JSON)
             .catch(rejectObject => {
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onErrorChallenge(rejectObject);
