@@ -17,6 +17,10 @@
     font-weight: 600;
     line-height: 22px;
     margin-bottom: 4px;
+
+    @media screen and (max-width: 400px) {
+        font-size: 15px;
+    }
 }
 
 .adyen-checkout-ctp__section-subtitle {
