@@ -47,6 +47,22 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
 
     setupObj.rootNode = rootNode; // Overwrite with actual node (in case we were sent a string)
 
+    // //////// 3. Add warning if in development mode and a custom http domain is detected
+    const origin = window.origin;
+    if (
+        process.env.NODE_ENV === 'development' &&
+        origin.indexOf('http') > -1 &&
+        origin.indexOf('localhost') === -1 &&
+        origin.indexOf('127.0.0.1') === -1
+    ) {
+        console.warn(
+            'WARNING: you are are running from an insecure context:',
+            origin,
+            '\nCrypto.subtle cannot function in this environment.\nThe only secure contexts under http contain "localhost" or "127.0.0.1" in their url.' +
+                '\nSee https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts'
+        );
+    }
+
     const myCSF: CSF = new CSF(setupObj);
     return myCSF.createReturnObject();
 };
