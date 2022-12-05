@@ -266,5 +266,6 @@
     "ctp.errors.CODE_EXPIRED": "This code has expired",
     "ctp.errors.INVALID_PARAMETER": "Something went wrong",
     "ctp.errors.RETRIES_EXCEEDED": "The limit for the number of retries for OTP generation was exceeded",
-    "ctp.errors.OTP_SEND_FAILED": "The OTP could not be sent to the recipient"
+    "ctp.errors.OTP_SEND_FAILED": "The OTP could not be sent to the recipient",
+    "a11y.paymentMethodsList": "Choose a payment method"
 }
