@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "Sähköposti",
     "ctp.logout.notYou": "Etkö tämä ole sinä?",
     "ctp.logout.notYourCards": "Eikö tämä ole korttisi?",
+    "ctp.logout.notYourCard": "Eikö tämä ole korttisi?",
     "ctp.logout.notYourProfile": "Eikö tämä ole profiilisi?",
     "ctp.otp.fieldLabel": "Kertakoodi",
     "ctp.otp.resendCode": "Lähetä koodi uudelleen",

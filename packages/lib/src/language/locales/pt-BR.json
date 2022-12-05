@@ -237,6 +237,7 @@
     "ctp.login.inputLabel": "E-mail",
     "ctp.logout.notYou": "Não é você?",
     "ctp.logout.notYourCards": "Não é o seu cartão?",
+    "ctp.logout.notYourCard": "Não é o seu cartão?",
     "ctp.logout.notYourProfile": "Não é o seu perfil?",
     "ctp.otp.fieldLabel": "Código de acesso único",
     "ctp.otp.resendCode": "Reenviar código",

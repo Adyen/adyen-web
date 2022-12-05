@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "E-postadress",
     "ctp.logout.notYou": "Inte du?",
     "ctp.logout.notYourCards": "Inte dina kort?",
+    "ctp.logout.notYourCard": "Inte ditt kort?",
     "ctp.logout.notYourProfile": "Inte din profil?",
     "ctp.otp.fieldLabel": "Engångskod",
     "ctp.otp.resendCode": "Skicka koden igen",

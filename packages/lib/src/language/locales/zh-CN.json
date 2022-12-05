@@ -238,6 +238,7 @@
     "ctp.login.inputLabel": "电子邮件",
     "ctp.logout.notYou": "不是您本人？",
     "ctp.logout.notYourCards": "不是您的卡？",
+    "ctp.logout.notYourCard": "不是您的卡片？",
     "ctp.logout.notYourProfile": "不是您的个人资料？",
     "ctp.otp.fieldLabel": "一次性代码",
     "ctp.otp.resendCode": "重新发送代码",

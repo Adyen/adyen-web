@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "Email",
     "ctp.logout.notYou": "Δεν είστε εσείς αυτό το άτομο;",
     "ctp.logout.notYourCards": "Αυτές δεν είναι οι κάρτες σας;",
+    "ctp.logout.notYourCard": "Δεν είναι η κάρτα σας;",
     "ctp.logout.notYourProfile": "Δεν είναι το προφίλ σας;",
     "ctp.otp.fieldLabel": "Κωδικός μιας χρήσης",
     "ctp.otp.resendCode": "Εκ νέου αποστολή κωδικού",

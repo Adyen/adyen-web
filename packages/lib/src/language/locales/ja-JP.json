@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "メールアドレス",
     "ctp.logout.notYou": "ご自分ではありませんか？",
     "ctp.logout.notYourCards": "ご自分のカードではありませんか？",
+    "ctp.logout.notYourCard": "ご自分のカードではありませんか？",
     "ctp.logout.notYourProfile": "ご自分のプロフィールではありませんか？",
     "ctp.otp.fieldLabel": "ワンタイムコード",
     "ctp.otp.resendCode": "コードを再送信する",
