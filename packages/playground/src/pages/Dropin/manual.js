@@ -135,7 +135,7 @@ export async function initManual() {
 
     const dropin = checkout
         .create('dropin', {
-            instantPaymentTypes: ['paywithgoogle']
+            instantPaymentTypes: ['googlepay']
         })
         .mount('#dropin-container');
 
