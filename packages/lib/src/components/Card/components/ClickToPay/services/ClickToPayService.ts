@@ -5,7 +5,8 @@ import {
     IdentityLookupParams,
     ClickToPayCheckoutPayload,
     SrcProfileWithScheme,
-    SchemesConfiguration
+    SchemesConfiguration,
+    IdentityValidationData
 } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
@@ -15,6 +16,7 @@ import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import uuidv4 from '../../../../../utils/uuid';
 import SrciError from './sdks/SrciError';
 import { isFulfilled, isRejected } from '../../../../../utils/promise-util';
+import { SchemeNames } from './sdks/utils';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -43,7 +45,7 @@ class ClickToPayService implements IClickToPayService {
 
     public state: CtpState = CtpState.Idle;
     public shopperCards: ShopperCard[] = null;
-    public shopperValidationContact: string;
+    public identityValidationData: IdentityValidationData = null;
 
     constructor(schemesConfig: SchemesConfiguration, sdkLoader: ISrcSdkLoader, environment: string, shopperIdentity?: IdentityLookupParams) {
         this.sdkLoader = sdkLoader;
@@ -107,7 +109,12 @@ class ClickToPayService implements IClickToPayService {
             throw Error('startIdentityValidation: No ValidationSDK set for the validation process');
         }
         const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
-        this.shopperValidationContact = maskedValidationChannel.replace(/\*/g, '•');
+
+        this.identityValidationData = {
+            maskedShopperContact: maskedValidationChannel.replace(/\*/g, '•'),
+            selectedNetwork: SchemeNames[this.validationSchemeSdk.schemeName]
+        };
+
         this.setState(CtpState.OneTimePassword);
     }
 
@@ -165,7 +172,7 @@ class ClickToPayService implements IClickToPayService {
         await Promise.all(logoutPromises);
 
         this.shopperCards = null;
-        this.shopperValidationContact = null;
+        this.identityValidationData = null;
         this.validationSchemeSdk = null;
 
         this.setState(CtpState.Login);
@@ -228,6 +235,7 @@ class ClickToPayService implements IClickToPayService {
                     isFulfilled(promiseResult) && { ...promiseResult.value, scheme: this.sdks[index].schemeName };
 
                 const profilesWithScheme: SrcProfileWithScheme[] = srcProfilesResponses.map(createProfileWithScheme).filter(profile => !!profile);
+
                 this.shopperCards = createShopperCardsList(profilesWithScheme);
                 resolve();
             });

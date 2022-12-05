@@ -46,7 +46,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
         this.customSdkConfiguration = customSdkConfiguration;
     }
 
-    public async loadSdkScript() {
+    public async loadSdkScript(): Promise<void> {
         if (!this.isSdkIsAvailableOnWindow()) {
             this.scriptElement = new Script(this.sdkUrl);
             await this.scriptElement.load();
@@ -82,7 +82,13 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * response contains summary checkout information.
      */
     public async checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse> {
-        return await this.schemeSdk.checkout(params);
+        try {
+            const checkoutResponse = await this.schemeSdk.checkout(params);
+            return checkoutResponse;
+        } catch (error) {
+            const srciError = new SrciError(error, 'checkout', this.schemeName);
+            throw srciError;
+        }
     }
 
     /**

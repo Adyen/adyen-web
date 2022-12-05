@@ -14,7 +14,8 @@ function createShopperCard({ panExpirationYear = '2030', panExpirationMonth = '0
             panExpirationYear: panExpirationYear,
             digitalCardData: {
                 descriptorName: 'Visa',
-                artUri: 'http://image.com'
+                artUri: 'http://image.com',
+                status: 'ACTIVE'
             },
             tokenId: 'xxxx-wwww'
         },

@@ -1,5 +1,6 @@
 import { createShopperCardsList } from './utils';
 import { SrcProfileWithScheme } from './types';
+import ShopperCard from '../models/ShopperCard';
 
 test('should place expired cards at the end of the list, placing the most recent ones on top', () => {
     const cardsFromSrcSystem: SrcProfileWithScheme[] = [
@@ -18,7 +19,8 @@ test('should place expired cards at the end of the list, placing the most recent
                             panExpirationYear: '2020',
                             digitalCardData: {
                                 descriptorName: 'Visa',
-                                artUri: 'https://image.com/visa'
+                                artUri: 'https://image.com/visa',
+                                status: 'EXPIRED'
                             },
                             tokenId: '9w8e8e'
                         },
@@ -31,7 +33,8 @@ test('should place expired cards at the end of the list, placing the most recent
                             panExpirationYear: '2025',
                             digitalCardData: {
                                 descriptorName: 'Visa',
-                                artUri: 'https://image.com/visa'
+                                artUri: 'https://image.com/visa',
+                                status: 'ACTIVE'
                             },
                             tokenId: '3f3f6g'
                         }
@@ -54,7 +57,9 @@ test('should place expired cards at the end of the list, placing the most recent
                             panExpirationYear: '2020',
                             digitalCardData: {
                                 descriptorName: 'Mastercard',
-                                artUri: 'https://image.com/mc'
+                                artUri: 'https://image.com/mc',
+                                // MC is only passing ACTIVE even if the card is EXPIRED
+                                status: 'ACTIVE'
                             },
                             tokenId: '2a2a3b3b'
                         }
@@ -64,7 +69,7 @@ test('should place expired cards at the end of the list, placing the most recent
         }
     ];
 
-    const cards = createShopperCardsList(cardsFromSrcSystem);
+    const cards: ShopperCard[] = createShopperCardsList(cardsFromSrcSystem);
 
     expect(cards).toEqual([
         {
@@ -78,6 +83,7 @@ test('should place expired cards at the end of the list, placing the most recent
             scheme: 'visa',
             srcCorrelationId: '123456',
             srcDigitalCardId: 'xxxxxx',
+            status: 'ACTIVE',
             tokenId: '3f3f6g'
         },
         {
@@ -91,6 +97,7 @@ test('should place expired cards at the end of the list, placing the most recent
             scheme: 'mc',
             srcCorrelationId: '1a2b3c',
             srcDigitalCardId: 'yyyy',
+            status: 'ACTIVE',
             tokenId: '2a2a3b3b'
         },
         {
@@ -104,12 +111,13 @@ test('should place expired cards at the end of the list, placing the most recent
             scheme: 'visa',
             srcCorrelationId: '123456',
             srcDigitalCardId: 'xxxx',
+            status: 'EXPIRED',
             tokenId: '9w8e8e'
         }
     ]);
 });
 
-test('should sort available cards placing most recent ones on top of the list', () => {
+test.only('should sort available cards placing most recent ones on top of the list', () => {
     const cardsFromSrcSystem: SrcProfileWithScheme[] = [
         {
             scheme: 'visa',
@@ -126,7 +134,8 @@ test('should sort available cards placing most recent ones on top of the list', 
                             panExpirationYear: '2026',
                             digitalCardData: {
                                 descriptorName: 'Visa',
-                                artUri: 'https://image.com/visa'
+                                artUri: 'https://image.com/visa',
+                                status: 'ACTIVE'
                             },
                             tokenId: '9w8e8e'
                         },
@@ -139,7 +148,8 @@ test('should sort available cards placing most recent ones on top of the list', 
                             panExpirationYear: '2028',
                             digitalCardData: {
                                 descriptorName: 'Visa',
-                                artUri: 'https://image.com/visa'
+                                artUri: 'https://image.com/visa',
+                                status: 'ACTIVE'
                             },
                             tokenId: '3f3f6g'
                         }
@@ -162,7 +172,8 @@ test('should sort available cards placing most recent ones on top of the list', 
                             panExpirationYear: '2030',
                             digitalCardData: {
                                 descriptorName: 'Mastercard',
-                                artUri: 'https://image.com/mc'
+                                artUri: 'https://image.com/mc',
+                                status: 'ACTIVE'
                             },
                             tokenId: '2a2a3b3b'
                         }
@@ -186,6 +197,7 @@ test('should sort available cards placing most recent ones on top of the list', 
             scheme: 'mc',
             srcCorrelationId: '1a2b3c',
             srcDigitalCardId: 'yyyy',
+            status: 'ACTIVE',
             tokenId: '2a2a3b3b'
         },
         {
@@ -199,6 +211,7 @@ test('should sort available cards placing most recent ones on top of the list', 
             scheme: 'visa',
             srcCorrelationId: '123456',
             srcDigitalCardId: 'xxxx',
+            status: 'ACTIVE',
             tokenId: '9w8e8e'
         },
         {
@@ -212,6 +225,7 @@ test('should sort available cards placing most recent ones on top of the list', 
             scheme: 'visa',
             srcCorrelationId: '123456',
             srcDigitalCardId: 'xxxxxx',
+            status: 'ACTIVE',
             tokenId: '3f3f6g'
         }
     ]);
