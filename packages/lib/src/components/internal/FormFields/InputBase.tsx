@@ -66,6 +66,7 @@ export default function InputBase(props) {
         <input
             id={uniqueId}
             {...newProps}
+            aria-required={newProps.required}
             type={type}
             className={inputClassNames}
             readOnly={readonly}
