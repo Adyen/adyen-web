@@ -55,7 +55,7 @@
     "mobileNumber": "Matkapuhelinnumero",
     "mobileNumber.invalid": "Ei-kelvollinen matkapuhelinnumero",
     "city": "Kaupunki",
-    "postalCode": "Postinumero (valinnainen)",
+    "postalCode": "Postinumero",
     "countryCode": "Maakoodi",
     "telephoneNumber": "Puhelinnumero",
     "dateOfBirth": "Syntymäaika",

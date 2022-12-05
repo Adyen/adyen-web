@@ -55,7 +55,7 @@
     "mobileNumber": "Numer telefonu komórkowego",
     "mobileNumber.invalid": "Nieprawidłowy numer telefonu komórkowego",
     "city": "Miasto",
-    "postalCode": "Kod pocztowy (opcjonalnie)",
+    "postalCode": "Kod pocztowy",
     "countryCode": "Kod kraju",
     "telephoneNumber": "Numer telefonu",
     "dateOfBirth": "Data urodzenia",

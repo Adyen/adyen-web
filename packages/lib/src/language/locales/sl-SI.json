@@ -55,7 +55,7 @@
     "mobileNumber": "Številka mobilnega telefona",
     "mobileNumber.invalid": "Neveljavna številka mobilnega telefona",
     "city": "Mesto",
-    "postalCode": "Poštna številka (neobvezno)",
+    "postalCode": "Poštna številka",
     "countryCode": "Koda države",
     "telephoneNumber": "Telefonska številka",
     "dateOfBirth": "Datum rojstva",

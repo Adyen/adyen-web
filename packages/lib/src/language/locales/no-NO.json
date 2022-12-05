@@ -55,7 +55,7 @@
     "mobileNumber": "Mobilnummer",
     "mobileNumber.invalid": "Ugyldig mobilnummer",
     "city": "Poststed",
-    "postalCode": "Postnummer (valgfritt)",
+    "postalCode": "Postnummer",
     "countryCode": "Landkode",
     "telephoneNumber": "Telefonnummer",
     "dateOfBirth": "Fødselsdato",

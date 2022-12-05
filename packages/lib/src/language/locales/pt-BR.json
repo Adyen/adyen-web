@@ -53,7 +53,7 @@
     "mobileNumber": "Celular",
     "mobileNumber.invalid": "Número de celular inválido",
     "city": "Cidade",
-    "postalCode": "Código postal (opcional)",
+    "postalCode": "CEP",
     "countryCode": "Código do país",
     "telephoneNumber": "Número de telefone",
     "dateOfBirth": "Data de nascimento",

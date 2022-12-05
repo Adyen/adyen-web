@@ -55,7 +55,7 @@
     "mobileNumber": "Číslo na mobil",
     "mobileNumber.invalid": "Neplatné číslo mobilního telefonu",
     "city": "Město",
-    "postalCode": "Poštovní směrovací číslo (nepovinné)",
+    "postalCode": "PSČ",
     "countryCode": "Kód země",
     "telephoneNumber": "Telefonní číslo",
     "dateOfBirth": "Datum narození",

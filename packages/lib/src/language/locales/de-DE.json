@@ -55,7 +55,7 @@
     "mobileNumber": "Handynummer",
     "mobileNumber.invalid": "Ungültige Handynummer",
     "city": "Stadt",
-    "postalCode": "Postleitzahl (optional)",
+    "postalCode": "Postleitzahl",
     "countryCode": "Landesvorwahl",
     "telephoneNumber": "Telefonnummer",
     "dateOfBirth": "Geburtsdatum",

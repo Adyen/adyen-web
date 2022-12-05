@@ -55,7 +55,7 @@
     "mobileNumber": "行動電話號碼",
     "mobileNumber.invalid": "手機號碼無效",
     "city": "城市",
-    "postalCode": "郵遞區號（選用）",
+    "postalCode": "郵遞區號",
     "countryCode": "國家代碼",
     "telephoneNumber": "電話號碼",
     "dateOfBirth": "出生日期",

@@ -55,7 +55,7 @@
     "mobileNumber": "휴대폰 번호",
     "mobileNumber.invalid": "유효하지 않은 휴대폰 번호",
     "city": "시",
-    "postalCode": "우편번호(선택 사항)",
+    "postalCode": "우편번호",
     "countryCode": "국가 코드",
     "telephoneNumber": "전화번호",
     "dateOfBirth": "생년월일",

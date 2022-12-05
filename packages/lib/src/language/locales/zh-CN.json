@@ -55,7 +55,7 @@
     "mobileNumber": "手机号",
     "mobileNumber.invalid": "无效的手机号码",
     "city": "城市",
-    "postalCode": "邮政编码（可选）",
+    "postalCode": "邮政编码",
     "countryCode": "国家代码",
     "telephoneNumber": "电话号码",
     "dateOfBirth": "出生日期",

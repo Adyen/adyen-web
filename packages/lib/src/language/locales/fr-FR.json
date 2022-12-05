@@ -55,7 +55,7 @@
     "mobileNumber": "Numéro de portable",
     "mobileNumber.invalid": "Numéro de portable non valide",
     "city": "Ville",
-    "postalCode": "Code postal (facultatif)",
+    "postalCode": "Code postal",
     "countryCode": "Code pays",
     "telephoneNumber": "Numéro de téléphone",
     "dateOfBirth": "Date de naissance",

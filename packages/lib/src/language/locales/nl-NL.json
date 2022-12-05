@@ -55,7 +55,7 @@
     "mobileNumber": "Telefoonnummer mobiel",
     "mobileNumber.invalid": "Ongeldig mobiel nummer",
     "city": "Stad",
-    "postalCode": "Postcode (optioneel)",
+    "postalCode": "Postcode",
     "countryCode": "Landcode",
     "telephoneNumber": "Telefoonnummer",
     "dateOfBirth": "Geboortedatum",

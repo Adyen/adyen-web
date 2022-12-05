@@ -55,7 +55,7 @@
     "mobileNumber": "Αριθμός κινητού",
     "mobileNumber.invalid": "Μη έγκυρος αριθμός κινητού",
     "city": "Πόλη",
-    "postalCode": "Ταχυδρομικός κωδικός (προαιρετικό)",
+    "postalCode": "Ταχυδρομικός κωδικός",
     "countryCode": "Κωδικός χώρας",
     "telephoneNumber": "Αριθμός τηλεφώνου",
     "dateOfBirth": "Ημερομηνία γέννησης",

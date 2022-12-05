@@ -55,7 +55,7 @@
     "mobileNumber": "Мобильный телефон",
     "mobileNumber.invalid": "Недействительной номер мобильного",
     "city": "Город",
-    "postalCode": "Почтовый индекс (необязательно)",
+    "postalCode": "Почтовый индекс",
     "countryCode": "Код страны",
     "telephoneNumber": "Номер телефона",
     "dateOfBirth": "Дата рождения",

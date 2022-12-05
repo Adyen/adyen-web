@@ -55,7 +55,7 @@
     "mobileNumber": "رقم الجوال",
     "mobileNumber.invalid": "رقم جوال غير صحيح",
     "city": "المدينة",
-    "postalCode": "الرمز البريدي (اختياري)",
+    "postalCode": "الرمز البريدي",
     "countryCode": "رمز البلد",
     "telephoneNumber": "رقم الهاتف",
     "dateOfBirth": "تاريخ الميلاد",

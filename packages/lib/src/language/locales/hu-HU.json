@@ -55,7 +55,7 @@
     "mobileNumber": "Mobiltelefonszám",
     "mobileNumber.invalid": "Érvénytelen mobilszám",
     "city": "Város",
-    "postalCode": "Irányítószám (nem kötelező)",
+    "postalCode": "Irányítószám",
     "countryCode": "Országkód",
     "telephoneNumber": "Telefonszám",
     "dateOfBirth": "Születési dátum",

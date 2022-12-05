@@ -53,7 +53,7 @@
     "mobileNumber": "Teléfono móvil",
     "mobileNumber.invalid": "Número de móvil no válido",
     "city": "Ciudad",
-    "postalCode": "Código postal (opcional)",
+    "postalCode": "Código postal",
     "countryCode": "Prefijo internacional",
     "telephoneNumber": "Número de teléfono",
     "dateOfBirth": "Fecha de nacimiento",

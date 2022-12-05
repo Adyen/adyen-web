@@ -53,7 +53,7 @@
     "mobileNumber": "Numero di cellulare",
     "mobileNumber.invalid": "Numero di cellulare non valido",
     "city": "Città",
-    "postalCode": "Codice postale (facoltativo)",
+    "postalCode": "Codice postale",
     "countryCode": "Codice nazionale",
     "telephoneNumber": "Numero di telefono",
     "dateOfBirth": "Data di nascita",

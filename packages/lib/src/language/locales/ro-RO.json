@@ -55,7 +55,7 @@
     "mobileNumber": "Număr de mobil",
     "mobileNumber.invalid": "Număr de telefon mobil incorect",
     "city": "Oraș",
-    "postalCode": "Cod poștal (opțional)",
+    "postalCode": "Cod poștal",
     "countryCode": "Codul țării",
     "telephoneNumber": "Număr de telefon",
     "dateOfBirth": "Data nașterii",

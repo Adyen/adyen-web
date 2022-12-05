@@ -55,7 +55,7 @@
     "mobileNumber": "Mobile number",
     "mobileNumber.invalid": "Invalid mobile number",
     "city": "City",
-    "postalCode": "Postal code (optional)",
+    "postalCode": "Postal code",
     "countryCode": "Country Code",
     "telephoneNumber": "Telephone number",
     "dateOfBirth": "Date of birth",

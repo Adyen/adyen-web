@@ -55,7 +55,7 @@
     "mobileNumber": "携帯番号",
     "mobileNumber.invalid": "無効な携帯電話番号",
     "city": "市区",
-    "postalCode": "郵便番号 (任意)",
+    "postalCode": "郵便番号",
     "countryCode": "国コード",
     "telephoneNumber": "電話番号",
     "dateOfBirth": "生年月日",

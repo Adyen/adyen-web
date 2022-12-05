@@ -55,7 +55,7 @@
     "mobileNumber": "Mobilnummer",
     "mobileNumber.invalid": "Ogiltigt mobilnummer",
     "city": "Stad",
-    "postalCode": "Postnummer (valfritt)",
+    "postalCode": "Postnummer",
     "countryCode": "Landskod",
     "telephoneNumber": "Telefonnummer",
     "dateOfBirth": "Födelsedatum",
