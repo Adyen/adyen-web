@@ -12,7 +12,7 @@ const INVALID_TAX_NUMBER = LANG['creditCard.taxNumber.invalid'];
 
 const cardPage = new CardComponentPage();
 
-fixture.only`Testing kcpCard, with holderName, error panel`
+fixture`Testing kcpCard, with holderName, error panel`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
