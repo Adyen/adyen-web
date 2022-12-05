@@ -45,7 +45,7 @@ test('With minimumExpiryDate set - input an expiry date that is 1 month before i
     await start(t, 2000, TEST_SPEED);
 
     // Card out of date
-    await cardUtils.fillDate(t, '08/22');
+    await cardUtils.fillDate(t, '08/24');
 
     // Expect errors
     await t.expect(errorHolder.exists).ok();
@@ -64,7 +64,7 @@ test('With minimumExpiryDate set - input an expiry date that is matches it & exp
     await start(t, 2000, TEST_SPEED);
 
     // Card in date
-    await cardUtils.fillDate(t, '09/22');
+    await cardUtils.fillDate(t, '09/24');
 
     // Expect NO errors
     await t.expect(errorHolder.exists).notOk();
@@ -78,7 +78,7 @@ test('With minimumExpiryDate set - input an expiry date that exceeds it (a bit) 
     await start(t, 2000, TEST_SPEED);
 
     // Card in date
-    await cardUtils.fillDate(t, '04/23');
+    await cardUtils.fillDate(t, '04/25');
 
     // Expect NO errors
     await t.expect(errorHolder.exists).notOk();
@@ -114,7 +114,7 @@ test(
         await start(t, 2000, TEST_SPEED);
 
         // Card in date
-        await cardUtils.fillDate(t, '09/22');
+        await cardUtils.fillDate(t, '09/24');
 
         // Expect NO errors
         await t.expect(errorHolder.exists).notOk();
@@ -123,7 +123,7 @@ test(
         await t.expect(errorLabel.exists).notOk();
 
         // Card out of date
-        await cardUtils.fillDate(t, '08/22', 'paste');
+        await cardUtils.fillDate(t, '08/24', 'paste');
 
         // Expect errors
         await t.expect(errorHolder.exists).ok();

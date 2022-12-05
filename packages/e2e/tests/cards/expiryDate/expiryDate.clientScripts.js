@@ -1,5 +1,5 @@
 window.cardConfig = {
     type: 'scheme',
     brands: ['mc', 'visa', 'amex'],
-    minimumExpiryDate: '09/22'
+    minimumExpiryDate: '09/24'
 };
