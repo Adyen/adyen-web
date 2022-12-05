@@ -273,5 +273,6 @@
     "ctp.errors.SERVICE_ERROR": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.SERVER_ERROR": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.INVALID_PARAMETER": "Something went wrong, try again or use the manual card entry",
-    "ctp.errors.AUTH_ERROR": "Something went wrong, try again or use the manual card entry"
+    "ctp.errors.AUTH_ERROR": "Something went wrong, try again or use the manual card entry",
+    "a11y.paymentMethodsList": "Choose a payment method"
 }

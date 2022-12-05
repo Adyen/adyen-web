@@ -94,19 +94,13 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
-            <li
-                key={paymentMethod._id}
-                className={paymentMethodClassnames}
-                onClick={onSelect}
-                aria-labelledby={buttonId}
-            >
+            <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={onSelect}>
                 <div className="adyen-checkout__payment-method__header">
                     <button
                         className="adyen-checkout__payment-method__header__title"
                         id={buttonId}
-                        aria-label={paymentMethod.accessibleName}
-                        aria-expanded={isSelected}
-                        aria-controls={containerId}
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={onSelect}
                         type="button"
                     >

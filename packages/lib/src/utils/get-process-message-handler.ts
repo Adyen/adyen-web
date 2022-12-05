@@ -10,12 +10,13 @@
  * @param expectedType - string to check that the passed data has the expected type
  */
 import { hasOwnProperty } from './hasOwnProperty';
+import { ThreeDS2ChallengeRejectObject } from '../components/ThreeDS2/types';
 
 const getProcessMessageHandler = (
     domain: string,
     resolve: Function,
     reject: Function,
-    rejectObj: object,
+    rejectObj: ThreeDS2ChallengeRejectObject | object,
     expectedType: string
 ): Function => event => {
     const clonedRejectObj = { ...rejectObj };
@@ -33,15 +34,23 @@ const getProcessMessageHandler = (
         return 'Invalid event data string';
     }
 
+    if (event.data === 'undefined') {
+        console.debug('get-process-message-handler:: "undefined" data object (but it\'s from a legitimate source so let it pass through)');
+    }
+
     // Try to parse the data
     try {
         const feedbackObj = JSON.parse(event.data);
         if (hasOwnProperty(feedbackObj, 'type') && feedbackObj.type === expectedType) {
             resolve(feedbackObj);
         } else {
+            // Silent fail - applies when RiskModule device fingerprinting is ongoing and this handler is picking up securedFields traffic
             return 'Event data was not of expected type';
         }
     } catch (e) {
+        clonedRejectObj.comment = 'failed to JSON parse event.data';
+        clonedRejectObj.extraInfo = `event.data = ${event.data}`;
+        clonedRejectObj.eventDataRaw = event.data;
         reject(clonedRejectObj);
         return false;
     }

@@ -138,11 +138,16 @@ export const loadTranslations = async (locale: string, customTranslations: objec
 export const interpolateElement = (translation: string, renderFunctions: Array<(translation: string) => h.JSX.Element>) => {
     // splits by regex group, it guarantees that it only splits with 2 tokens (%#)
     const matches = translation.split(/%#(.*?)%#/gm);
+
+    if (renderFunctions.length !== Math.floor(matches.length / 2)) {
+        throw Error('The number of functions provided does not match the number of elements in the translation string.');
+    }
+
     // the map will create an array of JSX / string elements, this syntax in accepted in JSX/react to render elements
     return matches.map((term, index) => {
         // math to get the index of the renderFunction that should be used
         // since we split on tokens, that means the index of the render function is half of the index of the string
-        const indexInFunctionArray = Math.floor(index / 2)
+        const indexInFunctionArray = Math.floor(index / 2);
         return index % 2 === 0 ? term : renderFunctions[indexInFunctionArray](term);
     });
 };
