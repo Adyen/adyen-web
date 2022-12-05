@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "E-mail",
     "ctp.logout.notYou": "Bent u dit niet?",
     "ctp.logout.notYourCards": "Niet uw kaarten?",
+    "ctp.logout.notYourCard": "Niet uw kaart?",
     "ctp.logout.notYourProfile": "Niet uw profiel?",
     "ctp.otp.fieldLabel": "Eenmalige code",
     "ctp.otp.resendCode": "Code opnieuw verzenden",

@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "E-pošta",
     "ctp.logout.notYou": "Niste vi?",
     "ctp.logout.notYourCards": "Nisu vaše kartice?",
+    "ctp.logout.notYourCard": "Nije vaša kartica?",
     "ctp.logout.notYourProfile": "Nije vaš profil?",
     "ctp.otp.fieldLabel": "Jednokratni kôd",
     "ctp.otp.resendCode": "Ponovno pošalji kôd",

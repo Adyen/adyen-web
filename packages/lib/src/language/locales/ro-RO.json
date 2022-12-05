@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "E-mail",
     "ctp.logout.notYou": "Nu sunteți dvs.?",
     "ctp.logout.notYourCards": "Nu sunt cardurile dvs.?",
+    "ctp.logout.notYourCard": "Nu este cardul dvs.?",
     "ctp.logout.notYourProfile": "Nu este profilul dvs.?",
     "ctp.otp.fieldLabel": "Cod unic",
     "ctp.otp.resendCode": "Retrimiteți codul",

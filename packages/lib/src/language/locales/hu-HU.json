@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "E-mail-cím",
     "ctp.logout.notYou": "Nem Ön az?",
     "ctp.logout.notYourCards": "Nem az Ön kártyái?",
+    "ctp.logout.notYourCard": "Nem az Ön kártyája?",
     "ctp.logout.notYourProfile": "Nem az Ön profilja?",
     "ctp.otp.fieldLabel": "Egyszeri kód",
     "ctp.otp.resendCode": "Kód újraküldése",

@@ -240,6 +240,7 @@
     "ctp.login.inputLabel": "البريد الإلكتروني",
     "ctp.logout.notYou": "ليس أنت؟",
     "ctp.logout.notYourCards": "ليست بطاقاتك؟",
+    "ctp.logout.notYourCard": "ليست بطاقتك؟",
     "ctp.logout.notYourProfile": "ليس ملفك التعريفي؟",
     "ctp.otp.fieldLabel": "رمز يستخدم لمرة واحدة",
     "ctp.otp.resendCode": "إعادة إرسال الرمز",

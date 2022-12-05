@@ -236,6 +236,7 @@
     "ctp.login.inputLabel": "Эл. почта",
     "ctp.logout.notYou": "Это не вы?",
     "ctp.logout.notYourCards": "Не ваши платежные карты?",
+    "ctp.logout.notYourCard": "Не ваша карта?",
     "ctp.logout.notYourProfile": "Не ваш профиль?",
     "ctp.otp.fieldLabel": "Одноразовый код",
     "ctp.otp.resendCode": "Отправить код повторно",

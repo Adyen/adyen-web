@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "E-mail",
     "ctp.logout.notYou": "Nejste to vy?",
     "ctp.logout.notYourCards": "Nejsou to vaše karty?",
+    "ctp.logout.notYourCard": "Není to vaše karta?",
     "ctp.logout.notYourProfile": "Není to váš profil?",
     "ctp.otp.fieldLabel": "Jednorázový kód",
     "ctp.otp.resendCode": "Znovu odeslat kód",

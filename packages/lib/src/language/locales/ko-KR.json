@@ -239,6 +239,7 @@
     "ctp.login.inputLabel": "이메일",
     "ctp.logout.notYou": "본인이 아니신가요?",
     "ctp.logout.notYourCards": "본인의 카드가 아닌가요?",
+    "ctp.logout.notYourCard": "본인의 카드가 아닌가요?",
     "ctp.logout.notYourProfile": "본인의 프로필이 아닌가요?",
     "ctp.otp.fieldLabel": "일회성 코드",
     "ctp.otp.resendCode": "코드 재전송",
