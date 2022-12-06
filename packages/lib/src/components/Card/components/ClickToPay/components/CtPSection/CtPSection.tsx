@@ -20,4 +20,11 @@ const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
     );
 };
 
+const Title = ({ children }: { children }) => <h1 className="adyen-checkout-ctp__section-title">{children}</h1>;
+
+const Subtitle = ({ children }: { children }) => <p className="adyen-checkout-ctp__section-subtitle">{children}</p>;
+
+CtPSection.Title = Title;
+CtPSection.Subtitle = Subtitle;
+
 export default CtPSection;

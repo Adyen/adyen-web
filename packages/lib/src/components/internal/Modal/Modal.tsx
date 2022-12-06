@@ -2,26 +2,20 @@ import { ComponentChildren, h } from 'preact';
 import { useCallback, useRef } from 'preact/hooks';
 import cx from 'classnames';
 import './Modal.scss';
-
-let idGenerator = Date.now();
-
-function getUniqueId() {
-    idGenerator += 1;
-    return `adyen-${idGenerator}`;
-}
+import { useTrapFocus } from './useTrapFocus';
 
 type ModalProps = {
-    title?: string;
     children: ComponentChildren;
     classNameModifiers?: string[];
     onClose(): void;
     isOpen: boolean;
     isDismissible?: boolean;
+    labelledBy: string;
 };
 
-const Modal = ({ children, classNameModifiers = [], isOpen, onClose, isDismissible = true }: ModalProps) => {
+const Modal = ({ children, classNameModifiers = [], isOpen, onClose, isDismissible = true, labelledBy, ...props }: ModalProps) => {
     const modalContainerRef = useRef<HTMLDivElement>();
-    const labelledBy = getUniqueId();
+    useTrapFocus({ element: isOpen ? modalContainerRef.current : null });
 
     const handleClickOutside = useCallback(e => {
         if (isDismissible && open && !modalContainerRef.current.contains(e.target)) {
@@ -37,10 +31,11 @@ const Modal = ({ children, classNameModifiers = [], isOpen, onClose, isDismissib
                 { 'adyen-checkout__modal-wrapper--open': isOpen }
             )}
             role="dialog"
-            aria-modal="true"
             aria-labelledby={labelledBy}
+            aria-modal="true"
             aria-hidden={!isOpen}
             onClick={handleClickOutside}
+            {...props}
         >
             <div className="adyen-checkout__modal" ref={modalContainerRef}>
                 {children}

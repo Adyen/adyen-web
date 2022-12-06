@@ -12,7 +12,7 @@
   top: 0;
   visibility: hidden;
   width: 100%;
-  z-index: 1;
+  z-index: 10;
 
   &:before {
     background: rgba(0, 17, 44, 0.5);
@@ -36,7 +36,6 @@
 
     .adyen-checkout__modal  {
       opacity: 1;
-      transform: scale(1);
     }
   }
 }
@@ -49,17 +48,6 @@
   padding: 16px;
   transition: opacity 0.2s ease, visibility 0.2s ease;
   opacity: 0;
-  transform: scale(0.7);
   position: relative;
   z-index: 11;
-
-  [dir=rtl] & {
-    direction: rtl;
-  }
-
-  //@include tablet-portrait-up {
-  //  min-height: 200px;
-  //  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-  //  width: 464px;
-  //}
 }
