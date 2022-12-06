@@ -1,0 +1,31 @@
+.adyen_checkout-ctp__brand {
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    height: 18px;
+  }
+
+  &-logo {
+    width: 24px;
+    margin-right: 6px;
+  }
+
+  &-pipe{
+    height: 15px;
+    margin-right: 6px;
+  }
+
+  &-scheme {
+    object-fit: none;
+    margin-right: 6px;
+
+    &-mc {
+      width: 27px;
+    }
+
+    &-visa {
+      width: 35px;
+    }
+  }
+
+}

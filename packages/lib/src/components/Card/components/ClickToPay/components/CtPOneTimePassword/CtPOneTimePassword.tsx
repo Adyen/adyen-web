@@ -6,6 +6,8 @@ import CtPOneTimePasswordInput from './CtPOneTimePasswordInput';
 import { CtPOneTimePasswordInputHandlers } from './CtPOneTimePasswordInput/CtPOneTimePasswordInput';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import './CtPOneTimePassword.scss';
+import { CtPInfoModal } from '../CtPInfoModal';
+import { CtPInfoIcon } from '../CtPInfo/CtPInfoIcon';
 
 type CtPOneTimePasswordProps = {
     onDisplayCardComponent?(): void;
@@ -61,6 +63,8 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
     return (
         <Fragment>
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.otp.title')}</div>
+            <CtPInfoIcon />
+            <CtPInfoModal />
             <div className="adyen-checkout-ctp__section-subtitle">
                 {subtitleParts[0]} {otpNetwork} {subtitleParts[1]}
                 <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span>

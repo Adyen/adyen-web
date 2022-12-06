@@ -5,6 +5,7 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import CtPLoginInput, { CtPLoginInputHandlers } from './CtPLoginInput';
 import { useCallback, useState } from 'preact/hooks';
 import './CtPLogin.scss';
+import { CtPInfoModal } from '../CtPInfoModal';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -55,6 +56,7 @@ const CtPLogin = (): h.JSX.Element => {
 
     return (
         <Fragment>
+            <CtPInfoModal />
             <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.login.title')}</div>
             <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.login.subtitle')}</div>
             <CtPLoginInput

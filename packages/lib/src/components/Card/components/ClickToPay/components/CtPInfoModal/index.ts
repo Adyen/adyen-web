@@ -1,0 +1,1 @@
+export { CtPInfoModal } from './CtPInfoModal';
