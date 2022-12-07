@@ -1,27 +1,42 @@
 import { ComponentChildren, h } from 'preact';
-import { useCallback, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import cx from 'classnames';
 import './Modal.scss';
-import { useTrapFocus } from './useTrapFocus';
+import { useModal } from './useModal';
 
 type ModalProps = {
-    children: ComponentChildren;
+    children: ({ onCloseModal }: { onCloseModal(): void }) => ComponentChildren;
     classNameModifiers?: string[];
     onClose(): void;
     isOpen: boolean;
     isDismissible?: boolean;
     labelledBy: string;
+    describedBy: string;
+    focusFirst: HTMLElement;
+    focusAfterClose: HTMLElement;
 };
 
-const Modal = ({ children, classNameModifiers = [], isOpen, onClose, isDismissible = true, labelledBy, ...props }: ModalProps) => {
+const Modal = ({
+    children,
+    classNameModifiers = [],
+    isOpen,
+    onClose,
+    isDismissible = true,
+    labelledBy,
+    describedBy,
+    focusFirst,
+    focusAfterClose,
+    ...props
+}: ModalProps) => {
     const modalContainerRef = useRef<HTMLDivElement>();
-    useTrapFocus({ element: isOpen ? modalContainerRef.current : null });
-
-    const handleClickOutside = useCallback(e => {
-        if (isDismissible && open && !modalContainerRef.current.contains(e.target)) {
-            onClose();
-        }
-    }, []);
+    const { closeModal, handleClickOutside } = useModal({
+        modalElement: modalContainerRef.current,
+        isOpen,
+        isDismissible,
+        focusFirst,
+        focusAfterClose,
+        onClose
+    });
 
     return (
         <div
@@ -32,13 +47,14 @@ const Modal = ({ children, classNameModifiers = [], isOpen, onClose, isDismissib
             )}
             role="dialog"
             aria-labelledby={labelledBy}
+            aria-describedby={describedBy}
             aria-modal="true"
             aria-hidden={!isOpen}
             onClick={handleClickOutside}
             {...props}
         >
             <div className="adyen-checkout__modal" ref={modalContainerRef}>
-                {children}
+                {children({ onCloseModal: closeModal })}
             </div>
         </div>
     );

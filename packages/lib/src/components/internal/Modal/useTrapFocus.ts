@@ -1,23 +1,44 @@
-import { useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 type UseTrapFocusProps = {
-    element?: HTMLElement;
+    rootElement?: HTMLElement;
+    /**
+     * Element that must be focused when the hook is executed. If no element is passed, the first focusable child
+     * element of the root element will be focused
+     */
+    focusFirst?: HTMLElement;
+    /**
+     * Can be used to conditionally disable the trap mechanism
+     */
+    shouldTrap?: boolean;
 };
 
 const KEYCODE_TAB = 9;
+const FOCUSABLE_ELEMENTS =
+    'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])';
 
-const useTrapFocus = ({ element }: UseTrapFocusProps) => {
+const useTrapFocus = ({ rootElement, focusFirst, shouldTrap = true }: UseTrapFocusProps) => {
+    const [firstFocusableEl, setFirstFocusableEl] = useState<HTMLElement>(focusFirst);
+
     useEffect(() => {
-        if (!element) {
+        if (!shouldTrap) return;
+
+        if (focusFirst) {
+            focusFirst.focus();
             return;
         }
+        firstFocusableEl?.focus();
+    }, [focusFirst, firstFocusableEl, shouldTrap]);
 
-        const focusabledEl: NodeListOf<HTMLElement> = element.querySelectorAll<HTMLElement>(
-            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
-        );
+    useEffect(() => {
+        if (!shouldTrap) return;
 
-        const firstFocusableEl: HTMLElement = focusabledEl[0];
-        const lastFocusableEl: HTMLElement = focusabledEl[focusabledEl.length - 1];
+        const focusableEl: NodeListOf<HTMLElement> = rootElement.querySelectorAll<HTMLElement>(FOCUSABLE_ELEMENTS);
+
+        const firstFocusableEl: HTMLElement = focusableEl[0];
+        const lastFocusableEl: HTMLElement = focusableEl[focusableEl.length - 1];
+
+        setFirstFocusableEl(firstFocusableEl);
 
         const trapFocus = (event: KeyboardEvent): void => {
             const isTabPressed = event.key === 'Tab' || event.keyCode === KEYCODE_TAB;
@@ -36,14 +57,13 @@ const useTrapFocus = ({ element }: UseTrapFocusProps) => {
             }
         };
 
-        element.addEventListener('keydown', trapFocus);
-        console.log('Event created');
+        rootElement.addEventListener('keydown', trapFocus);
 
         return () => {
-            console.log('Event removed');
-            element.removeEventListener('keydown', trapFocus);
+            setFirstFocusableEl(null);
+            rootElement.removeEventListener('keydown', trapFocus);
         };
-    }, [element]);
+    }, [rootElement, shouldTrap]);
 };
 
 export { useTrapFocus };

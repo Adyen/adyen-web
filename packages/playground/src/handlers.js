@@ -12,12 +12,12 @@ export function handleResponse(response, component) {
 }
 
 export function handleChange(state, component) {
-    console.group(`onChange - ${state.data.paymentMethod.type}`);
-    console.log('isValid', state.isValid);
-    console.log('data', state.data);
-    console.log('node', component._node);
-    console.log('state', state);
-    console.groupEnd();
+    // console.group(`onChange - ${state.data.paymentMethod.type}`);
+    // console.log('isValid', state.isValid);
+    // console.log('data', state.data);
+    // console.log('node', component._node);
+    // console.log('state', state);
+    // console.groupEnd();
 }
 
 export function handleError(obj) {

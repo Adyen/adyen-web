@@ -10,7 +10,7 @@ interface CtPSectionProps {
 const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
     return (
         <div className="adyen-checkout-ctp__section">
-            <div className="adyen-checkout-ctp__section-header">
+            <div className="adyen-checkout-ctp__section-brand">
                 <CtPBrand />
                 <CtPLogoutLink />
             </div>
@@ -20,8 +20,12 @@ const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
     );
 };
 
-const Title = ({ children }: { children }) => <h1 className="adyen-checkout-ctp__section-title">{children}</h1>;
-
+const Title = ({ endAdornment, children }: { endAdornment?; children }) => (
+    <div className="adyen-checkout-ctp__section-header">
+        <h1 className="adyen-checkout-ctp__section-header-title">{children}</h1>
+        {endAdornment && <span className="adyen-checkout-ctp__section-header-adornment">{endAdornment}</span>}
+    </div>
+);
 const Subtitle = ({ children }: { children }) => <p className="adyen-checkout-ctp__section-subtitle">{children}</p>;
 
 CtPSection.Title = Title;

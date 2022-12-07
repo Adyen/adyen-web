@@ -62,9 +62,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
 
     return (
         <Fragment>
-            <CtPSection.Title>
-                {i18n.get('ctp.otp.title')} <CtPInfo />
-            </CtPSection.Title>
+            <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.otp.title')}</CtPSection.Title>
 
             <CtPSection.Subtitle>
                 {subtitleParts[0]} {otpNetwork} {subtitleParts[1]}

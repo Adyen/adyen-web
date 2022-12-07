@@ -7,7 +7,7 @@
     border-radius: 12px;
     padding: 16px;
 
-    &-header {
+    &-brand {
         display: flex;
         align-items: center;
         height: 18px;
@@ -19,17 +19,28 @@
     }
 }
 
-.adyen-checkout-ctp__section-title {
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 22px;
-    margin-bottom: 4px;
-    padding: 0px;
+.adyen-checkout-ctp__section-header {
+    display: flex;
+    align-items: center;
 
-    @media screen and (max-width: 400px) {
-        font-size: 15px;
+    &-title {
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 22px;
+        margin-bottom: 4px;
+        padding: 0px;
+        width: auto;
+
+        @media screen and (max-width: 400px) {
+            font-size: 15px;
+        }
+    }
+
+    &-adornment {
+        margin-left: 5px;
     }
 }
+
 
 .adyen-checkout-ctp__section-subtitle {
     font-size: 13px;
