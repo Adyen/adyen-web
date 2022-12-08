@@ -9,8 +9,8 @@ import './CtPInfo.scss';
 const CtPInfo = () => {
     const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>();
-    const { loadingContext } = useCoreContext();
-    const url = getImageUrl({ loadingContext, imageFolder: 'components/' })('copy');
+    const { i18n, loadingContext } = useCoreContext();
+    const url = getImageUrl({ loadingContext, imageFolder: 'components/' })('info');
 
     const handleOnClose = useCallback(() => {
         setIsInfoModalOpen(false);
@@ -26,7 +26,7 @@ const CtPInfo = () => {
                 ref={buttonRef}
                 onClick={handleOnIconClick}
                 className="adyen-web__ctp-info-button"
-                aria-label="What is Click to Pay"
+                aria-label={i18n.get('ctp.aria.infoModalButton')}
                 type="button"
             >
                 <Img height="15" src={url} ariaHidden={true} />

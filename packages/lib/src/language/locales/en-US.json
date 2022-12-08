@@ -234,7 +234,6 @@
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
     "upi.modeSelection": "Make a selection on how you would like to use UPI.",
     "onlineBanking.termsAndConditions": "By continuing you agree with the %#terms and conditions%#",
-    "ctp.loading.poweredByCtp": "Powered by Click to Pay",
     "ctp.loading.intro": "We are checking to see if you have any saved cards with Click to Pay...",
     "ctp.login.title": "Continue to Click to Pay",
     "ctp.login.subtitle": "Enter the email address that is connected to Click to Pay to continue.",

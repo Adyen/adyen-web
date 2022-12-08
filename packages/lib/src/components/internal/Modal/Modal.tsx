@@ -4,15 +4,29 @@ import cx from 'classnames';
 import './Modal.scss';
 import { useModal } from './useModal';
 
+type ModalRenderFnProps = {
+    /**
+     * Function used to properly trigger the Modal close mechanism. It takes into account the element that the Modal needs
+     * to set focus when it is dismissed.
+     */
+    onCloseModal(): void;
+};
+
 type ModalProps = {
-    children: ({ onCloseModal }: { onCloseModal(): void }) => ComponentChildren;
+    children: ({ onCloseModal }: ModalRenderFnProps) => ComponentChildren;
     classNameModifiers?: string[];
     onClose(): void;
     isOpen: boolean;
     isDismissible?: boolean;
     labelledBy: string;
     describedBy: string;
+    /**
+     * Reference to the element that should be focused when the modal is opened
+     */
     focusFirst: HTMLElement;
+    /**
+     * Reference to the element that should be focused when the modal is closed
+     */
     focusAfterClose: HTMLElement;
 };
 

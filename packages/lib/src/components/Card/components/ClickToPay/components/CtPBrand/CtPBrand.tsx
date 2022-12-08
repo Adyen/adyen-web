@@ -33,7 +33,7 @@ const CtPBrand = ({ classNameModifiers = [] }: CtPBrandProps) => {
                     key={brand}
                     className={classnames('adyen_checkout-ctp__brand-scheme', `adyen_checkout-ctp__brand-scheme-${brand}`)}
                     src={getImage({ loadingContext })(brand)}
-                    alt={SchemeNames[brand]}
+                    alt={`Logo of ${SchemeNames[brand]}`}
                 />
             ))}
         </div>

@@ -17,18 +17,16 @@ const KEYCODE_TAB = 9;
 const FOCUSABLE_ELEMENTS =
     'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])';
 
-const useTrapFocus = ({ rootElement, focusFirst, shouldTrap = true }: UseTrapFocusProps) => {
+/**
+ * Hook used to trap the focus within the specific element and its child nodes.
+ */
+const useTrapFocus = ({ rootElement, focusFirst, shouldTrap = true }: UseTrapFocusProps): void => {
     const [firstFocusableEl, setFirstFocusableEl] = useState<HTMLElement>(focusFirst);
 
     useEffect(() => {
         if (!shouldTrap) return;
-
-        if (focusFirst) {
-            focusFirst.focus();
-            return;
-        }
         firstFocusableEl?.focus();
-    }, [focusFirst, firstFocusableEl, shouldTrap]);
+    }, [firstFocusableEl, shouldTrap]);
 
     useEffect(() => {
         if (!shouldTrap) return;
@@ -38,7 +36,7 @@ const useTrapFocus = ({ rootElement, focusFirst, shouldTrap = true }: UseTrapFoc
         const firstFocusableEl: HTMLElement = focusableEl[0];
         const lastFocusableEl: HTMLElement = focusableEl[focusableEl.length - 1];
 
-        setFirstFocusableEl(firstFocusableEl);
+        setFirstFocusableEl(focusFirst || firstFocusableEl);
 
         const trapFocus = (event: KeyboardEvent): void => {
             const isTabPressed = event.key === 'Tab' || event.keyCode === KEYCODE_TAB;
@@ -63,7 +61,7 @@ const useTrapFocus = ({ rootElement, focusFirst, shouldTrap = true }: UseTrapFoc
             setFirstFocusableEl(null);
             rootElement.removeEventListener('keydown', trapFocus);
         };
-    }, [rootElement, shouldTrap]);
+    }, [rootElement, focusFirst, shouldTrap]);
 };
 
 export { useTrapFocus };

@@ -1,4 +1,9 @@
 .adyen-checkout__ctp-modal {
+  &-header-image {
+    display: block;
+    margin: auto;
+  }
+
   &-title {
     font-weight: 700;
     font-size: 20px;

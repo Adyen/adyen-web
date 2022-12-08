@@ -5,14 +5,22 @@ type UseModalProps = {
     modalElement?: HTMLElement;
     isOpen: boolean;
     isDismissible: boolean;
-    focusFirst?: HTMLElement;
+    focusFirst: HTMLElement;
     focusAfterClose: HTMLElement;
     onClose(): void;
 };
 
+type UseModalHook = {
+    /**
+     * Function that focus on the 'focusAfterClose' element, and then closes the modal
+     */
+    closeModal(): void;
+    handleClickOutside(event: MouseEvent): void;
+};
+
 const KEYCODE_ESC = 27;
 
-const useModal = ({ modalElement, isOpen, isDismissible, focusFirst, focusAfterClose, onClose }: UseModalProps) => {
+const useModal = ({ modalElement, isOpen, isDismissible, focusFirst, focusAfterClose, onClose }: UseModalProps): UseModalHook => {
     useTrapFocus({ rootElement: modalElement, shouldTrap: isOpen, focusFirst });
 
     const closeModal = useCallback(() => {
@@ -21,8 +29,8 @@ const useModal = ({ modalElement, isOpen, isDismissible, focusFirst, focusAfterC
     }, [onClose, focusAfterClose]);
 
     const handleClickOutside = useCallback(
-        event => {
-            if (isDismissible && open && !modalElement.contains(event.target)) {
+        (event: MouseEvent) => {
+            if (isDismissible && event.target instanceof HTMLElement && !modalElement.contains(event.target)) {
                 closeModal();
             }
         },
