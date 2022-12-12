@@ -5,7 +5,9 @@ import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPOneTimePasswordInput from './CtPOneTimePasswordInput';
 import { CtPOneTimePasswordInputHandlers } from './CtPOneTimePasswordInput/CtPOneTimePasswordInput';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { CtPInfo } from '../CtPInfo';
 import './CtPOneTimePassword.scss';
+import CtPSection from '../CtPSection';
 
 type CtPOneTimePasswordProps = {
     onDisplayCardComponent?(): void;
@@ -60,12 +62,14 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.otp.title')}</div>
-            <div className="adyen-checkout-ctp__section-subtitle">
+            <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.otp.title')}</CtPSection.Title>
+
+            <CtPSection.Text>
                 {subtitleParts[0]} {otpNetwork} {subtitleParts[1]}
                 <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span>
                 {subtitleParts[2]}
-            </div>
+            </CtPSection.Text>
+
             <CtPOneTimePasswordInput
                 hideResendOtpButton={isAccountLocked}
                 onChange={onChangeOtpInput}

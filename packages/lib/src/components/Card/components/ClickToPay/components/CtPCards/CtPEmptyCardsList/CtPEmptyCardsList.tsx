@@ -3,6 +3,7 @@ import Button from '../../../../../../internal/Button';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import './CtPEmptyCards.scss';
+import CtPSection from '../../CtPSection';
 
 const CtPEmptyCardsList = () => {
     const { i18n } = useCoreContext();
@@ -10,8 +11,8 @@ const CtPEmptyCardsList = () => {
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
-            <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
+            <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
+            <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
 
             <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>
 

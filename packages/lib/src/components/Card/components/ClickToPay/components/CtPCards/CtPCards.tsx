@@ -13,6 +13,7 @@ import './CtPCards.scss';
 import isMobile from '../../../../../../utils/isMobile';
 import SrciError from '../../services/sdks/SrciError';
 import Language from '../../../../../../language';
+import CtPSection from '../CtPSection';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -63,8 +64,8 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.cards.title')}</div>
-            <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.cards.subtitle')}</div>
+            <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
+            <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
 
             {cards.length === 1 ? (
                 <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />

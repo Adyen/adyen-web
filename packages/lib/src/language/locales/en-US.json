@@ -2,6 +2,7 @@
     "payButton": "Pay",
     "payButton.redirecting": "Redirecting...",
     "payButton.with": "Pay %{value} with %{maskedData}",
+    "close": "Close",
     "storeDetails": "Save for my next payment",
     "creditCard.holderName": "Name on card",
     "creditCard.holderName.placeholder": "J. Smith",
@@ -50,12 +51,15 @@
     "companyDetails.registrationNumber": "Registration number",
     "socialSecurityNumber": "Social security number",
     "firstName": "First name",
+    "firstName.invalid": "First name is not valid",
     "infix": "Prefix",
     "lastName": "Last name",
+    "lastName.invalid": "Last name is not valid",
     "mobileNumber": "Mobile number",
     "mobileNumber.invalid": "Invalid mobile number",
     "city": "City",
     "postalCode": "Postal code",
+    "postalCode.optional": "Postal code (optional)",
     "countryCode": "Country Code",
     "telephoneNumber": "Telephone number",
     "dateOfBirth": "Date of birth",
@@ -254,6 +258,7 @@
     "ctp.cards.subtitle": "Select a card to use.",
     "ctp.cards.expiredCard": "Expired",
     "ctp.manualCardEntry": "Manual card entry",
+    "ctp.aria.infoModalButton": "What is Click to Pay",
     "ctp.infoPopup.title": "Click to Pay brings the ease of contactless, online",
     "ctp.infoPopup.subtitle": "A fast, secure payment method supported by Mastercard, Visa and other payment cards.",
     "ctp.infoPopup.benefit1": "Click to Pay uses encryption to keep your information safe and secure",
@@ -275,5 +280,5 @@
     "ctp.errors.SERVER_ERROR": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.INVALID_PARAMETER": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.AUTH_ERROR": "Something went wrong, try again or use the manual card entry",
-    "a11y.paymentMethodsList": "Choose a payment method"
+    "paymentMethodsList.aria.label": "Choose a payment method"
 }

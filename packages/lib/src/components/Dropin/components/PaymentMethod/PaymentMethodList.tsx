@@ -73,7 +73,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
 
                 {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
 
-                <ul className={paymentMethodListClassnames} role="radiogroup" aria-label={i18n.get('a11y.paymentMethodsList')} required>
+                <ul className={paymentMethodListClassnames} role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
                     {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
                         const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
                         const isLoaded = paymentMethod._id in cachedPaymentMethods;
