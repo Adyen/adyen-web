@@ -121,7 +121,8 @@ export default parent => {
                                 // this.props.brands that matches the card
                                 // number that the shopper has typed
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
-                                brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
+                                brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
+                                issuingCountryCode: data.issuingCountryCode
                             } as CbObjOnBinLookup);
 
                             return;
