@@ -26,9 +26,9 @@ const Title = ({ endAdornment, children }: { endAdornment?; children }) => (
         {endAdornment && <span className="adyen-checkout-ctp__section-header-adornment">{endAdornment}</span>}
     </div>
 );
-const Subtitle = ({ children }: { children }) => <p className="adyen-checkout-ctp__section-subtitle">{children}</p>;
+const Text = ({ children }: { children }) => <p className="adyen-checkout-ctp__section-text">{children}</p>;
 
 CtPSection.Title = Title;
-CtPSection.Subtitle = Subtitle;
+CtPSection.Text = Text;
 
 export default CtPSection;

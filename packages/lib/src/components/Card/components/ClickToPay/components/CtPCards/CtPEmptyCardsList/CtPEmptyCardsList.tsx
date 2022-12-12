@@ -12,7 +12,7 @@ const CtPEmptyCardsList = () => {
     return (
         <Fragment>
             <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
-            <CtPSection.Subtitle>{i18n.get('ctp.cards.subtitle')}</CtPSection.Subtitle>
+            <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
 
             <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>
 

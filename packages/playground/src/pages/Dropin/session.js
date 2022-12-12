@@ -10,7 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
-        shopperEmail: 'guilherme.ribeiro-ctp4@adyen.com',
+        shopperEmail: 'shopper.ctp1@adyen.com',
         countryCode
     });
 
@@ -37,8 +37,6 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             card: {
-                useClickToPay: true,
-
                 hasHolderName: true,
                 holderNameRequired: true,
                 holderName: 'J. Smith',

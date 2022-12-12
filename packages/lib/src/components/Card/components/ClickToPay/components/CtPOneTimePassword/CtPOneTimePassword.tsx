@@ -64,11 +64,11 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
         <Fragment>
             <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.otp.title')}</CtPSection.Title>
 
-            <CtPSection.Subtitle>
+            <CtPSection.Text>
                 {subtitleParts[0]} {otpNetwork} {subtitleParts[1]}
                 <span className="adyen-checkout-ctp__otp-subtitle--highlighted">{otpMaskedContact}</span>
                 {subtitleParts[2]}
-            </CtPSection.Subtitle>
+            </CtPSection.Text>
 
             <CtPOneTimePasswordInput
                 hideResendOtpButton={isAccountLocked}

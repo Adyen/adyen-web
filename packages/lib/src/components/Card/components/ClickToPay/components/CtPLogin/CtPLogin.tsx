@@ -59,7 +59,7 @@ const CtPLogin = (): h.JSX.Element => {
         <Fragment>
             <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.login.title')}</CtPSection.Title>
 
-            <CtPSection.Subtitle>{i18n.get('ctp.login.subtitle')}</CtPSection.Subtitle>
+            <CtPSection.Text>{i18n.get('ctp.login.subtitle')}</CtPSection.Text>
 
             <CtPLoginInput
                 onChange={handleOnLoginChange}

@@ -65,7 +65,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     return (
         <Fragment>
             <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
-            <CtPSection.Subtitle>{i18n.get('ctp.cards.subtitle')}</CtPSection.Subtitle>
+            <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
 
             {cards.length === 1 ? (
                 <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />
