@@ -63,7 +63,7 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) =
                         <CtPBrand classNameModifiers={['popup']} />
                     </div>
 
-                    <Button onClick={onCloseModal} label="Close" />
+                    <Button onClick={onCloseModal} label={i18n.get('close')} />
                 </Fragment>
             )}
         </Modal>
