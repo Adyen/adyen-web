@@ -7,6 +7,7 @@ import { useCallback, useState } from 'preact/hooks';
 import './CtPLogin.scss';
 import { CtPInfo } from '../CtPInfo';
 import CtPSection from '../CtPSection';
+import SrciError from '../../services/sdks/SrciError';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -50,6 +51,8 @@ const CtPLogin = (): h.JSX.Element => {
                 setIsLoggingIn(false);
             }
         } catch (error) {
+            if (error instanceof SrciError)
+                console.warn(`CtP - Login error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
             setErrorCode(error?.reason);
             setIsLoggingIn(false);
         }

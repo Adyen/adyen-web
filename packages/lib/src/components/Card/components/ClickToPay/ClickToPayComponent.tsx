@@ -7,6 +7,7 @@ import CtPCards from './components/CtPCards';
 import CtPSection from './components/CtPSection';
 import CtPLoader from './components/CtPLoader';
 import CtPLogin from './components/CtPLogin';
+import SrciError from './services/sdks/SrciError';
 
 type ClickToPayComponentProps = {
     onDisplayCardComponent?(): void;
@@ -20,7 +21,8 @@ const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProp
             try {
                 await startIdentityValidation();
             } catch (error) {
-                console.warn(error);
+                if (error instanceof SrciError)
+                    console.warn(`CtP - Identity Validation error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
                 logoutShopper();
             }
         }

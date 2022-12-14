@@ -37,13 +37,24 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     });
     const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
     const [inputRef, setInputRef] = useState<HTMLInputElement>(null);
+    const [isOtpFielDirty, setIsOtpFieldDirty] = useState<boolean>(false);
 
     const validateInput = useCallback(() => {
+        setIsOtpFieldDirty(true);
         triggerValidation();
     }, [triggerValidation]);
 
+    /**
+     * If shopper changes the value of the OTP fields, input becomes dirty
+     */
     useEffect(() => {
-        if (inputRef) inputRef.focus();
+        if (data.otp) setIsOtpFieldDirty(true);
+    }, [data.otp]);
+
+    useEffect(() => {
+        if (inputRef) {
+            inputRef.focus();
+        }
     }, [inputRef]);
 
     useEffect(() => {
@@ -88,7 +99,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                     <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
                 )
             }
-            errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
+            errorMessage={isOtpFielDirty ? resendOtpError || props.errorMessage || !!errors.otp : null}
             classNameModifiers={['otp']}
         >
             {renderFormField('text', {
