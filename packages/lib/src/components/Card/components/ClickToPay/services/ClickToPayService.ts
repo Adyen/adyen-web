@@ -140,13 +140,13 @@ class ClickToPayService implements IClickToPayService {
             throw Error('ClickToPayService # checkout: Missing card data');
         }
 
-        const checkoutParameters = {
-            srcDigitalCardId: card.srcDigitalCardId,
-            srcCorrelationId: card.srcCorrelationId
-        };
-
         const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === card.scheme);
-        const checkoutResponse = await checkoutSdk.checkout({ ...checkoutParameters, windowRef: window.frames[CTP_IFRAME_NAME] });
+
+        const checkoutResponse = await checkoutSdk.checkout({
+            srcDigitalCardId: card.srcDigitalCardId,
+            srcCorrelationId: card.srcCorrelationId,
+            ...(card.isDcfPopupEmbedded && { windowRef: window.frames[CTP_IFRAME_NAME] })
+        });
 
         if (checkoutResponse.dcfActionCode !== 'COMPLETE') {
             throw new AdyenCheckoutError(

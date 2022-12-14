@@ -42,8 +42,6 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         }
     }, [onDisplayCardComponent, isEveryCardExpired, cards]);
 
-    console.log(checkoutCard);
-
     const doCheckout = useCallback(async () => {
         if (!checkoutCard) return;
 
@@ -66,11 +64,14 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         return <CtPEmptyCardsList />;
     }
 
+    const displayNetworkDcf = status === 'loading' && checkoutCard.isDcfPopupEmbedded;
+    const displayCardCheckoutView = status !== 'loading' || !displayNetworkDcf;
+
     return (
         <Fragment>
-            <Iframe name={CTP_IFRAME_NAME} height="600" width="100%" classNameModifiers={[status !== 'loading' ? 'hidden' : '']} />
+            <Iframe name={CTP_IFRAME_NAME} height="600" width="100%" classNameModifiers={[displayNetworkDcf ? '' : 'hidden']} />
 
-            {status !== 'loading' && (
+            {displayCardCheckoutView && (
                 <Fragment>
                     <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
                     <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
