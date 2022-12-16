@@ -8,7 +8,6 @@ import PayButton from '../../../../../internal/PayButton';
 import { amountLabel } from '../../../../../internal/PayButton/utils';
 import CtPCardsList from './CtPCardsList';
 import ShopperCard from '../../models/ShopperCard';
-import './CtPCards.scss';
 import isMobile from '../../../../../../utils/isMobile';
 import SrciError from '../../services/sdks/SrciError';
 import Language from '../../../../../../language';
@@ -16,6 +15,7 @@ import CtPSection from '../CtPSection';
 import { CTP_IFRAME_NAME } from '../../services/utils';
 import Iframe from '../../../../../internal/IFrame';
 import { PaymentAmount } from '../../../../../../types';
+import './CtPCards.scss';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -60,7 +60,10 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
             const payload = await checkout(checkoutCard);
             onSubmit(payload);
         } catch (error) {
-            if (error instanceof SrciError) setErrorCode(error?.reason);
+            if (error instanceof SrciError) {
+                setErrorCode(error?.reason);
+                console.warn(`CtP - Checkout: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
+            }
             onError(error);
         }
     }, [checkout, checkoutCard]);
@@ -84,7 +87,12 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                     {cards.length === 0 && <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>}
                     {cards.length === 1 && <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />}
                     {cards.length > 1 && (
-                        <CtPCardsList cards={cards} onChangeCard={handleOnChangeCard} errorMessage={getErrorLabel(errorCode, i18n)} />
+                        <CtPCardsList
+                            cardSelected={checkoutCard}
+                            cards={cards}
+                            onChangeCard={handleOnChangeCard}
+                            errorMessage={getErrorLabel(errorCode, i18n)}
+                        />
                     )}
 
                     <PayButton
