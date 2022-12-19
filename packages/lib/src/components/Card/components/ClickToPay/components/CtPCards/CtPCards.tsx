@@ -41,7 +41,7 @@ function getPayButtonLabel(i18n: Language, amount: PaymentAmount, checkoutCard?:
 const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
-    const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards[0]);
+    const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards.find(card => !card.isExpired) || cards[0]);
     const [errorCode, setErrorCode] = useState<string>(null);
     const isEveryCardExpired = cards.every(card => card.isExpired);
 
