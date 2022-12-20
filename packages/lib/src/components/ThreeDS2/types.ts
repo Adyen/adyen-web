@@ -35,8 +35,8 @@ export interface ThreeDS2FlowObject {
     threeDSServerTransID?: string;
 }
 
-export interface ThreeDS2ChallengeRejectObject {
-    type: 'challengeError';
+export interface PostMsgParseErrorObject {
+    type?: string;
     comment?: string;
     extraInfo?: string;
     eventDataRaw?: string;
