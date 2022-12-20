@@ -2,8 +2,7 @@ import { shallow } from 'enzyme';
 import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import Language from '../../../../language/Language';
-import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED, ERROR_MSG_CLEARED } from '../../../../core/Errors/constants';
-import { getError } from '../../../../core/Errors/utils';
+import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD, ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../../../core/Errors/constants';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -14,12 +13,8 @@ const i18n = new Language('en-US', {});
 let wrapper;
 let sfp;
 
-let errorObj;
-
-const onError = jest.fn(errObj => {
-    errorObj = errObj;
-});
-const renderFn = jest.fn((props, state) => {});
+const onError = jest.fn(() => {});
+const renderFn = jest.fn(() => {});
 
 const handleSecuredFieldsRef = ref => {
     sfp = ref;

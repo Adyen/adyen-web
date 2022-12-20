@@ -67,8 +67,9 @@ describe('Google Pay Requests', () => {
         });
 
         test('should not have merchantOrigin when not in use', () => {
-            const paymentRequest = initiatePaymentRequest({...defaultProps});
+            const paymentRequest = initiatePaymentRequest({ ...defaultProps });
 
+            // eslint-disable-next-line no-prototype-builtins
             expect(paymentRequest.merchantInfo.hasOwnProperty('merchantOrigin')).toBe(false);
         });
     });

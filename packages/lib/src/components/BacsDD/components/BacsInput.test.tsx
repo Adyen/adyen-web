@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
+import { BacsInputProps } from './types';
+import { mock } from 'jest-mock-extended';
 
 const defaultProps = {
     onChange: () => {},
@@ -8,7 +10,8 @@ const defaultProps = {
 };
 
 describe('BacsInput', () => {
-    const getWrapper = (props?) => mount(<BacsInput {...defaultProps} {...props} />);
+    const bacsPropsMock = mock<BacsInputProps>();
+    const getWrapper = (props = {}) => mount(<BacsInput {...defaultProps} {...props} {...bacsPropsMock} />);
 
     test('Should display expected fields for opening (enter-data) state', () => {
         const wrapper = getWrapper({});

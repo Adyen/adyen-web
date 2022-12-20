@@ -17,7 +17,7 @@ let callbackFnCalled = false;
 
 const rootNode = null;
 
-const onError = dataObj => {
+const onError = () => {
     callbackFnCalled = true;
 };
 

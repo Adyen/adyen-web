@@ -1,10 +1,12 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
-import PayButton from './PayButton';
+import PayButton, { PayButtonProps } from './PayButton';
 import { PAY_BTN_DIVIDER } from './utils';
+import { mock } from 'jest-mock-extended';
 
 describe('PayButton', () => {
-    const getWrapper = (props?) => mount(<PayButton {...props} />);
+    const mockedProps = mock<PayButtonProps>();
+    const getWrapper = (props = {}) => mount(<PayButton {...props} {...mockedProps} />);
 
     test('Renders a pay button', () => {
         const wrapper = getWrapper();

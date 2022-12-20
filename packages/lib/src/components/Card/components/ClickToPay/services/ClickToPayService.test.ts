@@ -3,7 +3,7 @@ import { mock } from 'jest-mock-extended';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import VisaSdk from './sdks/VisaSdk';
 import MastercardSdk from './sdks/MastercardSdk';
-import { IdentityLookupParams, SchemesConfiguration, SrcProfileWithScheme } from './types';
+import { IdentityLookupParams, SchemesConfiguration } from './types';
 import { SrciIdentityLookupResponse, SrcProfile } from './sdks/types';
 import SrciError from './sdks/SrciError';
 
@@ -12,11 +12,11 @@ test('should pass the correct configuration to the respective scheme SDKs', asyn
     const mc = mock<MastercardSdk>();
     const sdkLoader = mock<ISrcSdkLoader>();
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     visa.schemeName = 'visa';
     visa.isRecognized.mockResolvedValue({ recognized: false });
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     mc.schemeName = 'mc';
     mc.isRecognized.mockResolvedValue({ recognized: false });
 
@@ -126,7 +126,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
 
     sdkLoader.load.mockResolvedValue([visa, mc]);
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     visa.schemeName = 'visa';
     visa.init.mockResolvedValue();
     visa.isRecognized.mockResolvedValue({ recognized: true, idTokens: mockedIdToken });
@@ -228,13 +228,13 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
 
     sdkLoader.load.mockResolvedValue([visa, mc]);
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     visa.schemeName = 'visa';
     visa.init.mockResolvedValue();
     visa.isRecognized.mockResolvedValue({ recognized: true, idTokens: mockedIdToken });
     visa.getSrcProfile.mockResolvedValue(profileFromVisaSrcSystem);
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     mc.schemeName = 'mc';
     mc.init.mockResolvedValue();
     mc.isRecognized.mockResolvedValue({ recognized: false });
@@ -298,7 +298,7 @@ test('should clean up shopper cards and set CtP state as Login after performing 
 
     sdkLoader.load.mockResolvedValue([visa, mc]);
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     visa.schemeName = 'visa';
     visa.init.mockResolvedValue();
     visa.unbindAppInstance.mockResolvedValue();
@@ -388,7 +388,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
 
     sdkLoader.load.mockResolvedValue([visa, mc]);
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     visa.schemeName = 'visa';
     visa.init.mockResolvedValue();
     visa.isRecognized.mockResolvedValue({ recognized: false });
@@ -397,7 +397,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
         () => new Promise<SrciIdentityLookupResponse>(resolve => setTimeout(() => resolve({ consumerPresent: true }), 700))
     );
 
-    // @ts-ignore
+    // @ts-ignore Mocking readonly property
     mc.schemeName = 'mc';
     mc.init.mockResolvedValue();
     mc.isRecognized.mockResolvedValue({ recognized: false });

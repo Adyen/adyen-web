@@ -5,7 +5,7 @@ import EcontextInput from './EcontextInput';
 describe('Econtext: EcontextInput', () => {
     test('renders PersonalDetails form by default', () => {
         const wrapper = shallow(
-            <EcontextInput onChange={jest.fn()} onSubmit={jest.fn()} showPayButton payButton={() => <button class="pay-button" />} />
+            <EcontextInput onChange={jest.fn()} onSubmit={jest.fn()} showPayButton payButton={() => <button className="pay-button" />} />
         );
         expect(wrapper.find('PersonalDetails')).toHaveLength(1);
     });
@@ -17,7 +17,7 @@ describe('Econtext: EcontextInput', () => {
                 onChange={jest.fn()}
                 onSubmit={jest.fn()}
                 showPayButton
-                payButton={() => <button class="pay-button" />}
+                payButton={() => <button className="pay-button" />}
             />
         );
         expect(wrapper.find('PersonalDetails')).toHaveLength(0);
@@ -30,9 +30,9 @@ describe('Econtext: EcontextInput', () => {
                 onChange={jest.fn()}
                 onSubmit={jest.fn()}
                 showPayButton={false}
-                payButton={() => <button class="pay-button" />}
+                payButton={() => <button className="pay-button" />}
             />
         );
-        expect(wrapper.contains(<button class="pay-button" />)).toBeFalsy();
+        expect(wrapper.contains(<button className="pay-button" />)).toBeFalsy();
     });
 });
