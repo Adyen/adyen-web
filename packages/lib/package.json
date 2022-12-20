@@ -89,7 +89,7 @@
         "node-sass": "^6.0.1",
         "postcss": "^8.4.7",
         "postcss-reporter": "^7.0.5",
-        "prettier": "^1.19.1",
+        "prettier": "^2.0.0",
         "rollup": "^2.79.1",
         "rollup-plugin-esbuild": "^4.5.0",
         "rollup-plugin-postcss": "^4.0.2",
