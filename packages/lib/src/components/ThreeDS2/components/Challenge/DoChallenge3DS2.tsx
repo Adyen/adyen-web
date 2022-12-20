@@ -48,13 +48,11 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), CHALLENGE_TIMEOUT_REJECT_OBJECT);
         this.challengePromise.promise
             .then((resolveObject: ThreeDS2FlowObject) => {
-                console.log('### DoChallenge3DS2::SUCCESS :: resolveObject', resolveObject);
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onCompleteChallenge(resolveObject);
             })
             // Catch, for when Challenge times-out
             .catch((rejectObject: ThreeDS2FlowObject) => {
-                console.log('### DoChallenge3DS2::ERROR :: rejectObject', rejectObject);
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onErrorChallenge(rejectObject);
             });

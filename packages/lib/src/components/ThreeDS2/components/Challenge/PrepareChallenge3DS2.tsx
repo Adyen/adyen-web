@@ -91,16 +91,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
                         if (hasOwnProperty(challenge, 'errorCode')) {
-                            console.log('\n### PrepareChallenge3DS2::onErrorChallenge::has errorCode:: challenge=', challenge);
                             const errorCodeObject = handleErrorCode(challenge.errorCode);
-                            console.log(
-                                '### PrepareChallenge3DS2::onErrorChallenge::has errorCode:: will call onError callback, passing',
-                                errorCodeObject
-                            );
-                            console.log(
-                                '### PrepareChallenge3DS2::onErrorChallenge::has errorCode:: will also call setStatusComplete, passing',
-                                challenge.result
-                            );
                             this.props.onError(errorCodeObject);
                             this.setStatusComplete(challenge.result);
                             return;
