@@ -12,7 +12,7 @@ export interface ThreeDS2ChallengeProps {
     token?: string;
     dataKey?: string;
     notificationURL?: string;
-    onError?: (error: string | ErrorCodeObject | PostMsgParseErrorObject) => void; // TODO PostMsgParseErrorObject only needed if this function gets passed down to get-process-message-handler
+    onError?: (error: string | ErrorCodeObject) => void;
     paymentData?: string;
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
