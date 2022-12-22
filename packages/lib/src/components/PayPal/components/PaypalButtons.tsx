@@ -23,7 +23,16 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
             onClick,
             onCancel,
             onError,
-            onApprove: onComplete
+            onApprove: function(details, actions) {
+                if (!actions) {
+                    return onComplete(details, null);
+                }
+
+                return actions.order.get().then(function(data) {
+                    const payerData = data.payer || {};
+                    onComplete(details, payerData);
+                });
+            }
         });
 
         if (button.isEligible()) {

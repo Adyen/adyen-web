@@ -86,8 +86,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleError(new AdyenCheckoutError('CANCEL'));
     }
 
-    handleComplete(details) {
+    handleComplete(details, payerData) {
         const state = { data: { details, paymentData: this.paymentData } };
+        if (payerData) {
+            this.props.onGetPayerData(payerData);
+        }
         this.handleAdditionalDetails(state);
     }
 

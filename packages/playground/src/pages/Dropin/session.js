@@ -36,6 +36,11 @@ export async function initSession() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
+            paypal: {
+                onGetPayerData(payerData) {
+                    console.log(payerData);
+                }
+            },
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,
