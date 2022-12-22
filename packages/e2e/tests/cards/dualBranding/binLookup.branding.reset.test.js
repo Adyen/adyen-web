@@ -247,7 +247,7 @@ test(
         await t.click(dualBrandingIconHolderActive.find('img').nth(0));
 
         // Hidden cvc field
-        await t.expect(cvcSpan.filterVisible().exists).ok();
+        await t.expect(cvcSpan.filterHidden().exists).ok();
 
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
 
@@ -255,5 +255,8 @@ test(
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
             .contains('visa');
+
+        // Visible cvc field
+        await t.expect(cvcSpan.filterVisible().exists).ok();
     }
 );
