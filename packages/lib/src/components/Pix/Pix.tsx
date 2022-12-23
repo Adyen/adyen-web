@@ -3,31 +3,31 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import { h } from 'preact';
 import PixInput from './PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
-import { PixProps } from './types';
+import { PixElementData, PixProps } from './types';
 
 class PixElement extends QRLoaderContainer<PixProps> {
     public static type = 'pix';
 
     public static defaultProps = {
         personalDetailsRequired: false,
+        countdownTime: 15,
+        delay: 2000,
         ...QRLoaderContainer.defaultProps
     };
 
-    get isValid() {
+    get isValid(): boolean {
         return !!this.state.isValid;
     }
 
     formatProps(props) {
         return {
-            delay: 2000, // ms
-            countdownTime: 15, // min
             copyBtn: true,
             introduction: 'pix.instructions',
             ...super.formatProps(props)
         };
     }
 
-    formatData() {
+    formatData(): PixElementData {
         const { data = {} } = this.state;
         const { firstName, lastName, socialSecurityNumber = '' } = data;
 
@@ -41,6 +41,8 @@ class PixElement extends QRLoaderContainer<PixProps> {
     }
 
     render() {
+        console.log(this.props);
+
         if (this.props.paymentData) {
             return this.renderQRCode();
         }
@@ -52,8 +54,10 @@ class PixElement extends QRLoaderContainer<PixProps> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
+                    showPayButton={this.props.showPayButton}
+                    personalDetailsRequired={this.props.personalDetailsRequired}
+                    name={this.displayName}
                     onChange={this.setState}
-                    onSubmit={this.submit}
                     payButton={this.payButton}
                 />
             </CoreProvider>

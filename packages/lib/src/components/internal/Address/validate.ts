@@ -57,6 +57,7 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
         postalCode: {
             modes: ['blur'],
             validate: (val, context) => {
+                console.log(context.state.data);
                 const country = context.state.data.country;
 
                 // Country specific rule

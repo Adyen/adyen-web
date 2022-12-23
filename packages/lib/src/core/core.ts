@@ -114,7 +114,20 @@ class Core {
     public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
     public create(paymentMethod: any, options?: any): any {
         const props = this.getPropsForComponent(options);
+
+        const isStandaloneComponent = paymentMethod !== 'dropin' && typeof paymentMethod === 'string';
+        if (isStandaloneComponent) {
+            this.addConfigToPaymentMethodConfiguration(paymentMethod, options);
+        }
+
         return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
+    }
+
+    private addConfigToPaymentMethodConfiguration(paymentMethodType: string, paymentMethodConfig: any) {
+        this.options.paymentMethodsConfiguration = {
+            ...this.options.paymentMethodsConfiguration,
+            [paymentMethodType]: { ...paymentMethodConfig }
+        };
     }
 
     /**
@@ -133,9 +146,18 @@ class Core {
             }
             throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
+
         if (action.type) {
-            const paymentMethodsConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
-            const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
+            const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
+            const paymentMethodConfiguration = getComponentConfiguration(action.paymentMethodType, this.options.paymentMethodsConfiguration);
+
+            const props = {
+                ...processGlobalOptions(this.options),
+                ...actionTypeConfiguration,
+                ...paymentMethodConfiguration,
+                ...this.getPropsForComponent(options)
+            };
+
             return getComponentForAction(action, props);
         }
         return this.handleCreateError();
