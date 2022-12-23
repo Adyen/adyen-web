@@ -1,6 +1,6 @@
+import { h } from 'preact';
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { h } from 'preact';
 import PixInput from './PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixProps } from './types';
@@ -9,6 +9,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
     public static type = 'pix';
 
     public static defaultProps = {
+        showPayButton: false,
         personalDetailsRequired: false,
         countdownTime: 15,
         delay: 2000,
@@ -19,7 +20,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
         return !!this.state.isValid;
     }
 
-    formatProps(props) {
+    formatProps(props): PixProps {
         return {
             copyBtn: true,
             introduction: 'pix.instructions',
