@@ -17,7 +17,7 @@ class BaseElement<P extends BaseElementProps> {
     protected readonly _parentInstance: Core;
 
     protected constructor(props: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
         this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};

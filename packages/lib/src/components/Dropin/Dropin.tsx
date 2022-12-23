@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-import {PaymentAction, PaymentMethod} from '../../types';
+import { PaymentAction, PaymentMethod } from '../../types';
 import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
@@ -122,6 +122,13 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         if (action.type !== 'redirect' && this.activePaymentMethod?.updateWithAction) {
             return this.activePaymentMethod.updateWithAction(action);
+        }
+
+        if (this.elementRef instanceof DropinElement) {
+            props = {
+                ...this.elementRef.activePaymentMethod?.props,
+                ...props
+            };
         }
 
         const paymentAction: UIElement = this._parentInstance.createFromAction(action, {

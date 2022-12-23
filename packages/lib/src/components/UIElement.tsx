@@ -18,7 +18,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     public elementRef: UIElement;
 
     constructor(props: P) {
-        super({ setStatusAutomatically: true, ...props });
+        super(props);
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -171,6 +171,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         const paymentAction = this._parentInstance.createFromAction(action, {
+            ...this.elementRef.props,
             ...props,
             onAdditionalDetails: this.handleAdditionalDetails
         });

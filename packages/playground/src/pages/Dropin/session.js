@@ -45,6 +45,9 @@ export async function initSession() {
                 // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
+            },
+            pix: {
+                countdownTime: 5
             }
         }
     });

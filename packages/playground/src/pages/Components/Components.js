@@ -93,7 +93,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // UPI
     window.upi = checkout.create('upi').mount('.upi-field');
 
-    window.pix = checkout.create('pix', { countdownTime: 5, personalDetailsRequired: true }).mount('.pix-field');
+    window.pix = checkout.create('pix', { countdownTime: 5 }).mount('.pix-field');
 
     // Redirect
     // window.redirect = checkout.create('paypal').mount('.redirect-field');

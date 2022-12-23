@@ -95,21 +95,6 @@ describe('Core - tests ensuring props reach components', () => {
      * COMPONENTS
      */
     describe('Tests for standalone components', () => {
-        test('should use custom config props from standalone Components to populate global paymentMethodsConfiguration', () => {
-            const { paymentMethodsConfiguration, ...checkoutCfg } = checkoutConfig;
-            const checkout = new AdyenCheckout(checkoutCfg);
-
-            checkout.create('card', { billingAddressRequired: true });
-            checkout.create('pix', { countdownTime: 5 });
-            checkout.create('googlepay', { buttonType: 'checkout' });
-
-            expect(checkout.options.paymentMethodsConfiguration).toEqual({
-                card: { billingAddressRequired: true },
-                pix: { countdownTime: 5 },
-                googlepay: { buttonType: 'checkout' }
-            });
-        });
-
         test('Test that expected props are propagated to a standalone storedCard ', () => {
             const checkout = new AdyenCheckout(checkoutConfig);
             const component = checkout.create('card', paymentMethodsResponse.storedPaymentMethods[0]);
