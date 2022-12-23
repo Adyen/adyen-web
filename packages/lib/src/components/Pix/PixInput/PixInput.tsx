@@ -31,7 +31,6 @@ function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButto
     };
 
     useEffect(() => {
-        console;
         onChange({ data, valid, errors, isValid });
     }, [onChange, data, valid, errors]);
 

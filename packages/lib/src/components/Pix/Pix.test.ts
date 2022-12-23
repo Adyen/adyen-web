@@ -1,24 +1,14 @@
 import Pix from './Pix';
-import { render, screen } from '@testing-library/preact';
-import { mock } from 'jest-mock-extended';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import Language from '../../language';
+
 test('should return only payment type if personalDetails is not required', async () => {
     const pixElement = new Pix({});
-    expect(pixElement.formatData()).toEqual({ paymentMethod: { type: 'pix' } });
+    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix' } });
 });
 
 test('should show personal details form if enabled', async () => {
-    const i18n = mock<Language>();
-    i18n.get.mockImplementation(key => {
-        if (key === 'firstName') return 'First name';
-        if (key === 'lastName') return 'Last name';
-        if (key === 'boleto.socialSecurityNumber') return 'CPF/CNPJ';
-        if (key === 'continueTo') return 'Continue to';
-    });
-
-    i18n.loaded = Promise.resolve();
-
+    const i18n = global.i18n;
     const pixElement = new Pix({ personalDetailsRequired: true, i18n });
     render(pixElement.render());
 
@@ -28,38 +18,44 @@ test('should show personal details form if enabled', async () => {
 });
 
 test('should show pay button if property is set to true', async () => {
-    const i18n = mock<Language>();
-    i18n.loaded = Promise.resolve();
-    i18n.get.mockImplementation(key => {
-        if (key === 'continueTo') return 'Continue to';
-    });
-
+    const i18n = global.i18n;
     const pixElement = new Pix({ showPayButton: true, i18n });
     render(pixElement.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
 });
 
-test.only('should validate Brazil SSN', async () => {
-    const user = userEvent.setup({ delay: 150 });
-
-    const i18n = mock<Language>();
-    i18n.loaded = Promise.resolve();
-    i18n.get.mockImplementation(key => {
-        if (key === 'firstName') return 'First name';
-        if (key === 'lastName') return 'Last name';
-        if (key === 'boleto.socialSecurityNumber') return 'CPF/CNPJ';
-        if (key === 'continueTo') return 'Continue to';
-    });
-
-    const pixElement = new Pix({ personalDetailsRequired: true, showPayButton: true, i18n });
+test('should validate Brazil SSN', async () => {
+    const user = userEvent.setup();
+    const i18n = global.i18n;
+    const pixElement = new Pix({ personalDetailsRequired: true, i18n });
     render(pixElement.render());
 
-    user.type(await screen.findByLabelText('First name'), 'Jose');
-    user.type(await screen.findByLabelText('Last name'), 'Fernandez');
-    user.type(await screen.findByLabelText('CPF/CNPJ'), '18839203');
+    const firstNameInput = await screen.findByLabelText('First name');
+    const lastNameInput = await screen.findByLabelText('Last name');
+    const ssnInput = await screen.findByLabelText('CPF/CNPJ');
 
-    console.log(pixElement.formatData());
+    await user.type(firstNameInput, 'Jose');
+    await user.type(lastNameInput, 'Fernandez');
+    await user.type(ssnInput, '18839203');
 
-    expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
+    pixElement.submit();
+
+    await waitFor(() => expect(ssnInput).toBeInvalid());
+
+    await user.clear(ssnInput);
+    await user.type(ssnInput, '81943004790');
+
+    await waitFor(() => expect(ssnInput).toBeValid());
+});
+
+test('should trigger submit when Pay button is pressed', async () => {
+    const user = userEvent.setup();
+    const i18n = global.i18n;
+    const pixElement = new Pix({ showPayButton: true, i18n });
+    pixElement.submit = jest.fn();
+    render(pixElement.render());
+
+    await user.click(await screen.findByRole('button', { name: 'Continue to pix' }));
+    expect(pixElement.submit).toHaveBeenCalledTimes(1);
 });
