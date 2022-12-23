@@ -42,8 +42,6 @@ class PixElement extends QRLoaderContainer<PixProps> {
     }
 
     render() {
-        console.log(this.props.countdownTime);
-
         if (this.props.paymentData) {
             return this.renderQRCode();
         }

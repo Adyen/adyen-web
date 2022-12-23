@@ -72,9 +72,6 @@ export async function initManual() {
             },
             paywithgoogle: {
                 buttonType: 'plain'
-            },
-            pix: {
-                countdownTime: 5
             }
         }
     });
