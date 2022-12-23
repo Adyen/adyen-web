@@ -114,20 +114,38 @@ class Core {
     public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
     public create(paymentMethod: any, options?: any): any {
         const props = this.getPropsForComponent(options);
-
-        const isStandaloneComponent = paymentMethod !== 'dropin' && typeof paymentMethod === 'string';
-        if (isStandaloneComponent) {
-            this.addConfigToPaymentMethodConfiguration(paymentMethod, options);
-        }
-
+        this.updatePaymentMethodsConfigurationIfNeeded(paymentMethod, options);
         return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
     }
 
-    private addConfigToPaymentMethodConfiguration(paymentMethodType: string, paymentMethodConfig: any) {
-        this.options.paymentMethodsConfiguration = {
-            ...this.options.paymentMethodsConfiguration,
-            [paymentMethodType]: { ...paymentMethodConfig }
+    /**
+     * When instantiating standalone Component, its custom configuration is passed to Component instance, but it also must be
+     * passed to the global 'paymentMethodsConfiguration' property as it is the source of truth of the configurations provided
+     * by the merchant / all payment methods configuration
+     *
+     * @param paymentMethod - txVariant
+     * @param paymentMethodConfig - Custom configuration passed by the merchant
+     * @internal
+     */
+    private updatePaymentMethodsConfigurationIfNeeded<T extends keyof PaymentMethods>(
+        paymentMethod: T,
+        paymentMethodConfig: PaymentMethodOptions<T>
+    ): void {
+        const isStandaloneComponent = paymentMethod !== 'dropin' && typeof paymentMethod === 'string';
+        if (!isStandaloneComponent || !paymentMethodConfig) {
+            return;
+        }
+
+        const { paymentMethodsConfiguration = {} } = this.options;
+        const updatedPmConfig = {
+            ...paymentMethodsConfiguration,
+            [paymentMethod]: {
+                ...paymentMethodsConfiguration[paymentMethod.toString()],
+                ...paymentMethodConfig
+            }
         };
+
+        this.options.paymentMethodsConfiguration = updatedPmConfig;
     }
 
     /**
