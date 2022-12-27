@@ -14,7 +14,7 @@ import {
     SSN_CARD_NAME_BOTTOM,
     SSN_CARD_NAME_TOP
 } from './layouts';
-import { StringObject } from '../../../internal/Address/types';
+import { AddressSpecifications, StringObject } from '../../../internal/Address/types';
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
@@ -205,6 +205,6 @@ export const extractPropsForSFP = (props: CardInputProps) => {
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 
-export const handlePartialAddressMode = (addressMode: AddressModeOptions) => {
-    return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : [];
+export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
+    return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : null;
 };

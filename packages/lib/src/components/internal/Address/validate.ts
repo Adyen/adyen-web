@@ -77,7 +77,7 @@ const postalCodePatterns = {
  * Validates only postalCode property. As the partial address form does not have the country selector, the country value
  * must be informed beforehand and can't be picked up from the form context
  *
- * @param country
+ * @param country - Country that will be used to validate postal code
  */
 export const getPartialAddressValidationRules = (country: string): ValidatorRules => {
     const validationRules: ValidatorRules = {

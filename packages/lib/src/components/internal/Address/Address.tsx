@@ -126,6 +126,7 @@ export default function Address(props: AddressProps) {
 
 Address.defaultProps = {
     countryCode: null,
+    validationRules: null,
     data: {},
     onChange: () => {},
     visibility: 'editable',
