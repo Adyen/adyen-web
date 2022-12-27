@@ -1,6 +1,6 @@
 import Language from '../../../../language/Language';
 import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
-import { PaymentAmount } from '../../../../types';
+import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
@@ -34,7 +34,7 @@ export interface CardInputErrorState {
 
 export interface CardInputDataState {
     holderName?: string;
-    billingAddress?: object;
+    billingAddress?: AddressData;
     socialSecurityNumber?: string;
     taxNumber?: string;
 }

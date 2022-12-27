@@ -9,6 +9,27 @@ const createPatternByDigits = (digits: number) => {
     };
 };
 
+const validatePostalCode = (val: string, countryCode: string, validatorRules: ValidatorRules) => {
+    if (countryCode) {
+        // Dynamically create errorMessage
+        (validatorRules.postalCode as ValidatorRule).errorMessage = {
+            translationKey: 'invalidFormatExpects',
+            translationObject: {
+                values: {
+                    format: countrySpecificFormatters[countryCode]?.postalCode.format || null
+                }
+            }
+        };
+
+        if (isEmpty(val)) return null;
+
+        const pattern = postalCodePatterns[countryCode]?.pattern;
+        return pattern ? pattern.test(val) : !!val; // No pattern? Accept any, filled, value.
+    }
+    // Default rule
+    return isEmpty(val) ? null : true;
+};
+
 const postalCodePatterns = {
     AT: createPatternByDigits(4),
     AU: createPatternByDigits(4),
@@ -52,32 +73,32 @@ const postalCodePatterns = {
     US: createPatternByDigits(5)
 };
 
+/**
+ * Validates only postalCode property. As the partial address form does not have the country selector, the country value
+ * must be informed beforehand and can't be picked up from the form context
+ *
+ * @param country
+ */
+export const getPartialAddressValidationRules = (country: string): ValidatorRules => {
+    const validationRules: ValidatorRules = {
+        postalCode: {
+            modes: ['blur'],
+            validate: val => {
+                return validatePostalCode(val, country, validationRules);
+            },
+            errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
+        }
+    };
+    return validationRules;
+};
+
 export const getAddressValidationRules = (specifications): ValidatorRules => {
     const addressValidationRules: ValidatorRules = {
         postalCode: {
             modes: ['blur'],
             validate: (val, context) => {
                 const country = context.state.data.country;
-
-                // Country specific rule
-                if (country) {
-                    // Dynamically create errorMessage
-                    (addressValidationRules.postalCode as ValidatorRule).errorMessage = {
-                        translationKey: 'invalidFormatExpects',
-                        translationObject: {
-                            values: {
-                                format: countrySpecificFormatters[country]?.postalCode.format || null
-                            }
-                        }
-                    };
-
-                    if (isEmpty(val)) return null;
-
-                    const pattern = postalCodePatterns[country]?.pattern;
-                    return pattern ? pattern.test(val) : !!val; // No pattern? Accept any, filled, value.
-                }
-                // Default rule
-                return isEmpty(val) ? null : true;
+                return validatePostalCode(val, country, addressValidationRules);
             },
             errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
         },
