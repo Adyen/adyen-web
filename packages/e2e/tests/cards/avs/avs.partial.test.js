@@ -14,13 +14,11 @@ fixture`Card with Partial AVS`.page(CARDS_URL).beforeEach(() => {
 });
 
 test('should validate Postal Code if property data.billingAddress.country is provided', async t => {
-    // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     await cardPage.cardUtils.fillDateAndCVC(t);
 
-    // Fill in wrong Postal code format
     await t.typeText(cardPage.postalCodeInput, INVALID_POSTALCODE);
     await t.click(cardPage.payButton);
 
@@ -28,14 +26,12 @@ test('should validate Postal Code if property data.billingAddress.country is pro
 }).clientScripts({ content: CLIENTSCRIPT_PARTIAL_AVS_WITH_COUNTRY });
 
 test('should not validate Postal Code if property data.billingAddress.country is not provided', async t => {
-    // Start, allow time for iframes to load
     await t.setNativeDialogHandler(() => true);
     await start(t, 2000, TEST_SPEED);
 
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     await cardPage.cardUtils.fillDateAndCVC(t);
 
-    // Fill in wrong Postal code format
     await t.typeText(cardPage.postalCodeInput, INVALID_POSTALCODE);
     await t.click(cardPage.payButton);
 
