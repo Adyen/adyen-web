@@ -1,4 +1,4 @@
-import { makePayment, makeDetailsCall } from '../services';
+import { makePayment, makeDetailsCall } from './checkout-api-calls';
 
 export function handleResponse(response, component) {
     const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;

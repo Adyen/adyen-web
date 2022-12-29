@@ -1,35 +1,27 @@
-import { createCard } from './Card';
-import { getPaymentMethods } from '../../services';
 import AdyenCheckout from '@adyen/adyen-web';
-import { amount, countryCode, shopperLocale } from '@adyen/adyen-web-playground/src/config/commonConfig';
-import { cancelOrder, checkBalance, createOrder, makeDetailsCall, makePayment } from '@adyen/adyen-web-playground/src/services';
+import { amount, countryCode, shopperLocale } from '../config/commonConfig';
+import { cancelOrder, checkBalance, createOrder, makeDetailsCall, makePayment, getPaymentMethods } from './checkout-api-calls';
 
-export default {
-    title: 'Card',
-    argTypes: {
-        sessions: {
-            defaultValue: 'true',
-            control: 'boolean'
-        }
+function handleFinalState(resultCode, dropin) {
+    localStorage.removeItem('storedPaymentData');
+
+    if (resultCode === 'Authorised' || resultCode === 'Received') {
+        dropin.setStatus('success');
+    } else {
+        dropin.setStatus('error');
     }
-    // More on argTypes: https://storybook.js.org/docs/html/api/argtypes
-};
-
-const Template = (args, { loaded: { checkout } }) => {
-    return createCard({ checkout, ...args });
-};
-export const Card = Template.bind({});
-
-async function createAdvancedFlowCheckout() {
+}
+async function createAdvancedFlowCheckout({ showPayButton, paymentMethodsConfiguration }) {
     const paymentMethodsResponse = await getPaymentMethods();
     const checkout = await AdyenCheckout({
         amount,
         countryCode,
-        clientKey: 'test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-        // clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        environment: 'test',
+        clientKey: process.env.CLIENT_KEY,
+        environment: process.env.CLIENT_ENV,
+        showPayButton,
+        paymentMethodsConfiguration,
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 
@@ -89,23 +81,4 @@ async function createAdvancedFlowCheckout() {
     return checkout;
 }
 
-Card.loaders = [
-    async (...args) => {
-        // const checkout = args.args.sessions ? createSessionsCheckout() : createAdvancedFlowCheckout();
-        const checkout = await createAdvancedFlowCheckout();
-
-        const paymentMethodsResponse = await getPaymentMethods();
-
-        console.log(checkout);
-        console.log(paymentMethodsResponse);
-        // maybe could get the configuration set here (sessions, manual), initialize checkout e pass it back to the render part?
-        return { checkout };
-    }
-];
-//
-// export const CardWithAVS = Template.bind({});
-// CardWithAVS.loaders = [
-//     async () => ({
-//         paymentMethodsResponse: await getPaymentMethods()
-//     })
-// ];
+export { createAdvancedFlowCheckout };

@@ -1,4 +1,6 @@
-const checkoutDevServer = require('@adyen/adyen-web-server');
+const path = require('path');
+
+const { parsed: environmentVariables } = require('dotenv').config({ path: path.resolve('../../', '.env') });
 
 module.exports = {
     stories: ['../stories/**/*.stories.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -13,11 +15,8 @@ module.exports = {
         };
         return config;
     },
-    babel: async options => {
-        console.log(options);
-        return {
-            ...options,
-            plugins: [...options.plugins, '@babel/preset-react']
-        };
-    }
+    env: config => ({
+        ...config,
+        ...environmentVariables
+    })
 };
