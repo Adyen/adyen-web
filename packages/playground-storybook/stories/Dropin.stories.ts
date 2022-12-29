@@ -1,5 +1,9 @@
+import { Meta, StoryFn } from '@storybook/html';
 import { createAdvancedFlowCheckout } from '../helpers/create-advanced-checkout';
 import { createSessionsCheckout } from '../helpers/create-sessions-checkout';
+import { DropinElementProps } from '@adyen/adyen-web/src/components/Dropin/types';
+
+type DropinProps = Pick<DropinElementProps, 'instantPaymentTypes'>;
 
 export default {
     title: 'Dropin',
@@ -26,17 +30,16 @@ export default {
             }
         }
     }
-};
+} as Meta<DropinProps>;
 
-const createDropin = (checkout, { paymentMethodConfiguration, instantPaymentTypes, ...props }) => {
+function createDropin(checkout, { instantPaymentTypes, ...props }: DropinProps): HTMLDivElement {
     const container = document.createElement('div');
-    console.log(instantPaymentTypes);
     const dropin = checkout.create('dropin', { instantPaymentTypes });
     dropin.mount(container);
     return container;
-};
+}
 
-const Template = (props, { loaded: { checkout } }) => {
+const Template: StoryFn<DropinProps> = (props, { loaded: { checkout } }): HTMLDivElement => {
     return createDropin(checkout, props);
 };
 export const Dropin = Template.bind({});

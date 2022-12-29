@@ -16,11 +16,12 @@ export const decorators = [
         const tale = story();
 
         if (typeof tale === 'string') {
-            return `<div class="component-wrapper">${story}</div>`;
+            return `<div id='component-field' class="component-wrapper">${story}</div>`;
         }
 
         const wrapper = document.createElement('div');
         wrapper.className = 'component-wrapper';
+        wrapper.id = 'component-field';
         wrapper.appendChild(tale);
         return wrapper;
     }

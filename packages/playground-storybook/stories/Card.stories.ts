@@ -16,7 +16,6 @@ export default {
 };
 
 const createCard = (checkout, { componentConfiguration, txVariant = 'card', ...props }) => {
-    debugger;
     const cardContainer = document.createElement('div');
     const card = checkout.create(txVariant, {
         ...componentConfiguration

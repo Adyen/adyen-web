@@ -1,8 +1,15 @@
 import { createSession } from './checkout-api-calls';
 import { amount, countryCode, returnUrl, shopperLocale, shopperReference } from '../config/commonConfig';
 import AdyenCheckout from '@adyen/adyen-web';
+import Core from '@adyen/adyen-web/dist/types/core';
+import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 
-async function createSessionsCheckout({ showPayButton, paymentMethodsConfiguration }) {
+type Props = {
+    showPayButton: boolean;
+    paymentMethodsConfiguration: Record<string, object>;
+};
+
+async function createSessionsCheckout({ showPayButton, paymentMethodsConfiguration }: Props): Promise<Core> {
     const session = await createSession({
         amount,
         reference: 'ABC123',
@@ -14,24 +21,26 @@ async function createSessionsCheckout({ showPayButton, paymentMethodsConfigurati
     });
 
     const checkout = await AdyenCheckout({
-        environment: process.env.CLIENT_ENV,
         clientKey: process.env.CLIENT_KEY,
+        environment: process.env.CLIENT_ENV,
         session,
         showPayButton,
         paymentMethodsConfiguration,
 
-        // Events
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
+
         onPaymentCompleted: (result, component) => {
-            console.info(result, component);
+            handleFinalState(result, component);
         },
+
         onError: (error, component) => {
-            console.info(JSON.stringify(error), component);
+            handleError(error, component);
         },
+
         onChange: (state, component) => {
-            console.log('onChange', state);
+            handleChange(state, component);
         }
     });
 
