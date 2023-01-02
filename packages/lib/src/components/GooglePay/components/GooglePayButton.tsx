@@ -6,6 +6,7 @@ interface GooglePayButtonProps {
     buttonType: google.payments.api.ButtonType;
     buttonSizeMode: google.payments.api.ButtonSizeMode;
     buttonLocale: string;
+    buttonRootNode?: HTMLDocument | ShadowRoot;
     paymentsClient: Promise<google.payments.api.PaymentsClient>;
     onClick: (e: Event) => void;
 }
@@ -35,10 +36,19 @@ class GooglePayButton extends Component<GooglePayButtonProps> {
     };
 
     componentDidMount() {
-        const { buttonColor, buttonType, buttonLocale, buttonSizeMode, paymentsClient } = this.props;
+        const { buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = this.props;
 
         paymentsClient
-            .then(client => client.createButton({ onClick: this.handleClick, buttonType, buttonColor, buttonLocale, buttonSizeMode }))
+            .then(client =>
+                client.createButton({
+                    onClick: this.handleClick,
+                    buttonType,
+                    buttonColor,
+                    buttonLocale,
+                    buttonSizeMode,
+                    buttonRootNode
+                })
+            )
             .then(googlePayButton => {
                 this.paywithgoogleWrapper.appendChild(googlePayButton);
             });

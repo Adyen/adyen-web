@@ -18,7 +18,7 @@ class GooglePay extends UIElement<GooglePayProps> {
      * Formats the component data input
      * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
      */
-    formatProps(props) {
+    formatProps(props): GooglePayProps {
         const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
@@ -122,6 +122,7 @@ class GooglePay extends UIElement<GooglePayProps> {
                     buttonType={this.props.buttonType}
                     buttonSizeMode={this.props.buttonSizeMode}
                     buttonLocale={this.props.buttonLocale}
+                    buttonRootNode={this.props.buttonRootNode}
                     paymentsClient={this.googlePay.paymentsClient}
                     onClick={this.submit}
                 />
