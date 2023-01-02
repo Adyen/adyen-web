@@ -9,11 +9,13 @@ describe('components utils', () => {
         test('filters unallowed properties', () => {
             const rawResponse = {
                 resultCode: 'Authorised',
-                someBackendProperty: true
+                someBackendProperty: true,
+                sessionResult: 'XYZ123'
             };
 
             const sanitizedResponse = getSanitizedResponse(rawResponse);
             expect(sanitizedResponse.resultCode).toBeTruthy();
+            expect(sanitizedResponse.sessionResult).toBeTruthy();
             expect((sanitizedResponse as any).someBackendProperty).toBeUndefined();
         });
     });
