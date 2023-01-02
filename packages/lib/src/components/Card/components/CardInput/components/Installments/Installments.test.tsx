@@ -5,7 +5,7 @@ import { InstallmentOptions } from '../types';
 
 describe('Installments', () => {
     let installmentOptions;
-    const getWrapper = (props?) => mount(<Installments installmentOptions={installmentOptions} {...props} />);
+    const getWrapper = (props = {}) => mount(<Installments installmentOptions={installmentOptions} {...props} />);
 
     beforeEach(() => {
         installmentOptions = {

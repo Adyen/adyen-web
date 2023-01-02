@@ -12,6 +12,7 @@ import isMobile from '../../../../../../../utils/isMobile';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
+    cardSelected: ShopperCard;
     errorMessage?: string;
     onChangeCard(card: ShopperCard): void;
 };
@@ -22,12 +23,12 @@ type CardsSelectorDataState = {
 
 const schema = ['srcDigitalCardId'];
 
-const CtPCardsList = ({ cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
+const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
     const { i18n, loadingContext } = useCoreContext();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,
-        defaultData: { srcDigitalCardId: cards.find(card => !card.isExpired)?.srcDigitalCardId || cards[0].srcDigitalCardId }
+        defaultData: { srcDigitalCardId: cardSelected.srcDigitalCardId }
     });
 
     const items = useMemo(() => {

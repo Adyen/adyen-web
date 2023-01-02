@@ -1,11 +1,10 @@
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import PaymentMethodItem from './PaymentMethodItem';
 import InstantPaymentMethods from './InstantPaymentMethods';
 
 const i18n = { get: key => key };
-const index = 0;
 const paymentMethods = [
     {
         props: {

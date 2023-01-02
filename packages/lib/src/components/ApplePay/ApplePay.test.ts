@@ -2,7 +2,7 @@ import ApplePay from '.';
 import defaultProps from './defaultProps';
 
 (global as any).ApplePaySession = {
-    supportsVersion: jest.fn(version => true)
+    supportsVersion: jest.fn(() => true)
 };
 
 describe('ApplePay', () => {

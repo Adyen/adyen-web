@@ -37,6 +37,10 @@ class ShopperCard {
         return this.descriptorName || SchemeNames[this.scheme];
     }
 
+    get isDcfPopupEmbedded(): boolean {
+        return this.scheme === 'mc';
+    }
+
     private confirmCardIsExpired(): boolean {
         if (this.status !== 'ACTIVE') return true;
         if (!this.panExpirationYear && !this.panExpirationMonth) return false;

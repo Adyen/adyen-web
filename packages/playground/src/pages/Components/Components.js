@@ -93,7 +93,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // UPI
     window.upi = checkout.create('upi').mount('.upi-field');
 
+    // PIX
     window.pix = checkout.create('pix', { countdownTime: 5 }).mount('.pix-field');
+
+    // Oxxo
+    window.oxxo = checkout.create('oxxo').mount('.oxxo-field');
 
     // Redirect
     // window.redirect = checkout.create('paypal').mount('.redirect-field');

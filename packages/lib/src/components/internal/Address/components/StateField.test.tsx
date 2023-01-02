@@ -3,6 +3,8 @@ import { h } from 'preact';
 import StateField from './StateField';
 import getDataset from '../../../../core/Services/get-dataset';
 import Specifications from '../Specifications';
+import { mock } from 'jest-mock-extended';
+import { StateFieldProps } from '../types';
 
 jest.mock('../../../../core/Services/get-dataset');
 const statesMock = [
@@ -19,7 +21,8 @@ const statesMock = [
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(statesMock)));
 
 describe('StateField', () => {
-    const getWrapper = (props?) => mount(<StateField specifications={new Specifications()} {...props} />);
+    const mockedProps = mock<StateFieldProps>();
+    const getWrapper = (props = {}) => mount(<StateField specifications={new Specifications()} {...props} {...mockedProps} />);
 
     test('does not call getDataset when no country is passed', () => {
         getWrapper();

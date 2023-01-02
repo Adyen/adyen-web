@@ -9,14 +9,14 @@ import {
     IdentityValidationData
 } from './types';
 import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
-import { createCheckoutPayloadBasedOnScheme, createShopperCardsList } from './utils';
+import { createCheckoutPayloadBasedOnScheme, createShopperCardsList, CTP_IFRAME_NAME } from './utils';
 import { SrciIsRecognizedResponse, SrcProfile } from './sdks/types';
+import SrciError from './sdks/SrciError';
+import { SchemeNames } from './sdks/utils';
 import ShopperCard from '../models/ShopperCard';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import uuidv4 from '../../../../../utils/uuid';
-import SrciError from './sdks/SrciError';
 import { isFulfilled, isRejected } from '../../../../../utils/promise-util';
-import { SchemeNames } from './sdks/utils';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -140,13 +140,13 @@ class ClickToPayService implements IClickToPayService {
             throw Error('ClickToPayService # checkout: Missing card data');
         }
 
-        const checkoutParameters = {
-            srcDigitalCardId: card.srcDigitalCardId,
-            srcCorrelationId: card.srcCorrelationId
-        };
-
         const checkoutSdk = this.sdks.find(sdk => sdk.schemeName === card.scheme);
-        const checkoutResponse = await checkoutSdk.checkout(checkoutParameters);
+
+        const checkoutResponse = await checkoutSdk.checkout({
+            srcDigitalCardId: card.srcDigitalCardId,
+            srcCorrelationId: card.srcCorrelationId,
+            ...(card.isDcfPopupEmbedded && { windowRef: window.frames[CTP_IFRAME_NAME] })
+        });
 
         if (checkoutResponse.dcfActionCode !== 'COMPLETE') {
             throw new AdyenCheckoutError(

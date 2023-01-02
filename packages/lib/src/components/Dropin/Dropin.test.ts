@@ -1,5 +1,4 @@
 import { mount } from 'enzyme';
-import Dropin from './Dropin';
 import AdyenCheckout from '../../core';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
@@ -122,7 +121,6 @@ describe('Dropin', () => {
     describe('Instant Payments feature', () => {
         test('formatProps formats instantPaymentTypes removing duplicates and invalid values', () => {
             const checkout = new AdyenCheckout({});
-            // @ts-ignore
             const dropin = checkout.create('dropin', { instantPaymentTypes: ['alipay', 'paywithgoogle', 'paywithgoogle', 'paypal'] });
 
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);

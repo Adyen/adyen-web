@@ -46,6 +46,7 @@ export interface PaymentResponse {
     resultCode: string;
     sessionData?: string;
     order?: Order;
+    sessionResult?: string;
 }
 
 export interface RawPaymentResponse extends PaymentResponse {

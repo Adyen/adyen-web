@@ -2,6 +2,8 @@ import { CardTypes, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './ty
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
 
+export const CTP_IFRAME_NAME = 'ctpIframe';
+
 /**
  * Creates the payload for the /payments call
  */
