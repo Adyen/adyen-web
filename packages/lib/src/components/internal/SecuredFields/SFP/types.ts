@@ -2,6 +2,7 @@ import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import { Language } from '../../../../language/Language';
+import { Resources } from '../../../../core/Context/Resources';
 
 /**
  * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, AchInput, GiftcardComponent)
@@ -41,6 +42,7 @@ export interface SFPProps {
     trimTrailingSeparator?: boolean;
     type: string;
     render: () => {};
+    resources: Resources;
 }
 
 export interface SFPState {

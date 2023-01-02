@@ -22,13 +22,12 @@ import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHa
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
-import useCoreContext from '../../../../core/Context/useCoreContext';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
     const isValidating = useRef(false);
-    const { resources } = useCoreContext();
+    const resources = props.resources;
 
     const cardInputRef = useRef<CardInputRef>({});
     // Just call once

@@ -200,7 +200,8 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         onFieldValid: props.onFieldValid,
         onLoad: props.onLoad,
         showWarnings: props.showWarnings,
-        trimTrailingSeparator: props.trimTrailingSeparator
+        trimTrailingSeparator: props.trimTrailingSeparator,
+        resources: props.resources
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 

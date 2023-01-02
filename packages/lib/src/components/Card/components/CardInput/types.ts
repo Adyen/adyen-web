@@ -8,6 +8,7 @@ import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRule
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema, StringObject } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
+import { Resources } from '../../../../core/Context/Resources';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -98,6 +99,7 @@ export interface CardInputProps {
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
+    resources: Resources;
     setComponentRef?: (ref) => void;
     showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;

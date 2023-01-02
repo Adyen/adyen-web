@@ -230,6 +230,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 brand={this.brand}
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
+                resources={this.resources}
             />
         );
     }
