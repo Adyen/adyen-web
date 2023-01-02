@@ -7,7 +7,7 @@ import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from
 
 type Props = {
     showPayButton: boolean;
-    paymentMethodsConfiguration: Record<string, object>;
+    paymentMethodsConfiguration?: Record<string, object>;
 };
 
 async function createAdvancedFlowCheckout({ showPayButton, paymentMethodsConfiguration }: Props): Promise<Core> {

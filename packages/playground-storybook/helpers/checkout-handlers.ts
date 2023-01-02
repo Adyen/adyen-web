@@ -29,7 +29,7 @@ export function handleFinalState(result: any, component: UIElement): void {
     // why?
     localStorage.removeItem('storedPaymentData');
 
-    const isDropin = component.props.isDropin;
+    const isDropin = component.props?.isDropin;
     const isAuthorized = result.resultCode === 'Authorised' || result.resultCode === 'Received';
 
     if (isDropin) {
@@ -41,7 +41,9 @@ export function handleFinalState(result: any, component: UIElement): void {
         return;
     }
 
-    component.unmount();
+    if (component.unmount) {
+        component.unmount();
+    }
     displayResultMessage(isAuthorized, result.resultCode);
 }
 

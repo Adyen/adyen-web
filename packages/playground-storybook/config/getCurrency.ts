@@ -1,4 +1,4 @@
-const currencies = {
+const currencies: Record<string, string> = {
     AR: 'ARS',
     AU: 'AUD',
     BR: 'BRL',
@@ -34,6 +34,6 @@ const currencies = {
     default: 'EUR'
 };
 
-const getCurrency = countryCode => currencies[countryCode] || currencies.default;
+const getCurrency = (countryCode: string): string => currencies[countryCode] || currencies.default;
 
 export default getCurrency;

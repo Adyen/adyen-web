@@ -6,7 +6,7 @@ import { handleChange, handleError, handleFinalState } from './checkout-handlers
 
 type Props = {
     showPayButton: boolean;
-    paymentMethodsConfiguration: Record<string, object>;
+    paymentMethodsConfiguration?: Record<string, object>;
 };
 
 async function createSessionsCheckout({ showPayButton, paymentMethodsConfiguration }: Props): Promise<Core> {

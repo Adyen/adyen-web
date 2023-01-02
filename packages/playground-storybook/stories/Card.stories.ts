@@ -1,5 +1,8 @@
 import { createAdvancedFlowCheckout } from '../helpers/create-advanced-checkout';
 import { createSessionsCheckout } from '../helpers/create-sessions-checkout';
+import { CardElementProps } from '@adyen/adyen-web/src/components/Card/types';
+import { Meta, StoryFn } from '@storybook/html';
+import Core from '@adyen/adyen-web/dist/types/core';
 
 export default {
     title: 'Card',
@@ -13,9 +16,9 @@ export default {
             control: 'boolean'
         }
     }
-};
+} as Meta;
 
-const createCard = (checkout, { componentConfiguration, txVariant = 'card', ...props }) => {
+const createCard = (checkout: Core, { componentConfiguration, txVariant = 'card', ...props }: CardElementProps) => {
     const cardContainer = document.createElement('div');
     const card = checkout.create(txVariant, {
         ...componentConfiguration
@@ -24,7 +27,7 @@ const createCard = (checkout, { componentConfiguration, txVariant = 'card', ...p
     return cardContainer;
 };
 
-const Template = (props, { loaded: { checkout } }) => {
+const Template: StoryFn<CardElementProps> = (props, { loaded: { checkout } }) => {
     return createCard(checkout, props);
 };
 export const Simple = Template.bind({});

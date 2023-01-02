@@ -1,5 +1,5 @@
 import getCurrency from './getCurrency';
-import { getSearchParameters } from '../utils/utils';
+import { getSearchParameters } from '../utils/get-query-parameters';
 
 const DEFAULT_LOCALE = 'en-US';
 const DEFAULT_COUNTRY = 'US';
@@ -16,9 +16,7 @@ export const amount = {
     value: Number(amountValue)
 };
 
-export const useSession = urlParams.session !== 'manual';
-
-export const returnUrl = 'http://localhost:3020/result';
+export const returnUrl = 'http://localhost:3020/?path=/story/redirectresult--redirect-result';
 
 export default {
     amount,

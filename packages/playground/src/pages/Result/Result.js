@@ -23,6 +23,8 @@ async function handleRedirectResult(redirectResult, sessionId) {
 
 const { redirectResult, sessionId } = getSearchParameters(window.location.search);
 
+console.log('RedirectResult', redirectResult);
+
 if (!redirectResult) {
     window.location.href = '/';
 } else {

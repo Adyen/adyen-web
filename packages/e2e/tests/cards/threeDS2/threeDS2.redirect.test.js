@@ -1,6 +1,6 @@
 /**
  * NOTE: the difference between the old and new flow is that ThreeDS2DeviceFingerprint.tsx calls /submitThreeDS2Fingerprint rather than /details as
- *  its onComplete function and ThreeDS2/components/utils.ts has to provide the createFingerprintResolveData & createChallengeResolveData functions
+ *  its onComplete function and ThreeDS2/components/get-query-parameters.ts has to provide the createFingerprintResolveData & createChallengeResolveData functions
  *  that will prepare the data in a way acceptable to the /submitThreeDS2Fingerprint endpoint
  */
 

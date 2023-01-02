@@ -1,6 +1,6 @@
 import paymentMethodsConfig from '../config/paymentMethodsConfig';
 import paymentsConfig from '../config/paymentsConfig';
-import { httpPost } from '../utils/utils';
+import { httpPost } from '../utils/http-post';
 import { PaymentMethodsResponseObject } from '@adyen/adyen-web/dist/types/core/ProcessResponse/PaymentMethodsResponse/types';
 import { RawPaymentResponse } from '@adyen/adyen-web/dist/types/components/types';
 import { CheckoutSessionSetupResponse, Order, OrderStatus, PaymentAction, PaymentAmount } from '@adyen/adyen-web/dist/types/types';
