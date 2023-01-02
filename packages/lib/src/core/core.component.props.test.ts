@@ -41,7 +41,6 @@ const amazonPayPMObj = {
     type: 'amazonpay',
     configuration: {
         merchantId: '1000',
-        // @ts-ignore
         publicKeyId: 'AG77',
         region: 'eu',
         storeId: 'amzn1.aaaaa'
@@ -251,8 +250,8 @@ describe('Core - tests ensuring props reach components', () => {
         let newPmResponsePaymentMethods;
 
         beforeEach(() => {
-            // @ts-ignore
-            checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj; // Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
+            // @ts-ignore Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
+            checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj;
 
             newPmResponsePaymentMethods = checkoutConfig['paymentMethodsResponse'].paymentMethods;
 

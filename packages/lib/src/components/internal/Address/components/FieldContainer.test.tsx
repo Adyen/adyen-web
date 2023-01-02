@@ -2,6 +2,8 @@ import { shallow } from 'enzyme';
 import { h } from 'preact';
 import FieldContainer from './FieldContainer';
 import Specifications from '../Specifications';
+import { mock } from 'jest-mock-extended';
+import { FieldContainerProps } from '../types';
 
 const propsMock = {
     errors: {},
@@ -11,7 +13,8 @@ const propsMock = {
 };
 
 describe('FieldContainer', () => {
-    const getWrapper = (props?) => shallow(<FieldContainer fields {...propsMock} {...props} />);
+    const mockedProps = mock<FieldContainerProps>();
+    const getWrapper = (props = {}) => shallow(<FieldContainer {...propsMock} {...props} {...mockedProps} />);
 
     test('renders the StateField', () => {
         const wrapper = getWrapper({ fieldName: 'stateOrProvince' });

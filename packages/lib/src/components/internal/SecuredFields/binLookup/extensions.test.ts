@@ -4,7 +4,7 @@ import { BRAND_ICON_UI_EXCLUSION_LIST, CVC_POLICY_REQUIRED } from '../lib/config
 let CIExtensions;
 
 // Mock sfp useRef
-let sfp = {
+const sfp = {
     current: {
         processBinLookupResponse: () => {}
     }

@@ -92,7 +92,7 @@ describe('UIElement', () => {
         test("calls component's showValidation method", () => {
             const showValidation = jest.fn();
             class MyElement extends UIElement {
-                showValidation = () => showValidation();
+                public showValidation = () => showValidation();
             }
 
             const myElement = new MyElement({});
@@ -109,7 +109,7 @@ describe('UIElement', () => {
 
         test('returns the constructor type if no name prop is passed', () => {
             class MyElement extends UIElement {
-                static type = 'test123';
+                protected static type = 'test123';
             }
 
             const myElement = new MyElement({});

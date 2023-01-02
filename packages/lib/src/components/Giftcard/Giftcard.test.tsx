@@ -3,7 +3,6 @@ const flushPromises = () => new Promise(setImmediate);
 
 describe('Giftcard', () => {
     const baseProps = { amount: { value: 1000, currency: 'EUR' }, name: 'My Test Gift Card', type: 'giftcard', brand: 'genericgiftcard' };
-    const balanceMock = { balance: { value: 100, currency: 'EUR' } };
 
     describe('onBalanceCheck', () => {
         test('If onBalanceCheck is not provided, step is skipped and calls onSubmit', async () => {
