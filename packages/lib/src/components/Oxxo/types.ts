@@ -10,3 +10,9 @@ export interface OxxoVoucherResultProps {
     downloadUrl?: string;
     ref?: any;
 }
+
+export type OxxoElementData = {
+    paymentMethod: {
+        type: 'oxxo' | string;
+    };
+};
