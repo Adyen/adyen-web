@@ -7,6 +7,7 @@ import UIElement from '../../../UIElement';
 import { Order, OrderStatus } from '../../../../types';
 import OrderPaymentMethods from './OrderPaymentMethods';
 import InstantPaymentMethods from './InstantPaymentMethods';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];
@@ -56,6 +57,8 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
     public onSelect = paymentMethod => () => this.props.onSelect(paymentMethod);
 
     render({ paymentMethods, instantPaymentMethods, activePaymentMethod, cachedPaymentMethods, isLoading }) {
+        const { i18n } = useCoreContext();
+
         const paymentMethodListClassnames = classNames({
             [styles['adyen-checkout__payment-methods-list']]: true,
             'adyen-checkout__payment-methods-list': true,
@@ -70,7 +73,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
 
                 {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
 
-                <ul className={paymentMethodListClassnames}>
+                <ul className={paymentMethodListClassnames} role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
                     {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
                         const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
                         const isLoaded = paymentMethod._id in cachedPaymentMethods;

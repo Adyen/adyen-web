@@ -2,14 +2,16 @@ import { ISrcInitiator } from './AbstractSrcInitiator';
 import VisaSdk from './VisaSdk';
 import MastercardSdk from './MastercardSdk';
 import { CustomSdkConfiguration } from './types';
+import { isFulfilled, isRejected } from '../../../../../../utils/promise-util';
+import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 
-const sdkMap = {
+const sdkMap: Record<string, typeof VisaSdk | typeof MastercardSdk | null> = {
     visa: VisaSdk,
     mc: MastercardSdk,
     default: null
 };
 
-const getSchemeSdk = (scheme: string, environment: string, customConfig: CustomSdkConfiguration) => {
+const getSchemeSdk = (scheme: string, environment: string, customConfig: CustomSdkConfiguration): ISrcInitiator | null => {
     const SchemeSdkClass = sdkMap[scheme] || sdkMap.default;
     return SchemeSdkClass ? new SchemeSdkClass(environment, customConfig) : null;
 };
@@ -30,13 +32,25 @@ class SrcSdkLoader implements ISrcSdkLoader {
 
     public async load(environment: string): Promise<ISrcInitiator[]> {
         if (!this.schemes) {
-            throw Error('SrcSdkLoader: There are no schemes set to be loaded');
+            throw new AdyenCheckoutError('ERROR', 'ClickToPay -> SrcSdkLoader: There are no schemes set to be loaded');
         }
 
-        const sdks = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration));
-        const promises = sdks.map(sdk => sdk.loadSdkScript());
-        await Promise.all(promises);
-        return sdks;
+        return new Promise((resolve, reject) => {
+            const sdks: ISrcInitiator[] = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration));
+            const loadScriptPromises = sdks.map(sdk => sdk.loadSdkScript());
+
+            Promise.allSettled(loadScriptPromises).then(loadScriptResponses => {
+                if (loadScriptResponses.every(isRejected)) {
+                    reject(
+                        new AdyenCheckoutError('ERROR', `ClickToPay -> SrcSdkLoader # Unable to load network schemes: ${this.schemes.toString()}`)
+                    );
+                }
+
+                const sdksLoaded = sdks.filter((sdk, index) => isFulfilled(loadScriptResponses[index]));
+
+                resolve(sdksLoaded);
+            });
+        });
     }
 }
 

@@ -1,0 +1,15 @@
+@import '../../../../../../../style/index';
+
+.adyen-checkout-ctp__empty-cards {
+  border-radius: 6px;
+  background-color: $color-gray-lighter;
+  color: $color-gray-darker;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 19px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+}

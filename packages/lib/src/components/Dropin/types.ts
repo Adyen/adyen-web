@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import { UIElementProps, UIElementStatus } from '../types';
 import { PaymentMethodsConfiguration } from '../../core/types';
 
-export type InstantPaymentTypes = 'paywithgoogle' | 'applepay';
+export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay' ;
 
 export interface DropinElementProps extends UIElementProps {
     /**

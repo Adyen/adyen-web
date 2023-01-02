@@ -15,6 +15,7 @@ export interface IClickToPayContext
     cards: ShopperCard[];
     schemes: string[];
     otpMaskedContact: string;
+    otpNetwork: string;
     amount: PaymentAmount;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
@@ -35,6 +36,7 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     cards: [],
     schemes: [],
     otpMaskedContact: null,
+    otpNetwork: null,
     checkout: null,
     verifyIfShopperIsEnrolled: null,
     startIdentityValidation: null,

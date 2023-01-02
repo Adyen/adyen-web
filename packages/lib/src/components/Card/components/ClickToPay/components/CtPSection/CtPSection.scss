@@ -3,58 +3,51 @@
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
-    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
     border-radius: 12px;
     padding: 16px;
+
+    &-brand {
+        display: flex;
+        align-items: center;
+        height: 18px;
+        margin-bottom: 14px;
+    }
 
     .adyen-checkout__fieldset {
         margin-bottom: 24px;
     }
 }
 
-.adyen-checkout-ctp__section-title {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 19px;
-    margin-bottom: 4px;
-}
-
-.adyen-checkout-ctp__section-subtitle {
-    font-size: 13px;
-    font-weight: 400;
-    color: $color-gray-darker;
-    line-height: 19px;
-    margin-bottom: 16px;
-}
-
-.adyen-checkout-ctp__section-header-logo {
-    width: 24px;
-    margin-right: 6px;
-}
-
-.adyen-checkout-ctp__section-header-pipe {
-    height: 15px;
-    margin-right: 6px;
-}
-
 .adyen-checkout-ctp__section-header {
     display: flex;
     align-items: center;
-    height: 18px;
-    margin-bottom: 16px;
+
+    &-title {
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 22px;
+        margin-bottom: 4px;
+        padding: 0px;
+        width: auto;
+
+        @media screen and (max-width: 400px) {
+            font-size: 15px;
+        }
+    }
+
+    &-adornment {
+        margin-left: 5px;
+    }
 }
 
-.adyen-checkout-ctp__section-header-scheme {
-    object-fit: none;
-    margin-right: 6px;
 
-    &-mc {
-        width: 27px;
-    }
-
-    &-visa {
-        width: 35px;
-    }
+.adyen-checkout-ctp__section-text {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 19px;
+    color: $color-gray-darker;
+    margin: 0 0 16px;
 }
 
 .adyen-checkout-ctp__separator {

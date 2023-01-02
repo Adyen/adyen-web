@@ -22,7 +22,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
         schema: requiredFields,
-        rules: props.validationRules,
+        // Ensure any passed validation rules are merged with the default ones
+        rules: { ...personalDetailsValidationRules, ...props.validationRules },
         defaultData: props.data
     });
 
@@ -52,7 +53,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('firstName')}
                     classNameModifiers={['col-50', 'firstName']}
-                    errorMessage={!!errors.firstName}
+                    errorMessage={getErrorMessage(errors.firstName)}
                     name={'firstName'}
                 >
                     {renderFormField('text', {
@@ -62,13 +63,19 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
                         placeholder: placeholders.firstName,
-                        spellCheck: false
+                        spellCheck: false,
+                        required: true
                     })}
                 </Field>
             )}
 
             {requiredFields.includes('lastName') && (
-                <Field label={i18n.get('lastName')} classNameModifiers={['col-50', 'lastName']} errorMessage={!!errors.lastName} name={'lastName'}>
+                <Field
+                    label={i18n.get('lastName')}
+                    classNameModifiers={['col-50', 'lastName']}
+                    errorMessage={getErrorMessage(errors.lastName)}
+                    name={'lastName'}
+                >
                     {renderFormField('text', {
                         name: generateFieldName('lastName'),
                         value: data.lastName,
@@ -76,7 +83,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
                         placeholder: placeholders.lastName,
-                        spellCheck: false
+                        spellCheck: false,
+                        required: true
                     })}
                 </Field>
             )}
@@ -93,7 +101,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         ],
                         classNameModifiers: ['gender'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur')
+                        onChange: eventHandler('blur'),
+                        required: true
                     })}
                 </Field>
             )}
@@ -112,7 +121,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['dateOfBirth'],
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
-                        placeholder: placeholders.dateOfBirth
+                        placeholder: placeholders.dateOfBirth,
+                        required: true
                     })}
                 </Field>
             )}
@@ -131,7 +141,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['shopperEmail'],
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
-                        placeholder: placeholders.shopperEmail
+                        placeholder: placeholders.shopperEmail,
+                        required: true
                     })}
                 </Field>
             )}
@@ -150,7 +161,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['telephoneNumber'],
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
-                        placeholder: placeholders.telephoneNumber
+                        placeholder: placeholders.telephoneNumber,
+                        required: true
                     })}
                 </Field>
             )}

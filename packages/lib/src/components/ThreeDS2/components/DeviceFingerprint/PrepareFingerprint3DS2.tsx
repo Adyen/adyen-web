@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createFingerprintResolveData, createOldFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
-import { ResultObject } from '../../types';
+import { FingerPrintData, ResultObject } from '../../types';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -13,7 +13,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const { token, notificationURL } = this.props; // See comments on prepareFingerPrintData regarding notificationURL
 
         if (token) {
-            const fingerPrintData = prepareFingerPrintData({ token, notificationURL });
+            const fingerPrintData: FingerPrintData = prepareFingerPrintData({ token, notificationURL });
 
             this.state = {
                 status: 'init',
@@ -34,7 +34,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     componentDidMount() {
         // If no fingerPrintData or no threeDSMethodURL - don't render component. Instead exit with threeDSCompInd: 'U'
-        if (!this.state.fingerPrintData || !this.state.fingerPrintData.threeDSMethodURL || !this.state.fingerPrintData.threeDSMethodURL.length) {
+        if (!this.state.fingerPrintData || !this.state.fingerPrintData.threeDSMethodURL) {
             this.setStatusComplete({ threeDSCompInd: 'U' });
             return;
         }
@@ -52,6 +52,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
              */
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
+
             this.props.onComplete(data);
         });
     }
@@ -64,8 +65,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         this.setStatusComplete(fingerprint.result);
                     }}
                     onErrorFingerprint={fingerprint => {
-                        const errorObject = handleErrorCode(fingerprint.errorCode);
-                        this.props.onError(errorObject);
+                        const errorCodeObject = handleErrorCode(fingerprint.errorCode);
+                        this.props.onError(errorCodeObject);
                         this.setStatusComplete(fingerprint.result);
                     }}
                     showSpinner={this.props.showSpinner}

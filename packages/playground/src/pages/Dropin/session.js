@@ -10,7 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
-        shopperEmail: 'shopper-ctp1@adyen.com',
+        shopperEmail: 'shopper.ctp1@adyen.com',
         countryCode
     });
 
@@ -27,7 +27,7 @@ export async function initSession() {
             console.info(result, component);
         },
         onError: (error, component) => {
-            console.info(error, component);
+            console.info(JSON.stringify(error), component);
         },
         onChange: (state, component) => {
             console.log('onChange', state);
@@ -49,6 +49,6 @@ export async function initSession() {
         }
     });
 
-    const dropin = checkout.create('dropin', { instantPaymentTypes: ['paywithgoogle'] }).mount('#dropin-container');
+    const dropin = checkout.create('dropin', { instantPaymentTypes: ['googlepay'] }).mount('#dropin-container');
     return [checkout, dropin];
 }

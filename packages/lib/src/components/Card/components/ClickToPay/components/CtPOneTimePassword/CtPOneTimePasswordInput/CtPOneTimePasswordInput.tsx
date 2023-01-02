@@ -9,12 +9,14 @@ import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface CtPOneTimePasswordInputProps {
+    hideResendOtpButton: boolean;
     disabled: boolean;
     isValidatingOtp: boolean;
     errorMessage?: string;
     onSetInputHandlers(handlers: CtPOneTimePasswordInputHandlers): void;
     onPressEnter(): Promise<void>;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
+    onResendCode(): void;
 }
 
 interface CtPOneTimePasswordInputDataState {
@@ -29,20 +31,32 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     const { i18n } = useCoreContext();
     const formSchema = ['otp'];
     const [resendOtpError, setResendOtpError] = useState<string>(null);
-    const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPOneTimePasswordInputDataState>({
+    const { handleChangeFor, data, triggerValidation, valid, errors, isValid, setData } = useForm<CtPOneTimePasswordInputDataState>({
         schema: formSchema,
         rules: otpValidationRules
     });
     const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
+    const [inputRef, setInputRef] = useState<HTMLInputElement>(null);
 
     const validateInput = useCallback(() => {
         triggerValidation();
     }, [triggerValidation]);
 
     useEffect(() => {
+        if (inputRef) inputRef.focus();
+    }, [inputRef]);
+
+    useEffect(() => {
         otpInputHandlersRef.current.validateInput = validateInput;
         props.onSetInputHandlers(otpInputHandlersRef.current);
     }, [validateInput, props.onSetInputHandlers]);
+
+    const handleOnResendOtp = useCallback(() => {
+        setData('otp', '');
+        setResendOtpError(null);
+        inputRef.focus();
+        props.onResendCode();
+    }, [props.onResendCode, inputRef]);
 
     const handleOnResendOtpError = useCallback(
         (errorCode: string) => {
@@ -69,7 +83,11 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         <Field
             name="oneTimePassword"
             label={i18n.get('ctp.otp.fieldLabel')}
-            labelEndAdornment={<CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} />}
+            labelEndAdornment={
+                !props.hideResendOtpButton && (
+                    <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
+                )
+            }
             errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
             classNameModifiers={['otp']}
         >
@@ -81,7 +99,8 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                 disabled: props.disabled,
                 onInput: handleChangeFor('otp', 'input'),
                 onBlur: handleChangeFor('otp', 'blur'),
-                onKeyUp: handleOnKeyUp
+                onKeyUp: handleOnKeyUp,
+                onCreateRef: setInputRef
             })}
         </Field>
     );
