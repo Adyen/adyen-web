@@ -4,8 +4,8 @@ import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils'
 
 const getActionHandler = statusType => (action: PaymentAction, props) => {
     return getComponent(action.paymentMethodType, {
-        ...action,
         ...props,
+        ...action,
         onComplete: props.onAdditionalDetails,
         onError: props.onError,
         statusType
