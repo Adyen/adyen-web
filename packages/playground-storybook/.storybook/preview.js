@@ -1,5 +1,6 @@
 import '!style-loader!css-loader!./main.css';
 import '!style-loader!css-loader!@adyen/adyen-web/dist/es/adyen.css';
+import { countryCode, shopperLocale } from '../config/commonConfig';
 
 export const parameters = {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -8,6 +9,33 @@ export const parameters = {
             color: /(background|color)$/i,
             date: /Date$/
         }
+    }
+};
+
+/**
+ * https://storybook.js.org/docs/html/api/argtypes
+ * https://storybook.js.org/docs/html/essentials/controls
+ */
+export const argTypes = {
+    useSessions: {
+        defaultValue: 'true',
+        control: 'boolean'
+    },
+    countryCode: {
+        defaultValue: countryCode,
+        control: 'text'
+    },
+    shopperLocale: {
+        defaultValue: shopperLocale,
+        control: 'text'
+    },
+    amount: {
+        defaultValue: 25900,
+        control: 'number'
+    },
+    showPayButton: {
+        defaultValue: 'true',
+        control: 'boolean'
     }
 };
 

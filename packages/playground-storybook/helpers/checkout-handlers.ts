@@ -94,9 +94,9 @@ export function handleError(error, component) {
     }
 }
 
-export async function handleSubmit(state: any, component: UIElement, checkout: Core) {
+export async function handleSubmit(state: any, component: UIElement, checkout: Core, paymentData: any) {
     component.setStatus('loading');
-    const response = await makePayment(state.data);
+    const response = await makePayment(state.data, paymentData);
     component.setStatus('ready');
     await handleResponse(response, component, checkout);
 }

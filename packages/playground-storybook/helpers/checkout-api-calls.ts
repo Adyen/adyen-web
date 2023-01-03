@@ -8,8 +8,8 @@ import { CheckoutSessionSetupResponse, Order, OrderStatus, PaymentAction, Paymen
 export const getPaymentMethods = async (configuration?: any): Promise<PaymentMethodsResponseObject> =>
     await httpPost('paymentMethods', { ...paymentMethodsConfig, ...configuration });
 
-export const makePayment = async (stateData: any): Promise<RawPaymentResponse> => {
-    const paymentRequest = { ...paymentsConfig, ...stateData };
+export const makePayment = async (stateData: any, paymentData: any): Promise<RawPaymentResponse> => {
+    const paymentRequest = { ...paymentsConfig, ...stateData, ...paymentData };
     if (paymentRequest.order) delete paymentRequest.amount; // why?
     return await httpPost('payments', paymentRequest);
 };

@@ -1,22 +1,29 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import { amount, countryCode, shopperLocale } from '../config/commonConfig';
-import { cancelOrder, checkBalance, createOrder, makeDetailsCall, makePayment, getPaymentMethods } from './checkout-api-calls';
+import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './checkout-api-calls';
 import { PaymentMethodsResponseObject } from '@adyen/adyen-web/dist/types/core/ProcessResponse/PaymentMethodsResponse/types';
 import Core from '@adyen/adyen-web/dist/types/core';
 import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from './checkout-handlers';
+import getCurrency from '../utils/get-currency';
+import { AdyenCheckoutProps } from '../stories/types';
 
-type Props = {
-    showPayButton: boolean;
-    paymentMethodsConfiguration?: Record<string, object>;
-};
+async function createAdvancedFlowCheckout({
+    showPayButton,
+    paymentMethodsConfiguration,
+    countryCode,
+    shopperLocale,
+    amount
+}: AdyenCheckoutProps): Promise<Core> {
+    const paymentAmount = {
+        currency: getCurrency(countryCode),
+        value: Number(amount)
+    };
 
-async function createAdvancedFlowCheckout({ showPayButton, paymentMethodsConfiguration }: Props): Promise<Core> {
-    const paymentMethodsResponse: PaymentMethodsResponseObject = await getPaymentMethods();
+    const paymentMethodsResponse: PaymentMethodsResponseObject = await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode });
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
         environment: process.env.CLIENT_ENV,
-        amount,
+        amount: paymentAmount,
         countryCode,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -24,7 +31,12 @@ async function createAdvancedFlowCheckout({ showPayButton, paymentMethodsConfigu
         paymentMethodsConfiguration,
 
         onSubmit: async (state, component) => {
-            await handleSubmit(state, component, checkout);
+            const paymentData = {
+                amount: paymentAmount,
+                countryCode,
+                shopperLocale
+            };
+            await handleSubmit(state, component, checkout, paymentData);
         },
 
         onChange: (state, component) => {
@@ -40,15 +52,15 @@ async function createAdvancedFlowCheckout({ showPayButton, paymentMethodsConfigu
         },
 
         onOrderRequest: async (resolve, reject) => {
-            resolve(await createOrder(amount));
+            resolve(await createOrder(paymentAmount));
         },
 
         onOrderCancel: async order => {
             await cancelOrder(order);
             await checkout.update({
-                paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }),
+                paymentMethodsResponse: await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode }),
                 order: null,
-                amount
+                amount: paymentAmount
             });
         },
 
