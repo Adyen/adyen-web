@@ -15,7 +15,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedBankAccountNumber || !!valid.encryptedBankAccountNumber}
                 errorMessage={!!errors.encryptedBankAccountNumber && i18n.get(errors.encryptedBankAccountNumber)}
-                dataInfo='{"length":"4-17", "maskInterval": 4}'
+                dataInfo='{"length":"4-17"}'
                 className={'adyen-checkout__field--50'}
                 dir={'ltr'}
             />
