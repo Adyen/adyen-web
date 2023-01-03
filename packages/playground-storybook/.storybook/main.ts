@@ -1,14 +1,18 @@
-const path = require('path');
+import type { StorybookConfig } from '@storybook/core-common';
 
+const path = require('path');
 const { parsed: environmentVariables } = require('dotenv').config({ path: path.resolve('../../', '.env') });
 
-module.exports = {
+const config: StorybookConfig = {
     stories: ['../stories/**/*.stories.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
     addons: ['@storybook/addon-links', '@storybook/addon-essentials', '@storybook/addon-interactions'],
     framework: '@storybook/html',
     typescript: {
         check: false,
         checkOptions: {}
+    },
+    features: {
+        postcss: false,
     },
     webpackFinal: async (config, { configType }) => {
         config.watchOptions = {
@@ -19,8 +23,11 @@ module.exports = {
         };
         return config;
     },
+    // @ts-ignore Property missing in the 'StorybookConfig' type
     env: config => ({
         ...config,
         ...environmentVariables
     })
 };
+
+module.exports = config;
