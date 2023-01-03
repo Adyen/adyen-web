@@ -104,6 +104,9 @@ export default class CardPage extends BasePage {
         this.addressLabel = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label`);
         this.addressInput = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__input--street`);
 
+        this.postalCodeInput = Selector(`${BASE_EL} .adyen-checkout__field--postalCode .adyen-checkout__input--postalCode`);
+        this.postalCodeErrorText = Selector(`${BASE_EL} .adyen-checkout__field--postalCode .adyen-checkout__error-text`);
+
         this.houseNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--houseNumberOrName .adyen-checkout__label--focused`);
 
         // Country dropdown

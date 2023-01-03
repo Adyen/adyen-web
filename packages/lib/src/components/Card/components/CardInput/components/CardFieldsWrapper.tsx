@@ -56,6 +56,7 @@ export const CardFieldsWrapper = ({
     billingAddressRequired,
     billingAddressRequiredFields,
     billingAddressAllowedCountries,
+    billingAddressValidationRules = null,
     brandsConfiguration,
     enableStoreDetails,
     hasCVC,
@@ -171,6 +172,7 @@ export const CardFieldsWrapper = ({
                     allowedCountries={billingAddressAllowedCountries}
                     requiredFields={billingAddressRequiredFields}
                     ref={billingAddressRef}
+                    validationRules={billingAddressValidationRules}
                     specifications={partialAddressSchema}
                     iOSFocusedField={iOSFocusedField}
                 />
