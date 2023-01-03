@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
-import { ChallengeData, ThreeDS2ChallengeRejectObject, ThreeDS2FlowObject } from '../../types';
+import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import { getImageUrl } from '../../../../utils/get-image';
@@ -86,23 +86,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         // Proceed with call to onAdditionalDetails
                         this.setStatusComplete(challenge.result);
                     }}
-                    onErrorChallenge={(challenge: ThreeDS2FlowObject | ThreeDS2ChallengeRejectObject) => {
+                    onErrorChallenge={(challenge: ThreeDS2FlowObject) => {
                         /**
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
-                        // first part of if-clause checks errorCode isn't undefined or null, second part keeps typescript happy
-                        if (hasOwnProperty(challenge, 'errorCode') && 'errorCode' in challenge) {
+                        if (hasOwnProperty(challenge, 'errorCode')) {
                             const errorCodeObject = handleErrorCode(challenge.errorCode);
                             this.props.onError(errorCodeObject);
                             this.setStatusComplete(challenge.result);
                             return;
                         }
-
-                        /**
-                         * ...OR, when the challenge response is un-parseable JSON - in which case something unknown has gone wrong
-                         * - So pass this on to the defined error handler *without* blocking the flow
-                         */
-                        this.props.onError(challenge as ThreeDS2ChallengeRejectObject);
                     }}
                     {...challengeData}
                 />

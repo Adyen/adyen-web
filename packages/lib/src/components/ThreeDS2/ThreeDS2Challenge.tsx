@@ -6,13 +6,12 @@ import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
-import { ThreeDS2ChallengeRejectObject } from './types';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
     dataKey?: string;
     notificationURL?: string;
-    onError?: (error: string | ErrorCodeObject | ThreeDS2ChallengeRejectObject) => void;
+    onError?: (error: string | ErrorCodeObject) => void;
     paymentData?: string;
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
