@@ -15,7 +15,21 @@ export const personalDetailsValidationRules: ValidatorRules = {
         validate: value => {
             return value && value.length > 0;
         },
-        errorMessage: 'error.va.gen.02', // = "field not valid" TODO make more specific errors for firstName & lastName (requires translations)
+        errorMessage: 'error.va.gen.02', // = "field not valid"
+        modes: ['blur']
+    },
+    firstName: {
+        validate: value => {
+            return value && value.length > 0;
+        },
+        errorMessage: 'firstName.invalid',
+        modes: ['blur']
+    },
+    lastName: {
+        validate: value => {
+            return value && value.length > 0;
+        },
+        errorMessage: 'lastName.invalid',
         modes: ['blur']
     },
     dateOfBirth: {
