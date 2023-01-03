@@ -1,4 +1,4 @@
-export type GlobalArgs = {
+export type GlobalStoryProps = {
     useSessions: boolean;
     countryCode: string;
     shopperLocale: string;

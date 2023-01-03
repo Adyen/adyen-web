@@ -1,6 +1,6 @@
 import '!style-loader!css-loader!./main.css';
 import '!style-loader!css-loader!@adyen/adyen-web/dist/es/adyen.css';
-import { countryCode, shopperLocale } from '../config/commonConfig';
+import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE } from '../config/commonConfig';
 
 export const parameters = {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -22,15 +22,15 @@ export const argTypes = {
         control: 'boolean'
     },
     countryCode: {
-        defaultValue: countryCode,
+        defaultValue: DEFAULT_COUNTRY_CODE,
         control: 'text'
     },
     shopperLocale: {
-        defaultValue: shopperLocale,
+        defaultValue: DEFAULT_SHOPPER_LOCALE,
         control: 'text'
     },
     amount: {
-        defaultValue: 25900,
+        defaultValue: DEFAULT_AMOUNT_VALUE,
         control: 'number'
     },
     showPayButton: {

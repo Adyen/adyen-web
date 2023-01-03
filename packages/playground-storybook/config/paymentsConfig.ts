@@ -1,11 +1,8 @@
-import commonConfiguration from './commonConfig';
-
 const identifier = new Date().getMilliseconds();
 const { origin = 'http://localhost:3020', search } = window.location;
 const returnUrl = origin + search;
 
 const paymentsConfig = {
-    ...commonConfiguration,
     origin,
     returnUrl,
     reference: `${identifier}-checkout-components-ref`,
@@ -46,4 +43,5 @@ const paymentsConfig = {
         }
     ]
 };
+
 export default paymentsConfig;

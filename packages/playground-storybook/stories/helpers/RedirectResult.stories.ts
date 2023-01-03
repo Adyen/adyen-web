@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/html';
 import AdyenCheckout from '@adyen/adyen-web';
-import { getSearchParameter } from '../utils/get-query-parameters';
-import { handleError, handleFinalState } from '../helpers/checkout-handlers';
+import { getSearchParameter } from '../../utils/get-query-parameters';
+import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
 
 type RedirectResultProps = {
     redirectResult: string;
@@ -9,7 +9,7 @@ type RedirectResultProps = {
 };
 
 export default {
-    title: 'RedirectResult'
+    title: 'Helpers/RedirectResult'
 } as Meta;
 
 export const RedirectResult: StoryFn<RedirectResultProps> = (props, { loaded: { checkout, errorMessage } }): HTMLElement => {

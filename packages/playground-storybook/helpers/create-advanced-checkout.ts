@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './checkout-api-calls';
 import { PaymentMethodsResponseObject } from '@adyen/adyen-web/dist/types/core/ProcessResponse/PaymentMethodsResponse/types';
 import Core from '@adyen/adyen-web/dist/types/core';
+import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './checkout-api-calls';
 import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';

@@ -1,7 +1,8 @@
-import commonConfiguration from './commonConfig';
+import { SHOPPER_REFERENCE } from './commonConfig';
 
 const paymentMethodsConfig = {
-    ...commonConfiguration,
+    channel: 'Web',
+    shopperReference: SHOPPER_REFERENCE,
     shopperName: {
         firstName: 'Jan',
         lastName: 'Jansen',

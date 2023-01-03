@@ -112,7 +112,7 @@ const componentsMap = {
     ratepay_directdebit: RatePayDirectDebit,
     /** Open Invoice */
 
-    /** Wallets */
+    /** wallets */
     amazonpay: AmazonPay,
     applepay: ApplePay,
     cashapp: CashAppPay,
@@ -121,7 +121,7 @@ const componentsMap = {
     paypal: PayPal,
     paywithgoogle: GooglePay,
     qiwiwallet: QiwiWallet,
-    /** Wallets */
+    /** wallets */
 
     /** Voucher */
     boletobancario: Boleto,

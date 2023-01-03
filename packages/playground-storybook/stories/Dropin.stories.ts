@@ -1,25 +1,21 @@
 import { Meta, StoryFn } from '@storybook/html';
-import { createAdvancedFlowCheckout } from '../helpers/create-advanced-checkout';
-import { createSessionsCheckout } from '../helpers/create-sessions-checkout';
 import { DropinElementProps } from '@adyen/adyen-web/src/components/Dropin/types';
+import { createCheckout } from '../helpers/create-checkout';
+import { GlobalStoryProps } from './types';
 
-type DropinProps = Pick<DropinElementProps, 'instantPaymentTypes'>;
+type DropinStoryProps = GlobalStoryProps & {
+    paymentMethodsConfiguration: any;
+    componentConfiguration: DropinElementProps;
+};
 
 export default {
-    title: 'Dropin',
+    title: 'Dropin/Default',
     argTypes: {
-        useSessions: {
-            defaultValue: 'true',
-            control: 'boolean'
-        },
-        showPayButton: {
-            defaultValue: 'true',
-            control: 'boolean'
-        },
-        instantPaymentTypes: {
-            control: 'inline-check',
-            options: ['googlepay', 'applepay'],
-            defaultValue: ['googlepay']
+        componentConfiguration: {
+            control: 'object',
+            defaultValue: {
+                instantPaymentTypes: ['googlepay']
+            }
         },
         paymentMethodsConfiguration: {
             control: 'object',
@@ -30,25 +26,18 @@ export default {
             }
         }
     }
-} as Meta<DropinProps>;
+} as Meta<DropinStoryProps>;
 
-function createDropin(checkout, { instantPaymentTypes, ...props }: DropinProps): HTMLDivElement {
+export const Dropin: StoryFn<DropinStoryProps> = ({ componentConfiguration }, { loaded: { checkout } }): HTMLDivElement => {
     const container = document.createElement('div');
-    const dropin = checkout.create('dropin', { instantPaymentTypes });
+    const dropin = checkout.create('dropin', { ...componentConfiguration });
     dropin.mount(container);
     return container;
-}
-
-const Template: StoryFn<DropinProps> = (props, { loaded: { checkout } }): HTMLDivElement => {
-    return createDropin(checkout, props);
 };
-export const Dropin = Template.bind({});
+
 Dropin.loaders = [
     async context => {
-        const { useSessions, paymentMethodsConfiguration, showPayButton } = context.args;
-        const checkout = useSessions
-            ? await createSessionsCheckout({ showPayButton, paymentMethodsConfiguration })
-            : await createAdvancedFlowCheckout({ showPayButton, paymentMethodsConfiguration });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];

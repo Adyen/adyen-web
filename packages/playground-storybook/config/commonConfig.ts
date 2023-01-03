@@ -1,23 +1,5 @@
-import getCurrency from '../utils/get-currency';
-import { getSearchParameters } from '../utils/get-query-parameters';
-
-const DEFAULT_LOCALE = 'en-US';
-const DEFAULT_COUNTRY = 'US';
-
-const urlParams = getSearchParameters(window.location.search);
-export const shopperLocale = urlParams.shopperLocale || DEFAULT_LOCALE;
-export const countryCode = urlParams.countryCode || DEFAULT_COUNTRY;
-export const currency = getCurrency(countryCode);
-export const amountValue = urlParams.amount ?? 25900;
-export const shopperReference = 'newshoppert';
-export const amount = {
-    currency,
-    value: Number(amountValue)
-};
-
-export const returnUrl = 'http://localhost:3020/?path=/story/redirectresult--redirect-result';
-
-export default {
-    channel: 'Web',
-    shopperReference
-};
+export const DEFAULT_SHOPPER_LOCALE = 'en-US';
+export const DEFAULT_COUNTRY_CODE = 'US';
+export const DEFAULT_AMOUNT_VALUE = 25900;
+export const SHOPPER_REFERENCE = 'newshoppert';
+export const RETURN_URL = 'http://localhost:3020/?path=/story/helpers-redirectresult--redirect-result';

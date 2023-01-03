@@ -1,24 +1,18 @@
-import { createAdvancedFlowCheckout } from '../helpers/create-advanced-checkout';
-import { createSessionsCheckout } from '../helpers/create-sessions-checkout';
 import { CardElementProps } from '@adyen/adyen-web/src/components/Card/types';
 import { Meta, StoryFn } from '@storybook/html';
-import Core from '@adyen/adyen-web/dist/types/core';
+import { GlobalStoryProps } from '../types';
+import { createCheckout } from '../../helpers/create-checkout';
+
+type CardStoryProps = GlobalStoryProps & {
+    txVariant: string;
+    componentConfiguration: CardElementProps;
+};
 
 export default {
-    title: 'Card',
-    argTypes: {
-        useSessions: {
-            defaultValue: 'true',
-            control: 'boolean'
-        },
-        showPayButton: {
-            defaultValue: 'true',
-            control: 'boolean'
-        }
-    }
+    title: 'Cards/Card'
 } as Meta;
 
-const createCard = (checkout: Core, { componentConfiguration, txVariant = 'card', ...props }: CardElementProps) => {
+const Template: StoryFn<CardStoryProps> = ({ txVariant = 'card', componentConfiguration }, { loaded: { checkout } }): HTMLDivElement => {
     const cardContainer = document.createElement('div');
     const card = checkout.create(txVariant, {
         ...componentConfiguration
@@ -27,28 +21,25 @@ const createCard = (checkout: Core, { componentConfiguration, txVariant = 'card'
     return cardContainer;
 };
 
-const Template: StoryFn<CardElementProps> = (props, { loaded: { checkout } }) => {
-    return createCard(checkout, props);
-};
-export const Simple = Template.bind({});
+export const Simple = Template.bind({}) as StoryFn<CardStoryProps>;
 Simple.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];
 
-export const WithAVS = Template.bind({});
+export const WithAVS = Template.bind({}) as StoryFn<CardStoryProps>;
 WithAVS.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];
 WithAVS.args = {
     componentConfiguration: {
+        // TODO: Make 'useClickToPay' prop optional in CardElementProps
+        useClickToPay: false,
         billingAddressRequired: true,
         billingAddressAllowedCountries: ['US', 'CA', 'GB'],
         data: {
@@ -64,31 +55,33 @@ WithAVS.args = {
     }
 };
 
-export const WithPartialAVS = Template.bind({});
+export const WithPartialAVS = Template.bind({}) as StoryFn<CardStoryProps>;
 WithPartialAVS.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];
 WithPartialAVS.args = {
     componentConfiguration: {
+        // TODO: Make 'useClickToPay' prop optional in CardElementProps
+        useClickToPay: false,
         billingAddressRequired: true,
         billingAddressMode: 'partial'
     }
 };
 
-export const WithInstallments = Template.bind({});
+export const WithInstallments = Template.bind({}) as StoryFn<CardStoryProps>;
 WithInstallments.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];
 WithInstallments.args = {
     componentConfiguration: {
+        // TODO: Make 'useClickToPay' prop optional in CardElementProps
+        useClickToPay: false,
         showBrandsUnderCardNumber: true,
         showInstallmentAmounts: true,
         installmentOptions: {
@@ -103,11 +96,10 @@ WithInstallments.args = {
     }
 };
 
-export const BCMC = Template.bind({});
+export const BCMC = Template.bind({}) as StoryFn<CardStoryProps>;
 BCMC.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];
@@ -115,16 +107,17 @@ BCMC.args = {
     txVariant: 'bcmc'
 };
 
-export const KCP = Template.bind({});
+export const KCP = Template.bind({}) as StoryFn<CardStoryProps>;
 KCP.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];
 KCP.args = {
     componentConfiguration: {
+        // TODO: Make 'useClickToPay' prop optional in CardElementProps
+        useClickToPay: false,
         // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
         // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
         configuration: {
@@ -134,11 +127,10 @@ KCP.args = {
     }
 };
 
-export const WithClickToPay = Template.bind({});
+export const WithClickToPay = Template.bind({}) as StoryFn<CardStoryProps>;
 WithClickToPay.loaders = [
     async context => {
-        const { useSessions, showPayButton } = context.args;
-        const checkout = useSessions ? await createSessionsCheckout({ showPayButton }) : await createAdvancedFlowCheckout({ showPayButton });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];

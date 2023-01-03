@@ -1,10 +1,9 @@
 import { Meta, StoryFn } from '@storybook/html';
-import { createSessionsCheckout } from '../../helpers/create-sessions-checkout';
-import { createAdvancedFlowCheckout } from '../../helpers/create-advanced-checkout';
-import { GlobalArgs } from '../types';
+import { GlobalStoryProps } from '../types';
 import { UPIElementProps } from '@adyen/adyen-web/dist/types/components/UPI/types';
+import { createCheckout } from '../../helpers/create-checkout';
 
-type UPIStoryProps = GlobalArgs & {
+type UPIStoryProps = GlobalStoryProps & {
     componentConfiguration: UPIElementProps;
 };
 
@@ -29,10 +28,7 @@ UPI.args = {
 
 UPI.loaders = [
     async context => {
-        const { useSessions, paymentMethodsConfiguration, showPayButton, countryCode, shopperLocale, amount } = context.args;
-        const checkout = useSessions
-            ? await createSessionsCheckout({ showPayButton, paymentMethodsConfiguration, countryCode, shopperLocale, amount })
-            : await createAdvancedFlowCheckout({ paymentMethodsConfiguration, showPayButton, countryCode, shopperLocale, amount });
+        const checkout = await createCheckout(context);
         return { checkout };
     }
 ];

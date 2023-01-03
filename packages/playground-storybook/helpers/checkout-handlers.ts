@@ -1,6 +1,5 @@
 import { makePayment, makeDetailsCall, getPaymentMethods } from './checkout-api-calls';
 import UIElement from '@adyen/adyen-web/dist/types/components/UIElement';
-import { amount, shopperLocale } from '../config/commonConfig';
 import Core from '@adyen/adyen-web/dist/types/core';
 
 function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
@@ -47,7 +46,7 @@ export function handleFinalState(result: any, component: UIElement): void {
     displayResultMessage(isAuthorized, result.resultCode);
 }
 
-export async function handleResponse(response, component, checkout) {
+export async function handleResponse(response, component, checkout, paymentData?) {
     const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;
     console.log('\ntype=', type, 'response=', response);
 
@@ -64,7 +63,12 @@ export async function handleResponse(response, component, checkout) {
             pspReference: response.order.pspReference
         };
 
-        const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+        const orderPaymentMethods = await getPaymentMethods({
+            order,
+            amount: paymentData.amount,
+            shopperLocale: paymentData.shopperLocale
+        });
+
         checkout.update({
             paymentMethodsResponse: orderPaymentMethods,
             order,
@@ -98,7 +102,7 @@ export async function handleSubmit(state: any, component: UIElement, checkout: C
     component.setStatus('loading');
     const response = await makePayment(state.data, paymentData);
     component.setStatus('ready');
-    await handleResponse(response, component, checkout);
+    await handleResponse(response, component, checkout, paymentData);
 }
 
 export async function handleAdditionalDetails(details, component: UIElement, checkout: Core) {

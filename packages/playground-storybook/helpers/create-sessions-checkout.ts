@@ -1,7 +1,7 @@
-import { createSession } from './checkout-api-calls';
-import { returnUrl, shopperReference } from '../config/commonConfig';
-import AdyenCheckout from '@adyen/adyen-web';
+import AdyenCheckout from '@adyen/adyen-web/dist/es';
 import Core from '@adyen/adyen-web/dist/types/core';
+import { createSession } from './checkout-api-calls';
+import { RETURN_URL, SHOPPER_REFERENCE } from '../config/commonConfig';
 import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
@@ -13,8 +13,6 @@ async function createSessionsCheckout({
     shopperLocale,
     amount
 }: AdyenCheckoutProps): Promise<Core> {
-    debugger;
-
     const session = await createSession({
         amount: {
             currency: getCurrency(countryCode),
@@ -23,8 +21,8 @@ async function createSessionsCheckout({
         shopperLocale,
         countryCode,
         reference: 'ABC123',
-        returnUrl,
-        shopperReference,
+        returnUrl: RETURN_URL,
+        shopperReference: SHOPPER_REFERENCE,
         shopperEmail: 'shopper.ctp1@adyen.com'
     });
 
