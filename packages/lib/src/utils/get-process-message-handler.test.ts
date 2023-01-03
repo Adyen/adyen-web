@@ -1,6 +1,5 @@
 import getProcessMessageHandler from './get-process-message-handler';
 
-const rejectObject = { type: 'rejected' };
 const expectedType = 'TestType';
 const response = {
     type: expectedType
