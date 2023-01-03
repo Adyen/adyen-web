@@ -65,6 +65,7 @@ export interface CardInputProps {
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
+    disableIOSArrowKeys?: boolean;
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
