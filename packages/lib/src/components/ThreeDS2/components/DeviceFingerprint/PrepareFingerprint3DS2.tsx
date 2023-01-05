@@ -36,6 +36,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         // If no fingerPrintData or no threeDSMethodURL - don't render component. Instead exit with threeDSCompInd: 'U'
         if (!this.state.fingerPrintData || !this.state.fingerPrintData.threeDSMethodURL) {
             this.setStatusComplete({ threeDSCompInd: 'U' });
+            console.debug('### PrepareFingerprint3DS2::exiting:: no fingerPrintData or no threeDSMethodURL');
             return;
         }
 
@@ -53,6 +54,10 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
+            /**
+             * For 'threeDS2' action = call to callSubmit3DS2Fingerprint
+             * For 'threeDS2Fingerprint' action = equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
+             */
             this.props.onComplete(data);
         });
     }
@@ -65,8 +70,11 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         this.setStatusComplete(fingerprint.result);
                     }}
                     onErrorFingerprint={fingerprint => {
+                        /**
+                         * Called when fingerprint times-out (which is still a valid scenario)...
+                         */
                         const errorCodeObject = handleErrorCode(fingerprint.errorCode);
-                        this.props.onError(errorCodeObject);
+                        console.debug('### PrepareFingerprint3DS2::fingerprint timed-out:: errorCodeObject=', errorCodeObject);
                         this.setStatusComplete(fingerprint.result);
                     }}
                     showSpinner={this.props.showSpinner}
