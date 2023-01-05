@@ -3,6 +3,7 @@ import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createFingerprintResolveData, createOldFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject } from '../../types';
+import { ThreeDS2DeviceFingerprint } from '../../index';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -21,7 +22,10 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             };
         } else {
             this.state = { status: 'error' };
-            this.props.onError('Missing fingerprintToken parameter');
+            this.props.onError({
+                errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
+                message: 'Missing fingerprintToken parameter'
+            });
         }
     }
 
