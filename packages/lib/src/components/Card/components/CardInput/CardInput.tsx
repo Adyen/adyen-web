@@ -389,7 +389,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}
                         role={collateErrors && 'form'}
-                        aria-describedby={collateErrors ? errorFieldId : null}
+                        // aria-describedby={collateErrors ? errorFieldId : null}
                     >
                         <FieldToRender
                             // Extract exact props that we need to pass down
