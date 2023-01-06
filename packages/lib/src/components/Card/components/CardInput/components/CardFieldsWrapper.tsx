@@ -8,7 +8,7 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+// import useCoreContext from '../../../../../core/Context/useCoreContext';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -71,7 +71,7 @@ export const CardFieldsWrapper = ({
     //
     iOSFocusedField
 }) => {
-    const { i18n } = useCoreContext();
+    // const { i18n } = useCoreContext();
 
     const cardHolderField = (
         <CardHolderName
@@ -91,7 +91,7 @@ export const CardFieldsWrapper = ({
             {collateErrors && (
                 <ErrorPanel
                     id={errorFieldId}
-                    heading={i18n.get('errorPanel.title')}
+                    // heading={i18n.get('errorPanel.title')}
                     errors={mergedSRErrors}
                     callbackFn={moveFocus ? handleErrorPanelFocus : null}
                     showPanel={showPanel}

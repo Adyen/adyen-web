@@ -17,32 +17,37 @@ export interface ErrorPanelProps {
 
 export function ErrorPanel({
     id = 'ariaConsolidatedErrorField',
-    heading = 'Errors:',
+    // heading = 'Errors:',
     errors,
     callbackFn = null,
     showPanel = false
 }: ErrorPanelProps) {
-    if (!errors) return null;
+    // if (!errors) return null;
 
-    const { errorMessages } = errors;
+    const { errorMessages } = errors ?? {};
+    // console.log('### ErrorPanel::errors:: ', errors);
 
-    // Perform passed callback, if specified
+    // Perform passed callback, if specified & errors exist
     useEffect(() => {
-        callbackFn?.(errors);
+        if (errors) {
+            callbackFn?.(errors);
+        }
     }, [errors]);
 
     return (
         <div className={showPanel ? 'adyen-checkout-error-panel' : 'adyen-checkout-error-panel--sr-only'} id={id} aria-live="polite">
-            <div className="adyen-checkout-error-panel__wrapper">
-                <div className="adyen-checkout-error-panel__header">
-                    <span className="adyen-checkout-error-panel__title">{heading}</span>
+            {errorMessages && (
+                <div className="adyen-checkout-error-panel__wrapper">
+                    {/*<div className="adyen-checkout-error-panel__header">*/}
+                    {/*    <span className="adyen-checkout-error-panel__title">{heading}</span>*/}
+                    {/*</div>*/}
+                    {errorMessages.map(error => (
+                        <div key={error} className="adyen-checkout-error-panel__error">
+                            {error}
+                        </div>
+                    ))}
                 </div>
-                {errorMessages.map(error => (
-                    <div key={error} className="adyen-checkout-error-panel__error">
-                        {error}
-                    </div>
-                ))}
-            </div>
+            )}
         </div>
     );
 }
