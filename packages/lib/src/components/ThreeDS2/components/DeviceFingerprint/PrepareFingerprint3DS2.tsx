@@ -22,6 +22,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             };
         } else {
             this.state = { status: 'error' };
+            // TODO - confirm that we should do this, or is it possible to proceed to the challenge anyway?
+            //  ...in which case we should console.debug the error object and then call: this.setStatusComplete({ threeDSCompInd: 'N' });
             this.props.onError({
                 errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
                 message: 'Missing fingerprintToken parameter'
