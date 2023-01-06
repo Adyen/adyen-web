@@ -119,7 +119,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
                     {errorMessage && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--invalid">
-                            <Icon type="field_error" alt={i18n?.get('field.invalid')} />
+                            <Icon type="field_error" alt={i18n?.get('error.title')} />
                         </span>
                     )}
                 </div>
