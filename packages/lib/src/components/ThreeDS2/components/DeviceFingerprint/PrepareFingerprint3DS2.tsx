@@ -3,7 +3,6 @@ import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createFingerprintResolveData, createOldFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject } from '../../types';
-import { ThreeDS2DeviceFingerprint } from '../../index';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -25,7 +24,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             // TODO - confirm that we should do this, or is it possible to proceed to the challenge anyway?
             //  ...in which case we should console.debug the error object and then call: this.setStatusComplete({ threeDSCompInd: 'N' });
             this.props.onError({
-                errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
+                errorCode: this.props.dataKey,
                 message: 'Missing fingerprintToken parameter'
             });
         }
