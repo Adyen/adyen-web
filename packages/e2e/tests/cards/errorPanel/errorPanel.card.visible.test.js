@@ -8,18 +8,22 @@ const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
 
 const cardPage = new CardComponentPage();
 
-fixture`Testing card's error panel`
+fixture`Testing card's error panel - error panel exists and is visible`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
     .clientScripts('./errorPanel.card.visible.clientScripts.js');
 
-test('#1 Error panel is not present at start, when there are no errors', async t => {
+test('#1 Error panel is present at start, when there are no errors, but is empty', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    // error panel does not exist
-    await t.expect(cardPage.errorPanelVisible.exists).notOk();
+    // error panel exists but is empty
+    await t
+        .expect(cardPage.errorPanelVisible.exists)
+        .ok()
+        .expect(cardPage.errorPanelEls.nth(0).exists)
+        .notOk();
 });
 
 test('#2 Click pay with empty fields and error panel is populated', async t => {
@@ -29,7 +33,7 @@ test('#2 Click pay with empty fields and error panel is populated', async t => {
     // click pay, to validate & generate errors
     await t
         .click(cardPage.payButton)
-        // error panel exists
+        // error panel is visible
         .expect(cardPage.errorPanelVisible.exists)
         .ok();
 

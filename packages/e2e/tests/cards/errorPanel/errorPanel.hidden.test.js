@@ -10,28 +10,20 @@ const INVALID_NAME = LANG['creditCard.holderName.invalid'];
 
 const cardPage = new CardComponentPage();
 
-fixture`Testing card, with holder name on top, error panel`
+fixture`Testing card, with holder name on top, error panel exists but is not visible`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
     .clientScripts('./errorPanel.hidden.clientScripts.js');
 
-test('#1 Error panel is not present at start, when there are no errors', async t => {
-    // Wait for field to appear in DOM
-    await cardPage.numHolder();
-
-    // error panel does not exist
-    await t.expect(cardPage.errorPanelHidden.exists).notOk();
-});
-
-test('#2 Click pay with empty fields and hidden error panel is populated', async t => {
+test('#1 Click pay with empty fields and hidden error panel is populated', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
     // click pay, to validate & generate errors
     await t
         .click(cardPage.payButton)
-        // error panel exists
+        // error panel exists but is not visible
         .expect(cardPage.errorPanelHidden.exists)
         .ok();
 
