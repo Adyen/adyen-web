@@ -26,6 +26,6 @@ export const phoneValidationRules: ValidatorRules = {
 
 export const phoneFormatters: FormatRules = {
     phoneNumber: {
-        formatter: val => val.replace(getFormattingRegEx('^\\d', 'g'), '')
+        formatterFn: val => val.replace(getFormattingRegEx('^\\d', 'g'), '')
     }
 };

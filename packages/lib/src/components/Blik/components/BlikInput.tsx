@@ -60,7 +60,7 @@ function BlikInput(props: BlikInputProps) {
                     onInput: handleChangeFor('blikCode', 'input'),
                     onBlur: handleChangeFor('blikCode', 'blur'),
                     placeholder: '123456',
-                    inputMode: 'number',
+                    inputMode: 'numeric',
                     maxLength: 6
                 })}
             </Field>
