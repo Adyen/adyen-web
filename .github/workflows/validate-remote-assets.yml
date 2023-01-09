@@ -37,7 +37,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            github.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️ });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️ });
 
 
       - name: Comment PR that request succeeded
@@ -47,4 +47,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            github.issues.createComment({ issue_number, owner, repo, body: '✅ SecuredFields v${{ env.SF_VERSION }} are available live' });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: '✅ SecuredFields v${{ env.SF_VERSION }} are available live' });
