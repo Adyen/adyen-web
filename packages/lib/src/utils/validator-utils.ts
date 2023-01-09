@@ -9,7 +9,7 @@ export const getMaxLengthByFieldAndCountry = (
     ignoreIfFormatterExists: boolean
 ): number | null => {
     // In ignoreIfFormatterExists is true we expect the formatter function to also act to limit length
-    if (ignoreIfFormatterExists && formattingRules[country]?.[field]?.formatter) {
+    if (ignoreIfFormatterExists && formattingRules[country]?.[field]?.formatterFn) {
         return null;
     }
     const maxLength = formattingRules[country]?.[field]?.maxlength;

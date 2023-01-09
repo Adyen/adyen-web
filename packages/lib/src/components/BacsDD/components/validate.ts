@@ -1,8 +1,8 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
+import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 
 const bankAccountNumberRegEx = /^(\d){1,8}$/;
 const bankLocationIdRegEx = /^(\d){6}$/;
-const nonDigitRegEx = /[^0-9]/g;
 
 export const bacsValidationRules: ValidatorRules = {
     bankAccountNumber: {
@@ -34,6 +34,6 @@ export const bacsValidationRules: ValidatorRules = {
 };
 
 export const bacsFormatters = {
-    bankAccountNumber: value => value.replace(nonDigitRegEx, ''),
-    bankLocationId: value => value.replace(nonDigitRegEx, '')
+    bankAccountNumber: digitsOnlyFormatter,
+    bankLocationId: digitsOnlyFormatter,
 };
