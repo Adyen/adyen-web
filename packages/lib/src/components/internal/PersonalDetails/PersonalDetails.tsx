@@ -55,6 +55,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['col-50', 'firstName']}
                     errorMessage={getErrorMessage(errors.firstName)}
                     name={'firstName'}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         name: generateFieldName('firstName'),
@@ -75,6 +76,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     classNameModifiers={['col-50', 'lastName']}
                     errorMessage={getErrorMessage(errors.lastName)}
                     name={'lastName'}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         name: generateFieldName('lastName'),
@@ -114,6 +116,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     errorMessage={getErrorMessage(errors.dateOfBirth)}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                     name={'dateOfBirth'}
+                    i18n={i18n}
                 >
                     {renderFormField('date', {
                         name: generateFieldName('dateOfBirth'),
@@ -134,6 +137,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     errorMessage={getErrorMessage(errors.shopperEmail)}
                     dir={'ltr'}
                     name={'emailAddress'}
+                    i18n={i18n}
                 >
                     {renderFormField('emailAddress', {
                         name: generateFieldName('shopperEmail'),
@@ -154,6 +158,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     errorMessage={getErrorMessage(errors.telephoneNumber)}
                     dir={'ltr'}
                     name={'telephoneNumber'}
+                    i18n={i18n}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),

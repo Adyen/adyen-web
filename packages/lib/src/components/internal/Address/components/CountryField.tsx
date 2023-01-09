@@ -44,6 +44,7 @@ export default function CountryField(props: CountryFieldProps) {
             isValid={!!value}
             showValidIcon={false}
             isCollatingErrors={isCollatingErrors}
+            i18n={i18n}
         >
             {renderFormField('select', {
                 onChange: onDropdownChange,
