@@ -1,12 +1,6 @@
 import { Meta, StoryFn } from '@storybook/html';
-import { DropinElementProps } from '@adyen/adyen-web/src/components/Dropin/types';
 import { createCheckout } from '../helpers/create-checkout';
-import { GlobalStoryProps } from './types';
-
-type DropinStoryProps = GlobalStoryProps & {
-    paymentMethodsConfiguration: any;
-    componentConfiguration: DropinElementProps;
-};
+import { DropinStoryProps } from './types';
 
 export default {
     title: 'Dropin/Default',

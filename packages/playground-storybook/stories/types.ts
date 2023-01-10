@@ -1,10 +1,20 @@
-export type GlobalStoryProps = {
+import { DropinElementProps } from '@adyen/adyen-web/src/components/Dropin/types';
+
+type GlobalStoryProps = {
     useSessions: boolean;
     countryCode: string;
     shopperLocale: string;
     amount: number;
     showPayButton: boolean;
 };
+
+export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
+    componentConfiguration: T;
+}
+
+export interface DropinStoryProps extends PaymentMethodStoryProps<DropinElementProps> {
+    paymentMethodsConfiguration: any;
+}
 
 export type AdyenCheckoutProps = {
     showPayButton: boolean;

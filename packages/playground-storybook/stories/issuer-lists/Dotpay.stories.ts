@@ -4,24 +4,24 @@ import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
 import { createCheckout } from '../../helpers/create-checkout';
 
 export default {
-    title: 'Vouchers/Oxxo'
+    title: 'IssuerLists/Dotpay'
 } as Meta;
 
-export const Oxxo: StoryFn<PaymentMethodStoryProps<UIElementProps>> = (
+const Template: StoryFn<PaymentMethodStoryProps<UIElementProps>> = (
     props: PaymentMethodStoryProps<UIElementProps>,
     { loaded: { checkout } }
 ): HTMLDivElement => {
     const container = document.createElement('div');
-    const oxxo = checkout.create('oxxo');
-    oxxo.mount(container);
+    const dotpay = checkout.create('dotpay', { ...props.componentConfiguration });
+    dotpay.mount(container);
     return container;
 };
 
-Oxxo.args = {
-    countryCode: 'MX'
+export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIElementProps>>;
+Default.args = {
+    countryCode: 'PL'
 };
-
-Oxxo.loaders = [
+Default.loaders = [
     async context => {
         const checkout = await createCheckout(context);
         return { checkout };

@@ -1,17 +1,16 @@
 import { Meta, StoryFn } from '@storybook/html';
-import { GlobalStoryProps } from '../types';
+import { PaymentMethodStoryProps } from '../types';
 import { UPIElementProps } from '@adyen/adyen-web/dist/types/components/UPI/types';
 import { createCheckout } from '../../helpers/create-checkout';
-
-type UPIStoryProps = GlobalStoryProps & {
-    componentConfiguration: UPIElementProps;
-};
 
 export default {
     title: 'Components/UPI'
 } as Meta;
 
-export const UPI: StoryFn<UPIStoryProps> = (props: UPIStoryProps, { loaded: { checkout } }): HTMLDivElement => {
+export const UPI: StoryFn<PaymentMethodStoryProps<UPIElementProps>> = (
+    props: PaymentMethodStoryProps<UPIElementProps>,
+    { loaded: { checkout } }
+): HTMLDivElement => {
     const container = document.createElement('div');
     const upi = checkout.create('upi', { ...props.componentConfiguration });
     upi.mount(container);

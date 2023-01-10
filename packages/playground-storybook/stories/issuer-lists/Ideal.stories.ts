@@ -1,25 +1,23 @@
 import { Meta, StoryFn } from '@storybook/html';
-import { GlobalStoryProps } from '../types';
+import { PaymentMethodStoryProps } from '../types';
 import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
 import { createCheckout } from '../../helpers/create-checkout';
-
-type IdealStoryProps = GlobalStoryProps & {
-    // TODO: iDeal does not export types (ex: to use highlightedIssuers )
-    componentConfiguration: UIElementProps;
-};
 
 export default {
     title: 'IssuerLists/IDEAL'
 } as Meta;
 
-const Template: StoryFn<IdealStoryProps> = (props: IdealStoryProps, { loaded: { checkout } }): HTMLDivElement => {
+const Template: StoryFn<PaymentMethodStoryProps<UIElementProps>> = (
+    props: PaymentMethodStoryProps<UIElementProps>,
+    { loaded: { checkout } }
+): HTMLDivElement => {
     const container = document.createElement('div');
     const ideal = checkout.create('ideal', { ...props.componentConfiguration });
     ideal.mount(container);
     return container;
 };
 
-export const Default = Template.bind({}) as StoryFn<IdealStoryProps>;
+export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIElementProps>>;
 Default.args = {
     countryCode: 'NL'
 };
@@ -30,7 +28,7 @@ Default.loaders = [
     }
 ];
 
-export const WithHighlightedIssuers = Template.bind({}) as StoryFn<IdealStoryProps>;
+export const WithHighlightedIssuers = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIElementProps>>;
 WithHighlightedIssuers.args = {
     countryCode: 'NL',
     componentConfiguration: {

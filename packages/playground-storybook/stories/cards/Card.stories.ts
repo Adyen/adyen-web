@@ -1,11 +1,10 @@
 import { CardElementProps } from '@adyen/adyen-web/src/components/Card/types';
 import { Meta, StoryFn } from '@storybook/html';
-import { GlobalStoryProps } from '../types';
+import { PaymentMethodStoryProps } from '../types';
 import { createCheckout } from '../../helpers/create-checkout';
 
-type CardStoryProps = GlobalStoryProps & {
+type CardStoryProps = PaymentMethodStoryProps<CardElementProps> & {
     txVariant: string;
-    componentConfiguration: CardElementProps;
 };
 
 export default {
