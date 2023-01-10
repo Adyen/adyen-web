@@ -186,7 +186,7 @@ class Core {
 
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
-        this.options.cdnContext = resolveCDNEnvironment(this.options.environment);
+        this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment);
         this.options.locale = this.options.locale || this.options.shopperLocale;
 
         this.modules = {
