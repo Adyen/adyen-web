@@ -13,8 +13,8 @@
         "packages/*"
     ],
     "scripts": {
-        "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground-new start\" --names \"lib,storybook\"",
-        "start:old": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
+        "start:new": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground-new start\" --names \"lib,storybook\"",
+        "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
         "build": "yarn workspace @adyen/adyen-web build",
         "format": "yarn workspace @adyen/adyen-web format",
         "lint": "yarn workspace @adyen/adyen-web lint",

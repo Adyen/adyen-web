@@ -43,10 +43,6 @@ export const decorators = [
     story => {
         const tale = story();
 
-        if (typeof tale === 'string') {
-            return `<div id='component-field' class="component-wrapper">${story}</div>`;
-        }
-
         const wrapper = document.createElement('div');
         wrapper.className = 'component-wrapper';
         wrapper.id = 'component-field';
