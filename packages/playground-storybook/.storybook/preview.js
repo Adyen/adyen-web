@@ -1,16 +1,7 @@
 import '!style-loader!css-loader!./main.css';
 import '!style-loader!css-loader!@adyen/adyen-web/dist/es/adyen.css';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE } from '../config/commonConfig';
-
-export const parameters = {
-    actions: { argTypesRegex: '^on[A-Z].*' },
-    controls: {
-        matchers: {
-            color: /(background|color)$/i,
-            date: /Date$/
-        }
-    }
-};
+import { createCheckout } from '../helpers/create-checkout';
 
 /**
  * https://storybook.js.org/docs/html/api/argtypes
@@ -48,5 +39,15 @@ export const decorators = [
         wrapper.id = 'component-field';
         wrapper.appendChild(tale);
         return wrapper;
+    }
+];
+
+/**
+ * https://storybook.js.org/docs/html/writing-stories/loaders
+ */
+export const loaders = [
+    async context => {
+        const checkout = await createCheckout(context);
+        return { checkout };
     }
 ];

@@ -1,7 +1,6 @@
 import { Meta, StoryFn } from '@storybook/html';
 import { PixProps } from '@adyen/adyen-web/dist/types/components/Pix/types';
 import { PaymentMethodStoryProps } from '../types';
-import { createCheckout } from '../../helpers/create-checkout';
 import { addToWindow } from '../../utils/add-to-window';
 
 export default {
@@ -20,12 +19,6 @@ export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<PixP
 Default.args = {
     countryCode: 'BR'
 };
-Default.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];
 
 export const WithPersonalDetails = Template.bind({}) as StoryFn<PaymentMethodStoryProps<PixProps>>;
 WithPersonalDetails.args = {
@@ -35,9 +28,3 @@ WithPersonalDetails.args = {
         personalDetailsRequired: true
     }
 };
-WithPersonalDetails.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];

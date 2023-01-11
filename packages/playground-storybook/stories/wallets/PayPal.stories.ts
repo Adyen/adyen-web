@@ -1,7 +1,6 @@
 import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { PayPalElementProps } from '@adyen/adyen-web/dist/types/components/PayPal/types';
-import { createCheckout } from '../../helpers/create-checkout';
 import { addToWindow } from '../../utils/add-to-window';
 
 export default {
@@ -18,10 +17,3 @@ export const Paypal: StoryFn<PaymentMethodStoryProps<PayPalElementProps>> = (
     addToWindow(paypal);
     return container;
 };
-
-Paypal.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];

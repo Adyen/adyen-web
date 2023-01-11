@@ -1,5 +1,4 @@
 import { Meta, StoryFn } from '@storybook/html';
-import { createCheckout } from '../helpers/create-checkout';
 import { DropinStoryProps } from './types';
 import { addToWindow } from '../utils/add-to-window';
 
@@ -30,10 +29,3 @@ export const Dropin: StoryFn<DropinStoryProps> = ({ componentConfiguration }, { 
     addToWindow(dropin);
     return container;
 };
-
-Dropin.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];

@@ -1,7 +1,6 @@
 import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
-import { createCheckout } from '../../helpers/create-checkout';
 import { addToWindow } from '../../utils/add-to-window';
 
 export default {
@@ -23,12 +22,6 @@ export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIEl
 Default.args = {
     countryCode: 'NL'
 };
-Default.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];
 
 export const WithHighlightedIssuers = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIElementProps>>;
 WithHighlightedIssuers.args = {
@@ -38,9 +31,3 @@ WithHighlightedIssuers.args = {
         highlightedIssuers: ['1121', '1154', '1153']
     }
 };
-WithHighlightedIssuers.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];

@@ -1,7 +1,6 @@
 import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
-import { createCheckout } from '../../helpers/create-checkout';
 import { addToWindow } from '../../utils/add-to-window';
 
 export default {
@@ -23,9 +22,3 @@ export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIEl
 Default.args = {
     countryCode: 'PL'
 };
-Default.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];
