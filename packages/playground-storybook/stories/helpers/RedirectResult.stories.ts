@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/html';
 import AdyenCheckout from '@adyen/adyen-web';
 import { getSearchParameter } from '../../utils/get-query-parameters';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
+import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
 type RedirectResultProps = {
     redirectResult: string;
@@ -12,7 +13,10 @@ export default {
     title: 'Helpers/RedirectResult'
 } as Meta;
 
-export const RedirectResult: StoryFn<RedirectResultProps> = (props, { loaded: { checkout, errorMessage } }): HTMLElement => {
+export const RedirectResult: StoryFn<RedirectResultProps> = (props, context): HTMLElement => {
+    const checkout = getStoryContextCheckout(context);
+    const errorMessage = context.loaded?.errorMessage;
+
     const div = document.createElement('div');
     div.setAttribute('id', 'redirect-result-status');
 
@@ -20,7 +24,7 @@ export const RedirectResult: StoryFn<RedirectResultProps> = (props, { loaded: { 
         div.innerText = errorMessage;
         return div;
     }
-    if (!checkout) {
+    if (!props.redirectResult || !props.sessionId || !checkout) {
         div.innerText = 'There is no redirectResult / sessionId provided';
         return div;
     }

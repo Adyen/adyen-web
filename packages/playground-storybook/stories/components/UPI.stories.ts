@@ -3,15 +3,14 @@ import { PaymentMethodStoryProps } from '../types';
 import { UPIElementProps } from '@adyen/adyen-web/dist/types/components/UPI/types';
 import { createCheckout } from '../../helpers/create-checkout';
 import { addToWindow } from '../../utils/add-to-window';
+import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
 export default {
     title: 'Components/UPI'
 } as Meta;
 
-export const UPI: StoryFn<PaymentMethodStoryProps<UPIElementProps>> = (
-    props: PaymentMethodStoryProps<UPIElementProps>,
-    { loaded: { checkout } }
-): HTMLDivElement => {
+export const UPI: StoryFn<PaymentMethodStoryProps<UPIElementProps>> = (props, context): HTMLDivElement => {
+    const checkout = getStoryContextCheckout(context);
     const container = document.createElement('div');
     const upi = checkout.create('upi', { ...props.componentConfiguration });
     upi.mount(container);

@@ -2,6 +2,7 @@ import { CardElementProps } from '@adyen/adyen-web/src/components/Card/types';
 import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { addToWindow } from '../../utils/add-to-window';
+import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
 type CardStoryProps = PaymentMethodStoryProps<CardElementProps> & {
     txVariant: string;
@@ -11,7 +12,8 @@ export default {
     title: 'Cards/Card'
 } as Meta;
 
-const Template: StoryFn<CardStoryProps> = ({ txVariant = 'card', componentConfiguration }, { loaded: { checkout } }): HTMLDivElement => {
+const Template: StoryFn<CardStoryProps> = ({ txVariant = 'card', componentConfiguration }, context): HTMLDivElement => {
+    const checkout = getStoryContextCheckout(context);
     const cardContainer = document.createElement('div');
     const card = checkout.create(txVariant, {
         ...componentConfiguration
