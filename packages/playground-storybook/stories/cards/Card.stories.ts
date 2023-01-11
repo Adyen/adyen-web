@@ -2,6 +2,7 @@ import { CardElementProps } from '@adyen/adyen-web/src/components/Card/types';
 import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { createCheckout } from '../../helpers/create-checkout';
+import { addToWindow } from '../../utils/add-to-window';
 
 type CardStoryProps = PaymentMethodStoryProps<CardElementProps> & {
     txVariant: string;
@@ -17,6 +18,7 @@ const Template: StoryFn<CardStoryProps> = ({ txVariant = 'card', componentConfig
         ...componentConfiguration
     });
     card.mount(cardContainer);
+    addToWindow(card);
     return cardContainer;
 };
 

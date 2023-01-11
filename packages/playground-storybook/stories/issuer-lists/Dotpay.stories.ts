@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
 import { createCheckout } from '../../helpers/create-checkout';
+import { addToWindow } from '../../utils/add-to-window';
 
 export default {
     title: 'IssuerLists/Dotpay'
@@ -14,6 +15,7 @@ const Template: StoryFn<PaymentMethodStoryProps<UIElementProps>> = (
     const container = document.createElement('div');
     const dotpay = checkout.create('dotpay', { ...props.componentConfiguration });
     dotpay.mount(container);
+    addToWindow(dotpay);
     return container;
 };
 

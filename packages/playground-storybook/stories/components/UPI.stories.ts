@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UPIElementProps } from '@adyen/adyen-web/dist/types/components/UPI/types';
 import { createCheckout } from '../../helpers/create-checkout';
+import { addToWindow } from '../../utils/add-to-window';
 
 export default {
     title: 'Components/UPI'
@@ -14,6 +15,7 @@ export const UPI: StoryFn<PaymentMethodStoryProps<UPIElementProps>> = (
     const container = document.createElement('div');
     const upi = checkout.create('upi', { ...props.componentConfiguration });
     upi.mount(container);
+    addToWindow(upi);
     return container;
 };
 

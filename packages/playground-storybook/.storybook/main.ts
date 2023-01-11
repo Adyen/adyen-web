@@ -9,11 +9,11 @@ const config: StorybookConfig = {
         {
             name: '@storybook/addon-essentials',
             options: {
-                docs: false,
-            },
+                docs: false
+            }
         },
         '@storybook/addon-links',
-        '@storybook/addon-interactions',
+        '@storybook/addon-interactions'
     ],
     framework: '@storybook/html',
     typescript: {

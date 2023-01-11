@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
 import { createCheckout } from '../../helpers/create-checkout';
+import { addToWindow } from '../../utils/add-to-window';
 
 export default {
     title: 'IssuerLists/IDEAL'
@@ -14,6 +15,7 @@ const Template: StoryFn<PaymentMethodStoryProps<UIElementProps>> = (
     const container = document.createElement('div');
     const ideal = checkout.create('ideal', { ...props.componentConfiguration });
     ideal.mount(container);
+    addToWindow(ideal);
     return container;
 };
 
