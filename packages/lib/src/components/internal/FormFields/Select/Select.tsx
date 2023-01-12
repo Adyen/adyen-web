@@ -35,13 +35,33 @@ function Select({
 
     const active: SelectItem = items.find(i => i.id === selected) || ({} as SelectItem);
 
+    const [inputText, setInputText] = useState<string>();
+
+    const [activeOption, setActiveOption] = useState<SelectItem>(active);
+
+    const [selectedOption, setSelectedOption] = useState<SelectItem>({} as SelectItem);
+
+    const filteredItems = items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
+
+    const setNextActive = () => {
+        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
+        const nextIndex = possibleNextIndex < filteredItems.length ? possibleNextIndex : 0;
+        setActiveOption(filteredItems[nextIndex]);
+    };
+
+    const setPreviousActive = () => {
+        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) - 1;
+        const nextIndex = possibleNextIndex < 0 ? filteredItems.length - 1 : possibleNextIndex;
+        setActiveOption(filteredItems[nextIndex]);
+    };
+
     /**
      * Closes the selectList, empties the text filter and focuses the button element
      */
     const closeList = () => {
         setTextFilter(null);
         setShowList(false);
-        if (toggleButtonRef.current) toggleButtonRef.current.focus();
+        //if (toggleButtonRef.current) toggleButtonRef.current.focus();
     };
 
     /**
@@ -52,18 +72,35 @@ function Select({
         e.preventDefault();
 
         // If the target is not one of the list items, select the first list item
+        //const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
+        // TODO: check the handling for data-disabled
+        //if (!target.getAttribute('data-disabled')) {
+        closeList();
+        setSelectedOption(activeOption);
+        setInputText(activeOption.name);
+        setTextFilter(null);
+        onChange({ target: { id: activeOption.id, name: activeOption.name } });
+        //}
+    };
+
+    /**
+     * Handles hovering and directions
+     * @param e - Event
+     */
+    const handleHover = (e: Event) => {
+        e.preventDefault();
+
+        // If the target is not one of the list items, select the first list item
         const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
 
-        if (!target.getAttribute('data-disabled')) {
-            closeList();
-            const value = target.getAttribute('data-value');
-            onChange({ target: { value, name: name } });
-        }
+        const value = target.getAttribute('data-value');
+        const item = filteredItems.find(listItem => listItem.id === value);
+        setActiveOption(item);
     };
 
     /**
      * Handle keyDown events on the selectList button
-     * Opens the selectList and focuses the first element if available
+     * Responsible for opening and closing the list
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
@@ -76,9 +113,7 @@ function Select({
         } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!filterable || !showList))) {
             e.preventDefault();
             setShowList(true);
-            if (selectListRef.current?.firstElementChild) {
-                selectListRef.current.firstElementChild.focus();
-            }
+            handleNavigationKeys(e);
         } else if (e.shiftKey && e.key === keys.tab) {
             // Shift-Tab out of Select - close list re. a11y guidelines (above)
             closeList();
@@ -104,37 +139,23 @@ function Select({
     };
 
     /**
-     * Handle keyDown events on the list elements
+     * Handles movement with navigation keys and enter
      * Navigates through the list, or select an element, or focus the filter input, or close the menu.
      * @param e - KeyDownEvent
      */
-    const handleListKeyDown = (e: KeyboardEvent) => {
-        const target = e.target as HTMLInputElement;
-
+    const handleNavigationKeys = (e: KeyboardEvent) => {
         switch (e.key) {
-            case keys.escape:
-                e.preventDefault();
-                // When user is actively navigating through list with arrow keys - close list and keep focus on the Select Button re. a11y guidelines (above)
-                closeList();
-                break;
             case keys.space:
             case keys.enter:
                 handleSelect(e);
                 break;
             case keys.arrowDown:
                 e.preventDefault();
-                if (target.nextElementSibling) (target.nextElementSibling as HTMLElement).focus();
+                setNextActive();
                 break;
             case keys.arrowUp:
                 e.preventDefault();
-                if (target.previousElementSibling) {
-                    (target.previousElementSibling as HTMLElement).focus();
-                } else if (filterable && filterInputRef.current) {
-                    filterInputRef.current.focus();
-                }
-                break;
-            case keys.tab:
-                closeList();
+                setPreviousActive();
                 break;
             default:
         }
@@ -146,7 +167,8 @@ function Select({
      */
     const handleTextFilter = (e: KeyboardEvent) => {
         const value: string = (e.target as HTMLInputElement).value;
-        setTextFilter(value.toLowerCase());
+        setInputText(value);
+        setTextFilter(value);
     };
 
     /**
@@ -158,6 +180,9 @@ function Select({
         setShowList(!showList);
     };
 
+    /**
+     * Focus on the input if filterable
+     */
     useEffect(() => {
         if (showList && filterable && filterInputRef.current) {
             filterInputRef.current.focus();
@@ -183,8 +208,10 @@ function Select({
             ref={selectContainerRef}
         >
             <SelectButton
+                inputText={inputText}
                 id={uniqueId ?? null}
-                active={active}
+                active={activeOption}
+                selected={selectedOption}
                 filterInputRef={filterInputRef}
                 filterable={filterable}
                 isInvalid={isInvalid}
@@ -200,14 +227,14 @@ function Select({
                 ariaDescribedBy={!isCollatingErrors && uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
             />
             <SelectList
-                active={active}
-                items={items}
-                onKeyDown={handleListKeyDown}
+                active={activeOption}
+                filteredItems={filteredItems}
+                onHover={handleHover}
                 onSelect={handleSelect}
+                selected={selectedOption}
                 selectListId={selectListId}
                 selectListRef={selectListRef}
                 showList={showList}
-                textFilter={textFilter}
             />
         </div>
     );

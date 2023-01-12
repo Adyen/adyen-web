@@ -24,7 +24,9 @@ export interface SelectProps {
 }
 
 export interface SelectButtonProps {
+    inputText: string;
     active: SelectItem;
+    selected: SelectItem;
     filterInputRef;
     filterable: boolean;
     isInvalid: boolean;
@@ -43,18 +45,19 @@ export interface SelectButtonProps {
 
 export interface SelectListProps {
     active: SelectItem;
-    items: SelectItem[];
-    onKeyDown: (e: KeyboardEvent) => void;
+    filteredItems: SelectItem[];
+    onHover: (e: Event) => void;
     onSelect: (e: Event) => void;
+    selected: SelectItem;
     selectListId: string;
     selectListRef;
     showList: boolean;
-    textFilter: string;
 }
 
 export interface SelectItemProps {
+    active: boolean;
     item: SelectItem;
     selected: boolean;
-    onKeyDown: (e: KeyboardEvent) => void;
+    onHover: (e: Event) => void;
     onSelect: (e: Event) => void;
 }
