@@ -29,7 +29,7 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
                 }
 
                 return actions.order.get().then(function(data) {
-                    const payerData = data.payer || {};
+                    const payerData = data || {};
                     onComplete(details, payerData);
                 });
             }
