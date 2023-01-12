@@ -20,7 +20,7 @@ interface PaymentMethodListProps {
     openFirstPaymentMethod?: boolean;
     showRemovePaymentMethodButton?: boolean;
 
-    onSelect: (paymentMethod) => void;
+    onSelect: (paymentMethod: UIElement) => void;
     onDisableStoredPaymentMethod: (storedPaymentMethod) => void;
     onOrderCancel?: (order) => void;
 
@@ -49,12 +49,10 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
             const shouldOpenFirstPaymentMethod = shouldOpenFirstStored || this.props.openFirstPaymentMethod;
 
             if (shouldOpenFirstPaymentMethod) {
-                this.onSelect(firstPaymentMethod)();
+                this.props.onSelect(firstPaymentMethod);
             }
         }
     }
-
-    public onSelect = paymentMethod => () => this.props.onSelect(paymentMethod);
 
     render({ paymentMethods, instantPaymentMethods, activePaymentMethod, cachedPaymentMethods, isLoading }) {
         const { i18n } = useCoreContext();
@@ -91,7 +89,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
                                 isDisabling={isSelected && this.props.isDisabling}
                                 isLoaded={isLoaded}
                                 isLoading={isLoading}
-                                onSelect={this.onSelect(paymentMethod)}
+                                onSelect={this.props.onSelect}
                                 key={paymentMethod._id}
                                 showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
                                 onDisableStoredPaymentMethod={this.props.onDisableStoredPaymentMethod}

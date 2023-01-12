@@ -30,7 +30,7 @@ export async function initSession() {
             console.info(JSON.stringify(error), component);
         },
         onChange: (state, component) => {
-            console.log('onChange', state);
+            // console.log('onChange', state);
         },
         paymentMethodsConfiguration: {
             paywithgoogle: {
@@ -49,6 +49,17 @@ export async function initSession() {
         }
     });
 
-    const dropin = checkout.create('dropin', { instantPaymentTypes: ['googlepay'] }).mount('#dropin-container');
+    const dropin = checkout
+        .create('dropin', {
+            instantPaymentTypes: ['googlepay'],
+            // showRemovePaymentMethodButton: true,
+            // onDisableStoredPaymentMethod(...args) {
+            //     console.log(args);
+            // },
+            onSelect(...args) {
+                console.log(args);
+            }
+        })
+        .mount('#dropin-container');
     return [checkout, dropin];
 }

@@ -3,6 +3,9 @@ import { h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import PaymentMethodItem from './PaymentMethodItem';
 import InstantPaymentMethods from './InstantPaymentMethods';
+import { render, screen, waitFor } from '@testing-library/preact';
+import { mock } from 'jest-mock-extended';
+import Language from '../../../../language';
 
 const i18n = { get: key => key };
 const paymentMethods = [
@@ -32,6 +35,22 @@ const instantPaymentMethods = [
         }
     }
 ];
+
+test('onSelect should be triggered only once', () => {
+    render(
+        <PaymentMethodList
+            paymentMethods={[]}
+            instantPaymentMethods={[]}
+            activePaymentMethod={null}
+            cachedPaymentMethods={{}}
+            onSelect={() => {}}
+            onDisableStoredPaymentMethod={() => {}}
+            orderStatus={null}
+            isDisabling={false}
+            isLoading={false}
+        />
+    );
+});
 
 describe('PaymentMethodList', () => {
     const getWrapper = props => shallow(<PaymentMethodList i18n={i18n} {...props} />);
