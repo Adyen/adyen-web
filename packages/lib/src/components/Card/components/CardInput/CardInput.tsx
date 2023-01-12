@@ -441,16 +441,19 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 }
 
                 // Create an item for the error panel
-                const latestItem = difference?.[0];
-                console.log('### CardInput::componentDidUpdate:: latest item=', latestItem);
 
-                if (latestItem) {
-                    const index = sortedMergedErrors?.fieldList.findIndex(item => item === latestItem);
+                const latestFieldInError = difference?.[0];
+                console.log('### CardInput::componentDidUpdate:: latestFieldInError=', latestFieldInError);
+
+                if (latestFieldInError) {
+                    // Find where in the list of fields in error the latest field is
+                    const index = sortedMergedErrors?.fieldList.findIndex(fieldName => fieldName === latestFieldInError);
+                    // Find the corresponding error message
                     const latestErrorItem = { errorMessages: [sortedMergedErrors?.errorMessages[index]], fieldList: null }; //[latestItem] };
-                    console.log('### CardInput::componentDidUpdate:: original error= ', errorsForPanel[latestItem]);
+                    console.log('### CardInput::componentDidUpdate:: original error= ', errorsForPanel[latestFieldInError]);
 
-                    // Lookup whether error is actually a blur base one - most are but some of the SF ones aren't
-                    const errorCode = errorsForPanel[latestItem].error || errorsForPanel[latestItem].errorMessage;
+                    // Use the field name to get the error code, so we can look up whether error is actually a blur base one (most are but some SF ones aren't)
+                    const errorCode = errorsForPanel[latestFieldInError].error || errorsForPanel[latestFieldInError].errorMessage;
                     const isBlurBasedError = lookupBlurBasedErrors(errorCode);
 
                     console.log('### CardInput::componentDidUpdate:: isBlurBasedError', isBlurBasedError);
