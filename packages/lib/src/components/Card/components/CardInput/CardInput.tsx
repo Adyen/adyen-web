@@ -169,10 +169,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // Callback for ErrorPanel
     const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
 
-    useEffect(() => {
-        console.log('### CardInput:::: IS VALIDATING', isValidating.current);
-        // sfp.current.setIsValidating(isValidating.current);
-    }, [isValidating.current]);
+    // useEffect(() => {
+    //     console.log('### CardInput:::: IS VALIDATING', isValidating.current);
+    // }, [isValidating.current]);
 
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
@@ -256,7 +255,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
          */
         setMergedSRErrors(null);
 
-        // setTimeout(() => {
         // Validate SecuredFields
         sfp.current.showValidation();
 
@@ -265,9 +263,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
-
-        // isValidating.current = true;
-        // }, 500);
     };
 
     cardInputRef.current.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
@@ -369,6 +364,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
         const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
+
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
         // Sort active errors based on layout
@@ -390,37 +386,34 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         console.log('### CardInput::componentDidUpdate:: previousSortedErrors', previousSortedErrors);
 
         if (sortedMergedErrors) {
-            /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
-
             // SIMPLER - WHEN WE JUST NEED THE ERROR MSG STRINGS
+            /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
             if (isValidating.current) {
                 setMergedSRErrors(sortedMergedErrors);
             } else {
-                /** Else we are in an onBlur scenario - so find the latest error message */
+                /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */
                 let difference;
                 const currentSortedErrors = sortedMergedErrors.errorMessages;
 
-                // Nothing to compare, so take the new item
+                // If nothing to compare - take the new item...
                 if (currentSortedErrors.length === 1 && !previousSortedErrors) {
                     difference = currentSortedErrors;
                 }
-
-                // Find the difference: what's in the new array that wasn't in the old array?
+                // .. else, find the difference: what's in the new array that wasn't in the old array?
                 if (currentSortedErrors.length > previousSortedErrors?.length) {
                     difference = currentSortedErrors.filter(x => !previousSortedErrors.includes(x));
                 }
 
-                // Create an item for the error panel
                 const latestErrorMsg = difference?.[0];
 
                 if (latestErrorMsg) {
                     console.log('### CardInput::componentDidUpdate:: latestErrorMsg=', latestErrorMsg);
                     const latestErrorItem = { errorMessages: [latestErrorMsg], fieldList: null, errorCodes: null };
 
-                    // Find where, in the list of error messages, the error is
+                    // Find the position of the error in the array of error messages
                     const index = sortedMergedErrors?.errorMessages.findIndex(fieldName => fieldName === latestErrorMsg);
 
-                    // Find the corresponding errorCode
+                    // Use this index to find the corresponding errorCode
                     const errorCode = sortedMergedErrors?.errorCodes[index];
 
                     // Use the error code to look up whether error is actually a blur base one (most are but some SF ones aren't)
@@ -556,7 +549,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             brandsIcons={props.brandsIcons}
                             mergedSRErrors={mergedSRErrors}
                             // moveFocus={moveFocus}
-                            moveFocus={false}
+                            moveFocus={true}
                             showPanel={true}
                             handleErrorPanelFocus={handleErrorPanelFocus}
                             formData={formData}

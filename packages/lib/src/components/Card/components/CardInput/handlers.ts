@@ -21,7 +21,11 @@ export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOn
                 // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
                 sfp.current.setFocusOn(who);
             }
-            isValidating.current = false;
+
+            // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
+            setTimeout(() => {
+                isValidating.current = false;
+            }, 300);
         }
     };
 };
