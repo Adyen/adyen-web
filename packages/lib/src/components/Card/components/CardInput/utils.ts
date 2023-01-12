@@ -126,6 +126,8 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
 };
 
 export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels }: SortErrorsObj): ErrorPanelObj => {
+    console.log('### utils::sortErrorsForPanel:: errors', errors);
+
     // Create array of fields with active errors, ordered according to passed layout
     const fieldList = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
@@ -137,10 +139,12 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
 
     if (!fieldList || !fieldList.length) return null;
 
-    // Create array of error messages to display
+    // Create array of error messages to display, using previously created, ordered, fieldList to also keep error messages in the right order
     const errorMessages = fieldList.map(key => {
         // Get translation for field type
-        const errorKey: string = mapFieldKey(key, i18n, countrySpecificLabels);
+        const fieldType: string = mapFieldKey(key, i18n, countrySpecificLabels);
+
+        const errorObj = errors[key];
 
         /**
          * Get corresponding error msg
@@ -148,12 +152,20 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
          * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
          * For other fields we still need to translate it
          */
-        const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n + '-sr' : i18n.get(errors[key].errorMessage) + '-sr';
+        const errorMsg = hasOwnProperty(errorObj, 'errorI18n') ? errorObj.errorI18n + '-sr' : i18n.get(errorObj.errorMessage) + '-sr';
 
-        return errorKey ? `${errorKey}: ${errorMsg}.` : errorMsg;
+        // If necessary append field type to start of error message
+        return fieldType ? `${fieldType}: ${errorMsg}.` : errorMsg;
     });
 
-    return !errorMessages.length ? null : { errorMessages, fieldList };
+    // Create array of error codes for reference
+    const errorCodes = fieldList.map(key => {
+        const errorObj = errors[key];
+        const errorCode = hasOwnProperty(errorObj, 'error') ? errorObj.error : errorObj.errorMessage;
+        return errorCode;
+    });
+
+    return !errorMessages.length ? null : { errorMessages, fieldList, errorCodes };
 };
 
 export const extractPropsForCardFields = (props: CardInputProps) => {

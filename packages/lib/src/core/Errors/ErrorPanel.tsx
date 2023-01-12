@@ -5,6 +5,7 @@ import './ErrorPanel.scss';
 export interface ErrorPanelObj {
     errorMessages: string[];
     fieldList: string[];
+    errorCodes: string[];
 }
 
 export interface ErrorPanelProps {
