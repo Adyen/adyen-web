@@ -215,6 +215,11 @@ export const handlePartialAddressMode = (addressMode: AddressModeOptions): Addre
     return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : null;
 };
 
+// Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
+export function lookupBlurBasedErrors(errorCode) {
+    return !['error.va.sf-cc-num.03', 'error.va.sf-cc-dat.01', 'error.va.sf-cc-dat.02', 'error.va.sf-cc-dat.03'].includes(errorCode);
+}
+
 // Hook
 export function usePrevious<T>(value: T): T {
     const ref: any = useRef<T>();
