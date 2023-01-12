@@ -42,6 +42,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             name={'encryptedExpiryDate'}
             isCollatingErrors={isCollatingErrors}
             i18n={i18n}
+            errorVisibleToScreenReader={false}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_EXPIRY_DATE}
@@ -57,13 +58,11 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     }
                 )}
             />
-            <div className={classNames(
-                'adyen-checkout__field__exp-date_hint_wrapper',
-                [styles['checkout__field__exp-date_hint_wrapper']],
-                {
-                    'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid,
-                }
-            )}>
+            <div
+                className={classNames('adyen-checkout__field__exp-date_hint_wrapper', [styles['checkout__field__exp-date_hint_wrapper']], {
+                    'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid
+                })}
+            >
                 <img
                     src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/components/expiry_date_hint.svg"
                     className="adyen-checkout__field__exp-date_hint"

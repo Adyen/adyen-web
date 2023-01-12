@@ -24,6 +24,7 @@ import {
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_SECURITY_CODE
 } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { useEffect, useRef } from 'preact/hooks';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -141,8 +142,13 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
         // Get translation for field type
         const errorKey: string = mapFieldKey(key, i18n, countrySpecificLabels);
 
-        // Get corresponding error msg
-        const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n : i18n.get(errors[key].errorMessage);
+        /**
+         * Get corresponding error msg
+         *
+         * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
+         * For other fields we still need to translate it
+         */
+        const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n + '-sr' : i18n.get(errors[key].errorMessage) + '-sr';
 
         return errorKey ? `${errorKey}: ${errorMsg}.` : errorMsg;
     });
@@ -208,3 +214,16 @@ export const extractPropsForSFP = (props: CardInputProps) => {
 export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
     return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : null;
 };
+
+// Hook
+export function usePrevious<T>(value: T): T {
+    const ref: any = useRef<T>();
+
+    // Store current value in ref
+    useEffect(() => {
+        ref.current = value;
+    }, [value]); // Only re-run if value changes
+
+    // Return previous value
+    return ref.current;
+}

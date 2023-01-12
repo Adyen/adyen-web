@@ -29,7 +29,8 @@ export const cardInputValidationRules: ValidatorRules = {
         {
             // Will fire at startup and when triggerValidation is called and also applies as text is input
             modes: ['blur'],
-            validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
+            // validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
+            validate: value => (isEmpty(value) ? null : value.length > 1), // true, if there are chars other than spaces
             errorMessage: 'creditCard.holderName.invalid'
         }
     ],

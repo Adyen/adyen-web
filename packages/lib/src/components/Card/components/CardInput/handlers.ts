@@ -18,7 +18,7 @@ export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOn
                 setFocusOnNonSF(who, sfp);
             } else {
                 // Is a securedField - so it has it's own focus procedures
-                handleFocus({ currentFocusObject: who } as CbObjOnFocus);
+                // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
                 sfp.current.setFocusOn(who);
             }
             isValidating.current = false;

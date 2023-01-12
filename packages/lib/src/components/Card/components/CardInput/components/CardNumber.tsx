@@ -30,6 +30,7 @@ export default function CardNumber(props: CardNumberProps) {
             isCollatingErrors={isCollatingErrors}
             showValidIcon={false}
             i18n={i18n}
+            errorVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}

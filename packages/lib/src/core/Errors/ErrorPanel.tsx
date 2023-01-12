@@ -35,7 +35,12 @@ export function ErrorPanel({
     }, [errors]);
 
     return (
-        <div className={showPanel ? 'adyen-checkout-error-panel' : 'adyen-checkout-error-panel--sr-only'} id={id} aria-live="polite">
+        <div
+            className={showPanel ? 'adyen-checkout-error-panel' : 'adyen-checkout-error-panel--sr-only'}
+            id={id}
+            aria-live={'polite'}
+            aria-atomic={'true'}
+        >
             {errorMessages && (
                 <div className="adyen-checkout-error-panel__wrapper">
                     {/*<div className="adyen-checkout-error-panel__header">*/}

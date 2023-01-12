@@ -63,6 +63,7 @@ export default function CVC(props: CVCProps) {
             name={ENCRYPTED_SECURITY_CODE}
             isCollatingErrors={isCollatingErrors}
             i18n={i18n}
+            errorVisibleToScreenReader={false}
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 

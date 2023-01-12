@@ -84,7 +84,8 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
-            aria-describedby={isCollatingErrors ? null : `${uniqueId}${ARIA_ERROR_SUFFIX}`}
+            // aria-describedby={isCollatingErrors ? null : `${uniqueId}${ARIA_ERROR_SUFFIX}`}
+            aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
             aria-invalid={isInvalid}
             onInput={handleInput}
             onBlur={handleBlur}
