@@ -22,8 +22,7 @@ function Select({
     isInvalid,
     isValid,
     placeholder,
-    uniqueId,
-    isCollatingErrors
+    uniqueId
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -197,7 +196,7 @@ function Select({
                 showList={showList}
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
-                ariaDescribedBy={!isCollatingErrors && uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
+                ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
             />
             <SelectList
                 active={active}

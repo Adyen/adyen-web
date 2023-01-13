@@ -3,11 +3,9 @@ import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
 import { ErrorPanel } from '../../../../../core/Errors/ErrorPanel';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)
-    collateErrors,
     errorFieldId,
     // vars created in CardInput:
     sfpState,
@@ -26,23 +24,11 @@ export const StoredCardFieldsWrapper = ({
     expiryYear,
     // Card
     mergedSRErrors,
-    // handleErrorPanelFocus,
-    moveFocus,
     showPanel
 }) => {
-    const { i18n } = useCoreContext();
-
     return (
         <LoadingWrapper status={sfpState.status}>
-            {/*{true && (*/}
-            <ErrorPanel
-                id={errorFieldId}
-                // heading={i18n.get('errorPanel.title')}
-                errors={mergedSRErrors}
-                // callbackFn={moveFocus ? handleErrorPanelFocus : null}
-                showPanel={showPanel}
-            />
-            {/*)}*/}
+            <ErrorPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
 
             <StoredCardFields
                 errors={sfpState.errors}

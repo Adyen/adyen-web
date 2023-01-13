@@ -15,10 +15,7 @@ import {
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__exp-date': true,
@@ -40,7 +37,6 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             isValid={isValid}
             dir={'ltr'}
             name={'encryptedExpiryDate'}
-            isCollatingErrors={isCollatingErrors}
             i18n={i18n}
             errorVisibleToScreenReader={false}
         >

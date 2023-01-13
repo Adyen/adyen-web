@@ -19,7 +19,6 @@ const Field: FunctionalComponent<FieldProps> = props => {
         errorMessage,
         helper,
         inputWrapperModifiers,
-        isCollatingErrors,
         isLoading,
         isValid,
         label,
@@ -130,12 +129,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 {errorMessage && typeof errorMessage === 'string' && errorMessage.length && (
                     <span
                         className={'adyen-checkout__error-text'}
-                        // id={`${uniqueId.current}${ARIA_ERROR_SUFFIX}`}
-                        // aria-hidden={isCollatingErrors ? 'true' : null}
-                        // aria-live={isCollatingErrors ? null : 'polite'}
                         {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
                         aria-hidden={errorVisibleToSR ? null : 'true'}
-                        // aria-live={errorVisibleToSR ? 'polite' : null}
                     >
                         {errorMessage}
                     </span>

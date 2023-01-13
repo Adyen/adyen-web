@@ -147,7 +147,6 @@ class SecuredField extends AbstractSecuredField {
             legacyInputMode: this.sfConfig.legacyInputMode,
             minimumExpiryDate: this.sfConfig.minimumExpiryDate,
             implementationType: this.sfConfig.implementationType,
-            isCollatingErrors: this.sfConfig.isCollatingErrors,
             maskSecurityCode: this.sfConfig.maskSecurityCode
         };
 

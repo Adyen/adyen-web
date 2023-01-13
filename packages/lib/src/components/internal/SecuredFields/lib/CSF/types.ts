@@ -37,7 +37,6 @@ interface CSFCommonProps {
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     implementationType?: 'components' | 'custom';
-    isCollatingErrors?: boolean;
     maskSecurityCode: boolean;
 }
 

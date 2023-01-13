@@ -27,7 +27,6 @@ import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
-// import {getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler, setFocusOnFirstFieldInError} from './handlers';
 import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstField } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
@@ -50,7 +49,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const errorFieldId = 'creditCardErrors';
 
-    const { collateErrors, moveFocus, showPanel } = props.SRConfig;
+    const { moveFocus, showPanel } = props.SRConfig;
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
@@ -452,8 +451,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onBrand={props.onBrand}
                 onFocus={handleFocus}
                 type={props.brand}
-                // isCollatingErrors={collateErrors}
-                isCollatingErrors={false}
                 {...(props.disableIOSArrowKeys && { onTouchstartIOS: handleTouchstartIOS })}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
@@ -464,8 +461,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}
-                        role={collateErrors && 'form'}
-                        // aria-describedby={collateErrors ? errorFieldId : null}
+                        role={'form'}
                     >
                         <FieldToRender
                             // Extract exact props that we need to pass down
@@ -479,7 +475,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             focusedElement={focusedElement}
                             setFocusOn={setFocusOn}
                             sfpState={sfpState}
-                            collateErrors={collateErrors}
                             errorFieldId={errorFieldId}
                             cvcPolicy={cvcPolicy}
                             hasInstallments={hasInstallments}

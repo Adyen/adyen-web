@@ -8,7 +8,6 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
-// import useCoreContext from '../../../../../core/Context/useCoreContext';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -19,7 +18,6 @@ export const CardFieldsWrapper = ({
     handleChangeFor,
     sfpState,
     setFocusOn,
-    collateErrors,
     errorFieldId,
     cvcPolicy,
     focusedElement,
@@ -29,9 +27,7 @@ export const CardFieldsWrapper = ({
     // Card
     brandsIcons,
     mergedSRErrors,
-    moveFocus,
     showPanel,
-    // handleErrorPanelFocus,
     formData,
     formErrors,
     formValid,
@@ -71,8 +67,6 @@ export const CardFieldsWrapper = ({
     //
     iOSFocusedField
 }) => {
-    // const { i18n } = useCoreContext();
-
     const cardHolderField = (
         <CardHolderName
             required={holderNameRequired}
@@ -86,20 +80,9 @@ export const CardFieldsWrapper = ({
         />
     );
 
-    // console.log('### CardFieldsWrapper::mergedSRErrors:: ', mergedSRErrors);
-
     return (
         <LoadingWrapper status={sfpState.status}>
-            {/*{collateErrors && (*/}
-            {/*{true && (*/}
-            <ErrorPanel
-                id={errorFieldId}
-                // heading={i18n.get('errorPanel.title')}
-                errors={mergedSRErrors}
-                // callbackFn={moveFocus ? handleErrorPanelFocus : null}
-                showPanel={showPanel}
-            />
-            {/*)}*/}
+            <ErrorPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
 
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
 

@@ -11,7 +11,7 @@ export interface InputBaseProps {
 }
 
 export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
-    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, isCollatingErrors, disabled } = props;
+    const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, isCollatingErrors: ce, ...newProps } = props;
+    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, ...newProps } = props;
 
     return (
         <input
@@ -84,7 +84,6 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
-            // aria-describedby={isCollatingErrors ? null : `${uniqueId}${ARIA_ERROR_SUFFIX}`}
             aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
             aria-invalid={isInvalid}
             onInput={handleInput}

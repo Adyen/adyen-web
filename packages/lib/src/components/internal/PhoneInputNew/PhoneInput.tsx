@@ -12,10 +12,7 @@ import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import { getUniqueId } from '../../../utils/idGenerator';
 
 function PhoneInput(props: PhoneInputProps) {
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n } = useCoreContext();
 
     const schema = props.requiredFields || [...(props?.items?.length ? ['phonePrefix'] : []), 'phoneNumber'];
     const showPrefix = schema.includes('phonePrefix') && !!props?.items?.length;
@@ -121,7 +118,6 @@ function PhoneInput(props: PhoneInputProps) {
                             // readonly: props.phonePrefixIsReadonly,
                             placeholder: i18n.get('infix'),
                             selected: data.phonePrefix,
-                            isCollatingErrors,
                             uniqueId: uniqueIDPhonePrefix
                         })}
 
@@ -146,7 +142,7 @@ function PhoneInput(props: PhoneInputProps) {
                     )}
                 </div>
             </Field>
-            {!isCollatingErrors && (
+            {
                 <div className="adyen-checkout-phone-input__error-holder">
                     {showPrefix && getPhoneFieldError('phonePrefix') && (
                         <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}>
@@ -159,7 +155,7 @@ function PhoneInput(props: PhoneInputProps) {
                         </span>
                     )}
                 </div>
-            )}
+            }
         </div>
     );
 }

@@ -76,7 +76,6 @@ export interface CardInputProps {
     holderNameRequired?: boolean;
     i18n?: Language;
     implementationType?: string;
-    isCollatingErrors?: boolean;
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;

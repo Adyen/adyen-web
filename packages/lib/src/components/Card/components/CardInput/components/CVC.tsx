@@ -26,10 +26,7 @@ export default function CVC(props: CVCProps) {
         frontCVC = false,
         cvcPolicy = CVC_POLICY_REQUIRED
     } = props;
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__cvc': true,
@@ -61,7 +58,6 @@ export default function CVC(props: CVCProps) {
             isValid={isValid}
             dir={'ltr'}
             name={ENCRYPTED_SECURITY_CODE}
-            isCollatingErrors={isCollatingErrors}
             i18n={i18n}
             errorVisibleToScreenReader={false}
         >

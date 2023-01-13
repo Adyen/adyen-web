@@ -60,7 +60,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     formatProps(props: CardElementProps) {
         // Extract &/or set defaults for the screenreader error panel
-        const { collateErrors = true, moveFocus = true, showPanel = false } = props.SRConfig;
+        const { moveFocus = true, showPanel = false } = props.SRConfig;
 
         return {
             ...props,
@@ -82,7 +82,6 @@ export class CardElement extends UIElement<CardElementProps> {
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
             SRConfig: {
-                collateErrors,
                 moveFocus,
                 showPanel
             },
@@ -236,11 +235,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} commonProps={{}}>
                 <ClickToPayWrapper
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}
