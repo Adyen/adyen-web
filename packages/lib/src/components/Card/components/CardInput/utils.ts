@@ -1,5 +1,5 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
+import { ErrorPanelObj, sortedErrorObject } from '../../../../core/Errors/ErrorPanel';
 import Language from '../../../../language/Language';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import { AddressModeOptions, CardInputProps, LayoutObj, SortErrorsObj } from './types';
@@ -125,7 +125,7 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
     }
 };
 
-export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels }: SortErrorsObj): ErrorPanelObj => {
+export const sortErrorsByLayout = ({ errors, layout, i18n, countrySpecificLabels }: SortErrorsObj): ErrorPanelObj => {
     // Create array of fields with active errors, ordered according to passed layout
     const fieldList = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
@@ -135,7 +135,10 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
         return acc;
     }, []);
 
-    if (!fieldList || !fieldList.length) return null;
+    if (!fieldList || !fieldList.length) {
+        // console.log('### utils::sortErrorsByLayout:: no field list return NULL');
+        return null;
+    }
 
     // Create array of error messages to display, using previously created, ordered, fieldList to also keep error messages in the right order
     const errorMessages = fieldList.map(key => {
@@ -160,7 +163,52 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
         return errorCode;
     });
 
-    return !errorMessages.length ? null : { errorMessages, fieldList, errorCodes };
+    // TODO NEW
+
+    // Create list of field names, sorted by layout
+    const sortedFieldList = Object.entries(errors).reduce((acc, [key, value]) => {
+        if (value) {
+            acc.push(key);
+            acc.sort((a, b) => layout.indexOf(a) - layout.indexOf(b));
+        }
+        return acc;
+    }, []);
+
+    if (!sortedFieldList || !sortedFieldList.length) {
+        // console.log('### utils::sortErrorsByLayout:: no field list return NULL');
+        return null;
+    }
+
+    // Retrieve error codes and messages, using previously created, ordered, fieldList to keep everything in the right order
+    // and create array of error objects
+    const sortedErrors: sortedErrorObject[] = sortedFieldList.map(key => {
+        const errorObj = errors[key];
+
+        /** Get error codes */
+        const errorCode = hasOwnProperty(errorObj, 'error') ? errorObj.error : errorObj.errorMessage;
+
+        /**
+         * Get corresponding error msg
+         * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
+         * For other fields we still need to translate it
+         */
+        const errorMsg = hasOwnProperty(errorObj, 'errorI18n') ? errorObj.errorI18n + '-sr' : i18n.get(errorObj.errorMessage) + '-sr';
+
+        // If necessary append field type to start of error message
+        const fieldType: string = mapFieldKey(key, i18n, countrySpecificLabels); // Get translation for field type
+        const errorMessage = fieldType ? `${fieldType}: ${errorMsg}.` : errorMsg;
+
+        return { field: key, errorMessage, errorCode };
+    });
+    // TODO NEW
+
+    if (!errorMessages.length) {
+        console.log('### utils::sortErrorsByLayout:: no error messages return NULL');
+        return null;
+    } else {
+        return { errorMessages, fieldList, errorCodes, sortedErrors };
+    }
+    // return !errorMessages.length ? null : { errorMessages, fieldList, errorCodes, sortedErrors };
 };
 
 export const extractPropsForCardFields = (props: CardInputProps) => {

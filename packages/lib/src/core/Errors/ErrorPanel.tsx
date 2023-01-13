@@ -6,6 +6,13 @@ export interface ErrorPanelObj {
     errorMessages: string[];
     fieldList: string[];
     errorCodes: string[];
+    sortedErrors: sortedErrorObject[];
+}
+
+export interface sortedErrorObject {
+    field: string;
+    errorMessage: string;
+    errorCode: string;
 }
 
 export interface ErrorPanelProps {
@@ -26,7 +33,7 @@ export function ErrorPanel({
     // if (!errors) return null;
 
     const { errorMessages } = errors ?? {};
-    // console.log('### ErrorPanel::errors:: ', errors);
+    console.log('### ErrorPanel::errors:: ', errors);
 
     // Perform passed callback, if specified & errors exist
     // useEffect(() => {
