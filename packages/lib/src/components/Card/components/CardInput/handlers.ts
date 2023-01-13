@@ -3,43 +3,17 @@ import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 
 /**
- * Return a function that can act as a callback for the ErrorPanel
+ * Helper for CardInput - gets a field name and sets focus on it
  */
-// export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOnFocus) => void) => {
-//     // Return Handler fn:
-//     return (errors: ErrorPanelObj): void => {
-//         if (isValidating.current) {
-//             const who: string = errors.fieldList[0];
-//
-//             // If not a cardInput related securedField - find field and set focus on it
-//             // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
-//             if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
-//                 setFocusOnNonSF(who, sfp);
-//             } else {
-//                 // Is a securedField - so it has it's own focus procedures
-//                 // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
-//                 sfp.current.setFocusOn(who);
-//             }
-//
-//             // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
-//             setTimeout(() => {
-//                 isValidating.current = false;
-//             }, 300);
-//         }
-//     };
-// };
-
-export const setFocusOnFirstField = (isValidating, sfp, fieldList) => {
+export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
     if (isValidating.current) {
-        const who: string = fieldList[0];
-
         // If not a cardInput related securedField - find field and set focus on it
         // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
-        if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
-            setFocusOnNonSF(who, sfp);
+        if (!CREDIT_CARD_SF_FIELDS.includes(fieldToFocus)) {
+            setFocusOnNonSF(fieldToFocus, sfp);
         } else {
             // Is a securedField - so it has its own focus procedures
-            sfp.current.setFocusOn(who);
+            sfp.current.setFocusOn(fieldToFocus);
         }
 
         // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode

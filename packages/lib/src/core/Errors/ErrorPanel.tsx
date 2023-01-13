@@ -1,13 +1,6 @@
 import { h } from 'preact';
 import './ErrorPanel.scss';
 
-// export interface ErrorPanelObj {
-//     errorMessages: string[];
-//     fieldList: string[];
-//     errorCodes: string[];
-//     sortedErrors: sortedErrorObject[];
-// }
-
 export interface SortedErrorObject {
     field: string;
     errorMessage: string;
@@ -16,7 +9,6 @@ export interface SortedErrorObject {
 
 export interface ErrorPanelProps {
     id?: string;
-    heading?: string;
     errors: string | string[];
     showPanel?: boolean;
 }

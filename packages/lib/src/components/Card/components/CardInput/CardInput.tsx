@@ -70,13 +70,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
 
-    // An object containing a collection of all the errors that can be passed to the ErrorPanel to be read by the screenreader
-    // const [mergedSRErrors, setMergedSRErrors] = useState<ErrorPanelObj>(null);
+    // An array containing all the errors to be passed to the SRPanel to be read by the screenreader
     const [mergedSRErrors, setMergedSRErrors] = useState<string[]>(null);
 
-    // const [sortedErrorList, setSortedErrorList] = useState<string[]>(null); // simple
-    // const [sortedErrorList, setSortedErrorList] = useState<ErrorPanelObj>(null);// complex
-    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null); // new
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
 
     const [focusedElement, setFocusedElement] = useState('');
     const [isSfpValid, setIsSfpValid] = useState(false);
@@ -169,22 +166,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         setIOSFocusedField(elementType);
     }, []);
 
-    // Callback for ErrorPanel
-    // const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
-
-    // useEffect(() => {
-    //     console.log('### CardInput:::: IS VALIDATING', isValidating.current);
-    // }, [isValidating.current]);
-
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
     const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
     // const doPanAutoJump = useMemo(() => getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout()), [isAutoJumping, sfp]);
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
-        // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
-        // setMergedSRErrors(null);
-
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
          */
@@ -306,9 +293,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * Handle updates from useForm
      */
     useEffect(() => {
-        // Clear errors so that the screenreader will read them *all* again
-        // setMergedSRErrors(null);
-
         setData({ ...data, holderName: formData.holderName ?? '', taxNumber: formData.taxNumber });
 
         setSocialSecurityNumber(formData.socialSecurityNumber);
@@ -341,8 +325,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     }, [formData, formValid, formErrors]);
 
     // Get the previous value
-    const previousSortedErrors = usePrevious(sortedErrorList); // simple
-    // const prevErrors = usePrevious(mergedSRErrors);//complex
+    const previousSortedErrors = usePrevious(sortedErrorList);
     console.log('### CardInput::previousSortedErrors:: ', previousSortedErrors);
 
     /**
@@ -380,17 +363,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         });
 
         // console.log('### CardInput::componentDidUpdate:: errorsForPanel', errorsForPanel);
-        // console.log('### CardInput::componentDidUpdate:: errorsSortedByLayout?.errorMessages', errorsSortedByLayout?.errorMessages);
-        // console.log('### CardInput::componentDidUpdate:: errorsSortedByLayout?.fieldList', errorsSortedByLayout?.fieldList);
-        // console.log('### CardInput::componentDidUpdate:: errorsSortedByLayout?.errorCodes', errorsSortedByLayout?.errorCodes);
         console.log('### CardInput::componentDidUpdate:: errorsSortedByLayout', errorsSortedByLayout);
 
-        // Store the list of errorMessages separately so that we can use it to make comparisons between the old and new arrays
-        // setSortedErrorList(errorsSortedByLayout?.errorMessages); // simple
-        // setSortedErrorList(errorsSortedByLayout);// complex
-
-        // setSortedErrorList(errorsSortedByLayout?.sortedErrors); // new
-        setSortedErrorList(errorsSortedByLayout); // new
+        // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
+        setSortedErrorList(errorsSortedByLayout);
 
         console.log('### CardInput::componentDidUpdate:: isValidating', isValidating.current);
         console.log('### CardInput::componentDidUpdate:: previousSortedErrors', previousSortedErrors);
@@ -400,21 +376,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
             if (isValidating.current) {
                 const errorMsgArr: string[] = errorsSortedByLayout.map(errObj => errObj.errorMessage);
-                console.log('### CardInput::componentDidUpdate:: errorMsgArr', errorMsgArr);
                 setMergedSRErrors(errorMsgArr);
-                // setMergedSRErrors(errorsSortedByLayout);
 
-                // console.log('### CardInput::componentDidUpdate:: fieldListArr', fieldListArr);
                 if (moveFocus) {
                     const fieldListArr: string[] = errorsSortedByLayout.map(errObj => errObj.field);
-                    setFocusOnFirstField(isValidating, sfp, fieldListArr);
+                    setFocusOnFirstField(isValidating, sfp, fieldListArr[0]);
                 }
             } else {
                 /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */
                 let difference;
 
-                // const currentSortedErrors = errorsSortedByLayout.errorMessages;// simple
-                const currentSortedErrors = errorsSortedByLayout; // new
+                const currentSortedErrors = errorsSortedByLayout;
 
                 console.log('### CardInput::componentDidUpdate:: currentSortedErrors', currentSortedErrors);
 
@@ -434,14 +406,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
                 if (latestErrorMsg) {
                     console.log('### CardInput::componentDidUpdate:: latestErrorMsg=', latestErrorMsg);
-                    // const latestErrorItem = [latestErrorMsg.errorMessage]; //{ errorMessages: [latestErrorMsg.errorMessage], fieldList: null, errorCodes: null, sortedErrors: null };
 
                     // Use the error code to look up whether error is actually a blur base one (most are but some SF ones aren't)
                     const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
 
                     // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                     // (once from the aria-live, error panel & once from the aria-describedby element)
-                    // const latestSRError = isBlurBasedError ? latestErrorItem : null;
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                     console.log('### CardInput::componentDidUpdate:: latestSRError', latestSRError);
                     setMergedSRErrors(latestSRError);
@@ -450,115 +420,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     setMergedSRErrors(null);
                 }
             }
-
-            // if (errorsSortedByLayout) {
-            //     // SIMPLER - WHEN WE CAN JUST USE THE ERROR MSG STRINGS
-            //     /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
-            //     if (isValidating.current) {
-            //         // const errorMsgArr: string[] = errorsSortedByLayout.sortedErrors.map(errObj => errObj.errorMessage);
-            //         // console.log('### CardInput::componentDidUpdate:: errorMsgArr', errorMsgArr);
-            //         setMergedSRErrors(errorsSortedByLayout);
-            //
-            //         // TODO - if moveFocus
-            //         // const fieldListArr: string[] = errorsSortedByLayout.sortedErrors.map(errObj => errObj.field);
-            //         // console.log('### CardInput::componentDidUpdate:: fieldListArr', fieldListArr);
-            //         if (moveFocus) setFocusOnFirstFieldInError(isValidating, sfp, errorsSortedByLayout);
-            //     } else {
-            //         /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */
-            //         let difference;
-            //
-            //         // const currentSortedErrors = errorsSortedByLayout.errorMessages;// simple
-            //         const currentSortedErrors = errorsSortedByLayout.sortedErrors; // new
-            //
-            //         console.log('### CardInput::componentDidUpdate:: currentSortedErrors', currentSortedErrors);
-            //
-            //         // If nothing to compare - take the new item...
-            //         if (currentSortedErrors.length === 1 && !previousSortedErrors) {
-            //             console.log('### CardInput:::: nothing to compare');
-            //             difference = currentSortedErrors;
-            //         }
-            //         // .. else, find the difference: what's in the new array that wasn't in the old array?
-            //         if (currentSortedErrors.length > previousSortedErrors?.length) {
-            //             console.log('### CardInput:::: find difference');
-            //             difference = currentSortedErrors.filter(x => !previousSortedErrors.includes(x));
-            //         }
-            //
-            //         const latestErrorMsg = difference?.[0];
-            //
-            //         if (latestErrorMsg) {
-            //             console.log('### CardInput::componentDidUpdate:: latestErrorMsg=', latestErrorMsg);
-            //             const latestErrorItem = { errorMessages: [latestErrorMsg], fieldList: null, errorCodes: null, sortedErrors: null };
-            //
-            //             // Find the position of the error in the array of error messages
-            //             const index = errorsSortedByLayout?.errorMessages.findIndex(fieldName => fieldName === latestErrorMsg);
-            //
-            //             // Use this index to find the corresponding errorCode
-            //             const errorCode = errorsSortedByLayout?.errorCodes[index];
-            //
-            //             // Use the error code to look up whether error is actually a blur base one (most are but some SF ones aren't)
-            //             const isBlurBasedError = lookupBlurBasedErrors(errorCode);
-            //
-            //             // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
-            //             // (once from the aria-live, error panel & once from the aria-describedby element)
-            //             const latestSRError = isBlurBasedError ? latestErrorItem : null;
-            //             console.log('### CardInput::componentDidUpdate:: latestSRError', latestSRError);
-            //             setMergedSRErrors(latestSRError);
-            //         } else {
-            //             console.log('### CardInput::componentDidUpdate:: NO latestErrorItem');
-            //             setMergedSRErrors(null);
-            //         }
-            //     }
-
-            // MORE COMPLEX IF WE ALSO NEED THE FIELDS IN ERROR IN ORDER TO EXTRACT THE ORIGINAL ERROR CODE AND USE THIS TO LOOK UP WHETHER THE ERROR IS BLUR BASED OR NOT
-            // if (isValidating.current) {
-            //     setMergedSRErrors(errorsSortedByLayout);
-            // } else {
-            //     /** Else we are in an onBlur scenario - so find the latest error message */
-            //     let difference;
-            //     const currentSortedErrors = errorsSortedByLayout.fieldList;
-            //     const prevSortedErrors = previousSortedErrors?.fieldList;
-            //
-            //     // Nothing to compare, so take the new item
-            //     if (currentSortedErrors.length === 1 && !prevSortedErrors) {
-            //         difference = currentSortedErrors;
-            //     }
-            //
-            //     // Find the difference: what's in the new array that wasn't in the old array?
-            //     if (currentSortedErrors.length > prevSortedErrors?.length) {
-            //         const arr1 = prevSortedErrors;
-            //         const arr2 = currentSortedErrors;
-            //         difference = arr2.filter(x => !arr1.includes(x));
-            //     }
-            //
-            //     // Create an item for the error panel
-            //
-            //     const latestFieldInError = difference?.[0];
-            //     console.log('### CardInput::componentDidUpdate:: latestFieldInError=', latestFieldInError);
-            //
-            //     if (latestFieldInError) {
-            //         // Find where, in the list of fields in error, the field is
-            //         const index = errorsSortedByLayout?.fieldList.findIndex(fieldName => fieldName === latestFieldInError);
-            //         // Find the corresponding error message
-            //         const latestErrorItem = { errorMessages: [errorsSortedByLayout?.errorMessages[index]], fieldList: null, errorCodes: null }; //[latestItem] };
-            //         console.log('### CardInput::componentDidUpdate:: original error= ', errorsForPanel[latestFieldInError]);
-            //
-            //         // Use the field name to get the error code, so we can look up whether error is actually a blur base one (most are but some SF ones aren't)
-            //         const errorCode = errorsSortedByLayout?.errorCodes[index]; //errorsForPanel[latestFieldInError].error || errorsForPanel[latestFieldInError].errorMessage;
-            //         console.log('### CardInput::componentDidUpdate:: errorCode =', errorCode);
-            //         const isBlurBasedError = lookupBlurBasedErrors(errorCode);
-            //
-            //         console.log('### CardInput::componentDidUpdate:: isBlurBasedError', isBlurBasedError);
-            //
-            //         // Add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
-            //         // (once from the aria-live, error panel & once from the aria-describedby element)
-            //         const latestSRError = isBlurBasedError ? latestErrorItem : null;
-            //         console.log('### CardInput::componentDidUpdate:: latestSRError', latestSRError);
-            //         setMergedSRErrors(latestSRError);
-            //     } else {
-            //         console.log('### CardInput::componentDidUpdate:: NO latestErrorItem');
-            //         setMergedSRErrors(null);
-            //     }
-            // }
         }
 
         props.onChange({
@@ -629,7 +490,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             mergedSRErrors={mergedSRErrors}
                             moveFocus={moveFocus}
                             showPanel={showPanel}
-                            // handleErrorPanelFocus={handleErrorPanelFocus}
                             formData={formData}
                             formErrors={formErrors}
                             formValid={formValid}
