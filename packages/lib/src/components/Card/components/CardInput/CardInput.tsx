@@ -11,7 +11,7 @@ import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
-import { SortedErrorObject } from '../../../../core/Errors/ErrorPanel';
+import { SortedErrorObject } from '../../../../core/Errors/SRPanel';
 import {
     handlePartialAddressMode,
     extractPropsForCardFields,
@@ -483,7 +483,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             // For Card
                             brandsIcons={props.brandsIcons}
                             mergedSRErrors={mergedSRErrors}
-                            moveFocus={moveFocus}
                             showPanel={showPanel}
                             formData={formData}
                             formErrors={formErrors}

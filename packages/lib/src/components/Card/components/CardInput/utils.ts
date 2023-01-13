@@ -1,5 +1,5 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import { SortedErrorObject } from '../../../../core/Errors/ErrorPanel';
+import { SortedErrorObject } from '../../../../core/Errors/SRPanel';
 import Language from '../../../../language/Language';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import { AddressModeOptions, CardInputProps, LayoutObj, SortErrorsObj } from './types';

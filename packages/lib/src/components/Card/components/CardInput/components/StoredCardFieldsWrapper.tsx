@@ -2,7 +2,7 @@ import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
-import { ErrorPanel } from '../../../../../core/Errors/ErrorPanel';
+import { SRPanel } from '../../../../../core/Errors/SRPanel';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)
@@ -28,7 +28,7 @@ export const StoredCardFieldsWrapper = ({
 }) => {
     return (
         <LoadingWrapper status={sfpState.status}>
-            <ErrorPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
+            <SRPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
 
             <StoredCardFields
                 errors={sfpState.errors}

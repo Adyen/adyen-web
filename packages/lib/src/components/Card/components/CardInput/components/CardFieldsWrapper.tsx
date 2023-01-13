@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
-import { ErrorPanel } from '../../../../../core/Errors/ErrorPanel';
+import { SRPanel } from '../../../../../core/Errors/SRPanel';
 import CardFields from './CardFields';
 import KCPAuthentication from './KCPAuthentication';
 import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
@@ -82,7 +82,7 @@ export const CardFieldsWrapper = ({
 
     return (
         <LoadingWrapper status={sfpState.status}>
-            <ErrorPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
+            <SRPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
 
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
 
