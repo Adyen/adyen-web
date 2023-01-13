@@ -1,4 +1,3 @@
-import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
@@ -30,17 +29,16 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 //     };
 // };
 
-export const setFocusOnFirstFieldInError = (isValidating, sfp, errors) => {
+export const setFocusOnFirstField = (isValidating, sfp, fieldList) => {
     if (isValidating.current) {
-        const who: string = errors.fieldList[0];
+        const who: string = fieldList[0];
 
         // If not a cardInput related securedField - find field and set focus on it
         // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
         if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
             setFocusOnNonSF(who, sfp);
         } else {
-            // Is a securedField - so it has it's own focus procedures
-            // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
+            // Is a securedField - so it has its own focus procedures
             sfp.current.setFocusOn(who);
         }
 

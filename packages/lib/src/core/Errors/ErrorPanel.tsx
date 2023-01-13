@@ -1,15 +1,14 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
 import './ErrorPanel.scss';
 
-export interface ErrorPanelObj {
-    errorMessages: string[];
-    fieldList: string[];
-    errorCodes: string[];
-    sortedErrors: sortedErrorObject[];
-}
+// export interface ErrorPanelObj {
+//     errorMessages: string[];
+//     fieldList: string[];
+//     errorCodes: string[];
+//     sortedErrors: sortedErrorObject[];
+// }
 
-export interface sortedErrorObject {
+export interface SortedErrorObject {
     field: string;
     errorMessage: string;
     errorCode: string;
@@ -18,30 +17,12 @@ export interface sortedErrorObject {
 export interface ErrorPanelProps {
     id?: string;
     heading?: string;
-    errors: ErrorPanelObj;
-    // callbackFn?: (who) => void;
+    errors: string | string[];
     showPanel?: boolean;
 }
 
-export function ErrorPanel({
-    id = 'ariaConsolidatedErrorField',
-    // heading = 'Errors:',
-    errors,
-    // callbackFn = null,
-    showPanel = false
-}: ErrorPanelProps) {
-    // if (!errors) return null;
-
-    const { errorMessages } = errors ?? {};
-    // console.log('### ErrorPanel::errors:: ', errors);
-
-    // Perform passed callback, if specified & errors exist
-    // useEffect(() => {
-    //     if (errors) {
-    //         callbackFn?.(errors);
-    //     }
-    // }, [errors]);
-
+export function ErrorPanel({ id = 'ariaLiveSRPanel', errors, showPanel = false }: ErrorPanelProps) {
+    const errorMessages = Array.isArray(errors) ? errors : [errors];
     return (
         <div
             className={showPanel ? 'adyen-checkout-error-panel' : 'adyen-checkout-error-panel--sr-only'}
@@ -51,9 +32,6 @@ export function ErrorPanel({
         >
             {errorMessages && (
                 <div className="adyen-checkout-error-panel__wrapper">
-                    {/*<div className="adyen-checkout-error-panel__header">*/}
-                    {/*    <span className="adyen-checkout-error-panel__title">{heading}</span>*/}
-                    {/*</div>*/}
                     {errorMessages.map(error => (
                         <div key={error} className="adyen-checkout-error-panel__error">
                             {error}
