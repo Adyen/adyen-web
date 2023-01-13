@@ -21,6 +21,11 @@ const i18n = new Language('en-US', {});
 const configuration = { koreanAuthenticationRequired: true };
 
 describe('CardInput', () => {
+    test('Has screenreader panel first', () => {
+        const wrapper = mount(<CardInput i18n={i18n} />);
+        expect(wrapper.find('SRPanel:first-child')).toHaveLength(1);
+    });
+
     test('Renders a normal Card form', () => {
         const wrapper = mount(<CardInput i18n={i18n} />);
         expect(wrapper.find('[data-cse="encryptedCardNumber"]')).toHaveLength(1);
@@ -149,15 +154,53 @@ describe('CardInput > holderName', () => {
         expect(data.holderName).toBe('J Smith');
     });
 
+    // These tests have been reworked now that the SRPanel is always the first element
+    // (but surely there has to be an easier way than this traversing through the children?)
     test('does not show the holder name first by default', () => {
-        const wrapper = mount(<CardInput hasHolderName={true} i18n={i18n} />);
-        expect(wrapper.find('CardHolderName')).toHaveLength(1);
-        expect(wrapper.find('CardHolderName:first-child')).toHaveLength(0);
+        render(<CardInput hasHolderName={true} i18n={i18n} />);
+
+        const select = screen.getByRole('form');
+        const children = select.children;
+
+        const positionDiv = children.item(0);
+        const positionDivChildren = positionDiv.children;
+
+        const loadingWrapper = positionDivChildren.item(1); // item(0) is the spinner
+        const loadingWrapperChildren = loadingWrapper.children;
+
+        // SR panel
+        expect(loadingWrapperChildren.item(0).id).toEqual('creditCardErrors');
+
+        // First visible element is the Card number
+        const firstFormElement = loadingWrapperChildren.item(1);
+        const firstFormElementChildren = firstFormElement.children;
+
+        const label = firstFormElementChildren.item(0);
+        const labelChildren = label.children;
+
+        expect(labelChildren.item(0).textContent).toEqual('Card number');
     });
 
-    test('shows holder name first', () => {
-        const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} SRConfig={{ collateErrors: false }} />);
-        expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
+    test('holder name is first visible element', () => {
+        render(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
+
+        const select = screen.getByRole('form');
+        const children = select.children;
+
+        const positionDiv = children.item(0);
+        const positionDivChildren = positionDiv.children;
+
+        const loadingWrapper = positionDivChildren.item(1); // item(0) is the spinner
+        const loadingWrapperChildren = loadingWrapper.children;
+
+        // First visible element is the Holder name
+        const firstFormElement = loadingWrapperChildren.item(1);
+        const firstFormElementChildren = firstFormElement.children;
+
+        const label = firstFormElementChildren.item(0);
+        const labelChildren = label.children;
+
+        expect(labelChildren.item(0).textContent).toEqual('Name on card');
     });
 });
 
