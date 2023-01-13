@@ -126,8 +126,6 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
 };
 
 export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels }: SortErrorsObj): ErrorPanelObj => {
-    console.log('### utils::sortErrorsForPanel:: errors', errors);
-
     // Create array of fields with active errors, ordered according to passed layout
     const fieldList = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
@@ -143,12 +141,9 @@ export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels
     const errorMessages = fieldList.map(key => {
         // Get translation for field type
         const fieldType: string = mapFieldKey(key, i18n, countrySpecificLabels);
-
         const errorObj = errors[key];
-
         /**
          * Get corresponding error msg
-         *
          * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
          * For other fields we still need to translate it
          */

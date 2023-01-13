@@ -12,7 +12,7 @@ export interface ErrorPanelProps {
     id?: string;
     heading?: string;
     errors: ErrorPanelObj;
-    callbackFn?: (who) => void;
+    // callbackFn?: (who) => void;
     showPanel?: boolean;
 }
 
@@ -20,7 +20,7 @@ export function ErrorPanel({
     id = 'ariaConsolidatedErrorField',
     // heading = 'Errors:',
     errors,
-    callbackFn = null,
+    // callbackFn = null,
     showPanel = false
 }: ErrorPanelProps) {
     // if (!errors) return null;
@@ -29,11 +29,11 @@ export function ErrorPanel({
     // console.log('### ErrorPanel::errors:: ', errors);
 
     // Perform passed callback, if specified & errors exist
-    useEffect(() => {
-        if (errors) {
-            callbackFn?.(errors);
-        }
-    }, [errors]);
+    // useEffect(() => {
+    //     if (errors) {
+    //         callbackFn?.(errors);
+    //     }
+    // }, [errors]);
 
     return (
         <div

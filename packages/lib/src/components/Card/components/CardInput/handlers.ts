@@ -6,28 +6,49 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 /**
  * Return a function that can act as a callback for the ErrorPanel
  */
-export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOnFocus) => void) => {
-    // Return Handler fn:
-    return (errors: ErrorPanelObj): void => {
-        if (isValidating.current) {
-            const who: string = errors.fieldList[0];
+// export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOnFocus) => void) => {
+//     // Return Handler fn:
+//     return (errors: ErrorPanelObj): void => {
+//         if (isValidating.current) {
+//             const who: string = errors.fieldList[0];
+//
+//             // If not a cardInput related securedField - find field and set focus on it
+//             // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
+//             if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
+//                 setFocusOnNonSF(who, sfp);
+//             } else {
+//                 // Is a securedField - so it has it's own focus procedures
+//                 // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
+//                 sfp.current.setFocusOn(who);
+//             }
+//
+//             // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
+//             setTimeout(() => {
+//                 isValidating.current = false;
+//             }, 300);
+//         }
+//     };
+// };
 
-            // If not a cardInput related securedField - find field and set focus on it
-            // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
-            if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
-                setFocusOnNonSF(who, sfp);
-            } else {
-                // Is a securedField - so it has it's own focus procedures
-                // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
-                sfp.current.setFocusOn(who);
-            }
+export const setFocusOnFirstFieldInError = (isValidating, sfp, errors) => {
+    if (isValidating.current) {
+        const who: string = errors.fieldList[0];
 
-            // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
-            setTimeout(() => {
-                isValidating.current = false;
-            }, 300);
+        // If not a cardInput related securedField - find field and set focus on it
+        // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
+        if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
+            setFocusOnNonSF(who, sfp);
+        } else {
+            // Is a securedField - so it has it's own focus procedures
+            // handleFocus({ currentFocusObject: who } as CbObjOnFocus); // TODO - not sure this line is required, just calling sfp.current.setFocusOn seems to have all the desired effects & the e2e tests pass
+            sfp.current.setFocusOn(who);
         }
-    };
+
+        // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
+        setTimeout(() => {
+            isValidating.current = false;
+        }, 300);
+    }
 };
 
 export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {

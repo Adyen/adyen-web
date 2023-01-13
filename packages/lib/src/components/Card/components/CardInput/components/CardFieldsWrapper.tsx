@@ -31,7 +31,7 @@ export const CardFieldsWrapper = ({
     mergedSRErrors,
     moveFocus,
     showPanel,
-    handleErrorPanelFocus,
+    // handleErrorPanelFocus,
     formData,
     formErrors,
     formValid,
@@ -91,15 +91,15 @@ export const CardFieldsWrapper = ({
     return (
         <LoadingWrapper status={sfpState.status}>
             {/*{collateErrors && (*/}
-            {true && (
-                <ErrorPanel
-                    id={errorFieldId}
-                    // heading={i18n.get('errorPanel.title')}
-                    errors={mergedSRErrors}
-                    callbackFn={moveFocus ? handleErrorPanelFocus : null}
-                    showPanel={showPanel}
-                />
-            )}
+            {/*{true && (*/}
+            <ErrorPanel
+                id={errorFieldId}
+                // heading={i18n.get('errorPanel.title')}
+                errors={mergedSRErrors}
+                // callbackFn={moveFocus ? handleErrorPanelFocus : null}
+                showPanel={showPanel}
+            />
+            {/*)}*/}
 
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
 

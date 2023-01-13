@@ -60,7 +60,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     formatProps(props: CardElementProps) {
         // Extract &/or set defaults for the screenreader error panel
-        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
+        const { collateErrors = true, moveFocus = true, showPanel = false } = props.SRConfig;
 
         return {
             ...props,

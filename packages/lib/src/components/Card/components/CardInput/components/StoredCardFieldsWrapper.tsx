@@ -26,7 +26,7 @@ export const StoredCardFieldsWrapper = ({
     expiryYear,
     // Card
     mergedSRErrors,
-    handleErrorPanelFocus,
+    // handleErrorPanelFocus,
     moveFocus,
     showPanel
 }) => {
@@ -34,15 +34,15 @@ export const StoredCardFieldsWrapper = ({
 
     return (
         <LoadingWrapper status={sfpState.status}>
-            {collateErrors && (
-                <ErrorPanel
-                    id={errorFieldId}
-                    heading={i18n.get('errorPanel.title')}
-                    errors={mergedSRErrors}
-                    callbackFn={moveFocus ? handleErrorPanelFocus : null}
-                    showPanel={showPanel}
-                />
-            )}
+            {/*{true && (*/}
+            <ErrorPanel
+                id={errorFieldId}
+                // heading={i18n.get('errorPanel.title')}
+                errors={mergedSRErrors}
+                // callbackFn={moveFocus ? handleErrorPanelFocus : null}
+                showPanel={showPanel}
+            />
+            {/*)}*/}
 
             <StoredCardFields
                 errors={sfpState.errors}

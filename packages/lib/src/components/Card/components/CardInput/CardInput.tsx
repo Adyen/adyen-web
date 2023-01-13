@@ -27,7 +27,8 @@ import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
-import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
+// import {getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler, setFocusOnFirstFieldInError} from './handlers';
+import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstFieldInError } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
@@ -167,7 +168,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     }, []);
 
     // Callback for ErrorPanel
-    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
+    // const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
 
     // useEffect(() => {
     //     console.log('### CardInput:::: IS VALIDATING', isValidating.current);
@@ -386,10 +387,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         console.log('### CardInput::componentDidUpdate:: previousSortedErrors', previousSortedErrors);
 
         if (sortedMergedErrors) {
-            // SIMPLER - WHEN WE JUST NEED THE ERROR MSG STRINGS
+            // SIMPLER - WHEN WE CAN JUST USE THE ERROR MSG STRINGS
             /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
             if (isValidating.current) {
                 setMergedSRErrors(sortedMergedErrors);
+                // TODO - if moveFocus
+                if (moveFocus) setFocusOnFirstFieldInError(isValidating, sfp, sortedMergedErrors);
             } else {
                 /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */
                 let difference;
@@ -513,7 +516,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onFocus={handleFocus}
                 type={props.brand}
                 // isCollatingErrors={collateErrors}
-                isCollatingErrors={isValidating.current}
+                isCollatingErrors={false}
                 {...(props.disableIOSArrowKeys && { onTouchstartIOS: handleTouchstartIOS })}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
@@ -548,10 +551,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             // For Card
                             brandsIcons={props.brandsIcons}
                             mergedSRErrors={mergedSRErrors}
-                            // moveFocus={moveFocus}
-                            moveFocus={true}
-                            showPanel={true}
-                            handleErrorPanelFocus={handleErrorPanelFocus}
+                            moveFocus={moveFocus}
+                            showPanel={showPanel}
+                            // handleErrorPanelFocus={handleErrorPanelFocus}
                             formData={formData}
                             formErrors={formErrors}
                             formValid={formValid}
