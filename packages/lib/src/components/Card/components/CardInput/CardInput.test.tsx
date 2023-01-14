@@ -160,12 +160,15 @@ describe('CardInput > holderName', () => {
         render(<CardInput hasHolderName={true} i18n={i18n} />);
 
         const select = screen.getByRole('form');
+        // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
         const positionDiv = children.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
         const loadingWrapper = positionDivChildren.item(1); // item(0) is the spinner
+        // eslint-disable-next-line testing-library/no-node-access
         const loadingWrapperChildren = loadingWrapper.children;
 
         // SR panel
@@ -173,9 +176,11 @@ describe('CardInput > holderName', () => {
 
         // First visible element is the Card number
         const firstFormElement = loadingWrapperChildren.item(1);
+        // eslint-disable-next-line testing-library/no-node-access
         const firstFormElementChildren = firstFormElement.children;
 
         const label = firstFormElementChildren.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
         const labelChildren = label.children;
 
         expect(labelChildren.item(0).textContent).toEqual('Card number');
@@ -185,19 +190,24 @@ describe('CardInput > holderName', () => {
         render(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
 
         const select = screen.getByRole('form');
+        // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
         const positionDiv = children.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
         const loadingWrapper = positionDivChildren.item(1); // item(0) is the spinner
+        // eslint-disable-next-line testing-library/no-node-access
         const loadingWrapperChildren = loadingWrapper.children;
 
         // First visible element is the Holder name
         const firstFormElement = loadingWrapperChildren.item(1);
+        // eslint-disable-next-line testing-library/no-node-access
         const firstFormElementChildren = firstFormElement.children;
 
         const label = firstFormElementChildren.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
         const labelChildren = label.children;
 
         expect(labelChildren.item(0).textContent).toEqual('Name on card');
