@@ -354,7 +354,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
         // Sort active errors based on layout
-        const errorsSortedByLayout = sortErrorsByLayout({
+        const currentErrorsSortedByLayout = sortErrorsByLayout({
             errors: errorsForPanel,
             layout: retrieveLayout(),
             i18n: props.i18n,
@@ -362,42 +362,37 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         });
 
         // console.log('### CardInput::componentDidUpdate:: errorsForPanel', errorsForPanel);
-        console.log('### CardInput::componentDidUpdate:: errorsSortedByLayout', errorsSortedByLayout);
+        console.log('### CardInput::componentDidUpdate:: currentErrorsSortedByLayout', currentErrorsSortedByLayout);
 
         // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
-        setSortedErrorList(errorsSortedByLayout);
+        setSortedErrorList(currentErrorsSortedByLayout);
 
         console.log('### CardInput::componentDidUpdate:: isValidating', isValidating.current);
         console.log('### CardInput::componentDidUpdate:: previousSortedErrors', previousSortedErrors);
 
-        if (errorsSortedByLayout) {
-            // NEW - array of error objects
+        if (currentErrorsSortedByLayout) {
             /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
             if (isValidating.current) {
-                const errorMsgArr: string[] = errorsSortedByLayout.map(errObj => errObj.errorMessage);
+                const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
                 setMergedSRErrors(errorMsgArr);
 
                 if (moveFocus) {
-                    const fieldListArr: string[] = errorsSortedByLayout.map(errObj => errObj.field);
+                    const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
                     setFocusOnFirstField(isValidating, sfp, fieldListArr[0]);
                 }
             } else {
                 /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */
                 let difference;
 
-                const currentSortedErrors = errorsSortedByLayout;
-
-                console.log('### CardInput::componentDidUpdate:: currentSortedErrors', currentSortedErrors);
-
                 // If nothing to compare - take the new item...
-                if (currentSortedErrors.length === 1 && !previousSortedErrors) {
+                if (currentErrorsSortedByLayout.length === 1 && !previousSortedErrors) {
                     console.log('### CardInput:::: nothing to compare');
-                    difference = currentSortedErrors;
+                    difference = currentErrorsSortedByLayout;
                 }
                 // .. else, find the difference: what's in the new array that wasn't in the old array?
-                if (currentSortedErrors.length > previousSortedErrors?.length) {
+                if (currentErrorsSortedByLayout.length > previousSortedErrors?.length) {
                     console.log('### CardInput:::: find difference');
-                    difference = currentSortedErrors.filter(({ field: id1 }) => !previousSortedErrors.some(({ field: id2 }) => id2 === id1));
+                    difference = currentErrorsSortedByLayout.filter(({ field: id1 }) => !previousSortedErrors.some(({ field: id2 }) => id2 === id1));
                     console.log('### CardInput:::: difference=', difference);
                 }
 

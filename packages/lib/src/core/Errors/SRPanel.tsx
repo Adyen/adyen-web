@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import './SRPanel.scss';
 
 export interface SortedErrorObject {
@@ -19,17 +19,22 @@ export interface SRPanelProps {
  * For testing purposes can be made visible
  */
 export function SRPanel({ id = 'ariaLiveSRPanel', errors, showPanel = false }: SRPanelProps) {
-    const errorMessages = Array.isArray(errors) ? errors : [errors];
+    let errorMessages = null;
+    if (errors) {
+        // Ensure errorMessages is an array
+        errorMessages = Array.isArray(errors) ? errors : [errors];
+    }
+
     return (
         <div className={showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'} id={id} aria-live={'polite'} aria-atomic={'true'}>
             {errorMessages && (
-                <div className="adyen-checkout-sr-panel__wrapper">
+                <Fragment>
                     {errorMessages.map(error => (
                         <div key={error} className="adyen-checkout-sr-panel__error">
                             {error}
                         </div>
                     ))}
-                </div>
+                </Fragment>
             )}
         </div>
     );
