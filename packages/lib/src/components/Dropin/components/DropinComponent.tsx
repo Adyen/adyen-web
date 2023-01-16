@@ -137,7 +137,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                         {elements && !!elements.length && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
-                                isDisabling={this.state.isDisabling}
+                                isDisablingPaymentMethod={this.state.isDisabling}
                                 paymentMethods={elements}
                                 instantPaymentMethods={instantPaymentElements}
                                 activePaymentMethod={activePaymentMethod}
