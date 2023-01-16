@@ -2,11 +2,10 @@ import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
-import { SRPanel } from '../../../../../core/Errors/SRPanel';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)
-    errorFieldId,
+    // n/a
     // vars created in CardInput:
     sfpState,
     setFocusOn,
@@ -21,15 +20,11 @@ export const StoredCardFieldsWrapper = ({
     installmentOptions,
     lastFour,
     expiryMonth,
-    expiryYear,
+    expiryYear
     // Card
-    mergedSRErrors,
-    showPanel
 }) => {
     return (
         <LoadingWrapper status={sfpState.status}>
-            <SRPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
-
             <StoredCardFields
                 errors={sfpState.errors}
                 brand={sfpState.brand}

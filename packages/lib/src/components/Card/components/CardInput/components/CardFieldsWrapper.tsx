@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
-import { SRPanel } from '../../../../../core/Errors/SRPanel';
 import CardFields from './CardFields';
 import KCPAuthentication from './KCPAuthentication';
 import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
@@ -18,7 +17,6 @@ export const CardFieldsWrapper = ({
     handleChangeFor,
     sfpState,
     setFocusOn,
-    errorFieldId,
     cvcPolicy,
     focusedElement,
     hasInstallments,
@@ -26,8 +24,6 @@ export const CardFieldsWrapper = ({
     showAmountsInInstallments,
     // Card
     brandsIcons,
-    mergedSRErrors,
-    showPanel,
     formData,
     formErrors,
     formValid,
@@ -82,8 +78,6 @@ export const CardFieldsWrapper = ({
 
     return (
         <LoadingWrapper status={sfpState.status}>
-            <SRPanel id={errorFieldId} errors={mergedSRErrors} showPanel={showPanel} />
-
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
 
             <CardFields

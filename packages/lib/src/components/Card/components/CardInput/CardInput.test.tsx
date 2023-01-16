@@ -22,8 +22,13 @@ const configuration = { koreanAuthenticationRequired: true };
 
 describe('CardInput', () => {
     test('Has screenreader panel first', () => {
-        const wrapper = mount(<CardInput i18n={i18n} />);
-        expect(wrapper.find('SRPanel:first-child')).toHaveLength(1);
+        render(<CardInput hasHolderName={true} i18n={i18n} />);
+
+        const select = screen.getByRole('form');
+        // eslint-disable-next-line testing-library/no-node-access
+        const children = select.children;
+        // SR panel
+        expect(children.item(0).id).toEqual('creditCardErrors');
     });
 
     test('Renders a normal Card form', () => {
@@ -154,8 +159,6 @@ describe('CardInput > holderName', () => {
         expect(data.holderName).toBe('J Smith');
     });
 
-    // These tests have been reworked now that the SRPanel is always the first element
-    // (but surely there has to be an easier way than this traversing through the children?)
     test('does not show the holder name first by default', () => {
         render(<CardInput hasHolderName={true} i18n={i18n} />);
 
@@ -163,19 +166,16 @@ describe('CardInput > holderName', () => {
         // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
-        const positionDiv = children.item(0);
+        const positionDiv = children.item(1); // children.item(0) is the SRPanel
         // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
-        const loadingWrapper = positionDivChildren.item(1); // item(0) is the spinner
+        const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
         // eslint-disable-next-line testing-library/no-node-access
         const loadingWrapperChildren = loadingWrapper.children;
 
-        // SR panel
-        expect(loadingWrapperChildren.item(0).id).toEqual('creditCardErrors');
-
         // First visible element is the Card number
-        const firstFormElement = loadingWrapperChildren.item(1);
+        const firstFormElement = loadingWrapperChildren.item(0);
         // eslint-disable-next-line testing-library/no-node-access
         const firstFormElementChildren = firstFormElement.children;
 
@@ -187,22 +187,25 @@ describe('CardInput > holderName', () => {
     });
 
     test('holder name is first visible element', () => {
+        // const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
+        // expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
+
         render(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
 
         const select = screen.getByRole('form');
         // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
-        const positionDiv = children.item(0);
+        const positionDiv = children.item(1); // children.item(0) is the SRPanel
         // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
-        const loadingWrapper = positionDivChildren.item(1); // item(0) is the spinner
+        const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
         // eslint-disable-next-line testing-library/no-node-access
         const loadingWrapperChildren = loadingWrapper.children;
 
         // First visible element is the Holder name
-        const firstFormElement = loadingWrapperChildren.item(1);
+        const firstFormElement = loadingWrapperChildren.item(0);
         // eslint-disable-next-line testing-library/no-node-access
         const firstFormElementChildren = firstFormElement.children;
 
