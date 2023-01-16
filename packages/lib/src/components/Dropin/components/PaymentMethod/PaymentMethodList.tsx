@@ -11,20 +11,23 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];
-    instantPaymentMethods: UIElement[];
-    activePaymentMethod: UIElement;
-    cachedPaymentMethods: object;
+    activePaymentMethod?: UIElement;
+    instantPaymentMethods?: UIElement[];
+    /**
+     * Map that keeps track of which Payment methods (UIElements) already got rendered in the UI
+     */
+    cachedPaymentMethods: Record<string, boolean>;
     order?: Order;
-    orderStatus: OrderStatus;
+    orderStatus?: OrderStatus;
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
     showRemovePaymentMethodButton?: boolean;
 
-    onSelect: (paymentMethod: UIElement) => void;
-    onDisableStoredPaymentMethod: (storedPaymentMethod) => void;
+    onSelect?: (paymentMethod: UIElement) => void;
+    onDisableStoredPaymentMethod?: (storedPaymentMethod) => void;
     onOrderCancel?: (order) => void;
 
-    isDisabling: boolean;
+    isDisablingPaymentMethod?: boolean;
     isLoading: boolean;
 }
 
@@ -37,7 +40,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
         orderStatus: null,
         onSelect: () => {},
         onDisableStoredPaymentMethod: () => {},
-        isDisabling: false,
+        isDisablingPaymentMethod: false,
         isLoading: false
     };
 
@@ -54,7 +57,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
         }
     }
 
-    render({ paymentMethods, instantPaymentMethods, activePaymentMethod, cachedPaymentMethods, isLoading }) {
+    render({ paymentMethods, instantPaymentMethods, activePaymentMethod, cachedPaymentMethods, isLoading, isDisablingPaymentMethod }) {
         const { i18n } = useCoreContext();
 
         const paymentMethodListClassnames = classNames({
@@ -86,7 +89,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
                                 standalone={paymentMethods.length === 1}
                                 paymentMethod={paymentMethod}
                                 isSelected={isSelected}
-                                isDisabling={isSelected && this.props.isDisabling}
+                                isDisablingPaymentMethod={isSelected && isDisablingPaymentMethod}
                                 isLoaded={isLoaded}
                                 isLoading={isLoading}
                                 onSelect={this.props.onSelect}
