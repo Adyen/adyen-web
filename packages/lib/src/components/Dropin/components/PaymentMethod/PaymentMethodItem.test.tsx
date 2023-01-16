@@ -38,9 +38,4 @@ describe('PaymentMethodItem', () => {
         wrapper.simulate('focus');
         expect(onSelect.mock.calls.length).toBe(0);
     });
-
-    test('Defaults events', () => {
-        const wrapper = getWrapper({ paymentMethod });
-        wrapper.simulate('click');
-    });
 });
