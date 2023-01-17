@@ -11,15 +11,16 @@ import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
-import { SortedErrorObject, SRPanel } from '../../../../core/Errors/SRPanel';
+import { SRPanel } from '../../../../core/Errors/SRPanel';
+import { SortedErrorObject } from '../../../../core/Errors/types';
 import {
     handlePartialAddressMode,
     extractPropsForCardFields,
     extractPropsForSFP,
     getLayout,
-    sortErrorsByLayout,
     usePrevious,
-    lookupBlurBasedErrors
+    lookupBlurBasedErrors,
+    mapFieldKey
 } from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
@@ -32,6 +33,7 @@ import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
+import { sortErrorsByLayout } from '../../../../core/Errors/utils';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -135,7 +137,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // SecuredField-only handler
     const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
-    const retrieveLayout = () => {
+    const retrieveLayout = (): string[] => {
         return getLayout({
             props,
             showKCP,
@@ -344,7 +346,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
 
-        // console.log('### CardInput::componentDidUpdate:: mergedErrors', mergedErrors);
+        console.log('### CardInput::componentDidUpdate:: mergedErrors', mergedErrors);
 
         // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
         const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
@@ -356,7 +358,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             errors: errorsForPanel,
             layout: retrieveLayout(),
             i18n: props.i18n,
-            countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
+            countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country),
+            fieldtypeMappingFn: mapFieldKey
         });
 
         console.log('### CardInput::componentDidUpdate:: currentErrorsSortedByLayout', currentErrorsSortedByLayout);
@@ -375,7 +378,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
                     setFocusOnFirstField(isValidating, sfp, fieldListArr[0]);
                 } else {
-                    isValidating.current = false;
+                    // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
+                    setTimeout(() => {
+                        isValidating.current = false;
+                    }, 300);
                 }
             } else {
                 /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */

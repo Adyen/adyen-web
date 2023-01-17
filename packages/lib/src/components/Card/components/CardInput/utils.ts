@@ -1,8 +1,6 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import { SortedErrorObject } from '../../../../core/Errors/SRPanel';
 import Language from '../../../../language/Language';
-import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
-import { AddressModeOptions, CardInputProps, LayoutObj, SortErrorsObj } from './types';
+import { AddressModeOptions, CardInputProps, LayoutObj } from './types';
 import {
     CREDIT_CARD,
     CREDIT_CARD_NAME_BOTTOM,
@@ -18,12 +16,6 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import {
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_EXPIRY_DATE,
-    ENCRYPTED_PWD_FIELD,
-    ENCRYPTED_SECURITY_CODE
-} from '../../../internal/SecuredFields/lib/configuration/constants';
 import { useEffect, useRef } from 'preact/hooks';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
@@ -95,12 +87,15 @@ export const getLayout = ({
     return layout;
 };
 
-const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
+/**
+ * Lookup service to map local (CardInput) field refs to a key, possibly region specific, by which to retrieve the translation
+ */
+export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
     // console.log('### utils::mapFieldKey:: key', key);
     switch (key) {
         case 'socialSecurityNumber':
             return i18n.get(`boleto.${key}`);
-        // address related
+        // Address related - if we have a country specific key for the field - use that to get the translation
         case 'street':
         case 'houseNumberOrName':
         case 'postalCode':
@@ -108,61 +103,76 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case 'city':
         case 'country':
             return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
-        // securedFields related
-        case ENCRYPTED_CARD_NUMBER:
-        case ENCRYPTED_EXPIRY_DATE:
-        case ENCRYPTED_SECURITY_CODE:
-        case ENCRYPTED_PWD_FIELD:
-        case 'holderName':
-        case 'taxNumber':
+        // We know that the translated error messages do contain a reference to the field they refer to, so we won't need to map them (currently applies mostly to SecuredFields related errors)
+        default:
             return null;
-
-        default: {
-            // Map all securedField field types to 'creditCard' - with 2 exceptions
-            const type = ['ach', 'giftcard'].includes(key) ? key : 'creditCard';
-            return i18n.get(`${type}.${key}.aria.label`);
-        }
     }
 };
 
-export const sortErrorsByLayout = ({ errors, layout, i18n, countrySpecificLabels }: SortErrorsObj): SortedErrorObject[] => {
-    // Create list of field names, sorted by layout
-    const sortedFieldList = Object.entries(errors).reduce((acc, [key, value]) => {
-        if (value) {
-            acc.push(key);
-            acc.sort((a, b) => layout.indexOf(a) - layout.indexOf(b));
-        }
-        return acc;
-    }, []);
-
-    if (!sortedFieldList || !sortedFieldList.length) {
-        return null;
-    }
-
-    // Retrieve error codes and messages, using previously created ordered fieldList to keep everything in the right order,
-    // and create array of error objects
-    const sortedErrors: SortedErrorObject[] = sortedFieldList.map(key => {
-        const errorObj = errors[key];
-
-        /** Get error codes */
-        const errorCode = hasOwnProperty(errorObj, 'error') ? errorObj.error : errorObj.errorMessage;
-
-        /**
-         * Get corresponding error msg
-         * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
-         * For other fields we still need to translate it
-         */
-        const errorMsg = hasOwnProperty(errorObj, 'errorI18n') ? errorObj.errorI18n + '-sr' : i18n.get(errorObj.errorMessage) + '-sr';
-
-        // If necessary append field type to start of error message
-        const fieldType: string = mapFieldKey(key, i18n, countrySpecificLabels); // Get translation for field type
-        const errorMessage = fieldType ? `${fieldType}: ${errorMsg}.` : errorMsg;
-
-        return { field: key, errorMessage, errorCode };
-    });
-
-    return sortedErrors;
-};
+/**
+ *
+ * @param errors - an object containing errors, referenced by field type
+ * @param layout - a string[] controlling how the output error objects will be ordered
+ * @param i18n - our internal Language mechanism
+ * @param countrySpecificLabels - some errors are region specific, e.g. in the US "postal code" = "zip code", so map the fieldType value accordingly (if it is being added to the errorMessage string)
+ * @param fieldtypeMappingFn - a component specific lookup function that will tell us both if we need to prepend the field type, and, if so, will retrieve the correct translation for the field type
+ */
+// export const sortErrorsByLayout = ({ errors, layout, i18n, countrySpecificLabels, fieldtypeMappingFn }: SortErrorsObj): SortedErrorObject[] => {
+//     console.log('### utils::sortErrorsByLayout:: countrySpecificLabels', countrySpecificLabels);
+//     // Create list of field names, sorted by layout
+//     const sortedFieldList = Object.entries(errors).reduce((acc, [key, value]) => {
+//         if (value) {
+//             acc.push(key);
+//             acc.sort((a, b) => layout.indexOf(a) - layout.indexOf(b));
+//         }
+//         return acc;
+//     }, []);
+//
+//     if (!sortedFieldList || !sortedFieldList.length) {
+//         return null;
+//     }
+//
+//     // Retrieve error codes and messages, using previously created ordered fieldList to keep everything in the right order,
+//     // and create array of error objects
+//     const sortedErrors: SortedErrorObject[] = sortedFieldList.map(key => {
+//         const errorObj: ValidationRuleResult | SFError = errors[key];
+//
+//         console.log('### utils::sortedErrors:: errorObj', errorObj);
+//
+//         const SR_INDICATOR_PREFIX = '-sr'; // for testing whether SR is reading out aria-live errors (sr) or aria-describedby ones
+//
+//         /** Get error codes */
+//         // const errorCode = hasOwnProperty(errorObj, 'error') ? errorObj.error : errorObj.errorMessage;
+//         const errorCode = errorObj instanceof ValidationRuleResult ? (errorObj.errorMessage as string) : errorObj.error;
+//
+//         /**
+//          * Get corresponding error msg
+//          * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
+//          * For other fields we still need to translate it
+//          */
+//         // const errorMsg = hasOwnProperty(errorObj, 'errorI18n') ? errorObj.errorI18n + '-sr' : i18n.get(errorObj.errorMessage) + '-sr';
+//         const errorMsg =
+//             errorObj instanceof ValidationRuleResult
+//                 ? i18n.get(errorObj.errorMessage as string) + SR_INDICATOR_PREFIX
+//                 : errorObj.errorI18n + SR_INDICATOR_PREFIX;
+//
+//         let errorMessage = errorMsg;
+//         /**
+//          * For some fields we might need to append the field type to the start of the error message (varies on a component by component basis)
+//          * - necessary for a11y, when we know the translated error msg doesn't contain a reference to the field it refers to
+//          * TODO - in the future this should be something we can get rid of once we align all our error texts and translations
+//          */
+//         if (fieldtypeMappingFn) {
+//             const fieldType: string = fieldtypeMappingFn(key, i18n, countrySpecificLabels); // Get translation for field type
+//             console.log('### utils:::: key=', key, 'fieldType=', fieldType);
+//             if (fieldType) errorMessage = `${fieldType}: ${errorMsg}`;
+//         }
+//
+//         return { field: key, errorMessage, errorCode };
+//     });
+//
+//     return sortedErrors;
+// };
 
 export const extractPropsForCardFields = (props: CardInputProps) => {
     return {

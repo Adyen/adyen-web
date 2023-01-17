@@ -4,9 +4,8 @@ import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
-import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 import Specifications from '../../../internal/Address/Specifications';
-import { AddressSchema, StringObject } from '../../../internal/Address/types';
+import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
 
 export interface CardInputValidState {
@@ -146,23 +145,22 @@ interface ScreenreaderConfig {
     showPanel?: boolean;
 }
 
-interface FieldError {
+export interface FieldError {
     errorMessage?: string;
     errorI18n?: string;
 }
 
-export interface ErrorObj {
-    holderName?: ValidationRuleResult;
-    socialSecurityNumber?: ValidationRuleResult;
-    taxNumber?: ValidationRuleResult;
-    billingAddress?: ValidationRuleResult;
-    encryptedCardNumber?: FieldError;
-    encryptedExpiryDate?: FieldError;
-    encryptedSecurityCode?: FieldError;
-    encryptedBankAccountNumber?: FieldError;
-    encryptedBankLocationId?: FieldError;
-    encryptedPassword?: FieldError;
-    encryptedPin?: FieldError;
+export interface SFError {
+    isValid: boolean;
+    errorMessage: string;
+    errorI18n: string;
+    error: string;
+    rootNode: HTMLElement;
+    detectedBrands?: string[];
+}
+
+export interface SFStateErrorObj {
+    [key: string]: SFError;
 }
 
 export interface LayoutObj {
@@ -171,13 +169,6 @@ export interface LayoutObj {
     showBrazilianSSN: boolean;
     countrySpecificSchemas: AddressSchema;
     billingAddressRequiredFields?: string[];
-}
-
-export interface SortErrorsObj {
-    errors: ErrorObj;
-    layout: string[];
-    i18n: Language;
-    countrySpecificLabels: StringObject;
 }
 
 export enum AddressModeOptions {

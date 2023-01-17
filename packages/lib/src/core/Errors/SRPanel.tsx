@@ -1,17 +1,6 @@
 import { h, Fragment } from 'preact';
 import './SRPanel.scss';
-
-export interface SortedErrorObject {
-    field: string;
-    errorMessage: string;
-    errorCode: string;
-}
-
-export interface SRPanelProps {
-    id?: string;
-    errors: string | string[];
-    showPanel?: boolean;
-}
+import { SRPanelProps } from './types';
 
 /**
  * A panel meant to hold errors that will be read out by ScreenReaders on an aria-live="polite" basis

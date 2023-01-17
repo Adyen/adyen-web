@@ -26,6 +26,7 @@ import {
 import { BinLookupResponse } from '../../../Card/types';
 import { getError } from '../../../../core/Errors/utils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
 
 /**
  * SecuredFieldsProvider:
@@ -298,8 +299,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     /**
      * Map SF errors to ValidationRuleResult-like objects, for CardInput component
      */
-    public mapErrorsToValidationRuleResult(): object {
-        const errorKeys = Object.keys(this.state.errors);
+    public mapErrorsToValidationRuleResult(): SFStateErrorObj {
+        const errorKeys: string[] = Object.keys(this.state.errors);
         const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
             if (this.state.errors[key]) {
                 acc[key] = {
