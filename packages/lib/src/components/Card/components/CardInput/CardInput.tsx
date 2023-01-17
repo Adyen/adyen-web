@@ -41,7 +41,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const isValidating = useRef(false);
 
     const cardInputRef = useRef<CardInputRef>({});
-    // Just call once
+    // Just call once to create the object by which we expose the members expected by the parent Card comp
     if (!Object.keys(cardInputRef.current).length) {
         props.setComponentRef(cardInputRef.current);
     }

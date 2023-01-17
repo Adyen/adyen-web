@@ -129,6 +129,7 @@ export interface CardInputState {
     showSocialSecurityNumber?: boolean;
 }
 
+// An interface for the members exposed by CardInput to its parent Card/UIElement
 export interface CardInputRef {
     sfp?: any;
     setFocusOn?: (who) => void;
