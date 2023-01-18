@@ -1,7 +1,5 @@
 import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { ValidatorRules } from '../../../utils/Validator/types';
-import { BinLookupResponse } from '../../Card/types';
-import { CbObjOnError, StylesObject } from '../SecuredFields/lib/types';
 
 type PersonalDetailsPlaceholders = Omit<PersonalDetailsSchema, 'gender'>;
 

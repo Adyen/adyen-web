@@ -356,10 +356,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         // Sort active errors based on layout
         const currentErrorsSortedByLayout = sortErrorsByLayout({
             errors: errorsForPanel,
-            layout: retrieveLayout(),
             i18n: props.i18n,
+            layout: retrieveLayout(),
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country),
-            fieldtypeMappingFn: mapFieldKey
+            fieldTypeMappingFn: mapFieldKey
         });
 
         console.log('### CardInput::componentDidUpdate:: currentErrorsSortedByLayout', currentErrorsSortedByLayout);

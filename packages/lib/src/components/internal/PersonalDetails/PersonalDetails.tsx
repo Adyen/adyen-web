@@ -64,10 +64,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
         const currentErrorsSortedByLayout = sortErrorsByLayout({
             errors,
-            layout: requiredFields,
             i18n,
-            countrySpecificLabels: null,
-            fieldtypeMappingFn: mapFieldKey
+            fieldTypeMappingFn: mapFieldKey
         });
 
         if (currentErrorsSortedByLayout) {

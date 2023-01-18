@@ -10,10 +10,10 @@ export interface ErrorObj {
 
 export interface SortErrorsObj {
     errors: ErrorObj;
-    layout: string[];
+    layout?: string[];
     i18n: Language;
-    countrySpecificLabels: StringObject;
-    fieldtypeMappingFn?: (key: string, i18n: Language, countrySpecificLabels: StringObject) => string;
+    countrySpecificLabels?: StringObject;
+    fieldTypeMappingFn?: (key: string, i18n: Language, countrySpecificLabels: StringObject) => string;
 }
 
 export interface SortedErrorObject {
