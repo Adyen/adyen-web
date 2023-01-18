@@ -53,7 +53,7 @@ export const addErrorTranslationsToObject = (originalObj, i18n) => {
  * sortErrorsByLayout - takes a list of errors and a layout, and returns a sorted array of error objects with translated error messages
  *
  * @param errors - an object containing errors, referenced by field type
- * @param layout - a string[] controlling how the output error objects will be ordered
+ * @param layout - a string[] controlling how the output error objects will be ordered. Only required when it is known that the error object is not already populated in the right order e.g. Card comp
  * @param i18n - our internal Language mechanism
  * @param countrySpecificLabels - some errors are region specific, e.g. in the US "postal code" = "zip code", so map the fieldType value accordingly (if it is being added to the errorMessage string)
  * @param fieldtypeMappingFn - a component specific lookup function that will tell us both if we need to prepend the field type, and, if so, will retrieve the correct translation for the field type
@@ -63,7 +63,7 @@ export const sortErrorsByLayout = ({ errors, layout, i18n, countrySpecificLabels
     const sortedFieldList = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
             acc.push(key);
-            acc.sort((a, b) => layout.indexOf(a) - layout.indexOf(b));
+            if (layout) acc.sort((a, b) => layout.indexOf(a) - layout.indexOf(b));
         }
         return acc;
     }, []);
