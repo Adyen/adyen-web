@@ -17,6 +17,8 @@ class AdyenCheckoutError extends Error {
         ERROR: 'ERROR'
     };
 
+    public cause: unknown;
+
     constructor(type: keyof typeof AdyenCheckoutError.errorTypes, message?: string, options?: CheckoutErrorOptions) {
         super(message);
 
