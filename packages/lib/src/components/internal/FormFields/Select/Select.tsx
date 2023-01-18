@@ -9,6 +9,7 @@ import { SelectItem, SelectProps } from './types';
 import styles from './Select.module.scss';
 import './Select.scss';
 import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { simulateFocusScroll } from '../utils';
 
 function Select({
     items = [],
@@ -18,7 +19,6 @@ function Select({
     readonly = false,
     onChange = () => {},
     selected,
-    name,
     isInvalid,
     isValid,
     placeholder,
@@ -62,6 +62,17 @@ function Select({
         setTextFilter(null);
         setShowList(false);
         //if (toggleButtonRef.current) toggleButtonRef.current.focus();
+    };
+
+    const openList = () => {
+        console.log('openList');
+        const selectedItem = selectContainerRef.current.querySelector('[aria-selected="true"]');
+        setShowList(true);
+        if (selectedItem) {
+            setTimeout(() => {
+                simulateFocusScroll(selectedItem);
+            });
+        }
     };
 
     /**
@@ -112,7 +123,9 @@ function Select({
             closeList();
         } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!filterable || !showList))) {
             e.preventDefault();
-            setShowList(true);
+            if (!showList) {
+                openList();
+            }
             handleNavigationKeys(e);
         } else if (e.shiftKey && e.key === keys.tab) {
             // Shift-Tab out of Select - close list re. a11y guidelines (above)
@@ -133,8 +146,7 @@ function Select({
             ? !e.composedPath().includes(selectContainerRef.current)
             : !selectContainerRef.current.contains(e.target);
         if (clickIsOutside) {
-            setTextFilter(null);
-            setShowList(false);
+            closeList();
         }
     };
 
@@ -177,7 +189,13 @@ function Select({
      */
     const toggleList = (e: Event) => {
         e.preventDefault();
-        setShowList(!showList);
+        if (!showList) {
+            setInputText(null);
+            openList();
+        } else {
+            setInputText(selectedOption.name);
+            closeList();
+        }
     };
 
     /**
