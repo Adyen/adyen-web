@@ -21,16 +21,6 @@ const i18n = new Language('en-US', {});
 const configuration = { koreanAuthenticationRequired: true };
 
 describe('CardInput', () => {
-    test('Has screenreader panel first', () => {
-        render(<CardInput hasHolderName={true} i18n={i18n} />);
-
-        const select = screen.getByRole('form');
-        // eslint-disable-next-line testing-library/no-node-access
-        const children = select.children;
-        // SR panel
-        expect(children.item(0).id).toEqual('creditCardErrors');
-    });
-
     test('Renders a normal Card form', () => {
         const wrapper = mount(<CardInput i18n={i18n} />);
         expect(wrapper.find('[data-cse="encryptedCardNumber"]')).toHaveLength(1);
@@ -166,7 +156,7 @@ describe('CardInput > holderName', () => {
         // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
-        const positionDiv = children.item(1); // children.item(0) is the SRPanel
+        const positionDiv = children.item(0);
         // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
@@ -196,7 +186,7 @@ describe('CardInput > holderName', () => {
         // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
-        const positionDiv = children.item(1); // children.item(0) is the SRPanel
+        const positionDiv = children.item(0);
         // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
