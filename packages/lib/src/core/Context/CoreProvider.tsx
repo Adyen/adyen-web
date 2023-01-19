@@ -41,7 +41,7 @@ class CoreProvider extends Component<CoreProviderProps> {
                 >
                     <SRPanel
                         id={this.props.commonProps?.srPanelID ?? 'coreSRPanel'}
-                        showPanel={true}
+                        showPanel={process.env.NODE_ENV !== 'production'}
                         ref={ref => {
                             if (this.props.commonProps) {
                                 this.props.commonProps.SRPanelRef = ref;

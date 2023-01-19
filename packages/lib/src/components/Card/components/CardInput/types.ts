@@ -104,7 +104,6 @@ export interface CardInputProps {
     showPayButton?: boolean;
     showWarnings?: boolean;
     specifications?: Specifications;
-    SRConfig?: ScreenreaderConfig;
     storedPaymentMethodId?: string;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
@@ -138,12 +137,6 @@ export interface CardInputRef {
     setStatus?: any;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
-}
-
-interface ScreenreaderConfig {
-    collateErrors?: boolean;
-    moveFocus?: boolean;
-    showPanel?: boolean;
 }
 
 export interface FieldError {

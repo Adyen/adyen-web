@@ -36,8 +36,7 @@ export class CardElement extends UIElement<CardElementProps> {
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
-        useClickToPay: false,
-        SRConfig: {}
+        useClickToPay: false
     };
 
     public setStatus(status: UIElementStatus, props?): this {
@@ -59,9 +58,6 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     formatProps(props: CardElementProps) {
-        // Extract &/or set defaults for the screenreader error panel
-        const { moveFocus = true, showPanel = false } = props.SRConfig;
-
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -81,10 +77,6 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
-            SRConfig: {
-                moveFocus,
-                showPanel
-            },
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
             enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
@@ -235,7 +227,14 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} commonProps={{}}>
+            <CoreProvider
+                i18n={this.props.i18n}
+                loadingContext={this.props.loadingContext}
+                commonProps={{
+                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true,
+                    srPanelID: 'creditCardErrors'
+                }}
+            >
                 <ClickToPayWrapper
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}

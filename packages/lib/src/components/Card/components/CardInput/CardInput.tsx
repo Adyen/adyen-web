@@ -11,7 +11,7 @@ import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
-import { SRPanel } from '../../../../core/Errors/SRPanel';
+// import { SRPanel } from '../../../../core/Errors/SRPanel';
 import { SortedErrorObject } from '../../../../core/Errors/types';
 import {
     handlePartialAddressMode,
@@ -34,8 +34,13 @@ import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
 import { sortErrorsByLayout } from '../../../../core/Errors/utils';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
+    const {
+        commonProps: { moveFocusOnSubmitErrors, SRPanelRef }
+    } = useCoreContext();
+
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
     const isValidating = useRef(false);
@@ -49,7 +54,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const hasPanLengthRef = useRef(0);
     const isAutoJumping = useRef(false);
 
-    const { moveFocus, showPanel } = props.SRConfig;
+    // const srPanel = useRef(null);
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
@@ -68,9 +73,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [data, setData] = useState<CardInputDataState>({
         ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
-
-    // An array containing all the errors to be passed to the SRPanel to be read by the screenreader
-    const [SRErrors, setSRErrors] = useState<string[]>(null);
 
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
 
@@ -242,7 +244,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
          * Clear errors prior to validating so that the screenreader will read them *all* again, and in the right order
          * - only using aria-atomic on the error panel will read them in the wrong order
          */
-        setSRErrors(null);
+        SRPanelRef.setErrors(null);
 
         // Validate SecuredFields
         sfp.current.showValidation();
@@ -372,9 +374,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             if (isValidating.current) {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
                 console.log('### CardInput::componentDidUpdate:: multiple errors:: (validating) errorMsgArr=', errorMsgArr);
-                setSRErrors(errorMsgArr);
+                SRPanelRef.setErrors(errorMsgArr);
+                // srPanel.current.setErrors(errorMsgArr);
 
-                if (moveFocus) {
+                if (moveFocusOnSubmitErrors) {
                     const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
                     setFocusOnFirstField(isValidating, sfp, fieldListArr[0]);
                 } else {
@@ -406,15 +409,15 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // (once from the aria-live, error panel & once from the aria-describedby element)
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                     console.log('### CardInput::componentDidUpdate:: single error:: latestSRError', latestSRError);
-                    setSRErrors(latestSRError);
+                    SRPanelRef.setErrors(latestSRError);
                 } else {
                     console.log('### CardInput::componentDidUpdate:: clearing errors:: NO latestErrorMsg');
-                    setSRErrors(null); // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    SRPanelRef?.setErrors(null); // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
                 }
             }
         } else {
             console.log('### CardInput::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            setSRErrors(null); // re. was a single error, now it is cleared - so clear SR panel
+            SRPanelRef.setErrors(null); // re. was a single error, now it is cleared - so clear SR panel
         }
 
         props.onChange({
@@ -459,7 +462,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         })}
                         role={'form'}
                     >
-                        <SRPanel id={'creditCardErrors'} errors={SRErrors} showPanel={showPanel} />
+                        {/*<SRPanel ref={srPanel} id={'creditCardErrorsCompLevel'} showPanel={true} />*/}
 
                         <FieldToRender
                             // Extract exact props that we need to pass down

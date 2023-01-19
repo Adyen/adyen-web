@@ -3,8 +3,6 @@ import UIElement from '../UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
 import CoreProvider from '../../core/Context/CoreProvider';
 
-import TestContextApp from './TestContextApp';
-
 export class PersonalDetailsElement extends UIElement {
     get data() {
         return this.state.data;
@@ -24,7 +22,7 @@ export class PersonalDetailsElement extends UIElement {
                 i18n={this.props.i18n}
                 loadingContext={this.props.loadingContext}
                 commonProps={{
-                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors,
+                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true,
                     srPanelID: 'personalDetailsErrors'
                 }}
             >
