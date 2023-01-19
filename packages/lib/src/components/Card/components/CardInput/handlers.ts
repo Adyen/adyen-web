@@ -91,6 +91,7 @@ const setFocusOnNonSF = (field, sfp) => {
     } else {
         // Set focus on input
         const field: HTMLElement = selectOne(sfp.current.rootNode, `[name="${nameVal}"]`);
+        console.log('### handlers::setFocusOnNonSF::field ', field);
         field?.focus();
     }
 };
