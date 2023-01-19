@@ -24,36 +24,32 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // Adyen Giving
-    // window.donation = checkout
-    //     .create('donation', {
-    //         onDonate: (state, component) => {
-    //             console.log({ state, component });
-    //             setTimeout(() => component.setStatus('ready'), 1000);
-    //         },
-    //         url: 'https://example.org',
-    //         amounts: {
-    //             currency: 'EUR',
-    //             values: [50, 199, 300]
-    //         },
-    //         backgroundUrl:
-    //             'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
-    //         description: 'Lorem ipsum...',
-    //         logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
-    //         name: 'Test Charity'
-    //     })
-    //     .mount('.donation-field');
+    window.donation = checkout
+        .create('donation', {
+            onDonate: (state, component) => {
+                console.log({ state, component });
+                setTimeout(() => component.setStatus('ready'), 1000);
+            },
+            url: 'https://example.org',
+            amounts: {
+                currency: 'EUR',
+                values: [50, 199, 300]
+            },
+            backgroundUrl:
+                'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
+            description: 'Lorem ipsum...',
+            logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
+            name: 'Test Charity'
+        })
+        .mount('.donation-field');
 
     // Personal details
     window.personalDetails = checkout
         .create('personal_details', {
             onChange: console.log
-            // data: {
-            //     firstName: 'foo',
-            //     lastName: 'bar'
-            // }
         })
         .mount('.personalDetails-field');
-    return;
+
     // Address
     window.address = checkout
         .create('address', {
