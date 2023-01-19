@@ -1,16 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:base",
+    ":disableDependencyDashboard"
   ],
   "labels": ["dependencies"],
   "stabilityDays": 21,
   "prConcurrentLimit": 5,
-  "includePaths": [
-    "packages/lib/",
-    "packages/server/",
-    ".github/",
-    "./package.json"
+  "ignorePaths": [
+    "**/node_modules/**",
+    "packages/e2e/**",
+    "packages/playground/**"
   ]
-
 }
