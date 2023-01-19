@@ -11,9 +11,9 @@ import { useRef } from 'preact/hooks';
 // export function SRPanel({ id = 'ariaLiveSRPanel', errors, showPanel = false, setComponentRef }: SRPanelProps) {
 //     const srPanelRef = useRef<SRPanelRef>({});
 //     // Just call once to create the object by which we expose the members expected by the parent PersonalDetails comp
-//     if (!Object.keys(srPanelRef.current).length) {
-//         setComponentRef(srPanelRef.current);
-//     }
+//     // if (!Object.keys(srPanelRef.current).length) {
+//     //     setComponentRef(srPanelRef.current);
+//     // }
 //
 //     let errorMessages = null;
 //     if (errors) {
@@ -44,7 +44,7 @@ import { useRef } from 'preact/hooks';
 //     );
 // }
 
-export class SRPanel extends Component {
+export class SRPanel extends Component<SRPanelProps> {
     private readonly id;
     private readonly showPanel;
 
