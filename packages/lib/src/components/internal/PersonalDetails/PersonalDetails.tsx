@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
@@ -9,12 +9,11 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps, PersonalDetailsRef } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
-import { getFormattedData, mapFieldKey } from './utils';
+import { getFormattedData, mapFieldKey, setFocusOnFirstField } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
 // import { SRPanel } from '../../../core/Errors/SRPanel';
 import { sortErrorsByLayout } from '../../../core/Errors/utils';
-import { selectOne } from '../SecuredFields/lib/utilities/dom';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -78,23 +77,18 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         console.log('### PersonalDetails::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
 
         if (currentErrorsSortedByLayout) {
+            /** If validating i.e. "on submit" type event - then display all errors in the error panel */
             if (isValidating.current) {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
                 SRPanelRef.setErrors(errorMsgArr);
 
-                // const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
-                //
-                // // adyen-checkout__fieldset--personalDetails
-                // const pdHolder = selectOne(document, '.adyen-checkout__fieldset--personalDetails');
-                // console.log('### PersonalDetails::::pdHolder ', pdHolder);
-                // // Set focus on input
-                // console.log('### PersonalDetails:::: fieldListArr[0]', fieldListArr[0]);
-                // const field: HTMLElement = selectOne(pdHolder, `[name="${fieldListArr[0]}"]`);
-                // console.log('### PersonalDetails:::: field', field);
-                // field?.focus();
-                setTimeout(() => {
-                    isValidating.current = false;
-                }, 300);
+                if (moveFocusOnSubmitErrors) {
+                    const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
+                    setFocusOnFirstField('.adyen-checkout__fieldset--personalDetails', fieldListArr[0]);
+                }
+
+                // Remove 'showValidation' mode
+                isValidating.current = false;
             } else {
                 console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
                 SRPanelRef?.setErrors(null);
@@ -237,6 +231,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     </Field>
                 )}
             </Fieldset>
+            {/* Needed to test shifting focus when showValidation is called */}
+            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
         </Fragment>
     );
 }

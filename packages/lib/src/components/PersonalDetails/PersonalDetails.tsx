@@ -27,7 +27,12 @@ export class PersonalDetailsElement extends UIElement {
                     moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
                 }}
             >
-                <PersonalDetails setComponentRef={this.setComponentRef} {...this.props} onChange={this.setState} />
+                <PersonalDetails
+                    setComponentRef={this.setComponentRef}
+                    {...this.props}
+                    onChange={this.setState}
+                    {...(process.env.NODE_ENV !== 'production' && { payButton: this.payButton })}
+                />
             </CoreProvider>
         );
     }

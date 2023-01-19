@@ -15,6 +15,8 @@ export interface PersonalDetailsProps {
     ref?: any;
     validationRules?: ValidatorRules;
     setComponentRef?: (ref) => void;
+    payButton?: (obj) => {};
+    showPayButton?: boolean;
 }
 
 export interface PersonalDetailsStateError {

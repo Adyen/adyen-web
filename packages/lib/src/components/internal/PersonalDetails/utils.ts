@@ -1,5 +1,6 @@
 import { unformatDate } from '../FormFields/InputDate/utils';
 import Language from '../../../language';
+import { selectOne } from '../SecuredFields/lib/utilities/dom';
 
 export const getFormattedData = data => {
     const { firstName, lastName, gender, dateOfBirth, shopperEmail, telephoneNumber } = data;
@@ -27,4 +28,11 @@ export const mapFieldKey = (key: string, i18n: Language): string => {
         default:
             return null;
     }
+};
+
+export const setFocusOnFirstField = (holder, fieldToFocus) => {
+    const pdHolder = selectOne(document, holder);
+    // Set focus on input
+    const field: HTMLElement = selectOne(pdHolder, `[name="${fieldToFocus}"]`);
+    field?.focus();
 };
