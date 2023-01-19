@@ -50,7 +50,7 @@ export class SRPanel extends Component<SRPanelProps> {
         this.setState({ errorMessages });
     };
 
-    /* eslint-disable-next-line no-empty-pattern */
+    // eslint-disable-next-line no-empty-pattern
     render({}, { errorMessages }) {
         return (
             <div
