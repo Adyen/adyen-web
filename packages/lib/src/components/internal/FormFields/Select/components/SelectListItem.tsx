@@ -4,21 +4,10 @@ import { SelectItemProps } from '../types';
 import styles from '../Select.module.scss';
 import Img from '../../../Img';
 import Icon from '../../../Icon';
-import { useEffect, useRef } from 'preact/hooks';
-import { simulateFocusScroll } from '../../utils';
 
 const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) => {
-    const listItem = useRef();
-
-    useEffect(() => {
-        if (active && listItem.current) {
-            simulateFocusScroll(listItem.current);
-        }
-    }, [active]);
-
     return (
         <li
-            ref={listItem}
             aria-disabled={!!item.disabled}
             aria-selected={selected}
             className={cx([

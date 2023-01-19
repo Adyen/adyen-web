@@ -46,13 +46,22 @@ function Select({
     const setNextActive = () => {
         const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
         const nextIndex = possibleNextIndex < filteredItems.length ? possibleNextIndex : 0;
-        setActiveOption(filteredItems[nextIndex]);
+        const nextItem = filteredItems[nextIndex];
+        scrollToItem(nextItem);
+        setActiveOption(nextItem);
     };
 
     const setPreviousActive = () => {
         const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) - 1;
         const nextIndex = possibleNextIndex < 0 ? filteredItems.length - 1 : possibleNextIndex;
-        setActiveOption(filteredItems[nextIndex]);
+        const nextItem = filteredItems[nextIndex];
+        scrollToItem(nextItem);
+        setActiveOption(nextItem);
+    };
+
+    const scrollToItem = (item: SelectItem) => {
+        const nextElement = selectContainerRef.current.querySelector(`#listItem-${item.id}`);
+        simulateFocusScroll(nextElement);
     };
 
     /**
@@ -65,14 +74,7 @@ function Select({
     };
 
     const openList = () => {
-        console.log('openList');
-        const selectedItem = selectContainerRef.current.querySelector('[aria-selected="true"]');
         setShowList(true);
-        if (selectedItem) {
-            setTimeout(() => {
-                simulateFocusScroll(selectedItem);
-            });
-        }
     };
 
     /**
