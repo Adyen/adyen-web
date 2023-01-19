@@ -1,5 +1,6 @@
 import { Component, h, toChildArray } from 'preact';
 import { CoreContext } from './CoreContext';
+import { SRPanel } from '../Errors/SRPanel';
 
 interface CoreProviderProps {
     loadingContext: string;
@@ -9,7 +10,9 @@ interface CoreProviderProps {
 }
 
 export interface CommonPropsTypes {
-    isCollatingErrors?: boolean;
+    moveFocusOnSubmitErrors?: boolean;
+    srPanelID?: string;
+    SRPanelRef?: any;
 }
 /**
  * CoreProvider Component
@@ -36,6 +39,16 @@ class CoreProvider extends Component<CoreProviderProps> {
                 <CoreContext.Provider
                     value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext, commonProps: this.props.commonProps || {} }}
                 >
+                    <SRPanel
+                        id={this.props.commonProps?.srPanelID ?? 'coreSRPanel'}
+                        // errors={this.props.commonProps.srErrors}
+                        errors={null}
+                        showPanel={true}
+                        ref={ref => {
+                            this.props.commonProps.SRPanelRef = ref;
+                        }}
+                        // setComponentRef={this.setPanelRef.bind(this)}
+                    />
                     {toChildArray(children)}
                 </CoreContext.Provider>
             );

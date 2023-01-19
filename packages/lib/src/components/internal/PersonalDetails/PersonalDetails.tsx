@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useContext, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
@@ -14,11 +14,22 @@ import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import { sortErrorsByLayout } from '../../../core/Errors/utils';
+import { selectOne } from '../SecuredFields/lib/utilities/dom';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
+    const {
+        i18n,
+        commonProps: { moveFocusOnSubmitErrors, SRPanelRef }
+    } = useCoreContext();
+
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
+
+    const isValidating = useRef(false);
+
+    console.log('### PersonalDetails::PersonalDetails:: moveFocusOnSubmitErrors', moveFocusOnSubmitErrors);
+    console.log('### PersonalDetails::PersonalDetails:: SRPanelRef', SRPanelRef);
 
     const personalDetailsRef = useRef<PersonalDetailsRef>({});
     // Just call once to create the object by which we expose the members expected by the parent PersonalDetails comp
@@ -29,7 +40,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     // An array containing all the errors to be passed to the SRPanel to be read by the screenreader
     const [SRErrors, setSRErrors] = useState<string[]>(null);
 
-    const { i18n } = useCoreContext();
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
         schema: requiredFields,
@@ -51,7 +61,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     // Expose method expected by (parent) PersonalDetails.tsx
     personalDetailsRef.current.showValidation = () => {
         // set flag
-        // isValidating.current = true;
+        isValidating.current = true;
 
         triggerValidation();
     };
@@ -69,8 +79,25 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         });
 
         if (currentErrorsSortedByLayout) {
-            const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-            setSRErrors(errorMsgArr);
+            if (isValidating.current) {
+                const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
+                // setSRErrors(errorMsgArr);
+                SRPanelRef.setErrors(errorMsgArr);
+
+                // const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
+                //
+                // // adyen-checkout__fieldset--personalDetails
+                // const pdHolder = selectOne(document, '.adyen-checkout__fieldset--personalDetails');
+                // console.log('### PersonalDetails::::pdHolder ', pdHolder);
+                // // Set focus on input
+                // console.log('### PersonalDetails:::: fieldListArr[0]', fieldListArr[0]);
+                // const field: HTMLElement = selectOne(pdHolder, `[name="${fieldListArr[0]}"]`);
+                // console.log('### PersonalDetails:::: field', field);
+                // field?.focus();
+                // setTimeout(() => {
+                //     isValidating.current = false;
+                // }, 300);
+            }
         } else {
             console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
             setSRErrors(null); // re. was a single error, now it is cleared - so clear SR panel
@@ -84,7 +111,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     return (
         <Fragment>
-            <SRPanel id={'personalDetailsErrors'} errors={SRErrors} showPanel={true} />
+            {/*<SRPanel id={'personalDetailsErrors'} errors={SRErrors} showPanel={true} />*/}
             <Fieldset classNameModifiers={['personalDetails']} label={label}>
                 {requiredFields.includes('firstName') && (
                     <Field

@@ -3,6 +3,8 @@ import UIElement from '../UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
 import CoreProvider from '../../core/Context/CoreProvider';
 
+import TestContextApp from './TestContextApp';
+
 export class PersonalDetailsElement extends UIElement {
     get data() {
         return this.state.data;
@@ -18,7 +20,14 @@ export class PersonalDetailsElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider
+                i18n={this.props.i18n}
+                loadingContext={this.props.loadingContext}
+                commonProps={{
+                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors,
+                    srPanelID: 'personalDetailsErrors'
+                }}
+            >
                 <PersonalDetails setComponentRef={this.setComponentRef} {...this.props} onChange={this.setState} />
             </CoreProvider>
         );
