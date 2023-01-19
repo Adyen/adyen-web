@@ -5,5 +5,12 @@
   ],
   "labels": ["dependencies"],
   "stabilityDays": 21,
-  "prConcurrentLimit": 5
+  "prConcurrentLimit": 5,
+  "includePaths": [
+    "packages/lib/",
+    "packages/server/",
+    ".github/",
+    "./package.json"
+  ]
+
 }
