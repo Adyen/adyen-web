@@ -40,11 +40,12 @@ export class SRPanel extends Component<SRPanelProps> {
     }
 
     // A method we can expose to allow comps to set errors in this panel
-    public setErrors = errors => {
+    public setErrors = (errors: string[] | string): void => {
         // Ensure errorMessages is an array
         this.setState({ errorMessages: Array.isArray(errors) ? errors : [errors] });
     };
 
+    /* eslint-disable-next-line no-empty-pattern */
     render({}, { errorMessages }) {
         return (
             <div

@@ -12,7 +12,7 @@ import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData, mapFieldKey } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
-import { SRPanel } from '../../../core/Errors/SRPanel';
+// import { SRPanel } from '../../../core/Errors/SRPanel';
 import { sortErrorsByLayout } from '../../../core/Errors/utils';
 import { selectOne } from '../SecuredFields/lib/utilities/dom';
 
@@ -34,11 +34,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const personalDetailsRef = useRef<PersonalDetailsRef>({});
     // Just call once to create the object by which we expose the members expected by the parent PersonalDetails comp
     if (!Object.keys(personalDetailsRef.current).length) {
-        props.setComponentRef(personalDetailsRef.current);
+        props.setComponentRef?.(personalDetailsRef.current);
     }
-
-    // An array containing all the errors to be passed to the SRPanel to be read by the screenreader
-    const [SRErrors, setSRErrors] = useState<string[]>(null);
 
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
@@ -83,7 +80,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         if (currentErrorsSortedByLayout) {
             if (isValidating.current) {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-                // setSRErrors(errorMsgArr);
                 SRPanelRef.setErrors(errorMsgArr);
 
                 // const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
@@ -101,13 +97,11 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 }, 300);
             } else {
                 console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
-                // setSRErrors(null); //
                 SRPanelRef?.setErrors(null);
             }
         } else {
             console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            // setSRErrors(null); // re. was a single error, now it is cleared - so clear SR panel
-            SRPanelRef.setErrors(null);
+            SRPanelRef.setErrors(null); // re. was a single error, now it is cleared - so clear SR panel
         }
 
         props.onChange({ data: formattedData, valid, errors, isValid });
