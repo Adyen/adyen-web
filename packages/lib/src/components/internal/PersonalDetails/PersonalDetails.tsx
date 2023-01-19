@@ -70,13 +70,15 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         const formattedData = getFormattedData(data);
 
         console.log('### PersonalDetails:::: errors=', errors);
-        console.log('### PersonalDetails:::: requiredFields=', requiredFields);
+        // console.log('### PersonalDetails:::: requiredFields=', requiredFields);
 
         const currentErrorsSortedByLayout = sortErrorsByLayout({
             errors,
             i18n,
             fieldTypeMappingFn: mapFieldKey
         });
+
+        console.log('### PersonalDetails::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
 
         if (currentErrorsSortedByLayout) {
             if (isValidating.current) {
@@ -94,13 +96,18 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 // const field: HTMLElement = selectOne(pdHolder, `[name="${fieldListArr[0]}"]`);
                 // console.log('### PersonalDetails:::: field', field);
                 // field?.focus();
-                // setTimeout(() => {
-                //     isValidating.current = false;
-                // }, 300);
+                setTimeout(() => {
+                    isValidating.current = false;
+                }, 300);
+            } else {
+                // setSRErrors(null); //
+                console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
+                SRPanelRef?.setErrors(null);
             }
         } else {
             console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            setSRErrors(null); // re. was a single error, now it is cleared - so clear SR panel
+            // setSRErrors(null); // re. was a single error, now it is cleared - so clear SR panel
+            SRPanelRef.setErrors(null);
         }
 
         props.onChange({ data: formattedData, valid, errors, isValid });
