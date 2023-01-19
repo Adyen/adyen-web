@@ -37,12 +37,17 @@ export class SRPanel extends Component<SRPanelProps> {
         super(props);
         this.id = props.id || 'ariaLiveSRPanel';
         this.showPanel = props.showPanel;
+        this.state = { errorMessages: null };
     }
 
     // A method we can expose to allow comps to set errors in this panel
     public setErrors = (errors: string[] | string): void => {
+        let errorMessages = null;
+        if (errors) {
+            errorMessages = Array.isArray(errors) ? errors : [errors];
+        }
         // Ensure errorMessages is an array
-        this.setState({ errorMessages: Array.isArray(errors) ? errors : [errors] });
+        this.setState({ errorMessages });
     };
 
     /* eslint-disable-next-line no-empty-pattern */
