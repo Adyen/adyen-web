@@ -1,33 +1,18 @@
 import { h, Fragment, Component } from 'preact';
 import './SRPanel.scss';
-import { SRPanelProps, SRPanelRef } from './types';
-import { useRef } from 'preact/hooks';
+import { SRPanelProps } from './types';
 
 /**
  * A panel meant to hold errors that will be read out by ScreenReaders on an aria-live="polite" basis
  * Expects a string or string array of message to add to the panel to be read out
  * For testing purposes can be made visible
  */
-// export function SRPanel({ id = 'ariaLiveSRPanel', errors, showPanel = false, setComponentRef }: SRPanelProps) {
-//     const srPanelRef = useRef<SRPanelRef>({});
-//     // Just call once to create the object by which we expose the members expected by the parent PersonalDetails comp
-//     // if (!Object.keys(srPanelRef.current).length) {
-//     //     setComponentRef(srPanelRef.current);
-//     // }
-//
+// export function SRPanel({ id = 'ariaLiveSRPanel', errors, showPanel = false }: SRPanelProps) {
 //     let errorMessages = null;
 //     if (errors) {
 //         // Ensure errorMessages is an array
 //         errorMessages = Array.isArray(errors) ? errors : [errors];
 //     }
-//
-//     srPanelRef.current.setErrors = errs => {
-//         console.log('### SRPanel::setErrors:: errs=', errs);
-//         if (errs) {
-//             // Ensure errorMessages is an array
-//             errorMessages = Array.isArray(errs) ? errs : [errs];
-//         }
-//     };
 //
 //     return (
 //         <div className={showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'} id={id} aria-live={'polite'} aria-atomic={'true'}>
@@ -51,9 +36,10 @@ export class SRPanel extends Component<SRPanelProps> {
     constructor(props: SRPanelProps) {
         super(props);
         this.id = props.id || 'ariaLiveSRPanel';
-        this.showPanel = true;
+        this.showPanel = props.showPanel;
     }
 
+    // A method we can expose to allow comps to set errors in this panel
     public setErrors = errors => {
         // Ensure errorMessages is an array
         this.setState({ errorMessages: Array.isArray(errors) ? errors : [errors] });

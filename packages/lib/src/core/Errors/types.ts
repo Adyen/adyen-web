@@ -24,12 +24,7 @@ export interface SortedErrorObject {
 
 export interface SRPanelProps {
     id?: string;
-    errors: string | string[];
+    errors?: string | string[];
     showPanel?: boolean;
     ref?: any;
-    setComponentRef?: any;
-}
-
-export interface SRPanelRef {
-    setErrors?: (errs) => void;
 }

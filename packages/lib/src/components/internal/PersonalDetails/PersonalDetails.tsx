@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import { useContext, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
@@ -100,8 +100,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     isValidating.current = false;
                 }, 300);
             } else {
-                // setSRErrors(null); //
                 console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
+                // setSRErrors(null); //
                 SRPanelRef?.setErrors(null);
             }
         } else {
@@ -118,7 +118,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     return (
         <Fragment>
-            {/*<SRPanel id={'personalDetailsErrors'} errors={SRErrors} showPanel={true} />*/}
+            {/*<SRPanel id={'personalDetailsErrorsCompLevel'} errors={SRErrors} showPanel={true} />*/}
             <Fieldset classNameModifiers={['personalDetails']} label={label}>
                 {requiredFields.includes('firstName') && (
                     <Field

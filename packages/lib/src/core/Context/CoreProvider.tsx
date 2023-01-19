@@ -41,14 +41,12 @@ class CoreProvider extends Component<CoreProviderProps> {
                 >
                     <SRPanel
                         id={this.props.commonProps?.srPanelID ?? 'coreSRPanel'}
-                        errors={null}
                         showPanel={true}
                         ref={ref => {
                             if (this.props.commonProps) {
                                 this.props.commonProps.SRPanelRef = ref;
                             }
                         }}
-                        // setComponentRef={this.setPanelRef.bind(this)}
                     />
                     {toChildArray(children)}
                 </CoreContext.Provider>
