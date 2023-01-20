@@ -1,4 +1,4 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import './SRPanel.scss';
 import { SRPanelProps } from './types';
 import BaseElement from '../../components/BaseElement';
@@ -20,6 +20,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     private readonly id;
     private readonly showPanel;
+    private msgPanel;
+    private msgHolder;
 
     constructor(props: SRPanelProps) {
         super(props);
@@ -35,6 +37,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                 this.srPanelContainer.className = 'srPanel-holder';
                 document.querySelector(this.props.node).appendChild(this.srPanelContainer);
                 this.mount(this.srPanelContainer);
+
+                this.msgPanel = document.getElementById('ariaLiveSRPanel');
             } else {
                 throw new Error('Component could not mount. Root node was not found.');
             }
@@ -58,9 +62,31 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         // "re-render" if we have a new set of messages
         const hasNewMessages = !objectsDeepEqual(oldMessages, panelMessages);
         if (hasNewMessages) {
-            this.mount(this._node);
+            // this.mount(this._node);
+            this.createMessageElements();
         }
     };
+
+    public createMessageElements() {
+        if (this.msgHolder) {
+            this.msgPanel.removeChild(this.msgHolder);
+            this.msgHolder = null;
+        }
+
+        if (this.state.panelMessages) {
+            this.msgHolder = document.createElement('div');
+            this.msgHolder.className = 'adyen-checkout-sr-panel__msg-holder';
+
+            this.state.panelMessages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'adyen-checkout-sr-panel__msg';
+                msgDiv.innerText = msg;
+                this.msgHolder.appendChild(msgDiv);
+            });
+
+            this.msgPanel.appendChild(this.msgHolder);
+        }
+    }
 
     render() {
         console.log('### SRPanel::render:: ');
@@ -70,17 +96,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                 id={this.id}
                 aria-live={'polite'}
                 aria-atomic={'true'}
-            >
-                {this.state.panelMessages && (
-                    <Fragment>
-                        {this.state.panelMessages.map(msg => (
-                            <div key={msg} className="adyen-checkout-sr-panel__msg">
-                                {msg}
-                            </div>
-                        ))}
-                    </Fragment>
-                )}
-            </div>
+            ></div>
         );
     }
 }
