@@ -119,8 +119,8 @@
         "README"
     ],
     "lint-staged": {
-        "*.js": "eslint --cache --fix",
-        "*.css": "stylelint --fix",
-        "*.{js,css,md}": "prettier --write"
+        "*.{js,jsx,ts,tsx}": "eslint",
+        "*.{scss,css}": "stylelint",
+        "*.{js,jsx,ts,tsx,scss,css,html}": "prettier --write"
     }
 }
