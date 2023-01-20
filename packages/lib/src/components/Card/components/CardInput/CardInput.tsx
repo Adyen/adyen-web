@@ -38,8 +38,10 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const {
-        commonProps: { moveFocusOnSubmitErrors, SRPanelRef }
+        commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
+
+    const SRPanelRef = props.modules.srPanel;
 
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
@@ -244,7 +246,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
          * Clear errors prior to validating so that the screenreader will read them *all* again, and in the right order
          * - only using aria-atomic on the error panel will read them in the wrong order
          */
-        SRPanelRef.setErrors(null);
+        SRPanelRef.setMessages(null);
 
         // Validate SecuredFields
         sfp.current.showValidation();
@@ -374,7 +376,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             if (isValidating.current) {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
                 console.log('### CardInput::componentDidUpdate:: multiple errors:: (validating) errorMsgArr=', errorMsgArr);
-                SRPanelRef.setErrors(errorMsgArr);
+                SRPanelRef.setMessages(errorMsgArr);
                 // srPanel.current.setErrors(errorMsgArr);
 
                 if (moveFocusOnSubmitErrors) {
@@ -408,16 +410,16 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                     // (once from the aria-live, error panel & once from the aria-describedby element)
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                    console.log('### CardInput::componentDidUpdate:: single error:: latestSRError', latestSRError);
-                    SRPanelRef.setErrors(latestSRError);
+                    console.log('### CardInput::componentDidUpdate:: (not validating) single error:: latestSRError', latestSRError);
+                    SRPanelRef.setMessages(latestSRError);
                 } else {
-                    console.log('### CardInput::componentDidUpdate:: clearing errors:: NO latestErrorMsg');
-                    SRPanelRef?.setErrors(null); // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    console.log('### CardInput::componentDidUpdate:: (not validating) clearing errors:: NO latestErrorMsg');
+                    SRPanelRef?.setMessages(null); // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
                 }
             }
         } else {
             console.log('### CardInput::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            SRPanelRef.setErrors(null); // re. was a single error, now it is cleared - so clear SR panel
+            SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
         }
 
         props.onChange({

@@ -20,8 +20,10 @@ const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth',
 export default function PersonalDetails(props: PersonalDetailsProps) {
     const {
         i18n,
-        commonProps: { moveFocusOnSubmitErrors, SRPanelRef }
+        commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
+
+    const SRPanelRef = props.modules.srPanel;
 
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
 
@@ -80,7 +82,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
             /** If validating i.e. "on submit" type event - then display all errors in the error panel */
             if (isValidating.current) {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-                SRPanelRef.setErrors(errorMsgArr);
+                SRPanelRef.setMessages(errorMsgArr);
 
                 if (moveFocusOnSubmitErrors) {
                     const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
@@ -91,11 +93,11 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 isValidating.current = false;
             } else {
                 console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
-                SRPanelRef?.setErrors(null);
+                SRPanelRef?.setMessages(null);
             }
         } else {
             console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            SRPanelRef.setErrors(null); // re. was a single error, now it is cleared - so clear SR panel
+            SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
         }
 
         props.onChange({ data: formattedData, valid, errors, isValid });

@@ -41,18 +41,18 @@ class CoreProvider extends Component<CoreProviderProps> {
                 <CoreContext.Provider
                     value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext, commonProps: this.props.commonProps || {} }}
                 >
-                    {/* Show SRPanel unless explicitly told not to */}
-                    {this.props.includeSRPanel !== false && (
-                        <SRPanel
-                            id={this.props.srPanelID ?? 'coreSRPanel'}
-                            showPanel={process.env.NODE_ENV !== 'production'}
-                            ref={ref => {
-                                if (this.props.commonProps) {
-                                    this.props.commonProps.SRPanelRef = ref;
-                                }
-                            }}
-                        />
-                    )}
+                    {/*/!* Show SRPanel unless explicitly told not to *!/*/}
+                    {/*{this.props.includeSRPanel !== false && (*/}
+                    {/*    <SRPanel*/}
+                    {/*        id={this.props.srPanelID ?? 'coreSRPanel'}*/}
+                    {/*        showPanel={process.env.NODE_ENV !== 'production'}*/}
+                    {/*        ref={ref => {*/}
+                    {/*            if (this.props.commonProps) {*/}
+                    {/*                this.props.commonProps.SRPanelRef = ref;*/}
+                    {/*            }*/}
+                    {/*        }}*/}
+                    {/*    />*/}
+                    {/*)}*/}
                     {toChildArray(children)}
                 </CoreContext.Provider>
             );

@@ -139,7 +139,7 @@ export default class CardPage extends BasePage {
          */
         this.errorPanelVisible = Selector(`${BASE_EL} .adyen-checkout-sr-panel`);
         this.errorPanelHidden = Selector(`${BASE_EL} .adyen-checkout-sr-panel--sr-only`);
-        this.errorPanelEls = Selector('.adyen-checkout-sr-panel__error'); // error messages within the panel
+        this.errorPanelEls = Selector('.adyen-checkout-sr-panel__msg'); // error messages within the panel
 
         /**
          * 3DS2

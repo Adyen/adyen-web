@@ -20,28 +20,31 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         environment: 'test',
         onError: console.error,
         showPayButton: true,
-        moveFocusOnSubmitErrors: true
+        moveFocusOnSubmitErrors: true,
+        srConfig: {
+            node: '.personalDetails-field'
+        }
     });
 
     // Adyen Giving
-    window.donation = checkout
-        .create('donation', {
-            onDonate: (state, component) => {
-                console.log({ state, component });
-                setTimeout(() => component.setStatus('ready'), 1000);
-            },
-            url: 'https://example.org',
-            amounts: {
-                currency: 'EUR',
-                values: [50, 199, 300]
-            },
-            backgroundUrl:
-                'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
-            description: 'Lorem ipsum...',
-            logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
-            name: 'Test Charity'
-        })
-        .mount('.donation-field');
+    // window.donation = checkout
+    //     .create('donation', {
+    //         onDonate: (state, component) => {
+    //             console.log({ state, component });
+    //             setTimeout(() => component.setStatus('ready'), 1000);
+    //         },
+    //         url: 'https://example.org',
+    //         amounts: {
+    //             currency: 'EUR',
+    //             values: [50, 199, 300]
+    //         },
+    //         backgroundUrl:
+    //             'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
+    //         description: 'Lorem ipsum...',
+    //         logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
+    //         name: 'Test Charity'
+    //     })
+    //     .mount('.donation-field');
 
     // Personal details
     window.personalDetails = checkout
@@ -51,42 +54,42 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.personalDetails-field');
 
     // Address
-    window.address = checkout
-        .create('address', {
-            onChange: console.log,
-            validationRules: {
-                postalCode: {
-                    validate: (value, context) => {
-                        const selectedCountry = context.state?.data?.country;
-                        const isOptional = selectedCountry === 'IN';
-                        return isOptional || (value && value.length > 0);
-                    },
-                    modes: ['blur']
-                },
-                default: {
-                    validate: value => value && value.length > 0,
-                    modes: ['blur']
-                }
-            },
-            specifications: {
-                IN: {
-                    hasDataset: false,
-                    optionalFields: ['postalCode'],
-                    labels: {
-                        postalCode: 'pin',
-                        street: 'addressTown'
-                    },
-                    schema: [
-                        'country',
-                        'street',
-                        'houseNumberOrName',
-                        [
-                            ['city', 70],
-                            ['postalCode', 30]
-                        ]
-                    ]
-                }
-            }
-        })
-        .mount('.address-field');
+    // window.address = checkout
+    //     .create('address', {
+    //         onChange: console.log,
+    //         validationRules: {
+    //             postalCode: {
+    //                 validate: (value, context) => {
+    //                     const selectedCountry = context.state?.data?.country;
+    //                     const isOptional = selectedCountry === 'IN';
+    //                     return isOptional || (value && value.length > 0);
+    //                 },
+    //                 modes: ['blur']
+    //             },
+    //             default: {
+    //                 validate: value => value && value.length > 0,
+    //                 modes: ['blur']
+    //             }
+    //         },
+    //         specifications: {
+    //             IN: {
+    //                 hasDataset: false,
+    //                 optionalFields: ['postalCode'],
+    //                 labels: {
+    //                     postalCode: 'pin',
+    //                     street: 'addressTown'
+    //                 },
+    //                 schema: [
+    //                     'country',
+    //                     'street',
+    //                     'houseNumberOrName',
+    //                     [
+    //                         ['city', 70],
+    //                         ['postalCode', 30]
+    //                     ]
+    //                 ]
+    //             }
+    //         }
+    //     })
+    //     .mount('.address-field');
 });

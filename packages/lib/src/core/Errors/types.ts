@@ -2,6 +2,7 @@ import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult
 import { SFError } from '../../components/Card/components/CardInput/types';
 import Language from '../../language';
 import { StringObject } from '../../components/internal/Address/types';
+import { BaseElementProps } from '../../components/types';
 
 export interface ErrorObj {
     // Describes an object with unknown keys whose value is always a ValidationRuleResult or FieldError
@@ -22,8 +23,8 @@ export interface SortedErrorObject {
     errorCode: string;
 }
 
-export interface SRPanelProps {
-    id?: string;
-    showPanel?: boolean;
-    ref?: any;
+export interface SRPanelProps extends BaseElementProps {
+    enabled: boolean;
+    node: string;
+    showPanel: boolean;
 }

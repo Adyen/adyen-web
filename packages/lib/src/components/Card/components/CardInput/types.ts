@@ -7,6 +7,9 @@ import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/l
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
+import { SRPanel } from '../../../../core/Errors/SRPanel';
+import Analytics from '../../../../core/Analytics';
+import RiskElement from '../../../../core/RiskModule';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -81,6 +84,11 @@ export interface CardInputProps {
     loadingContext: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
+    modules?: {
+        srPanel: SRPanel;
+        analytics: Analytics;
+        risk: RiskElement;
+    };
     onAdditionalSFConfig?: () => {};
     onAdditionalSFRemoved?: () => {};
     onAllValid?: () => {};
