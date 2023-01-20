@@ -50,8 +50,8 @@ export class SRPanel extends Component<SRPanelProps> {
         this.setState({ errorMessages });
     };
 
-    // eslint-disable-next-line no-empty-pattern
-    render({}, { errorMessages }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    render(props = {}, { errorMessages }) {
         return (
             <div
                 className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
