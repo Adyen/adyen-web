@@ -68,11 +68,13 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     };
 
     public createMessageElements() {
+        // Remove old holder
         if (this.msgHolder) {
             this.msgPanel.removeChild(this.msgHolder);
             this.msgHolder = null;
         }
 
+        // If we have new messages - create them and add them to the holder
         if (this.state.panelMessages) {
             this.msgHolder = document.createElement('div');
             this.msgHolder.className = 'adyen-checkout-sr-panel__msg-holder';
