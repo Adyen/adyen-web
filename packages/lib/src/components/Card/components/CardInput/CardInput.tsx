@@ -41,7 +41,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
 
-    const SRPanelRef = props.modules.srPanel;
+    const { current: SRPanelRef } = useRef(props.modules.srPanel);
 
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);

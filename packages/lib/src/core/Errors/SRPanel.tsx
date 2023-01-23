@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import './SRPanel.scss';
 import { SRPanelProps } from './types';
 import BaseElement from '../../components/BaseElement';

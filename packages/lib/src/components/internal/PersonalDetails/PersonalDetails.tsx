@@ -23,7 +23,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
 
-    const SRPanelRef = props.modules.srPanel;
+    const { current: SRPanelRef } = useRef(props.modules.srPanel);
 
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
 
