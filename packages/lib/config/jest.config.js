@@ -1,9 +1,11 @@
 module.exports = {
-    transformIgnorePatterns: ['node_modules'],
+    preset: 'ts-jest',
+    testEnvironment: 'jsdom',
+    transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library)/)'],
     transform: {
+        '^.+\\.(js|mjs)$': 'babel-jest',
         '\\.[jt]sx?$': 'babel-jest',
-        '^.+\\.ts?$': 'ts-jest',
-        '^.+\\.tsx?$': 'ts-jest'
+        '^.+\\.(ts|tsx)?$': 'ts-jest'
     },
     moduleNameMapper: {
         '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/config/testMocks/fileMock.js',
@@ -11,8 +13,7 @@ module.exports = {
         '\\.scss$': '<rootDir>/config/testMocks/styleMock.js',
         '~(.*)$': '<rootDir>/src$1'
     },
-    verbose: true,
-    testEnvironment: 'jsdom',
+    verbose: false,
     globals: {
         NODE_ENV: 'test'
     },
