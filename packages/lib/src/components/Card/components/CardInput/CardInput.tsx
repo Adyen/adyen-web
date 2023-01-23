@@ -376,7 +376,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
                 console.log('### CardInput::componentDidUpdate:: multiple errors:: (validating) errorMsgArr=', errorMsgArr);
                 SRPanelRef.setMessages(errorMsgArr);
-                // srPanel.current.setErrors(errorMsgArr);
 
                 if (moveFocusOnSubmitErrors) {
                     const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
