@@ -6,10 +6,5 @@
   ],
   "labels": ["dependencies"],
   "stabilityDays": 21,
-  "prConcurrentLimit": 5,
-  "ignorePaths": [
-    "**/node_modules/**",
-    "packages/e2e/**",
-    "packages/playground/**"
-  ]
+  "prConcurrentLimit": 5
 }
