@@ -37,7 +37,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             if (document.querySelector(this.props.node)) {
                 this.srPanelContainer = document.createElement('div');
-                this.srPanelContainer.className = 'srPanel-holder';
+                this.srPanelContainer.className = 'sr-panel-holder';
                 document.querySelector(this.props.node).appendChild(this.srPanelContainer);
                 this.mount(this.srPanelContainer);
 
@@ -101,16 +101,14 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     render() {
         console.log('### SRPanel::render:: ');
         return (
-            // <div
-            //     className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
-            //     id={this.id}
-            //     aria-live={'polite'}
-            //     aria-atomic={'true'}
-            // >
-            <Fragment>
-                <SRMessages id={this.id} showPanel={this.showPanel} setComponentRef={this.setComponentRef} />
-            </Fragment>
-            // </div>
+            <div
+                className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
+                id={this.id}
+                aria-live={'polite'}
+                aria-atomic={'true'}
+            >
+                <SRMessages setComponentRef={this.setComponentRef} />
+            </div>
         );
     }
 }

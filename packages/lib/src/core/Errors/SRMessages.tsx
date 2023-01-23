@@ -8,7 +8,7 @@ export interface SRMessagesRef {
 }
 
 // TODO set type SRMessagesProps
-export function SRMessages({ id = 'SRPanelMessages', setComponentRef, showPanel = true }: SRMessagesProps) {
+export function SRMessages({ setComponentRef }: SRMessagesProps) {
     const messagesRef = useRef<SRMessagesRef>({});
     // Just call once to create the object by which we expose the members expected by the parent comp
     if (!Object.keys(messagesRef.current).length) {
@@ -22,17 +22,13 @@ export function SRMessages({ id = 'SRPanelMessages', setComponentRef, showPanel 
         setMessages(msgs);
     };
 
-    return (
-        <div className={showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'} id={id} aria-live={'polite'} aria-atomic={'true'}>
-            {messages && (
-                <Fragment>
-                    {messages.map(msg => (
-                        <div key={msg} className="adyen-checkout-sr-panel__msg">
-                            {msg}
-                        </div>
-                    ))}
-                </Fragment>
-            )}
-        </div>
-    );
+    return messages ? (
+        <Fragment>
+            {messages.map(msg => (
+                <div key={msg} className="adyen-checkout-sr-panel__msg">
+                    {msg}
+                </div>
+            ))}
+        </Fragment>
+    ) : null;
 }
