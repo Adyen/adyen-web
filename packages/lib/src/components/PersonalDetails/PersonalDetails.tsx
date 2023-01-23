@@ -21,8 +21,6 @@ export class PersonalDetailsElement extends UIElement {
             <CoreProvider
                 i18n={this.props.i18n}
                 loadingContext={this.props.loadingContext}
-                srPanelID={'personalDetailsErrors'}
-                // includeSRPanel={false}
                 commonProps={{
                     moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
                 }}

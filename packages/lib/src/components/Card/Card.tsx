@@ -230,7 +230,6 @@ export class CardElement extends UIElement<CardElementProps> {
             <CoreProvider
                 i18n={this.props.i18n}
                 loadingContext={this.props.loadingContext}
-                srPanelID={'creditCardErrors'}
                 commonProps={{
                     moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
                 }}
