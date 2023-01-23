@@ -1,20 +1,15 @@
 import { Component, h, toChildArray } from 'preact';
 import { CoreContext } from './CoreContext';
-import { SRPanel } from '../Errors/SRPanel';
 
 interface CoreProviderProps {
     loadingContext: string;
     i18n: any;
-    srPanelID?: string;
-    includeSRPanel?: boolean;
     children?: any;
     commonProps?: CommonPropsTypes;
 }
 
 export interface CommonPropsTypes {
     moveFocusOnSubmitErrors?: boolean;
-    srPanelID?: string;
-    SRPanelRef?: any;
 }
 /**
  * CoreProvider Component
@@ -41,18 +36,6 @@ class CoreProvider extends Component<CoreProviderProps> {
                 <CoreContext.Provider
                     value={{ i18n: this.props.i18n, loadingContext: this.props.loadingContext, commonProps: this.props.commonProps || {} }}
                 >
-                    {/*/!* Show SRPanel unless explicitly told not to *!/*/}
-                    {/*{this.props.includeSRPanel !== false && (*/}
-                    {/*    <SRPanel*/}
-                    {/*        id={this.props.srPanelID ?? 'coreSRPanel'}*/}
-                    {/*        showPanel={process.env.NODE_ENV !== 'production'}*/}
-                    {/*        ref={ref => {*/}
-                    {/*            if (this.props.commonProps) {*/}
-                    {/*                this.props.commonProps.SRPanelRef = ref;*/}
-                    {/*            }*/}
-                    {/*        }}*/}
-                    {/*    />*/}
-                    {/*)}*/}
                     {toChildArray(children)}
                 </CoreContext.Provider>
             );
