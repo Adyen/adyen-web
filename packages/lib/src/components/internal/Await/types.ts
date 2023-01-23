@@ -18,7 +18,6 @@ export interface AwaitComponentProps {
     throttleInterval: number;
     paymentData: string;
     url?: string;
-    shouldRedirectOnMobile?: boolean;
     classNameModifiers?: string[];
     clientKey: string;
     onError: (error) => void;

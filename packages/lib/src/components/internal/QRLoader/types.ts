@@ -8,7 +8,6 @@ export interface QRLoaderProps {
     onComplete?: (data) => void;
     throttleTime?: number;
     throttledInterval?: number;
-    shouldRedirectOnMobile?: boolean;
     url?: string;
     type?: string;
     paymentData?: string;

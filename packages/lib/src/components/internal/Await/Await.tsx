@@ -106,15 +106,7 @@ function Await(props: AwaitComponentProps) {
     };
 
     useEffect(() => {
-        const { shouldRedirectOnMobile, url } = props;
-        const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
-
-        if (shouldRedirectOnMobile && url && isMobile) {
-            redirectToApp(url, checkStatus);
-        } else {
-            checkStatus();
-        }
-
+        checkStatus();
         return (): void => {
             clearTimeout(storedTimeout);
         };
