@@ -11,7 +11,6 @@ import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
-// import { SRPanel } from '../../../../core/Errors/SRPanel';
 import { SortedErrorObject } from '../../../../core/Errors/types';
 import {
     handlePartialAddressMode,
@@ -41,7 +40,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
 
-    const { current: SRPanelRef } = useRef(props.modules.srPanel);
+    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
 
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
@@ -464,8 +463,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         })}
                         role={'form'}
                     >
-                        {/*<SRPanel ref={srPanel} id={'creditCardErrorsCompLevel'} showPanel={true} />*/}
-
                         <FieldToRender
                             // Extract exact props that we need to pass down
                             {...extractPropsForCardFields(props)}

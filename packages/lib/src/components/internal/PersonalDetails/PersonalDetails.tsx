@@ -12,7 +12,6 @@ import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData, mapFieldKey, setFocusOnFirstField } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
-// import { SRPanel } from '../../../core/Errors/SRPanel';
 import { sortErrorsByLayout } from '../../../core/Errors/utils';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
@@ -23,14 +22,11 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
 
-    const { current: SRPanelRef } = useRef(props.modules.srPanel);
+    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
 
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
 
     const isValidating = useRef(false);
-
-    console.log('### PersonalDetails::PersonalDetails:: moveFocusOnSubmitErrors', moveFocusOnSubmitErrors);
-    console.log('### PersonalDetails::PersonalDetails:: SRPanelRef', SRPanelRef);
 
     const personalDetailsRef = useRef<PersonalDetailsRef>({});
     // Just call once to create the object by which we expose the members expected by the parent PersonalDetails comp
@@ -108,7 +104,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     return (
         <Fragment>
-            {/*<SRPanel id={'personalDetailsErrorsCompLevel'} errors={SRErrors} showPanel={true} />*/}
             <Fieldset classNameModifiers={['personalDetails']} label={label}>
                 {requiredFields.includes('firstName') && (
                     <Field
