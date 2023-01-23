@@ -28,3 +28,9 @@ export interface SRPanelProps extends BaseElementProps {
     node: string;
     showPanel: boolean;
 }
+
+export interface SRMessagesProps {
+    id: string;
+    showPanel: boolean;
+    setComponentRef: (ref: any) => void;
+}
