@@ -1,31 +1,30 @@
 @import 'src/style/index';
 
 .adyen-checkout__content-separator {
-  margin-top: $spacing-medium;
-  margin-bottom: $spacing-medium;
-  display:flex;
-  justify-content:center;
-  align-items: center;
-  color: $color-gray-darker;
-  white-space: nowrap;
-  font-size: 13px;
-  line-height: 19px;
+    margin-top: $spacing-medium;
+    margin-bottom: $spacing-medium;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color-gray-darker;
+    white-space: nowrap;
+    font-size: 13px;
+    line-height: 19px;
 
-  &:after,
-  &:before {
-    content: "";
-    display: block;
-    background: $color-gray-light;
-    width: 100%;
-    height: 1px;
-  }
+    &::after,
+    &::before {
+        content: '';
+        display: block;
+        background: $color-gray-light;
+        width: 100%;
+        height: 1px;
+    }
 
-  &:after {
-    margin-left: 20px
-  }
+    &::after {
+        margin-left: 20px;
+    }
 
-  &:before {
-    margin-right: 20px;
-  }
-
+    &::before {
+        margin-right: 20px;
+    }
 }

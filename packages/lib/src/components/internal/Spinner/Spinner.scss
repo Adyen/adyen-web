@@ -11,6 +11,7 @@
     height: auto;
     display: inline-block;
     margin-right: 8px;
+
     [dir='rtl'] & {
         margin-right: 0;
         margin-left: 8px;
@@ -23,7 +24,7 @@
     height: 43px;
     width: 43px;
     border-top-color: transparent;
-    animation: rotateSpinner 1.5s infinite linear;
+    animation: rotate-spinner 1.5s infinite linear;
 }
 
 .adyen-checkout__spinner--large {
@@ -42,10 +43,11 @@
     width: 28px;
 }
 
-@keyframes rotateSpinner {
+@keyframes rotate-spinner {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

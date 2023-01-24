@@ -52,9 +52,10 @@
     height: 4px;
     background: $color-gray;
     border-radius: $border-radius-xlarge;
-    margin: 32px auto 12px auto;
+    margin: 32px auto 12px;
     width: 152px;
     padding-right: 3%;
+
     [dir='rtl'] & {
         padding-right: 0;
         padding-left: 3%;

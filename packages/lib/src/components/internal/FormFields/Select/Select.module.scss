@@ -10,7 +10,7 @@
     cursor: pointer;
 }
 
-.adyen-checkout__dropdown__button:after {
+.adyen-checkout__dropdown__button::after {
     position: absolute;
     content: '';
     height: 6px;
@@ -26,7 +26,7 @@
     }
 }
 
-.adyen-checkout__dropdown__button--active:after {
+.adyen-checkout__dropdown__button--active::after {
     transform: rotate(180deg);
 }
 

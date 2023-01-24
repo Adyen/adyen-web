@@ -36,7 +36,7 @@
     margin-top: $spacing-medium;
 }
 
-.adyen-checkout__card-input.adyen-checkout__card-input--loading{
+.adyen-checkout__card-input.adyen-checkout__card-input--loading {
     pointer-events: none;
 }
 
@@ -46,7 +46,7 @@
 
 /* When holderName is on top & co-exists with an error panel */
 .adyen-checkout-error-panel--sr-only + .adyen-checkout__card__holderName,
-.adyen-checkout-error-panel + .adyen-checkout__card__holderName{
+.adyen-checkout-error-panel + .adyen-checkout__card__holderName {
     margin: 0 0 $spacing-medium;
 }
 
@@ -67,7 +67,7 @@
     opacity: 0;
 }
 
-@keyframes cvcIndicateLocation {
+@keyframes cvc-indicate-location {
     from {
         opacity: 1;
     }
@@ -82,7 +82,7 @@
     .adyen-checkout__field__cvc--back-hint .adyen-checkout__card__cvc__hint--back {
         .adyen-checkout__card__cvc__hint__location {
             animation-duration: 1s;
-            animation-name: cvcIndicateLocation;
+            animation-name: cvc-indicate-location;
             animation-iteration-count: infinite;
             animation-direction: alternate;
         }
@@ -95,10 +95,8 @@
     top: 0;
     height: 100%;
     width: 27px;
-
     display: flex;
     align-items: center;
-
     margin: 0 10px;
 
     // Card Flip animation
@@ -123,17 +121,18 @@
 
 .adyen-checkout__field__exp-date_hint_wrapper {
     position: absolute;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
+    right: 0;
+    top: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     transition: opacity 0.1s linear;
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
         opacity: 0;
-    }    
+    }
 }
+
 .adyen-checkout__field__exp-date_hint {
     width: 27px;
     height: 18px;

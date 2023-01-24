@@ -1,41 +1,38 @@
 @import '../../../style/index';
 
-.adyen-checkout__bacs{
+.adyen-checkout__bacs {
+    &--confirm {
+        position: relative;
 
-  &--confirm {
-    position: relative;
-
-    .adyen-checkout-input__inline-validation--valid {
-      display: none
-    }
-  }
-
-  .adyen-checkout__field {
-
-    &--inactive {
-      pointer-events: none;
-    }
-  }
-
-  .adyen-checkout__bacs--edit {
-
-    position: absolute;
-    top: -25px;
-    right: 0px;
-    cursor: pointer;
-    width: 20%;
-
-    &-dropin{
-      top: -50px;
+        .adyen-checkout-input__inline-validation--valid {
+            display: none;
+        }
     }
 
-    .adyen-checkout__bacs--edit-button {
-      border: none;
-      background: none;
-      color: $color-blue;
-      text-decoration: underline;
-      text-align: end;
-      cursor: pointer;
+    .adyen-checkout__field {
+        &--inactive {
+            pointer-events: none;
+        }
     }
-  }
+
+    .adyen-checkout__bacs--edit {
+        position: absolute;
+        top: -25px;
+        right: 0;
+        cursor: pointer;
+        width: 20%;
+
+        &-dropin {
+            top: -50px;
+        }
+
+        .adyen-checkout__bacs--edit-button {
+            border: none;
+            background: none;
+            color: $color-blue;
+            text-decoration: underline;
+            text-align: end;
+            cursor: pointer;
+        }
+    }
 }

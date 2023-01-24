@@ -22,7 +22,7 @@
 
     &:hover {
         background: #1c3045;
-        box-shadow: 0 0, 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14);
+        box-shadow: 0 0, 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%);
     }
 
     &:active {
@@ -30,7 +30,7 @@
     }
 
     &:hover:focus {
-        box-shadow: 0 0 0 2px $color-blue-light, 0 3px 4px rgba(0, 15, 45, 0.2);
+        box-shadow: 0 0 0 2px $color-blue-light, 0 3px 4px rgb(0 15 45 / 20%);
     }
 
     &:disabled {
@@ -52,9 +52,11 @@
 
     &.adyen-checkout__button--pay {
         margin-top: 24px;
+
         &:disabled {
             opacity: 0.4;
         }
+
         display: flex;
         justify-content: center;
     }
@@ -95,7 +97,7 @@
 
         &:hover {
             background: $color-gray-lighter;
-            box-shadow: 0px 2px 4px rgba(27, 42, 60, 0.2), 0px 4px 5px rgba(27, 42, 60, 0.14);;
+            box-shadow: 0 2px 4px rgb(27 42 60 / 20%), 0 4px 5px rgb(27 42 60 / 14%);
         }
 
         &:active,
@@ -109,7 +111,7 @@
             &:hover {
                 box-shadow: none;
                 cursor: not-allowed;
-                border-color: #99A3AD;
+                border-color: #99a3ad;
                 background-color: $color-gray-lighter;
                 opacity: 0.5;
                 user-select: all;
@@ -124,18 +126,18 @@
 
     &.adyen-checkout__button--action {
         padding: 10px 12px;
-        background: rgba(0, 102, 255, 0.1);
+        background: rgb(0 102 255 / 10%);
         border: 1px solid transparent;
         color: $color-blue;
 
         &:hover {
-            background: rgba(0, 102, 255, 0.2);
+            background: rgb(0 102 255 / 20%);
             box-shadow: none;
         }
 
         &:active,
         &:active:hover {
-            background: rgba(0, 102, 255, 0.3);
+            background: rgb(0 102 255 / 30%);
             box-shadow: none;
         }
     }

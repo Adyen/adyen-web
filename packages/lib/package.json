@@ -96,8 +96,9 @@
         "rollup-plugin-postcss": "^4.0.2",
         "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-visualizer": "^5.8.3",
-        "stylelint": "^14.0.0",
-        "stylelint-config-recommended": "^5.0.0",
+        "stylelint": "14.16.1",
+        "stylelint-config-prettier-scss": "0.0.1",
+        "stylelint-config-standard-scss": "6.1.0",
         "tslib": "^2.4.1",
         "typescript": "4.5.3",
         "whatwg-fetch": "^3.6.2"
