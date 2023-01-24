@@ -9,10 +9,11 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps, PersonalDetailsRef } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
-import { getFormattedData, mapFieldKey, setFocusOnFirstField } from './utils';
+import { getFormattedData, mapFieldKey } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
-import { sortErrorsByLayout } from '../../../core/Errors/utils';
+import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
+import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -27,6 +28,18 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
 
     const isValidating = useRef(false);
+
+    // Generate a setSRMessages function once only (since the initial set of parameters don't change)
+    const { current: setSRMessages } = useRef(
+        partial(setSRMessagesFromErrors, {
+            SRPanelRef,
+            i18n,
+            fieldTypeMappingFn: mapFieldKey,
+            isValidating,
+            moveFocusOnSubmitErrors,
+            focusSelector: '.adyen-checkout__fieldset--personalDetails'
+        })
+    );
 
     const personalDetailsRef = useRef<PersonalDetailsRef>({});
     // Just call once to create the object by which we expose the members expected by the parent PersonalDetails comp
@@ -64,37 +77,38 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         const formattedData = getFormattedData(data);
 
         console.log('### PersonalDetails:::: errors=', errors);
-        // console.log('### PersonalDetails:::: requiredFields=', requiredFields);
 
-        const currentErrorsSortedByLayout = sortErrorsByLayout({
-            errors,
-            i18n,
-            fieldTypeMappingFn: mapFieldKey
-        });
+        setSRMessages(errors);
 
-        console.log('### PersonalDetails::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
-
-        if (currentErrorsSortedByLayout) {
-            /** If validating i.e. "on submit" type event - then display all errors in the error panel */
-            if (isValidating.current) {
-                const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-                SRPanelRef.setMessages(errorMsgArr);
-
-                if (moveFocusOnSubmitErrors) {
-                    const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
-                    setFocusOnFirstField('.adyen-checkout__fieldset--personalDetails', fieldListArr[0]);
-                }
-
-                // Remove 'showValidation' mode
-                isValidating.current = false;
-            } else {
-                console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
-                SRPanelRef?.setMessages(null);
-            }
-        } else {
-            console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
-        }
+        // const currentErrorsSortedByLayout = sortErrorsByLayout({
+        //     errors,
+        //     i18n,
+        //     fieldTypeMappingFn: mapFieldKey
+        // });
+        //
+        // console.log('### PersonalDetails::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
+        //
+        // if (currentErrorsSortedByLayout) {
+        //     /** If validating i.e. "on submit" type event - then display all errors in the error panel */
+        //     if (isValidating.current) {
+        //         const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
+        //         SRPanelRef.setMessages(errorMsgArr);
+        //
+        //         if (moveFocusOnSubmitErrors) {
+        //             const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
+        //             setFocusOnFirstField('.adyen-checkout__fieldset--personalDetails', fieldListArr[0]);
+        //         }
+        //
+        //         // Remove 'showValidation' mode
+        //         isValidating.current = false;
+        //     } else {
+        //         console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
+        //         SRPanelRef?.setMessages(null);
+        //     }
+        // } else {
+        //     console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
+        //     SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
+        // }
 
         props.onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
@@ -118,7 +132,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                             value: data.firstName,
                             classNameModifiers: ['firstName'],
                             onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
                             placeholder: placeholders.firstName,
                             spellCheck: false,
                             required: true
@@ -139,7 +152,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                             value: data.lastName,
                             classNameModifiers: ['lastName'],
                             onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
                             placeholder: placeholders.lastName,
                             spellCheck: false,
                             required: true
@@ -179,7 +191,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                             value: data.dateOfBirth,
                             classNameModifiers: ['dateOfBirth'],
                             onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
                             placeholder: placeholders.dateOfBirth,
                             required: true
                         })}
@@ -200,7 +211,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                             value: data.shopperEmail,
                             classNameModifiers: ['shopperEmail'],
                             onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
                             placeholder: placeholders.shopperEmail,
                             required: true
                         })}
@@ -221,7 +231,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                             value: data.telephoneNumber,
                             classNameModifiers: ['telephoneNumber'],
                             onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
                             placeholder: placeholders.telephoneNumber,
                             required: true
                         })}

@@ -16,7 +16,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         showPanel: false
     };
 
-    private srPanelContainer = null;
+    private readonly srPanelContainer = null;
 
     private readonly id;
     private readonly showPanel;

@@ -2,6 +2,7 @@ import { ERROR_CODES } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
+import { setFocusOnFirstField } from '../../components/internal/PersonalDetails/utils';
 
 /**
  * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
@@ -98,4 +99,39 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     }, []);
 
     return sortedErrors;
+};
+
+// export const setSRMessagesFromErrors = ({ errors, i18n, fieldTypeMappingFn, isValidating, SRPanelRef, moveFocusOnSubmitErrors, focusSelector }) => {
+
+// Implemented as a partial, with an object containing the first 6 arguments; then the final argument, errors, is passed to the partial
+export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating, SRPanelRef, moveFocusOnSubmitErrors, focusSelector }, errors) => {
+    const currentErrorsSortedByLayout = sortErrorsByLayout({
+        errors,
+        i18n,
+        fieldTypeMappingFn
+    });
+
+    console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
+
+    if (currentErrorsSortedByLayout) {
+        /** If validating i.e. "on submit" type event - then display all errors in the SR panel */
+        if (isValidating.current) {
+            const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
+            SRPanelRef.setMessages(errorMsgArr);
+
+            if (moveFocusOnSubmitErrors) {
+                const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
+                setFocusOnFirstField(focusSelector, fieldListArr[0]);
+            }
+
+            // Remove 'showValidation' mode
+            isValidating.current = false;
+        } else {
+            console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: updating but not validating');
+            SRPanelRef?.setMessages(null);
+        }
+    } else {
+        console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
+        SRPanelRef.setMessages(null); // not validating - so clear SR panel
+    }
 };
