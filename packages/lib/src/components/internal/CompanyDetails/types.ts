@@ -16,9 +16,15 @@ export interface CompanyDetailsProps {
     readonly?: boolean;
     ref?: any;
     validationRules?: ValidatorRules;
+    setComponentRef?: (ref) => void;
 }
 
 export interface ReadOnlyCompanyDetailsProps {
     name?: string;
     registrationNumber?: string;
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface CompanyDetailsRef {
+    showValidation?: (who) => void;
 }

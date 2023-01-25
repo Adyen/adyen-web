@@ -1,5 +1,5 @@
-import { h, createRef } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { h } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
@@ -23,10 +23,15 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const { i18n } = useCoreContext();
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
     const [activeFieldsets, setActiveFieldsets] = useState<OpenInvoiceActiveFieldsets>(initialActiveFieldsets);
-    const fieldsetsRefs: OpenInvoiceFieldsetsRefs = fieldsetsSchema.reduce((acc, fieldset) => {
-        acc[fieldset] = createRef();
-        return acc;
-    }, {});
+
+    const { current: fieldsetsRefs } = useRef<OpenInvoiceFieldsetsRefs>(
+        fieldsetsSchema.reduce((acc, fieldset) => {
+            acc[fieldset] = ref => {
+                fieldsetsRefs[fieldset].current = ref;
+            };
+            return acc;
+        }, {})
+    );
 
     const checkFieldsets = () => Object.keys(activeFieldsets).every(fieldset => !activeFieldsets[fieldset] || !!valid[fieldset]);
     const hasConsentCheckbox = !!props.consentCheckboxLabel;
@@ -89,7 +94,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     data={props.data.companyDetails}
                     label="companyDetails"
                     onChange={handleFieldset('companyDetails')}
-                    ref={fieldsetsRefs.companyDetails}
+                    setComponentRef={fieldsetsRefs.companyDetails}
                     visibility={visibility.companyDetails}
                 />
             )}
@@ -100,7 +105,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     requiredFields={props.personalDetailsRequiredFields}
                     label="personalDetails"
                     onChange={handleFieldset('personalDetails')}
-                    ref={fieldsetsRefs.personalDetails}
+                    setComponentRef={fieldsetsRefs.personalDetails}
                     visibility={visibility.personalDetails}
                 />
             )}
@@ -124,7 +129,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     data={data.billingAddress}
                     label="billingAddress"
                     onChange={handleFieldset('billingAddress')}
-                    ref={fieldsetsRefs.billingAddress}
+                    setComponentRef={fieldsetsRefs.billingAddress}
                     visibility={visibility.billingAddress}
                 />
             )}
@@ -146,7 +151,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     data={data.deliveryAddress}
                     label="deliveryAddress"
                     onChange={handleFieldset('deliveryAddress')}
-                    ref={fieldsetsRefs.deliveryAddress}
+                    setComponentRef={fieldsetsRefs.deliveryAddress}
                     visibility={visibility.deliveryAddress}
                 />
             )}
