@@ -43,8 +43,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const { current: SRPanelRef } = useRef(props.modules?.srPanel);
 
     const sfp = useRef(null);
-    const billingAddressRef = useRef(null);
     const isValidating = useRef(false);
+
+    const billingAddressRef = useRef(null);
+    const setAddressRef = ref => {
+        billingAddressRef.current = ref;
+    };
 
     const cardInputRef = useRef<CardInputRef>({});
     // Just call once to create the object by which we expose the members expected by the parent Card comp
@@ -54,8 +58,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const hasPanLengthRef = useRef(0);
     const isAutoJumping = useRef(false);
-
-    // const srPanel = useRef(null);
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
@@ -381,7 +383,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
                     setFocusOnFirstField(isValidating, sfp, fieldListArr[0]);
                 } else {
-                    // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
+                    // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode (Address errors come in a second render)
                     setTimeout(() => {
                         isValidating.current = false;
                     }, 300);
@@ -495,7 +497,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             // For Store details
                             handleOnStoreDetails={setStorePaymentMethod}
                             // For Address
-                            billingAddressRef={billingAddressRef}
+                            setAddressRef={setAddressRef}
                             billingAddress={billingAddress}
                             billingAddressValidationRules={partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)}
                             partialAddressSchema={partialAddressSchema}
