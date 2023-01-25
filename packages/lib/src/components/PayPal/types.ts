@@ -153,7 +153,7 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
-    onGetPayerData?: (payerData) => void;
+    onReceiveOrderData?: (orderData) => void;
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }

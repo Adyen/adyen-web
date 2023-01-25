@@ -13,9 +13,9 @@ export default function PaypalComponent(props: PayPalComponentProps) {
 
     this.setStatus = setStatus;
 
-    const handleComplete = (data, payerData) => {
+    const handleComplete = (data, orderData) => {
         setStatus('processing');
-        props.onComplete(data, payerData);
+        props.onComplete(data, orderData);
     };
 
     const handlePaypalLoad = () => {
