@@ -1,8 +1,11 @@
 {
-    "extends": ["stylelint-config-standard-scss", "stylelint-config-prettier"],
+    "extends": ["stylelint-config-standard-scss"],
+    "defaultSeverity": "warning",
     "rules": {
         "no-descending-specificity": null,
         "selector-class-pattern": null,
-        "scss/no-global-function-names": null
+        "scss/no-global-function-names": null,
+        "indentation": 4,
+        "max-line-length": null
     }
 }

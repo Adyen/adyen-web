@@ -51,17 +51,16 @@
 }
 
 .adyen-checkout__card__cvc__input--hidden,
-.adyen-checkout__card__exp-date__input--hidden
-{
+.adyen-checkout__card__exp-date__input--hidden {
     display: none;
 }
 
-.adyen-checkout__card__exp-cvc__exp-date__input--hidden{
+.adyen-checkout__card__exp-cvc__exp-date__input--hidden {
     justify-content: flex-end;
 }
 
-.revolving-plan-installments{
-    &__disabled{
+.revolving-plan-installments {
+    &__disabled {
         pointer-events: none;
         opacity: 0.4;
     }

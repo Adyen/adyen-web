@@ -1,35 +1,36 @@
 @import '../../../../../../../style/index';
 
 .adyen-checkout-ctp__cards-list-dropdown {
-  // Select Item customization
-  .adyen-checkout__dropdown__element--disabled {
-    opacity: 1;
+    // Select Item customization
+    .adyen-checkout__dropdown__element--disabled {
+        opacity: 1;
 
-    .adyen-checkout__dropdown__element__text {
-      text-decoration: line-through;
-      opacity: 0.4;
+        .adyen-checkout__dropdown__element__text {
+            text-decoration: line-through;
+            opacity: 0.4;
+            margin: 0;
+        }
+
+        .adyen-checkout__dropdown__element__secondary-text {
+            color: $color-gray-darker;
+            font-weight: 500;
+            line-height: 17px;
+        }
     }
 
-    .adyen-checkout__dropdown__element__secondary-text {
-      color: $color-gray-darker;
-      font-weight: 500;
-      line-height: 17px;
-    }
-  }
+    // Select Button customization
+    .adyen-checkout__dropdown__button--disabled {
+        opacity: 1;
 
-  // Select Button customization
-  .adyen-checkout__dropdown__button--disabled {
-    opacity: 1;
+        .adyen-checkout__dropdown__button__text {
+            text-decoration: line-through;
+            opacity: 0.4;
+        }
 
-    .adyen-checkout__dropdown__button__text {
-      text-decoration: line-through;
-      opacity: 0.4;
+        .adyen-checkout__dropdown__button__secondary-text {
+            color: $color-gray-darker;
+            font-weight: 500;
+            opacity: 1;
+        }
     }
-
-    .adyen-checkout__dropdown__button__secondary-text {
-      color: $color-gray-darker;
-      font-weight: 500;
-      opacity: 1;
-    }
-  }
 }
