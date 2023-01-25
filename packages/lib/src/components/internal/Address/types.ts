@@ -2,6 +2,9 @@ import { AddressField, AddressData } from '../../../types';
 import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
+import { SRPanel } from '../../../core/Errors/SRPanel';
+import Analytics from '../../../core/Analytics';
+import RiskElement from '../../../core/RiskModule';
 
 // Describes an object with unknown keys whose value is always a string
 export type StringObject = {
@@ -21,6 +24,14 @@ export interface AddressProps {
     visibility?: string;
     overrideSchema?: AddressSpecifications;
     iOSFocusedField?: string;
+    payButton?: (obj) => {};
+    showPayButton?: boolean;
+    modules?: {
+        srPanel: SRPanel;
+        analytics: Analytics;
+        risk: RiskElement;
+    };
+    setComponentRef?: (ref) => void;
 }
 
 export interface AddressStateError {
@@ -97,4 +108,9 @@ export interface AddressSpecifications {
         placeholders?: StringObject;
         schema?: AddressSchema;
     };
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface AddressRef {
+    showValidation?: (who) => void;
 }

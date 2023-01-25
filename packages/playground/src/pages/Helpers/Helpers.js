@@ -22,7 +22,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true,
         moveFocusOnSubmitErrors: true,
         srConfig: {
-            node: '.personalDetails-field',
             showPanel: true
         }
     });
@@ -58,6 +57,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.address = checkout
         .create('address', {
             onChange: console.log,
+            //TODO - what is the origin/purpose of this postalCode-is-optional-for-India rule??
             validationRules: {
                 postalCode: {
                     validate: (value, context) => {
@@ -65,11 +65,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                         const isOptional = selectedCountry === 'IN';
                         return isOptional || (value && value.length > 0);
                     },
-                    modes: ['blur']
-                },
-                default: {
-                    validate: value => value && value.length > 0,
-                    modes: ['blur']
+                    modes: ['blur'],
+                    errorMessage: 'incomplete field'
                 }
             },
             specifications: {

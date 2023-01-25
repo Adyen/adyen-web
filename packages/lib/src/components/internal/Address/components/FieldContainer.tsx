@@ -72,7 +72,7 @@ function FieldContainer(props: FieldContainerProps) {
                         name: fieldName,
                         value,
                         onInput,
-                        onBlur,
+                        // onBlur,
                         maxlength,
                         trimOnBlur,
                         disabled
