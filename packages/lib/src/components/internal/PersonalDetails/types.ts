@@ -57,7 +57,7 @@ export interface ValidationResult {
     isValid: boolean;
 }
 
-// An interface for the members exposed by CardInput to its parent Card/UIElement
+// An interface for the members exposed by a component to its parent UIElement
 export interface PersonalDetailsRef {
     showValidation?: (who) => void;
 }
