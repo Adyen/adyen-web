@@ -39,16 +39,16 @@ describe('IBAN Validations', () => {
             expect(isValidHolder('John Doe')).toBe(true);
         });
 
-        test('Returns false for an incorrect account Holder Name', () => {
-            expect(isValidHolder('')).toBe(false);
+        test('Returns null for an empty account Holder Name', () => {
+            expect(isValidHolder('')).toBe(null);
         });
 
-        test('Returns false for an undefined account Holder Name', () => {
-            expect(isValidHolder(undefined)).toBe(false);
+        test('Returns null for an undefined account Holder Name', () => {
+            expect(isValidHolder(undefined)).toBe(null);
         });
 
-        test('Returns false for an undefined account Holder Name', () => {
-            expect(isValidHolder(123)).toBe(false);
+        test('Returns true for an defined account Holder Name', () => {
+            expect(isValidHolder(123)).toBe(true);
         });
     });
 
