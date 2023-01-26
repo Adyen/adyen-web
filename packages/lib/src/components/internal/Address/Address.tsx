@@ -54,13 +54,6 @@ export default function Address(props: AddressProps) {
     const addressRef = useRef<AddressRef>({});
     // Just call once
     if (!Object.keys(addressRef.current).length) {
-        // Expose method expected by (parent) Address.tsx
-        addressRef.current.showValidation = () => {
-            // set flag
-            isValidating.current = true;
-            triggerValidation();
-        };
-
         props.setComponentRef?.(addressRef.current);
     }
 
@@ -75,6 +68,13 @@ export default function Address(props: AddressProps) {
         rules: { ...getAddressValidationRules(specifications), ...props.validationRules },
         formatters: addressFormatters
     });
+
+    // Expose method expected by (parent) Address.tsx
+    addressRef.current.showValidation = () => {
+        // set flag
+        isValidating.current = true;
+        triggerValidation();
+    };
 
     /**
      * For iOS: iOSFocusedField is the name of the element calling for other elements to be disabled

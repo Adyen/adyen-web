@@ -11,6 +11,7 @@ import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
     OpenInvoiceProps,
+    OpenInvoiceRef,
     OpenInvoiceStateData,
     OpenInvoiceStateError,
     OpenInvoiceStateValid
@@ -21,6 +22,13 @@ import IbanInput from '../IbanInput';
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const openInvoiceRef = useRef<OpenInvoiceRef>({});
+    // Just call once
+    if (!Object.keys(openInvoiceRef.current).length) {
+        props.setComponentRef?.(openInvoiceRef.current);
+    }
+
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
     const [activeFieldsets, setActiveFieldsets] = useState<OpenInvoiceActiveFieldsets>(initialActiveFieldsets);
 
@@ -46,7 +54,18 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
     const [status, setStatus] = useState('ready');
 
-    this.setStatus = setStatus;
+    // Expose methods expected by parent
+    openInvoiceRef.current.showValidation = () => {
+        fieldsetsSchema.forEach(fieldset => {
+            if (fieldsetsRefs[fieldset].current) fieldsetsRefs[fieldset].current.showValidation();
+        });
+
+        setErrors({
+            ...(hasConsentCheckbox && { consentCheckbox: !data.consentCheckbox })
+        });
+    };
+
+    openInvoiceRef.current.setStatus = setStatus;
 
     useEffect(() => {
         const fieldsetsAreValid: boolean = checkFieldsets();
@@ -75,16 +94,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setData(prevData => ({ ...prevData, consentCheckbox: checked }));
         setValid(prevValid => ({ ...prevValid, consentCheckbox: checked }));
         setErrors(prevErrors => ({ ...prevErrors, consentCheckbox: !checked }));
-    };
-
-    this.showValidation = () => {
-        fieldsetsSchema.forEach(fieldset => {
-            if (fieldsetsRefs[fieldset].current) fieldsetsRefs[fieldset].current.showValidation();
-        });
-
-        setErrors({
-            ...(hasConsentCheckbox && { consentCheckbox: !data.consentCheckbox })
-        });
     };
 
     return (

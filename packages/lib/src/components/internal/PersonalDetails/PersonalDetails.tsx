@@ -55,13 +55,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const personalDetailsRef = useRef<PersonalDetailsRef>({});
     // Just call once
     if (!Object.keys(personalDetailsRef.current).length) {
-        // Expose method expected by (parent) PersonalDetails.tsx
-        personalDetailsRef.current.showValidation = () => {
-            // set flag
-            isValidating.current = true;
-
-            triggerValidation();
-        };
         props.setComponentRef?.(personalDetailsRef.current);
     }
 
@@ -72,6 +65,14 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         rules: { ...personalDetailsValidationRules, ...props.validationRules },
         defaultData: props.data
     });
+
+    // Expose method expected by (parent) PersonalDetails.tsx
+    personalDetailsRef.current.showValidation = () => {
+        // set flag
+        isValidating.current = true;
+
+        triggerValidation();
+    };
 
     const eventHandler = (mode: string): Function => (e: Event): void => {
         const { name } = e.target as HTMLInputElement;
