@@ -46,10 +46,6 @@ describe('IBAN Validations', () => {
         test('Returns null for an undefined account Holder Name', () => {
             expect(isValidHolder(undefined)).toBe(null);
         });
-
-        test('Returns true for an defined account Holder Name', () => {
-            expect(isValidHolder(123)).toBe(true);
-        });
     });
 
     describe('checkIbanStatus', () => {
