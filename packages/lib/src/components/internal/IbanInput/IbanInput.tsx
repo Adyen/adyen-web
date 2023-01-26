@@ -103,8 +103,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         this.setState(
             prevState => ({ data: { ...prevState.data, ownerName: holder } }),
             () => {
-                this.setError('holder', !isValidHolder(this.state.data['ownerName']));
-                this.onChange(); // propagate state
+                this.setError('holder', !isValidHolder(this.state.data['ownerName']), this.onChange);
             }
         );
     };
@@ -143,7 +142,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
 
         if (currentIban.length > 0) {
             const validationStatus = checkIbanStatus(currentIban).status;
-            this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null);
+            this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null, this.onChange);
         }
     };
 
