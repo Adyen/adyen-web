@@ -18,13 +18,16 @@ interface EcontextInputProps {
 
 export default function EcontextInput({ personalDetailsRequired = true, data, onChange, showPayButton, payButton }: EcontextInputProps) {
     const personalDetailsRef = useRef(null);
+    const setPersonalDetailsRef = ref => {
+        personalDetailsRef.current = ref;
+    };
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState('ready');
     this.setStatus = setStatus;
 
     this.showValidation = () => {
-        if (personalDetailsRef.current) personalDetailsRef.current.showValidation();
+        personalDetailsRef.current?.showValidation();
     };
 
     return (
@@ -35,7 +38,7 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
                     requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
                     onChange={onChange}
                     namePrefix="econtext"
-                    ref={personalDetailsRef}
+                    setComponentRef={setPersonalDetailsRef}
                     validationRules={econtextValidationRules}
                 />
             )}
