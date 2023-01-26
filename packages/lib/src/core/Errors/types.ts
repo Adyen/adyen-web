@@ -9,6 +9,11 @@ export interface ErrorObj {
     [key: string]: ValidationRuleResult | SFError;
 }
 
+export interface ValidationRuleErrorObj {
+    // Describes an object with unknown keys whose value is always a ValidationRuleResult
+    [key: string]: ValidationRuleResult;
+}
+
 export interface SortErrorsObj {
     errors: ErrorObj;
     layout?: string[];
@@ -31,4 +36,10 @@ export interface SRPanelProps extends BaseElementProps {
 
 export interface SRMessagesProps {
     setComponentRef: (ref: any) => void;
+}
+
+export interface GenericError {
+    isValid?: boolean;
+    errorMessage: string;
+    error: string;
 }
