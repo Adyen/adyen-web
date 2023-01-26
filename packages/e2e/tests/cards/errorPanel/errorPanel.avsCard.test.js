@@ -2,6 +2,12 @@ import CardComponentPage from '../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD } from '../utils/constants';
 import { getInputSelector } from '../../utils/commonUtils';
 
+import LANG from '../../../../lib/src/language/locales/en-US.json';
+
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
+
 const cardPage = new CardComponentPage();
 
 fixture`Testing avsCard's error panel`
@@ -54,11 +60,11 @@ test('#2 Click pay with empty fields and error panel in avsCard is populated', a
 
     // Expect 8 elements, with default order & text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Card number:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(CARD_NUMBER_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(3).withText('Country:').exists)
         .ok()
@@ -135,11 +141,11 @@ test('#4 Switch country to US, click pay with empty fields and error panel in av
 
     // Expect 7 elements, with order & text specific to the US
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Card number:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(CARD_NUMBER_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(3).withText('Address:').exists)
         .ok()
@@ -217,11 +223,11 @@ test('#6 Switch country to UK, click pay with empty fields and error panel in av
 
     // Expect 7 elements, with order & text specific to the UK
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Card number:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(CARD_NUMBER_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(3).withText('House number:').exists)
         .ok()

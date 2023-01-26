@@ -101,7 +101,7 @@ test(
          * Expect error clearing received & processed at SF level
          */
         // Expect input in iframe to have aria-invalid set to true
-        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'true');
+        await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'aria-invalid', 'false');
 
         // Expect error field in iframe to be unfilled
         await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), '');

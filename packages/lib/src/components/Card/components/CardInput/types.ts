@@ -1,6 +1,6 @@
 import Language from '../../../../language/Language';
 import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
-import { PaymentAmount } from '../../../../types';
+import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
@@ -34,7 +34,7 @@ export interface CardInputErrorState {
 
 export interface CardInputDataState {
     holderName?: string;
-    billingAddress?: object;
+    billingAddress?: AddressData;
     socialSecurityNumber?: string;
     taxNumber?: string;
 }
@@ -65,9 +65,11 @@ export interface CardInputProps {
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
+    disableIOSArrowKeys?: boolean;
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
+    forceCompat?: boolean;
     fundingSource?: string;
     hasCVC?: boolean;
     hasHolderName?: boolean;
@@ -109,6 +111,7 @@ export interface CardInputProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type?: string;
+    maskSecurityCode?: boolean;
 }
 
 export interface CardInputState {

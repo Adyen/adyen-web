@@ -108,17 +108,14 @@ test(
             )
             .eql('bcmc');
 
-        // visible cvc holder
-        await t.expect(cvcField.filterVisible().exists).ok();
+        // hidden cvc holder
+        await t.expect(cvcField.filterHidden().exists).ok();
 
         // Click BCMC brand icon
         await t.click(dualBrandingIconHolder.find('img').nth(1));
 
         // Should be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql('bcmc');
-
-        // hidden cvc holder
-        await t.expect(cvcField.filterHidden().exists).ok();
 
         await cardUtils.deleteCardNumber(t);
 

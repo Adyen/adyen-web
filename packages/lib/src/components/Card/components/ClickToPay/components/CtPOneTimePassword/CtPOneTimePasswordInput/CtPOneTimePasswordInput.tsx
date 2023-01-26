@@ -1,6 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useImperativeHandle, useState } from 'preact/hooks';
-import { forwardRef } from 'preact/compat';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { otpValidationRules } from './validate';
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
@@ -10,11 +9,14 @@ import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
 
 interface CtPOneTimePasswordInputProps {
+    hideResendOtpButton: boolean;
     disabled: boolean;
     isValidatingOtp: boolean;
     errorMessage?: string;
+    onSetInputHandlers(handlers: CtPOneTimePasswordInputHandlers): void;
     onPressEnter(): Promise<void>;
     onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
+    onResendCode(): void;
 }
 
 interface CtPOneTimePasswordInputDataState {
@@ -25,14 +27,47 @@ export type CtPOneTimePasswordInputHandlers = {
     validateInput(): void;
 };
 
-const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPOneTimePasswordInputProps>((props, ref) => {
+const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const formSchema = ['otp'];
     const [resendOtpError, setResendOtpError] = useState<string>(null);
-    const { handleChangeFor, data, triggerValidation, valid, errors, isValid } = useForm<CtPOneTimePasswordInputDataState>({
+    const { handleChangeFor, data, triggerValidation, valid, errors, isValid, setData } = useForm<CtPOneTimePasswordInputDataState>({
         schema: formSchema,
         rules: otpValidationRules
     });
+    const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
+    const [inputRef, setInputRef] = useState<HTMLInputElement>(null);
+    const [isOtpFielDirty, setIsOtpFieldDirty] = useState<boolean>(false);
+
+    const validateInput = useCallback(() => {
+        setIsOtpFieldDirty(true);
+        triggerValidation();
+    }, [triggerValidation]);
+
+    /**
+     * If shopper changes the value of the OTP fields, input becomes dirty
+     */
+    useEffect(() => {
+        if (data.otp) setIsOtpFieldDirty(true);
+    }, [data.otp]);
+
+    useEffect(() => {
+        if (inputRef) {
+            inputRef.focus();
+        }
+    }, [inputRef]);
+
+    useEffect(() => {
+        otpInputHandlersRef.current.validateInput = validateInput;
+        props.onSetInputHandlers(otpInputHandlersRef.current);
+    }, [validateInput, props.onSetInputHandlers]);
+
+    const handleOnResendOtp = useCallback(() => {
+        setData('otp', '');
+        setResendOtpError(null);
+        inputRef.focus();
+        props.onResendCode();
+    }, [props.onResendCode, inputRef]);
 
     const handleOnResendOtpError = useCallback(
         (errorCode: string) => {
@@ -41,10 +76,6 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         },
         [i18n]
     );
-
-    const validateInput = useCallback(() => {
-        triggerValidation();
-    }, [triggerValidation]);
 
     const handleOnKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
@@ -55,8 +86,6 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         [props.onPressEnter]
     );
 
-    useImperativeHandle(ref, () => ({ validateInput }));
-
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors]);
@@ -65,8 +94,12 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
         <Field
             name="oneTimePassword"
             label={i18n.get('ctp.otp.fieldLabel')}
-            labelEndAdornment={<CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} />}
-            errorMessage={resendOtpError || props.errorMessage || !!errors.otp}
+            labelEndAdornment={
+                !props.hideResendOtpButton && (
+                    <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
+                )
+            }
+            errorMessage={isOtpFielDirty ? resendOtpError || props.errorMessage || !!errors.otp : null}
             classNameModifiers={['otp']}
         >
             {renderFormField('text', {
@@ -77,10 +110,11 @@ const CtPOneTimePasswordInput = forwardRef<CtPOneTimePasswordInputHandlers, CtPO
                 disabled: props.disabled,
                 onInput: handleChangeFor('otp', 'input'),
                 onBlur: handleChangeFor('otp', 'blur'),
-                onKeyUp: handleOnKeyUp
+                onKeyUp: handleOnKeyUp,
+                onCreateRef: setInputRef
             })}
         </Field>
     );
-});
+};
 
 export default CtPOneTimePasswordInput;

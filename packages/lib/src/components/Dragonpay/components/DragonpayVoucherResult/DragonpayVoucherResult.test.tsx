@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { shallow } from 'enzyme';
 import DragonpayVoucherResult from './DragonpayVoucherResult';
-import Voucher from '../../../internal/Voucher';
 
 describe('DragonpayVoucherResult', () => {
     test('should not render issuer image for dragonpay_otc_philippines', () => {

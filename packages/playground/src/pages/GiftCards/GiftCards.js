@@ -47,7 +47,7 @@ import '../../style.scss';
 
     const session = await createSession({
         amount,
-        reference: 'ABC123',
+        reference: 'antonio_giftcard_test',
         returnUrl,
         shopperLocale,
         shopperReference,
@@ -58,7 +58,7 @@ import '../../style.scss';
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
-        showPayButton: false,
+        showPayButton: true,
 
         // Events
         beforeSubmit: (data, component, actions) => {
@@ -72,41 +72,34 @@ import '../../style.scss';
         }
     });
 
-    const checkoutButton = document.querySelector('#custom-checkout-button');
+    const checkoutAddButton = document.querySelector('#custom-checkout-add-button');
+    const checkoutConfirmButton = document.querySelector('#custom-checkout-confirm-button');
+    const checkoutCardButton = document.querySelector('#custom-checkout-card-button');
+
+    checkoutConfirmButton.style.display = 'none';
 
     const giftcardCheckBalance = () => window.giftcard.balanceCheck();
     const giftcardSubmit = () => window.giftcard.submit();
     const cardSubmit = () => window.card.submit();
 
-    checkoutButton.addEventListener('click', giftcardCheckBalance);
-
-    const setupGiftCardSubmit = () => {
-        checkoutButton.removeEventListener('click', giftcardCheckBalance);
-        checkoutButton.addEventListener('click', giftcardSubmit);
-    };
-    const setupCardSubmit = () => {
-        checkoutButton.removeEventListener('click', setupGiftCardSubmit);
-        checkoutButton.addEventListener('click', cardSubmit);
-    };
+    checkoutAddButton.addEventListener('click', giftcardCheckBalance);
+    checkoutConfirmButton.addEventListener('click', giftcardSubmit);
+    checkoutCardButton.addEventListener('click', cardSubmit);
 
     window.giftcard = sessionCheckout
         .create('giftcard', {
             type: 'giftcard',
             brand: 'svs',
-            onSubmit: () => {
-                afterGiftCard();
-            },
             onOrderCreated: () => {
-                afterGiftCard();
+                console.log('onOrderCreated');
             },
             onRequiringConfirmation: () => {
-                setupGiftCardSubmit();
+                console.log('onRequiringConfirmation');
+                checkoutConfirmButton.style.display = '';
+                checkoutAddButton.style.display = 'none';
             }
         })
         .mount('#giftcard-session-container');
 
-    const afterGiftCard = () => {
-        window.card = sessionCheckout.create('card').mount('#payment-method-container');
-        setupCardSubmit();
-    };
+    window.card = sessionCheckout.create('card').mount('#payment-method-container');
 })();

@@ -1,11 +1,12 @@
-import { CountryFormatRules, FormatRules, Format } from '../../../utils/Validator/types';
+import { CountryFormatRules, FormatRules } from '../../../utils/Validator/types';
+import { Formatter } from '../../../utils/useForm/types';
 import { getFormattingRegEx, SPECIAL_CHARS, trimValWithOneSpace } from '../../../utils/validator-utils';
 
-const createFormatByDigits = (digits): Format => {
+const createFormatByDigits = (digits: number): Formatter => {
     const format = new Array(digits).fill('9').join('');
     return {
         // Formatter - excludes non digits and limits to maxlength
-        formatter: val => val.replace(getFormattingRegEx('^\\d', 'g'), '').substr(0, digits),
+        formatterFn: val => val.replace(getFormattingRegEx('^\\d', 'g'), '').substr(0, digits),
         format,
         maxlength: digits
     };
@@ -16,11 +17,11 @@ const formattingFn = val => trimValWithOneSpace(val).replace(specialCharsRegEx, 
 
 export const addressFormatters: FormatRules = {
     postalCode: {
-        formatter: (val, context) => {
+        formatterFn: (val, context) => {
             const country = context.state.data.country;
 
             // Country specific formatting rule
-            const specificRule = countrySpecificFormatters[country]?.postalCode.formatter;
+            const specificRule = countrySpecificFormatters[country]?.postalCode.formatterFn;
             if (specificRule) {
                 return specificRule(val);
             }
@@ -30,13 +31,13 @@ export const addressFormatters: FormatRules = {
         }
     },
     street: {
-        formatter: formattingFn
+        formatterFn: formattingFn
     },
     houseNumberOrName: {
-        formatter: formattingFn
+        formatterFn: formattingFn
     },
     city: {
-        formatter: formattingFn
+        formatterFn: formattingFn
     }
 };
 
@@ -101,7 +102,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
     GB: {
         postalCode: {
             // Disallow special chars & set to maxlength
-            formatter: val => val.replace(getFormattingRegEx(SPECIAL_CHARS), '').substr(0, 8),
+            formatterFn: val => val.replace(getFormattingRegEx(SPECIAL_CHARS), '').substr(0, 8),
             format: 'AA99 9AA or A99 9AA or A9 9AA',
             maxlength: 8
         }
@@ -181,7 +182,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
     PL: {
         postalCode: {
             // Formatter - excludes non digits & hyphens and limits to a maxlength that varies depending on whether a hyphen is present or not
-            formatter: val => {
+            formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 const maxlength = nuVal.indexOf('-') > -1 ? 6 : 5;
                 return nuVal.substr(0, maxlength);
@@ -192,7 +193,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
     },
     PT: {
         postalCode: {
-            formatter: val => {
+            formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 return nuVal.substr(0, 8);
             },
@@ -229,7 +230,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
     },
     US: {
         postalCode: {
-            formatter: val => {
+            formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 const maxlength = nuVal.indexOf('-') > -1 ? 10 : 5;
                 return nuVal.substr(0, maxlength);

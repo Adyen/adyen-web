@@ -1,5 +1,4 @@
 dist/
 server/
 config/
-*.test.*
 src/polyfills.ts

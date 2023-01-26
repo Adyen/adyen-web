@@ -1,4 +1,4 @@
-interface Experiment {
+export interface Experiment {
     controlGroup: boolean;
     experimentId: string;
     experimentName?: string;

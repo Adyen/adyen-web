@@ -6,19 +6,14 @@
  * @param domain - expected domain for the postMesssage to have originated from
  * @param resolve - the resolve function from the Promise that called this function
  * @param reject - the reject function from the Promise that called this function
- * @param rejectObj - an object to reject the promise with if origins don't match
+ * @param parseErrorObj - an error object to log in the case of unparseable data (albeit from a valid origin)
  * @param expectedType - string to check that the passed data has the expected type
  */
 import { hasOwnProperty } from './hasOwnProperty';
+import { PostMsgParseErrorObject } from '../components/ThreeDS2/types';
 
-const getProcessMessageHandler = (
-    domain: string,
-    resolve: Function,
-    reject: Function,
-    rejectObj: object,
-    expectedType: string
-): Function => event => {
-    const clonedRejectObj = { ...rejectObj };
+const getProcessMessageHandler = (domain: string, resolve: Function, reject: Function, expectedType: string): Function => event => {
+    const parseErrorObj: PostMsgParseErrorObject = {};
     const origin = event.origin || event.originalEvent.origin;
 
     if (origin !== domain) {
@@ -39,10 +34,18 @@ const getProcessMessageHandler = (
         if (hasOwnProperty(feedbackObj, 'type') && feedbackObj.type === expectedType) {
             resolve(feedbackObj);
         } else {
+            // Silent fail - applies when RiskModule device fingerprinting is ongoing and this handler is picking up securedFields traffic
             return 'Event data was not of expected type';
         }
     } catch (e) {
-        reject(clonedRejectObj);
+        parseErrorObj.type = `${expectedType}-JSON-parse-error`;
+        parseErrorObj.comment = 'failed to JSON parse event.data';
+        parseErrorObj.extraInfo = `event.data = ${event.data}`;
+        parseErrorObj.eventDataRaw = event.data;
+
+        // TODO - decide whether to console.log/debug/error &/or call the merchant defined onError callback
+        console.debug('get-process-message-handler::CATCH::Un-parseable JSON:: parseErrorObj=', parseErrorObj);
+
         return false;
     }
 

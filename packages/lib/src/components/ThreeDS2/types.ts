@@ -35,6 +35,13 @@ export interface ThreeDS2FlowObject {
     threeDSServerTransID?: string;
 }
 
+export interface PostMsgParseErrorObject {
+    type?: string;
+    comment?: string;
+    extraInfo?: string;
+    eventDataRaw?: string;
+}
+
 // One token fits all - Fingerprint & Challenge
 export interface ThreeDS2Token {
     acsTransID?: string;

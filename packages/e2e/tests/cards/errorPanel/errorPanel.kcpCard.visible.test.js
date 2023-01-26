@@ -1,5 +1,14 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 import { KOREAN_TEST_CARD } from '../utils/constants';
+import LANG from '../../../../lib/src/language/locales/en-US.json';
+
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
+const PWD_EMPTY = LANG['error.va.sf-kcp-pwd.01'];
+
+const INVALID_NAME = LANG['creditCard.holderName.invalid'];
+const INVALID_TAX_NUMBER = LANG['creditCard.taxNumber.invalid'];
 
 const cardPage = new CardComponentPage();
 
@@ -22,17 +31,17 @@ test('#1 Click pay with empty fields and error panel is populated', async t => {
 
     // Expect 6 elements, in order, with specific text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Card number:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(CARD_NUMBER_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Expiry date:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(EXPIRY_DATE_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('Security code:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Name on card:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(INVALID_NAME).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(4).withText('Cardholder birthdate').exists)
+        .expect(cardPage.errorPanelEls.nth(4).withExactText(INVALID_TAX_NUMBER).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(5).withText('First 2 digits').exists)
+        .expect(cardPage.errorPanelEls.nth(5).withExactText(PWD_EMPTY).exists)
         .ok();
 
     // no 7th element
@@ -60,9 +69,9 @@ test('#2 Fill out PAN & name and see that first error in error panel is tax numb
 
     // Expect 2 elements, in order, with specific text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Cardholder birthdate').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(INVALID_TAX_NUMBER).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('First 2 digits').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(PWD_EMPTY).exists)
         .ok();
 
     // no 3rd element

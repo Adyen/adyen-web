@@ -6,7 +6,7 @@ import ShopperCard from '../models/ShopperCard';
 import { UIElementStatus } from '../../../../types';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 
-export interface ClickToPayContextInterface
+export interface IClickToPayContext
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
     isCtpPrimaryPaymentMethod: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
@@ -15,6 +15,7 @@ export interface ClickToPayContextInterface
     cards: ShopperCard[];
     schemes: string[];
     otpMaskedContact: string;
+    otpNetwork: string;
     amount: PaymentAmount;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
@@ -22,7 +23,7 @@ export interface ClickToPayContextInterface
     onError(error: AdyenCheckoutError): void;
 }
 
-const ClickToPayContext = createContext<ClickToPayContextInterface>({
+const ClickToPayContext = createContext<IClickToPayContext>({
     status: null,
     onSubmit: null,
     onSetStatus: null,
@@ -35,6 +36,7 @@ const ClickToPayContext = createContext<ClickToPayContextInterface>({
     cards: [],
     schemes: [],
     otpMaskedContact: null,
+    otpNetwork: null,
     checkout: null,
     verifyIfShopperIsEnrolled: null,
     startIdentityValidation: null,

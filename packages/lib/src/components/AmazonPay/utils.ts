@@ -7,7 +7,15 @@ import {
     SUPPORTED_LOCALES_EU,
     SUPPORTED_LOCALES_US
 } from './config';
-import { AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
+import {
+    AmazonPayButtonProps,
+    AmazonPayButtonSettings,
+    ChargeAmount,
+    Currency,
+    PayloadJSON,
+    Region,
+    SupportedLocale
+} from './types';
 import { PaymentAmount } from '../../types';
 import { getDecimalAmount } from '../../utils/amount-util';
 
@@ -25,11 +33,11 @@ export function getAmazonPayUrl(region: Region): string {
  * @param props -
  * @returns the AmazonPay button settings
  */
-export function getAmazonPaySettings(props): AmazonPayButtonSettings {
+export function getAmazonPaySettings(props: AmazonPayButtonProps): AmazonPayButtonSettings {
     return {
         ...(props.buttonColor && { buttonColor: props.buttonColor }),
         ...(props.design && { design: getDesignCode(props.design) }),
-        checkoutLanguage: getCheckoutLocale(props.locale, props.region),
+        checkoutLanguage: getCheckoutLocale(props.locale, props.configuration.region),
         ledgerCurrency: LEDGER_CURRENCIES_PER_REGION[props.configuration.region] || props.currency || (props.amount?.currency as Currency),
         merchantId: props.configuration.merchantId,
         productType: props.productType,

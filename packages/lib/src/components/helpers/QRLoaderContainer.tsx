@@ -22,7 +22,9 @@ export interface QRLoaderContainerProps extends UIElementProps {
     shouldRedirectOnMobile?: boolean;
     qrCodeImage?: string;
     paymentData?: string;
+    introduction: string;
     instructions?: string;
+    copyBtn?: boolean;
 }
 
 class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProps> extends UIElement<T> {

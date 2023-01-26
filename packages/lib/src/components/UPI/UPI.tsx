@@ -41,6 +41,10 @@ class UPI extends UIElement<UPIElementProps> {
     private onUpdateMode = (mode: UpiMode): void => {
         if (mode === UpiMode.QrCode) {
             this.useQrCodeVariant = true;
+            /**
+             * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
+             */
+            this.setState({ data: {}, valid: {}, errors: {}, isValid: true });
         } else {
             this.useQrCodeVariant = false;
         }

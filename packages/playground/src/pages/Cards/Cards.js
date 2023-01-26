@@ -5,15 +5,17 @@ import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
+import { MockReactApp } from './MockReactApp';
 
 const showComps = {
+    clickToPay: true,
     storedCard: true,
     card: true,
+    cardInReact: true,
     bcmcCard: true,
     avsCard: true,
     avsPartialCard: true,
-    kcpCard: true,
-    clickToPay: true
+    kcpCard: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -23,7 +25,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
@@ -68,6 +69,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 }
             })
             .mount('.card-field');
+    }
+
+    // Card mounted in a React app
+    if (showComps.cardInReact) {
+        window.cardReact = checkout.create('card', {});
+        MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 
     // Bancontact card
@@ -134,6 +141,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
+                // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
+                // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
                 configuration: {
                     koreanAuthenticationRequired: true
                 },
@@ -153,7 +162,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa'],
                 useClickToPay: true,
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'shopper-ctp1@adyen.com',
+                    shopperIdentityValue: 'gui.ctp@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name '
                 }
             })

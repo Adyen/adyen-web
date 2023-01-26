@@ -1,19 +1,19 @@
 import { Selector } from 'testcafe';
 import { DROPIN_SESSIONS_URL } from '../../../pages';
-import { mock } from './availableBrands.mocks';
+import { getMock } from './availableBrands.mocks';
 import DropinPage from '../../../_models/Dropin.page';
 
 let dropinPage = null;
 
 fixture`Cards - Available Brands (Default view)`
     .page(DROPIN_SESSIONS_URL)
-    .requestHooks([mock])
+    .requestHooks([getMock()])
     .clientScripts('./availableBrands.clientScripts.js')
     .beforeEach(() => {
         dropinPage = new DropinPage({});
     });
 
-test('All available brands show up on the Payment Method Item', async t => {
+test('#1 All available brands show up on the Payment Method Item', async t => {
     const paymentItem = dropinPage.getPaymentMethodItemSelector('Credit Card');
 
     await t.expect(paymentItem.hasBrands).ok();
@@ -21,7 +21,7 @@ test('All available brands show up on the Payment Method Item', async t => {
     await t.expect(paymentItem.numberOfBrandImages).eql(10);
 });
 
-test('Brands are kept in the  Payment Method Item after clicking on it', async t => {
+test('#2 Brands are kept in the  Payment Method Item after clicking on it', async t => {
     const paymentItem = dropinPage.getPaymentMethodItemSelector('Credit Card');
     await paymentItem.click();
 

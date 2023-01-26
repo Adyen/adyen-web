@@ -157,6 +157,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     errorMessage={!!errors.consentCheckbox}
                     label={props.consentCheckboxLabel}
                     onChange={handleConsentCheckbox}
+                    i18n={i18n}
                 />
             )}
 

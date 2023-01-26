@@ -19,40 +19,54 @@ export interface CSFReturnObject {
 }
 
 /**
- * Base interface for SetupObject & ConfigObject
+ * Base interface for CSFSetupObject & CSFConfigObject
+ *
+ * These are the props that are passed from SFP when CSF is initialised but which also end up
+ * as props in CSF->this.config: CSFConfigObject
  */
 interface CSFCommonProps {
+    allowedDOMAccess?: boolean | string; // accept boolean or string representation of a boolean i.e. "false"
+    autoFocus?: boolean | string;
+    keypadFix?: boolean | string;
+    // Below are config props that also end up set on createSecuredFields->SecuredFieldInitObj
     loadingContext: string;
     cardGroupTypes?: string[];
-    allowedDOMAccess?: boolean;
-    autoFocus?: boolean;
-    trimTrailingSeparator?: boolean;
-    showWarnings?: boolean;
-    keypadFix?: boolean;
-    isKCP?: boolean;
+    trimTrailingSeparator?: boolean | string;
+    showWarnings?: boolean | string;
     iframeUIConfig?: object;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
     implementationType?: 'components' | 'custom';
     isCollatingErrors?: boolean;
+    maskSecurityCode: boolean;
 }
 
 /**
- * Object sent when SecuredFieldsProvider initialises CSF
+ * The object sent when SecuredFieldsProvider initialises CSF
+ *
+ * The properties defined here are ones that will not end up on CSF->this.config
  */
 export interface CSFSetupObject extends CSFCommonProps {
     type: string;
     clientKey: string;
     rootNode: string | HTMLElement;
     callbacks?: object;
+    isKCP?: boolean;
     i18n?: Language;
+    forceCompat: boolean;
 }
 
 /**
- * The type for the config object created by CSF: properties that just need to be set once, at startup, and then don't change
- * This object provides the source for many of the properties that are written into the SFSetupObject used to initialise a new SecuredField.ts
+ * The type for the this.config object created by CSF - properties that just need to be set once, at startup, and then don't change.
+ *
+ * The CSFConfigObject provides the source for many of the properties that are written into the
+ * SecuredFieldInitObj used by createSecuredFields.ts to initialise a new SecuredField.ts
+ *
+ * Properties defined directly in *this* interface c.f. CSFCommonProps are ones that are not part of the CSFSetupObject
+ * and which are generated/calculated in handleConfig.ts
  */
 export interface CSFConfigObject extends CSFCommonProps {
+    // These config props also end up set on createSecuredFields->SecuredFieldInitObj
     iframeSrc: string;
     isCreditCardType: boolean;
     sfLogAtStart: boolean;

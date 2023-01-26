@@ -19,4 +19,5 @@ export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeProps {
 export interface PrepareChallenge3DS2State {
     challengeData?: ChallengeData;
     status?: string;
+    errorInfo?: string;
 }

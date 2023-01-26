@@ -22,6 +22,11 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
             // elementRef exists when the fingerprint component is created from the Dropin
             const actionHandler = this.props.elementRef ?? this;
 
+            if (!actionHandler) {
+                console.error('Handled Error::callSubmit3DS2Fingerprint::FAILED:: actionHandler=', actionHandler);
+                return;
+            }
+
             if (!resData.action && !resData.details) {
                 console.error('Handled Error::callSubmit3DS2Fingerprint::FAILED:: resData=', resData);
                 return;

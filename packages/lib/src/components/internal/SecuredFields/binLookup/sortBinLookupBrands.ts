@@ -27,6 +27,7 @@ export const sortBrandsAccordingToRules = (brandsArray: any, cardType: string): 
     /**
      * RULE 2: if BCMC card component & bcmc is dual branded with maestro
      *  - maestro has cvcPolicy:'hidden'
+     *  TODO - NOTE: this now applies to all situations where bcmc is dual branded with maestro
      */
     if (cardType === 'bcmc' && hasBCMC && hasMaestro) {
         clonedArr[1].cvcPolicy = CVC_POLICY_HIDDEN; // Maestro already placed into index 1 by Rule 1

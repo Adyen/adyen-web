@@ -3,8 +3,11 @@ import Button from '../../../../../internal/Button';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import CtPLoginInput, { CtPLoginInputHandlers } from './CtPLoginInput';
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 import './CtPLogin.scss';
+import { CtPInfo } from '../CtPInfo';
+import CtPSection from '../CtPSection';
+import SrciError from '../../services/sdks/SrciError';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -13,7 +16,11 @@ const CtPLogin = (): h.JSX.Element => {
     const [isValid, setIsValid] = useState<boolean>(false);
     const [errorCode, setErrorCode] = useState<string>(null);
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
-    const inputRef = useRef<CtPLoginInputHandlers>(null);
+    const [loginInputHandlers, setLoginInputHandlers] = useState<CtPLoginInputHandlers>(null);
+
+    const onSetLoginInputHandlers = useCallback((handlers: CtPLoginInputHandlers) => {
+        setLoginInputHandlers(handlers);
+    }, []);
 
     const handleOnLoginChange = useCallback(({ data, isValid }) => {
         setShopperLogin(data.shopperLogin);
@@ -29,7 +36,7 @@ const CtPLogin = (): h.JSX.Element => {
         setErrorCode(null);
 
         if (!isValid) {
-            inputRef.current.validateInput();
+            loginInputHandlers.validateInput();
             return;
         }
 
@@ -44,18 +51,22 @@ const CtPLogin = (): h.JSX.Element => {
                 setIsLoggingIn(false);
             }
         } catch (error) {
+            if (error instanceof SrciError)
+                console.warn(`CtP - Login error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
             setErrorCode(error?.reason);
             setIsLoggingIn(false);
         }
-    }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, inputRef.current]);
+    }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, loginInputHandlers]);
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.login.title')}</div>
-            <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.login.subtitle')}</div>
+            <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.login.title')}</CtPSection.Title>
+
+            <CtPSection.Text>{i18n.get('ctp.login.subtitle')}</CtPSection.Text>
+
             <CtPLoginInput
-                ref={inputRef}
                 onChange={handleOnLoginChange}
+                onSetInputHandlers={onSetLoginInputHandlers}
                 disabled={isLoggingIn}
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
                 onPressEnter={handleOnLoginButtonClick}

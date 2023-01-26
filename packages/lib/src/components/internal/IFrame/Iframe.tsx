@@ -1,4 +1,5 @@
 import { Component, h } from 'preact';
+import classNames from 'classnames';
 
 interface IframeProps {
     width?: string;
@@ -10,6 +11,7 @@ interface IframeProps {
     allow?: string;
     name?: string;
     title?: string;
+    classNameModifiers?: string[];
     callback?: (contentWindow) => void;
 }
 
@@ -21,7 +23,8 @@ class Iframe extends Component<IframeProps> {
         minHeight: '0',
         src: null,
         allow: null,
-        title: 'components iframe'
+        title: 'components iframe',
+        classNameModifiers: []
     };
 
     private iframeEl;
@@ -54,14 +57,20 @@ class Iframe extends Component<IframeProps> {
         }
     }
 
-    render({ name, src, width, height, minWidth, minHeight, allow, title }) {
+    render({ name, src, width, height, minWidth, minHeight, allow, title, classNameModifiers }: IframeProps) {
+        const validClassNameModifiers = classNameModifiers.filter(m => !!m);
+
         return (
             <iframe
                 ref={ref => {
                     this.iframeEl = ref;
                 }}
                 allow={allow}
-                className={`adyen-checkout__iframe adyen-checkout__iframe--${name}`}
+                className={classNames(
+                    'adyen-checkout__iframe',
+                    `adyen-checkout__iframe--${name}`,
+                    validClassNameModifiers.length && classNameModifiers.map(m => `adyen-checkout__iframe--${name}-${m}`)
+                )}
                 name={name}
                 src={src}
                 width={width}

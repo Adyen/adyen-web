@@ -179,7 +179,9 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             legacyInputMode: this.props.legacyInputMode,
             minimumExpiryDate: this.props.minimumExpiryDate,
             implementationType: this.props.implementationType || 'components', // to distinguish between 'regular' and 'custom' card component
-            isCollatingErrors: this.props.isCollatingErrors
+            isCollatingErrors: this.props.isCollatingErrors,
+            forceCompat: this.props.forceCompat,
+            maskSecurityCode: this.props.maskSecurityCode
         };
 
         this.csf = initCSF(csfSetupObj);

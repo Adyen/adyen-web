@@ -12,7 +12,24 @@ const isDateOfBirthValid = value => {
 
 export const personalDetailsValidationRules: ValidatorRules = {
     default: {
-        validate: value => value && value.length > 0,
+        validate: value => {
+            return value && value.length > 0;
+        },
+        errorMessage: 'error.va.gen.02', // = "field not valid"
+        modes: ['blur']
+    },
+    firstName: {
+        validate: value => {
+            return value && value.length > 0;
+        },
+        errorMessage: 'firstName.invalid',
+        modes: ['blur']
+    },
+    lastName: {
+        validate: value => {
+            return value && value.length > 0;
+        },
+        errorMessage: 'lastName.invalid',
         modes: ['blur']
     },
     dateOfBirth: {
@@ -22,10 +39,12 @@ export const personalDetailsValidationRules: ValidatorRules = {
     },
     telephoneNumber: {
         validate: value => telephoneNumber.test(value),
+        errorMessage: 'telephoneNumber.invalid',
         modes: ['blur']
     },
     shopperEmail: {
         validate: value => email.test(value),
+        errorMessage: 'shopperEmail.invalid',
         modes: ['blur']
     }
 };

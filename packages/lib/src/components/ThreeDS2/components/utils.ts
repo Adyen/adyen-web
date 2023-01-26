@@ -19,7 +19,7 @@ export interface ChallengeResolveData {
     };
 }
 
-export interface ErrorObject {
+export interface ErrorCodeObject {
     errorCode: string;
     message: string;
 }
@@ -145,7 +145,7 @@ export const createOldChallengeResolveData = (dataKey: string, transStatus: stri
     }
 });
 
-export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorObject => {
+export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorCodeObject => {
     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
     const message = ERROR_MESSAGES[errorCode] || errorDescription || unknownMessage;
     return { errorCode, message };

@@ -47,7 +47,8 @@ class VisaSdk extends AbstractSrcInitiator {
             const response = await this.schemeSdk.identityLookup(consumerIdentity);
             return response;
         } catch (err) {
-            throw new SrciError(err);
+            const srciError = new SrciError(err, 'identityLookup', this.schemeName);
+            throw srciError;
         }
     }
 
@@ -56,7 +57,8 @@ class VisaSdk extends AbstractSrcInitiator {
             const response = await this.schemeSdk.completeIdentityValidation(otp);
             return response;
         } catch (err) {
-            throw new SrciError(err);
+            const srciError = new SrciError(err, 'completeIdentityValidation', this.schemeName);
+            throw srciError;
         }
     }
 }

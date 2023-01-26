@@ -1,19 +1,23 @@
 import { h } from 'preact';
 import { shallow } from 'enzyme';
 import OpenInvoice from './OpenInvoice';
+import { mock } from 'jest-mock-extended';
+import { OpenInvoiceProps } from './types';
+import { FieldsetVisibility } from '../../../types';
 
 const defaultProps = {
     onChange: () => {},
     data: { personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
     visibility: {
-        personalDetails: 'editable',
-        billingAddress: 'editable',
-        deliveryAddress: 'editable'
+        personalDetails: 'editable' as FieldsetVisibility,
+        billingAddress: 'editable' as FieldsetVisibility,
+        deliveryAddress: 'editable' as FieldsetVisibility
     }
 };
 
 describe('OpenInvoice', () => {
-    const getWrapper = (props?) => shallow(<OpenInvoice {...defaultProps} {...props} />);
+    const openInvoicePropsMock = mock<OpenInvoiceProps>();
+    const getWrapper = (props = {}) => shallow(<OpenInvoice {...openInvoicePropsMock} {...defaultProps} {...props} />);
 
     test('should not display fieldsets set to hidden', () => {
         const visibility = { personalDetails: 'hidden' };
@@ -75,6 +79,6 @@ describe('OpenInvoice', () => {
         const status = 'loading';
         wrapper.instance().setStatus(status);
         wrapper.update();
-        expect(payButton).toHaveBeenCalledWith(jasmine.objectContaining({ status }));
+        expect(payButton).toHaveBeenCalledWith(expect.objectContaining({ status }));
     });
 });

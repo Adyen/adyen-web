@@ -39,6 +39,9 @@ export async function initManual() {
                 handleFinalState(result.resultCode, component);
             }
         },
+        onChange: state => {
+            console.log('onChange', state);
+        },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
 
@@ -132,7 +135,7 @@ export async function initManual() {
 
     const dropin = checkout
         .create('dropin', {
-            instantPaymentTypes: ['paywithgoogle']
+            instantPaymentTypes: ['googlepay']
         })
         .mount('#dropin-container');
 

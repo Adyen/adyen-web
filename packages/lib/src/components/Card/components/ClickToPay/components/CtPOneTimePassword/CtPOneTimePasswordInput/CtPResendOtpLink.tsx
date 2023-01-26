@@ -9,10 +9,11 @@ const CONFIRMATION_SHOWING_TIME = 2000;
 
 interface CtPResendOtpLinkProps {
     onError(errorCode: string): void;
+    onResendCode(): void;
     disabled: boolean;
 }
 
-const CtPResendOtpLink = ({ onError, disabled }: CtPResendOtpLinkProps): h.JSX.Element => {
+const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkProps): h.JSX.Element => {
     const [counter, setCounter] = useState<number>(null);
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const { i18n } = useCoreContext();
@@ -43,6 +44,7 @@ const CtPResendOtpLink = ({ onError, disabled }: CtPResendOtpLinkProps): h.JSX.E
             event.preventDefault();
 
             try {
+                onResendCode();
                 setShowConfirmation(true);
                 await startIdentityValidation();
             } catch (error) {
@@ -51,7 +53,7 @@ const CtPResendOtpLink = ({ onError, disabled }: CtPResendOtpLinkProps): h.JSX.E
                 setShowConfirmation(false);
             }
         },
-        [startIdentityValidation, onError]
+        [startIdentityValidation, onError, onResendCode]
     );
 
     if (showConfirmation) {

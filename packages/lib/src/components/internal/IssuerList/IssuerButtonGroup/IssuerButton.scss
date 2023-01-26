@@ -15,7 +15,6 @@
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
 
   transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
@@ -37,8 +36,7 @@
   &:not(&--selected):hover {
     outline: none;
     box-shadow: inset 0 0 0 2px #99A3AD;
-  };
-
+  }
 
   &--selected {
     background: $color-white;
@@ -53,4 +51,5 @@
 
 .adyen-checkout__issuer-button-img {
   max-height: 26px;
+  margin-right: 8px;
 }

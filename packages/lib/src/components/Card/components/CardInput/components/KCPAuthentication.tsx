@@ -54,7 +54,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 filled={props.filled}
                 classNameModifiers={['50', 'koreanAuthentication-encryptedPassword']}
                 onFocusField={() => props.onFocusField('encryptedPassword')}
-                errorMessage={props.encryptedPasswordState.errors && i18n.get('creditCard.encryptedPassword.invalid')}
+                errorMessage={props.encryptedPasswordState.errors && i18n.get(String(props.encryptedPasswordState.errors))}
                 isValid={props.encryptedPasswordState.valid}
                 dir={'ltr'}
                 name={'encryptedPassword'}

@@ -29,7 +29,7 @@ export interface GooglePayPropsConfiguration {
      * Google JWT solution for platforms
      * To request Google Pay credentials, you can enable platforms to send requests that are authenticated with the platform credentials. You don't need to register individual domain names to call Google Pay APIs.
      */
-     authJwt?: string;
+    authJwt?: string;
 }
 
 export interface GooglePayProps extends UIElementProps {
@@ -129,6 +129,7 @@ export interface GooglePayProps extends UIElementProps {
     buttonColor?: google.payments.api.ButtonColor;
     buttonType?: google.payments.api.ButtonType;
     buttonSizeMode?: google.payments.api.ButtonSizeMode;
+    buttonRootNode?: HTMLDocument | ShadowRoot;
     buttonLocale?: string;
 
     // Events
@@ -138,9 +139,9 @@ export interface GooglePayProps extends UIElementProps {
 
 // Used to add undocumented google payment options
 export interface GooglePaymentDataRequest extends google.payments.api.PaymentDataRequest {
-    merchantInfo: ExtendedMerchantInfo
+    merchantInfo: ExtendedMerchantInfo;
 }
 
 export interface ExtendedMerchantInfo extends google.payments.api.MerchantInfo {
-    merchantOrigin?: string
+    merchantOrigin?: string;
 }

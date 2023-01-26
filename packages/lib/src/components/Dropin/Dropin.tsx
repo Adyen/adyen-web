@@ -3,14 +3,15 @@ import UIElement from '../UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { PaymentAction } from '../../types';
+import { PaymentAction, PaymentMethod } from '../../types';
 import { DropinElementProps, InstantPaymentTypes } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
+import { PaymentResponse } from '../types';
 
-const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'applepay'];
+const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';
@@ -33,13 +34,13 @@ class DropinElement extends UIElement<DropinElementProps> {
             SUPPORTED_INSTANT_PAYMENTS.includes(value)
         );
 
-        const instantPaymentMethods = instantPaymentTypes.reduce((memo, paymentType) => {
-            const paymentMethod = props.paymentMethods.find(({ type }) => type === paymentType);
+        const instantPaymentMethods: PaymentMethod[] = instantPaymentTypes.reduce((memo, paymentType) => {
+            const paymentMethod: PaymentMethod = props.paymentMethods.find(({ type }) => type === paymentType);
             if (paymentMethod) return [...memo, paymentMethod];
             return memo;
         }, []);
 
-        const paymentMethods = props.paymentMethods.filter(({ type }) => !instantPaymentTypes.includes(type));
+        const paymentMethods: PaymentMethod[] = props.paymentMethods.filter(({ type }) => !instantPaymentTypes.includes(type));
 
         return {
             ...super.formatProps(props),
@@ -123,6 +124,13 @@ class DropinElement extends UIElement<DropinElementProps> {
             return this.activePaymentMethod.updateWithAction(action);
         }
 
+        if (this.elementRef instanceof DropinElement) {
+            props = {
+                ...this.elementRef.activePaymentMethod?.props,
+                ...props
+            };
+        }
+
         const paymentAction: UIElement = this._parentInstance.createFromAction(action, {
             ...props,
             elementRef: this.elementRef, // maintain elementRef for 3DS2 flow
@@ -138,6 +146,14 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         return null;
     }
+
+    /**
+     * handleOrder is implemented so we don't trigger a callback like in the components
+     * @param response - PaymentResponse
+     */
+    protected handleOrder = ({ order }: PaymentResponse): void => {
+        this.updateParent({ order });
+    };
 
     closeActivePaymentMethod() {
         this.dropinRef.closeActivePaymentMethod();

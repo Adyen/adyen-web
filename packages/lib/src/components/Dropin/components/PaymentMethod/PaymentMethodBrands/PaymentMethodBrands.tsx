@@ -5,19 +5,22 @@ import CompactView from './CompactView';
 
 interface PaymentMethodBrandsProps {
     brands: Array<BrandConfiguration>;
+    excludedUIBrands: Array<string>; // A list of brands that can never appear in the UI
     isPaymentMethodSelected: boolean;
     activeBrand?: string;
     isCompactView?: boolean;
 }
 
-const PaymentMethodBrands = ({ activeBrand, brands, isPaymentMethodSelected, isCompactView = true }: PaymentMethodBrandsProps) => {
-    if (isCompactView) {
-        return <CompactView brands={brands} isPaymentMethodSelected={isPaymentMethodSelected} />;
-    }
+const PaymentMethodBrands = ({ activeBrand, brands, excludedUIBrands, isPaymentMethodSelected, isCompactView = true }: PaymentMethodBrandsProps) => {
+    // A set of brands filtered to exclude those that can never appear in the UI
+    const allowedBrands = brands.filter(brand => !excludedUIBrands?.includes(brand.name));
 
+    if (isCompactView) {
+        return <CompactView allowedBrands={allowedBrands} isPaymentMethodSelected={isPaymentMethodSelected} />;
+    }
     return (
         <span className="adyen-checkout__payment-method__brands">
-            {brands.map(brand => (
+            {allowedBrands.map(brand => (
                 <PaymentMethodIcon
                     key={brand.name}
                     altDescription={brand.name}

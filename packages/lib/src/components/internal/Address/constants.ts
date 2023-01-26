@@ -67,7 +67,7 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
     }
 };
 
-export const PARTIAL_ADDRESS_SCHEMA = {
+export const PARTIAL_ADDRESS_SCHEMA: AddressSpecifications = {
     default: {
         labels: {
             [POSTAL_CODE]: 'zipCode'

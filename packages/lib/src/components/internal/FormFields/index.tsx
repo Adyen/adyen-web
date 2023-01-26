@@ -7,8 +7,9 @@ import RadioGroup from './RadioGroup';
 import Checkbox from './Checkbox';
 import Select from './Select';
 import './FormFields.scss';
+import { InputBaseProps } from './InputBase';
 
-export const renderFormField = (type, props) => {
+export const renderFormField = (type, props: InputBaseProps) => {
     const formFieldTypes = {
         boolean: Checkbox,
         radio: RadioGroup,

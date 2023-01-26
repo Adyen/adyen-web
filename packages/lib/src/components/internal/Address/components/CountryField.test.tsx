@@ -2,6 +2,8 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import CountryField from './CountryField';
 import getDataset from '../../../../core/Services/get-dataset';
+import { mock } from 'jest-mock-extended';
+import { CountryFieldProps } from '../types';
 
 jest.mock('../../../../core/Services/get-dataset');
 const countriesMock = [
@@ -22,7 +24,8 @@ const countriesMock = [
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(countriesMock)));
 
 describe('CountryField', () => {
-    const getWrapper = (props?) => mount(<CountryField {...props} />);
+    const countryFieldPropsMock = mock<CountryFieldProps>();
+    const getWrapper = (props = {}) => mount(<CountryField {...props} {...countryFieldPropsMock} />);
 
     test('calls getDataset', () => {
         getWrapper();

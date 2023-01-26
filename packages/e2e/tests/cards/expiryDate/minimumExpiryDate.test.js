@@ -7,7 +7,6 @@ import LANG from '../../../../lib/src/language/locales/en-US.json';
 const errorHolder = Selector('.card-field .adyen-checkout__field--error');
 const errorLabel = Selector('.card-field .adyen-checkout__error-text');
 
-const ARIA_LABEL = LANG['creditCard.encryptedExpiryDate.aria.label'];
 const CARD_TOO_OLD = LANG['error.va.sf-cc-dat.01'];
 const CARD_TOO_FAR = LANG['error.va.sf-cc-dat.02'];
 const CARD_EXPIRES_BEFORE = LANG['error.va.sf-cc-dat.03'];
@@ -37,7 +36,7 @@ test('With minimumExpiryDate set - input an expiry date that is too old & expect
         .expect(errorLabel.exists)
         .ok()
         // with text
-        .expect(errorLabel.withExactText(`${ARIA_LABEL}: ${CARD_TOO_OLD}`).exists)
+        .expect(errorLabel.withExactText(CARD_TOO_OLD).exists)
         .ok();
 });
 
@@ -46,7 +45,7 @@ test('With minimumExpiryDate set - input an expiry date that is 1 month before i
     await start(t, 2000, TEST_SPEED);
 
     // Card out of date
-    await cardUtils.fillDate(t, '08/22');
+    await cardUtils.fillDate(t, '08/24');
 
     // Expect errors
     await t.expect(errorHolder.exists).ok();
@@ -56,7 +55,7 @@ test('With minimumExpiryDate set - input an expiry date that is 1 month before i
         .expect(errorLabel.exists)
         .ok()
         // with text
-        .expect(errorLabel.withExactText(`${ARIA_LABEL}: ${CARD_EXPIRES_BEFORE}`).exists)
+        .expect(errorLabel.withExactText(CARD_EXPIRES_BEFORE).exists)
         .ok();
 });
 
@@ -65,7 +64,7 @@ test('With minimumExpiryDate set - input an expiry date that is matches it & exp
     await start(t, 2000, TEST_SPEED);
 
     // Card in date
-    await cardUtils.fillDate(t, '09/22');
+    await cardUtils.fillDate(t, '09/24');
 
     // Expect NO errors
     await t.expect(errorHolder.exists).notOk();
@@ -79,7 +78,7 @@ test('With minimumExpiryDate set - input an expiry date that exceeds it (a bit) 
     await start(t, 2000, TEST_SPEED);
 
     // Card in date
-    await cardUtils.fillDate(t, '04/23');
+    await cardUtils.fillDate(t, '04/25');
 
     // Expect NO errors
     await t.expect(errorHolder.exists).notOk();
@@ -103,7 +102,7 @@ test('With minimumExpiryDate set - input an expiry date that is too far in the f
         .expect(errorLabel.exists)
         .ok()
         // with text
-        .expect(errorLabel.withExactText(`${ARIA_LABEL}: ${CARD_TOO_FAR}`).exists)
+        .expect(errorLabel.withExactText(CARD_TOO_FAR).exists)
         .ok();
 });
 
@@ -115,7 +114,7 @@ test(
         await start(t, 2000, TEST_SPEED);
 
         // Card in date
-        await cardUtils.fillDate(t, '09/22');
+        await cardUtils.fillDate(t, '09/24');
 
         // Expect NO errors
         await t.expect(errorHolder.exists).notOk();
@@ -124,7 +123,7 @@ test(
         await t.expect(errorLabel.exists).notOk();
 
         // Card out of date
-        await cardUtils.fillDate(t, '08/22', 'paste');
+        await cardUtils.fillDate(t, '08/24', 'paste');
 
         // Expect errors
         await t.expect(errorHolder.exists).ok();
@@ -134,7 +133,7 @@ test(
             .expect(errorLabel.exists)
             .ok()
             // with text
-            .expect(errorLabel.withExactText(`${ARIA_LABEL}: ${CARD_EXPIRES_BEFORE}`).exists)
+            .expect(errorLabel.withExactText(CARD_EXPIRES_BEFORE).exists)
             .ok();
     }
 );
@@ -166,7 +165,7 @@ test(
             .expect(errorLabel.exists)
             .ok()
             // with text
-            .expect(errorLabel.withExactText(`${ARIA_LABEL}: ${CARD_TOO_OLD}`).exists)
+            .expect(errorLabel.withExactText(CARD_TOO_OLD).exists)
             .ok();
     }
 );
