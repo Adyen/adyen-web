@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__radio_group + .adyen-checkout-input__inline-validation {
     display: none;
@@ -26,7 +26,7 @@
 }
 
 .adyen-checkout__radio_group__label::before {
-    content: '';
+    content: "";
     position: absolute;
     background-color: $color-white;
     border: 1px solid $color-gray-dark;
@@ -45,7 +45,7 @@
 }
 
 .adyen-checkout__radio_group__label::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     margin: 0 auto;

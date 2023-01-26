@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__field-wrapper {
     display: flex;
@@ -48,7 +48,7 @@
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {
     margin-right: 8px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         margin-right: 0;
         margin-left: 8px;
     }
@@ -57,7 +57,7 @@
 .adyen-checkout__field-wrapper > .adyen-checkout__field:nth-child(2) {
     margin-left: 8px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         margin-left: 0;
         margin-right: 8px;
     }
@@ -119,12 +119,12 @@
     transform: translateY(-50%);
     right: 14px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         right: auto;
         left: 14px;
     }
 
-    [dir='ltr'] & {
+    [dir="ltr"] & {
         right: 14px;
         left: auto;
     }

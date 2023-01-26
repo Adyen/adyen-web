@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__checkbox {
     display: block;
@@ -14,7 +14,7 @@
         font-weight: normal;
         user-select: none;
 
-        [dir='rtl'] & {
+        [dir="rtl"] & {
             padding-left: 0;
             padding-right: 24px;
         }
@@ -61,7 +61,7 @@
         border-bottom: 2px solid $color-white;
         border-right: 2px solid $color-white;
         border-radius: 0 2px 1px;
-        content: '';
+        content: "";
         height: 11px;
         left: 1px;
         opacity: 0;
@@ -73,7 +73,7 @@
         width: 6px;
         z-index: 1;
 
-        [dir='rtl'] & {
+        [dir="rtl"] & {
             left: auto;
             right: 8px;
         }
@@ -81,7 +81,7 @@
 
     /* Box */
     + .adyen-checkout__checkbox__label::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -93,7 +93,7 @@
         z-index: 0;
         transition: background 0.15s ease-out, border 0.05s ease-out, box-shadow 0.1s ease-out;
 
-        [dir='rtl'] & {
+        [dir="rtl"] & {
             left: auto;
             right: 0;
         }
@@ -106,7 +106,7 @@
     border-radius: $border-radius-medium;
     padding: 14px 14px 13px;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         padding: 14px 14px 13px;
     }
 

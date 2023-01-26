@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__payment-method {
     position: relative;
@@ -65,7 +65,7 @@
     transition: background 0.1s ease-out;
     width: 100%;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         padding: $spacing-medium - $payment-button-padding;
         padding-right: $spacing-xxlarge - $payment-button-padding;
     }
@@ -91,7 +91,7 @@
     font-size: 1em;
     font-weight: 400;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         margin-right: 0;
         margin-left: 16px;
     }
@@ -141,7 +141,7 @@
 }
 
 .adyen-checkout__payment-method__image__wrapper--outline::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     width: 100%;
@@ -214,7 +214,7 @@
     left: 16px;
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         right: 16px;
         left: auto;
     }
@@ -225,7 +225,7 @@
 }
 
 .adyen-checkout__payment-method__radio::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     margin: 0 auto;

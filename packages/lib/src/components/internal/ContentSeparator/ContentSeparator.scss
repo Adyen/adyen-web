@@ -1,4 +1,4 @@
-@import 'src/style/index';
+@import "src/style/index";
 
 .adyen-checkout__content-separator {
     margin-top: $spacing-medium;
@@ -13,7 +13,7 @@
 
     &::after,
     &::before {
-        content: '';
+        content: "";
         display: block;
         background: $color-gray-light;
         width: 100%;

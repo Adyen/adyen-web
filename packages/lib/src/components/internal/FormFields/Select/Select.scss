@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__dropdown__button-icon--left {
     flex-direction: row-reverse;
@@ -31,7 +31,7 @@
     user-select: none;
     transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         padding: 7px 12px 7px 24px;
     }
 }

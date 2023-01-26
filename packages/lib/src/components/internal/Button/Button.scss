@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__button {
     background: $color-black;
@@ -181,7 +181,7 @@
     &__icon {
         margin-right: 12px;
 
-        [dir='rtl'] & {
+        [dir="rtl"] & {
             margin-right: 0;
             margin-left: 12px;
         }

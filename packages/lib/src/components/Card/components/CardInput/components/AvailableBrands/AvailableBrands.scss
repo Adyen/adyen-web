@@ -1,4 +1,4 @@
-@import '../../../../../../style/index';
+@import "../../../../../../style/index";
 
 .adyen-checkout__card__brands {
     display: flex;
@@ -33,7 +33,7 @@
 }
 
 .adyen-checkout__card__brands__brand-wrapper::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     width: 100%;

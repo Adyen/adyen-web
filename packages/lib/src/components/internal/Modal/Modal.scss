@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__modal-wrapper {
     align-items: center;
@@ -16,7 +16,7 @@
 
     &::before {
         background: rgb(0 17 44 / 50%);
-        content: '';
+        content: "";
         height: 100%;
         left: 0;
         opacity: 0;

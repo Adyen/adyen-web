@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__qr-loader {
     background: $color-white;
@@ -56,7 +56,7 @@
     width: 152px;
     padding-right: 3%;
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
         padding-right: 0;
         padding-left: 3%;
     }
