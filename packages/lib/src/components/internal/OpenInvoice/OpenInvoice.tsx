@@ -18,16 +18,42 @@ import {
 } from './types';
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
+import { partial } from '../SecuredFields/lib/utilities/commonUtils';
+import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
+import { mapFieldKey } from '../Address/utils';
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
-    const { i18n } = useCoreContext();
+    const {
+        i18n,
+        commonProps: { moveFocusOnSubmitErrors }
+    } = useCoreContext();
+
     /** An object by which to expose 'public' members to the parent UIElement */
     const openInvoiceRef = useRef<OpenInvoiceRef>({});
     // Just call once
     if (!Object.keys(openInvoiceRef.current).length) {
         props.setComponentRef?.(openInvoiceRef.current);
     }
+
+    /** Screen Reader related stuff */
+    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
+
+    const isValidating = useRef(false);
+
+    /**
+     * Generate a setSRMessages function, once only (since the initial set of arguments don't change).
+     */
+    const setSRMessages = partial(setSRMessagesFromErrors, {
+        SRPanelRef,
+        i18n,
+        fieldTypeMappingFn: mapFieldKey, //TODO make bespoke fn?
+        isValidating,
+        moveFocusOnSubmitErrors,
+        focusSelector: '.adyen-checkout__open-invoice'
+    });
+
+    /** end SR stuff */
 
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
     const [activeFieldsets, setActiveFieldsets] = useState<OpenInvoiceActiveFieldsets>(initialActiveFieldsets);
@@ -56,6 +82,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
     // Expose methods expected by parent
     openInvoiceRef.current.showValidation = () => {
+        isValidating.current = true;
         fieldsetsSchema.forEach(fieldset => {
             if (fieldsetsRefs[fieldset].current) fieldsetsRefs[fieldset].current.showValidation();
         });
@@ -72,6 +99,20 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const consentCheckboxValid: boolean = !hasConsentCheckbox || !!valid.consentCheckbox;
         const isValid: boolean = fieldsetsAreValid && consentCheckboxValid;
         const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
+
+        // Create messages for SRPanel
+        // TODO need a layout
+        // TODO where are the IbanInput errors
+
+        // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
+        const { billingAddress: extractedBillingAddressErrors, ...remainingErrors } = errors;
+        const { personalDetails: extractedPDErrors, ...remainingErrors2 } = remainingErrors;
+
+        // @ts-ignore failure to recognise objects
+        const errorsForPanel = { ...remainingErrors2, ...extractedBillingAddressErrors, ...extractedPDErrors };
+        console.log('### OpenInvoice:::: errorsForPanel', errorsForPanel);
+
+        setSRMessages(errorsForPanel);
 
         props.onChange({ data: newData, errors, valid, isValid });
     }, [data, activeFieldsets]);
