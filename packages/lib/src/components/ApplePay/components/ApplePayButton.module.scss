@@ -3,10 +3,12 @@
     *  Combination of both classes improve the specificity, avoiding
     *  overwrite of the -webkit-appearence by the button native css
     */
+    /* stylelint-disable property-no-vendor-prefix */
     .apple-pay,
     .apple-pay-button {
         -webkit-appearance: -apple-pay-button;
     }
+    /* stylelint-enable property-no-vendor-prefix */
 
     .apple-pay-button {
         display: inline-block;
