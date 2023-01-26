@@ -1,4 +1,7 @@
 import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
+import Language from '../../../language';
+import { mapFieldKey as mapFieldKeyPD } from '../PersonalDetails/utils';
+import { mapFieldKey as mapFieldKeyAddress } from '../Address/utils';
 
 export const fieldsetsSchema: Array<keyof OpenInvoiceStateData> = [
     'companyDetails',
@@ -29,3 +32,21 @@ export const getInitialActiveFieldsets = (visibility: OpenInvoiceVisibility, dat
         acc[fieldset] = isVisible && (!isDeliveryAddress || billingAddressIsHidden || isPrefilled(data[fieldset]));
         return acc;
     }, {} as OpenInvoiceActiveFieldsets);
+
+export const mapFieldKey = (key: string, i18n: Language): string => {
+    // console.log('### utils::mapFieldKey:: key', key);
+
+    const addressKey = mapFieldKeyAddress(key, i18n);
+    if (addressKey) return addressKey;
+
+    switch (key) {
+        case 'gender':
+        case 'dateOfBirth':
+            return mapFieldKeyPD(key, i18n);
+
+        default:
+            break;
+    }
+
+    return null;
+};

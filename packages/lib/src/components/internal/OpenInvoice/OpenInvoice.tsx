@@ -6,7 +6,7 @@ import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import ConsentCheckbox from '../FormFields/ConsentCheckbox';
-import { getActiveFieldsData, getInitialActiveFieldsets, fieldsetsSchema } from './utils';
+import { getActiveFieldsData, getInitialActiveFieldsets, fieldsetsSchema, mapFieldKey } from './utils';
 import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
@@ -20,7 +20,6 @@ import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
-import { mapFieldKey } from '../Address/utils';
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
@@ -100,19 +99,31 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const isValid: boolean = fieldsetsAreValid && consentCheckboxValid;
         const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
 
-        // Create messages for SRPanel
-        // TODO need a layout
-        // TODO where are the IbanInput errors
+        /** Create messages for SRPanel */
+        // Extract and then flatten errors for the various child components into a new object with *all* the field errors at top level
+        const {
+            companyDetails: extractedCompanyDetailsErrors,
+            personalDetails: extractedPersonalDetailsErrors,
+            bankAccount: extractedBankAccountErrors,
+            billingAddress: extractedBillingAddressErrors,
+            deliveryAddress: extractedDeliveryAddressErrors,
+            ...remainingErrors
+        } = errors;
 
-        // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
-        const { billingAddress: extractedBillingAddressErrors, ...remainingErrors } = errors;
-        const { personalDetails: extractedPDErrors, ...remainingErrors2 } = remainingErrors;
-
-        // @ts-ignore failure to recognise objects
-        const errorsForPanel = { ...remainingErrors2, ...extractedBillingAddressErrors, ...extractedPDErrors };
+        // Order errors based on rendering layout
+        const errorsForPanel = {
+            ...(typeof extractedCompanyDetailsErrors === 'object' && extractedCompanyDetailsErrors),
+            ...(typeof extractedPersonalDetailsErrors === 'object' && extractedPersonalDetailsErrors),
+            ...(typeof extractedBankAccountErrors === 'object' && extractedBankAccountErrors),
+            ...(typeof extractedBillingAddressErrors === 'object' && extractedBillingAddressErrors),
+            ...(typeof extractedDeliveryAddressErrors === 'object' && extractedDeliveryAddressErrors),
+            ...remainingErrors
+        };
         console.log('### OpenInvoice:::: errorsForPanel', errorsForPanel);
 
         setSRMessages(errorsForPanel);
+
+        console.log('### OpenInvoice:::: errors', errors);
 
         props.onChange({ data: newData, errors, valid, isValid });
     }, [data, activeFieldsets]);
@@ -121,6 +132,8 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setData(prevData => ({ ...prevData, [key]: state.data }));
         setValid(prevValid => ({ ...prevValid, [key]: state.isValid }));
         setErrors(prevErrors => ({ ...prevErrors, [key]: state.errors }));
+
+        console.log('### OpenInvoice::handleFieldset:: key=', key, 'state.errors=', state.errors);
     };
 
     const handleSeparateDeliveryAddress = () => {
