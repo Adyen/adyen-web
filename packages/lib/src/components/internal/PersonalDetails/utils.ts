@@ -29,10 +29,3 @@ export const mapFieldKey = (key: string, i18n: Language): string => {
             return null;
     }
 };
-
-export const setFocusOnFirstField = (holder, fieldToFocus) => {
-    const pdHolder = selectOne(document, holder);
-    // Set focus on input
-    const field: HTMLElement = selectOne(pdHolder, `[name="${fieldToFocus}"]`);
-    field?.focus();
-};

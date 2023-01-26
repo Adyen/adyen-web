@@ -2,7 +2,7 @@ import { ERROR_CODES } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
-import { setFocusOnFirstField } from '../../components/internal/PersonalDetails/utils';
+import { setFocusOnField } from '../../utils/setFocus';
 
 /**
  * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
@@ -121,7 +121,7 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
 
             if (moveFocusOnSubmitErrors) {
                 const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
-                setFocusOnFirstField(focusSelector, fieldListArr[0]);
+                setFocusOnField(focusSelector, fieldListArr[0]);
             }
 
             // Remove 'showValidation' mode
