@@ -82,7 +82,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         const holderNameValid = this.props.holderName ? isValidHolder(this.state.data['ownerName']) : true;
         const ibanValid = checkIbanStatus(this.state.data['ibanNumber']).status === 'valid';
         const isValid = ibanValid && holderNameValid;
-        const data = { data: this.state.data, isValid };
+        const data = { data: this.state.data, isValid, errors: this.state.errors };
 
         this.props.onChange(data);
     }
@@ -151,7 +151,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         const validationStatus = checkIbanStatus(this.state.data['ibanNumber']).status;
         const holderStatus = isValidHolder(this.state.data['ownerName']);
         this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null);
-        this.setError('holder', !holderStatus ? true : null);
+        this.setError('holder', !holderStatus ? true : null, this.onChange); // add callback param to force propagation of state to parent comp
     }
 
     render({ placeholders, countryCode }: IbanInputProps, { data, errors, valid }) {
