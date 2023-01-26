@@ -132,8 +132,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setData(prevData => ({ ...prevData, [key]: state.data }));
         setValid(prevValid => ({ ...prevValid, [key]: state.isValid }));
         setErrors(prevErrors => ({ ...prevErrors, [key]: state.errors }));
-
-        console.log('### OpenInvoice::handleFieldset:: key=', key, 'state.errors=', state.errors);
     };
 
     const handleSeparateDeliveryAddress = () => {

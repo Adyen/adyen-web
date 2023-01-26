@@ -66,7 +66,7 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     const sortedErrors = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
-            console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
+            // console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
 
             /** Get error codes */
             const errorCode = errObj instanceof ValidationRuleResult ? (errObj.errorMessage as string) : errObj.error;
