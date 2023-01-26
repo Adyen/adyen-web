@@ -1,6 +1,6 @@
 import { ERROR_CODES } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
-import { SortErrorsObj, SortedErrorObject } from './types';
+import { SortErrorsObj, SortedErrorObject, GenericError } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
 import { setFocusOnField } from '../../utils/setFocus';
 
@@ -65,7 +65,8 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     // Create array of error objects, sorted by layout
     const sortedErrors = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
-            const errObj: ValidationRuleResult | SFError = errors[key];
+            const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
+            console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
 
             /** Get error codes */
             const errorCode = errObj instanceof ValidationRuleResult ? (errObj.errorMessage as string) : errObj.error;
@@ -76,9 +77,19 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
              * For other fields we still need to translate it
              */
             const errorMsg =
-                errObj instanceof ValidationRuleResult
-                    ? i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX
-                    : errObj.errorI18n + SR_INDICATOR_PREFIX;
+                // !(errObj instanceof ValidationRuleResult) && typeof errObj !== 'string' && 'errorI18n' in errObj
+                !(errObj instanceof ValidationRuleResult) && 'errorI18n' in errObj
+                    ? errObj.errorI18n + SR_INDICATOR_PREFIX // is SFError
+                    : i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly made error
+
+            // let errorMsg;
+            // if (!(errObj instanceof ValidationRuleResult) && ("errorI18n" in errObj)) {
+            //     // is SFError
+            //     errorMsg = errObj.errorI18n + SR_INDICATOR_PREFIX;
+            // } else {
+            //     // is ValidationRuleResult || GenericError
+            //     errorMsg = i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX;
+            // }
 
             let errorMessage = errorMsg;
             /**
@@ -127,8 +138,10 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
                 setFocusOnField(focusSelector, fieldListArr[0]);
             }
 
-            // Remove 'showValidation' mode
-            isValidating.current = false;
+            // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
+            setTimeout(() => {
+                isValidating.current = false;
+            }, 300);
         } else {
             console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: updating but not validating');
             SRPanelRef?.setMessages(null);
