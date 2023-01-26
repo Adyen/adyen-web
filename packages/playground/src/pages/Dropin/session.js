@@ -37,8 +37,6 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             card: {
-                icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Google_Images_2015_logo.svg/800px-Google_Images_2015_logo.svg.png',
-
                 hasHolderName: true,
                 holderNameRequired: true,
                 holderName: 'J. Smith',
