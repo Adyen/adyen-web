@@ -39,7 +39,7 @@ const ibanHolderNameErrorObj: GenericError = {
     error: 'ach.accountHolderNameField.invalid'
 };
 
-const ibanNameErrorObj: GenericError = {
+const ibanErrorObj: GenericError = {
     isValid: false,
     errorMessage: 'sepaDirectDebit.ibanField.invalid',
     error: 'sepaDirectDebit.ibanField.invalid'
@@ -148,7 +148,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                 errors: {
                     ...prevState.errors,
                     // iban: validationStatus === 'invalid' ? 'sepaDirectDebit.ibanField.invalid' : null
-                    iban: validationStatus === 'invalid' ? ibanNameErrorObj : null
+                    iban: validationStatus === 'invalid' ? ibanErrorObj : null
                 },
                 valid: { ...prevState.valid, iban: validationStatus === 'valid' }
             }),
@@ -165,7 +165,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         if (currentIban.length > 0) {
             const validationStatus = checkIbanStatus(currentIban).status;
             // this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null, this.onChange);
-            this.setError('iban', validationStatus !== 'valid' ? ibanNameErrorObj : null, this.onChange);
+            this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null, this.onChange);
         }
     };
 
@@ -173,7 +173,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         const validationStatus = checkIbanStatus(this.state.data['ibanNumber']).status;
         const holderStatus = isValidHolder(this.state.data['ownerName']);
         // this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null);
-        this.setError('iban', validationStatus !== 'valid' ? ibanNameErrorObj : null);
+        this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null);
 
         const holderErr = !holderStatus // *do* consider null, i.e. an empty field, to be in error
             ? ibanHolderNameErrorObj
