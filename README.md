@@ -49,7 +49,11 @@ To run the development environment:
   ```sh
   yarn install
   ```
-4. Run the development environment, which starts a server listening on [http://localhost:3020](http://localhost:3020):
+4. Run build
+  ```sh
+  yarn build
+  ```
+5. Run the development environment, which starts a server listening on [http://localhost:3020](http://localhost:3020):
   ```sh
   yarn start
   ```
