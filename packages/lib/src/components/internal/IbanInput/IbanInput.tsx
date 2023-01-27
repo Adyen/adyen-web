@@ -165,6 +165,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         filled={data['ownerName'] && data['ownerName'].length}
                         errorMessage={errors.holder ? i18n.get('creditCard.holderName.invalid') : false}
                         dir={'ltr'}
+                        i18n={i18n}
                     >
                         {renderFormField('text', {
                             name: 'ownerName',
@@ -186,6 +187,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                     isValid={valid.iban}
                     onBlur={this.handleIbanBlur}
                     dir={'ltr'}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         ref: ref => {

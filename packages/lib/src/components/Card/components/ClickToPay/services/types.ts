@@ -1,12 +1,12 @@
 import { CtpState } from './ClickToPayService';
-import { SrcProfile } from './sdks/types';
+import { SrcInitParams, SrcProfile } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
 
 export interface IClickToPayService {
     state: CtpState;
     shopperCards: ShopperCard[];
-    shopperValidationContact: string;
+    identityValidationData: IdentityValidationData;
     schemes: string[];
     initialize(): Promise<void>;
     checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
@@ -16,6 +16,11 @@ export interface IClickToPayService {
     startIdentityValidation(): Promise<void>;
     finishIdentityValidation(otpCode: string): Promise<void>;
 }
+
+export type IdentityValidationData = {
+    maskedShopperContact: string;
+    selectedNetwork: string;
+};
 
 export type CallbackStateSubscriber = (state: CtpState) => void;
 
@@ -45,5 +50,7 @@ export type CardTypes = {
     availableCards: ShopperCard[];
     expiredCards: ShopperCard[];
 };
+
+export type SchemesConfiguration = Partial<Record<ClickToPayScheme, SrcInitParams>>;
 
 export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;

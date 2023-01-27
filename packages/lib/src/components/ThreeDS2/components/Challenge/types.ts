@@ -5,7 +5,6 @@ import { ThreeDS2ChallengeProps } from '../../ThreeDS2Challenge';
 export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
     onErrorChallenge: (rejectObject: ThreeDS2FlowObject) => void;
-    threeDS2MDFlowUnloadListener?: (event: any) => any;
 }
 
 export interface DoChallenge3DS2State {
@@ -20,4 +19,5 @@ export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeProps {
 export interface PrepareChallenge3DS2State {
     challengeData?: ChallengeData;
     status?: string;
+    errorInfo?: string;
 }

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { loginValidationRules } from './validate';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../utils/useForm';
@@ -30,10 +30,16 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
         rules: loginValidationRules
     });
     const loginInputHandlersRef = useRef<CtPLoginInputHandlers>({ validateInput: null });
+    const [isLoginInputDirty, setIsLoginInputDirty] = useState<boolean>(false);
 
     const validateInput = useCallback(() => {
+        setIsLoginInputDirty(true);
         triggerValidation();
     }, [triggerValidation]);
+
+    useEffect(() => {
+        if (data.shopperLogin) setIsLoginInputDirty(true);
+    }, [data.shopperLogin]);
 
     useEffect(() => {
         loginInputHandlersRef.current.validateInput = validateInput;
@@ -57,7 +63,7 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
         <Field
             name="shopperLogin"
             label={i18n.get('ctp.login.inputLabel')}
-            errorMessage={props.errorMessage || !!errors.shopperLogin}
+            errorMessage={isLoginInputDirty ? props.errorMessage || !!errors.shopperLogin : null}
             classNameModifiers={['shopperLogin']}
         >
             {renderFormField('text', {

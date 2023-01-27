@@ -69,6 +69,7 @@ function FieldContainer(props: FieldContainerProps) {
                     isValid={valid[fieldName]}
                     name={fieldName}
                     isCollatingErrors={isCollatingErrors}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         classNameModifiers,

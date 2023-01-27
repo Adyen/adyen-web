@@ -40,9 +40,9 @@ test('#1 - should save the checkoutAttemptId session in the sessionStorage and k
         .eql(1)
         .expect(
             paymentLogger.contains(record => {
-                const { checkoutAttemptId } = JSON.parse(record.request.body);
-                return checkoutAttemptId === id;
+                const body = JSON.parse(record.request.body);
+                return body.paymentMethod.checkoutAttemptId === id;
             })
         )
-        .ok('checkoutAttemptId is present in the /payments request');
+        .ok('checkoutAttemptId is present in the /payments request inside paymentMethod data');
 });

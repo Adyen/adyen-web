@@ -37,6 +37,8 @@ export type SrcProfile = {
     srcCorrelationId: string;
 };
 
+export type DigitalCardStatus = 'ACTIVE' | 'SUSPENDED' | 'EXPIRED' | 'PENDING';
+
 export type SrcCard = {
     srcDigitalCardId: string;
     panLastFour: string;
@@ -47,6 +49,7 @@ export type SrcCard = {
     digitalCardData: {
         descriptorName: string;
         artUri: string;
+        status?: DigitalCardStatus;
     };
     tokenId?: string;
 };
@@ -54,6 +57,7 @@ export type SrcCard = {
 export type SrcCheckoutParams = {
     srcCorrelationId: string;
     srcDigitalCardId: string;
+    windowRef?: Window;
 };
 
 export interface SrcInitParams {

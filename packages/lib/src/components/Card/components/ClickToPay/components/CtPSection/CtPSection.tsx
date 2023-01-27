@@ -1,11 +1,6 @@
 import { h } from 'preact';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
-import getImage from '../../../../../../utils/get-image';
-import Img from '../../../../../internal/Img';
 import CtPLogoutLink from './CtPLogoutLink';
-import classnames from 'classnames';
-import useClickToPayContext from '../../context/useClickToPayContext';
-import { SchemeNames } from '../../services/sdks/utils';
+import { CtPBrand } from '../CtPBrand';
 import './CtPSection.scss';
 
 interface CtPSectionProps {
@@ -13,26 +8,10 @@ interface CtPSectionProps {
 }
 
 const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
-    const { loadingContext } = useCoreContext();
-    const { schemes } = useClickToPayContext();
-
-    const ctpImageUrl = getImage({ loadingContext })('ctp');
-    const pipeImageUrl = getImage({ loadingContext, imageFolder: 'components/' })('pipe');
-
     return (
         <div className="adyen-checkout-ctp__section">
-            <div className="adyen-checkout-ctp__section-header">
-                <Img className="adyen-checkout-ctp__section-header-logo" src={ctpImageUrl} alt={'Click to Pay'} />
-                <Img className="adyen-checkout-ctp__section-header-pipe" src={pipeImageUrl} alt="" />
-
-                {schemes.map(brand => (
-                    <Img
-                        key={brand}
-                        className={classnames('adyen-checkout-ctp__section-header-scheme', `adyen-checkout-ctp__section-header-scheme-${brand}`)}
-                        src={getImage({ loadingContext })(brand)}
-                        alt={SchemeNames[brand]}
-                    />
-                ))}
+            <div className="adyen-checkout-ctp__section-brand">
+                <CtPBrand />
                 <CtPLogoutLink />
             </div>
 
@@ -40,5 +19,16 @@ const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
         </div>
     );
 };
+
+const Title = ({ endAdornment, children }: { endAdornment?; children }) => (
+    <div className="adyen-checkout-ctp__section-header">
+        <h1 className="adyen-checkout-ctp__section-header-title">{children}</h1>
+        {endAdornment && <span className="adyen-checkout-ctp__section-header-adornment">{endAdornment}</span>}
+    </div>
+);
+const Text = ({ children }: { children }) => <p className="adyen-checkout-ctp__section-text">{children}</p>;
+
+CtPSection.Title = Title;
+CtPSection.Text = Text;
 
 export default CtPSection;

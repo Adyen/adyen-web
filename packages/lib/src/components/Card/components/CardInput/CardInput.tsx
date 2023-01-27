@@ -23,6 +23,7 @@ import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHa
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
+import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -75,6 +76,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
 
     const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
+    // Keeps the value of the country set initially by the merchant, before the Address Component mutates it
+    const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
     const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
@@ -139,6 +142,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     /**
      * re. Disabling arrow keys in iOS:
      * Only by disabling all fields in the Card PM except for the active securedField input can we force the iOS soft keyboard arrow keys to disable
+     *
+     * NOTE: only called if ua.__IS_IOS = true (as referenced in CSF)
      *
      * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
      * - in which case we should disable all non-SF fields
@@ -373,7 +378,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onFocus={handleFocus}
                 type={props.brand}
                 isCollatingErrors={collateErrors}
-                onTouchstartIOS={handleTouchstartIOS}
+                {...(props.disableIOSArrowKeys && { onTouchstartIOS: handleTouchstartIOS })}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}
@@ -425,10 +430,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             // For Store details
                             handleOnStoreDetails={setStorePaymentMethod}
                             // For Address
-                            billingAddress={billingAddress}
-                            handleAddress={handleAddress}
                             billingAddressRef={billingAddressRef}
+                            billingAddress={billingAddress}
+                            billingAddressValidationRules={partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)}
                             partialAddressSchema={partialAddressSchema}
+                            handleAddress={handleAddress}
                             //
                             iOSFocusedField={iOSFocusedField}
                         />

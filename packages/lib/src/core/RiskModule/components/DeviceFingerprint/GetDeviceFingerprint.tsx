@@ -1,7 +1,7 @@
 import { Component, h } from 'preact';
 import Iframe from '../../../../components/internal/IFrame';
 import promiseTimeout from '../../../../utils/promiseTimeout';
-import { DEVICE_FINGERPRINT, DF_TIMEOUT, FAILED_DFP_RESOLVE_OBJECT, FAILED_DFP_RESOLVE_OBJECT_TIMEOUT } from '../../constants';
+import { DEVICE_FINGERPRINT, DF_TIMEOUT, FAILED_DFP_RESOLVE_OBJECT_TIMEOUT } from '../../constants';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { getOrigin } from '../../../../utils/getOrigin';
 import { GetDeviceFingerprintProps } from './types';
@@ -25,13 +25,7 @@ class GetDeviceFingerprint extends Component<GetDeviceFingerprintProps> {
             /**
              * Listen for postMessage responses from the notification url
              */
-            this.processMessageHandler = getProcessMessageHandler(
-                this.postMessageDomain,
-                resolve,
-                reject,
-                FAILED_DFP_RESOLVE_OBJECT,
-                DEVICE_FINGERPRINT
-            );
+            this.processMessageHandler = getProcessMessageHandler(this.postMessageDomain, resolve, reject, DEVICE_FINGERPRINT);
 
             /* eslint-disable-next-line */
             window.addEventListener('message', this.processMessageHandler);

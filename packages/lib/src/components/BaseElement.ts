@@ -3,7 +3,8 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import Core from '../core';
-import { BaseElementProps } from './types';
+import { BaseElementProps, PaymentData } from './types';
+import { RiskData } from '../core/RiskModule/RiskModule';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -16,7 +17,7 @@ class BaseElement<P extends BaseElementProps> {
     protected readonly _parentInstance: Core;
 
     protected constructor(props: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...props });
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
         this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};
@@ -33,8 +34,11 @@ class BaseElement<P extends BaseElementProps> {
     /**
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
+     *
+     * TODO: Replace 'any' by type PaymentMethodData<T> - this change requires updating all payment methods,
+     *       properly adding the type of the formatData function
      */
-    protected formatData() {
+    protected formatData(): any {
         return {};
     }
 
@@ -46,16 +50,20 @@ class BaseElement<P extends BaseElementProps> {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    get data(): any {
+    get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const checkoutAttemptId = getProp(this.props, 'modules.analytics.checkoutAttemptId');
         const order = this.state.order || this.props.order;
 
+        const componentData = this.formatData();
+        if (componentData.paymentMethod && checkoutAttemptId) {
+            componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
+        }
+
         return {
             ...(clientData && { riskData: { clientData } }),
-            ...(checkoutAttemptId && { checkoutAttemptId }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
-            ...this.formatData(),
+            ...componentData,
             clientStateDataIndicator: true
         };
     }

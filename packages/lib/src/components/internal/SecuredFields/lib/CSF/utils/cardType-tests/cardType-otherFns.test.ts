@@ -35,7 +35,7 @@ describe('Tests for cardType.getShortestPermittedCardLength & getCardByBrand fun
 
     test('Should throw error since a type argument has not been passed', () => {
         expect(() => {
-            /* @ts-ignore */
+            // @ts-ignore Expected to complain as the argument is missing
             CardType.isGenericCardType();
         }).toThrow('Error: isGenericCardType: type param has not been specified');
     });

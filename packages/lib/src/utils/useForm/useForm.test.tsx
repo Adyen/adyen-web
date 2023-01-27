@@ -13,6 +13,7 @@ describe('useForm', () => {
     describe('schema', () => {
         let useFormHook;
         beforeEach(() => {
+            // eslint-disable-next-line testing-library/no-render-in-setup
             const { result } = renderHook(() => useForm({ schema: defaultSchema }));
             useFormHook = result;
         });

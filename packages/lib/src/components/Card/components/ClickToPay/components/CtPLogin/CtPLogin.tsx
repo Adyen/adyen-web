@@ -5,6 +5,9 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import CtPLoginInput, { CtPLoginInputHandlers } from './CtPLoginInput';
 import { useCallback, useState } from 'preact/hooks';
 import './CtPLogin.scss';
+import { CtPInfo } from '../CtPInfo';
+import CtPSection from '../CtPSection';
+import SrciError from '../../services/sdks/SrciError';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -48,6 +51,8 @@ const CtPLogin = (): h.JSX.Element => {
                 setIsLoggingIn(false);
             }
         } catch (error) {
+            if (error instanceof SrciError)
+                console.warn(`CtP - Login error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
             setErrorCode(error?.reason);
             setIsLoggingIn(false);
         }
@@ -55,8 +60,10 @@ const CtPLogin = (): h.JSX.Element => {
 
     return (
         <Fragment>
-            <div className="adyen-checkout-ctp__section-title">{i18n.get('ctp.login.title')}</div>
-            <div className="adyen-checkout-ctp__section-subtitle">{i18n.get('ctp.login.subtitle')}</div>
+            <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.login.title')}</CtPSection.Title>
+
+            <CtPSection.Text>{i18n.get('ctp.login.subtitle')}</CtPSection.Text>
+
             <CtPLoginInput
                 onChange={handleOnLoginChange}
                 onSetInputHandlers={onSetLoginInputHandlers}

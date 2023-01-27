@@ -3,7 +3,7 @@ import { h } from 'preact';
 import Img from './Img';
 
 describe('Image', () => {
-    const getWrapper = (props?) => shallow(<Img {...props} />);
+    const getWrapper = (props = {}) => shallow(<Img {...props} />);
 
     test('renders a component', () => {
         const wrapper = getWrapper();

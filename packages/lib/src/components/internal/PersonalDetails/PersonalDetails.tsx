@@ -22,7 +22,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const isDateInputSupported = useMemo(checkDateInputSupport, []);
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PersonalDetailsSchema>({
         schema: requiredFields,
-        rules: props.validationRules,
+        // Ensure any passed validation rules are merged with the default ones
+        rules: { ...personalDetailsValidationRules, ...props.validationRules },
         defaultData: props.data
     });
 
@@ -52,8 +53,9 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 <Field
                     label={i18n.get('firstName')}
                     classNameModifiers={['col-50', 'firstName']}
-                    errorMessage={!!errors.firstName}
+                    errorMessage={getErrorMessage(errors.firstName)}
                     name={'firstName'}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         name: generateFieldName('firstName'),
@@ -62,13 +64,20 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
                         placeholder: placeholders.firstName,
-                        spellCheck: false
+                        spellCheck: false,
+                        required: true
                     })}
                 </Field>
             )}
 
             {requiredFields.includes('lastName') && (
-                <Field label={i18n.get('lastName')} classNameModifiers={['col-50', 'lastName']} errorMessage={!!errors.lastName} name={'lastName'}>
+                <Field
+                    label={i18n.get('lastName')}
+                    classNameModifiers={['col-50', 'lastName']}
+                    errorMessage={getErrorMessage(errors.lastName)}
+                    name={'lastName'}
+                    i18n={i18n}
+                >
                     {renderFormField('text', {
                         name: generateFieldName('lastName'),
                         value: data.lastName,
@@ -76,7 +85,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
                         placeholder: placeholders.lastName,
-                        spellCheck: false
+                        spellCheck: false,
+                        required: true
                     })}
                 </Field>
             )}
@@ -93,7 +103,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         ],
                         classNameModifiers: ['gender'],
                         onInput: eventHandler('input'),
-                        onChange: eventHandler('blur')
+                        onChange: eventHandler('blur'),
+                        required: true
                     })}
                 </Field>
             )}
@@ -105,6 +116,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     errorMessage={getErrorMessage(errors.dateOfBirth)}
                     helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                     name={'dateOfBirth'}
+                    i18n={i18n}
                 >
                     {renderFormField('date', {
                         name: generateFieldName('dateOfBirth'),
@@ -112,7 +124,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['dateOfBirth'],
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
-                        placeholder: placeholders.dateOfBirth
+                        placeholder: placeholders.dateOfBirth,
+                        required: true
                     })}
                 </Field>
             )}
@@ -124,6 +137,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     errorMessage={getErrorMessage(errors.shopperEmail)}
                     dir={'ltr'}
                     name={'emailAddress'}
+                    i18n={i18n}
                 >
                     {renderFormField('emailAddress', {
                         name: generateFieldName('shopperEmail'),
@@ -131,7 +145,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['shopperEmail'],
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
-                        placeholder: placeholders.shopperEmail
+                        placeholder: placeholders.shopperEmail,
+                        required: true
                     })}
                 </Field>
             )}
@@ -143,6 +158,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     errorMessage={getErrorMessage(errors.telephoneNumber)}
                     dir={'ltr'}
                     name={'telephoneNumber'}
+                    i18n={i18n}
                 >
                     {renderFormField('tel', {
                         name: generateFieldName('telephoneNumber'),
@@ -150,7 +166,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         classNameModifiers: ['telephoneNumber'],
                         onInput: eventHandler('input'),
                         onBlur: eventHandler('blur'),
-                        placeholder: placeholders.telephoneNumber
+                        placeholder: placeholders.telephoneNumber,
+                        required: true
                     })}
                 </Field>
             )}

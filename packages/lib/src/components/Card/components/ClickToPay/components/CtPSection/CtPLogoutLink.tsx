@@ -15,8 +15,10 @@ const CtPLogoutLink = (): h.JSX.Element => {
     }
 
     const label = useMemo(() => {
-        if (ctpState === CtpState.Ready && cards.length !== 0) return i18n.get('ctp.logout.notYouCards');
-        else return i18n.get('ctp.logout.notYou');
+        if (ctpState === CtpState.Ready && cards.length > 1) return i18n.get('ctp.logout.notYourCards');
+        if (ctpState === CtpState.Ready && cards.length === 1) return i18n.get('ctp.logout.notYourCard');
+        if (ctpState === CtpState.Ready && cards.length === 0) return i18n.get('ctp.logout.notYourProfile');
+        return i18n.get('ctp.logout.notYou');
     }, [i18n, ctpState]);
 
     return (

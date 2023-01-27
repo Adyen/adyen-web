@@ -6,8 +6,9 @@ import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { encodeBase64URL } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
-import { CHALLENGE_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT, UNKNOWN_CHALLENGE_RESOLVE_OBJECT } from '../../config';
+import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT } from '../../config';
 import { DoChallenge3DS2Props, DoChallenge3DS2State } from './types';
+import { ThreeDS2FlowObject } from '../../types';
 
 const iframeName = 'threeDSIframe';
 
@@ -35,13 +36,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
             /**
              * Listen for postMessage responses from the notification url
              */
-            this.processMessageHandler = getProcessMessageHandler(
-                this.props.postMessageDomain,
-                resolve,
-                reject,
-                UNKNOWN_CHALLENGE_RESOLVE_OBJECT,
-                'challengeResult'
-            );
+            this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'challengeResult');
 
             /* eslint-disable-next-line */
             window.addEventListener('message', this.processMessageHandler);
@@ -50,13 +45,14 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
 
     componentDidMount() {
         // Render challenge
-        this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT);
+        this.challengePromise = promiseTimeout(CHALLENGE_TIMEOUT, this.get3DS2ChallengePromise(), CHALLENGE_TIMEOUT_REJECT_OBJECT);
         this.challengePromise.promise
-            .then(resolveObject => {
+            .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onCompleteChallenge(resolveObject);
             })
-            .catch(rejectObject => {
+            /** Catch, for when Challenge times-out */
+            .catch((rejectObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onErrorChallenge(rejectObject);
             });

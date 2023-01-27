@@ -115,6 +115,7 @@ export interface CbObjOnBinLookup {
     detectedBrands?: string[];
     supportedBrands?: string[];
     brands?: string[];
+    issuingCountryCode?: string;
     // New for CustomCard
     supportedBrandsRaw?: BrandObject[];
     rootNode?: HTMLElement;
