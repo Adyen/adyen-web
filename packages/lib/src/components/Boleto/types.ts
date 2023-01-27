@@ -30,3 +30,9 @@ export interface BoletoInputErrorState {
     shopperEmail?: boolean;
     socialSecurityNumber?: boolean;
 }
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface BoletoRef {
+    showValidation?: (who) => void;
+    setStatus?: any;
+}

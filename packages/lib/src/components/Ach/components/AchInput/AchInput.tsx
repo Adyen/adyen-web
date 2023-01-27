@@ -12,7 +12,7 @@ import defaultStyles from './defaultStyles';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './AchInput.module.scss';
 import './AchInput.scss';
-import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
+import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid, AchRef } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
 
 function validateHolderName(holderName, holderNameRequired = false) {
@@ -90,11 +90,14 @@ function AchInput(props: ACHInputProps) {
 
     const [status, setStatus] = useState('ready');
 
-    this.setStatus = newStatus => {
-        setStatus(newStatus);
-    };
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const achRef = useRef<AchRef>({});
+    // Just call once
+    if (!Object.keys(achRef.current).length) {
+        props.setComponentRef?.(achRef.current);
+    }
 
-    this.showValidation = () => {
+    achRef.current.showValidation = () => {
         // Validate SecuredFields
         sfp.current.showValidation();
 
@@ -106,6 +109,8 @@ function AchInput(props: ACHInputProps) {
         // Validate Address
         if (billingAddressRef.current) billingAddressRef.current.showValidation();
     };
+
+    achRef.current.setStatus = setStatus;
 
     useEffect(() => {
         this.setFocusOn = sfp.current.setFocusOn;

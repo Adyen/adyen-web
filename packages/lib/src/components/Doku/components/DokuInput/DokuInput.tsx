@@ -3,6 +3,12 @@ import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
+// An interface for the members exposed by a component to its parent UIElement
+interface DokuRef {
+    showValidation?: (who) => void;
+    setStatus?: any;
+}
+
 export default function DokuInput(props) {
     const personalDetailsRef = useRef(null);
     const setPersonalDetailsRef = ref => {
@@ -13,11 +19,18 @@ export default function DokuInput(props) {
 
     const [status, setStatus] = useState('ready');
 
-    this.setStatus = setStatus;
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const dokuRef = useRef<DokuRef>({});
+    // Just call once
+    if (!Object.keys(dokuRef.current).length) {
+        props.setComponentRef?.(dokuRef.current);
+    }
 
-    this.showValidation = () => {
+    dokuRef.current.showValidation = () => {
         personalDetailsRef.current?.showValidation();
     };
+
+    dokuRef.current.setStatus = setStatus;
 
     return (
         <div className="adyen-checkout__doku-input__field">

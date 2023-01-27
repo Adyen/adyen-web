@@ -28,6 +28,10 @@ export class DokuElement extends UIElement {
         return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
     }
 
+    public setComponentRef = ref => {
+        this.componentRef = ref;
+    };
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
@@ -40,9 +44,7 @@ export class DokuElement extends UIElement {
                     />
                 ) : (
                     <DokuInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

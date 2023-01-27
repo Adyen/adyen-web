@@ -5,7 +5,7 @@ import { boletoValidationRules } from './validate';
 import { boletoFormatters } from './utils';
 import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { BoletoInputDataState } from '../../types';
+import { BoletoInputDataState, BoletoRef } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 
@@ -45,14 +45,22 @@ function BoletoInput(props) {
     };
 
     const [status, setStatus] = useState('ready');
-    this.setStatus = setStatus;
 
-    this.showValidation = () => {
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const boletoRef = useRef<BoletoRef>({});
+    // Just call once
+    if (!Object.keys(boletoRef.current).length) {
+        props.setComponentRef?.(boletoRef.current);
+    }
+
+    boletoRef.current.showValidation = () => {
         triggerValidation();
         if (props.billingAddressRequired) {
             addressRef.current.showValidation();
         }
     };
+
+    boletoRef.current.setStatus = setStatus;
 
     useEffect(() => {
         const billingAddressValid = props.billingAddressRequired ? Boolean(valid.billingAddress) : true;

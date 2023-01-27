@@ -47,8 +47,6 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
         props.onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
-    this.showValidation = triggerValidation;
-
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyCompanyDetails {...props} data={data} />;
 
