@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
@@ -8,7 +8,7 @@
     border-left: 1px solid darken($color-alert, 2%);
     overflow: hidden;
     opacity: 0;
-    margin: 0 -17px 0;
+    margin: 0 -17px;
     max-height: 0;
     transition: opacity 0.15s ease-out, max-height 0.15s linear, margin-bottom 0.1s linear;
 
