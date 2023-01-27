@@ -5,6 +5,11 @@ import { mock } from 'jest-mock-extended';
 import { OpenInvoiceProps } from './types';
 import { FieldsetVisibility } from '../../../types';
 
+let componentRef;
+const setComponentRef = ref => {
+    componentRef = ref;
+};
+
 const defaultProps = {
     onChange: () => {},
     data: { personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
@@ -12,7 +17,8 @@ const defaultProps = {
         personalDetails: 'editable' as FieldsetVisibility,
         billingAddress: 'editable' as FieldsetVisibility,
         deliveryAddress: 'editable' as FieldsetVisibility
-    }
+    },
+    setComponentRef: setComponentRef
 };
 
 describe('OpenInvoice', () => {
@@ -77,7 +83,7 @@ describe('OpenInvoice', () => {
         const payButton = jest.fn();
         const wrapper = getWrapper({ showPayButton: true, payButton });
         const status = 'loading';
-        wrapper.instance().setStatus(status);
+        componentRef.setStatus(status);
         wrapper.update();
         expect(payButton).toHaveBeenCalledWith(jasmine.objectContaining({ status }));
     });
