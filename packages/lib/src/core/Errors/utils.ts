@@ -125,7 +125,9 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         fieldTypeMappingFn
     });
 
-    console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
+    const doLog = false;
+
+    if (doLog) console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
 
     if (currentErrorsSortedByLayout) {
         /** If validating i.e. "on submit" type event - then display all errors in the SR panel */
@@ -143,11 +145,11 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
                 isValidating.current = false;
             }, 300);
         } else {
-            console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: updating but not validating');
+            if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: updating but not validating');
             SRPanelRef?.setMessages(null);
         }
     } else {
-        console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
+        if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
         SRPanelRef.setMessages(null); // not validating - so clear SR panel
     }
 };
