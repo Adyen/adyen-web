@@ -19,7 +19,7 @@ import {
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
-import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
+import { enhanceErrorObjectKeys, setSRMessagesFromErrors } from '../../../core/Errors/utils';
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
@@ -110,20 +110,22 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             ...remainingErrors
         } = errors;
 
+        const enhancedBillingAddressErrors = extractedBillingAddressErrors; // enhanceErrorObjectKeys(extractedBillingAddressErrors, 'billingAddress:');
+        const enhancedDeliveryAddressErrors = enhanceErrorObjectKeys(extractedDeliveryAddressErrors, 'deliveryAddress:');
+
         // Order errors based on rendering layout
         const errorsForPanel = {
             ...(typeof extractedCompanyDetailsErrors === 'object' && extractedCompanyDetailsErrors),
             ...(typeof extractedPersonalDetailsErrors === 'object' && extractedPersonalDetailsErrors),
             ...(typeof extractedBankAccountErrors === 'object' && extractedBankAccountErrors),
-            ...(typeof extractedBillingAddressErrors === 'object' && extractedBillingAddressErrors),
-            ...(typeof extractedDeliveryAddressErrors === 'object' && extractedDeliveryAddressErrors),
+            ...(typeof enhancedBillingAddressErrors === 'object' && enhancedBillingAddressErrors),
+            ...(typeof enhancedDeliveryAddressErrors === 'object' && enhancedDeliveryAddressErrors),
             ...remainingErrors
         };
+        console.log('### OpenInvoice:::: errors', errors);
         console.log('### OpenInvoice:::: errorsForPanel', errorsForPanel);
 
         setSRMessages(errorsForPanel);
-
-        console.log('### OpenInvoice:::: errors', errors);
 
         props.onChange({ data: newData, errors, valid, isValid });
     }, [data, activeFieldsets]);

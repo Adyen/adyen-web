@@ -77,19 +77,9 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
              * For other fields we still need to translate it
              */
             const errorMsg =
-                // !(errObj instanceof ValidationRuleResult) && typeof errObj !== 'string' && 'errorI18n' in errObj
                 !(errObj instanceof ValidationRuleResult) && 'errorI18n' in errObj
                     ? errObj.errorI18n + SR_INDICATOR_PREFIX // is SFError
                     : i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly made error
-
-            // let errorMsg;
-            // if (!(errObj instanceof ValidationRuleResult) && ("errorI18n" in errObj)) {
-            //     // is SFError
-            //     errorMsg = errObj.errorI18n + SR_INDICATOR_PREFIX;
-            // } else {
-            //     // is ValidationRuleResult || GenericError
-            //     errorMsg = i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX;
-            // }
 
             let errorMessage = errorMsg;
             /**
@@ -152,4 +142,17 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
         SRPanelRef.setMessages(null); // not validating - so clear SR panel
     }
+};
+
+export const enhanceErrorObjectKeys = (errorObj, keyPrefix) => {
+    if (!errorObj) return null;
+    const enhancedObj = Object.entries(errorObj).reduce((acc, [key, value]) => {
+        if (value) {
+            const newKey = `${keyPrefix}${key}`;
+            acc[newKey] = value;
+        }
+        return acc;
+    }, {});
+
+    return enhancedObj;
 };

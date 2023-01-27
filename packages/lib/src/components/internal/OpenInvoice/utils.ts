@@ -34,15 +34,24 @@ export const getInitialActiveFieldsets = (visibility: OpenInvoiceVisibility, dat
     }, {} as OpenInvoiceActiveFieldsets);
 
 export const mapFieldKey = (key: string, i18n: Language): string => {
-    // console.log('### utils::mapFieldKey:: key', key);
+    let refKey = key;
+    let label;
 
-    const addressKey = mapFieldKeyAddress(key, i18n);
-    if (addressKey) return addressKey;
+    // Differentiate between address types (billing and delivery)
+    const splitKey = refKey.split(':');
+    const hasSplitKey = splitKey.length > 1;
+    if (hasSplitKey) {
+        label = splitKey[0];
+        refKey = splitKey[1];
+    }
 
-    switch (key) {
+    const addressKey = mapFieldKeyAddress(refKey, i18n);
+    if (addressKey) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
+
+    switch (refKey) {
         case 'gender':
         case 'dateOfBirth':
-            return mapFieldKeyPD(key, i18n);
+            return mapFieldKeyPD(refKey, i18n);
 
         default:
             break;
