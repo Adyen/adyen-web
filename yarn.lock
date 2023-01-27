@@ -7,6 +7,19 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.0.1.tgz#b38b444ad3aa5fedbb15f2f746dcd934226a12dd"
   integrity sha512-+u76oB43nOHrF4DDWRLWDCtci7f3QJoEBigemIdIeTi1ODqjx6Tad9NCVnPRwewWlKkVab5PlK8DCtPTyX7S8g==
 
+"@adyen/adyen-web@5.29.0":
+  version "5.29.0"
+  resolved "https://registry.yarnpkg.com/@adyen/adyen-web/-/adyen-web-5.29.0.tgz#f73ab1bd837d9f8fa6b812f7f0a980e248655c8c"
+  integrity sha512-zoflOQ/uxbSlW+wZqX2N+8AwAj3Y6pCPsOw1gWVC0f9AaITjwE4peNxkYtmJKwpkM+3Eaq3I13iramsn15u3nw==
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    "@babel/runtime-corejs3" "^7.19.1"
+    "@types/applepayjs" "^3.0.4"
+    "@types/googlepay" "^0.6.2"
+    classnames "^2.3.1"
+    core-js-pure "^3.25.3"
+    preact "10.11.2"
+
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
@@ -1243,6 +1256,14 @@
   dependencies:
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.10"
+
+"@babel/runtime-corejs3@^7.19.1":
+  version "7.20.13"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.20.13.tgz#ad012857db412ab0b5ccf184b67be2cfcc2a1dcf"
+  integrity sha512-p39/6rmY9uvlzRiLZBIB3G9/EBr66LBMcYm7fIDeSBNdRjF2AGD3rFZucUyAgGHC2N+7DdLvVi33uTjSE44FIw==
+  dependencies:
+    core-js-pure "^3.25.1"
+    regenerator-runtime "^0.13.11"
 
 "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.8.4":
   version "7.17.9"
@@ -9872,6 +9893,11 @@ postcss@^8.2.15, postcss@^8.4.7:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+preact@10.11.2:
+  version "10.11.2"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-10.11.2.tgz#e43f2a2f2985dedb426bb4c765b7bb037734f8a8"
+  integrity sha512-skAwGDFmgxhq1DCBHke/9e12ewkhc7WYwjuhHB8HHS8zkdtITXLRmUMTeol2ldxvLwYtwbFeifZ9uDDWuyL4Iw==
+
 preact@10.11.3:
   version "10.11.3"
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.11.3.tgz#8a7e4ba19d3992c488b0785afcc0f8aa13c78d19"
@@ -9891,6 +9917,11 @@ prettier@2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.3.tgz#ab697b1d3dd46fb4626fbe2f543afe0cc98d8632"
   integrity sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==
+
+prettier@^1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
 pretty-error@^2.1.1:
   version "2.1.2"
@@ -10237,7 +10268,7 @@ regenerate@^1.4.2:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
 
-regenerator-runtime@^0.13.10, regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.9:
+regenerator-runtime@^0.13.10, regenerator-runtime@^0.13.11, regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.9:
   version "0.13.11"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
