@@ -63,25 +63,29 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     const SR_INDICATOR_PREFIX = '-sr'; // for testing whether SR is reading out aria-live errors (sr) or aria-describedby ones
 
     // Create array of error objects, sorted by layout
-    const sortedErrors = Object.entries(errors).reduce((acc, [key, value]) => {
+    const sortedErrors: SortedErrorObject[] = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
             // console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
 
-            /** Get error codes */
+            /**
+             * Get error codes - these are used if we need to distinguish between showValidation & onBlur errors
+             * - For a ValidationRuleResult or GenericError the error "code" is contained in the errorMessage prop.
+             * - For an SFError the error "code" is contained in the error prop.
+             */
             const errorCode = errObj instanceof ValidationRuleResult ? (errObj.errorMessage as string) : errObj.error;
 
             // console.log('### utils::sortErrorsByLayout:: key=', key, 'errObj=', errObj);
 
             /**
-             * Get corresponding error msg
+             * Get corresponding error msg - a translated string we can place into the SRPanel
              * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
-             * For other fields we still need to translate it
+             * For other fields we still need to translate it, so we use the errorMessage prop as a translation key
              */
             const errorMsg =
                 !(errObj instanceof ValidationRuleResult) && 'errorI18n' in errObj
                     ? errObj.errorI18n + SR_INDICATOR_PREFIX // is SFError
-                    : i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly made error
+                    : i18n.get(errObj.errorMessage as string) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly formed error
 
             let errorMessage = errorMsg;
             /**

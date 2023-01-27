@@ -39,7 +39,7 @@ export interface SRMessagesProps {
 }
 
 export interface GenericError {
-    isValid?: boolean;
-    errorMessage: string;
-    error: string;
+    isValid: boolean;
+    errorMessage: string; // needed for the SRPanel
+    error: string; // needed for the visual error
 }
