@@ -1,6 +1,5 @@
 import { unformatDate } from '../FormFields/InputDate/utils';
 import Language from '../../../language';
-import { selectOne } from '../SecuredFields/lib/utilities/dom';
 
 export const getFormattedData = data => {
     const { firstName, lastName, gender, dateOfBirth, shopperEmail, telephoneNumber } = data;

@@ -2,8 +2,8 @@ import { selectOne } from '../components/internal/SecuredFields/lib/utilities/do
 
 /**
  * Generic function to set focus on named element
- * @param holder
- * @param fieldToFocus
+ * @param holder -
+ * @param fieldToFocus -
  */
 export const setFocusOnField = (holder, fieldToFocus) => {
     const pdHolder = selectOne(document, holder);
