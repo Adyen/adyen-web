@@ -12,6 +12,9 @@ import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBraz
 function BoletoInput(props) {
     const { i18n } = useCoreContext();
     const addressRef = useRef(null);
+    const setAddressRef = ref => {
+        addressRef.current = ref;
+    };
     const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } = useForm<
         BoletoInputDataState
     >({
@@ -71,7 +74,7 @@ function BoletoInput(props) {
                     data={{ ...props.data.billingAddress, country: 'BR' }}
                     onChange={handleAddress}
                     requiredFields={['country', 'street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince']}
-                    ref={addressRef}
+                    setComponentRef={setAddressRef}
                 />
             )}
 

@@ -1,8 +1,8 @@
 import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 import { AddressSpecifications } from '../Address/types';
-import {UIElementProps} from "../../types";
-import UIElement from "../../UIElement";
+import { UIElementProps } from '../../types';
+import UIElement from '../../UIElement';
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
@@ -13,12 +13,12 @@ export interface OpenInvoiceVisibility {
 }
 
 export interface BankDetailsSchema {
-    countryCode?: string,
-    ibanNumber?: any,
-    ownerName?: string
+    countryCode?: string;
+    ibanNumber?: any;
+    ownerName?: string;
 }
 
-export interface OpenInvoiceProps extends UIElementProps{
+export interface OpenInvoiceProps extends UIElementProps {
     allowedCountries?: string[];
     consentCheckboxLabel: any;
     countryCode?: string;
@@ -27,7 +27,7 @@ export interface OpenInvoiceProps extends UIElementProps{
         personalDetails?: PersonalDetailsSchema;
         billingAddress?: AddressData;
         deliveryAddress?: AddressData;
-        bankAccount?: BankDetailsSchema
+        bankAccount?: BankDetailsSchema;
     };
     onChange: (state: any, element?: UIElement) => void;
     payButton: any;
@@ -36,6 +36,7 @@ export interface OpenInvoiceProps extends UIElementProps{
     personalDetailsRequiredFields?: string[];
     billingAddressRequiredFields?: string[];
     billingAddressSpecification?: AddressSpecifications;
+    setComponentRef?: (ref) => void;
 }
 
 export interface OpenInvoiceStateData {
@@ -43,7 +44,7 @@ export interface OpenInvoiceStateData {
     personalDetails?: PersonalDetailsSchema;
     billingAddress?: AddressData;
     deliveryAddress?: AddressData;
-    bankAccount?: BankDetailsSchema
+    bankAccount?: BankDetailsSchema;
     consentCheckbox?: boolean;
 }
 
@@ -79,4 +80,10 @@ export interface OpenInvoiceFieldsetsRefs {
     billingAddress?;
     deliveryAddress?;
     bankAccount?;
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface OpenInvoiceRef {
+    showValidation?: (who) => void;
+    setStatus?: any;
 }

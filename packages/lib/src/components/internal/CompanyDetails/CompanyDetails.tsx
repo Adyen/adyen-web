@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyCompanyDetails from './ReadOnlyCompanyDetails';
@@ -7,7 +7,7 @@ import { renderFormField } from '../FormFields';
 import { companyDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
-import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
+import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsRef } from './types';
 import useForm from '../../../utils/useForm';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
@@ -20,6 +20,18 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
         rules: props.validationRules,
         defaultData: props.data
     });
+
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const companyDetailsRef = useRef<CompanyDetailsRef>({});
+    // Just call once
+    if (!Object.keys(companyDetailsRef.current).length) {
+        props.setComponentRef?.(companyDetailsRef.current);
+    }
+
+    // Expose method expected by (parent) Address.tsx
+    companyDetailsRef.current.showValidation = () => {
+        triggerValidation();
+    };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 

@@ -14,6 +14,9 @@ export interface PersonalDetailsProps {
     readonly?: boolean;
     ref?: any;
     validationRules?: ValidatorRules;
+    setComponentRef?: (ref) => void;
+    payButton?: (obj) => {};
+    showPayButton?: boolean;
 }
 
 export interface PersonalDetailsStateError {
@@ -44,4 +47,9 @@ export interface ReadOnlyPersonalDetailsProps {
 export interface ValidationResult {
     errorMessage: string;
     isValid: boolean;
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface PersonalDetailsRef {
+    showValidation?: (who) => void;
 }

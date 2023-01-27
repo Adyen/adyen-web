@@ -21,6 +21,9 @@ export interface AddressProps {
     visibility?: string;
     overrideSchema?: AddressSpecifications;
     iOSFocusedField?: string;
+    payButton?: (obj) => {};
+    showPayButton?: boolean;
+    setComponentRef?: (ref) => void;
 }
 
 export interface AddressStateError {
@@ -97,4 +100,9 @@ export interface AddressSpecifications {
         placeholders?: StringObject;
         schema?: AddressSchema;
     };
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface AddressRef {
+    showValidation?: (who) => void;
 }

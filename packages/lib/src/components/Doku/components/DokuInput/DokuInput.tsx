@@ -5,13 +5,18 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 
 export default function DokuInput(props) {
     const personalDetailsRef = useRef(null);
+    const setPersonalDetailsRef = ref => {
+        personalDetailsRef.current = ref;
+    };
+
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState('ready');
+
     this.setStatus = setStatus;
 
     this.showValidation = () => {
-        if (personalDetailsRef.current) personalDetailsRef.current.showValidation();
+        personalDetailsRef.current?.showValidation();
     };
 
     return (
@@ -21,7 +26,7 @@ export default function DokuInput(props) {
                 requiredFields={['firstName', 'lastName', 'shopperEmail']}
                 onChange={props.onChange}
                 namePrefix="doku"
-                ref={personalDetailsRef}
+                setComponentRef={setPersonalDetailsRef}
             />
 
             {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}

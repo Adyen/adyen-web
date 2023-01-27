@@ -84,6 +84,9 @@ function AchInput(props: ACHInputProps) {
     // Refs
     const sfp = useRef(null);
     const billingAddressRef = useRef(null);
+    const setAddressRef = ref => {
+        billingAddressRef.current = ref;
+    };
 
     const [status, setStatus] = useState('ready');
 
@@ -172,7 +175,7 @@ function AchInput(props: ACHInputProps) {
                                     onChange={handleAddress}
                                     allowedCountries={props.billingAddressAllowedCountries}
                                     requiredFields={props.billingAddressRequiredFields}
-                                    ref={billingAddressRef}
+                                    setComponentRef={setAddressRef}
                                 />
                             )}
 

@@ -1,19 +1,30 @@
-import { h } from 'preact';
-import { useEffect, useMemo } from 'preact/hooks';
+import { Fragment, h } from 'preact';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
-import { AddressProps } from './types';
+import { AddressProps, AddressRef } from './types';
 import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
 export default function Address(props: AddressProps) {
+    const { i18n } = useCoreContext();
+
     const { label = '', requiredFields, visibility, iOSFocusedField = null } = props;
+
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const addressRef = useRef<AddressRef>({});
+    // Just call once
+    if (!Object.keys(addressRef.current).length) {
+        props.setComponentRef?.(addressRef.current);
+    }
+
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
     const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
@@ -24,6 +35,11 @@ export default function Address(props: AddressProps) {
         rules: props.validationRules || getAddressValidationRules(specifications),
         formatters: addressFormatters
     });
+
+    // Expose method expected by (parent) Address.tsx
+    addressRef.current.showValidation = () => {
+        triggerValidation();
+    };
 
     /**
      * For iOS: iOSFocusedField is the name of the element calling for other elements to be disabled
@@ -81,8 +97,6 @@ export default function Address(props: AddressProps) {
         props.onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
-    this.showValidation = triggerValidation;
-
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyAddress data={data} label={label} />;
 
@@ -118,9 +132,13 @@ export default function Address(props: AddressProps) {
     const addressSchema = specifications.getAddressSchemaForCountry(data.country);
 
     return (
-        <Fieldset classNameModifiers={[label]} label={label}>
-            {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
-        </Fieldset>
+        <Fragment>
+            <Fieldset classNameModifiers={[label]} label={label}>
+                {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
+            </Fieldset>
+            {/* Needed to easily test when showValidation is called */}
+            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
+        </Fragment>
     );
 }
 
