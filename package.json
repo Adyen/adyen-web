@@ -20,12 +20,16 @@
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
         "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e",
-        "type-check": "yarn workspace @adyen/adyen-web type-check"
+        "type-check": "yarn workspace @adyen/adyen-web type-check",
+        "prepare": "yarn workspace @adyen/adyen-web prepare"
     },
     "resolutions": {
         "**/regenerator-runtime": "^0.13.9"
     },
     "dependencies": {
         "concurrently": "^7.6.0"
+    },
+    "devDependencies": {
+        "prettier": "2.8.3"
     }
 }
