@@ -20,6 +20,13 @@ import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { enhanceErrorObjectKeys, setSRMessagesFromErrors } from '../../../core/Errors/utils';
+import { GenericError } from '../../../core/Errors/types';
+
+const consentCBErrorObj: GenericError = {
+    isValid: false,
+    errorMessage: 'consent.checkbox.invalid',
+    error: 'consent.checkbox.invalid'
+};
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
@@ -87,7 +94,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         });
 
         setErrors({
-            ...(hasConsentCheckbox && { consentCheckbox: !data.consentCheckbox })
+            ...(hasConsentCheckbox && { consentCheckbox: data.consentCheckbox ? null : consentCBErrorObj })
         });
     };
 

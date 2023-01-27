@@ -71,6 +71,8 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
             /** Get error codes */
             const errorCode = errObj instanceof ValidationRuleResult ? (errObj.errorMessage as string) : errObj.error;
 
+            // console.log('### utils::sortErrorsByLayout:: key=', key, 'errObj=', errObj);
+
             /**
              * Get corresponding error msg
              * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
@@ -115,7 +117,7 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         fieldTypeMappingFn
     });
 
-    const doLog = false;
+    const doLog = true;
 
     if (doLog) console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
 
