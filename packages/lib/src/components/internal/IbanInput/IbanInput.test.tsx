@@ -1,10 +1,23 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import IbanInput from './IbanInput';
+import { GenericError } from '../../../core/Errors/types';
 
 const i18n = { get: key => key };
 
 const createWrapper = (props = {}) => mount(<IbanInput i18n={i18n} {...props} />);
+
+const ibanErrorObj: GenericError = {
+    isValid: false,
+    errorMessage: 'sepaDirectDebit.ibanField.invalid',
+    error: 'sepaDirectDebit.ibanField.invalid'
+};
+
+const ibanHolderNameErrorObj: GenericError = {
+    isValid: false,
+    errorMessage: 'ach.accountHolderNameField.invalid',
+    error: 'ach.accountHolderNameField.invalid'
+};
 
 describe('IbanInput', () => {
     test('Renders two fields', () => {
@@ -16,7 +29,7 @@ describe('IbanInput', () => {
     describe('Validation Errors', () => {
         test('Set iban errors', () => {
             const wrapper = createWrapper();
-            wrapper.instance().setError('iban', true);
+            wrapper.instance().setError('iban', ibanErrorObj);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(1);
             expect(wrapper.find('input[name="ibanNumber"]').prop('aria-invalid')).toBe(true);
@@ -29,7 +42,7 @@ describe('IbanInput', () => {
 
         test('Set holderName errors', () => {
             const wrapper = createWrapper();
-            wrapper.instance().setError('holder', true);
+            wrapper.instance().setError('holder', ibanHolderNameErrorObj);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(1);
 
