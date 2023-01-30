@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
+import { ComponentMethodsRef } from '../../../types';
 
 export default function DokuInput(props) {
     const personalDetailsRef = useRef(null);
@@ -12,11 +13,19 @@ export default function DokuInput(props) {
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState('ready');
-    this.setStatus = setStatus;
 
-    this.showValidation = () => {
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const dokuRef = useRef<ComponentMethodsRef>({});
+    // Just call once
+    if (!Object.keys(dokuRef.current).length) {
+        props.setComponentRef?.(dokuRef.current);
+    }
+
+    dokuRef.current.showValidation = () => {
         personalDetailsRef.current?.showValidation();
     };
+
+    dokuRef.current.setStatus = setStatus;
 
     return (
         <div className="adyen-checkout__doku-input__field">

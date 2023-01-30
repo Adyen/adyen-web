@@ -133,3 +133,9 @@ export interface UIElementProps extends BaseElementProps {
     /** @internal */
     i18n?: Language;
 }
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface ComponentMethodsRef {
+    showValidation?: () => void;
+    setStatus?(status: UIElementStatus): void;
+}

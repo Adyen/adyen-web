@@ -82,9 +82,3 @@ export interface OpenInvoiceFieldsetsRefs {
     deliveryAddress?;
     bankAccount?;
 }
-
-// An interface for the members exposed by a component to its parent UIElement
-export interface OpenInvoiceRef {
-    showValidation?: (who) => void;
-    setStatus?: any;
-}

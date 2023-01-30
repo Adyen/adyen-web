@@ -4,7 +4,7 @@ import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
-import { AddressProps, AddressRef } from './types';
+import { AddressProps } from './types';
 import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
@@ -15,6 +15,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
 import { mapFieldKey } from './utils';
+import { ComponentMethodsRef } from '../../types';
 
 export default function Address(props: AddressProps) {
     const {
@@ -52,7 +53,7 @@ export default function Address(props: AddressProps) {
     /** end SR stuff */
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const addressRef = useRef<AddressRef>({});
+    const addressRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(addressRef.current).length) {
         props.setComponentRef?.(addressRef.current);

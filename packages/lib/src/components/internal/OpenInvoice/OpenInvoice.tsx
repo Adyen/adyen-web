@@ -11,7 +11,6 @@ import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
     OpenInvoiceProps,
-    OpenInvoiceRef,
     OpenInvoiceStateData,
     OpenInvoiceStateError,
     OpenInvoiceStateValid
@@ -21,6 +20,7 @@ import IbanInput from '../IbanInput';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { enhanceErrorObjectKeys, setSRMessagesFromErrors } from '../../../core/Errors/utils';
 import { GenericError } from '../../../core/Errors/types';
+import { ComponentMethodsRef } from '../../types';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -36,7 +36,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     } = useCoreContext();
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const openInvoiceRef = useRef<OpenInvoiceRef>({});
+    const openInvoiceRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(openInvoiceRef.current).length) {
         props.setComponentRef?.(openInvoiceRef.current);

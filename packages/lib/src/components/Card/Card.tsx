@@ -49,10 +49,6 @@ export class CardElement extends UIElement<CardElementProps> {
         return this;
     }
 
-    public setComponentRef = ref => {
-        this.componentRef = ref;
-    };
-
     private setClickToPayRef = ref => {
         this.clickToPayRef = ref;
     };

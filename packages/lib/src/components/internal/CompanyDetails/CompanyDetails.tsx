@@ -7,8 +7,9 @@ import { renderFormField } from '../FormFields';
 import { companyDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
-import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsRef } from './types';
+import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
+import { ComponentMethodsRef } from '../../types';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
 
@@ -22,16 +23,16 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     });
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const companyDetailsRef = useRef<CompanyDetailsRef>({});
+    const companyDetailsRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(companyDetailsRef.current).length) {
-        // Expose method expected by (parent) Address.tsx
-        companyDetailsRef.current.showValidation = () => {
-            triggerValidation();
-        };
-
         props.setComponentRef?.(companyDetailsRef.current);
     }
+
+    // Expose method expected by (parent) Address.tsx
+    companyDetailsRef.current.showValidation = () => {
+        triggerValidation();
+    };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 

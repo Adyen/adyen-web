@@ -8,6 +8,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
+import { ComponentMethodsRef } from '../../../types';
 
 function BoletoInput(props) {
     const { i18n } = useCoreContext();
@@ -15,14 +16,13 @@ function BoletoInput(props) {
     const setAddressRef = ref => {
         addressRef.current = ref;
     };
-    const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } = useForm<
-        BoletoInputDataState
-    >({
-        schema: ['firstName', 'lastName', 'socialSecurityNumber', 'billingAddress', 'shopperEmail'],
-        defaultData: props.data,
-        rules: boletoValidationRules,
-        formatters: boletoFormatters
-    });
+    const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } =
+        useForm<BoletoInputDataState>({
+            schema: ['firstName', 'lastName', 'socialSecurityNumber', 'billingAddress', 'shopperEmail'],
+            defaultData: props.data,
+            rules: boletoValidationRules,
+            formatters: boletoFormatters
+        });
 
     // Email field toggle
     const [showingEmail, setShowingEmail] = useState<boolean>(false);
@@ -45,14 +45,22 @@ function BoletoInput(props) {
     };
 
     const [status, setStatus] = useState('ready');
-    this.setStatus = setStatus;
 
-    this.showValidation = () => {
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const boletoRef = useRef<ComponentMethodsRef>({});
+    // Just call once
+    if (!Object.keys(boletoRef.current).length) {
+        props.setComponentRef?.(boletoRef.current);
+    }
+
+    boletoRef.current.showValidation = () => {
         triggerValidation();
         if (props.billingAddressRequired) {
             addressRef.current.showValidation();
         }
     };
+
+    boletoRef.current.setStatus = setStatus;
 
     useEffect(() => {
         const billingAddressValid = props.billingAddressRequired ? Boolean(valid.billingAddress) : true;

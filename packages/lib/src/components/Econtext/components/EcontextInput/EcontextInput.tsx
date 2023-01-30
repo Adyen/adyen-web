@@ -5,6 +5,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types';
 import './EcontextInput.scss';
+import { ComponentMethodsRef } from '../../../types';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
@@ -16,7 +17,7 @@ interface EcontextInputProps {
     [key: string]: any;
 }
 
-export default function EcontextInput({ personalDetailsRequired = true, data, onChange, showPayButton, payButton }: EcontextInputProps) {
+export default function EcontextInput({ personalDetailsRequired = true, data, onChange, showPayButton, payButton, ...props }: EcontextInputProps) {
     const personalDetailsRef = useRef(null);
     const setPersonalDetailsRef = ref => {
         personalDetailsRef.current = ref;
@@ -24,11 +25,19 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState('ready');
-    this.setStatus = setStatus;
 
-    this.showValidation = () => {
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const econtextRef = useRef<ComponentMethodsRef>({});
+    // Just call once
+    if (!Object.keys(econtextRef.current).length) {
+        props.setComponentRef?.(econtextRef.current);
+    }
+
+    econtextRef.current.showValidation = () => {
         personalDetailsRef.current?.showValidation();
     };
+
+    econtextRef.current.setStatus = setStatus;
 
     return (
         <div className="adyen-checkout__econtext-input__field">

@@ -10,6 +10,7 @@ import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import Analytics from '../../../../core/Analytics';
 import RiskElement from '../../../../core/RiskModule';
+import { ComponentMethodsRef } from '../../../types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -137,12 +138,10 @@ export interface CardInputState {
 }
 
 // An interface for the members exposed by CardInput to its parent Card/UIElement
-export interface CardInputRef {
+export interface CardInputRef extends ComponentMethodsRef {
     sfp?: any;
     setFocusOn?: (who) => void;
-    showValidation?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
-    setStatus?: any;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
 }

@@ -6,7 +6,7 @@ import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
 import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { PersonalDetailsProps, PersonalDetailsRef } from './types';
+import { PersonalDetailsProps } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData, mapFieldKey } from './utils';
@@ -14,6 +14,7 @@ import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
 import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
+import { ComponentMethodsRef } from '../../types';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -53,7 +54,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     /** end SR STUFF */
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const personalDetailsRef = useRef<PersonalDetailsRef>({});
+    const personalDetailsRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(personalDetailsRef.current).length) {
         props.setComponentRef?.(personalDetailsRef.current);
