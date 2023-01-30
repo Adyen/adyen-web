@@ -1,32 +1,30 @@
-@import '../../../../../../../style/index';
+@import "../../../../../../../style/index";
 
 .adyen-checkout-ctp__card-list-single-card {
-  border-radius: 6px;
-  background-color: $color-gray-lighter;
-  height: 40px;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 19px;
+    border-radius: 6px;
+    background-color: $color-gray-lighter;
+    height: 40px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 19px;
 
-  &-expired {
-    text-decoration: line-through;
-    color: $color-gray-darker;
-  }
+    &-expired {
+        text-decoration: line-through;
+        color: $color-gray-darker;
+    }
 }
 
 .adyen-checkout-ctp__expired-label {
-  color: $color-gray-darker;
-  font-weight: 500;
-  line-height: 17px;
-  margin-left: auto;
+    color: $color-gray-darker;
+    font-weight: 500;
+    line-height: 17px;
+    margin-left: auto;
 }
 
-
-
 .adyen-checkout-ctp__card-image {
-  border-radius: 3px;
-  margin-right: 8px;
+    border-radius: 3px;
+    margin-right: 8px;
 }

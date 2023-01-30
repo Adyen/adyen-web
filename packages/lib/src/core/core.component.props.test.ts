@@ -261,7 +261,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('StoredCard in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const storedCard = dropin.dropinRef.state.elements[0];
@@ -292,7 +292,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('Card in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const card = dropin.dropinRef.state.elements[1];
@@ -326,7 +326,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('AmazonPay in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const aPay = dropin.dropinRef.state.elements[2];
@@ -358,7 +358,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('Redirect PM in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const redirect = dropin.dropinRef.state.elements[3];

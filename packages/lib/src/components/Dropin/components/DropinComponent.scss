@@ -1,9 +1,9 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__dropin,
 .adyen-checkout__dropin *,
-.adyen-checkout__dropin *:after,
-.adyen-checkout__dropin *:before {
+.adyen-checkout__dropin *::after,
+.adyen-checkout__dropin *::before {
     box-sizing: border-box;
 }
 
