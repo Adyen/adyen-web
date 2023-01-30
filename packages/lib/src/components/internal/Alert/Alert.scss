@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__alert-message {
     display: flex;
@@ -12,7 +12,6 @@
 .adyen-checkout__alert-message--error {
     background: $color-red-light;
 }
-
 
 .adyen-checkout__alert-message--warning {
     background: $color-orange-light;

@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__await {
     background: $color-white;
@@ -56,7 +56,7 @@
     height: 4px;
     background: $color-gray;
     border-radius: $border-radius-xlarge;
-    margin: 32px auto 12px auto;
+    margin: 32px auto 12px;
     width: 152px;
 }
 
