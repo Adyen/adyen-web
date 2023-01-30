@@ -25,17 +25,18 @@ export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility, iOSFocusedField = null } = props;
 
     /** Screen Reader related stuff */
-    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
-
     const isValidating = useRef(false);
 
     /**
-     * SRPanelRef will *not* have a value when this component is directly initialised e.g. from CardInput, ACHInput, OpenInvoices etc.
-     * In this scenario the parent component will be responsible for handling and passing errors to the SRPanel, so we do not need a setSRMessages fn.
+     * - SRPanelRef only have a value when it is passed in via a component's props AND THAT SHOULD ONLY HAPPEN when a comp is being instantiated via a UIElement.
      *
-     * Otherwise, this component has been initialised as a standalone comp i.e. through a parent UIElement, so a SRPanelRef will exist.
-     * In this latter scenario we generate a setSRMessages function, once only (since the initial set of arguments don't change).
+     * - SRPanelRef will *not* (should not!) have a value when this component is directly initialised e.g. from CardInput, ACHInput, OpenInvoices etc.
+     * In this scenario the parent component will be responsible for handling and passing errors to the SRPanel, so we do not need a setSRMessages fn
+     *
+     * When this component has been initialised as a standalone comp, so we have a SRPanelRef - generate a (partial) setSRMessages function, once only
+     * (since the initial set of arguments don't change).
      */
+    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
     const { current: setSRMessages } = useRef(
         SRPanelRef
             ? partial(setSRMessagesFromErrors, {
