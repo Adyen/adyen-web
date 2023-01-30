@@ -36,7 +36,7 @@
     margin-top: $spacing-medium;
 }
 
-.adyen-checkout__card-input.adyen-checkout__card-input--loading{
+.adyen-checkout__card-input.adyen-checkout__card-input--loading {
     pointer-events: none;
 }
 
@@ -45,8 +45,8 @@
 }
 
 /* When holderName is on top & co-exists with an error panel */
-.adyen-checkout-sr-panel--sr-only + .adyen-checkout__card__holderName,
-.adyen-checkout-sr-panel + .adyen-checkout__card__holderName{
+.adyen-checkout-error-panel--sr-only + .adyen-checkout__card__holderName,
+.adyen-checkout-error-panel + .adyen-checkout__card__holderName {
     margin: 0 0 $spacing-medium;
 }
 
@@ -132,7 +132,7 @@
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
         opacity: 0;
-    }    
+    }
 }
 .adyen-checkout__field__exp-date_hint {
     width: 27px;
