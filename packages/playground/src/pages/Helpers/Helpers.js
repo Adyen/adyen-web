@@ -58,17 +58,17 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .create('address', {
             onChange: console.log,
             //TODO - what is the origin/purpose of this postalCode-is-optional-for-India rule??
-            validationRules: {
-                postalCode: {
-                    validate: (value, context) => {
-                        const selectedCountry = context.state?.data?.country;
-                        const isOptional = selectedCountry === 'IN';
-                        return isOptional || (value && value.length > 0);
-                    },
-                    modes: ['blur'],
-                    errorMessage: 'incomplete field'
-                }
-            },
+            // validationRules: {
+            //     postalCode: {
+            //         validate: (value, context) => {
+            //             const selectedCountry = context.state?.data?.country;
+            //             const isOptional = selectedCountry === 'IN';
+            //             return isOptional || (value && value.length > 0);
+            //         },
+            //         modes: ['blur'],
+            //         errorMessage: 'incomplete field'
+            //     }
+            // },
             specifications: {
                 IN: {
                     hasDataset: false,
