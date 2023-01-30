@@ -4,7 +4,7 @@ import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
-import { AddressProps, AddressRef } from './types';
+import { AddressProps } from './types';
 import { AddressData } from '../../../types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
@@ -12,6 +12,7 @@ import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import { ComponentMethodsRef } from '../../types';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
@@ -19,7 +20,7 @@ export default function Address(props: AddressProps) {
     const { label = '', requiredFields, visibility, iOSFocusedField = null } = props;
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const addressRef = useRef<AddressRef>({});
+    const addressRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(addressRef.current).length) {
         props.setComponentRef?.(addressRef.current);

@@ -5,9 +5,10 @@ import { boletoValidationRules } from './validate';
 import { boletoFormatters } from './utils';
 import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { BoletoInputDataState, BoletoRef } from '../../types';
+import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
+import { ComponentMethodsRef } from '../../../types';
 
 function BoletoInput(props) {
     const { i18n } = useCoreContext();
@@ -15,14 +16,13 @@ function BoletoInput(props) {
     const setAddressRef = ref => {
         addressRef.current = ref;
     };
-    const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } = useForm<
-        BoletoInputDataState
-    >({
-        schema: ['firstName', 'lastName', 'socialSecurityNumber', 'billingAddress', 'shopperEmail'],
-        defaultData: props.data,
-        rules: boletoValidationRules,
-        formatters: boletoFormatters
-    });
+    const { handleChangeFor, triggerValidation, setSchema, setData, setValid, setErrors, data, valid, errors, isValid } =
+        useForm<BoletoInputDataState>({
+            schema: ['firstName', 'lastName', 'socialSecurityNumber', 'billingAddress', 'shopperEmail'],
+            defaultData: props.data,
+            rules: boletoValidationRules,
+            formatters: boletoFormatters
+        });
 
     // Email field toggle
     const [showingEmail, setShowingEmail] = useState<boolean>(false);
@@ -47,7 +47,7 @@ function BoletoInput(props) {
     const [status, setStatus] = useState('ready');
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const boletoRef = useRef<BoletoRef>({});
+    const boletoRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(boletoRef.current).length) {
         props.setComponentRef?.(boletoRef.current);

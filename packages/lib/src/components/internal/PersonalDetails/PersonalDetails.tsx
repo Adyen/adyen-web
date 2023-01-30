@@ -6,12 +6,13 @@ import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
 import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { PersonalDetailsProps, PersonalDetailsRef } from './types';
+import { PersonalDetailsProps } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
 import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
+import { ComponentMethodsRef } from '../../types';
 
 const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -21,7 +22,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const { i18n } = useCoreContext();
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const personalDetailsRef = useRef<PersonalDetailsRef>({});
+    const personalDetailsRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(personalDetailsRef.current).length) {
         props.setComponentRef?.(personalDetailsRef.current);
@@ -40,12 +41,14 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         triggerValidation();
     };
 
-    const eventHandler = (mode: string): Function => (e: Event): void => {
-        const { name } = e.target as HTMLInputElement;
-        const key = name.split(`${namePrefix}.`).pop();
+    const eventHandler =
+        (mode: string): Function =>
+        (e: Event): void => {
+            const { name } = e.target as HTMLInputElement;
+            const key = name.split(`${namePrefix}.`).pop();
 
-        handleChangeFor(key, mode)(e);
-    };
+            handleChangeFor(key, mode)(e);
+        };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
     const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);

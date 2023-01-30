@@ -11,20 +11,20 @@ import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
     OpenInvoiceProps,
-    OpenInvoiceRef,
     OpenInvoiceStateData,
     OpenInvoiceStateError,
     OpenInvoiceStateValid
 } from './types';
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
+import { ComponentMethodsRef } from '../../types';
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
     const { i18n } = useCoreContext();
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const openInvoiceRef = useRef<OpenInvoiceRef>({});
+    const openInvoiceRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(openInvoiceRef.current).length) {
         props.setComponentRef?.(openInvoiceRef.current);

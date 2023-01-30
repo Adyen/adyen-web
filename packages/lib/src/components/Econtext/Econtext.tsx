@@ -43,10 +43,6 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
         return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
     }
 
-    public setComponentRef = ref => {
-        this.componentRef = ref;
-    };
-
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>

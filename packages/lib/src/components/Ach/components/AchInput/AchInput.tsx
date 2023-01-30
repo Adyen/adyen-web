@@ -12,8 +12,9 @@ import defaultStyles from './defaultStyles';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import styles from './AchInput.module.scss';
 import './AchInput.scss';
-import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid, AchRef } from './types';
+import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
+import { ComponentMethodsRef } from '../../../types';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -91,7 +92,7 @@ function AchInput(props: ACHInputProps) {
     const [status, setStatus] = useState('ready');
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const achRef = useRef<AchRef>({});
+    const achRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(achRef.current).length) {
         props.setComponentRef?.(achRef.current);

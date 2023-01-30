@@ -64,10 +64,6 @@ export class AchElement extends UIElement<AchElementProps> {
         return this.props.name;
     }
 
-    public setComponentRef = ref => {
-        this.componentRef = ref;
-    };
-
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>

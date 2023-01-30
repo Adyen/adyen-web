@@ -5,6 +5,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types';
 import './EcontextInput.scss';
+import { ComponentMethodsRef } from '../../../types';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
@@ -14,12 +15,6 @@ interface EcontextInputProps {
     onChange?(data: any): void;
     onSubmit?(state: any, component: any): void;
     [key: string]: any;
-}
-
-// An interface for the members exposed by a component to its parent UIElement
-interface EcontextRef {
-    showValidation?: (who) => void;
-    setStatus?: any;
 }
 
 export default function EcontextInput({ personalDetailsRequired = true, data, onChange, showPayButton, payButton, ...props }: EcontextInputProps) {
@@ -32,7 +27,7 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
     const [status, setStatus] = useState('ready');
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const econtextRef = useRef<EcontextRef>({});
+    const econtextRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(econtextRef.current).length) {
         props.setComponentRef?.(econtextRef.current);

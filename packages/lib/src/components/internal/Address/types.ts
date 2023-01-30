@@ -101,8 +101,3 @@ export interface AddressSpecifications {
         schema?: AddressSchema;
     };
 }
-
-// An interface for the members exposed by a component to its parent UIElement
-export interface AddressRef {
-    showValidation?: (who) => void;
-}

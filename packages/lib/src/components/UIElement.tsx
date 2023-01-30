@@ -130,10 +130,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private submitAdditionalDetails(data): Promise<void> {
-        return this._parentInstance.session
-            .submitDetails(data)
-            .then(this.handleResponse)
-            .catch(this.handleError);
+        return this._parentInstance.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -227,6 +224,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     public updateParent(options: CoreOptions = {}): Promise<Core> {
         return this.elementRef._parentInstance.update(options);
     }
+
+    public setComponentRef = ref => {
+        this.componentRef = ref;
+    };
 
     /**
      * Get the current validation status of the element

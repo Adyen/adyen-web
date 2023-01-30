@@ -12,10 +12,6 @@ export class PersonalDetailsElement extends UIElement {
         return !!this.state.isValid;
     }
 
-    public setComponentRef = ref => {
-        this.componentRef = ref;
-    };
-
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>

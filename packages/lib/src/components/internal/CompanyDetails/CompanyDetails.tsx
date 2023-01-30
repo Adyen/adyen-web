@@ -7,8 +7,9 @@ import { renderFormField } from '../FormFields';
 import { companyDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
-import { CompanyDetailsSchema, CompanyDetailsProps, CompanyDetailsRef } from './types';
+import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
+import { ComponentMethodsRef } from '../../types';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
 
@@ -22,7 +23,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     });
 
     /** An object by which to expose 'public' members to the parent UIElement */
-    const companyDetailsRef = useRef<CompanyDetailsRef>({});
+    const companyDetailsRef = useRef<ComponentMethodsRef>({});
     // Just call once
     if (!Object.keys(companyDetailsRef.current).length) {
         props.setComponentRef?.(companyDetailsRef.current);
@@ -35,12 +36,14 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
-    const eventHandler = (mode: string): Function => (e: Event): void => {
-        const { name } = e.target as HTMLInputElement;
-        const key = name.split(`${namePrefix}.`).pop();
+    const eventHandler =
+        (mode: string): Function =>
+        (e: Event): void => {
+            const { name } = e.target as HTMLInputElement;
+            const key = name.split(`${namePrefix}.`).pop();
 
-        handleChangeFor(key, mode)(e);
-    };
+            handleChangeFor(key, mode)(e);
+        };
 
     useEffect(() => {
         const formattedData = getFormattedData(data);

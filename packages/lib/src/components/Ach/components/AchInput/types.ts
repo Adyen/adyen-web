@@ -60,9 +60,3 @@ export interface ACHInputProps {
     forceCompat?: boolean;
     setComponentRef?: (ref) => void;
 }
-
-// An interface for the members exposed by a component to its parent UIElement
-export interface AchRef {
-    showValidation?: (who) => void;
-    setStatus?: any;
-}
