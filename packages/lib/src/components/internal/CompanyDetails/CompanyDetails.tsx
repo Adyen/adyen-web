@@ -17,7 +17,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<CompanyDetailsSchema>({
         schema: requiredFields,
-        rules: props.validationRules,
+        rules: { ...companyDetailsValidationRules, ...props.validationRules },
         defaultData: props.data
     });
 
@@ -35,12 +35,14 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
-    const eventHandler = (mode: string): Function => (e: Event): void => {
-        const { name } = e.target as HTMLInputElement;
-        const key = name.split(`${namePrefix}.`).pop();
+    const eventHandler =
+        (mode: string): Function =>
+        (e: Event): void => {
+            const { name } = e.target as HTMLInputElement;
+            const key = name.split(`${namePrefix}.`).pop();
 
-        handleChangeFor(key, mode)(e);
-    };
+            handleChangeFor(key, mode)(e);
+        };
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
