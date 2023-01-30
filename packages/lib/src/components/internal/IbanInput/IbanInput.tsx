@@ -116,11 +116,9 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         this.setState(
             prevState => ({ data: { ...prevState.data, ownerName: holder } }),
             () => {
-                // this.setError('holder', !isValidHolder(this.state.data['ownerName']), this.onChange);
-
                 const holderStatus = isValidHolder(this.state.data['ownerName']);
                 const holderErr =
-                    holderStatus != null && !holderStatus // *don't* consider null, i.e. an empty field, to be in error
+                    holderStatus != null && !holderStatus // *don't* consider null, i.e. a value that has just been deleted, to be in error
                         ? ibanHolderNameErrorObj
                         : null;
 
@@ -147,7 +145,6 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                 data: { ...prevState.data, ibanNumber: iban, countryCode: countryCode },
                 errors: {
                     ...prevState.errors,
-                    // iban: validationStatus === 'invalid' ? 'sepaDirectDebit.ibanField.invalid' : null
                     iban: validationStatus === 'invalid' ? ibanErrorObj : null
                 },
                 valid: { ...prevState.valid, iban: validationStatus === 'valid' }
@@ -164,7 +161,6 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
 
         if (currentIban.length > 0) {
             const validationStatus = checkIbanStatus(currentIban).status;
-            // this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null, this.onChange);
             this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null, this.onChange);
         }
     };
@@ -172,7 +168,6 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
     showValidation() {
         const validationStatus = checkIbanStatus(this.state.data['ibanNumber']).status;
         const holderStatus = isValidHolder(this.state.data['ownerName']);
-        // this.setError('iban', validationStatus !== 'valid' ? 'sepaDirectDebit.ibanField.invalid' : null);
         this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null);
 
         const holderErr = !holderStatus // *do* consider null, i.e. an empty field, to be in error
@@ -180,8 +175,6 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
             : null;
 
         this.setError('holder', holderErr, this.onChange); // add callback param to force propagation of state to parent comp
-
-        // this.setError('holder', !holderStatus ? true : null, this.onChange); // add callback param to force propagation of state to parent comp
     }
 
     render({ placeholders, countryCode }: IbanInputProps, { data, errors, valid }) {
