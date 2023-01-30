@@ -5,6 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
 import eslint from '@rollup/plugin-eslint';
 import babel from '@rollup/plugin-babel';
+import stylelint from 'rollup-plugin-stylelint';
 import { terserConfig, modernTerserConfig } from './terser.config';
 import pkg from '../package.json';
 
@@ -57,6 +58,7 @@ async function getPlugins({ compress, analyze, version, modern }) {
     return [
         resolve({ extensions }),
         commonjs(),
+        stylelint({ include: 'src/**/*.scss' }),
         eslint({
             include: ['./src/**'],
             exclude: ['./src/**/*.json', './src/**/*.scss']
@@ -83,6 +85,7 @@ async function getPlugins({ compress, analyze, version, modern }) {
         }),
         json({ namedExports: false, compact: true, preferConst: true }),
         postcss({
+            use: ['sass'],
             config: {
                 path: 'config/postcss.config.js'
             },

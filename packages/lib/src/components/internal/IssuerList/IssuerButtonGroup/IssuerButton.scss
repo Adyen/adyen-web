@@ -1,55 +1,50 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__issuer-button {
-  background-color: $color-white;
-  box-shadow: inset 0 0 0 1px $color-border-dark;
-  border: none;
-  border-radius: $border-radius-medium;
-  padding: $spacing-none $spacing-medium-small;
-  cursor: pointer;
-  flex-basis: 47%;
-  flex-grow: 2;
-  height: 40px;
-
-  font-size: $font-size-small;
-
-  display: flex;
-  align-items: center;
-
-  transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
-
-  &:active {
-    color: black;
-  }
-
-  &:not(&--selected):focus {
-    outline: none;
-    box-shadow: inset 0 0 0 2px #99A3AD;
-  }
-
-  &:not(&--selected):focus-visible {
-    outline: none;
-    box-shadow: inset 0 0 0 2px #99A3AD;
-  }
-
-
-  &:not(&--selected):hover {
-    outline: none;
-    box-shadow: inset 0 0 0 2px #99A3AD;
-  }
-
-  &--selected {
-    background: $color-white;
-    box-shadow: inset 0 0 0 2px $color-blue;
-    color: $color-blue;
-    font-weight: 500;
+    background-color: $color-white;
+    box-shadow: inset 0 0 0 1px $color-border-dark;
+    border: none;
+    border-radius: $border-radius-medium;
+    padding: $spacing-none $spacing-medium-small;
+    cursor: pointer;
+    flex-basis: 47%;
+    flex-grow: 2;
     height: 40px;
-    transition: none;
-  }
+    font-size: $font-size-small;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
+    &:active {
+        color: black;
+    }
+
+    &:not(&--selected):focus {
+        outline: none;
+        box-shadow: inset 0 0 0 2px #99a3ad;
+    }
+
+    &:not(&--selected):focus-visible {
+        outline: none;
+        box-shadow: inset 0 0 0 2px #99a3ad;
+    }
+
+    &:not(&--selected):hover {
+        outline: none;
+        box-shadow: inset 0 0 0 2px #99a3ad;
+    }
+
+    &--selected {
+        background: $color-white;
+        box-shadow: inset 0 0 0 2px $color-blue;
+        color: $color-blue;
+        font-weight: 500;
+        height: 40px;
+        transition: none;
+    }
 }
 
 .adyen-checkout__issuer-button-img {
-  max-height: 26px;
-  margin-right: 8px;
+    max-height: 26px;
+    margin-right: 8px;
 }
