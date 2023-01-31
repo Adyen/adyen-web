@@ -28,6 +28,9 @@ import './QRCodes.scss';
         .then(result => {
             if (result.action) {
                 window.wechatpayqr = checkout.createFromAction(result.action).mount('#wechatpayqr-container');
+                window.wechatpayqr.getStatus().then(status => {
+                    console.log('### QRCodes:::: THEN status=', status);
+                });
             }
         })
         .catch(error => {
@@ -81,7 +84,7 @@ import './QRCodes.scss';
         amount: {
             currency: 'THB',
             value: 101
-        },
+        }
     })
         .then(result => {
             if (result.action) {
