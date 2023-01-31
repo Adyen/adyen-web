@@ -1,0 +1,70 @@
+name: Validate PR labels and release notes
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, edited]
+
+jobs:
+  get-pr-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get the list of allowed pull request labels
+        run: |
+          RED='\033[0;31m'
+          NC='\033[0m'
+          FILE_NAME=.pull-requests-allowed-labels-list
+          FILE_PATH=$PROJECT_ROOT/$FILE_NAME
+          if [[ ! -f "$FILE_PATH" ]]; then
+             echo -e "${RED}$FILE_NAME file doesn't exits in the root of the respository${NC}"
+             exit 1
+          fi 
+          echo "::set-output name=LABELS::$(cat $FILE_PATH),chore"
+        id: get-allowed_labels
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}
+
+      - name: Validate labels
+        uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          valid-labels: ${{ steps.get-allowed_labels.outputs.LABELS }}
+
+      - name: Get PR labels
+        uses: joerick/pr-labels-action@v1.0.6
+        id: pr-labels
+
+      - run: |
+          ALLOWED_LABELS="$ALLOWED_LABELS,chore"
+          IFS=',' read -r -a ALLOWED_LABELS_ARRAY <<< "$ALLOWED_LABELS"
+
+          SHOULD_FAIL_JOB="false"
+
+          RED='\033[0;31m'
+          NC='\033[0m'
+
+          for LABEL in "${ALLOWED_LABELS_ARRAY[@]}"; do
+            LABEL=$(echo "$LABEL" | sed 's/^ *//g' | sed 's/ *$//g')
+            if [[ "$LABEL" == "chore" ]]; then
+              continue
+            fi
+            if [[ "$PR_LABELS" == *"$LABEL"* ]]; then
+              cmd="awk '/<$LABEL>.*<\/$LABEL>/'"
+              FEATURE_RELEASE_NOTE="$(echo $PR_BODY | eval $cmd)"
+              if [[ -z "$FEATURE_RELEASE_NOTE" ]]; then
+                 echo -e "${RED}Pull requests labeled with '$LABEL' must have the release note in the pull request body in the following format '<$LABEL> {THE RELEASE NOTE}  </$LABEL>'${NC}"
+                 SHOULD_FAIL_JOB="true"
+              fi
+            fi
+          done
+          if [[ "$SHOULD_FAIL_JOB" == "true" ]]; then
+            exit 1
+          fi
+        env:
+          PR_BODY: ${{github.event.pull_request.body}}
+          PR_LABELS: ${{steps.pr-labels.outputs.labels}}
+          ALLOWED_LABELS: ${{ steps.get-allowed_labels.outputs.LABELS }}
