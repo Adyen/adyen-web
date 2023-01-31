@@ -45,13 +45,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     protected setInternalStatus(val: UIElementStatus): void {
-        if (this.props.isDropin) {
-            this.elementRef.status = val;
-            this.elementRef.resolveInternalStatus(val);
-        } else {
-            this.status = val;
-            this.resolveInternalStatus(val);
-        }
+        const _this = this.props.isDropin ? this.elementRef : this;
+        _this.status = val;
+        _this.resolveInternalStatus(val);
     }
 
     public setState(newState: object): void {
