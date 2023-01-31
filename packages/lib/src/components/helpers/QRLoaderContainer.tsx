@@ -66,6 +66,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
                     onComplete={this.onComplete}
                     countdownTime={this.props.countdownTime}
                     instructions={this.props.instructions}
+                    setInternalStatus={this.setInternalStatus}
                 />
             </CoreProvider>
         );

@@ -1,5 +1,6 @@
 import { PaymentAmount } from '../../../types';
 import Language from '../../../language/Language';
+import { UIElementStatus } from '../../types';
 
 export interface QRLoaderProps {
     delay?: number;
@@ -23,6 +24,7 @@ export interface QRLoaderProps {
     introduction?: string;
     instructions?: string;
     copyBtn?: boolean;
+    setInternalStatus?: (val: UIElementStatus) => void;
 }
 
 export interface QRLoaderState {

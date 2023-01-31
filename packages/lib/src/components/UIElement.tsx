@@ -16,6 +16,8 @@ import Core from '../core';
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
     public elementRef: UIElement;
+    public status: UIElementStatus;
+    public resolveInternalStatus: any;
 
     constructor(props: P) {
         super(props);
@@ -30,6 +32,26 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.setElementStatus = this.setElementStatus.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
+
+        this.status = 'loading';
+        this.setInternalStatus = this.setInternalStatus.bind(this);
+        this.resolveInternalStatus = () => {};
+    }
+
+    public getStatus() {
+        return new Promise(resolve => {
+            this.resolveInternalStatus = resolve;
+        });
+    }
+
+    protected setInternalStatus(val: UIElementStatus): void {
+        if (this.props.isDropin) {
+            this.elementRef.status = val;
+            this.elementRef.resolveInternalStatus(val);
+        } else {
+            this.status = val;
+            this.resolveInternalStatus(val);
+        }
     }
 
     public setState(newState: object): void {

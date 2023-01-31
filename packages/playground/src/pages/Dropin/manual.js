@@ -25,7 +25,10 @@ export async function initManual() {
             if (result.action) {
                 // demo only - store paymentData & order
                 if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action);
+                const comp = component.handleAction(result.action);
+                comp.getStatus().then(status => {
+                    console.log('### manual:::: handleAction THEN status=', status);
+                });
             } else if (result.order && result.order?.remainingAmount?.value > 0) {
                 // handle orders
                 const order = {

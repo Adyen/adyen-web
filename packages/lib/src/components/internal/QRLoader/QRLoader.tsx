@@ -141,7 +141,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             });
     };
 
-    render({ amount, url, brandLogo, countdownTime, type }: QRLoaderProps, { expired, completed, loading }) {
+    render({ amount, url, brandLogo, countdownTime, type, setInternalStatus }: QRLoaderProps, { expired, completed, loading }) {
         const { i18n, loadingContext } = useCoreContext();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
@@ -187,7 +187,13 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
                 <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.introduction)}</div>
 
-                <img src={qrCodeImage} alt={i18n.get('wechatpay.scanqrcode')} />
+                <img
+                    src={qrCodeImage}
+                    alt={i18n.get('wechatpay.scanqrcode')}
+                    onLoad={() => {
+                        setInternalStatus('ready');
+                    }}
+                />
 
                 {amount && amount.value && amount.currency && (
                     <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
