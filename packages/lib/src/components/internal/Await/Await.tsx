@@ -18,6 +18,7 @@ function Await(props: AwaitComponentProps) {
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [hasCalledActionHandled, setHasCalledActionHandled] = useState(false);
     const [delay, setDelay] = useState(props.delay);
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
@@ -74,6 +75,11 @@ function Await(props: AwaitComponentProps) {
 
     const checkStatus = (): void => {
         const { paymentData, clientKey } = props;
+
+        if (!hasCalledActionHandled) {
+            props.onActionHandled({ componentType: props.type, actionType: 'polling-started' });
+            setHasCalledActionHandled(true);
+        }
 
         checkPaymentStatus(paymentData, clientKey, loadingContext)
             .then(processResponse)
@@ -223,6 +229,7 @@ Await.defaultProps = {
     countdownTime: 15,
     onError: () => {},
     onComplete: () => {},
+    onActionHandled: () => {},
     delay: 2000,
     throttleTime: 60000,
     throttleInterval: 10000,
