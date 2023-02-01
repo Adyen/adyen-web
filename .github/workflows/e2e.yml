@@ -16,10 +16,8 @@ jobs:
           uses: actions/setup-node@v3
           with:
             node-version: ${{ matrix.node-version }}
-        - name: Install project dependencies
-          run: yarn install
-        - name: Build project
-          run: yarn build
+        - name: Install project dependencies & Build project
+          run: yarn install && yarn build
         - name: Install playwright dependencies
           working-directory: packages/e2e-playwright/
           run: yarn install && npx playwright install --with-deps
