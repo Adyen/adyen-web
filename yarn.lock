@@ -1862,7 +1862,7 @@
     lz-string "^1.4.4"
     pretty-format "^27.0.2"
 
-"@testing-library/jest-dom@^5.16.5":
+"@testing-library/jest-dom@5.16.5":
   version "5.16.5"
   resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.16.5.tgz#3912846af19a29b2dbf32a6ae9c31ef52580074e"
   integrity sha512-N5ixQ2qKpi5OLYfwQmUb/5mSV9LneAcaUfp32pn4yCnpb8r/Yz0pXFPck21dIicKmi+ta5WRAknkZCfA8refMA==
@@ -1877,19 +1877,19 @@
     lodash "^4.17.15"
     redent "^3.0.0"
 
-"@testing-library/preact-hooks@^1.1.0":
+"@testing-library/preact-hooks@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@testing-library/preact-hooks/-/preact-hooks-1.1.0.tgz#f4e197ec77b295ce6c122c560c46b5b03bc4f015"
   integrity sha512-+JIor+NsOHkK3oIrwMDGKGHXTN0JJi462dBJlj4FNbGaDPTlctE6eu2ranWQirh7/FJMkWfzQCP+tk7jmY8ZrQ==
 
-"@testing-library/preact@^3.0.0":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@testing-library/preact/-/preact-3.2.2.tgz#d942bf7e1fd1d55ec0bf082e5a6320ad6c70bc7e"
-  integrity sha512-mMPEp/9TOOqf3QqDHY02ieGFfRbi8fAxZvRifn+vOzrdNcCR1zchwPA6BvqXG3wAweRan4QJioYgEc1cePeC3g==
+"@testing-library/preact@3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@testing-library/preact/-/preact-3.2.3.tgz#0d331b7a7f934a4b0fc6c95ff3a9e1d6fa93094e"
+  integrity sha512-y6Kklp1XK3f1X2fWCbujmJyzkf+1BgLYXNgAx21j9+D4CoqMTz5qC4SQufb1L6q/jxLGACzrQ90ewVOTBvHOfg==
   dependencies:
     "@testing-library/dom" "^8.11.1"
 
-"@testing-library/user-event@^14.4.3":
+"@testing-library/user-event@14.4.3":
   version "14.4.3"
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.4.3.tgz#af975e367743fa91989cd666666aec31a8f50591"
   integrity sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==
@@ -10224,7 +10224,7 @@ regenerate@^1.4.2:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
 
-regenerator-runtime@^0.13.10, regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.9:
+regenerator-runtime@^0.13.10, regenerator-runtime@^0.13.4:
   version "0.13.11"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
