@@ -81,6 +81,11 @@ export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
+export interface ActionHandledReturnObject {
+    componentType: string;
+    actionType: string;
+}
+
 export interface UIElementProps extends BaseElementProps {
     session?: Session;
     onChange?: (state: any, element: UIElement) => void;
@@ -88,6 +93,7 @@ export interface UIElementProps extends BaseElementProps {
     beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
     onPaymentCompleted?: (result: any, element: UIElement) => void;

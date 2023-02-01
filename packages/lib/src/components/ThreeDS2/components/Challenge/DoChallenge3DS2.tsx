@@ -29,6 +29,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
 
     private iframeCallback = () => {
         this.setState({ status: 'iframeLoaded' });
+        this.props.onActionHandled({ componentType: '3DS2Challenge', actionType: 'challenge-iframe-loaded' });
     };
 
     private get3DS2ChallengePromise(): Promise<any> {

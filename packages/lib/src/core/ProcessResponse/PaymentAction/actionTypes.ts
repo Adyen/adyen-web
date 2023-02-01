@@ -58,6 +58,7 @@ const actionTypes = {
             // Props common to both flows
             token: action.token,
             paymentData,
+            onActionHandled: props.onActionHandled,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
             isDropin: !!props.isDropin,
