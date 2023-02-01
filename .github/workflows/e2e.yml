@@ -11,22 +11,22 @@ jobs:
 			matrix:
 			- node-version: [16.x, 18.x, 19.x]
 		steps:
-    - uses: actions/checkout@v3
-    - name: Install project dependencies
+    - name: Setup Node
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install
-    - run: yarn build
-    
-    - name: Install playwright dependencies
+    - name: Install Project Dependencies
+      run: yarn install
+    - name: Build Project
+      run: yarn build
+    - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/
-    - run: yarn install && npx playwright install --with-deps
+      run: yarn install && npx playwright install --with-deps
   e2e-testing:
     needs: setup-dependencies
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
     - name: Run e2e tests
-    - working-directory: adyen-web/packages/e2e-playwright/
-    - run: npx playwright test
+      working-directory: adyen-web/packages/e2e-playwright/
+      run: npx playwright test
