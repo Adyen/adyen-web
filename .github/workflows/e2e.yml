@@ -29,3 +29,10 @@ jobs:
     - name: Run E2E Tests
       working-directory: packages/e2e-playwright/
       run: npx playwright test
+      env:
+        CHECKOUT_API_KEY: ${{secrets.CHECKOUT_API_KEY}}
+        MERCHANT_ACCOUNT: ${{secrets.MERCHANT_ACCOUNT}}
+        CLIENT_KEY: ${{secrets.CLIENT_KEY}}
+        CLIENT_ENV: test
+        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v70
+        API_VERSION: v70
