@@ -9,7 +9,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16.x, 18.x, 19.x]
+        node-version: [16.x]
+        # node-version: [16.x, 18.x, 19.x]
+        # Currently 18 and 19 are not supported, still keeping it
+        # as a reminder for compatibility check
     steps:
     - uses: actions/checkout@v3
     - name: Setup Node
