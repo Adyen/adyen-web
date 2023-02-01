@@ -3,30 +3,30 @@ name: E2E for Checkout Components
 on: [pull_request]
 
 jobs:
-  setup-dependencies:
-    if: ${{ github.actor != 'renovate[bot]' || github.actor != 'lgtm-com[bot]' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [16.x, 18.x, 19.x]
-    steps:
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-        - name: Install project dependencies & Build project
-          run: yarn install && yarn build
-        - name: Install playwright dependencies
-          working-directory: packages/e2e-playwright/
-          run: yarn install && npx playwright install --with-deps
+    setup-dependencies:
+        if: ${{ github.actor != 'renovate[bot]' || github.actor != 'lgtm-com[bot]' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        strategy:
+            fail-fast: false
+            matrix:
+                node-version: [16.x, 18.x, 19.x]
+        steps:
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Install project dependencies & Build project
+            - run: yarn install && yarn build
+            - name: Install playwright dependencies
+              working-directory: packages/e2e-playwright/
+            - run: yarn install && npx playwright install --with-deps
 
-  e2e-testing:
-    needs: setup-dependencies
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Run e2e tests
-        working-directory: adyen-web/packages/e2e-playwright/
-        run: npx playwright test
+    e2e-testing:
+        needs: setup-dependencies
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Run e2e tests
+              working-directory: adyen-web/packages/e2e-playwright/
+            - run: npx playwright test
