@@ -21,7 +21,7 @@ jobs:
         - name: Build project
           run: yarn build
         - name: Install playwright dependencies
-          working-directory: adyen-web/packages/e2e-playwright/
+          working-directory: packages/e2e-playwright/
           run: yarn install && npx playwright install --with-deps
 
   e2e-testing:
