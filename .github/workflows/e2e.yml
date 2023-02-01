@@ -3,7 +3,7 @@ name: E2E for Checkout Components
 on: [pull_request]
 
 jobs:
-  setup-dependencies:
+  end-to-end:
     if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
     runs-on: ubuntu-latest
     strategy:
@@ -23,11 +23,6 @@ jobs:
     - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
-  e2e-testing:
-    needs: setup-dependencies
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-    - name: Run e2e tests
+    - name: Run E2E Tests
       working-directory: packages/e2e-playwright/
       run: npx playwright test
