@@ -4,13 +4,14 @@ on: [pull_request]
 
 jobs:
   setup-dependencies:
-		if: ${{ github.actor != 'renovate[bot]' || github.actor != 'lgtm-com[bot]' }}
-		runs-on: ubuntu-latest
-		strategy:
-			fail-fast: false
-			matrix:
-			- node-version: [16.x, 18.x, 19.x]
-		steps:
+    if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [16.x, 18.x, 19.x]
+    steps:
+    - uses: actions/checkout@v3
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
