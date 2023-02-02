@@ -81,7 +81,7 @@ import './QRCodes.scss';
         amount: {
             currency: 'THB',
             value: 101
-        },
+        }
     })
         .then(result => {
             if (result.action) {
