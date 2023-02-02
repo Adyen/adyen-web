@@ -77,7 +77,7 @@ function Await(props: AwaitComponentProps) {
         const { paymentData, clientKey } = props;
 
         if (!hasCalledActionHandled) {
-            props.onActionHandled({ componentType: props.type, actionType: 'polling-started' });
+            props.onActionHandled({ componentType: props.type, actionDescription: 'polling-started' });
             setHasCalledActionHandled(true);
         }
 

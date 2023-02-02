@@ -78,12 +78,13 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
 export interface ActionHandledReturnObject {
     componentType: string;
-    actionType: string;
+    actionDescription: ActionDescriptionType;
 }
 
 export interface UIElementProps extends BaseElementProps {
