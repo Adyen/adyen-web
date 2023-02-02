@@ -24,8 +24,10 @@ export type SrciIsRecognizedResponse = {
 
 export type SrciCheckoutResponse = {
     dcfActionCode: string;
-    encryptedPayload?: string;
-    idToken?: string;
+    checkoutResponse: string;
+    checkoutResponseSignature: string;
+    idToken: string;
+    unbindAppInstance: boolean;
 };
 
 export type SrciIdentityLookupResponse = {
