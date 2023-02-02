@@ -68,9 +68,7 @@ function Select({
      * Closes the selectList, empties the text filter and focuses the button element
      */
     const closeList = () => {
-        setTextFilter(null);
         setShowList(false);
-        //if (toggleButtonRef.current) toggleButtonRef.current.focus();
     };
 
     const openList = () => {
@@ -88,12 +86,7 @@ function Select({
         //const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
         // TODO: check the handling for data-disabled
         //if (!target.getAttribute('data-disabled')) {
-        closeList();
         setSelectedOption(activeOption);
-        setInputText(activeOption.name);
-        setTextFilter(null);
-        onChange({ target: { id: activeOption.id, name: activeOption.name } });
-        //}
     };
 
     /**
@@ -133,21 +126,6 @@ function Select({
             // Shift-Tab out of Select - close list re. a11y guidelines (above)
             closeList();
         } else if (e.key === keys.tab) {
-            closeList();
-        }
-    };
-
-    /**
-     * Close the select list when clicking outside the list
-     * @param e - MouseEvent
-     */
-    const handleClickOutside = (e: MouseEvent) => {
-        // use composedPath so it can also check when inside a web component
-        // if composedPath is not available fallback to e.target
-        const clickIsOutside = e.composedPath
-            ? !e.composedPath().includes(selectContainerRef.current)
-            : !selectContainerRef.current.contains(e.target);
-        if (clickIsOutside) {
             closeList();
         }
     };
@@ -200,6 +178,28 @@ function Select({
         }
     };
 
+    // used when a new value is selected from the list
+    useEffect(() => {
+        // TODO double check if this is the intended behaviour
+        if (!selectedOption.id) return;
+        onChange({
+            target: {
+                value: selectedOption.id,
+                name: selectedOption.name
+            }
+        });
+        closeList();
+    }, [selectedOption]);
+
+    useEffect(() => {
+        if (showList) {
+            setInputText(null);
+        } else {
+            setInputText(selectedOption.name);
+            setTextFilter(null);
+        }
+    }, [showList]);
+
     /**
      * Focus on the input if filterable
      */
@@ -210,12 +210,27 @@ function Select({
     }, [showList]);
 
     useEffect(() => {
+        /**
+         * Close the select list when clicking outside the list
+         * @param e - MouseEvent
+         */
+        function handleClickOutside(e: MouseEvent) {
+            // use composedPath so it can also check when inside a web component
+            // if composedPath is not available fallback to e.target
+            const clickIsOutside = e.composedPath
+                ? !e.composedPath().includes(selectContainerRef.current)
+                : !selectContainerRef.current.contains(e.target);
+            if (clickIsOutside) {
+                closeList();
+            }
+        }
+
         document.addEventListener('click', handleClickOutside, false);
 
         return () => {
             document.removeEventListener('click', handleClickOutside, false);
         };
-    }, []);
+    }, [selectContainerRef]);
 
     return (
         <div
