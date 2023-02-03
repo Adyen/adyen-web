@@ -1,9 +1,10 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import DeviceFingerprint from './components/DeviceFingerprint';
+import PrepareFingerprint from './components/DeviceFingerprint';
 import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
+import { ActionHandledReturnObject } from '../types';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
@@ -17,6 +18,7 @@ export interface ThreeDS2DeviceFingerprintProps {
     loadingContext?: string;
     clientKey?: string;
     elementRef?: UIElement;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
 }
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
@@ -52,7 +54,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
          * It means the call to create this component came from the old 'threeDS2Fingerprint' action and upon completion should call the /details endpoint
          * instead of the new /submitThreeDS2Fingerprint endpoint
          */
-        return <DeviceFingerprint {...this.props} onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
+        return <PrepareFingerprint {...this.props} onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
     }
 }
 

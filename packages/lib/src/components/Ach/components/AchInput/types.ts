@@ -58,4 +58,5 @@ export interface ACHInputProps {
     styles?: StylesObject;
     type?: string;
     forceCompat?: boolean;
+    setComponentRef?: (ref) => void;
 }
