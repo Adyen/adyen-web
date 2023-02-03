@@ -24,13 +24,11 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
 
     // //////// 1. Check passed config object has minimum expected properties //////////
     if (!hasOwnProperty(setupObj, 'rootNode')) {
-        logger.error('ERROR: SecuredFields configuration object is missing a "rootNode" property');
-        return null;
+        return logger.error('ERROR: SecuredFields configuration object is missing a "rootNode" property');
     }
 
     if (falsy(setupObj.clientKey)) {
-        logger.warn('WARNING: AdyenCheckout configuration object is missing a "clientKey" property.');
-        return null;
+        return logger.warn('WARNING: AdyenCheckout configuration object is missing a "clientKey" property.');
     }
 
     //----------------------------------------------------------------------------
@@ -39,18 +37,16 @@ const initCSF = (pSetupObj: CSFSetupObject): CSFReturnObject => {
     const rootNode: HTMLElement = findRootNode(setupObj.rootNode);
 
     if (!rootNode) {
-        if (window.console && window.console.error) {
-            window.console.error('ERROR: SecuredFields cannot find a valid rootNode element for', setupObj.type);
-        }
-        return null;
+        return logger.error(`ERROR: SecuredFields cannot find a valid rootNode element for ${setupObj.type}`);
     }
 
     setupObj.rootNode = rootNode; // Overwrite with actual node (in case we were sent a string)
 
     // //////// 3. Add warning if in development mode and a custom http domain is detected
-    const origin = window.origin;
+    const origin = window.location.origin;
+
     if (
-        process.env.NODE_ENV === 'development' &&
+        (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') &&
         origin.indexOf('http') > -1 &&
         origin.indexOf('localhost') === -1 &&
         origin.indexOf('127.0.0.1') === -1
