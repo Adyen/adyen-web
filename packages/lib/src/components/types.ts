@@ -80,8 +80,14 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
+
+export interface ActionHandledReturnObject {
+    componentType: string;
+    actionDescription: ActionDescriptionType;
+}
 
 export interface UIElementProps extends BaseElementProps {
     session?: Session;
@@ -90,6 +96,7 @@ export interface UIElementProps extends BaseElementProps {
     beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
     onPaymentCompleted?: (result: any, element: UIElement) => void;
