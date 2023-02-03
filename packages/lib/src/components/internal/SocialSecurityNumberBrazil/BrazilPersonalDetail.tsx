@@ -10,7 +10,12 @@ export function BrazilPersonalDetail(props) {
             <div className="adyen-checkout__fieldset__title">{i18n.get('personalDetails')}</div>
 
             <div className="adyen-checkout__fieldset__fields">
-                <Field label={i18n.get('firstName')} classNameModifiers={['firstName', 'col-50']} errorMessage={!!errors.firstName}>
+                <Field
+                    label={i18n.get('firstName')}
+                    name={'firstName'}
+                    classNameModifiers={['firstName', 'col-50']}
+                    errorMessage={!!errors.firstName}
+                >
                     {renderFormField('text', {
                         name: 'firstName',
                         autocorrect: 'off',
@@ -21,7 +26,7 @@ export function BrazilPersonalDetail(props) {
                     })}
                 </Field>
 
-                <Field label={i18n.get('lastName')} classNameModifiers={['lastName', 'col-50']} errorMessage={!!errors.lastName}>
+                <Field label={i18n.get('lastName')} name={'lastName'} classNameModifiers={['lastName', 'col-50']} errorMessage={!!errors.lastName}>
                     {renderFormField('text', {
                         name: 'lastName',
                         autocorrect: 'off',
