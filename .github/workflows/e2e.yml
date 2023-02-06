@@ -26,7 +26,7 @@ jobs:
       run: yarn build
     - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/
-      run: yarn install && npx playwright install --with-deps
+      run: yarn install && npx playwright install
   end-to-end:
     needs: build-and-install
     runs-on: ubuntu-latest
