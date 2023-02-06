@@ -1,6 +1,8 @@
 name: E2E for Checkout Components
 
-on: [pull_request]
+on: 
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-then-e2e:
