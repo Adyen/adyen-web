@@ -26,7 +26,7 @@ jobs:
     - name: Build Project
       run: yarn build
     - name: Install Playwright Dependencies
-      working-directory: ./packages/e2e-playwright/
+      working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install
   end-to-end:
     needs: build-and-install
@@ -39,7 +39,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Run E2E Tests
       run: npx playwright test
-      working-directory: ./packages/e2e-playwright/
+      working-directory: packages/e2e-playwright/
       env:
         CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
         MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
@@ -51,4 +51,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: html-report
-        path: ./packages/e2e-playwright/test-report
+        path: packages/e2e-playwright/test-report
