@@ -29,13 +29,14 @@ jobs:
       run: yarn install && npx playwright install --with-deps
   end-to-end:
     needs: build-and-install
+    runs-on: ubuntu-latest
     steps:
     - name: Run E2E Tests
-      working-directory: packages/e2e-playwright/
       timeout-minutes: 10
       with:
         node-version: ${{ matrix.node-version }}
-      run: npx playwright test
+        working-directory: packages/e2e-playwright/
+        run: npx playwright test
       env:
         CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
         MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
