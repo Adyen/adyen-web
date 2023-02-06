@@ -15,8 +15,6 @@ jobs:
         # Currently 18 and 19 are not supported, still keeping it
         # as a reminder for compatibility check
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
