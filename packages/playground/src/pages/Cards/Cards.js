@@ -160,7 +160,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa'],
-                useClickToPay: true,
                 clickToPayConfiguration: {
                     shopperIdentityValue: 'gui.ctp@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name '

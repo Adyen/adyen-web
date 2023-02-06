@@ -9,7 +9,7 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
-import { createClickToPayService } from './components/ClickToPay/utils';
+import { createClickToPayService } from './components/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
 import ClickToPayWrapper from './ClickToPayWrapper';
 import { UIElementStatus } from '../types';
@@ -27,16 +27,13 @@ export class CardElement extends UIElement<CardElementProps> {
     constructor(props) {
         super(props);
 
-        if (this.props.useClickToPay) {
-            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
-            this.clickToPayService?.initialize();
-        }
+        this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+        this.clickToPayService?.initialize();
     }
 
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
-        useClickToPay: false,
         SRConfig: {}
     };
 
