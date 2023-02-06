@@ -5,6 +5,7 @@ on: [pull_request]
 jobs:
   end-to-end:
     if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
