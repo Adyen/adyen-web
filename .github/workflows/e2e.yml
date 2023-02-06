@@ -28,6 +28,7 @@ jobs:
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
   end-to-end:
+    needs: build-and-install
     steps:
     - name: Run E2E Tests
       timeout-minutes: 10
