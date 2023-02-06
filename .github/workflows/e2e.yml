@@ -31,10 +31,10 @@ jobs:
     needs: build-and-install
     steps:
     - name: Run E2E Tests
+      working-directory: packages/e2e-playwright/
       timeout-minutes: 10
       with:
         node-version: ${{ matrix.node-version }}
-      working-directory: packages/e2e-playwright/
       run: npx playwright test
       env:
         CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
