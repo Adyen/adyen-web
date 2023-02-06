@@ -37,3 +37,8 @@ jobs:
         CLIENT_ENV: test
         TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v70
         API_VERSION: v70
+    - name: Archive test result artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-report
+        path: adyen-web/packages/e2e-playwright/test-report
