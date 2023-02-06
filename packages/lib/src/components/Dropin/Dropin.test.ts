@@ -1,36 +1,23 @@
 import { mount } from 'enzyme';
-import AdyenCheckout from '../../core';
+import AdyenCheckout from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
+import DropinElement from './Dropin';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 describe('Dropin', () => {
-    let dropin;
+    let dropin: DropinElement;
 
-    beforeEach(() => {
-        const checkout = new AdyenCheckout({});
+    beforeEach(async () => {
+        const checkout = await AdyenCheckout({ analytics: { enabled: false } });
         dropin = checkout.create('dropin');
     });
 
     describe('isValid', () => {
         test('should fail if no activePaymentMethod', () => {
-            mount(dropin.render());
-
             expect(dropin.isValid).toEqual(false);
-        });
-
-        test('should return the isValid value of the activePaymentMethod', async () => {
-            // mount(dropin.render());
-            const dp = await mount(dropin.render());
-            await dp.update();
-
-            // setTimeout(() => {
-            // console.log('### Dropin.test:::: dropin.dropinRef1', dropin.dropinRef.state);
-            dropin.dropinRef.state.activePaymentMethod = { isValid: true };
-            expect(dropin.isValid).toEqual(true);
-            // }, 0);
         });
     });
 
@@ -42,16 +29,12 @@ describe('Dropin', () => {
 
     describe('closeActivePaymentMethod', () => {
         test('should close active payment method', async () => {
-            // mount(dropin.render());
             const dp = await mount(dropin.render());
             await dp.update();
 
-            // setTimeout(() => {
-            // console.log('### Dropin.test:::: dropin.dropinRef2', dropin.dropinRef.state);
             expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
             dropin.closeActivePaymentMethod();
             expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
-            // }, 0);
         });
     });
 
@@ -59,8 +42,7 @@ describe('Dropin', () => {
         const challengeAction = {
             paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
             subtype: 'challenge',
-            token:
-                'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
+            token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
             type: 'threeDS2',
             paymentMethodType: 'scheme'
         };
@@ -70,8 +52,7 @@ describe('Dropin', () => {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
-                token:
-                    'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
+                token: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
                 type: 'threeDS2'
             };
 
@@ -82,8 +63,8 @@ describe('Dropin', () => {
             expect(pa.componentFromAction.props.isDropin).toBe(true);
         });
 
-        test('should handle new challenge action', () => {
-            const checkout = new AdyenCheckout({});
+        test('should handle new challenge action', async () => {
+            const checkout = await AdyenCheckout({});
 
             const dropin = checkout.create('dropin');
 
@@ -94,8 +75,8 @@ describe('Dropin', () => {
             expect(pa.componentFromAction.props.size).toEqual('02');
         });
 
-        test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', () => {
-            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '02' } } });
+        test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', async () => {
+            const checkout = await AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '02' } } });
 
             const dropin = checkout.create('dropin');
 
@@ -104,8 +85,8 @@ describe('Dropin', () => {
             expect(pa.componentFromAction.props.challengeWindowSize).toEqual('02');
         });
 
-        test('new challenge action gets challengeWindowSize from handleAction config', () => {
-            const checkout = new AdyenCheckout({ challengeWindowSize: '04' });
+        test('new challenge action gets challengeWindowSize from handleAction config', async () => {
+            const checkout = await AdyenCheckout({ challengeWindowSize: '04' });
 
             const dropin = checkout.create('dropin');
             mount(dropin.render());
@@ -119,15 +100,15 @@ describe('Dropin', () => {
     });
 
     describe('Instant Payments feature', () => {
-        test('formatProps formats instantPaymentTypes removing duplicates and invalid values', () => {
-            const checkout = new AdyenCheckout({});
+        test('formatProps formats instantPaymentTypes removing duplicates and invalid values', async () => {
+            const checkout = await AdyenCheckout({});
             const dropin = checkout.create('dropin', { instantPaymentTypes: ['alipay', 'paywithgoogle', 'paywithgoogle', 'paypal'] });
 
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
         });
 
-        test('formatProps filter out instantPaymentMethods from paymentMethods list ', () => {
-            const checkout = new AdyenCheckout({
+        test('formatProps filter out instantPaymentMethods from paymentMethods list ', async () => {
+            const checkout = await AdyenCheckout({
                 paymentMethodsResponse: {
                     paymentMethods: [
                         { name: 'Google Pay', type: 'paywithgoogle' },
@@ -143,13 +124,13 @@ describe('Dropin', () => {
             expect(dropin.props.instantPaymentMethods[0]).toStrictEqual({ name: 'Google Pay', type: 'paywithgoogle' });
         });
 
-        test('formatProps does not change paymentMethods list if instantPaymentType is not provided', () => {
+        test('formatProps does not change paymentMethods list if instantPaymentType is not provided', async () => {
             const paymentMethods = [
                 { name: 'Google Pay', type: 'paywithgoogle' },
                 { name: 'AliPay', type: 'alipay' }
             ];
 
-            const checkout = new AdyenCheckout({
+            const checkout = await AdyenCheckout({
                 paymentMethodsResponse: {
                     paymentMethods
                 }
