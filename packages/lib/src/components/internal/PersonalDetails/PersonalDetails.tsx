@@ -93,36 +93,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
         setSRMessages?.(errors);
 
-        // const currentErrorsSortedByLayout = sortErrorsByLayout({
-        //     errors,
-        //     i18n,
-        //     fieldTypeMappingFn: mapFieldKey
-        // });
-        //
-        // console.log('### PersonalDetails::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
-        //
-        // if (currentErrorsSortedByLayout) {
-        //     /** If validating i.e. "on submit" type event - then display all errors in the error panel */
-        //     if (isValidating.current) {
-        //         const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-        //         SRPanelRef.setMessages(errorMsgArr);
-        //
-        //         if (moveFocusOnSubmitErrors) {
-        //             const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
-        //             setFocusOnFirstField('.adyen-checkout__fieldset--personalDetails', fieldListArr[0]);
-        //         }
-        //
-        //         // Remove 'showValidation' mode
-        //         isValidating.current = false;
-        //     } else {
-        //         console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: updating but not validating');
-        //         SRPanelRef?.setMessages(null);
-        //     }
-        // } else {
-        //     console.log('### PersonalDetails::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-        //     SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
-        // }
-
         props.onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 

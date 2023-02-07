@@ -129,8 +129,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             ...(typeof enhancedDeliveryAddressErrors === 'object' && enhancedDeliveryAddressErrors),
             ...remainingErrors
         };
-        console.log('### OpenInvoice:::: errors', errors);
-        console.log('### OpenInvoice:::: errorsForPanel', errorsForPanel);
 
         setSRMessages(errorsForPanel);
 
