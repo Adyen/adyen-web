@@ -336,7 +336,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * Main 'componentDidUpdate' handler
      */
     useEffect(() => {
-        console.log('### CardInput::componentDidUpdate:: ');
         const holderNameValid: boolean = valid.holderName;
 
         const sfpValid: boolean = isSfpValid;
