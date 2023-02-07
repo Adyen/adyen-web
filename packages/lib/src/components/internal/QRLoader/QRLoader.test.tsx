@@ -57,7 +57,7 @@ describe('WeChat', () => {
                     expect(status.props).toEqual(checkPaymentStatusValue);
                     expect(status.type).toBe('success');
                     expect(onCompleteMock.mock.calls.length).toBe(1);
-                    expect(onCompleteMock).toBeCalledWith(expectedResult);
+                    expect(onCompleteMock).toBeCalledWith(expectedResult, expect.any(Object));
                     expect(onErrorMock.mock.calls.length).toBe(0);
                     expect(qrloader.state('completed')).toBe(true);
                 });
@@ -73,6 +73,7 @@ describe('WeChat', () => {
             const onErrorMock = jest.fn();
 
             const qrloader = mount(<QRLoader i18n={i18n} onComplete={onCompleteMock} onError={onErrorMock} />);
+
             qrloader
                 .instance()
                 .checkStatus()

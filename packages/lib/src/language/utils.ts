@@ -113,11 +113,12 @@ export const getTranslation = (translations: object, key: string, options: { [ke
 };
 
 /**
- * Returns an array with all the locales
+ * Returns an Object which contains all the key/values of the translation labels
+ *
  * @param locale - The locale the user wants to use
- * @param customTranslations -
+ * @param customTranslations - Custom translations provided by the merchant
  */
-export const loadTranslations = async (locale: string, customTranslations: object = {}) => {
+export const loadTranslations = async (locale: string, customTranslations: object = {}): Promise<Record<string, string>> => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
     const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
     const loadedLocale = await locales[localeToLoad]();

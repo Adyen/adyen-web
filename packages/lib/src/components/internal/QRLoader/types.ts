@@ -6,7 +6,7 @@ export interface QRLoaderProps {
     delay?: number;
     countdownTime?: number;
     onError?: (error) => void;
-    onComplete?: (data) => void;
+    onComplete?: (data, component) => void;
     throttleTime?: number;
     throttledInterval?: number;
     shouldRedirectOnMobile?: boolean;

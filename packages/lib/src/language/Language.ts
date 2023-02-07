@@ -5,6 +5,14 @@ import { getLocalisedAmount } from '../utils/amount-util';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class Language {
+    private readonly supportedLocales: string[];
+
+    public readonly locale: string;
+    public readonly languageCode: string;
+    public translations: Record<string, string> = defaultTranslation;
+    public readonly customTranslations;
+    public loaded: Promise<any>;
+
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
         const defaultLocales = Object.keys(locales);
         this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
@@ -19,13 +27,6 @@ export class Language {
             this.translations = translations;
         });
     }
-
-    public readonly locale: string;
-    public readonly languageCode: string;
-    private readonly supportedLocales: string[];
-    public translations: object = defaultTranslation;
-    public readonly customTranslations;
-    public loaded: Promise<any>;
 
     /**
      * Returns a translated string from a key in the current {@link Language.locale}
