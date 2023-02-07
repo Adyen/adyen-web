@@ -19,6 +19,7 @@ function Select({
     readonly = false,
     onChange = () => {},
     selected,
+    name,
     isInvalid,
     isValid,
     placeholder,
@@ -39,7 +40,7 @@ function Select({
 
     const [activeOption, setActiveOption] = useState<SelectItem>(active);
 
-    const [selectedOption, setSelectedOption] = useState<SelectItem>({} as SelectItem);
+    const selectedOption = active;
 
     const filteredItems = items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
@@ -86,7 +87,15 @@ function Select({
         //const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
         // TODO: check the handling for data-disabled
         //if (!target.getAttribute('data-disabled')) {
-        setSelectedOption(activeOption);
+        // TODO: check if this `if` this is intended
+        if (!activeOption.id) return;
+        onChange({
+            target: {
+                value: activeOption.id,
+                name: name
+            }
+        });
+        closeList();
     };
 
     /**
@@ -99,8 +108,8 @@ function Select({
         // If the target is not one of the list items, select the first list item
         const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
 
-        const value = target.getAttribute('data-value');
-        const item = filteredItems.find(listItem => listItem.id === value);
+        const value = target.getAttribute('data-value') as string;
+        const item = filteredItems.find(listItem => listItem.id == value);
         setActiveOption(item);
     };
 
@@ -177,19 +186,6 @@ function Select({
             closeList();
         }
     };
-
-    // used when a new value is selected from the list
-    useEffect(() => {
-        // TODO double check if this is the intended behaviour
-        if (!selectedOption.id) return;
-        onChange({
-            target: {
-                value: selectedOption.id,
-                name: selectedOption.name
-            }
-        });
-        closeList();
-    }, [selectedOption]);
 
     useEffect(() => {
         if (showList) {

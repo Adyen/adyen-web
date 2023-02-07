@@ -1,7 +1,7 @@
 export interface SelectItem {
     disabled?: boolean;
     icon?: string;
-    id: string;
+    id: string | number;
     name: string;
     secondaryText?: string;
     selectedOptionName?: string;

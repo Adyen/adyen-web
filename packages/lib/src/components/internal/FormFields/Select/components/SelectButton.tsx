@@ -6,7 +6,9 @@ import styles from '../Select.module.scss';
 import Img from '../../../Img';
 
 function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
-    return <div {...props} ref={toggleButtonRef} />;
+    if (filterable) return <div {...props} ref={toggleButtonRef} />;
+
+    return <button {...props} ref={toggleButtonRef} />;
 }
 
 function SelectButton(props: SelectButtonProps) {
@@ -32,7 +34,7 @@ function SelectButton(props: SelectButtonProps) {
             //tabIndex="0"
             title={selected.name || props.placeholder}
             toggleButtonRef={props.toggleButtonRef}
-            //type={!props.filterable ? 'button' : null}
+            type={!props.filterable ? 'button' : null}
             aria-describedby={props.ariaDescribedBy}
             id={props.id}
         >
