@@ -14,6 +14,8 @@ export async function initSession() {
         countryCode
     });
 
+    console.log(session);
+
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,

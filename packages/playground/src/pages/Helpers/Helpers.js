@@ -38,7 +38,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
             description: 'Lorem ipsum...',
             logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
-            name: 'Test Charity'
+            name: 'Test Charity',
+            onCancel(data) {
+                console.log(data);
+            }
         })
         .mount('.donation-field');
 
