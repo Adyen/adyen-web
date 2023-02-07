@@ -64,7 +64,7 @@ describe('Dropin', () => {
         });
 
         test('should handle new challenge action', async () => {
-            const checkout = await AdyenCheckout({});
+            const checkout = await AdyenCheckout({ analytics: { enabled: false } });
 
             const dropin = checkout.create('dropin');
 
@@ -86,7 +86,7 @@ describe('Dropin', () => {
         });
 
         test('new challenge action gets challengeWindowSize from handleAction config', async () => {
-            const checkout = await AdyenCheckout({ challengeWindowSize: '04' });
+            const checkout = await AdyenCheckout({ analytics: { enabled: false }, challengeWindowSize: '04' });
 
             const dropin = checkout.create('dropin');
             mount(dropin.render());
@@ -101,7 +101,9 @@ describe('Dropin', () => {
 
     describe('Instant Payments feature', () => {
         test('formatProps formats instantPaymentTypes removing duplicates and invalid values', async () => {
-            const checkout = await AdyenCheckout({});
+            const checkout = await AdyenCheckout({
+                analytics: { enabled: false }
+            });
             const dropin = checkout.create('dropin', { instantPaymentTypes: ['alipay', 'paywithgoogle', 'paywithgoogle', 'paypal'] });
 
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
@@ -109,6 +111,7 @@ describe('Dropin', () => {
 
         test('formatProps filter out instantPaymentMethods from paymentMethods list ', async () => {
             const checkout = await AdyenCheckout({
+                analytics: { enabled: false },
                 paymentMethodsResponse: {
                     paymentMethods: [
                         { name: 'Google Pay', type: 'paywithgoogle' },
@@ -131,6 +134,7 @@ describe('Dropin', () => {
             ];
 
             const checkout = await AdyenCheckout({
+                analytics: { enabled: false },
                 paymentMethodsResponse: {
                     paymentMethods
                 }
