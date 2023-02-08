@@ -19,6 +19,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError: (error, component) => {
             console.info(error, component);
         },
+        onActionHandled: rtnObj => {
+            console.log('onActionHandled', rtnObj);
+        },
         showPayButton: true
     });
 

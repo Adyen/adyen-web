@@ -1,11 +1,12 @@
 import { PaymentAmount } from '../../../types';
 import Language from '../../../language/Language';
+import { ActionHandledReturnObject } from '../../types';
 
 export interface QRLoaderProps {
     delay?: number;
     countdownTime?: number;
     onError?: (error) => void;
-    onComplete?: (data) => void;
+    onComplete?: (data, component) => void;
     throttleTime?: number;
     throttledInterval?: number;
     shouldRedirectOnMobile?: boolean;
@@ -23,6 +24,7 @@ export interface QRLoaderProps {
     introduction?: string;
     instructions?: string;
     copyBtn?: boolean;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }
 
 export interface QRLoaderState {

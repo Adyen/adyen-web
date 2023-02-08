@@ -21,6 +21,9 @@ export interface AddressProps {
     visibility?: string;
     overrideSchema?: AddressSpecifications;
     iOSFocusedField?: string;
+    payButton?: (obj) => {};
+    showPayButton?: boolean;
+    setComponentRef?: (ref) => void;
 }
 
 export interface AddressStateError {

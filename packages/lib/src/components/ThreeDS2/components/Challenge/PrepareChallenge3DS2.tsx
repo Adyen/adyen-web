@@ -12,7 +12,8 @@ import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
         onComplete: () => {},
-        onError: () => {}
+        onError: () => {},
+        onActionHandled: () => {}
     };
 
     constructor(props) {
@@ -71,7 +72,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render(props, { challengeData }) {
+    render({ onActionHandled }, { challengeData }) {
         if (this.state.status === 'retrievingChallengeToken') {
             return (
                 <DoChallenge3DS2
@@ -98,6 +99,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
+                    onActionHandled={onActionHandled}
                 />
             );
         }

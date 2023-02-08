@@ -55,9 +55,7 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
                     />
                 ) : (
                     <EcontextInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

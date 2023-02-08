@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import { UIElementProps, UIElementStatus } from '../types';
 import { PaymentMethodsConfiguration } from '../../core/types';
 
-export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay' ;
+export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay';
 
 export interface DropinElementProps extends UIElementProps {
     /**
@@ -47,7 +47,7 @@ export interface DropinElementProps extends UIElementProps {
     openFirstPaymentMethod?: boolean;
     onSubmit?: (data, component) => void;
     onReady?: () => void;
-    onSelect?: (paymentMethod) => void;
+    onSelect?: (paymentMethod: UIElement) => void;
 
     /**
      * Show/Hide the remove payment method button on stored payment methods

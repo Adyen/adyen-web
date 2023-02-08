@@ -15,10 +15,10 @@ interface PaymentMethodItemProps {
     isSelected: boolean;
     isLoaded: boolean;
     isLoading: boolean;
-    isDisabling: boolean;
+    isDisablingPaymentMethod: boolean;
     showRemovePaymentMethodButton: boolean;
     onDisableStoredPaymentMethod: (paymentMethod) => void;
-    onSelect: () => void;
+    onSelect: (paymentMethod: UIElement) => void;
     standalone: boolean;
     className?: string;
 }
@@ -29,17 +29,12 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         isSelected: false,
         isLoaded: false,
         isLoading: false,
-        showDisableStoredPaymentMethodConfirmation: false,
-        onSelect: () => {}
+        showDisableStoredPaymentMethodConfirmation: false
     };
 
     public state = {
         showDisableStoredPaymentMethodConfirmation: false,
         activeBrand: null
-    };
-
-    public onClick = () => {
-        this.props.onSelect();
     };
 
     componentDidMount() {
@@ -63,7 +58,12 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         this.toggleDisableConfirmation();
     };
 
-    render({ paymentMethod, isSelected, isDisabling, isLoaded, isLoading, onSelect, standalone }, { activeBrand }) {
+    private handleOnListItemClick = (): void => {
+        const { onSelect, paymentMethod } = this.props;
+        onSelect(paymentMethod);
+    };
+
+    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone }, { activeBrand }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -78,7 +78,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
             'adyen-checkout__payment-method--selected': isSelected,
             [styles['adyen-checkout__payment-method--selected']]: isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
-            'adyen-checkout__payment-method--disabling': isDisabling,
+            'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
             'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
             'adyen-checkout__payment-method--standalone': standalone,
             [styles['adyen-checkout__payment-method--loading']]: isLoading,
@@ -94,14 +94,13 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
-            <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={onSelect}>
+            <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
                 <div className="adyen-checkout__payment-method__header">
                     <button
                         className="adyen-checkout__payment-method__header__title"
                         id={buttonId}
                         role="radio"
                         aria-checked={isSelected}
-                        onClick={onSelect}
                         type="button"
                     >
                         <span

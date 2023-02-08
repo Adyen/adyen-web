@@ -1,8 +1,8 @@
-import SrcSdkLoader from './services/sdks/SrcSdkLoader';
-import ClickToPayService from './services/ClickToPayService';
-import { IClickToPayService, IdentityLookupParams } from './services/types';
-import { CardConfiguration, ClickToPayConfiguration, ClickToPayScheme } from '../../types';
-import { SrcInitParams } from './services/sdks/types';
+import SrcSdkLoader from './sdks/SrcSdkLoader';
+import ClickToPayService from './ClickToPayService';
+import { IClickToPayService, IdentityLookupParams } from './types';
+import { SrcInitParams } from './sdks/types';
+import { CardConfiguration, ClickToPayConfiguration, ClickToPayScheme } from '../../../types';
 
 /**
  * Creates the Click to Pay service in case the required configuration is provided

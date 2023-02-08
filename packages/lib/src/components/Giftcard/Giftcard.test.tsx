@@ -1,5 +1,5 @@
 import Giftcard from './Giftcard';
-const flushPromises = () => new Promise(setImmediate);
+const flushPromises = () => new Promise(process.nextTick);
 
 describe('Giftcard', () => {
     const baseProps = { amount: { value: 1000, currency: 'EUR' }, name: 'My Test Gift Card', type: 'giftcard', brand: 'genericgiftcard' };

@@ -8,6 +8,7 @@ import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRule
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema, StringObject } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
+import { ComponentMethodsRef } from '../../../types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -131,12 +132,10 @@ export interface CardInputState {
     showSocialSecurityNumber?: boolean;
 }
 
-export interface CardInputRef {
+export interface CardInputRef extends ComponentMethodsRef {
     sfp?: any;
     setFocusOn?: (who) => void;
-    showValidation?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
-    setStatus?: any;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
 }
