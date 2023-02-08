@@ -56,8 +56,9 @@ import WalletINElement from './WalletIN';
 import OnlineBankingCZElement from './OnlineBankingCZ';
 import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
-import PromptPay from "./PromptPay";
-import Duitnow from "./DuitNow";
+import PromptPay from './PromptPay';
+import Duitnow from './DuitNow';
+import CashAppPay from './CashAppPay';
 
 /**
  * Maps each component with a Component element.
@@ -113,6 +114,7 @@ const componentsMap = {
     /** Wallets */
     amazonpay: AmazonPay,
     applepay: ApplePay,
+    cashapp: CashAppPay,
     googlepay: GooglePay,
     paypal: PayPal,
     paywithgoogle: GooglePay,
