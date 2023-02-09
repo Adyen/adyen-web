@@ -61,7 +61,7 @@ function Select({
     };
 
     const scrollToItem = (item: SelectItem) => {
-        const nextElement = selectContainerRef.current.querySelector(`#listItem-${item.id}`);
+        const nextElement = document.getElementById(`listItem-${item.id}`);
         simulateFocusScroll(nextElement);
     };
 

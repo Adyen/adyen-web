@@ -15,6 +15,13 @@ function SelectButton(props: SelectButtonProps) {
     const { i18n } = useCoreContext();
     const { active, selected, inputText, readonly, showList } = props;
 
+    // display fallback order
+    const displayText = selected.selectedOptionName || selected.name || props.placeholder;
+    // displayInputText only used for the text input for the filter
+    // display the "typed" filter text when showing the dropdown,
+    // hide it and show the "selected" value when collapsed
+    const displayInputText = showList ? inputText : displayText;
+
     return (
         <SelectButtonElement
             className={cx({
@@ -30,8 +37,6 @@ function SelectButton(props: SelectButtonProps) {
             filterable={props.filterable}
             onClick={!readonly ? props.toggleList : null}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
-            //role={props.filterable ? 'button' : null}
-            //tabIndex="0"
             title={selected.name || props.placeholder}
             toggleButtonRef={props.toggleButtonRef}
             type={!props.filterable ? 'button' : null}
@@ -41,16 +46,14 @@ function SelectButton(props: SelectButtonProps) {
             {!props.filterable ? (
                 <Fragment>
                     {selected.icon && <Img className="adyen-checkout__dropdown__button__icon" src={selected.icon} alt={selected.name} />}
-                    <span className="adyen-checkout__dropdown__button__text">
-                        {selected.selectedOptionName || selected.name || props.placeholder}
-                    </span>
+                    <span className="adyen-checkout__dropdown__button__text">{displayText}</span>
                     {selected.secondaryText && <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>}
                 </Fragment>
             ) : (
                 <Fragment>
                     {!showList && selected.icon && <Img className="adyen-checkout__dropdown__button__icon" src={selected.icon} alt={selected.name} />}
                     <input
-                        value={inputText}
+                        value={displayInputText}
                         aria-autocomplete="list"
                         aria-controls={props.selectListId}
                         aria-expanded={showList}
