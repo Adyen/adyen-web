@@ -1,9 +1,10 @@
 import { h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import { CashAppPayEvents, ICashAppService } from '../services/CashAppService';
+import { ICashAppService } from '../services/CashAppService';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from '../../types';
 import Spinner from '../../internal/Spinner';
+import { CashAppPayEvents } from '../services/types';
 
 interface CashAppComponentProps {
     cashAppService: ICashAppService;

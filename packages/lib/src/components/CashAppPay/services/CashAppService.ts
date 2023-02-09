@@ -1,7 +1,6 @@
 import { ICashAppSdkLoader } from './CashAppSdkLoader';
-import { PaymentAmount } from '../../../types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ICashAppSDK } from './types';
+import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK } from './types';
 
 export interface ICashAppService {
     initialize(target: HTMLElement): Promise<void>;
@@ -16,27 +15,6 @@ export interface ICashAppService {
     // subscribeForCustomerRequestDeclined();
     // subscribeForCustomerRequestFailed();
 }
-
-export enum CashAppPayEvents {
-    CustomerDismissed = 'CUSTOMER_DISMISSED',
-    CustomerRequestApproved = 'CUSTOMER_REQUEST_APPROVED',
-    CustomerRequestDeclined = 'CUSTOMER_REQUEST_DECLINED',
-    CustomerRequestFailed = 'CUSTOMER_REQUEST_FAILED'
-}
-
-type CashAppServiceConfig = {
-    environment: string;
-    clientId: string;
-    scopeId: string;
-    amount: PaymentAmount;
-    referenceId?: string;
-    button?: {
-        shape?: 'semiround' | 'round';
-        size?: 'medium' | 'small';
-        theme?: 'dark' | 'light';
-        width?: 'static' | 'full';
-    };
-};
 
 class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;
@@ -64,10 +42,10 @@ class CashAppService implements ICashAppService {
         }
     }
 
-    public subscribeToEvent(eventType, callback) {
+    public subscribeToEvent(eventType, callback): Function {
         this.pay.addEventListener(eventType, callback);
         return () => {
-            this.pay.addEventListener(eventType, callback);
+            this.pay.removeEventListener(eventType, callback);
         };
     }
 
