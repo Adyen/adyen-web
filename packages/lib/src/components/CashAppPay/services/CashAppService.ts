@@ -1,14 +1,13 @@
-import { ICashAppSDK, ICashAppSdkLoader } from './CashAppSdkLoader';
+import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import { PaymentAmount } from '../../../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { ICashAppSDK } from './types';
 
 export interface ICashAppService {
     initialize(target: HTMLElement): Promise<void>;
-
-    // // https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference#restart
     restart(): Promise<void>;
-    //
-    // // https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference#customerrequest
-    // createCustomerRequest();
+    createCustomerRequest(): Promise<void>;
+    subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function;
     //
     // // https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference#addeventlistener
     // subscribeForCustomerInteraction();
@@ -18,11 +17,18 @@ export interface ICashAppService {
     // subscribeForCustomerRequestFailed();
 }
 
+export enum CashAppPayEvents {
+    CustomerDismissed = 'CUSTOMER_DISMISSED',
+    CustomerRequestApproved = 'CUSTOMER_REQUEST_APPROVED',
+    CustomerRequestDeclined = 'CUSTOMER_REQUEST_DECLINED',
+    CustomerRequestFailed = 'CUSTOMER_REQUEST_FAILED'
+}
+
 type CashAppServiceConfig = {
     environment: string;
     clientId: string;
     scopeId: string;
-    amount: PaymentAmount; // check when amount is zero if this is undefined
+    amount: PaymentAmount;
     referenceId?: string;
     button?: {
         shape?: 'semiround' | 'round';
@@ -42,14 +48,53 @@ class CashAppService implements ICashAppService {
         this.sdkLoader = sdkLoader;
     }
 
+    get isOneTimePayment() {
+        const { amount } = this.configuration;
+        return amount?.value > 0;
+    }
+
     public async initialize(target: HTMLElement): Promise<void> {
         try {
-            const cashApp = await this.sdkLoader.load(this.configuration.environment);
-            this.pay = await cashApp.pay({ clientId: this.configuration.clientId });
-            await this.pay.render(target, { button: { width: 'full', shape: 'semiround', ...this.configuration.button } });
+            const { environment, clientId, button } = this.configuration;
+            const cashApp = await this.sdkLoader.load(environment);
+            this.pay = await cashApp.pay({ clientId });
+            await this.pay.render(target, { button: { width: 'full', shape: 'semiround', ...button } });
         } catch (error) {
-            console.log(error);
-            throw error;
+            throw new AdyenCheckoutError('ERROR', 'Error during initialization', { cause: error });
+        }
+    }
+
+    public subscribeToEvent(eventType, callback) {
+        this.pay.addEventListener(eventType, callback);
+        return () => {
+            this.pay.addEventListener(eventType, callback);
+        };
+    }
+
+    public async createCustomerRequest(): Promise<void> {
+        try {
+            const { referenceId, amount, scopeId } = this.configuration;
+
+            await this.pay.customerRequest({
+                referenceId,
+                redirectURL: window.location.href,
+                actions: {
+                    ...(this.isOneTimePayment
+                        ? {
+                              payment: {
+                                  amount,
+                                  scopeId
+                              }
+                          }
+                        : {
+                              onFile: {
+                                  scopeId
+                              }
+                          })
+                }
+            });
+        } catch (error) {
+            throw new AdyenCheckoutError('ERROR', 'Something went wrong during customerRequest creation', { cause: error });
         }
     }
 

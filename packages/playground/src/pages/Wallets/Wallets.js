@@ -16,7 +16,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         environment: process.env.__CLIENT_ENV__,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: console.error,
+        onError(error) {
+            console.log(error);
+        },
         showPayButton: true
     });
 

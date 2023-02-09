@@ -1,16 +1,6 @@
 import { CASHAPPPAY_PROD_SDK, CASHAPPPAY_SANDBOX_SDK } from './config';
 import Script from '../../../utils/Script';
-
-interface ICashAppWindowObject {
-    pay({ clientId: string }): Promise<ICashAppSDK>;
-}
-
-export interface ICashAppSDK {
-    addEventListener(event: string, callback: Function): void;
-    customerRequest(customerRequest: any): Promise<void>;
-    render(target: string | HTMLElement, options?: any): Promise<void>;
-    restart(): Promise<void>;
-}
+import { ICashAppWindowObject } from './types';
 
 export interface ICashAppSdkLoader {
     load(environment: string): Promise<ICashAppWindowObject>;

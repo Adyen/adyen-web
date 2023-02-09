@@ -1,28 +1,12 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { CashAppPayButton } from './components/CashAppPayButton';
+import { CashAppComponent } from './components/CashAppComponent';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from '../PayPal/constants';
 import { CashAppService, ICashAppService } from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';
-import { UIElementProps } from '../types';
-
-interface CashAppPayElementProps extends UIElementProps {
-    referenceId?: string;
-
-    button?: {
-        shape?: 'semiround' | 'round';
-        size?: 'medium' | 'small';
-        theme?: 'dark' | 'light';
-        width?: 'static' | 'full';
-    };
-
-    configuration: {
-        clientId: string;
-        scopeId: string;
-    };
-}
+import { CashAppPayElementProps } from './types';
 
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
@@ -40,22 +24,34 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
             button: this.props.button,
             referenceId: this.props.referenceId
         });
-
-        console.log(this.cashAppService);
     }
 
-    submit() {
+    public formatData() {
+        return {
+            paymentMethod: {
+                type: CashAppPay.type,
+                ...this.state
+            }
+        };
+    }
+
+    public submit() {
         this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
-    // get isValid() {
-    //     return !!this.state.isValid;
-    // }
+    public get isValid() {
+        return true;
+    }
+
+    private handleSubmit = (grantId: string) => {
+        this.setState({ grantId });
+        super.submit();
+    };
 
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <CashAppPayButton cashAppService={this.cashAppService} />
+                <CashAppComponent cashAppService={this.cashAppService} onError={this.handleError} onSubmit={this.handleSubmit} />
             </CoreProvider>
         );
     }
