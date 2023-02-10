@@ -1,15 +1,15 @@
-import { h } from 'preact';
+import { h, RefObject } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import { ICashAppService } from '../services/CashAppService';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from '../../types';
 import Spinner from '../../internal/Spinner';
-import { CashAppPayEvents } from '../services/types';
+import { CashAppPayEvents, ICashAppService } from '../services/types';
 
 interface CashAppComponentProps {
     cashAppService: ICashAppService;
     onSubmit(grantId: string): void;
     onError(error: AdyenCheckoutError): void;
+    ref(ref: RefObject<typeof CashAppComponent>): void;
 }
 
 const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponentProps) => {

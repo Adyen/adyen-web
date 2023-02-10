@@ -28,3 +28,10 @@ export interface CashAppPayElementProps extends UIElementProps {
         scopeId: string;
     };
 }
+
+export type CashAppPayElementData = {
+    paymentMethod: {
+        type: 'cashapp';
+        grantId: string;
+    };
+};

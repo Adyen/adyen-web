@@ -4,9 +4,10 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import { CashAppComponent } from './components/CashAppComponent';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from '../PayPal/constants';
-import { CashAppService, ICashAppService } from './services/CashAppService';
+import { CashAppService } from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';
-import { CashAppPayElementProps } from './types';
+import { CashAppPayElementData, CashAppPayElementProps } from './types';
+import { ICashAppService } from './services/types';
 
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
@@ -27,7 +28,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         });
     }
 
-    public formatData() {
+    public formatData(): CashAppPayElementData {
         return {
             paymentMethod: {
                 type: CashAppPay.type,
@@ -36,15 +37,15 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         };
     }
 
-    public submit() {
+    public submit(): void {
         this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
-    public get isValid() {
+    public get isValid(): boolean {
         return true;
     }
 
-    private handleSubmit = (grantId: string) => {
+    private handleSubmit = (grantId: string): void => {
         this.setState({ grantId });
         super.submit();
     };
@@ -52,7 +53,14 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <CashAppComponent cashAppService={this.cashAppService} onError={this.handleError} onSubmit={this.handleSubmit} />
+                <CashAppComponent
+                    ref={ref => {
+                        this.componentRef = ref;
+                    }}
+                    cashAppService={this.cashAppService}
+                    onError={this.handleError}
+                    onSubmit={this.handleSubmit}
+                />
             </CoreProvider>
         );
     }
