@@ -18,13 +18,16 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
 
     const initializeCashAppSdk = useCallback(async () => {
         try {
-            await cashAppService.initialize(cashAppRef.current);
+            await cashAppService.initialize();
 
             cashAppService.subscribeToEvent(CashAppPayEvents.CustomerDismissed, () => {
                 onError(new AdyenCheckoutError('CANCEL', 'Customer dismissed the modal'));
             });
-            cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestDeclined, () => {
+            cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestDeclined, async () => {
                 onError(new AdyenCheckoutError('ERROR', 'Payment declined by CashAppPay'));
+                await cashAppService.restart();
+                await cashAppService.createCustomerRequest();
+                await cashAppService.renderButton(cashAppRef.current);
             });
 
             cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, ({ grants }) => {
@@ -36,6 +39,7 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
             });
 
             await cashAppService.createCustomerRequest();
+            await cashAppService.renderButton(cashAppRef.current);
 
             setStatus('ready');
         } catch (error) {

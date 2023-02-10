@@ -1,20 +1,6 @@
 import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK } from './types';
-
-export interface ICashAppService {
-    initialize(target: HTMLElement): Promise<void>;
-    restart(): Promise<void>;
-    createCustomerRequest(): Promise<void>;
-    subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function;
-    //
-    // // https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference#addeventlistener
-    // subscribeForCustomerInteraction();
-    // subscribeForCustomerDismissed();
-    // subscribeForCustomerRequestApproved();
-    // subscribeForCustomerRequestDeclined();
-    // subscribeForCustomerRequestFailed();
-}
+import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppService } from './types';
 
 class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;
@@ -31,18 +17,26 @@ class CashAppService implements ICashAppService {
         return amount?.value > 0;
     }
 
-    public async initialize(target: HTMLElement): Promise<void> {
+    public async initialize(): Promise<void> {
         try {
-            const { environment, clientId, button } = this.configuration;
+            const { environment, clientId } = this.configuration;
             const cashApp = await this.sdkLoader.load(environment);
             this.pay = await cashApp.pay({ clientId });
-            await this.pay.render(target, { button: { width: 'full', shape: 'semiround', ...button } });
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Error during initialization', { cause: error });
         }
     }
 
-    public subscribeToEvent(eventType, callback): Function {
+    public async renderButton(target: HTMLElement): Promise<void> {
+        try {
+            const { button } = this.configuration;
+            await this.pay.render(target, { button: { width: 'full', shape: 'semiround', ...button } });
+        } catch (error) {
+            throw new AdyenCheckoutError('ERROR', 'Error rendering CashAppPay button', { cause: error });
+        }
+    }
+
+    public subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function {
         this.pay.addEventListener(eventType, callback);
         return () => {
             this.pay.removeEventListener(eventType, callback);
@@ -51,11 +45,11 @@ class CashAppService implements ICashAppService {
 
     public async createCustomerRequest(): Promise<void> {
         try {
-            const { referenceId, amount, scopeId } = this.configuration;
+            const { referenceId, amount, scopeId, redirectURL = window.location.href } = this.configuration;
 
             await this.pay.customerRequest({
                 referenceId,
-                redirectURL: window.location.href,
+                redirectURL,
                 actions: {
                     ...(this.isOneTimePayment
                         ? {

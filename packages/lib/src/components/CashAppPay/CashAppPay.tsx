@@ -19,6 +19,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         this.cashAppService = new CashAppService(new CashAppSdkLoader(), {
             environment: this.props.environment,
             amount: this.props.amount,
+            redirectURL: this.props.redirectURL,
             clientId: this.props.configuration?.clientId || 'CAS-CI_ADYEN',
             scopeId: this.props.configuration?.scopeId || 'BRAND_0yzb9bio4n9cvqavihftllbrv',
             button: this.props.button,

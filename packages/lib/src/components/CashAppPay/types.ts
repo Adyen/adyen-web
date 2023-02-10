@@ -7,6 +7,12 @@ export interface CashAppPayElementProps extends UIElementProps {
      */
     referenceId?: string;
     /**
+     * The destination for the customer after approving (or declining) in Cash App for mobile redirect flow.
+     * https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference#customerrequest
+     * @defaultValue window.location.ref
+     */
+    redirectURL?: string;
+    /**
      * Button customization
      * https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/use-cases#customize-the-cash-app-pay-button
      */

@@ -22,12 +22,21 @@ export enum CashAppPayEvents {
     CustomerRequestFailed = 'CUSTOMER_REQUEST_FAILED'
 }
 
+export interface ICashAppService {
+    initialize(): Promise<void>;
+    renderButton(target: HTMLElement): Promise<void>;
+    restart(): Promise<void>;
+    createCustomerRequest(): Promise<void>;
+    subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function;
+}
+
 export type CashAppServiceConfig = {
     environment: string;
     clientId: string;
     scopeId: string;
     amount: PaymentAmount;
     referenceId?: string;
+    redirectURL?: string;
     button?: {
         shape?: 'semiround' | 'round';
         size?: 'medium' | 'small';
