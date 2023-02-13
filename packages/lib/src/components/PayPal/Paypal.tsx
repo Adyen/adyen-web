@@ -8,7 +8,7 @@ import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
-import { convertPayPalOrderToShopperDetails } from './utils';
+import { createShopperDetails } from './create-shopper-details';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -18,17 +18,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     private reject = null;
 
     protected static defaultProps = defaultProps;
-
-    constructor(props: PayPalElementProps) {
-        super(props);
-
-        this.handleAction = this.handleAction.bind(this);
-        // this.updateWithAction = this.updateWithAction.bind(this);
-        // this.handleCancel = this.handleCancel.bind(this);
-        // this.handleComplete = this.handleComplete.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
-        this.submit = this.submit.bind(this);
-    }
 
     protected formatProps(props) {
         const isZeroAuth = props.amount?.value === 0;
@@ -42,6 +31,10 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         };
     }
 
+    public submit = () => {
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
+    };
+
     /**
      * Formats the component data output
      */
@@ -54,9 +47,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         };
     }
 
-    handleAction(action: PaymentAction) {
+    public handleAction = (action: PaymentAction) => {
         return this.updateWithAction(action);
-    }
+    };
 
     public updateWithAction = (action: PaymentAction) => {
         if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
@@ -94,7 +87,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return actions.order
             .get()
             .then(paypalOrder => {
-                const shopperDetails = convertPayPalOrderToShopperDetails(paypalOrder);
+                const shopperDetails = createShopperDetails(paypalOrder);
                 console.log('PayPal Order', paypalOrder);
                 console.log('Shopper details object', shopperDetails);
 
@@ -131,10 +124,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
             this.reject = reject;
         });
     };
-
-    submit() {
-        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
-    }
 
     render() {
         if (!this.props.showPayButton) return null;

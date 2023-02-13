@@ -75,23 +75,4 @@ const getPaypalUrl = (props: PayPalElementProps): string => {
     return `${PAYPAL_JS_URL}?${params}`;
 };
 
-const convertPayPalOrderToShopperDetails = order => {
-    const paypalShippingAddress = order.purchase_units[0]?.shipping?.address;
-    const paypalBillingAddress = order.payer?.address;
-
-    return {
-        shopperName: order?.payer?.name?.given_name,
-        shopperEmail: order?.payer?.email_address,
-        countryCode: order?.payer?.address?.country_code,
-        billingAddress: {
-            // TODO
-            ...paypalBillingAddress
-        },
-        shippingAddress: {
-            // TODO
-            ...paypalShippingAddress
-        }
-    };
-};
-
-export { getStyle, getSupportedLocale, getPaypalUrl, convertPayPalOrderToShopperDetails };
+export { getStyle, getSupportedLocale, getPaypalUrl };
