@@ -81,15 +81,22 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleError(new AdyenCheckoutError('CANCEL'));
     };
 
-    private handleOnApprove = async (data, actions) => {
+    private handleOnApprove = (data: any, actions: any): Promise<void> => {
         const { onShopperDetails, onError } = this.props;
+
+        if (!onShopperDetails) {
+            const state = { data: { details: data, paymentData: this.paymentData } };
+            this.handleAdditionalDetails(state);
+            return;
+        }
 
         return actions.order
             .get()
             .then(paypalOrder => {
                 const shopperDetails = createShopperDetails(paypalOrder);
+
                 console.log('PayPal Order', paypalOrder);
-                console.log('Shopper details object', shopperDetails);
+                console.log('ShopperDetails', shopperDetails);
 
                 return new Promise((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
             })
@@ -98,7 +105,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                 this.handleAdditionalDetails(state);
             })
             .catch(error => {
-                onError(new AdyenCheckoutError('ERROR', 'Something went wrong during onApprove', { cause: error }));
+                onError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error }));
             });
     };
 
@@ -110,10 +117,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     handleReject(errorMessage: string) {
         if (!this.reject) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
         this.reject(new Error(errorMessage));
-    }
-
-    startPayment() {
-        return Promise.reject(new AdyenCheckoutError('ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     private handleSubmit = async () => {

@@ -13,10 +13,13 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
 
     this.setStatus = setStatus;
 
-    // const handleComplete = (data, orderData) => {
-    //     setStatus('processing');
-    //     onApprove(data, orderData);
-    // };
+    // const handleOnApprove = useCallback(
+    //     (data: any, actions: any) => {
+    //         // setStatus('processing');
+    //         onApprove(data, actions);
+    //     },
+    //     [onApprove]
+    // );
 
     const handlePaypalLoad = () => {
         setStatus('ready');
@@ -65,6 +68,7 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
                 onChange={onChange}
                 onError={onError}
                 onSubmit={onSubmit}
+                // onApprove={handleOnApprove}
                 onApprove={onApprove}
                 paypalRef={window.paypal}
             />

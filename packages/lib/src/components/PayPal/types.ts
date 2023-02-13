@@ -147,22 +147,23 @@ export interface PayPalConfig {
     intent?: Intent;
 }
 
+type ShopperDetails = {
+    // todo
+};
+
 export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
-    onReceiveOrderData?: (orderData) => void;
-
-    onShopperDetails?(state, event, actions: { resolve; reject }): Promise<void>;
-
+    onShopperDetails?(state: ShopperDetails, rawData: any, actions: { resolve; reject }): void;
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {
-    onApprove: (details: object, payerData: any) => void;
+    onApprove: (data: any, actions: any) => Promise<void>;
     onCancel?: (data: object) => void;
     onChange?: (newState: object) => void;
     onError?: (data: object) => void;

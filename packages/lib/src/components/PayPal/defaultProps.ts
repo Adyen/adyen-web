@@ -61,9 +61,7 @@ const defaultProps: PayPalElementProps = {
     onClick: () => {},
     onCancel: () => {},
     onError: () => {},
-    onShippingChange: () => {},
-
-    onShopperDetails: (_state, _event, { resolve }) => resolve()
+    onShippingChange: () => {}
 };
 
 export default defaultProps;
