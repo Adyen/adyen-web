@@ -7,16 +7,16 @@ import { getPaypalUrl } from '../utils';
 import { PayPalComponentProps } from '../types';
 import Script from '../../../utils/Script';
 
-export default function PaypalComponent(props: PayPalComponentProps) {
+export default function PaypalComponent({ onApprove, onCancel, onChange, onError, onSubmit, ...props }: PayPalComponentProps) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('pending');
 
     this.setStatus = setStatus;
 
-    const handleComplete = (data, orderData) => {
-        setStatus('processing');
-        props.onComplete(data, orderData);
-    };
+    // const handleComplete = (data, orderData) => {
+    //     setStatus('processing');
+    //     onApprove(data, orderData);
+    // };
 
     const handlePaypalLoad = () => {
         setStatus('ready');
@@ -59,7 +59,15 @@ export default function PaypalComponent(props: PayPalComponentProps) {
 
     return (
         <div className="adyen-checkout__paypal">
-            <PaypalButtons {...props} onComplete={handleComplete} paypalRef={window.paypal} />
+            <PaypalButtons
+                {...props}
+                onCancel={onCancel}
+                onChange={onChange}
+                onError={onError}
+                onSubmit={onSubmit}
+                onApprove={onApprove}
+                paypalRef={window.paypal}
+            />
         </div>
     );
 }

@@ -8,23 +8,25 @@ import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
+import { convertPayPalOrderToShopperDetails } from './utils';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
     public static subtype = 'sdk';
-    protected static defaultProps = defaultProps;
     private paymentData = null;
     private resolve = null;
     private reject = null;
+
+    protected static defaultProps = defaultProps;
 
     constructor(props: PayPalElementProps) {
         super(props);
 
         this.handleAction = this.handleAction.bind(this);
-        this.updateWithAction = this.updateWithAction.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleComplete = this.handleComplete.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // this.updateWithAction = this.updateWithAction.bind(this);
+        // this.handleCancel = this.handleCancel.bind(this);
+        // this.handleComplete = this.handleComplete.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
         this.submit = this.submit.bind(this);
     }
 
@@ -56,7 +58,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return this.updateWithAction(action);
     }
 
-    updateWithAction(action: PaymentAction) {
+    public updateWithAction = (action: PaymentAction) => {
         if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
 
         if (action.paymentData) {
@@ -70,7 +72,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         }
 
         return null;
-    }
+    };
 
     /**
      * Dropin Validation
@@ -82,19 +84,30 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return true;
     }
 
-    handleCancel() {
+    private handleCancel = () => {
         this.handleError(new AdyenCheckoutError('CANCEL'));
-    }
+    };
 
-    handleComplete(details, orderData) {
-        const state = { data: { details, paymentData: this.paymentData } };
+    private handleOnApprove = async (data, actions) => {
+        const { onShopperDetails, onError } = this.props;
 
-        if (orderData) {
-            this.props.onReceiveOrderData(orderData);
-        }
+        return actions.order
+            .get()
+            .then(paypalOrder => {
+                const shopperDetails = convertPayPalOrderToShopperDetails(paypalOrder);
+                console.log('PayPal Order', paypalOrder);
+                console.log('Shopper details object', shopperDetails);
 
-        this.handleAdditionalDetails(state);
-    }
+                return new Promise((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
+            })
+            .then(() => {
+                const state = { data: { details: data, paymentData: this.paymentData } };
+                this.handleAdditionalDetails(state);
+            })
+            .catch(error => {
+                onError(new AdyenCheckoutError('ERROR', 'Something went wrong during onApprove', { cause: error }));
+            });
+    };
 
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
@@ -110,14 +123,14 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return Promise.reject(new AdyenCheckoutError('ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
-    handleSubmit() {
+    private handleSubmit = async () => {
         super.submit();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
         });
-    }
+    };
 
     submit() {
         this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
@@ -135,9 +148,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     {...this.props}
                     onCancel={this.handleCancel}
                     onChange={this.setState}
-                    onComplete={this.handleComplete}
-                    onError={e => {
-                        this.handleError(new AdyenCheckoutError('ERROR', e.toString()));
+                    onApprove={this.handleOnApprove}
+                    onError={error => {
+                        this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                     }}
                     onSubmit={this.handleSubmit}
                 />

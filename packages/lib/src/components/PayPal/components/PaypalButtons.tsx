@@ -4,7 +4,7 @@ import { PayPalButtonsProps, FundingSource } from '../types';
 import { getStyle } from '../utils';
 
 export default function PaypalButtons(props: PayPalButtonsProps) {
-    const { onInit, onComplete, onClick, onCancel, onError, onShippingChange, onSubmit, paypalRef, style } = props;
+    const { onInit, onApprove, onClick, onCancel, onError, onShippingChange, onSubmit, paypalRef, style } = props;
     const isTokenize = props.configuration?.intent === 'tokenize';
     const paypalButtonRef = useRef<HTMLDivElement>(null);
     const creditButtonRef = useRef<HTMLDivElement>(null);
@@ -23,14 +23,7 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
             onClick,
             onCancel,
             onError,
-            onApprove: async function(details, actions) {
-                if (!actions) {
-                    return onComplete(details, null);
-                }
-
-                const orderData = await actions.order.get();
-                onComplete(details, orderData);
-            }
+            onApprove
         });
 
         if (button.isEligible()) {

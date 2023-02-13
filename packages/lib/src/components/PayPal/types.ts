@@ -154,14 +154,17 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
     onReceiveOrderData?: (orderData) => void;
+
+    onShopperDetails?(state, event, actions: { resolve; reject }): Promise<void>;
+
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {
+    onApprove: (details: object, payerData: any) => void;
     onCancel?: (data: object) => void;
     onChange?: (newState: object) => void;
-    onComplete?: (details: object, payerData: any) => void;
     onError?: (data: object) => void;
     onSubmit?: () => Promise<any>;
     ref?: any;
@@ -186,4 +189,4 @@ export interface PaypalSettings {
     components: string;
 }
 
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
