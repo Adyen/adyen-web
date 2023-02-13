@@ -25,12 +25,6 @@ export interface CardElementProps extends UIElementProps {
     brandsConfiguration?: CardBrandsConfiguration;
 
     /**
-     * Flag indicating if merchant really intent to use Click to Pay
-     * Will be removed when we Click to Pay goes live
-     */
-    useClickToPay: boolean;
-
-    /**
      * Configuration for Click to Pay
      */
     clickToPayConfiguration?: ClickToPayConfiguration;

@@ -11,6 +11,7 @@ import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import ContentSeparator from '../ContentSeparator';
+import { StatusObject } from '../Await/types';
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
@@ -94,30 +95,36 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         this.props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
-    private onComplete = status => {
+    private onComplete = (status: StatusObject): void => {
         clearInterval(this.interval);
         this.setState({ completed: true, loading: false });
 
-        this.props.onComplete({
+        const state = {
             data: {
                 details: { payload: status.props.payload },
                 paymentData: this.props.paymentData
             }
-        });
+        };
 
-        return status;
+        this.props.onComplete(state, this);
     };
 
-    private onError = status => {
+    private onError = (status: StatusObject): void => {
         clearInterval(this.interval);
         this.setState({ expired: true, loading: false });
-        this.props.onComplete({
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: this.props.paymentData
-            }
-        });
-        return status;
+
+        if (status.props.payload) {
+            const state = {
+                data: {
+                    details: { payload: status.props.payload },
+                    paymentData: this.props.paymentData
+                }
+            };
+            this.props.onComplete(state, this);
+        }
+
+        const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
+        return this.props.onError(error);
     };
 
     private checkStatus = () => {
@@ -126,14 +133,14 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         return checkPaymentStatus(paymentData, clientKey, loadingContext)
             .then(processResponse)
             .catch(response => ({ type: 'network-error', props: response }))
-            .then(status => {
+            .then((status: StatusObject) => {
                 switch (status.type) {
                     case 'success':
-                        return this.onComplete(status);
-
+                        this.onComplete(status);
+                        break;
                     case 'error':
-                        return this.onError(status);
-
+                        this.onError(status);
+                        break;
                     default:
                         this.setState({ loading: false });
                 }
