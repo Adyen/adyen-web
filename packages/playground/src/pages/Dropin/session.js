@@ -37,10 +37,12 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             paypal: {
-                onReceiveOrderData(orderData) {
-                    console.log('Order data', orderData);
+                onShopperDetails(shopperDetails, rawData, actions) {
+                    console.log('ShopperDetails', shopperDetails);
+                    console.log('RawData', rawData);
+                    actions.resolve();
                 },
-                onShippingChange: function(data, actions) {
+                onShippingChange: function (data, actions) {
                     const baseOrderAmount = window.checkout.options.amount.value;
 
                     /**
