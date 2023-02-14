@@ -39,9 +39,7 @@ export class DokuElement extends UIElement {
                     />
                 ) : (
                     <DokuInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

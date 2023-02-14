@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
-import { ThreeDS2FlowObject } from '../../types';
+import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
@@ -12,32 +12,44 @@ import { CoreConsumer } from '../../../../core/Context/CoreContext';
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
         onComplete: () => {},
-        onError: () => {}
+        onError: () => {},
+        onActionHandled: () => {}
     };
 
     constructor(props) {
         super(props);
 
         if (this.props.token) {
-            const challengeData = prepareChallengeData({
+            const challengeData: ChallengeData = prepareChallengeData({
                 token: this.props.token,
                 size: this.props.challengeWindowSize || this.props.size
             });
 
+            /**
+             * Check the structure of the created challengeData
+             */
+            const { acsTransID, messageVersion, threeDSServerTransID } = challengeData.cReqData;
+
+            /** Missing props */
+            if (!challengeData.acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
+                this.setStatusError({
+                    errorInfo:
+                        'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)',
+                    errorObj: challengeData
+                });
+                return;
+            }
+
+            /** All good */
             this.state = {
                 status: 'retrievingChallengeToken',
-                challengeData
+                challengeData,
+                errorInfo: null
             };
         } else {
-            this.state = { status: 'error' };
-            this.props.onError('Missing challengeToken parameter');
-        }
-    }
-
-    // For 3DS2InMDFlow - we need to remove the unload listener that has been set on the window
-    remove3DS2MDFlowUnloadListener() {
-        if (this.props.threeDS2MDFlowUnloadListener) {
-            window.removeEventListener('beforeunload', this.props.threeDS2MDFlowUnloadListener, { capture: true });
+            this.setStatusError({
+                errorInfo: 'Missing challengeToken parameter'
+            });
         }
     }
 
@@ -51,20 +63,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            this.remove3DS2MDFlowUnloadListener();
-
-            this.props.onComplete(data); // (equals onAdditionalDetails)
+            this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
         });
     }
 
-    setStatusError(errorObj) {
-        this.setState({ status: 'error' }, () => {
-            this.remove3DS2MDFlowUnloadListener();
-            this.props.onError(errorObj);
-        });
+    setStatusError(errorInfoObj) {
+        this.setState({ status: 'error', errorInfo: errorInfoObj.errorInfo });
+        this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render(props, { challengeData }) {
+    render({ onActionHandled }, { challengeData }) {
         if (this.state.status === 'retrievingChallengeToken') {
             return (
                 <DoChallenge3DS2
@@ -72,29 +80,26 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
                         if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
                             // Tell the merchant there's been an error
-                            const errorObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
-                            this.props.onError(errorObject);
-                            // Proceed with call to onAdditionalDetails
-                            this.setStatusComplete(challenge.result);
-                            return;
+                            const errorCodeObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
+                            this.props.onError(errorCodeObject);
                         }
 
-                        // A valid result (w. transStatus)
+                        // Proceed with call to onAdditionalDetails
                         this.setStatusComplete(challenge.result);
                     }}
                     onErrorChallenge={(challenge: ThreeDS2FlowObject) => {
-                        // Called when challenge times-out (which is still a valid scenario)
+                        /**
+                         * Called when challenge times-out (which is still a valid scenario)...
+                         */
                         if (hasOwnProperty(challenge, 'errorCode')) {
-                            const errorObject = handleErrorCode(challenge.errorCode);
-                            this.props.onError(errorObject);
+                            const errorCodeObject = handleErrorCode(challenge.errorCode);
+                            this.props.onError(errorCodeObject);
                             this.setStatusComplete(challenge.result);
                             return;
                         }
-
-                        // or, when the challenge response is un-parseable JSON - in which case something unknown has gone wrong
-                        this.setStatusError(challenge);
                     }}
                     {...challengeData}
+                    onActionHandled={onActionHandled}
                 />
             );
         }
@@ -107,11 +112,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             <Img
                                 className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
                                 src={props.resources.getImage({
+                                    loadingContext: this.props.loadingContext,
                                     imageFolder: 'components/'
                                 })('error')}
                                 alt={''}
                             />
-                            <div className="adyen-checkout__status__text">{this.props.i18n.get('error.message.unknown')}</div>
+                            <div className="adyen-checkout__status__text">
+                                {this.state.errorInfo ? this.state.errorInfo : this.props.i18n.get('error.message.unknown')}
+                            </div>
                         </div>
                     )}
                 </CoreConsumer>

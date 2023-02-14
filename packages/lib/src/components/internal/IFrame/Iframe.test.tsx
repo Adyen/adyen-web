@@ -1,8 +1,7 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
-import iframe from './Iframe';
 
-const createWrapper = (props?) => mount(<iframe name={'test'} width={'200'} height={'300'} src={'https://www.google.com'} {...props} />);
+const createWrapper = (props = {}) => mount(<iframe name={'test'} width={'200'} height={'300'} src={'https://www.google.com'} {...props} />);
 
 describe('iframe', () => {
     test('Renders an iframe', () => {

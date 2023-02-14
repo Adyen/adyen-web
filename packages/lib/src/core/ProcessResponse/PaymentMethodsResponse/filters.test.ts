@@ -1,9 +1,4 @@
-import {
-    filterAllowedPaymentMethods,
-    filterRemovedPaymentMethods,
-    filterEcomStoredPaymentMethods,
-    filterSupportedStoredPaymentMethods
-} from './filters';
+import { filterEcomStoredPaymentMethods, filterSupportedStoredPaymentMethods } from './filters';
 
 describe('PaymentMethodsResponse filters', () => {
     test('filterEcomStoredPaymentMethods', () => {

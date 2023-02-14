@@ -31,7 +31,8 @@ test('should pre selected available card', async () => {
                 panExpirationYear: '2020',
                 digitalCardData: {
                     descriptorName: 'Visa',
-                    artUri: 'http://image.com/visa'
+                    artUri: 'http://image.com/visa',
+                    status: 'EXPIRED'
                 },
                 tokenId: 'xxxx-wwww'
             },
@@ -48,7 +49,8 @@ test('should pre selected available card', async () => {
                 panExpirationYear: '2025',
                 digitalCardData: {
                     descriptorName: 'Mastercard',
-                    artUri: 'http://image.com/mc'
+                    artUri: 'http://image.com/mc',
+                    status: 'ACTIVE'
                 },
                 tokenId: 'xxxx-wwww'
             },
@@ -57,7 +59,7 @@ test('should pre selected available card', async () => {
         )
     ];
 
-    customRender(<CtPCards onShowCardButtonClick={jest.fn()} />, contextProps);
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeEnabled();
     expect(screen.getByRole('button', { name: /Mastercard •••• 3456/i }).textContent).toBe('Mastercard •••• 3456 ');
@@ -89,7 +91,8 @@ test('should not be able to checkout with expired card (single card)', async () 
                 panExpirationYear: '2019',
                 digitalCardData: {
                     descriptorName: 'Visa',
-                    artUri: 'http://image.com'
+                    artUri: 'http://image.com',
+                    status: 'EXPIRED'
                 },
                 tokenId: 'xxxx-wwww'
             },
@@ -98,7 +101,7 @@ test('should not be able to checkout with expired card (single card)', async () 
         )
     ];
 
-    customRender(<CtPCards onShowCardButtonClick={jest.fn()} />, contextProps);
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 2024' }));
 
@@ -114,23 +117,6 @@ test('should not be able to checkout with expired card (card list)', async () =>
     contextProps.cards = [
         new ShopperCard(
             {
-                srcDigitalCardId: '654321',
-                panLastFour: '8902',
-                dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
-                paymentCardDescriptor: 'visa',
-                panExpirationMonth: '08',
-                panExpirationYear: '2020',
-                digitalCardData: {
-                    descriptorName: 'Visa',
-                    artUri: 'http://image.com/visa'
-                },
-                tokenId: 'xxxx-wwww'
-            },
-            'visa',
-            '1234566'
-        ),
-        new ShopperCard(
-            {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
                 dateOfCardLastUsed: '2021-02-16T08:10:02.312Z',
@@ -139,31 +125,50 @@ test('should not be able to checkout with expired card (card list)', async () =>
                 panExpirationYear: '2021',
                 digitalCardData: {
                     descriptorName: 'Mastercard',
-                    artUri: 'http://image.com/mc'
+                    artUri: 'http://image.com/mc',
+                    status: 'EXPIRED'
                 },
                 tokenId: 'xxxx-wwww'
             },
             'mc',
             '1234566'
+        ),
+        new ShopperCard(
+            {
+                srcDigitalCardId: '654321',
+                panLastFour: '8902',
+                dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
+                paymentCardDescriptor: 'visa',
+                panExpirationMonth: '08',
+                panExpirationYear: '2020',
+                digitalCardData: {
+                    descriptorName: 'Visa',
+                    artUri: 'http://image.com/visa',
+                    status: 'EXPIRED'
+                },
+                tokenId: 'xxxx-wwww'
+            },
+            'visa',
+            '1234566'
         )
     ];
 
-    customRender(<CtPCards onShowCardButtonClick={jest.fn()} />, contextProps);
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
-    expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 8902' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: /Visa •••• 8902/i }).textContent).toBe('Visa •••• 8902 Expired');
+    expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Mastercard •••• 3456/i }).textContent).toBe('Mastercard •••• 3456 Expired');
 
-    await user.click(screen.getByRole('button', { name: /Visa •••• 8902/i }));
+    await user.click(screen.getByRole('button', { name: /Mastercard •••• 3456/i }));
     const options = screen.getAllByRole('option');
 
-    expect(options[0].textContent).toBe('Visa •••• 8902 Expired');
+    expect(options[0].textContent).toBe('Mastercard •••• 3456 Expired');
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
     expect(options[0]).toHaveAttribute('aria-disabled', 'true');
-    expect(options[1].textContent).toBe('Mastercard •••• 3456 Expired');
+    expect(options[1].textContent).toBe('Visa •••• 8902 Expired');
     expect(options[1]).toHaveAttribute('aria-selected', 'false');
     expect(options[1]).toHaveAttribute('aria-disabled', 'true');
 
-    await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 8902' }));
+    await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' }));
     expect(contextProps.onSetStatus).toHaveBeenCalledTimes(0);
 });
 
@@ -187,7 +192,8 @@ test('should be able to checkout (card list)', async () => {
                 panExpirationYear: '2025',
                 digitalCardData: {
                     descriptorName: 'Visa',
-                    artUri: 'http://image.com/visa'
+                    artUri: 'http://image.com/visa',
+                    status: 'ACTIVE'
                 },
                 tokenId: 'xxxx-wwww'
             },
@@ -204,7 +210,8 @@ test('should be able to checkout (card list)', async () => {
                 panExpirationYear: '2025',
                 digitalCardData: {
                     descriptorName: 'Mastercard',
-                    artUri: 'http://image.com/mc'
+                    artUri: 'http://image.com/mc',
+                    status: 'ACTIVE'
                 },
                 tokenId: 'xxxx-wwww'
             },
@@ -213,7 +220,7 @@ test('should be able to checkout (card list)', async () => {
         )
     ];
 
-    customRender(<CtPCards onShowCardButtonClick={jest.fn()} />, contextProps);
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 8902' })).toBeTruthy();
 
@@ -250,7 +257,8 @@ test('should be able to checkout (single card)', async () => {
                 panExpirationYear: '2025',
                 digitalCardData: {
                     descriptorName: 'Visa',
-                    artUri: 'http://image.com'
+                    artUri: 'http://image.com',
+                    status: 'ACTIVE'
                 },
                 tokenId: 'xxxx-wwww'
             },
@@ -259,7 +267,7 @@ test('should be able to checkout (single card)', async () => {
         )
     ];
 
-    customRender(<CtPCards onShowCardButtonClick={jest.fn()} />, contextProps);
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByText('Visa •••• 2024')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 2024' })).toBeTruthy();
@@ -273,5 +281,5 @@ test('should be able to checkout (single card)', async () => {
 });
 
 test('should display empty card list UI if there is no card available', () => {
-    render(<CtPCards onShowCardButtonClick={jest.fn()} />);
+    render(<CtPCards onDisplayCardComponent={jest.fn()} />);
 });

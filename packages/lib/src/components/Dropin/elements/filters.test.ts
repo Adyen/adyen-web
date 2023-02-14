@@ -1,4 +1,4 @@
-import { UNSUPPORTED_PAYMENT_METHODS, filterUnsupported, filterPresent, filterAvailable } from './filters';
+import { filterPresent, filterAvailable } from './filters';
 
 describe('elements filters', () => {
     // describe('filterUnsupported', () => {

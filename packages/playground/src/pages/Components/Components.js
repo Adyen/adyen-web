@@ -3,7 +3,7 @@ import '@adyen/adyen-web/dist/es/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleChange } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -13,11 +13,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        //        onChange: handleChange,
+        onChange: handleChange,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: (error, component) => {
             console.info(error, component);
+        },
+        onActionHandled: rtnObj => {
+            console.log('onActionHandled', rtnObj);
         },
         showPayButton: true
     });
@@ -92,6 +95,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // UPI
     window.upi = checkout.create('upi').mount('.upi-field');
+
+    // PIX
+    window.pix = checkout.create('pix', { countdownTime: 5 }).mount('.pix-field');
+
+    // Oxxo
+    window.oxxo = checkout.create('oxxo').mount('.oxxo-field');
 
     // Redirect
     // window.redirect = checkout.create('paypal').mount('.redirect-field');

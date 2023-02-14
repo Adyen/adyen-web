@@ -22,7 +22,9 @@ export interface QRLoaderContainerProps extends UIElementProps {
     shouldRedirectOnMobile?: boolean;
     qrCodeImage?: string;
     paymentData?: string;
+    introduction: string;
     instructions?: string;
+    copyBtn?: boolean;
 }
 
 class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProps> extends UIElement<T> {
@@ -32,7 +34,8 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
         amount: null,
         paymentData: null,
         onError: () => {},
-        onComplete: () => {}
+        onComplete: () => {},
+        onActionHandled: () => {}
     };
 
     formatData() {
@@ -64,6 +67,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
                     onComplete={this.onComplete}
                     countdownTime={this.props.countdownTime}
                     instructions={this.props.instructions}
+                    onActionHandled={this.props.onActionHandled}
                 />
             </CoreProvider>
         );

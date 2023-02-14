@@ -105,7 +105,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         .mount('.ratepay-field');
 
     // RATEPAY
-    window.ratepay = checkout
+    window.ratepaydd = checkout
         .create('ratepay_directdebit', {
             //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {

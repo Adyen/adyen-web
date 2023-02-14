@@ -16,11 +16,10 @@ export class PersonalDetailsElement extends UIElement {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PersonalDetails
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                     {...this.props}
                     onChange={this.setState}
+                    {...(process.env.NODE_ENV !== 'production' && { payButton: this.payButton })}
                 />
             </CoreProvider>
         );

@@ -97,7 +97,6 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'amex', icon: 'amex.png' }
         ];
         const wrapper = mount(<CardInput i18n={i18n} brand={detectedBrand} brandsIcons={brandsIcons} />);
-        const brandWrapper = wrapper.find('.checkout__card__brands');
         expect(wrapper.find('.adyen-checkout__card__brands--hidden')).toHaveLength(0);
     });
 });

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const gzipSize = require('gzip-size').sync;
-const filesize = require('filesize');
+const filesize = require('filesize').filesize;
 const path = require('path');
 
 const filePath = path.join(__dirname, '..', '/dist/adyen.js');

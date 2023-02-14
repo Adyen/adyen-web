@@ -134,9 +134,16 @@ class Core {
             }
             throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
+
         if (action.type) {
-            const paymentMethodsConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
-            const props = { ...processGlobalOptions(this.options), ...paymentMethodsConfiguration, ...this.getPropsForComponent(options) };
+            const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
+
+            const props = {
+                ...processGlobalOptions(this.options),
+                ...actionTypeConfiguration,
+                ...this.getPropsForComponent(options)
+            };
+
             return getComponentForAction(action, props);
         }
         return this.handleCreateError();

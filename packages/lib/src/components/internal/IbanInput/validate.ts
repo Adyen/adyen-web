@@ -1,11 +1,5 @@
-import {
-    iso13616Prepare,
-    iso7064Mod97_10,
-    electronicFormat,
-    regex,
-    getIbanCountrySpecification,
-    getCountryCode
-} from './utils';
+import { iso13616Prepare, iso7064Mod97_10, electronicFormat, regex, getIbanCountrySpecification, getCountryCode } from './utils';
+import { isEmpty } from '../../../utils/validator-utils';
 
 /**
  * Contains a validation status
@@ -77,6 +71,5 @@ export const checkIbanStatus = iban => {
 
 /**
  * Checks validity of a holder name
- * @param holder -
  */
-export const isValidHolder = holder => !!(holder && holder.length && holder.length > 0);
+export const isValidHolder = value => (isEmpty(value) ? null : true); // true, if there are chars other than spaces

@@ -43,6 +43,7 @@ export interface SFPProps {
     type: string;
     render: () => {};
     resources: Resources;
+    maskSecurityCode: boolean;
 }
 
 export interface SFPState {

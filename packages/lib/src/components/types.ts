@@ -9,11 +9,45 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { Resources } from '../core/Context/Resources';
 
+export interface PaymentMethodData {
+    paymentMethod: {
+        [key: string]: any;
+        checkoutAttemptId?: string;
+    };
+    browserInfo?: {
+        acceptHeader: string;
+        colorDepth: number;
+        javaEnabled: boolean;
+        language: string;
+        screenHeight: number;
+        screenWidth: number;
+        timeZoneOffset: number;
+        userAgent: string;
+    };
+}
+
+/**
+ * Represents the payment data that will be submitted to the /payments endpoint
+ */
+export interface PaymentData extends PaymentMethodData {
+    riskData?: {
+        clientData: string;
+    };
+    order?: {
+        orderData: string;
+        pspReference: string;
+    };
+    clientStateDataIndicator: boolean;
+    sessionData?: string;
+    storePaymentMethod?: boolean;
+}
+
 export interface PaymentResponse {
     action?: PaymentAction;
     resultCode: string;
     sessionData?: string;
     order?: Order;
+    sessionResult?: string;
 }
 
 export interface RawPaymentResponse extends PaymentResponse {
@@ -46,8 +80,14 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
+
+export interface ActionHandledReturnObject {
+    componentType: string;
+    actionDescription: ActionDescriptionType;
+}
 
 export interface UIElementProps extends BaseElementProps {
     session?: Session;
@@ -56,6 +96,7 @@ export interface UIElementProps extends BaseElementProps {
     beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
     onPaymentCompleted?: (result: any, element: UIElement) => void;
@@ -98,4 +139,10 @@ export interface UIElementProps extends BaseElementProps {
 
     /** @internal */
     i18n?: Language;
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface ComponentMethodsRef {
+    showValidation?: () => void;
+    setStatus?(status: UIElementStatus): void;
 }

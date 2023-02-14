@@ -57,7 +57,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     updateWithAction(action: PaymentAction) {
-        if (action.paymentMethodType !== this.data.paymentMethod.type) throw new Error('Invalid Action');
+        if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
 
         if (action.paymentData) {
             this.paymentData = action.paymentData;

@@ -1,4 +1,5 @@
 import { ValidatorRules } from '../Validator/types';
+import { FormatterFn } from '../Formatters/types';
 
 export type FormState<FormSchema> = {
     schema?: string[];
@@ -15,9 +16,18 @@ export type FormState<FormSchema> = {
     isValid?: boolean;
 };
 
+export interface Formatter {
+    formatterFn?: FormatterFn;
+    format?: string;
+    maxlength?: number;
+}
+
 export type FormProps = {
-    rules?: ValidatorRules;
-    [key: string]: any;
+    rules?: ValidatorRules,
+    formatters?: {
+        [key: string]: Formatter | Function;
+    },
+    [key: string]: any,
 };
 
 export interface Form<FormSchema> extends FormState<FormSchema> {

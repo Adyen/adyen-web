@@ -47,6 +47,7 @@ export default function StateField(props: StateFieldProps) {
             showValidIcon={false}
             name={'stateOrProvince'}
             isCollatingErrors={isCollatingErrors}
+            i18n={i18n}
         >
             {renderFormField('select', {
                 name: 'stateOrProvince',

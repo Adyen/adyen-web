@@ -14,6 +14,9 @@ export interface PersonalDetailsProps {
     readonly?: boolean;
     ref?: any;
     validationRules?: ValidatorRules;
+    setComponentRef?: (ref) => void;
+    payButton?: (obj) => {};
+    showPayButton?: boolean;
 }
 
 export interface PersonalDetailsStateError {

@@ -13,7 +13,7 @@ abstract class AbstractCSF {
     protected validateForm: () => void;
     protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
-    protected configHandler: () => void;
+    protected configHandler: (props: CSFSetupObject) => void;
     protected createCardSecuredFields: (securedFields: HTMLElement[]) => Promise<any>;
     protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<any>;
     protected createSecuredFields: typeof createSecuredFields;

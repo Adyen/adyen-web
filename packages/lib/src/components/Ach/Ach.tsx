@@ -79,9 +79,7 @@ export class AchElement extends UIElement<AchElementProps> {
                     />
                 ) : (
                     <AchInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

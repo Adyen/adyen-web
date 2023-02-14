@@ -80,6 +80,7 @@ function BacsInput(props: BacsInputProps) {
                 errorMessage={errors.holderName ? i18n.get('bacs.accountHolderName.invalid') : false}
                 isValid={valid.holderName}
                 name={'accountHolderName'}
+                i18n={i18n}
             >
                 {renderFormField('text', {
                     name: 'bacs.accountHolderName',
@@ -108,6 +109,7 @@ function BacsInput(props: BacsInputProps) {
                     classNameModifiers={['col-70']}
                     isValid={valid.bankAccountNumber}
                     name={'bankAccountNumber'}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         value: data.bankAccountNumber,
@@ -134,6 +136,7 @@ function BacsInput(props: BacsInputProps) {
                     classNameModifiers={['col-30']}
                     isValid={valid.bankLocationId}
                     name={'bankLocationId'}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         value: data.bankLocationId,
@@ -160,6 +163,7 @@ function BacsInput(props: BacsInputProps) {
                 })}
                 isValid={valid.shopperEmail}
                 name={'emailAddress'}
+                i18n={i18n}
             >
                 {renderFormField('emailAddress', {
                     value: data.shopperEmail,
@@ -186,6 +190,7 @@ function BacsInput(props: BacsInputProps) {
                     label={i18n.get('bacs.consent.amount')}
                     onChange={handleChangeFor('amountConsentCheckbox')}
                     checked={!!data.amountConsentCheckbox}
+                    i18n={i18n}
                 />
             )}
 
@@ -196,6 +201,7 @@ function BacsInput(props: BacsInputProps) {
                     label={i18n.get('bacs.consent.account')}
                     onChange={handleChangeFor('accountConsentCheckbox')}
                     checked={!!data.accountConsentCheckbox}
+                    i18n={i18n}
                 />
             )}
 

@@ -7,12 +7,13 @@ import CtPCards from './components/CtPCards';
 import CtPSection from './components/CtPSection';
 import CtPLoader from './components/CtPLoader';
 import CtPLogin from './components/CtPLogin';
+import SrciError from './services/sdks/SrciError';
 
 type ClickToPayComponentProps = {
-    onShowCardButtonClick?(): void;
+    onDisplayCardComponent?(): void;
 };
 
-const ClickToPayComponent = ({ onShowCardButtonClick }: ClickToPayComponentProps): h.JSX.Element => {
+const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProps): h.JSX.Element => {
     const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
 
     useEffect(() => {
@@ -20,7 +21,8 @@ const ClickToPayComponent = ({ onShowCardButtonClick }: ClickToPayComponentProps
             try {
                 await startIdentityValidation();
             } catch (error) {
-                console.warn(error);
+                if (error instanceof SrciError)
+                    console.warn(`CtP - Identity Validation error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
                 logoutShopper();
             }
         }
@@ -36,8 +38,8 @@ const ClickToPayComponent = ({ onShowCardButtonClick }: ClickToPayComponentProps
     return (
         <CtPSection>
             {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
-            {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword />}
-            {ctpState === CtpState.Ready && <CtPCards onShowCardButtonClick={onShowCardButtonClick} />}
+            {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword onDisplayCardComponent={onDisplayCardComponent} />}
+            {ctpState === CtpState.Ready && <CtPCards onDisplayCardComponent={onDisplayCardComponent} />}
             {ctpState === CtpState.Login && <CtPLogin />}
         </CtPSection>
     );

@@ -81,7 +81,7 @@ import './QRCodes.scss';
         amount: {
             currency: 'THB',
             value: 101
-        },
+        }
     })
         .then(result => {
             if (result.action) {
@@ -105,6 +105,25 @@ import './QRCodes.scss';
         .then(result => {
             if (result.action) {
                 window.paynow = checkout.createFromAction(result.action).mount('#paynow-container');
+            }
+        })
+        .catch(error => {
+            throw Error(error);
+        });
+
+    makePayment({
+        paymentMethod: {
+            type: 'duitnow'
+        },
+        countryCode: 'MY',
+        amount: {
+            currency: 'MYR',
+            value: 101
+        }
+    })
+        .then(result => {
+            if (result.action) {
+                window.paynow = checkout.createFromAction(result.action).mount('#duitnow-container');
             }
         })
         .catch(error => {

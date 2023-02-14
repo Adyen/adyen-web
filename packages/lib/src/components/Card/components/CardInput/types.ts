@@ -1,6 +1,6 @@
 import Language from '../../../../language/Language';
 import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
-import { PaymentAmount } from '../../../../types';
+import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
@@ -9,6 +9,7 @@ import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema, StringObject } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../../core/Context/Resources';
+import { ComponentMethodsRef } from '../../../types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -35,7 +36,7 @@ export interface CardInputErrorState {
 
 export interface CardInputDataState {
     holderName?: string;
-    billingAddress?: object;
+    billingAddress?: AddressData;
     socialSecurityNumber?: string;
     taxNumber?: string;
 }
@@ -66,6 +67,7 @@ export interface CardInputProps {
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
+    disableIOSArrowKeys?: boolean;
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
@@ -112,6 +114,7 @@ export interface CardInputProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type?: string;
+    maskSecurityCode?: boolean;
 }
 
 export interface CardInputState {
@@ -131,12 +134,10 @@ export interface CardInputState {
     showSocialSecurityNumber?: boolean;
 }
 
-export interface CardInputRef {
+export interface CardInputRef extends ComponentMethodsRef {
     sfp?: any;
     setFocusOn?: (who) => void;
-    showValidation?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
-    setStatus?: any;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
 }

@@ -64,6 +64,9 @@ export async function initManual() {
         onError: (error, component) => {
             console.info(error.name, error.message, error.stack, component);
         },
+        onActionHandled: rtnObj => {
+            console.log('onActionHandled', rtnObj);
+        },
         paymentMethodsConfiguration: {
             card: {
                 enableStoreDetails: false,
@@ -135,7 +138,7 @@ export async function initManual() {
 
     const dropin = checkout
         .create('dropin', {
-            instantPaymentTypes: ['paywithgoogle']
+            instantPaymentTypes: ['googlepay']
         })
         .mount('#dropin-container');
 

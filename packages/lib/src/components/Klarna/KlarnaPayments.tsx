@@ -50,7 +50,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
                         this.componentRef = ref;
                     }}
                     displayName={this.displayName}
-                    onComplete={state => this.props.onAdditionalDetails(state, this.elementRef)}
+                    onComplete={state => this.handleAdditionalDetails(state)}
                     onError={this.props.onError}
                     payButton={this.payButton}
                 />

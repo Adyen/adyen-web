@@ -7,9 +7,12 @@ import useForm from '../../../../../../../utils/useForm';
 import ShopperCard from '../../../models/ShopperCard';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import './CtPCardsList.scss';
+import isMobile from '../../../../../../../utils/isMobile';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
+    cardSelected: ShopperCard;
+    errorMessage?: string;
     onChangeCard(card: ShopperCard): void;
 };
 
@@ -19,18 +22,18 @@ type CardsSelectorDataState = {
 
 const schema = ['srcDigitalCardId'];
 
-const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
+const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
     const { i18n, loadingContext, resources } = useCoreContext();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,
-        defaultData: { srcDigitalCardId: cards.find(card => !card.isExpired)?.srcDigitalCardId || cards[0].srcDigitalCardId }
+        defaultData: { srcDigitalCardId: cardSelected.srcDigitalCardId }
     });
 
     const items = useMemo(() => {
         return cards.map(card => ({
             icon: card.artUri || resources.getImage({ loadingContext })(card.scheme),
-            name: `${card.title ? card.title : ''} •••• ${card.panLastFour} `,
+            name: `${isMobile() ? '' : card.title} •••• ${card.panLastFour} `,
             secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
             id: card.srcDigitalCardId,
             disabled: card.isExpired
@@ -44,7 +47,7 @@ const CtPCardsList = ({ cards, onChangeCard }: CtPCardsListProps) => {
     }, [data, onChangeCard]);
 
     return (
-        <Field label={i18n.get('ctp.cards.cardSelector')} name="clickToPayCards">
+        <Field name="clickToPayCards" errorMessage={errorMessage}>
             {renderFormField('select', {
                 items,
                 selected: data['srcDigitalCardId'],

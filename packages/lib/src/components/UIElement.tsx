@@ -17,7 +17,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     public elementRef: UIElement;
 
     constructor(props: P) {
-        super({ setStatusAutomatically: true, ...props });
+        super(props);
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -129,10 +129,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private submitAdditionalDetails(data): Promise<void> {
-        return this._parentInstance.session
-            .submitDetails(data)
-            .then(this.handleResponse)
-            .catch(this.handleError);
+        return this._parentInstance.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -170,6 +167,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         const paymentAction = this._parentInstance.createFromAction(action, {
+            ...this.elementRef.props,
             ...props,
             onAdditionalDetails: this.handleAdditionalDetails
         });
@@ -225,6 +223,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     public updateParent(options: CoreOptions = {}): Promise<Core> {
         return this.elementRef._parentInstance.update(options);
     }
+
+    public setComponentRef = ref => {
+        this.componentRef = ref;
+    };
 
     /**
      * Get the current validation status of the element

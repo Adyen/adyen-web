@@ -1,0 +1,1 @@
+export { CtPBrand } from './CtPBrand';

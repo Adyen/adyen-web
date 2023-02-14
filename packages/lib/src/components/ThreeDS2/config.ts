@@ -5,14 +5,7 @@ export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
 
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT: ThreeDS2FlowObject = {
-    result: {
-        transStatus: 'U'
-    },
-    type: 'challengeResult'
-};
-
-export const UNKNOWN_CHALLENGE_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
+export const CHALLENGE_TIMEOUT_REJECT_OBJECT: ThreeDS2FlowObject = {
     result: {
         transStatus: 'U'
     },

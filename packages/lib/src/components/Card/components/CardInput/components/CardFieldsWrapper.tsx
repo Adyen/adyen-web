@@ -49,13 +49,14 @@ export const CardFieldsWrapper = ({
     // Address
     billingAddress,
     handleAddress,
-    billingAddressRef,
+    setAddressRef,
     partialAddressSchema,
     // For this comp (props passed through from CardInput)
     amount,
     billingAddressRequired,
     billingAddressRequiredFields,
     billingAddressAllowedCountries,
+    billingAddressValidationRules = null,
     brandsConfiguration,
     enableStoreDetails,
     hasCVC,
@@ -170,7 +171,8 @@ export const CardFieldsWrapper = ({
                     onChange={handleAddress}
                     allowedCountries={billingAddressAllowedCountries}
                     requiredFields={billingAddressRequiredFields}
-                    ref={billingAddressRef}
+                    setComponentRef={setAddressRef}
+                    validationRules={billingAddressValidationRules}
                     specifications={partialAddressSchema}
                     iOSFocusedField={iOSFocusedField}
                 />
