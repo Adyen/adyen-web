@@ -1,10 +1,25 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
+import classnames from 'classnames';
 import { PayPalButtonsProps, FundingSource } from '../types';
 import { getStyle } from '../utils';
+import Spinner from '../../internal/Spinner';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
-export default function PaypalButtons(props: PayPalButtonsProps) {
-    const { onInit, onApprove, onClick, onCancel, onError, onShippingChange, onSubmit, paypalRef, style } = props;
+export default function PaypalButtons({
+    onInit,
+    onApprove,
+    onClick,
+    onCancel,
+    onError,
+    onShippingChange,
+    onSubmit,
+    isProcessingPayment,
+    paypalRef,
+    style,
+    ...props
+}: PayPalButtonsProps) {
+    const { i18n } = useCoreContext();
     const isTokenize = props.configuration?.intent === 'tokenize';
     const paypalButtonRef = useRef<HTMLDivElement>(null);
     const creditButtonRef = useRef<HTMLDivElement>(null);
@@ -39,10 +54,18 @@ export default function PaypalButtons(props: PayPalButtonsProps) {
     }, []);
 
     return (
-        <div className="adyen-checkout__paypal__buttons">
+        <div className={classnames('adyen-checkout__paypal__buttons', { 'adyen-checkout__paypal-processing': isProcessingPayment })}>
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--paypal" ref={paypalButtonRef} />
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--credit" ref={creditButtonRef} />
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--pay-later" ref={payLaterButtonRef} />
+
+            {isProcessingPayment && (
+                <div className="adyen-checkout__paypal">
+                    <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--processing">
+                        <Spinner size="medium" inline /> {i18n.get('paypal.processingPayment')}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

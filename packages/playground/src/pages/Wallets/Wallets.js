@@ -118,6 +118,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // commit: true, // true [Default] / false
             // style: {},
 
+            onShopperDetails(shopperDetails, rawData, actions) {
+                console.log('Shopper details', shopperDetails);
+                console.log('Raw data', rawData);
+                actions.resolve();
+            },
+
             // Events
             onError: (error, component) => {
                 component.setStatus('ready');

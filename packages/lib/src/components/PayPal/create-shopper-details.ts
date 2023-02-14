@@ -1,7 +1,29 @@
+export type ShopperDetails = {
+    shopperName?: {
+        firstName?: string;
+        lastName?: string;
+    };
+    shopperEmail?: string;
+    countryCode?: string;
+    telephoneNumber?: string;
+    dateOfBirth?: string;
+    billingAddress?: Partial<Address>;
+    shippingAddress?: Partial<Address>;
+};
+
+type Address = {
+    street: string;
+    stateOrProvince: string;
+    city: string;
+    postalCode: string;
+    country: string;
+    houseNumberOrName: string;
+};
+
 /**
  * Parses the Order data from PayPal, and create the shopper details object according to how Adyen expects
  */
-const createShopperDetails = (order: any) => {
+const createShopperDetails = (order: any): ShopperDetails | null => {
     if (!order) {
         return null;
     }
@@ -24,8 +46,8 @@ const createShopperDetails = (order: any) => {
         shopperName: order.purchase_units[0]?.shipping?.name?.full_name
     });
 
-    return {
-        ...(shopperName && { shopperName }),
+    const shopperDetails = {
+        ...(shopperName.firstName && { shopperName }),
         ...(shopperEmail && { shopperEmail }),
         ...(dateOfBirth && { dateOfBirth }),
         ...(telephoneNumber && { telephoneNumber }),
@@ -33,9 +55,11 @@ const createShopperDetails = (order: any) => {
         ...(billingAddress && { billingAddress }),
         ...(shippingAddress && { shippingAddress })
     };
+
+    return Object.keys(shopperDetails).length > 0 ? shopperDetails : null;
 };
 
-const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject, shopperName }) => {
+const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject, shopperName }): Partial<Address> | null => {
     const getStreet = (addressPart1 = null, addressPart2 = null): string | null => {
         if (addressPart1 && addressPart2) return `${addressPart1}, ${addressPart2}`;
         if (addressPart1) return addressPart1;
@@ -47,7 +71,7 @@ const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject, shopperName
 
     const street = getStreet(paypalAddressObject.address_line_1, paypalAddressObject.address_line_2);
 
-    return {
+    const address = {
         ...(street && { street }),
         ...(paypalAddressObject.admin_area_1 && { stateOrProvince: paypalAddressObject.admin_area_1 }),
         ...(paypalAddressObject.admin_area_2 && { city: paypalAddressObject.admin_area_2 }),
@@ -55,6 +79,8 @@ const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject, shopperName
         ...(paypalAddressObject.country_code && { country: paypalAddressObject.country_code }),
         ...(shopperName && { houseNumberOrName: shopperName })
     };
+
+    return Object.keys(address).length > 0 ? address : null;
 };
 
 export { createShopperDetails };

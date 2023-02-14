@@ -1,25 +1,23 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useCallback } from 'preact/hooks';
 import PaypalButtons from './PaypalButtons';
 import Spinner from '../../internal/Spinner';
-import useCoreContext from '../../../core/Context/useCoreContext';
 import { getPaypalUrl } from '../utils';
 import { PayPalComponentProps } from '../types';
 import Script from '../../../utils/Script';
 
 export default function PaypalComponent({ onApprove, onCancel, onChange, onError, onSubmit, ...props }: PayPalComponentProps) {
-    const { i18n } = useCoreContext();
     const [status, setStatus] = useState('pending');
 
     this.setStatus = setStatus;
 
-    // const handleOnApprove = useCallback(
-    //     (data: any, actions: any) => {
-    //         // setStatus('processing');
-    //         onApprove(data, actions);
-    //     },
-    //     [onApprove]
-    // );
+    const handleOnApprove = useCallback(
+        (data: any, actions: any) => {
+            setStatus('processing');
+            onApprove(data, actions);
+        },
+        [onApprove]
+    );
 
     const handlePaypalLoad = () => {
         setStatus('ready');
@@ -50,16 +48,6 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
         );
     }
 
-    if (status === 'processing') {
-        return (
-            <div className="adyen-checkout__paypal">
-                <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--processing">
-                    <Spinner size="medium" inline /> {i18n.get('paypal.processingPayment')}
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="adyen-checkout__paypal">
             <PaypalButtons
@@ -68,8 +56,8 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
                 onChange={onChange}
                 onError={onError}
                 onSubmit={onSubmit}
-                // onApprove={handleOnApprove}
-                onApprove={onApprove}
+                onApprove={handleOnApprove}
+                isProcessingPayment={status === 'processing'}
                 paypalRef={window.paypal}
             />
         </div>

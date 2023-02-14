@@ -2,6 +2,7 @@ import { PaymentAmount, PaymentMethod } from '../../types';
 import UIElement from '../UIElement';
 import { UIElementProps } from '../types';
 import { SUPPORTED_LOCALES } from './config';
+import { ShopperDetails } from './create-shopper-details';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -147,23 +148,19 @@ export interface PayPalConfig {
     intent?: Intent;
 }
 
-type ShopperDetails = {
-    // todo
-};
-
 export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
-    onShopperDetails?(state: ShopperDetails, rawData: any, actions: { resolve; reject }): void;
+    onShopperDetails?(shopperDetails: ShopperDetails, rawData: any, actions: { resolve; reject }): void;
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {
-    onApprove: (data: any, actions: any) => Promise<void>;
+    onApprove: (data: any, actions: any) => void;
     onCancel?: (data: object) => void;
     onChange?: (newState: object) => void;
     onError?: (data: object) => void;
@@ -173,6 +170,7 @@ export interface PayPalComponentProps extends PayPalCommonProps {
 
 export interface PayPalButtonsProps extends PayPalComponentProps {
     paypalRef: any;
+    isProcessingPayment: boolean;
 }
 
 export interface PaypalSettings {

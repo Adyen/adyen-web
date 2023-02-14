@@ -94,13 +94,10 @@ class PaypalElement extends UIElement<PayPalElementProps> {
             .get()
             .then(paypalOrder => {
                 const shopperDetails = createShopperDetails(paypalOrder);
-
-                console.log('PayPal Order', paypalOrder);
-                console.log('ShopperDetails', shopperDetails);
-
                 return new Promise((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
             })
             .then(() => {
+                this.componentRef.setStatus('processing');
                 const state = { data: { details: data, paymentData: this.paymentData } };
                 this.handleAdditionalDetails(state);
             })
