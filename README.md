@@ -49,7 +49,7 @@ To run the development environment:
   ```sh
   yarn install
   ```
-4. Run build
+4. If you are running the project by the first time, run the build script
   ```sh
   yarn build
   ```
