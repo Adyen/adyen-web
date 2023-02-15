@@ -31,8 +31,8 @@ jobs:
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
     - name: Run E2E Tests
-      run: npx playwright test
       working-directory: packages/e2e-playwright/
+      run: yarn test:headless
       env:
         CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
         MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}

@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "test:start-playground": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
-    "test:headless": "npx playwright test"
+    "test:headless": "npx playwright test",
+    "test:headed": "npx playwright test --headed"
   },
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",
