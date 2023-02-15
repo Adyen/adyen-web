@@ -1,0 +1,1 @@
+global.sessionId = null;

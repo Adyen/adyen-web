@@ -1,7 +1,17 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
-import { createSession } from '../../services';
+import { createSession, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+
+function handleFinalState(resultCode, dropin) {
+    localStorage.removeItem('storedPaymentData');
+
+    if (resultCode === 'Authorised' || resultCode === 'Received') {
+        dropin.setStatus('success');
+    } else {
+        dropin.setStatus('error');
+    }
+}
 
 export async function initSession() {
     const session = await createSession({
@@ -42,6 +52,15 @@ export async function initSession() {
                     console.log('RawData', rawData);
                     actions.resolve();
                 },
+                onAdditionalDetails: async (state, component) => {
+                    const result = await makeDetailsCall(state.data);
+
+                    if (result.action) {
+                        component.handleAction(result.action);
+                    } else {
+                        handleFinalState(result.resultCode, component);
+                    }
+                },
                 onShippingChange: function (data, actions) {
                     const baseOrderAmount = window.checkout.options.amount.value;
 
@@ -50,7 +69,7 @@ export async function initSession() {
                      * Converts 25900 to '259.00'
                      */
                     const baseOrderAmountInUSD = (parseInt(String(baseOrderAmount), 10) / 100).toFixed(2);
-                    const shippingAmount = data.shipping_address.country_code === 'NL' ? '0' : '30.00';
+                    const shippingAmount = data.shipping_address.country_code === 'NL' ? '0' : '10.00';
 
                     const valueWithShipping = (parseFloat(baseOrderAmountInUSD) + parseFloat(shippingAmount)).toFixed(2);
 
