@@ -27,7 +27,7 @@ test('should initialize the CashAppPay SDK', async () => {
     expect(cashAppWindowObject.pay).toBeCalledWith({ clientId: configuration.clientId });
 });
 
-test('should trigger the button rendering', async () => {
+test('should trigger the SDK button rendering', async () => {
     const sdkLoader = mock<ICashAppSdkLoader>();
     const cashAppWindowObject = mock<ICashAppWindowObject>();
     const cashAppSdk = mock<ICashAppSDK>();
@@ -44,7 +44,7 @@ test('should trigger the button rendering', async () => {
     expect(cashAppSdk.render).toBeCalledWith(divContainer, { button: { width: 'full', shape: 'semiround' } });
 });
 
-test('should create customer request', async () => {
+test('should create a customer request', async () => {
     const sdkLoader = mock<ICashAppSdkLoader>();
     const cashAppWindowObject = mock<ICashAppWindowObject>();
     const cashAppSdk = mock<ICashAppSDK>();
@@ -83,18 +83,33 @@ test('should be able to restart the SDK', async () => {
     expect(cashAppSdk.restart).toHaveBeenCalledTimes(1);
 });
 
-test('should trigger proper callback when CashAppSdk fires an event', async () => {
+test('should be able to subscribe/unsubscribe to CashAppSdk events', async () => {
     const sdkLoader = mock<ICashAppSdkLoader>();
     const cashAppWindowObject = mock<ICashAppWindowObject>();
     const cashAppSdk = mock<ICashAppSDK>();
 
+    const onCustomerApprovedResponse = {
+        grants: { payment: { grantId: 'xxxx' } }
+    };
+
     cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
     sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppSdk.addEventListener.mockImplementation((event: CashAppPayEvents, cb: Function) => {
+        if (event === CashAppPayEvents.CustomerRequestApproved) {
+            cb(onCustomerApprovedResponse);
+        }
+    });
 
     const service = new CashAppService(sdkLoader, configuration);
     await service.initialize();
 
     const handleRequestApproved = jest.fn();
+    const unsubscribeFn = service.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, handleRequestApproved);
 
-    service.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, handleRequestApproved);
+    expect(handleRequestApproved).toBeCalledWith(onCustomerApprovedResponse);
+    expect(handleRequestApproved).toHaveBeenCalledTimes(1);
+
+    unsubscribeFn();
+
+    expect(cashAppSdk.removeEventListener).toBeCalledWith(CashAppPayEvents.CustomerRequestApproved, handleRequestApproved);
 });
