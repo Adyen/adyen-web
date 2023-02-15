@@ -12,11 +12,13 @@ import {
     DATE_POLICY_REQUIRED,
     ENCRYPTED_EXPIRY_DATE
 } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import getImage from '../../../../../utils/get-image';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
     const {
         i18n,
+        loadingContext,
         commonProps: { isCollatingErrors }
     } = useCoreContext();
 
@@ -57,15 +59,13 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     }
                 )}
             />
-            <div className={classNames(
-                'adyen-checkout__field__exp-date_hint_wrapper',
-                [styles['checkout__field__exp-date_hint_wrapper']],
-                {
-                    'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid,
-                }
-            )}>
+            <div
+                className={classNames('adyen-checkout__field__exp-date_hint_wrapper', [styles['checkout__field__exp-date_hint_wrapper']], {
+                    'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid
+                })}
+            >
                 <img
-                    src="https://checkoutshopper-test.adyen.com/checkoutshopper/images/components/expiry_date_hint.svg"
+                    src={getImage({ loadingContext, imageFolder: 'components/' })('expiry_date_hint')}
                     className="adyen-checkout__field__exp-date_hint"
                     alt={fieldLabel}
                 />

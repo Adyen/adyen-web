@@ -70,13 +70,13 @@ describe('Language', () => {
 
     describe('get', () => {
         test('gets a string even if it is empty', () => {
-            const lang = new Language('en-US', {
+            const i18n = new Language('en-US', {
                 'en-US': {
                     test: ''
                 }
             });
 
-            lang.loaded.then(i18n => {
+            i18n.loaded.then(() => {
                 expect(i18n.get('test')).toBe('');
             });
         });
