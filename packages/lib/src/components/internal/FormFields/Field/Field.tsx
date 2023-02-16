@@ -74,6 +74,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             'adyen-checkout__label__text': true,
                             'adyen-checkout__label__text--error': errorMessage
                         })}
+                        data-id={name}
                     >
                         {label}
                     </span>
@@ -92,18 +93,16 @@ const Field: FunctionalComponent<FieldProps> = props => {
                     ])}
                     dir={dir}
                 >
-                    {toChildArray(children).map(
-                        (child: ComponentChild): ComponentChild => {
-                            const childProps = {
-                                isValid,
-                                onFocusHandler,
-                                onBlurHandler,
-                                isInvalid: !!errorMessage,
-                                ...(name && { uniqueId: uniqueId.current })
-                            };
-                            return cloneElement(child as VNode, childProps);
-                        }
-                    )}
+                    {toChildArray(children).map((child: ComponentChild): ComponentChild => {
+                        const childProps = {
+                            isValid,
+                            onFocusHandler,
+                            onBlurHandler,
+                            isInvalid: !!errorMessage,
+                            ...(name && { uniqueId: uniqueId.current })
+                        };
+                        return cloneElement(child as VNode, childProps);
+                    })}
 
                     {isLoading && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--loading">

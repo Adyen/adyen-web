@@ -88,10 +88,12 @@ function touchendListener(e: Event): void {
  */
 function touchstartListener(e: Event): void {
     const targetEl: EventTarget = e.target;
-    // If other element is Input TODO apply to other types of el?
-    if (targetEl instanceof HTMLInputElement) {
+    // If other element is Input or Span (i.e. label text) TODO apply to other types of el?
+    if (targetEl instanceof HTMLInputElement || targetEl instanceof HTMLSpanElement) {
         this.postMessageToAllIframes({ fieldType: 'webInternalElement', checkoutTouchEvent: true });
-        this.callbacks.onTouchstartIOS?.({ fieldType: 'webInternalElement', name: targetEl.getAttribute('name') });
+
+        const name = targetEl.getAttribute('name') ?? targetEl.getAttribute('data-id'); // if targetEl is a label's span it will only have a data-id
+        this.callbacks.onTouchstartIOS?.({ fieldType: 'webInternalElement', name });
     }
 }
 
