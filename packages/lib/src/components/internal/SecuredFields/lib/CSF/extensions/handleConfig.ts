@@ -87,4 +87,5 @@ export function handleConfig(props: CSFSetupObject): void {
     // TODO######
 
     this.config.maskSecurityCode = props.maskSecurityCode;
+    this.config.disableIOSArrowKeys = props.disableIOSArrowKeys;
 }

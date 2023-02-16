@@ -39,6 +39,7 @@ interface CSFCommonProps {
     implementationType?: 'components' | 'custom';
     isCollatingErrors?: boolean;
     maskSecurityCode: boolean;
+    disableIOSArrowKeys: boolean;
 }
 
 /**

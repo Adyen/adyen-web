@@ -42,6 +42,7 @@ export interface SFPProps {
     type: string;
     render: () => {};
     maskSecurityCode: boolean;
+    disableIOSArrowKeys: boolean;
 }
 
 export interface SFPState {

@@ -84,7 +84,7 @@ function touchendListener(e: Event): void {
 /**
  * re. Disabling arrow keys in iOS - need to enable all fields in the form and tell SFs to disable
  *
- * NOTE: Only called when iOS detected
+ * NOTE: Only called when iOS detected & this.config.disableIOSArrowKeys = true
  */
 function touchstartListener(e: Event): void {
     const targetEl: EventTarget = e.target;
