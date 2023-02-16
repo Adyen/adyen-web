@@ -382,8 +382,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onFocus={handleFocus}
                 type={props.brand}
                 isCollatingErrors={collateErrors}
-                {...(props.disableIOSArrowKeys && { onTouchstartIOS: handleTouchstartIOS })}
-                disableIOSArrowKeys={props.disableIOSArrowKeys}
+                disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}

@@ -2,6 +2,7 @@ import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import { Language } from '../../../../language/Language';
+import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
 
 /**
  * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, AchInput, GiftcardComponent)
@@ -42,7 +43,7 @@ export interface SFPProps {
     type: string;
     render: () => {};
     maskSecurityCode: boolean;
-    disableIOSArrowKeys: boolean;
+    disableIOSArrowKeys: (obj: TouchStartEventObj) => void | null;
 }
 
 export interface SFPState {

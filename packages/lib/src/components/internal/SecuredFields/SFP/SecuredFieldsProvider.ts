@@ -182,7 +182,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             isCollatingErrors: this.props.isCollatingErrors,
             forceCompat: this.props.forceCompat,
             maskSecurityCode: this.props.maskSecurityCode,
-            disableIOSArrowKeys: this.props.disableIOSArrowKeys
+            disableIOSArrowKeys: !!this.props.disableIOSArrowKeys
         };
 
         this.csf = initCSF(csfSetupObj);
