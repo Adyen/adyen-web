@@ -64,6 +64,9 @@ export async function initManual() {
         onError: (error, component) => {
             console.info(error.name, error.message, error.stack, component);
         },
+        onActionHandled: rtnObj => {
+            console.log('onActionHandled', rtnObj);
+        },
         paymentMethodsConfiguration: {
             card: {
                 enableStoreDetails: false,

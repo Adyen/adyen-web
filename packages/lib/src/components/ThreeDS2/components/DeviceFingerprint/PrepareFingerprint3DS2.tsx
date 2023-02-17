@@ -34,7 +34,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         onComplete: () => {},
         onError: () => {},
         paymentData: '',
-        showSpinner: true
+        showSpinner: true,
+        onActionHandled: () => {}
     };
 
     componentDidMount() {
@@ -67,7 +68,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         });
     }
 
-    render(props, { fingerPrintData }) {
+    render({ showSpinner, onActionHandled }, { fingerPrintData }) {
         if (this.state.status === 'retrievingFingerPrint') {
             return (
                 <DoFingerprint3DS2
@@ -82,8 +83,9 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         console.debug('### PrepareFingerprint3DS2::fingerprint timed-out:: errorCodeObject=', errorCodeObject);
                         this.setStatusComplete(fingerprint.result);
                     }}
-                    showSpinner={this.props.showSpinner}
+                    showSpinner={showSpinner}
                     {...fingerPrintData}
+                    onActionHandled={onActionHandled}
                 />
             );
         }

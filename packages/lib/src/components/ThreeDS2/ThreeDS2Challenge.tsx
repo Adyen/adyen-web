@@ -1,11 +1,12 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import Challenge from './components/Challenge';
+import PrepareChallenge from './components/Challenge';
 import { ErrorCodeObject } from './components/utils';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
+import { ActionHandledReturnObject } from '../types';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -19,6 +20,7 @@ export interface ThreeDS2ChallengeProps {
     loadingContext?: string;
     useOriginalFlow?: boolean;
     i18n?: Language;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
@@ -49,7 +51,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
             return null;
         }
 
-        return <Challenge {...this.props} onComplete={this.onComplete} />;
+        return <PrepareChallenge {...this.props} onComplete={this.onComplete} />;
     }
 }
 

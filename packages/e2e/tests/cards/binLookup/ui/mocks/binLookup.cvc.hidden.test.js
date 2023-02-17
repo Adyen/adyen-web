@@ -1,52 +1,16 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
-import { Selector, RequestMock } from 'testcafe';
+import { Selector } from 'testcafe';
 import { start, getIframeSelector, getIsValid } from '../../../../utils/commonUtils';
 import cu from '../../../utils/cardUtils';
-import { BASE_URL, CARDS_URL } from '../../../../pages';
-import { BIN_LOOKUP_VERSION, UNKNOWN_BIN_CARD } from '../../../utils/constants';
+import { CARDS_URL } from '../../../../pages';
+import { BCMC_CARD } from '../../../utils/constants';
 
 const cvcSpan = Selector('.card-field .adyen-checkout__field__cvc');
 const optionalCVCSpan = Selector('.card-field .adyen-checkout__field__cvc--optional');
 const cvcLabel = Selector('.card-field .adyen-checkout__label__text');
 const brandingIcon = Selector('.card-field .adyen-checkout__card__cardNumber__brandIcon');
-
-const requestURL = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
-
-/**
- * NOTE - we are mocking the response until such time as we have a genuine card,
- * that's not in our local RegEx, that returns the properties we want to test
- */
-const mockedResponse = {
-    brands: [
-        {
-            brand: 'bcmc', // keep as a recognised card brand (bcmc) until we have a genuine card - to avoid logo loading errors
-            cvcPolicy: 'hidden',
-            enableLuhnCheck: true,
-            showExpiryDate: true,
-            supported: true
-        }
-    ],
-    issuingCountryCode: 'US',
-    requestId: null
-};
-
-const mock = RequestMock()
-    .onRequestTo(request => {
-        return request.url === requestURL && request.method === 'post';
-    })
-    .respond(
-        (req, res) => {
-            const body = JSON.parse(req.body);
-            mockedResponse.requestId = body.requestId;
-            res.setBody(mockedResponse);
-        },
-        200,
-        {
-            'Access-Control-Allow-Origin': BASE_URL
-        }
-    );
 
 const TEST_SPEED = 1;
 
@@ -54,10 +18,7 @@ const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing a card, as detected by a mock/binLookup, for a response that should indicate hidden cvc)`
-    .page(CARDS_URL)
-    .clientScripts('binLookup.mocks.clientScripts.js')
-    .requestHooks(mock);
+fixture`Testing a card for a response that should indicate hidden cvc)`.page(CARDS_URL).clientScripts('binLookup.mocks.clientScripts.js');
 
 test('Test card has hidden cvc field ' + 'then complete date and see card is valid ' + ' then delete card number and see card reset', async t => {
     // Start, allow time for iframes to load
@@ -81,7 +42,7 @@ test('Test card has hidden cvc field ' + 'then complete date and see card is val
         .notOk();
 
     // Unknown card
-    await cardUtils.fillCardNumber(t, UNKNOWN_BIN_CARD);
+    await cardUtils.fillCardNumber(t, BCMC_CARD);
 
     await t
         // bcmc card icon

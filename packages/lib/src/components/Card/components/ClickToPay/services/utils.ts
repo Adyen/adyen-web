@@ -9,7 +9,7 @@ export const CTP_IFRAME_NAME = 'ctpIframe';
  */
 function createCheckoutPayloadBasedOnScheme(
     card: ShopperCard,
-    checkoutResponse: SrciCheckoutResponse,
+    srciCheckoutResponse: SrciCheckoutResponse,
     environment: string
 ): ClickToPayCheckoutPayload {
     const { scheme, tokenId, srcDigitalCardId, srcCorrelationId } = card;
@@ -25,7 +25,7 @@ function createCheckoutPayloadBasedOnScheme(
                       srcCorrelationId,
                       srcTokenReference: environment.toLowerCase().includes('live') ? tokenId : '987654321'
                   }
-                : { srcScheme: scheme, srcCheckoutPayload: checkoutResponse.encryptedPayload, srcCorrelationId };
+                : { srcScheme: scheme, srcCheckoutPayload: srciCheckoutResponse.checkoutResponse, srcCorrelationId };
         case 'mc':
         default:
             return { srcScheme: scheme, srcDigitalCardId, srcCorrelationId };

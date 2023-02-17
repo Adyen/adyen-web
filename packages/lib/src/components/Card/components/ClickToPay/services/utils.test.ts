@@ -117,7 +117,7 @@ test('should place expired cards at the end of the list, placing the most recent
     ]);
 });
 
-test.only('should sort available cards placing most recent ones on top of the list', () => {
+test('should sort available cards placing most recent ones on top of the list', () => {
     const cardsFromSrcSystem: SrcProfileWithScheme[] = [
         {
             scheme: 'visa',
