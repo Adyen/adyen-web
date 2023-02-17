@@ -19,6 +19,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     protected static defaultProps = defaultProps;
 
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
     protected formatProps(props) {
         const isZeroAuth = props.amount?.value === 0;
         return {
@@ -115,14 +120,14 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.reject(new Error(errorMessage));
     }
 
-    private handleSubmit = async () => {
+    private handleSubmit(): Promise<void> {
         super.submit();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
         });
-    };
+    }
 
     render() {
         if (!this.props.showPayButton) return null;
