@@ -38,12 +38,10 @@ const createShopperDetails = (order: any): ShopperDetails | null => {
     const dateOfBirth = order?.payer?.birth_date;
 
     const billingAddress = mapPayPalAddressToAdyenAddressFormat({
-        paypalAddressObject: order.payer?.address,
-        shopperName: `${order?.payer?.name?.given_name} ${order?.payer?.name?.surname}`.trim()
+        paypalAddressObject: order.payer?.address
     });
     const shippingAddress = mapPayPalAddressToAdyenAddressFormat({
-        paypalAddressObject: order.purchase_units[0]?.shipping?.address,
-        shopperName: order.purchase_units[0]?.shipping?.name?.full_name
+        paypalAddressObject: order.purchase_units[0]?.shipping?.address
     });
 
     const shopperDetails = {
@@ -59,7 +57,7 @@ const createShopperDetails = (order: any): ShopperDetails | null => {
     return Object.keys(shopperDetails).length > 0 ? shopperDetails : null;
 };
 
-const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject, shopperName }): Partial<Address> | null => {
+const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject }): Partial<Address> | null => {
     const getStreet = (addressPart1 = null, addressPart2 = null): string | null => {
         if (addressPart1 && addressPart2) return `${addressPart1}, ${addressPart2}`;
         if (addressPart1) return addressPart1;
@@ -76,8 +74,7 @@ const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject, shopperName
         ...(paypalAddressObject.admin_area_1 && { stateOrProvince: paypalAddressObject.admin_area_1 }),
         ...(paypalAddressObject.admin_area_2 && { city: paypalAddressObject.admin_area_2 }),
         ...(paypalAddressObject.postal_code && { postalCode: paypalAddressObject.postal_code }),
-        ...(paypalAddressObject.country_code && { country: paypalAddressObject.country_code }),
-        ...(shopperName && { houseNumberOrName: shopperName })
+        ...(paypalAddressObject.country_code && { country: paypalAddressObject.country_code })
     };
 
     return Object.keys(address).length > 0 ? address : null;

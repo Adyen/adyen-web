@@ -9,8 +9,8 @@ module.exports = (res, request) => {
             value: '9000',
             currency: 'USD'
         },
-        // sessionId: global.sessionId,
-        pspReference: global.pspReference
+        sessionId: global.sessionId
+        // pspReference: global.pspReference
     };
     const params = getPostParameters('/payments/details', { merchantAccount, ...paypalPatchingData, ...request });
 
