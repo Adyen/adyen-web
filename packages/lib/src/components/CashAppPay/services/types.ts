@@ -1,7 +1,7 @@
 import { PaymentAmount } from '../../../types';
 
 export interface ICashAppWindowObject {
-    pay({ clientId: string }): Promise<ICashAppSDK>;
+    pay({ clientId }: { clientId: string }): Promise<ICashAppSDK>;
 }
 
 /**

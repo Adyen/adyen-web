@@ -15,28 +15,30 @@ interface CashAppComponentProps {
 const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponentProps) => {
     const cashAppRef = useRef<HTMLDivElement>(null);
     const [status, setStatus] = useState<UIElementStatus>('loading');
+    const subscriptions = useRef<Function[]>([]);
 
     const initializeCashAppSdk = useCallback(async () => {
         try {
             await cashAppService.initialize();
 
-            cashAppService.subscribeToEvent(CashAppPayEvents.CustomerDismissed, () => {
-                onError(new AdyenCheckoutError('CANCEL', 'Customer dismissed the modal'));
-            });
-            cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestDeclined, async () => {
-                onError(new AdyenCheckoutError('ERROR', 'Payment declined by CashAppPay'));
-                await cashAppService.restart();
-                await cashAppService.createCustomerRequest();
-                await cashAppService.renderButton(cashAppRef.current);
-            });
+            subscriptions.current = [
+                cashAppService.subscribeToEvent(CashAppPayEvents.CustomerDismissed, () => {
+                    onError(new AdyenCheckoutError('CANCEL', 'Customer dismissed the modal'));
+                }),
+                cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestDeclined, async () => {
+                    onError(new AdyenCheckoutError('ERROR', 'Payment declined by CashAppPay'));
+                    await cashAppService.restart();
+                    await cashAppService.createCustomerRequest();
+                    await cashAppService.renderButton(cashAppRef.current);
+                }),
 
-            cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, ({ grants }) => {
-                onSubmit(grants.payment.grantId);
-            });
-
-            cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestFailed, () => {
-                onError(new AdyenCheckoutError('ERROR', 'Customer request failed'));
-            });
+                cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, ({ grants }) => {
+                    onSubmit(grants.payment.grantId);
+                }),
+                cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestFailed, () => {
+                    onError(new AdyenCheckoutError('ERROR', 'Customer request failed'));
+                })
+            ];
 
             await cashAppService.createCustomerRequest();
             await cashAppService.renderButton(cashAppRef.current);
@@ -45,13 +47,17 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
         } catch (error) {
             onError(error);
         }
-    }, []);
+    }, [cashAppService, onError, onSubmit]);
 
     useEffect(() => {
+        console.log('CashApp started');
         initializeCashAppSdk();
         return () => {
-            console.log('restart');
             cashAppService.restart();
+            subscriptions.current.map(unsubscribeFn => unsubscribeFn());
+
+            console.log('subscriptions count:', subscriptions.current.length);
+            console.log('CashApp Effect cleanup');
         };
     }, [cashAppService, initializeCashAppSdk]);
 
