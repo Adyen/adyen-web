@@ -8,6 +8,8 @@ import renderFormField from '../../../../../../internal/FormFields';
 import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
 
+type OnChangeProps = { data: CtPOneTimePasswordInputDataState; valid; errors; isValid: boolean };
+
 interface CtPOneTimePasswordInputProps {
     hideResendOtpButton: boolean;
     disabled: boolean;
@@ -15,7 +17,7 @@ interface CtPOneTimePasswordInputProps {
     errorMessage?: string;
     onSetInputHandlers(handlers: CtPOneTimePasswordInputHandlers): void;
     onPressEnter(): Promise<void>;
-    onChange({ data: CtPOneTimePasswordInputDataState, valid, errors, isValid: boolean }): void;
+    onChange({ data, valid, errors, isValid }: OnChangeProps): void;
     onResendCode(): void;
 }
 
