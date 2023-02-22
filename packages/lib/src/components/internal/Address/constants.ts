@@ -26,7 +26,7 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         },
         placeholders: {
             [STATE_OR_PROVINCE]: 'select.state'
-        },
+        }
     },
     CA: {
         hasDataset: true,
@@ -63,7 +63,7 @@ export const ADDRESS_SPECIFICATIONS: AddressSpecifications = {
         placeholders: {
             [STATE_OR_PROVINCE]: 'select.provinceOrTerritory'
         },
-        schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE],
+        schema: [COUNTRY, [[STREET, 70], [HOUSE_NUMBER_OR_NAME, 30]], [[POSTAL_CODE, 30], [CITY, 70]], STATE_OR_PROVINCE]
     }
 };
 

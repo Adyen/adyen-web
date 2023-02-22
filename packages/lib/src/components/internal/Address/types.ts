@@ -32,6 +32,7 @@ export interface AddressProps {
         risk: RiskElement;
     };
     setComponentRef?: (ref) => void;
+    hasParentSRPanel?: boolean;
 }
 
 export interface AddressStateError {

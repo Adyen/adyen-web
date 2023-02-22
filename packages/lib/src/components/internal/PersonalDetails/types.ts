@@ -25,6 +25,7 @@ export interface PersonalDetailsProps {
     setComponentRef?: (ref) => void;
     payButton?: (obj) => {};
     showPayButton?: boolean;
+    hasParentSRPanel?: boolean;
 }
 
 export interface PersonalDetailsStateError {

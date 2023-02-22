@@ -58,7 +58,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         moveFocusOnSubmitErrors,
         focusSelector: '.adyen-checkout__open-invoice'
     });
-
     /** end SR stuff */
 
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
@@ -130,6 +129,8 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             ...remainingErrors
         };
 
+        console.log('### OpenInvoice::errorsForPanel:: ', errorsForPanel);
+
         setSRMessages(errorsForPanel);
 
         props.onChange({ data: newData, errors, valid, isValid });
@@ -175,6 +176,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     onChange={handleFieldset('personalDetails')}
                     setComponentRef={fieldsetsRefs.personalDetails}
                     visibility={visibility.personalDetails}
+                    hasParentSRPanel={true}
                 />
             )}
 
@@ -199,6 +201,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     onChange={handleFieldset('billingAddress')}
                     setComponentRef={fieldsetsRefs.billingAddress}
                     visibility={visibility.billingAddress}
+                    hasParentSRPanel={true}
                 />
             )}
 
@@ -221,6 +224,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     onChange={handleFieldset('deliveryAddress')}
                     setComponentRef={fieldsetsRefs.deliveryAddress}
                     visibility={visibility.deliveryAddress}
+                    hasParentSRPanel={true}
                 />
             )}
 

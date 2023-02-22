@@ -30,15 +30,19 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     const isValidating = useRef(false);
 
     /**
-     * - SRPanelRef only have a value when it is passed in via a component's props AND THAT SHOULD ONLY HAPPEN when a comp is being instantiated via a UIElement.
+     * There are 2 ways a component can be instantiated.
+     * Most commonly through checkout.create (which leads to a UIElement), or, it can be marked up directly e.g. from OpenInvoices, DokuInput, EcontextInput etc.
      *
-     * - SRPanelRef will *not* (should not!) have a value when this component is directly initialised e.g. from OpenInvoices, DokuInput, EcontextInput etc.
-     * In this scenario the parent component will be responsible for handling and passing errors to the SRPanel, so we do not need a setSRMessages fn
+     * When instantiated through checkout.create, props.modules.srPanel will have a value, which we want to use to create an SRPanelRef.
      *
-     * When this component has been initialised as a standalone comp, so we have a SRPanelRef - generate a (partial) setSRMessages function, once only
-     * (since the initial set of arguments don't change).
+     * However, when props.hasParentSRPanel is true, this means the component has either been marked up directly, or, has been instantiated in PayByLink.
+     * In both cases the parent component will be responsible for handling and passing errors to the SRPanel, so we do not need a SRPanelRef or a setSRMessages function.
      */
-    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
+    const { current: SRPanelRef } = useRef(!props.hasParentSRPanel ? props.modules?.srPanel : null);
+
+    /**
+     * When we have a SRPanelRef, generate a (partial) setSRMessages function, once only (since the initial set of arguments don't change).
+     */
     const { current: setSRMessages } = useRef(
         SRPanelRef
             ? partial(setSRMessagesFromErrors, {
@@ -90,6 +94,8 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
+
+        console.log('### PersonalDetails:::: errors', errors);
 
         setSRMessages?.(errors);
 
