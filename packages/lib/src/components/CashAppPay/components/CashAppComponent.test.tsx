@@ -7,8 +7,12 @@ import { CashAppPayEvents, ICashAppService } from '../services/types';
 test('should initialize the CashAppPay through the CashAppService', async () => {
     const onSubmit = jest.fn();
     const onError = jest.fn();
-    const service = mock<ICashAppService>();
     const ref = jest.fn();
+    const service = mock<ICashAppService>();
+
+    service.subscribeToEvent.mockImplementation(() => {
+        return () => {};
+    });
 
     const { unmount } = render(<CashAppComponent ref={ref} onSubmit={onSubmit} onError={onError} cashAppService={service} />);
 
