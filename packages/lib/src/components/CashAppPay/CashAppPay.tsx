@@ -32,7 +32,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         return {
             paymentMethod: {
                 type: CashAppPay.type,
-                ...this.state
+                grantId: this.state.grantId
             }
         };
     }

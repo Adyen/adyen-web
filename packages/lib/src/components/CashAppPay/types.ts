@@ -31,7 +31,7 @@ export interface CashAppPayElementProps extends UIElementProps {
 
 export type CashAppPayElementData = {
     paymentMethod: {
-        type: 'cashapp';
+        type: string;
         grantId: string;
     };
 };

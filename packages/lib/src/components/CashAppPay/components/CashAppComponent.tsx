@@ -55,14 +55,13 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
         return () => {
             cashAppService.restart();
             subscriptions.current.map(unsubscribeFn => unsubscribeFn());
-
             console.log('subscriptions count:', subscriptions.current.length);
             console.log('CashApp Effect cleanup');
         };
     }, [cashAppService, initializeCashAppSdk]);
 
     return (
-        <div id="adyen-checkout__cashapp-button" ref={cashAppRef}>
+        <div id="adyen-checkout__cashapp" ref={cashAppRef}>
             {status === 'loading' && <Spinner />}
         </div>
     );
