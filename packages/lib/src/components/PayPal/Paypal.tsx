@@ -40,7 +40,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
             vault,
             configuration: {
                 intent,
-                ...(merchantId && { merchantId })
+                merchantId
             }
         };
     }
