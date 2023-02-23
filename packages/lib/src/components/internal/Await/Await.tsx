@@ -100,8 +100,7 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout(fallback, 1000);
+    const redirectToApp = (url): void => {
         window.location.assign(url);
     };
 
@@ -220,7 +219,6 @@ Await.defaultProps = {
     throttleInterval: 10000,
     showCountdownTimer: true,
     classNameModifiers: [],
-    shouldRedirectOnMobile: false,
     url: null
 };
 
