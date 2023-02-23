@@ -19,7 +19,6 @@ export async function initManual() {
             }
         },
         onSubmit: async (state, component) => {
-            debugger;
             const result = await makePayment(state.data);
 
             // handle actions
@@ -44,8 +43,6 @@ export async function initManual() {
             console.log('onChange', state);
         },
         onAdditionalDetails: async (state, component) => {
-            debugger;
-
             const result = await makeDetailsCall(state.data);
 
             if (result.action) {
