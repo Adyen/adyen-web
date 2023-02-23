@@ -2,6 +2,7 @@ import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
 import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
+import { ResultCode } from '../components/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -196,7 +197,7 @@ export interface PaymentAmountExtended extends PaymentAmount {
     currencyDisplay?: string;
 }
 
-export type AddressField = typeof ADDRESS_SCHEMA[number];
+export type AddressField = (typeof ADDRESS_SCHEMA)[number];
 
 export type AddressData = {
     [key in AddressField]?: string;
@@ -287,6 +288,11 @@ export type CheckoutSessionSetupResponse = {
     paymentMethods: any;
     returnUrl: string;
     configuration: SessionConfiguration;
+    /**
+     * 'shopperLocale' set during session creation.
+     * @defaultValue en-US
+     */
+    shopperLocale: string;
 };
 
 export type CheckoutSessionPaymentResponse = {
@@ -298,8 +304,9 @@ export type CheckoutSessionPaymentResponse = {
 
 export type CheckoutSessionDetailsResponse = {
     sessionData: string;
+    sessionResult: string;
+    resultCode: ResultCode;
     status?: string;
-    resultCode: string;
     action?: PaymentAction;
 };
 

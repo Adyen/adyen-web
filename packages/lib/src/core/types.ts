@@ -90,11 +90,11 @@ export interface CoreOptions {
 
     beforeSubmit?(state: any, element: UIElement, actions: { resolve: PromiseResolve; reject: PromiseReject }): Promise<void>;
 
-    onPaymentCompleted?(data: OnPaymentCompletedData, element: UIElement): void;
+    onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
 
     onSubmit?(state: any, element: UIElement): void;
 
-    onAdditionalDetails?(state: any, element: UIElement): void;
+    onAdditionalDetails?(state: any, element?: UIElement): void;
 
     onActionHandled?(data: ActionHandledReturnObject): void;
 
