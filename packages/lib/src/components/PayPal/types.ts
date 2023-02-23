@@ -86,7 +86,10 @@ interface PayPalCommonProps {
     cspNonce?: string;
 
     /**
+     * Determines whether the funds are captured immediately on checkout or if the buyer authorizes the funds to be captured later.
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
+     *
+     * If set, it will override the intent passed inside the 'configuration' object
      */
     intent?: Intent;
 

@@ -29,18 +29,18 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     formatProps(props: PayPalElementProps): PayPalElementProps {
-        // should we deprecate isZeroAuth?
+        const { merchantId, intent: intentFromConfig } = props.configuration;
         const isZeroAuth = props.amount?.value === 0;
 
-        const intent: Intent = props.intent || props.configuration.intent;
+        const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
+        const vault = isZeroAuth || props.vault;
 
         return {
             ...props,
-            vault: isZeroAuth || props.vault, // what has priority?
-            intent: isZeroAuth ? 'tokenize' : intent, // should prop take priority over isZeroAuth?
+            vault,
             configuration: {
-                ...props.configuration,
-                intent: isZeroAuth ? 'tokenize' : props.configuration.intent
+                intent,
+                ...(merchantId && { merchantId })
             }
         };
     }
