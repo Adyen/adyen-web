@@ -3,7 +3,7 @@ import UIElement from '../UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
-import { PayPalElementProps } from './types';
+import { Intent, PayPalElementProps } from './types';
 import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
@@ -28,11 +28,16 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.submit = this.submit.bind(this);
     }
 
-    protected formatProps(props) {
+    formatProps(props: PayPalElementProps): PayPalElementProps {
+        // should we deprecate isZeroAuth?
         const isZeroAuth = props.amount?.value === 0;
+
+        const intent: Intent = props.intent || props.configuration.intent;
+
         return {
             ...props,
-            vault: isZeroAuth || props.vault,
+            vault: isZeroAuth || props.vault, // what has priority?
+            intent: isZeroAuth ? 'tokenize' : intent, // should prop take priority over isZeroAuth?
             configuration: {
                 ...props.configuration,
                 intent: isZeroAuth ? 'tokenize' : props.configuration.intent

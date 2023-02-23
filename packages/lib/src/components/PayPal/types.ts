@@ -14,11 +14,11 @@ declare global {
  * The intent for the transaction. This determines whether the funds are captured immediately, or later.
  * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
  */
-type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
+export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
 export type FundingSource = 'paypal' | 'credit';
 
-interface PayPalStyles {
+export interface PayPalStyles {
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#color}
      */
@@ -185,4 +185,4 @@ export interface PaypalSettings {
     components: string;
 }
 
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
