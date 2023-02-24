@@ -41,10 +41,14 @@ class Analytics {
         if (enabled === true) {
             if (telemetry === true && !this.checkoutAttemptId) {
                 // fetch a new checkoutAttemptId if none is already available
-                this.collectId().then(checkoutAttemptId => {
-                    this.checkoutAttemptId = checkoutAttemptId;
-                    this.queue.run(this.checkoutAttemptId);
-                });
+                this.collectId()
+                    .then(checkoutAttemptId => {
+                        this.checkoutAttemptId = checkoutAttemptId;
+                        this.queue.run(this.checkoutAttemptId);
+                    })
+                    .catch(e => {
+                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                    });
             }
 
             if (telemetry === true) {
