@@ -31,6 +31,7 @@ export interface CardElementProps extends UIElementProps {
 
     /**
      * Disable Click to Pay for testing purposes
+     * @defaultValue false
      * @internal
      */
     _disableClickToPay?: boolean;
