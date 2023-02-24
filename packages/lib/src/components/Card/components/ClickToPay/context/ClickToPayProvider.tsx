@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import { ClickToPayCheckoutPayload, IClickToPayService } from '../services/types';
+import { ClickToPayCheckoutPayload, IClickToPayService, IdentityLookupParams } from '../services/types';
 import { PaymentAmount } from '../../../../../types';
 import ShopperCard from '../models/ShopperCard';
 import { UIElementStatus } from '../../../../types';
@@ -58,8 +58,8 @@ const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPay
     );
 
     const verifyIfShopperIsEnrolled = useCallback(
-        async (value: string, type?: string) => {
-            return await ctpService?.verifyIfShopperIsEnrolled(value, type);
+        async (shopperIdentity: IdentityLookupParams) => {
+            return await ctpService?.verifyIfShopperIsEnrolled(shopperIdentity);
         },
         [ctpService]
     );

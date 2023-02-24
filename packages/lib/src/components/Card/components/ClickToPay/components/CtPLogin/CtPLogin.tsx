@@ -43,7 +43,7 @@ const CtPLogin = (): h.JSX.Element => {
         setIsLoggingIn(true);
 
         try {
-            const { isEnrolled } = await verifyIfShopperIsEnrolled(shopperLogin);
+            const { isEnrolled } = await verifyIfShopperIsEnrolled({ shopperEmail: shopperLogin });
             if (isEnrolled) {
                 await startIdentityValidation();
             } else {
