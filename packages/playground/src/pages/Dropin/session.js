@@ -38,8 +38,6 @@ export async function initSession() {
                 buttonType: 'plain'
             },
             card: {
-                _disableClickToPay: true,
-
                 hasHolderName: true,
                 holderNameRequired: true,
                 holderName: 'J. Smith',

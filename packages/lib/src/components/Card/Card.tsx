@@ -91,6 +91,7 @@ export class CardElement extends UIElement<CardElementProps> {
              */
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
+                disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
                 shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
                 telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
@@ -240,6 +241,7 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 <ClickToPayWrapper
                     amount={this.props.amount}
+                    configuration={this.props.clickToPayConfiguration}
                     clickToPayService={this.clickToPayService}
                     setClickToPayRef={this.setClickToPayRef}
                     onSetStatus={this.setElementStatus}

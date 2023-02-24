@@ -7,6 +7,7 @@ import { PaymentAmount } from '../../../../../types';
 import ShopperCard from '../models/ShopperCard';
 import { UIElementStatus } from '../../../../types';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
+import { ClickToPayConfiguration } from '../../../types';
 
 type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
@@ -14,6 +15,7 @@ type ClickToPayProviderRef = {
 
 export type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
+    configuration: ClickToPayConfiguration;
     amount: PaymentAmount;
     children: any;
     setClickToPayRef(ref): void;
@@ -22,7 +24,16 @@ export type ClickToPayProviderProps = {
     onError(error: AdyenCheckoutError): void;
 };
 
-const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPayRef, onSubmit, onSetStatus, onError }: ClickToPayProviderProps) => {
+const ClickToPayProvider = ({
+    clickToPayService,
+    amount,
+    configuration,
+    children,
+    setClickToPayRef,
+    onSubmit,
+    onSetStatus,
+    onError
+}: ClickToPayProviderProps) => {
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(null);
@@ -76,6 +87,7 @@ const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPay
                 onError,
                 onSetStatus,
                 amount,
+                configuration,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,
                 ctpState,

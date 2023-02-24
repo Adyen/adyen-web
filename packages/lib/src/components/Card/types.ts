@@ -145,6 +145,11 @@ export type ClickToPayConfiguration = {
      * @defaultValue en_US
      */
     locale?: string;
+    /**
+     * Disable autofocus on the One Time Password input field when it is either displayed or when the OTP is resent
+     * @defaultValue false
+     */
+    disableOtpAutoFocus?: boolean;
 };
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
