@@ -33,7 +33,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         const isZeroAuth = props.amount?.value === 0;
 
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
-        const vault = isZeroAuth || props.vault;
+        const vault = intent === 'tokenize' || props.vault;
 
         return {
             ...props,
