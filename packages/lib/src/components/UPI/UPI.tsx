@@ -65,6 +65,7 @@ class UPI extends UIElement<UPIElementProps> {
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
                         countdownTime={5}
+                        onActionHandled={this.props.onActionHandled}
                     />
                 );
             case 'await':
@@ -83,6 +84,7 @@ class UPI extends UIElement<UPIElementProps> {
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}
                         showCountdownTimer
                         countdownTime={5}
+                        onActionHandled={this.props.onActionHandled}
                     />
                 );
             default:
