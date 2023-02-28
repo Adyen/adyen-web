@@ -10,6 +10,7 @@ export async function initSession() {
         returnUrl,
         shopperLocale,
         shopperReference,
+        telephoneNumber: '+611223344',
         shopperEmail: 'shopper.ctp1@adyen.com',
         countryCode
     });
