@@ -160,8 +160,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa'],
+                configuration: {
+                    mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                    mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+                },
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'gui.ctp@adyen.com',
+                    disableOtpAutoFocus: true,
+                    shopperEmail: 'gui.ctp@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name '
                 }
             })

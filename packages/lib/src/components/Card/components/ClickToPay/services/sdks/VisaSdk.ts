@@ -1,12 +1,17 @@
 import { getVisaSetttings, VISA_SDK_PROD, VISA_SDK_TEST } from './config';
-import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
-import { CustomSdkConfiguration, SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse, SrcInitParams } from './types';
+import {
+    CustomSdkConfiguration,
+    SrciCompleteIdentityValidationResponse,
+    SrcIdentityLookupParams,
+    SrciIdentityLookupResponse,
+    SrcInitParams
+} from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL',
-    mobilePhone: 'MOBILE_NUMBER'
+    telephoneNumber: 'MOBILE_NUMBER'
 };
 
 class VisaSdk extends AbstractSrcInitiator {
@@ -37,11 +42,11 @@ class VisaSdk extends AbstractSrcInitiator {
         await this.schemeSdk.init(sdkProps);
     }
 
-    public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {
+    public async identityLookup({ identityValue, type }: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse> {
         try {
             const consumerIdentity = {
-                identityValue: params.value,
-                type: IdentityTypeMap[params.type]
+                identityValue,
+                type: IdentityTypeMap[type]
             };
 
             const response = await this.schemeSdk.identityLookup(consumerIdentity);

@@ -1,12 +1,15 @@
 import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
 import postTelemetry from '../Services/analytics/post-telemetry';
+import { PaymentAmountExtended } from '../../types';
 
 jest.mock('../Services/analytics/collect-id');
 jest.mock('../Services/analytics/post-telemetry');
 
 const mockedCollectId = collectId as jest.Mock;
 const mockedPostTelemetry = postTelemetry as jest.Mock;
+
+let amount: PaymentAmountExtended;
 
 describe('Analytics', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve('123456'));
@@ -19,24 +22,26 @@ describe('Analytics', () => {
         mockedPostTelemetry.mockReset();
         mockedPostTelemetry.mockImplementation(() => logTelemetryPromiseMock);
         logTelemetryPromiseMock.mockClear();
+
+        amount = { value: 50000, currency: 'USD' };
     });
 
     test('Creates an Analytics module with defaultProps', () => {
-        const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
         expect(analytics.props.enabled).toBe(true);
         expect(analytics.props.telemetry).toBe(true);
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
     test('Calls the collectId endpoint by default (telemetry enabled)', () => {
-        const analytics = new Analytics({ loadingContext: '', locale: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         analytics.send({});
         expect(collectIdPromiseMock).toHaveBeenCalled();
     });
 
     test('Will not call the collectId endpoint if telemetry is disabled', () => {
-        const analytics = new Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         analytics.send({});
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -46,7 +51,7 @@ describe('Analytics', () => {
         const event = {
             eventData: 'test'
         };
-        const analytics = new Analytics({ loadingContext: '', locale: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
         analytics.send(event);
 
         expect(collectIdPromiseMock).toHaveBeenCalled();
@@ -61,7 +66,7 @@ describe('Analytics', () => {
         const event = {
             eventData: 'test'
         };
-        const analytics = new Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount });
 
         analytics.send(event);
 
@@ -71,7 +76,7 @@ describe('Analytics', () => {
     });
 
     test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = new Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '' });
+        const analytics = new Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount });
 
         analytics.send({});
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
