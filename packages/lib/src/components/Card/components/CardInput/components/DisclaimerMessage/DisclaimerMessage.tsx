@@ -7,6 +7,7 @@ interface DisclaimerMessageProps {
     disclaimer: DisclaimerMsgObject;
 }
 
+/* eslint-disable */
 /**
  * Expects a config object with this shape:
  *  disclaimerMessage: {
@@ -15,6 +16,7 @@ interface DisclaimerMessageProps {
  *      link: 'https://www.adyen.com'
  *  }
  */
+/* eslint-enable */
 export default function DisclaimerMessage({ disclaimer }: DisclaimerMessageProps) {
     const messageIsStr = typeof disclaimer.message === 'string';
     const linkTextIsStr = typeof disclaimer.linkText === 'string';
