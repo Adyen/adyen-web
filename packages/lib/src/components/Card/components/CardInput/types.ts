@@ -1,5 +1,12 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
+import {
+    BinLookupResponse,
+    BrandConfiguration,
+    CardBrandsConfiguration,
+    CardConfiguration,
+    CardElementProps,
+    DualBrandSelectElement
+} from '../../types';
 import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
@@ -48,7 +55,7 @@ type Placeholders = {
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
  * - either in the comp itself or are passed on to its children
  */
-export interface CardInputProps {
+export type CardInputProps = Pick<CardElementProps, 'fundingSource'> & {
     amount?: PaymentAmount;
     isPayButtonPrimaryVariant?: boolean;
     allowedDOMAccess?: boolean;
@@ -113,7 +120,7 @@ export interface CardInputProps {
     trimTrailingSeparator?: boolean;
     type?: string;
     maskSecurityCode?: boolean;
-}
+};
 
 export interface CardInputState {
     dualBrandSelectElements: DualBrandSelectElement[];
