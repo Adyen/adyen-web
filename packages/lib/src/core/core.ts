@@ -32,6 +32,9 @@ class Core {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(options);
+
+        // Expose version number for npm builds
+        window['adyenWebVersion'] = Core.version.version;
     }
 
     initialize(): Promise<this> {

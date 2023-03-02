@@ -9,6 +9,7 @@ import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
+import DisclaimerMessage from './DisclaimerMessage';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -69,7 +70,8 @@ export const CardFieldsWrapper = ({
     showBrandIcon,
     showBrandsUnderCardNumber,
     //
-    iOSFocusedField
+    iOSFocusedField,
+    disclaimerMessage
 }) => {
     const { i18n } = useCoreContext();
 
@@ -177,6 +179,8 @@ export const CardFieldsWrapper = ({
                     iOSFocusedField={iOSFocusedField}
                 />
             )}
+
+            {disclaimerMessage && <DisclaimerMessage disclaimer={disclaimerMessage} />}
         </LoadingWrapper>
     );
 };
