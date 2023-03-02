@@ -110,7 +110,7 @@
         "@types/googlepay": "^0.6.2",
         "classnames": "^2.3.1",
         "core-js-pure": "^3.25.3",
-        "preact": "10.11.3"
+        "preact": "10.12.1"
     },
     "files": [
         "dist",
