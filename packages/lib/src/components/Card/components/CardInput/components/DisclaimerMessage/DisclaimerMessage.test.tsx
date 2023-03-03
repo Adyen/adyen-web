@@ -1,6 +1,6 @@
-import { shallow } from 'enzyme';
 import { h } from 'preact';
 import DisclaimerMessage from './DisclaimerMessage';
+import { render, screen } from '@testing-library/preact';
 
 describe('DisclaimerMessage', () => {
     const disclaimerMessage = {
@@ -9,39 +9,35 @@ describe('DisclaimerMessage', () => {
         link: 'https://www.adyen.com'
     };
 
-    const getWrapper = prop => shallow(<DisclaimerMessage disclaimer={prop} />);
-
     test('Renders the DisclaimerMessage with text before and after the link', () => {
-        const wrapper = getWrapper(disclaimerMessage);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label').text()).toContain('By continuing you accept the terms and conditions of MyStore');
-
-        expect(wrapper.find('.adyen-checkout__link')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout__link').text()).toContain('terms and conditions');
-
-        expect(wrapper.find('[href="https://www.adyen.com"]')).toHaveLength(1);
+        render(<DisclaimerMessage disclaimer={disclaimerMessage} />);
+        expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
+            'By continuing you accept the terms and conditions of MyStore'
+        );
+        expect(screen.getByRole('link', { name: 'terms and conditions' })).toHaveAttribute('href', 'https://www.adyen.com');
     });
 
     test('Renders the DisclaimerMessage just with text before the link', () => {
         const nuMsg = { ...disclaimerMessage };
         nuMsg.message = 'By continuing you accept the %{linkText}';
 
-        const wrapper = getWrapper(nuMsg);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label').text()).toContain('By continuing you accept the terms and conditions');
+        render(<DisclaimerMessage disclaimer={nuMsg} />);
 
-        expect(wrapper.find('.adyen-checkout__link')).toHaveLength(1);
-        expect(wrapper.find('.adyen-checkout__link').text()).toContain('terms and conditions');
+        /* eslint-disable-next-line */
+        expect(screen.queryByText('By continuing', { exact: false })).toBeTruthy(); // presence
+        /* eslint-disable-next-line */
+        expect(screen.queryByRole('link')).toBeTruthy(); // presence
 
-        expect(wrapper.find('[href="https://www.adyen.com"]')).toHaveLength(1);
+        expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual('By continuing you accept the terms and conditions');
+        expect(screen.getByRole('link', { name: 'terms and conditions' })).toHaveAttribute('href', 'https://www.adyen.com');
     });
 
     test("Doesn't render the DisclaimerMessage because the link is not https", () => {
         const nuMsg = { ...disclaimerMessage };
         nuMsg.link = 'http://www.adyen.com';
 
-        const wrapper = getWrapper(nuMsg);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label')).toHaveLength(0);
+        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        expect(screen.queryByText('By continuing', { exact: false })).toBeNull(); // non-presence
     });
 
     test("Doesn't render the DisclaimerMessage because the linkText is not a string", () => {
@@ -50,8 +46,8 @@ describe('DisclaimerMessage', () => {
         /* eslint-disable-next-line */
         nuMsg.linkText = <script>alert("busted")</script>;
 
-        const wrapper = getWrapper(nuMsg);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label')).toHaveLength(0);
+        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        expect(screen.queryByText('By continuing', { exact: false })).toBeNull(); // non-presence
     });
 
     test("Doesn't render the DisclaimerMessage because the message is not a string", () => {
@@ -59,7 +55,7 @@ describe('DisclaimerMessage', () => {
         // @ts-ignore allow assignment
         nuMsg.message = {};
 
-        const wrapper = getWrapper(nuMsg);
-        expect(wrapper.find('.adyen-checkout-disclaimer__label')).toHaveLength(0);
+        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        expect(screen.queryByRole('link')).toBeNull(); // non-presence
     });
 });
