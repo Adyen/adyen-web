@@ -21,6 +21,7 @@ export interface SelectProps {
     selected: string;
     uniqueId?: string;
     isCollatingErrors: boolean;
+    disabled: boolean;
 }
 
 export interface SelectButtonProps {
@@ -32,6 +33,7 @@ export interface SelectButtonProps {
     isInvalid: boolean;
     isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
+    onFocus: (e: Event) => void;
     onInput: (e: Event) => void;
     placeholder: string;
     readonly: boolean;
@@ -41,6 +43,7 @@ export interface SelectButtonProps {
     toggleList: (e: Event) => void;
     id?: string;
     ariaDescribedBy: string;
+    disabled: boolean;
 }
 
 export interface SelectListProps {

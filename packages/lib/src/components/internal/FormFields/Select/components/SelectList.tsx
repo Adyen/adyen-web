@@ -11,7 +11,6 @@ function SelectList({ selected, active, filteredItems, showList, ...props }: Sel
     return (
         <ul
             className={cx({
-                test: true,
                 'adyen-checkout__dropdown__list': true,
                 [styles['adyen-checkout__dropdown__list']]: true,
                 'adyen-checkout__dropdown__list--active': showList,

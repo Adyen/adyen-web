@@ -22,6 +22,18 @@ function SelectButton(props: SelectButtonProps) {
     // hide it and show the "selected" value when collapsed
     const displayInputText = showList ? inputText : displayText;
 
+    const setFocus = (e: Event) => {
+        e.preventDefault();
+        if (props.filterInputRef.current) props.filterInputRef.current.focus();
+    };
+
+    // 1. If readonly we ignore the click action
+    // 2. If filterable we want to show the list and focus on the input
+    // 3. Otherwise we just toggle the list
+    const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
+
+    const onFocusHandler = readonly ? null : props.onFocus;
+
     return (
         <SelectButtonElement
             className={cx({
@@ -34,8 +46,9 @@ function SelectButton(props: SelectButtonProps) {
                 'adyen-checkout__dropdown__button--valid': props.isValid,
                 'adyen-checkout__dropdown__button--disabled': active.disabled
             })}
+            disabled={props.disabled}
             filterable={props.filterable}
-            onClick={!readonly ? props.toggleList : null}
+            onClick={onClickHandler}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
             title={selected.name || props.placeholder}
             toggleButtonRef={props.toggleButtonRef}
@@ -61,11 +74,13 @@ function SelectButton(props: SelectButtonProps) {
                         autoComplete="off"
                         className={cx('adyen-checkout__filter-input', [styles['adyen-checkout__filter-input']])}
                         onInput={props.onInput}
+                        onFocus={onFocusHandler}
                         placeholder={i18n.get('select.filter.placeholder')}
                         ref={props.filterInputRef}
                         role="combobox"
                         aria-activedescendant={`listItem-${active.id}`}
                         type="text"
+                        readOnly={props.readonly}
                     />
                     {!showList && selected.secondaryText && (
                         <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>

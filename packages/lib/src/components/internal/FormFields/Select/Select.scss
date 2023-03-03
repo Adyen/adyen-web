@@ -118,6 +118,11 @@
     outline: 0;
     user-select: none;
     transition: background 0.2s ease-out, border-color 0.2s ease-out;
+
+    .adyen-checkout__icon {
+        position: absolute;
+        right: 8px;
+    }
 }
 
 .adyen-checkout__dropdown__element:last-child {

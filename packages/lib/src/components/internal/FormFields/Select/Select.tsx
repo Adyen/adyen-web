@@ -24,7 +24,8 @@ function Select({
     isValid,
     placeholder,
     uniqueId,
-    isCollatingErrors
+    isCollatingErrors,
+    disabled
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -83,18 +84,11 @@ function Select({
     const handleSelect = (e: Event) => {
         e.preventDefault();
 
-        // If the target is not one of the list items, select the first list item
-        //const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
-        // TODO: check the handling for data-disabled
-        //if (!target.getAttribute('data-disabled')) {
-        // TODO: check if this `if` this is intended
-        if (!activeOption.id) return;
-        onChange({
-            target: {
-                value: activeOption.id,
-                name: name
-            }
-        });
+        // If no active option we should just emit again with the value that was already selected
+        const valueToEmit = activeOption.id ? activeOption.id : selected;
+
+        onChange({ target: { value: valueToEmit, name: name } });
+
         closeList();
     };
 
@@ -129,8 +123,9 @@ function Select({
             e.preventDefault();
             if (!showList) {
                 openList();
+            } else {
+                handleNavigationKeys(e);
             }
-            handleNavigationKeys(e);
         } else if (e.shiftKey && e.key === keys.tab) {
             // Shift-Tab out of Select - close list re. a11y guidelines (above)
             closeList();
@@ -191,7 +186,7 @@ function Select({
         if (showList) {
             setInputText(null);
         } else {
-            setInputText(selectedOption.name);
+            //setInputText(selectedOption.name);
             setTextFilter(null);
         }
     }, [showList]);
@@ -248,6 +243,7 @@ function Select({
                 isInvalid={isInvalid}
                 isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
+                onFocus={openList}
                 onInput={handleTextFilter}
                 placeholder={placeholder}
                 readonly={readonly}
@@ -255,6 +251,7 @@ function Select({
                 showList={showList}
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
+                disabled={disabled}
                 ariaDescribedBy={!isCollatingErrors && uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
             />
             <SelectList
