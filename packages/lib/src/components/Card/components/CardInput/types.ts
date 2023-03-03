@@ -46,6 +46,12 @@ type Placeholders = {
     holderName?: string;
 };
 
+export interface DisclaimerMsgObject {
+    message: string;
+    linkText: string;
+    link: string;
+}
+
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
  * - either in the comp itself or are passed on to its children
@@ -118,6 +124,7 @@ export interface CardInputProps {
     trimTrailingSeparator?: boolean;
     type?: string;
     maskSecurityCode?: boolean;
+    disclaimerMessage?: DisclaimerMsgObject;
 }
 
 export interface CardInputState {

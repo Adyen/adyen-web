@@ -7,6 +7,7 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
+import DisclaimerMessage from './DisclaimerMessage';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -61,7 +62,8 @@ export const CardFieldsWrapper = ({
     showBrandIcon,
     showBrandsUnderCardNumber,
     //
-    iOSFocusedField
+    iOSFocusedField,
+    disclaimerMessage
 }) => {
     const cardHolderField = (
         <CardHolderName
@@ -157,6 +159,8 @@ export const CardFieldsWrapper = ({
                     iOSFocusedField={iOSFocusedField}
                 />
             )}
+
+            {disclaimerMessage && <DisclaimerMessage disclaimer={disclaimerMessage} />}
         </LoadingWrapper>
     );
 };

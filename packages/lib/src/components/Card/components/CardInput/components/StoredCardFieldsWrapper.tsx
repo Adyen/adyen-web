@@ -2,6 +2,7 @@ import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
+import DisclaimerMessage from './DisclaimerMessage';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)
@@ -20,8 +21,9 @@ export const StoredCardFieldsWrapper = ({
     installmentOptions,
     lastFour,
     expiryMonth,
-    expiryYear
+    expiryYear,
     // Card
+    disclaimerMessage
 }) => {
     return (
         <LoadingWrapper status={sfpState.status}>
@@ -48,6 +50,8 @@ export const StoredCardFieldsWrapper = ({
                     type={showAmountsInInstallments ? 'amount' : 'months'}
                 />
             )}
+
+            {disclaimerMessage && <DisclaimerMessage disclaimer={disclaimerMessage} />}
         </LoadingWrapper>
     );
 };
