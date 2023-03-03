@@ -134,8 +134,10 @@ export default function Address(props: AddressProps) {
             return acc;
         }, {});
 
+        const countrySpecificLabels = specifications.getAddressLabelsForCountry(data.country);
+
         // If we have generated an setSRMessages function then pass it the latest errors
-        setSRMessages?.(errors);
+        setSRMessages?.(errors, countrySpecificLabels);
 
         props.onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
