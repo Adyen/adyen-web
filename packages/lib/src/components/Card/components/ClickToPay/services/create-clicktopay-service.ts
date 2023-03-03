@@ -18,7 +18,7 @@ function createClickToPayService(
         return null;
     }
 
-    const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperIdentityValue, clickToPayConfiguration?.shopperIdentityType);
+    const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperEmail, clickToPayConfiguration?.telephoneNumber);
 
     const schemeNames = Object.keys(schemesConfig);
     const srcSdkLoader = new SrcSdkLoader(schemeNames, {
@@ -28,14 +28,14 @@ function createClickToPayService(
     return new ClickToPayService(schemesConfig, srcSdkLoader, environment, shopperIdentity);
 }
 
-const createShopperIdentityObject = (value: string, type?: 'email' | 'mobilePhone'): IdentityLookupParams => {
-    if (!value) {
-        return null;
-    }
-    return {
-        value,
-        type: type || 'email'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createShopperIdentityObject = (shopperEmail: string, telephoneNumber: string): IdentityLookupParams | null => {
+    const identityLookup = {
+        ...(shopperEmail && { shopperEmail })
+        // ...(telephoneNumber && { telephoneNumber }) telephoneNumber not supported yet
     };
+
+    return Object.keys(identityLookup).length > 0 ? identityLookup : null;
 };
 
 /**

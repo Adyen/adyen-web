@@ -27,14 +27,17 @@ export class CardElement extends UIElement<CardElementProps> {
     constructor(props) {
         super(props);
 
-        this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
-        this.clickToPayService?.initialize();
+        if (!props._disableClickToPay) {
+            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService?.initialize();
+        }
     }
 
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
-        SRConfig: {}
+        SRConfig: {},
+        _disableClickToPay: false
     };
 
     public setStatus(status: UIElementStatus, props?): this {
@@ -88,7 +91,9 @@ export class CardElement extends UIElement<CardElementProps> {
              */
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
-                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,
+                disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };
@@ -236,6 +241,7 @@ export class CardElement extends UIElement<CardElementProps> {
             >
                 <ClickToPayWrapper
                     amount={this.props.amount}
+                    configuration={this.props.clickToPayConfiguration}
                     clickToPayService={this.clickToPayService}
                     setClickToPayRef={this.setClickToPayRef}
                     onSetStatus={this.setElementStatus}

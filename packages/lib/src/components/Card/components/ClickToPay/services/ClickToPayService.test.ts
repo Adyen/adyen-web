@@ -61,8 +61,7 @@ test('should set state to not available if there is no cookie AND provided shopp
     const sdkLoader = mock<ISrcSdkLoader>();
     const schemesConfig = mock<SchemesConfiguration>();
     const identity: IdentityLookupParams = {
-        value: 'shopper@email.com',
-        type: 'email'
+        shopperEmail: 'shopper@email.com'
     };
 
     sdkLoader.load.mockResolvedValue([visa]);
@@ -74,7 +73,7 @@ test('should set state to not available if there is no cookie AND provided shopp
     const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', identity);
     await service.initialize();
 
-    expect(visa.identityLookup).toHaveBeenCalledWith(identity);
+    expect(visa.identityLookup).toHaveBeenCalledWith({ identityValue: identity.shopperEmail, type: 'email' });
     expect(service.state).toBe(CtpState.NotAvailable);
 });
 
@@ -334,8 +333,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
     const mockedIdToken = 'xxxx-yyyy';
     const otp = '654321';
     const identity: IdentityLookupParams = {
-        value: 'shopper@email.com',
-        type: 'email'
+        shopperEmail: 'shopper@email.com'
     };
 
     const profileFromVisaSrcSystem: SrcProfile = {
@@ -411,8 +409,8 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
     const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', identity);
     await service.initialize();
 
-    expect(mc.identityLookup).toHaveBeenCalledWith(identity);
-    expect(visa.identityLookup).toHaveBeenCalledWith(identity);
+    expect(mc.identityLookup).toHaveBeenCalledWith({ identityValue: identity.shopperEmail, type: 'email' });
+    expect(visa.identityLookup).toHaveBeenCalledWith({ identityValue: identity.shopperEmail, type: 'email' });
     expect(service.state).toBe(CtpState.ShopperIdentified);
 
     await service.startIdentityValidation();
