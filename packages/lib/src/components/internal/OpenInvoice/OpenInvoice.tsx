@@ -129,8 +129,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             ...remainingErrors
         };
 
-        console.log('### OpenInvoice::errorsForPanel:: ', errorsForPanel);
-
         setSRMessages(errorsForPanel);
 
         props.onChange({ data: newData, errors, valid, isValid });

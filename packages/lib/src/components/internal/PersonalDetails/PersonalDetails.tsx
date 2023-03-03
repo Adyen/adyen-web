@@ -95,8 +95,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     useEffect(() => {
         const formattedData = getFormattedData(data);
 
-        console.log('### PersonalDetails:::: errors', errors);
-
         setSRMessages?.(errors);
 
         props.onChange({ data: formattedData, valid, errors, isValid });

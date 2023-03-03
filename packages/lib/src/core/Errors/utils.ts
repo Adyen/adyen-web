@@ -137,7 +137,7 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         fieldTypeMappingFn
     });
 
-    const doLog = true;
+    const doLog = false;
 
     if (doLog) console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
 
