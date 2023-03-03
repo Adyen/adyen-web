@@ -14,6 +14,9 @@ window.mainConfiguration = {
     paymentMethodsConfiguration: {
         threeDS2: {
             challengeWindowSize: '04'
+        },
+        card: {
+            _disableClickToPay: true
         }
     }
 };

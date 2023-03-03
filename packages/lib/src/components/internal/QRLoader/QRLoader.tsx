@@ -60,7 +60,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     public redirectToApp = url => {
         window.location.assign(url);
-    }
+    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.delay !== this.state.delay) {
