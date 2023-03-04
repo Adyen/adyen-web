@@ -54,10 +54,10 @@ export const addErrorTranslationsToObject = (originalObj, i18n) => {
  * sortErrorsByLayout - takes a list of errors and a layout, and returns a sorted array of error objects with translated error messages
  *
  * @param errors - an object containing errors, referenced by field type
- * @param layout - a string[] controlling how the output error objects will be ordered. Only required when it is known that the error object is not already populated in the right order e.g. Card comp
+ * @param layout - a string[] controlling how the output error objects will be ordered. Required when it is known that the way the error object is populated can vary e.g. Card comp, &/or anything with a country selector
  * @param i18n - our internal Language mechanism
  * @param countrySpecificLabels - some errors are region specific, e.g. in the US "postal code" = "zip code", so map the fieldType value accordingly (if it is being added to the errorMessage string)
- * @param fieldtypeMappingFn - a component specific lookup function that will tell us both if we need to prepend the field type, and, if so, will retrieve the correct translation for the field type
+ * @param fieldTypeMappingFn - a component specific lookup function that will tell us both if we need to prepend the field type to the SR panel message, and, if so, will retrieve the correct translation for the field type
  */
 export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels, fieldTypeMappingFn }: SortErrorsObj): SortedErrorObject[] => {
     const SR_INDICATOR_PREFIX = process.env.NODE_ENV === 'production' ? '' : '-sr'; // Useful for testing whether SR is reading out aria-live errors (sr) or aria-describedby ones
