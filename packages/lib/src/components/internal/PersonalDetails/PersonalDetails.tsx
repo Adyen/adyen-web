@@ -16,7 +16,7 @@ import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { ComponentMethodsRef } from '../../types';
 
-const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
+export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
     const {
@@ -234,7 +234,7 @@ PersonalDetails.defaultProps = {
     data: {},
     onChange: () => {},
     placeholders: {},
-    requiredFields: personalDetailsSchema,
+    requiredFields: PERSONAL_DETAILS_SCHEMA,
     validationRules: personalDetailsValidationRules,
     visibility: 'editable'
 };

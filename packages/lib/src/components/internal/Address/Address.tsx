@@ -134,10 +134,14 @@ export default function Address(props: AddressProps) {
             return acc;
         }, {});
 
+        // Create layout
+        const addressLayout = specifications.getAddressSchemaForCountryFlat(data.country);
+
+        // Country specific address labels
         const countrySpecificLabels = specifications.getAddressLabelsForCountry(data.country);
 
         // If we have generated an setSRMessages function then pass it the latest errors
-        setSRMessages?.(errors, countrySpecificLabels);
+        setSRMessages?.(errors, addressLayout, countrySpecificLabels);
 
         props.onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);

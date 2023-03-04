@@ -133,13 +133,15 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
 export const setSRMessagesFromErrors = (
     { i18n, fieldTypeMappingFn, isValidating, SRPanelRef, moveFocusOnSubmitErrors, focusSelector },
     errors,
+    layout,
     countrySpecificLabels
 ) => {
     const currentErrorsSortedByLayout = sortErrorsByLayout({
         errors,
         i18n,
         fieldTypeMappingFn,
-        countrySpecificLabels
+        countrySpecificLabels,
+        layout
     });
 
     const doLog = false;

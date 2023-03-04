@@ -19,7 +19,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         onError: console.error,
         showPayButton: true,
         amount, // Optional. Used to display the amount in the Pay Button.
-        srConfig: { showPanel: true, node: '.ratepay-direct-field' }, // default: { enabled: true, showPanel: true, node: 'body' }
+        srConfig: { showPanel: true }, // default: { enabled: true, showPanel: true, node: 'body' }
         moveFocusOnSubmitErrors: false // default: true
     });
 

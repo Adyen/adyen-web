@@ -7,7 +7,6 @@ export interface SRMessagesRef {
     setMessages?: (who) => void;
 }
 
-// TODO set type SRMessagesProps
 export function SRMessages({ setComponentRef }: SRMessagesProps) {
     const messagesRef = useRef<SRMessagesRef>({});
     // Just call once to create the object by which we expose the members expected by the parent comp

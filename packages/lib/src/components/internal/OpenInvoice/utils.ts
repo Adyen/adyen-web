@@ -2,6 +2,7 @@ import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility
 import Language from '../../../language';
 import { mapFieldKey as mapFieldKeyPD } from '../PersonalDetails/utils';
 import { mapFieldKey as mapFieldKeyAddress } from '../Address/utils';
+import { StringObject } from '../Address/types';
 
 export const fieldsetsSchema: Array<keyof OpenInvoiceStateData> = [
     'companyDetails',
@@ -33,7 +34,7 @@ export const getInitialActiveFieldsets = (visibility: OpenInvoiceVisibility, dat
         return acc;
     }, {} as OpenInvoiceActiveFieldsets);
 
-export const mapFieldKey = (key: string, i18n: Language): string => {
+export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
     let refKey = key;
     let label;
 
@@ -45,7 +46,7 @@ export const mapFieldKey = (key: string, i18n: Language): string => {
         refKey = splitKey[1];
     }
 
-    const addressKey = mapFieldKeyAddress(refKey, i18n);
+    const addressKey = mapFieldKeyAddress(refKey, i18n, countrySpecificLabels);
     if (addressKey) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
 
     switch (refKey) {
