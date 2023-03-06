@@ -1,4 +1,4 @@
-import {Component, FunctionComponent, h} from 'preact';
+import { Component, FunctionComponent, h } from 'preact';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
@@ -6,7 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
-import {GiftcardFieldsProps} from "./types";
+import { GiftcardFieldsProps } from './types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -86,7 +86,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         }
 
         const getCardErrorMessage = sfpState => {
-            if (sfpState.errors.encryptedCardNumber) return i18n.get('error.va.gen.01');
+            if (sfpState.errors.encryptedCardNumber) return i18n.get(sfpState.errors.encryptedCardNumber);
 
             switch (this.state.status) {
                 case 'no-balance':

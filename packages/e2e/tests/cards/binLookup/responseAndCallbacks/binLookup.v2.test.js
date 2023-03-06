@@ -7,6 +7,8 @@ import cu from '../../utils/cardUtils';
 import { CARDS_URL } from '../../../pages';
 import { BIN_LOOKUP_VERSION, DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
 
+import LANG from '../../../../../lib/src/language/locales/en-US.json';
+
 const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
 const logger = RequestLogger(
@@ -18,6 +20,8 @@ const logger = RequestLogger(
 );
 
 const errorLabel = Selector('.card-field .adyen-checkout__error-text');
+
+const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
 
 const TEST_SPEED = 1;
 
@@ -119,7 +123,7 @@ test('#3 Enter number of unsupported card, ' + 'then inspect response body for e
         .expect(errorLabel.exists)
         .ok()
         // with text
-        .expect(errorLabel.withExactText('Unsupported card entered').exists)
+        .expect(errorLabel.withExactText(UNSUPPORTED_CARD).exists)
         .ok();
 });
 

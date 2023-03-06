@@ -41,7 +41,6 @@ const amazonPayPMObj = {
     type: 'amazonpay',
     configuration: {
         merchantId: '1000',
-        // @ts-ignore
         publicKeyId: 'AG77',
         region: 'eu',
         storeId: 'amzn1.aaaaa'
@@ -251,8 +250,8 @@ describe('Core - tests ensuring props reach components', () => {
         let newPmResponsePaymentMethods;
 
         beforeEach(() => {
-            // @ts-ignore
-            checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj; // Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
+            // @ts-ignore Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
+            checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj;
 
             newPmResponsePaymentMethods = checkoutConfig['paymentMethodsResponse'].paymentMethods;
 
@@ -262,7 +261,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('StoredCard in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const storedCard = dropin.dropinRef.state.elements[0];
@@ -293,7 +292,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('Card in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const card = dropin.dropinRef.state.elements[1];
@@ -327,7 +326,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('AmazonPay in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const aPay = dropin.dropinRef.state.elements[2];
@@ -355,12 +354,11 @@ describe('Core - tests ensuring props reach components', () => {
             // expect props from AmazonPay.formatProps()
             expect(aPay.props.type).toEqual('amazonpay');
             expect(aPay.props.productType).toEqual('PayOnly');
-            expect(aPay.props.region).toEqual('EU'); // should have reformatted region to upperCase
         });
 
         test('Redirect PM in Dropin receives correct props ', async () => {
             mount(dropin.render());
-            const flushPromises = () => new Promise(resolve => setImmediate(resolve));
+            const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
             const redirect = dropin.dropinRef.state.elements[3];

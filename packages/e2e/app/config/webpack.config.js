@@ -18,7 +18,8 @@ const htmlPages = [
     { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'Drop-in Sessions', id: 'DropinSessions' },
     { name: 'Gift Cards Sessions', id: 'GiftCardsSessions' },
-    { name: 'Vouchers', id: 'Vouchers' }
+    { name: 'Vouchers', id: 'Vouchers' },
+    { name: 'StoredCards', id: 'StoredCards' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>

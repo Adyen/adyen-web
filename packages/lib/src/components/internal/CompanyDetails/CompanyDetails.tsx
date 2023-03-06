@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyCompanyDetails from './ReadOnlyCompanyDetails';
@@ -9,6 +9,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
 import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
+import { ComponentMethodsRef } from '../../types';
 
 const companyDetailsSchema = ['name', 'registrationNumber'];
 
@@ -21,21 +22,33 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
         defaultData: props.data
     });
 
+    /** An object by which to expose 'public' members to the parent UIElement */
+    const companyDetailsRef = useRef<ComponentMethodsRef>({});
+    // Just call once
+    if (!Object.keys(companyDetailsRef.current).length) {
+        props.setComponentRef?.(companyDetailsRef.current);
+    }
+
+    // Expose method expected by (parent) Address.tsx
+    companyDetailsRef.current.showValidation = () => {
+        triggerValidation();
+    };
+
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
-    const eventHandler = (mode: string): Function => (e: Event): void => {
-        const { name } = e.target as HTMLInputElement;
-        const key = name.split(`${namePrefix}.`).pop();
+    const eventHandler =
+        (mode: string): Function =>
+        (e: Event): void => {
+            const { name } = e.target as HTMLInputElement;
+            const key = name.split(`${namePrefix}.`).pop();
 
-        handleChangeFor(key, mode)(e);
-    };
+            handleChangeFor(key, mode)(e);
+        };
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
         props.onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
-
-    this.showValidation = triggerValidation;
 
     if (visibility === 'hidden') return null;
     if (visibility === 'readOnly') return <ReadOnlyCompanyDetails {...props} data={data} />;
@@ -43,7 +56,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     return (
         <Fieldset classNameModifiers={[label]} label={label}>
             {requiredFields.includes('name') && (
-                <Field label={i18n.get('companyDetails.name')} classNameModifiers={['name']} errorMessage={!!errors.name}>
+                <Field label={i18n.get('companyDetails.name')} classNameModifiers={['name']} errorMessage={!!errors.name} i18n={i18n}>
                     {renderFormField('text', {
                         name: generateFieldName('name'),
                         value: data.name,
@@ -60,6 +73,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                     label={i18n.get('companyDetails.registrationNumber')}
                     classNameModifiers={['registrationNumber']}
                     errorMessage={!!errors.registrationNumber}
+                    i18n={i18n}
                 >
                     {renderFormField('text', {
                         name: generateFieldName('registrationNumber'),

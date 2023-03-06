@@ -1,4 +1,4 @@
-@import '../../../../style/index';
+@import "../../../../style/index";
 
 .adyen-checkout__status {
     display: flex;
@@ -7,7 +7,6 @@
     flex-direction: column;
     justify-content: center;
     height: 350px;
-
     margin: 0;
     padding: 32px;
     background-color: $color-white;

@@ -29,26 +29,13 @@ describe('PaymentMethodItem', () => {
 
         wrapper.simulate('click');
         expect(onSelect.mock.calls.length).toBe(1);
-
-        wrapper.simulate('focus');
-        expect(onSelect.mock.calls.length).toBe(2);
     });
 
-    test('Defaults events', () => {
-        const wrapper = getWrapper({ paymentMethod });
-        wrapper.simulate('click');
-    });
-
-    test('Ignores focus during mouse down', () => {
+    test('Focus should NOT trigger select', () => {
         const onSelect = jest.fn();
         const wrapper = getWrapper({ paymentMethod, index, onSelect });
 
-        wrapper.simulate('mousedown');
         wrapper.simulate('focus');
         expect(onSelect.mock.calls.length).toBe(0);
-
-        wrapper.simulate('mouseup');
-        wrapper.simulate('focus');
-        expect(onSelect.mock.calls.length).toBe(1);
     });
 });

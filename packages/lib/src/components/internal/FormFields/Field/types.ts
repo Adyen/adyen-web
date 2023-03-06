@@ -1,4 +1,5 @@
 import { h, Component, ComponentChildren } from 'preact';
+import Language from '../../../../language';
 
 export interface FieldProps {
     className?: string;
@@ -23,6 +24,7 @@ export interface FieldProps {
     showValidIcon?: boolean;
     isCollatingErrors?: boolean;
     useLabelElement?: boolean;
+    i18n?: Language;
 }
 
 export interface FieldState {

@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Getting SF_VERSION in the codebase
         run: |
@@ -32,19 +32,19 @@ jobs:
 
       - name: Comment PR that request failed
         if: failure()
-        uses: actions/github-script@0.3.0
+        uses: actions/github-script@v6.4.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            github.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️ });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: '⚠️ WARNING: SecuredFields v${{ env.SF_VERSION }} might not be available live ⚠️ });
 
 
       - name: Comment PR that request succeeded
         if: success()
-        uses: actions/github-script@0.3.0
+        uses: actions/github-script@v6.4.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { issue: { number: issue_number }, repo: { owner, repo }  } = context;
-            github.issues.createComment({ issue_number, owner, repo, body: '✅ SecuredFields v${{ env.SF_VERSION }} are available live' });
+            await github.rest.issues.createComment({ issue_number, owner, repo, body: '✅ SecuredFields v${{ env.SF_VERSION }} are available live' });

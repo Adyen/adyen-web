@@ -1,3 +1,5 @@
+import { ClickToPayScheme } from '../../../../types';
+
 type MastercardError = {
     message: string;
     reason: string;
@@ -13,8 +15,10 @@ type VisaError = {
 class SrciError extends Error {
     public reason: string;
     public message: string;
+    public source: string;
+    public scheme: ClickToPayScheme;
 
-    constructor(schemeError: VisaError | MastercardError) {
+    constructor(schemeError: VisaError | MastercardError, source: string, scheme: ClickToPayScheme) {
         super();
 
         const message = 'error' in schemeError ? schemeError?.error?.message : schemeError?.message;
@@ -22,6 +26,8 @@ class SrciError extends Error {
 
         this.message = message;
         this.reason = reason;
+        this.source = source;
+        this.scheme = scheme;
     }
 }
 

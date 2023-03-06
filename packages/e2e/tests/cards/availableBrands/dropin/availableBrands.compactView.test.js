@@ -1,13 +1,13 @@
 import { Selector } from 'testcafe';
 import { DROPIN_SESSIONS_URL } from '../../../pages';
-import { mock } from './availableBrands.mocks';
+import { getMock } from './availableBrands.mocks';
 import DropinPage from '../../../_models/Dropin.page';
 
 let dropinPage = null;
 
 fixture`Cards - Available Brands (Compact view)`
     .page(DROPIN_SESSIONS_URL)
-    .requestHooks([mock])
+    .requestHooks([getMock()])
     .beforeEach(() => {
         dropinPage = new DropinPage({});
     });

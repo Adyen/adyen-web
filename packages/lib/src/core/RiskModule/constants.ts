@@ -12,13 +12,6 @@ export const FAILED_DFP_RESOLVE_OBJECT_TIMEOUT = {
     errorCode: 'timeout'
 };
 
-export const FAILED_DFP_RESOLVE_OBJECT = {
-    result: {
-        type: DEVICE_FINGERPRINT,
-        value: 'df-failed'
-    }
-};
-
 export const ERRORS = {
     TIME_OUT: 'timeout',
     WRONG_ORIGIN: 'wrongOrigin',

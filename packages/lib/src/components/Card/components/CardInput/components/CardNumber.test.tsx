@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import CardNumber from './CardNumber';
 
-let wrapper = mount(
+const wrapper = mount(
     <CardNumber
         label="Card number"
         error=""

@@ -1,6 +1,5 @@
 import getProcessMessageHandler from './get-process-message-handler';
 
-const rejectObject = { type: 'rejected' };
 const expectedType = 'TestType';
 const response = {
     type: expectedType
@@ -17,7 +16,7 @@ describe('getProcessMessageHandler', () => {
             data
         };
 
-        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, rejectObject, expectedType);
+        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, expectedType);
         processEvent(event);
 
         expect(resolveFunction.mock.calls.length).toBe(1);
@@ -33,7 +32,7 @@ describe('getProcessMessageHandler', () => {
             data
         };
 
-        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, rejectObject, expectedType);
+        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, expectedType);
         expect(processEvent(event)).toBe('Message was not sent from the expected domain');
         expect(resolveFunction.mock.calls.length).toBe(0);
     });
@@ -47,7 +46,7 @@ describe('getProcessMessageHandler', () => {
             data: rejectFunction
         };
 
-        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, rejectObject, expectedType);
+        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, expectedType);
         expect(processEvent(event)).toBe('Event data was not of type string');
         expect(resolveFunction.mock.calls.length).toBe(0);
     });
@@ -61,7 +60,7 @@ describe('getProcessMessageHandler', () => {
             data: ''
         };
 
-        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, rejectObject, expectedType);
+        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, expectedType);
         expect(processEvent(event)).toBe('Invalid event data string');
         expect(resolveFunction.mock.calls.length).toBe(0);
     });
@@ -76,7 +75,7 @@ describe('getProcessMessageHandler', () => {
             data
         };
 
-        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, rejectObject, notTheExpectedType);
+        const processEvent = getProcessMessageHandler('http://fake-domain.com', resolveFunction, rejectFunction, notTheExpectedType);
         expect(processEvent(event)).toBe('Event data was not of expected type');
         expect(resolveFunction.mock.calls.length).toBe(0);
     });

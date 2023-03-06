@@ -11,12 +11,14 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import ContentSeparator from '../ContentSeparator';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [hasCalledActionHandled, setHasCalledActionHandled] = useState(false);
     const [delay, setDelay] = useState(props.delay);
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
@@ -34,39 +36,57 @@ function Await(props: AwaitComponentProps) {
     };
 
     const onComplete = (status: StatusObject): void => {
-        setCompleted(true);
-        const state = {
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: props.paymentData
-            }
-        };
+        // Only make details call if we have a payload
+        if (status.props.payload) {
+            setCompleted(true);
+            const state = {
+                data: {
+                    details: { payload: status.props.payload },
+                    paymentData: props.paymentData
+                }
+            };
+            // Send success response to onAdditionalDetails
+            return props.onComplete(state, this);
+        }
 
-        props.onComplete(state, this);
+        // Show error state & call merchant defined error callback if we do not have a payload
+        setExpired(true);
+        props.onError(new AdyenCheckoutError('ERROR', 'successful result, but no payload in response'));
     };
 
     const onError = (status: StatusObject): void => {
         setExpired(true);
-        const state = {
-            data: {
-                details: { payload: status.props.payload },
-                paymentData: props.paymentData
-            }
-        };
 
-        // Send error response to onAdditionalDetails
-        props.onComplete(state, this);
+        // Only make details call if we have a payload
+        if (status.props.payload) {
+            const state = {
+                data: {
+                    details: { payload: status.props.payload },
+                    paymentData: props.paymentData
+                }
+            };
+            // Send error response to onAdditionalDetails
+            return props.onComplete(state, this);
+        }
+
+        // Call merchant defined error callback if we do not have a payload
+        props.onError(new AdyenCheckoutError('ERROR', 'error result with no payload in response'));
     };
 
     const checkStatus = (): void => {
         const { paymentData, clientKey } = props;
+
+        if (!hasCalledActionHandled) {
+            props.onActionHandled({ componentType: props.type, actionDescription: 'polling-started' });
+            setHasCalledActionHandled(true);
+        }
 
         checkPaymentStatus(paymentData, clientKey, loadingContext)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',
                 props: {
-                    ...(message && { message: this.props.i18n.get(message) }),
+                    ...(message && { message: i18n.get(message) }),
                     ...response
                 }
             }))
@@ -86,25 +106,12 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout((): void => {
-            // Redirect to the APP failed
-            props.onError(new AdyenCheckoutError('ERROR', `${props.type} App was not found`));
-            fallback();
-        }, 25);
+    const redirectToApp = (url): void => {
         window.location.assign(url);
     };
 
     useEffect(() => {
-        const { shouldRedirectOnMobile, url } = props;
-        const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
-
-        if (shouldRedirectOnMobile && url && isMobile) {
-            this.redirectToApp(url, checkStatus);
-        } else {
-            checkStatus();
-        }
-
+        checkStatus();
         return (): void => {
             clearTimeout(storedTimeout);
         };
@@ -122,6 +129,7 @@ function Await(props: AwaitComponentProps) {
                 checkStatus();
 
                 const actualTimePassed = timePassed + delay;
+                // timePassed is the value that is the main "engine" that drives this useEffect/polling
                 setTimePassed(actualTimePassed);
 
                 if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
@@ -130,9 +138,10 @@ function Await(props: AwaitComponentProps) {
                 }
             };
 
+            // Create (another) interval to poll for a result
             setStoredTimeout(setTimeout(statusInterval, delay));
         }
-    }, [loading, timePassed, expired, completed]);
+    }, [loading, expired, completed, timePassed]);
 
     const finalState = (image, message) => (
         <div className="adyen-checkout__await adyen-checkout__await--result">
@@ -199,7 +208,7 @@ function Await(props: AwaitComponentProps) {
 
             {props.url && (
                 <div className="adyen-checkout__await__app-link">
-                    <span className="adyen-checkout__await__separator__label">{i18n.get('or')}</span>
+                    <ContentSeparator />
                     <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} label={i18n.get('openApp')} />
                 </div>
             )}
@@ -211,12 +220,12 @@ Await.defaultProps = {
     countdownTime: 15,
     onError: () => {},
     onComplete: () => {},
+    onActionHandled: () => {},
     delay: 2000,
     throttleTime: 60000,
     throttleInterval: 10000,
     showCountdownTimer: true,
     classNameModifiers: [],
-    shouldRedirectOnMobile: false,
     url: null
 };
 

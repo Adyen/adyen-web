@@ -122,7 +122,7 @@ test(
         // ... & no errors
         await t.expect(cardPage.numLabelTextError.exists).notOk();
 
-        // Replace number with non-korean card (pasting works better than replacing in textcafe >1.13.0)
+        // Replace number with korean card (pasting works better than replacing in textcafe >1.13.0)
         await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'paste'); // 'replace'
 
         // Expect card to now be invalid

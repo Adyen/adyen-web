@@ -4,7 +4,6 @@ import { DEFAULT_CARD_GROUP_TYPES } from '../lib/configuration/constants';
 import { getError } from '../../../../core/Errors/utils';
 import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
-import { sortBrandsAccordingToRules } from './sortBinLookupBrands';
 
 if (process.env.NODE_ENV === 'development') {
     window.mockBinCount = 0; // Set to 0 to turn off mocking, 1 to turn it on
@@ -83,10 +82,7 @@ export default parent => {
                     }
 
                     if (data.brands?.length) {
-                        // Sort brands according to rules
-                        const sortedBrands = data.brands.length === 2 ? sortBrandsAccordingToRules(data.brands, parent.props.type) : data.brands;
-
-                        const mappedResponse = sortedBrands.reduce(
+                        const mappedResponse = data.brands.reduce(
                             (acc, item) => {
                                 // All brand strings end up in the detectedBrands array
                                 acc.detectedBrands.push(item.brand);
@@ -121,7 +117,8 @@ export default parent => {
                                 // this.props.brands that matches the card
                                 // number that the shopper has typed
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
-                                brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
+                                brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
+                                issuingCountryCode: data.issuingCountryCode
                             } as CbObjOnBinLookup);
 
                             return;

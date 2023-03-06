@@ -11,12 +11,12 @@
             height: auto;
 
             &:focus-within {
-                 border: 1px solid #06f;
+                border: 1px solid #0075ff;
 
-                 .adyen-checkout-dropdown--countrycode-selector {
-                     border-right: 1px solid #06f;
-                 }
-             }
+                .adyen-checkout-dropdown--countrycode-selector {
+                    border-right: 1px solid #0075ff;
+                }
+            }
         }
 
         // inherited style (Select.scss)
@@ -27,7 +27,7 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
 
-            &:after {
+            &::after {
                 box-sizing: revert;
                 height: 10px;
             }
@@ -53,7 +53,7 @@
             padding-left: 15px;
 
             &:focus-within {
-                border: 1px solid #06f;
+                border: 1px solid #0075ff;
                 box-shadow: 0 0 0 2px #99c2ff;
             }
         }

@@ -3,7 +3,7 @@
  */
 window.cardConfig = {
     type: 'scheme',
-    brands: ['mc', 'visa', 'amex', 'cartebancaire']
+    brands: ['mc', 'visa', 'amex', 'cartebancaire', 'star']
 };
 
 window.dropinConfig = {
@@ -13,6 +13,6 @@ window.dropinConfig = {
 window.mainConfiguration = {
     removePaymentMethods: ['paywithgoogle', 'applepay'],
     paymentMethodsConfiguration: {
-        card: { brands: ['mc', 'amex', 'visa', 'cartebancaire'] }
+        card: { brands: ['mc', 'amex', 'visa', 'cartebancaire', 'star'], _disableClickToPay: true }
     }
 };

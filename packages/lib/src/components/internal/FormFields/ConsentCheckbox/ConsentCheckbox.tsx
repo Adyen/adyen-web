@@ -2,9 +2,9 @@ import { h } from 'preact';
 import Field from '../Field';
 import Checkbox from '../Checkbox';
 
-export default function ConsentCheckbox({ errorMessage, label, onChange, ...props }) {
+export default function ConsentCheckbox({ errorMessage, label, onChange, i18n, ...props }) {
     return (
-        <Field classNameModifiers={['consentCheckbox']} errorMessage={errorMessage}>
+        <Field classNameModifiers={['consentCheckbox']} errorMessage={errorMessage} i18n={i18n}>
             <Checkbox
                 name="consentCheckbox"
                 classNameModifiers={[...props.classNameModifiers??=[], 'consentCheckbox']}

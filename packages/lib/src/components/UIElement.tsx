@@ -1,20 +1,24 @@
 import { h } from 'preact';
 import BaseElement from './BaseElement';
-import { Order, PaymentAction } from '../types';
+import { PaymentAction } from '../types';
+import { PaymentResponse } from './types';
 import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
-import { IUIElement, PayButtonFunctionProps, UIElementProps } from './types';
+import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
+import DropinElement from './Dropin';
+import { CoreOptions } from '../core/types';
+import Core from '../core';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
-    public elementRef: any;
+    public elementRef: UIElement;
 
     constructor(props: P) {
-        super({ setStatusAutomatically: true, ...props });
+        super(props);
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -43,8 +47,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private onSubmit(): void {
+        //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
-            this.elementRef.closeActivePaymentMethod();
+            const dropinElementRef = this.elementRef as DropinElement;
+            dropinElementRef.closeActivePaymentMethod();
         }
 
         if (this.props.setStatusAutomatically) {
@@ -58,7 +64,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             // Session flow
             // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
-                ? new Promise((resolve, reject) => this.props.beforeSubmit(this.data, this.elementRef, { resolve, reject }))
+                ? new Promise((resolve, reject) =>
+                      this.props.beforeSubmit(this.data, this.elementRef, {
+                          resolve,
+                          reject
+                      })
+                  )
                 : Promise.resolve(this.data);
 
             beforeSubmitEvent
@@ -119,10 +130,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private submitAdditionalDetails(data): Promise<void> {
-        return this._parentInstance.session
-            .submitDetails(data)
-            .then(this.handleResponse)
-            .catch(this.handleError);
+        return this._parentInstance.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -160,6 +168,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         const paymentAction = this._parentInstance.createFromAction(action, {
+            ...this.elementRef.props,
             ...props,
             onAdditionalDetails: this.handleAdditionalDetails
         });
@@ -172,11 +181,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return null;
     }
 
-    protected handleOrder = (order: Order): void => {
-        this.elementRef._parentInstance.update({ order });
+    protected handleOrder = (response: PaymentResponse): void => {
+        this.updateParent({ order: response.order });
+        // in case we receive an order in any other component then a GiftCard trigger handleFinalResult
+        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(response, this.elementRef);
     };
 
-    protected handleFinalResult = result => {
+    protected handleFinalResult = (result: PaymentResponse) => {
         if (this.props.setStatusAutomatically) {
             const [status, statusProps] = resolveFinalResult(result);
             if (status) this.setElementStatus(status, statusProps);
@@ -191,17 +202,32 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * The component will handle automatically actions, orders, and final results.
      * @param rawResponse -
      */
-    protected handleResponse(rawResponse): void {
+    protected handleResponse(rawResponse: RawPaymentResponse): void {
         const response = getSanitizedResponse(rawResponse);
 
         if (response.action) {
             this.elementRef.handleAction(response.action);
         } else if (response.order?.remainingAmount?.value > 0) {
-            this.elementRef.handleOrder(response.order);
+            // we don't want to call elementRef here, use the component handler
+            // we do this way so the logic on handlingOrder is associated with payment method
+            this.handleOrder(response);
         } else {
             this.elementRef.handleFinalResult(response);
         }
     }
+
+    /**
+     * Call update on parent instance
+     * This function exist to make safe access to the protect _parentInstance
+     * @param options - CoreOptions
+     */
+    public updateParent(options: CoreOptions = {}): Promise<Core> {
+        return this.elementRef._parentInstance.update(options);
+    }
+
+    public setComponentRef = ref => {
+        this.componentRef = ref;
+    };
 
     /**
      * Get the current validation status of the element

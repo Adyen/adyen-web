@@ -10,7 +10,6 @@ class BCMCMobileElement extends QRLoaderContainer {
         return {
             delay: STATUS_INTERVAL,
             countdownTime: COUNTDOWN_MINUTES,
-            shouldRedirectOnMobile: true,
             buttonLabel: isMobile ? 'openApp' : 'generateQRCode',
             ...super.formatProps(props)
         };

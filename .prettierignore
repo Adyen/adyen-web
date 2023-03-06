@@ -1,2 +1,30 @@
+node_modules
 dist
 coverage
+
+*.log*
+.env
+.env*
+stats.json
+stats.html
+.DS_Store
+/*.tgz
+
+# IntelliJ
+.idea
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# VSCode
+.vscode
+
+# VIM
+*.swp
+*.swo
+
+# Vagrant
+Vagrantfile
+.vagrant

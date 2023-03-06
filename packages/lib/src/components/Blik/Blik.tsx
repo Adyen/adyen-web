@@ -22,7 +22,7 @@ class BlikElement extends UIElement {
         return {
             paymentMethod: {
                 type: BlikElement.type,
-                ...(!recurringPayment && { blikCode: this.state.data.blikCode }),
+                ...(!recurringPayment && { blikCode: this.state?.data?.blikCode }),
                 ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
             }
         };
@@ -36,6 +36,11 @@ class BlikElement extends UIElement {
         return !!this.state.isValid;
     }
 
+    /**
+     * NOTE: for future reference:
+     *  this.props.onComplete (which is called from this.onComplete) equates to the merchant defined onAdditionalDetails callback
+     *  (the initial /payments response defines an "await" action, actionTypes.ts translates this to "onComplete: props.onAdditionalDetails")
+     */
     render() {
         if (this.props.paymentData) {
             return (
@@ -57,6 +62,7 @@ class BlikElement extends UIElement {
                         countdownTime={config.COUNTDOWN_MINUTES}
                         throttleTime={config.THROTTLE_TIME}
                         throttleInterval={config.THROTTLE_INTERVAL}
+                        onActionHandled={this.props.onActionHandled}
                     />
                 </CoreProvider>
             );

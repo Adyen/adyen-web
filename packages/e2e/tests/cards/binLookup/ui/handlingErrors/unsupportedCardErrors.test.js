@@ -1,6 +1,9 @@
 import { turnOffSDKMocking } from '../../../../_common/cardMocks';
 import CardComponentPage from '../../../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_VISA_CARD } from '../../../utils/constants';
+import LANG from '../../../../../../lib/src/language/locales/en-US.json';
+
+const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
 
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up
@@ -28,7 +31,7 @@ test('#1 Enter number of unsupported card, ' + 'then check UI shows an error ' +
         .expect(cardPage.numErrorText.exists)
         .ok()
         // with text
-        .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+        .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
         .ok();
 
     // Past card field with supported number
@@ -56,7 +59,7 @@ test(
             .expect(cardPage.numErrorText.exists)
             .ok()
             // with text
-            .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+            .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
             .ok();
 
         // Click Pay (which will call showValidation on all fields)
@@ -99,7 +102,7 @@ test('#3 Enter number of unsupported card, ' + 'then check UI shows an error ' +
         .expect(cardPage.numErrorText.exists)
         .ok()
         // with text
-        .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+        .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
         .ok();
 
     // Past card field with supported number
@@ -121,7 +124,7 @@ test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' +
         .expect(cardPage.numErrorText.exists)
         .ok()
         // with text
-        .expect(cardPage.numErrorText.withExactText('Unsupported card entered').exists)
+        .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
         .ok();
 
     // Past card field with supported number

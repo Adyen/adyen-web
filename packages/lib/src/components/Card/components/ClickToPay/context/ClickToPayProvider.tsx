@@ -2,11 +2,12 @@ import { h } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import { ClickToPayCheckoutPayload, IClickToPayService } from '../services/types';
+import { ClickToPayCheckoutPayload, IClickToPayService, IdentityLookupParams } from '../services/types';
 import { PaymentAmount } from '../../../../../types';
 import ShopperCard from '../models/ShopperCard';
 import { UIElementStatus } from '../../../../types';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
+import { ClickToPayConfiguration } from '../../../types';
 
 type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
@@ -14,6 +15,7 @@ type ClickToPayProviderRef = {
 
 export type ClickToPayProviderProps = {
     clickToPayService: IClickToPayService | null;
+    configuration: ClickToPayConfiguration;
     amount: PaymentAmount;
     children: any;
     setClickToPayRef(ref): void;
@@ -22,7 +24,16 @@ export type ClickToPayProviderProps = {
     onError(error: AdyenCheckoutError): void;
 };
 
-const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPayRef, onSubmit, onSetStatus, onError }: ClickToPayProviderProps) => {
+const ClickToPayProvider = ({
+    clickToPayService,
+    amount,
+    configuration,
+    children,
+    setClickToPayRef,
+    onSubmit,
+    onSetStatus,
+    onError
+}: ClickToPayProviderProps) => {
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(null);
@@ -58,8 +69,8 @@ const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPay
     );
 
     const verifyIfShopperIsEnrolled = useCallback(
-        async (value: string, type?: string) => {
-            return await ctpService?.verifyIfShopperIsEnrolled(value, type);
+        async (shopperIdentity: IdentityLookupParams) => {
+            return await ctpService?.verifyIfShopperIsEnrolled(shopperIdentity);
         },
         [ctpService]
     );
@@ -76,13 +87,15 @@ const ClickToPayProvider = ({ clickToPayService, amount, children, setClickToPay
                 onError,
                 onSetStatus,
                 amount,
+                configuration,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,
                 ctpState,
                 verifyIfShopperIsEnrolled,
                 cards: ctpService?.shopperCards,
                 schemes: ctpService?.schemes,
-                otpMaskedContact: ctpService?.shopperValidationContact,
+                otpMaskedContact: ctpService?.identityValidationData?.maskedShopperContact,
+                otpNetwork: ctpService?.identityValidationData?.selectedNetwork,
                 checkout,
                 logoutShopper,
                 startIdentityValidation,

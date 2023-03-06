@@ -4,6 +4,7 @@ import CardInput from './CardInput';
 import Language from '../../../../language/Language';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
+import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 
@@ -78,7 +79,7 @@ describe('CardInput - Brands beneath Card Number field', () => {
         expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper--disabled')).toHaveLength(0);
     });
 
-    test('should disable the brands icons that are not detected', () => {
+    test('should hide all brand icons when brand is detected', () => {
         const detectedBrand = 'visa';
         const brandsIcons = [
             { name: 'visa', icon: 'visa.png' },
@@ -86,11 +87,18 @@ describe('CardInput - Brands beneath Card Number field', () => {
             { name: 'amex', icon: 'amex.png' }
         ];
         const wrapper = mount(<CardInput i18n={i18n} brand={detectedBrand} brandsIcons={brandsIcons} />);
-        const brands = wrapper.find('.adyen-checkout__card__brands__brand-wrapper');
+        expect(wrapper.find('.adyen-checkout__card__brands--hidden')).toHaveLength(1);
+    });
 
-        expect(brands.at(0).is('.adyen-checkout__card__brands__brand-wrapper--disabled')).toBeFalsy();
-        expect(brands.at(1).is('.adyen-checkout__card__brands__brand-wrapper--disabled')).toBeTruthy();
-        expect(brands.at(2).is('.adyen-checkout__card__brands__brand-wrapper--disabled')).toBeTruthy();
+    test('should show all brand icons when no brand is detected', () => {
+        const detectedBrand = 'card';
+        const brandsIcons = [
+            { name: 'visa', icon: 'visa.png' },
+            { name: 'mc', icon: 'mc.png' },
+            { name: 'amex', icon: 'amex.png' }
+        ];
+        const wrapper = mount(<CardInput i18n={i18n} brand={detectedBrand} brandsIcons={brandsIcons} />);
+        expect(wrapper.find('.adyen-checkout__card__brands--hidden')).toHaveLength(0);
     });
 });
 
@@ -216,5 +224,25 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
         cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+    });
+});
+
+describe('CardInput > Installments', () => {
+    const installments = {
+        mc: {
+            values: [1, 2, 3]
+        }
+    };
+    test('should not display installments if fundingSource is debit', () => {
+        const wrapper = mount(<CardInput fundingSource={'debit'} i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
+    });
+    test('should display installments if fundingSource is credit', () => {
+        const wrapper = mount(<CardInput fundingSource={'credit'} i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
+    });
+    test('should display installments if fundingSource undefined', () => {
+        const wrapper = mount(<CardInput i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
     });
 });

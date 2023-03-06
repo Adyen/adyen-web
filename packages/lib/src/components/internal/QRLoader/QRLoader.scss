@@ -1,4 +1,4 @@
-@import '../../../style/index';
+@import "../../../style/index";
 
 .adyen-checkout__qr-loader {
     background: $color-white;
@@ -52,10 +52,11 @@
     height: 4px;
     background: $color-gray;
     border-radius: $border-radius-xlarge;
-    margin: 32px auto 12px auto;
+    margin: 32px auto 12px;
     width: 152px;
     padding-right: 3%;
-    [dir='rtl'] & {
+
+    [dir="rtl"] & {
         padding-right: 0;
         padding-left: 3%;
     }
@@ -80,36 +81,6 @@
 .adyen-checkout__qr-loader__app-link {
     margin-top: 16px;
     display: none;
-}
-
-.adyen-checkout__qr-loader__separator__label {
-    position: relative;
-    font-size: 13px;
-    color: $color-gray-darker;
-    overflow: hidden;
-    text-align: center;
-    z-index: 1;
-    display: block;
-}
-
-.adyen-checkout__qr-loader__separator__label:before,
-.adyen-checkout__qr-loader__separator__label:after {
-    position: absolute;
-    top: 51%;
-    overflow: hidden;
-    width: 50%;
-    height: 1px;
-    content: '\a0';
-    background-color: $color-gray-light;
-}
-
-.adyen-checkout__qr-loader__separator__label:before {
-    margin-left: -52%;
-    text-align: right;
-}
-
-.adyen-checkout__qr-loader__separator__label:after {
-    margin-left: 2%;
 }
 
 .adyen-checkout__button.adyen-checkout__button--qr-loader {

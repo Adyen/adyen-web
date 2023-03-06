@@ -9,7 +9,7 @@
             height: auto;
 
             &:focus {
-                border: 1px solid #06f;
+                border: 1px solid #0075ff;
                 box-shadow: 0 0 0 2px #99c2ff;
             }
         }
@@ -21,7 +21,7 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
 
-            &:after {
+            &::after {
                 left: 40px;
                 box-sizing: revert;
                 height: 10px;
@@ -40,7 +40,7 @@
             align-items: center;
 
             &:focus {
-                border: 1px solid #06f;
+                border: 1px solid #0075ff;
                 box-shadow: 0 0 0 2px #99c2ff;
             }
         }

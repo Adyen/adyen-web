@@ -9,9 +9,10 @@ import {
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
-import { SFSetupObject } from '../../securedField/AbstractSecuredField';
+import { SecuredFieldInitObj } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType } from '../../types';
+import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 
 /**
  * cvcPolicy - 'required' | 'optional' | 'hidden'
@@ -168,35 +169,45 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
         const uid = getAttribute(pItem, DATA_UID);
 
         // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
-        const setupObj: SFSetupObject = {
+        const sfInitObj: SecuredFieldInitObj = {
             fieldType,
             extraFieldData,
             uid,
+            cvcPolicy,
+            holderEl: pItem,
+            expiryDatePolicy: DATE_POLICY_REQUIRED,
             txVariant: this.state.type,
             cardGroupTypes: this.config.cardGroupTypes,
             iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
             sfLogAtStart: this.config.sfLogAtStart,
             trimTrailingSeparator: this.config.trimTrailingSeparator,
-            cvcPolicy,
-            expiryDatePolicy: DATE_POLICY_REQUIRED,
             isCreditCardType: this.config.isCreditCardType,
             iframeSrc: this.config.iframeSrc,
             loadingContext: this.config.loadingContext,
             showWarnings: this.config.showWarnings,
-            holderEl: pItem,
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
-            bundleType: this.config.bundleType,
-            isCollatingErrors: this.config.isCollatingErrors
+            isCollatingErrors: this.config.isCollatingErrors,
+            maskSecurityCode: this.config.maskSecurityCode
         };
 
-        const sf: SecuredField = new SecuredField(setupObj, this.props.i18n)
+        const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
             .onIframeLoaded((): void => {
                 // Count
                 this.state.iframeCount += 1;
 
                 if (window._b$dl) console.log('### createSecuredFields::onIframeLoaded:: this.state.iframeCount=', this.state.iframeCount);
+
+                // One of our existing securedFields has just loaded new content!
+                if (this.state.iframeCount > this.state.numIframes) {
+                    this.destroySecuredFields();
+                    throw new AdyenCheckoutError(
+                        'ERROR',
+                        `One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.
+                        iframe load count=${this.state.iframeCount}. Expected count:${this.state.numIframes}`
+                    );
+                }
 
                 /** Create timeout within which time we expect the securedField to configure */
                 // @ts-ignore - timeout 'type' *is* a number

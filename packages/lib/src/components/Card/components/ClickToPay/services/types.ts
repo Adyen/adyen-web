@@ -1,36 +1,41 @@
 import { CtpState } from './ClickToPayService';
-import { SrcProfile } from './sdks/types';
+import { SrcInitParams, SrcProfile } from './sdks/types';
 import { ClickToPayScheme } from '../../../types';
 import ShopperCard from '../models/ShopperCard';
 
 export interface IClickToPayService {
     state: CtpState;
     shopperCards: ShopperCard[];
-    shopperValidationContact: string;
+    identityValidationData: IdentityValidationData;
     schemes: string[];
     initialize(): Promise<void>;
     checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;
-    verifyIfShopperIsEnrolled(value: string, type?: string): Promise<{ isEnrolled: boolean }>;
+    verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }>;
     subscribeOnStateChange(callback: CallbackStateSubscriber): void;
     startIdentityValidation(): Promise<void>;
     finishIdentityValidation(otpCode: string): Promise<void>;
 }
 
+export type IdentityValidationData = {
+    maskedShopperContact: string;
+    selectedNetwork: string;
+};
+
 export type CallbackStateSubscriber = (state: CtpState) => void;
 
 export interface IdentityLookupParams {
-    value: string;
-    type?: 'email' | 'mobilePhone';
+    shopperEmail?: string;
+    telephoneNumber?: string;
 }
 
-type MastercardCheckout = {
+export type MastercardCheckout = {
     srcDigitalCardId: string;
     srcCorrelationId: string;
     srcScheme: string;
 };
 
-type VisaCheckout = {
+export type VisaCheckout = {
     srcCheckoutPayload?: string;
     srcTokenReference?: string;
     srcCorrelationId: string;
@@ -40,5 +45,12 @@ type VisaCheckout = {
 export interface SrcProfileWithScheme extends SrcProfile {
     scheme: ClickToPayScheme;
 }
+
+export type CardTypes = {
+    availableCards: ShopperCard[];
+    expiredCards: ShopperCard[];
+};
+
+export type SchemesConfiguration = Partial<Record<ClickToPayScheme, SrcInitParams>>;
 
 export type ClickToPayCheckoutPayload = VisaCheckout | MastercardCheckout;

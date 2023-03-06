@@ -1,15 +1,16 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import DeviceFingerprint from './components/DeviceFingerprint';
-import { ErrorObject } from './components/utils';
+import PrepareFingerprint from './components/DeviceFingerprint';
+import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
+import { ActionHandledReturnObject } from '../types';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
     token: string;
     notificationURL: string;
-    onError: (error?: string | ErrorObject) => void;
+    onError: (error?: string | ErrorCodeObject) => void;
     paymentData: string;
     showSpinner: boolean;
     type: string;
@@ -17,6 +18,7 @@ export interface ThreeDS2DeviceFingerprintProps {
     loadingContext?: string;
     clientKey?: string;
     elementRef?: UIElement;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
 }
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
@@ -29,8 +31,16 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
+    onComplete(state) {
+        super.onComplete(state);
+        this.unmount(); // re. fixing issue around back to back fingerprinting calls
+    }
+
     render() {
-        // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
+        /**
+         * In the regular components (aka "native") flow we can't proceed because something has gone wrong with the payment if paymentData is missing from the threeDS2 action.
+         * In the MDFlow the paymentData is always present (albeit an empty string, which is why we use 'existy' since we should be allowed to proceed with this)
+         */
         if (!existy(this.props.paymentData)) {
             this.props.onError({
                 errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
@@ -44,7 +54,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
          * It means the call to create this component came from the old 'threeDS2Fingerprint' action and upon completion should call the /details endpoint
          * instead of the new /submitThreeDS2Fingerprint endpoint
          */
-        return <DeviceFingerprint {...this.props} onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
+        return <PrepareFingerprint {...this.props} onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
     }
 }
 

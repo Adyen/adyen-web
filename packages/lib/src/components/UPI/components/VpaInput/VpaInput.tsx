@@ -1,19 +1,21 @@
 import { h } from 'preact';
-import { forwardRef } from 'preact/compat';
-import { useCallback, useEffect, useImperativeHandle } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import Field from '../../../internal/FormFields/Field';
 import useForm from '../../../../utils/useForm';
 import renderFormField from '../../../internal/FormFields';
 import { vpaValidationRules } from './validate';
 import './VpaInput.scss';
 
+type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
+
 interface VpaInputProps {
     data?: {};
     disabled?: boolean;
-    onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
+    onChange({ data, valid, errors, isValid }: OnChangeProps): void;
+    onSetInputHandlers(handlers: VpaInputHandlers): void;
 }
 
-interface VpaInputDataState {
+export interface VpaInputDataState {
     virtualPaymentAddress?: string;
 }
 
@@ -21,25 +23,27 @@ export type VpaInputHandlers = {
     validateInput(): void;
 };
 
-const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
+const VpaInput = (props: VpaInputProps): h.JSX.Element => {
     const formSchema = ['virtualPaymentAddress'];
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<VpaInputDataState>({
         schema: formSchema,
         defaultData: props.data,
         rules: vpaValidationRules
     });
+    const vpaInputHandlersRef = useRef<VpaInputHandlers>({ validateInput: null });
 
     const validateInput = useCallback(() => {
         triggerValidation();
     }, [triggerValidation]);
 
-    useImperativeHandle(ref, () => ({
-        validateInput
-    }));
+    useEffect(() => {
+        vpaInputHandlersRef.current.validateInput = validateInput;
+        props.onSetInputHandlers(vpaInputHandlersRef.current);
+    }, [validateInput, props.onSetInputHandlers]);
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
-    }, [data, valid, errors]);
+    }, [data, valid, errors, isValid]);
 
     return (
         <Field
@@ -59,6 +63,6 @@ const VpaInput = forwardRef<VpaInputHandlers, VpaInputProps>((props, ref) => {
             })}
         </Field>
     );
-});
+};
 
 export default VpaInput;

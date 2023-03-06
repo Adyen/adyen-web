@@ -1,23 +1,23 @@
-.adyen-checkout__card__dual-branding__buttons{
-  display: flex;
-  opacity: 0.40;
-  pointer-events: none;
+.adyen-checkout__card__dual-branding__buttons {
+    display: flex;
+    opacity: 0.4;
+    pointer-events: none;
 
-  &--active{
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .adyen-checkout__card__cardNumber__brandIcon{
-    cursor: pointer;
-    opacity: 1;
-
-    &:nth-child(1){
-      right: 40px;
+    &--active {
+        opacity: 1;
+        pointer-events: auto;
     }
 
-    &--not-selected{
-      opacity: 0.50;
+    .adyen-checkout__card__cardNumber__brandIcon {
+        cursor: pointer;
+        opacity: 1;
+
+        &:nth-child(1) {
+            right: 40px;
+        }
+
+        &--not-selected {
+            opacity: 0.5;
+        }
     }
-  }
 }

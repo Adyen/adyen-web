@@ -13,6 +13,7 @@ export interface SFPProps {
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey: string;
     countryCode?: string;
+    forceCompat?: boolean;
     hasKoreanFields?: boolean;
     i18n: Language;
     implementationType?: string;
@@ -40,6 +41,7 @@ export interface SFPProps {
     trimTrailingSeparator?: boolean;
     type: string;
     render: () => {};
+    maskSecurityCode: boolean;
 }
 
 export interface SFPState {

@@ -36,6 +36,15 @@ const notConfiguredWarning = (str = 'You cannot use secured fields') => {
 class CSF extends AbstractCSF {
     // --
     constructor(setupObj: CSFSetupObject) {
+        /**
+         * Initialises:
+         *  - this.props = setupObj: CSFSetupObject
+         *
+         * and empty objects for:
+         *  - this.config: CSFConfigObject (populated in handleConfig.ts)
+         *  - this.callbacks: CSFCallbacksConfig (populated in configureCallbacks.ts
+         *  - this.state: CSFStateObject (populated below)
+         */
         super(setupObj);
 
         this.state = {
@@ -114,7 +123,7 @@ class CSF extends AbstractCSF {
     }
 
     private init(): void {
-        this.configHandler();
+        this.configHandler(this.props);
         this.callbacksHandler(this.props.callbacks);
 
         /**
@@ -236,6 +245,7 @@ class CSF extends AbstractCSF {
                     this.state.securedFields[pFieldType].destroy();
                     delete this.state.securedFields[pFieldType];
                     this.state.numIframes -= 1;
+                    this.state.iframeCount -= 1;
 
                     const callbackObj: CbObjOnAdditionalSF = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
                     this.callbacks.onAdditionalSFRemoved(callbackObj);

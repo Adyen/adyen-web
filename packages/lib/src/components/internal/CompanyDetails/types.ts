@@ -16,6 +16,7 @@ export interface CompanyDetailsProps {
     readonly?: boolean;
     ref?: any;
     validationRules?: ValidatorRules;
+    setComponentRef?: (ref) => void;
 }
 
 export interface ReadOnlyCompanyDetailsProps {

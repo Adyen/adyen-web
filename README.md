@@ -1,6 +1,8 @@
-# Adyen Web
+![npm](https://img.shields.io/npm/v/@adyen/adyen-web.svg)
 
-[![npm](https://img.shields.io/npm/v/@adyen/adyen-web.svg)](http://npm.im/@adyen/adyen-web)
+![Web](https://user-images.githubusercontent.com/7724351/198588741-f522c3ed-ff3c-4f70-b8cb-8ff9e6d41cfa.png)
+
+# Adyen Web
 
 Adyen Web provides you with the building blocks to create a checkout experience for your shoppers, allowing them to pay using the payment method of their choice.
 
@@ -47,7 +49,11 @@ To run the development environment:
   ```sh
   yarn install
   ```
-4. Run the development environment, which starts a server listening on [http://localhost:3020](http://localhost:3020):
+4. If you are running the project by the first time, run the build script
+  ```sh
+  yarn build
+  ```
+5. Run the development environment, which starts a server listening on [http://localhost:3020](http://localhost:3020):
   ```sh
   yarn start
   ```

@@ -1,3 +1,3 @@
 window.cardConfig = {
-    minimumExpiryDate: '09/22'
+    minimumExpiryDate: '09/24'
 };

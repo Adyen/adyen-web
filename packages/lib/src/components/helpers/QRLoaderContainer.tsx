@@ -19,10 +19,11 @@ export interface QRLoaderContainerProps extends UIElementProps {
     type?: string;
     brandLogo?: string;
     buttonLabel?: string;
-    shouldRedirectOnMobile?: boolean;
     qrCodeImage?: string;
     paymentData?: string;
+    introduction: string;
     instructions?: string;
+    copyBtn?: boolean;
 }
 
 class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProps> extends UIElement<T> {
@@ -32,7 +33,8 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
         amount: null,
         paymentData: null,
         onError: () => {},
-        onComplete: () => {}
+        onComplete: () => {},
+        onActionHandled: () => {}
     };
 
     formatData() {
@@ -57,13 +59,13 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
                         this.componentRef = ref;
                     }}
                     {...this.props}
-                    shouldRedirectOnMobile={this.props.shouldRedirectOnMobile}
                     type={this.constructor['type']}
                     brandLogo={this.props.brandLogo || this.icon}
                     delay={this.props.delay}
                     onComplete={this.onComplete}
                     countdownTime={this.props.countdownTime}
                     instructions={this.props.instructions}
+                    onActionHandled={this.props.onActionHandled}
                 />
             </CoreProvider>
         );

@@ -4,7 +4,7 @@ import Spinner from '../../../internal/Spinner';
 import ThreeDS2Form from '../Form';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
-import { FAILED_METHOD_STATUS_RESOLVE_OBJECT, THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT } from '../../config';
+import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT } from '../../config';
 import { encodeBase64URL } from '../utils';
 import { DoFingerprint3DS2Props, DoFingerprint3DS2State } from './types';
 
@@ -47,13 +47,7 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
             /**
              * Listen for postMessage responses from the notification url
              */
-            this.processMessageHandler = getProcessMessageHandler(
-                this.props.postMessageDomain,
-                resolve,
-                reject,
-                FAILED_METHOD_STATUS_RESOLVE_OBJECT,
-                'fingerPrintResult'
-            );
+            this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'fingerPrintResult');
 
             /* eslint-disable-next-line */
             window.addEventListener('message', this.processMessageHandler);
@@ -79,12 +73,17 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ threeDSMethodURL }, { base64URLencodedData }) {
+    render({ threeDSMethodURL, onActionHandled }, { base64URLencodedData }) {
         return (
             <div className="adyen-checkout__3ds2-device-fingerprint">
                 {this.props.showSpinner && <Spinner />}
                 <div style={{ display: 'none' }}>
-                    <Iframe name={iframeName} />
+                    <Iframe
+                        name={iframeName}
+                        callback={() => {
+                            onActionHandled({ componentType: '3DS2Fingerprint', actionDescription: 'fingerprint-iframe-loaded' });
+                        }}
+                    />
                     <ThreeDS2Form
                         name={'threeDSMethodForm'}
                         action={threeDSMethodURL}
