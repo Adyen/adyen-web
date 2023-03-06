@@ -77,7 +77,7 @@ export interface CardInputProps {
     expiryMonth?: string;
     expiryYear?: string;
     forceCompat?: boolean;
-    fundingSource?: string;
+    fundingSource?: 'debit' | 'credit';
     hasCVC?: boolean;
     hasHolderName?: boolean;
     holderNameRequired?: boolean;
