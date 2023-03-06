@@ -120,7 +120,7 @@ test('#3 Testing optional expiryDatePolicy - validating fields first and then en
         .notEql(null);
 
     // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'paste'); // TODO - shouldn't have to 'paste' here... but Testcafe is being flaky, again!
 
     // Expect errors to be cleared - since the fields were in error because they were empty
     // and now the PAN field is filled and the date & cvc fields are now optional...

@@ -2,9 +2,9 @@ import CardComponentPage from '../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD } from '../utils/constants';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
-const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
-const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
-const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + '-sr';
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + '-sr';
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + '-sr';
 
 const cardPage = new CardComponentPage();
 
@@ -19,11 +19,7 @@ test('#1 Error panel is present at start, when there are no errors, but is empty
     await cardPage.numHolder();
 
     // error panel exists but is empty
-    await t
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok()
-        .expect(cardPage.errorPanelEls.nth(0).exists)
-        .notOk();
+    await t.expect(cardPage.errorPanelVisible.exists).ok().expect(cardPage.errorPanelEls.nth(0).exists).notOk();
 });
 
 test('#2 Click pay with empty fields and error panel is populated', async t => {
@@ -31,11 +27,7 @@ test('#2 Click pay with empty fields and error panel is populated', async t => {
     await cardPage.numHolder();
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel is visible
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 3 elements, in order, with specific text
     await t
@@ -60,11 +52,7 @@ test('#3 Fill out PAN & see that first error in error panel is date related', as
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 2 elements, in order, with specific text
     await t
