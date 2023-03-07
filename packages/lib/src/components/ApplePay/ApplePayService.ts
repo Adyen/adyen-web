@@ -68,18 +68,24 @@ class ApplePayService {
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778020-onpaymentauthorized}
      */
     onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized: OnAuthorizedFunction): Promise<void> {
-        return new Promise<ApplePayJS.ApplePayPaymentAuthorizationResult>((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
-            .then((authorizationResult?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment({
-                    ...authorizationResult,
-                    status: authorizationResult?.status ?? ApplePaySession.STATUS_SUCCESS
-                });
+        return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
+            .then((result: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
+                const authResult = {
+                    ...result,
+                    status: result?.status ?? ApplePaySession.STATUS_SUCCESS
+                };
+                console.log('Success', authResult);
+
+                this.session.completePayment(authResult);
             })
-            .catch((authorizationResult?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment({
-                    ...authorizationResult,
-                    status: authorizationResult?.status ?? ApplePaySession.STATUS_FAILURE
-                });
+            .catch((result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
+                const authResult = {
+                    ...result,
+                    status: result?.status ?? ApplePaySession.STATUS_FAILURE
+                };
+                console.log('Error', authResult);
+
+                this.session.completePayment(authResult);
             });
     }
 

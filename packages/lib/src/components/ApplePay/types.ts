@@ -27,10 +27,10 @@ export type ApplePayButtonType =
     | 'top-up';
 
 export type OnAuthorizedFunction = (
-    resolve: (authorizationResult?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
-    reject: (authorizationResult?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
+    resolve: (result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
+    reject: (result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
     event: ApplePayJS.ApplePayPaymentAuthorizedEvent
-) => Promise<void>;
+) => void;
 
 export interface ApplePayElementProps extends UIElementProps {
     /**
