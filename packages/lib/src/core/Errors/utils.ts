@@ -61,7 +61,7 @@ export const addErrorTranslationsToObject = (originalObj, i18n) => {
  */
 export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels, fieldTypeMappingFn }: SortErrorsObj): SortedErrorObject[] => {
     const SR_INDICATOR_PREFIX = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? '' : '-sr'; // Useful for testing whether SR is reading out aria-live errors (sr) or aria-describedby ones
-    console.log('### utils::sortErrorsByLayout::process.env.NODE_ENV ', process.env.NODE_ENV);
+
     // Create array of error objects, sorted by layout
     const sortedErrors: SortedErrorObject[] = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {

@@ -1,12 +1,13 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 
 import LANG from '../../../../lib/src/language/locales/en-US.json';
+import { SR_INDICATOR_PREFIX } from '../utils/constants';
 
-const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + '-sr';
-const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + '-sr';
-const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + '-sr';
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + SR_INDICATOR_PREFIX;
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + SR_INDICATOR_PREFIX;
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + SR_INDICATOR_PREFIX;
 
-const INVALID_NAME = LANG['creditCard.holderName.invalid'] + '-sr';
+const INVALID_NAME = LANG['creditCard.holderName.invalid'] + SR_INDICATOR_PREFIX;
 
 const cardPage = new CardComponentPage();
 

@@ -1,10 +1,10 @@
 import CardComponentPage from '../../_models/CardComponent.page';
-import { REGULAR_TEST_CARD } from '../utils/constants';
+import { REGULAR_TEST_CARD, SR_INDICATOR_PREFIX } from '../utils/constants';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
-const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + '-sr';
-const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + '-sr';
-const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + '-sr';
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + SR_INDICATOR_PREFIX;
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + SR_INDICATOR_PREFIX;
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + SR_INDICATOR_PREFIX;
 
 const cardPage = new CardComponentPage();
 
