@@ -1,4 +1,4 @@
-import { OnAuthorizedFunction } from './types';
+import { OnAuthorizedCallback } from './types';
 
 interface ApplePayServiceOptions {
     version: number;
@@ -7,7 +7,7 @@ interface ApplePayServiceOptions {
     onPaymentMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayPaymentMethodSelectedEvent) => void;
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
     onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
-    onPaymentAuthorized?: OnAuthorizedFunction;
+    onPaymentAuthorized?: OnAuthorizedCallback;
 }
 
 class ApplePayService {
@@ -67,7 +67,7 @@ class ApplePayService {
      * @param onPaymentAuthorized - A promise that will complete the payment when resolved. Use this promise to process the payment.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778020-onpaymentauthorized}
      */
-    onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized: OnAuthorizedFunction): Promise<void> {
+    onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized: OnAuthorizedCallback): Promise<void> {
         return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
             .then((result: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
                 const authResult = {
