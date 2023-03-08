@@ -70,22 +70,16 @@ class ApplePayService {
     onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized: OnAuthorizedCallback): Promise<void> {
         return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
             .then((result: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
-                const authResult = {
+                this.session.completePayment({
                     ...result,
                     status: result?.status ?? ApplePaySession.STATUS_SUCCESS
-                };
-                console.log('Success', authResult);
-
-                this.session.completePayment(authResult);
+                });
             })
             .catch((result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
-                const authResult = {
+                this.session.completePayment({
                     ...result,
                     status: result?.status ?? ApplePaySession.STATUS_FAILURE
-                };
-                console.log('Error', authResult);
-
-                this.session.completePayment(authResult);
+                });
             });
     }
 
