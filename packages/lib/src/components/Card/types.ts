@@ -37,6 +37,12 @@ export interface CardElementProps extends UIElementProps {
     _disableClickToPay?: boolean;
 
     /**
+     * Funding source field populated when 'splitCardFundingSources' is used
+     * @internal
+     */
+    fundingSource?: 'debit' | 'credit';
+
+    /**
      * type will always be "card" (generic card, stored card)
      * except for a single branded card when it will be the same as the brand prop
      */

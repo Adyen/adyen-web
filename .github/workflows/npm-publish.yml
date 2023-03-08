@@ -9,6 +9,7 @@ on:
 
 jobs:
   publish-npm:
+    environment: release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,7 +26,7 @@ jobs:
       # Build and publish to npm
       - run: cd packages/lib && npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_ADYEN_WEB_TOKEN}}
           CI: true
       # Upload artifacts
       - uses: actions/upload-artifact@v3
