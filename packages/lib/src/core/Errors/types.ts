@@ -29,9 +29,9 @@ export interface SortedErrorObject {
 }
 
 export interface SRPanelProps extends BaseElementProps {
-    enabled: boolean;
-    node: string;
-    showPanel: boolean;
+    enabled?: boolean;
+    node?: string;
+    showPanel?: boolean;
 }
 
 export interface SRMessagesProps {

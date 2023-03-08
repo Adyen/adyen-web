@@ -59,12 +59,14 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     };
 
     render() {
+        if (!this.props.enabled) return null;
         return (
             <div
                 className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
                 id={this.id}
                 aria-live={'polite'}
                 aria-atomic={'true'}
+                {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
                 <SRMessages setComponentRef={this.setComponentRef} />
             </div>

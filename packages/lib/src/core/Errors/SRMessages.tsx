@@ -23,11 +23,13 @@ export function SRMessages({ setComponentRef }: SRMessagesProps) {
 
     return messages ? (
         <Fragment>
-            {messages.map(msg => (
-                <div key={msg} className="adyen-checkout-sr-panel__msg">
-                    {msg}
-                </div>
-            ))}
+            {messages.map(msg => {
+                return (
+                    <div key={msg} className="adyen-checkout-sr-panel__msg" {...(process.env.NODE_ENV !== 'production' && { 'data-testid': msg })}>
+                        {msg}
+                    </div>
+                );
+            })}
         </Fragment>
     ) : null;
 }
