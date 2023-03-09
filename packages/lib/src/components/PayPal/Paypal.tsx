@@ -99,7 +99,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
             .get()
             .then(paypalOrder => {
                 const shopperDetails = createShopperDetails(paypalOrder);
-                return new Promise((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
+                return new Promise<void>((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
