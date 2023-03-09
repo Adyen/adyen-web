@@ -119,8 +119,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // style: {},
 
             onShopperDetails(shopperDetails, rawData, actions) {
-                console.log('Shopper details', shopperDetails);
-                console.log('Raw data', rawData);
+                console.log('Shopper details', JSON.stringify(shopperDetails));
+                console.log('Raw data', JSON.stringify(rawData));
                 actions.resolve();
             },
 

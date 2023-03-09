@@ -1,24 +1,4 @@
-export type ShopperDetails = {
-    shopperName?: {
-        firstName?: string;
-        lastName?: string;
-    };
-    shopperEmail?: string;
-    countryCode?: string;
-    telephoneNumber?: string;
-    dateOfBirth?: string;
-    billingAddress?: Partial<Address>;
-    shippingAddress?: Partial<Address>;
-};
-
-type Address = {
-    street: string;
-    stateOrProvince: string;
-    city: string;
-    postalCode: string;
-    country: string;
-    houseNumberOrName: string;
-};
+import { AddressData, ShopperDetails } from '../../../types';
 
 /**
  * Parses the Order data from PayPal, and create the shopper details object according to how Adyen expects
@@ -38,10 +18,10 @@ const createShopperDetails = (order: any): ShopperDetails | null => {
     const dateOfBirth = order?.payer?.birth_date;
 
     const billingAddress = mapPayPalAddressToAdyenAddressFormat({
-        paypalAddressObject: order.payer?.address
+        paypalAddressObject: order?.payer?.address
     });
     const shippingAddress = mapPayPalAddressToAdyenAddressFormat({
-        paypalAddressObject: order.purchase_units[0]?.shipping?.address
+        paypalAddressObject: order?.purchase_units?.[0].shipping?.address
     });
 
     const shopperDetails = {
@@ -57,7 +37,7 @@ const createShopperDetails = (order: any): ShopperDetails | null => {
     return Object.keys(shopperDetails).length > 0 ? shopperDetails : null;
 };
 
-const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject }): Partial<Address> | null => {
+const mapPayPalAddressToAdyenAddressFormat = ({ paypalAddressObject }): Partial<AddressData> | null => {
     const getStreet = (addressPart1 = null, addressPart2 = null): string | null => {
         if (addressPart1 && addressPart2) return `${addressPart1}, ${addressPart2}`;
         if (addressPart1) return addressPart1;

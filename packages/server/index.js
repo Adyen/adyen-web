@@ -9,7 +9,6 @@ const postDetails = require('./api/details');
 const createOrder = require('./api/orders');
 const cancelOrder = require('./api/ordersCancel');
 const createSession = require('./api/sessions');
-require('./globals');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());

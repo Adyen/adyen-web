@@ -8,7 +8,7 @@ import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
-import { createShopperDetails } from './create-shopper-details';
+import { createShopperDetails } from './utils/create-shopper-details';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
