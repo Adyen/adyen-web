@@ -88,9 +88,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
         const { onShopperDetails } = this.props;
+        const state = { data: { details: data, paymentData: this.paymentData } };
 
         if (!onShopperDetails) {
-            const state = { data: { details: data, paymentData: this.paymentData } };
             this.handleAdditionalDetails(state);
             return;
         }
@@ -101,13 +101,8 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                 const shopperDetails = createShopperDetails(paypalOrder);
                 return new Promise((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
             })
-            .then(() => {
-                const state = { data: { details: data, paymentData: this.paymentData } };
-                this.handleAdditionalDetails(state);
-            })
-            .catch(error => {
-                this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error }));
-            });
+            .then(() => this.handleAdditionalDetails(state))
+            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
     };
 
     handleResolve(token: string) {

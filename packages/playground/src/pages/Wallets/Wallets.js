@@ -109,22 +109,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // PAYPAL
     window.paypalButtons = checkout
         .create('paypal', {
-            // merchantId: '5RZKQX2FC48EA',
-            // intent: 'capture', // 'capture' [Default] / 'authorize'
-            // configuration: {
-            //      merchantId: '5RZKQX2FC48EA',
-            //      intent: 'capture'
-            // },
-            // commit: true, // true [Default] / false
-            // style: {},
-
-            onShopperDetails(shopperDetails, rawData, actions) {
-                console.log('Shopper details', JSON.stringify(shopperDetails));
-                console.log('Raw data', JSON.stringify(rawData));
+            onShopperDetails: (shopperDetails, rawData, actions) => {
+                console.log('Shopper details', shopperDetails);
+                console.log('Raw data', rawData);
                 actions.resolve();
             },
-
-            // Events
             onError: (error, component) => {
                 component.setStatus('ready');
                 console.log('paypal onError', error);
