@@ -368,6 +368,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
+        // Pass errors to SRPanel via partial
         const srPanelResp = setSRMessages(errorsForPanel, retrieveLayout(), specifications.getAddressLabelsForCountry(billingAddress?.country));
 
         /**

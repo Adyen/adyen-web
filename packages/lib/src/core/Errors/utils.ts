@@ -167,7 +167,7 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         }
     } else {
         if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: #4 clearing errors:: NO currentErrorsSortedByLayout');
-        SRPanelRef.setMessages(null); // no errors - so clear SR panel
+        SRPanelRef?.setMessages(null); // no errors - so clear SR panel
         return { currentErrorsSortedByLayout, action: 'none' };
     }
 };
