@@ -1,0 +1,24 @@
+@import "../../../../style/index";
+
+.adyen-checkout__payment-method {
+    &__name {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &__name--selected {
+        font-weight: 500;
+    }
+
+    &__additional-info {
+        font-size: $font-size-small;
+        color: $color-gray-darker;
+    }
+
+    &__name_wrapper {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
