@@ -1,4 +1,4 @@
-import { ERROR_CODES } from './constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ERROR_CODES } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
@@ -138,7 +138,7 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         layout
     });
 
-    const doLog = true;
+    const doLog = false;
 
     if (doLog) console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
 
@@ -154,30 +154,22 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
                 isValidating.current = false;
             }, 300);
 
-            // if (moveFocusOnSubmitErrors) {
             const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
-            // if (!willPerformOwnFocusOperation) {
-            //     console.log('### utils::setSRMessagesFromErrors:: do generic focus');
-            //     setFocusOnField(focusSelector, fieldListArr[0]);
-            //     return { currentErrorsSortedByLayout, action: 'none' };
-            // } else {
-            console.log('### utils::setSRMessagesFromErrors:: do own focus');
-            return { currentErrorsSortedByLayout, action: 'focusField', fieldToFocus: fieldListArr[0] };
-            // }
-            // }
+            return { currentErrorsSortedByLayout, action: ERROR_ACTION_FOCUS_FIELD, fieldToFocus: fieldListArr[0] };
         } else {
-            if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: #3 clearing errors:: updating but not validating');
+            if (doLog)
+                console.log(
+                    '### setSRMessagesFromErrors::componentDidUpdate:: #3 on blur scenario:: not validating but there might be an error, either to set or to clear'
+                );
             SRPanelRef?.setMessages(null);
 
-            return { currentErrorsSortedByLayout, action: 'notValidating:blurScenario' }; // on blur scenario: not validating but there might be an error, either to set or to clear
+            return { currentErrorsSortedByLayout, action: ERROR_ACTION_BLUR_SCENARIO }; // on blur scenario: not validating but there might be an error, either to set or to clear
         }
     } else {
         if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: #4 clearing errors:: NO currentErrorsSortedByLayout');
         SRPanelRef.setMessages(null); // no errors - so clear SR panel
         return { currentErrorsSortedByLayout, action: 'none' };
     }
-
-    return { currentErrorsSortedByLayout, action: 'none' }; //null;
 };
 
 export const enhanceErrorObjectKeys = (errorObj, keyPrefix) => {

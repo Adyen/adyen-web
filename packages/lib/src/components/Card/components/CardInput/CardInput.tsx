@@ -32,11 +32,14 @@ import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
-import { sortErrorsByLayout } from '../../../../core/Errors/utils';
+import { setSRMessagesFromErrors } from '../../../../core/Errors/utils';
 import useCoreContext from '../../../../core/Context/useCoreContext';
+import { partial } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const {
+        i18n,
         commonProps: { moveFocusOnSubmitErrors }
     } = useCoreContext();
 
@@ -44,6 +47,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const sfp = useRef(null);
     const isValidating = useRef(false);
+
+    /**
+     * Generate a setSRMessages function, once only (since the initial set of arguments don't change).
+     */
+    const setSRMessages = partial(setSRMessagesFromErrors, {
+        SRPanelRef,
+        i18n,
+        fieldTypeMappingFn: mapFieldKey,
+        isValidating
+    });
+    /** end SR stuff */
 
     const billingAddressRef = useRef(null);
     const setAddressRef = ref => {
@@ -354,36 +368,22 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
-        // Sort active errors based on layout
-        const currentErrorsSortedByLayout = sortErrorsByLayout({
-            errors: errorsForPanel,
-            i18n: props.i18n,
-            layout: retrieveLayout(),
-            countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country),
-            fieldTypeMappingFn: mapFieldKey
-        });
+        const srPanelResp = setSRMessages(errorsForPanel, retrieveLayout(), specifications.getAddressLabelsForCountry(billingAddress?.country));
+
+        /**
+         * Need extra actions because we have a different way to focus fields and because we have some errors that are fired onBLur
+         */
+        const currentErrorsSortedByLayout = srPanelResp.currentErrorsSortedByLayout;
 
         // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
         setSortedErrorList(currentErrorsSortedByLayout);
 
-        if (currentErrorsSortedByLayout) {
-            /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
-            if (isValidating.current) {
-                const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-                // console.log('### CardInput::componentDidUpdate:: multiple errors:: (validating) errorMsgArr=', errorMsgArr);
-                SRPanelRef.setMessages(errorMsgArr);
-
-                if (moveFocusOnSubmitErrors) {
-                    const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
-                    setFocusOnFirstField(isValidating, sfp, fieldListArr[0]);
-                } else {
-                    // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode (Address errors come in a second render)
-                    setTimeout(() => {
-                        isValidating.current = false;
-                    }, 300);
-                }
-            } else {
-                /** Else we are in an onBlur scenario - so find the latest error message and create a single item to send to the error panel */
+        switch (srPanelResp.action) {
+            case ERROR_ACTION_FOCUS_FIELD:
+                if (moveFocusOnSubmitErrors) setFocusOnFirstField(isValidating, sfp, srPanelResp.fieldToFocus);
+                break;
+            case ERROR_ACTION_BLUR_SCENARIO: {
+                // on blur scenario: not validating but there might be an error, either to set or to clear
                 let difference;
 
                 // If nothing to compare - take the new item...
@@ -404,16 +404,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                     // (once from the aria-live, error panel & once from the aria-describedby element)
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                    // console.log('### CardInput::componentDidUpdate:: (not validating) single error:: latestSRError', latestSRError);
-                    SRPanelRef.setMessages(latestSRError);
+                    // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
+                    SRPanelRef.setMessages(latestSRError); // not validating, but there is an error
                 } else {
-                    // console.log('### CardInput::componentDidUpdate:: (not validating) clearing errors:: NO latestErrorMsg');
-                    SRPanelRef?.setMessages(null); // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    // console.log('### CardInput2::componentDidUpdate:: #3(not validating) clearing errors:: NO latestErrorMsg');
+                    SRPanelRef?.setMessages(null); // not validating, was an error, now there isn't
                 }
+                break;
             }
-        } else {
-            // console.log('### CardInput::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
+            default:
+                break;
         }
 
         props.onChange({

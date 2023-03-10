@@ -25,6 +25,7 @@ import Specifications from '../Address/Specifications';
 import { PERSONAL_DETAILS_SCHEMA } from '../PersonalDetails/PersonalDetails';
 import { COMPANY_DETAILS_SCHEMA } from '../CompanyDetails/CompanyDetails';
 import { setFocusOnField } from '../../../utils/setFocus';
+import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -58,9 +59,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         SRPanelRef,
         i18n,
         fieldTypeMappingFn: mapFieldKey,
-        isValidating,
-        moveFocusOnSubmitErrors
-        // focusSelector: '.adyen-checkout__open-invoice'
+        isValidating
     });
     /** end SR stuff */
 
@@ -160,7 +159,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
         // Set messages
         const srPanelResp = setSRMessages(errorsForPanel, fullLayout, countrySpecificLabels);
-        if (moveFocusOnSubmitErrors && srPanelResp.action === 'focusField') {
+        if (moveFocusOnSubmitErrors && srPanelResp.action === ERROR_ACTION_FOCUS_FIELD) {
             setFocusOnField('.adyen-checkout__open-invoice', srPanelResp.fieldToFocus);
         }
 
