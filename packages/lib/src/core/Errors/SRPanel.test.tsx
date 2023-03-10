@@ -6,7 +6,7 @@ describe('SRPanel disabled', () => {
 
     test('Does not render the SRPanel in the DOM', async () => {
         // Expect panel to not be present
-        /* eslint-disable-next-line */
+        /* eslint-disable-next-line testing-library/prefer-presence-queries */ // linter is wrong: queryBy statements are designed to be used to test non-existence
         expect(screen.queryByTestId('ariaLiveSRPanel')).toBeNull();
     });
 });
@@ -22,20 +22,20 @@ describe('SRPanel in use', () => {
         // Set messages
         srPanel.setMessages(['message1', 'message2']);
 
-        /* eslint-disable-next-line */
-        await waitFor(() => expect(screen.getByTestId('message1')).toBeTruthy());
-        /* eslint-disable-next-line */
-        await waitFor(() => expect(screen.getByTestId('message2')).toBeTruthy());
+        expect(await screen.findByTestId('message1')).toBeTruthy(); // find* queries use waitFor under the hood
+        expect(await screen.findByTestId('message2')).toBeTruthy();
 
-        /* eslint-disable-next-line */
-        await waitFor(() => expect(screen.queryByTestId('message1')).toBeTruthy()); // presence
-        /* eslint-disable-next-line */
-        await waitFor(() => expect(screen.queryByTestId('message3')).toBeNull()); // non-presence
+        // expect(await screen.findByTestId('message3')).toBeTruthy(); // KEEP: example of assertion that should fail (triggering log of available DOM)
+
+        /* eslint-disable-next-line */ // linter is wrong:this is valid because we are waiting to test for existence
+        await waitFor(() => expect(screen.queryByTestId('message1')).toBeTruthy()); // existence
+        /* eslint-disable-next-line */ // linter is wrong:this is valid because we are waiting to test for non-existence
+        await waitFor(() => expect(screen.queryByTestId('message3')).toBeNull()); // non-existence
 
         // Clear messages
         srPanel.setMessages(null);
 
-        /* eslint-disable-next-line */
+        /* eslint-disable-next-line testing-library/prefer-find-by*/
         await waitFor(() => expect(screen.queryByTestId('message1')).toBeNull());
     });
 });
