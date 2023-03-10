@@ -363,15 +363,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             fieldTypeMappingFn: mapFieldKey
         });
 
+        console.log('### CardInput::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
+
         // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
         setSortedErrorList(currentErrorsSortedByLayout);
 
-        if (currentErrorsSortedByLayout) {
+        if (currentErrorsSortedByLayout.length) {
             /** If validating i.e. "on submit" type event (pay button pressed) - then display all errors in the error panel */
             if (isValidating.current) {
                 const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-                // console.log('### CardInput::componentDidUpdate:: multiple errors:: (validating) errorMsgArr=', errorMsgArr);
-                SRPanelRef.setMessages(errorMsgArr);
+                console.log('### CardInput::componentDidUpdate:: #1 multiple errors:: (validating) errorMsgArr=', errorMsgArr);
+                SRPanelRef.setMessages(errorMsgArr); // validating, 1 or more errors
 
                 if (moveFocusOnSubmitErrors) {
                     const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
@@ -404,16 +406,16 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                     // (once from the aria-live, error panel & once from the aria-describedby element)
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-                    // console.log('### CardInput::componentDidUpdate:: (not validating) single error:: latestSRError', latestSRError);
-                    SRPanelRef.setMessages(latestSRError);
+                    console.log('### CardInput::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
+                    SRPanelRef.setMessages(latestSRError); // not validating, but there is an error
                 } else {
-                    // console.log('### CardInput::componentDidUpdate:: (not validating) clearing errors:: NO latestErrorMsg');
-                    SRPanelRef?.setMessages(null); // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    console.log('### CardInput::componentDidUpdate:: #3(not validating) clearing errors:: NO latestErrorMsg');
+                    SRPanelRef?.setMessages(null); // not validating, was an error, now there isn't // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
                 }
             }
         } else {
-            // console.log('### CardInput::componentDidUpdate:: clearing errors:: NO currentErrorsSortedByLayout');
-            SRPanelRef.setMessages(null); // re. was a single error, now it is cleared - so clear SR panel
+            console.log('### CardInput::componentDidUpdate:: #4 clearing errors:: NO currentErrorsSortedByLayout');
+            SRPanelRef.setMessages(null); // no errors - so clear SR panel
         }
 
         props.onChange({
