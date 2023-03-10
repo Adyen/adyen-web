@@ -372,7 +372,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const srPanelResp = setSRMessages(errorsForPanel, retrieveLayout(), specifications.getAddressLabelsForCountry(billingAddress?.country));
 
         /**
-         * Need extra actions because we have a different way to focus fields and because we have some errors that are fired onBLur
+         * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
          */
         const currentErrorsSortedByLayout = srPanelResp.currentErrorsSortedByLayout;
 
@@ -383,8 +383,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             case ERROR_ACTION_FOCUS_FIELD:
                 if (moveFocusOnSubmitErrors) setFocusOnFirstField(isValidating, sfp, srPanelResp.fieldToFocus);
                 break;
+            /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
             case ERROR_ACTION_BLUR_SCENARIO: {
-                // on blur scenario: not validating but there might be an error, either to set or to clear
                 let difference;
 
                 // If nothing to compare - take the new item...

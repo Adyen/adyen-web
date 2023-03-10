@@ -159,6 +159,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
         // Set messages
         const srPanelResp = setSRMessages(errorsForPanel, fullLayout, countrySpecificLabels);
+        // Need extra action after setting SRPanel messages in order to focus first field in error, if required
         if (moveFocusOnSubmitErrors && srPanelResp.action === ERROR_ACTION_FOCUS_FIELD) {
             setFocusOnField('.adyen-checkout__open-invoice', srPanelResp.fieldToFocus);
         }

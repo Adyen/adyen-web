@@ -96,6 +96,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         const formattedData = getFormattedData(data);
 
         const srPanelResp = setSRMessages?.(errors);
+        // Need extra action after setting SRPanel messages in order to focus first field in error, if required
         if (moveFocusOnSubmitErrors && srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
             setFocusOnField('.adyen-checkout__fieldset--personalDetails', srPanelResp.fieldToFocus);
         }

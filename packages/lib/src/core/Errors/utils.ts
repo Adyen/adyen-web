@@ -146,7 +146,7 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
         /** If validating i.e. "on submit" type event - then display all errors in the SR panel */
         if (isValidating.current) {
             const errorMsgArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.errorMessage);
-            if (doLog) console.log('### setSRMessagesFromErrors::componentDidUpdate:: #1 multiple errors:: (validating) errorMsgArr=', errorMsgArr);
+            if (doLog) console.log('### setSRMessagesFromErrors:: #1 multiple errors:: (validating) errorMsgArr=', errorMsgArr);
             SRPanelRef.setMessages(errorMsgArr);
 
             // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
@@ -157,10 +157,8 @@ export const setSRMessagesFromErrors = ({ i18n, fieldTypeMappingFn, isValidating
             const fieldListArr: string[] = currentErrorsSortedByLayout.map(errObj => errObj.field);
             return { currentErrorsSortedByLayout, action: ERROR_ACTION_FOCUS_FIELD, fieldToFocus: fieldListArr[0] };
         } else {
-            if (doLog)
-                console.log(
-                    '### setSRMessagesFromErrors::componentDidUpdate:: #3 on blur scenario:: not validating but there might be an error, either to set or to clear'
-                );
+            // prettier-ignore
+            if (doLog) console.log('### setSRMessagesFromErrors:: #3 on blur scenario:: not validating but there might be an error, either to set or to clear');
             SRPanelRef?.setMessages(null);
 
             return { currentErrorsSortedByLayout, action: ERROR_ACTION_BLUR_SCENARIO }; // on blur scenario: not validating but there might be an error, either to set or to clear
