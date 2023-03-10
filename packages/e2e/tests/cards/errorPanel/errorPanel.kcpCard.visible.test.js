@@ -54,7 +54,7 @@ test('#2 Fill out PAN & name and see that first error in error panel is tax numb
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD);
+    await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'paste'); // TODO - shouldn't have to 'paste' here... but Testcafe is being flaky, again!
     await cardPage.cardUtils.fillDateAndCVC(t);
 
     await t.typeText(cardPage.holderNameInput, 'j smith');

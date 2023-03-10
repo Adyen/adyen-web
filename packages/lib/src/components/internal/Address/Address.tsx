@@ -16,6 +16,8 @@ import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
 import { mapFieldKey } from './utils';
 import { ComponentMethodsRef } from '../../types';
+import { setFocusOnField } from '../../../utils/setFocus';
+import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 
 export default function Address(props: AddressProps) {
     const {
@@ -47,9 +49,7 @@ export default function Address(props: AddressProps) {
                   SRPanelRef,
                   i18n,
                   fieldTypeMappingFn: mapFieldKey,
-                  isValidating,
-                  moveFocusOnSubmitErrors,
-                  focusSelector: `.adyen-checkout__fieldset--${label || 'address'}`
+                  isValidating
               })
             : null
     );
@@ -141,7 +141,10 @@ export default function Address(props: AddressProps) {
         const countrySpecificLabels = specifications.getAddressLabelsForCountry(data.country);
 
         // If we have generated an setSRMessages function then pass it the latest errors
-        setSRMessages?.(errors, addressLayout, countrySpecificLabels);
+        const srPanelResp = setSRMessages?.(errors, addressLayout, countrySpecificLabels);
+        if (moveFocusOnSubmitErrors && srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
+            setFocusOnField(`.adyen-checkout__fieldset--${label || 'address'}`, srPanelResp.fieldToFocus);
+        }
 
         props.onChange({ data: processedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);

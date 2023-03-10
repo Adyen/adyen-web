@@ -20,7 +20,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         showPayButton: true,
         amount, // Optional. Used to display the amount in the Pay Button.
         srConfig: { showPanel: true }, // default: { enabled: true, showPanel: true, node: 'body' }
-        moveFocusOnSubmitErrors: false // default: true
+        moveFocusOnSubmitErrors: true // default: true
     });
 
     // AFTERPAY

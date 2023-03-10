@@ -15,6 +15,8 @@ import './PersonalDetails.scss';
 import { setSRMessagesFromErrors } from '../../../core/Errors/utils';
 import { partial } from '../SecuredFields/lib/utilities/commonUtils';
 import { ComponentMethodsRef } from '../../types';
+import { setFocusOnField } from '../../../utils/setFocus';
+import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -49,9 +51,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                   SRPanelRef,
                   i18n,
                   fieldTypeMappingFn: mapFieldKey,
-                  isValidating,
-                  moveFocusOnSubmitErrors,
-                  focusSelector: '.adyen-checkout__fieldset--personalDetails'
+                  isValidating
               })
             : null
     );
@@ -95,7 +95,10 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     useEffect(() => {
         const formattedData = getFormattedData(data);
 
-        setSRMessages?.(errors);
+        const srPanelResp = setSRMessages?.(errors);
+        if (moveFocusOnSubmitErrors && srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
+            setFocusOnField('.adyen-checkout__fieldset--personalDetails', srPanelResp.fieldToFocus);
+        }
 
         props.onChange({ data: formattedData, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
