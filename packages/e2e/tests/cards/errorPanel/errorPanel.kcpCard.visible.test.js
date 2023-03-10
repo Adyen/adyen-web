@@ -50,7 +50,7 @@ test('#1 Click pay with empty fields and error panel is populated', async t => {
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test.only('#2 Fill out PAN & name and see that first error in error panel is tax number related', async t => {
+test('#2 Fill out PAN & name and see that first error in error panel is tax number related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
