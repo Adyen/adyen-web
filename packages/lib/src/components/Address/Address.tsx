@@ -14,13 +14,7 @@ export class AddressElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                commonProps={{
-                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
-                }}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <Address
                     setComponentRef={this.setComponentRef}
                     {...this.props}

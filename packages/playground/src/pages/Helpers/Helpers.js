@@ -20,7 +20,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         environment: 'test',
         onError: console.error,
         showPayButton: true,
-        moveFocusOnSubmitErrors: true,
         srConfig: {
             showPanel: true
         }

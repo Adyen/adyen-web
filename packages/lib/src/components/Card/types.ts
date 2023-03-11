@@ -126,11 +126,6 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
-    /**
-     * From Checkout config - whether focus should shift to first field in error when validating form after "pay" button pressed
-     */
-    moveFocusOnSubmitErrors?: boolean;
-
     [key: string]: any; // TODO get rid of this and explicitly declare props
 }
 

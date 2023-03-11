@@ -9,7 +9,7 @@ interface CoreProviderProps {
 }
 
 export interface CommonPropsTypes {
-    moveFocusOnSubmitErrors?: boolean;
+    [key: string]: string;
 }
 /**
  * CoreProvider Component

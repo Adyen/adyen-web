@@ -225,13 +225,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                commonProps={{
-                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
-                }}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <ClickToPayWrapper
                     amount={this.props.amount}
                     configuration={this.props.clickToPayConfiguration}

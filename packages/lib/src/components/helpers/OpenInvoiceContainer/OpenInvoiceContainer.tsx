@@ -9,7 +9,6 @@ export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
     consentCheckboxLabel?: h.JSX.Element;
     billingAddressRequiredFields?: string[];
     billingAddressSpecification?: AddressSpecifications;
-    moveFocusOnSubmitErrors?: boolean;
 }
 
 export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainerProps> {
@@ -86,13 +85,7 @@ export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainer
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                commonProps={{
-                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
-                }}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <OpenInvoice
                     setComponentRef={this.setComponentRef}
                     {...this.props}

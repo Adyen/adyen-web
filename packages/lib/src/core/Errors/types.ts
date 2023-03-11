@@ -32,6 +32,7 @@ export interface SRPanelProps extends BaseElementProps {
     enabled?: boolean;
     node?: string;
     showPanel?: boolean;
+    moveFocus?: boolean;
 }
 
 export interface SRMessagesProps {

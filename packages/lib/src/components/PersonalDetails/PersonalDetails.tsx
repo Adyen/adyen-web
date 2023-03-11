@@ -14,13 +14,7 @@ export class PersonalDetailsElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                commonProps={{
-                    moveFocusOnSubmitErrors: this.props.moveFocusOnSubmitErrors ?? true
-                }}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <PersonalDetails
                     setComponentRef={this.setComponentRef}
                     {...this.props}

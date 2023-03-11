@@ -20,6 +20,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     private readonly id;
     private readonly showPanel;
+    private readonly _enabled: boolean;
+    private readonly _moveFocus: boolean;
 
     private componentRef: SRMessagesRef;
 
@@ -27,9 +29,11 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         super(props);
         this.id = 'ariaLiveSRPanel';
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;
-        this.state = { panelMessages: null };
+        this._enabled = false;
+        this._moveFocus = this.props.moveFocus ?? true;
 
         if (this.props.enabled) {
+            this._enabled = true;
             if (document.querySelector(this.props.node)) {
                 this.srPanelContainer = document.createElement('div');
                 this.srPanelContainer.className = 'sr-panel-holder';
@@ -44,6 +48,14 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     public setComponentRef = ref => {
         this.componentRef = ref;
     };
+
+    public get enabled() {
+        return this._enabled;
+    }
+
+    public get moveFocus() {
+        return this._moveFocus;
+    }
 
     // A method we can expose to allow comps to set messages in this panel
     public setMessages = (messages: string[] | string): void => {
