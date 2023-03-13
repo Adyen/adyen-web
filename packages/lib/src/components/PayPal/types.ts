@@ -1,4 +1,4 @@
-import { PaymentAmount, PaymentMethod } from '../../types';
+import { PaymentAmount, PaymentMethod, ShopperDetails } from '../../types';
 import UIElement from '../UIElement';
 import { UIElementProps } from '../types';
 import { SUPPORTED_LOCALES } from './config';
@@ -156,14 +156,15 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
+    onShopperDetails?(shopperDetails: ShopperDetails, rawData: any, actions: { resolve: () => void; reject: () => void }): void;
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {
+    onApprove: (data: any, actions: any) => void;
     onCancel?: (data: object) => void;
     onChange?: (newState: object) => void;
-    onComplete?: (details: object) => void;
     onError?: (data: object) => void;
     onSubmit?: () => Promise<any>;
     ref?: any;
@@ -171,6 +172,7 @@ export interface PayPalComponentProps extends PayPalCommonProps {
 
 export interface PayPalButtonsProps extends PayPalComponentProps {
     paypalRef: any;
+    isProcessingPayment: boolean;
 }
 
 export interface PaypalSettings {
