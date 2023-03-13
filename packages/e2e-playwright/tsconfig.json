@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": false,
+
+        "outDir": "./dist/",
+        "declaration": true,
+
+        "moduleResolution": "node",
+        "module": "esnext",
+        "target": "es5",
+        "jsx": "react",
+        "jsxFactory": "h",
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+
+        "noImplicitReturns": true,
+        "noImplicitAny": true,
+
+        "strictPropertyInitialization": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "stripInternal": true,
+        "strictNullChecks": true,
+
+        "importHelpers": true,
+
+        "baseUrl": "./"
+    },
+    "include": ["app/", "tests/", "mocks/", "models/", "pages/"],
+    "exclude": ["node_modules"]
+}

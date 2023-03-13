@@ -4,6 +4,7 @@ import CardInput from './CardInput';
 import Language from '../../../../language/Language';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
+import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 
@@ -223,5 +224,25 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
         cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+    });
+});
+
+describe('CardInput > Installments', () => {
+    const installments = {
+        mc: {
+            values: [1, 2, 3]
+        }
+    };
+    test('should not display installments if fundingSource is debit', () => {
+        const wrapper = mount(<CardInput fundingSource={'debit'} i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
+    });
+    test('should display installments if fundingSource is credit', () => {
+        const wrapper = mount(<CardInput fundingSource={'credit'} i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
+    });
+    test('should display installments if fundingSource undefined', () => {
+        const wrapper = mount(<CardInput i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
     });
 });

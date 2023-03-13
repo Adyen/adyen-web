@@ -4,6 +4,7 @@ import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
 import { ErrorPanel } from '../../../../../core/Errors/ErrorPanel';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
+import DisclaimerMessage from './DisclaimerMessage';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)
@@ -28,7 +29,8 @@ export const StoredCardFieldsWrapper = ({
     mergedSRErrors,
     handleErrorPanelFocus,
     moveFocus,
-    showPanel
+    showPanel,
+    disclaimerMessage
 }) => {
     const { i18n } = useCoreContext();
 
@@ -67,6 +69,8 @@ export const StoredCardFieldsWrapper = ({
                     type={showAmountsInInstallments ? 'amount' : 'months'}
                 />
             )}
+
+            {disclaimerMessage && <DisclaimerMessage disclaimer={disclaimerMessage} />}
         </LoadingWrapper>
     );
 };
