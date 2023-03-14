@@ -1,6 +1,8 @@
 {
   "name": "@adyen/adyen-web-playwright",
+  "private": true,
   "version": "1.0.0",
+  "repository": "github:Adyen/adyen-web",
   "license": "MIT",
   "scripts": {
     "test:start-playground": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
@@ -24,6 +26,6 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "@adyen/adyen-web": "5.33.0"
+    "@adyen/adyen-web": "5.35.0"
   }
 }
