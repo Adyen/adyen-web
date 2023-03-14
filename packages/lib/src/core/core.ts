@@ -299,6 +299,17 @@ class Core {
          * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
          */
         if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
+            if (PaymentMethod === 'dropin') {
+                console.log('### core::handleCreate:: PaymentMethod', PaymentMethod);
+                console.log('### core::handleCreate:: options=', options);
+                console.log('### core::handleCreate:: this.options=', this.options);
+            }
+            if (PaymentMethod === 'dropin' && hasOwnProperty(options, 'paymentMethodsConfiguration')) {
+                console.warn(
+                    "WARNING: You are setting a 'paymentMethodsConfiguration' object in the Dropin configuration options. This object will be ignored."
+                );
+            }
+
             return this.handleCreate(paymentMethods[PaymentMethod], { type: PaymentMethod, ...options });
         }
 

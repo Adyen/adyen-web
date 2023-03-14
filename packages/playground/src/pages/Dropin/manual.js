@@ -13,12 +13,27 @@ export async function initManual() {
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        installmentOptions: {
-            mc: {
-                values: [1, 2, 3, 4]
-            }
+        // DOES WORK - BUT IT SHOULDN'T - fixed removed from core/config.ts
+        // installmentOptions: {
+        //     mc: {
+        //         values: [1, 2, 3, 4]
+        //     }
+        // },
+        risk: {
+            enabled: false
+        },
+        removePaymentMethods: ['applepay'],
+        // allowPaymentMethods: ['mbway', 'blik'],
+        //        allowPaymentMethods: ['ideal'],
+        // allowPaymentMethods: ['scheme'],
+        onCancel: obj => {
+            console.log('### manual::onCancel:: obj', obj);
+        },
+        onChange: state => {
+            console.debug('onChange', state);
         },
         onSubmit: async (state, component) => {
+            console.log('### manual::onSubmit:: IN THE RIGHT PLACE');
             const result = await makePayment(state.data);
 
             // handle actions
@@ -72,6 +87,13 @@ export async function initManual() {
                 enableStoreDetails: false,
                 hasHolderName: true,
                 holderNameRequired: true
+            },
+            storedCard: {
+                installmentOptions: {
+                    mc: {
+                        values: [1, 2]
+                    }
+                }
             },
             paywithgoogle: {
                 buttonType: 'plain'
