@@ -136,6 +136,7 @@
     "ach.accountNumberField.invalid": "Número de conta inválido",
     "ach.accountLocationField.title": "Número de roteamento ABA",
     "ach.accountLocationField.invalid": "Número de roteamento ABA inválido",
+    "ach.savedBankAccount": "Conta bancária cadastrada",
     "select.state": "Selecionar estado",
     "select.stateOrProvince": "Selecione estado ou província",
     "select.provinceOrTerritory": "Selecionar província ou território",

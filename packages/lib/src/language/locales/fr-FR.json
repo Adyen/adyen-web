@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Numéro du compte incorrect",
     "ach.accountLocationField.title": "Code ABA",
     "ach.accountLocationField.invalid": "Code ABA incorrect",
+    "ach.savedBankAccount": "Compte bancaire enregistré",
     "select.state": "Sélectionnez l'État",
     "select.stateOrProvince": "Sélectionnez l'État ou la province",
     "select.provinceOrTerritory": "Sélectionnez la province ou le territoire",

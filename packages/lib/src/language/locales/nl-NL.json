@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Ongeldig rekeningnummer",
     "ach.accountLocationField.title": "Routingnummer (ABA)",
     "ach.accountLocationField.invalid": "Ongeldig routingnummer (ABA)",
+    "ach.savedBankAccount": "Opgeslagen bankrekening",
     "select.state": "Selecteer staat",
     "select.stateOrProvince": "Selecteer staat of provincie",
     "select.provinceOrTerritory": "Selecteer provincie of territorium",

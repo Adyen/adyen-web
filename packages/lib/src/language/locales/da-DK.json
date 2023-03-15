@@ -140,6 +140,7 @@
     "ach.accountNumberField.invalid": "Ugyldigt kontonummer",
     "ach.accountLocationField.title": "ABA-registreringsnummer",
     "ach.accountLocationField.invalid": "Ugyldigt ABA-registreringsnummer",
+    "ach.savedBankAccount": "Gemt bankkonto",
     "select.state": "Vælg stat",
     "select.stateOrProvince": "Vælg region eller kommune",
     "select.provinceOrTerritory": "Vælg provins eller territorium",
