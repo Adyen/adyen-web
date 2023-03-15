@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Nevažeći broj računa",
     "ach.accountLocationField.title": "ABA identifikacijski broj",
     "ach.accountLocationField.invalid": "Nevažeći ABA identifikacijski broj",
+    "ach.savedBankAccount": "Spremljeni bankovni račun",
     "select.state": "Odaberite saveznu državu",
     "select.stateOrProvince": "Odaberite državu ili provinciju",
     "select.provinceOrTerritory": "Odaberite provinciju ili teritorij",

@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Μη έγκυρος αριθμός λογαριασμού",
     "ach.accountLocationField.title": "Αριθμός δρομολόγησης ABA",
     "ach.accountLocationField.invalid": "Μη έγκυρος αριθμός δρομολόγησης ABA",
+    "ach.savedBankAccount": "Αποθηκευμένος τραπεζικός λογαριασμός",
     "select.state": "Επιλέξτε πολιτεία",
     "select.stateOrProvince": "Επιλέξτε πολιτεία ή επαρχία",
     "select.provinceOrTerritory": "Επιλέξτε επαρχία ή περιφέρεια",

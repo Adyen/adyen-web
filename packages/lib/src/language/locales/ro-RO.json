@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Numărul de cont este incorect",
     "ach.accountLocationField.title": "Număr de direcționare ABA",
     "ach.accountLocationField.invalid": "Număr de direcționare ABA incorect",
+    "ach.savedBankAccount": "Cont bancar salvat",
     "select.state": "Selectați statul",
     "select.stateOrProvince": "Selectați județul sau provincia",
     "select.provinceOrTerritory": "Selectați provincia sau teritoriul",
