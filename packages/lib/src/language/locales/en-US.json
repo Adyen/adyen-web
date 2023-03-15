@@ -40,7 +40,7 @@
     "idealIssuer.selectField.title": "Bank",
     "idealIssuer.selectField.placeholder": "Select your bank",
     "creditCard.success": "Payment Successful",
-    "loading": "Loading…",
+    "loading": "Loading&#8230",
     "continue": "Continue",
     "continueTo": "Continue to",
     "wechatpay.timetopay": "You have %@ to pay",
