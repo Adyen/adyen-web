@@ -6,6 +6,7 @@ name: Publish Package
 on:
   release:
     types: [created]
+  workflow_dispatch:  
 
 jobs:
   publish-npm:
@@ -25,7 +26,7 @@ jobs:
       # Build and publish to npm
       - run: cd packages/lib && npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_ADYEN_WEB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
       # Upload artifacts
       - uses: actions/upload-artifact@v3
