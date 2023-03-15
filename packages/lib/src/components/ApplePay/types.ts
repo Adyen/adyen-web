@@ -130,9 +130,6 @@ export interface ApplePayElementProps extends UIElementProps {
 
     onClick?: (resolve, reject) => void;
 
-    /** @internal */
-    onCancel?: () => void;
-
     onAuthorized?: OnAuthorizedCallback;
 
     onValidateMerchant?: (resolve, reject, validationURL: string) => void;

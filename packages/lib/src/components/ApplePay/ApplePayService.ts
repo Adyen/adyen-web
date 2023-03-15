@@ -8,12 +8,17 @@ interface ApplePayServiceOptions {
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
     onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
     onPaymentAuthorized?: OnAuthorizedCallback;
+    onSuccess: (event: ApplePayJS.ApplePayPaymentAuthorizationResult) => void;
+    onError: (reason?: any) => void;
 }
 
 class ApplePayService {
     private session: ApplePaySession;
+    private readonly options: ApplePayServiceOptions;
 
     constructor(paymentRequest: ApplePayJS.ApplePayPaymentRequest, options: ApplePayServiceOptions) {
+        this.options = options;
+
         this.session = new ApplePaySession(options.version, paymentRequest);
         this.session.onvalidatemerchant = event => this.onvalidatemerchant(event, options.onValidateMerchant);
         this.session.onpaymentauthorized = event => this.onpaymentauthorized(event, options.onPaymentAuthorized);
@@ -49,13 +54,14 @@ class ApplePayService {
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_js_api/providing_merchant_validation}
      */
     onvalidatemerchant(event: ApplePayJS.ApplePayValidateMerchantEvent, onValidateMerchant) {
-        new Promise((resolve, reject) => onValidateMerchant(resolve, reject, event.validationURL))
+        return new Promise((resolve, reject) => onValidateMerchant(resolve, reject, event.validationURL))
             .then(response => {
                 this.session.completeMerchantValidation(response);
             })
             .catch(error => {
                 console.error(error);
                 this.session.abort();
+                this.options.onError(error);
             });
     }
 
@@ -74,18 +80,21 @@ class ApplePayService {
                     ...result,
                     status: result?.status ?? ApplePaySession.STATUS_SUCCESS
                 });
+                this.options.onSuccess(result);
             })
             .catch((result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
                 this.session.completePayment({
                     ...result,
                     status: result?.status ?? ApplePaySession.STATUS_FAILURE
                 });
+                this.options.onError(result);
             });
     }
 
     /**
      * An event handler that is called when a new payment method is selected.
      * The onpaymentmethodselected function must resolve before the 30 second timeout
+     *
      * @param event - The event parameter contains the payment (ApplePayPayment) attribute.
      * @param onPaymentMethodSelected - A promise that will complete the payment when resolved. Use this promise to process the payment.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778013-onpaymentmethodselected}
@@ -93,10 +102,12 @@ class ApplePayService {
     onpaymentmethodselected(event: ApplePayJS.ApplePayPaymentMethodSelectedEvent, onPaymentMethodSelected) {
         return new Promise((resolve, reject) => onPaymentMethodSelected(resolve, reject, event))
             .then((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {
+                console.log('onpaymentmethodselected', paymentMethodUpdate);
                 this.session.completePaymentMethodSelection(paymentMethodUpdate);
             })
             .catch((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {
                 this.session.completePaymentMethodSelection(paymentMethodUpdate);
+                this.options.onError(paymentMethodUpdate);
             });
     }
 
@@ -114,6 +125,7 @@ class ApplePayService {
             })
             .catch((shippingContactUpdate: ApplePayJS.ApplePayShippingContactUpdate) => {
                 this.session.completeShippingContactSelection(shippingContactUpdate);
+                this.options.onError(shippingContactUpdate);
             });
     }
 
@@ -131,6 +143,7 @@ class ApplePayService {
             })
             .catch((shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => {
                 this.session.completeShippingMethodSelection(shippingMethodUpdate);
+                this.options.onError(shippingMethodUpdate);
             });
     }
 
@@ -141,8 +154,9 @@ class ApplePayService {
      * @param onCancel -
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778029-oncancel}
      */
-    oncancel(event: ApplePayJS.Event, onCancel) {
-        return onCancel(event);
+    oncancel(event: ApplePayJS.Event, onCancel): void {
+        onCancel(event);
+        this.options.onError(event);
     }
 }
 

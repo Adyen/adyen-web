@@ -36,8 +36,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             configuration: props.configuration,
             supportedNetworks,
             version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
-            onCancel: event => this.handleError(new AdyenCheckoutError('CANCEL', event))
+            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName
         };
     }
 
@@ -58,17 +57,23 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     }
 
     private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
-        const { version, onValidateMerchant, onCancel, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
+        const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
-        return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {
-            const paymentRequest = preparePaymentRequest({
-                companyName: this.props.configuration.merchantName,
-                ...this.props
-            });
+        const paymentRequest = preparePaymentRequest({
+            companyName: this.props.configuration.merchantName,
+            ...this.props
+        });
 
+        console.log('## starting session');
+
+        return new Promise((resolveSubmit, rejectSubmit) => {
             const session = new ApplePayService(paymentRequest, {
                 version,
-                onCancel,
+                onSuccess: resolveSubmit,
+                onError: rejectSubmit,
+                onCancel: event => {
+                    this.handleError(new AdyenCheckoutError('CANCEL', 'ApplePay UI dismissed', { cause: event }));
+                },
                 onPaymentMethodSelected,
                 onShippingMethodSelected,
                 onShippingContactSelected,
@@ -78,12 +83,16 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
 
+                    console.log('## onPaymentAuthorized - triggering submit and onAuthorised');
                     super.submit();
                     onPaymentAuthorized(resolve, reject, event);
                 }
             });
 
-            session.begin();
+            return new Promise((resolveOnClick, rejectOnClick) => this.props.onClick(resolveOnClick, rejectOnClick)).then(() => {
+                console.log('## Session begin');
+                session.begin();
+            });
         });
     }
 
