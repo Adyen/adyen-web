@@ -368,7 +368,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const srPanelResp = setSRMessages(
             errorsForPanel,
             retrieveLayout(),
-            // If we don't have country specific address labels, we might have labels related to a partialAddressSchema (i.e. zipCode)
+            // If we don't have country specific address labels, we might have a label related to a partialAddressSchema (i.e. zipCode)
             specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
         );
 
