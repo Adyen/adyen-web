@@ -365,7 +365,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
         // Pass errors to SRPanel via partial
-        const srPanelResp = setSRMessages(errorsForPanel, retrieveLayout(), specifications.getAddressLabelsForCountry(billingAddress?.country));
+        const srPanelResp = setSRMessages(
+            errorsForPanel,
+            retrieveLayout(),
+            // If we don't have country specific address labels, we might have labels related to a partialAddressSchema (i.e. zipCode)
+            specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
+        );
 
         /**
          * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
