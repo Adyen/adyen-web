@@ -1,25 +1,23 @@
 import { h, Fragment } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { SRMessagesProps } from './types';
 
 // An interface for the members exposed by SRMessages to its parent
 export interface SRMessagesRef {
-    setMessages?: (who) => void;
+    setMessages?: (who: string[]) => void;
 }
 
 export function SRMessages({ setComponentRef }: SRMessagesProps) {
     const messagesRef = useRef<SRMessagesRef>({});
-    // Just call once to create the object by which we expose the members expected by the parent comp
-    if (!Object.keys(messagesRef.current).length) {
-        setComponentRef?.(messagesRef.current);
-    }
 
     const [messages, setMessages] = useState(null);
 
-    // Expose method expected by (parent) PersonalDetails.tsx
-    messagesRef.current.setMessages = (msgs: string[]) => {
-        setMessages(msgs);
-    };
+    useEffect(() => {
+        // Should just call once, to create the object by which we expose the members expected by the parent comp
+        setComponentRef(messagesRef.current);
+        // Expose method expected by parent
+        messagesRef.current.setMessages = (msgs: string[]) => setMessages(msgs);
+    }, [setComponentRef]);
 
     return messages ? (
         <Fragment>
