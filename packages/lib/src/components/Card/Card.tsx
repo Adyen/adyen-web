@@ -36,7 +36,6 @@ export class CardElement extends UIElement<CardElementProps> {
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
-        SRConfig: {},
         _disableClickToPay: false
     };
 
@@ -55,9 +54,6 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     formatProps(props: CardElementProps) {
-        // Extract &/or set defaults for the screenreader error panel
-        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
-
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -77,11 +73,6 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
-            SRConfig: {
-                collateErrors,
-                moveFocus,
-                showPanel
-            },
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
             enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
@@ -234,11 +225,7 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
-            >
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <ClickToPayWrapper
                     amount={this.props.amount}
                     configuration={this.props.clickToPayConfiguration}
