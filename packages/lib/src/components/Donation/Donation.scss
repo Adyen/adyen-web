@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .adyen-checkout__adyen-giving {
     .adyen-checkout__status__icon {
@@ -92,8 +92,15 @@
 }
 
 .adyen-checkout__adyen-giving-actions {
+    display: flex;
+    flex-direction: column;
     margin-top: $spacing-medium;
+
+    .adyen-checkout-disclaimer__label {
+        align-self: center;
+    }
 }
+
 
 .adyen-checkout__button {
     &.adyen-checkout__button--donate {
