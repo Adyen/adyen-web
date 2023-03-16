@@ -5,5 +5,5 @@ window.cardConfig = {
 };
 
 window.mainConfiguration = {
-    moveFocusOnSubmitErrors: false
+    srConfig: { moveFocus: false }
 };

@@ -44,17 +44,6 @@
     margin: 0 0 $spacing-medium;
 }
 
-/* When holderName is on top & co-exists with an error panel */
-.adyen-checkout-error-panel--sr-only + .adyen-checkout__card__holderName,
-.adyen-checkout-error-panel + .adyen-checkout__card__holderName {
-    margin: 0 0 $spacing-medium;
-}
-
-.adyen-checkout-sr-panel--sr-only + .adyen-checkout__card__holderName,
-.adyen-checkout-sr-panel + .adyen-checkout__card__holderName {
-    margin: 0 0 $spacing-medium;
-}
-
 /* Hide card brand icon when cardNumber is in an error state */
 .adyen-checkout__field--cardNumber .adyen-checkout__input--error .adyen-checkout__card__cardNumber__brandIcon {
     display: none;
