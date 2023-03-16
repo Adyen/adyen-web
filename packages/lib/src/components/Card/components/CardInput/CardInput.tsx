@@ -11,23 +11,50 @@ import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
-import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
-import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, sortErrorsForPanel } from './utils';
+import { SortedErrorObject } from '../../../../core/Errors/types';
+import {
+    handlePartialAddressMode,
+    extractPropsForCardFields,
+    extractPropsForSFP,
+    getLayout,
+    usePrevious,
+    lookupBlurBasedErrors,
+    mapFieldKey
+} from './utils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
-import { getAddressHandler, getAutoJumpHandler, getErrorPanelHandler, getFocusHandler } from './handlers';
+import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstField } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
+import { setSRMessagesFromErrors } from '../../../../core/Errors/utils';
+import useCoreContext from '../../../../core/Context/useCoreContext';
+import { partial } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
+    const { i18n } = useCoreContext();
+
+    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
+
     const sfp = useRef(null);
     const isValidating = useRef(false);
+
+    /**
+     * Generate a setSRMessages function, once only (since the initial set of arguments don't change).
+     */
+    const setSRMessages = partial(setSRMessagesFromErrors, {
+        SRPanelRef,
+        i18n,
+        fieldTypeMappingFn: mapFieldKey,
+        isValidating
+    });
+    /** end SR stuff */
 
     const billingAddressRef = useRef(null);
     const setAddressRef = ref => {
@@ -42,10 +69,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const hasPanLengthRef = useRef(0);
     const isAutoJumping = useRef(false);
-
-    const errorFieldId = 'creditCardErrors';
-
-    const { collateErrors, moveFocus, showPanel } = props.SRConfig;
 
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
@@ -65,8 +88,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
 
-    // An object containing a collection of all the errors that can be passed to the ErrorPanel to be read by the screenreader
-    const [mergedSRErrors, setMergedSRErrors] = useState<ErrorPanelObj>(null);
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
 
     const [focusedElement, setFocusedElement] = useState('');
     const [isSfpValid, setIsSfpValid] = useState(false);
@@ -131,7 +153,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // SecuredField-only handler
     const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
-    const retrieveLayout = () => {
+    const retrieveLayout = (): string[] => {
         return getLayout({
             props,
             showKCP,
@@ -159,17 +181,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         setIOSFocusedField(elementType);
     }, []);
 
-    // Callback for ErrorPanel
-    const handleErrorPanelFocus = getErrorPanelHandler(isValidating, sfp, handleFocus);
-
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
     const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
-        // Clear errors so that the screenreader will read them *all* again - without this it only reads the newly added ones
-        setMergedSRErrors(null);
-
         /**
          * Handling auto complete value for holderName (but only if the component is using a holderName field)
          */
@@ -234,8 +250,14 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * EXPOSE METHODS expected by Card.tsx
      */
     cardInputRef.current.showValidation = () => {
-        // Clear errors so that the screenreader will read them *all* again
-        setMergedSRErrors(null);
+        // set flag
+        isValidating.current = true;
+
+        /**
+         * Clear errors prior to validating so that the screenreader will read them *all* again, and in the right order
+         * - only using aria-atomic on the error panel will read them in the wrong order
+         */
+        SRPanelRef.setMessages(null);
 
         // Validate SecuredFields
         sfp.current.showValidation();
@@ -245,8 +267,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         // Validate Address
         if (billingAddressRef?.current) billingAddressRef.current.showValidation();
-
-        isValidating.current = true;
     };
 
     cardInputRef.current.processBinLookupResponse = (binLookupResponse: BinLookupResponse, isReset: boolean) => {
@@ -287,9 +307,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * Handle updates from useForm
      */
     useEffect(() => {
-        // Clear errors so that the screenreader will read them *all* again
-        setMergedSRErrors(null);
-
         setData({ ...data, holderName: formData.holderName ?? '', taxNumber: formData.taxNumber });
 
         setSocialSecurityNumber(formData.socialSecurityNumber);
@@ -321,6 +338,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         });
     }, [formData, formValid, formErrors]);
 
+    // Get the previous value
+    const previousSortedErrors = usePrevious(sortedErrorList);
+
     /**
      * Main 'componentDidUpdate' handler
      */
@@ -341,15 +361,58 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
         const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
+
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
-        const sortedMergedErrors = sortErrorsForPanel({
-            errors: errorsForPanel,
-            layout: retrieveLayout(),
-            i18n: props.i18n,
-            countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country)
-        });
-        setMergedSRErrors(sortedMergedErrors);
+        // Pass errors to SRPanel via partial
+        const srPanelResp = setSRMessages(errorsForPanel, retrieveLayout(), specifications.getAddressLabelsForCountry(billingAddress?.country));
+
+        /**
+         * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
+         */
+        const currentErrorsSortedByLayout = srPanelResp.currentErrorsSortedByLayout;
+
+        // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
+        setSortedErrorList(currentErrorsSortedByLayout);
+
+        switch (srPanelResp.action) {
+            case ERROR_ACTION_FOCUS_FIELD:
+                if (SRPanelRef.moveFocus) setFocusOnFirstField(isValidating, sfp, srPanelResp.fieldToFocus);
+                break;
+            /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
+            case ERROR_ACTION_BLUR_SCENARIO: {
+                let difference;
+
+                // If nothing to compare - take the new item...
+                if (currentErrorsSortedByLayout.length === 1 && !previousSortedErrors) {
+                    difference = currentErrorsSortedByLayout;
+                }
+                // .. else, find the difference: what's in the new array that wasn't in the old array?
+                if (currentErrorsSortedByLayout.length > previousSortedErrors?.length) {
+                    difference = currentErrorsSortedByLayout.filter(({ field: id1 }) => !previousSortedErrors.some(({ field: id2 }) => id2 === id1));
+                }
+
+                const latestErrorMsg = difference?.[0];
+
+                if (latestErrorMsg) {
+                    // Use the error code to look up whether error is actually a blur base one (most are but some SF ones aren't)
+                    const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
+
+                    // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
+                    // (once from the aria-live, error panel & once from the aria-describedby element)
+                    const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
+                    // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
+                    SRPanelRef.setMessages(latestSRError); // not validating, but there is an error
+                } else {
+                    // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    // console.log('### CardInput2::componentDidUpdate:: #3(not validating) clearing errors:: NO latestErrorMsg');
+                    SRPanelRef?.setMessages(null); // not validating, was an error, now there isn't
+                }
+                break;
+            }
+            default:
+                break;
+        }
 
         props.onChange({
             data,
@@ -381,7 +444,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onBrand={props.onBrand}
                 onFocus={handleFocus}
                 type={props.brand}
-                isCollatingErrors={collateErrors}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
@@ -392,8 +454,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}
-                        role={collateErrors && 'form'}
-                        aria-describedby={collateErrors ? errorFieldId : null}
+                        role={'form'}
                     >
                         <FieldToRender
                             // Extract exact props that we need to pass down
@@ -407,18 +468,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             focusedElement={focusedElement}
                             setFocusOn={setFocusOn}
                             sfpState={sfpState}
-                            collateErrors={collateErrors}
-                            errorFieldId={errorFieldId}
                             cvcPolicy={cvcPolicy}
                             hasInstallments={hasInstallments}
                             showAmountsInInstallments={showAmountsInInstallments}
                             handleInstallments={setInstallments}
                             // For Card
                             brandsIcons={props.brandsIcons}
-                            mergedSRErrors={mergedSRErrors}
-                            moveFocus={moveFocus}
-                            showPanel={showPanel}
-                            handleErrorPanelFocus={handleErrorPanelFocus}
                             formData={formData}
                             formErrors={formErrors}
                             formValid={formValid}

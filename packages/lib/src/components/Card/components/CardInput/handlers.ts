@@ -1,29 +1,26 @@
-import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 
 /**
- * Return a function that can act as a callback for the ErrorPanel
+ * Helper for CardInput - gets a field name and sets focus on it
  */
-export const getErrorPanelHandler = (isValidating, sfp, handleFocus: (e: CbObjOnFocus) => void) => {
-    // Return Handler fn:
-    return (errors: ErrorPanelObj): void => {
-        if (isValidating.current) {
-            const who: string = errors.fieldList[0];
-
-            // If not a cardInput related securedField - find field and set focus on it
-            // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
-            if (!CREDIT_CARD_SF_FIELDS.includes(who)) {
-                setFocusOnNonSF(who, sfp);
-            } else {
-                // Is a securedField - so it has it's own focus procedures
-                handleFocus({ currentFocusObject: who } as CbObjOnFocus);
-                sfp.current.setFocusOn(who);
-            }
-            isValidating.current = false;
+export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
+    if (isValidating.current) {
+        // If not a cardInput related securedField - find field and set focus on it
+        // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
+        if (!CREDIT_CARD_SF_FIELDS.includes(fieldToFocus)) {
+            setFocusOnNonSF(fieldToFocus, sfp);
+        } else {
+            // Is a securedField - so it has its own focus procedures
+            sfp.current.setFocusOn(fieldToFocus);
         }
-    };
+
+        // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
+        setTimeout(() => {
+            isValidating.current = false;
+        }, 300);
+    }
 };
 
 export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {

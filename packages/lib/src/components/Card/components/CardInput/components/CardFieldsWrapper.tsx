@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
-import { ErrorPanel } from '../../../../../core/Errors/ErrorPanel';
 import CardFields from './CardFields';
 import KCPAuthentication from './KCPAuthentication';
 import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
@@ -8,7 +7,6 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
 import DisclaimerMessage from './DisclaimerMessage';
 
 export const CardFieldsWrapper = ({
@@ -20,8 +18,6 @@ export const CardFieldsWrapper = ({
     handleChangeFor,
     sfpState,
     setFocusOn,
-    collateErrors,
-    errorFieldId,
     cvcPolicy,
     focusedElement,
     hasInstallments,
@@ -29,10 +25,6 @@ export const CardFieldsWrapper = ({
     showAmountsInInstallments,
     // Card
     brandsIcons,
-    mergedSRErrors,
-    moveFocus,
-    showPanel,
-    handleErrorPanelFocus,
     formData,
     formErrors,
     formValid,
@@ -73,8 +65,6 @@ export const CardFieldsWrapper = ({
     iOSFocusedField,
     disclaimerMessage
 }) => {
-    const { i18n } = useCoreContext();
-
     const cardHolderField = (
         <CardHolderName
             required={holderNameRequired}
@@ -90,16 +80,6 @@ export const CardFieldsWrapper = ({
 
     return (
         <LoadingWrapper status={sfpState.status}>
-            {collateErrors && (
-                <ErrorPanel
-                    id={errorFieldId}
-                    heading={i18n.get('errorPanel.title')}
-                    errors={mergedSRErrors}
-                    callbackFn={moveFocus ? handleErrorPanelFocus : null}
-                    showPanel={showPanel}
-                />
-            )}
-
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
 
             <CardFields
