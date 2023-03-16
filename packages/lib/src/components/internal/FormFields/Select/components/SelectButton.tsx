@@ -24,7 +24,11 @@ function SelectButton(props: SelectButtonProps) {
 
     const setFocus = (e: Event) => {
         e.preventDefault();
-        if (props.filterInputRef.current) props.filterInputRef.current.focus();
+        if (document.activeElement === props.filterInputRef.current) {
+            if (!props.showList) {
+                props.toggleList(e);
+            }
+        } else if (props.filterInputRef.current) props.filterInputRef.current.focus();
     };
 
     // 1. If readonly we ignore the click action
