@@ -50,7 +50,7 @@
     .adyen-checkout__campaign-background-image {
         &::before {
             background: inherit;
-            content: "";
+            content: '';
             height: 100%;
             position: absolute;
             transition: transform 0.6s ease-out;
@@ -92,15 +92,9 @@
 }
 
 .adyen-checkout__adyen-giving-actions {
-    display: flex;
-    flex-direction: column;
     margin-top: $spacing-medium;
-
-    .adyen-checkout-disclaimer__label {
-        align-self: center;
-    }
+    text-align: center;
 }
-
 
 .adyen-checkout__button {
     &.adyen-checkout__button--donate {
