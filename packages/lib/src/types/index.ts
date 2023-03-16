@@ -196,7 +196,20 @@ export interface PaymentAmountExtended extends PaymentAmount {
     currencyDisplay?: string;
 }
 
-export type AddressField = typeof ADDRESS_SCHEMA[number];
+export type ShopperDetails = {
+    shopperName?: {
+        firstName?: string;
+        lastName?: string;
+    };
+    shopperEmail?: string;
+    countryCode?: string;
+    telephoneNumber?: string;
+    dateOfBirth?: string;
+    billingAddress?: Partial<AddressData>;
+    shippingAddress?: Partial<AddressData>;
+};
+
+export type AddressField = (typeof ADDRESS_SCHEMA)[number];
 
 export type AddressData = {
     [key in AddressField]?: string;

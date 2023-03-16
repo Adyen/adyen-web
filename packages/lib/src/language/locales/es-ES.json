@@ -136,6 +136,7 @@
     "ach.accountNumberField.invalid": "Número de cuenta no válido",
     "ach.accountLocationField.title": "Número de ruta ABA",
     "ach.accountLocationField.invalid": "El número de ruta ABA no es válido",
+    "ach.savedBankAccount": "Se ha guardado la cuenta bancaria",
     "select.state": "Seleccione el estado",
     "select.stateOrProvince": "Seleccione el estado o provincia",
     "select.provinceOrTerritory": "Seleccione la provincia o territorio",

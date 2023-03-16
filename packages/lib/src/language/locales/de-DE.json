@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Ungültige Kontonummer",
     "ach.accountLocationField.title": "ABA-Nummer",
     "ach.accountLocationField.invalid": "Ungültige ABA-Nummer",
+    "ach.savedBankAccount": "Gespeichertes Bankkonto",
     "select.state": "Bundesstaat auswählen",
     "select.stateOrProvince": "Bundesland oder Provinz/Region auswählen",
     "select.provinceOrTerritory": "Provinz oder Territorium auswählen",

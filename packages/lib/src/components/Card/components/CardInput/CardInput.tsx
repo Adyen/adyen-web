@@ -169,7 +169,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * re. Disabling arrow keys in iOS:
      * Only by disabling all fields in the Card PM except for the active securedField input can we force the iOS soft keyboard arrow keys to disable
      *
-     * NOTE: only called if ua.__IS_IOS = true (as referenced in CSF)
+     * NOTE: only called if ua.__IS_IOS = true && this.config.disableIOSArrowKeys = true (as referenced in CSF)
      *
      * @param obj - has fieldType prop saying whether this function is being called in response to an securedFields click ('encryptedCardNumber' etc)
      * - in which case we should disable all non-SF fields
@@ -184,7 +184,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const handleAddress = getAddressHandler(setFormData, setFormValid, setFormErrors);
 
     const doPanAutoJump = getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout());
-    // const doPanAutoJump = useMemo(() => getAutoJumpHandler(isAutoJumping, sfp, retrieveLayout()), [isAutoJumping, sfp]);
 
     const handleSecuredFieldsChange = (sfState: SFPState, eventDetails?: OnChangeEventDetails): void => {
         /**
@@ -445,7 +444,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 onBrand={props.onBrand}
                 onFocus={handleFocus}
                 type={props.brand}
-                {...(props.disableIOSArrowKeys && { onTouchstartIOS: handleTouchstartIOS })}
+                disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
                     <div
                         ref={setRootNode}

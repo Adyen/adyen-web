@@ -188,7 +188,8 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
-            maskSecurityCode: this.config.maskSecurityCode
+            maskSecurityCode: this.config.maskSecurityCode,
+            disableIOSArrowKeys: this.config.disableIOSArrowKeys
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
@@ -237,7 +238,9 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                if (this.config.disableIOSArrowKeys) {
+                    this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                }
 
                 // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
                 // - pass information about which field has just been clicked (gained focus) to the other iframes

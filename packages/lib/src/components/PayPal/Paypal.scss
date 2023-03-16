@@ -30,6 +30,10 @@
     }
 }
 
+.adyen-checkout__paypal-processing .adyen-checkout__paypal__button {
+    display: none;
+}
+
 // Dropin only
 .adyen-checkout__payment-method {
     .adyen-checkout__paypal__status {

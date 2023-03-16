@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Nieprawidłowy numer rachunku",
     "ach.accountLocationField.title": "Kod bankowy ABA Routing Number",
     "ach.accountLocationField.invalid": "Nieprawidłowy kod bankowy ABA Routing Number",
+    "ach.savedBankAccount": "Zapisane konto bankowe",
     "select.state": "Wybierz stan",
     "select.stateOrProvince": "Wybierz stan/województwo",
     "select.provinceOrTerritory": "Wybierz region/terytorium",

@@ -139,6 +139,7 @@
     "ach.accountNumberField.invalid": "Neplatné číslo účtu",
     "ach.accountLocationField.title": "Směrovací tranzitní číslo ABA",
     "ach.accountLocationField.invalid": "Neplatné směrovací tranzitní číslo ABA",
+    "ach.savedBankAccount": "Uložený bankovní účet",
     "select.state": "Vyberte stát",
     "select.stateOrProvince": "Vyberte kraj nebo okres",
     "select.provinceOrTerritory": "Vyberte provincii nebo teritorium",

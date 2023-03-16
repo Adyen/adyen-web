@@ -28,7 +28,7 @@ class Session {
         const session = sanitizeSession(rawSession) as CheckoutSession;
         if (!clientKey) throw new Error('No clientKey available');
 
-        this.storage = new Storage('session');
+        this.storage = new Storage('session', 'localStorage');
         this.clientKey = clientKey;
         this.loadingContext = loadingContext;
         this.session = session;

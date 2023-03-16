@@ -5,4 +5,5 @@ export interface AchElementProps extends UIElementProps {
     holderNameRequired?: boolean;
     hasHolderName?: boolean;
     enableStoreDetails: boolean;
+    bankAccountNumber: string;
 }

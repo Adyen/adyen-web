@@ -1,4 +1,4 @@
-import AdyenCheckout from '@adyen/adyen-web';
+import AdyenCheckout from '@adyen/adyen-web/dist/es';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';

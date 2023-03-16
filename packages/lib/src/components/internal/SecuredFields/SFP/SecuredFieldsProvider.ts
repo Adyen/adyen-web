@@ -181,7 +181,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             minimumExpiryDate: this.props.minimumExpiryDate,
             implementationType: this.props.implementationType || 'components', // to distinguish between 'regular' and 'custom' card component
             forceCompat: this.props.forceCompat,
-            maskSecurityCode: this.props.maskSecurityCode
+            maskSecurityCode: this.props.maskSecurityCode,
+            disableIOSArrowKeys: !!this.props.disableIOSArrowKeys
         };
 
         this.csf = initCSF(csfSetupObj);
