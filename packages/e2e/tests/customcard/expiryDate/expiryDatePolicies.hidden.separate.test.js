@@ -1,26 +1,10 @@
-import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../_common/cardMocks';
+import { turnOffSDKMocking } from '../../_common/cardMocks';
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
-import { REGULAR_TEST_CARD } from '../../cards/utils/constants';
+import { SYNCHRONY_PLCC_NO_DATE, TEST_CVC_VALUE } from '../../cards/utils/constants';
 
 const cardPage = new CustomCardComponentPage('.secured-fields-2');
 
 const BASE_REF = 'securedFields2';
-
-const mockedResponse = {
-    brands: [
-        {
-            brand: 'cup', // keep as a recognised card brand (cup) until we have a genuine brand w. optional expiryDate
-            cvcPolicy: 'hidden',
-            enableLuhnCheck: true,
-            expiryDatePolicy: 'hidden',
-            supported: true
-        }
-    ],
-    issuingCountryCode: 'US',
-    requestId: null
-};
-
-const mock = getBinLookupMock(binLookupUrl, mockedResponse);
 
 fixture`Test how Custom Card Component with separate date fields handles hidden expiryDate policy`
     .beforeEach(async t => {
@@ -29,24 +13,22 @@ fixture`Test how Custom Card Component with separate date fields handles hidden 
         // - provide a way to ensure SDK bin mocking is turned off
         await turnOffSDKMocking();
     })
-    .requestHooks(mock)
     .clientScripts('./expiryDate.clientScripts.js');
 
 test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    // Fill number to provoke binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, SYNCHRONY_PLCC_NO_DATE);
 
     // UI reflects that binLookup says expiryDate is hidden
     await t.expect(cardPage.monthHolder.filterHidden().exists).ok();
     await t.expect(cardPage.yearHolder.filterHidden().exists).ok();
 
-    // ...and cvc is hidden too
-    await t.expect(cardPage.cvcHolder.filterHidden().exists).ok();
+    await cardPage.customCardUtils.fillCVC(t, TEST_CVC_VALUE);
 
-    // Card seen as valid (since CVC is hidden too)
+    // Card seen as valid
     await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(true);
 
     // Clear number and see UI & state reset
@@ -91,8 +73,8 @@ test('#2 Testing hidden expiryDatePolicy - validating fields first and then ente
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .notEql(null);
 
-    // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    // Fill number to provoke binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, SYNCHRONY_PLCC_NO_DATE);
 
     // Expect errors to be cleared - since the fields were in error because they were empty
     // and now the PAN field is filled and the date & cvc fields are now hidden...
@@ -102,8 +84,6 @@ test('#2 Testing hidden expiryDatePolicy - validating fields first and then ente
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryMonth'))
         .eql(null)
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryYear'))
-        .eql(null)
-        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .eql(null);
 });
 
@@ -121,12 +101,14 @@ test('#3 Testing hidden expiryDatePolicy - date field in error does not stop car
     // Force blur event to fire on date field
     await cardPage.setForceClick(true);
 
-    // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    // Fill number to provoke binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, SYNCHRONY_PLCC_NO_DATE);
 
     // UI reflects that binLookup says expiryDate is hidden
     await t.expect(cardPage.monthHolder.filterHidden().exists).ok();
     await t.expect(cardPage.yearHolder.filterHidden().exists).ok();
+
+    await cardPage.customCardUtils.fillCVC(t, TEST_CVC_VALUE);
 
     // Card seen as valid (despite date field technically being in error)
     await t.expect(cardPage.getFromState(BASE_REF, 'isValid')).eql(true);
