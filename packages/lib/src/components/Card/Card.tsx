@@ -13,6 +13,7 @@ import { createClickToPayService } from './components/ClickToPay/services/create
 import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
 import ClickToPayWrapper from './ClickToPayWrapper';
 import { UIElementStatus } from '../types';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -226,17 +227,19 @@ export class CardElement extends UIElement<CardElementProps> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <ClickToPayWrapper
-                    amount={this.props.amount}
-                    configuration={this.props.clickToPayConfiguration}
-                    clickToPayService={this.clickToPayService}
-                    setClickToPayRef={this.setClickToPayRef}
-                    onSetStatus={this.setElementStatus}
-                    onSubmit={this.handleClickToPaySubmit}
-                    onError={this.handleError}
-                >
-                    {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
-                </ClickToPayWrapper>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <ClickToPayWrapper
+                        amount={this.props.amount}
+                        configuration={this.props.clickToPayConfiguration}
+                        clickToPayService={this.clickToPayService}
+                        setClickToPayRef={this.setClickToPayRef}
+                        onSetStatus={this.setElementStatus}
+                        onSubmit={this.handleClickToPaySubmit}
+                        onError={this.handleError}
+                    >
+                        {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+                    </ClickToPayWrapper>
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

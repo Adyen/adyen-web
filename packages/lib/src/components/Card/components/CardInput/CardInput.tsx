@@ -32,25 +32,19 @@ import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
 import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
-import { setSRMessagesFromErrors } from '../../../../core/Errors/utils';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import { partial } from '../../../internal/SecuredFields/lib/utilities/commonUtils';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
+import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
-    const { i18n } = useCoreContext();
-
-    const { current: SRPanelRef } = useRef(props.modules?.srPanel);
+    const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     const sfp = useRef(null);
     const isValidating = useRef(false);
 
     /**
-     * Generate a setSRMessages function, once only (since the initial set of arguments don't change).
+     * Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
      */
-    const setSRMessages = partial(setSRMessagesFromErrors, {
-        SRPanelRef,
-        i18n,
+    const setSRMessages = setSRMessagesFromObjects?.({
         fieldTypeMappingFn: mapFieldKey,
         isValidating
     });
@@ -257,7 +251,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
          * Clear errors prior to validating so that the screenreader will read them *all* again, and in the right order
          * - only using aria-atomic on the error panel will read them in the wrong order
          */
-        SRPanelRef.setMessages(null);
+        clearSRPanel(); // TODO - recheck if this is still true
 
         // Validate SecuredFields
         sfp.current.showValidation();
@@ -365,7 +359,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
         // Pass errors to SRPanel via partial
-        const srPanelResp = setSRMessages(
+        const srPanelResp = setSRMessages?.(
             errorsForPanel,
             retrieveLayout(),
             // If we don't have country specific address labels, we might have a label related to a partialAddressSchema (i.e. zipCode)
@@ -375,14 +369,14 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         /**
          * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
          */
-        const currentErrorsSortedByLayout = srPanelResp.currentErrorsSortedByLayout;
+        const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
 
         // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
         setSortedErrorList(currentErrorsSortedByLayout);
 
-        switch (srPanelResp.action) {
+        switch (srPanelResp?.action) {
             case ERROR_ACTION_FOCUS_FIELD:
-                if (SRPanelRef.moveFocus) setFocusOnFirstField(isValidating, sfp, srPanelResp.fieldToFocus);
+                if (shouldMoveFocusSR) setFocusOnFirstField(isValidating, sfp, srPanelResp?.fieldToFocus);
                 break;
             /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
             case ERROR_ACTION_BLUR_SCENARIO: {
@@ -407,11 +401,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // (once from the aria-live, error panel & once from the aria-describedby element)
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                     // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
-                    SRPanelRef.setMessages(latestSRError); // not validating, but there is an error
+                    setSRMessagesFromStrings(latestSRError);
                 } else {
                     // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
                     // console.log('### CardInput2::componentDidUpdate:: #3(not validating) clearing errors:: NO latestErrorMsg');
-                    SRPanelRef?.setMessages(null); // not validating, was an error, now there isn't
+                    clearSRPanel();
                 }
                 break;
             }

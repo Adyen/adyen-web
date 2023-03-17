@@ -15,11 +15,6 @@ export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
             // Is a securedField - so it has its own focus procedures
             sfp.current.setFocusOn(fieldToFocus);
         }
-
-        // Allow time for cardInput to collate all the fields in error whilst it is 'showValidation' mode
-        setTimeout(() => {
-            isValidating.current = false;
-        }, 300);
     }
 };
 
