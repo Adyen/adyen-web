@@ -1,12 +1,16 @@
-import { h } from 'preact';
+import { h, ComponentChildren } from 'preact';
 import { SRPanelContext } from './SRPanelContext';
 import useCoreContext from '../Context/useCoreContext';
 import { partial } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from './utils';
+import { SRPanel } from './SRPanel';
 
-// TODO - add Types
+type SRPanelProviderProps = {
+    srPanel: SRPanel;
+    children: ComponentChildren;
+};
 
-const SRPanelProvider = ({ srPanel, children }) => {
+const SRPanelProvider = ({ srPanel, children }: SRPanelProviderProps) => {
     const { i18n } = useCoreContext();
 
     // Helper fns

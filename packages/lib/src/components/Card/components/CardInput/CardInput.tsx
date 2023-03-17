@@ -43,7 +43,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
-    const setSRMessages = setSRMessagesFromObjects?.({
+    const setSRMessages: any = setSRMessagesFromObjects?.({
         fieldTypeMappingFn: mapFieldKey
     });
     /** end SR stuff */

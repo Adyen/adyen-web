@@ -1,8 +1,15 @@
 import { createContext } from 'preact';
+import { SRPanel } from './SRPanel';
 
-// TODO - add Types
+export interface ISRPanelContext {
+    srPanel: SRPanel;
+    setSRMessagesFromObjects: ({ fieldTypeMappingFn }) => {};
+    setSRMessagesFromStrings: (strs) => void;
+    clearSRPanel: () => void;
+    shouldMoveFocusSR: boolean;
+}
 
-export const SRPanelContext = createContext({
+export const SRPanelContext = createContext<ISRPanelContext>({
     srPanel: null,
     setSRMessagesFromObjects: null,
     setSRMessagesFromStrings: null,
