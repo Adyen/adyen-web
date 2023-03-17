@@ -6,7 +6,7 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
  * Helper for CardInput - gets a field name and sets focus on it
  */
 export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
-    if (isValidating.current) {
+    if (isValidating) {
         // If not a cardInput related securedField - find field and set focus on it
         // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
         if (!CREDIT_CARD_SF_FIELDS.includes(fieldToFocus)) {

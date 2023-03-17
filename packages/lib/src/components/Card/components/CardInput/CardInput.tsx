@@ -36,17 +36,15 @@ import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../.
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
-    const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
-
     const sfp = useRef(null);
     const isValidating = useRef(false);
 
-    /**
-     * Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
-     */
+    /** SR stuff */
+    const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
+
+    // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
     const setSRMessages = setSRMessagesFromObjects?.({
-        fieldTypeMappingFn: mapFieldKey,
-        isValidating
+        fieldTypeMappingFn: mapFieldKey
     });
     /** end SR stuff */
 
@@ -358,9 +356,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
-        // Pass errors to SRPanel via partial
+        // Pass dynamic props (errors, layout etc) to SRPanel via partial
         const srPanelResp = setSRMessages?.(
             errorsForPanel,
+            isValidating.current,
             retrieveLayout(),
             // If we don't have country specific address labels, we might have a label related to a partialAddressSchema (i.e. zipCode)
             specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
@@ -376,7 +375,11 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
         switch (srPanelResp?.action) {
             case ERROR_ACTION_FOCUS_FIELD:
-                if (shouldMoveFocusSR) setFocusOnFirstField(isValidating, sfp, srPanelResp?.fieldToFocus);
+                if (shouldMoveFocusSR) setFocusOnFirstField(isValidating.current, sfp, srPanelResp?.fieldToFocus);
+                // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
+                setTimeout(() => {
+                    isValidating.current = false;
+                }, 300);
                 break;
             /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
             case ERROR_ACTION_BLUR_SCENARIO: {

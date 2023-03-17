@@ -10,12 +10,11 @@ const SRPanelProvider = ({ srPanel, children }) => {
     const { i18n } = useCoreContext();
 
     // Helper fns
-    const setSRMessagesFromObjects = ({ fieldTypeMappingFn, isValidating }) => {
+    const setSRMessagesFromObjects = ({ fieldTypeMappingFn }) => {
         return partial(setSRMessagesFromErrors, {
             SRPanelRef: srPanel,
             i18n,
-            fieldTypeMappingFn,
-            isValidating
+            fieldTypeMappingFn
         });
     };
 
