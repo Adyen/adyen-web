@@ -115,16 +115,6 @@
     flex-wrap: wrap;
 }
 
-.adyen-checkout__payment-method__name {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.adyen-checkout__payment-method__name--selected {
-    font-weight: 500;
-}
-
 .adyen-checkout__payment-method__details {
     padding: 0 16px;
     position: relative;
