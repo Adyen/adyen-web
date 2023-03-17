@@ -1,12 +1,14 @@
 import { h } from 'preact';
 import { mount, shallow } from 'enzyme';
 import DonationComponent from './DonationComponent';
+import { render, screen } from '@testing-library/preact';
 
 const amounts = {
     currency: 'EUR',
     values: [50, 199, 300]
 };
 const createWrapper = (props = {}) => mount(<DonationComponent amounts={amounts} {...props} />);
+jest.mock('../../internal/DisclaimerMessage', () => () => <div data-testid="disclaimer" />);
 
 describe('DonationComponent', () => {
     test('Renders the Donation Component', () => {
@@ -34,10 +36,7 @@ describe('DonationComponent', () => {
     test('Should return isValid true when an amount is selected', () => {
         const onChangeMock = jest.fn();
         const wrapper = createWrapper({ onChange: onChangeMock });
-        wrapper
-            .find('.adyen-checkout__button-group__input')
-            .first()
-            .simulate('change');
+        wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
         const lastOnChangeCall = onChangeMock.mock.calls.pop();
         expect(lastOnChangeCall[0].isValid).toBe(true);
     });
@@ -61,37 +60,35 @@ describe('DonationComponent', () => {
 
     test('Should show number fractions in the labels', () => {
         const wrapper = createWrapper();
-        expect(
-            wrapper
-                .find('label.adyen-checkout__button')
-                .at(0)
-                .text()
-        ).toEqual('€0.50');
-        expect(
-            wrapper
-                .find('label.adyen-checkout__button')
-                .at(1)
-                .text()
-        ).toEqual('€1.99');
-        expect(
-            wrapper
-                .find('label.adyen-checkout__button')
-                .at(2)
-                .text()
-        ).toEqual('€3.00');
+        expect(wrapper.find('label.adyen-checkout__button').at(0).text()).toEqual('€0.50');
+        expect(wrapper.find('label.adyen-checkout__button').at(1).text()).toEqual('€1.99');
+        expect(wrapper.find('label.adyen-checkout__button').at(2).text()).toEqual('€3.00');
     });
 
     test('Should submit the right amount', () => {
         const onDonateMock = jest.fn();
         const wrapper = createWrapper({ onDonate: onDonateMock });
 
-        wrapper
-            .find('.adyen-checkout__button-group__input')
-            .first()
-            .simulate('change');
+        wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
         wrapper.find('.adyen-checkout__button--donate').simulate('click');
 
         const callbackData = onDonateMock.mock.calls[0][0];
         expect(callbackData.data.amount.value).toBe(50);
+    });
+
+    test('Should render the disclaimer if disclaimerMessage presents', () => {
+        const disclaimerMessage = {
+            message: 'By continuing you accept the %{linkText} of MyStore',
+            linkText: 'terms and conditions',
+            link: 'https://www.adyen.com'
+        };
+
+        render(<DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} />);
+        expect(screen.queryByTestId('disclaimer')).toBeVisible();
+    });
+
+    test('Should not render the disclaimer if there is no disclaimerMessage', () => {
+        render(<DonationComponent amounts={amounts} />);
+        expect(screen.queryByTestId('disclaimer')).not.toBeInTheDocument();
     });
 });
