@@ -78,6 +78,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                 id={this.id}
                 aria-live={'polite'}
                 aria-atomic={'true'}
+                role={'log'}
+                aria-relevant={'all'}
                 {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
                 <SRMessages setComponentRef={this.setComponentRef} />
