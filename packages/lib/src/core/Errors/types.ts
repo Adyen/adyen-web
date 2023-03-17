@@ -44,3 +44,9 @@ export interface GenericError {
     errorMessage: string; // needed for the SRPanel
     error: string; // needed for the visual error
 }
+
+export interface SetSRMessagesReturnObject {
+    currentErrorsSortedByLayout: SortedErrorObject[];
+    action: string;
+    fieldToFocus?: string;
+}

@@ -1,9 +1,10 @@
 import { createContext } from 'preact';
 import { SRPanel } from './SRPanel';
+import { SetSRMessagesReturnFn } from './SRPanelProvider';
 
 export interface ISRPanelContext {
     srPanel: SRPanel;
-    setSRMessagesFromObjects: ({ fieldTypeMappingFn }) => {};
+    setSRMessagesFromObjects: ({ fieldTypeMappingFn }) => SetSRMessagesReturnFn;
     setSRMessagesFromStrings: (strs) => void;
     clearSRPanel: () => void;
     shouldMoveFocusSR: boolean;

@@ -11,7 +11,7 @@ import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
-import { SortedErrorObject } from '../../../../core/Errors/types';
+import { SetSRMessagesReturnObject, SortedErrorObject } from '../../../../core/Errors/types';
 import {
     handlePartialAddressMode,
     extractPropsForCardFields,
@@ -34,6 +34,7 @@ import classNames from 'classnames';
 import { getPartialAddressValidationRules } from '../../../internal/Address/validate';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
+import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -43,7 +44,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
-    const setSRMessages: any = setSRMessagesFromObjects?.({
+    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
         fieldTypeMappingFn: mapFieldKey
     });
     /** end SR stuff */
@@ -357,13 +358,13 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
 
         // Pass dynamic props (errors, layout etc) to SRPanel via partial
-        const srPanelResp = setSRMessages?.(
-            errorsForPanel,
-            isValidating.current,
-            retrieveLayout(),
+        const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({
+            errors: errorsForPanel,
+            isValidating: isValidating.current,
+            layout: retrieveLayout(),
             // If we don't have country specific address labels, we might have a label related to a partialAddressSchema (i.e. zipCode)
-            specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
-        );
+            countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
+        });
 
         /**
          * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
