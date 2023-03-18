@@ -1723,10 +1723,10 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/googlepay@^0.6.2":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@types/googlepay/-/googlepay-0.6.4.tgz#e0b06ae1f12496c4fa43e52d35e76411dbbee135"
-  integrity sha512-PTt/UCllzl8z5HmhymPpSj6uENZvVKZvCBYdDVmbBVJnLStitxtWrterAOQZkKGlqVdzxNXYeif5hOAMNMS5mw==
+"@types/googlepay@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@types/googlepay/-/googlepay-0.7.0.tgz#eb11aca185a64cd413952bcb7c16ea25217ac6bc"
+  integrity sha512-jC7ViexJeV8LlTKLiUBfNs5GICbm0PYsm5Y30JCEBkreY0bMNA+F4KnTEz+WtqBTRldTAxKBKqRstlOUFpW+dA==
 
 "@types/graceful-fs@^4.1.3":
   version "4.1.6"
