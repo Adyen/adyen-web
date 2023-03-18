@@ -250,7 +250,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
          * Clear errors prior to validating so that the screenreader will read them *all* again, and in the right order
          * - only using aria-atomic on the error panel will read them in the wrong order
          */
-        clearSRPanel(); // TODO - recheck if this is still true
+        clearSRPanel?.(); // TODO - recheck if this is still true
 
         // Validate SecuredFields
         sfp.current.showValidation();
