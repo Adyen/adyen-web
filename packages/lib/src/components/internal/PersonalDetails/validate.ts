@@ -30,7 +30,7 @@ export const personalDetailsValidationRules: ValidatorRules = {
         modes: ['blur']
     },
     dateOfBirth: {
-        validate: value => isDateOfBirthValid(value),
+        validate: value => (isEmpty(value) ? null : isDateOfBirthValid(value)),
         errorMessage: 'dateOfBirth.invalid',
         modes: ['blur']
     },
