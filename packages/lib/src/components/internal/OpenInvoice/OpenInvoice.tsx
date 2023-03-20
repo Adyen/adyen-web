@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState, useMemo } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
 import Checkbox from '../FormFields/Checkbox';
 import ConsentCheckbox from '../FormFields/ConsentCheckbox';
-import { getActiveFieldsData, getInitialActiveFieldsets, fieldsetsSchema } from './utils';
+import { getActiveFieldsData, getInitialActiveFieldsets, fieldsetsSchema, mapFieldKey } from './utils';
 import {
     OpenInvoiceActiveFieldsets,
     OpenInvoiceFieldsetsRefs,
@@ -18,6 +18,21 @@ import {
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { ComponentMethodsRef } from '../../types';
+import { enhanceErrorObjectKeys } from '../../../core/Errors/utils';
+import { GenericError, SetSRMessagesReturnObject } from '../../../core/Errors/types';
+import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
+import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
+import Specifications from '../Address/Specifications';
+import { PERSONAL_DETAILS_SCHEMA } from '../PersonalDetails/PersonalDetails';
+import { COMPANY_DETAILS_SCHEMA } from '../CompanyDetails/CompanyDetails';
+import { setFocusOnField } from '../../../utils/setFocus';
+import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
+
+const consentCBErrorObj: GenericError = {
+    isValid: false,
+    errorMessage: 'consent.checkbox.invalid',
+    error: 'consent.checkbox.invalid'
+};
 
 export default function OpenInvoice(props: OpenInvoiceProps) {
     const { countryCode, visibility } = props;
@@ -29,6 +44,19 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     if (!Object.keys(openInvoiceRef.current).length) {
         props.setComponentRef?.(openInvoiceRef.current);
     }
+
+    const isValidating = useRef(false);
+
+    /** SR stuff */
+    const { setSRMessagesFromObjects, shouldMoveFocusSR } = useSRPanelContext();
+
+    // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
+    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
+        fieldTypeMappingFn: mapFieldKey
+    });
+
+    const specifications = useMemo(() => new Specifications(), []);
+    /** end SR stuff */
 
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
     const [activeFieldsets, setActiveFieldsets] = useState<OpenInvoiceActiveFieldsets>(initialActiveFieldsets);
@@ -57,12 +85,13 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
     // Expose methods expected by parent
     openInvoiceRef.current.showValidation = () => {
+        isValidating.current = true;
         fieldsetsSchema.forEach(fieldset => {
             if (fieldsetsRefs[fieldset].current) fieldsetsRefs[fieldset].current.showValidation();
         });
 
         setErrors({
-            ...(hasConsentCheckbox && { consentCheckbox: !data.consentCheckbox })
+            ...(hasConsentCheckbox && { consentCheckbox: data.consentCheckbox ? null : consentCBErrorObj })
         });
     };
 
@@ -73,6 +102,70 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const consentCheckboxValid: boolean = !hasConsentCheckbox || !!valid.consentCheckbox;
         const isValid: boolean = fieldsetsAreValid && consentCheckboxValid;
         const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
+
+        const DELIVERY_ADDRESS_PREFIX = 'deliveryAddress:';
+
+        /** Create messages for SRPanel */
+        // Extract nested errors from the various child components...
+        const {
+            companyDetails: extractedCompanyDetailsErrors,
+            personalDetails: extractedPersonalDetailsErrors,
+            bankAccount: extractedBankAccountErrors,
+            billingAddress: extractedBillingAddressErrors,
+            deliveryAddress: extractedDeliveryAddressErrors,
+            ...remainingErrors
+        } = errors;
+
+        // (Differentiate between billingAddress and deliveryAddress errors by adding a prefix to the latter)
+        const enhancedDeliveryAddressErrors = enhanceErrorObjectKeys(extractedDeliveryAddressErrors, DELIVERY_ADDRESS_PREFIX);
+
+        // ...and then collate the errors into a new object so that they all sit at top level
+        const errorsForPanel = {
+            ...(typeof extractedCompanyDetailsErrors === 'object' && extractedCompanyDetailsErrors),
+            ...(typeof extractedPersonalDetailsErrors === 'object' && extractedPersonalDetailsErrors),
+            ...(typeof extractedBankAccountErrors === 'object' && extractedBankAccountErrors),
+            ...(typeof extractedBillingAddressErrors === 'object' && extractedBillingAddressErrors),
+            ...(typeof enhancedDeliveryAddressErrors === 'object' && enhancedDeliveryAddressErrors),
+            ...remainingErrors
+        };
+
+        // Create layout
+        const companyDetailsLayout: string[] = COMPANY_DETAILS_SCHEMA;
+
+        const personalDetailsReqFields: string[] = props.personalDetailsRequiredFields ?? PERSONAL_DETAILS_SCHEMA;
+        const personalDetailLayout: string[] = PERSONAL_DETAILS_SCHEMA.filter(x => personalDetailsReqFields?.includes(x));
+
+        const bankAccountLayout = ['holder', 'iban'];
+
+        const billingAddressLayout = specifications.getAddressSchemaForCountryFlat(data.billingAddress?.country);
+
+        const deliveryAddressLayout = specifications.getAddressSchemaForCountryFlat(data.deliveryAddress?.country);
+        // In order to sort the deliveryAddress errors the layout entries need to have the same (prefixed) identifier as the errors themselves
+        const deliveryAddressLayoutEnhanced = deliveryAddressLayout.map(item => `${DELIVERY_ADDRESS_PREFIX}${item}`);
+
+        const fullLayout = companyDetailsLayout.concat(personalDetailLayout, bankAccountLayout, billingAddressLayout, deliveryAddressLayoutEnhanced, [
+            'consentCheckbox'
+        ]);
+
+        // Country specific address labels
+        const countrySpecificLabels = specifications.getAddressLabelsForCountry(data.billingAddress?.country ?? data.deliveryAddress?.country);
+
+        // Set messages: Pass dynamic props (errors, layout etc) to SRPanel via partial
+        const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({
+            errors: errorsForPanel,
+            isValidating: isValidating.current,
+            layout: fullLayout,
+            countrySpecificLabels
+        });
+
+        // Need extra action after setting SRPanel messages in order to focus first field in error, if required
+        if (shouldMoveFocusSR && srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
+            setFocusOnField('.adyen-checkout__open-invoice', srPanelResp.fieldToFocus);
+            // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
+            setTimeout(() => {
+                isValidating.current = false;
+            }, 300);
+        }
 
         props.onChange({ data: newData, errors, valid, isValid });
     }, [data, activeFieldsets]);
