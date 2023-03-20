@@ -13,11 +13,9 @@ class Card {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
-        this.cardNumberInput = this.rootElement.frameLocator('[title="Iframe for secured card number"]').locator('input[aria-label="Card number"]');
-        this.expiryDateInput = this.rootElement
-            .frameLocator('[title="Iframe for secured card expiry date"]')
-            .locator('input[aria-label="Expiry date"]');
-        this.cvcInput = this.rootElement.frameLocator('[title="Iframe for secured card security code"]').locator('input[aria-label="Security code"]');
+        this.cardNumberInput = this.rootElement.frameLocator('[title="Iframe for card number"]').locator('input[aria-label="Card number"]');
+        this.expiryDateInput = this.rootElement.frameLocator('[title="Iframe for expiry date"]').locator('input[aria-label="Expiry date"]');
+        this.cvcInput = this.rootElement.frameLocator('[title="Iframe for security code"]').locator('input[aria-label="Security code"]');
     }
 
     async isComponentVisible() {
