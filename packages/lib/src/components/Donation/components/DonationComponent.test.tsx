@@ -76,7 +76,7 @@ describe('DonationComponent', () => {
         expect(callbackData.data.amount.value).toBe(50);
     });
 
-    test('Should render the disclaimer if disclaimerMessage presents', () => {
+ test('Should render the disclaimer if disclaimerMessage presents', () => {
         const disclaimerMessage = {
             message: 'By continuing you accept the %{linkText} of MyStore',
             linkText: 'terms and conditions',
@@ -84,11 +84,13 @@ describe('DonationComponent', () => {
         };
 
         render(<DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} />);
-        expect(screen.queryByTestId('disclaimer')).toBeVisible();
+        expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
+            'By continuing you accept the terms and conditions of MyStore'
+        );
     });
 
     test('Should not render the disclaimer if there is no disclaimerMessage', () => {
         render(<DonationComponent amounts={amounts} />);
-        expect(screen.queryByTestId('disclaimer')).not.toBeInTheDocument();
+        expect(screen.queryByText('By continuing', { exact: false })).toBeNull();
     });
 });
