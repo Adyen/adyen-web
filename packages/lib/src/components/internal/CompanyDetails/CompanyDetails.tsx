@@ -18,7 +18,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<CompanyDetailsSchema>({
         schema: requiredFields,
-        rules: props.validationRules,
+        rules: { ...companyDetailsValidationRules, ...props.validationRules },
         defaultData: props.data
     });
 

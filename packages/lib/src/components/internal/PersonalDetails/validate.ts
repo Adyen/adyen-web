@@ -1,6 +1,7 @@
 import { email, telephoneNumber } from '../../../utils/regex';
 import { unformatDate } from '../FormFields/InputDate/utils';
 import { ValidatorRules } from '../../../utils/Validator/types';
+import { isEmpty } from '../../../utils/validator-utils';
 
 const isDateOfBirthValid = value => {
     if (!value) return false;
@@ -19,16 +20,12 @@ export const personalDetailsValidationRules: ValidatorRules = {
         modes: ['blur']
     },
     firstName: {
-        validate: value => {
-            return value && value.length > 0;
-        },
+        validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces,
         errorMessage: 'firstName.invalid',
         modes: ['blur']
     },
     lastName: {
-        validate: value => {
-            return value && value.length > 0;
-        },
+        validate: value => (isEmpty(value) ? null : true),
         errorMessage: 'lastName.invalid',
         modes: ['blur']
     },
@@ -38,12 +35,13 @@ export const personalDetailsValidationRules: ValidatorRules = {
         modes: ['blur']
     },
     telephoneNumber: {
-        validate: value => telephoneNumber.test(value),
+        validate: value => (isEmpty(value) ? null : telephoneNumber.test(value)),
         errorMessage: 'telephoneNumber.invalid',
         modes: ['blur']
     },
     shopperEmail: {
-        validate: value => email.test(value),
+        // If it's empty it's not in error, else, is it a valid email?
+        validate: value => (isEmpty(value) ? null : email.test(value)),
         errorMessage: 'shopperEmail.invalid',
         modes: ['blur']
     }

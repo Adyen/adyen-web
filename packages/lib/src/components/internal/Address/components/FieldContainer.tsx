@@ -22,10 +22,7 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
  * - then you should implement <CountryField> or <StateField> directly
  */
 function FieldContainer(props: FieldContainerProps) {
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n } = useCoreContext();
     const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxlength, disabled } = props;
 
     const value: string = data[fieldName];
@@ -68,7 +65,6 @@ function FieldContainer(props: FieldContainerProps) {
                     errorMessage={errorMessage}
                     isValid={valid[fieldName]}
                     name={fieldName}
-                    isCollatingErrors={isCollatingErrors}
                     i18n={i18n}
                 >
                     {renderFormField('text', {
@@ -77,7 +73,6 @@ function FieldContainer(props: FieldContainerProps) {
                         value,
                         onInput,
                         onBlur,
-                        isCollatingErrors,
                         maxlength,
                         trimOnBlur,
                         disabled
