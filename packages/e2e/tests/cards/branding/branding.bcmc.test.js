@@ -58,7 +58,7 @@ test('Test card is valid with bcmc details (no cvc) ' + 'then test it is invalid
         .ok()
 
         // with regular text
-        .expect(cvcLabel.withExactText('CVC / CVV').exists)
+        .expect(cvcLabel.withExactText('Security code').exists)
         .ok()
 
         // and not optional

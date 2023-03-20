@@ -25,6 +25,7 @@ export interface FieldProps {
     isCollatingErrors?: boolean;
     useLabelElement?: boolean;
     i18n?: Language;
+    errorVisibleToScreenReader?: boolean;
 }
 
 export interface FieldState {

@@ -19,7 +19,6 @@ const Field: FunctionalComponent<FieldProps> = props => {
         errorMessage,
         helper,
         inputWrapperModifiers,
-        isCollatingErrors,
         isLoading,
         isValid,
         label,
@@ -34,8 +33,12 @@ const Field: FunctionalComponent<FieldProps> = props => {
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
-        i18n
+        i18n,
+        errorVisibleToScreenReader
     } = props;
+
+    // Controls whether any error element has an aria-hidden attr & and id attr that can be pointed to by an aria-describedby attr on an input element
+    const errorVisibleToSR = errorVisibleToScreenReader ?? true;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
 
@@ -125,9 +128,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 {errorMessage && typeof errorMessage === 'string' && errorMessage.length && (
                     <span
                         className={'adyen-checkout__error-text'}
-                        id={`${uniqueId.current}${ARIA_ERROR_SUFFIX}`}
-                        aria-hidden={isCollatingErrors ? 'true' : null}
-                        aria-live={isCollatingErrors ? null : 'polite'}
+                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                        aria-hidden={errorVisibleToSR ? null : 'true'}
                     >
                         {errorMessage}
                     </span>

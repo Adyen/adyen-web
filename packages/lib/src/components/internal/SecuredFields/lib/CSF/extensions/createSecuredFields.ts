@@ -188,7 +188,6 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
-            isCollatingErrors: this.config.isCollatingErrors,
             maskSecurityCode: this.config.maskSecurityCode,
             disableIOSArrowKeys: this.config.disableIOSArrowKeys
         };

@@ -1,12 +1,12 @@
 import CardComponentPage from '../../_models/CardComponent.page';
-import { REGULAR_TEST_CARD } from '../utils/constants';
+import { REGULAR_TEST_CARD, SR_INDICATOR_PREFIX } from '../utils/constants';
 import { getInputSelector } from '../../utils/commonUtils';
 
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
-const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
-const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
-const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + SR_INDICATOR_PREFIX;
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + SR_INDICATOR_PREFIX;
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + SR_INDICATOR_PREFIX;
 
 const cardPage = new CardComponentPage();
 
@@ -24,39 +24,39 @@ test('#1 avsCard error fields and inputs should have correct aria attributes', a
     await t.click(cardPage.payButton);
 
     // Card number's error field should have correct aria attrs (-hidden="true", -live not set)
-    await t
-        .expect(cardPage.numErrorText.getAttribute('aria-hidden'))
-        .eql('true')
-        .expect(cardPage.numErrorText.getAttribute('aria-live'))
-        .eql(null);
+    await t.expect(cardPage.numErrorText.getAttribute('aria-hidden')).eql('true').expect(cardPage.numErrorText.getAttribute('aria-live')).eql(null);
 
-    // Card number input should not have aria-describedby attr
+    // Card number input should have aria-describedby attr
     await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
     const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
-    await t.expect(adb).eql(null);
+    await t.expect(adb).contains('adyen-checkout-encryptedCardNumber-');
+    await t.expect(adb).contains('-ariaError');
     await t.switchToMainWindow();
 
     // Address input's error field should have correct aria attrs
     await t
         .expect(cardPage.addressLabelErrorText.getAttribute('aria-hidden'))
-        .eql('true')
+        .eql(null)
         .expect(cardPage.addressLabelErrorText.getAttribute('aria-live'))
         .eql(null);
 
-    // Address input should not have aria-describedby attr
-    await t.expect(cardPage.addressInput.getAttribute('aria-describedby')).eql(null);
+    // Address input should have aria-describedby attr
+    const adb_address = await cardPage.addressInput.getAttribute('aria-describedby');
+    await t.expect(adb_address).contains('adyen-checkout-street-');
+    await t.expect(adb_address).contains('-ariaError');
 });
 
 test('#2 Click pay with empty fields and error panel in avsCard is populated', async t => {
+    // error panel exists at startup
+    await t.expect(cardPage.errorPanelVisible.exists).ok();
+
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
+
+    // await t.debug();
 
     // Expect 8 elements, with default order & text
     await t
@@ -92,11 +92,7 @@ test('#3 fill out credit card fields & see that first error in error panel is co
     await cardPage.cardUtils.fillDateAndCVC(t);
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 5 elements, with default order & text
     await t
@@ -124,20 +120,13 @@ test('#4 Switch country to US, click pay with empty fields and error panel in av
     await cardPage.numHolder();
 
     // Opens dropdown
-    await t
-        .click(cardPage.countrySelectBtn)
-        .expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls))
-        .ok();
+    await t.click(cardPage.countrySelectBtn).expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls)).ok();
 
     // Click US
     await t.click(cardPage.countrySelectList.child(2));
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 7 elements, with order & text specific to the US
     await t
@@ -165,10 +154,7 @@ test('#5 Switch country to US, fill out credit card fields & see that first erro
     await cardPage.numHolder();
 
     // Opens dropdown
-    await t
-        .click(cardPage.countrySelectBtn)
-        .expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls))
-        .ok();
+    await t.click(cardPage.countrySelectBtn).expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls)).ok();
 
     // Click US
     await t.click(cardPage.countrySelectList.child(2));
@@ -177,11 +163,7 @@ test('#5 Switch country to US, fill out credit card fields & see that first erro
     await cardPage.cardUtils.fillDateAndCVC(t);
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 4 elements, with order & text specific to the US
     await t
@@ -206,20 +188,13 @@ test('#6 Switch country to UK, click pay with empty fields and error panel in av
     await cardPage.numHolder();
 
     // Opens dropdown
-    await t
-        .click(cardPage.countrySelectBtn)
-        .expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls))
-        .ok();
+    await t.click(cardPage.countrySelectBtn).expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls)).ok();
 
     // Click UK
     await t.click(cardPage.countrySelectList.child(1));
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 7 elements, with order & text specific to the UK
     await t
@@ -250,10 +225,7 @@ test('#7 Switch country to UK, fill out credit card fields & see that first erro
     await cardPage.numHolder();
 
     // Opens dropdown
-    await t
-        .click(cardPage.countrySelectBtn)
-        .expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls))
-        .ok();
+    await t.click(cardPage.countrySelectBtn).expect(cardPage.countrySelectList.hasClass(cardPage.countryListActiveCls)).ok();
 
     // Click UK
     await t.click(cardPage.countrySelectList.child(1));
@@ -262,11 +234,7 @@ test('#7 Switch country to UK, fill out credit card fields & see that first erro
     await cardPage.cardUtils.fillDateAndCVC(t);
 
     // click pay, to validate & generate errors
-    await t
-        .click(cardPage.payButton)
-        // error panel exists
-        .expect(cardPage.errorPanelVisible.exists)
-        .ok();
+    await t.click(cardPage.payButton);
 
     // Expect 4 elements, with order & text specific to the US
     await t

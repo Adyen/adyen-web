@@ -126,7 +126,7 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
-    [key: string]: any;
+    [key: string]: any; // TODO get rid of this and explicitly declare props
 }
 
 export type ClickToPayScheme = 'mc' | 'visa';
