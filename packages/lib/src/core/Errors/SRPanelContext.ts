@@ -10,6 +10,15 @@ export interface ISRPanelContext {
     shouldMoveFocusSR: boolean;
 }
 
+// Will be needed once PersonalDetails & Address have ability to administer their own SRPanel
+// export const mockSRContext: ISRPanelContext = {
+//     srPanel: null,
+//     setSRMessagesFromObjects: null,
+//     setSRMessagesFromStrings: null,
+//     clearSRPanel: null,
+//     shouldMoveFocusSR: null
+// };
+
 export const SRPanelContext = createContext<ISRPanelContext>({
     srPanel: null,
     setSRMessagesFromObjects: null,
