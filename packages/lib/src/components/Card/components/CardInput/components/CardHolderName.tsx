@@ -6,10 +6,7 @@ import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
 
 export default function CardHolderName({ onBlur, onInput, placeholder, value, required, error = false, isValid, disabled }: CardHolderNameProps) {
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n } = useCoreContext();
 
     return (
         <Field
@@ -18,7 +15,6 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
             errorMessage={error && i18n.get('creditCard.holderName.invalid')}
             isValid={!!isValid}
             name={'holderName'}
-            isCollatingErrors={isCollatingErrors}
             i18n={i18n}
         >
             {renderFormField('text', {
@@ -30,7 +26,6 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
                 required,
                 onBlur,
                 onInput,
-                isCollatingErrors,
                 disabled
             })}
         </Field>

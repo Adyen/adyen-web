@@ -1,37 +1,33 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 
 import LANG from '../../../../lib/src/language/locales/en-US.json';
+import { SR_INDICATOR_PREFIX } from '../utils/constants';
 
-const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'];
-const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'];
-const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'];
+const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + SR_INDICATOR_PREFIX;
+const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + SR_INDICATOR_PREFIX;
+const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + SR_INDICATOR_PREFIX;
 
-const INVALID_NAME = LANG['creditCard.holderName.invalid'];
+const INVALID_NAME = LANG['creditCard.holderName.invalid'] + SR_INDICATOR_PREFIX;
 
 const cardPage = new CardComponentPage();
 
-fixture`Testing card, with holder name on top, error panel`
+fixture`Testing card, with holder name on top, error panel exists but is not visible`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
     })
     .clientScripts('./errorPanel.hidden.clientScripts.js');
 
-test('#1 Error panel is not present at start, when there are no errors', async t => {
-    // Wait for field to appear in DOM
-    await cardPage.numHolder();
+test('#1 Click pay with empty fields and hidden error panel is populated', async t => {
+    // error panel exists at startup but is not visible
+    await t.expect(cardPage.errorPanelHidden.exists).ok();
 
-    // error panel does not exist
-    await t.expect(cardPage.errorPanelHidden.exists).notOk();
-});
-
-test('#2 Click pay with empty fields and hidden error panel is populated', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
     // click pay, to validate & generate errors
     await t
         .click(cardPage.payButton)
-        // error panel exists
+        // error panel exists but is not visible
         .expect(cardPage.errorPanelHidden.exists)
         .ok();
 

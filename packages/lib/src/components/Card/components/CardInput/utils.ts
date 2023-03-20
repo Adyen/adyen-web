@@ -1,8 +1,6 @@
 import { getImageUrl } from '../../../../utils/get-image';
-import { ErrorPanelObj } from '../../../../core/Errors/ErrorPanel';
 import Language from '../../../../language/Language';
-import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
-import { AddressModeOptions, CardInputProps, LayoutObj, SortErrorsObj } from './types';
+import { AddressModeOptions, CardInputProps, LayoutObj } from './types';
 import {
     CREDIT_CARD,
     CREDIT_CARD_NAME_BOTTOM,
@@ -18,12 +16,7 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import {
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_EXPIRY_DATE,
-    ENCRYPTED_PWD_FIELD,
-    ENCRYPTED_SECURITY_CODE
-} from '../../../internal/SecuredFields/lib/configuration/constants';
+import { useEffect, useRef } from 'preact/hooks';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -94,12 +87,15 @@ export const getLayout = ({
     return layout;
 };
 
-const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
+/**
+ * Lookup service to map local (CardInput) field refs to a key, possibly region specific, by which to retrieve the translation
+ */
+export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
     // console.log('### utils::mapFieldKey:: key', key);
     switch (key) {
         case 'socialSecurityNumber':
             return i18n.get(`boleto.${key}`);
-        // address related
+        // Address related - if we have a country specific key for the field - use that to get the translation
         case 'street':
         case 'houseNumberOrName':
         case 'postalCode':
@@ -107,47 +103,10 @@ const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringO
         case 'city':
         case 'country':
             return countrySpecificLabels?.[key] ? i18n.get(countrySpecificLabels?.[key]) : i18n.get(key);
-        // securedFields related
-        case ENCRYPTED_CARD_NUMBER:
-        case ENCRYPTED_EXPIRY_DATE:
-        case ENCRYPTED_SECURITY_CODE:
-        case ENCRYPTED_PWD_FIELD:
-        case 'holderName':
-        case 'taxNumber':
+        // We know that the translated error messages do contain a reference to the field they refer to, so we won't need to map them (currently applies mostly to SecuredFields related errors)
+        default:
             return null;
-
-        default: {
-            // Map all securedField field types to 'creditCard' - with 2 exceptions
-            const type = ['ach', 'giftcard'].includes(key) ? key : 'creditCard';
-            return i18n.get(`${type}.${key}.aria.label`);
-        }
     }
-};
-
-export const sortErrorsForPanel = ({ errors, layout, i18n, countrySpecificLabels }: SortErrorsObj): ErrorPanelObj => {
-    // Create array of fields with active errors, ordered according to passed layout
-    const fieldList = Object.entries(errors).reduce((acc, [key, value]) => {
-        if (value) {
-            acc.push(key);
-            acc.sort((a, b) => layout.indexOf(a) - layout.indexOf(b));
-        }
-        return acc;
-    }, []);
-
-    if (!fieldList || !fieldList.length) return null;
-
-    // Create array of error messages to display
-    const errorMessages = fieldList.map(key => {
-        // Get translation for field type
-        const errorKey: string = mapFieldKey(key, i18n, countrySpecificLabels);
-
-        // Get corresponding error msg
-        const errorMsg = hasOwnProperty(errors[key], 'errorI18n') ? errors[key].errorI18n : i18n.get(errors[key].errorMessage);
-
-        return errorKey ? `${errorKey}: ${errorMsg}.` : errorMsg;
-    });
-
-    return !errorMessages.length ? null : { errorMessages, fieldList };
 };
 
 export const extractPropsForCardFields = (props: CardInputProps) => {
@@ -171,7 +130,8 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,
-        expiryYear: props.expiryYear
+        expiryYear: props.expiryYear,
+        disclaimerMessage: props.disclaimerMessage
     };
 };
 
@@ -208,3 +168,21 @@ export const extractPropsForSFP = (props: CardInputProps) => {
 export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
     return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : null;
 };
+
+// Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
+export function lookupBlurBasedErrors(errorCode) {
+    return !['error.va.sf-cc-num.03', 'error.va.sf-cc-dat.01', 'error.va.sf-cc-dat.02', 'error.va.sf-cc-dat.03'].includes(errorCode);
+}
+
+// Hook
+export function usePrevious<T>(value: T): T {
+    const ref: any = useRef<T>();
+
+    // Store current value in ref
+    useEffect(() => {
+        ref.current = value;
+    }, [value]); // Only re-run if value changes
+
+    // Return previous value
+    return ref.current;
+}

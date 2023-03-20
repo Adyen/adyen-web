@@ -16,7 +16,6 @@ interface SecuredFieldsProps {
     countryCode?: string;
     i18n: Language;
     implementationType?: string;
-    isCollatingErrors?: boolean;
     keypadFix?: boolean;
     loadingContext?: string;
     legacyInputMode?: boolean;
@@ -138,7 +137,6 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         // countryCode: props.countryCode, // only used for korean cards when koreanAuthenticationRequired is true
         i18n: props.i18n,
         implementationType: props.implementationType,
-        // isCollatingErrors: props.isCollatingErrors,
         keypadFix: props.keypadFix,
         legacyInputMode: props.legacyInputMode,
         loadingContext: props.loadingContext,

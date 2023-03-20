@@ -59,9 +59,6 @@ export function handleConfig(props: CSFSetupObject): void {
     // To distinguish between regular 'components' initiated securedField or 'custom' card component
     this.config.implementationType = props.implementationType;
 
-    // Whether Component is collating errors into a single element for the screenreader & therefore whether indiv. SFs will have an aria-describedby attr
-    this.config.isCollatingErrors = props.isCollatingErrors;
-
     this.config.sfLogAtStart = window._b$dl === true;
 
     let sfBundleType: string = this.config.isCreditCardType ? 'card' : props.type;
@@ -87,4 +84,5 @@ export function handleConfig(props: CSFSetupObject): void {
     // TODO######
 
     this.config.maskSecurityCode = props.maskSecurityCode;
+    this.config.disableIOSArrowKeys = props.disableIOSArrowKeys;
 }

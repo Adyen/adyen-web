@@ -4,6 +4,8 @@ import collectId from '../Services/analytics/collect-id';
 import EventsQueue from './EventsQueue';
 import { CoreOptions } from '../types';
 
+export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'>;
+
 class Analytics {
     private static defaultProps = {
         enabled: true,
@@ -19,10 +21,10 @@ class Analytics {
     private readonly queue = new EventsQueue();
     public readonly collectId;
 
-    constructor({ loadingContext, locale, clientKey, analytics }: CoreOptions) {
+    constructor({ loadingContext, locale, clientKey, analytics, amount }: AnalyticsProps) {
         this.props = { ...Analytics.defaultProps, ...analytics };
         this.logEvent = logEvent({ loadingContext, locale });
-        this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey });
+        this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey, amount });
         this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });
 
         const { telemetry, enabled } = this.props;
@@ -41,10 +43,14 @@ class Analytics {
         if (enabled === true) {
             if (telemetry === true && !this.checkoutAttemptId) {
                 // fetch a new checkoutAttemptId if none is already available
-                this.collectId().then(checkoutAttemptId => {
-                    this.checkoutAttemptId = checkoutAttemptId;
-                    this.queue.run(this.checkoutAttemptId);
-                });
+                this.collectId()
+                    .then(checkoutAttemptId => {
+                        this.checkoutAttemptId = checkoutAttemptId;
+                        this.queue.run(this.checkoutAttemptId);
+                    })
+                    .catch(e => {
+                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                    });
             }
 
             if (telemetry === true) {
