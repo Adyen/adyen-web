@@ -8,7 +8,8 @@ import { getImageUrl } from '../../../utils/get-image';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import '../Donation.scss';
 import DisclaimerMessage from '../../internal/DisclaimerMessage';
-export default function DonationComponent(props) {
+import { DonationComponentProps } from './types';
+export default function DonationComponent(props: DonationComponentProps) {
     const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
     const { i18n, loadingContext } = useCoreContext();
     const { currency } = amounts;

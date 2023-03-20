@@ -3,12 +3,12 @@ import { mount, shallow } from 'enzyme';
 import DonationComponent from './DonationComponent';
 import { render, screen } from '@testing-library/preact';
 
+const onDonate = () => {};
 const amounts = {
     currency: 'EUR',
     values: [50, 199, 300]
 };
-const createWrapper = (props = {}) => mount(<DonationComponent amounts={amounts} {...props} />);
-jest.mock('../../internal/DisclaimerMessage', () => () => <div data-testid="disclaimer" />);
+const createWrapper = (props = {}) => mount(<DonationComponent onDonate={onDonate} amounts={amounts} {...props} />);
 
 describe('DonationComponent', () => {
     test('Renders the Donation Component', () => {
@@ -17,13 +17,13 @@ describe('DonationComponent', () => {
     });
 
     test('Renders the Success state', () => {
-        const wrapper = shallow(<DonationComponent amounts={amounts} />);
+        const wrapper = shallow(<DonationComponent amounts={amounts} onDonate={onDonate} />);
         wrapper.instance().setStatus('success');
         expect(wrapper.find('.adyen-checkout__status__icon--success')).toHaveLength(1);
     });
 
     test('Renders the Error state', () => {
-        const wrapper = shallow(<DonationComponent amounts={amounts} />);
+        const wrapper = shallow(<DonationComponent amounts={amounts} onDonate={onDonate} />);
         wrapper.instance().setStatus('error');
         expect(wrapper.find('.adyen-checkout__status__icon--error')).toHaveLength(1);
     });
@@ -76,21 +76,21 @@ describe('DonationComponent', () => {
         expect(callbackData.data.amount.value).toBe(50);
     });
 
- test('Should render the disclaimer if disclaimerMessage presents', () => {
+    test('Should render the disclaimer if disclaimerMessage presents', () => {
         const disclaimerMessage = {
             message: 'By continuing you accept the %{linkText} of MyStore',
             linkText: 'terms and conditions',
             link: 'https://www.adyen.com'
         };
 
-        render(<DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} />);
+        render(<DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} onDonate={onDonate} />);
         expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
             'By continuing you accept the terms and conditions of MyStore'
         );
     });
 
     test('Should not render the disclaimer if there is no disclaimerMessage', () => {
-        render(<DonationComponent amounts={amounts} />);
+        render(<DonationComponent amounts={amounts} onDonate={onDonate} />);
         expect(screen.queryByText('By continuing', { exact: false })).toBeNull();
     });
 });
