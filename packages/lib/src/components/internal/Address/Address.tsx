@@ -33,7 +33,8 @@ export default function Address(props: AddressProps) {
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFieldsSchema,
         defaultData: props.data,
-        rules: props.validationRules || getAddressValidationRules(specifications),
+        // Ensure any passed validation rules are merged with the default ones
+        rules: { ...getAddressValidationRules(specifications), ...props.validationRules },
         formatters: addressFormatters
     });
 
@@ -134,7 +135,7 @@ export default function Address(props: AddressProps) {
 
     return (
         <Fragment>
-            <Fieldset classNameModifiers={[label]} label={label}>
+            <Fieldset classNameModifiers={[label || 'address']} label={label}>
                 {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
             </Fieldset>
             {/* Needed to easily test when showValidation is called */}

@@ -11,14 +11,14 @@ import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
 import { ComponentMethodsRef } from '../../types';
 
-const companyDetailsSchema = ['name', 'registrationNumber'];
+export const COMPANY_DETAILS_SCHEMA = ['name', 'registrationNumber'];
 
 export default function CompanyDetails(props: CompanyDetailsProps) {
     const { label = '', namePrefix, requiredFields, visibility } = props;
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<CompanyDetailsSchema>({
         schema: requiredFields,
-        rules: props.validationRules,
+        rules: { ...companyDetailsValidationRules, ...props.validationRules },
         defaultData: props.data
     });
 
@@ -93,6 +93,6 @@ CompanyDetails.defaultProps = {
     data: {},
     onChange: () => {},
     visibility: 'editable',
-    requiredFields: companyDetailsSchema,
+    requiredFields: COMPANY_DETAILS_SCHEMA,
     validationRules: companyDetailsValidationRules
 };

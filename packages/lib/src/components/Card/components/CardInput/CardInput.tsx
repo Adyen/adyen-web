@@ -375,6 +375,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         setSortedErrorList(currentErrorsSortedByLayout);
 
         switch (srPanelResp?.action) {
+            // A call to focus the first field in error will always follow the call to validate the whole form
             case ERROR_ACTION_FOCUS_FIELD:
                 if (shouldMoveFocusSR) setFocusOnFirstField(isValidating.current, sfp, srPanelResp?.fieldToFocus);
                 // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)

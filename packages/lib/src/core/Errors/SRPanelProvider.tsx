@@ -11,7 +11,7 @@ type SRPanelProviderProps = {
     children: ComponentChildren;
 };
 
-export type SetSRMessagesReturnFn = ({ errors, isValidating, layout, countrySpecificLabels }) => SetSRMessagesReturnObject;
+export type SetSRMessagesReturnFn = ({ errors, isValidating, layout = null, countrySpecificLabels = null }) => SetSRMessagesReturnObject;
 
 const SRPanelProvider = ({ srPanel, children }: SRPanelProviderProps) => {
     const { i18n } = useCoreContext();
