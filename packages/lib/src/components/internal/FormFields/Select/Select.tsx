@@ -77,6 +77,14 @@ function Select({
         setShowList(true);
     };
 
+    const extractItemFromEvent = (e: Event): SelectItem => {
+        // If the target is not one of the list items, select the first list item
+        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
+
+        const value = target.getAttribute('data-value') as string;
+        return filteredItems.find(listItem => listItem.id == value);
+    };
+
     /**
      * Closes the select list and fires an onChange
      * @param e - Event
@@ -84,8 +92,9 @@ function Select({
     const handleSelect = (e: Event) => {
         e.preventDefault();
 
+        const item = extractItemFromEvent(e);
         // If no active option we should just emit again with the value that was already selected
-        const valueToEmit = activeOption.id ? activeOption.id : selected;
+        const valueToEmit = item ? item.id : activeOption.id ? activeOption.id : selected;
 
         onChange({ target: { value: valueToEmit, name: name } });
 
@@ -98,12 +107,7 @@ function Select({
      */
     const handleHover = (e: Event) => {
         e.preventDefault();
-
-        // If the target is not one of the list items, select the first list item
-        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
-
-        const value = target.getAttribute('data-value') as string;
-        const item = filteredItems.find(listItem => listItem.id == value);
+        const item = extractItemFromEvent(e);
         setActiveOption(item);
     };
 

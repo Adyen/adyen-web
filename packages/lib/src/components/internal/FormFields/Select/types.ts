@@ -15,7 +15,7 @@ export interface SelectProps {
     isValid?: boolean;
     items: SelectItem[];
     name?: string;
-    onChange: (e) => void;
+    onChange: (e: { target: { value: string | number; name: string } }) => void;
     placeholder: string;
     readonly: boolean;
     selected: string;

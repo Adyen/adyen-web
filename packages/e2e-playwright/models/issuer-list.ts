@@ -5,7 +5,7 @@ class IssuerList {
     readonly rootElementSelector: string;
 
     readonly selectorList: Locator;
-    readonly selectorButton: Locator;
+    readonly selectorCombobox: Locator;
     readonly submitButton: Locator;
     readonly highlightedIssuerButtonGroup: Locator;
 
@@ -14,14 +14,14 @@ class IssuerList {
         this.rootElementSelector = rootElementSelector;
 
         this.selectorList = this.rootElement.getByRole('listbox');
-        this.selectorButton = this.rootElement.locator('.adyen-checkout__dropdown__button');
+        this.selectorCombobox = this.rootElement.getByRole('combobox');
         this.submitButton = this.rootElement.getByRole('button', { name: /Continue/i });
         this.highlightedIssuerButtonGroup = this.rootElement.getByRole('group');
     }
 
     async selectIssuerOnSelectorDropdown(issuerName: string) {
-        await this.selectorButton.click();
-        const option = this.selectorList.getByRole('option').getByAltText(issuerName, { exact: true });
+        await this.selectorCombobox.click();
+        const option = this.selectorList.getByRole('option').getByText(issuerName, { exact: true });
         await option.click();
     }
 
