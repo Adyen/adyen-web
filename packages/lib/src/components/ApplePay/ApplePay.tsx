@@ -11,7 +11,7 @@ import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
-const latestSupportedVersion = 11;
+const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
@@ -65,6 +65,9 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                 companyName: this.props.configuration.merchantName,
                 ...this.props
             });
+
+            console.log(paymentRequest);
+            console.log(JSON.stringify(paymentRequest));
 
             const session = new ApplePayService(paymentRequest, {
                 version,

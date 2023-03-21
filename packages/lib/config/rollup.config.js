@@ -93,7 +93,7 @@ async function getPlugins({ compress, analyze, version, modern }) {
             inject: false,
             extract: 'adyen.css'
         }),
-        compress && (await import('rollup-plugin-terser')).terser(modern ? modernTerserConfig : terserConfig),
+        // compress && (await import('rollup-plugin-terser')).terser(modern ? modernTerserConfig : terserConfig),
         analyze &&
             (await import('rollup-plugin-visualizer')).default({
                 title: 'Adyen Web bundle visualizer',
@@ -134,7 +134,8 @@ export default async () => {
                     dir: 'dist/es',
                     format: 'es',
                     chunkFileNames: '[name].js',
-                    ...(!isProduction ? { sourcemap: true } : {})
+                    sourcemap: true
+                    // ...(!isProduction ? { sourcemap: true } : {})
                 },
                 {
                     dir: 'dist/cjs',
