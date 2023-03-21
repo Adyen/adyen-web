@@ -22,5 +22,5 @@ test('should select highlighted issuer and update pay button label', async ({ is
     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 4');
 
     await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Test Issuer 4');
-    await expect(issuerList.selectorButton).toHaveText('Select your bank');
+    await expect(issuerList.selectorCombobox).toHaveValue('Select your bank');
 });
