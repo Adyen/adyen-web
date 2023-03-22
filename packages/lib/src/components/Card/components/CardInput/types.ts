@@ -11,6 +11,7 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import Analytics from '../../../../core/Analytics';
 import RiskElement from '../../../../core/RiskModule';
 import { ComponentMethodsRef } from '../../../types';
+import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -45,12 +46,6 @@ export interface CardInputDataState {
 type Placeholders = {
     holderName?: string;
 };
-
-export interface DisclaimerMsgObject {
-    message: string;
-    linkText: string;
-    link: string;
-}
 
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput

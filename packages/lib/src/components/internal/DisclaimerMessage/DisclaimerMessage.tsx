@@ -1,7 +1,12 @@
 import { h } from 'preact';
-import { DisclaimerMsgObject } from '../../types';
-import { isValidHttpUrl } from '../../../../../../utils/isValidURL';
+import { isValidHttpUrl } from '../../../utils/isValidURL';
 import './DisclaimerMessage.scss';
+
+export interface DisclaimerMsgObject {
+    message: string;
+    linkText: string;
+    link: string;
+}
 
 interface DisclaimerMessageProps {
     disclaimer: DisclaimerMsgObject;

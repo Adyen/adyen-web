@@ -2,7 +2,7 @@ import { h } from 'preact';
 import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
-import DisclaimerMessage from './DisclaimerMessage';
+import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 
 export const StoredCardFieldsWrapper = ({
     // base (shared)

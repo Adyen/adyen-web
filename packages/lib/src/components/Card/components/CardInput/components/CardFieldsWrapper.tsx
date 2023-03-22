@@ -7,7 +7,7 @@ import StoreDetails from '../../../../internal/StoreDetails';
 import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
-import DisclaimerMessage from './DisclaimerMessage';
+import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
