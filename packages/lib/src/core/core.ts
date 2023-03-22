@@ -12,6 +12,7 @@ import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
+import { SRPanel } from './Errors/SRPanel';
 
 class Core {
     public session: Session;
@@ -30,8 +31,10 @@ class Core {
     constructor(props: CoreOptions) {
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
-
         this.setOptions(props);
+
+        // Expose version number for npm builds
+        window['adyenWebVersion'] = Core.version.version;
     }
 
     initialize(): Promise<this> {
@@ -182,7 +185,8 @@ class Core {
         this.modules = {
             risk: new RiskModule(this.options),
             analytics: new Analytics(this.options),
-            i18n: new Language(this.options.locale, this.options.translations)
+            i18n: new Language(this.options.locale, this.options.translations),
+            srPanel: new SRPanel(this.options.srConfig)
         };
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);

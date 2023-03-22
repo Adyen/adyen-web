@@ -39,8 +39,8 @@ export interface SFInternalConfig {
     legacyInputMode: boolean;
     minimumExpiryDate: string;
     implementationType: string;
-    isCollatingErrors: boolean;
     maskSecurityCode: boolean;
+    disableIOSArrowKeys: boolean;
 }
 
 /**
@@ -127,7 +127,7 @@ abstract class AbstractSecuredField {
     protected onAutoCompleteCallback: RtnType_callbackFn;
 
     protected constructor() {
-        this.sfConfig = ({} as any) as SFInternalConfig;
+        this.sfConfig = {} as any as SFInternalConfig;
     }
 }
 

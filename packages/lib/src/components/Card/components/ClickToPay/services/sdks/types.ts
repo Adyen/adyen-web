@@ -66,3 +66,8 @@ export interface SrcInitParams {
     srcInitiatorId: string;
     srciDpaId: string;
 }
+
+export interface SrcIdentityLookupParams {
+    identityValue: string;
+    type: 'email' | 'telephoneNumber';
+}

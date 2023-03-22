@@ -3,3 +3,7 @@ window.cardConfig = {
     holderNameRequired: true,
     positionHolderNameOnTop: true
 };
+
+window.mainConfiguration = {
+    srConfig: { moveFocus: false }
+};

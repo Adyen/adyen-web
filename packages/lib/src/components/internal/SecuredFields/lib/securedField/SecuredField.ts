@@ -147,8 +147,8 @@ class SecuredField extends AbstractSecuredField {
             legacyInputMode: this.sfConfig.legacyInputMode,
             minimumExpiryDate: this.sfConfig.minimumExpiryDate,
             implementationType: this.sfConfig.implementationType,
-            isCollatingErrors: this.sfConfig.isCollatingErrors,
-            maskSecurityCode: this.sfConfig.maskSecurityCode
+            maskSecurityCode: this.sfConfig.maskSecurityCode,
+            disableIOSArrowKeys: this.sfConfig.disableIOSArrowKeys
         };
 
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);

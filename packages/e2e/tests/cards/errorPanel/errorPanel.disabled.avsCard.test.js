@@ -10,6 +10,9 @@ fixture`Testing when error panel is not enabled`
     .clientScripts('./errorPanel.disabled.avsCard.clientScripts.js');
 
 test('#1 avsCard error fields and inputs should have correct aria attributes', async t => {
+    // error panel does not exist at startup
+    await t.expect(cardPage.errorPanelVisible.exists).notOk();
+
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -17,26 +20,18 @@ test('#1 avsCard error fields and inputs should have correct aria attributes', a
     await t.click(cardPage.payButton);
 
     // PAN's error field should have correct aria attrs
-    await t
-        .expect(cardPage.numErrorText.getAttribute('aria-live'))
-        .eql('polite')
-        .expect(cardPage.numErrorText.getAttribute('aria-hidden'))
-        .eql(null);
+    await t.expect(cardPage.numErrorText.getAttribute('aria-live')).eql(null).expect(cardPage.numErrorText.getAttribute('aria-hidden')).eql('true');
 
     // PAN input should have aria-describedby attr
     await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
     const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
-    await t
-        .expect(adb)
-        .notEql(null)
-        .expect(adb)
-        .contains('encryptedCardNumber');
+    await t.expect(adb).notEql(null).expect(adb).contains('encryptedCardNumber');
     await t.switchToMainWindow();
 
     // Address input's error field should have correct aria attrs
     await t
         .expect(cardPage.addressLabelErrorText.getAttribute('aria-live'))
-        .eql('polite')
+        .eql(null)
         .expect(cardPage.addressLabelErrorText.getAttribute('aria-hidden'))
         .eql(null);
 

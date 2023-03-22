@@ -77,21 +77,35 @@ function PhoneInput(props: PhoneInputProps) {
         return getUniqueId('adyen-checkout-phonePrefix');
     }, []);
 
+    // Note we don't pass a string to the errorMessage prop because the phoneInput comp can potentially have 2 errors (one for prefix, one for number)
+    // - so we want to handle both those errors here in this comp rather than within the Field comp.
+    // However we do want to take advantage of the error icon that Field can provide - so we pass a boolean if errors exist
+    const hasErrorMessage = (errors.phoneNumber || errors.phonePrefix) && true;
+
     return (
         <div className="adyen-checkout-phone-input--new">
+            <label className={'adyen-checkout-error-panel--sr-only'} htmlFor={uniqueIDPhonePrefix}>
+                {props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
+            </label>
+            <label htmlFor={getRelatedUniqueId()}>
+                <span
+                    className={classNames({
+                        'adyen-checkout__label__text': true,
+                        'adyen-checkout__label__text--error': hasErrorMessage
+                    })}
+                >
+                    {props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
+                </span>
+            </label>
             <Field
                 name={'phoneNumber'}
-                label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                 className={classNames({
                     'adyen-checkout-field': true,
                     'adyen-checkout-field--phone-input': true
                 })}
                 inputWrapperModifiers={['phone-input']}
                 isValid={valid.phoneNumber}
-                // Note we don't pass a string to the errorMessage prop because the phoneInput comp can potentially have 2 errors (one for prefix, one for number)
-                // - so we want to handle both those errors here in this comp rather than within the Field comp.
-                // However we do want to take advantage of the error icon that Field can provide - so we pass a boolean if errors exist
-                errorMessage={(errors.phoneNumber || errors.phonePrefix) && true}
+                errorMessage={hasErrorMessage}
                 // Avoids the situation where the phoneNumber is valid but the phonePrefix is not and we see the valid icon showing underneath the error icon
                 showValidIcon={errors.phonePrefix ? false : true}
             >

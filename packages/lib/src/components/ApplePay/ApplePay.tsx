@@ -8,7 +8,7 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
+import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 const latestSupportedVersion = 11;
@@ -57,7 +57,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         return this.startSession(this.props.onAuthorized);
     }
 
-    private startSession(onPaymentAuthorized) {
+    private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
         const { version, onValidateMerchant, onCancel, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {

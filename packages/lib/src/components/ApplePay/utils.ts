@@ -20,7 +20,8 @@ export function mapBrands(brands) {
         electron: 'electron',
         maestro: 'maestro',
         girocard: 'girocard',
-        cartebancaire: 'cartesBancaires'
+        cartebancaire: 'cartesBancaires',
+        eftpos_australia: 'eftpos'
     };
 
     return brands.reduce((accumulator, item) => {

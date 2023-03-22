@@ -7,6 +7,7 @@ import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
+import { SRPanel } from '../core/Errors/SRPanel';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -65,6 +66,7 @@ export interface BaseElementProps {
     _parentInstance?: Core;
     order?: Order;
     modules?: {
+        srPanel: SRPanel;
         analytics: Analytics;
         risk: RiskElement;
     };

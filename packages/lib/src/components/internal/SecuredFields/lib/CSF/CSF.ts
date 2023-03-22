@@ -139,7 +139,7 @@ class CSF extends AbstractCSF {
          * Add touchstart listener
          * re. Disabling arrow keys in iOS
          */
-        if (ua.__IS_IOS) {
+        if (ua.__IS_IOS && this.config.disableIOSArrowKeys) {
             on(document, 'touchstart', this.touchstartListener);
         }
     }

@@ -7,6 +7,7 @@ import Field from '../../../../../../internal/FormFields/Field';
 import renderFormField from '../../../../../../internal/FormFields';
 import './CtPOneTimePasswordInput.scss';
 import CtPResendOtpLink from './CtPResendOtpLink';
+import useClickToPayContext from '../../../context/useClickToPayContext';
 
 type OnChangeProps = { data: CtPOneTimePasswordInputDataState; valid; errors; isValid: boolean };
 
@@ -31,6 +32,10 @@ export type CtPOneTimePasswordInputHandlers = {
 
 const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
+    const {
+        configuration: { disableOtpAutoFocus }
+    } = useClickToPayContext();
+
     const formSchema = ['otp'];
     const [resendOtpError, setResendOtpError] = useState<string>(null);
     const { handleChangeFor, data, triggerValidation, valid, errors, isValid, setData } = useForm<CtPOneTimePasswordInputDataState>({
@@ -54,10 +59,10 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     }, [data.otp]);
 
     useEffect(() => {
-        if (inputRef) {
+        if (!disableOtpAutoFocus && inputRef) {
             inputRef.focus();
         }
-    }, [inputRef]);
+    }, [inputRef, disableOtpAutoFocus]);
 
     useEffect(() => {
         otpInputHandlersRef.current.validateInput = validateInput;
@@ -67,9 +72,11 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     const handleOnResendOtp = useCallback(() => {
         setData('otp', '');
         setResendOtpError(null);
-        inputRef.focus();
+        if (!disableOtpAutoFocus) {
+            inputRef.focus();
+        }
         props.onResendCode();
-    }, [props.onResendCode, inputRef]);
+    }, [props.onResendCode, inputRef, disableOtpAutoFocus]);
 
     const handleOnResendOtpError = useCallback(
         (errorCode: string) => {

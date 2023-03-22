@@ -7,6 +7,7 @@ import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
+import { SRPanelProps } from './Errors/types';
 
 type PromiseResolve = typeof Promise.resolve;
 
@@ -77,6 +78,11 @@ export interface CoreOptions {
      * Never display these payment methods
      */
     removePaymentMethods?: string[];
+
+    /**
+     * Screen Reader configuration
+     */
+    srConfig?: SRPanelProps;
 
     analytics?: AnalyticsOptions;
 
