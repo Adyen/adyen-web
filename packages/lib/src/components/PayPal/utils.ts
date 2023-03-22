@@ -57,7 +57,7 @@ const getPaypalSettings = ({
         'client-id': clientId,
         'integration-date': INTEGRATION_DATE,
         'enable-funding': 'paylater',
-        components: 'buttons,funding-eligibility'
+        components: 'buttons,funding-eligibility,messages'
     };
 };
 
