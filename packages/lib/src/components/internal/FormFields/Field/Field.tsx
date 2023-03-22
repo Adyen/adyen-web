@@ -37,7 +37,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         errorVisibleToScreenReader
     } = props;
 
-    // Controls whether any error element has an aria-hidden attr & and id attr that can be pointed to by an aria-describedby attr on an input element
+    // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
+    // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
     const errorVisibleToSR = errorVisibleToScreenReader ?? true;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
@@ -138,7 +139,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         );
     }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
 
-    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, children }) => {
+    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, errorVisibleToSR, children }) => {
         const defaultWrapperProps = {
             onClick: onFocusField,
             className: classNames({
@@ -150,7 +151,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         };
 
         return useLabelElement ? (
-            <label {...defaultWrapperProps} htmlFor={name && uniqueId}>
+            // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
+            <label {...defaultWrapperProps} {...(errorVisibleToSR && { htmlFor: name && uniqueId })}>
                 {children}
             </label>
         ) : (
@@ -183,6 +185,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 focused={focused}
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
+                errorVisibleToSR={errorVisibleToSR}
             >
                 {renderContent()}
             </LabelOrDiv>
