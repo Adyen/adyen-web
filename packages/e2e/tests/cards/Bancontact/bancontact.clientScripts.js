@@ -4,5 +4,10 @@ window.dropinConfig = {
 
 window.mainConfiguration = {
     removePaymentMethods: ['paywithgoogle', 'applepay'],
-    allowPaymentMethods: ['bcmc']
+    allowPaymentMethods: ['bcmc'],
+    paymentMethodsConfiguration: {
+        bcmc: {
+            _disableClickToPay: true
+        }
+    }
 };

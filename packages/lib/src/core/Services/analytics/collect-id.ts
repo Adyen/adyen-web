@@ -32,7 +32,7 @@ const collectId = ({ loadingContext, clientKey, experiments }: CollectIdProps) =
         if (promise) return promise;
         if (!clientKey) return Promise.reject();
 
-        const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', window.sessionStorage);
+        const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
         const checkoutAttemptIdSession = storage.get();
 
         if (confirmSessionDurationIsMaxFifteenMinutes(checkoutAttemptIdSession)) {

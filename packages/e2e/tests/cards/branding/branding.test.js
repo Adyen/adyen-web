@@ -49,7 +49,7 @@ test(
             .ok()
 
             // with regular text
-            .expect(cvcLabel.withExactText('CVC / CVV').exists)
+            .expect(cvcLabel.withExactText('Security code').exists)
             .ok()
 
             // and not optional
@@ -65,7 +65,7 @@ test(
             .contains('maestro.svg')
 
             // with "optional" text
-            .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
+            .expect(cvcLabel.withExactText('Security code (optional)').exists)
             .ok()
             // and optional class
             .expect(optionalCVCSpan.exists)
@@ -101,7 +101,7 @@ test(
             .ok()
 
             // with regular text
-            .expect(cvcLabel.withExactText('CVC / CVV').exists)
+            .expect(cvcLabel.withExactText('Security code').exists)
             .ok()
 
             // and not optional
@@ -127,7 +127,7 @@ test('Test card is valid with maestro details (cvc optional) ' + 'then test it i
         .contains('maestro.svg')
 
         // with "optional" text
-        .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
+        .expect(cvcLabel.withExactText('Security code (optional)').exists)
         .ok()
         // and optional class
         .expect(optionalCVCSpan.exists)
@@ -187,7 +187,7 @@ test(
             .contains('maestro.svg')
 
             // with "optional" text
-            .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
+            .expect(cvcLabel.withExactText('Security code (optional)').exists)
             .ok()
             // and optional class
             .expect(optionalCVCSpan.exists)

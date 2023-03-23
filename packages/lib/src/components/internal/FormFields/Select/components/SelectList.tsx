@@ -5,14 +5,12 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectListProps } from '../types';
 import styles from '../Select.module.scss';
 
-function SelectList({ active, items, showList, textFilter, ...props }: SelectListProps) {
+function SelectList({ selected, active, filteredItems, showList, ...props }: SelectListProps) {
     const { i18n } = useCoreContext();
-    const filteredItems = items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter));
 
     return (
         <ul
             className={cx({
-                test: true,
                 'adyen-checkout__dropdown__list': true,
                 [styles['adyen-checkout__dropdown__list']]: true,
                 'adyen-checkout__dropdown__list--active': showList,
@@ -25,11 +23,12 @@ function SelectList({ active, items, showList, textFilter, ...props }: SelectLis
             {filteredItems.length ? (
                 filteredItems.map(item => (
                     <SelectListItem
+                        active={item.id === active.id}
                         item={item}
                         key={item.id}
-                        onKeyDown={props.onKeyDown}
                         onSelect={props.onSelect}
-                        selected={item.id === active.id}
+                        onHover={props.onHover}
+                        selected={item.id === selected.id}
                     />
                 ))
             ) : (

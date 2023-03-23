@@ -18,8 +18,10 @@
 /**
  * @internal
  * Logs errors
+ * NOTE: changed to 'let' from 'const' for the purpose of running unit tests
  */
-export const error = typeof window !== 'undefined' && window.console && window.console.error && window.console.error.bind(window.console);
+// eslint-disable-next-line prefer-const
+export let error = typeof window !== 'undefined' && window.console && window.console.error && window.console.error.bind(window.console);
 
 /**
  * @internal
@@ -32,6 +34,7 @@ export const info = typeof window !== 'undefined' && window.console && window.co
  * Logs
  * NOTE: changed to 'let' from 'const' for the purpose of running unit tests
  */
+// eslint-disable-next-line prefer-const
 export let log = typeof window !== 'undefined' && window.console && window.console.log && window.console.log.bind(window.console); // eslint-disable-line
 
 /**
@@ -39,4 +42,5 @@ export let log = typeof window !== 'undefined' && window.console && window.conso
  * Logs warnings
  * NOTE: changed to 'let' from 'const' for the purpose of running unit tests
  */
+// eslint-disable-next-line prefer-const
 export let warn = typeof window !== 'undefined' && window.console && window.console.warn && window.console.warn.bind(window.console); // eslint-disable-line

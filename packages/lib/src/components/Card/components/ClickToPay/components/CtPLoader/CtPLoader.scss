@@ -1,14 +1,14 @@
 .adyen-checkout-ctp__loading {
-  &-image {
-    display: block;
-    margin: 30px auto auto;
-  }
+    &-image {
+        display: block;
+        margin: 30px auto auto;
+    }
 
-  &-subtitle {
-    font-size: 16px;
-    line-height: 19px;
-    max-width: 280px;
-    text-align: center;
-    margin: 0 auto 58px;
-  }
+    &-subtitle {
+        font-size: 16px;
+        line-height: 19px;
+        max-width: 280px;
+        text-align: center;
+        margin: 0 auto 58px;
+    }
 }

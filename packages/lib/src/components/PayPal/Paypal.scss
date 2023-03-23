@@ -1,4 +1,4 @@
-@import '../../style/index';
+@import "../../style/index";
 
 .adyen-checkout__paypal {
     &__buttons {
@@ -28,6 +28,10 @@
             padding: $spacing-large 0;
         }
     }
+}
+
+.adyen-checkout__paypal-processing .adyen-checkout__paypal__button {
+    display: none;
 }
 
 // Dropin only

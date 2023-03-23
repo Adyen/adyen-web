@@ -1,3 +1,5 @@
+import { ActionHandledReturnObject } from '../../types';
+
 interface StatusObjectProps {
     payload: string;
     resultCode: string;
@@ -18,7 +20,6 @@ export interface AwaitComponentProps {
     throttleInterval: number;
     paymentData: string;
     url?: string;
-    shouldRedirectOnMobile?: boolean;
     classNameModifiers?: string[];
     clientKey: string;
     onError: (error) => void;
@@ -27,4 +28,5 @@ export interface AwaitComponentProps {
     messageText: string;
     awaitText: string;
     ref: any;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
 }

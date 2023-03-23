@@ -21,6 +21,6 @@ window.cardConfig = {
 window.dropinConfig = {
     showStoredPaymentMethods: false, // hide stored PMs so credit card is first on list
     paymentMethodsConfiguration: {
-        card: { brands: ['mc', 'amex', 'visa', 'cartebancaire'] }
+        card: { brands: ['mc', 'amex', 'visa', 'cartebancaire'], _disableClickToPay: true }
     }
 };

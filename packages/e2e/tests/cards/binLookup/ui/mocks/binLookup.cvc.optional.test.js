@@ -73,7 +73,7 @@ test('Test card has optional cvc field ' + 'then complete date and see card is v
         .ok()
 
         // with regular text
-        .expect(cvcLabel.withExactText('CVC / CVV').exists)
+        .expect(cvcLabel.withExactText('Security code').exists)
         .ok()
 
         // and not optional
@@ -93,7 +93,7 @@ test('Test card has optional cvc field ' + 'then complete date and see card is v
         .ok()
 
         // with "optional" text
-        .expect(cvcLabel.withExactText('CVC / CVV (optional)').exists)
+        .expect(cvcLabel.withExactText('Security code (optional)').exists)
         .ok()
         // and optional class
         .expect(optionalCVCSpan.exists)
@@ -119,7 +119,7 @@ test('Test card has optional cvc field ' + 'then complete date and see card is v
         .ok()
 
         // with regular text
-        .expect(cvcLabel.withExactText('CVC / CVV').exists)
+        .expect(cvcLabel.withExactText('Security code').exists)
         .ok()
 
         // and not optional

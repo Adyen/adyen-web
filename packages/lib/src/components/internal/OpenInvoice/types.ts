@@ -1,8 +1,9 @@
 import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 import { AddressSpecifications } from '../Address/types';
-import {UIElementProps} from "../../types";
-import UIElement from "../../UIElement";
+import { UIElementProps } from '../../types';
+import UIElement from '../../UIElement';
+import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
@@ -13,12 +14,12 @@ export interface OpenInvoiceVisibility {
 }
 
 export interface BankDetailsSchema {
-    countryCode?: string,
-    ibanNumber?: any,
-    ownerName?: string
+    countryCode?: string;
+    ibanNumber?: any;
+    ownerName?: string;
 }
 
-export interface OpenInvoiceProps extends UIElementProps{
+export interface OpenInvoiceProps extends UIElementProps {
     allowedCountries?: string[];
     consentCheckboxLabel: any;
     countryCode?: string;
@@ -27,7 +28,7 @@ export interface OpenInvoiceProps extends UIElementProps{
         personalDetails?: PersonalDetailsSchema;
         billingAddress?: AddressData;
         deliveryAddress?: AddressData;
-        bankAccount?: BankDetailsSchema
+        bankAccount?: BankDetailsSchema;
     };
     onChange: (state: any, element?: UIElement) => void;
     payButton: any;
@@ -36,6 +37,7 @@ export interface OpenInvoiceProps extends UIElementProps{
     personalDetailsRequiredFields?: string[];
     billingAddressRequiredFields?: string[];
     billingAddressSpecification?: AddressSpecifications;
+    setComponentRef?: (ref) => void;
 }
 
 export interface OpenInvoiceStateData {
@@ -43,17 +45,17 @@ export interface OpenInvoiceStateData {
     personalDetails?: PersonalDetailsSchema;
     billingAddress?: AddressData;
     deliveryAddress?: AddressData;
-    bankAccount?: BankDetailsSchema
+    bankAccount?: BankDetailsSchema;
     consentCheckbox?: boolean;
 }
 
 export interface OpenInvoiceStateError {
-    consentCheckbox?: boolean;
-    companyDetails?: boolean;
-    billingAddress?: boolean;
-    deliveryAddress?: boolean;
-    personalDetails?: boolean;
-    bankAccount?: boolean;
+    consentCheckbox?: boolean | GenericError;
+    companyDetails?: boolean | ValidationRuleErrorObj;
+    billingAddress?: boolean | ValidationRuleErrorObj;
+    deliveryAddress?: boolean | ValidationRuleErrorObj;
+    personalDetails?: boolean | ValidationRuleErrorObj;
+    bankAccount?: boolean | object;
 }
 
 export interface OpenInvoiceStateValid {

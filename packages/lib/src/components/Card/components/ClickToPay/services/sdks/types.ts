@@ -24,8 +24,10 @@ export type SrciIsRecognizedResponse = {
 
 export type SrciCheckoutResponse = {
     dcfActionCode: string;
-    encryptedPayload?: string;
-    idToken?: string;
+    checkoutResponse: string;
+    checkoutResponseSignature: string;
+    idToken: string;
+    unbindAppInstance: boolean;
 };
 
 export type SrciIdentityLookupResponse = {
@@ -63,4 +65,9 @@ export type SrcCheckoutParams = {
 export interface SrcInitParams {
     srcInitiatorId: string;
     srciDpaId: string;
+}
+
+export interface SrcIdentityLookupParams {
+    identityValue: string;
+    type: 'email' | 'telephoneNumber';
 }

@@ -4,6 +4,7 @@ import CardInput from './CardInput';
 import Language from '../../../../language/Language';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
+import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 
@@ -150,14 +151,60 @@ describe('CardInput > holderName', () => {
     });
 
     test('does not show the holder name first by default', () => {
-        const wrapper = mount(<CardInput hasHolderName={true} i18n={i18n} />);
-        expect(wrapper.find('CardHolderName')).toHaveLength(1);
-        expect(wrapper.find('CardHolderName:first-child')).toHaveLength(0);
+        render(<CardInput hasHolderName={true} i18n={i18n} />);
+
+        const select = screen.getByRole('form');
+        // eslint-disable-next-line testing-library/no-node-access
+        const children = select.children;
+
+        const positionDiv = children.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
+        const positionDivChildren = positionDiv.children;
+
+        const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
+        // eslint-disable-next-line testing-library/no-node-access
+        const loadingWrapperChildren = loadingWrapper.children;
+
+        // First visible element is the Card number
+        const firstFormElement = loadingWrapperChildren.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
+        const firstFormElementChildren = firstFormElement.children;
+
+        const label = firstFormElementChildren.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
+        const labelChildren = label.children;
+
+        expect(labelChildren.item(0).textContent).toEqual('Card number');
     });
 
-    test('shows holder name first', () => {
-        const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} SRConfig={{ collateErrors: false }} />);
-        expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
+    test('holder name is first visible element', () => {
+        // const wrapper = mount(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
+        // expect(wrapper.find('CardHolderName:first-child')).toHaveLength(1);
+
+        render(<CardInput hasHolderName={true} positionHolderNameOnTop={true} i18n={i18n} />);
+
+        const select = screen.getByRole('form');
+        // eslint-disable-next-line testing-library/no-node-access
+        const children = select.children;
+
+        const positionDiv = children.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
+        const positionDivChildren = positionDiv.children;
+
+        const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
+        // eslint-disable-next-line testing-library/no-node-access
+        const loadingWrapperChildren = loadingWrapper.children;
+
+        // First visible element is the Holder name
+        const firstFormElement = loadingWrapperChildren.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
+        const firstFormElementChildren = firstFormElement.children;
+
+        const label = firstFormElementChildren.item(0);
+        // eslint-disable-next-line testing-library/no-node-access
+        const labelChildren = label.children;
+
+        expect(labelChildren.item(0).textContent).toEqual('Name on card');
     });
 });
 
@@ -223,5 +270,25 @@ describe('CardInput never shows KCP fields when koreanAuthenticationRequired is 
         cardInputRef?.processBinLookupResponse({ issuingCountryCode: 'kr' }, false);
         wrapper.update();
         expect(wrapper.find('.adyen-checkout__card__kcp-authentication')).toHaveLength(0);
+    });
+});
+
+describe('CardInput > Installments', () => {
+    const installments = {
+        mc: {
+            values: [1, 2, 3]
+        }
+    };
+    test('should not display installments if fundingSource is debit', () => {
+        const wrapper = mount(<CardInput fundingSource={'debit'} i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(false);
+    });
+    test('should display installments if fundingSource is credit', () => {
+        const wrapper = mount(<CardInput fundingSource={'credit'} i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
+    });
+    test('should display installments if fundingSource undefined', () => {
+        const wrapper = mount(<CardInput i18n={i18n} installmentOptions={installments} />);
+        expect(wrapper.find(CardFieldsWrapper).prop('hasInstallments')).toBe(true);
     });
 });

@@ -18,6 +18,7 @@ function Await(props: AwaitComponentProps) {
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [hasCalledActionHandled, setHasCalledActionHandled] = useState(false);
     const [delay, setDelay] = useState(props.delay);
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
@@ -75,6 +76,11 @@ function Await(props: AwaitComponentProps) {
     const checkStatus = (): void => {
         const { paymentData, clientKey } = props;
 
+        if (!hasCalledActionHandled) {
+            props.onActionHandled({ componentType: props.type, actionDescription: 'polling-started' });
+            setHasCalledActionHandled(true);
+        }
+
         checkPaymentStatus(paymentData, clientKey, loadingContext)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
@@ -100,21 +106,12 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout(fallback, 1000);
+    const redirectToApp = (url): void => {
         window.location.assign(url);
     };
 
     useEffect(() => {
-        const { shouldRedirectOnMobile, url } = props;
-        const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
-
-        if (shouldRedirectOnMobile && url && isMobile) {
-            redirectToApp(url, checkStatus);
-        } else {
-            checkStatus();
-        }
-
+        checkStatus();
         return (): void => {
             clearTimeout(storedTimeout);
         };
@@ -223,12 +220,12 @@ Await.defaultProps = {
     countdownTime: 15,
     onError: () => {},
     onComplete: () => {},
+    onActionHandled: () => {},
     delay: 2000,
     throttleTime: 60000,
     throttleInterval: 10000,
     showCountdownTimer: true,
     classNameModifiers: [],
-    shouldRedirectOnMobile: false,
     url: null
 };
 

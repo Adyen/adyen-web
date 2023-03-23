@@ -22,7 +22,7 @@ class BlikElement extends UIElement {
         return {
             paymentMethod: {
                 type: BlikElement.type,
-                ...(!recurringPayment && { blikCode: this.state.data.blikCode }),
+                ...(!recurringPayment && { blikCode: this.state?.data?.blikCode }),
                 ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
             }
         };
@@ -62,6 +62,7 @@ class BlikElement extends UIElement {
                         countdownTime={config.COUNTDOWN_MINUTES}
                         throttleTime={config.THROTTLE_TIME}
                         throttleInterval={config.THROTTLE_INTERVAL}
+                        onActionHandled={this.props.onActionHandled}
                     />
                 </CoreProvider>
             );

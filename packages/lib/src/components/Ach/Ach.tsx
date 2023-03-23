@@ -61,7 +61,15 @@ export class AchElement extends UIElement<AchElementProps> {
     }
 
     get displayName() {
+        if (this.props.storedPaymentMethodId && this.props.bankAccountNumber) {
+            // get lastFour from bankAccountNumber, value comes from storedPaymentMethods
+            return `•••• ${this.props.bankAccountNumber.slice(-4)}`;
+        }
         return this.props.name;
+    }
+
+    get additionalInfo() {
+        return this.props.storedPaymentMethodId ? this.props.i18n.get('ach.savedBankAccount') : '';
     }
 
     render() {
@@ -79,9 +87,7 @@ export class AchElement extends UIElement<AchElementProps> {
                     />
                 ) : (
                     <AchInput
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

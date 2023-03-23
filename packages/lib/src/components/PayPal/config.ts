@@ -1,6 +1,6 @@
 const INTEGRATION_DATE = '2020-02-01';
 const PAYPAL_JS_URL = 'https://www.paypal.com/sdk/js';
-const ADYEN_CLIENTID_TEST = 'AVzsPoGmjcm99YG02kq0iWL3KP3JedbMQJO2QUnVUc-t7aUzjkBWte7relkAC5SPUL50ovLGKmxfA674';
+const ADYEN_CLIENTID_TEST = 'AXy9hIzWB6h_LjZUHjHmsbsiicSIbL4GKOrcgomEedVjduUinIU4C2llxkW5p0OG0zTNgviYFceaXEnj';
 const ADYEN_CLIENTID_LIVE = 'AU0Z-TP9t5_9196agaBN6ZD3UAwypdP1IX8ZYH3PcNNAQMXUTDQlChruXqQEhyI6-NKBKowN6ydkj477';
 
 const SUPPORTED_COLORS_FOR_CREDIT = ['black', 'white'];

@@ -1,4 +1,4 @@
-import { PaymentAmount, PaymentMethod } from '../../types';
+import { PaymentAmount, PaymentMethod, ShopperDetails } from '../../types';
 import UIElement from '../UIElement';
 import { UIElementProps } from '../types';
 import { SUPPORTED_LOCALES } from './config';
@@ -14,11 +14,11 @@ declare global {
  * The intent for the transaction. This determines whether the funds are captured immediately, or later.
  * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
  */
-type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
+export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
 export type FundingSource = 'paypal' | 'credit';
 
-interface PayPalStyles {
+export interface PayPalStyles {
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#color}
      */
@@ -92,7 +92,10 @@ interface PayPalCommonProps {
     cspNonce?: string;
 
     /**
+     * Determines whether the funds are captured immediately on checkout or if the buyer authorizes the funds to be captured later.
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
+     *
+     * If set, it will override the intent passed inside the 'configuration' object
      */
     intent?: Intent;
 
@@ -159,14 +162,15 @@ export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
+    onShopperDetails?(shopperDetails: ShopperDetails, rawData: any, actions: { resolve: () => void; reject: () => void }): void;
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }
 
 export interface PayPalComponentProps extends PayPalCommonProps {
+    onApprove: (data: any, actions: any) => void;
     onCancel?: (data: object) => void;
     onChange?: (newState: object) => void;
-    onComplete?: (details: object) => void;
     onError?: (data: object) => void;
     onSubmit?: () => Promise<any>;
     ref?: any;
@@ -174,6 +178,7 @@ export interface PayPalComponentProps extends PayPalCommonProps {
 
 export interface PayPalButtonsProps extends PayPalComponentProps {
     paypalRef: any;
+    isProcessingPayment: boolean;
 }
 
 export interface PaypalSettings {
@@ -191,4 +196,4 @@ export interface PaypalSettings {
     components: string;
 }
 
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number];
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];

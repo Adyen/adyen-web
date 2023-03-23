@@ -4,8 +4,9 @@ import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
 import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
 import { AddressSpecifications } from '../../internal/Address/types';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 
-export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps>{
+export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
     consentCheckboxLabel?: h.JSX.Element;
     billingAddressRequiredFields?: string[];
     billingAddressSpecification?: AddressSpecifications;
@@ -86,16 +87,16 @@ export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainer
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <OpenInvoice
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    {...this.state}
-                    onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
-                />
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <OpenInvoice
+                        setComponentRef={this.setComponentRef}
+                        {...this.props}
+                        {...this.state}
+                        onChange={this.setState}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                    />
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

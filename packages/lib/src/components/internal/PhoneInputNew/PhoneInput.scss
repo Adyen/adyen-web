@@ -11,12 +11,12 @@
             height: auto;
 
             &:focus-within {
-                 border: 1px solid #0075FF;
+                border: 1px solid #0075ff;
 
-                 .adyen-checkout-dropdown--countrycode-selector {
-                     border-right: 1px solid #0075FF;
-                 }
-             }
+                .adyen-checkout-dropdown--countrycode-selector {
+                    border-right: 1px solid #0075ff;
+                }
+            }
         }
 
         // inherited style (Select.scss)
@@ -27,7 +27,7 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
 
-            &:after {
+            &::after {
                 box-sizing: revert;
                 height: 10px;
             }
@@ -53,15 +53,15 @@
             padding-left: 15px;
 
             &:focus-within {
-                border: 1px solid #0075FF;
+                border: 1px solid #0075ff;
                 box-shadow: 0 0 0 2px #99c2ff;
             }
         }
 
         .adyen-checkout-dropdown--countrycode-selector {
             border-right: 1px solid #dce0e5;
-            min-width: 134px;
-            width: 134px;
+            min-width: 144px;
+            width: 144px;
         }
 
         .adyen-checkout-input-holder--phone-input {

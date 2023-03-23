@@ -10,10 +10,7 @@ import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/configuration/constants';
 
 export default function CardNumber(props: CardNumberProps) {
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n } = useCoreContext();
     const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
 
     return (
@@ -27,9 +24,9 @@ export default function CardNumber(props: CardNumberProps) {
             isValid={isValid}
             dir={'ltr'}
             name={ENCRYPTED_CARD_NUMBER}
-            isCollatingErrors={isCollatingErrors}
             showValidIcon={false}
             i18n={i18n}
+            errorVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}

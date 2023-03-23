@@ -1,0 +1,17 @@
+@import "../../../style/index";
+
+.adyen-checkout-disclaimer__label {
+    position: relative;
+    margin-top: $spacing-medium;
+    padding-left: 0;
+    display: inline-block;
+    line-height: 19px;
+    color: $color-black;
+    font-size: $font-size-small;
+    font-weight: normal;
+
+
+    [dir="rtl"] & {
+        padding-right: 0;
+    }
+}

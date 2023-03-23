@@ -4,10 +4,14 @@ import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
-import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 import Specifications from '../../../internal/Address/Specifications';
-import { AddressSchema, StringObject } from '../../../internal/Address/types';
+import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
+import { SRPanel } from '../../../../core/Errors/SRPanel';
+import Analytics from '../../../../core/Analytics';
+import RiskElement from '../../../../core/RiskModule';
+import { ComponentMethodsRef } from '../../../types';
+import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -70,19 +74,23 @@ export interface CardInputProps {
     expiryMonth?: string;
     expiryYear?: string;
     forceCompat?: boolean;
-    fundingSource?: string;
+    fundingSource?: 'debit' | 'credit';
     hasCVC?: boolean;
     hasHolderName?: boolean;
     holderNameRequired?: boolean;
     i18n?: Language;
     implementationType?: string;
-    isCollatingErrors?: boolean;
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;
     loadingContext: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
+    modules?: {
+        srPanel: SRPanel;
+        analytics: Analytics;
+        risk: RiskElement;
+    };
     onAdditionalSFConfig?: () => {};
     onAdditionalSFRemoved?: () => {};
     onAllValid?: () => {};
@@ -106,12 +114,12 @@ export interface CardInputProps {
     showPayButton?: boolean;
     showWarnings?: boolean;
     specifications?: Specifications;
-    SRConfig?: ScreenreaderConfig;
     storedPaymentMethodId?: string;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type?: string;
     maskSecurityCode?: boolean;
+    disclaimerMessage?: DisclaimerMsgObject;
 }
 
 export interface CardInputState {
@@ -131,39 +139,31 @@ export interface CardInputState {
     showSocialSecurityNumber?: boolean;
 }
 
-export interface CardInputRef {
+// An interface for the members exposed by CardInput to its parent Card/UIElement
+export interface CardInputRef extends ComponentMethodsRef {
     sfp?: any;
     setFocusOn?: (who) => void;
-    showValidation?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
-    setStatus?: any;
     updateStyles?: (stylesObj: StylesObject) => void;
     handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
 }
 
-interface ScreenreaderConfig {
-    collateErrors?: boolean;
-    moveFocus?: boolean;
-    showPanel?: boolean;
-}
-
-interface FieldError {
+export interface FieldError {
     errorMessage?: string;
     errorI18n?: string;
 }
 
-export interface ErrorObj {
-    holderName?: ValidationRuleResult;
-    socialSecurityNumber?: ValidationRuleResult;
-    taxNumber?: ValidationRuleResult;
-    billingAddress?: ValidationRuleResult;
-    encryptedCardNumber?: FieldError;
-    encryptedExpiryDate?: FieldError;
-    encryptedSecurityCode?: FieldError;
-    encryptedBankAccountNumber?: FieldError;
-    encryptedBankLocationId?: FieldError;
-    encryptedPassword?: FieldError;
-    encryptedPin?: FieldError;
+export interface SFError {
+    isValid: boolean;
+    errorMessage: string;
+    errorI18n: string;
+    error: string;
+    rootNode: HTMLElement;
+    detectedBrands?: string[];
+}
+
+export interface SFStateErrorObj {
+    [key: string]: SFError;
 }
 
 export interface LayoutObj {
@@ -172,13 +172,6 @@ export interface LayoutObj {
     showBrazilianSSN: boolean;
     countrySpecificSchemas: AddressSchema;
     billingAddressRequiredFields?: string[];
-}
-
-export interface SortErrorsObj {
-    errors: ErrorObj;
-    layout: string[];
-    i18n: Language;
-    countrySpecificLabels: StringObject;
 }
 
 export enum AddressModeOptions {

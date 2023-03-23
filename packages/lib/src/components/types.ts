@@ -7,6 +7,7 @@ import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
+import { SRPanel } from '../core/Errors/SRPanel';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -57,6 +58,7 @@ export interface BaseElementProps {
     _parentInstance?: Core;
     order?: Order;
     modules?: {
+        srPanel: SRPanel;
         analytics: Analytics;
         risk: RiskElement;
     };
@@ -78,8 +80,14 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
+
+export interface ActionHandledReturnObject {
+    componentType: string;
+    actionDescription: ActionDescriptionType;
+}
 
 export interface UIElementProps extends BaseElementProps {
     session?: Session;
@@ -88,6 +96,7 @@ export interface UIElementProps extends BaseElementProps {
     beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element: UIElement) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onError?: (error, element?: UIElement) => void;
     onPaymentCompleted?: (result: any, element: UIElement) => void;
@@ -130,4 +139,10 @@ export interface UIElementProps extends BaseElementProps {
 
     /** @internal */
     i18n?: Language;
+}
+
+// An interface for the members exposed by a component to its parent UIElement
+export interface ComponentMethodsRef {
+    showValidation?: () => void;
+    setStatus?(status: UIElementStatus): void;
 }
