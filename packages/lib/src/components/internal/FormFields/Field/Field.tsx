@@ -126,15 +126,13 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         </span>
                     )}
                 </div>
-                {errorMessage && typeof errorMessage === 'string' && errorMessage.length && (
-                    <span
-                        className={'adyen-checkout__error-text'}
-                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                        aria-hidden={errorVisibleToSR ? null : 'true'}
-                    >
-                        {errorMessage}
-                    </span>
-                )}
+                <span
+                    className={'adyen-checkout__error-text'}
+                    {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                    aria-hidden={errorVisibleToSR ? null : 'true'}
+                >
+                    {errorMessage}
+                </span>
             </Fragment>
         );
     }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
