@@ -137,7 +137,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         );
     }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
 
-    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, errorVisibleToSR, children }) => {
+    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children }) => {
         const defaultWrapperProps = {
             onClick: onFocusField,
             className: classNames({
@@ -150,7 +150,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
         return useLabelElement ? (
             // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
-            <label {...defaultWrapperProps} {...(errorVisibleToSR && { htmlFor: name && uniqueId })}>
+            <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
                 {children}
             </label>
         ) : (
@@ -183,7 +183,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 focused={focused}
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
-                errorVisibleToSR={errorVisibleToSR}
+                isSecuredField={!errorVisibleToSR}
             >
                 {renderContent()}
             </LabelOrDiv>
