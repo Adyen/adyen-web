@@ -92,7 +92,7 @@ function Select({
         // We use a local variable here since writing and if statement is cleaner then a long ternary
         let valueToEmit;
 
-        if (e.currentTarget instanceof HTMLElement && e.currentTarget.role === 'option') {
+        if (e.currentTarget instanceof HTMLElement && e.currentTarget.getAttribute('role') === 'option') {
             // This is the main scenario when clicking and item in the list
             // Item comes from the event
             valueToEmit = extractItemFromEvent(e)?.id;
