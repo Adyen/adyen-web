@@ -89,9 +89,28 @@ function Select({
     const handleSelect = (e: Event) => {
         e.preventDefault();
 
-        const item = extractItemFromEvent(e);
-        // If no active option we should just emit again with the value that was already selected
-        const valueToEmit = item ? item.id : activeOption.id ? activeOption.id : selected;
+        // We use a local variable here since writing and if statement is cleaner then a long ternary
+        let valueToEmit;
+
+        if (e.currentTarget instanceof HTMLElement && e.currentTarget.role === 'option') {
+            // This is the main scenario when clicking and item in the list
+            // Item comes from the event
+            valueToEmit = extractItemFromEvent(e)?.id;
+        } else if (activeOption.id) {
+            // This is the scenario where a user is using the keyboard to navigate
+            // In the case item comes from the visually select item
+            valueToEmit = activeOption.id;
+        } else {
+            // This is the scenario the user didn't select anything
+            if (textFilter) {
+                // if we filtering for something then select the first option
+                valueToEmit = filteredItems[0].id;
+            } else {
+                // This will happen when we want to keep an already chosen option
+                // If no active option we should just emit again with the value that was already selected
+                valueToEmit = selected;
+            }
+        }
 
         onChange({ target: { value: valueToEmit, name: name } });
 

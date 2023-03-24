@@ -28,6 +28,23 @@ class IssuerList {
     async selectHighlightedIssuer(issuerName: string) {
         await this.highlightedIssuerButtonGroup.getByRole('button', { name: issuerName }).click();
     }
+
+    async typeToFilterTerm(filter: string) {
+        await this.selectorCombobox.focus();
+        await this.selectorCombobox.type(filter);
+    }
+
+    async pressKeyboardToNextItem() {
+        await this.selectorCombobox.press('ArrowDown');
+    }
+
+    async pressKeyboardToPreviousItem() {
+        await this.selectorCombobox.press('ArrowDown');
+    }
+
+    async pressKeyboardToSelectItem() {
+        await this.selectorCombobox.press('Enter');
+    }
 }
 
 export { IssuerList };
