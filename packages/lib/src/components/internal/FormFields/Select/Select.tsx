@@ -78,10 +78,7 @@ function Select({
     };
 
     const extractItemFromEvent = (e: Event): SelectItem => {
-        // If the target is not one of the list items, select the first list item
-        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
-
-        const value = target.getAttribute('data-value') as string;
+        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value') as string;
         return filteredItems.find(listItem => listItem.id == value);
     };
 
