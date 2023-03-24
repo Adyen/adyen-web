@@ -10,6 +10,11 @@ import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
 import './IssuerList.scss';
 import { interpolateElement } from '../../../language/utils';
+import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
+import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
+import { SetSRMessagesReturnObject } from '../../../core/Errors/types';
+import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
+import { setFocusOnField } from '../../../utils/setFocus';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -21,6 +26,7 @@ const schema = ['issuer'];
 const validationRules: ValidatorRules = {
     issuer: {
         validate: issuer => !!issuer && issuer.length > 0,
+        errorMessage: 'idealIssuer.selectField.placeholder',
         modes: ['blur']
     }
 };
@@ -40,6 +46,11 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
     const [status, setStatus] = useState('ready');
     const [inputType, setInputType] = useState<IssuerListInputTypes>(IssuerListInputTypes.Dropdown);
 
+    const { setSRMessagesFromObjects, shouldMoveFocusSR } = useSRPanelContext();
+    const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
+
+    const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);
+
     this.setStatus = newStatus => {
         setStatus(newStatus);
     };
@@ -54,6 +65,12 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
+
+        const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: true });
+        if (srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
+            // Focus field in error, if required
+            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__issuer-list', srPanelResp.fieldToFocus);
+        }
     }, [data, valid, errors, isValid]);
 
     this.showValidation = () => {
@@ -81,7 +98,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 </Fragment>
             )}
 
-            <Field errorMessage={!!errors['issuer']} classNameModifiers={['issuer-list']}>
+            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
                     items,
                     selected: inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null,
