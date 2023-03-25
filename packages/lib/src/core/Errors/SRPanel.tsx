@@ -27,7 +27,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     constructor(props: SRPanelProps) {
         super(props);
-        this.id = props.id ?? 'ariaLiveSRPanel';
+        this.id = props?.id ?? 'ariaLiveSRPanel';
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;
         this._enabled = false;
         this._moveFocus = this.props.moveFocus ?? true;
