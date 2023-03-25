@@ -13,7 +13,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
     public static defaultProps = {
         enabled: true,
         node: 'body',
-        showPanel: false
+        showPanel: false,
+        id: 'ariaLiveSRPanel'
     };
 
     private readonly srPanelContainer = null;
@@ -27,7 +28,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     constructor(props: SRPanelProps) {
         super(props);
-        this.id = props?.id ?? 'ariaLiveSRPanel';
+        this.id = this.props.id;
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;
         this._enabled = false;
         this._moveFocus = this.props.moveFocus ?? true;
