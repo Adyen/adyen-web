@@ -27,7 +27,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     constructor(props: SRPanelProps) {
         super(props);
-        this.id = 'ariaLiveSRPanel';
+        this.id = props.id ?? 'ariaLiveSRPanel';
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;
         this._enabled = false;
         this._moveFocus = this.props.moveFocus ?? true;
@@ -37,6 +37,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
             if (document.querySelector(this.props.node)) {
                 this.srPanelContainer = document.createElement('div');
                 this.srPanelContainer.className = 'sr-panel-holder';
+                this.srPanelContainer.id = this.id;
+
                 document.querySelector(this.props.node).appendChild(this.srPanelContainer);
                 this.mount(this.srPanelContainer);
             } else {
@@ -75,7 +77,6 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return (
             <div
                 className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
-                id={this.id}
                 aria-live={'polite'}
                 aria-atomic={'true'}
                 role={'log'}
