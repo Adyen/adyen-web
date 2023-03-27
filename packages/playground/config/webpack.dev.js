@@ -1,8 +1,6 @@
 const webpack = require('webpack');
-const { merge } = require('webpack-merge');
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const webpackConfig = require('./webpack.config');
 const checkoutDevServer = require('@adyen/adyen-web-server');
 const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || '3020';
@@ -11,17 +9,17 @@ const resolve = dir => path.resolve(__dirname, dir);
 // NOTE: The first page in the array will be considered the index page.
 const htmlPages = [
     { name: 'Drop-in', id: 'Dropin' },
-    { name: 'Cards', id: 'Cards' }
-    // { name: 'Components', id: 'Components' },
-    // { name: 'Gift Cards', id: 'GiftCards' },
-    // { name: 'Helpers', id: 'Helpers' },
-    // { name: 'Issuer Lists', id: 'IssuerLists' },
-    // { name: 'Open Invoices', id: 'OpenInvoices' },
-    // { name: 'QR Codes', id: 'QRCodes' },
-    // { name: 'Secured Fields', id: 'SecuredFields' },
-    // { name: 'Vouchers', id: 'Vouchers' },
-    // { name: 'Wallets', id: 'Wallets' },
-    // { name: 'Result', id: 'Result' }
+    { name: 'Cards', id: 'Cards' },
+    { name: 'Components', id: 'Components' },
+    { name: 'Gift Cards', id: 'GiftCards' },
+    { name: 'Helpers', id: 'Helpers' },
+    { name: 'Issuer Lists', id: 'IssuerLists' },
+    { name: 'Open Invoices', id: 'OpenInvoices' },
+    { name: 'QR Codes', id: 'QRCodes' },
+    { name: 'Secured Fields', id: 'SecuredFields' },
+    { name: 'Vouchers', id: 'Vouchers' },
+    { name: 'Wallets', id: 'Wallets' },
+    { name: 'Result', id: 'Result' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>
@@ -39,8 +37,16 @@ const entriesReducer = (acc, { id }) => {
     return acc;
 };
 
-module.exports = merge(webpackConfig, {
+module.exports = {
+    resolve: {
+        mainFields: ['module', 'main'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss']
+    },
+
+    stats: { children: false },
+
     mode: 'development',
+
     plugins: [
         ...htmlPages.map(htmlPageGenerator),
         new webpack.HotModuleReplacementPlugin(),
@@ -52,6 +58,7 @@ module.exports = merge(webpackConfig, {
             }
         })
     ],
+
     devtool: 'cheap-module-source-map',
 
     entry: {
@@ -110,6 +117,7 @@ module.exports = merge(webpackConfig, {
             }
         ]
     },
+
     devServer: {
         port,
         host,
@@ -123,4 +131,4 @@ module.exports = merge(webpackConfig, {
             checkoutDevServer(devServer.app);
         }
     }
-});
+};
