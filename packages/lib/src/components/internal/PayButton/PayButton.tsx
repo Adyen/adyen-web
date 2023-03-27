@@ -42,7 +42,7 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
             {...props}
             disabled={props.disabled || props.status === 'loading'}
             classNameModifiers={[...classNameModifiers, 'pay']}
-            label={'Caralhddosss'}
+            label={label || defaultLabel}
         >
             {secondaryLabel && <SecondaryButtonLabel label={secondaryLabel} />}
         </Button>
