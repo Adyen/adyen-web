@@ -200,10 +200,10 @@ class Core {
 
         // In a sessions flow setOptions gets called twice, but we only need one set of modules (except for i18n needs to be re-initialised as the options settle)
         this.modules = {
-            risk: !this.modules?.risk ? new RiskModule(this.options) : this.modules.risk,
-            analytics: !this.modules?.analytics ? new Analytics(this.options) : this.modules.analytics,
+            risk: this.modules?.risk ?? new RiskModule(this.options),
+            analytics: this.modules?.analytics ?? new Analytics(this.options),
             i18n: new Language(this.options.locale, this.options.translations),
-            srPanel: !this.modules?.srPanel ? new SRPanel(this.options.srConfig) : this.modules.srPanel
+            srPanel: this.modules?.srPanel ?? new SRPanel(this.options.srConfig)
         };
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
