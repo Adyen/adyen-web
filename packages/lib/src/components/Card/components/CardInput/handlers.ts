@@ -81,7 +81,7 @@ const setFocusOnNonSF = (field, sfp) => {
 
     if (nameVal === 'country' || nameVal === 'stateOrProvince') {
         // Set focus on dropdown
-        const field: HTMLElement = selectOne(sfp.current.rootNode, `.adyen-checkout__field--${nameVal} .adyen-checkout__dropdown__button`);
+        const field: HTMLElement = selectOne(sfp.current.rootNode, `.adyen-checkout__field--${nameVal} .adyen-checkout__filter-input`);
         field?.focus();
     } else {
         // Set focus on input

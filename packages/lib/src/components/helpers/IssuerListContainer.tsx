@@ -8,6 +8,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
 import { IssuerItem } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -96,18 +97,20 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 {this.props.issuers.length > 0 ? (
-                    <IssuerList
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        items={this.props.issuers}
-                        highlightedIds={this.props.highlightedIssuers}
-                        {...this.props}
-                        {...this.state}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
+                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                        <IssuerList
+                            ref={ref => {
+                                this.componentRef = ref;
+                            }}
+                            items={this.props.issuers}
+                            highlightedIds={this.props.highlightedIssuers}
+                            {...this.props}
+                            {...this.state}
+                            onChange={this.setState}
+                            onSubmit={this.submit}
+                            payButton={this.payButton}
+                        />
+                    </SRPanelProvider>
                 ) : (
                     <RedirectButton
                         name={this.props.name}
