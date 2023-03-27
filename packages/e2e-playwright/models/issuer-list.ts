@@ -9,7 +9,10 @@ class IssuerList {
     readonly submitButton: Locator;
     readonly highlightedIssuerButtonGroup: Locator;
 
+    readonly page: Page;
+
     constructor(page: Page, rootElementSelector: string = '.adyen-checkout__issuer-list') {
+        this.page = page;
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
@@ -35,15 +38,15 @@ class IssuerList {
     }
 
     async pressKeyboardToNextItem() {
-        await this.selectorCombobox.press('ArrowDown');
+        await this.page.keyboard.press('ArrowDown');
     }
 
     async pressKeyboardToPreviousItem() {
-        await this.selectorCombobox.press('ArrowDown');
+        await this.page.keyboard.press('ArrowDown');
     }
 
     async pressKeyboardToSelectItem() {
-        await this.selectorCombobox.press('Enter');
+        await this.page.keyboard.press('Enter');
     }
 }
 
