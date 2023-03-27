@@ -14,7 +14,7 @@ const htmlPages = [
     { name: 'Gift Cards', id: 'GiftCards' },
     { name: 'Helpers', id: 'Helpers' },
     { name: 'Issuer Lists', id: 'IssuerLists' },
-    { name: 'Open InvFoices', id: 'OpenInvoices' },
+    { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'QR Codes', id: 'QRCodes' },
     { name: 'Secured Fields', id: 'SecuredFields' },
     { name: 'Vouchers', id: 'Vouchers' },
@@ -41,7 +41,6 @@ module.exports = {
     mode: 'development',
 
     resolve: {
-        // mainFields: ['module', 'main'],
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss']
     },
 
