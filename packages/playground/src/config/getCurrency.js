@@ -29,9 +29,9 @@ const currencies = {
     SK: 'SKK',
     TH: 'THB',
     TW: 'TWD',
-    US: 'USD',
+    US: 'RSD',
     VN: 'VND',
-    default: 'EUR'
+    default: 'RSD'
 };
 
 const getCurrency = countryCode => currencies[countryCode] || currencies.default;

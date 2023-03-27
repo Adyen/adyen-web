@@ -1,5 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import '@adyen/adyen-web/dist/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';

@@ -50,6 +50,7 @@ export class Language {
      * @param options - Options for String.prototype.toLocaleString
      */
     amount(amount: number, currencyCode: string, options?: object): string {
+        debugger;
         return getLocalisedAmount(amount, this.locale, currencyCode, options);
     }
 
