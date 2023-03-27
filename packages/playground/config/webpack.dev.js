@@ -10,18 +10,18 @@ const resolve = dir => path.resolve(__dirname, dir);
 
 // NOTE: The first page in the array will be considered the index page.
 const htmlPages = [
-    { name: 'Drop-in', id: 'Dropin' },
-    { name: 'Cards', id: 'Cards' },
-    { name: 'Components', id: 'Components' },
-    { name: 'Gift Cards', id: 'GiftCards' },
-    { name: 'Helpers', id: 'Helpers' },
-    { name: 'Issuer Lists', id: 'IssuerLists' },
-    { name: 'Open Invoices', id: 'OpenInvoices' },
-    { name: 'QR Codes', id: 'QRCodes' },
-    { name: 'Secured Fields', id: 'SecuredFields' },
-    { name: 'Vouchers', id: 'Vouchers' },
-    { name: 'Wallets', id: 'Wallets' },
-    { name: 'Result', id: 'Result' }
+    // { name: 'Drop-in', id: 'Dropin' },
+    { name: 'Cards', id: 'Cards' }
+    // { name: 'Components', id: 'Components' },
+    // { name: 'Gift Cards', id: 'GiftCards' },
+    // { name: 'Helpers', id: 'Helpers' },
+    // { name: 'Issuer Lists', id: 'IssuerLists' },
+    // { name: 'Open Invoices', id: 'OpenInvoices' },
+    // { name: 'QR Codes', id: 'QRCodes' },
+    // { name: 'Secured Fields', id: 'SecuredFields' },
+    // { name: 'Vouchers', id: 'Vouchers' },
+    // { name: 'Wallets', id: 'Wallets' },
+    // { name: 'Result', id: 'Result' }
 ];
 
 const htmlPageGenerator = ({ id }, index) =>
@@ -103,11 +103,19 @@ module.exports = merge(webpackConfig, {
         ]
     },
     devServer: {
-        before: app => checkoutDevServer(app),
+        // before: app => checkoutDevServer(app),
         port,
         host,
         https: false,
-        inline: true,
+
+        onBeforeSetupMiddleware: devServer => {
+            if (!devServer) {
+                throw new Error('webpack-dev-server is not defined');
+            }
+            checkoutDevServer(devServer.app);
+        },
+
+        // inline: true,
 
         // Enable hot reloading server. It will provide /sockjs-node/ endpoint
         // for the WebpackDevServer client so it can learn when the files were
@@ -117,29 +125,27 @@ module.exports = merge(webpackConfig, {
         hot: true,
 
         // Enable gzip compression of generated files.
-        compress: true,
+        compress: true
 
         // Silence WebpackDevServer's own logs since they're generally not useful.
-        // It will still show compile warnings and errors with this setting.
-        clientLogLevel: 'none',
+        // // It will still show compile warnings and errors with this setting.
+        // clientLogLevel: 'none'
 
         // Tells dev-server to suppress messages like the webpack bundle information.
-        // Errors and warnings will still be shown.
-        noInfo: true,
+        // // Errors and warnings will still be shown.
+        // noInfo: true
 
         // By default files from `contentBase` will not trigger a page reload.
-        watchContentBase: false,
+        // watchContentBase: false
 
-        // Reportedly, this avoids CPU overload on some systems.
-        // https://github.com/facebook/create-react-app/issues/293
-        // src/node_modules is not ignored to support absolute imports
-        // https://github.com/facebook/create-react-app/issues/1065
-        watchOptions: {
-            ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-            aggregateTimeout: 200,
-            poll: 500
-        },
-
-        overlay: false
+        // // Reportedly, this avoids CPU overload on some systems.
+        // // https://github.com/facebook/create-react-app/issues/293
+        // // src/node_modules is not ignored to support absolute imports
+        // // https://github.com/facebook/create-react-app/issues/1065
+        // watchOptions: {
+        //     ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
+        //     aggregateTimeout: 200,
+        //     poll: 500
+        // }
     }
 });
