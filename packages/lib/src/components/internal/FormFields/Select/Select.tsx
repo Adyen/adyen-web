@@ -95,26 +95,28 @@ function Select({
         if (e.currentTarget instanceof HTMLElement && e.currentTarget.getAttribute('role') === 'option') {
             // This is the main scenario when clicking and item in the list
             // Item comes from the event
-            valueToEmit = extractItemFromEvent(e)?.id;
+            valueToEmit = extractItemFromEvent(e);
         } else if (activeOption.id) {
             // This is the scenario where a user is using the keyboard to navigate
             // In the case item comes from the visually select item
-            valueToEmit = activeOption.id;
+            valueToEmit = activeOption;
         } else {
             // This is the scenario the user didn't select anything
             if (textFilter) {
                 // if we filtering for something then select the first option
-                valueToEmit = filteredItems[0].id;
+                valueToEmit = filteredItems[0];
             } else {
                 // This will happen when we want to keep an already chosen option
                 // If no active option we should just emit again with the value that was already selected
-                valueToEmit = selected;
+                valueToEmit = { id: selected };
             }
         }
 
-        onChange({ target: { value: valueToEmit, name: name } });
+        if (!valueToEmit.disabled) {
+            onChange({ target: { value: valueToEmit.id, name: name } });
 
-        closeList();
+            closeList();
+        }
     };
 
     /**
