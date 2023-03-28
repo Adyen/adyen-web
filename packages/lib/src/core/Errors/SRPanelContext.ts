@@ -4,7 +4,7 @@ import { SetSRMessagesReturnFn } from './SRPanelProvider';
 
 export interface ISRPanelContext {
     srPanel: SRPanel;
-    setSRMessagesFromObjects: ({ fieldTypeMappingFn }) => SetSRMessagesReturnFn;
+    setSRMessagesFromObjects: ({ fieldTypeMappingFn = null }) => SetSRMessagesReturnFn;
     setSRMessagesFromStrings: (strs) => void;
     clearSRPanel: () => void;
     shouldMoveFocusSR: boolean;

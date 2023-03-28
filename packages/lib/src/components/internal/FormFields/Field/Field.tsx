@@ -37,7 +37,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         errorVisibleToScreenReader
     } = props;
 
-    // Controls whether any error element has an aria-hidden attr & and id attr that can be pointed to by an aria-describedby attr on an input element
+    // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
+    // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
     const errorVisibleToSR = errorVisibleToScreenReader ?? true;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
@@ -125,20 +126,18 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         </span>
                     )}
                 </div>
-                {errorMessage && typeof errorMessage === 'string' && errorMessage.length && (
-                    <span
-                        className={'adyen-checkout__error-text'}
-                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                        aria-hidden={errorVisibleToSR ? null : 'true'}
-                    >
-                        {errorMessage}
-                    </span>
-                )}
+                <span
+                    className={'adyen-checkout__error-text'}
+                    {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                    aria-hidden={errorVisibleToSR ? null : 'true'}
+                >
+                    {errorMessage}
+                </span>
             </Fragment>
         );
     }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
 
-    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, children }) => {
+    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children }) => {
         const defaultWrapperProps = {
             onClick: onFocusField,
             className: classNames({
@@ -150,7 +149,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         };
 
         return useLabelElement ? (
-            <label {...defaultWrapperProps} htmlFor={name && uniqueId}>
+            // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
+            <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
                 {children}
             </label>
         ) : (
@@ -183,6 +183,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 focused={focused}
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
+                isSecuredField={!errorVisibleToSR}
             >
                 {renderContent()}
             </LabelOrDiv>
