@@ -14,6 +14,7 @@ export const GiftcardNumberField = ({ i18n, classNameModifiers, sfpState, getCar
             onFocusField={() => setFocusOn('encryptedCardNumber')}
             dir={'ltr'}
             name={'encryptedCardNumber'}
+            errorVisibleToScreenReader={false}
         >
             <DataSfSpan
                 encryptedFieldType="encryptedCardNumber"
