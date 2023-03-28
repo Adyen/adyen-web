@@ -48,7 +48,7 @@ function SelectButton(props: SelectButtonProps) {
                 [styles['adyen-checkout__dropdown__button--active']]: showList,
                 'adyen-checkout__dropdown__button--invalid': props.isInvalid,
                 'adyen-checkout__dropdown__button--valid': props.isValid,
-                'adyen-checkout__dropdown__button--disabled': active.disabled
+                'adyen-checkout__dropdown__button--disabled': selected.disabled
             })}
             disabled={props.disabled}
             filterable={props.filterable}
