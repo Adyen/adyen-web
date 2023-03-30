@@ -14,9 +14,6 @@ class ApplePayService {
     private session: ApplePaySession;
 
     constructor(paymentRequest: ApplePayJS.ApplePayPaymentRequest, options: ApplePayServiceOptions) {
-        console.log('#Lib ApplePayService - paymentRequest', paymentRequest);
-        console.log(options.version);
-
         this.session = new ApplePaySession(options.version, paymentRequest);
         this.session.onvalidatemerchant = event => this.onvalidatemerchant(event, options.onValidateMerchant);
         this.session.onpaymentauthorized = event => this.onpaymentauthorized(event, options.onPaymentAuthorized);

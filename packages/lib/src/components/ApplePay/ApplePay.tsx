@@ -66,9 +66,6 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                 ...this.props
             });
 
-            console.log(paymentRequest);
-            console.log(JSON.stringify(paymentRequest));
-
             const session = new ApplePayService(paymentRequest, {
                 version,
                 onCancel,
