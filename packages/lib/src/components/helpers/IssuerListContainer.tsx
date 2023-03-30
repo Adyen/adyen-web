@@ -112,15 +112,17 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                         />
                     </SRPanelProvider>
                 ) : (
-                    <RedirectButton
-                        name={this.props.name}
-                        {...this.props}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
+                    this.props.showPayButton && (
+                        <RedirectButton
+                            name={this.props.name}
+                            {...this.props}
+                            onSubmit={this.submit}
+                            payButton={this.payButton}
+                            ref={ref => {
+                                this.componentRef = ref;
+                            }}
+                        />
+                    )
                 )}
             </CoreProvider>
         );
