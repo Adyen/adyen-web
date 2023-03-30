@@ -3,13 +3,12 @@ import { OnAuthorizedCallback } from './types';
 interface ApplePayServiceOptions {
     version: number;
     onValidateMerchant: (resolve, reject, url) => void;
+    onError: (error?: unknown) => void;
     onCancel?: (event: ApplePayJS.Event) => void;
     onPaymentMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayPaymentMethodSelectedEvent) => void;
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
     onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
     onPaymentAuthorized?: OnAuthorizedCallback;
-    onSuccess: (event: ApplePayJS.ApplePayPaymentAuthorizationResult) => void;
-    onError: (reason?: any) => void;
 }
 
 class ApplePayService {
@@ -80,14 +79,12 @@ class ApplePayService {
                     ...result,
                     status: result?.status ?? ApplePaySession.STATUS_SUCCESS
                 });
-                this.options.onSuccess(result);
             })
             .catch((result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
                 this.session.completePayment({
                     ...result,
                     status: result?.status ?? ApplePaySession.STATUS_FAILURE
                 });
-                this.options.onError(result);
             });
     }
 
@@ -107,7 +104,6 @@ class ApplePayService {
             })
             .catch((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {
                 this.session.completePaymentMethodSelection(paymentMethodUpdate);
-                this.options.onError(paymentMethodUpdate);
             });
     }
 
@@ -125,7 +121,6 @@ class ApplePayService {
             })
             .catch((shippingContactUpdate: ApplePayJS.ApplePayShippingContactUpdate) => {
                 this.session.completeShippingContactSelection(shippingContactUpdate);
-                this.options.onError(shippingContactUpdate);
             });
     }
 
@@ -143,7 +138,6 @@ class ApplePayService {
             })
             .catch((shippingMethodUpdate: ApplePayJS.ApplePayShippingMethodUpdate) => {
                 this.session.completeShippingMethodSelection(shippingMethodUpdate);
-                this.options.onError(shippingMethodUpdate);
             });
     }
 
@@ -156,7 +150,6 @@ class ApplePayService {
      */
     oncancel(event: ApplePayJS.Event, onCancel): void {
         onCancel(event);
-        this.options.onError(event);
     }
 }
 
