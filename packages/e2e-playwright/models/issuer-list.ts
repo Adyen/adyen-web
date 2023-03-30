@@ -9,7 +9,10 @@ class IssuerList {
     readonly submitButton: Locator;
     readonly highlightedIssuerButtonGroup: Locator;
 
+    readonly page: Page;
+
     constructor(page: Page, rootElementSelector: string = '.adyen-checkout__issuer-list') {
+        this.page = page;
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
@@ -27,6 +30,23 @@ class IssuerList {
 
     async selectHighlightedIssuer(issuerName: string) {
         await this.highlightedIssuerButtonGroup.getByRole('button', { name: issuerName }).click();
+    }
+
+    async typeToFilterTerm(filter: string) {
+        await this.selectorCombobox.focus();
+        await this.selectorCombobox.type(filter);
+    }
+
+    async pressKeyboardToNextItem() {
+        await this.page.keyboard.press('ArrowDown');
+    }
+
+    async pressKeyboardToPreviousItem() {
+        await this.page.keyboard.press('ArrowDown');
+    }
+
+    async pressKeyboardToSelectItem() {
+        await this.page.keyboard.press('Enter');
     }
 }
 

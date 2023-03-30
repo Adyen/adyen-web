@@ -84,9 +84,6 @@ function PhoneInput(props: PhoneInputProps) {
 
     return (
         <div className="adyen-checkout-phone-input--new">
-            <label className={'adyen-checkout-error-panel--sr-only'} htmlFor={uniqueIDPhonePrefix}>
-                {props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
-            </label>
             <label htmlFor={getRelatedUniqueId()}>
                 <span
                     className={classNames({

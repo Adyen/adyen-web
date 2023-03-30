@@ -78,10 +78,7 @@ function Select({
     };
 
     const extractItemFromEvent = (e: Event): SelectItem => {
-        // If the target is not one of the list items, select the first list item
-        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
-
-        const value = target.getAttribute('data-value') as string;
+        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value') as string;
         return filteredItems.find(listItem => listItem.id == value);
     };
 
@@ -92,13 +89,34 @@ function Select({
     const handleSelect = (e: Event) => {
         e.preventDefault();
 
-        const item = extractItemFromEvent(e);
-        // If no active option we should just emit again with the value that was already selected
-        const valueToEmit = item ? item.id : activeOption.id ? activeOption.id : selected;
+        // We use a local variable here since writing and if statement is cleaner then a long ternary
+        let valueToEmit;
 
-        onChange({ target: { value: valueToEmit, name: name } });
+        if (e.currentTarget instanceof HTMLElement && e.currentTarget.getAttribute('role') === 'option') {
+            // This is the main scenario when clicking and item in the list
+            // Item comes from the event
+            valueToEmit = extractItemFromEvent(e);
+        } else if (activeOption.id) {
+            // This is the scenario where a user is using the keyboard to navigate
+            // In the case item comes from the visually select item
+            valueToEmit = activeOption;
+        } else {
+            // This is the scenario the user didn't select anything
+            if (textFilter) {
+                // if we filtering for something then select the first option
+                valueToEmit = filteredItems[0];
+            } else {
+                // This will happen when we want to keep an already chosen option
+                // If no active option we should just emit again with the value that was already selected
+                valueToEmit = { id: selected };
+            }
+        }
 
-        closeList();
+        if (!valueToEmit.disabled) {
+            onChange({ target: { value: valueToEmit.id, name: name } });
+
+            closeList();
+        }
     };
 
     /**
