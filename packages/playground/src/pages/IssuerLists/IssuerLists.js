@@ -56,4 +56,7 @@ import '../../style.scss';
 
     // Molpay MY
     window.molpay = checkout.create('molpay_ebanking_fpx_MY').mount('.molpay-field');
+
+    // Pay By Bank
+    window.paybybank_NL = checkout.create('paybybank').mount('.paybybank_NL-field');
 })();
