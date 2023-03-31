@@ -84,8 +84,22 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             this.props.onError(errorCodeObject);
                         }
 
-                        // Proceed with call to onAdditionalDetails
-                        this.setStatusComplete(challenge.result);
+                        // This is the response we were looking for
+                        if (challenge.threeDSServerTransID === challengeData.cReqData.threeDSServerTransID) {
+                            // Proceed with call to onAdditionalDetails
+                            this.setStatusComplete(challenge.result);
+                        } else {
+                            /**
+                             * We suspect there is a scenario where the cRes is empty the first time causing the shopper to try to pay again, from the same
+                             * browser window. But due to a suboptimal implementation by the merchant - the first set of 3DS2 components has not been properly removed.
+                             * This means that for the second, successful challenge, there are a double set of listeners, leading to double callbacks, leading to
+                             * double /details calls (one that will fail, one that will succeed).
+                             *
+                             * So here we detect that this is not the response we are looking for, and this time round, unmount this set of 3DS2 comps
+                             */
+                            console.debug('### PrepareChallenge3DS2::threeDSServerTransID:: ids do not match');
+                            this.props.onComplete(null); // Send null so parent will unmount without calling onComplete
+                        }
                     }}
                     onErrorChallenge={(challenge: ThreeDS2FlowObject) => {
                         /**
