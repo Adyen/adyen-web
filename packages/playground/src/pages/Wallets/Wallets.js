@@ -178,10 +178,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         countryCode: 'DE', // Required. The merchant’s two-letter ISO 3166 country code.
 
         // Merchant config (required)
-        configuration: {
-            merchantName: 'Adyen Test merchant', // Name to be displayed
-            merchantIdentifier: '000000000200001' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
-        },
+        // Overwritten by /paymentMethods request
         buttonType: 'buy'
     });
 
