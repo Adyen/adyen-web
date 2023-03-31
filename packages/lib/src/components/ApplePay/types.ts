@@ -1,4 +1,3 @@
-import { PaymentAmount } from '../../types';
 import { UIElementProps } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,8 +39,6 @@ export interface ApplePayElementProps extends UIElementProps {
      */
     version?: number;
 
-    amount: PaymentAmount;
-
     /**
      * The merchant’s two-letter ISO 3166 country code.
      */
@@ -58,7 +55,10 @@ export interface ApplePayElementProps extends UIElementProps {
      */
     totalPriceStatus?: ApplePayJS.ApplePayLineItemType;
 
-    configuration: {
+    /**
+     * ApplePay configuration sent by the /paymentMethods response
+     */
+    configuration?: {
         merchantName?: string;
         merchantId?: string;
     };
