@@ -27,7 +27,7 @@ export default function PaypalButtons({
     const venmoButtonRef = useRef<HTMLDivElement>(null);
 
     const createButton = (fundingSource: FundingSource, buttonRef) => {
-        const button = paypalRef.Buttons({
+        const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && {
                 createOrder: onSubmit,
@@ -40,10 +40,17 @@ export default function PaypalButtons({
             onCancel,
             onError,
             onApprove
-        });
+        };
+
+        console.log(`PayPal - Funding source ${fundingSource}`);
+        console.log('PayPal - Config passed to paypalRef.Buttons', configuration);
+
+        const button = paypalRef.Buttons(configuration);
 
         if (button.isEligible()) {
             button.render(buttonRef.current);
+        } else {
+            console.log(`PayPal - Funding source ${fundingSource} is NOT ELIGIBLE`);
         }
     };
 
