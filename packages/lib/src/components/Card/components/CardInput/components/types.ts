@@ -66,6 +66,7 @@ export interface CVCProps {
 }
 
 export interface CVCHintProps {
+    fieldLabel: string;
     frontCVC: boolean;
 }
 

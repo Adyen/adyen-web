@@ -20,6 +20,7 @@ export interface QRLoaderProps {
     i18n?: Language;
     classNameModifiers?: string[];
     brandLogo?: string;
+    brandName?: string;
     introduction?: string;
     instructions?: string;
     copyBtn?: boolean;
