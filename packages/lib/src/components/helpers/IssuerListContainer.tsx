@@ -47,7 +47,11 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         issuers: [],
         highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false
+        showPaymentMethodItemImages: false,
+        // Previously we didn't check the showPayButton before rendering the RedirectButton.
+        // Now that we are checking it, all the merchants who don't specify showPayButton in the config will not see the RedirectButton anymore.
+        // To prevent the backward compatible issue, we add it as the default prop, but it should be fixed properly on v6.
+        showPayButton: true
     };
 
     formatProps(props) {
@@ -112,15 +116,17 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                         />
                     </SRPanelProvider>
                 ) : (
-                    <RedirectButton
-                        name={this.props.name}
-                        {...this.props}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
+                    this.props.showPayButton && (
+                        <RedirectButton
+                            name={this.props.name}
+                            {...this.props}
+                            onSubmit={this.submit}
+                            payButton={this.payButton}
+                            ref={ref => {
+                                this.componentRef = ref;
+                            }}
+                        />
+                    )
                 )}
             </CoreProvider>
         );
