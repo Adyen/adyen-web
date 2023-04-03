@@ -34,7 +34,7 @@ test('Test card has hidden cvc field ' + 'then complete date and see card is val
         .ok()
 
         // with regular text
-        .expect(cvcLabel.withExactText('CVC / CVV').exists)
+        .expect(cvcLabel.withExactText('Security code').exists)
         .ok()
 
         // and not optional
@@ -73,7 +73,7 @@ test('Test card has hidden cvc field ' + 'then complete date and see card is val
         .ok()
 
         // with regular text
-        .expect(cvcLabel.withExactText('CVC / CVV').exists)
+        .expect(cvcLabel.withExactText('Security code').exists)
         .ok()
 
         // and not optional

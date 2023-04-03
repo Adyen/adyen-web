@@ -14,6 +14,7 @@ export const DUAL_BRANDED_CARD_EXCLUDED = '4001230000000004'; // dual branded vi
 
 export const SYNCHRONY_PLCC_NO_LUHN = '6044100018023838'; // also, no date
 export const SYNCHRONY_PLCC_WITH_LUHN = '6044141000018769'; // also, no date
+export const SYNCHRONY_PLCC_NO_DATE = SYNCHRONY_PLCC_NO_LUHN; // no date
 
 export const FAILS_LUHN_CARD = '4111111111111112';
 
@@ -34,3 +35,5 @@ export const TEST_CPF_VALUE = '22936094488';
 export const JWE_VERSION = '1';
 export const JWE_CONTENT_ALG = 'A256CBC-HS512';
 export const JWE_ALG = 'RSA-OAEP';
+
+export const SR_INDICATOR_PREFIX = '-sr';

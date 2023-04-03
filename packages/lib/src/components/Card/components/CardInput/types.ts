@@ -4,11 +4,14 @@ import { AddressData, PaymentAmount } from '../../../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
-import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 import Specifications from '../../../internal/Address/Specifications';
-import { AddressSchema, StringObject } from '../../../internal/Address/types';
+import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
+import { SRPanel } from '../../../../core/Errors/SRPanel';
+import Analytics from '../../../../core/Analytics';
+import RiskElement from '../../../../core/RiskModule';
 import { ComponentMethodsRef } from '../../../types';
+import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -44,12 +47,6 @@ type Placeholders = {
     holderName?: string;
 };
 
-export interface DisclaimerMsgObject {
-    message: string;
-    linkText: string;
-    link: string;
-}
-
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
  * - either in the comp itself or are passed on to its children
@@ -83,13 +80,17 @@ export interface CardInputProps {
     holderNameRequired?: boolean;
     i18n?: Language;
     implementationType?: string;
-    isCollatingErrors?: boolean;
     installmentOptions?: InstallmentOptions;
     keypadFix?: boolean;
     lastFour?: string;
     loadingContext: string;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
+    modules?: {
+        srPanel: SRPanel;
+        analytics: Analytics;
+        risk: RiskElement;
+    };
     onAdditionalSFConfig?: () => {};
     onAdditionalSFRemoved?: () => {};
     onAllValid?: () => {};
@@ -113,7 +114,6 @@ export interface CardInputProps {
     showPayButton?: boolean;
     showWarnings?: boolean;
     specifications?: Specifications;
-    SRConfig?: ScreenreaderConfig;
     storedPaymentMethodId?: string;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
@@ -139,6 +139,7 @@ export interface CardInputState {
     showSocialSecurityNumber?: boolean;
 }
 
+// An interface for the members exposed by CardInput to its parent Card/UIElement
 export interface CardInputRef extends ComponentMethodsRef {
     sfp?: any;
     setFocusOn?: (who) => void;
@@ -147,29 +148,22 @@ export interface CardInputRef extends ComponentMethodsRef {
     handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
 }
 
-interface ScreenreaderConfig {
-    collateErrors?: boolean;
-    moveFocus?: boolean;
-    showPanel?: boolean;
-}
-
-interface FieldError {
+export interface FieldError {
     errorMessage?: string;
     errorI18n?: string;
 }
 
-export interface ErrorObj {
-    holderName?: ValidationRuleResult;
-    socialSecurityNumber?: ValidationRuleResult;
-    taxNumber?: ValidationRuleResult;
-    billingAddress?: ValidationRuleResult;
-    encryptedCardNumber?: FieldError;
-    encryptedExpiryDate?: FieldError;
-    encryptedSecurityCode?: FieldError;
-    encryptedBankAccountNumber?: FieldError;
-    encryptedBankLocationId?: FieldError;
-    encryptedPassword?: FieldError;
-    encryptedPin?: FieldError;
+export interface SFError {
+    isValid: boolean;
+    errorMessage: string;
+    errorI18n: string;
+    error: string;
+    rootNode: HTMLElement;
+    detectedBrands?: string[];
+}
+
+export interface SFStateErrorObj {
+    [key: string]: SFError;
 }
 
 export interface LayoutObj {
@@ -178,13 +172,6 @@ export interface LayoutObj {
     showBrazilianSSN: boolean;
     countrySpecificSchemas: AddressSchema;
     billingAddressRequiredFields?: string[];
-}
-
-export interface SortErrorsObj {
-    errors: ErrorObj;
-    layout: string[];
-    i18n: Language;
-    countrySpecificLabels: StringObject;
 }
 
 export enum AddressModeOptions {

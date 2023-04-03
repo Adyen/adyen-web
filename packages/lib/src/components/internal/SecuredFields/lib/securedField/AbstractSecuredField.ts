@@ -39,7 +39,6 @@ export interface SFInternalConfig {
     legacyInputMode: boolean;
     minimumExpiryDate: string;
     implementationType: string;
-    isCollatingErrors: boolean;
     maskSecurityCode: boolean;
     disableIOSArrowKeys: boolean;
 }

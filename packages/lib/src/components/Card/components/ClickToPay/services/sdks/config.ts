@@ -11,7 +11,7 @@ const getVisaSetttings = ({ dpaLocale = 'en_US', dpaPresentationName = '' }: Cus
         dpaLocale: dpaLocale,
         payloadTypeIndicator: 'NON_PAYMENT',
         customInputData: {
-            checkoutOrchestator: 'merchant'
+            checkoutOrchestrator: 'merchant'
         }
     },
     dpaData: {

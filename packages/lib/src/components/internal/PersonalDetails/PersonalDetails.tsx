@@ -14,7 +14,7 @@ import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
 import { ComponentMethodsRef } from '../../types';
 
-const personalDetailsSchema = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
+export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
 export default function PersonalDetails(props: PersonalDetailsProps) {
     const { label = '', namePrefix, placeholders, requiredFields, visibility } = props;
@@ -107,7 +107,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 )}
 
                 {requiredFields.includes('gender') && (
-                    <Field errorMessage={!!errors.gender} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
+                    <Field errorMessage={getErrorMessage(errors.gender)} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
                         {renderFormField('radio', {
                             i18n,
                             name: generateFieldName('gender'),
@@ -197,7 +197,7 @@ PersonalDetails.defaultProps = {
     data: {},
     onChange: () => {},
     placeholders: {},
-    requiredFields: personalDetailsSchema,
+    requiredFields: PERSONAL_DETAILS_SCHEMA,
     validationRules: personalDetailsValidationRules,
     visibility: 'editable'
 };
