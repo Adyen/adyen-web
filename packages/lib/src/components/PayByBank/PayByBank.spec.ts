@@ -9,21 +9,21 @@ test('should return expected data to perform the payment', () => {
     expect(payByBankEle.formatData()).toEqual({ paymentMethod: { type: 'paybybank' } });
 });
 
-test('should not show the pay button by default', () => {
-    const payByBankEle = new PayByBank({});
-    render(payByBankEle.render());
-    expect(screen.queryByRole('button', { name: 'Continue to Pay By Bank' })).toBeNull();
-    expect(payByBankEle.props.showPayButton).toBeFalsy();
-});
-
-test('should show pay button if property is set to true', async () => {
+test('should show the pay button by default', async () => {
     const i18n = mock<Language>();
     i18n.get.mockImplementation(() => 'Continue to');
     i18n.loaded = Promise.resolve();
 
-    const payByBankEle = new PayByBank({ showPayButton: true, name: 'Pay By Bank', i18n });
+    const payByBankEle = new PayByBank({ name: 'Pay By Bank', i18n });
     render(payByBankEle.render());
     expect(await screen.findByRole('button', { name: 'Continue to Pay By Bank' })).toBeTruthy();
+    expect(payByBankEle.props.showPayButton).toBeTruthy();
+});
+
+test('should hide pay button if property is set to false', () => {
+    const payByBankEle = new PayByBank({ showPayButton: false });
+    render(payByBankEle.render());
+    expect(screen.queryByRole('button', { name: 'Continue to Pay By Bank' })).toBeFalsy();
 });
 
 test('should trigger submit when Pay button is pressed', async () => {
