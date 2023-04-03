@@ -37,7 +37,7 @@ const getPaypalSettings = ({
     configuration,
     commit,
     vault,
-    enableMessages = false
+    enableMessages
 }: PayPalElementProps): PaypalSettings => {
     const shopperLocale: SupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
