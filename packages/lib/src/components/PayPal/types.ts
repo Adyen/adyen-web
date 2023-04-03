@@ -16,7 +16,7 @@ declare global {
  */
 export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
-export type FundingSource = 'paypal' | 'credit';
+export type FundingSource = 'paypal' | 'credit' | 'paylater' | 'venmo';
 
 export interface PayPalStyles {
     /**
