@@ -39,18 +39,27 @@ function touchendListener(e: Event): void {
 
         targetEl.value = val;
 
-        if (targetEl.setSelectionRange) {
-            targetEl.focus();
-            targetEl.setSelectionRange(caretPos, caretPos);
+        /**
+         * If the input element is of an unexpected type (perhaps the merchant is using a custom button that is an input element, type="button", or,
+         * it is something presented in the 3DS2 flow - both, TBC) then this next line will not work.
+         * However, the input element still has a setSelectionRange property of type "function", but trying to call it will throw an error...
+         * so, try, to see if setSelectionRange can be called
+         */
+        try {
+            if (targetEl.setSelectionRange) {
+                targetEl.focus();
+                targetEl.setSelectionRange(caretPos, caretPos);
 
-            // Quirky! (see comment above)
-            if (adjFlag) {
-                caretPos += 1;
-                setTimeout(() => {
-                    targetEl.setSelectionRange(caretPos, caretPos);
-                }, 0);
+                // Quirky! (see comment above)
+                if (adjFlag) {
+                    caretPos += 1;
+                    setTimeout(() => {
+                        targetEl.setSelectionRange(caretPos, caretPos);
+                    }, 0);
+                }
             }
-        }
+            /* eslint-disable-next-line */
+        } catch (e) {}
     } else {
         /**
          * Workaround for iOS/Safari bug where keypad doesn't retract when SF paymentMethod is no longer active
