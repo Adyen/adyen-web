@@ -63,7 +63,7 @@ export default function CVC(props: CVCProps) {
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
-            <CVCHint frontCVC={frontCVC} />
+            <CVCHint frontCVC={frontCVC} fieldLabel={fieldLabel} />
         </Field>
     );
 }
