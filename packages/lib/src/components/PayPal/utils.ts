@@ -44,10 +44,8 @@ const getPaypalSettings = ({
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_TEST : ADYEN_CLIENTID_LIVE;
     const { merchantId, intent } = configuration;
-    let components = 'buttons,funding-eligibility';
-    if (enableMessages) {
-        components = components + ',messages';
-    }
+    const components = `buttons,funding-eligibility${enableMessages ? ',messages' : ''}`;
+
     return {
         ...(merchantId && { 'merchant-id': merchantId }),
         ...(shopperLocale && { locale: shopperLocale }),
