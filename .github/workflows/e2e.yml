@@ -41,6 +41,7 @@ jobs:
         TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v70
         API_VERSION: v70
     - name: Archive test result artifacts
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: html-report
