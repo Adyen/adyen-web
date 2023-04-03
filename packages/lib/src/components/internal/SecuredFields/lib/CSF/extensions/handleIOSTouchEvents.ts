@@ -50,7 +50,7 @@ function touchendListener(e: Event): void {
                 targetEl.focus();
                 targetEl.setSelectionRange(caretPos, caretPos);
 
-                // Quirky! (see comment above)
+                // Quirky! (see comment about iOS Safari, above)
                 if (adjFlag) {
                     caretPos += 1;
                     setTimeout(() => {
