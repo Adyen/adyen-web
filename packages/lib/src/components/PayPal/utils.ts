@@ -36,15 +36,18 @@ const getPaypalSettings = ({
     locale,
     configuration,
     commit,
-    vault
+    vault,
+    enableMessages = false
 }: PayPalElementProps): PaypalSettings => {
     const shopperLocale: SupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_TEST : ADYEN_CLIENTID_LIVE;
-
     const { merchantId, intent } = configuration;
-
+    let components = 'buttons,funding-eligibility';
+    if (enableMessages) {
+        components = components + ',messages';
+    }
     return {
         ...(merchantId && { 'merchant-id': merchantId }),
         ...(shopperLocale && { locale: shopperLocale }),
@@ -57,7 +60,7 @@ const getPaypalSettings = ({
         'client-id': clientId,
         'integration-date': INTEGRATION_DATE,
         'enable-funding': 'paylater',
-        components: 'buttons,funding-eligibility,messages'
+        components
     };
 };
 
