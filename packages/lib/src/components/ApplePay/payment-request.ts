@@ -1,8 +1,11 @@
 import { getDecimalAmount } from '../../utils/amount-util';
+import { PaymentAmount } from '../../types';
 
-const formatAmount = amount => String(getDecimalAmount(amount.value, amount.currency));
+const formatAmount = (amount: PaymentAmount) => String(getDecimalAmount(amount.value, amount.currency));
 
-export const preparePaymentRequest = ({ countryCode, companyName, amount, ...props }): ApplePayJS.ApplePayPaymentRequest => {
+export const preparePaymentRequest = (paymentRequest): ApplePayJS.ApplePayPaymentRequest => {
+    const { countryCode, companyName, amount, ...props } = paymentRequest;
+
     const formattedAmount = formatAmount(amount);
 
     return {
