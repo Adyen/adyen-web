@@ -11,7 +11,7 @@ import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
-const latestSupportedVersion = 11;
+const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
@@ -74,7 +74,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                 onShippingContactSelected,
                 onValidateMerchant: onValidateMerchant || this.validateMerchant,
                 onPaymentAuthorized: (resolve, reject, event) => {
-                    if (!!event.payment.token && !!event.payment.token.paymentData) {
+                    if (event?.payment?.token?.paymentData) {
                         this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
                     }
 
