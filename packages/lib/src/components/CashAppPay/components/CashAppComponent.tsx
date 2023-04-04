@@ -4,15 +4,18 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from '../../types';
 import Spinner from '../../internal/Spinner';
 import { CashAppPayEvents, ICashAppService } from '../services/types';
+import { CashAppPayEventData } from '../types';
 
 interface CashAppComponentProps {
     cashAppService: ICashAppService;
-    onSubmit(grantId: string): void;
+    showPayButton: boolean;
+    onClick(): void;
+    onAuthorize(payEventData: CashAppPayEventData): void;
     onError(error: AdyenCheckoutError): void;
     ref(ref: RefObject<typeof CashAppComponent>): void;
 }
 
-const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponentProps) => {
+const CashAppComponent = ({ cashAppService, showPayButton, onClick, onAuthorize, onError }: CashAppComponentProps) => {
     const cashAppRef = useRef<HTMLDivElement>(null);
     const [status, setStatus] = useState<UIElementStatus>('loading');
     const subscriptions = useRef<Function[]>([]);
@@ -32,8 +35,17 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
                     await cashAppService.renderButton(cashAppRef.current);
                 }),
 
-                cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, ({ grants }) => {
-                    onSubmit(grants.payment.grantId);
+                cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestApproved, ({ customerProfile, grants }) => {
+                    const cashAppPaymentData: CashAppPayEventData = {
+                        ...(customerProfile?.id && { customerId: customerProfile.id }),
+                        ...(customerProfile?.cashtag && { cashTag: customerProfile.cashtag }),
+                        ...(grants?.payment?.grantId && { grantId: grants.payment.grantId }),
+                        ...(grants?.onFile?.grantId && { onFileGrantId: grants.onFile.grantId })
+                    };
+
+                    console.log(cashAppPaymentData);
+
+                    onAuthorize(cashAppPaymentData);
                 }),
                 cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestFailed, () => {
                     onError(new AdyenCheckoutError('ERROR', 'Customer request failed'));
@@ -47,7 +59,7 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
         } catch (error) {
             onError(error);
         }
-    }, [cashAppService, onError, onSubmit]);
+    }, [cashAppService, onError, onAuthorize]);
 
     useEffect(() => {
         console.log('CashApp started');
@@ -61,8 +73,9 @@ const CashAppComponent = ({ cashAppService, onSubmit, onError }: CashAppComponen
     }, [cashAppService, initializeCashAppSdk]);
 
     return (
-        <div id="adyen-checkout__cashapp" ref={cashAppRef}>
-            {status === 'loading' && <Spinner />}
+        // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+        <div onClick={onClick} id="adyen-checkout__cashapp" ref={cashAppRef}>
+            {status === 'loading' && showPayButton && <Spinner />}
         </div>
     );
 };

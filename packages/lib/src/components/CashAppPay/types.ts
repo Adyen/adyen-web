@@ -2,6 +2,10 @@ import { UIElementProps } from '../types';
 
 export interface CashAppPayElementProps extends UIElementProps {
     /**
+     * Callback triggered before starting the CashAppPay flow. Use case: Validate customer data, check product availability
+     */
+    onClick?(actions: { resolve: () => void; reject: () => void }): void;
+    /**
      * A reference to your system (for example, a cart or checkout identifier). Maximum length 1024 characters.
      * https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference#parameters-3
      */
@@ -22,8 +26,10 @@ export interface CashAppPayElementProps extends UIElementProps {
         theme?: 'dark' | 'light';
         width?: 'static' | 'full';
     };
-
-    configuration: {
+    /**
+     * CashAppPay configuration sent by the /paymentMethods response
+     */
+    configuration?: {
         clientId: string;
         scopeId: string;
     };
@@ -34,4 +40,11 @@ export type CashAppPayElementData = {
         type: string;
         grantId: string;
     };
+};
+
+export type CashAppPayEventData = {
+    cashTag?: string;
+    customerId?: string;
+    grantId?: string;
+    onFileGrantId?: string;
 };

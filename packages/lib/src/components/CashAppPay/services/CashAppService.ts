@@ -5,16 +5,22 @@ import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppService } 
 class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;
     private readonly configuration: CashAppServiceConfig;
+
     private pay: ICashAppSDK;
+    private startAuthorization?: () => void;
 
     constructor(sdkLoader: ICashAppSdkLoader, configuration: CashAppServiceConfig) {
         this.configuration = configuration;
         this.sdkLoader = sdkLoader;
     }
 
-    get isOneTimePayment() {
+    get hasOneTimePayment() {
         const { amount } = this.configuration;
         return amount?.value > 0;
+    }
+
+    get hasOnFilePayment() {
+        return false;
     }
 
     public async initialize(): Promise<void> {
@@ -29,11 +35,21 @@ class CashAppService implements ICashAppService {
 
     public async renderButton(target: HTMLElement): Promise<void> {
         try {
-            const { button } = this.configuration;
-            await this.pay.render(target, { button: { width: 'full', shape: 'semiround', ...button } });
+            const { button, useCashAppButtonUi } = this.configuration;
+
+            const { begin } = await this.pay.render(target, {
+                manage: false,
+                button: useCashAppButtonUi ? { width: 'full', shape: 'semiround', ...button } : false
+            });
+            this.startAuthorization = begin;
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Error rendering CashAppPay button', { cause: error });
         }
+    }
+
+    public begin(): void {
+        if (!this.startAuthorization) console.warn('CashAppService - begin() not available');
+        else this.startAuthorization();
     }
 
     public subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function {
@@ -51,18 +67,17 @@ class CashAppService implements ICashAppService {
                 referenceId,
                 redirectURL,
                 actions: {
-                    ...(this.isOneTimePayment
-                        ? {
-                              payment: {
-                                  amount,
-                                  scopeId
-                              }
-                          }
-                        : {
-                              onFile: {
-                                  scopeId
-                              }
-                          })
+                    ...(this.hasOneTimePayment && {
+                        payment: {
+                            amount,
+                            scopeId
+                        }
+                    }),
+                    ...(this.hasOnFilePayment && {
+                        onFile: {
+                            scopeId
+                        }
+                    })
                 }
             });
         } catch (error) {

@@ -8,7 +8,7 @@ export interface ICashAppWindowObject {
  * https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/technical-reference
  */
 export interface ICashAppSDK {
-    render(target: string | HTMLElement, options?: any): Promise<void>;
+    render(target: string | HTMLElement, options?: any): Promise<{ begin?: () => void }>;
     addEventListener(eventType: CashAppPayEvents, callback: Function): void;
     removeEventListener(eventType: CashAppPayEvents, callback: Function): void;
     customerRequest(customerRequest: any): Promise<void>;
@@ -23,6 +23,7 @@ export enum CashAppPayEvents {
 }
 
 export interface ICashAppService {
+    begin(): void;
     initialize(): Promise<void>;
     renderButton(target: HTMLElement): Promise<void>;
     restart(): Promise<void>;
@@ -31,6 +32,7 @@ export interface ICashAppService {
 }
 
 export type CashAppServiceConfig = {
+    useCashAppButtonUi: boolean;
     environment: string;
     clientId: string;
     scopeId: string;

@@ -23,7 +23,19 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // Cash App Pay
-    window.cashApp = checkout.create('cashapp', {}).mount('.cashapp-field');
+    window.cashApp = checkout
+        .create('cashapp', {
+            // showPayButton: false,
+            onClick(actions) {
+                console.log('onclick check');
+                actions.resolve();
+            }
+        })
+        .mount('.cashapp-field');
+
+    document.getElementById('cashapp-button').addEventListener('click', () => {
+        window.cashApp.submit();
+    });
     //
     // // AMAZON PAY
     // // Demo only
