@@ -21,6 +21,7 @@
         },
         "./modern": "./dist/es.modern/index.js",
         "./dist/adyen.css": "./dist/adyen.css",
+        "./dist/es/adyen.css": "./dist/es/adyen.css",
         "./package.json": "./package.json"
     },
     "version": "5.39.0",
