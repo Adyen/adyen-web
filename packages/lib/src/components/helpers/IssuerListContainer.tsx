@@ -18,6 +18,7 @@ interface IssuerListContainerProps extends UIElementProps {
     i18n: Language;
     loadingContext: string;
     showPaymentMethodItemImages?: boolean;
+    showPayButton?: boolean;
 }
 
 interface IssuerListData {

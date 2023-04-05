@@ -1,5 +1,5 @@
 import { PayButtonProps } from '../PayButton/PayButton';
-import { ComponentChildren } from 'preact';
+import { ComponentChildren, h } from 'preact';
 
 export interface IssuerListProps {
     items: IssuerItem[];
@@ -9,10 +9,8 @@ export interface IssuerListProps {
     highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;
-    termsAndConditionsUrl?: string;
+    termsAndConditions?(): string | h.JSX.Element;
 }
-
-
 
 export interface IssuerItem {
     id: string;

@@ -9,7 +9,6 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
 import './IssuerList.scss';
-import { interpolateElement } from '../../../language/utils';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import { SetSRMessagesReturnObject } from '../../../core/Errors/types';
@@ -115,17 +114,9 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                     label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
                 })}
 
-            {props.termsAndConditionsUrl && (
+            {props.termsAndConditions && (
                 <div className="adyen-checkout__issuer-list__termsAndConditions">
-                    <p className="adyen-checkout__helper-text">
-                        {interpolateElement(i18n.get('onlineBanking.termsAndConditions'), [
-                            translation => (
-                                <a href={props.termsAndConditionsUrl} target="_blank" rel="noopener noreferrer">
-                                    {translation}
-                                </a>
-                            )
-                        ])}
-                    </p>
+                    <p className="adyen-checkout__helper-text">{props.termsAndConditions()}</p>
                 </div>
             )}
         </div>
