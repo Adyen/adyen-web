@@ -7,6 +7,7 @@ import { CashAppPayEvents, ICashAppService } from '../services/types';
 import { CashAppPayEventData } from '../types';
 import StoreDetails from '../../internal/StoreDetails';
 import './CashAppComponent.scss';
+import classnames from 'classnames';
 
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
@@ -19,11 +20,21 @@ interface CashAppComponentProps {
     ref(ref: RefObject<typeof CashAppComponent>): void;
 }
 
-const CashAppComponent = ({ enableStoreDetails, cashAppService, showPayButton, onClick, onChange, onAuthorize, onError }: CashAppComponentProps) => {
+export function CashAppComponent({
+    enableStoreDetails,
+    cashAppService,
+    showPayButton,
+    onClick,
+    onChange,
+    onAuthorize,
+    onError
+}: CashAppComponentProps): h.JSX.Element {
     const cashAppRef = useRef<HTMLDivElement>(null);
     const [status, setStatus] = useState<UIElementStatus>('loading');
     const subscriptions = useRef<Function[]>([]);
     const [storePaymentMethod, setStorePaymentMethod] = useState<boolean>(false);
+
+    this.setStatus = setStatus;
 
     const initializeCashAppSdk = useCallback(async () => {
         try {
@@ -57,7 +68,6 @@ const CashAppComponent = ({ enableStoreDetails, cashAppService, showPayButton, o
                 })
             ];
 
-            // await cashAppService.createCustomerRequest();
             await cashAppService.renderButton(cashAppRef.current);
 
             setStatus('ready');
@@ -74,23 +84,25 @@ const CashAppComponent = ({ enableStoreDetails, cashAppService, showPayButton, o
     }, [enableStoreDetails, storePaymentMethod]);
 
     useEffect(() => {
-        console.log('CashApp started');
         initializeCashAppSdk();
         return () => {
             cashAppService.restart();
             subscriptions.current.map(unsubscribeFn => unsubscribeFn());
-            console.log('subscriptions count:', subscriptions.current.length);
-            console.log('CashApp Effect cleanup');
         };
     }, [cashAppService, initializeCashAppSdk]);
 
     return (
         <div className="adyen-checkout__cashapp">
             {status === 'loading' && showPayButton && <Spinner />}
-            {status !== 'loading' && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
-            <div onClick={onClick} id="adyen-checkout__cashapp-placeholder" ref={cashAppRef} />
+
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            <div
+                onClick={onClick}
+                className={classnames('adyen-checkout__cashapp-placeholder', { 'adyen-checkout__cashapp-placeholder--hide': status === 'loading' })}
+                ref={cashAppRef}
+            >
+                {enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
+            </div>
         </div>
     );
-};
-
-export { CashAppComponent };
+}

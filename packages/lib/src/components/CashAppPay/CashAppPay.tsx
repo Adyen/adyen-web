@@ -7,6 +7,7 @@ import { CashAppSdkLoader } from './services/CashAppSdkLoader';
 import { CashAppPayElementData, CashAppPayElementProps, CashAppPayEventData } from './types';
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
+import RedirectButton from '../internal/RedirectButton';
 
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
@@ -40,9 +41,17 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
 
     public formatData(): CashAppPayElementData {
         const { shopperWantsToStore, grantId, onFileGrantId, cashTag, customerId } = this.state;
-        const { storePaymentMethod: storePaymentMethodSetByMerchant } = this.props;
-
+        const { storePaymentMethod: storePaymentMethodSetByMerchant, storedPaymentMethodId } = this.props;
         const includeStorePaymentMethod = !this.props.session && (shopperWantsToStore || storePaymentMethodSetByMerchant);
+
+        if (storedPaymentMethodId) {
+            return {
+                paymentMethod: {
+                    type: CashAppPay.type,
+                    storedPaymentMethodId
+                }
+            };
+        }
 
         return {
             paymentMethod: {
@@ -77,18 +86,30 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
-                <CashAppComponent
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    enableStoreDetails={this.props.enableStoreDetails}
-                    showPayButton={this.props.showPayButton}
-                    cashAppService={this.cashAppService}
-                    onChange={this.setState}
-                    onError={this.handleError}
-                    onClick={this.submit}
-                    onAuthorize={this.handleAuthorize}
-                />
+                {this.props.storedPaymentMethodId ? (
+                    <RedirectButton
+                        name={this.displayName}
+                        amount={this.props.amount}
+                        payButton={this.payButton}
+                        onSubmit={this.submit}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
+                ) : (
+                    <CashAppComponent
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        enableStoreDetails={this.props.enableStoreDetails}
+                        showPayButton={this.props.showPayButton}
+                        cashAppService={this.cashAppService}
+                        onChange={this.setState}
+                        onError={this.handleError}
+                        onClick={this.submit}
+                        onAuthorize={this.handleAuthorize}
+                    />
+                )}
             </CoreProvider>
         );
     }

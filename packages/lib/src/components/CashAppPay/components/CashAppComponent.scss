@@ -1,4 +1,13 @@
-.adyen-checkout__cashapp > .adyen-checkout__store-details {
+.adyen-checkout__cashapp-placeholder > .adyen-checkout__store-details {
   margin-top: 0;
   margin-bottom: 16px;
+}
+
+.adyen-checkout__cashapp-placeholder {
+  flex-direction: column-reverse;
+  display: flex;
+}
+
+.adyen-checkout__cashapp-placeholder--hide {
+  display: none;
 }

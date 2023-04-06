@@ -41,12 +41,19 @@ export interface CashAppPayElementProps extends UIElementProps {
         clientId: string;
         scopeId: string;
     };
+
+    /**
+     * If payment is tokenized, then API will return its ID
+     * @internal
+     */
+    storedPaymentMethodId?: string;
 }
 
 export type CashAppPayElementData = {
     paymentMethod: {
         type: string;
-        grantId: string;
+        grantId?: string;
+        storedPaymentMethodId?: string;
     };
     storePaymentMethod?: boolean;
 };
