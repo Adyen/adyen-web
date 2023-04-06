@@ -18,14 +18,6 @@ test('should return grantId and correct txVariant', () => {
     expect(cashAppPayElement.formatData()).toEqual({ paymentMethod: { type: 'cashapp', grantId } });
 });
 
-test('should trigger error if submit is called', () => {
-    const onError = jest.fn();
-    const cashAppPayElement = new CashAppPay({ onError });
-    cashAppPayElement.submit();
-
-    expect(onError).toHaveBeenCalledTimes(1);
-});
-
 test('should initially display the loading spinner while SDK is being loaded', async () => {
     const cashAppPayElement = new CashAppPay({});
     render(cashAppPayElement.render());
@@ -33,3 +25,5 @@ test('should initially display the loading spinner while SDK is being loaded', a
     expect(CashAppService).toHaveBeenCalledTimes(1);
     expect(await screen.findByTestId('spinner')).toBeTruthy();
 });
+
+test.skip('should create customer request and then begin CashApp flow when submit is triggered', () => {});

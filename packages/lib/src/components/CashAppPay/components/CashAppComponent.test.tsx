@@ -5,19 +5,25 @@ import { render, waitFor } from '@testing-library/preact';
 import { CashAppPayEvents, ICashAppService } from '../services/types';
 
 test('should initialize the CashAppPay through the CashAppService', async () => {
-    const onSubmit = jest.fn();
-    const onError = jest.fn();
-    const ref = jest.fn();
     const service = mock<ICashAppService>();
 
     service.subscribeToEvent.mockImplementation(() => {
         return () => {};
     });
 
-    const { unmount } = render(<CashAppComponent ref={ref} onSubmit={onSubmit} onError={onError} cashAppService={service} />);
+    const { unmount } = render(
+        <CashAppComponent
+            showPayButton={true}
+            onChange={() => {}}
+            onAuthorize={() => {}}
+            ref={jest.fn()}
+            onClick={jest.fn()}
+            onError={jest.fn()}
+            cashAppService={service}
+        />
+    );
 
     await waitFor(() => expect(service.initialize).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(service.createCustomerRequest).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(service.renderButton).toHaveBeenCalledTimes(1));
 
     expect(service.subscribeToEvent.mock.calls[0][0]).toBe(CashAppPayEvents.CustomerDismissed);
@@ -30,33 +36,51 @@ test('should initialize the CashAppPay through the CashAppService', async () => 
     expect(service.restart).toHaveBeenCalledTimes(1);
 });
 
-test('should call onSubmit when customer request is approved', async () => {
+test('should call onAuthorize when customer request is approved', async () => {
     const grantId = 'xxxx-yyyy';
-    const onSubmit = jest.fn();
-    const onError = jest.fn();
-    const ref = jest.fn();
+    const onFileGrantId = 'zzzz-wwww';
+    const id = '#123456#';
+    const cashtag = '$cashtag-id';
+
+    const onAuthorized = jest.fn();
     const service = mock<ICashAppService>();
 
     service.subscribeToEvent.mockImplementation((eventType, cb) => {
         if (eventType === CashAppPayEvents.CustomerRequestApproved) {
             const cashAppApprovedObject = {
-                grants: { payment: { grantId } }
+                customerProfile: { id, cashtag },
+                grants: { payment: { grantId }, onFile: { grantId: onFileGrantId } }
             };
             cb(cashAppApprovedObject);
         }
         return () => {};
     });
 
-    render(<CashAppComponent ref={ref} onSubmit={onSubmit} onError={onError} cashAppService={service} />);
+    const expectedData = {
+        customerId: id,
+        cashTag: cashtag,
+        grantId,
+        onFileGrantId
+    };
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
-    expect(onSubmit).toHaveBeenCalledWith(grantId);
+    render(
+        <CashAppComponent
+            ref={jest.fn()}
+            onClick={jest.fn()}
+            showPayButton={true}
+            onChange={jest.fn()}
+            onAuthorize={onAuthorized}
+            onError={jest.fn()}
+            cashAppService={service}
+        />
+    );
+
+    await waitFor(() => expect(onAuthorized).toHaveBeenCalledTimes(1));
+    expect(onAuthorized).toHaveBeenCalledWith(expectedData);
 });
 
 test('should call onError with error type CANCEL when customer dismiss the pop-up', async () => {
-    const onSubmit = jest.fn();
     const onError = jest.fn();
-    const ref = jest.fn();
     const service = mock<ICashAppService>();
 
     service.subscribeToEvent.mockImplementation((eventType, cb) => {
@@ -66,16 +90,24 @@ test('should call onError with error type CANCEL when customer dismiss the pop-u
         return () => {};
     });
 
-    render(<CashAppComponent ref={ref} onSubmit={onSubmit} onError={onError} cashAppService={service} />);
+    render(
+        <CashAppComponent
+            ref={jest.fn()}
+            showPayButton={true}
+            onAuthorize={jest.fn()}
+            onClick={jest.fn()}
+            onChange={jest.fn()}
+            onError={onError}
+            cashAppService={service}
+        />
+    );
 
     await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
     expect(onError.mock.calls[0][0].name).toBe('CANCEL');
 });
 
 test('should call onError with error type ERROR and CashApp is reinitialized when payment request is declined', async () => {
-    const onSubmit = jest.fn();
     const onError = jest.fn();
-    const ref = jest.fn();
     const service = mock<ICashAppService>();
 
     service.subscribeToEvent.mockImplementation((eventType, cb) => {
@@ -85,19 +117,27 @@ test('should call onError with error type ERROR and CashApp is reinitialized whe
         return () => {};
     });
 
-    render(<CashAppComponent ref={ref} onSubmit={onSubmit} onError={onError} cashAppService={service} />);
+    render(
+        <CashAppComponent
+            ref={jest.fn()}
+            showPayButton={true}
+            onAuthorize={jest.fn()}
+            onClick={jest.fn()}
+            onChange={jest.fn()}
+            onError={onError}
+            cashAppService={service}
+        />
+    );
 
     await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
+
     expect(onError.mock.calls[0][0].name).toBe('ERROR');
     expect(service.restart).toHaveBeenCalledTimes(1);
-    expect(service.createCustomerRequest).toHaveBeenCalledTimes(2);
     expect(service.renderButton).toHaveBeenCalledTimes(2);
 });
 
 test('should call onError with error type ERROR when customer request fails', async () => {
-    const onSubmit = jest.fn();
     const onError = jest.fn();
-    const ref = jest.fn();
     const service = mock<ICashAppService>();
 
     service.subscribeToEvent.mockImplementation((eventType, cb) => {
@@ -107,7 +147,17 @@ test('should call onError with error type ERROR when customer request fails', as
         return () => {};
     });
 
-    render(<CashAppComponent ref={ref} onSubmit={onSubmit} onError={onError} cashAppService={service} />);
+    render(
+        <CashAppComponent
+            ref={jest.fn()}
+            showPayButton={true}
+            onAuthorize={jest.fn()}
+            onClick={jest.fn()}
+            onChange={jest.fn()}
+            onError={onError}
+            cashAppService={service}
+        />
+    );
 
     await waitFor(() => expect(onError).toHaveBeenCalledTimes(1));
     expect(onError.mock.calls[0][0].name).toBe('ERROR');

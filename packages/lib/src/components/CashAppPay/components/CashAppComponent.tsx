@@ -47,7 +47,6 @@ export function CashAppComponent({
                 cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestDeclined, async () => {
                     onError(new AdyenCheckoutError('ERROR', 'Payment declined by CashAppPay'));
                     await cashAppService.restart();
-                    await cashAppService.createCustomerRequest();
                     await cashAppService.renderButton(cashAppRef.current);
                 }),
 

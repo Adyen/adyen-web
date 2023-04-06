@@ -8,9 +8,10 @@ class CashAppService implements ICashAppService {
 
     private pay: ICashAppSDK;
 
-    private customerRequest;
+    /**
+     * Reference to CashApp 'begin' method
+     */
     private startAuthorization?: () => void;
-    private updateRequest?: () => void;
 
     constructor(sdkLoader: ICashAppSdkLoader, configuration: CashAppServiceConfig) {
         this.configuration = configuration;
@@ -59,31 +60,6 @@ class CashAppService implements ICashAppService {
         else this.startAuthorization();
     }
 
-    // public async addOnFileAction(): Promise<void> {
-    //     if (!this.updateRequest) return Promise.reject();
-    //
-    //     this.customerRequest.actions = {
-    //         ...this.customerRequest.actions,
-    //         onFile: {
-    //             scopeId: this.configuration.scopeId
-    //         }
-    //     };
-    //     const success = await this.updateRequest(this.customerRequest);
-    //
-    //     if (success) return Promise.resolve();
-    //     return Promise.reject();
-    // }
-    //
-    // public async removeOnFileAction(): Promise<void> {
-    //     if (!this.updateRequest) return Promise.reject();
-    //
-    //     delete this.customerRequest.actions.onFile;
-    //     const success = await this.updateRequest(this.customerRequest);
-    //
-    //     if (success) return Promise.resolve();
-    //     return Promise.reject();
-    // }
-
     public subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function {
         this.pay.addEventListener(eventType, callback);
         return () => {
@@ -112,13 +88,7 @@ class CashAppService implements ICashAppService {
                     })
                 }
             };
-            // const { update } = await this.pay.customerRequest(customerRequest);
             await this.pay.customerRequest(customerRequest);
-
-            console.log(customerRequest);
-
-            // this.customerRequest = customerRequest;
-            // this.updateRequest = update;
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Something went wrong during customerRequest creation', { cause: error });
         }
