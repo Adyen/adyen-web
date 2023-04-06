@@ -25,6 +25,7 @@ export enum CashAppPayEvents {
 export interface ICashAppService {
     begin(): void;
     initialize(): Promise<void>;
+    setStorePaymentMethod(store: boolean): void;
     renderButton(target: HTMLElement): Promise<void>;
     restart(): Promise<void>;
     createCustomerRequest(): Promise<void>;
@@ -33,6 +34,7 @@ export interface ICashAppService {
 
 export type CashAppServiceConfig = {
     useCashAppButtonUi: boolean;
+    storePaymentMethod: boolean;
     environment: string;
     clientId: string;
     scopeId: string;

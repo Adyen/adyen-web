@@ -7,7 +7,10 @@ class CashAppService implements ICashAppService {
     private readonly configuration: CashAppServiceConfig;
 
     private pay: ICashAppSDK;
+
+    private customerRequest;
     private startAuthorization?: () => void;
+    private updateRequest?: () => void;
 
     constructor(sdkLoader: ICashAppSdkLoader, configuration: CashAppServiceConfig) {
         this.configuration = configuration;
@@ -20,7 +23,11 @@ class CashAppService implements ICashAppService {
     }
 
     get hasOnFilePayment() {
-        return false;
+        return this.configuration.storePaymentMethod;
+    }
+
+    public setStorePaymentMethod(store: boolean) {
+        this.configuration.storePaymentMethod = store;
     }
 
     public async initialize(): Promise<void> {
@@ -52,6 +59,31 @@ class CashAppService implements ICashAppService {
         else this.startAuthorization();
     }
 
+    // public async addOnFileAction(): Promise<void> {
+    //     if (!this.updateRequest) return Promise.reject();
+    //
+    //     this.customerRequest.actions = {
+    //         ...this.customerRequest.actions,
+    //         onFile: {
+    //             scopeId: this.configuration.scopeId
+    //         }
+    //     };
+    //     const success = await this.updateRequest(this.customerRequest);
+    //
+    //     if (success) return Promise.resolve();
+    //     return Promise.reject();
+    // }
+    //
+    // public async removeOnFileAction(): Promise<void> {
+    //     if (!this.updateRequest) return Promise.reject();
+    //
+    //     delete this.customerRequest.actions.onFile;
+    //     const success = await this.updateRequest(this.customerRequest);
+    //
+    //     if (success) return Promise.resolve();
+    //     return Promise.reject();
+    // }
+
     public subscribeToEvent(eventType: CashAppPayEvents, callback: Function): Function {
         this.pay.addEventListener(eventType, callback);
         return () => {
@@ -63,7 +95,7 @@ class CashAppService implements ICashAppService {
         try {
             const { referenceId, amount, scopeId, redirectURL = window.location.href } = this.configuration;
 
-            await this.pay.customerRequest({
+            const customerRequest = {
                 referenceId,
                 redirectURL,
                 actions: {
@@ -79,7 +111,14 @@ class CashAppService implements ICashAppService {
                         }
                     })
                 }
-            });
+            };
+            // const { update } = await this.pay.customerRequest(customerRequest);
+            await this.pay.customerRequest(customerRequest);
+
+            console.log(customerRequest);
+
+            // this.customerRequest = customerRequest;
+            // this.updateRequest = update;
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Something went wrong during customerRequest creation', { cause: error });
         }

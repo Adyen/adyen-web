@@ -6,13 +6,15 @@ import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from 
 export async function initSession() {
     const session = await createSession({
         amount,
-        reference: 'ABC123',
+        reference: 'shopper-gui-1',
         returnUrl,
         shopperLocale,
-        shopperReference,
+        shopperReference: 'iOS Checkout Shopper',
         telephoneNumber: '+611223344',
         shopperEmail: 'shopper.ctp1@adyen.com',
-        countryCode
+        countryCode,
+        recurringProcessingModel: 'Subscription',
+        storePaymentMethodMode: 'askForConsent'
     });
 
     const checkout = await AdyenCheckout({
@@ -38,6 +40,9 @@ export async function initSession() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
+            // cashapp: {
+            //     storePaymentMethod: true
+            // },
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,

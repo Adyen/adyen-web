@@ -19,6 +19,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         super(props);
 
         this.cashAppService = new CashAppService(new CashAppSdkLoader(), {
+            storePaymentMethod: this.props.storePaymentMethod,
             useCashAppButtonUi: this.props.showPayButton,
             environment: this.props.environment,
             amount: this.props.amount,
@@ -30,24 +31,36 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         });
     }
 
+    public formatProps(props: CashAppPayElementProps) {
+        return {
+            ...props,
+            enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails
+        };
+    }
+
     public formatData(): CashAppPayElementData {
-        const { grantId, onFileGrantId, cashTag, customerId } = this.state;
+        const { shopperWantsToStore, grantId, onFileGrantId, cashTag, customerId } = this.state;
+        const { storePaymentMethod: storePaymentMethodSetByMerchant } = this.props;
+
+        const includeStorePaymentMethod = !this.props.session && (shopperWantsToStore || storePaymentMethodSetByMerchant);
 
         return {
             paymentMethod: {
                 type: CashAppPay.type,
-                ...(grantId && { grantId }),
-                ...(onFileGrantId && { onFileGrantId }),
-                ...(cashTag && { cashTag }),
-                ...(customerId && { customerId })
-            }
+                ...(grantId && { grantId })
+                // ...(onFileGrantId && { onFileGrantId })
+                // ...(cashTag && { cashTag }),
+                // ...(customerId && { customerId })
+            },
+            ...(includeStorePaymentMethod && { storePaymentMethod: true })
         };
     }
 
     public submit(): void {
         const { onClick } = this.props;
 
-        new Promise<void>((resolve, reject) => onClick({ resolve, reject })).then(() => {
+        new Promise<void>((resolve, reject) => onClick({ resolve, reject })).then(async () => {
+            await this.cashAppService.createCustomerRequest();
             this.cashAppService.begin();
         });
     }
@@ -68,8 +81,10 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
                     ref={ref => {
                         this.componentRef = ref;
                     }}
+                    enableStoreDetails={this.props.enableStoreDetails}
                     showPayButton={this.props.showPayButton}
                     cashAppService={this.cashAppService}
+                    onChange={this.setState}
                     onError={this.handleError}
                     onClick={this.submit}
                     onAuthorize={this.handleAuthorize}

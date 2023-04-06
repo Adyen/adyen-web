@@ -2,6 +2,14 @@ import { UIElementProps } from '../types';
 
 export interface CashAppPayElementProps extends UIElementProps {
     /**
+     * Indicates that the payment must be stored (Ex: in case there is no checkbox but merchant wants to store it)
+     */
+    storePaymentMethod?: boolean;
+    /**
+     * Enables storing the payment method using the Checkbox
+     */
+    enableStoreDetails?: boolean;
+    /**
      * Callback triggered before starting the CashAppPay flow. Use case: Validate customer data, check product availability
      */
     onClick?(actions: { resolve: () => void; reject: () => void }): void;
@@ -40,6 +48,7 @@ export type CashAppPayElementData = {
         type: string;
         grantId: string;
     };
+    storePaymentMethod?: boolean;
 };
 
 export type CashAppPayEventData = {

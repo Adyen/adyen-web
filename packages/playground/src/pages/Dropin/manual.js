@@ -75,6 +75,9 @@ export async function initManual() {
             },
             paywithgoogle: {
                 buttonType: 'plain'
+            },
+            cashapp: {
+                enableStoreDetails: true
             }
         }
     });
