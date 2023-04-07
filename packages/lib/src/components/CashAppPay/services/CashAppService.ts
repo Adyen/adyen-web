@@ -2,7 +2,7 @@ import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppService } from './types';
 
-class CashAppService implements ICashAppService {
+export default class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;
     private readonly configuration: CashAppServiceConfig;
 
@@ -98,5 +98,3 @@ class CashAppService implements ICashAppService {
         await this.pay.restart();
     }
 }
-
-export { CashAppService };

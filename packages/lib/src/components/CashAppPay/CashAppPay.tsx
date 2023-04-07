@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { CashAppComponent } from './components/CashAppComponent';
-import { CashAppService } from './services/CashAppService';
+import CashAppService from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';
 import { CashAppPayElementData, CashAppPayElementProps, CashAppPayEventData } from './types';
 import { ICashAppService } from './services/types';
@@ -56,10 +56,10 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         return {
             paymentMethod: {
                 type: CashAppPay.type,
-                ...(grantId && { grantId })
-                // ...(onFileGrantId && { onFileGrantId })
-                // ...(cashTag && { cashTag }),
-                // ...(customerId && { customerId })
+                ...(grantId && { grantId }),
+                ...(onFileGrantId && { onFileGrantId }),
+                ...(cashTag && { cashTag }),
+                ...(customerId && { customerId })
             },
             ...(includeStorePaymentMethod && { storePaymentMethod: true })
         };
