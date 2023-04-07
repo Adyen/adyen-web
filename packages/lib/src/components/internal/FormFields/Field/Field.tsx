@@ -131,7 +131,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                     {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
                     aria-hidden={errorVisibleToSR ? null : 'true'}
                 >
-                    {errorMessage}
+                    {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
                 </span>
             </Fragment>
         );
