@@ -1,6 +1,5 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
 import getImage from '../../utils/get-image';
-import { getIssuerListTermsAndConditions } from '../helpers/IssuerListTermsAndCondition';
 
 const TERMS_AND_CONDITIONS = 'https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf';
 const ICON = 'bankTransfer_IBAN';
@@ -8,11 +7,16 @@ const ICON = 'bankTransfer_IBAN';
 class OnlineBankingSKElement extends IssuerListContainer {
     public static type = 'onlineBanking_SK';
 
+    private static termsAndConditions = {
+        translationKey: 'onlineBanking.termsAndConditions',
+        urls: [TERMS_AND_CONDITIONS]
+    };
+
     formatProps(props) {
         return {
             ...super.formatProps(props),
             showImage: false,
-            termsAndConditions: () => getIssuerListTermsAndConditions(this.props, 'onlineBanking.termsAndConditions', TERMS_AND_CONDITIONS)
+            termsAndConditions: OnlineBankingSKElement.termsAndConditions
         };
     }
 
