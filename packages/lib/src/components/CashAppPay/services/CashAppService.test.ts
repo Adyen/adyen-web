@@ -1,4 +1,4 @@
-import { CashAppService } from './CashAppService';
+import CashAppService from './CashAppService';
 import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import { mock } from 'jest-mock-extended';
 import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppWindowObject } from './types';
@@ -72,13 +72,129 @@ test('should create a customer request with one time action', async () => {
     });
 });
 
-test.skip('should create a customer request with on file action');
+test('should create a customer request with on file action', async () => {
+    const sdkLoader = mock<ICashAppSdkLoader>();
+    const cashAppWindowObject = mock<ICashAppWindowObject>();
+    const cashAppSdk = mock<ICashAppSDK>();
 
-test.skip('should create a customer request with on file AND one time actions');
+    sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
 
-test.skip('should be able to enable/disable on file action (Scenario: user tick/untick store payment method checkbox');
+    const service = new CashAppService(sdkLoader, { ...configuration, amount: { value: 0, currency: 'USD' }, storePaymentMethod: true });
 
-test.skip('should trigger the CashAppPay flow');
+    await service.initialize();
+    await service.createCustomerRequest();
+
+    expect(cashAppSdk.customerRequest).toBeCalledWith({
+        referenceId: configuration.referenceId,
+        redirectURL: configuration.redirectURL,
+        actions: {
+            onFile: {
+                scopeId: configuration.scopeId
+            }
+        }
+    });
+});
+
+test('should create a customer request with on file AND one time actions', async () => {
+    const sdkLoader = mock<ICashAppSdkLoader>();
+    const cashAppWindowObject = mock<ICashAppWindowObject>();
+    const cashAppSdk = mock<ICashAppSDK>();
+
+    sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
+
+    const service = new CashAppService(sdkLoader, { ...configuration, storePaymentMethod: true });
+
+    await service.initialize();
+    await service.createCustomerRequest();
+
+    expect(cashAppSdk.customerRequest).toBeCalledWith({
+        referenceId: configuration.referenceId,
+        redirectURL: configuration.redirectURL,
+        actions: {
+            payment: {
+                amount: configuration.amount,
+                scopeId: configuration.scopeId
+            },
+            onFile: {
+                scopeId: configuration.scopeId
+            }
+        }
+    });
+});
+
+test('should be able to enable/disable on file action (Scenario: user tick/untick store payment method checkbox', async () => {
+    const sdkLoader = mock<ICashAppSdkLoader>();
+    const cashAppWindowObject = mock<ICashAppWindowObject>();
+    const cashAppSdk = mock<ICashAppSDK>();
+
+    sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
+
+    const service = new CashAppService(sdkLoader, configuration);
+
+    await service.initialize();
+
+    service.setStorePaymentMethod(true);
+    await service.createCustomerRequest();
+
+    expect(cashAppSdk.customerRequest).toBeCalledWith({
+        referenceId: configuration.referenceId,
+        redirectURL: configuration.redirectURL,
+        actions: {
+            payment: {
+                amount: configuration.amount,
+                scopeId: configuration.scopeId
+            },
+            onFile: {
+                scopeId: configuration.scopeId
+            }
+        }
+    });
+});
+
+test('should trigger the CashAppPay flow when calling begin()', async () => {
+    const sdkLoader = mock<ICashAppSdkLoader>();
+    const cashAppWindowObject = mock<ICashAppWindowObject>();
+    const cashAppSdk = mock<ICashAppSDK>();
+
+    const mockBegin = jest.fn();
+
+    cashAppSdk.render.mockResolvedValue({ begin: mockBegin });
+
+    sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
+
+    const divContainer = document.createElement('div');
+
+    const service = new CashAppService(sdkLoader, configuration);
+    await service.initialize();
+    await service.renderButton(divContainer);
+
+    service.begin();
+
+    expect(mockBegin).toHaveBeenCalledTimes(1);
+});
+
+test('should disable CashAppPay button if needed', async () => {
+    const sdkLoader = mock<ICashAppSdkLoader>();
+    const cashAppWindowObject = mock<ICashAppWindowObject>();
+    const cashAppSdk = mock<ICashAppSDK>();
+
+    cashAppSdk.render.mockResolvedValue({ begin: jest.fn() });
+
+    sdkLoader.load.mockResolvedValue(cashAppWindowObject);
+    cashAppWindowObject.pay.mockResolvedValue(cashAppSdk);
+
+    const divContainer = document.createElement('div');
+
+    const service = new CashAppService(sdkLoader, { ...configuration, useCashAppButtonUi: false });
+    await service.initialize();
+    await service.renderButton(divContainer);
+
+    expect(cashAppSdk.render).toBeCalledWith(divContainer, { button: false, manage: false });
+});
 
 test('should be able to restart the SDK', async () => {
     const sdkLoader = mock<ICashAppSdkLoader>();
