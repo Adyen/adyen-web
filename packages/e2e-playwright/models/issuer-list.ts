@@ -1,4 +1,8 @@
 import { Locator, Page } from '@playwright/test';
+import { USER_TYPE_DELAY } from '../tests/utils/constants';
+
+const SELECTOR_DELAY = 300;
+const KEYBOARD_DELAY = 300;
 
 class IssuerList {
     readonly rootElement: Locator;
@@ -22,8 +26,12 @@ class IssuerList {
         this.highlightedIssuerButtonGroup = this.rootElement.getByRole('group');
     }
 
+    async clickOnSelector() {
+        await this.selectorCombobox.click({ delay: SELECTOR_DELAY });
+    }
+
     async selectIssuerOnSelectorDropdown(issuerName: string) {
-        await this.selectorCombobox.click();
+        await this.clickOnSelector();
         const option = this.selectorList.getByRole('option').getByText(issuerName, { exact: true });
         await option.click();
     }
@@ -32,21 +40,20 @@ class IssuerList {
         await this.highlightedIssuerButtonGroup.getByRole('button', { name: issuerName }).click();
     }
 
-    async typeToFilterTerm(filter: string) {
-        await this.selectorCombobox.focus();
-        await this.selectorCombobox.type(filter);
+    async typeOnSelectorField(filter: string) {
+        await this.selectorCombobox.type(filter, { delay: USER_TYPE_DELAY });
     }
 
     async pressKeyboardToNextItem() {
-        await this.page.keyboard.press('ArrowDown');
+        await this.page.keyboard.press('ArrowDown', { delay: KEYBOARD_DELAY });
     }
 
     async pressKeyboardToPreviousItem() {
-        await this.page.keyboard.press('ArrowDown');
+        await this.page.keyboard.press('ArrowDown', { delay: KEYBOARD_DELAY });
     }
 
     async pressKeyboardToSelectItem() {
-        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.press('Enter', { delay: KEYBOARD_DELAY });
     }
 }
 
