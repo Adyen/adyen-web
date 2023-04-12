@@ -1,0 +1,22 @@
+$adyen-checkout-media-query-s-min: 480px;
+$adyen-checkout-media-query-m-min: 768px;
+$adyen-checkout-media-query-l-min: 1024px;
+
+
+@mixin screen-s-and-up {
+  @media (min-width: #{$adyen-checkout-media-query-s-min}) {
+    @content;
+  }
+}
+
+@mixin screen-m-and-up {
+  @media (min-width: #{$adyen-checkout-media-query-m-min}) {
+    @content;
+  }
+}
+
+@mixin screen-l-and-up {
+  @media (min-width: #{$adyen-checkout-media-query-l-min}) {
+    @content;
+  }
+}
