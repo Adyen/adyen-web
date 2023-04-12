@@ -38,7 +38,7 @@ test('#1 Enter number of unsupported card, ' + 'then check UI shows an error ' +
     await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'paste');
 
     // Test UI shows "Unsupported card" error has gone
-    await t.expect(cardPage.numErrorText.exists).notOk();
+    await t.expect(cardPage.numErrorText.withExactText('').exists).ok();
 });
 
 test(
@@ -77,7 +77,7 @@ test(
         await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'paste');
 
         // Test UI shows "Unsupported card" error has gone
-        await t.expect(cardPage.numErrorText.exists).notOk();
+        await t.expect(cardPage.numErrorText.withExactText('').exists).ok();
 
         // PAN error cleared but other errors persist
         await t
@@ -109,7 +109,7 @@ test('#3 Enter number of unsupported card, ' + 'then check UI shows an error ' +
     await cardPage.cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste');
 
     // Test UI shows "Unsupported card" error has gone
-    await t.expect(cardPage.numErrorText.exists).notOk();
+    await t.expect(cardPage.numErrorText.withExactText('').exists).ok();
 });
 
 test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' + 'then delete PAN & check UI error is cleared', async t => {
@@ -131,5 +131,5 @@ test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' +
     await cardPage.cardUtils.deleteCardNumber(t);
 
     // Test UI shows "Unsupported card" error has gone
-    await t.expect(cardPage.numErrorText.exists).notOk();
+    await t.expect(cardPage.numErrorText.withExactText('').exists).ok();
 });
