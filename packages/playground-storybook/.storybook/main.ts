@@ -1,7 +1,10 @@
-import type { StorybookConfig } from '@storybook/core-common';
+import type { StorybookConfig } from '@storybook/html-vite';
+import { mergeConfig } from 'vite';
 
 const path = require('path');
-const { parsed: environmentVariables } = require('dotenv').config({ path: path.resolve('../../', '.env') });
+const { parsed: environmentVariables } = require('dotenv').config({
+    path: path.resolve('../../', '.env')
+});
 
 const config: StorybookConfig = {
     stories: ['../stories/**/*.stories.mdx', '../stories/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -12,31 +15,61 @@ const config: StorybookConfig = {
                 docs: false
             }
         },
-        '@storybook/addon-links',
-        '@storybook/addon-interactions'
+        '@storybook/addon-links'
+        // '@storybook/addon-interactions',
+        // '@storybook/addon-mdx-gfm'
     ],
-    framework: '@storybook/html',
-    typescript: {
-        check: false,
-        checkOptions: {}
+    core: {
+        builder: '@storybook/builder-vite'
     },
-    features: {
-        postcss: false,
+    framework: {
+        name: '@storybook/html-vite',
+        options: {}
     },
-    webpackFinal: async (config, { configType }) => {
-        config.watchOptions = {
-            ...config.watchOptions,
-            ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-            aggregateTimeout: 200,
-            poll: 500
+    // framework: {
+    //     name: '@storybook/html-webpack5',
+    //     options: {}
+    // },
+    // typescript: {
+    //     check: false
+    //     // checkOptions: {}
+    // },
+    // features: {
+    //     postcss: false
+    // },
+    // webpackFinal: async (config, {
+    //   configType
+    // }) => {
+    //   config.watchOptions = {
+    //     ...config.watchOptions,
+    //     ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
+    //     aggregateTimeout: 200,
+    //     poll: 500
+    //   };
+    //   return config;
+    // },
+
+    // async viteFinal(config, { configType }) {
+    //     return mergeConfig(config, {
+    //         define: {
+    //             'process.env': {}
+    //         }
+    //     });
+    // },
+    env: config => {
+        let viteEnvVariables = {};
+        for (const [key, value] of Object.entries(environmentVariables)) {
+            viteEnvVariables[`VITE_${key}`] = value;
+        }
+
+        return {
+            ...config,
+            ...viteEnvVariables
         };
-        return config;
-    },
-    // @ts-ignore Property missing in the 'StorybookConfig' type
-    env: config => ({
-        ...config,
-        ...environmentVariables
-    })
+    }
+    // docs: {
+    //     autodocs: true
+    // }
 };
 
-module.exports = config;
+export default config;

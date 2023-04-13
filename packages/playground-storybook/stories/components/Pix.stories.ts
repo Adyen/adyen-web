@@ -1,32 +1,39 @@
-import { Meta, StoryFn } from '@storybook/html';
+import { Meta, StoryObj } from '@storybook/html';
 import { PixProps } from '@adyen/adyen-web/dist/types/components/Pix/types';
 import { PaymentMethodStoryProps } from '../types';
 import { addToWindow } from '../../utils/add-to-window';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
-export default {
-    title: 'Components/Pix'
-} as Meta;
+type PixStory = StoryObj<PaymentMethodStoryProps<PixProps>>;
 
-const Template: StoryFn<PaymentMethodStoryProps<PixProps>> = (props, context): HTMLDivElement => {
+const meta: Meta<PaymentMethodStoryProps<PixProps>> = {
+    title: 'Components/Pix'
+};
+export default meta;
+
+const createComponent = (args, context) => {
     const checkout = getStoryContextCheckout(context);
     const container = document.createElement('div');
-    const pix = checkout.create('pix', { ...props.componentConfiguration });
+    const pix = checkout.create('pix', { ...args.componentConfiguration });
     pix.mount(container);
     addToWindow(pix);
     return container;
 };
 
-export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<PixProps>>;
-Default.args = {
-    countryCode: 'BR'
+export const Default: PixStory = {
+    render: createComponent,
+    args: {
+        countryCode: 'BR'
+    }
 };
 
-export const WithPersonalDetails = Template.bind({}) as StoryFn<PaymentMethodStoryProps<PixProps>>;
-WithPersonalDetails.args = {
-    countryCode: 'BR',
-    // @ts-ignore TODO: Make Pix 'introduction' prop optional
-    componentConfiguration: {
-        personalDetailsRequired: true
+export const WithPersonalDetails: PixStory = {
+    render: createComponent,
+    args: {
+        ...Default.args,
+        // @ts-ignore TODO: Make Pix 'introduction' prop optional
+        componentConfiguration: {
+            personalDetailsRequired: true
+        }
     }
 };

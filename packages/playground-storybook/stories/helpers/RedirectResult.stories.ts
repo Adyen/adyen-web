@@ -1,4 +1,4 @@
-import { Meta, StoryFn } from '@storybook/html';
+import { Meta, StoryObj } from '@storybook/html';
 import AdyenCheckout from '@adyen/adyen-web';
 import { getSearchParameter } from '../../utils/get-query-parameters';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
@@ -9,60 +9,63 @@ type RedirectResultProps = {
     sessionId: string;
 };
 
-export default {
+type RedirectStory = StoryObj<RedirectResultProps>;
+
+const meta: Meta<RedirectResultProps> = {
     title: 'Helpers/RedirectResult'
-} as Meta;
-
-export const RedirectResult: StoryFn<RedirectResultProps> = (props, context): HTMLElement => {
-    const checkout = getStoryContextCheckout(context);
-    const errorMessage = context.loaded?.errorMessage;
-
-    const div = document.createElement('div');
-    div.setAttribute('id', 'redirect-result-status');
-
-    if (errorMessage) {
-        div.innerText = errorMessage;
-        return div;
-    }
-    if (!props.redirectResult || !props.sessionId || !checkout) {
-        div.innerText = 'There is no redirectResult / sessionId provided';
-        return div;
-    }
-
-    div.innerText = 'Submitting details...';
-    checkout.submitDetails({ details: { redirectResult: props.redirectResult } });
-
-    return div;
 };
+export default meta;
 
-RedirectResult.args = {
-    redirectResult: getSearchParameter('redirectResult'),
-    sessionId: getSearchParameter('sessionId')
-};
+export const RedirectResult: RedirectStory = {
+    render: (args, context) => {
+        const checkout = getStoryContextCheckout(context);
+        const errorMessage = context.loaded?.errorMessage;
 
-RedirectResult.loaders = [
-    async context => {
-        const { redirectResult, sessionId } = context.args;
-        let errorMessage = null;
+        const div = document.createElement('div');
+        div.setAttribute('id', 'redirect-result-status');
 
-        if (!redirectResult || !sessionId) {
-            return {};
+        if (errorMessage) {
+            div.innerText = errorMessage;
+            return div;
+        }
+        if (!args.redirectResult || !args.sessionId || !checkout) {
+            div.innerText = 'There is no redirectResult / sessionId provided';
+            return div;
         }
 
-        const checkout = await AdyenCheckout({
-            clientKey: process.env.CLIENT_KEY,
-            environment: process.env.CLIENT_ENV,
-            session: { id: sessionId },
-            onPaymentCompleted: (result, component) => {
-                document.getElementById('redirect-result-status').remove();
-                handleFinalState(result, component);
-            },
-            onError: (error, component) => {
-                errorMessage = `${error.name}: ${error.message}`;
-                handleError(error, component);
-            }
-        });
+        div.innerText = 'Submitting details...';
+        checkout.submitDetails({ details: { redirectResult: args.redirectResult } });
 
-        return { checkout, errorMessage };
-    }
-];
+        return div;
+    },
+    args: {
+        redirectResult: getSearchParameter('redirectResult'),
+        sessionId: getSearchParameter('sessionId')
+    },
+    loaders: [
+        async context => {
+            const { redirectResult, sessionId } = context.args;
+            let errorMessage = null;
+
+            if (!redirectResult || !sessionId) {
+                return {};
+            }
+
+            const checkout = await AdyenCheckout({
+                clientKey: import.meta.env.VITE_CLIENT_KEY,
+                environment: import.meta.env.VITE_CLIENT_ENV,
+                session: { id: sessionId },
+                onPaymentCompleted: (result, component) => {
+                    document.getElementById('redirect-result-status').remove();
+                    handleFinalState(result, component);
+                },
+                onError: (error, component) => {
+                    errorMessage = `${error.name}: ${error.message}`;
+                    handleError(error, component);
+                }
+            });
+
+            return { checkout, errorMessage };
+        }
+    ]
+};

@@ -1,23 +1,26 @@
-import { Meta, StoryFn } from '@storybook/html';
+import { Meta, StoryObj } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UIElementProps } from '@adyen/adyen-web/dist/types/components/types';
 import { addToWindow } from '../../utils/add-to-window';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
-export default {
-    title: 'IssuerLists/Dotpay'
-} as Meta;
+type DotpayStory = StoryObj<PaymentMethodStoryProps<UIElementProps>>;
 
-const Template: StoryFn<PaymentMethodStoryProps<UIElementProps>> = (props, context): HTMLDivElement => {
-    const checkout = getStoryContextCheckout(context);
-    const container = document.createElement('div');
-    const dotpay = checkout.create('dotpay', { ...props.componentConfiguration });
-    dotpay.mount(container);
-    addToWindow(dotpay);
-    return container;
+const meta: Meta<PaymentMethodStoryProps<UIElementProps>> = {
+    title: 'IssuerList/Dotpay'
 };
+export default meta;
 
-export const Default = Template.bind({}) as StoryFn<PaymentMethodStoryProps<UIElementProps>>;
-Default.args = {
-    countryCode: 'PL'
+export const Dotpay: DotpayStory = {
+    render: (args, context) => {
+        const checkout = getStoryContextCheckout(context);
+        const container = document.createElement('div');
+        const dotpay = checkout.create('dotpay', { ...args.componentConfiguration });
+        dotpay.mount(container);
+        addToWindow(dotpay);
+        return container;
+    },
+    args: {
+        countryCode: 'PL'
+    }
 };

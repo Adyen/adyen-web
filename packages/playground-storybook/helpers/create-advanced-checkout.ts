@@ -21,8 +21,8 @@ async function createAdvancedFlowCheckout({
     const paymentMethodsResponse: PaymentMethodsResponseObject = await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode });
 
     const checkout = await AdyenCheckout({
-        clientKey: process.env.CLIENT_KEY,
-        environment: process.env.CLIENT_ENV,
+        clientKey: import.meta.env.VITE_CLIENT_KEY,
+        environment: import.meta.env.VITE_CLIENT_ENV,
         amount: paymentAmount,
         countryCode,
         paymentMethodsResponse,

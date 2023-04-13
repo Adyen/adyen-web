@@ -1,4 +1,4 @@
-import AdyenCheckout from '@adyen/adyen-web/dist/es';
+import AdyenCheckout from '@adyen/adyen-web';
 import Core from '@adyen/adyen-web/dist/types/core';
 import { createSession } from './checkout-api-calls';
 import { RETURN_URL, SHOPPER_REFERENCE } from '../config/commonConfig';
@@ -27,8 +27,8 @@ async function createSessionsCheckout({
     });
 
     const checkout = await AdyenCheckout({
-        clientKey: process.env.CLIENT_KEY,
-        environment: process.env.CLIENT_ENV,
+        clientKey: import.meta.env.VITE_CLIENT_KEY,
+        environment: import.meta.env.VITE_CLIENT_ENV,
         session,
         showPayButton,
         paymentMethodsConfiguration,

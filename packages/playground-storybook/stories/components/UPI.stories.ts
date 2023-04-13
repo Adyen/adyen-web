@@ -1,34 +1,30 @@
-import { Meta, StoryFn } from '@storybook/html';
+import { Meta, StoryObj } from '@storybook/html';
 import { PaymentMethodStoryProps } from '../types';
 import { UPIElementProps } from '@adyen/adyen-web/dist/types/components/UPI/types';
-import { createCheckout } from '../../helpers/create-checkout';
 import { addToWindow } from '../../utils/add-to-window';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
-export default {
+type UpiStory = StoryObj<PaymentMethodStoryProps<UPIElementProps>>;
+
+const meta: Meta<PaymentMethodStoryProps<UPIElementProps>> = {
     title: 'Components/UPI'
-} as Meta;
-
-export const UPI: StoryFn<PaymentMethodStoryProps<UPIElementProps>> = (props, context): HTMLDivElement => {
-    const checkout = getStoryContextCheckout(context);
-    const container = document.createElement('div');
-    const upi = checkout.create('upi', { ...props.componentConfiguration });
-    upi.mount(container);
-    addToWindow(upi);
-    return container;
 };
+export default meta;
 
-UPI.args = {
-    countryCode: 'IN',
-    componentConfiguration: {
-        // @ts-ignore Seems like enum isnt the best way to export fixed strings
-        defaultMode: 'vpa'
+export const UPI: UpiStory = {
+    render: (args, context) => {
+        const checkout = getStoryContextCheckout(context);
+        const container = document.createElement('div');
+        const upi = checkout.create('upi', { ...args.componentConfiguration });
+        upi.mount(container);
+        addToWindow(upi);
+        return container;
+    },
+    args: {
+        countryCode: 'IN',
+        componentConfiguration: {
+            // @ts-ignore Seems like enum isnt the best way to export fixed strings
+            defaultMode: 'vpa'
+        }
     }
 };
-
-UPI.loaders = [
-    async context => {
-        const checkout = await createCheckout(context);
-        return { checkout };
-    }
-];
