@@ -1,5 +1,4 @@
 import type { StorybookConfig } from '@storybook/html-vite';
-import { mergeConfig } from 'vite';
 
 const path = require('path');
 const { parsed: environmentVariables } = require('dotenv').config({
