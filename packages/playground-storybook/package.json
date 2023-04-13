@@ -5,18 +5,9 @@
   "license": "MIT",
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",
-    "@babel/core": "^7.20.7",
-    "@storybook/addon-actions": "^7.0.3",
     "@storybook/addon-essentials": "^7.0.3",
-    "@storybook/addon-interactions": "^7.0.3",
-    "@storybook/addon-links": "^7.0.3",
-    "@storybook/addon-mdx-gfm": "^7.0.3",
-    "@storybook/builder-vite": "^7.0.4",
     "@storybook/html": "^7.0.3",
     "@storybook/html-vite": "7.0.4",
-    "@storybook/html-webpack5": "^7.0.3",
-    "@storybook/testing-library": "^0.1.0",
-    "babel-loader": "^8.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.0.3",
@@ -26,7 +17,7 @@
     "@adyen/adyen-web": "5.39.1"
   },
   "scripts": {
-    "start": "storybook dev --port 3020 --quiet --disable-telemetry",
+    "start": "storybook dev --port 3020 --disable-telemetry",
     "build-storybook": "storybook build --disable-telemetry"
   }
 }

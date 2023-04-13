@@ -14,48 +14,12 @@ const config: StorybookConfig = {
             options: {
                 docs: false
             }
-        },
-        '@storybook/addon-links'
-        // '@storybook/addon-interactions',
-        // '@storybook/addon-mdx-gfm'
+        }
     ],
-    core: {
-        builder: '@storybook/builder-vite'
-    },
     framework: {
         name: '@storybook/html-vite',
         options: {}
     },
-    // framework: {
-    //     name: '@storybook/html-webpack5',
-    //     options: {}
-    // },
-    // typescript: {
-    //     check: false
-    //     // checkOptions: {}
-    // },
-    // features: {
-    //     postcss: false
-    // },
-    // webpackFinal: async (config, {
-    //   configType
-    // }) => {
-    //   config.watchOptions = {
-    //     ...config.watchOptions,
-    //     ignored: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-    //     aggregateTimeout: 200,
-    //     poll: 500
-    //   };
-    //   return config;
-    // },
-
-    // async viteFinal(config, { configType }) {
-    //     return mergeConfig(config, {
-    //         define: {
-    //             'process.env': {}
-    //         }
-    //     });
-    // },
     env: config => {
         let viteEnvVariables = {};
         for (const [key, value] of Object.entries(environmentVariables)) {
@@ -67,9 +31,6 @@ const config: StorybookConfig = {
             ...viteEnvVariables
         };
     }
-    // docs: {
-    //     autodocs: true
-    // }
 };
 
 export default config;
