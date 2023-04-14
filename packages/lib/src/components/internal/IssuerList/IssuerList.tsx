@@ -110,7 +110,9 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
             </Field>
 
             {props.termsAndConditions && (
-                <DisclaimerMessage message={i18n.get(props.termsAndConditions.translationKey)} urls={props.termsAndConditions.urls} />
+                <div className="adyen-checkout__issuer-list__termsAndConditions">
+                    <DisclaimerMessage message={i18n.get(props.termsAndConditions.translationKey)} urls={props.termsAndConditions.urls} />
+                </div>
             )}
 
             {props.showPayButton &&
