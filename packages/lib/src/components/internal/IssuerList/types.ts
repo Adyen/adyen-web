@@ -9,13 +9,15 @@ export interface IssuerListProps {
     highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;
-    termsAndConditionsUrl?: string;
+    termsAndConditions?: TermsAndConditions;
 }
-
-
 
 export interface IssuerItem {
     id: string;
     name: string;
     icon?: string;
+}
+export interface TermsAndConditions {
+    translationKey: string;
+    urls: string[];
 }
