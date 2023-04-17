@@ -52,11 +52,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 installmentOptions: {
                     mc: {
-                        values: [1, 2, 3]
+                        values: [1, 2],
+                        preselectedValue: 2
                     },
                     visa: {
                         values: [1, 2, 3, 4],
-                        plans: ['regular', 'revolving']
+                        plans: ['regular', 'revolving'],
+                        preselectedValue: 4
                     }
                 },
                 showBrandsUnderCardNumber: true,

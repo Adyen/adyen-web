@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { mount } from 'enzyme';
 import Installments from './Installments';
 import { InstallmentOptions } from '../types';
+import { render, screen } from '@testing-library/preact';
 
 describe('Installments', () => {
     let installmentOptions;
@@ -48,6 +49,79 @@ describe('Installments', () => {
         installmentOptions.card.preselectedValue = 2;
         const wrapper = getWrapper({ installmentOptions });
         expect(wrapper.find('Select').prop('selected')).toBe(2);
+    });
+
+    test('preselect the first if the preselectedValue is not provided', async () => {
+        const amount = { value: 30000, currency: 'USD' };
+        const props = { amount, installmentOptions, type: 'amount' };
+
+        render(<Installments {...props} />);
+        expect(await screen.findByTitle('1x $300.00')).toBeTruthy();
+    });
+
+    describe('On brand change', () => {
+        let amount;
+        let type;
+        beforeEach(() => {
+            amount = { value: 30000, currency: 'USD' };
+            type = 'amount';
+        });
+
+        describe('New brand supports the installmentAmount', () => {
+            test('should keep selecting the current installmentAmount', async () => {
+                installmentOptions = {
+                    card: {
+                        values: [1, 2, 3, 4],
+                        preselectedValue: 2
+                    },
+                    visa: {
+                        values: [1, 2]
+                    }
+                };
+                const props = { amount, installmentOptions, type };
+                const { rerender } = render(<Installments {...props} />);
+                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                rerender(<Installments brand={'visa'} {...props} />);
+                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+            });
+        });
+
+        describe('New brand does not support the installmentAmount', () => {
+            test('should preselect the preselectedValue if provided', async () => {
+                installmentOptions = {
+                    card: {
+                        values: [1, 2, 3, 4],
+                        preselectedValue: 4
+                    },
+                    visa: {
+                        values: [1, 2],
+                        preselectedValue: 2
+                    }
+                };
+                const props = { amount, installmentOptions, type };
+                const { rerender } = render(<Installments {...props} />);
+                expect(await screen.findByTitle('4x $75.00')).toBeTruthy();
+                rerender(<Installments brand={'visa'} {...props} />);
+                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+            });
+
+            test('should preselect the first installments', async () => {
+                installmentOptions = {
+                    card: {
+                        values: [1, 2, 3, 4],
+                        preselectedValue: 4
+                    },
+                    visa: {
+                        values: [1, 2]
+                    }
+                };
+                const props = { amount, installmentOptions, type };
+                const { rerender } = render(<Installments {...props} />);
+                expect(await screen.findByTitle('4x $75.00')).toBeTruthy();
+                rerender(<Installments brand={'visa'} {...props} />);
+                expect(await screen.findByTitle('1x $300.00')).toBeTruthy();
+            });
+        });
     });
 
     test('renders the right amount of installment options', () => {
