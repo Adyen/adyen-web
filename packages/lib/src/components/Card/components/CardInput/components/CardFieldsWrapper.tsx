@@ -160,7 +160,12 @@ export const CardFieldsWrapper = ({
                 />
             )}
 
-            {disclaimerMessage && <DisclaimerMessage disclaimer={disclaimerMessage} />}
+            {disclaimerMessage && (
+                <DisclaimerMessage
+                    message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
+                    urls={[disclaimerMessage.link]}
+                />
+            )}
         </LoadingWrapper>
     );
 };

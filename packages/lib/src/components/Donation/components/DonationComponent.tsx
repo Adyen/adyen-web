@@ -90,7 +90,12 @@ export default function DonationComponent(props: DonationComponentProps) {
                         onChange={handleAmountSelected}
                     />
                 </div>
-                {disclaimerMessage && <DisclaimerMessage disclaimer={disclaimerMessage} />}
+                {disclaimerMessage && (
+                    <DisclaimerMessage
+                        message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
+                        urls={[disclaimerMessage.link]}
+                    />
+                )}
                 <Button
                     classNameModifiers={['donate']}
                     onClick={handleDonate}
