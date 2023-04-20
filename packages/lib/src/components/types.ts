@@ -59,10 +59,10 @@ export interface BaseElementProps {
     _parentInstance?: Core;
     order?: Order;
     modules?: {
-        srPanel: SRPanel;
-        analytics: Analytics;
-        resources: Resources;
-        risk: RiskElement;
+        srPanel?: SRPanel;
+        analytics?: Analytics;
+        resources?: Resources;
+        risk?: RiskElement;
     };
     isDropin?: boolean;
 }
