@@ -5,13 +5,23 @@ import { personalDetailsValidationRules } from '../../../internal/PersonalDetail
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,
-        errorMessage: '',
+        errorMessage: 'error.va.gen.02',
         modes: ['blur']
     },
     shopperEmail: personalDetailsValidationRules.shopperEmail,
     default: {
         validate: value => !!value && value.length > 0,
-        errorMessage: '',
+        errorMessage: 'error.va.gen.02',
+        modes: ['blur']
+    },
+    firstName: {
+        validate: value => !!value && value.length > 0,
+        errorMessage: 'firstName.invalid',
+        modes: ['blur']
+    },
+    lastName: {
+        validate: value => !!value && value.length > 0,
+        errorMessage: 'lastName.invalid',
         modes: ['blur']
     }
 };

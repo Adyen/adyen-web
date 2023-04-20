@@ -6,11 +6,16 @@ const ICON = 'bankTransfer_IBAN';
 class OnlineBankingSKElement extends IssuerListContainer {
     public static type = 'onlineBanking_SK';
 
+    private static termsAndConditions = {
+        translationKey: 'onlineBanking.termsAndConditions',
+        urls: [TERMS_AND_CONDITIONS]
+    };
+
     formatProps(props) {
         return {
             ...super.formatProps(props),
             showImage: false,
-            termsAndConditionsUrl: TERMS_AND_CONDITIONS
+            termsAndConditions: OnlineBankingSKElement.termsAndConditions
         };
     }
 

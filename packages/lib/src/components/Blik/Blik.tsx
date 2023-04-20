@@ -22,7 +22,7 @@ class BlikElement extends UIElement {
         return {
             paymentMethod: {
                 type: BlikElement.type,
-                ...(!recurringPayment && { blikCode: this.state.data.blikCode }),
+                ...(!recurringPayment && { blikCode: this.state?.data?.blikCode }),
                 ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
             }
         };

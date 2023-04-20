@@ -2,12 +2,14 @@ import { Fragment, h, RefObject } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
-import { VpaInputHandlers } from '../VpaInput/VpaInput';
+import { VpaInputDataState, VpaInputHandlers } from '../VpaInput/VpaInput';
 import VpaInput from '../VpaInput';
 import SegmentedControl from '../../../internal/SegmentedControl';
 import { UpiMode } from '../../types';
 import './UPIComponent.scss';
 import isMobile from '../../../../utils/isMobile';
+
+type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
 interface UPIComponentProps {
     defaultMode: UpiMode;
@@ -16,9 +18,7 @@ interface UPIComponentProps {
     ref(ref: RefObject<typeof UPIComponent>): void;
 
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
-
-    onChange({ data: VpaInputDataState, valid, errors, isValid: boolean }): void;
-
+    onChange({ data, valid, errors, isValid }: OnChangeProps): void;
     onUpdateMode(mode: UpiMode): void;
 }
 

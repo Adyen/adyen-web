@@ -29,8 +29,8 @@ function BlikInput(props: BlikInputProps) {
             }
         },
         formatters: {
-            blikCode: digitsOnlyFormatter,
-        },
+            blikCode: digitsOnlyFormatter
+        }
     });
 
     useEffect(() => {
@@ -57,6 +57,7 @@ function BlikInput(props: BlikInputProps) {
                     spellcheck: false,
                     required: true,
                     autocorrect: 'off',
+                    autocomplete: 'off',
                     onInput: handleChangeFor('blikCode', 'input'),
                     onBlur: handleChangeFor('blikCode', 'blur'),
                     placeholder: '123456',

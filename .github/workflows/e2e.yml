@@ -1,0 +1,48 @@
+name: E2E for Checkout Components
+
+on: 
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-then-e2e:
+    if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x]
+        # node-version: [16.x, 18.x, 19.x]
+        # Currently 18 and 19 are not supported, still keeping it
+        # as a reminder for compatibility check
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Project Dependencies
+      run: yarn install
+    - name: Build Project
+      run: yarn build
+    - name: Install Playwright Dependencies
+      working-directory: packages/e2e-playwright/
+      run: yarn install && npx playwright install --with-deps
+    - name: Run E2E Tests
+      working-directory: packages/e2e-playwright/
+      run: yarn test:headless
+      env:
+        CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
+        MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
+        CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+        CLIENT_ENV: test
+        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v70
+        API_VERSION: v70
+    - name: Archive test result artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-report
+        path: packages/e2e-playwright/playwright-report

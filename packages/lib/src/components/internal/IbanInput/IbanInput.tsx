@@ -162,6 +162,9 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         if (currentIban.length > 0) {
             const validationStatus = checkIbanStatus(currentIban).status;
             this.setError('iban', validationStatus !== 'valid' ? ibanErrorObj : null, this.onChange);
+        } else {
+            // Empty field is not in error
+            this.setError('iban', null, this.onChange);
         }
     };
 
@@ -197,7 +200,8 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                             value: data['ownerName'],
                             'aria-invalid': !!this.state.errors.holder,
                             'aria-label': i18n.get('sepa.ownerName'),
-                            onInput: e => this.handleHolderInput(e.target.value)
+                            onInput: e => this.handleHolderInput(e.target.value),
+                            onBlur: e => this.handleHolderInput(e.target.value)
                         })}
                     </Field>
                 )}

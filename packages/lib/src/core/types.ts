@@ -1,7 +1,7 @@
 import { CustomTranslations, Locales } from '../language/types';
 import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
-import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
+import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 
 export interface CoreOptions {
@@ -33,7 +33,7 @@ export interface CoreOptions {
     /**
      * The full `/paymentMethods` response
      */
-    paymentMethodsResponse?: PaymentMethodsResponseObject;
+    paymentMethodsResponse?: PaymentMethodsResponse;
 
     /**
      * Amount of the payment

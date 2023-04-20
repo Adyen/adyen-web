@@ -11,7 +11,7 @@ interface CoreProviderProps {
 }
 
 export interface CommonPropsTypes {
-    isCollatingErrors?: boolean;
+    [key: string]: any;
 }
 
 /**

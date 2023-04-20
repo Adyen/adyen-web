@@ -8,10 +8,10 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
+import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
-const latestSupportedVersion = 11;
+const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static type = 'applepay';
@@ -36,8 +36,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             configuration: props.configuration,
             supportedNetworks,
             version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
-            onCancel: event => this.handleError(new AdyenCheckoutError('CANCEL', event))
+            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName
         };
     }
 
@@ -57,34 +56,42 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         return this.startSession(this.props.onAuthorized);
     }
 
-    private startSession(onPaymentAuthorized) {
-        const { version, onValidateMerchant, onCancel, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
+    private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
+        const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
-        return new Promise((resolve, reject) => this.props.onClick(resolve, reject)).then(() => {
-            const paymentRequest = preparePaymentRequest({
-                companyName: this.props.configuration.merchantName,
-                ...this.props
-            });
-
-            const session = new ApplePayService(paymentRequest, {
-                version,
-                onCancel,
-                onPaymentMethodSelected,
-                onShippingMethodSelected,
-                onShippingContactSelected,
-                onValidateMerchant: onValidateMerchant || this.validateMerchant,
-                onPaymentAuthorized: (resolve, reject, event) => {
-                    if (!!event.payment.token && !!event.payment.token.paymentData) {
-                        this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
-                    }
-
-                    super.submit();
-                    onPaymentAuthorized(resolve, reject, event);
-                }
-            });
-
-            session.begin();
+        const paymentRequest = preparePaymentRequest({
+            companyName: this.props.configuration.merchantName,
+            ...this.props
         });
+
+        const session = new ApplePayService(paymentRequest, {
+            version,
+            onError: (error: unknown) => {
+                this.handleError(new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', { cause: error }));
+            },
+            onCancel: event => {
+                this.handleError(new AdyenCheckoutError('CANCEL', 'ApplePay UI dismissed', { cause: event }));
+            },
+            onPaymentMethodSelected,
+            onShippingMethodSelected,
+            onShippingContactSelected,
+            onValidateMerchant: onValidateMerchant || this.validateMerchant,
+            onPaymentAuthorized: (resolve, reject, event) => {
+                if (event?.payment?.token?.paymentData) {
+                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
+                }
+                super.submit();
+                onPaymentAuthorized(resolve, reject, event);
+            }
+        });
+
+        return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
+            .then(() => {
+                session.begin();
+            })
+            .catch(() => ({
+                // Swallow exception triggered by onClick reject
+            }));
     }
 
     private async validateMerchant(resolve, reject) {

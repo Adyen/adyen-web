@@ -21,7 +21,7 @@ fixture`Testing setting minimumExpiryDate - that it is recognised but doesn't ov
     .page(CARDS_URL)
     .clientScripts('expiryDate.clientScripts.js');
 
-test('With minimumExpiryDate set - input an expiry date that is too old & expect the correct error ', async t => {
+test('#1 With minimumExpiryDate set - input an expiry date that is too old & expect the correct error ', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -40,7 +40,7 @@ test('With minimumExpiryDate set - input an expiry date that is too old & expect
         .ok();
 });
 
-test('With minimumExpiryDate set - input an expiry date that is 1 month before it & expect the correct error', async t => {
+test('#2 With minimumExpiryDate set - input an expiry date that is 1 month before it & expect the correct error', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -59,7 +59,7 @@ test('With minimumExpiryDate set - input an expiry date that is 1 month before i
         .ok();
 });
 
-test('With minimumExpiryDate set - input an expiry date that is matches it & expect no error ', async t => {
+test('#3 With minimumExpiryDate set - input an expiry date that is matches it & expect no error ', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -70,10 +70,10 @@ test('With minimumExpiryDate set - input an expiry date that is matches it & exp
     await t.expect(errorHolder.exists).notOk();
 
     // Test UI shows no error
-    await t.expect(errorLabel.exists).notOk();
+    await t.expect(errorLabel.withExactText('').exists).ok();
 });
 
-test('With minimumExpiryDate set - input an expiry date that exceeds it (a bit) & expect no error', async t => {
+test('#4 With minimumExpiryDate set - input an expiry date that exceeds it (a bit) & expect no error', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -84,10 +84,10 @@ test('With minimumExpiryDate set - input an expiry date that exceeds it (a bit) 
     await t.expect(errorHolder.exists).notOk();
 
     // Test UI shows no error
-    await t.expect(errorLabel.exists).notOk();
+    await t.expect(errorLabel.withExactText('').exists).ok();
 });
 
-test('With minimumExpiryDate set - input an expiry date that is too far in the future, & expect the correct error ', async t => {
+test('#5 With minimumExpiryDate set - input an expiry date that is too far in the future, & expect the correct error ', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
 
@@ -107,7 +107,7 @@ test('With minimumExpiryDate set - input an expiry date that is too far in the f
 });
 
 test(
-    'General "date edit" bug: with minimumExpiryDate set - input an expiry date that is matches it & expect no error ' +
+    '#6 General "date edit" bug: with minimumExpiryDate set - input an expiry date that is matches it & expect no error ' +
         'then edit the date to be before the minimumExpiryDate and expect that to register as an error',
     async t => {
         // Start, allow time for iframes to load
@@ -120,7 +120,7 @@ test(
         await t.expect(errorHolder.exists).notOk();
 
         // Test UI shows no error
-        await t.expect(errorLabel.exists).notOk();
+        await t.expect(errorLabel.withExactText('').exists).ok();
 
         // Card out of date
         await cardUtils.fillDate(t, '08/24', 'paste');
@@ -152,7 +152,7 @@ test(
         await t.expect(errorHolder.exists).notOk();
 
         // Test UI shows no error
-        await t.expect(errorLabel.exists).notOk();
+        await t.expect(errorLabel.withExactText('').exists).ok();
 
         // Card out of date
         await cardUtils.fillDate(t, '04/10', 'paste');

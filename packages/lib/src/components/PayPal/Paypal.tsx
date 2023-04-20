@@ -3,42 +3,47 @@ import UIElement from '../UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
 import { PaymentAction } from '../../types';
-import { PayPalElementProps } from './types';
+import { Intent, PayPalElementProps } from './types';
 import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
+import { createShopperDetails } from './utils/create-shopper-details';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
     public static subtype = 'sdk';
-    protected static defaultProps = defaultProps;
     private paymentData = null;
     private resolve = null;
     private reject = null;
 
-    constructor(props: PayPalElementProps) {
-        super(props);
+    protected static defaultProps = defaultProps;
 
-        this.handleAction = this.handleAction.bind(this);
-        this.updateWithAction = this.updateWithAction.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleComplete = this.handleComplete.bind(this);
+    constructor(props) {
+        super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.submit = this.submit.bind(this);
     }
 
-    protected formatProps(props) {
+    formatProps(props: PayPalElementProps): PayPalElementProps {
+        const { merchantId, intent: intentFromConfig } = props.configuration;
         const isZeroAuth = props.amount?.value === 0;
+
+        const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
+        const vault = intent === 'tokenize' || props.vault;
+
         return {
             ...props,
-            vault: isZeroAuth || props.vault,
+            vault,
             configuration: {
-                ...props.configuration,
-                intent: isZeroAuth ? 'tokenize' : props.configuration.intent
+                intent,
+                merchantId
             }
         };
     }
+
+    public submit = () => {
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
+    };
 
     /**
      * Formats the component data output
@@ -52,11 +57,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         };
     }
 
-    handleAction(action: PaymentAction) {
+    public handleAction = (action: PaymentAction) => {
         return this.updateWithAction(action);
-    }
+    };
 
-    updateWithAction(action: PaymentAction) {
+    public updateWithAction = (action: PaymentAction) => {
         if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
 
         if (action.paymentData) {
@@ -70,7 +75,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         }
 
         return null;
-    }
+    };
 
     /**
      * Dropin Validation
@@ -82,14 +87,28 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return true;
     }
 
-    handleCancel() {
+    private handleCancel = () => {
         this.handleError(new AdyenCheckoutError('CANCEL'));
-    }
+    };
 
-    handleComplete(details) {
-        const state = { data: { details, paymentData: this.paymentData } };
-        this.handleAdditionalDetails(state);
-    }
+    private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
+        const { onShopperDetails } = this.props;
+        const state = { data: { details: data, paymentData: this.paymentData } };
+
+        if (!onShopperDetails) {
+            this.handleAdditionalDetails(state);
+            return;
+        }
+
+        return actions.order
+            .get()
+            .then(paypalOrder => {
+                const shopperDetails = createShopperDetails(paypalOrder);
+                return new Promise<void>((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
+            })
+            .then(() => this.handleAdditionalDetails(state))
+            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
+    };
 
     handleResolve(token: string) {
         if (!this.resolve) return this.handleError(new AdyenCheckoutError('ERROR', ERRORS.WRONG_INSTANCE));
@@ -101,21 +120,13 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.reject(new Error(errorMessage));
     }
 
-    startPayment() {
-        return Promise.reject(new AdyenCheckoutError('ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
-    }
-
-    handleSubmit() {
+    private handleSubmit(): Promise<void> {
         super.submit();
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
         });
-    }
-
-    submit() {
-        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     }
 
     render() {
@@ -130,9 +141,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     {...this.props}
                     onCancel={this.handleCancel}
                     onChange={this.setState}
-                    onComplete={this.handleComplete}
-                    onError={e => {
-                        this.handleError(new AdyenCheckoutError('ERROR', e.toString()));
+                    onApprove={this.handleOnApprove}
+                    onError={error => {
+                        this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                     }}
                     onSubmit={this.handleSubmit}
                 />

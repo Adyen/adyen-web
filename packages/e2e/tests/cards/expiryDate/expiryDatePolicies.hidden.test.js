@@ -1,52 +1,28 @@
 import CardComponentPage from '../../_models/CardComponent.page';
-import { REGULAR_TEST_CARD } from '../utils/constants';
-import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../_common/cardMocks';
+import { SYNCHRONY_PLCC_NO_DATE, TEST_CVC_VALUE } from '../utils/constants';
+import { turnOffSDKMocking } from '../../_common/cardMocks';
 
 const cardPage = new CardComponentPage();
-
-/**
- * NOTE - we are mocking the response until such time as we have a genuine card,
- * that's not in our local RegEx, that returns the properties we want to test
- */
-const mockedResponse = {
-    brands: [
-        {
-            brand: 'cup', // keep as a recognised card brand (cup) until we have a genuine brand w. hidden expiryDate
-            cvcPolicy: 'hidden',
-            enableLuhnCheck: true,
-            expiryDatePolicy: 'hidden',
-            supported: true
-        }
-    ],
-    issuingCountryCode: 'US',
-    requestId: null
-};
-
-const mock = getBinLookupMock(binLookupUrl, mockedResponse);
 
 fixture`Test how Card Component handles hidden expiryDate policy`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
         await turnOffSDKMocking();
     })
-    .requestHooks(mock)
     .clientScripts('./expiryDate.clientScripts.js');
 
 test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
-    // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    // Fill number to provoke binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, SYNCHRONY_PLCC_NO_DATE);
 
     // UI reflects that binLookup says expiryDate is hidden
     await t.expect(cardPage.dateHolder.filterHidden().exists).ok();
 
-    // ...and cvc is hidden too
-    await t.expect(cardPage.cvcHolder.filterHidden().exists).ok();
-
     // Card seen as valid (since CVC is hidden too)
-    await t.expect(cardPage.getFromState('isValid')).eql(true);
+    await t.expect(cardPage.getFromState('isValid')).eql(false);
 
     // Clear number and see UI & state reset
     await cardPage.cardUtils.deleteCardNumber(t);
@@ -84,18 +60,14 @@ test('#2 Testing hidden expiryDatePolicy - validating fields first and then ente
         .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
         .notEql(null);
 
-    // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    // Fill number to provoke binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, SYNCHRONY_PLCC_NO_DATE, 'paste'); // TODO - shouldn't have to 'paste' here... but Testcafe is being flaky, again!
 
     // Expect errors to be cleared - since the fields were in error because they were empty
-    // and now the PAN field is filled and the date & cvc fields are now hidden...
+    // and now the PAN field is filled and the date fields is now hidden...
 
-    // ...State errors cleared
-    await t
-        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate'))
-        .eql(null)
-        .expect(cardPage.getFromWindow('mappedStateErrors.encryptedSecurityCode'))
-        .eql(null);
+    // ...State errors cleared for date
+    await t.expect(cardPage.getFromWindow('mappedStateErrors.encryptedExpiryDate')).eql(null);
 });
 
 test('#3 Testing hidden expiryDatePolicy - date field in error does not stop card becoming valid', async t => {
@@ -111,8 +83,9 @@ test('#3 Testing hidden expiryDatePolicy - date field in error does not stop car
     // Force blur event to fire on date field
     await cardPage.setForceClick(true);
 
-    // Fill number to provoke (mock) binLookup response
-    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
+    // Fill number to provoke binLookup response
+    await cardPage.cardUtils.fillCardNumber(t, SYNCHRONY_PLCC_NO_DATE);
+    await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE);
 
     // UI reflects that binLookup says expiryDate is hidden
     await t.expect(cardPage.dateHolder.filterHidden().exists).ok();

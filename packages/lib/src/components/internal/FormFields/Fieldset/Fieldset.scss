@@ -4,6 +4,14 @@
     display: block;
     padding-bottom: 8px;
     width: 100%;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    margin: 0;
+    border: none;
+    padding-block-start: 0;
+    padding-block-end: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
 }
 
 .adyen-checkout__fieldset:last-of-type {
@@ -34,6 +42,16 @@
 }
 
 .adyen-checkout__field-group:last-of-type .adyen-checkout__field {
+    @include screen-s-and-up {
+        margin-bottom: 0;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+:not(.adyen-checkout__field-group) > .adyen-checkout__field:last-of-type {
     margin-bottom: 0;
 }
 

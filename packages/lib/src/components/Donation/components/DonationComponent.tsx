@@ -4,12 +4,13 @@ import CampaignContainer from './CampaignContainer';
 import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
-
 import useCoreContext from '../../../core/Context/useCoreContext';
 import '../Donation.scss';
+import DisclaimerMessage from '../../internal/DisclaimerMessage';
+import { DonationComponentProps } from './types';
 
-export default function DonationComponent(props) {
-    const { amounts, onCancel, onDonate, showCancelButton = true } = props;
+export default function DonationComponent(props: DonationComponentProps) {
+    const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
     const { i18n, loadingContext, resources } = useCoreContext();
     const { currency } = amounts;
     const [status, setStatus] = useState('ready');
@@ -89,7 +90,12 @@ export default function DonationComponent(props) {
                         onChange={handleAmountSelected}
                     />
                 </div>
-
+                {disclaimerMessage && (
+                    <DisclaimerMessage
+                        message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
+                        urls={[disclaimerMessage.link]}
+                    />
+                )}
                 <Button
                     classNameModifiers={['donate']}
                     onClick={handleDonate}

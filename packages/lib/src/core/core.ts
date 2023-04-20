@@ -13,6 +13,7 @@ import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
+import { SRPanel } from './Errors/SRPanel';
 
 class Core {
     public session: Session;
@@ -33,6 +34,9 @@ class Core {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(options);
+
+        // Expose version number for npm builds
+        window['adyenWebVersion'] = Core.version.version;
     }
 
     initialize(): Promise<this> {
@@ -196,11 +200,13 @@ class Core {
         this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment);
         this.options.locale = this.options.locale || this.options.shopperLocale;
 
+        // In a sessions flow setOptions gets called twice, but we only need one set of modules (except for i18n needs to be re-initialised as the options settle)
         this.modules = {
-            risk: new RiskModule(this.options),
-            analytics: new Analytics(this.options),
-            resources: new Resources(this.options.cdnContext, this.options.loadingContext),
-            i18n: new Language(this.options.locale, this.options.translations)
+            risk: this.modules?.risk ?? new RiskModule(this.options),
+            analytics: this.modules?.analytics ?? new Analytics(this.options),
+            resources: this.modules?.resources ?? new Resources(this.options.cdnContext, this.options.loadingContext),
+            i18n: new Language(this.options.locale, this.options.translations),
+            srPanel: this.modules?.srPanel ?? new SRPanel(this.options.srConfig)
         };
 
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);

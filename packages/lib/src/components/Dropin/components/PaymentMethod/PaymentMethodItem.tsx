@@ -9,6 +9,7 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import UIElement from '../../../UIElement';
 import PaymentMethodBrands from './PaymentMethodBrands/PaymentMethodBrands';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../internal/SecuredFields/lib/configuration/constants';
+import PaymentMethodName from './PaymentMethodName';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -113,14 +114,11 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
                         <PaymentMethodIcon altDescription={paymentMethod.props.name} type={paymentMethod.type} src={paymentMethod.icon} />
 
-                        <span
-                            className={classNames({
-                                'adyen-checkout__payment-method__name': true,
-                                'adyen-checkout__payment-method__name--selected': isSelected
-                            })}
-                        >
-                            {paymentMethod.displayName}
-                        </span>
+                        <PaymentMethodName
+                            displayName={paymentMethod.displayName}
+                            isSelected={isSelected}
+                            additionalInfo={paymentMethod.additionalInfo}
+                        />
                     </button>
 
                     {showRemovePaymentMethodButton && (

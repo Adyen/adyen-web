@@ -106,21 +106,12 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url, fallback = (): void => {}): void => {
-        setTimeout(fallback, 1000);
+    const redirectToApp = (url): void => {
         window.location.assign(url);
     };
 
     useEffect(() => {
-        const { shouldRedirectOnMobile, url } = props;
-        const isMobile: boolean = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
-
-        if (shouldRedirectOnMobile && url && isMobile) {
-            redirectToApp(url, checkStatus);
-        } else {
-            checkStatus();
-        }
-
+        checkStatus();
         return (): void => {
             clearTimeout(storedTimeout);
         };
@@ -235,7 +226,6 @@ Await.defaultProps = {
     throttleInterval: 10000,
     showCountdownTimer: true,
     classNameModifiers: [],
-    shouldRedirectOnMobile: false,
     url: null
 };
 

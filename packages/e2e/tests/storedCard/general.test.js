@@ -20,11 +20,7 @@ test('#1 Can fill out the cvc fields in the stored card and make a successful pa
     await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
 
     // click pay
-    await t
-        .click(cardPage.payButton)
-        .expect(cardPage.cvcLabelTextError.exists)
-        .notOk()
-        .wait(1000);
+    await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(1000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
@@ -43,12 +39,4 @@ test('#2 Pressing pay without filling the cvc should generate a translated error
         // with text
         .expect(cardPage.cvcErrorText.withExactText(EMPTY_FIELD).exists)
         .ok();
-});
-
-test("#3 Value of label's 'for' attr should match value of corresponding securedField input's 'id' attr", async t => {
-    // Wait for field to appear in DOM
-    await cardPage.cvcHolder();
-
-    const cvcAttrVal = await cardPage.cvcLabel.getAttribute('for');
-    await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedSecurityCode', 'id', cvcAttrVal);
 });

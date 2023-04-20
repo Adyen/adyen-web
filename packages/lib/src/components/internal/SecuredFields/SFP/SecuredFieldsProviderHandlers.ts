@@ -208,7 +208,8 @@ function handleFocus(cbObj: CbObjOnFocus): void {
 }
 
 function handleOnTouchstartIOS(cbObj): void {
-    this.props.onTouchstartIOS(cbObj);
+    // disableIOSArrowKeys is either null or a function (in which case we should call it)
+    this.props.disableIOSArrowKeys?.(cbObj);
 }
 
 // Only called for holder name (from CSF>partials>processAutoComplete)

@@ -118,25 +118,28 @@
     outline: 0;
     user-select: none;
     transition: background 0.2s ease-out, border-color 0.2s ease-out;
+
+    .adyen-checkout__icon {
+        position: absolute;
+        right: 8px;
+    }
 }
 
 .adyen-checkout__dropdown__element:last-child {
     border-bottom: 0;
 }
 
-.adyen-checkout__dropdown__element:hover,
-.adyen-checkout__dropdown__element:focus,
-.adyen-checkout__dropdown__element:active {
+.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
     background: rgb(230 233 235 / 60%);
 }
 
-.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active {
+.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected {
     background: rgb(0 102 255 / 10%);
 }
 
-.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:hover,
-.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:focus,
-.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--active:active {
+.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected:hover,
+.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected:focus,
+.adyen-checkout__dropdown__element.adyen-checkout__dropdown__element--selected:active {
     background: rgb(0 102 255 / 15%);
 }
 

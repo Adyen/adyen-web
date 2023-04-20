@@ -12,6 +12,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
+
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
@@ -55,22 +56,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     };
 
     componentDidMount() {
-        const { shouldRedirectOnMobile, url } = this.props;
-        const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);
-
-        const startPolling = () => {
-            this.interval = setInterval(this.statusInterval, this.state.delay);
-        };
-
-        if (shouldRedirectOnMobile && url && isMobile) {
-            this.redirectToApp(url, startPolling);
-        } else {
-            startPolling();
-        }
+        this.interval = setInterval(this.statusInterval, this.state.delay);
     }
 
-    public redirectToApp = (url, fallback = () => {}) => {
-        setTimeout(fallback, 1000);
+    public redirectToApp = url => {
         window.location.assign(url);
     };
 
@@ -148,7 +137,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             });
     };
 
-    render({ amount, url, brandLogo, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
+    render({ amount, url, brandLogo, brandName, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
         const { i18n, loadingContext, resources } = useCoreContext();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
@@ -174,7 +163,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         if (loading) {
             return (
                 <div className="adyen-checkout__qr-loader">
-                    {brandLogo && <img alt={type} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />}
+                    {brandLogo && <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />}
                     <Spinner />
                 </div>
             );
@@ -190,7 +179,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     ${this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`)}
                 `}
             >
-                {brandLogo && <img src={brandLogo} alt={type} className="adyen-checkout__qr-loader__brand-logo" />}
+                {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
 
                 <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.introduction)}</div>
 
@@ -232,7 +221,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                         />
                     </div>
                 )}
-
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
                         <ContentSeparator />

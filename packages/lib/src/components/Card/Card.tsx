@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardElementProps } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
@@ -13,6 +12,7 @@ import { createClickToPayService } from './components/ClickToPay/services/create
 import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
 import ClickToPayWrapper from './ClickToPayWrapper';
 import { UIElementStatus } from '../types';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -27,14 +27,16 @@ export class CardElement extends UIElement<CardElementProps> {
     constructor(props) {
         super(props);
 
-        this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
-        this.clickToPayService?.initialize();
+        if (!props._disableClickToPay) {
+            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService?.initialize();
+        }
     }
 
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
-        SRConfig: {}
+        _disableClickToPay: false
     };
 
     public setStatus(status: UIElementStatus, props?): this {
@@ -52,9 +54,6 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     formatProps(props: CardElementProps) {
-        // Extract &/or set defaults for the screenreader error panel
-        const { collateErrors = true, moveFocus = false, showPanel = false } = props.SRConfig;
-
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -74,11 +73,6 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             brandsConfiguration: props.brandsConfiguration || props.configuration?.brandsConfiguration || {},
             icon: props.icon || props.configuration?.icon,
-            SRConfig: {
-                collateErrors,
-                moveFocus,
-                showPanel
-            },
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
             enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
@@ -88,7 +82,9 @@ export class CardElement extends UIElement<CardElementProps> {
              */
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
-                shopperIdentityValue: props.clickToPayConfiguration?.shopperIdentityValue || props?._parentInstance?.options?.session?.shopperEmail,
+                disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };
@@ -230,22 +226,20 @@ export class CardElement extends UIElement<CardElementProps> {
 
     render() {
         return (
-            <CoreProvider
-                i18n={this.props.i18n}
-                loadingContext={this.props.loadingContext}
-                resources={this.resources}
-                commonProps={{ isCollatingErrors: this.props.SRConfig.collateErrors }}
-            >
-                <ClickToPayWrapper
-                    amount={this.props.amount}
-                    clickToPayService={this.clickToPayService}
-                    setClickToPayRef={this.setClickToPayRef}
-                    onSetStatus={this.setElementStatus}
-                    onSubmit={this.handleClickToPaySubmit}
-                    onError={this.handleError}
-                >
-                    {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
-                </ClickToPayWrapper>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <ClickToPayWrapper
+                        amount={this.props.amount}
+                        configuration={this.props.clickToPayConfiguration}
+                        clickToPayService={this.clickToPayService}
+                        setClickToPayRef={this.setClickToPayRef}
+                        onSetStatus={this.setElementStatus}
+                        onSubmit={this.handleClickToPaySubmit}
+                        onError={this.handleError}
+                    >
+                        {isCardPrimaryInput => this.renderCardInput(isCardPrimaryInput)}
+                    </ClickToPayWrapper>
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

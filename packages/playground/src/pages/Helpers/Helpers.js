@@ -34,6 +34,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 currency: 'EUR',
                 values: [50, 199, 300]
             },
+            disclaimerMessage: {
+                message: 'By donating you agree to the %{linkText} ',
+                linkText: 'terms and conditions',
+                link: 'https://www.adyen.com'
+            },
             backgroundUrl:
                 'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
             description: 'Lorem ipsum...',
@@ -62,6 +67,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     },
                     modes: ['blur']
                 },
+                // Example of overwriting the default validation rule (which doesn't consider an empty field to be in error, unless the whole form is being validated)
+                // with a new rule that will throw an error on a field if you click into it and then click out again leaving it empty
                 default: {
                     validate: value => value && value.length > 0,
                     modes: ['blur']

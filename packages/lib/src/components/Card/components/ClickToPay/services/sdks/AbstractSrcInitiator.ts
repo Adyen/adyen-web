@@ -1,10 +1,10 @@
-import { IdentityLookupParams } from '../types';
 import Script from '../../../../../../utils/Script';
 import {
     CustomSdkConfiguration,
     SrcCheckoutParams,
     SrciCheckoutResponse,
     SrciCompleteIdentityValidationResponse,
+    SrcIdentityLookupParams,
     SrciIdentityLookupResponse,
     SrciInitiateIdentityValidationResponse,
     SrciIsRecognizedResponse,
@@ -22,7 +22,7 @@ export interface ISrcInitiator {
     // SRCi specification methods
     init(params: SrcInitParams, srciTransactionId: string): Promise<void>;
     isRecognized(): Promise<SrciIsRecognizedResponse>;
-    identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse>;
+    identityLookup(params: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse>;
     initiateIdentityValidation(): Promise<SrciInitiateIdentityValidationResponse>;
     completeIdentityValidation(validationData: string): Promise<SrciCompleteIdentityValidationResponse>;
     getSrcProfile(idTokens: string[]): Promise<SrcProfile>;
@@ -143,7 +143,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * Obtains the user account associated with the consumer’s identity (an email address or phone
      * number).
      */
-    public abstract identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse>;
+    public abstract identityLookup(params: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse>;
 
     /**
      * This method completes the identity validation by receiving the one-time password (OTP) sent to the

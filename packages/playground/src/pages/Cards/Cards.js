@@ -17,6 +17,11 @@ const showComps = {
     avsPartialCard: true,
     kcpCard: true
 };
+const disclaimerMessage = {
+    message: 'By continuing you accept the %{linkText} of MyStore',
+    linkText: 'terms and conditions',
+    link: 'https://www.adyen.com'
+};
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -41,7 +46,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
-            window.storedCard = checkout.create('card', storedCardData).mount('.storedcard-field');
+            window.storedCard = checkout
+                .create('card', {
+                    ...storedCardData,
+                    disclaimerMessage
+                })
+                .mount('.storedcard-field');
         }
     }
 
@@ -59,6 +69,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                         plans: ['regular', 'revolving']
                     }
                 },
+                disclaimerMessage,
                 showBrandsUnderCardNumber: true,
                 showInstallmentAmounts: true,
                 onError: obj => {
@@ -160,8 +171,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa'],
+                configuration: {
+                    mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                    mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+                },
                 clickToPayConfiguration: {
-                    shopperIdentityValue: 'gui.ctp@adyen.com',
+                    disableOtpAutoFocus: true,
+                    shopperEmail: 'gui.ctp@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name '
                 }
             })

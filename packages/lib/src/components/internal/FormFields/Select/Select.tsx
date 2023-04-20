@@ -9,6 +9,7 @@ import { SelectItem, SelectProps } from './types';
 import styles from './Select.module.scss';
 import './Select.scss';
 import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { simulateFocusScroll } from '../utils';
 
 function Select({
     items = [],
@@ -23,7 +24,7 @@ function Select({
     isValid,
     placeholder,
     uniqueId,
-    isCollatingErrors
+    disabled
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -35,13 +36,49 @@ function Select({
 
     const active: SelectItem = items.find(i => i.id === selected) || ({} as SelectItem);
 
+    const [inputText, setInputText] = useState<string>();
+
+    const [activeOption, setActiveOption] = useState<SelectItem>(active);
+
+    const selectedOption = active;
+
+    const filteredItems = items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
+
+    const setNextActive = () => {
+        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
+        const nextIndex = possibleNextIndex < filteredItems.length ? possibleNextIndex : 0;
+        const nextItem = filteredItems[nextIndex];
+        scrollToItem(nextItem);
+        setActiveOption(nextItem);
+    };
+
+    const setPreviousActive = () => {
+        const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) - 1;
+        const nextIndex = possibleNextIndex < 0 ? filteredItems.length - 1 : possibleNextIndex;
+        const nextItem = filteredItems[nextIndex];
+        scrollToItem(nextItem);
+        setActiveOption(nextItem);
+    };
+
+    const scrollToItem = (item: SelectItem) => {
+        const nextElement = document.getElementById(`listItem-${item.id}`);
+        simulateFocusScroll(nextElement);
+    };
+
     /**
      * Closes the selectList, empties the text filter and focuses the button element
      */
     const closeList = () => {
-        setTextFilter(null);
         setShowList(false);
-        if (toggleButtonRef.current) toggleButtonRef.current.focus();
+    };
+
+    const openList = () => {
+        setShowList(true);
+    };
+
+    const extractItemFromEvent = (e: Event): SelectItem => {
+        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value') as string;
+        return filteredItems.find(listItem => listItem.id == value);
     };
 
     /**
@@ -51,19 +88,49 @@ function Select({
     const handleSelect = (e: Event) => {
         e.preventDefault();
 
-        // If the target is not one of the list items, select the first list item
-        const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
+        // We use a local variable here since writing and if statement is cleaner then a long ternary
+        let valueToEmit;
 
-        if (!target.getAttribute('data-disabled')) {
+        if (e.currentTarget instanceof HTMLElement && e.currentTarget.getAttribute('role') === 'option') {
+            // This is the main scenario when clicking and item in the list
+            // Item comes from the event
+            valueToEmit = extractItemFromEvent(e);
+        } else if (activeOption.id) {
+            // This is the scenario where a user is using the keyboard to navigate
+            // In the case item comes from the visually select item
+            valueToEmit = activeOption;
+        } else {
+            // This is the scenario the user didn't select anything
+            if (textFilter) {
+                // if we filtering for something then select the first option
+                valueToEmit = filteredItems[0];
+            } else {
+                // This will happen when we want to keep an already chosen option
+                // If no active option we should just emit again with the value that was already selected
+                valueToEmit = { id: selected };
+            }
+        }
+
+        if (!valueToEmit.disabled) {
+            onChange({ target: { value: valueToEmit.id, name: name } });
+
             closeList();
-            const value = target.getAttribute('data-value');
-            onChange({ target: { value, name: name } });
         }
     };
 
     /**
+     * Handles hovering and directions
+     * @param e - Event
+     */
+    const handleHover = (e: Event) => {
+        e.preventDefault();
+        const item = extractItemFromEvent(e);
+        setActiveOption(item);
+    };
+
+    /**
      * Handle keyDown events on the selectList button
-     * Opens the selectList and focuses the first element if available
+     * Responsible for opening and closing the list
      * @param e - KeyboardEvent
      */
     const handleButtonKeyDown = (e: KeyboardEvent) => {
@@ -75,9 +142,10 @@ function Select({
             closeList();
         } else if ([keys.arrowUp, keys.arrowDown, keys.enter].includes(e.key) || (e.key === keys.space && (!filterable || !showList))) {
             e.preventDefault();
-            setShowList(true);
-            if (selectListRef.current?.firstElementChild) {
-                selectListRef.current.firstElementChild.focus();
+            if (!showList) {
+                openList();
+            } else {
+                handleNavigationKeys(e);
             }
         } else if (e.shiftKey && e.key === keys.tab) {
             // Shift-Tab out of Select - close list re. a11y guidelines (above)
@@ -88,53 +156,23 @@ function Select({
     };
 
     /**
-     * Close the select list when clicking outside the list
-     * @param e - MouseEvent
-     */
-    const handleClickOutside = (e: MouseEvent) => {
-        // use composedPath so it can also check when inside a web component
-        // if composedPath is not available fallback to e.target
-        const clickIsOutside = e.composedPath
-            ? !e.composedPath().includes(selectContainerRef.current)
-            : !selectContainerRef.current.contains(e.target);
-        if (clickIsOutside) {
-            setTextFilter(null);
-            setShowList(false);
-        }
-    };
-
-    /**
-     * Handle keyDown events on the list elements
+     * Handles movement with navigation keys and enter
      * Navigates through the list, or select an element, or focus the filter input, or close the menu.
      * @param e - KeyDownEvent
      */
-    const handleListKeyDown = (e: KeyboardEvent) => {
-        const target = e.target as HTMLInputElement;
-
+    const handleNavigationKeys = (e: KeyboardEvent) => {
         switch (e.key) {
-            case keys.escape:
-                e.preventDefault();
-                // When user is actively navigating through list with arrow keys - close list and keep focus on the Select Button re. a11y guidelines (above)
-                closeList();
-                break;
             case keys.space:
             case keys.enter:
                 handleSelect(e);
                 break;
             case keys.arrowDown:
                 e.preventDefault();
-                if (target.nextElementSibling) (target.nextElementSibling as HTMLElement).focus();
+                setNextActive();
                 break;
             case keys.arrowUp:
                 e.preventDefault();
-                if (target.previousElementSibling) {
-                    (target.previousElementSibling as HTMLElement).focus();
-                } else if (filterable && filterInputRef.current) {
-                    filterInputRef.current.focus();
-                }
-                break;
-            case keys.tab:
-                closeList();
+                setPreviousActive();
                 break;
             default:
         }
@@ -146,7 +184,8 @@ function Select({
      */
     const handleTextFilter = (e: KeyboardEvent) => {
         const value: string = (e.target as HTMLInputElement).value;
-        setTextFilter(value.toLowerCase());
+        setInputText(value);
+        setTextFilter(value);
     };
 
     /**
@@ -155,9 +194,27 @@ function Select({
      */
     const toggleList = (e: Event) => {
         e.preventDefault();
-        setShowList(!showList);
+        if (!showList) {
+            setInputText(null);
+            openList();
+        } else {
+            setInputText(selectedOption.name);
+            closeList();
+        }
     };
 
+    useEffect(() => {
+        if (showList) {
+            setInputText(null);
+        } else {
+            //setInputText(selectedOption.name);
+            setTextFilter(null);
+        }
+    }, [showList]);
+
+    /**
+     * Focus on the input if filterable
+     */
     useEffect(() => {
         if (showList && filterable && filterInputRef.current) {
             filterInputRef.current.focus();
@@ -165,12 +222,27 @@ function Select({
     }, [showList]);
 
     useEffect(() => {
+        /**
+         * Close the select list when clicking outside the list
+         * @param e - MouseEvent
+         */
+        function handleClickOutside(e: MouseEvent) {
+            // use composedPath so it can also check when inside a web component
+            // if composedPath is not available fallback to e.target
+            const clickIsOutside = e.composedPath
+                ? !e.composedPath().includes(selectContainerRef.current)
+                : !selectContainerRef.current.contains(e.target);
+            if (clickIsOutside) {
+                closeList();
+            }
+        }
+
         document.addEventListener('click', handleClickOutside, false);
 
         return () => {
             document.removeEventListener('click', handleClickOutside, false);
         };
-    }, []);
+    }, [selectContainerRef]);
 
     return (
         <div
@@ -183,13 +255,16 @@ function Select({
             ref={selectContainerRef}
         >
             <SelectButton
+                inputText={inputText}
                 id={uniqueId ?? null}
-                active={active}
+                active={activeOption}
+                selected={selectedOption}
                 filterInputRef={filterInputRef}
                 filterable={filterable}
                 isInvalid={isInvalid}
                 isValid={isValid}
                 onButtonKeyDown={handleButtonKeyDown}
+                onFocus={openList}
                 onInput={handleTextFilter}
                 placeholder={placeholder}
                 readonly={readonly}
@@ -197,17 +272,18 @@ function Select({
                 showList={showList}
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
-                ariaDescribedBy={!isCollatingErrors && uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
+                disabled={disabled}
+                ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
             />
             <SelectList
-                active={active}
-                items={items}
-                onKeyDown={handleListKeyDown}
+                active={activeOption}
+                filteredItems={filteredItems}
+                onHover={handleHover}
                 onSelect={handleSelect}
+                selected={selectedOption}
                 selectListId={selectListId}
                 selectListRef={selectListRef}
                 showList={showList}
-                textFilter={textFilter}
             />
         </div>
     );
