@@ -56,8 +56,11 @@ function Installments(props: InstallmentsProps) {
     };
 
     useEffect(() => {
-        const newAmount = installmentOptions?.values?.includes(installmentAmount) ? installmentAmount : installmentOptions?.values[0];
-        setInstallmentAmount(newAmount);
+        if (installmentOptions?.values?.includes(installmentAmount)) {
+            return;
+        }
+
+        setInstallmentAmount(installmentOptions?.preselectedValue ?? installmentOptions?.values[0]);
     }, [brand]);
 
     useEffect(() => {
