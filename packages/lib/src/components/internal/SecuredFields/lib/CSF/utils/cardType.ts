@@ -277,7 +277,7 @@ const getShortestPermittedCardLength = () => {
         let permittedLengthsArray = [];
 
         CardType.cards.forEach(pItem => {
-            permittedLengthsArray = permittedLengthsArray.concat(pItem.permittedLengths);
+            permittedLengthsArray = permittedLengthsArray.concat(pItem.permittedLengths ?? []);
         });
 
         shortestPermittedCardLength = Math.min.apply(null, permittedLengthsArray);
