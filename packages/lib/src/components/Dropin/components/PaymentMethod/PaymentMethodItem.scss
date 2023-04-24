@@ -115,16 +115,6 @@
     flex-wrap: wrap;
 }
 
-.adyen-checkout__payment-method__name {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.adyen-checkout__payment-method__name--selected {
-    font-weight: 500;
-}
-
 .adyen-checkout__payment-method__details {
     padding: 0 16px;
     position: relative;
@@ -167,7 +157,7 @@
     overflow: hidden;
 
     & .adyen-checkout__payment-method__brand-number {
-        color: #99a3ad;
+        color: $color-gray-darker;
         font-size: 13px;
     }
 }

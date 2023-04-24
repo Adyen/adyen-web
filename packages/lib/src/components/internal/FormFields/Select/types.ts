@@ -1,7 +1,7 @@
 export interface SelectItem {
     disabled?: boolean;
     icon?: string;
-    id: string;
+    id: string | number;
     name: string;
     secondaryText?: string;
     selectedOptionName?: string;
@@ -15,21 +15,24 @@ export interface SelectProps {
     isValid?: boolean;
     items: SelectItem[];
     name?: string;
-    onChange: (e) => void;
+    onChange: (e: { target: { value: string | number; name: string } }) => void;
     placeholder: string;
     readonly: boolean;
     selected: string;
     uniqueId?: string;
-    isCollatingErrors: boolean;
+    disabled: boolean;
 }
 
 export interface SelectButtonProps {
+    inputText: string;
     active: SelectItem;
+    selected: SelectItem;
     filterInputRef;
     filterable: boolean;
     isInvalid: boolean;
     isValid?: boolean;
     onButtonKeyDown: (e: KeyboardEvent) => void;
+    onFocus: (e: Event) => void;
     onInput: (e: Event) => void;
     placeholder: string;
     readonly: boolean;
@@ -39,22 +42,24 @@ export interface SelectButtonProps {
     toggleList: (e: Event) => void;
     id?: string;
     ariaDescribedBy: string;
+    disabled: boolean;
 }
 
 export interface SelectListProps {
     active: SelectItem;
-    items: SelectItem[];
-    onKeyDown: (e: KeyboardEvent) => void;
+    filteredItems: SelectItem[];
+    onHover: (e: Event) => void;
     onSelect: (e: Event) => void;
+    selected: SelectItem;
     selectListId: string;
     selectListRef;
     showList: boolean;
-    textFilter: string;
 }
 
 export interface SelectItemProps {
+    active: boolean;
     item: SelectItem;
     selected: boolean;
-    onKeyDown: (e: KeyboardEvent) => void;
+    onHover: (e: Event) => void;
     onSelect: (e: Event) => void;
 }

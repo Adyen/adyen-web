@@ -5,8 +5,9 @@ import {
     filterRemovedPaymentMethods,
     filterSupportedStoredPaymentMethods
 } from './filters';
+import { PaymentMethodsResponse } from './types';
 
-const processStoredPaymentMethod = (pm): PaymentMethod => ({
+const processStoredPaymentMethod = (pm): StoredPaymentMethod => ({
     ...pm,
     storedPaymentMethodId: pm.id
 });
@@ -20,7 +21,7 @@ export const processPaymentMethods = (paymentMethods: PaymentMethod[], { allowPa
 export const processStoredPaymentMethods = (
     storedPaymentMethods: StoredPaymentMethod[],
     { allowPaymentMethods = [], removePaymentMethods = [] }
-): PaymentMethod[] => {
+): StoredPaymentMethod[] => {
     if (!storedPaymentMethods) return [];
 
     return storedPaymentMethods
@@ -31,22 +32,22 @@ export const processStoredPaymentMethods = (
         .map(processStoredPaymentMethod);
 };
 
-export const checkPaymentMethodsResponse = response => {
-    if (typeof response === 'string') {
+export const checkPaymentMethodsResponse = (paymentMethodsResponse: PaymentMethodsResponse) => {
+    if (typeof paymentMethodsResponse === 'string') {
         throw new Error(
             'paymentMethodsResponse was provided but of an incorrect type (should be an object but a string was provided).' +
                 'Try JSON.parse("{...}") your paymentMethodsResponse.'
         );
     }
 
-    if (response instanceof Array) {
+    if (paymentMethodsResponse instanceof Array) {
         throw new Error(
             'paymentMethodsResponse was provided but of an incorrect type (should be an object but an array was provided).' +
                 'Please check you are passing the whole response.'
         );
     }
 
-    if (response && !response?.paymentMethods?.length && !response?.storePaymentMethods?.length) {
+    if (paymentMethodsResponse && !paymentMethodsResponse?.paymentMethods?.length && !paymentMethodsResponse?.storedPaymentMethods?.length) {
         console.warn('paymentMethodsResponse was provided but no payment methods were found.');
     }
 };

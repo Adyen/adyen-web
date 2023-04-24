@@ -3,11 +3,8 @@ import renderFormField from '../../internal/FormFields';
 import Field from '../../internal/FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
 
-export default function({ onBlur, onInput, valid = false, error = null, data = '', required = false, disabled = false }) {
-    const {
-        i18n,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+export default function ({ onBlur, onInput, valid = false, error = null, data = '', required = false, disabled = false }) {
+    const { i18n } = useCoreContext();
 
     return (
         <Field
@@ -16,7 +13,6 @@ export default function({ onBlur, onInput, valid = false, error = null, data = '
             errorMessage={error && error.errorMessage ? i18n.get(error.errorMessage) : !!error}
             isValid={Boolean(valid)}
             name={'socialSecurityNumber'}
-            isCollatingErrors={isCollatingErrors}
         >
             {renderFormField('text', {
                 name: 'socialSecurityNumber',
@@ -27,7 +23,6 @@ export default function({ onBlur, onInput, valid = false, error = null, data = '
                 onInput,
                 onBlur,
                 required,
-                isCollatingErrors,
                 disabled
             })}
         </Field>

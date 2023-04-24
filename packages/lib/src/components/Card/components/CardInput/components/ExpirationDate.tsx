@@ -16,11 +16,7 @@ import getImage from '../../../../../utils/get-image';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
-    const {
-        i18n,
-        loadingContext,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__exp-date': true,
@@ -42,8 +38,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             isValid={isValid}
             dir={'ltr'}
             name={'encryptedExpiryDate'}
-            isCollatingErrors={isCollatingErrors}
             i18n={i18n}
+            errorVisibleToScreenReader={false}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_EXPIRY_DATE}
@@ -73,5 +69,3 @@ export default function ExpirationDate(props: ExpirationDateProps) {
         </Field>
     );
 }
-
-// export default ExpirationDate;

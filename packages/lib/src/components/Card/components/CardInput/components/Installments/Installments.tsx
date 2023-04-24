@@ -56,8 +56,11 @@ function Installments(props: InstallmentsProps) {
     };
 
     useEffect(() => {
-        const newAmount = installmentOptions?.values?.includes(installmentAmount) ? installmentAmount : installmentOptions?.values[0];
-        setInstallmentAmount(newAmount);
+        if (installmentOptions?.values?.includes(installmentAmount)) {
+            return;
+        }
+
+        setInstallmentAmount(installmentOptions?.preselectedValue ?? installmentOptions?.values[0]);
     }, [brand]);
 
     useEffect(() => {
@@ -102,7 +105,8 @@ function Installments(props: InstallmentsProps) {
                             items: installmentOptions.values.map(installmentItemsMapper),
                             selected: installmentAmount,
                             onChange: onSelectInstallment,
-                            name: 'installments'
+                            name: 'installments',
+                            disabled: radioBtnValue !== 'installments'
                         })}
                     </Field>
                 </Fieldset>

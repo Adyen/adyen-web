@@ -7,9 +7,10 @@ import Img from '../../internal/Img';
 import { getImageUrl } from '../../../utils/get-image';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import '../Donation.scss';
-
-export default function DonationComponent(props) {
-    const { amounts, onCancel, onDonate, showCancelButton = true } = props;
+import DisclaimerMessage from '../../internal/DisclaimerMessage';
+import { DonationComponentProps } from './types';
+export default function DonationComponent(props: DonationComponentProps) {
+    const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
     const { i18n, loadingContext } = useCoreContext();
     const { currency } = amounts;
     const [status, setStatus] = useState('ready');
@@ -89,7 +90,12 @@ export default function DonationComponent(props) {
                         onChange={handleAmountSelected}
                     />
                 </div>
-
+                {disclaimerMessage && (
+                    <DisclaimerMessage
+                        message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
+                        urls={[disclaimerMessage.link]}
+                    />
+                )}
                 <Button
                     classNameModifiers={['donate']}
                     onClick={handleDonate}

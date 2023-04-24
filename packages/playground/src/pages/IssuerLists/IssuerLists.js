@@ -57,6 +57,6 @@ import '../../style.scss';
     // Molpay MY
     window.molpay = checkout.create('molpay_ebanking_fpx_MY').mount('.molpay-field');
 
-    // Open Banking OK
-    window.openbanking_UK = checkout.create('openbanking_UK').mount('.openbanking_UK-field');
+    // Pay By Bank
+    window.paybybank_NL = checkout.create('paybybank').mount('.paybybank_NL-field');
 })();

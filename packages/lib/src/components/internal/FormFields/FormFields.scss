@@ -6,43 +6,63 @@
 }
 
 .adyen-checkout__field--20 {
-    width: 20%;
+    @include screen-s-and-up {
+        width: 20%;
+    }
 }
 
 .adyen-checkout__field--30 {
-    width: 30%;
+    @include screen-s-and-up {
+        width: 30%;
+    }
 }
 
 .adyen-checkout__field--40 {
-    width: 40%;
+    @include screen-s-and-up {
+        width: 40%;
+    }
 }
 
 .adyen-checkout__field--50 {
-    width: 50%;
+    @include screen-s-and-up {
+        width: 50%;
+    }
 }
 
 .adyen-checkout__field--60 {
-    width: 60%;
+    @include screen-s-and-up {
+        width: 60%;
+    }
 }
 
 .adyen-checkout__field--70 {
-    width: 70%;
+    @include screen-s-and-up {
+        width: 70%;
+    }
 }
 
 .adyen-checkout__field--80 {
-    width: 80%;
+    @include screen-s-and-up {
+        width: 80%;
+    }
 }
 
 .adyen-checkout__field--col-70 {
-    width: calc(70% - 8px);
+    @include screen-s-and-up {
+        width: calc(70% - 8px);
+    }
 }
 
 .adyen-checkout__field--col-30 {
-    width: calc(30% - 8px);
+    @include screen-s-and-up {
+        width: calc(30% - 8px);
+    }
 }
 
 .adyen-checkout__field--col-50 {
-    width: calc(50% - 8px);
+    @include screen-s-and-up {
+        width: calc(50% - 8px);
+    }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {

@@ -77,7 +77,7 @@ class ClickToPayService implements IClickToPayService {
                 return;
             }
 
-            const { isEnrolled } = await this.verifyIfShopperIsEnrolled(this.shopperIdentity.value, this.shopperIdentity.type);
+            const { isEnrolled } = await this.verifyIfShopperIsEnrolled(this.shopperIdentity);
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);
                 return;
@@ -184,10 +184,12 @@ class ClickToPayService implements IClickToPayService {
      * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
      * that responds faster with 'consumerPresent=true'
      */
-    public async verifyIfShopperIsEnrolled(value: string, type: 'email' | 'mobilePhone' = 'email'): Promise<{ isEnrolled: boolean }> {
+    public async verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }> {
+        const { shopperEmail } = shopperIdentity;
+
         return new Promise((resolve, reject) => {
             const lookupPromises = this.sdks.map(sdk => {
-                const identityLookupPromise = sdk.identityLookup({ value, type });
+                const identityLookupPromise = sdk.identityLookup({ identityValue: shopperEmail, type: 'email' });
 
                 identityLookupPromise
                     .then(response => {

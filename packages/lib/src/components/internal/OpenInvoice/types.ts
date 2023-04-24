@@ -3,6 +3,7 @@ import { CompanyDetailsSchema } from '../CompanyDetails/types';
 import { AddressSpecifications } from '../Address/types';
 import { UIElementProps } from '../../types';
 import UIElement from '../../UIElement';
+import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
@@ -49,12 +50,12 @@ export interface OpenInvoiceStateData {
 }
 
 export interface OpenInvoiceStateError {
-    consentCheckbox?: boolean;
-    companyDetails?: boolean;
-    billingAddress?: boolean;
-    deliveryAddress?: boolean;
-    personalDetails?: boolean;
-    bankAccount?: boolean;
+    consentCheckbox?: boolean | GenericError;
+    companyDetails?: boolean | ValidationRuleErrorObj;
+    billingAddress?: boolean | ValidationRuleErrorObj;
+    deliveryAddress?: boolean | ValidationRuleErrorObj;
+    personalDetails?: boolean | ValidationRuleErrorObj;
+    bankAccount?: boolean | object;
 }
 
 export interface OpenInvoiceStateValid {

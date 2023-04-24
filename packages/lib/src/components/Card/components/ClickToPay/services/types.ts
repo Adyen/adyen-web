@@ -11,7 +11,7 @@ export interface IClickToPayService {
     initialize(): Promise<void>;
     checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;
-    verifyIfShopperIsEnrolled(value: string, type?: string): Promise<{ isEnrolled: boolean }>;
+    verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }>;
     subscribeOnStateChange(callback: CallbackStateSubscriber): void;
     startIdentityValidation(): Promise<void>;
     finishIdentityValidation(otpCode: string): Promise<void>;
@@ -25,8 +25,8 @@ export type IdentityValidationData = {
 export type CallbackStateSubscriber = (state: CtpState) => void;
 
 export interface IdentityLookupParams {
-    value: string;
-    type?: 'email' | 'mobilePhone';
+    shopperEmail?: string;
+    telephoneNumber?: string;
 }
 
 export type MastercardCheckout = {

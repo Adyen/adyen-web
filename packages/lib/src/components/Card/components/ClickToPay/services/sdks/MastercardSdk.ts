@@ -1,12 +1,17 @@
 import { getMastercardSettings, MC_SDK_PROD, MC_SDK_TEST } from './config';
-import { IdentityLookupParams } from '../types';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
 import SrciError from './SrciError';
-import { CustomSdkConfiguration, SrciCompleteIdentityValidationResponse, SrciIdentityLookupResponse, SrcInitParams } from './types';
+import {
+    CustomSdkConfiguration,
+    SrciCompleteIdentityValidationResponse,
+    SrcIdentityLookupParams,
+    SrciIdentityLookupResponse,
+    SrcInitParams
+} from './types';
 
 const IdentityTypeMap = {
     email: 'EMAIL_ADDRESS',
-    mobilePhone: 'MOBILE_PHONE_NUMBER'
+    telephoneNumber: 'MOBILE_PHONE_NUMBER'
 };
 
 class MastercardSdk extends AbstractSrcInitiator {
@@ -36,11 +41,11 @@ class MastercardSdk extends AbstractSrcInitiator {
         await this.schemeSdk.init(sdkProps);
     }
 
-    public async identityLookup(params: IdentityLookupParams): Promise<SrciIdentityLookupResponse> {
+    public async identityLookup({ identityValue, type }: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse> {
         try {
             const consumerIdentity = {
-                identityValue: params.value,
-                identityType: IdentityTypeMap[params.type]
+                identityValue,
+                identityType: IdentityTypeMap[type]
             };
 
             const response = await this.schemeSdk.identityLookup({ consumerIdentity });
