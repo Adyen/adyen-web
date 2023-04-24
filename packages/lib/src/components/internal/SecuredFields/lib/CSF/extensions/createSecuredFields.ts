@@ -11,7 +11,7 @@ import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
 import { SecuredFieldInitObj } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
-import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType } from '../../types';
+import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 
 /**
@@ -22,6 +22,9 @@ import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError
  * comes from the SF in the brand information (as the shopper inputs the cc number)
  */
 let cvcPolicy: CVCPolicyType;
+
+// Usually 'required' for single branded Credit Cards but with exceptions e.g. ticket ('hidden', *technically* a meal voucher)
+let expiryDatePolicy: DatePolicyType;
 
 /**
  * Bound to the instance of CSF
@@ -34,6 +37,7 @@ export function createSecuredFields(): number {
     const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
 
     cvcPolicy = CVC_POLICY_REQUIRED;
+    expiryDatePolicy = DATE_POLICY_REQUIRED;
 
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
@@ -92,6 +96,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
         } else {
             // Assess whether cvc field is required based on the card type & whether the cvc field should even be visible
             cvcPolicy = (card.cvcPolicy as CVCPolicyType) || CVC_POLICY_REQUIRED;
+            expiryDatePolicy = (card.expiryDatePolicy as DatePolicyType) || DATE_POLICY_REQUIRED;
 
             this.securityCode = card.securityCode;
         }
@@ -124,8 +129,8 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
      * Now the securedFields have all been created and configured...
      *
      * For a single branded card we call to onBrand callback once.
-     * This allows the ui to set the correct logo if they haven't already,
-     * and we also pass the cvcPolicy so the UI can hide the CVC iframe holder if necessary
+     * This allows the UI to set the correct logo if they haven't already,
+     * and we also pass the cvcPolicy & expiryDatePolicy so the UI can hide the iframe holders if necessary
      */
     if (this.isSingleBrandedCard) {
         const callbackObj: CbObjOnBrand = {
@@ -133,6 +138,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
             rootNode: this.props.rootNode,
             brand: type,
             cvcPolicy,
+            expiryDatePolicy,
             cvcText: this.securityCode
         };
 
@@ -175,7 +181,7 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             uid,
             cvcPolicy,
             holderEl: pItem,
-            expiryDatePolicy: DATE_POLICY_REQUIRED,
+            expiryDatePolicy,
             txVariant: this.state.type,
             cardGroupTypes: this.config.cardGroupTypes,
             iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
