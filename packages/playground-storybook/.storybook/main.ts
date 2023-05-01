@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/html-vite';
+import { mergeConfig } from 'vite';
 
 const path = require('path');
 const { parsed: environmentVariables } = require('dotenv').config({
@@ -18,6 +19,15 @@ const config: StorybookConfig = {
     framework: {
         name: '@storybook/html-vite',
         options: {}
+    },
+    async viteFinal(config, options) {
+        return mergeConfig(config, {
+            server: {
+                watch: {
+                    usePolling: true
+                }
+            }
+        });
     },
     env: config => {
         let viteEnvVariables = {};
