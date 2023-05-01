@@ -53,22 +53,28 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
             };
         }
 
+        const shouldAddOnFileProps = includeStorePaymentMethod && onFileGrantId && cashTag;
+
         return {
             paymentMethod: {
                 type: CashAppPay.type,
                 ...(grantId && { grantId }),
-                ...(onFileGrantId && { onFileGrantId }),
-                ...(cashTag && { cashTag }),
-                ...(customerId && { customerId })
+                ...(customerId && { customerId }),
+                ...(shouldAddOnFileProps && { onFileGrantId, cashtag: cashTag })
             },
             ...(includeStorePaymentMethod && { storePaymentMethod: true })
         };
     }
 
     public submit(): void {
-        const { onClick } = this.props;
+        const { onClick, storedPaymentMethodId } = this.props;
 
         new Promise<void>((resolve, reject) => onClick({ resolve, reject })).then(async () => {
+            if (storedPaymentMethodId) {
+                super.submit();
+                return;
+            }
+
             await this.cashAppService.createCustomerRequest();
             this.cashAppService.begin();
         });
@@ -102,7 +108,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
                             this.componentRef = ref;
                         }}
                         enableStoreDetails={this.props.enableStoreDetails}
-                        showPayButton={this.props.showPayButton}
+                        // showPayButton={this.props.showPayButton}
                         cashAppService={this.cashAppService}
                         onChange={this.setState}
                         onError={this.handleError}

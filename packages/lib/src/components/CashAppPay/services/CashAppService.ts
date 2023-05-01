@@ -16,6 +16,10 @@ export default class CashAppService implements ICashAppService {
     constructor(sdkLoader: ICashAppSdkLoader, configuration: CashAppServiceConfig) {
         this.configuration = configuration;
         this.sdkLoader = sdkLoader;
+
+        if (!configuration.clientId) {
+            console.warn('CashAppService: clientId is missing');
+        }
     }
 
     get hasOneTimePayment() {

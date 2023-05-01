@@ -26,6 +26,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.cashApp = checkout
         .create('cashapp', {
             enableStoreDetails: true,
+            // storePaymentMethod: true,
             // showPayButton: false,
             onClick(actions) {
                 console.log('onclick check');

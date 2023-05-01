@@ -12,7 +12,7 @@ import classnames from 'classnames';
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
     cashAppService: ICashAppService;
-    showPayButton: boolean;
+    // showPayButton: boolean;
     onClick(): void;
     onChange(data: any): void;
     onAuthorize(payEventData: CashAppPayEventData): void;
@@ -23,7 +23,6 @@ interface CashAppComponentProps {
 export function CashAppComponent({
     enableStoreDetails,
     cashAppService,
-    showPayButton,
     onClick,
     onChange,
     onAuthorize,
@@ -92,16 +91,11 @@ export function CashAppComponent({
 
     return (
         <div className="adyen-checkout__cashapp">
-            {status === 'loading' && showPayButton && <Spinner />}
+            {status === 'loading' && <Spinner />}
+            {status !== 'loading' && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
 
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div
-                onClick={onClick}
-                className={classnames('adyen-checkout__cashapp-placeholder', { 'adyen-checkout__cashapp-placeholder--hide': status === 'loading' })}
-                ref={cashAppRef}
-            >
-                {enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
-            </div>
+            <div onClick={onClick} className={'adyen-checkout__cashapp-button'} ref={cashAppRef}></div>
         </div>
     );
 }

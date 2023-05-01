@@ -10,7 +10,7 @@ export const shopperLocale = urlParams.shopperLocale || DEFAULT_LOCALE;
 export const countryCode = urlParams.countryCode || DEFAULT_COUNTRY;
 export const currency = getCurrency(countryCode);
 export const amountValue = urlParams.amount ?? 25900;
-export const shopperReference = 'newshoppert';
+export const shopperReference = 'gui-shopper-1';
 export const amount = {
     currency,
     value: Number(amountValue)
