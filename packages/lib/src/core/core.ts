@@ -197,14 +197,14 @@ class Core {
 
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
-        this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment);
+        this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
         this.options.locale = this.options.locale || this.options.shopperLocale;
 
         // In a sessions flow setOptions gets called twice, but we only need one set of modules (except for i18n needs to be re-initialised as the options settle)
         this.modules = {
             risk: this.modules?.risk ?? new RiskModule(this.options),
             analytics: this.modules?.analytics ?? new Analytics(this.options),
-            resources: this.modules?.resources ?? new Resources(this.options.cdnContext, this.options.loadingContext),
+            resources: this.modules?.resources ?? new Resources(this.options.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations),
             srPanel: this.modules?.srPanel ?? new SRPanel(this.options.srConfig)
         };

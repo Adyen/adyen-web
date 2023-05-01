@@ -9,6 +9,3 @@ export const CoreContext = createContext({
     commonProps: {} as CommonPropsTypes,
     resources: new Resources()
 });
-
-export const CoreProvider = CoreContext.Provider;
-export const CoreConsumer = CoreContext.Consumer;

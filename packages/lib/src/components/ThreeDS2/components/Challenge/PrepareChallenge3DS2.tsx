@@ -7,7 +7,7 @@ import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
-import { CoreConsumer } from '../../../../core/Context/CoreContext';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -73,6 +73,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     render({ onActionHandled }, { challengeData }) {
+        const { resources } = useCoreContext();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
                 <DoChallenge3DS2
@@ -120,23 +121,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
         if (this.state.status === 'error') {
             return (
-                <CoreConsumer>
-                    {props => (
-                        <div className="adyen-checkout__threeds2-challenge-error">
-                            <Img
-                                className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                                src={props.resources.getImage({
-                                    loadingContext: this.props.loadingContext,
-                                    imageFolder: 'components/'
-                                })('error')}
-                                alt={''}
-                            />
-                            <div className="adyen-checkout__status__text">
-                                {this.state.errorInfo ? this.state.errorInfo : this.props.i18n.get('error.message.unknown')}
-                            </div>
-                        </div>
-                    )}
-                </CoreConsumer>
+                <div className="adyen-checkout__threeds2-challenge-error">
+                    <Img
+                        className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
+                        src={resources.getImage({
+                            loadingContext: this.props.loadingContext,
+                            imageFolder: 'components/'
+                        })('error')}
+                        alt={''}
+                    />
+                    <div className="adyen-checkout__status__text">
+                        {this.state.errorInfo ? this.state.errorInfo : this.props.i18n.get('error.message.unknown')}
+                    </div>
+                </div>
             );
         }
 
