@@ -1,12 +1,14 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
-import getImage from '../../../../utils/get-image';
+
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { MultibancoVoucherResultProps } from '../../types';
 import { VoucherDetail } from '../../../internal/Voucher/types';
+import useImage from '../../../../core/Context/useImage';
 
 const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
     const { entity, reference, expiresAt, merchantReference, totalAmount, paymentMethodType, downloadUrl } = props;
 
     const voucherDetails: VoucherDetail[] = [
@@ -21,7 +23,7 @@ const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
             barcode={null}
             copyBtn
             downloadUrl={downloadUrl}
-            imageUrl={getImage({ loadingContext })(paymentMethodType)}
+            imageUrl={getImage({})(paymentMethodType)}
             introduction={i18n.get('voucher.introduction')}
             paymentMethodType={'multibanco'}
             reference={reference}

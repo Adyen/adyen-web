@@ -2,9 +2,10 @@ import { Fragment, h } from 'preact';
 import classnames from 'classnames';
 import Img from '../../../../../../internal/Img';
 import ShopperCard from '../../../models/ShopperCard';
-import getImage from '../../../../../../../utils/get-image';
+
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import './CtPSingleCard.scss';
+import useImage from '../../../../../../../core/Context/useImage';
 
 type CtPSingleCardProps = {
     card: ShopperCard;
@@ -12,8 +13,9 @@ type CtPSingleCardProps = {
 };
 
 const CtPSingleCard = ({ card, errorMessage }: CtPSingleCardProps) => {
-    const { loadingContext, i18n } = useCoreContext();
-    const cardImage = card.artUri || getImage({ loadingContext })(card.scheme);
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
+    const cardImage = card.artUri || getImage({})(card.scheme);
 
     return (
         <Fragment>

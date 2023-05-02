@@ -3,7 +3,6 @@ import UIElement from '../UIElement';
 import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
-import getImage from '../../utils/get-image';
 
 export class DokuElement extends UIElement {
     public static type = 'doku';
@@ -25,12 +24,12 @@ export class DokuElement extends UIElement {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return this.resources.getImage({})(this.props.type);
     }
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.reference ? (
                     <DokuVoucherResult
                         ref={ref => {

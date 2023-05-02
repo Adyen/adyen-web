@@ -18,7 +18,7 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
             checkoutMode: props.isDropin ? 'ProcessOrder' : props.checkoutMode,
             environment: props.environment.toUpperCase(),
             locale: props.locale.replace('-', '_'),
-            productType: props.isDropin && !props.addressDetails ? 'PayOnly' : props.productType,
+            productType: props.isDropin && !props.addressDetails ? 'PayOnly' : props.productType
         };
     }
 
@@ -89,7 +89,7 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <AmazonPayComponent
                     ref={ref => {
                         this.componentRef = ref;

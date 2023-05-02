@@ -2,7 +2,6 @@ import { h } from 'preact';
 import BaseElement from './BaseElement';
 import { PaymentAction } from '../types';
 import { PaymentResponse } from './types';
-import getImage from '../utils/get-image';
 import PayButton from './internal/PayButton';
 import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
@@ -240,7 +239,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
+        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
     }
 
     /**

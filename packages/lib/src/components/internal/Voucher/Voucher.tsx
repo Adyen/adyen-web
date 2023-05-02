@@ -2,13 +2,15 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import Button from '../Button';
 import { copyToClipboard } from '../../../utils/clipboard';
-import getImage from '../../../utils/get-image';
+
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './Voucher.scss';
 import { VoucherProps } from './types';
+import useImage from '../../../core/Context/useImage';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
     const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <div className={classNames('adyen-checkout__voucher-result', `adyen-checkout__voucher-result--${props.paymentMethodType}`, className)}>

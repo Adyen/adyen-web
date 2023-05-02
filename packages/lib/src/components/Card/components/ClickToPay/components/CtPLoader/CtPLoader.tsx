@@ -2,16 +2,17 @@ import { Fragment, h } from 'preact';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import './CtPLoader.scss';
 import Img from '../../../../../internal/Img';
-import getImageUrl from '../../../../../../utils/get-image';
+import useImage from '../../../../../../core/Context/useImage';
 
 const CtPLoader = (): h.JSX.Element => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <Fragment>
             <Img
                 className="adyen-checkout-ctp__loading-image"
-                src={getImageUrl({ loadingContext, extension: 'gif', imageFolder: 'components/' })('ctp_loader')}
+                src={getImage({ extension: 'gif', imageFolder: 'components/' })('ctp_loader')}
                 alt=""
                 height={120}
             />

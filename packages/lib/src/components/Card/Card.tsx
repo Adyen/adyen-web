@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import getImage from '../../utils/get-image';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardElementProps } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
@@ -165,14 +164,14 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return this.props.icon ?? getImage({ loadingContext: this.props.loadingContext })(this.brand);
+        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(this.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
         const { brands, loadingContext, brandsConfiguration } = this.props;
         if (brands) {
             return brands.map(brand => {
-                const brandIcon = brandsConfiguration[brand]?.icon ?? getImage({ loadingContext })(brand);
+                const brandIcon = brandsConfiguration[brand]?.icon ?? this.props.modules.resources.getImage({ loadingContext })(brand);
                 return { icon: brandIcon, name: brand };
             });
         }
@@ -220,13 +219,14 @@ export class CardElement extends UIElement<CardElementProps> {
                 brand={this.brand}
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
+                resources={this.resources}
             />
         );
     }
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <ClickToPayWrapper
                         amount={this.props.amount}

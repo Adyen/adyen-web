@@ -2,7 +2,7 @@ import { Fragment, h } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import useClickToPayContext from '../../context/useClickToPayContext';
 import CtPSingleCard from './CtPSingleCard/CtPSingleCard';
-import getImage from '../../../../../../utils/get-image';
+
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import PayButton from '../../../../../internal/PayButton';
 import { amountLabel } from '../../../../../internal/PayButton/utils';
@@ -16,6 +16,7 @@ import { CTP_IFRAME_NAME } from '../../services/utils';
 import Iframe from '../../../../../internal/IFrame';
 import { PaymentAmount } from '../../../../../../types';
 import './CtPCards.scss';
+import useImage from '../../../../../../core/Context/useImage';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -40,6 +41,7 @@ function getPayButtonLabel(i18n: Language, amount: PaymentAmount, checkoutCard?:
 
 const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
+    const getImage = useImage();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards.find(card => !card.isExpired) || cards[0]);
     const [errorCode, setErrorCode] = useState<string>(null);

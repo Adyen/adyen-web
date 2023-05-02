@@ -74,7 +74,7 @@ export class AchElement extends UIElement<AchElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
                         name={this.displayName}
