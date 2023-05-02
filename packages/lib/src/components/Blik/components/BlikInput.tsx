@@ -8,6 +8,7 @@ import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
+import useImage from '../../../core/Context/useImage';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -18,7 +19,8 @@ interface BlikInputDataState {
 }
 
 function BlikInput(props: BlikInputProps) {
-    const { i18n, loadingContext, resources } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({
         schema: ['blikCode'],
         rules: {
@@ -69,7 +71,7 @@ function BlikInput(props: BlikInputProps) {
             {props.showPayButton &&
                 props.payButton({
                     status,
-                    icon: resources.getImage({ loadingContext, imageFolder: 'components/' })('lock')
+                    icon: getImage({ loadingContext, imageFolder: 'components/' })('lock')
                 })}
         </div>
     );

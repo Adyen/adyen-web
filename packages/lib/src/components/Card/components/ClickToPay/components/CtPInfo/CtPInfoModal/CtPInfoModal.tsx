@@ -6,6 +6,7 @@ import Button from '../../../../../../internal/Button';
 import { CtPBrand } from '../../CtPBrand';
 import { useRef } from 'preact/hooks';
 import Img from '../../../../../../internal/Img';
+import useImage from '../../../../../../../core/Context/useImage';
 
 let idGenerator = Date.now();
 
@@ -22,7 +23,8 @@ type CtPInfoModalProps = {
 
 const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) => {
     const focusFirstElement = useRef<HTMLParagraphElement>();
-    const { i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     const labelledBy = getUniqueId();
     const describedBy = getUniqueId();
@@ -39,11 +41,7 @@ const CtPInfoModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) =
         >
             {({ onCloseModal }) => (
                 <Fragment>
-                    <Img
-                        className="adyen-checkout__ctp-modal-header-image"
-                        src={resources.getImage({ imageFolder: 'components/' })('ctp_landscape')}
-                        alt=""
-                    />
+                    <Img className="adyen-checkout__ctp-modal-header-image" src={getImage({ imageFolder: 'components/' })('ctp_landscape')} alt="" />
                     <h1 id={labelledBy} className="adyen-checkout__ctp-modal-title">
                         {i18n.get('ctp.infoPopup.title')}
                     </h1>

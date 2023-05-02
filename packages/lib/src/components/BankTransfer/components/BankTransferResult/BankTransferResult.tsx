@@ -2,16 +2,18 @@ import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
 
 import useCoreContext from '../../../../core/Context/useCoreContext';
+import useImage from '../../../../core/Context/useImage';
 
 export default function BankTransferResult(props) {
     const { reference, totalAmount, paymentMethodType } = props;
-    const { loadingContext, i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <Voucher
             paymentMethodType={paymentMethodType}
             introduction={i18n.get('bankTransfer.instructions')}
-            imageUrl={resources.getImage({ loadingContext })(paymentMethodType)}
+            imageUrl={getImage({})(paymentMethodType)}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[
                 { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },

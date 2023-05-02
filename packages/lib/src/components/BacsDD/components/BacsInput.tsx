@@ -10,12 +10,14 @@ import { BacsDataState, BacsInputProps } from './types';
 import './BacsInput.scss';
 
 import useForm from '../../../utils/useForm';
+import useImage from '../../../core/Context/useImage';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
 
 function BacsInput(props: BacsInputProps) {
-    const { i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BacsDataState>({
         schema: ['holderName', 'bankAccountNumber', 'bankLocationId', 'shopperEmail', 'amountConsentCheckbox', 'accountConsentCheckbox'],
@@ -214,7 +216,7 @@ function BacsInput(props: BacsInputProps) {
                             : `${i18n.get('bacs.confirm')} ${
                                   !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
                               }`,
-                    icon: resources.getImage({ imageFolder: 'components/' })('lock'),
+                    icon: getImage({ imageFolder: 'components/' })('lock'),
                     onClick: handlePayButton
                 })}
         </div>

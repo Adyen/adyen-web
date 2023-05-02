@@ -12,9 +12,11 @@ import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import ContentSeparator from '../ContentSeparator';
+import useImage from '../../../core/Context/useImage';
 
 function Await(props: AwaitComponentProps) {
-    const { i18n, loadingContext, resources } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
     const [completed, setCompleted] = useState(false);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -147,7 +149,7 @@ function Await(props: AwaitComponentProps) {
         <div className="adyen-checkout__await adyen-checkout__await--result">
             <img
                 className="adyen-checkout__await__icon adyen-checkout__await__icon--result"
-                src={resources.getImage({ loadingContext, imageFolder: 'components/' })(image)}
+                src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
                 alt={i18n.get(message)}
             />
             <div className="adyen-checkout__await__subtitle adyen-checkout__await__subtitle--result">{i18n.get(message)}</div>

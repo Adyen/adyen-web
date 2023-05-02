@@ -8,6 +8,7 @@ import SegmentedControl from '../../../internal/SegmentedControl';
 import { UpiMode } from '../../types';
 import './UPIComponent.scss';
 import isMobile from '../../../../utils/isMobile';
+import useImage from '../../../../core/Context/useImage';
 
 type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
@@ -18,7 +19,9 @@ interface UPIComponentProps {
     ref(ref: RefObject<typeof UPIComponent>): void;
 
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
+
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
+
     onUpdateMode(mode: UpiMode): void;
 }
 
@@ -34,7 +37,8 @@ const A11Y = {
 };
 
 export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton }: UPIComponentProps): h.JSX.Element {
-    const { i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
@@ -105,7 +109,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),
-                            icon: resources.getImage({ imageFolder: 'components/' })('qr'),
+                            icon: getImage({ imageFolder: 'components/' })('qr'),
                             status
                         })}
                 </div>

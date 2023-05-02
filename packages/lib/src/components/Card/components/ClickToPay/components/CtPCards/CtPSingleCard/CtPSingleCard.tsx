@@ -5,15 +5,17 @@ import ShopperCard from '../../../models/ShopperCard';
 
 import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import './CtPSingleCard.scss';
+import useImage from '../../../../../../../core/Context/useImage';
 
 type CtPSingleCardProps = {
     card: ShopperCard;
     errorMessage?: string;
 };
 
-const CtPSingleCard = ({ card,errorMessage }: CtPSingleCardProps) => {
-    const { loadingContext, i18n, resources } = useCoreContext();
-    const cardImage = card.artUri || resources.getImage({ loadingContext })(card.scheme);
+const CtPSingleCard = ({ card, errorMessage }: CtPSingleCardProps) => {
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
+    const cardImage = card.artUri || getImage({})(card.scheme);
 
     return (
         <Fragment>

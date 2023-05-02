@@ -3,17 +3,19 @@ import Voucher from '../../../internal/Voucher';
 
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { EcontextVoucherResultProps } from '../../types';
+import useImage from '../../../../core/Context/useImage';
 
 const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
     const { reference, totalAmount, expiresAt, paymentMethodType, maskedTelephoneNumber, instructionsUrl, collectionInstitutionNumber } = props;
-    const { loadingContext, i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <Voucher
             paymentMethodType={paymentMethodType}
             reference={reference}
             introduction={i18n.get('voucher.introduction.econtext')}
-            imageUrl={resources.getImage({ loadingContext })(paymentMethodType)}
+            imageUrl={getImage({})(paymentMethodType)}
             instructionsUrl={instructionsUrl}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[

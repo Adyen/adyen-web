@@ -34,11 +34,12 @@ import { getPartialAddressValidationRules } from '../../../internal/Address/vali
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
+import useImage from '../../../../core/Context/useImage';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
     const isValidating = useRef(false);
-    const resources = props.resources;
+    const getImage = useImage();
 
     /** SR stuff */
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
@@ -514,7 +515,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
-                    icon: resources.getImage({ imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })('lock')
                 })}
         </Fragment>
     );

@@ -3,9 +3,11 @@ import PaymentMethodIcon from './PaymentMethodIcon';
 
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import './OrderPaymentMethods.scss';
+import useImage from '../../../../core/Context/useImage';
 
 export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
-    const { loadingContext, i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <div>
@@ -17,7 +19,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel }) => {
                                 <PaymentMethodIcon
                                     altDescription={orderPaymentMethod.name}
                                     type={orderPaymentMethod.type}
-                                    src={resources.getImage({ loadingContext })(orderPaymentMethod.type)}
+                                    src={getImage({})(orderPaymentMethod.type)}
                                 />
                                 •••• {orderPaymentMethod.lastFour}
                             </div>

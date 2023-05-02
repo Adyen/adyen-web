@@ -3,19 +3,19 @@ import classnames from 'classnames';
 import Img from '../../../../../internal/Img';
 import { SchemeNames } from '../../services/sdks/utils';
 import useClickToPayContext from '../../context/useClickToPayContext';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import './CtPBrand.scss';
+import useImage from '../../../../../../core/Context/useImage';
 
 type CtPBrandProps = {
     classNameModifiers?: string[];
 };
 
 const CtPBrand = ({ classNameModifiers = [] }: CtPBrandProps) => {
-    const { loadingContext, resources } = useCoreContext();
+    const getImage = useImage();
     const { schemes } = useClickToPayContext();
 
-    const ctpImageUrl = resources.getImage({ loadingContext })('ctp');
-    const pipeImageUrl = resources.getImage({ loadingContext, imageFolder: 'components/' })('pipe');
+    const ctpImageUrl = getImage({})('ctp');
+    const pipeImageUrl = getImage({ imageFolder: 'components/' })('pipe');
 
     return (
         <div
@@ -31,7 +31,7 @@ const CtPBrand = ({ classNameModifiers = [] }: CtPBrandProps) => {
                 <Img
                     key={brand}
                     className={classnames('adyen_checkout-ctp__brand-scheme', `adyen_checkout-ctp__brand-scheme-${brand}`)}
-                    src={resources.getImage({ loadingContext })(brand)}
+                    src={getImage({})(brand)}
                     alt={`Logo of ${SchemeNames[brand]}`}
                 />
             ))}

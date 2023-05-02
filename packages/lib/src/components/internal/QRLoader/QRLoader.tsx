@@ -12,6 +12,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
+import useImage from '../../../core/Context/useImage';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -138,14 +139,15 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     };
 
     render({ amount, url, brandLogo, brandName, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
-        const { i18n, loadingContext, resources } = useCoreContext();
+        const { i18n, loadingContext } = useCoreContext();
+        const getImage = useImage();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
         const finalState = (image, message) => (
             <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
                 <img
                     className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                    src={resources.getImage({ loadingContext, imageFolder: 'components/' })(image)}
+                    src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
                     alt={i18n.get(message)}
                 />
                 <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{i18n.get(message)}</div>
@@ -216,7 +218,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                                 copyToClipboard(this.props.qrCodeData);
                                 complete();
                             }}
-                            icon={resources.getImage({ loadingContext, imageFolder: 'components/' })('copy')}
+                            icon={getImage({ loadingContext, imageFolder: 'components/' })('copy')}
                             label={i18n.get('button.copy')}
                         />
                     </div>

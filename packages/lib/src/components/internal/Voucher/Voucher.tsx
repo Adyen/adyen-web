@@ -6,9 +6,11 @@ import { copyToClipboard } from '../../../utils/clipboard';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './Voucher.scss';
 import { VoucherProps } from './types';
+import useImage from '../../../core/Context/useImage';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
-    const { i18n, loadingContext, resources } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <div className={classNames('adyen-checkout__voucher-result', `adyen-checkout__voucher-result--${props.paymentMethodType}`, className)}>
@@ -88,7 +90,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                         copyToClipboard(props.reference);
                                         complete();
                                     }}
-                                    icon={resources.getImage({ loadingContext, imageFolder: 'components/' })('copy')}
+                                    icon={getImage({ loadingContext, imageFolder: 'components/' })('copy')}
                                     label={i18n.get('button.copy')}
                                 />
                             </li>
@@ -100,7 +102,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     inline
                                     variant="action"
                                     href={props.downloadUrl}
-                                    icon={resources.getImage({ loadingContext, imageFolder: 'components/' })('download')}
+                                    icon={getImage({ loadingContext, imageFolder: 'components/' })('download')}
                                     label={props.downloadButtonText || i18n.get('button.download')}
                                     target="_blank"
                                     rel="noopener noreferrer"

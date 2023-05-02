@@ -4,12 +4,14 @@ import Img from '../../../../../internal/Img';
 import { CtPInfoModal } from './CtPInfoModal';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import './CtPInfo.scss';
+import useImage from '../../../../../../core/Context/useImage';
 
 const CtPInfo = () => {
     const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
     const buttonRef = useRef<HTMLButtonElement>();
-    const { i18n, resources } = useCoreContext();
-    const url = resources.getImage({ imageFolder: 'components/' })('info');
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
+    const url = getImage({ imageFolder: 'components/' })('info');
 
     const handleOnClose = useCallback(() => {
         setIsInfoModalOpen(false);
