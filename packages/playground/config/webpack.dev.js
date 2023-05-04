@@ -1,9 +1,19 @@
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const checkoutDevServer = require('@adyen/adyen-web-server');
 const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || '3020';
+const isHttps = process.env.IS_HTTPS === 'true';
+const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
+const httpsConfig = isHttps
+    ? {
+          cert: fs.readFileSync(certPath),
+          key: fs.readFileSync(certKeyPath)
+      }
+    : false;
 const resolve = dir => path.resolve(__dirname, dir);
 
 // NOTE: The first page in the array will be considered the index page.
@@ -118,7 +128,7 @@ module.exports = {
     devServer: {
         port,
         host,
-        https: false,
+        https: httpsConfig,
         hot: true,
         compress: true,
         onBeforeSetupMiddleware: devServer => {
