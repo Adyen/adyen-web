@@ -47,6 +47,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
                 <ClickToPayProvider
+                    isStandaloneComponent={true}
                     configuration={this.ctpConfiguration}
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}

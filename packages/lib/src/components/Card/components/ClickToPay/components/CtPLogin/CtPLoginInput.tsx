@@ -57,6 +57,11 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
         [props.onPressEnter]
     );
 
+    const handleOnKeyPress = useCallback((event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        // Prevent <form> submission if Component is placed inside an form
+        if (event.key === 'Enter') event.preventDefault();
+    }, []);
+
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors]);
@@ -76,6 +81,7 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
                 disabled: props.disabled,
                 onInput: handleChangeFor('shopperLogin', 'input'),
                 onBlur: handleChangeFor('shopperLogin', 'blur'),
+                onKeyPress: handleOnKeyPress,
                 onKeyUp: handleOnKeyUp
             })}
         </Field>

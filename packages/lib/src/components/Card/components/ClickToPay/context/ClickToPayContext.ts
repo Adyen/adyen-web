@@ -9,6 +9,7 @@ import { ClickToPayConfiguration } from '../../../types';
 
 export interface IClickToPayContext
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
+    isStandaloneComponent: boolean;
     isCtpPrimaryPaymentMethod: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
     logoutShopper(): void;
@@ -32,6 +33,7 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     onError: null,
     amount: null,
     configuration: null,
+    isStandaloneComponent: null,
     isCtpPrimaryPaymentMethod: null,
     setIsCtpPrimaryPaymentMethod: null,
     logoutShopper: null,

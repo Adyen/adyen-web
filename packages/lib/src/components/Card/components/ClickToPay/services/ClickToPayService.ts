@@ -85,8 +85,7 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            if (error instanceof SrciError)
-                console.warn(`Error at ClickToPayService: Reason: ${error.reason} / Source: ${error.source} / Scheme: ${error.scheme}`);
+            if (error instanceof SrciError) console.warn(`Error at ClickToPayService # init: ${error.toString()}`);
             else console.warn(error);
 
             this.setState(CtpState.NotAvailable);
@@ -167,9 +166,13 @@ class ClickToPayService implements IClickToPayService {
             throw new AdyenCheckoutError('ERROR', 'ClickToPayService is not initialized');
         }
 
-        const logoutPromises = this.sdks.map(sdk => sdk.unbindAppInstance());
-
-        await Promise.all(logoutPromises);
+        try {
+            const logoutPromises = this.sdks.map(sdk => sdk.unbindAppInstance());
+            await Promise.all(logoutPromises);
+        } catch (error) {
+            if (error instanceof SrciError) console.warn(`Error at ClickToPayService # logout: ${error.toString()}`);
+            else console.warn(error);
+        }
 
         this.shopperCards = null;
         this.identityValidationData = null;

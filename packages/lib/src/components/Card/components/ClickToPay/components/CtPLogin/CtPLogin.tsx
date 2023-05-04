@@ -71,6 +71,7 @@ const CtPLogin = (): h.JSX.Element => {
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
                 onPressEnter={handleOnLoginButtonClick}
             />
+
             <Button
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}

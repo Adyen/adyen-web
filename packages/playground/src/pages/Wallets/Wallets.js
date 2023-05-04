@@ -23,6 +23,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Click to Pay
     window.clickToPay = checkout
         .create('clicktopay', {
+            configuration: {
+                // visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                // visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8'
+                mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+            },
             shopperEmail: 'gui.ctp@adyen.com'
         })
         .mount('.clicktopay-field');

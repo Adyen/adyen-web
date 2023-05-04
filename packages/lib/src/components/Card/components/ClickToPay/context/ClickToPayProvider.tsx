@@ -14,6 +14,7 @@ type ClickToPayProviderRef = {
 };
 
 export type ClickToPayProviderProps = {
+    isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
     configuration: ClickToPayConfiguration;
     amount: PaymentAmount;
@@ -25,6 +26,7 @@ export type ClickToPayProviderProps = {
 };
 
 const ClickToPayProvider = ({
+    isStandaloneComponent = false,
     clickToPayService,
     amount,
     configuration,
@@ -88,6 +90,7 @@ const ClickToPayProvider = ({
                 onSetStatus,
                 amount,
                 configuration,
+                isStandaloneComponent,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,
                 ctpState,
