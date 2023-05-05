@@ -8,11 +8,7 @@ import { CountryFieldProps, CountryFieldItem } from '../types';
 
 export default function CountryField(props: CountryFieldProps) {
     const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
-    const {
-        i18n,
-        loadingContext,
-        commonProps: { isCollatingErrors }
-    } = useCoreContext();
+    const { i18n, loadingContext } = useCoreContext();
     const [countries, setCountries] = useState<CountryFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [readOnly, setReadOnly] = useState(props.readOnly);
@@ -43,7 +39,6 @@ export default function CountryField(props: CountryFieldProps) {
             classNameModifiers={classNameModifiers}
             isValid={!!value}
             showValidIcon={false}
-            isCollatingErrors={isCollatingErrors}
             i18n={i18n}
         >
             {renderFormField('select', {
@@ -52,8 +47,7 @@ export default function CountryField(props: CountryFieldProps) {
                 placeholder: i18n.get('select.country'),
                 selected: value,
                 items: countries,
-                readonly: readOnly && !!value,
-                isCollatingErrors
+                readonly: readOnly && !!value
             })}
         </Field>
     );

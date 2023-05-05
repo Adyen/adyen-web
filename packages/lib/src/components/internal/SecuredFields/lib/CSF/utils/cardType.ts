@@ -92,6 +92,7 @@ CardType.cards.push({
     // prettier-ignore
     startingRules: [506699, 50670, 50671, 50672, 50673, 50674, 50675, 50676, 506770, 506771, 506772, 506773, 506774, 506775, 506776, 506777, 506778, 401178, 438935, 451416, 457631, 457632, 504175, 627780, 636297, 636368], // eslint-disable-line max-len
     permittedLengths: [16],
+    // prettier-ignore
     pattern: /^((((506699)|(506770)|(506771)|(506772)|(506773)|(506774)|(506775)|(506776)|(506777)|(506778)|(401178)|(438935)|(451416)|(457631)|(457632)|(504175)|(627780)|(636368)|(636297))[0-9]{0,10})|((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0,11})$/ // eslint-disable-line max-len
 });
 
@@ -177,7 +178,13 @@ CardType.cards.push({
     cardType: 'rupay',
     startingRules: [508528],
     permittedLengths: [16],
+    // prettier-ignore
     pattern: /^(100003|508(2|[5-9])|60(69|[7-8])|652(1[5-9]|[2-5][0-9]|8[5-9])|65300[3-4]|8172([0-1]|[3-5]|7|9)|817(3[3-8]|40[6-9]|410)|35380([0-2]|[5-6]|9))[0-9]{0,12}$/ // eslint-disable-line max-len
+});
+
+CardType.cards.push({
+    cardType: 'ticket',
+    expiryDatePolicy: 'hidden'
 });
 
 const detectCard = (pCardNumber, pAvailableCards?) => {
@@ -270,7 +277,7 @@ const getShortestPermittedCardLength = () => {
         let permittedLengthsArray = [];
 
         CardType.cards.forEach(pItem => {
-            permittedLengthsArray = permittedLengthsArray.concat(pItem.permittedLengths);
+            permittedLengthsArray = permittedLengthsArray.concat(pItem.permittedLengths ?? []);
         });
 
         shortestPermittedCardLength = Math.min.apply(null, permittedLengthsArray);

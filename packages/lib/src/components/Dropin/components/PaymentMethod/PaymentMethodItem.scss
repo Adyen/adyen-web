@@ -157,7 +157,7 @@
     overflow: hidden;
 
     & .adyen-checkout__payment-method__brand-number {
-        color: #99a3ad;
+        color: $color-gray-darker;
         font-size: 13px;
     }
 }

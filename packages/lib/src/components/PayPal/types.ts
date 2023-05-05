@@ -86,6 +86,12 @@ interface PayPalCommonProps {
      */
     blockPayPalVenmoButton?: boolean;
 
+    /*
+     * Set to true to force the UI to load Paypal Messages Component
+     * @defaultValue false
+     */
+    enableMessages?: boolean;
+
     /**
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
      */

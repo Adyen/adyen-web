@@ -1,5 +1,6 @@
 import CURRENCY_CODES from './constants/currency-codes';
 import CURRENCY_DECIMALS from './constants/currency-decimals';
+import { currencyMinorUnitsConfig } from './constants/currency-minor-units';
 
 /**
  * @internal
@@ -37,11 +38,12 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
     const decimalAmount = getDecimalAmount(stringAmount, currencyCode);
     const formattedLocale = locale.replace('_', '-');
 
+    const modifiedOptions = currencyMinorUnitsConfig[currencyCode] ? { ...options, ...currencyMinorUnitsConfig[currencyCode] } : options;
     const localeOptions = {
         style: 'currency',
         currency: currencyCode,
         currencyDisplay: 'symbol',
-        ...options
+        ...modifiedOptions
     };
 
     try {

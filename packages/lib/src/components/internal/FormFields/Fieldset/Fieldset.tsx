@@ -14,16 +14,16 @@ export default function Fieldset({ children, classNameModifiers = [], label, rea
     const { i18n } = useCoreContext();
 
     return (
-        <div
+        <fieldset
             className={cx([
                 'adyen-checkout__fieldset',
                 ...classNameModifiers.map(m => `adyen-checkout__fieldset--${m}`),
                 { 'adyen-checkout__fieldset--readonly': readonly }
             ])}
         >
-            {label && <div className="adyen-checkout__fieldset__title">{i18n.get(label)}</div>}
+            {label && <legend className="adyen-checkout__fieldset__title">{i18n.get(label)}</legend>}
 
             <div className="adyen-checkout__fieldset__fields">{children}</div>
-        </div>
+        </fieldset>
     );
 }

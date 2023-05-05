@@ -8,13 +8,15 @@ import { selectOne } from '../components/internal/SecuredFields/lib/utilities/do
 export const setFocusOnField = (holder, fieldToFocus) => {
     const pdHolder = selectOne(document, holder);
 
-    if (fieldToFocus === 'country' || fieldToFocus === 'stateOrProvince') {
+    const actualFieldToFocus = fieldToFocus === 'issuer' ? 'issuer-list' : fieldToFocus;
+
+    if (actualFieldToFocus === 'country' || actualFieldToFocus === 'stateOrProvince' || actualFieldToFocus === 'issuer-list') {
         // Set focus on dropdown
-        const field: HTMLElement = selectOne(pdHolder, `.adyen-checkout__field--${fieldToFocus} .adyen-checkout__dropdown__button`);
+        const field: HTMLElement = selectOne(pdHolder, `.adyen-checkout__field--${actualFieldToFocus} .adyen-checkout__filter-input`);
         field?.focus();
     } else {
         // Set focus on input
-        const field: HTMLElement = selectOne(pdHolder, `[name="${fieldToFocus}"]`);
+        const field: HTMLElement = selectOne(pdHolder, `[name="${actualFieldToFocus}"]`);
         field?.focus();
     }
 };

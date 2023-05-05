@@ -148,6 +148,7 @@ export interface StoredPaymentMethod extends PaymentMethod {
 
     /**
      * A unique identifier of this stored payment method.
+     * Mapped from 'storedPaymentMethod.id'
      */
     storedPaymentMethodId?: string;
 }

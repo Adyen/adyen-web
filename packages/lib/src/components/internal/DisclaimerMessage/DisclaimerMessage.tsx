@@ -1,45 +1,45 @@
 import { h } from 'preact';
 import { isValidHttpUrl } from '../../../utils/isValidURL';
 import './DisclaimerMessage.scss';
-
+import { interpolateElement } from '../../../language/utils';
 export interface DisclaimerMsgObject {
     message: string;
     linkText: string;
     link: string;
 }
 
-interface DisclaimerMessageProps {
-    disclaimer: DisclaimerMsgObject;
+interface InternalDisclaimerMsgObject {
+    message: string;
+    urls: Array<string>;
 }
 
+function render(message: string, urls: Array<string>) {
+    return (
+        <span className="adyen-checkout-disclaimer__label">
+            {interpolateElement(
+                message,
+                urls.map(url => translation => (
+                    <a className="adyen-checkout__link" href={url} target="_blank" rel="noopener noreferrer">
+                        {translation}
+                    </a>
+                ))
+            )}
+        </span>
+    );
+}
 /* eslint-disable */
 /**
- * Expects a config object with this shape:
- *  disclaimerMessage: {
- *      message: 'By continuing you accept the %{linkText} of MyStore',
- *      linkText: 'terms and conditions',
- *      link: 'https://www.adyen.com'
+ *  props: {
+ *    message: 'By continuing you agree with the %#terms and conditions%#',
+ *    urls: ['https://www.adyen.com']
  *  }
+ *  String inside the '%#' token pair will be rendered as an anchor element.
  */
 /* eslint-enable */
-export default function DisclaimerMessage({ disclaimer }: DisclaimerMessageProps) {
-    const messageIsStr = typeof disclaimer.message === 'string';
-    const linkTextIsStr = typeof disclaimer.linkText === 'string';
-    if (!messageIsStr || !linkTextIsStr) return null;
+export default function DisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
+    const messageIsStr = typeof message === 'string';
+    const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));
+    if (!messageIsStr || !validUrls) return null;
 
-    const [textBeforeLink, textAfterLink] = disclaimer.message.split('%{linkText}');
-
-    if (isValidHttpUrl(disclaimer.link)) {
-        return (
-            <span className="adyen-checkout-disclaimer__label">
-                {textBeforeLink}
-                <a className="adyen-checkout__link" target="_blank" rel="noopener noreferrer" href={disclaimer.link}>
-                    {disclaimer.linkText}
-                </a>
-                {textAfterLink}
-            </span>
-        );
-    }
-
-    return null;
+    return render(message, urls);
 }

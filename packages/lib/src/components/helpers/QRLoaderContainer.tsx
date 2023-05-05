@@ -66,6 +66,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
                     countdownTime={this.props.countdownTime}
                     instructions={this.props.instructions}
                     onActionHandled={this.props.onActionHandled}
+                    brandName={this.displayName}
                 />
             </CoreProvider>
         );

@@ -12,10 +12,10 @@ class ShopperCard {
     public tokenId?: string;
     public isExpired: boolean;
 
-    private panExpirationMonth: string;
-    private panExpirationYear: string;
-    private descriptorName?: string;
-    private status?: DigitalCardStatus = null;
+    private readonly panExpirationMonth: string;
+    private readonly panExpirationYear: string;
+    private readonly descriptorName?: string;
+    private readonly status?: DigitalCardStatus = null;
 
     constructor(maskedCard: SrcCard, scheme: ClickToPayScheme, srcCorrelationId: string) {
         this.dateOfCardLastUsed = maskedCard.dateOfCardLastUsed;
@@ -34,7 +34,7 @@ class ShopperCard {
     }
 
     get title() {
-        return this.descriptorName || SchemeNames[this.scheme];
+        return this.scheme === 'visa' ? SchemeNames[this.scheme] : this.descriptorName || SchemeNames[this.scheme];
     }
 
     get isDcfPopupEmbedded(): boolean {

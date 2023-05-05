@@ -4,13 +4,12 @@ import { render, screen } from '@testing-library/preact';
 
 describe('DisclaimerMessage', () => {
     const disclaimerMessage = {
-        message: 'By continuing you accept the %{linkText} of MyStore',
-        linkText: 'terms and conditions',
-        link: 'https://www.adyen.com'
+        message: 'By continuing you accept the %#terms and conditions%# of MyStore',
+        urls: ['https://www.adyen.com']
     };
 
     test('Renders the DisclaimerMessage with text before and after the link', () => {
-        render(<DisclaimerMessage disclaimer={disclaimerMessage} />);
+        render(<DisclaimerMessage {...disclaimerMessage} />);
         expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
             'By continuing you accept the terms and conditions of MyStore'
         );
@@ -19,9 +18,9 @@ describe('DisclaimerMessage', () => {
 
     test('Renders the DisclaimerMessage just with text before the link', () => {
         const nuMsg = { ...disclaimerMessage };
-        nuMsg.message = 'By continuing you accept the %{linkText}';
+        nuMsg.message = 'By continuing you accept the %#terms and conditions%#';
 
-        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        render(<DisclaimerMessage {...nuMsg} />);
 
         /* eslint-disable-next-line */
         expect(screen.queryByText('By continuing', { exact: false })).toBeTruthy(); // presence
@@ -34,9 +33,9 @@ describe('DisclaimerMessage', () => {
 
     test("Doesn't render the DisclaimerMessage because the link is not https", () => {
         const nuMsg = { ...disclaimerMessage };
-        nuMsg.link = 'http://www.adyen.com';
+        nuMsg.urls = ['http://www.adyen.com'];
 
-        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        render(<DisclaimerMessage {...nuMsg} />);
         expect(screen.queryByText('By continuing', { exact: false })).toBeNull(); // non-presence
     });
 
@@ -44,9 +43,9 @@ describe('DisclaimerMessage', () => {
         const nuMsg = { ...disclaimerMessage };
 
         /* eslint-disable-next-line */
-        nuMsg.linkText = <script>alert("busted")</script>;
+        nuMsg.message = <script>alert("busted")</script>;
 
-        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        render(<DisclaimerMessage {...nuMsg} />);
         expect(screen.queryByText('By continuing', { exact: false })).toBeNull(); // non-presence
     });
 
@@ -55,7 +54,7 @@ describe('DisclaimerMessage', () => {
         // @ts-ignore allow assignment
         nuMsg.message = {};
 
-        render(<DisclaimerMessage disclaimer={nuMsg} />);
+        render(<DisclaimerMessage {...nuMsg} />);
         expect(screen.queryByRole('link')).toBeNull(); // non-presence
     });
 });

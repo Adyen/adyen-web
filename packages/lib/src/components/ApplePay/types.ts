@@ -1,4 +1,3 @@
-import { PaymentAmount } from '../../types';
 import { UIElementProps } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,8 +39,6 @@ export interface ApplePayElementProps extends UIElementProps {
      */
     version?: number;
 
-    amount: PaymentAmount;
-
     /**
      * The merchant’s two-letter ISO 3166 country code.
      */
@@ -58,7 +55,10 @@ export interface ApplePayElementProps extends UIElementProps {
      */
     totalPriceStatus?: ApplePayJS.ApplePayLineItemType;
 
-    configuration: {
+    /**
+     * ApplePay configuration sent by the /paymentMethods response
+     */
+    configuration?: {
         merchantName?: string;
         merchantId?: string;
     };
@@ -98,6 +98,19 @@ export interface ApplePayElementProps extends UIElementProps {
      */
     supportedNetworks?: string[];
 
+    /**
+     * ApplePayRecurringPaymentRequest - Represents a request to set up a recurring payment, typically a subscription.
+     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrecurringpaymentrequest}
+     */
+    recurringPaymentRequest?: {
+        paymentDescription: string;
+        regularBilling: ApplePayJS.ApplePayLineItem;
+        trialBilling?: ApplePayJS.ApplePayLineItem;
+        billingAgreement?: string;
+        managementURL: string;
+        tokenNotificationURL?: string;
+    };
+
     // Requested Billing and Shipping Contact Information
 
     /**
@@ -129,9 +142,6 @@ export interface ApplePayElementProps extends UIElementProps {
     // Events
 
     onClick?: (resolve, reject) => void;
-
-    /** @internal */
-    onCancel?: () => void;
 
     onAuthorized?: OnAuthorizedCallback;
 

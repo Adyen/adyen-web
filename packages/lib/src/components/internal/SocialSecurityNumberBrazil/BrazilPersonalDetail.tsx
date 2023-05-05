@@ -5,12 +5,13 @@ import { h } from 'preact';
 
 export function BrazilPersonalDetail(props) {
     const { i18n, data, handleChangeFor, errors, valid } = props;
+    const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);
     return (
         <div className={'adyen-checkout__fieldset adyen-checkout__fieldset--address adyen-checkout__fieldset--personalDetails'}>
             <div className="adyen-checkout__fieldset__title">{i18n.get('personalDetails')}</div>
 
             <div className="adyen-checkout__fieldset__fields">
-                <Field label={i18n.get('firstName')} classNameModifiers={['firstName', 'col-50']} errorMessage={!!errors.firstName}>
+                <Field label={i18n.get('firstName')} classNameModifiers={['firstName', 'col-50']} errorMessage={getErrorMessage(errors.firstName)}>
                     {renderFormField('text', {
                         name: 'firstName',
                         autocorrect: 'off',
@@ -21,7 +22,7 @@ export function BrazilPersonalDetail(props) {
                     })}
                 </Field>
 
-                <Field label={i18n.get('lastName')} classNameModifiers={['lastName', 'col-50']} errorMessage={!!errors.lastName}>
+                <Field label={i18n.get('lastName')} classNameModifiers={['lastName', 'col-50']} errorMessage={getErrorMessage(errors.lastName)}>
                     {renderFormField('text', {
                         name: 'lastName',
                         autocorrect: 'off',
