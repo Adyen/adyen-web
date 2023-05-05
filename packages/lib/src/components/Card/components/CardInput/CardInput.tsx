@@ -18,7 +18,6 @@ import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
-import getImage from '../../../../utils/get-image';
 import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstField } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
@@ -28,11 +27,13 @@ import { getPartialAddressValidationRules } from '../../../internal/Address/vali
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
+import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
     const isValidating = useRef(false);
+    const getImage = useImage();
 
     /** SR stuff */
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
@@ -227,7 +228,13 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             CIExtensions(
                 props,
                 { sfp },
-                { dualBrandSelectElements, setDualBrandSelectElements, setSelectedBrandValue, issuingCountryCode, setIssuingCountryCode },
+                {
+                    dualBrandSelectElements,
+                    setDualBrandSelectElements,
+                    setSelectedBrandValue,
+                    issuingCountryCode,
+                    setIssuingCountryCode
+                },
                 hasPanLengthRef
             ),
         [dualBrandSelectElements, issuingCountryCode]
@@ -493,7 +500,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
-                    icon: getImage({ loadingContext: props.loadingContext, imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })('lock')
                 })}
         </Fragment>
     );

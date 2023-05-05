@@ -44,14 +44,14 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
     render() {
         if (this.props.reference) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <BankTransferResult ref={this.handleRef} {...this.props} />
                 </CoreProvider>
             );
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.showEmailAddress && <BankTransferInput ref={this.handleRef} {...this.props} onChange={this.setState} />}
                 {this.props.showPayButton && (
                     <RedirectButton {...this.props} name={this.displayName} onSubmit={this.submit} payButton={this.payButton} />

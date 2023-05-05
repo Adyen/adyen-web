@@ -6,9 +6,9 @@ import useCoreContext from '../../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../../utils/useForm';
 import ShopperCard from '../../../models/ShopperCard';
 import useClickToPayContext from '../../../context/useClickToPayContext';
-import getImage from '../../../../../../../utils/get-image';
 import './CtPCardsList.scss';
 import isMobile from '../../../../../../../utils/isMobile';
+import useImage from '../../../../../../../core/Context/useImage';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -25,6 +25,7 @@ const schema = ['srcDigitalCardId'];
 
 const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
     const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
         schema,

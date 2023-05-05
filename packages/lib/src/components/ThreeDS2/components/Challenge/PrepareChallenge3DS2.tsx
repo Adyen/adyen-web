@@ -5,9 +5,9 @@ import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
-import { getImageUrl } from '../../../../utils/get-image';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
+import useImage from '../../../../core/Context/useImage';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -73,6 +73,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     render({ onActionHandled }, { challengeData }) {
+        const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
                 <DoChallenge3DS2
@@ -123,7 +124,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 <div className="adyen-checkout__threeds2-challenge-error">
                     <Img
                         className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                        src={getImageUrl({ loadingContext: this.props.loadingContext, imageFolder: 'components/' })('error')}
+                        src={getImage({
+                            imageFolder: 'components/'
+                        })('error')}
                         alt={''}
                     />
                     <div className="adyen-checkout__status__text">
