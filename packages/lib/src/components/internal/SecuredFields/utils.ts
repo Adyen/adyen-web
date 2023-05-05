@@ -55,7 +55,7 @@ export const getCardImageUrl = (brand, resources: Resources) => {
         extension: 'svg'
     };
 
-    return resources.getImage(imageOptions)(type);
+    return resources && resources.getImage(imageOptions)(type);
 };
 
 // REGULAR "UTIL" UTILS
