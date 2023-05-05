@@ -261,7 +261,6 @@ export interface BrowserInfo {
     colorDepth: number;
     language: string;
     javaEnabled: boolean;
-    javaScriptEnabled?: boolean;
     screenHeight: number;
     screenWidth: number;
     userAgent: string;
