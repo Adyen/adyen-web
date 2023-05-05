@@ -54,6 +54,10 @@ class ClickToPayService implements IClickToPayService {
         this.environment = environment;
     }
 
+    public get shopperAccountFound(): boolean {
+        return [CtpState.Ready, CtpState.ShopperIdentified].includes(this.state);
+    }
+
     public get schemes(): string[] {
         return this.sdkLoader.schemes;
     }

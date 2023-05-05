@@ -21,8 +21,7 @@ const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProp
             try {
                 await startIdentityValidation();
             } catch (error) {
-                if (error instanceof SrciError)
-                    console.warn(`CtP - Identity Validation error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
+                if (error instanceof SrciError) console.warn(`CtP - Identity Validation error: ${error.toString()}`);
                 logoutShopper();
             }
         }

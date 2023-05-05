@@ -1,12 +1,15 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { ClickToPayElementProps } from './types';
+import { ClickToPayElementProps, ClickToPayPaymentData } from './types';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../Card/components/ClickToPay/services/types';
 import { createClickToPayService } from '../Card/components/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayConfiguration } from '../Card/types';
 import ClickToPayProvider from '../Card/components/ClickToPay/context/ClickToPayProvider';
 import ClickToPayComponent from '../Card/components/ClickToPay';
+import { CtpState } from '../Card/components/ClickToPay/services/ClickToPayService';
+import collectBrowserInfo from '../../utils/browserInfo';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     public static type = 'clicktopay';
@@ -28,6 +31,34 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
         this.clickToPayService?.initialize();
     }
 
+    get isValid() {
+        return true;
+    }
+
+    get browserInfo() {
+        return collectBrowserInfo();
+    }
+
+    public submit(): void {
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Calling submit() is not supported for this payment method'));
+    }
+
+    public formatData(): ClickToPayPaymentData {
+        const { srcScheme, srcCorrelationId, srcTokenReference, srcCheckoutPayload, srcDigitalCardId } = this.state.data;
+        return {
+            paymentMethod: {
+                type: ClickToPayElement.type,
+                ...(srcScheme && { srcScheme }),
+                ...(srcCorrelationId && { srcCorrelationId }),
+                ...(srcTokenReference && { srcTokenReference }),
+                ...(srcCheckoutPayload && { srcCheckoutPayload }),
+                ...(srcDigitalCardId && { srcDigitalCardId })
+            },
+            browserInfo: this.browserInfo,
+            origin: !!window && window.location.origin
+        };
+    }
+
     protected formatProps(props: ClickToPayElementProps) {
         return {
             ...props,
@@ -36,6 +67,25 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
             telephoneNumber: props.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
             locale: props.locale || props.i18n?.locale?.replace('-', '_')
         };
+    }
+
+    /**
+     * Method used to let the merchant know if the shopper have a valid CtP accoubt
+     *
+     * Resolves Promise if the Shopper has cookies OR has valid CtP account
+     * Rejects Promise if account isn't found or if Login screen is triggered
+     */
+    public async isAvailable(): Promise<boolean> {
+        if (this.clickToPayService.shopperAccountFound) {
+            return Promise.resolve(true);
+        }
+
+        return new Promise((resolve, reject) => {
+            this.clickToPayService.subscribeOnStateChange((state: CtpState) => {
+                if (this.clickToPayService.shopperAccountFound) resolve(true);
+                if (state === CtpState.NotAvailable || state === CtpState.Login || state === CtpState.Idle) reject(false);
+            });
+        });
     }
 
     private handleClickToPaySubmit = (payload: ClickToPayCheckoutPayload) => {
@@ -52,7 +102,6 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}
                     setClickToPayRef={this.setComponentRef}
-                    // setClickToPayRef={setClickToPayRef}
                     onSetStatus={this.setElementStatus}
                     onSubmit={this.handleClickToPaySubmit}
                     onError={this.handleError}

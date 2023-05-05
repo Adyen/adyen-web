@@ -35,7 +35,6 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
 
     const handleKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-            console.log('key press');
             if (props?.onKeyPress) props.onKeyPress(event);
         },
         [props?.onKeyPress]
