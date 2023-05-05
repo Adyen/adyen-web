@@ -28,7 +28,7 @@ import { getPartialAddressValidationRules } from '../../../internal/Address/vali
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
-import { getErrorArrayDifferences } from '../../../../core/Errors/utils';
+import { getArrayDifferences } from '../../../../utils/arrayUtils';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -379,7 +379,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 break;
             /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
             case ERROR_ACTION_BLUR_SCENARIO: {
-                const difference = getErrorArrayDifferences(currentErrorsSortedByLayout, previousSortedErrors);
+                const difference = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
                 const latestErrorMsg = difference?.[0];
 

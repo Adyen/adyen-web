@@ -18,7 +18,7 @@ import {
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { ComponentMethodsRef } from '../../types';
-import { enhanceErrorObjectKeys, getErrorArrayDifferences } from '../../../core/Errors/utils';
+import { enhanceErrorObjectKeys } from '../../../core/Errors/utils';
 import { GenericError, SetSRMessagesReturnObject, SortedErrorObject } from '../../../core/Errors/types';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
@@ -28,6 +28,7 @@ import { COMPANY_DETAILS_SCHEMA } from '../CompanyDetails/CompanyDetails';
 import { setFocusOnField } from '../../../utils/setFocus';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { usePrevious } from '../../../utils/hookUtils';
+import { getArrayDifferences } from '../../../utils/arrayUtils';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -187,7 +188,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
             case ERROR_ACTION_BLUR_SCENARIO: {
-                const difference = getErrorArrayDifferences(currentErrorsSortedByLayout, previousSortedErrors);
+                const difference = getArrayDifferences(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
                 const latestErrorMsg = difference?.[0];
 
