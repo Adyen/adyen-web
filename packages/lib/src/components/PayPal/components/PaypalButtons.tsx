@@ -40,15 +40,10 @@ export default function PaypalButtons({
             onApprove
         };
 
-        console.log(`PayPal - Funding source ${fundingSource}`);
-        console.log('PayPal - Config passed to paypalRef.Buttons', configuration);
-
         const button = paypalRef.Buttons(configuration);
 
         if (button.isEligible()) {
             button.render(buttonRef.current);
-        } else {
-            console.log(`PayPal - Funding source ${fundingSource} is NOT ELIGIBLE`);
         }
     };
 
