@@ -79,8 +79,11 @@ describe('Email regex', () => {
         // Domain part components must not start with a `-` or end with it
         expect(email.test('john.smith@abc-12CB-.co')).toBeFalsy();
         expect(email.test('john.smith@-12CB-FVCbh45.co')).toBeFalsy();
-        // Domain last component must be alphabetical string.
-        expect(email.test('john.smith@abc-12CB-FVCbh45.co5')).toBeFalsy();
+        expect(email.test('john.smith@abc-12CB.co...')).toBeFalsy();
+        // Domain last component cannot contain number.
+        expect(email.test('john.smith@abc-12CB-FVCbh45.777')).toBeFalsy();
+        expect(email.test('john.smith@abc-12CB-FVCbh45.1com')).toBeFalsy();
+        expect(email.test('john.smith@abc-12CB-FVCbh45.c2om')).toBeFalsy();
         // Domain part before and after dot should be at least 2 characters
         expect(email.test('john.smith@1.c')).toBeFalsy();
         // Domain part can be an IP address of four of 1-3 long numbers separated by a dot.
