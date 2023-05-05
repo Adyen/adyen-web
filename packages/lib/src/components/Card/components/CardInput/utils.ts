@@ -16,7 +16,6 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import { useEffect, useRef } from 'preact/hooks';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -172,17 +171,4 @@ export const handlePartialAddressMode = (addressMode: AddressModeOptions): Addre
 // Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
 export function lookupBlurBasedErrors(errorCode) {
     return !['error.va.sf-cc-num.03', 'error.va.sf-cc-dat.01', 'error.va.sf-cc-dat.02', 'error.va.sf-cc-dat.03'].includes(errorCode);
-}
-
-// Hook
-export function usePrevious<T>(value: T): T {
-    const ref: any = useRef<T>();
-
-    // Store current value in ref
-    useEffect(() => {
-        ref.current = value;
-    }, [value]); // Only re-run if value changes
-
-    // Return previous value
-    return ref.current;
 }

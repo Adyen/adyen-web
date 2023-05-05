@@ -180,3 +180,23 @@ export const enhanceErrorObjectKeys = (errorObj, keyPrefix) => {
 
     return enhancedObj;
 };
+
+// Find the difference: what's in the new array that wasn't in the old array?
+function getErrorArrayDifference(currentArray, previousArray) {
+    return currentArray.filter(({ field: id1 }) => !previousArray.some(({ field: id2 }) => id2 === id1));
+}
+
+// Pass 2 arrays of similar objects - and compare for differences
+export function getErrorArrayDifferences(currentArray: SortedErrorObject[], previousArray: SortedErrorObject[]): SortedErrorObject[] {
+    let difference;
+
+    // If nothing to compare - take the new item...
+    if (currentArray.length === 1 && !previousArray) {
+        difference = currentArray;
+    }
+    // .. else, find the difference: what's in the new array that wasn't in the old array?
+    if (currentArray.length > previousArray?.length) {
+        difference = getErrorArrayDifference(currentArray, previousArray);
+    }
+    return difference;
+}

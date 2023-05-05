@@ -18,15 +18,16 @@ import {
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
 import { ComponentMethodsRef } from '../../types';
-import { enhanceErrorObjectKeys } from '../../../core/Errors/utils';
-import { GenericError, SetSRMessagesReturnObject } from '../../../core/Errors/types';
+import { enhanceErrorObjectKeys, getErrorArrayDifferences } from '../../../core/Errors/utils';
+import { GenericError, SetSRMessagesReturnObject, SortedErrorObject } from '../../../core/Errors/types';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import Specifications from '../Address/Specifications';
 import { PERSONAL_DETAILS_SCHEMA } from '../PersonalDetails/PersonalDetails';
 import { COMPANY_DETAILS_SCHEMA } from '../CompanyDetails/CompanyDetails';
 import { setFocusOnField } from '../../../utils/setFocus';
-import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
+import { usePrevious } from '../../../utils/hookUtils';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -48,7 +49,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const isValidating = useRef(false);
 
     /** SR stuff */
-    const { setSRMessagesFromObjects, shouldMoveFocusSR } = useSRPanelContext();
+    const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
     const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
@@ -83,6 +84,9 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
     const [status, setStatus] = useState('ready');
 
+    // Relates to onBlur errors
+    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
+
     // Expose methods expected by parent
     openInvoiceRef.current.showValidation = () => {
         isValidating.current = true;
@@ -96,6 +100,9 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     };
 
     openInvoiceRef.current.setStatus = setStatus;
+
+    // Get the previous value (Relates to onBlur errors)
+    const previousSortedErrors = usePrevious(sortedErrorList);
 
     useEffect(() => {
         const fieldsetsAreValid: boolean = checkFieldsets();
@@ -158,14 +165,48 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             countrySpecificLabels
         });
 
-        // A call to focus the first field in error will always follow the call to validate the whole form
-        if (srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
-            // Focus first field in error, if required
-            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__open-invoice', srPanelResp.fieldToFocus);
-            // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
-            setTimeout(() => {
-                isValidating.current = false;
-            }, 300);
+        // Relates to onBlur errors
+        const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
+
+        // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
+        setSortedErrorList(currentErrorsSortedByLayout); // Relates to onBlur errors
+
+        /**
+         * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
+         */
+        switch (srPanelResp?.action) {
+            // A call to focus the first field in error will always follow the call to validate the whole form
+            case ERROR_ACTION_FOCUS_FIELD:
+                // Focus first field in error, if required
+                if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__open-invoice', srPanelResp.fieldToFocus);
+                // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
+                setTimeout(() => {
+                    isValidating.current = false;
+                }, 300);
+                break;
+
+            /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
+            case ERROR_ACTION_BLUR_SCENARIO: {
+                const difference = getErrorArrayDifferences(currentErrorsSortedByLayout, previousSortedErrors);
+
+                const latestErrorMsg = difference?.[0];
+
+                if (latestErrorMsg) {
+                    // Is error actually a blur based one - depends on the specific fields in a component as to whether they validate on blur
+                    const isBlurBasedError = latestErrorMsg.errorCode === 'shopperEmail.invalid';
+
+                    // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
+                    const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
+                    setSRMessagesFromStrings(latestSRError);
+                } else {
+                    // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
+                    clearSRPanel();
+                }
+
+                break;
+            }
+            default:
+                break;
         }
 
         props.onChange({ data: newData, errors, valid, isValid });
