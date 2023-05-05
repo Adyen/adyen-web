@@ -258,11 +258,11 @@ export interface OrderStatus {
  */
 export interface BrowserInfo {
     acceptHeader: string;
-    colorDepth: string;
+    colorDepth: number;
     language: string;
     javaEnabled: boolean;
-    screenHeight: string;
-    screenWidth: string;
+    screenHeight: number;
+    screenWidth: number;
     userAgent: string;
     timeZoneOffset: number;
 }
