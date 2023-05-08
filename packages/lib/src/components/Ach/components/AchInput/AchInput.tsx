@@ -217,6 +217,7 @@ const extractPropsForSFP = (props: ACHInputProps) => {
         showWarnings: props.showWarnings,
         styles: props.styles,
         type: props.type,
-        forceCompat: props.forceCompat
+        forceCompat: props.forceCompat,
+        resources: props.resources
     };
 };

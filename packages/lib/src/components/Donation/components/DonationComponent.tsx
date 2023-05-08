@@ -4,14 +4,16 @@ import CampaignContainer from './CampaignContainer';
 import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
-import { getImageUrl } from '../../../utils/get-image';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import '../Donation.scss';
 import DisclaimerMessage from '../../internal/DisclaimerMessage';
 import { DonationComponentProps } from './types';
+import useImage from '../../../core/Context/useImage';
+
 export default function DonationComponent(props: DonationComponentProps) {
     const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
     const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
     const { currency } = amounts;
     const [status, setStatus] = useState('ready');
     const [isValid, setIsValid] = useState(false);
@@ -51,7 +53,7 @@ export default function DonationComponent(props: DonationComponentProps) {
             <div className="adyen-checkout__adyen-giving">
                 <Img
                     className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                    src={getImageUrl({ loadingContext, imageFolder: 'components/' })('error')}
+                    src={getImage({ loadingContext, imageFolder: 'components/' })('error')}
                     alt={i18n.get('error.message.unknown')}
                 />
                 <div className="adyen-checkout__status__text">{i18n.get('error.message.unknown')}</div>
@@ -64,7 +66,7 @@ export default function DonationComponent(props: DonationComponentProps) {
             <div className="adyen-checkout__adyen-giving">
                 <Img
                     className="adyen-checkout__status__icon adyen-checkout__status__icon--success"
-                    src={getImageUrl({ loadingContext, imageFolder: 'components/' })('heart')}
+                    src={getImage({ loadingContext, imageFolder: 'components/' })('heart')}
                     alt={i18n.get('thanksForYourSupport')}
                 />
 

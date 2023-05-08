@@ -48,7 +48,7 @@ class DonationElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
             </CoreProvider>
         );

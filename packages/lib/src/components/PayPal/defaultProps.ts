@@ -44,8 +44,10 @@ const defaultProps: PayPalElementProps = {
     blockPayPalCreditButton: false,
 
     blockPayPalPayLaterButton: false,
-    
+
     enableMessages: false,
+
+    blockPayPalVenmoButton: false,
 
     configuration: {
         /**

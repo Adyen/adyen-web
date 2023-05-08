@@ -8,6 +8,7 @@ import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
+import { Resources } from '../core/Context/Resources';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -58,9 +59,10 @@ export interface BaseElementProps {
     _parentInstance?: Core;
     order?: Order;
     modules?: {
-        srPanel: SRPanel;
-        analytics: Analytics;
-        risk: RiskElement;
+        srPanel?: SRPanel;
+        analytics?: Analytics;
+        resources?: Resources;
+        risk?: RiskElement;
     };
     isDropin?: boolean;
 }

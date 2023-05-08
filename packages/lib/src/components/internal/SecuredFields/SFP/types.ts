@@ -2,6 +2,7 @@ import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import { Language } from '../../../../language/Language';
+import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
 
 /**
@@ -41,6 +42,7 @@ export interface SFPProps {
     trimTrailingSeparator?: boolean;
     type: string;
     render: () => {};
+    resources: Resources;
     maskSecurityCode: boolean;
     disableIOSArrowKeys: (obj: TouchStartEventObj) => void | null;
 }
