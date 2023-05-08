@@ -92,6 +92,7 @@ export class AchElement extends UIElement<AchElementProps> {
                         onChange={this.setState}
                         onSubmit={this.submit}
                         payButton={this.payButton}
+                        resources={this.resources}
                     />
                 )}
             </CoreProvider>
