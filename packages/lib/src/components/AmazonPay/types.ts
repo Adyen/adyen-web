@@ -17,7 +17,7 @@ type ChargePermissionType = 'OneTime' | 'Recurring';
 type FrequencyUnit = 'Year' | 'Month' | 'Week' | 'Day' | 'Variable';
 export type Currency = 'EUR' | 'GBP' | 'USD';
 export type Region = 'EU' | 'UK' | 'US';
-export type SupportedLocale = typeof SUPPORTED_LOCALES_EU[number] | typeof SUPPORTED_LOCALES_US[number];
+export type SupportedLocale = (typeof SUPPORTED_LOCALES_EU)[number] | (typeof SUPPORTED_LOCALES_US)[number];
 
 export interface RecurringMetadata {
     frequency: {

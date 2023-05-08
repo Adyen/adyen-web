@@ -12,15 +12,8 @@ import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } f
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
 import { SetSRMessagesReturnObject, SortedErrorObject } from '../../../../core/Errors/types';
-import {
-    handlePartialAddressMode,
-    extractPropsForCardFields,
-    extractPropsForSFP,
-    getLayout,
-    usePrevious,
-    lookupBlurBasedErrors,
-    mapFieldKey
-} from './utils';
+import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, lookupBlurBasedErrors, mapFieldKey } from './utils';
+import { usePrevious } from '../../../../utils/hookUtils';
 import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
@@ -35,6 +28,7 @@ import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../.
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 import useImage from '../../../../core/Context/useImage';
+import { getArrayDifferences } from '../../../../utils/arrayUtils';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -392,21 +386,12 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                 break;
             /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
             case ERROR_ACTION_BLUR_SCENARIO: {
-                let difference;
-
-                // If nothing to compare - take the new item...
-                if (currentErrorsSortedByLayout.length === 1 && !previousSortedErrors) {
-                    difference = currentErrorsSortedByLayout;
-                }
-                // .. else, find the difference: what's in the new array that wasn't in the old array?
-                if (currentErrorsSortedByLayout.length > previousSortedErrors?.length) {
-                    difference = currentErrorsSortedByLayout.filter(({ field: id1 }) => !previousSortedErrors.some(({ field: id2 }) => id2 === id1));
-                }
+                const difference = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
                 const latestErrorMsg = difference?.[0];
 
                 if (latestErrorMsg) {
-                    // Use the error code to look up whether error is actually a blur base one (most are but some SF ones aren't)
+                    // Use the error code to look up whether error is actually a blur based one (most are but some SF ones aren't)
                     const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
 
                     // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
