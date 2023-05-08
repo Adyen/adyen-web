@@ -13,6 +13,7 @@ export interface AddressProps {
     countryCode?: string;
     data?: object;
     label?: string;
+    onAddressLookup?: (string) => Array<AddressLookupItem>;
     onChange: (newState) => void;
     requiredFields?: string[];
     ref?: any;
@@ -24,6 +25,11 @@ export interface AddressProps {
     payButton?: (obj) => {};
     showPayButton?: boolean;
     setComponentRef?: (ref) => void;
+}
+
+export interface AddressLookupItem extends AddressData {
+    id: string;
+    value: string;
 }
 
 export interface AddressStateError {
