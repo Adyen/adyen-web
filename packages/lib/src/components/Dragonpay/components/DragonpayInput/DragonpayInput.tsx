@@ -6,6 +6,7 @@ import Field from '../../../internal/FormFields/Field';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
+import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
@@ -20,7 +21,8 @@ export default function DragonpayInput(props: DragonpayInputProps) {
             issuer: {
                 validate: issuer => isIssuerRequired() && !!issuer,
                 modes: ['input', 'blur']
-            }
+            },
+            shopperEmail: personalDetailsValidationRules.shopperEmail
         }
     });
 
