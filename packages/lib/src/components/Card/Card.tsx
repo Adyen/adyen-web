@@ -232,6 +232,7 @@ export class CardElement extends UIElement<CardElementProps> {
                         amount={this.props.amount}
                         configuration={this.props.clickToPayConfiguration}
                         clickToPayService={this.clickToPayService}
+                        isStandaloneComponent={false}
                         setClickToPayRef={this.setClickToPayRef}
                         onSetStatus={this.setElementStatus}
                         onSubmit={this.handleClickToPaySubmit}
