@@ -42,6 +42,7 @@ export default {
     allowPrepaidCards: true, // Set to false if you don't support prepaid cards.
     billingAddressRequired: false, // A billing address should only be requested if it's required to process the transaction.
     billingAddressParameters: undefined, // The expected fields returned if billingAddressRequired is set to true.
+    assuranceDetailsRequired: false, // https://developers.google.com/pay/api/web/reference/response-objects#assurance-details-specifications
 
     emailRequired: false,
     shippingAddressRequired: false,
