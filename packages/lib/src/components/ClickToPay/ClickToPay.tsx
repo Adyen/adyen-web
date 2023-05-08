@@ -2,14 +2,13 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { ClickToPayElementProps, ClickToPayPaymentData } from './types';
-import { ClickToPayCheckoutPayload, IClickToPayService } from '../Card/components/ClickToPay/services/types';
-import { createClickToPayService } from '../Card/components/ClickToPay/services/create-clicktopay-service';
-import { ClickToPayConfiguration } from '../Card/types';
-import ClickToPayProvider from '../Card/components/ClickToPay/context/ClickToPayProvider';
-import ClickToPayComponent from '../Card/components/ClickToPay';
-import { CtpState } from '../Card/components/ClickToPay/services/ClickToPayService';
 import collectBrowserInfo from '../../utils/browserInfo';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
+import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { createClickToPayService } from '../internal/ClickToPay/services/create-clicktopay-service';
+import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
+import ClickToPayProvider from '../internal/ClickToPay/context/ClickToPayProvider';
+import ClickToPayComponent from '../internal/ClickToPay';
 
 export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     public static type = 'clicktopay';
@@ -37,10 +36,6 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
 
     get browserInfo() {
         return collectBrowserInfo();
-    }
-
-    public submit(): void {
-        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Calling submit() is not supported for this payment method'));
     }
 
     public formatData(): ClickToPayPaymentData {
@@ -95,7 +90,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <ClickToPayProvider
                     isStandaloneComponent={true}
                     configuration={this.ctpConfiguration}
