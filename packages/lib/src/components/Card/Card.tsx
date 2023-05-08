@@ -8,9 +8,9 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
-import { createClickToPayService } from './components/ClickToPay/services/create-clicktopay-service';
-import { ClickToPayCheckoutPayload, IClickToPayService } from './components/ClickToPay/services/types';
-import ClickToPayWrapper from './ClickToPayWrapper';
+import { createClickToPayService } from '../internal/ClickToPay/services/create-clicktopay-service';
+import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
+import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
