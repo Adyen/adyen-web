@@ -1,7 +1,7 @@
 import { UIElementProps } from '../types';
-import { ClickToPayConfiguration } from '../Card/types';
-import { ClickToPayCheckoutPayload } from '../Card/components/ClickToPay/services/types';
 import { BrowserInfo } from '../../types';
+import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { ClickToPayCheckoutPayload } from '../internal/ClickToPay/services/types';
 
 export type ClickToPayElementProps = UIElementProps &
     ClickToPayConfiguration & {

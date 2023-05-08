@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import {useCallback, useEffect, useRef} from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
 import { PayPalButtonsProps, FundingSource } from '../types';
 import { getStyle } from '../utils';
