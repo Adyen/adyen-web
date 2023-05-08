@@ -10,7 +10,6 @@ export function getArrayDifferences<A, S extends string>(currentArray: A[], prev
     }
     // .. else, find the difference: what's in the new array that wasn't in the old array?
     if (currentArray.length > previousArray?.length) {
-        // difference = getArrayDifference<A, B, S>(currentArray, previousArray, comparisonKey);
         difference = currentArray.filter(({ [compKey]: id1 }) => !previousArray.some(({ [compKey]: id2 }) => id2 === id1));
     }
     return difference;
