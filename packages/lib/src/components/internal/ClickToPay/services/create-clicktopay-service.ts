@@ -8,7 +8,7 @@ import { ClickToPayConfiguration, ClickToPayScheme } from '../types';
 /**
  * Creates the Click to Pay service in case the required configuration is provided
  */
-function createClickToPayService(
+export default function createClickToPayService(
     configuration: CardConfiguration,
     clickToPayConfiguration: ClickToPayConfiguration | undefined,
     environment: string
@@ -62,5 +62,3 @@ const createSchemesInitConfiguration = (configuration: CardConfiguration): Recor
     };
     return Object.keys(schemesConfig).length === 0 ? null : schemesConfig;
 };
-
-export { createClickToPayService };

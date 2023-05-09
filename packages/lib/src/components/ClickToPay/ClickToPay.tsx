@@ -5,7 +5,7 @@ import { ClickToPayElementProps, ClickToPayPaymentData } from './types';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
-import { createClickToPayService } from '../internal/ClickToPay/services/create-clicktopay-service';
+import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import ClickToPayProvider from '../internal/ClickToPay/context/ClickToPayProvider';
 import ClickToPayComponent from '../internal/ClickToPay';
