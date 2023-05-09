@@ -126,7 +126,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     }}
                     {...challengeData}
                     onActionHandled={this.onActionHandled}
-                    onSubmit={this.submitAnalytics}
+                    onSubmitAnalytics={this.submitAnalytics}
                 />
             );
         }

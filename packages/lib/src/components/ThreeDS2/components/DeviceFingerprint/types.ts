@@ -9,7 +9,7 @@ export interface DoFingerprint3DS2Props extends FingerPrintData {
     onErrorFingerprint: (rejectObject: ThreeDS2FlowObject) => void;
     showSpinner: boolean;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-    onSubmit: (w) => void;
+    onSubmitAnalytics: (w) => void;
 }
 
 export interface DoFingerprint3DS2State {
@@ -18,6 +18,7 @@ export interface DoFingerprint3DS2State {
 
 export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintProps {
     onComplete: (data: FingerprintResolveData) => void;
+    onSubmitAnalytics: (w) => void;
 }
 
 export interface PrepareFingerprint3DS2State {

@@ -45,9 +45,9 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         onActionHandled: () => {}
     };
 
-    submitAnalytics(what) {
-        console.log('### PrepareFingerprint3DS2::submitAnalytics:: what=', what);
-    }
+    public submitAnalytics = what => {
+        this.props.onSubmitAnalytics(what);
+    };
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         this.submitAnalytics(rtnObj.actionDescription);
@@ -105,8 +105,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             // TODO send log to analytics endpoint - we can use timeoutObject to set the log object's "actionType" as either “timeout" or "result”
             this.submitAnalytics(`${THREEDS2_FINGERPRINT}: onComplete, result:${JSON.stringify(finalResObject)}`);
 
-            console.debug('### PrepareFingerprint3DS2::fingerprint onComplete, result==', timeoutObject ? timeoutObject : resultObj);
-
             /**
              * For 'threeDS2' action = call to callSubmit3DS2Fingerprint
              * For 'threeDS2Fingerprint' action = equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
@@ -126,14 +124,16 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         /**
                          * Called when fingerprint times-out (which is still a valid scenario)...
                          */
-                        const errorCodeObject = handleErrorCode(fingerprint.errorCode);
-                        console.debug('### PrepareFingerprint3DS2::fingerprint timed-out:: errorCodeObject=', errorCodeObject);
-                        this.setStatusComplete(fingerprint.result);
+                        const timeoutObject = {
+                            message: `${THREEDS2_FINGERPRINT}: ${fingerprint.errorCode}`
+                        };
+
+                        this.setStatusComplete(fingerprint.result, timeoutObject);
                     }}
                     showSpinner={showSpinner}
                     {...fingerPrintData}
                     onActionHandled={this.onActionHandled}
-                    onSubmit={this.submitAnalytics}
+                    onSubmitAnalytics={this.submitAnalytics}
                 />
             );
         }

@@ -31,6 +31,10 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
+    submitAnalytics(what) {
+        console.log('### ThreeDS2DeviceFingerprint::submitAnalytics:: what=', what);
+    }
+
     onComplete(state) {
         super.onComplete(state);
         this.unmount(); // re. fixing issue around back to back fingerprinting calls
@@ -54,7 +58,13 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
          * It means the call to create this component came from the old 'threeDS2Fingerprint' action and upon completion should call the /details endpoint
          * instead of the new /submitThreeDS2Fingerprint endpoint
          */
-        return <PrepareFingerprint {...this.props} onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
+        return (
+            <PrepareFingerprint
+                {...this.props}
+                onComplete={this.props.useOriginalFlow ? this.onComplete : this.callSubmit3DS2Fingerprint}
+                onSubmitAnalytics={this.submitAnalytics}
+            />
+        );
     }
 }
 
