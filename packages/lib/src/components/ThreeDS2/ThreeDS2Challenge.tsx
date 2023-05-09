@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import PrepareChallenge from './components/Challenge';
 import { ErrorCodeObject } from './components/utils';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE_ERROR } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
@@ -32,6 +32,10 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
         type: 'ChallengeShopper'
     };
 
+    submitAnalytics(what) {
+        console.log('### ThreeDS2Challenge::submitAnalytics:: what=', what);
+    }
+
     onComplete(state) {
         if (state) super.onComplete(state);
         this.unmount(); // re. fixing issue around back to back challenge calls
@@ -48,10 +52,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
             const dataTypeForError = hasOwnProperty(this.props, 'useOriginalFlow') ? 'paymentData' : 'authorisationToken';
 
             this.props.onError({ errorCode: 'threeds2.challenge', message: `No ${dataTypeForError} received. Challenge cannot proceed` });
+
+            this.submitAnalytics(`${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`);
+
             return null;
         }
 
-        return <PrepareChallenge {...this.props} onComplete={this.onComplete} />;
+        return <PrepareChallenge {...this.props} onComplete={this.onComplete} onSubmitAnalytics={this.submitAnalytics} />;
     }
 }
 

@@ -5,6 +5,7 @@ import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { ActionHandledReturnObject } from '../types';
+import { THREEDS2_FINGERPRINT_ERROR } from './config';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
@@ -50,6 +51,9 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
                 errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
                 message: 'No paymentData received. Fingerprinting cannot proceed'
             });
+
+            this.submitAnalytics(`${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`);
+
             return null;
         }
 

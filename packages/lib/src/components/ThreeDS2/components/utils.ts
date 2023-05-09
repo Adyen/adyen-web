@@ -80,10 +80,13 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
  *     threeDSNotificationURL and threeDSServerTransID
  *  @param size - one of five possible challenge window sizes
  */
-export const prepareChallengeData = ({ token, size }): ChallengeData => {
+export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObject => {
     const decodedChallengeToken = decodeAndParseToken(token);
 
-    // TODO - handle if base64 decoding or JSON.parse has failed
+    // base64 decoding or JSON.parse has failed
+    if ('success' in decodedChallengeToken && !decodedChallengeToken.success) {
+        return decodedChallengeToken;
+    }
 
     const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken as ThreeDS2Token;
     const notificationURLOrigin = getOrigin(threeDSNotificationURL);
