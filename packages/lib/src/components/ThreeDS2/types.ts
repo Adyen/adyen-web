@@ -79,3 +79,9 @@ type CheckoutThreeDS2Action = {
     subtype: string;
     authorisationToken: string;
 };
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
+};

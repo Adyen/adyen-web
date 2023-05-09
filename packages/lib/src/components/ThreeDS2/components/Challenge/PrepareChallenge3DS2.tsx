@@ -8,6 +8,7 @@ import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
+import { ActionHandledReturnObject } from '../../../types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -53,6 +54,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
+    submitAnalytics(what) {
+        console.log('### PrepareChallenge3DS2::submitAnalytics:: what=', what);
+    }
+
+    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        this.submitAnalytics(rtnObj.actionDescription);
+        this.props.onActionHandled(rtnObj);
+    };
+
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
             /**
@@ -72,7 +82,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render({ onActionHandled }, { challengeData }) {
+    // eslint-disable-next-line no-empty-pattern
+    render({}, { challengeData }) {
         const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
@@ -114,7 +125,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={onActionHandled}
+                    onActionHandled={this.onActionHandled}
+                    onSubmit={this.submitAnalytics}
                 />
             );
         }

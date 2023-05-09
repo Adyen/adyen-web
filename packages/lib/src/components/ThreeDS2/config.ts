@@ -1,5 +1,8 @@
 import { ThreeDS2FlowObject } from './types';
 
+export const THREEDS2_FINGERPRINT = '3DS2Fingerprint';
+export const THREEDS2_FINGERPRINT_ERROR = '3DS2FingerprintError';
+
 export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;
@@ -13,12 +16,12 @@ export const CHALLENGE_TIMEOUT_REJECT_OBJECT: ThreeDS2FlowObject = {
     errorCode: 'timeout'
 };
 
-export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ThreeDS2FlowObject = {
-    result: {
-        threeDSCompInd: 'N'
-    },
-    type: 'fingerPrintResult'
-};
+// export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ThreeDS2FlowObject = {
+//     result: {
+//         threeDSCompInd: 'N'
+//     },
+//     type: 'fingerPrintResult'
+// };
 
 export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
     result: {
