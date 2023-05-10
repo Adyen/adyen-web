@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../config';
+import { CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../config';
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
@@ -167,11 +167,11 @@ export const createOldChallengeResolveData = (dataKey: string, transStatus: stri
     }
 });
 
-export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorCodeObject => {
-    const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
-    const message = ERROR_MESSAGES[errorCode] || errorDescription || unknownMessage;
-    return { errorCode, message };
-};
+// export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorCodeObject => {
+//     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
+//     const message = ERROR_MESSAGES[errorCode] || errorDescription || unknownMessage;
+//     return { errorCode, message };
+// };
 
 /**
  *

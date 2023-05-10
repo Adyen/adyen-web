@@ -3,6 +3,7 @@ import { ThreeDS2FlowObject } from './types';
 export const THREEDS2_FINGERPRINT = '3DS2Fingerprint';
 export const THREEDS2_FINGERPRINT_ERROR = '3DS2Fingerprint_Error';
 export const THREEDS2_FINGERPRINT_SUBMIT = 'callSubmit3DS2Fingerprint_Response';
+export const THREEDS2_CHALLENGE = '3DS2Challenge';
 export const THREEDS2_CHALLENGE_ERROR = '3DS2Challenge_Error';
 
 export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
@@ -33,23 +34,23 @@ export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
     errorCode: 'timeout'
 };
 
-export const ERRORS = {
-    TIME_OUT: 'timeout',
-    WRONG_ORIGIN: 'wrongOrigin',
-    HTML_ELEMENT: 'HTMLElementError',
-    WRONG_DATA_TYPE: 'wrongDataType',
-    MISSING_PROPERTY: 'missingProperty',
-    UNKNOWN: 'unknownError'
-};
-
-export const ERROR_MESSAGES = {
-    timeout: 'ThreeDS2 timed out',
-    wrongOrigin: 'Result came in the right format but not from the expected origin',
-    HTMLElementError: 'No proper HTML element was passed',
-    wrongDataType: 'Result data was not of the expected type',
-    missingProperty: 'Result data did not contain the expected properties',
-    unknownError: 'An unknown error occurred'
-};
+// export const ERRORS = {
+//     TIME_OUT: 'timeout',
+//     WRONG_ORIGIN: 'wrongOrigin',
+//     HTML_ELEMENT: 'HTMLElementError',
+//     WRONG_DATA_TYPE: 'wrongDataType',
+//     MISSING_PROPERTY: 'missingProperty',
+//     UNKNOWN: 'unknownError'
+// };
+//
+// export const ERROR_MESSAGES = {
+//     timeout: 'ThreeDS2 timed out',
+//     wrongOrigin: 'Result came in the right format but not from the expected origin',
+//     HTMLElementError: 'No proper HTML element was passed',
+//     wrongDataType: 'Result data was not of the expected type',
+//     missingProperty: 'Result data did not contain the expected properties',
+//     unknownError: 'An unknown error occurred'
+// };
 
 // Re. EMV 3-D Specification: EMVCo_3DS_Spec_210_1017.pdf
 export const CHALLENGE_WINDOW_SIZES = {

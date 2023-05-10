@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
+import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData, ErrorCodeObject } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
@@ -10,13 +10,15 @@ import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
-import { THREEDS2_CHALLENGE_ERROR } from '../../config';
+import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR } from '../../config';
+import { isValidHttpUrl } from '../../../../utils/isValidURL';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
         onComplete: () => {},
         onError: () => {},
-        onActionHandled: () => {}
+        onActionHandled: () => {},
+        isMDFlow: false
     };
 
     constructor(props) {
@@ -31,28 +33,33 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Check the structure of the created challengeData
              */
-            const { acsURL } = challengeData as ChallengeData;
-            const { acsTransID, messageVersion, threeDSServerTransID } = (challengeData as ChallengeData).cReqData;
+            // const { acsURL } = challengeData as ChallengeData;
+            // const { acsTransID, messageVersion, threeDSServerTransID } = (challengeData as ChallengeData).cReqData;
+            //
+            // /** Missing props */
+            // if (!acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
+            //     this.setStatusError({
+            //         errorInfo:
+            //             'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)',
+            //         errorObj: challengeData
+            //     });
+            //     return;
+            // }
 
-            /** Missing props */
-            if (!acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
-                this.setStatusError({
-                    errorInfo:
-                        'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)',
-                    errorObj: challengeData
-                });
-                return;
-            }
+            /* All good */
+            // this.state = {
+            //     status: 'retrievingChallengeToken',
+            //     challengeData: challengeData as ChallengeData,
+            //     errorInfo: null
+            // };
 
-            /** All good */
             this.state = {
-                status: 'retrievingChallengeToken',
-                challengeData: challengeData as ChallengeData,
-                errorInfo: null
+                status: 'init',
+                challengeData: challengeData as ChallengeData
             };
         } else {
             this.setStatusError({
-                errorInfo: 'Missing challengeToken parameter'
+                errorInfo: "Missing 'token' property from threeDS2 action"
             });
 
             // TODO send error to analytics endpoint
@@ -69,7 +76,56 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onActionHandled(rtnObj);
     };
 
-    setStatusComplete(resultObj) {
+    componentDidMount() {
+        const hasChallengeData = !('success' in this.state.challengeData && !this.state.challengeData.success);
+
+        if (hasChallengeData) {
+            /**
+             * Check the structure of the created challengeData
+             */
+            const { acsURL } = this.state.challengeData as ChallengeData;
+            const hasValidAcsURL = isValidHttpUrl(acsURL);
+
+            // Only render component if we have a acsURL.
+            if (!hasValidAcsURL) {
+                // TODO send error to analytics endpoint
+                this.submitAnalytics(`${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`);
+
+                // TODO - we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
+                //  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
+                //  but in the MDFlow we control what the onError handler does.
+
+                console.debug('### PrepareFingerprint3DS2::exiting:: no valid acsURL');
+                return;
+            }
+
+            const { acsTransID, messageVersion, threeDSServerTransID } = (this.state.challengeData as ChallengeData).cReqData;
+
+            // Only render component if we have a acsTransID, messageVersion & threeDSServerTransID
+            if (!acsTransID || !messageVersion || !threeDSServerTransID) {
+                this.setStatusError({
+                    errorInfo: 'Challenge Data missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)',
+                    errorObj: this.state.challengeData
+                });
+
+                // TODO send error to analytics endpoint
+                this.submitAnalytics(
+                    `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
+                );
+                return;
+            }
+
+            // Proceed to allow component to render
+            this.setState({ status: 'performingChallenge' });
+        } else {
+            // TODO send error to analytics endpoint 'cos base64 decoding or JSON.parse has failed on the token
+            this.submitAnalytics(`${THREEDS2_CHALLENGE_ERROR}: ${(this.state.challengeData as ErrorObject).error}`); // can be: 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
+
+            console.debug('### PrepareChallenge3DS2::exiting:: no challengeData');
+        }
+    }
+
+    setStatusComplete(resultObj, errorCodeObject: ErrorCodeObject = null) {
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the /details endpoint expects.
@@ -78,6 +134,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              */
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+
+            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
+
+            // TODO send log to analytics endpoint - we can use errorCodeObject.errorCode to set the log object's "actionType" as either “timeout" or "result”
+            this.submitAnalytics(
+                `${THREEDS2_CHALLENGE}: onComplete, result:${JSON.stringify(finalResObject)}, reason:${
+                    finalResObject.errorCode ? finalResObject.errorCode : 'process-complete'
+                }`
+            );
 
             this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
         });
@@ -91,21 +156,31 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     // eslint-disable-next-line no-empty-pattern
     render({}, { challengeData }) {
         const getImage = useImage();
-        if (this.state.status === 'retrievingChallengeToken') {
+        if (this.state.status === 'performingChallenge') {
             return (
                 <DoChallenge3DS2
                     onCompleteChallenge={(challenge: ThreeDS2FlowObject) => {
+                        let errorCodeObject: ErrorCodeObject = null;
+
                         // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
                         if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
                             // Tell the merchant there's been an error
-                            const errorCodeObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
+                            // const errorCodeObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
+                            // this.props.onError(errorCodeObject);
+
+                            errorCodeObject = {
+                                errorCode: challenge.result.errorCode,
+                                message: `${THREEDS2_CHALLENGE_ERROR}: ${
+                                    challenge.result.errorDescription ? challenge.result.errorDescription : 'no transStatus could be retrieved'
+                                }`
+                            };
                             this.props.onError(errorCodeObject);
                         }
 
                         // This is the response we were looking for
                         if (challenge.threeDSServerTransID === challengeData.cReqData.threeDSServerTransID) {
                             // Proceed with call to onAdditionalDetails
-                            this.setStatusComplete(challenge.result);
+                            this.setStatusComplete(challenge.result, errorCodeObject);
                         } else {
                             /**
                              * We suspect there is a scenario where the cRes is empty the first time causing the shopper to try to pay again, from the same
@@ -124,9 +199,20 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
                         if (hasOwnProperty(challenge, 'errorCode')) {
-                            const errorCodeObject = handleErrorCode(challenge.errorCode);
-                            this.props.onError(errorCodeObject);
-                            this.setStatusComplete(challenge.result);
+                            // const errorCodeObject = handleErrorCode(challenge.errorCode);
+                            // console.debug('### PrepareChallenge3DS2::challenge timed-out:: errorCodeObject=', errorCodeObject);
+
+                            console.log('### PrepareChallenge3DS2:::: timeout challenge obj=', challenge);
+
+                            const timeoutObject: ErrorCodeObject = {
+                                errorCode: challenge.errorCode,
+                                message: `${THREEDS2_CHALLENGE}: ${challenge.errorCode}`
+                            };
+
+                            this.props.onError(timeoutObject);
+                            // this.props.onError(errorCodeObject);
+
+                            this.setStatusComplete(challenge.result, timeoutObject);
                             return;
                         }
                     }}

@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, createOldFingerprintResolveData, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, createOldFingerprintResolveData, ErrorCodeObject, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -42,7 +42,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         onError: () => {},
         paymentData: '',
         showSpinner: true,
-        onActionHandled: () => {}
+        onActionHandled: () => {},
+        isMDFlow: false
     };
 
     public submitAnalytics = what => {
@@ -58,26 +59,41 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const hasFingerPrintData = !('success' in this.state.fingerPrintData && !this.state.fingerPrintData.success);
 
         if (hasFingerPrintData) {
-            const { threeDSMethodURL } = this.state.fingerPrintData as FingerPrintData;
+            /**
+             * Check the structure of the created fingerPrintData
+             */
+            const { threeDSMethodURL, threeDSMethodNotificationURL, postMessageDomain, threeDSServerTransID } = this.state
+                .fingerPrintData as FingerPrintData;
             const hasValid3DSMethodURL = isValidHttpUrl(threeDSMethodURL);
-
-            // TODO send error to analytics endpoint? - if any of these are false:
-            // const hasValid3DSMethodNotificationURL = isValidHttpUrl(threeDSMethodNotificationURL);
-            // const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain);
-            // const hasTransServerID = threeDSServerTransID?.length;
 
             // Only render component if we have a threeDSMethodURL. Otherwise, exit with threeDSCompInd: 'U'
             if (!hasValid3DSMethodURL) {
                 this.setStatusComplete({ threeDSCompInd: 'U' });
 
                 // TODO send error to analytics endpoint
-                this.submitAnalytics(`${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a threeDSMethodURL property`);
+                this.submitAnalytics(`${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`);
 
-                console.debug('### PrepareFingerprint3DS2::exiting:: no threeDSMethodURL');
+                // TODO - we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
+                //  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
+                //  but in the MDFlow we control what the onError handler does.
+
+                console.debug('### PrepareFingerprint3DS2::exiting:: no valid threeDSMethodURL');
                 return;
             }
 
-            // Proceed to render component
+            const hasValid3DSMethodNotificationURL = isValidHttpUrl(threeDSMethodNotificationURL);
+            const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain);
+            const hasTransServerID = threeDSServerTransID?.length;
+
+            if (!hasValid3DSMethodNotificationURL || !hasValidPostMessageDomain || !hasTransServerID) {
+                // TODO send error to analytics endpoint
+                this.submitAnalytics(
+                    `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
+                );
+                return;
+            }
+
+            // Proceed to allow component to render
             this.setState({ status: 'retrievingFingerPrint' });
         } else {
             // Only render component if we have fingerPrintData. Otherwise, exit with threeDSCompInd: 'U'
@@ -90,7 +106,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         }
     }
 
-    setStatusComplete(resultObj: ResultObject, timeoutObject = null) {
+    setStatusComplete(resultObj: ResultObject, errorCodeObject = null) {
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the endpoint expects:
@@ -100,10 +116,16 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            const finalResObject = timeoutObject ? timeoutObject : resultObj;
+            console.log('### PrepareFingerprint3DS2::setStatusComplete:: resultObj=', resultObj);
 
-            // TODO send log to analytics endpoint - we can use timeoutObject to set the log object's "actionType" as either “timeout" or "result”
-            this.submitAnalytics(`${THREEDS2_FINGERPRINT}: onComplete, result:${JSON.stringify(finalResObject)}`);
+            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
+
+            // TODO send log to analytics endpoint - we can use errorCodeObject.errorCode to set the log object's "actionType" as either “timeout" or "result”
+            this.submitAnalytics(
+                `${THREEDS2_FINGERPRINT}: onComplete, result:${JSON.stringify(finalResObject)}, reason:${
+                    finalResObject.errorCode ? finalResObject.errorCode : 'process-complete'
+                }`
+            );
 
             /**
              * For 'threeDS2' action = call to callSubmit3DS2Fingerprint
@@ -124,7 +146,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         /**
                          * Called when fingerprint times-out (which is still a valid scenario)...
                          */
-                        const timeoutObject = {
+                        const timeoutObject: ErrorCodeObject = {
+                            errorCode: fingerprint.errorCode,
                             message: `${THREEDS2_FINGERPRINT}: ${fingerprint.errorCode}`
                         };
 
