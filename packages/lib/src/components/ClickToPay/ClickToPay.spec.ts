@@ -9,6 +9,7 @@ jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
 
 test('should initialize ClickToPayService when creating the element', () => {
     const mockCtpService = mock<IClickToPayService>();
+    mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
     createClickToPayService.mockImplementation(() => mockCtpService);
 
@@ -71,6 +72,7 @@ test('should get shopperEmail from session if available', () => {
 
 test('should resolve isAvailable if shopper account is found', async () => {
     const mockCtpService = mock<IClickToPayService>();
+    mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
     createClickToPayService.mockImplementation(() => mockCtpService);
 
@@ -85,6 +87,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
 
 test('should reject isAvailable if shopper account is not found', async () => {
     const mockCtpService = mock<IClickToPayService>();
+    mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
     createClickToPayService.mockImplementation(() => mockCtpService);
 
