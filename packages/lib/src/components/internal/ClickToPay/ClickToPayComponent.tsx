@@ -14,7 +14,13 @@ type ClickToPayComponentProps = {
 };
 
 const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProps): h.JSX.Element => {
-    const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
+    const { ctpState, onReady, startIdentityValidation, logoutShopper } = useClickToPayContext();
+
+    useEffect(() => {
+        if ([CtpState.OneTimePassword, CtpState.Login, CtpState.Ready].includes(ctpState)) {
+            onReady();
+        }
+    }, [ctpState, onReady]);
 
     useEffect(() => {
         async function sendOneTimePassword() {

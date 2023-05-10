@@ -24,6 +24,7 @@ export interface IClickToPayContext
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;
     onError(error: AdyenCheckoutError): void;
+    onReady(): void;
 }
 
 const ClickToPayContext = createContext<IClickToPayContext>({
@@ -31,6 +32,7 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     onSubmit: null,
     onSetStatus: null,
     onError: null,
+    onReady: null,
     amount: null,
     configuration: null,
     isStandaloneComponent: null,

@@ -24,6 +24,10 @@ export type ClickToPayConfiguration = {
      * @defaultValue false
      */
     disableOtpAutoFocus?: boolean;
+    /**
+     *  Callback triggered when the Click to Pay component is ready to be used
+     */
+    onReady?(): void;
 };
 
 export type ClickToPayScheme = 'mc' | 'visa';

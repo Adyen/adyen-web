@@ -41,6 +41,7 @@ const ClickToPayProvider = ({
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(true);
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const clickToPayRef = useRef<ClickToPayProviderRef>({});
+    const isOnReadyInvoked = useRef<boolean>(false);
 
     useEffect(() => {
         setClickToPayRef(clickToPayRef.current);
@@ -50,6 +51,14 @@ const ClickToPayProvider = ({
     useEffect(() => {
         ctpService?.subscribeOnStateChange(status => setCtpState(status));
     }, [ctpService]);
+
+    const onReady = useCallback(() => {
+        if (isOnReadyInvoked.current) {
+            return;
+        }
+        configuration.onReady?.();
+        isOnReadyInvoked.current = true;
+    }, [configuration.onReady]);
 
     const finishIdentityValidation = useCallback(
         async (otpValue: string) => {
@@ -102,7 +111,8 @@ const ClickToPayProvider = ({
                 checkout,
                 logoutShopper,
                 startIdentityValidation,
-                finishIdentityValidation
+                finishIdentityValidation,
+                onReady
             }}
         >
             {children}
