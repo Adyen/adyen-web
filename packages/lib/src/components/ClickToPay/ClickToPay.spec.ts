@@ -20,7 +20,8 @@ test('should initialize ClickToPayService when creating the element', () => {
         shopperEmail: 'shopper@example.com'
     };
 
-    new ClickToPayElement({ environment: 'test', configuration, ...ctpConfiguration });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const element = new ClickToPayElement({ environment: 'test', configuration, ...ctpConfiguration });
 
     expect(createClickToPayService).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test');
     expect(mockCtpService.initialize).toHaveBeenCalledTimes(1);
