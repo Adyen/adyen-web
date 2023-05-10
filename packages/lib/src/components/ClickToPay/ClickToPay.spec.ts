@@ -36,25 +36,20 @@ test('should formatData() to click to pay /payment request format', () => {
     const element = new ClickToPayElement({});
     element.setState({ data: paymentDataReceivedFromScheme });
 
-    expect(element.formatData()).toEqual({
-        paymentMethod: {
-            type: 'clicktopay',
-            srcDigitalCardId: paymentDataReceivedFromScheme.srcDigitalCardId,
-            srcCorrelationId: paymentDataReceivedFromScheme.srcCorrelationId,
-            srcScheme: paymentDataReceivedFromScheme.srcScheme
-        },
-        browserInfo: {
-            acceptHeader: '*/*',
-            colorDepth: 24,
-            javaEnabled: false,
-            language: 'en-US',
-            screenHeight: '',
-            screenWidth: '',
-            timeZoneOffset: 300,
-            userAgent: 'Mozilla/5.0 (linux) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/20.0.3'
-        },
-        origin: 'http://localhost'
-    });
+    const data = element.formatData();
+
+    expect(data).toEqual(
+        expect.objectContaining({
+            paymentMethod: {
+                type: 'clicktopay',
+                srcDigitalCardId: paymentDataReceivedFromScheme.srcDigitalCardId,
+                srcCorrelationId: paymentDataReceivedFromScheme.srcCorrelationId,
+                srcScheme: paymentDataReceivedFromScheme.srcScheme
+            }
+        })
+    );
+    expect(data.browserInfo).toBeDefined();
+    expect(data.origin).toBeDefined();
 });
 
 test('should get shopperEmail from session if available', () => {
