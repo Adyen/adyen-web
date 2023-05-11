@@ -32,6 +32,10 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
         this.clickToPayService?.initialize().catch(error => {
             this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
         });
+
+        if (!this.clickToPayService) {
+            console.warn('ClickToPay not initialized - Likely the payment method is not configured or its configuration is missing');
+        }
     }
 
     get isValid() {
@@ -74,15 +78,19 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
      * Resolves Promise if the Shopper has cookies OR has valid CtP account
      * Rejects Promise if account isn't found or if Login screen is triggered
      */
-    public async isAvailable(): Promise<boolean> {
+    public async isAvailable(): Promise<void> {
+        if (this.clickToPayService) {
+            return Promise.reject();
+        }
+
         if (this.clickToPayService.shopperAccountFound) {
-            return Promise.resolve(true);
+            return Promise.resolve();
         }
 
         return new Promise((resolve, reject) => {
             this.clickToPayService.subscribeOnStateChange((state: CtpState) => {
-                if (this.clickToPayService.shopperAccountFound) resolve(true);
-                if (state === CtpState.NotAvailable || state === CtpState.Login || state === CtpState.Idle) reject(false);
+                if (this.clickToPayService.shopperAccountFound) resolve();
+                if (state === CtpState.NotAvailable || state === CtpState.Login || state === CtpState.Idle) reject();
             });
         });
     }
