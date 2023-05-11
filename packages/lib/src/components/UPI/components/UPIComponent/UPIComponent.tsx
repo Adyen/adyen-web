@@ -66,7 +66,6 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     return (
         <Fragment>
             <p className="adyen-checkout_upi-mode-selection-text">{i18n.get('upi.modeSelection')}</p>
-
             <SegmentedControl
                 onChange={onChangeUpiMode}
                 selectedValue={mode}

@@ -27,8 +27,8 @@ async function createSessionsCheckout({
     });
 
     const checkout = await AdyenCheckout({
-        clientKey: import.meta.env.VITE_CLIENT_KEY,
-        environment: import.meta.env.VITE_CLIENT_ENV,
+        clientKey: process.env.CLIENT_KEY,
+        environment: process.env.CLIENT_ENV,
         session,
         showPayButton,
         paymentMethodsConfiguration,

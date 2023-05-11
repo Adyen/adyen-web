@@ -5,16 +5,17 @@
   "license": "MIT",
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",
-    "@storybook/addon-essentials": "^7.0.3",
-    "@storybook/html": "^7.0.3",
-    "@storybook/html-vite": "7.0.4",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-typescript": "^7.21.5",
+    "@storybook/addon-essentials": "^7.0.10",
+    "@storybook/html": "^7.0.10",
+    "@storybook/html-webpack5": "^7.0.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "^7.0.3",
-    "vite": "4.2.1"
+    "storybook": "^7.0.10"
   },
   "dependencies": {
-    "@adyen/adyen-web": "5.39.1"
+    "@adyen/adyen-web": "5.42.1"
   },
   "scripts": {
     "start": "storybook dev --port 3020 --disable-telemetry",

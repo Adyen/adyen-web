@@ -1,5 +1,4 @@
-import type { StorybookConfig } from '@storybook/html-vite';
-import { mergeConfig } from 'vite';
+import type { StorybookConfig } from '@storybook/html-webpack5';
 
 const path = require('path');
 const { parsed: environmentVariables } = require('dotenv').config({
@@ -17,29 +16,13 @@ const config: StorybookConfig = {
         }
     ],
     framework: {
-        name: '@storybook/html-vite',
+        name: '@storybook/html-webpack5',
         options: {}
     },
-    async viteFinal(config, options) {
-        return mergeConfig(config, {
-            server: {
-                watch: {
-                    usePolling: true
-                }
-            }
-        });
-    },
-    env: config => {
-        let viteEnvVariables = {};
-        for (const [key, value] of Object.entries(environmentVariables)) {
-            viteEnvVariables[`VITE_${key}`] = value;
-        }
-
-        return {
-            ...config,
-            ...viteEnvVariables
-        };
-    }
+    env: config => ({
+        ...config,
+        ...environmentVariables
+    })
 };
 
 export default config;
