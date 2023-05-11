@@ -6,6 +6,7 @@ import { SFPState } from '../../internal/SecuredFields/SFP/types';
 import { BinLookupResponse, CardBrandsConfiguration } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
 import { StylesObject } from '../../internal/SecuredFields/lib/types';
+import { Resources } from '../../../core/Context/Resources';
 
 interface SecuredFieldsProps {
     allowedDOMAccess?: boolean;
@@ -33,6 +34,7 @@ interface SecuredFieldsProps {
     onFocus?: (e) => {};
     onLoad?: () => {};
     rootNode: HTMLElement;
+    resources: Resources;
     showWarnings?: boolean;
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
@@ -158,6 +160,7 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         showWarnings: props.showWarnings,
         styles: props.styles,
         trimTrailingSeparator: props.trimTrailingSeparator,
-        type: props.type
+        type: props.type,
+        resources: props.resources
     };
 };

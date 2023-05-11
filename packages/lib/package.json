@@ -24,7 +24,7 @@
         "./dist/es/adyen.css": "./dist/es/adyen.css",
         "./package.json": "./package.json"
     },
-    "version": "5.41.0",
+    "version": "5.42.1",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -68,7 +68,7 @@
         "@testing-library/preact": "3.2.3",
         "@testing-library/preact-hooks": "1.1.0",
         "@testing-library/user-event": "14.4.3",
-        "@types/jest": "29.5.0",
+        "@types/jest": "29.5.1",
         "@typescript-eslint/eslint-plugin": "5.56.0",
         "@typescript-eslint/parser": "5.56.0",
         "autoprefixer": "10.4.14",
