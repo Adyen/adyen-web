@@ -1,5 +1,8 @@
 import { DecodeObject } from '../components/ThreeDS2/types';
 
+export const NOT_BASE64_ERROR = 'not base64';
+export const BASE64_MALFORMED_URI_ERROR = 'malformed URI sequence';
+
 const b64DecodeUnicode = str =>
     /**
      * The "Unicode Problem" Since DOMStrings are 16-bit-encoded strings:
@@ -18,7 +21,7 @@ const base64 = {
         if (!base64.isBase64(pData)) {
             return {
                 success: false,
-                error: 'not base64'
+                error: NOT_BASE64_ERROR
             };
         }
 
@@ -31,7 +34,7 @@ const base64 = {
         } catch (e) {
             return {
                 success: false,
-                error: 'malformed URI sequence'
+                error: BASE64_MALFORMED_URI_ERROR
             };
         }
     },

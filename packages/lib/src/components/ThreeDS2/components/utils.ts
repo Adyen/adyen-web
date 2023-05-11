@@ -167,12 +167,6 @@ export const createOldChallengeResolveData = (dataKey: string, transStatus: stri
     }
 });
 
-// export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorCodeObject => {
-//     const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
-//     const message = ERROR_MESSAGES[errorCode] || errorDescription || unknownMessage;
-//     return { errorCode, message };
-// };
-
 /**
  *
  * Takes a string and encodes it as a base64url string

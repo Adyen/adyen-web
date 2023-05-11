@@ -165,9 +165,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
                         if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
                             // Tell the merchant there's been an error
-                            // const errorCodeObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
-                            // this.props.onError(errorCodeObject);
-
                             errorCodeObject = {
                                 errorCode: challenge.result.errorCode,
                                 message: `${THREEDS2_CHALLENGE_ERROR}: ${
@@ -191,6 +188,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                              * So here we detect that this is not the response we are looking for, and this time round, unmount this set of 3DS2 comps
                              */
                             console.debug('### PrepareChallenge3DS2::threeDSServerTransID:: ids do not match');
+                            this.submitAnalytics(`${THREEDS2_CHALLENGE}: threeDSServerTransID: ids do not match`);
+
                             this.props.onComplete(null); // Send null so parent will unmount without calling onComplete
                         }
                     }}
@@ -199,18 +198,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
                         if (hasOwnProperty(challenge, 'errorCode')) {
-                            // const errorCodeObject = handleErrorCode(challenge.errorCode);
-                            // console.debug('### PrepareChallenge3DS2::challenge timed-out:: errorCodeObject=', errorCodeObject);
-
-                            console.log('### PrepareChallenge3DS2:::: timeout challenge obj=', challenge);
-
                             const timeoutObject: ErrorCodeObject = {
                                 errorCode: challenge.errorCode,
                                 message: `${THREEDS2_CHALLENGE}: ${challenge.errorCode}`
                             };
 
                             this.props.onError(timeoutObject);
-                            // this.props.onError(errorCodeObject);
 
                             this.setStatusComplete(challenge.result, timeoutObject);
                             return;

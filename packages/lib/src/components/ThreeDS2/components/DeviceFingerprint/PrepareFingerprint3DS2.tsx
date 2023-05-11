@@ -116,8 +116,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            console.log('### PrepareFingerprint3DS2::setStatusComplete:: resultObj=', resultObj);
-
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
 
             // TODO send log to analytics endpoint - we can use errorCodeObject.errorCode to set the log object's "actionType" as either “timeout" or "result”
