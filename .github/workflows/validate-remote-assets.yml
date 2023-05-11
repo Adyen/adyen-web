@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-secured-fields-assets:
-    if: contains(github.head_ref, 'release')
+    if: contains(github.head_ref, 'changeset-release')
 
     runs-on: ubuntu-latest
     steps:
