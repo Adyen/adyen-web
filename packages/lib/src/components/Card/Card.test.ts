@@ -1,7 +1,7 @@
 import { CardElement } from './Card';
 
 describe('Card', () => {
-    describe('formatProps', function() {
+    describe('formatProps', function () {
         test('should not require a billingAddress if it is a stored card', () => {
             const card = new CardElement({ billingAddressRequired: true, storedPaymentMethodId: 'test' });
             expect(card.props.billingAddressRequired).toBe(false);

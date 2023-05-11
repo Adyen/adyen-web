@@ -38,7 +38,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
 
     // REMOVE ANY ERRORS ON FIELD e.g. was a full number that failed the luhnCheck, then we corrected the number and now it passes
     processErrors(
-        ({ error: '', fieldType } as any) as SFFeedbackObj,
+        { error: '', fieldType } as any as SFFeedbackObj,
         this.state.securedFields[fieldType],
         this.state.type,
         this.props.rootNode,

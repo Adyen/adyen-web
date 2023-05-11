@@ -44,9 +44,12 @@
         "size-only": "node ./scripts/size",
         "type-check": "tsc --noEmit",
         "type-check-generate": "tsc --emitDeclarationOnly",
+        "format": "npm run lint:fix && npm run prettier:fix && npm run styles:fix",
         "lint": "eslint 'src/**/*.{js,ts,tsx}' --quiet",
         "lint-styles": "stylelint '**/*.scss'",
+        "styles:fix": "npm run lint-styles -- --fix",
         "lint:fix": "npm run lint -- --fix",
+        "prettier:fix": "prettier \"src/**/*.{js,ts,tsx}\" \"package.json\" --write --loglevel silent",
         "prepublishOnly": "npm run build",
         "prepare": "cd ../.. && husky install packages/lib/.husky"
     },

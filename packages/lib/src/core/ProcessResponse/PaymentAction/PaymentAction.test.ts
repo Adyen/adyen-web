@@ -6,8 +6,7 @@ describe('getComponentForAction', () => {
             method: 'GET',
             paymentMethodType: 'ideal',
             type: 'redirect',
-            url:
-                'http://localhost:8080/hpp/redirectIdeal.shtml?brandCode=ideal&countryCode=NL¤cyCode=EUR&issuerId=1121&merchantAccount=TestMerchant&merchantIntegration.type=CHECKOUT_GENERIC&merchantIntegration.version=49&merchantReference=8&merchantReturnData=991558707124405K&merchantSig=g1KlViuS0JSr%2Fl9ah1uC4dpYjpn9T%2FvB7dAwHn81sdA%3D&paymentAmount=250&recurringContract=RECURRING&resURL=http%3A%2F%2Flocalhost%3A8080%2Fcheckoutshopper%2Fservices%2FPaymentIncomingRedirect%2Fv1%2FlocalPaymentMethod%3FmerchantAccount%3DTestMerchant%26returnURL%3Dapp%253A%252F%252Fyou&sessionValidity=2019-05-24T15%3A12%3A04Z&shopperReference=emred&skinCode=pub.v2.9915585372919700.W8YBZHHDHqOtHZK8ZC-X7_n9x1N3opO8Wbc_MQlh2IU'
+            url: 'http://localhost:8080/hpp/redirectIdeal.shtml?brandCode=ideal&countryCode=NL¤cyCode=EUR&issuerId=1121&merchantAccount=TestMerchant&merchantIntegration.type=CHECKOUT_GENERIC&merchantIntegration.version=49&merchantReference=8&merchantReturnData=991558707124405K&merchantSig=g1KlViuS0JSr%2Fl9ah1uC4dpYjpn9T%2FvB7dAwHn81sdA%3D&paymentAmount=250&recurringContract=RECURRING&resURL=http%3A%2F%2Flocalhost%3A8080%2Fcheckoutshopper%2Fservices%2FPaymentIncomingRedirect%2Fv1%2FlocalPaymentMethod%3FmerchantAccount%3DTestMerchant%26returnURL%3Dapp%253A%252F%252Fyou&sessionValidity=2019-05-24T15%3A12%3A04Z&shopperReference=emred&skinCode=pub.v2.9915585372919700.W8YBZHHDHqOtHZK8ZC-X7_n9x1N3opO8Wbc_MQlh2IU'
         };
 
         const redirectPostActionMock = {
@@ -17,8 +16,7 @@ describe('getComponentForAction', () => {
             data: {
                 test: '123'
             },
-            url:
-                'http://localhost:8080/hpp/redirectIdeal.shtml?brandCode=ideal&countryCode=NL¤cyCode=EUR&issuerId=1121&merchantAccount=TestMerchant&merchantIntegration.type=CHECKOUT_GENERIC&merchantIntegration.version=49&merchantReference=8&merchantReturnData=991558707124405K&merchantSig=g1KlViuS0JSr%2Fl9ah1uC4dpYjpn9T%2FvB7dAwHn81sdA%3D&paymentAmount=250&recurringContract=RECURRING&resURL=http%3A%2F%2Flocalhost%3A8080%2Fcheckoutshopper%2Fservices%2FPaymentIncomingRedirect%2Fv1%2FlocalPaymentMethod%3FmerchantAccount%3DTestMerchant%26returnURL%3Dapp%253A%252F%252Fyou&sessionValidity=2019-05-24T15%3A12%3A04Z&shopperReference=emred&skinCode=pub.v2.9915585372919700.W8YBZHHDHqOtHZK8ZC-X7_n9x1N3opO8Wbc_MQlh2IU'
+            url: 'http://localhost:8080/hpp/redirectIdeal.shtml?brandCode=ideal&countryCode=NL¤cyCode=EUR&issuerId=1121&merchantAccount=TestMerchant&merchantIntegration.type=CHECKOUT_GENERIC&merchantIntegration.version=49&merchantReference=8&merchantReturnData=991558707124405K&merchantSig=g1KlViuS0JSr%2Fl9ah1uC4dpYjpn9T%2FvB7dAwHn81sdA%3D&paymentAmount=250&recurringContract=RECURRING&resURL=http%3A%2F%2Flocalhost%3A8080%2Fcheckoutshopper%2Fservices%2FPaymentIncomingRedirect%2Fv1%2FlocalPaymentMethod%3FmerchantAccount%3DTestMerchant%26returnURL%3Dapp%253A%252F%252Fyou&sessionValidity=2019-05-24T15%3A12%3A04Z&shopperReference=emred&skinCode=pub.v2.9915585372919700.W8YBZHHDHqOtHZK8ZC-X7_n9x1N3opO8Wbc_MQlh2IU'
         };
 
         test('processes a redirect response', () => {

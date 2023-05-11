@@ -1,5 +1,5 @@
 import Language from '../../../language/Language';
-import {SFPState} from '../../internal/SecuredFields/SFP/types';
+import { SFPState } from '../../internal/SecuredFields/SFP/types';
 
 export type GiftcardFieldsProps = {
     setRootNode: (input: HTMLElement) => void;
