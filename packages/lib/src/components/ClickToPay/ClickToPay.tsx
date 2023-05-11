@@ -79,7 +79,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
      * Rejects Promise if account isn't found or if Login screen is triggered
      */
     public async isAvailable(): Promise<void> {
-        if (this.clickToPayService) {
+        if (!this.clickToPayService) {
             return Promise.reject();
         }
 

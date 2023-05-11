@@ -82,7 +82,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
 
     const element = new ClickToPayElement({});
 
-    await expect(element.isAvailable()).resolves.toBeTruthy();
+    await expect(element.isAvailable()).resolves.not.toThrow();
 });
 
 test('should reject isAvailable if shopper account is not found', async () => {
