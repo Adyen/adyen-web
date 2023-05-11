@@ -18,6 +18,7 @@ function Select({
     filterable = true,
     readonly = false,
     onChange = () => {},
+    onInput,
     selected,
     name,
     isInvalid,
@@ -186,6 +187,9 @@ function Select({
         const value: string = (e.target as HTMLInputElement).value;
         setInputText(value);
         setTextFilter(value);
+        if (onInput) {
+            onInput(value);
+        }
     };
 
     /**

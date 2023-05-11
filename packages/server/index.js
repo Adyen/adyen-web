@@ -9,6 +9,7 @@ const postDetails = require('./api/details');
 const createOrder = require('./api/orders');
 const cancelOrder = require('./api/ordersCancel');
 const createSession = require('./api/sessions');
+const mockAddressSearch = require('./api/mock/addressSearch');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -35,6 +36,8 @@ module.exports = (app = express(), options = {}) => {
     app.all('/orders/cancel', (req, res) => cancelOrder(res, req.body));
 
     app.all('/sessions', (req, res) => createSession(res, req.body));
+
+    app.all('/mock/addressSearch', (req, res) => mockAddressSearch(res, req.body));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;

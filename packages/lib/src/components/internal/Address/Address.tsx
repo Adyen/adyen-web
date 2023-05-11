@@ -13,6 +13,7 @@ import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { ComponentMethodsRef } from '../../types';
+import AddressSearch from './components/AddressSearch';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
@@ -29,6 +30,8 @@ export default function Address(props: AddressProps) {
     const specifications = useMemo(() => new Specifications(props.specifications), [props.specifications]);
 
     const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
+
+    const showAddressSearch = !!props.onAddressLookup;
 
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFieldsSchema,
@@ -135,11 +138,17 @@ export default function Address(props: AddressProps) {
 
     return (
         <Fragment>
-            <Fieldset classNameModifiers={[label || 'address']} label={label}>
-                {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
-            </Fieldset>
-            {/* Needed to easily test when showValidation is called */}
-            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
+            {showAddressSearch ? (
+                <AddressSearch onAddressLookup={props.onAddressLookup} />
+            ) : (
+                <Fragment>
+                    <Fieldset classNameModifiers={[label || 'address']} label={label}>
+                        {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
+                    </Fieldset>
+                    {/* Needed to easily test when showValidation is called */}
+                    {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
+                </Fragment>
+            )}
         </Fragment>
     );
 }
