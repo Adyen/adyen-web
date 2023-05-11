@@ -56,8 +56,8 @@ import WalletINElement from './WalletIN';
 import OnlineBankingCZElement from './OnlineBankingCZ';
 import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
-import PromptPay from "./PromptPay";
-import Duitnow from "./DuitNow";
+import PromptPay from './PromptPay';
+import Duitnow from './DuitNow';
 
 /**
  * Maps each component with a Component element.

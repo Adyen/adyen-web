@@ -23,11 +23,11 @@ export interface Formatter {
 }
 
 export type FormProps = {
-    rules?: ValidatorRules,
+    rules?: ValidatorRules;
     formatters?: {
         [key: string]: Formatter | Function;
-    },
-    [key: string]: any,
+    };
+    [key: string]: any;
 };
 
 export interface Form<FormSchema> extends FormState<FormSchema> {

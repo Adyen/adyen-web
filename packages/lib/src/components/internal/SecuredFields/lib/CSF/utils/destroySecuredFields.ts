@@ -12,7 +12,7 @@ export function destroySecuredFields(): void {
     // Then remove ref to SecuredField instance
     securedFieldKeys.forEach(pFieldType => {
         const sf: SecuredField = this.state.securedFields[pFieldType];
-        if (sf) sf.destroy();// Comment out if you want to test the 'destroy' effects in the actual SF
+        if (sf) sf.destroy(); // Comment out if you want to test the 'destroy' effects in the actual SF
         this.state.securedFields[pFieldType] = null;
     });
     // --
