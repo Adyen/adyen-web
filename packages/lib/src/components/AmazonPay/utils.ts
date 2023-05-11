@@ -7,15 +7,7 @@ import {
     SUPPORTED_LOCALES_EU,
     SUPPORTED_LOCALES_US
 } from './config';
-import {
-    AmazonPayButtonProps,
-    AmazonPayButtonSettings,
-    ChargeAmount,
-    Currency,
-    PayloadJSON,
-    Region,
-    SupportedLocale
-} from './types';
+import { AmazonPayButtonProps, AmazonPayButtonSettings, ChargeAmount, Currency, PayloadJSON, Region, SupportedLocale } from './types';
 import { PaymentAmount } from '../../types';
 import { getDecimalAmount } from '../../utils/amount-util';
 
@@ -62,7 +54,7 @@ export function getFallbackLocale(region: Region): SupportedLocale {
  */
 export function getSupportedLocales(region: Region): SupportedLocale[] {
     const supportedLocales = region === 'US' ? SUPPORTED_LOCALES_US : SUPPORTED_LOCALES_EU;
-    return (supportedLocales as unknown) as SupportedLocale[];
+    return supportedLocales as unknown as SupportedLocale[];
 }
 
 /**
@@ -108,16 +100,8 @@ export function getChargeAmount(amount: PaymentAmount): ChargeAmount {
  * @returns PayloadJSON
  */
 export function getPayloadJSON(props): PayloadJSON {
-    const {
-        addressDetails,
-        cancelUrl,
-        checkoutMode,
-        deliverySpecifications,
-        returnUrl,
-        merchantMetadata,
-        chargePermissionType,
-        recurringMetadata,
-    } = props;
+    const { addressDetails, cancelUrl, checkoutMode, deliverySpecifications, returnUrl, merchantMetadata, chargePermissionType, recurringMetadata } =
+        props;
 
     const { storeId } = props.configuration;
     const isPayNow = checkoutMode === 'ProcessOrder';

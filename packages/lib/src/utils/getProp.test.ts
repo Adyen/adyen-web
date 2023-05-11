@@ -2,7 +2,11 @@ import getProp from './getProp';
 
 const props = {
     user: {
-        posts: [{ title: 'Foo', comments: ['Good one!', 'Interesting...'] }, { title: 'Bar', comments: ['Ok'] }, { title: 'Baz', comments: [] }]
+        posts: [
+            { title: 'Foo', comments: ['Good one!', 'Interesting...'] },
+            { title: 'Bar', comments: ['Ok'] },
+            { title: 'Baz', comments: [] }
+        ]
     }
 };
 

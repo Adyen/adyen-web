@@ -1,11 +1,12 @@
-import { digitsOnlyFormatter } from "./formatters";
+import { digitsOnlyFormatter } from './formatters';
 
-function getAllCharactersArray() { 
-    const allCharacters:Array<string> = [];
-    for (let i=32; i<127; i++) { allCharacters.push(String.fromCharCode(i)); }
+function getAllCharactersArray() {
+    const allCharacters: Array<string> = [];
+    for (let i = 32; i < 127; i++) {
+        allCharacters.push(String.fromCharCode(i));
+    }
     return allCharacters.join(',');
 }
-
 
 describe('Formatters', () => {
     describe('digitsOnlyFormatter', () => {

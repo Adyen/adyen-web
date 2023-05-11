@@ -1,4 +1,4 @@
-import {PaymentResponse, RawPaymentResponse, UIElementStatus} from './types';
+import { PaymentResponse, RawPaymentResponse, UIElementStatus } from './types';
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult'];
 

@@ -24,7 +24,11 @@ describe('creating a promiseTimeout', () => {
 
     test('and letting it time out', async () => {
         jest.useFakeTimers();
-        const newPromiseTimeout = promiseTimeout(1000, promiseOne(() => {}), { timed_out: true });
+        const newPromiseTimeout = promiseTimeout(
+            1000,
+            promiseOne(() => {}),
+            { timed_out: true }
+        );
 
         // Fast-forward until all timers have been executed
         jest.advanceTimersByTime(1000);
