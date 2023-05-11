@@ -59,6 +59,14 @@ export interface GooglePayProps extends UIElementProps {
     allowedCardNetworks?: google.payments.api.CardNetwork[];
 
     /**
+     * Set to true to request assuranceDetails. This object provides information
+     * about the validation performed on the returned payment data.
+     *
+     * @defaultValue false
+     */
+    assuranceDetailsRequired?: boolean;
+
+    /**
      * Set to false if you don't support credit cards.
      * @defaultValue true
      */
