@@ -31,6 +31,9 @@ class CoreProvider extends Component<CoreProviderProps> {
         } else {
             this.setState({ loaded: true });
         }
+        if (!this.props.i18n || !this.props.loadingContext || !this.props.resources) {
+            console.error('CoreProvider - WARNING core provider is missing one of the following: i18n, loadingContext or resources');
+        }
     }
 
     render({ children }: CoreProviderProps) {
