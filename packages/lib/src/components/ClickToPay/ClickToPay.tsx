@@ -58,7 +58,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
                 ...(srcDigitalCardId && { srcDigitalCardId })
             },
             browserInfo: this.browserInfo,
-            origin: !!window && window.location.origin
+            origin: window?.location?.origin
         };
     }
 
