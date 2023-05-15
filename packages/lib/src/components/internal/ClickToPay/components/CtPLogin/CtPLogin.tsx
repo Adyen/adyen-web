@@ -74,8 +74,10 @@ const CtPLogin = (): h.JSX.Element => {
             <Button
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                onClick={handleOnLoginButtonClick}
                 status={isLoggingIn && 'loading'}
+                onClick={() => {
+                    void handleOnLoginButtonClick();
+                }}
             />
         </Fragment>
     );

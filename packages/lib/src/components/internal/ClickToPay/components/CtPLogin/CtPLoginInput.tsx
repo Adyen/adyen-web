@@ -11,7 +11,7 @@ type OnChangeProps = { data: CtPLoginInputDataState; valid; errors; isValid: boo
 interface CtPLoginInputProps {
     disabled: boolean;
     errorMessage?: string;
-    onPressEnter(): void;
+    onPressEnter(): Promise<void>;
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
     onSetInputHandlers(handlers: CtPLoginInputHandlers): void;
 }
@@ -51,7 +51,7 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
     const handleOnKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
-                props.onPressEnter();
+                void props.onPressEnter();
             }
         },
         [props.onPressEnter]

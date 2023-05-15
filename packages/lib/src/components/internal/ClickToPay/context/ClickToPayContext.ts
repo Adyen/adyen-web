@@ -12,7 +12,7 @@ export interface IClickToPayContext
     isStandaloneComponent: boolean;
     isCtpPrimaryPaymentMethod: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
-    logoutShopper(): void;
+    logoutShopper(): Promise<void>;
     ctpState: CtpState;
     cards: ShopperCard[];
     schemes: string[];
