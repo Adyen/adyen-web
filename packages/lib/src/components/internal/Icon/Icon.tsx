@@ -12,7 +12,7 @@ interface IconProps {
 
 const Icon = ({ type, className = '', alt = '', height, width }: IconProps) => {
     const getImage = useImage();
-    const iconUrl = getImage({ imageFolder: 'components/' })(type);
+    const iconUrl = getImage({ imageFolder: 'components/' })?.(type);
 
     return <img className={cx('adyen-checkout__icon', className)} alt={alt} src={iconUrl} height={height} width={width} />;
 };

@@ -52,7 +52,7 @@ class RedirectElement extends UIElement {
 
         if (this.props.showButton) {
             return (
-                <CoreProvider {...this.props} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
                         {...this.props}
                         onSubmit={this.submit}
