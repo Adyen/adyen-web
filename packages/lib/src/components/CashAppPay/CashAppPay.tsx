@@ -19,6 +19,10 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     constructor(props) {
         super(props);
 
+        if (this.props.storedPaymentMethodId) {
+            return;
+        }
+
         this.cashAppService = new CashAppService(new CashAppSdkLoader(), {
             storePaymentMethod: this.props.storePaymentMethod,
             useCashAppButtonUi: this.props.showPayButton,
@@ -40,10 +44,11 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     }
 
     public formatData(): CashAppPayElementData {
-        const { shopperWantsToStore, grantId, onFileGrantId, cashTag, customerId } = this.state;
+        const { shopperWantsToStore, grantId, onFileGrantId, cashTag, customerId } = this.state.data || {};
         const { storePaymentMethod: storePaymentMethodSetByMerchant, storedPaymentMethodId } = this.props;
 
-        const includeStorePaymentMethod = !this.props.session && (shopperWantsToStore || storePaymentMethodSetByMerchant);
+        // const includeStorePaymentMethod = !this.props.session && (shopperWantsToStore || storePaymentMethodSetByMerchant);
+        const includeStorePaymentMethod = storePaymentMethodSetByMerchant || this.props.enableStoreDetails;
 
         if (storedPaymentMethodId) {
             return {
@@ -63,8 +68,19 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
                 ...(customerId && { customerId }),
                 ...(shouldAddOnFileProps && { onFileGrantId, cashtag: cashTag })
             },
-            ...(includeStorePaymentMethod && { storePaymentMethod: true })
+            ...(includeStorePaymentMethod && { storePaymentMethod: storePaymentMethodSetByMerchant || shopperWantsToStore })
         };
+    }
+
+    get displayName() {
+        if (this.props.storedPaymentMethodId && this.props.cashtag) {
+            return this.props.cashtag;
+        }
+        return this.props.name;
+    }
+
+    get additionalInfo() {
+        return this.props.storedPaymentMethodId ? 'Cash App Pay Account' : '';
     }
 
     public submit = () => {
@@ -87,8 +103,14 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         return true;
     }
 
+    private handleOnChangeStoreDetails = (storePayment: boolean) => {
+        const data = { ...this.state.data, shopperWantsToStore: storePayment };
+        this.setState({ data });
+    };
+
     private handleAuthorize = (cashAppPaymentData: CashAppPayEventData): void => {
-        this.setState(cashAppPaymentData);
+        const data = { ...this.state.data, ...cashAppPaymentData };
+        this.setState({ data, valid: {}, errors: {}, isValid: true });
         super.submit();
     };
 
@@ -113,7 +135,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
                         enableStoreDetails={this.props.enableStoreDetails}
                         // showPayButton={this.props.showPayButton}
                         cashAppService={this.cashAppService}
-                        onChange={this.setState}
+                        onChangeStoreDetails={this.handleOnChangeStoreDetails}
                         onError={this.handleError}
                         onClick={this.submit}
                         onAuthorize={this.handleAuthorize}

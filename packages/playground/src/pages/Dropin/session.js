@@ -9,7 +9,7 @@ export async function initSession() {
         reference: 'shopper-gui-1',
         returnUrl,
         shopperLocale,
-        shopperReference: 'iOS Checkout Shopper',
+        shopperReference: 'gui-cashapp-2',
         telephoneNumber: '+611223344',
         shopperEmail: 'shopper.ctp1@adyen.com',
         countryCode,

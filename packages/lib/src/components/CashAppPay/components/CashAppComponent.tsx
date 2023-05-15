@@ -13,7 +13,7 @@ interface CashAppComponentProps {
     cashAppService: ICashAppService;
     // showPayButton: boolean;
     onClick(): void;
-    onChange(data: any): void;
+    onChangeStoreDetails(data: any): void;
     onAuthorize(payEventData: CashAppPayEventData): void;
     onError(error: AdyenCheckoutError): void;
     ref(ref: RefObject<typeof CashAppComponent>): void;
@@ -23,7 +23,7 @@ export function CashAppComponent({
     enableStoreDetails,
     cashAppService,
     onClick,
-    onChange,
+    onChangeStoreDetails,
     onAuthorize,
     onError
 }: CashAppComponentProps): h.JSX.Element {
@@ -76,7 +76,7 @@ export function CashAppComponent({
     useEffect(() => {
         if (enableStoreDetails) {
             cashAppService.setStorePaymentMethod(storePaymentMethod);
-            onChange({ shopperWantsToStore: storePaymentMethod });
+            onChangeStoreDetails(storePaymentMethod);
         }
     }, [enableStoreDetails, storePaymentMethod]);
 
@@ -87,6 +87,8 @@ export function CashAppComponent({
             subscriptions.current.map(unsubscribeFn => unsubscribeFn());
         };
     }, [cashAppService, initializeCashAppSdk]);
+
+    console.log('test');
 
     return (
         <div className="adyen-checkout__cashapp">
