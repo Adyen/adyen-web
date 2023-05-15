@@ -1,4 +1,4 @@
-export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay'];
+export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
 // filter payment methods that we don't support in the Drop-in
 export const filterUnsupported = paymentMethod => !UNSUPPORTED_PAYMENT_METHODS.includes(paymentMethod.constructor['type']);

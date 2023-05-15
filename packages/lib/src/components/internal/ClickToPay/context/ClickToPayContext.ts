@@ -9,9 +9,10 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 
 export interface IClickToPayContext
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
+    isStandaloneComponent: boolean;
     isCtpPrimaryPaymentMethod: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
-    logoutShopper(): void;
+    logoutShopper(): Promise<void>;
     ctpState: CtpState;
     cards: ShopperCard[];
     schemes: string[];
@@ -23,6 +24,7 @@ export interface IClickToPayContext
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;
     onError(error: AdyenCheckoutError): void;
+    onReady(): void;
 }
 
 const ClickToPayContext = createContext<IClickToPayContext>({
@@ -30,8 +32,10 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     onSubmit: null,
     onSetStatus: null,
     onError: null,
+    onReady: null,
     amount: null,
     configuration: null,
+    isStandaloneComponent: null,
     isCtpPrimaryPaymentMethod: null,
     setIsCtpPrimaryPaymentMethod: null,
     logoutShopper: null,

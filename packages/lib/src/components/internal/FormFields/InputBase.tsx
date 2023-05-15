@@ -33,6 +33,13 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
         [props.onInput]
     );
 
+    const handleKeyPress = useCallback(
+        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (props?.onKeyPress) props.onKeyPress(event);
+        },
+        [props?.onKeyPress]
+    );
+
     const handleKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyUp) props.onKeyUp(event);
@@ -90,6 +97,7 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
             onBlur={handleBlur}
             onFocus={handleFocus}
             onKeyUp={handleKeyUp}
+            onKeyPress={handleKeyPress}
             disabled={disabled}
             ref={inputRef}
         />

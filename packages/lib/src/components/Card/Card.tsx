@@ -8,7 +8,7 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
-import { createClickToPayService } from '../internal/ClickToPay/services/create-clicktopay-service';
+import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { UIElementStatus } from '../types';
@@ -232,6 +232,7 @@ export class CardElement extends UIElement<CardElementProps> {
                         amount={this.props.amount}
                         configuration={this.props.clickToPayConfiguration}
                         clickToPayService={this.clickToPayService}
+                        isStandaloneComponent={false}
                         setClickToPayRef={this.setClickToPayRef}
                         onSetStatus={this.setElementStatus}
                         onSubmit={this.handleClickToPaySubmit}
