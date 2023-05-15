@@ -42,6 +42,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public formatData(): CashAppPayElementData {
         const { shopperWantsToStore, grantId, onFileGrantId, cashTag, customerId } = this.state;
         const { storePaymentMethod: storePaymentMethodSetByMerchant, storedPaymentMethodId } = this.props;
+
         const includeStorePaymentMethod = !this.props.session && (shopperWantsToStore || storePaymentMethodSetByMerchant);
 
         if (storedPaymentMethodId) {

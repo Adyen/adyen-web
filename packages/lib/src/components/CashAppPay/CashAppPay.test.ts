@@ -15,22 +15,41 @@ beforeEach(() => {
     mockBegin.mockClear();
 });
 
-test('should return grantId, cashTag, customerId and correct txVariant', () => {
-    const grantId = 'xxxx-yyyy';
-    const cashTag = '$johnny';
+test('should return on-file data if available', () => {
+    const onFileGrantId = 'xxxx-yyyy';
     const customerId = 'abcdef';
+    const cashTag = '$john-doe';
 
-    const cashAppPayElement = new CashAppPay({});
+    const cashAppPayElement = new CashAppPay({ storePaymentMethod: true });
 
     const data: CashAppPayEventData = {
-        grantId,
+        onFileGrantId,
         cashTag,
         customerId
     };
 
     cashAppPayElement.setState(data);
 
-    expect(cashAppPayElement.formatData()).toEqual({ paymentMethod: { type: 'cashapp', grantId, cashTag, customerId } });
+    expect(cashAppPayElement.formatData()).toEqual({
+        paymentMethod: { type: 'cashapp', onFileGrantId, customerId, cashtag: cashTag },
+        storePaymentMethod: true
+    });
+});
+
+test('should return grantId, customerId and correct txVariant', () => {
+    const grantId = 'xxxx-yyyy';
+    const customerId = 'abcdef';
+
+    const cashAppPayElement = new CashAppPay({});
+
+    const data: CashAppPayEventData = {
+        grantId,
+        customerId
+    };
+
+    cashAppPayElement.setState(data);
+
+    expect(cashAppPayElement.formatData()).toEqual({ paymentMethod: { type: 'cashapp', grantId, customerId } });
 });
 
 test('should initially display the loading spinner while SDK is being loaded', async () => {
