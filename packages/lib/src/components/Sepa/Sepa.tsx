@@ -42,7 +42,7 @@ class SepaElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider {...this.props} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <IbanInput
                     ref={ref => {
                         this.componentRef = ref;
