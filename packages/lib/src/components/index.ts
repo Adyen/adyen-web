@@ -4,6 +4,7 @@ import ApplePay from './ApplePay';
 import Atome from './Atome';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
+import ClickToPay from './ClickToPay';
 import Bancontact from './Card/Bancontact';
 import Donation from './Donation';
 import Giropay from './Giropay';
@@ -113,6 +114,7 @@ const componentsMap = {
     /** Wallets */
     amazonpay: AmazonPay,
     applepay: ApplePay,
+    clicktopay: ClickToPay,
     googlepay: GooglePay,
     paypal: PayPal,
     paywithgoogle: GooglePay,

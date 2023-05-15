@@ -1,6 +1,8 @@
 import { h } from 'preact';
+import classnames from 'classnames';
 import CtPLogoutLink from './CtPLogoutLink';
 import { CtPBrand } from '../CtPBrand';
+import useClickToPayContext from '../../context/useClickToPayContext';
 import './CtPSection.scss';
 
 interface CtPSectionProps {
@@ -8,8 +10,10 @@ interface CtPSectionProps {
 }
 
 const CtPSection = ({ children }: CtPSectionProps): h.JSX.Element => {
+    const { isStandaloneComponent } = useClickToPayContext();
+
     return (
-        <div className="adyen-checkout-ctp__section">
+        <div className={classnames('adyen-checkout-ctp__section', { 'adyen-checkout-ctp__section--standalone': isStandaloneComponent })}>
             <div className="adyen-checkout-ctp__section-brand">
                 <CtPBrand />
                 <CtPLogoutLink />

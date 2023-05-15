@@ -10,10 +10,12 @@ const ClickToPayWrapper = ({
     onSetStatus,
     onSubmit,
     onError,
+    isStandaloneComponent,
     ...props
 }: ClickToPayProviderProps) => {
     return (
         <ClickToPayProvider
+            isStandaloneComponent={isStandaloneComponent}
             configuration={configuration}
             amount={amount}
             clickToPayService={clickToPayService}

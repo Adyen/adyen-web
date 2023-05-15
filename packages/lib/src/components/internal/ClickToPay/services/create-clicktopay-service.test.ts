@@ -1,4 +1,4 @@
-import { createClickToPayService } from './create-clicktopay-service';
+import createClickToPayService from './create-clicktopay-service';
 import { CtpState } from './ClickToPayService';
 import { IClickToPayService } from './types';
 import { CardConfiguration } from '../../../Card/types';

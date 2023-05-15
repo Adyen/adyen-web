@@ -51,8 +51,7 @@ const CtPLogin = (): h.JSX.Element => {
                 setIsLoggingIn(false);
             }
         } catch (error) {
-            if (error instanceof SrciError)
-                console.warn(`CtP - Login error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
+            if (error instanceof SrciError) console.warn(`CtP - Login error: ${error.toString()}`);
             setErrorCode(error?.reason);
             setIsLoggingIn(false);
         }
@@ -71,11 +70,14 @@ const CtPLogin = (): h.JSX.Element => {
                 errorMessage={errorCode && i18n.get(`ctp.errors.${errorCode}`)}
                 onPressEnter={handleOnLoginButtonClick}
             />
+
             <Button
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                onClick={handleOnLoginButtonClick}
                 status={isLoggingIn && 'loading'}
+                onClick={() => {
+                    void handleOnLoginButtonClick();
+                }}
             />
         </Fragment>
     );
