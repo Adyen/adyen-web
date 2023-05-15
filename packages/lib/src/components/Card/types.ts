@@ -211,6 +211,7 @@ export interface BrandObject {
     supported: boolean;
     brandImageUrl?: string;
     panLength?: number;
+    paymentMethodVariant?: string;
 }
 
 export interface BinLookupResponseRaw {
