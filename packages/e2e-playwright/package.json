@@ -25,6 +25,6 @@
     "webpack-dev-server": "4.13.1"
   },
   "dependencies": {
-    "@adyen/adyen-web": "5.42.1"
+    "@adyen/adyen-web": "5.43.0"
   }
 }
