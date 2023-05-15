@@ -2,12 +2,13 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
-import getImage from '../../../utils/get-image';
+
 import { renderFormField } from '../../internal/FormFields';
 import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
+import useImage from '../../../core/Context/useImage';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -19,6 +20,7 @@ interface BlikInputDataState {
 
 function BlikInput(props: BlikInputProps) {
     const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({
         schema: ['blikCode'],
         rules: {
@@ -29,8 +31,8 @@ function BlikInput(props: BlikInputProps) {
             }
         },
         formatters: {
-            blikCode: digitsOnlyFormatter,
-        },
+            blikCode: digitsOnlyFormatter
+        }
     });
 
     useEffect(() => {
@@ -57,6 +59,7 @@ function BlikInput(props: BlikInputProps) {
                     spellcheck: false,
                     required: true,
                     autocorrect: 'off',
+                    autocomplete: 'off',
                     onInput: handleChangeFor('blikCode', 'input'),
                     onBlur: handleChangeFor('blikCode', 'blur'),
                     placeholder: '123456',
@@ -65,7 +68,11 @@ function BlikInput(props: BlikInputProps) {
                 })}
             </Field>
 
-            {props.showPayButton && props.payButton({ status, icon: getImage({ loadingContext, imageFolder: 'components/' })('lock') })}
+            {props.showPayButton &&
+                props.payButton({
+                    status,
+                    icon: getImage({ loadingContext, imageFolder: 'components/' })('lock')
+                })}
         </div>
     );
 }

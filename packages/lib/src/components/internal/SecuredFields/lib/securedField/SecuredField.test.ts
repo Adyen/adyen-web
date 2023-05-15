@@ -63,7 +63,6 @@ const setupObj = {
     minimumExpiryDate: null,
     uid: null,
     implementationType: null,
-    isCollatingErrors: false,
     maskSecurityCode: false
 };
 

@@ -22,7 +22,6 @@ export interface FieldProps {
     dir?;
     name?: string;
     showValidIcon?: boolean;
-    isCollatingErrors?: boolean;
     useLabelElement?: boolean;
     i18n?: Language;
     errorVisibleToScreenReader?: boolean;

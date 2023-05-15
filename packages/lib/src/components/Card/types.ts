@@ -11,6 +11,7 @@ import {
     CbObjOnBinLookup
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
+import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -129,36 +130,6 @@ export interface CardElementProps extends UIElementProps {
     [key: string]: any; // TODO get rid of this and explicitly declare props
 }
 
-export type ClickToPayScheme = 'mc' | 'visa';
-
-export type ClickToPayConfiguration = {
-    /**
-     * Shopper email used to be recognized with the Network schemes
-     */
-    shopperEmail?: string;
-    /**
-     * Shopper telephone number used to be recognized with the Network schemes
-     */
-    telephoneNumber?: string;
-    /**
-     * Used to display the merchant name in case the DCF appears (ex: first time doing transaction in the device),
-     */
-    merchantDisplayName: string;
-    /**
-     * Used to ensure the correct language and user experience if DCF screen is displayed. As a fallback, it uses the main locale
-     * defined during the creation of the Checkout.
-     * Format: ISO language_country pair (e.g., en_US )
-     *
-     * @defaultValue en_US
-     */
-    locale?: string;
-    /**
-     * Disable autofocus on the One Time Password input field when it is either displayed or when the OTP is resent
-     * @defaultValue false
-     */
-    disableOtpAutoFocus?: boolean;
-};
-
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 
 // TODO clarify exact properties that can be in this object
@@ -240,6 +211,7 @@ export interface BrandObject {
     supported: boolean;
     brandImageUrl?: string;
     panLength?: number;
+    paymentMethodVariant?: string;
 }
 
 export interface BinLookupResponseRaw {

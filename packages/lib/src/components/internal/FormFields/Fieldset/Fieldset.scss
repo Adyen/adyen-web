@@ -42,6 +42,16 @@
 }
 
 .adyen-checkout__field-group:last-of-type .adyen-checkout__field {
+    @include screen-s-and-up {
+        margin-bottom: 0;
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+:not(.adyen-checkout__field-group) > .adyen-checkout__field:last-of-type {
     margin-bottom: 0;
 }
 

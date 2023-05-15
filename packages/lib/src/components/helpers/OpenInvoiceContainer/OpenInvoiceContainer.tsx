@@ -86,7 +86,7 @@ export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainer
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <OpenInvoice
                         setComponentRef={this.setComponentRef}

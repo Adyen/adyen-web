@@ -9,12 +9,12 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
 import './IssuerList.scss';
-import { interpolateElement } from '../../../language/utils';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 import { SetSRMessagesReturnObject } from '../../../core/Errors/types';
 import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { setFocusOnField } from '../../../utils/setFocus';
+import DisclaimerMessage from '../DisclaimerMessage';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -109,25 +109,17 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 })}
             </Field>
 
+            {props.termsAndConditions && (
+                <div className="adyen-checkout__issuer-list__termsAndConditions">
+                    <DisclaimerMessage message={i18n.get(props.termsAndConditions.translationKey)} urls={props.termsAndConditions.urls} />
+                </div>
+            )}
+
             {props.showPayButton &&
                 props.payButton({
                     status,
                     label: payButtonLabel({ issuer: data['issuer'], items: [...items, ...highlightedItems] }, i18n)
                 })}
-
-            {props.termsAndConditionsUrl && (
-                <div className="adyen-checkout__issuer-list__termsAndConditions">
-                    <p className="adyen-checkout__helper-text">
-                        {interpolateElement(i18n.get('onlineBanking.termsAndConditions'), [
-                            translation => (
-                                <a href={props.termsAndConditionsUrl} target="_blank" rel="noopener noreferrer">
-                                    {translation}
-                                </a>
-                            )
-                        ])}
-                    </p>
-                </div>
-            )}
         </div>
     );
 }

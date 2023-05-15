@@ -20,12 +20,12 @@ describe('PaypalButtons', () => {
     test('Calls to paypalRef.Buttons', async () => {
         jest.clearAllMocks();
         getWrapper();
-        expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(3);
+        expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(4);
     });
 
     test('Calls to paypalRef.Buttons().render', async () => {
         jest.clearAllMocks();
         getWrapper();
-        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(3);
+        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
     });
 });

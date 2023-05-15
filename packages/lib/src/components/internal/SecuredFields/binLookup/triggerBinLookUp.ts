@@ -86,6 +86,8 @@ export default parent => {
                             (acc, item) => {
                                 // All brand strings end up in the detectedBrands array
                                 acc.detectedBrands.push(item.brand);
+                                // Also add the paymentMethodVariants (more granular description of the txvariant)
+                                acc.paymentMethodVariants.push(item.paymentMethodVariant);
 
                                 // Add supported brand objects to the supportedBrands array
                                 if (item.supported === true) {
@@ -95,7 +97,7 @@ export default parent => {
 
                                 return acc;
                             },
-                            { supportedBrands: [], detectedBrands: [] }
+                            { supportedBrands: [], detectedBrands: [], paymentMethodVariants: [] }
                         );
 
                         /**
@@ -113,9 +115,9 @@ export default parent => {
                             parent.onBinLookup({
                                 type: callbackObj.type,
                                 detectedBrands: mappedResponse.detectedBrands,
-                                supportedBrands: mappedResponse.supportedBrands.map(item => item.brand), // supportedBrands contains the subset of
-                                // this.props.brands that matches the card
-                                // number that the shopper has typed
+                                // supportedBrands contains the subset of this.props.brands that matches the card number that the shopper has typed
+                                supportedBrands: mappedResponse.supportedBrands.map(item => item.brand),
+                                paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                                 issuingCountryCode: data.issuingCountryCode
@@ -142,6 +144,7 @@ export default parent => {
                                 type: callbackObj.type,
                                 detectedBrands: mappedResponse.detectedBrands,
                                 supportedBrands: null,
+                                paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
                             } as CbObjOnBinLookup);
 
@@ -155,6 +158,7 @@ export default parent => {
                             type: callbackObj.type,
                             detectedBrands: null,
                             supportedBrands: null,
+                            paymentMethodVariants: null,
                             brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
                         } as CbObjOnBinLookup);
 

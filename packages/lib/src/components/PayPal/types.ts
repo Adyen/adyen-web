@@ -16,7 +16,7 @@ declare global {
  */
 export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
 
-export type FundingSource = 'paypal' | 'credit';
+export type FundingSource = 'paypal' | 'credit' | 'paylater' | 'venmo';
 
 export interface PayPalStyles {
     /**
@@ -81,6 +81,12 @@ interface PayPalCommonProps {
     blockPayPalPayLaterButton?: boolean;
 
     /**
+     * Set to true to force the UI to not render PayPal Venmo button
+     * @defaultValue false
+     */
+    blockPayPalVenmoButton?: boolean;
+
+    /*
      * Set to true to force the UI to load Paypal Messages Component
      * @defaultValue false
      */

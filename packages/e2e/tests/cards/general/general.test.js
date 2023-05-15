@@ -39,28 +39,14 @@ test('#1 Can fill out the fields in the regular card and make a successful payme
     await t.expect(history[0].text).eql('Authorised');
 });
 
-test("#2 Value of label's 'for' attr should match value of corresponding securedField input's 'id' attr", async t => {
-    // Wait for field to appear in DOM
-    await cardPage.numHolder();
+// KEEP AS REF - process needed if we actually want to be able to store or log the value of an attr on an iframe
+//    await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
+//    const idVal = await getInputSelector('encryptedCardNumber', true).getAttribute('id');
+//    console.log('### general.test:::: idVal', idVal);
+//    await t.switchToMainWindow();
+//    await t.expect(numAttrVal).eql(idVal);
 
-    const numAttrVal = await cardPage.numLabel.getAttribute('for');
-    await cardPage.cardUtils.checkIframeForAttrVal(t, 0, 'encryptedCardNumber', 'id', numAttrVal);
-
-    const dateAttrVal = await cardPage.dateLabel.getAttribute('for');
-    await cardPage.cardUtils.checkIframeForAttrVal(t, 1, 'encryptedExpiryDate', 'id', dateAttrVal);
-
-    const cvcAttrVal = await cardPage.cvcLabel.getAttribute('for');
-    await cardPage.cardUtils.checkIframeForAttrVal(t, 2, 'encryptedSecurityCode', 'id', cvcAttrVal);
-
-    // KEEP AS REF - process needed if we actually want to be able to store or log the value of an attr on an iframe
-    //    await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
-    //    const idVal = await getInputSelector('encryptedCardNumber', true).getAttribute('id');
-    //    console.log('### general.test:::: idVal', idVal);
-    //    await t.switchToMainWindow();
-    //    await t.expect(numAttrVal).eql(idVal);
-});
-
-test('#3 PAN that consists of the same digit (but passes luhn) causes an error', async t => {
+test('#2 PAN that consists of the same digit (but passes luhn) causes an error', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -76,7 +62,7 @@ test('#3 PAN that consists of the same digit (but passes luhn) causes an error',
         .ok();
 });
 
-test('#4 Clicking pay button with an empty PAN causes an "empty" error on the PAN field', async t => {
+test('#3 Clicking pay button with an empty PAN causes an "empty" error on the PAN field', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -91,7 +77,7 @@ test('#4 Clicking pay button with an empty PAN causes an "empty" error on the PA
         .ok();
 });
 
-test('#5 PAN that consists of the 1 digit causes a "wrong length" error ', async t => {
+test('#4 PAN that consists of the 1 digit causes a "wrong length" error ', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 

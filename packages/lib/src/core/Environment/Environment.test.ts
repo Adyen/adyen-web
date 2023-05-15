@@ -1,4 +1,4 @@
-import resolveEnvironment from './Environment';
+import { resolveEnvironment } from './Environment';
 
 describe('Environment', () => {
     test('resolves set environments', () => {

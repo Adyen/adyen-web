@@ -46,11 +46,11 @@ abstract class AbstractCSF {
     // --
     protected constructor(setupObj: CSFSetupObject) {
         this.props = setupObj;
-        this.state = ({} as any) as CSFStateObject;
+        this.state = {} as any as CSFStateObject;
 
         // Initialise storage objects
-        this.config = ({} as any) as CSFConfigObject; // {} as ConfigObject fails in linting
-        this.callbacks = ({} as any) as CSFCallbacksConfig;
+        this.config = {} as any as CSFConfigObject; // {} as ConfigObject fails in linting
+        this.callbacks = {} as any as CSFCallbacksConfig;
     }
 }
 export default AbstractCSF;

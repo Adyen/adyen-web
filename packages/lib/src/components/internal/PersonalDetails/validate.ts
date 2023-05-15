@@ -10,7 +10,10 @@ const isDateOfBirthValid = value => {
     const age = new Date(ageDiff).getFullYear() - 1970;
     return age >= 18;
 };
-
+const isEmailValid = value => {
+    if (isEmpty(value)) return null;
+    return value.length >= 6 && value.length <= 320 && email.test(value);
+};
 export const personalDetailsValidationRules: ValidatorRules = {
     default: {
         validate: value => {
@@ -46,7 +49,7 @@ export const personalDetailsValidationRules: ValidatorRules = {
     },
     shopperEmail: {
         // If it's empty it's not in error, else, is it a valid email?
-        validate: value => (isEmpty(value) ? null : email.test(value)),
+        validate: value => isEmailValid(value),
         errorMessage: 'shopperEmail.invalid',
         modes: ['blur']
     }

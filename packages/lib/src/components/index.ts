@@ -4,6 +4,8 @@ import ApplePay from './ApplePay';
 import Atome from './Atome';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
+import CashAppPay from './CashAppPay';
+import ClickToPay from './ClickToPay';
 import Bancontact from './Card/Bancontact';
 import Donation from './Donation';
 import Giropay from './Giropay';
@@ -58,7 +60,6 @@ import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
-import CashAppPay from './CashAppPay';
 
 /**
  * Maps each component with a Component element.
@@ -115,6 +116,7 @@ const componentsMap = {
     amazonpay: AmazonPay,
     applepay: ApplePay,
     cashapp: CashAppPay,
+    clicktopay: ClickToPay,
     googlepay: GooglePay,
     paypal: PayPal,
     paywithgoogle: GooglePay,

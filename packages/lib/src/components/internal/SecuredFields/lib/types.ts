@@ -58,12 +58,13 @@ interface StyleDefinitions {
 
 export interface CardObject {
     cardType: string;
-    startingRules: number[];
-    permittedLengths: number[];
-    pattern: RegExp;
+    startingRules?: number[];
+    permittedLengths?: number[];
+    pattern?: RegExp;
     securityCode?: string;
     displayName?: string;
     cvcPolicy?: CVCPolicyType;
+    expiryDatePolicy?: DatePolicyType;
 }
 
 export interface CbObjOnBrand {

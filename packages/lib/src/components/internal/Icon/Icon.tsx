@@ -1,7 +1,6 @@
 import { h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
-import getImageUrl from '../../../utils/get-image';
 import cx from 'classnames';
+import useImage from '../../../core/Context/useImage';
 
 interface IconProps {
     type: string;
@@ -12,8 +11,8 @@ interface IconProps {
 }
 
 const Icon = ({ type, className = '', alt = '', height, width }: IconProps) => {
-    const { loadingContext } = useCoreContext();
-    const iconUrl = getImageUrl({ loadingContext, imageFolder: 'components/' })(type);
+    const getImage = useImage();
+    const iconUrl = getImage({ imageFolder: 'components/' })?.(type);
 
     return <img className={cx('adyen-checkout__icon', className)} alt={alt} src={iconUrl} height={height} width={width} />;
 };

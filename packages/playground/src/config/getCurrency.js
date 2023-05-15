@@ -31,6 +31,8 @@ const currencies = {
     TW: 'TWD',
     US: 'USD',
     VN: 'VND',
+    LA: 'LAK',
+    RS: 'RSD',
     default: 'EUR'
 };
 

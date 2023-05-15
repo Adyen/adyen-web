@@ -46,7 +46,7 @@ export class MBWayElement extends UIElement {
     render() {
         if (this.props.paymentData) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <Await
                         ref={ref => {
                             this.componentRef = ref;
@@ -71,7 +71,7 @@ export class MBWayElement extends UIElement {
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <MBWayInput
                     ref={ref => {
                         this.componentRef = ref;

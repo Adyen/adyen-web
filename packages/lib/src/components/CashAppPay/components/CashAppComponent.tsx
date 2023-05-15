@@ -7,7 +7,6 @@ import { CashAppPayEvents, ICashAppService } from '../services/types';
 import { CashAppPayEventData } from '../types';
 import StoreDetails from '../../internal/StoreDetails';
 import './CashAppComponent.scss';
-import classnames from 'classnames';
 
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;

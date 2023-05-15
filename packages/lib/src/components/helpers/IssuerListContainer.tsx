@@ -6,7 +6,7 @@ import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
-import { IssuerItem } from '../internal/IssuerList/types';
+import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
@@ -18,6 +18,8 @@ interface IssuerListContainerProps extends UIElementProps {
     i18n: Language;
     loadingContext: string;
     showPaymentMethodItemImages?: boolean;
+    showPayButton?: boolean;
+    termsAndConditions?: TermsAndConditions;
 }
 
 interface IssuerListData {
@@ -99,7 +101,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.issuers.length > 0 ? (
                     <SRPanelProvider srPanel={this.props.modules.srPanel}>
                         <IssuerList
