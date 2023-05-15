@@ -4,8 +4,8 @@ describe('Sepa', () => {
     const mockStateChange = sepa => {
         sepa.setState({
             data: {
-                'ownerName': 'A. Klaassen',
-                'ibanNumber': 'NL13TEST0123456789'
+                ownerName: 'A. Klaassen',
+                ibanNumber: 'NL13TEST0123456789'
             },
             isValid: true
         });
@@ -15,8 +15,8 @@ describe('Sepa', () => {
     const mockInvalidStateChange = sepa => {
         sepa.setState({
             data: {
-                'ownerName': 'A. Klaassen',
-                'ibanNumber': 'NOTANIBAN'
+                ownerName: 'A. Klaassen',
+                ibanNumber: 'NOTANIBAN'
             },
             isValid: false
         });

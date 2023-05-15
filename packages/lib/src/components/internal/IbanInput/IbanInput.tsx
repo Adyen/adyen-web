@@ -192,6 +192,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         errorMessage={errors.holder ? i18n.get(errors.holder.error) : false}
                         dir={'ltr'}
                         i18n={i18n}
+                        name={'ownerName'}
                     >
                         {renderFormField('text', {
                             name: 'ownerName',
@@ -215,6 +216,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                     onBlur={this.handleIbanBlur}
                     dir={'ltr'}
                     i18n={i18n}
+                    name={'ibanNumber'}
                 >
                     {renderFormField('text', {
                         ref: ref => {

@@ -9,7 +9,7 @@ interface AlertProps {
     children: ComponentChildren;
     classNames?: string[];
     icon?: string;
-    type?: typeof ALERT_TYPES[number];
+    type?: (typeof ALERT_TYPES)[number];
 }
 
 export default function Alert({ children, classNames = [], type = 'error', icon }: AlertProps) {

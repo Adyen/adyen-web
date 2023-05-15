@@ -29,7 +29,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 container: klarnaWidgetRef.current,
                 payment_method_category: sdkData.payment_method_category
             },
-            function(res) {
+            function (res) {
                 // If show_form: true is received together with an error, something fixable is wrong and the consumer
                 // needs to take action before moving forward
                 // If show_form: false, the payment method in the loaded widget will not be offered for this order
@@ -48,7 +48,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 {
                     payment_method_category: sdkData.payment_method_category
                 },
-                function(res: KlarnaWidgetAuthorizeResponse) {
+                function (res: KlarnaWidgetAuthorizeResponse) {
                     if (res.approved === true && res.show_form === true) {
                         // Klarna has approved the authorization of credit for this order.
                         setStatus('success');
@@ -78,7 +78,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
 
     // Add Klarna Payments Widget SDK
     useEffect(() => {
-        window.klarnaAsyncCallback = function() {
+        window.klarnaAsyncCallback = function () {
             initializeKlarnaWidget();
         };
 

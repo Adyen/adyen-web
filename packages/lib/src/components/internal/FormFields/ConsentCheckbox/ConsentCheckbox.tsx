@@ -7,7 +7,7 @@ export default function ConsentCheckbox({ errorMessage, label, onChange, i18n, .
         <Field classNameModifiers={['consentCheckbox']} errorMessage={errorMessage} i18n={i18n}>
             <Checkbox
                 name="consentCheckbox"
-                classNameModifiers={[...props.classNameModifiers??=[], 'consentCheckbox']}
+                classNameModifiers={[...(props.classNameModifiers ??= []), 'consentCheckbox']}
                 onInput={onChange}
                 value={props?.data?.consentCheckbox}
                 label={label}

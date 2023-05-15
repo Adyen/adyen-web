@@ -4,7 +4,7 @@ import { getReducer, init } from './reducer';
 import { Form, FormState, FormProps, Formatter } from './types';
 
 function isFormatterObject(formatter: Formatter | Function): formatter is Formatter {
-    return formatter && ('formatterFn' in formatter);
+    return formatter && 'formatterFn' in formatter;
 }
 
 function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
