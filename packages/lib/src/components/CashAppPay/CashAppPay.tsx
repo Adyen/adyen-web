@@ -66,19 +66,21 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         };
     }
 
-    public submit(): void {
+    public submit = () => {
         const { onClick, storedPaymentMethodId } = this.props;
 
-        new Promise<void>((resolve, reject) => onClick({ resolve, reject })).then(async () => {
-            if (storedPaymentMethodId) {
-                super.submit();
-                return;
-            }
-
-            await this.cashAppService.createCustomerRequest();
-            this.cashAppService.begin();
-        });
-    }
+        new Promise<void>((resolve, reject) => onClick({ resolve, reject }))
+            .then(() => {
+                if (storedPaymentMethodId) {
+                    super.submit();
+                    return;
+                }
+                return this.cashAppService.createCustomerRequest();
+            })
+            .then(() => {
+                this.cashAppService.begin();
+            });
+    };
 
     public get isValid(): boolean {
         return true;
@@ -91,7 +93,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} resources={this.resources} loadingContext={this.props.loadingContext}>
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
                         name={this.displayName}

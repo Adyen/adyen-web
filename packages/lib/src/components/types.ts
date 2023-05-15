@@ -92,7 +92,6 @@ export interface ActionHandledReturnObject {
 }
 
 export interface UIElementProps extends BaseElementProps {
-    environment?: string;
     session?: Session;
     onChange?: (state: any, element: UIElement) => void;
     onValid?: (state: any, element: UIElement) => void;
