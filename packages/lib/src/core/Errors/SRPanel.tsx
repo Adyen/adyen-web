@@ -10,6 +10,8 @@ import { SRMessages, SRMessagesRef } from './SRMessages';
  * For testing purposes can be made visible
  */
 export class SRPanel extends BaseElement<SRPanelProps> {
+    public static type = 'srPanel';
+
     public static defaultProps = {
         enabled: true,
         node: 'body',
