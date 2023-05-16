@@ -90,7 +90,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 {labelEndAdornment && <span className="adyen-checkout__label-adornment--end">{labelEndAdornment}</span>}
 
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
-                <div
+                <span
                     className={classNames([
                         'adyen-checkout__input-wrapper',
                         ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
@@ -125,7 +125,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             <Icon type="field_error" alt={i18n?.get('error.title')} />
                         </span>
                     )}
-                </div>
+                </span>
                 <span
                     className={'adyen-checkout__error-text'}
                     {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
