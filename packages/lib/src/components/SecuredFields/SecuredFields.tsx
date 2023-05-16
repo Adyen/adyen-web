@@ -3,7 +3,6 @@ import UIElement from '../UIElement';
 import SecuredFields from './SecuredFieldsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
-import getImage from '../../utils/get-image';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
@@ -72,7 +71,7 @@ export class SecuredFieldsElement extends UIElement {
         if (!nuObj.isReset) {
             // Add brandImage urls, first checking if the merchant has configured their own one for the brand
             nuObj.supportedBrandsRaw = obj.supportedBrandsRaw?.map((item: BrandObject) => {
-                item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.props.loadingContext);
+                item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
                 return item;
             });
         }
@@ -87,7 +86,7 @@ export class SecuredFieldsElement extends UIElement {
     }
 
     get icon() {
-        return getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.type);
     }
 
     get browserInfo() {
@@ -96,7 +95,7 @@ export class SecuredFieldsElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SecuredFields
                     ref={ref => {
                         this.componentRef = ref;
@@ -107,6 +106,7 @@ export class SecuredFieldsElement extends UIElement {
                     onChange={this.setState}
                     onBinValue={this.onBinValue}
                     implementationType={'custom'}
+                    resources={this.resources}
                 />
             </CoreProvider>
         );

@@ -28,7 +28,8 @@ test('should show pay button if property is set to true', async () => {
 test('should validate Brazil SSN', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix({ personalDetailsRequired: true, i18n });
+    const resources = global.resources;
+    const pixElement = new Pix({ personalDetailsRequired: true, i18n, modules: { resources } });
     render(pixElement.render());
 
     const firstNameInput = await screen.findByLabelText('First name');

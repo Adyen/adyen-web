@@ -15,19 +15,19 @@ export interface ImageOptions {
 const returnImage = ({ name, loadingContext, imageFolder = '', parentFolder = '', extension, size = '', subFolder = '' }: ImageOptions): string =>
     `${loadingContext}images/${imageFolder}${subFolder}${parentFolder}${name}${size}.${extension}`;
 
-export const getImageUrl = ({ loadingContext = FALLBACK_CONTEXT, extension = 'svg', ...options }: ImageOptions): Function => (
-    name: string
-): string => {
-    const imageOptions: ImageOptions = {
-        extension,
-        loadingContext,
-        imageFolder: 'logos/',
-        parentFolder: '',
-        name,
-        ...options
-    };
+export const getImageUrl =
+    ({ loadingContext = FALLBACK_CONTEXT, extension = 'svg', ...options }: ImageOptions): Function =>
+    (name: string): string => {
+        const imageOptions: ImageOptions = {
+            extension,
+            loadingContext,
+            imageFolder: 'logos/',
+            parentFolder: '',
+            name,
+            ...options
+        };
 
-    return returnImage(imageOptions);
-};
+        return returnImage(imageOptions);
+    };
 
 export default getImageUrl;

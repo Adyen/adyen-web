@@ -5,9 +5,9 @@ import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
-import { getImageUrl } from '../../../../utils/get-image';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
+import useImage from '../../../../core/Context/useImage';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -73,6 +73,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     render({ onActionHandled }, { challengeData }) {
+        const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
                 <DoChallenge3DS2
@@ -84,8 +85,22 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             this.props.onError(errorCodeObject);
                         }
 
-                        // Proceed with call to onAdditionalDetails
-                        this.setStatusComplete(challenge.result);
+                        // This is the response we were looking for
+                        if (challenge.threeDSServerTransID === challengeData.cReqData.threeDSServerTransID) {
+                            // Proceed with call to onAdditionalDetails
+                            this.setStatusComplete(challenge.result);
+                        } else {
+                            /**
+                             * We suspect there is a scenario where the cRes is empty the first time causing the shopper to try to pay again, from the same
+                             * browser window. But due to a suboptimal implementation by the merchant - the first set of 3DS2 components has not been properly removed.
+                             * This means that for the second, successful challenge, there are a double set of listeners, leading to double callbacks, leading to
+                             * double /details calls (one that will fail, one that will succeed).
+                             *
+                             * So here we detect that this is not the response we are looking for, and this time round, unmount this set of 3DS2 comps
+                             */
+                            console.debug('### PrepareChallenge3DS2::threeDSServerTransID:: ids do not match');
+                            this.props.onComplete(null); // Send null so parent will unmount without calling onComplete
+                        }
                     }}
                     onErrorChallenge={(challenge: ThreeDS2FlowObject) => {
                         /**
@@ -109,7 +124,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 <div className="adyen-checkout__threeds2-challenge-error">
                     <Img
                         className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                        src={getImageUrl({ loadingContext: this.props.loadingContext, imageFolder: 'components/' })('error')}
+                        src={getImage({
+                            imageFolder: 'components/'
+                        })('error')}
                         alt={''}
                     />
                     <div className="adyen-checkout__status__text">

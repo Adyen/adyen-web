@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { GiftcardNumberField } from './GiftcardNumberField';
 import { GiftcardPinField } from './GiftcardPinField';
-import {GiftcardFieldsProps} from "./types";
+import { GiftcardFieldsProps } from './types';
 
 export const GiftCardFields = (props: GiftcardFieldsProps) => {
     const { setRootNode, pinRequired } = props;

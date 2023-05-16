@@ -24,14 +24,13 @@ export default function PaypalButtons({
     const paypalButtonRef = useRef<HTMLDivElement>(null);
     const creditButtonRef = useRef<HTMLDivElement>(null);
     const payLaterButtonRef = useRef<HTMLDivElement>(null);
+    const venmoButtonRef = useRef<HTMLDivElement>(null);
 
     const createButton = (fundingSource: FundingSource, buttonRef) => {
-        const button = paypalRef.Buttons({
+        const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
-            ...(!isTokenize && {
-                createOrder: onSubmit,
-                onShippingChange
-            }),
+            ...(!isTokenize && { createOrder: onSubmit }),
+            ...(!isTokenize && fundingSource !== 'venmo' && { onShippingChange }),
             fundingSource,
             style: getStyle(fundingSource, style),
             onInit,
@@ -39,7 +38,9 @@ export default function PaypalButtons({
             onCancel,
             onError,
             onApprove
-        });
+        };
+
+        const button = paypalRef.Buttons(configuration);
 
         if (button.isEligible()) {
             button.render(buttonRef.current);
@@ -47,10 +48,12 @@ export default function PaypalButtons({
     };
 
     useEffect(() => {
-        const { PAYPAL, CREDIT, PAYLATER } = paypalRef.FUNDING;
+        const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;
         createButton(PAYPAL, paypalButtonRef);
+
         if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);
         if (!props.blockPayPalPayLaterButton) createButton(PAYLATER, payLaterButtonRef);
+        if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
     }, []);
 
     return (
@@ -58,6 +61,7 @@ export default function PaypalButtons({
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--paypal" ref={paypalButtonRef} />
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--credit" ref={creditButtonRef} />
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--pay-later" ref={payLaterButtonRef} />
+            <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--venmo" ref={venmoButtonRef} />
 
             {isProcessingPayment && (
                 <div className="adyen-checkout__paypal">

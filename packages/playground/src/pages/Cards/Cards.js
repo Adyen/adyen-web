@@ -17,6 +17,11 @@ const showComps = {
     avsPartialCard: true,
     kcpCard: true
 };
+const disclaimerMessage = {
+    message: 'By continuing you accept the %{linkText} of MyStore',
+    linkText: 'terms and conditions',
+    link: 'https://www.adyen.com'
+};
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -41,7 +46,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
-            window.storedCard = checkout.create('card', storedCardData).mount('.storedcard-field');
+            window.storedCard = checkout
+                .create('card', {
+                    ...storedCardData,
+                    disclaimerMessage
+                })
+                .mount('.storedcard-field');
         }
     }
 
@@ -52,13 +62,16 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 installmentOptions: {
                     mc: {
-                        values: [1, 2, 3]
+                        values: [1, 2],
+                        preselectedValue: 2
                     },
                     visa: {
                         values: [1, 2, 3, 4],
-                        plans: ['regular', 'revolving']
+                        plans: ['regular', 'revolving'],
+                        preselectedValue: 4
                     }
                 },
+                disclaimerMessage,
                 showBrandsUnderCardNumber: true,
                 showInstallmentAmounts: true,
                 onError: obj => {

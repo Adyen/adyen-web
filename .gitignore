@@ -28,3 +28,7 @@ stats.html
 # Vagrant
 Vagrantfile
 .vagrant
+
+# Certifictes
+cert
+*.pem

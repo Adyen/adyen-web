@@ -133,7 +133,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         if (!this.props.showPayButton) return null;
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PaypalComponent
                     ref={ref => {
                         this.componentRef = ref;

@@ -6,8 +6,9 @@ import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language/Language';
-import { IssuerItem } from '../internal/IssuerList/types';
+import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -17,6 +18,8 @@ interface IssuerListContainerProps extends UIElementProps {
     i18n: Language;
     loadingContext: string;
     showPaymentMethodItemImages?: boolean;
+    showPayButton?: boolean;
+    termsAndConditions?: TermsAndConditions;
 }
 
 interface IssuerListData {
@@ -46,7 +49,11 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         issuers: [],
         highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false
+        showPaymentMethodItemImages: false,
+        // Previously we didn't check the showPayButton before rendering the RedirectButton.
+        // Now that we are checking it, all the merchants who don't specify showPayButton in the config will not see the RedirectButton anymore.
+        // To prevent the backward compatible issue, we add it as the default prop, but it should be fixed properly on v6.
+        showPayButton: true
     };
 
     formatProps(props) {
@@ -94,30 +101,34 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.issuers.length > 0 ? (
-                    <IssuerList
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        items={this.props.issuers}
-                        highlightedIds={this.props.highlightedIssuers}
-                        {...this.props}
-                        {...this.state}
-                        onChange={this.setState}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                    />
+                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                        <IssuerList
+                            ref={ref => {
+                                this.componentRef = ref;
+                            }}
+                            items={this.props.issuers}
+                            highlightedIds={this.props.highlightedIssuers}
+                            {...this.props}
+                            {...this.state}
+                            onChange={this.setState}
+                            onSubmit={this.submit}
+                            payButton={this.payButton}
+                        />
+                    </SRPanelProvider>
                 ) : (
-                    <RedirectButton
-                        name={this.props.name}
-                        {...this.props}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
+                    this.props.showPayButton && (
+                        <RedirectButton
+                            name={this.props.name}
+                            {...this.props}
+                            onSubmit={this.submit}
+                            payButton={this.payButton}
+                            ref={ref => {
+                                this.componentRef = ref;
+                            }}
+                        />
+                    )
                 )}
             </CoreProvider>
         );

@@ -33,6 +33,7 @@ export interface SRPanelProps extends BaseElementProps {
     node?: string;
     showPanel?: boolean;
     moveFocus?: boolean;
+    id?: string;
 }
 
 export interface SRMessagesProps {

@@ -20,6 +20,23 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
+    // CLICK TO PAY
+    window.clickToPay = checkout.create('clicktopay', {
+        shopperEmail: 'shopper@example.com',
+        onReady() {
+            console.log('ClickToPay is ready');
+        }
+    });
+    window.clickToPay
+        .isAvailable()
+        .then(() => {
+            document.querySelector('#clicktopay').classList.remove('merchant-checkout__payment-method--hidden');
+            window.clickToPay.mount('.clicktopay-field');
+        })
+        .catch(e => {
+            console.warn('ClickToPay is NOT available');
+        });
+
     // AMAZON PAY
     // Demo only
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -162,20 +179,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // APPLE PAY
     const applepay = checkout.create('applepay', {
-        // Callbacks
+        onClick: (resolve, reject) => {
+            console.log('Apple Pay - Button clicked');
+            resolve();
+        },
         onAuthorized: (resolve, reject, event) => {
             console.log('Apple Pay onAuthorized', event);
             resolve();
-        },
-        // onError: console.error,
-
-        // Payment info
-        countryCode: 'DE', // Required. The merchant’s two-letter ISO 3166 country code.
-
-        // Merchant config (required)
-        configuration: {
-            merchantName: 'Adyen Test merchant', // Name to be displayed
-            merchantIdentifier: '000000000200001' // Required. https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrequest/2951611-merchantidentifier
         },
         buttonType: 'buy'
     });
@@ -183,11 +193,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     applepay
         .isAvailable()
         .then(isAvailable => {
-            // Demo only
-            if (isAvailable) document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
-
-            // If Available mount it in the dom
-            if (isAvailable) applepay.mount('.applepay-field');
+            if (isAvailable) {
+                // For this Demo only
+                document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
+                // Required: mount ApplePay component
+                applepay.mount('.applepay-field');
+            }
         })
         .catch(e => {
             console.warn(e);

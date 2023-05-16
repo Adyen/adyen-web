@@ -60,3 +60,15 @@ export const DATA_INFO = 'data-info';
 export const DATA_UID = 'data-uid';
 
 export const BRAND_ICON_UI_EXCLUSION_LIST = ['accel', 'pulse', 'star', 'nyce'];
+
+export const BRAND_READABLE_NAME_MAP = {
+    visa: 'VISA',
+    mc: 'MasterCard',
+    amex: 'American Express',
+    discover: 'Discover',
+    cup: 'China Union Pay',
+    jcb: 'JCB',
+    diners: 'Diners Club',
+    maestro: 'Maestro',
+    bcmc: 'Bancontact card'
+};

@@ -1,5 +1,4 @@
-import { getStyle, getSupportedLocale } from './utils';
-
+import { getStyle, getSupportedLocale, getPaypalUrl } from './utils';
 describe('getStyle', () => {
     test('return the same styles for the regular PayPal button', () => {
         const style = { color: 'gold', height: 48 };
@@ -19,5 +18,40 @@ describe('getSupportedLocale', () => {
 
     test('return null if the passed locale is not supported', () => {
         expect(getSupportedLocale('es_AR')).toBe(null);
+    });
+});
+
+describe('getPaypalUrl', () => {
+    test('return the url to be with messages component when enableMessages is undefined/false', () => {
+        const props: any = {
+            amount: { currency: 'USD', value: 100 },
+            countryCode: 'US',
+            environment: 'test',
+            locale: 'en-US',
+            configuration: {
+                merchantId: 'fakeMerchant',
+                intent: 'fakeIntents'
+            }
+        };
+        const url = getPaypalUrl(props);
+        const messagesComponent = url.split('&components=')[1];
+        expect(messagesComponent).toBe('buttons,funding-eligibility');
+    });
+
+    test('return the url to be with messages component when all enableMessages is set to true', () => {
+        const props: any = {
+            amount: { currency: 'USD', value: 100 },
+            countryCode: 'US',
+            environment: 'test',
+            locale: 'en-US',
+            enableMessages: true,
+            configuration: {
+                merchantId: 'fakeMerchant',
+                intent: 'fakeIntents'
+            }
+        };
+        const url = getPaypalUrl(props);
+        const messagesComponent = url.split('&components=')[1];
+        expect(messagesComponent).toBe('buttons,funding-eligibility,messages');
     });
 });

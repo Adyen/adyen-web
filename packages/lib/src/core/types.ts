@@ -1,7 +1,7 @@
 import { CustomTranslations, Locales } from '../language/types';
 import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
-import { PaymentMethodsResponseObject } from './ProcessResponse/PaymentMethodsResponse/types';
+import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
 import UIElement from '../components/UIElement';
@@ -47,7 +47,7 @@ export interface CoreOptions {
     /**
      * The full `/paymentMethods` response
      */
-    paymentMethodsResponse?: PaymentMethodsResponseObject;
+    paymentMethodsResponse?: PaymentMethodsResponse;
 
     /**
      * Amount of the payment
@@ -83,6 +83,14 @@ export interface CoreOptions {
      * Screen Reader configuration
      */
     srConfig?: SRPanelProps;
+
+    /**
+     * @internal
+     */
+    //TODO: maybe type this?
+    cdnContext?: string;
+
+    resourceEnvironment?: string;
 
     analytics?: AnalyticsOptions;
 

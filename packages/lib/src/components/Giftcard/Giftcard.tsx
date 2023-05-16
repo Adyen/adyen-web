@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-import getImage from '../../utils/get-image';
+
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types';
@@ -42,7 +42,7 @@ export class GiftcardElement extends UIElement {
         return (
             this.props.brandsConfiguration[this.props.brand]?.icon ||
             this.props.icon ||
-            getImage({ loadingContext: this.props.loadingContext })(this.props.brand)
+            this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.brand)
         );
     }
 
@@ -132,7 +132,7 @@ export class GiftcardElement extends UIElement {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <GiftcardComponent
                     ref={ref => {
                         this.componentRef = ref;

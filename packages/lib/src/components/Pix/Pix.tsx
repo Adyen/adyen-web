@@ -47,7 +47,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PixInput
                     ref={ref => {
                         this.componentRef = ref;

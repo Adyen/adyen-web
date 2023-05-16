@@ -70,6 +70,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     },
                     modes: ['blur']
                 },
+                // Example of overwriting the default validation rule (which doesn't consider an empty field to be in error, unless the whole form is being validated)
+                // with a new rule that will throw an error on a field if you click into it and then click out again leaving it empty
                 default: {
                     validate: value => value && value.length > 0,
                     modes: ['blur']

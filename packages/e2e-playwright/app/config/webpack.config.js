@@ -1,17 +1,18 @@
 const webpack = require('webpack');
-const { merge } = require('webpack-merge');
 const path = require('path');
+const fs = require('fs');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const checkoutDevServer = require('@adyen/adyen-web-server');
 const host = process.env.HOST || '0.0.0.0';
 const port = '3024';
 const resolve = dir => path.resolve(__dirname, dir);
 
+const basePageDir = path.join(__dirname, `../src/pages/`);
 // NOTE: The first page in the array will be considered the index page.
-const htmlPages = [
-    { name: 'Cards', id: 'Cards' },
-    { name: 'Issuer Lists', id: 'IssuerLists' }
-];
+// Automatically get
+const htmlPages = fs.readdirSync(basePageDir).map(fileName => ({
+    id: fileName
+}));
 
 const htmlPageGenerator = ({ id }, index) =>
     new HTMLWebpackPlugin({
@@ -30,6 +31,11 @@ const entriesReducer = (acc, { id }) => {
 
 module.exports = {
     mode: 'development',
+
+    resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss']
+    },
+
     plugins: [
         ...htmlPages.map(htmlPageGenerator),
         new webpack.HotModuleReplacementPlugin(),
@@ -40,20 +46,22 @@ module.exports = {
             }
         })
     ],
+
     devtool: 'cheap-module-source-map',
+
     entry: {
         ...htmlPages.reduce(entriesReducer, {})
     },
-    resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss']
+
+    watchOptions: {
+        ignored: ['/node_modules/', '/!(@adyen/adyen-web/dist)/'],
+        aggregateTimeout: 200,
+        poll: 500
     },
-    stats: { children: false },
+
     module: {
         rules: [
             {
-                // "oneOf" will traverse all following loaders until one will
-                // match the requirements. When no loader matches it will fall
-                // back to the "file" loader at the end of the loader list.
                 oneOf: [
                     {
                         test: [/\.js?$/],
@@ -85,44 +93,18 @@ module.exports = {
             }
         ]
     },
+
     devServer: {
-        before: app => checkoutDevServer(app),
         port,
-        host,
+        host: '0.0.0.0',
         https: false,
-        inline: true,
-
-        // Enable hot reloading server. It will provide /sockjs-node/ endpoint
-        // for the WebpackDevServer client so it can learn when the files were
-        // updated. The WebpackDevServer client is included as an entry point
-        // in the Webpack development configuration. Note that only changes
-        // to CSS are currently hot reloaded. JS changes will refresh the browser.
         hot: true,
-
-        // Enable gzip compression of generated files.
         compress: true,
-
-        // Silence WebpackDevServer's own logs since they're generally not useful.
-        // It will still show compile warnings and errors with this setting.
-        clientLogLevel: 'none',
-
-        // Tells dev-server to suppress messages like the webpack bundle information.
-        // Errors and warnings will still be shown.
-        noInfo: true,
-
-        // By default files from `contentBase` will not trigger a page reload.
-        watchContentBase: false,
-
-        // Reportedly, this avoids CPU overload on some systems.
-        // https://github.com/facebook/create-react-app/issues/293
-        // src/node_modules is not ignored to support absolute imports
-        // https://github.com/facebook/create-react-app/issues/1065
-        watchOptions: {
-            ignore: [/node_modules/, /!(@adyen\/adyen-web\/dist)/],
-            aggregateTimeout: 200,
-            poll: 500
-        },
-
-        overlay: false
+        onBeforeSetupMiddleware: devServer => {
+            if (!devServer) {
+                throw new Error('webpack-dev-server is not defined');
+            }
+            checkoutDevServer(devServer.app);
+        }
     }
 };

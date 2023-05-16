@@ -1,11 +1,12 @@
-import { PaymentMethod } from '../../../types';
+import { PaymentMethod, StoredPaymentMethod } from '../../../types';
 import { checkPaymentMethodsResponse, processPaymentMethods, processStoredPaymentMethods } from './utils';
+import { PaymentMethodsResponse as PaymentMethodsResponseType } from './types';
 
 class PaymentMethodsResponse {
     public paymentMethods: PaymentMethod[] = [];
-    public storedPaymentMethods: PaymentMethod[] = [];
+    public storedPaymentMethods: StoredPaymentMethod[] = [];
 
-    constructor(response, options = {}) {
+    constructor(response: PaymentMethodsResponseType, options = {}) {
         checkPaymentMethodsResponse(response);
 
         this.paymentMethods = response ? processPaymentMethods(response.paymentMethods, options) : [];

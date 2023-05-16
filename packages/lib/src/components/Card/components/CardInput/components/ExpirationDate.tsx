@@ -12,11 +12,12 @@ import {
     DATE_POLICY_REQUIRED,
     ENCRYPTED_EXPIRY_DATE
 } from '../../../../internal/SecuredFields/lib/configuration/constants';
-import getImage from '../../../../../utils/get-image';
+import useImage from '../../../../../core/Context/useImage';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     const fieldClassnames = classNames(className, {
         'adyen-checkout__field__exp-date': true,
@@ -61,7 +62,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                 })}
             >
                 <img
-                    src={getImage({ loadingContext, imageFolder: 'components/' })('expiry_date_hint')}
+                    src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
                     className="adyen-checkout__field__exp-date_hint"
                     alt={fieldLabel}
                 />

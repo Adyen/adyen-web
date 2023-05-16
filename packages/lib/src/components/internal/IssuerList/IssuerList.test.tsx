@@ -70,10 +70,7 @@ describe('IssuerList', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
         expect(onChangeCb.mock.calls[1][0]).toStrictEqual(callbackData);
 
-        wrapper
-            .find('.adyen-checkout__issuer-button-group button')
-            .at(1)
-            .simulate('click');
+        wrapper.find('.adyen-checkout__issuer-button-group button').at(1).simulate('click');
 
         callbackData = { data: { issuer: '3' }, valid: { issuer: true }, errors: { issuer: null }, isValid: true };
 

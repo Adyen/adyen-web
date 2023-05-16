@@ -1,6 +1,6 @@
 import { getDecimalAmount } from '../../utils/amount-util';
 import config from './config';
-import {GooglePaymentDataRequest, GooglePayProps} from './types';
+import { GooglePaymentDataRequest, GooglePayProps } from './types';
 
 /**
  * Configure your site's support for payment methods supported by the Google Pay API.
@@ -80,6 +80,7 @@ export function initiatePaymentRequest({ configuration, ...props }: GooglePayPro
                 parameters: {
                     allowedAuthMethods: props.allowedAuthMethods,
                     allowedCardNetworks: props.allowedCardNetworks,
+                    assuranceDetailsRequired: props.assuranceDetailsRequired,
                     allowPrepaidCards: props.allowPrepaidCards,
                     allowCreditCards: props.allowCreditCards,
                     billingAddressRequired: props.billingAddressRequired,

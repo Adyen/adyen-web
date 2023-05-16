@@ -27,7 +27,12 @@ export default function SendCopyToEmail(props) {
             </Field>
 
             {sendCopyToEmail && (
-                <Field label={i18n.get('shopperEmail')} classNameModifiers={['shopperEmail']} errorMessage={errors}>
+                <Field
+                    label={i18n.get('shopperEmail')}
+                    classNameModifiers={['shopperEmail']}
+                    errorMessage={errors && errors.errorMessage ? i18n.get(errors.errorMessage) : !!errors}
+                    name={'shopperEmail'}
+                >
                     {renderFormField('emailAddress', {
                         name: 'shopperEmail',
                         autoCorrect: 'off',

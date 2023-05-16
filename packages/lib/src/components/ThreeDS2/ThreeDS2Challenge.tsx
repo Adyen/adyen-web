@@ -33,7 +33,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     };
 
     onComplete(state) {
-        super.onComplete(state);
+        if (state) super.onComplete(state);
         this.unmount(); // re. fixing issue around back to back challenge calls
     }
 

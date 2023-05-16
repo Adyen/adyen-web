@@ -75,7 +75,8 @@ function FieldContainer(props: FieldContainerProps) {
                         onBlur,
                         maxlength,
                         trimOnBlur,
-                        disabled
+                        disabled,
+                        required: isOptional ? false : true
                     })}
                 </Field>
             );
