@@ -13,13 +13,11 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
 import useImage from '../../../core/Context/useImage';
-import { A11yManager } from '../Countdown/A11yManager';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     private interval;
-    private a11yManager;
 
     constructor(props) {
         super(props);
@@ -60,8 +58,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     componentDidMount() {
         this.interval = setInterval(this.statusInterval, this.state.delay);
-        // @ts-ignore runtime modules in props
-        this.a11yManager = new A11yManager({ srPanel: this.props.modules.srPanel, i18n: this.props.i18n });
     }
 
     public redirectToApp = url => {
@@ -77,24 +73,20 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     componentWillUnmount() {
         clearInterval(this.interval);
-        this.a11yManager.tearDown();
     }
 
     private onTick = (time): void => {
         this.setState({ percentage: time.percentage });
-        this.a11yManager.update(time);
     };
 
     private onTimeUp = (): void => {
         this.setState({ expired: true });
         clearInterval(this.interval);
-        this.a11yManager.tearDown();
         this.props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
     private onComplete = (status: StatusObject): void => {
         clearInterval(this.interval);
-        this.a11yManager.tearDown();
         this.setState({ completed: true, loading: false });
 
         const state = {
@@ -109,7 +101,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     private onError = (status: StatusObject): void => {
         clearInterval(this.interval);
-        this.a11yManager.tearDown();
         this.setState({ expired: true, loading: false });
 
         if (status.props.payload) {

@@ -1,78 +1,73 @@
-// The component knows how to communicate with SR, how to build translation messages
-// Listen to the new time minutes and seconds change, knows the timer component state
-// If mins > 5, updates the SR every 3 mins
-// If 1 < mins <=5, update the SR every 1 min
-// If min <=1 && seconds>0, update SR every 30s
-// Clear SR every 5 seconds
-// Un-mounding will clear all timers
+import { interpolateElement } from '../../../language/utils';
 
 export class A11yManager {
-    protected static translationKey = 'sr.wechatpay.timetopay';
-    protected static longTimeout = 1000 * 5; // 3 minutes 3 * 1000 * 60;
-    protected static midTimeout = 3000; // 1 minutes 1000 * 60;
-    protected static shortTimeout = 1000; // 30 seconds 1000 * 30;
+    protected translationKey = 'sr.wechatpay.timetopay';
+    protected longTimeout = 3 * 60 * 1000; // 3 minutes
+    protected midTimeout = 60 * 1000; // 1 minute
+    protected shortTimeout = 30 * 1000; // 30 seconds
 
-    private interval;
     private srPanel;
+    private srInterval;
     private i18n;
     private timeout;
     private timeLeft;
 
     constructor(props) {
-        // todo: make duration configurable
         const { srPanel, i18n } = props;
         this.srPanel = srPanel;
         this.i18n = i18n;
+        // Force the srPanel to update arialRelevant
+        this.srPanel.update({ arialRelevant: 'additions text' });
     }
 
     public update(time) {
-        this.timeLeft = time;
-        const { minutes: minutesLeft, seconds: secondsLeft } = time;
-        if (minutesLeft > 5 && this.timeout !== A11yManager.longTimeout) {
-            this.timeout = A11yManager.longTimeout;
+        const { minutes, seconds } = time;
+        if (minutes === '-' || seconds === '-') return;
+
+        const minutesLeft = parseInt(minutes, 10);
+        const secondsLeft = parseInt(seconds, 10);
+        this.timeLeft = { minutes: minutesLeft, seconds: secondsLeft };
+
+        if (minutesLeft > 5 && this.timeout !== this.longTimeout) {
+            this.timeout = this.longTimeout;
             this.setInterval(this.timeout);
         }
-        if (minutesLeft >= 1 && minutesLeft <= 5 && this.timeout !== A11yManager.midTimeout) {
-            this.timeout = A11yManager.midTimeout;
+        if (minutesLeft >= 1 && minutesLeft <= 5 && this.timeout !== this.midTimeout) {
+            this.timeout = this.midTimeout;
             this.setInterval(this.timeout);
         }
-        if (minutesLeft < 1 && secondsLeft > 0 && this.timeout !== A11yManager.shortTimeout) {
-            this.timeout = A11yManager.shortTimeout;
+        if (minutesLeft < 1 && secondsLeft > 0 && this.timeout !== this.shortTimeout) {
+            this.timeout = this.shortTimeout;
             this.setInterval(this.timeout);
         }
     }
 
     public tearDown() {
         this.clearInterval();
+        // Reset the srPanel arialRelevant
+        this.srPanel.update({ arialRelevant: this.srPanel.constructor['defaultProps'].arialRelevant });
+        this.srPanel.setMessages(null);
     }
 
     private setInterval(timeout) {
         this.clearInterval();
-
         const setSrMessages = () => {
+            this.srPanel.setMessages(null);
             this.srPanel.setMessages(this.getSrMessages(this.timeLeft));
         };
-        // to execute immediately
+        // To execute immediately
         setSrMessages();
-        this.interval = setInterval(setSrMessages, timeout);
+        this.srInterval = setInterval(setSrMessages, timeout);
     }
 
     private getSrMessages({ minutes, seconds }) {
-        const translation = this.i18n.get(A11yManager.translationKey);
-        const fns = [minutes, seconds].map(time => translation => `${time} ${translation}`);
-        return [this.build(translation, fns).join('')];
-    }
-
-    private build(translation, cbFunctions) {
-        const matches = translation.split(/%#(.*?)%#/gm);
-
-        return matches.map((term, index) => {
-            const indexInFunctionArray = Math.floor(index / 2);
-            return index % 2 === 0 ? term : cbFunctions[indexInFunctionArray](term);
-        });
+        const translation = this.i18n.get(this.translationKey);
+        const getTimeTranslation = time => (time !== 0 ? translation => `${time} ${translation}` : () => '');
+        const fns = [minutes, seconds].map(getTimeTranslation);
+        return [interpolateElement(translation, fns).join('')];
     }
 
     private clearInterval() {
-        if (this.interval) clearInterval(this.interval);
+        if (this.srInterval) clearInterval(this.srInterval);
     }
 }

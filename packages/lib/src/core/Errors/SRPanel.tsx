@@ -12,11 +12,12 @@ import { SRMessages, SRMessagesRef } from './SRMessages';
 export class SRPanel extends BaseElement<SRPanelProps> {
     public static type = 'srPanel';
 
-    public static defaultProps = {
+    public static defaultProps: SRPanelProps = {
         enabled: true,
         node: 'body',
         showPanel: false,
-        id: 'ariaLiveSRPanel'
+        id: 'ariaLiveSRPanel',
+        arialRelevant: 'all'
     };
 
     private readonly srPanelContainer = null;
@@ -83,7 +84,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                 aria-live={'polite'}
                 aria-atomic={'true'}
                 role={'log'}
-                aria-relevant={'all'}
+                aria-relevant={this.props.arialRelevant}
                 {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
                 <SRMessages setComponentRef={this.setComponentRef} />
