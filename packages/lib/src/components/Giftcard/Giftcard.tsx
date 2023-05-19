@@ -7,6 +7,7 @@ import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types';
 import { PaymentResponse } from '../types';
+import { GiftCardElementData } from './types';
 
 export class GiftcardElement extends UIElement {
     public static type = 'giftcard';
@@ -22,10 +23,7 @@ export class GiftcardElement extends UIElement {
         };
     }
 
-    /**
-     * Formats the component data output
-     */
-    formatData() {
+    formatData(): GiftCardElementData {
         return {
             paymentMethod: {
                 type: this.constructor['type'],

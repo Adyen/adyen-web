@@ -3,6 +3,15 @@ import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmount
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
+import UIElement from '../components/UIElement';
+import AdyenCheckoutError from './Errors/AdyenCheckoutError';
+import { GiftCardElementData } from '../components/Giftcard/types';
+import { SRPanelProps } from './Errors/types';
+
+type PromiseResolve = typeof Promise.resolve;
+
+type PromiseReject = typeof Promise.reject;
 
 export interface CoreOptions {
     session?: any;
@@ -10,6 +19,11 @@ export interface CoreOptions {
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
     environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+
+    /**
+     * Show or hides a Pay Button for each payment method
+     */
+    showPayButton?: boolean;
 
     /**
      * A public key linked to your web service user, used for {@link https://docs.adyen.com/user-management/client-side-authentication | client-side authentication}.
@@ -66,9 +80,9 @@ export interface CoreOptions {
     removePaymentMethods?: string[];
 
     /**
-     * @internal
-     * */
-    loadingContext?: string;
+     * Screen Reader configuration
+     */
+    srConfig?: SRPanelProps;
 
     /**
      * @internal
@@ -84,8 +98,45 @@ export interface CoreOptions {
 
     order?: Order;
 
-    //TODO: discuss if can remove this
-    [key: string]: any;
+    setStatusAutomatically?: boolean;
+
+    beforeRedirect?(resolve: PromiseResolve, reject: PromiseReject, redirectData: { url: string; method: string; data?: any }): Promise<void>;
+
+    beforeSubmit?(state: any, element: UIElement, actions: { resolve: PromiseResolve; reject: PromiseReject }): Promise<void>;
+
+    onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
+
+    onSubmit?(state: any, element: UIElement): void;
+
+    onAdditionalDetails?(state: any, element?: UIElement): void;
+
+    onActionHandled?(data: ActionHandledReturnObject): void;
+
+    onChange?(state: any, element: UIElement): void;
+
+    onError?(error: AdyenCheckoutError, element?: UIElement): void;
+
+    onBalanceCheck?(resolve: PromiseResolve, reject: PromiseReject, data: GiftCardElementData): Promise<void>;
+
+    onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
+
+    /**
+     * Only used in Components combined with Sessions flow
+     * Callback used to inform when the order is created.
+     * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
+     */
+    onOrderCreated?(order: Order): void;
+
+    /**
+     * Used only in the Donation Component when shopper declines to donate
+     * https://docs.adyen.com/online-payments/donations/web-component
+     */
+    onCancel?(): void;
+
+    /**
+     * @internal
+     */
+    loadingContext?: string;
 }
 
 export type PaymentMethodsConfiguration =

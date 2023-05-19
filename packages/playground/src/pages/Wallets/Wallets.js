@@ -134,11 +134,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             onError: (error, component) => {
                 component.setStatus('ready');
                 console.log('paypal onError', error);
-            },
-
-            onCancel: (data, component) => {
-                component.setStatus('ready');
-                console.log('paypal onCancel', data);
             }
         })
         .mount('.paypal-field');
