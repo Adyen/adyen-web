@@ -29,7 +29,7 @@
         "**/regenerator-runtime": "^0.13.9"
     },
     "dependencies": {
-        "concurrently": "^8.0.0"
+        "concurrently": "8.0.1"
     },
     "devDependencies": {
         "prettier": "2.8.8"
