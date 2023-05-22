@@ -24,7 +24,7 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "concurrently": "^7.6.0",
+        "concurrently": "8.0.1",
         "cross-env": "^7.0.3",
         "css-loader": "^5.2.7",
         "dotenv": "^16.0.3",
