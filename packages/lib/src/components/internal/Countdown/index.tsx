@@ -24,8 +24,9 @@ function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }
 
     const { i18n } = useCoreContext();
     const { srPanel } = useSRPanelContext();
+
     const a11yManager = useRef(null);
-    const [state, setState] = useState<CountdownState>({
+    const [time, setTime] = useState<CountdownState>({
         minutes: '-',
         seconds: '-'
     });
@@ -37,7 +38,7 @@ function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }
                 onCompleted();
             }
             const timeLeft = { minutes, seconds, percentage };
-            setState(timeLeft);
+            setTime(timeLeft);
             onTick(timeLeft);
         };
         a11yManager.current = new A11yManager({ srPanel, i18n });
@@ -50,14 +51,14 @@ function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }
     }, []);
 
     useEffect(() => {
-        a11yManager.current.update(state);
-    }, [state]);
+        a11yManager.current.update(time);
+    }, [time]);
 
     return (
         <span className="adyen-checkout__countdown" role="timer">
-            <span className="countdown__minutes">{state.minutes}</span>
+            <span className="countdown__minutes">{time.minutes}</span>
             <span className="countdown__separator">:</span>
-            <span className="countdown__seconds">{state.seconds}</span>
+            <span className="countdown__seconds">{time.seconds}</span>
         </span>
     );
 }

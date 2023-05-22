@@ -1,10 +1,10 @@
 import { interpolateElement } from '../../../language/utils';
 
 export class A11yManager {
-    protected translationKey = 'sr.wechatpay.timetopay';
-    protected longTimeout = 3 * 60 * 1000; // 3 minutes
-    protected midTimeout = 60 * 1000; // 1 minute
-    protected shortTimeout = 30 * 1000; // 30 seconds
+    protected TRANSLATION_KEY = 'sr.wechatpay.timetopay';
+    protected LONG_TIMEOUT = 180_000;
+    protected MID_TIMEOUT = 60_000;
+    protected SHORT_TIMEOUT = 30_000;
 
     private srPanel;
     private srInterval;
@@ -28,16 +28,16 @@ export class A11yManager {
         const secondsLeft = parseInt(seconds, 10);
         this.timeLeft = { minutes: minutesLeft, seconds: secondsLeft };
 
-        if (minutesLeft > 5 && this.timeout !== this.longTimeout) {
-            this.timeout = this.longTimeout;
+        if (minutesLeft > 5 && this.timeout !== this.LONG_TIMEOUT) {
+            this.timeout = this.LONG_TIMEOUT;
             this.setInterval(this.timeout);
         }
-        if (minutesLeft >= 1 && minutesLeft <= 5 && this.timeout !== this.midTimeout) {
-            this.timeout = this.midTimeout;
+        if (minutesLeft >= 1 && minutesLeft <= 5 && this.timeout !== this.MID_TIMEOUT) {
+            this.timeout = this.MID_TIMEOUT;
             this.setInterval(this.timeout);
         }
-        if (minutesLeft < 1 && secondsLeft > 0 && this.timeout !== this.shortTimeout) {
-            this.timeout = this.shortTimeout;
+        if (minutesLeft < 1 && secondsLeft > 0 && this.timeout !== this.SHORT_TIMEOUT) {
+            this.timeout = this.SHORT_TIMEOUT;
             this.setInterval(this.timeout);
         }
     }
@@ -61,7 +61,7 @@ export class A11yManager {
     }
 
     private getSrMessages({ minutes, seconds }) {
-        const translation = this.i18n.get(this.translationKey);
+        const translation = this.i18n.get(this.TRANSLATION_KEY);
         const getTimeTranslation = time => (time !== 0 ? translation => `${time} ${translation}` : () => '');
         const fns = [minutes, seconds].map(getTimeTranslation);
         return [interpolateElement(translation, fns).join('')];
