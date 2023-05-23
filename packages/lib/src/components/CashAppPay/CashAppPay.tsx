@@ -12,7 +12,7 @@ import RedirectButton from '../internal/RedirectButton';
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
 
-    private readonly cashAppService: ICashAppService;
+    private readonly cashAppService: ICashAppService | undefined;
 
     protected static defaultProps = defaultProps;
 
@@ -80,7 +80,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     }
 
     get additionalInfo() {
-        return this.props.storedPaymentMethodId ? 'Cash App Pay Account' : '';
+        return this.props.storedPaymentMethodId ? 'Cash App Pay' : '';
     }
 
     public submit = () => {
