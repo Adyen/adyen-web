@@ -180,6 +180,12 @@ class Core {
             );
         }
 
+        if (hasOwnProperty(options, 'installmentOptions')) {
+            console.warn(
+                "WARNING: you are setting installmentOptions directly in the top level configuration object. They should be set via the 'paymentMethodsConfiguration' object or directly on the 'card' component."
+            );
+        }
+
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
         this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
@@ -288,6 +294,12 @@ class Core {
          * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
          */
         if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
+            if (PaymentMethod === 'dropin' && hasOwnProperty(options, 'paymentMethodsConfiguration')) {
+                console.warn(
+                    "WARNING: You are setting a 'paymentMethodsConfiguration' object in the Dropin configuration options. This object will be ignored."
+                );
+            }
+
             return this.handleCreate(paymentMethods[PaymentMethod], { type: PaymentMethod, ...options });
         }
 
@@ -330,7 +342,9 @@ class Core {
      */
     private handleCreateError(paymentMethod?): never {
         const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';
-        const errorMessage = paymentMethod ? `${paymentMethodName} is not a valid Checkout Component` : 'No Payment Method component was passed';
+        const errorMessage = paymentMethod
+            ? `${paymentMethodName} is not a valid Checkout Component. (What was passed:${JSON.stringify(paymentMethod)})`
+            : 'No Payment Method component was passed';
 
         throw new Error(errorMessage);
     }
