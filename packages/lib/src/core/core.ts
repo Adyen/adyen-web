@@ -29,11 +29,10 @@ class Core {
         buildId: process.env.ADYEN_BUILD_ID
     };
 
-    constructor(options: CoreOptions) {
+    constructor(props: CoreOptions) {
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
-
-        this.setOptions(options);
+        this.setOptions(props);
 
         // Expose version number for npm builds
         window['adyenWebVersion'] = Core.version.version;
@@ -46,8 +45,15 @@ class Core {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
-                    const amount = this.options.order ? this.options.order.remainingAmount : sessionResponse.amount;
-                    this.setOptions({ ...sessionResponse, amount });
+                    const { amount, shopperLocale, paymentMethods, ...rest } = sessionResponse;
+
+                    this.setOptions({
+                        ...rest,
+                        amount: this.options.order ? this.options.order.remainingAmount : amount,
+                        paymentMethodsResponse: this.options.paymentMethodsResponse || paymentMethods,
+                        locale: this.options.locale || shopperLocale
+                    });
+
                     return this;
                 })
                 .catch(error => {
@@ -60,43 +66,22 @@ class Core {
     }
 
     /**
-     * Submit data to payments using the onSubmit event or the session flow if available
-     * @param data -
-     */
-    public submitPayment(data): void {
-        if (this.options.onSubmit) return this.options.onSubmit(data);
-
-        if (this.session) {
-            this.session
-                .submitPayment(data)
-                .then(response => {
-                    if (response.action) {
-                        if (this.options.onPaymentSubmitted) this.options.onPaymentSubmitted(response, this);
-                    } else {
-                        if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
-                    }
-                })
-                .catch(error => {
-                    if (this.options.onError) this.options.onError(error);
-                });
-        }
-    }
-
-    /**
      * Submits details using onAdditionalDetails or the session flow if available
      * @param details -
      */
     public submitDetails(details): void {
-        if (this.options.onAdditionalDetails) return this.options.onAdditionalDetails(details);
+        if (this.options.onAdditionalDetails) {
+            return this.options.onAdditionalDetails(details);
+        }
 
         if (this.session) {
             this.session
                 .submitDetails(details)
                 .then(response => {
-                    if (this.options.onPaymentCompleted) this.options.onPaymentCompleted(response, this);
+                    this.options.onPaymentCompleted?.(response);
                 })
                 .catch(error => {
-                    if (this.options.onError) this.options.onError(error, this);
+                    this.options.onError?.(error);
                 });
         }
     }
@@ -188,7 +173,7 @@ class Core {
      * @param options - the config object passed when AdyenCheckout is initialised
      * @returns this
      */
-    private setOptions = (options): this => {
+    private setOptions = (options: CoreOptions): this => {
         if (hasOwnProperty(options?.paymentMethodsConfiguration, 'scheme')) {
             console.warn(
                 'WARNING: You cannot define a property "scheme" on the paymentMethodsConfiguration object - it should be defined as "card" otherwise it will be ignored'
@@ -198,7 +183,6 @@ class Core {
         this.options = { ...this.options, ...options };
         this.options.loadingContext = resolveEnvironment(this.options.environment);
         this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
-        this.options.locale = this.options.locale || this.options.shopperLocale;
 
         // In a sessions flow setOptions gets called twice, but we only need one set of modules (except for i18n needs to be re-initialised as the options settle)
         this.modules = {
@@ -209,8 +193,7 @@ class Core {
             srPanel: this.modules?.srPanel ?? new SRPanel(this.options.srConfig)
         };
 
-        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse ?? this.options.paymentMethods, this.options);
-        delete this.options.paymentMethods;
+        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
 
         // Check for clientKey/environment mismatch
         const clientKeyType = this.options.clientKey?.substr(0, 4);
