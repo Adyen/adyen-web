@@ -95,6 +95,11 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         [props.onPressEnter]
     );
 
+    const handleOnKeyPress = useCallback((event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        // Prevent <form> submission if Component is placed inside an form
+        if (event.key === 'Enter') event.preventDefault();
+    }, []);
+
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors]);
@@ -120,6 +125,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                 onInput: handleChangeFor('otp', 'input'),
                 onBlur: handleChangeFor('otp', 'blur'),
                 onKeyUp: handleOnKeyUp,
+                onKeyPress: handleOnKeyPress,
                 onCreateRef: setInputRef
             })}
         </Field>

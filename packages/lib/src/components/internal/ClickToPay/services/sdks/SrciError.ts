@@ -29,6 +29,10 @@ class SrciError extends Error {
         this.source = source;
         this.scheme = scheme;
     }
+
+    toString() {
+        return `Reason: ${this.reason} / Source: ${this.source} / Scheme: ${this.scheme} / Message: ${this.message}`;
+    }
 }
 
 export default SrciError;

@@ -12,8 +12,8 @@ class WalletINElement extends IssuerListContainer {
     }
 
     /**
-    * Formats the component data output
-    */
+     * Formats the component data output
+     */
     formatData() {
         return {
             ...super.formatData(),

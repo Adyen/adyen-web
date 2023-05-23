@@ -9,7 +9,7 @@ class Card {
     readonly expiryDateInput: Locator;
     readonly cvcInput: Locator;
 
-    constructor(page: Page, rootElementSelector: string = '.adyen-checkout__card-input') {
+    constructor(page: Page, rootElementSelector = '.adyen-checkout__card-input') {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 

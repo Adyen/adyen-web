@@ -10,7 +10,7 @@ export type ClickToPayConfiguration = {
     /**
      * Used to display the merchant name in case the DCF appears (ex: first time doing transaction in the device),
      */
-    merchantDisplayName: string;
+    merchantDisplayName?: string;
     /**
      * Used to ensure the correct language and user experience if DCF screen is displayed. As a fallback, it uses the main locale
      * defined during the creation of the Checkout.
@@ -24,6 +24,10 @@ export type ClickToPayConfiguration = {
      * @defaultValue false
      */
     disableOtpAutoFocus?: boolean;
+    /**
+     *  Callback triggered when the Click to Pay component is ready to be used
+     */
+    onReady?(): void;
 };
 
 export type ClickToPayScheme = 'mc' | 'visa';

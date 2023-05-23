@@ -14,6 +14,7 @@ type ClickToPayProviderRef = {
 };
 
 export type ClickToPayProviderProps = {
+    isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
     configuration: ClickToPayConfiguration;
     amount: PaymentAmount;
@@ -25,6 +26,7 @@ export type ClickToPayProviderProps = {
 };
 
 const ClickToPayProvider = ({
+    isStandaloneComponent = false,
     clickToPayService,
     amount,
     configuration,
@@ -36,9 +38,10 @@ const ClickToPayProvider = ({
 }: ClickToPayProviderProps) => {
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
-    const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(null);
+    const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(true);
     const [status, setStatus] = useState<UIElementStatus>('ready');
     const clickToPayRef = useRef<ClickToPayProviderRef>({});
+    const isOnReadyInvoked = useRef<boolean>(false);
 
     useEffect(() => {
         setClickToPayRef(clickToPayRef.current);
@@ -48,6 +51,14 @@ const ClickToPayProvider = ({
     useEffect(() => {
         ctpService?.subscribeOnStateChange(status => setCtpState(status));
     }, [ctpService]);
+
+    const onReady = useCallback(() => {
+        if (isOnReadyInvoked.current) {
+            return;
+        }
+        configuration.onReady?.();
+        isOnReadyInvoked.current = true;
+    }, [configuration.onReady]);
 
     const finishIdentityValidation = useCallback(
         async (otpValue: string) => {
@@ -88,6 +99,7 @@ const ClickToPayProvider = ({
                 onSetStatus,
                 amount,
                 configuration,
+                isStandaloneComponent,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,
                 ctpState,
@@ -99,7 +111,8 @@ const ClickToPayProvider = ({
                 checkout,
                 logoutShopper,
                 startIdentityValidation,
-                finishIdentityValidation
+                finishIdentityValidation,
+                onReady
             }}
         >
             {children}

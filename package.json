@@ -15,6 +15,7 @@
     "scripts": {
         "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
         "build": "yarn workspace @adyen/adyen-web build",
+        "format": "yarn workspace @adyen/adyen-web format",
         "lint": "yarn workspace @adyen/adyen-web lint",
         "test": "yarn workspace @adyen/adyen-web test",
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
@@ -28,9 +29,9 @@
         "**/regenerator-runtime": "^0.13.9"
     },
     "dependencies": {
-        "concurrently": "^7.6.0"
+        "concurrently": "8.0.1"
     },
     "devDependencies": {
-        "prettier": "2.8.4"
+        "prettier": "2.8.8"
     }
 }

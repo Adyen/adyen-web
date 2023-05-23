@@ -8,6 +8,7 @@ export interface IClickToPayService {
     shopperCards: ShopperCard[];
     identityValidationData: IdentityValidationData;
     schemes: string[];
+    shopperAccountFound: boolean;
     initialize(): Promise<void>;
     checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;

@@ -95,7 +95,12 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      * This method disassociates the Consumer application / Consumer Device from the Consumer’s SRC Profile.
      */
     public async unbindAppInstance(): Promise<void> {
-        return await this.schemeSdk.unbindAppInstance();
+        try {
+            await this.schemeSdk.unbindAppInstance();
+        } catch (error) {
+            const srciError = new SrciError(error, 'unbindAppInstance', this.schemeName);
+            throw srciError;
+        }
     }
 
     /**

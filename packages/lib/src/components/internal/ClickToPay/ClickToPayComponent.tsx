@@ -14,16 +14,21 @@ type ClickToPayComponentProps = {
 };
 
 const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProps): h.JSX.Element => {
-    const { ctpState, startIdentityValidation, logoutShopper } = useClickToPayContext();
+    const { ctpState, onReady, startIdentityValidation, logoutShopper } = useClickToPayContext();
+
+    useEffect(() => {
+        if ([CtpState.OneTimePassword, CtpState.Login, CtpState.Ready].includes(ctpState)) {
+            onReady();
+        }
+    }, [ctpState, onReady]);
 
     useEffect(() => {
         async function sendOneTimePassword() {
             try {
                 await startIdentityValidation();
             } catch (error) {
-                if (error instanceof SrciError)
-                    console.warn(`CtP - Identity Validation error: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
-                logoutShopper();
+                if (error instanceof SrciError) console.warn(`CtP - Identity Validation error: ${error.toString()}`);
+                await logoutShopper();
             }
         }
         if (ctpState === CtpState.ShopperIdentified) {

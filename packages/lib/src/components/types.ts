@@ -43,12 +43,20 @@ export interface PaymentData extends PaymentMethodData {
     storePaymentMethod?: boolean;
 }
 
+export type ResultCode = 'Authorised' | 'Cancelled' | 'ChallengeShopper' | 'Error' | 'IdentifyShopper' | 'Pending';
+
+export interface OnPaymentCompletedData {
+    sessionData: string;
+    sessionResult: string;
+    resultCode: ResultCode;
+}
+
 export interface PaymentResponse {
     action?: PaymentAction;
     resultCode: string;
     sessionData?: string;
-    order?: Order;
     sessionResult?: string;
+    order?: Order;
 }
 
 export interface RawPaymentResponse extends PaymentResponse {
@@ -92,6 +100,7 @@ export interface ActionHandledReturnObject {
 }
 
 export interface UIElementProps extends BaseElementProps {
+    environment?: string;
     session?: Session;
     onChange?: (state: any, element: UIElement) => void;
     onValid?: (state: any, element: UIElement) => void;

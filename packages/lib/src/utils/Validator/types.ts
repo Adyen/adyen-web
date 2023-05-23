@@ -1,5 +1,5 @@
 import { ValidationRuleResult } from './ValidationRuleResult';
-import { Formatter } from '../useForm/types'
+import { Formatter } from '../useForm/types';
 
 type ValidatorMode = 'blur' | 'input';
 

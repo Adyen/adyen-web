@@ -20,6 +20,23 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
+    // CLICK TO PAY
+    window.clickToPay = checkout.create('clicktopay', {
+        shopperEmail: 'shopper@example.com',
+        onReady() {
+            console.log('ClickToPay is ready');
+        }
+    });
+    window.clickToPay
+        .isAvailable()
+        .then(() => {
+            document.querySelector('#clicktopay').classList.remove('merchant-checkout__payment-method--hidden');
+            window.clickToPay.mount('.clicktopay-field');
+        })
+        .catch(e => {
+            console.warn('ClickToPay is NOT available');
+        });
+
     // AMAZON PAY
     // Demo only
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -117,11 +134,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             onError: (error, component) => {
                 component.setStatus('ready');
                 console.log('paypal onError', error);
-            },
-
-            onCancel: (data, component) => {
-                component.setStatus('ready');
-                console.log('paypal onCancel', data);
             }
         })
         .mount('.paypal-field');

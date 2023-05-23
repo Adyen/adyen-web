@@ -1,16 +1,18 @@
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const checkoutDevServer = require('@adyen/adyen-web-server');
 const host = process.env.HOST || '0.0.0.0';
 const port = '3024';
 const resolve = dir => path.resolve(__dirname, dir);
 
+const basePageDir = path.join(__dirname, `../src/pages/`);
 // NOTE: The first page in the array will be considered the index page.
-const htmlPages = [
-    { name: 'Cards', id: 'Cards' },
-    { name: 'Issuer Lists', id: 'IssuerLists' }
-];
+// Automatically get
+const htmlPages = fs.readdirSync(basePageDir).map(fileName => ({
+    id: fileName
+}));
 
 const htmlPageGenerator = ({ id }, index) =>
     new HTMLWebpackPlugin({
@@ -94,7 +96,7 @@ module.exports = {
 
     devServer: {
         port,
-        host,
+        host: '0.0.0.0',
         https: false,
         hot: true,
         compress: true,
