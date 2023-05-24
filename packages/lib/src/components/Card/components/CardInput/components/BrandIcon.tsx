@@ -18,7 +18,6 @@ export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIcon
             onError={handleError}
             alt={brand}
             src={imageUrl}
-            aria-hidden={'true'}
         />
     );
 }
