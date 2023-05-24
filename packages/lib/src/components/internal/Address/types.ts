@@ -14,7 +14,7 @@ export interface AddressProps {
     data?: object;
     label?: string;
     onChange: (newState) => void;
-    onAddressLookup?: (string) => Array<AddressLookupItem>;
+    onAddressLookup?: (string) => Promise<Array<AddressLookupItem>>;
     requiredFields?: string[];
     ref?: any;
     specifications?: AddressSpecifications;

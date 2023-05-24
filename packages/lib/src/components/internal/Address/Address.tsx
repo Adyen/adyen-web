@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useEffect, useMemo, useRef } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
@@ -31,7 +31,9 @@ export default function Address(props: AddressProps) {
 
     const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
 
-    const showAddressSearch = !!props.onAddressLookup;
+    const [hasSelectedAddress, setHasSelectedAddress] = useState(false);
+
+    const showAddressSearch = !!props.onAddressLookup && !hasSelectedAddress;
 
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFieldsSchema,
@@ -40,6 +42,22 @@ export default function Address(props: AddressProps) {
         rules: { ...getAddressValidationRules(specifications), ...props.validationRules },
         formatters: addressFormatters
     });
+
+    const setSearchData = selectedAddress => {
+        // TODO get this props from typings
+        const propsKeysToProcess = ['city', 'postalCode', 'street', 'houseNumberOrName', 'country'];
+        propsKeysToProcess.forEach(propKey => {
+            // Make sure the data provided by the merchant is always strings
+            const providedValue = selectedAddress[propKey];
+            if (providedValue === null || providedValue === undefined) return;
+            // Cast everything to string
+            data[propKey] = String(providedValue);
+        });
+        setHasSelectedAddress(true);
+
+        // TODO next steps
+        // 1. take a look at the design and see how better add the "not my address button"
+    };
 
     // Expose method expected by (parent) Address.tsx
     addressRef.current.showValidation = () => {
@@ -139,7 +157,7 @@ export default function Address(props: AddressProps) {
     return (
         <Fragment>
             {showAddressSearch ? (
-                <AddressSearch onAddressLookup={props.onAddressLookup} />
+                <AddressSearch onAddressLookup={props.onAddressLookup} onSelect={setSearchData} />
             ) : (
                 <Fragment>
                     <Fieldset classNameModifiers={[label || 'address']} label={label}>

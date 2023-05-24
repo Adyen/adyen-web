@@ -91,5 +91,16 @@ module.exports = (res, request) => {
     // 2. Filter by params
     // 3. Change response to return this instead of static
 
-    res.send(JSON.stringify(MOCK_ADDRESS_ARRAY));
+    // Get the search parameter from the request
+    const searchParam = request.query.search;
+
+    // Filter the MOCK_ADDRESS_ARRAY based on the search parameter
+    const filteredAddresses = MOCK_ADDRESS_ARRAY.filter(address => {
+        // Match the search parameter against the address name, postalCode, or city
+        const { name, postalCode, city } = address;
+        const searchRegex = new RegExp(searchParam, 'i');
+        return searchRegex.test(name) || searchRegex.test(postalCode) || searchRegex.test(city);
+    });
+
+    res.send(JSON.stringify(filteredAddresses));
 };

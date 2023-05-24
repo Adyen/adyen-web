@@ -37,7 +37,7 @@ module.exports = (app = express(), options = {}) => {
 
     app.all('/sessions', (req, res) => createSession(res, req.body));
 
-    app.all('/mock/addressSearch', (req, res) => mockAddressSearch(res, req.body));
+    app.all('/mock/addressSearch', (req, res) => mockAddressSearch(res, req));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;

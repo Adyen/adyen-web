@@ -6,19 +6,29 @@ import { useCallback, useState } from 'preact/hooks';
 
 interface AddressSearchProps {
     onAddressLookup?: (string) => Promise<Array<AddressLookupItem>>;
+    onSelect: any; //TODO
 }
 
-export default function AddressSearch({ onAddressLookup }: AddressSearchProps) {
+export default function AddressSearch({ onAddressLookup, onSelect }: AddressSearchProps) {
     const [formattedData, setFormattedData] = useState([]);
+    const [originalData, setOriginalData] = useState([]);
+
+    const mapDataToSelect = data => data.map(({ id, name }) => ({ id, name }));
 
     const onInput = useCallback(
         async event => {
             console.log(event);
             const data = await onAddressLookup(event);
-            setFormattedData(data.map(({ id, name }) => ({ id, name })));
+            setOriginalData(data);
+            setFormattedData(mapDataToSelect(data));
         },
         [onAddressLookup]
     );
+
+    const onChange = event => {
+        const value = originalData.find(item => item.id === event.target.value);
+        onSelect(value);
+    };
 
     return (
         <Field classNameModifiers={['']}>
@@ -26,7 +36,8 @@ export default function AddressSearch({ onAddressLookup }: AddressSearchProps) {
                 name: 'issuer',
                 className: 'adyen-checkout__issuer-list__dropdown',
                 onInput: onInput,
-                items: formattedData
+                items: formattedData,
+                onChange: onChange
             })}
         </Field>
     );
