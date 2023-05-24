@@ -5,7 +5,7 @@
   "fixed": [],
   "linked": [],
   "access": "public",
-  "baseBranch": "master",
+  "baseBranch": "changesets_playground",
   "updateInternalDependencies": "patch",
   "ignore": ["@adyen/adyen-web-e2e","@adyen/adyen-web-playwright","@adyen/adyen-web-playground","@adyen/adyen-web-server"]
 }

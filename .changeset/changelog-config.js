@@ -2,6 +2,9 @@
 const { config } = require('dotenv');
 const { getInfo, getInfoFromPullRequest } = require('@changesets/get-github-info');
 
+const pj = require('../packages/lib/package.json');
+console.log('package.version', pj.version);
+
 config();
 
 const repo = 'adyen/adyen-web';
