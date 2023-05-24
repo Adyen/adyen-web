@@ -2,9 +2,6 @@
 const { config } = require('dotenv');
 const { getInfo, getInfoFromPullRequest } = require('@changesets/get-github-info');
 
-const pj = require('../packages/lib/package.json');
-console.log('package.version', pj.version);
-
 config();
 
 const repo = 'adyen/adyen-web';
@@ -29,7 +26,10 @@ const changelogFunctions = {
             .filter(_ => _)
             .join(', ')}]:`;
 
-        const updatedDepenenciesList = dependenciesUpdated.map(dependency => `  - ${dependency.name}@${dependency.newVersion}`);
+        const updatedDepenenciesList = dependenciesUpdated.map(dependency => {
+            console.log('dependency.newVersion', dependency.newVersion);
+            return `  - ${dependency.name}@${dependency.newVersion}`;
+        });
 
         return [changesetLink, ...updatedDepenenciesList].join('\n');
     },
