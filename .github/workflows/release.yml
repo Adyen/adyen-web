@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - poc/changesets
+      - master
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
