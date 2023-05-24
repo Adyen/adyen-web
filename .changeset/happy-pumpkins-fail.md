@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-Test a patch commit
+ci: use Changesets to automate release branch creation
