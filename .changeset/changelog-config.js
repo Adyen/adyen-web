@@ -33,7 +33,10 @@ const changelogFunctions = {
 
         return [changesetLink, ...updatedDepenenciesList].join('\n');
     },
-    getReleaseLine: async changeset => {
+    getReleaseLine: async (changeset, type, changelogOpts) => {
+        console.log({ changeset });
+        console.log({ type });
+        console.log({ changelogOpts });
         let prFromSummary;
         let commitFromSummary;
 
