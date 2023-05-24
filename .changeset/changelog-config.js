@@ -8,6 +8,7 @@ const repo = 'adyen/adyen-web';
 
 const changelogFunctions = {
     getDependencyReleaseLine: async (changesets, dependenciesUpdated) => {
+        console.log('dependenciesUpdated', dependenciesUpdated.length);
         if (dependenciesUpdated.length === 0) return '';
 
         const changesetLink = `- Updated dependencies [${(
@@ -35,6 +36,7 @@ const changelogFunctions = {
     },
     getReleaseLine: async (changeset, type, changelogOpts) => {
         console.log({ changeset });
+        console.log(JSON.stringify(changeset.releases));
         console.log({ type });
         console.log({ changelogOpts });
         let prFromSummary;
