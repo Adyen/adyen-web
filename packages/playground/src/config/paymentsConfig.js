@@ -9,7 +9,6 @@ const paymentsConfig = {
     origin,
     returnUrl,
     reference: `${identifier}-checkout-components-ref`,
-    recurringProcessingModel: 'Subscription',
     additionalData: {
         // Force response code. See https://docs.adyen.com/development-resources/test-cards/result-code-testing/adyen-response-codes
         // RequestedTestAcquirerResponseCode: 2,
