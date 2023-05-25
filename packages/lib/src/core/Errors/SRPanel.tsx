@@ -17,7 +17,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         node: 'body',
         showPanel: false,
         id: 'ariaLiveSRPanel',
-        arialRelevant: 'all'
+        ariaRelevant: 'all'
     };
 
     private readonly srPanelContainer = null;
@@ -84,7 +84,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
                 aria-live={'polite'}
                 aria-atomic={'true'}
                 role={'log'}
-                aria-relevant={this.props.arialRelevant}
+                aria-relevant={this.props.ariaRelevant}
                 {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
                 <SRMessages setComponentRef={this.setComponentRef} />

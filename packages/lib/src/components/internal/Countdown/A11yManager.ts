@@ -16,8 +16,8 @@ export class A11yManager {
         const { srPanel, i18n } = props;
         this.srPanel = srPanel;
         this.i18n = i18n;
-        // Force the srPanel to update arialRelevant
-        this.srPanel.update({ arialRelevant: 'additions text' });
+        // Force the srPanel to update ariaRelevant
+        this.srPanel.update({ ariaRelevant: 'additions text' });
     }
 
     public update(time) {
@@ -44,8 +44,8 @@ export class A11yManager {
 
     public tearDown() {
         this.clearInterval();
-        // Reset the srPanel arialRelevant
-        this.srPanel.update({ arialRelevant: this.srPanel.constructor['defaultProps'].arialRelevant });
+        // Reset the srPanel ariaRelevant
+        this.srPanel.update({ ariaRelevant: this.srPanel.constructor['defaultProps'].ariaRelevant });
         this.srPanel.setMessages(null);
     }
 

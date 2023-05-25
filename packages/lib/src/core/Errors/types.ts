@@ -34,7 +34,7 @@ export interface SRPanelProps extends BaseElementProps {
     showPanel?: boolean;
     moveFocus?: boolean;
     id?: string;
-    arialRelevant?: 'additions' | 'all' | 'removals' | 'text' | 'additions text';
+    ariaRelevant?: 'additions' | 'all' | 'removals' | 'text' | 'additions text';
 }
 
 export interface SRMessagesProps {
