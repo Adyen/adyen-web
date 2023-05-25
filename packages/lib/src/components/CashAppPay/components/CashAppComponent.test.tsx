@@ -13,8 +13,7 @@ test('should initialize the CashAppPay through the CashAppService', async () => 
 
     const { unmount } = render(
         <CashAppComponent
-            showPayButton={true}
-            onChange={() => {}}
+            onChangeStoreDetails={() => {}}
             onAuthorize={() => {}}
             ref={jest.fn()}
             onClick={jest.fn()}
@@ -67,8 +66,7 @@ test('should call onAuthorize when customer request is approved', async () => {
         <CashAppComponent
             ref={jest.fn()}
             onClick={jest.fn()}
-            showPayButton={true}
-            onChange={jest.fn()}
+            onChangeStoreDetails={jest.fn()}
             onAuthorize={onAuthorized}
             onError={jest.fn()}
             cashAppService={service}
@@ -93,10 +91,9 @@ test('should call onError with error type CANCEL when customer dismiss the pop-u
     render(
         <CashAppComponent
             ref={jest.fn()}
-            showPayButton={true}
             onAuthorize={jest.fn()}
             onClick={jest.fn()}
-            onChange={jest.fn()}
+            onChangeStoreDetails={jest.fn()}
             onError={onError}
             cashAppService={service}
         />
@@ -120,10 +117,9 @@ test('should call onError with error type ERROR and CashApp is reinitialized whe
     render(
         <CashAppComponent
             ref={jest.fn()}
-            showPayButton={true}
             onAuthorize={jest.fn()}
             onClick={jest.fn()}
-            onChange={jest.fn()}
+            onChangeStoreDetails={jest.fn()}
             onError={onError}
             cashAppService={service}
         />
@@ -150,10 +146,9 @@ test('should call onError with error type ERROR when customer request fails', as
     render(
         <CashAppComponent
             ref={jest.fn()}
-            showPayButton={true}
             onAuthorize={jest.fn()}
             onClick={jest.fn()}
-            onChange={jest.fn()}
+            onChangeStoreDetails={jest.fn()}
             onError={onError}
             cashAppService={service}
         />

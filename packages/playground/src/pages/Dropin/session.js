@@ -6,10 +6,10 @@ import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from 
 export async function initSession() {
     const session = await createSession({
         amount,
-        reference: 'shopper-gui-1',
+        reference: 'shopper-gui-2',
         returnUrl,
         shopperLocale,
-        shopperReference: 'gui-cashapp-2',
+        shopperReference: 'gui-cashapp-21',
         telephoneNumber: '+611223344',
         shopperEmail: 'shopper.ctp1@adyen.com',
         countryCode,
@@ -40,9 +40,9 @@ export async function initSession() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
-            // cashapp: {
-            //     storePaymentMethod: true
-            // },
+            cashapp: {
+                storePaymentMethod: true
+            },
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,

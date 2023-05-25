@@ -8,6 +8,7 @@ import { CashAppPayElementData, CashAppPayElementProps, CashAppPayEventData } fr
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
+import { payAmountLabel } from '../internal/PayButton';
 
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
@@ -18,6 +19,12 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
 
     constructor(props) {
         super(props);
+
+        if (this.props.enableStoreDetails && this.props.storePaymentMethod) {
+            console.warn(
+                'CashAppPay: enableStoreDetails AND storePaymentMethod configuration properties should not be used together. That can lead to undesired behavior.'
+            );
+        }
 
         if (this.props.storedPaymentMethodId) {
             return;
@@ -47,8 +54,10 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         const { shopperWantsToStore, grantId, onFileGrantId, cashTag, customerId } = this.state.data || {};
         const { storePaymentMethod: storePaymentMethodSetByMerchant, storedPaymentMethodId } = this.props;
 
-        // const includeStorePaymentMethod = !this.props.session && (shopperWantsToStore || storePaymentMethodSetByMerchant);
-        const includeStorePaymentMethod = storePaymentMethodSetByMerchant || this.props.enableStoreDetails;
+        /**
+         * We include 'storePaymentMethod' flag if we either Display the Checkbox OR if it is non-sessions flow AND the merchant wants to store the payment method
+         */
+        const includeStorePaymentMethod = this.props.enableStoreDetails || (!this.props.session && storePaymentMethodSetByMerchant);
 
         if (storedPaymentMethodId) {
             return {
@@ -59,14 +68,14 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
             };
         }
 
-        const shouldAddOnFileProps = includeStorePaymentMethod && onFileGrantId && cashTag;
+        const shouldAddOnFileProperties = onFileGrantId && cashTag;
 
         return {
             paymentMethod: {
                 type: CashAppPay.type,
                 ...(grantId && { grantId }),
                 ...(customerId && { customerId }),
-                ...(shouldAddOnFileProps && { onFileGrantId, cashtag: cashTag })
+                ...(shouldAddOnFileProperties && { onFileGrantId, cashtag: cashTag })
             },
             ...(includeStorePaymentMethod && { storePaymentMethod: storePaymentMethodSetByMerchant || shopperWantsToStore })
         };
@@ -86,16 +95,30 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public submit = () => {
         const { onClick, storedPaymentMethodId } = this.props;
 
+        if (storedPaymentMethodId) {
+            super.submit();
+            return;
+        }
+
+        let onClickPromiseRejected = false;
+
         new Promise<void>((resolve, reject) => onClick({ resolve, reject }))
+            .catch(() => {
+                onClickPromiseRejected = true;
+                throw Error('onClick rejected');
+            })
             .then(() => {
-                if (storedPaymentMethodId) {
-                    super.submit();
-                    return;
-                }
                 return this.cashAppService.createCustomerRequest();
             })
             .then(() => {
                 this.cashAppService.begin();
+            })
+            .catch(error => {
+                if (onClickPromiseRejected) {
+                    // Swallow exception triggered by onClick reject
+                    return;
+                }
+                this.handleError(error);
             });
     };
 
@@ -119,6 +142,8 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
             <CoreProvider i18n={this.props.i18n} resources={this.resources} loadingContext={this.props.loadingContext}>
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
+                        label={payAmountLabel(this.props.i18n, this.props.amount)}
+                        icon={this.resources?.getImage({ imageFolder: 'components/' })('lock')}
                         name={this.displayName}
                         amount={this.props.amount}
                         payButton={this.payButton}
@@ -133,7 +158,6 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
                             this.componentRef = ref;
                         }}
                         enableStoreDetails={this.props.enableStoreDetails}
-                        // showPayButton={this.props.showPayButton}
                         cashAppService={this.cashAppService}
                         onChangeStoreDetails={this.handleOnChangeStoreDetails}
                         onError={this.handleError}

@@ -28,7 +28,7 @@ test('should return on-file data if available', () => {
         customerId
     };
 
-    cashAppPayElement.setState(data);
+    cashAppPayElement.setState({ data });
 
     expect(cashAppPayElement.formatData()).toEqual({
         paymentMethod: { type: 'cashapp', onFileGrantId, customerId, cashtag: cashTag },
@@ -47,13 +47,13 @@ test('should return grantId, customerId and correct txVariant', () => {
         customerId
     };
 
-    cashAppPayElement.setState(data);
+    cashAppPayElement.setState({ data });
 
     expect(cashAppPayElement.formatData()).toEqual({ paymentMethod: { type: 'cashapp', grantId, customerId } });
 });
 
 test('should initially display the loading spinner while SDK is being loaded', async () => {
-    const cashAppPayElement = new CashAppPay({});
+    const cashAppPayElement = new CashAppPay({ i18n: global.i18n, loadingContext: 'test', modules: { resources: {} } });
     render(cashAppPayElement.render());
 
     expect(CashAppService).toHaveBeenCalledTimes(1);
@@ -62,7 +62,7 @@ test('should initially display the loading spinner while SDK is being loaded', a
 
 test('should create customer request and then begin CashApp flow when submit is triggered', async () => {
     const onClick = jest.fn().mockImplementation(actions => actions.resolve());
-    const cashAppPayElement = new CashAppPay({ onClick });
+    const cashAppPayElement = new CashAppPay({ onClick, i18n: global.i18n, loadingContext: 'test', modules: { resources: {} } });
     render(cashAppPayElement.render());
 
     cashAppPayElement.submit();

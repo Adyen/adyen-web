@@ -11,7 +11,6 @@ import './CashAppComponent.scss';
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
     cashAppService: ICashAppService;
-    // showPayButton: boolean;
     onClick(): void;
     onChangeStoreDetails(data: any): void;
     onAuthorize(payEventData: CashAppPayEventData): void;
@@ -56,8 +55,6 @@ export function CashAppComponent({
                         ...(grants?.onFile?.grantId && { onFileGrantId: grants.onFile.grantId })
                     };
 
-                    console.log(cashAppPaymentData);
-
                     onAuthorize(cashAppPaymentData);
                 }),
                 cashAppService.subscribeToEvent(CashAppPayEvents.CustomerRequestFailed, () => {
@@ -87,8 +84,6 @@ export function CashAppComponent({
             subscriptions.current.map(unsubscribeFn => unsubscribeFn());
         };
     }, [cashAppService, initializeCashAppSdk]);
-
-    console.log('test');
 
     return (
         <div className="adyen-checkout__cashapp">
