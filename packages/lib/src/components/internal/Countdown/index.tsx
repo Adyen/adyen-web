@@ -1,58 +1,41 @@
 import { h } from 'preact';
 import { getTimeDifference } from './utils';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
-import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
-import { A11yManager } from './A11yManager';
+import { CountdownProps, CountdownTime } from './types';
+import { useCountdownA11yReporter } from './useCountdownA11yReporter';
 
-interface CountdownProps {
-    minutesFromNow: number;
-    onTick?: (time) => void;
-    onCompleted?: () => void;
-}
-
-interface CountdownState {
-    minutes: string;
-    seconds: string;
-}
-
-function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }: CountdownProps) {
+const calculateStartAndEndTime = (minutesFromNow: number) => {
     const secondsFromNow = minutesFromNow * 60000;
     const nowTime = new Date().getTime();
-    const startTime = new Date(nowTime);
-    const endTime = new Date(nowTime + secondsFromNow);
+    return { startTime: new Date(nowTime), endTime: new Date(nowTime + secondsFromNow) };
+};
 
-    const { i18n } = useCoreContext();
-    const { srPanel } = useSRPanelContext();
-
-    const a11yManager = useRef(null);
-    const [time, setTime] = useState<CountdownState>({
+function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }: CountdownProps) {
+    const startAndEndTime = useRef(calculateStartAndEndTime(minutesFromNow));
+    const { startTime, endTime } = startAndEndTime.current;
+    const [time, setTime] = useState<CountdownTime>({
         minutes: '-',
         seconds: '-'
     });
+    useCountdownA11yReporter(time);
 
     useEffect(() => {
         const tick = () => {
             const { minutes, seconds, percentage, completed } = getTimeDifference(startTime, endTime);
             if (completed) {
                 onCompleted();
+            } else {
+                const timeLeft = { minutes, seconds, percentage };
+                setTime(timeLeft);
+                onTick(timeLeft);
             }
-            const timeLeft = { minutes, seconds, percentage };
-            setTime(timeLeft);
-            onTick(timeLeft);
         };
-        a11yManager.current = new A11yManager({ srPanel, i18n });
         const interval = setInterval(tick, 1000);
 
         return () => {
             clearInterval(interval);
-            a11yManager.current.tearDown();
         };
     }, []);
-
-    useEffect(() => {
-        a11yManager.current.update(time);
-    }, [time]);
 
     return (
         <span className="adyen-checkout__countdown" role="timer">

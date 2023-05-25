@@ -1,26 +1,34 @@
 import { interpolateElement } from '../../../language/utils';
+import { SRPanel } from '../../../core/Errors/SRPanel';
+import Language from '../../../language';
+import { CountdownTime } from './types';
 
-export class A11yManager {
+interface ICountdownA11yService {
+    srPanel: SRPanel;
+    i18n: Language;
+}
+
+export class CountdownA11yReporter {
     protected TRANSLATION_KEY = 'sr.wechatpay.timetopay';
-    protected LONG_TIMEOUT = 180_000;
-    protected MID_TIMEOUT = 60_000;
-    protected SHORT_TIMEOUT = 30_000;
+    protected LONG_TIMEOUT = 180000;
+    protected MID_TIMEOUT = 60000;
+    protected SHORT_TIMEOUT = 30000;
 
-    private srPanel;
-    private srInterval;
-    private i18n;
-    private timeout;
-    private timeLeft;
+    private readonly srPanel: SRPanel;
+    private readonly i18n: Language;
+    private srInterval: ReturnType<typeof setInterval>;
+    private timeout: number;
+    private timeLeft: { minutes; seconds };
 
-    constructor(props) {
+    constructor(props: ICountdownA11yService) {
         const { srPanel, i18n } = props;
         this.srPanel = srPanel;
         this.i18n = i18n;
         // Force the srPanel to update ariaRelevant
-        this.srPanel.update({ ariaRelevant: 'additions text' });
+        this.srPanel.setAriaProps({ 'aria-relevant': 'additions text' });
     }
 
-    public update(time) {
+    public update(time: CountdownTime): void {
         const { minutes, seconds } = time;
         if (minutes === '-' || seconds === '-') return;
 
@@ -42,14 +50,14 @@ export class A11yManager {
         }
     }
 
-    public tearDown() {
+    public tearDown(): void {
         this.clearInterval();
         // Reset the srPanel ariaRelevant
-        this.srPanel.update({ ariaRelevant: this.srPanel.constructor['defaultProps'].ariaRelevant });
+        this.srPanel.setAriaProps({ 'aria-relevant': 'all' });
         this.srPanel.setMessages(null);
     }
 
-    private setInterval(timeout) {
+    private setInterval(timeout): void {
         this.clearInterval();
         const setSrMessages = () => {
             this.srPanel.setMessages(null);
@@ -60,14 +68,14 @@ export class A11yManager {
         this.srInterval = setInterval(setSrMessages, timeout);
     }
 
-    private getSrMessages({ minutes, seconds }) {
+    private getSrMessages({ minutes, seconds }): Array<string> {
         const translation = this.i18n.get(this.TRANSLATION_KEY);
         const getTimeTranslation = time => (time !== 0 ? translation => `${time} ${translation}` : () => '');
         const fns = [minutes, seconds].map(getTimeTranslation);
         return [interpolateElement(translation, fns).join('')];
     }
 
-    private clearInterval() {
+    private clearInterval(): void {
         if (this.srInterval) clearInterval(this.srInterval);
     }
 }

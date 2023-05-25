@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import './SRPanel.scss';
-import { SRPanelProps } from './types';
+import { AriaAttributes, SRPanelProps } from './types';
 import BaseElement from '../../components/BaseElement';
 import { SRMessages, SRMessagesRef } from './SRMessages';
 
@@ -17,7 +17,11 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         node: 'body',
         showPanel: false,
         id: 'ariaLiveSRPanel',
-        ariaRelevant: 'all'
+        ariaAttributes: {
+            'aria-relevant': 'all',
+            'aria-live': 'polite',
+            'aria-atomic': 'true'
+        }
     };
 
     private readonly srPanelContainer = null;
@@ -63,6 +67,13 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return this._moveFocus;
     }
 
+    public setAriaProps(ariaAttributes: AriaAttributes) {
+        const firstPanel = document.querySelectorAll('[class^="adyen-checkout-sr-panel"]')[0];
+        for (const [key, value] of Object.entries(ariaAttributes)) {
+            firstPanel.setAttribute(key, value);
+        }
+    }
+
     // A method we can expose to allow comps to set messages in this panel
     public setMessages = (messages: string[] | string): void => {
         if (!this.props.enabled) return;
@@ -81,10 +92,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return (
             <div
                 className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
-                aria-live={'polite'}
-                aria-atomic={'true'}
                 role={'log'}
-                aria-relevant={this.props.ariaRelevant}
+                {...this.props.ariaAttributes}
                 {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
                 <SRMessages setComponentRef={this.setComponentRef} />
