@@ -19,6 +19,23 @@ const config: StorybookConfig = {
         name: '@storybook/html-webpack5',
         options: {}
     },
+    typescript: {
+        check: false,
+        checkOptions: {}
+    },
+    features: {
+        //postcss: false,
+    },
+    webpackFinal: async (config, { configType }) => {
+        config.watchOptions = {
+            ...config.watchOptions,
+            ignored: ['/node_modules/', '/!(@adyen/adyen-web/dist)/']
+            // aggregateTimeout: 200,
+            //poll: 500
+        };
+        console.log({ config });
+        return config;
+    },
     env: config => ({
         ...config,
         ...environmentVariables

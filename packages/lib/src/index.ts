@@ -11,6 +11,7 @@ import Checkout from './core';
 
 async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
     const checkout = new Checkout(props);
+
     return await checkout.initialize();
 }
 
