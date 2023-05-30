@@ -100,9 +100,24 @@ export interface CoreOptions {
 
     setStatusAutomatically?: boolean;
 
-    beforeRedirect?(resolve: PromiseResolve, reject: PromiseReject, redirectData: { url: string; method: string; data?: any }): Promise<void>;
+    beforeRedirect?(
+        resolve: PromiseResolve,
+        reject: PromiseReject,
+        redirectData: {
+            url: string;
+            method: string;
+            data?: any;
+        }
+    ): Promise<void>;
 
-    beforeSubmit?(state: any, element: UIElement, actions: { resolve: PromiseResolve; reject: PromiseReject }): Promise<void>;
+    beforeSubmit?(
+        state: any,
+        element: UIElement,
+        actions: {
+            resolve: PromiseResolve;
+            reject: PromiseReject;
+        }
+    ): Promise<void>;
 
     onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
 
@@ -121,12 +136,13 @@ export interface CoreOptions {
     onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
 
     onOrderCancel?(order: Order): void;
+
     /**
      * Only used in Components combined with Sessions flow
      * Callback used to inform when the order is created.
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
-    onOrderCreated?(order: Order): void;
+    onOrderCreated?(data: { order: Order }): void;
 
     /**
      * Used only in the Donation Component when shopper declines to donate
