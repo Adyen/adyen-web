@@ -343,7 +343,9 @@ class Core {
     private handleCreateError(paymentMethod?): never {
         const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';
         const errorMessage = paymentMethod
-            ? `${paymentMethodName} is not a valid Checkout Component. (What was passed:${JSON.stringify(paymentMethod)})`
+            ? `${paymentMethodName} is not a valid Checkout Component. What was passed as a txVariant was: ${JSON.stringify(
+                  paymentMethod
+              )}. Check if this payment method is configured in the Backoffice or if the txVariant is a valid one`
             : 'No Payment Method component was passed';
 
         throw new Error(errorMessage);
