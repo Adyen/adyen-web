@@ -81,7 +81,7 @@ export function CashAppComponent({
         initializeCashAppSdk();
         return () => {
             cashAppService.restart();
-            subscriptions.current.map(unsubscribeFn => unsubscribeFn());
+            subscriptions.current.forEach(unsubscribeFn => unsubscribeFn());
         };
     }, [cashAppService, initializeCashAppSdk]);
 
