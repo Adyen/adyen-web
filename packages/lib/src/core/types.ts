@@ -120,6 +120,7 @@ export interface CoreOptions {
 
     onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
 
+    onOrderCancel?(order: Order): void;
     /**
      * Only used in Components combined with Sessions flow
      * Callback used to inform when the order is created.
