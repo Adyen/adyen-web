@@ -63,7 +63,7 @@ Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the 
 
 ## Contributing
 
-We merge every pull request into the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
+We merge every pull request into the `main` branch. We aim to keep `main` in good shape, which allows us to release a new version whenever we need to.
 
 Have a look at our [contributing guidelines](https://github.com/Adyen/.github/blob/master/CONTRIBUTING.md) to find out how to raise a pull request.
 
