@@ -67,11 +67,12 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return this._moveFocus;
     }
 
-    public setAriaProps(ariaAttributes: AriaAttributes) {
-        const firstPanel = document.querySelectorAll('[class^="adyen-checkout-sr-panel"]')[0];
+    public setAriaProps(ariaAttributes: AriaAttributes): void {
+        const firstPanel = document.querySelector('[class^="adyen-checkout-sr-panel"]');
         for (const [key, value] of Object.entries(ariaAttributes)) {
             firstPanel.setAttribute(key, value);
         }
+        this.props = { ...this.props, ariaAttributes: { ...this.props.ariaAttributes, ...ariaAttributes } };
     }
 
     // A method we can expose to allow comps to set messages in this panel

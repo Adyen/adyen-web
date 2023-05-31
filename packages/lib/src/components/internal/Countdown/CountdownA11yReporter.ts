@@ -18,7 +18,7 @@ export class CountdownA11yReporter {
     private readonly i18n: Language;
     private srInterval: ReturnType<typeof setInterval>;
     private timeout: number;
-    private timeLeft: { minutes; seconds };
+    private timeLeft: CountdownTime;
 
     constructor(props: ICountdownA11yService) {
         const { srPanel, i18n } = props;
@@ -32,8 +32,8 @@ export class CountdownA11yReporter {
         const { minutes, seconds } = time;
         if (minutes === '-' || seconds === '-') return;
 
-        const minutesLeft = parseInt(minutes, 10);
-        const secondsLeft = parseInt(seconds, 10);
+        const minutesLeft = typeof minutes === 'string' ? parseInt(minutes, 10) : minutes;
+        const secondsLeft = typeof seconds === 'string' ? parseInt(seconds, 10) : seconds;
         this.timeLeft = { minutes: minutesLeft, seconds: secondsLeft };
 
         if (minutesLeft > 5 && this.timeout !== this.LONG_TIMEOUT) {
@@ -53,7 +53,7 @@ export class CountdownA11yReporter {
     public tearDown(): void {
         this.clearInterval();
         // Reset the srPanel ariaRelevant
-        this.srPanel.setAriaProps({ 'aria-relevant': 'all' });
+        this.srPanel.setAriaProps({ 'aria-relevant': this.srPanel.constructor['defaultProps'].ariaAttributes['aria-relevant'] });
         this.srPanel.setMessages(null);
     }
 

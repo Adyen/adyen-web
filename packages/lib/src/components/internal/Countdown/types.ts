@@ -5,6 +5,6 @@ export interface CountdownProps {
 }
 
 export interface CountdownTime {
-    minutes: string;
-    seconds: string;
+    minutes: string | number;
+    seconds: string | number;
 }

@@ -17,6 +17,13 @@ export const useCountdownA11yReporter = (time: CountdownTime): void => {
     }, []);
 
     useEffect(() => {
-        reporter.current?.update(time);
+        try {
+            if (!reporter.current) return;
+            reporter.current.update(time);
+        } catch (e) {
+            reporter.current.tearDown();
+            reporter.current = null;
+            throw e;
+        }
     }, [time]);
 };
