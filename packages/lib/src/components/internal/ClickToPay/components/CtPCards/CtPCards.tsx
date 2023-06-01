@@ -42,9 +42,10 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const { loadingContext, i18n } = useCoreContext();
     const getImage = useImage();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
-    const [checkoutCard, setCheckoutCard] = useState<ShopperCard>(cards.find(card => !card.isExpired) || cards[0]);
+    const [checkoutCard, setCheckoutCard] = useState<ShopperCard | undefined>(cards.find(card => !card.isExpired) || cards[0]);
     const [errorCode, setErrorCode] = useState<string>(null);
     const isEveryCardExpired = cards.every(card => card.isExpired);
+    const [isShopperCheckingOutWithCtp, setIsShopperCheckingOutWithCtp] = useState<boolean>(false);
 
     useEffect(() => {
         if (cards.length === 0 || isEveryCardExpired) {
@@ -56,6 +57,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         if (!checkoutCard) return;
 
         try {
+            setIsShopperCheckingOutWithCtp(true);
             setErrorCode(null);
             onSetStatus('loading');
             const payload = await checkout(checkoutCard);
@@ -65,6 +67,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                 setErrorCode(error?.reason);
                 console.warn(`CtP - Checkout: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
             }
+            setIsShopperCheckingOutWithCtp(false);
             onError(error);
         }
     }, [checkout, checkoutCard]);
@@ -73,7 +76,14 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         setCheckoutCard(card);
     }, []);
 
-    const displayNetworkDcf = status === 'loading' && checkoutCard.isDcfPopupEmbedded;
+    /**
+     * If shopper submits the payment using the default Card component while CtP is rendered, the status here will be updated
+     * and that can potentially display an iframe.
+     *
+     * Therefore, we use the flag 'isShopperCheckingOutWithCtp' to flag that the iframe should be displayed only in case the
+     * Shopper is checking out with Click to Pay.
+     */
+    const displayNetworkDcf = isShopperCheckingOutWithCtp && status === 'loading' && checkoutCard?.isDcfPopupEmbedded;
     const displayCardCheckoutView = status !== 'loading' || !displayNetworkDcf;
 
     return (

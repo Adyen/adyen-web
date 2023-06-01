@@ -23,7 +23,9 @@
         "test:e2e": "yarn build && yarn workspace @adyen/adyen-web-playwright test:headless",
         "test:e2e-testcafe": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e",
         "type-check": "yarn workspace @adyen/adyen-web type-check",
-        "prepare": "yarn workspace @adyen/adyen-web prepare"
+        "prepare": "yarn workspace @adyen/adyen-web prepare",
+        "changeset": "changeset",
+        "version": "changeset version"
     },
     "resolutions": {
         "**/regenerator-runtime": "^0.13.9"
@@ -32,6 +34,9 @@
         "concurrently": "8.0.1"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.26.1",
+        "@changesets/get-github-info": "^0.5.2",
+        "dotenv": "^16.0.3",
         "prettier": "2.8.8"
     }
 }
