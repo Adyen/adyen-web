@@ -23,13 +23,13 @@ jobs:
         CI: true
 
     - name: Coveralls Parallel
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./packages/lib/coverage/lcov.info
 
     - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: ./packages/lib/coverage/lcov.info
