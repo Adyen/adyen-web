@@ -44,6 +44,7 @@
     "continue": "Continue",
     "continueTo": "Continue to",
     "wechatpay.timetopay": "You have %@ to pay",
+    "sr.wechatpay.timetopay": "You have %#minutes%# %#seconds%# to pay",
     "wechatpay.scanqrcode": "Scan QR code",
     "personalDetails": "Personal details",
     "companyDetails": "Company details",
