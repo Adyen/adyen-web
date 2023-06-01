@@ -7,9 +7,9 @@ on:
 
 jobs:
   check-secured-fields-assets:
-    if: contains(github.head_ref, 'changeset-release')
-
+    if: ${{contains(github.event.pull_request.head.ref, 'changeset-release')}}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
