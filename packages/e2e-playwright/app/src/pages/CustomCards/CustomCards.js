@@ -21,7 +21,7 @@ const initCheckout = async () => {
     });
 
     window.securedFields = checkout
-        .create('securedfields', {
+        .create('customcard', {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,
