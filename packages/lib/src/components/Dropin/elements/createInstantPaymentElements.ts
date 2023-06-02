@@ -9,6 +9,6 @@ import UIElement from '../../UIElement';
  * @param create - Reference to the main instance `Core#create` method
  */
 const createInstantPaymentElements = (paymentMethods: PaymentMethod[] = [], props, create): Promise<UIElement[]> | [] =>
-    paymentMethods.length ? createElements(paymentMethods, { ...props, isInstantPayment: true, showPayButton: true }, create) : [];
+    paymentMethods.length ? createElements(paymentMethods, { ...props, isInstantPayment: true }, create) : [];
 
 export default createInstantPaymentElements;

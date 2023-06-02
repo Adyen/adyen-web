@@ -11,7 +11,7 @@ class TwintElement extends RedirectElement {
 
     public static defaultProps = {
         type: TwintElement.type,
-        showPayButton: true
+        name: 'Twint'
     };
     /**
      * Get the element displayable name

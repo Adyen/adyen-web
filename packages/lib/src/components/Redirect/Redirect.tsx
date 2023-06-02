@@ -12,8 +12,7 @@ class RedirectElement extends UIElement {
     public static type = 'redirect';
 
     public static defaultProps = {
-        type: RedirectElement.type,
-        showPayButton: true
+        type: RedirectElement.type
     };
 
     formatProps(props) {
