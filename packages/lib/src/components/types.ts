@@ -100,7 +100,6 @@ export interface ActionHandledReturnObject {
 }
 
 export interface UIElementProps extends BaseElementProps {
-    environment?: string;
     session?: Session;
     onChange?: (state: any, element: UIElement) => void;
     onValid?: (state: any, element: UIElement) => void;
@@ -114,6 +113,8 @@ export interface UIElementProps extends BaseElementProps {
     beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
     isInstantPayment?: boolean;
+
+    environment?: string;
 
     type?: string;
     name?: string;
