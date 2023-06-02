@@ -117,9 +117,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByRole('button')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByRole('button')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
             });
         });
     });
