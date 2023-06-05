@@ -9,6 +9,7 @@ export type GiftcardFieldsProps = {
     getCardErrorMessage;
     focusedElement;
     setFocusOn;
+    label?: string;
 };
 
 export type GiftcardFieldProps = {
@@ -18,4 +19,5 @@ export type GiftcardFieldProps = {
     getCardErrorMessage;
     focusedElement;
     setFocusOn;
+    label?: string;
 };
