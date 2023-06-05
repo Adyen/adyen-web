@@ -139,6 +139,10 @@ export async function initManual() {
     const dropin = checkout
         .create('dropin', {
             instantPaymentTypes: ['googlepay']
+            // showRemovePaymentMethodButton: true,
+            // onDisableStoredPaymentMethod: w => {
+            //     console.log('### manual::onDisableStoredPaymentMethod:: w=', w);
+            // }
         })
         .mount('#dropin-container');
 

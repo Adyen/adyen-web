@@ -30,3 +30,14 @@ export interface AnalyticsOptions {
      */
     experiments?: Experiment[];
 }
+
+export interface AnalyticsObject {
+    timestamp: string;
+    component: string;
+    code?: string;
+    errorType?: string;
+    message?: string;
+    type?: string;
+    action?: string;
+    actionType?: string;
+}

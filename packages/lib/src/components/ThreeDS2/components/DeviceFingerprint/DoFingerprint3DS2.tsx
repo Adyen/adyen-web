@@ -4,7 +4,7 @@ import Spinner from '../../../internal/Spinner';
 import ThreeDS2Form from '../Form';
 import promiseTimeout from '../../../../utils/promiseTimeout';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
-import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT } from '../../config';
+import { THREEDS_METHOD_TIMEOUT, FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT, THREEDS2_NUM } from '../../config';
 import { encodeBase64URL } from '../utils';
 import { DoFingerprint3DS2Props, DoFingerprint3DS2State } from './types';
 
@@ -81,7 +81,7 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
                     <Iframe
                         name={iframeName}
                         callback={() => {
-                            onActionHandled({ componentType: '3DS2Fingerprint', actionDescription: 'fingerprint-iframe-loaded' });
+                            onActionHandled({ componentType: '3DS2Fingerprint', actionDescription: `${THREEDS2_NUM} fingerprint iframe loaded` });
                         }}
                     />
                     <ThreeDS2Form
