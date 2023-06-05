@@ -28,12 +28,19 @@ export interface SortedErrorObject {
     errorCode: string;
 }
 
+export interface AriaAttributes {
+    'aria-relevant'?: 'additions' | 'all' | 'removals' | 'text' | 'additions text';
+    'aria-live'?: 'off' | 'polite' | 'assertive';
+    'aria-atomic'?: 'true' | 'false';
+}
+
 export interface SRPanelProps extends BaseElementProps {
     enabled?: boolean;
     node?: string;
     showPanel?: boolean;
     moveFocus?: boolean;
     id?: string;
+    ariaAttributes?: AriaAttributes;
 }
 
 export interface SRMessagesProps {
