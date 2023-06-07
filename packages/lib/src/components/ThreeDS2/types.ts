@@ -88,15 +88,6 @@ export type DecodeObject = {
     data?: string;
 };
 
-// export type ThreeDS2AnalyticsObject = {
-//     class: string;
-//     code?: string;
-//     errorType?: string;
-//     message?: string;
-//     type?: string;
-//     // action?: string;
-//     // target?: string;
-// };
 export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type'> & {
     class: string;
     metaData?: string; // Will be added to /checkoutanalytics

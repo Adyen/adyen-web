@@ -8,14 +8,14 @@ import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM } from '../../config';
 import { ActionHandledReturnObject } from '../../../types';
 import {
-    ANALYTICS_DATA_ERROR,
-    ANALYTICS_DATA_LOG,
+    ANALYTICS_ACTION_ERROR,
+    ANALYTICS_ACTION_LOG,
     ANALYTICS_API_ERROR,
-    ANALYTICS_ERROR_ACTION_IS_MISSING_TOKEN,
-    ANALYTICS_ERROR_TOKEN_IS_MISSING_THREEDSMETHODURL,
-    ANALYTICS_ERROR_TOKEN_IS_MISSING_OTHER_PROPS,
-    ANALYTICS_ERROR_TOKEN_DECODE_OR_PARSING_FAILED,
-    ANALYTICS_ERROR_3DS2_FINGERPRINT_TIMEOUT
+    ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
+    ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
+    ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
+    ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
+    ANALYTICS_ERROR_CODE_3DS2_FINGERPRINT_TIMEOUT
 } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
@@ -45,8 +45,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
-                class: ANALYTICS_DATA_ERROR,
-                code: ANALYTICS_ERROR_ACTION_IS_MISSING_TOKEN,
+                class: ANALYTICS_ACTION_ERROR,
+                code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'token' property from threeDS2 action`
             });
@@ -68,7 +68,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     };
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({ class: ANALYTICS_DATA_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.submitAnalytics({ class: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
 
         // Allow unmounting to proceed
@@ -92,8 +92,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.submitAnalytics({
-                    class: ANALYTICS_DATA_ERROR,
-                    code: ANALYTICS_ERROR_TOKEN_IS_MISSING_THREEDSMETHODURL,
+                    class: ANALYTICS_ACTION_ERROR,
+                    code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
                 });
@@ -113,8 +113,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             if (!hasValid3DSMethodNotificationURL || !hasValidPostMessageDomain || !hasTransServerID) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.submitAnalytics({
-                    class: ANALYTICS_DATA_ERROR,
-                    code: ANALYTICS_ERROR_TOKEN_IS_MISSING_OTHER_PROPS,
+                    class: ANALYTICS_ACTION_ERROR,
+                    code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
                 });
@@ -129,8 +129,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             // Send error to analytics endpoint 'cos base64 decoding or JSON.parse has failed on the token // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
-                class: ANALYTICS_DATA_ERROR,
-                code: ANALYTICS_ERROR_TOKEN_DECODE_OR_PARSING_FAILED,
+                class: ANALYTICS_ACTION_ERROR,
+                code: ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
                 errorType: 'token decoding or parsing has failed',
                 message: `${THREEDS2_FINGERPRINT_ERROR}: ${(this.state.fingerPrintData as ErrorObject).error}`
             }); // can be: 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -156,8 +156,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             // *Currently* errorCodeObject (& therefore finalResObject.errorCode) will only be true in the fingerprint timeout scenario
             if (finalResObject.errorCode) {
                 analyticsObject = {
-                    class: ANALYTICS_DATA_ERROR,
-                    code: ANALYTICS_ERROR_3DS2_FINGERPRINT_TIMEOUT,
+                    class: ANALYTICS_ACTION_ERROR,
+                    code: ANALYTICS_ERROR_CODE_3DS2_FINGERPRINT_TIMEOUT,
                     errorType: finalResObject.errorCode,
                     message: finalResObject.message,
                     metaData: JSON.stringify(finalResObject)
@@ -166,7 +166,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.setState({ hasCompleted: true });
             } else {
                 analyticsObject = {
-                    class: ANALYTICS_DATA_LOG,
+                    class: ANALYTICS_ACTION_LOG,
                     type: THREEDS2_FULL,
                     message: `${THREEDS2_NUM} fingerprinting has succeeded`,
                     metaData: JSON.stringify(finalResObject)

@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import classNames from 'classnames';
 import { THREEDS2_FULL } from '../../config';
 import { ThreeDS2AnalyticsObject } from '../../types';
-import { ANALYTICS_DATA_LOG } from '../../../../core/Analytics/constants';
+import { ANALYTICS_ACTION_LOG } from '../../../../core/Analytics/constants';
 
 interface ThreeDS2FormProps {
     name: string;
@@ -19,7 +19,7 @@ export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
     componentDidMount() {
         this.formEl.submit();
         this.props.onSubmitAnalytics({
-            class: ANALYTICS_DATA_LOG,
+            class: ANALYTICS_ACTION_LOG,
             type: THREEDS2_FULL,
             message: `${this.props.inputName} sent`
         } as ThreeDS2AnalyticsObject);
