@@ -39,5 +39,5 @@ export interface AnalyticsObject {
     message?: string;
     type?: string;
     action?: string;
-    actionType?: string;
+    subtype?: string;
 }

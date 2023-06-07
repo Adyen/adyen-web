@@ -99,5 +99,5 @@ export type DecodeObject = {
 // };
 export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type'> & {
     class: string;
-    metaData?: string; // May be added to /checkoutanalytics
+    metaData?: string; // Will be added to /checkoutanalytics
 };

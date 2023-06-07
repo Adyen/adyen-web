@@ -60,6 +60,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
                 message: 'No paymentData received. Fingerprinting cannot proceed'
             });
 
+            // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
                 class: ANALYTICS_DATA_ERROR,
                 code: ANALYTICS_ERROR_ACTION_IS_MISSING_PAYMENT_DATA,

@@ -31,7 +31,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             this.state = {
                 status: 'init',
-                fingerPrintData: fingerPrintData as FingerPrintData
+                fingerPrintData: fingerPrintData as FingerPrintData,
+                hasCompleted: false
             };
         } else {
             this.state = { status: 'error' };
@@ -42,7 +43,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'token' property from threeDS2 action`
             });
 
-            // Send error to analytics endpoint
+            // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
                 class: ANALYTICS_DATA_ERROR,
                 code: ANALYTICS_ERROR_ACTION_IS_MISSING_TOKEN,
@@ -69,6 +70,9 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         this.submitAnalytics({ class: ANALYTICS_DATA_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
+
+        // Allow unmounting to proceed
+        this.setState({ hasCompleted: true });
     };
 
     componentDidMount() {
@@ -86,7 +90,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             if (!hasValid3DSMethodURL) {
                 this.setStatusComplete({ threeDSCompInd: 'U' });
 
-                // Send error to analytics endpoint
+                // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.submitAnalytics({
                     class: ANALYTICS_DATA_ERROR,
                     code: ANALYTICS_ERROR_TOKEN_IS_MISSING_THREEDSMETHODURL,
@@ -107,7 +111,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const hasTransServerID = threeDSServerTransID?.length;
 
             if (!hasValid3DSMethodNotificationURL || !hasValidPostMessageDomain || !hasTransServerID) {
-                // Send error to analytics endpoint
+                // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.submitAnalytics({
                     class: ANALYTICS_DATA_ERROR,
                     code: ANALYTICS_ERROR_TOKEN_IS_MISSING_OTHER_PROPS,
@@ -123,7 +127,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             // Only render component if we have fingerPrintData. Otherwise, exit with threeDSCompInd: 'U'
             this.setStatusComplete({ threeDSCompInd: 'U' });
 
-            // Send error to analytics endpoint 'cos base64 decoding or JSON.parse has failed on the token
+            // Send error to analytics endpoint 'cos base64 decoding or JSON.parse has failed on the token // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
                 class: ANALYTICS_DATA_ERROR,
                 code: ANALYTICS_ERROR_TOKEN_DECODE_OR_PARSING_FAILED,
@@ -149,7 +153,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             let analyticsObject: ThreeDS2AnalyticsObject;
 
-            // *Currently* this will only be true in the fingerprint timeout scenario
+            // *Currently* errorCodeObject (& therefore finalResObject.errorCode) will only be true in the fingerprint timeout scenario
             if (finalResObject.errorCode) {
                 analyticsObject = {
                     class: ANALYTICS_DATA_ERROR,
@@ -158,6 +162,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                     message: finalResObject.message,
                     metaData: JSON.stringify(finalResObject)
                 };
+
+                this.setState({ hasCompleted: true });
             } else {
                 analyticsObject = {
                     class: ANALYTICS_DATA_LOG,
@@ -178,8 +184,10 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         });
     }
 
-    render({ showSpinner }, { fingerPrintData }) {
-        if (this.state.status === 'retrievingFingerPrint') {
+    render({ showSpinner }, { status, fingerPrintData, hasCompleted }) {
+        // Use state.hasCompleted to hold back unmounting until the iframe has either loaded or timed-out
+        // This allows us time to hear from, and process, the iframe onload callback (in onActionHandled) before we unmount
+        if (status === 'retrievingFingerPrint' || !hasCompleted) {
             return (
                 <DoFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
