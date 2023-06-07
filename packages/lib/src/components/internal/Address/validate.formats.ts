@@ -58,7 +58,16 @@ export const countrySpecificFormatters: CountryFormatRules = {
         postalCode: createFormatByDigits(4)
     },
     BR: {
-        postalCode: createFormatByDigits(8)
+        postalCode: {
+            // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
+            formatterFn: val => {
+                const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
+                const maxlength = nuVal.indexOf('-') > -1 ? 9 : 8;
+                return nuVal.substr(0, maxlength);
+            },
+            format: '12345678 or 12345-678',
+            maxlength: 9
+        }
     },
     CA: {
         postalCode: {
@@ -181,7 +190,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
     },
     PL: {
         postalCode: {
-            // Formatter - excludes non digits & hyphens and limits to a maxlength that varies depending on whether a hyphen is present or not
+            // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 const maxlength = nuVal.indexOf('-') > -1 ? 6 : 5;
