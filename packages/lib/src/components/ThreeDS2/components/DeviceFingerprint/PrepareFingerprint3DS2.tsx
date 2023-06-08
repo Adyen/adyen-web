@@ -87,7 +87,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const hasFingerPrintData = !('success' in this.state.fingerPrintData && !this.state.fingerPrintData.success);
 
         if (hasFingerPrintData) {
-            const shouldAllowHttpDomains = false; //process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__.indexOf('localhost:8080') > -1; // allow http urls if in development and testing against localhost:8080
+            const shouldAllowHttpDomains = process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__.indexOf('localhost:8080') > -1; // allow http urls if in development and testing against localhost:8080
 
             /**
              * Check the structure of the created fingerPrintData
