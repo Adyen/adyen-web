@@ -33,7 +33,13 @@ export default function Address(props: AddressProps) {
 
     const [hasSelectedAddress, setHasSelectedAddress] = useState(false);
 
-    const showAddressSearch = !!props.onAddressLookup && !hasSelectedAddress;
+    const [useManualAddress, setUseManualAddress] = useState(false);
+
+    const [searchErrorMessage, setSearchErrorMessage] = useState('');
+
+    const showAddressSearch = !!props.onAddressLookup;
+
+    const showAddressFields = props.onAddressLookup ? hasSelectedAddress || useManualAddress : true;
 
     const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
         schema: requiredFieldsSchema,
@@ -54,14 +60,20 @@ export default function Address(props: AddressProps) {
             data[propKey] = String(providedValue);
         });
         setHasSelectedAddress(true);
+    };
 
-        // TODO next steps
-        // 1. take a look at the design and see how better add the "not my address button"
+    const onManualAddress = () => {
+        setUseManualAddress(true);
     };
 
     // Expose method expected by (parent) Address.tsx
     addressRef.current.showValidation = () => {
         triggerValidation();
+        if (showAddressSearch && !showAddressFields && !isValid) {
+            setSearchErrorMessage(i18n.get('address.errors.incomplete'));
+        } else {
+            setSearchErrorMessage('');
+        }
     };
 
     /**
@@ -156,17 +168,22 @@ export default function Address(props: AddressProps) {
 
     return (
         <Fragment>
-            {showAddressSearch ? (
-                <AddressSearch onAddressLookup={props.onAddressLookup} onSelect={setSearchData} />
-            ) : (
-                <Fragment>
-                    <Fieldset classNameModifiers={[label || 'address']} label={label}>
-                        {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
-                    </Fieldset>
-                    {/* Needed to easily test when showValidation is called */}
-                    {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
-                </Fragment>
-            )}
+            <Fieldset classNameModifiers={[label || 'address']} label={label}>
+                {showAddressSearch && (
+                    <AddressSearch
+                        onAddressLookup={props.onAddressLookup}
+                        onSelect={setSearchData}
+                        onManualAddress={onManualAddress}
+                        externalErrorMessage={searchErrorMessage}
+                        hideManualButton={showAddressFields}
+                    />
+                )}
+                {showAddressFields && (
+                    <Fragment>{addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}</Fragment>
+                )}
+            </Fieldset>
+            {/* Needed to easily test when showValidation is called */}
+            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
         </Fragment>
     );
 }
