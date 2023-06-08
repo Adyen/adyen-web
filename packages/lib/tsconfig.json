@@ -15,7 +15,7 @@
         "noImplicitAny": false,
         "strictPropertyInitialization": false,
         "suppressImplicitAnyIndexErrors": true,
-        "stripInternal": true,
+        "stripInternal": false,
 
         "importHelpers": true,
 
