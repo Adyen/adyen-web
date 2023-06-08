@@ -8,7 +8,7 @@ export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
     onErrorChallenge: (rejectObject: ThreeDS2FlowObject) => void;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-    onSubmitAnalytics: (w) => void;
+    onFormSubmit: (w) => void;
 }
 
 export interface DoChallenge3DS2State {

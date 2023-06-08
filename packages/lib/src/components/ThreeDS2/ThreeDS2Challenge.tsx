@@ -7,6 +7,9 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject } from '../types';
+import { ANALYTICS_API_ERROR, ANALYTICS_ACTION_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { AnalyticsObject } from '../../core/Analytics/types';
+import { createAnalyticsObject } from '../../core/Analytics/utils';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -32,8 +35,12 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
         type: 'ChallengeShopper'
     };
 
-    submitAnalytics(what) {
-        console.log('### ThreeDS2Challenge::submitAnalytics:: what=', what);
+    submitAnalytics(aObj) {
+        const analyticsObj: AnalyticsObject = createAnalyticsObject({ ...aObj, component: ThreeDS2Challenge.type });
+
+        console.log('### ThreeDS2Challenge::submitAnalytics:: analyticsObj', analyticsObj);
+
+        // TODO based on aObj.class decide how to send this object to the analytics queue
     }
 
     onComplete(state) {
@@ -53,7 +60,12 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
 
             this.props.onError({ errorCode: 'threeds2.challenge', message: `No ${dataTypeForError} received. Challenge cannot proceed` });
 
-            this.submitAnalytics(`${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`);
+            this.submitAnalytics({
+                class: ANALYTICS_ACTION_ERROR,
+                code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
+                errorType: ANALYTICS_API_ERROR,
+                message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
+            });
 
             return null;
         }

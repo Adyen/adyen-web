@@ -15,7 +15,7 @@ import {
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
     ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
-    ANALYTICS_ERROR_CODE_3DS2_FINGERPRINT_TIMEOUT
+    ANALYTICS_ERROR_CODE_3DS2_TIMEOUT
 } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
@@ -75,6 +75,14 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         this.setState({ hasCompleted: true });
     };
 
+    public onFormSubmit = (msg: string) => {
+        this.props.onSubmitAnalytics({
+            class: ANALYTICS_ACTION_LOG,
+            type: THREEDS2_FULL,
+            message: msg
+        } as ThreeDS2AnalyticsObject);
+    };
+
     componentDidMount() {
         const hasFingerPrintData = !('success' in this.state.fingerPrintData && !this.state.fingerPrintData.success);
 
@@ -98,9 +106,14 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                     message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
                 });
 
-                // TODO - we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
-                //  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
-                //  but in the MDFlow we control what the onError handler does.
+                /**
+                 * NOTE: we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
+                 *  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
+                 *   but in the MDFlow we control what the onError handler does.
+                 */
+                if (this.props.isMDFlow) {
+                    // Decide whether to call this.props.onError
+                }
 
                 console.debug('### PrepareFingerprint3DS2::exiting:: no valid threeDSMethodURL');
                 return;
@@ -157,7 +170,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             if (finalResObject.errorCode) {
                 analyticsObject = {
                     class: ANALYTICS_ACTION_ERROR,
-                    code: ANALYTICS_ERROR_CODE_3DS2_FINGERPRINT_TIMEOUT,
+                    code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
                     errorType: finalResObject.errorCode,
                     message: finalResObject.message,
                     metaData: JSON.stringify(finalResObject)
@@ -168,7 +181,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 analyticsObject = {
                     class: ANALYTICS_ACTION_LOG,
                     type: THREEDS2_FULL,
-                    message: `${THREEDS2_NUM} fingerprinting has succeeded`,
+                    message: `${THREEDS2_NUM} fingerprinting has completed`,
                     metaData: JSON.stringify(finalResObject)
                 };
             }
@@ -185,7 +198,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     render({ showSpinner }, { status, fingerPrintData, hasCompleted }) {
-        // Use state.hasCompleted to hold back unmounting until the iframe has either loaded or timed-out
+        // Due to the short-lived nature of the fingerprint iframe - the process can complete, & the component unmount, before the iframe ever gets a chance to say it has loaded.
+        // So we use state.hasCompleted to hold back unmounting until the iframe has either loaded or timed-out
         // This allows us time to hear from, and process, the iframe onload callback (in onActionHandled) before we unmount
         if (status === 'retrievingFingerPrint' || !hasCompleted) {
             return (
@@ -207,7 +221,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                     showSpinner={showSpinner}
                     {...fingerPrintData}
                     onActionHandled={this.onActionHandled}
-                    onSubmitAnalytics={this.submitAnalytics}
+                    onFormSubmit={this.onFormSubmit}
                 />
             );
         }
