@@ -87,7 +87,10 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              * Check the structure of the created challengeData
              */
             const { acsURL } = this.state.challengeData as ChallengeData;
-            const hasValidAcsURL = isValidHttpUrl(acsURL);
+            const hasValidAcsURL = isValidHttpUrl(
+                acsURL,
+                process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__.indexOf('localhost:8080') > -1 // allow http urls if in development and testing against localhost:8080);
+            );
 
             // Only render component if we have a acsURL.
             if (!hasValidAcsURL) {
@@ -108,7 +111,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     // Decide whether to call this.props.onError
                 }
 
-                console.debug('### PrepareFingerprint3DS2::exiting:: no valid acsURL');
+                console.debug('### PrepareChallenge3DS2::exiting:: no valid acsURL');
                 return;
             }
 
@@ -141,7 +144,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             this.submitAnalytics({
                 class: ANALYTICS_ACTION_ERROR,
                 code: ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
-                errorType: 'token decoding or parsing has failed',
+                errorType: 'token decoding or parsing has failed', // TODO check what values for "errorType" b/e will allow
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${(this.state.challengeData as ErrorObject).error}`
             }); // can be: 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
 
@@ -168,7 +171,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     analyticsObject = {
                         class: ANALYTICS_ACTION_ERROR,
                         code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-                        errorType: finalResObject.errorCode,
+                        errorType: finalResObject.errorCode, // TODO check what values for "errorType" b/e will allow
                         message: finalResObject.message,
                         metaData: JSON.stringify(finalResObject)
                     };

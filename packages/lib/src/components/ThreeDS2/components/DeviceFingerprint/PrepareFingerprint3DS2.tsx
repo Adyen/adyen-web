@@ -87,24 +87,24 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const hasFingerPrintData = !('success' in this.state.fingerPrintData && !this.state.fingerPrintData.success);
 
         if (hasFingerPrintData) {
+            const shouldAllowHttpDomains = false; //process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__.indexOf('localhost:8080') > -1; // allow http urls if in development and testing against localhost:8080
+
             /**
              * Check the structure of the created fingerPrintData
              */
             const { threeDSMethodURL, threeDSMethodNotificationURL, postMessageDomain, threeDSServerTransID } = this.state
                 .fingerPrintData as FingerPrintData;
-            const hasValid3DSMethodURL = isValidHttpUrl(threeDSMethodURL);
+            const hasValid3DSMethodURL = isValidHttpUrl(threeDSMethodURL, shouldAllowHttpDomains);
 
             // Only render component if we have a threeDSMethodURL. Otherwise, exit with threeDSCompInd: 'U'
             if (!hasValid3DSMethodURL) {
-                this.setStatusComplete({ threeDSCompInd: 'U' });
-
-                // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                this.submitAnalytics({
-                    class: ANALYTICS_ACTION_ERROR,
-                    code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
-                    errorType: ANALYTICS_API_ERROR,
-                    message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
-                });
+                this.setStatusComplete(
+                    { threeDSCompInd: 'U' },
+                    {
+                        errorCode: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
+                        message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
+                    }
+                );
 
                 /**
                  * NOTE: we can now use this.props.isMDFlow to decide if we want to send any of these errors to the onError handler
@@ -119,8 +119,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 return;
             }
 
-            const hasValid3DSMethodNotificationURL = isValidHttpUrl(threeDSMethodNotificationURL);
-            const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain);
+            const hasValid3DSMethodNotificationURL = isValidHttpUrl(threeDSMethodNotificationURL, shouldAllowHttpDomains);
+            const hasValidPostMessageDomain = isValidHttpUrl(postMessageDomain, shouldAllowHttpDomains);
             const hasTransServerID = threeDSServerTransID?.length;
 
             if (!hasValid3DSMethodNotificationURL || !hasValidPostMessageDomain || !hasTransServerID) {
@@ -166,15 +166,24 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             let analyticsObject: ThreeDS2AnalyticsObject;
 
-            // *Currently* errorCodeObject (& therefore finalResObject.errorCode) will only be true in the fingerprint timeout scenario
             if (finalResObject.errorCode) {
-                analyticsObject = {
-                    class: ANALYTICS_ACTION_ERROR,
-                    code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-                    errorType: finalResObject.errorCode,
-                    message: finalResObject.message,
-                    metaData: JSON.stringify(finalResObject)
-                };
+                if (finalResObject.errorCode === 'timeout') {
+                    analyticsObject = {
+                        class: ANALYTICS_ACTION_ERROR,
+                        code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
+                        errorType: finalResObject.errorCode, // = 'timeout' // TODO check what values for "errorType" b/e will allow
+                        message: finalResObject.message,
+                        metaData: JSON.stringify(finalResObject)
+                    };
+                } else {
+                    // Decoded token is missing a valid threeDSMethodURL property
+                    analyticsObject = {
+                        class: ANALYTICS_ACTION_ERROR,
+                        code: finalResObject.errorCode,
+                        errorType: ANALYTICS_API_ERROR,
+                        message: finalResObject.message
+                    };
+                }
 
                 this.setState({ hasCompleted: true });
             } else {
