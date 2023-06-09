@@ -21,7 +21,9 @@ import {
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
     ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
     ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-    ANALYTICS_ERROR_CODE_NO_TRANSSTATUS
+    ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
+    ANALYTICS_IMPLEMENTATION_ERROR,
+    ANALYTICS_ERROR_CODE_MISMATCHING_TRANS_IDS
 } from '../../../../core/Analytics/constants';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -60,7 +62,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    public submitAnalytics = what => {
+    public submitAnalytics = (what: ThreeDS2AnalyticsObject) => {
         // console.log('### PrepareChallenge3DS2::submitAnalytics:: what=', what);
         this.props.onSubmitAnalytics(what);
     };
@@ -137,9 +139,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Proceed to allow component to render
             this.setState({ status: 'performingChallenge' });
         } else {
-            // TODO send error to analytics endpoint 'cos base64 decoding or JSON.parse has failed on the token
-            this.submitAnalytics(`${THREEDS2_CHALLENGE_ERROR}: ${(this.state.challengeData as ErrorObject).error}`);
-
             // Send error to analytics endpoint 'cos base64 decoding or JSON.parse has failed on the token // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
                 class: ANALYTICS_ACTION_ERROR,
@@ -173,7 +172,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
                         errorType: finalResObject.errorCode, // TODO check what values for "errorType" b/e will allow
                         message: finalResObject.message,
-                        metaData: JSON.stringify(finalResObject)
+                        metaData: JSON.stringify(resultObj)
                     };
                 } else {
                     // It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
@@ -182,7 +181,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         code: ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
                         errorType: finalResObject.errorCode,
                         message: finalResObject.message,
-                        metaData: JSON.stringify(finalResObject)
+                        metaData: JSON.stringify(resultObj)
                     };
                 }
             } else {
@@ -190,7 +189,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     class: ANALYTICS_ACTION_LOG,
                     type: THREEDS2_FULL,
                     message: `${THREEDS2_NUM} challenge has completed`,
-                    metaData: JSON.stringify(finalResObject)
+                    metaData: JSON.stringify(resultObj)
                 };
             }
 
@@ -241,7 +240,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                              * So here we detect that this is not the response we are looking for, and this time round, unmount this set of 3DS2 comps
                              */
                             console.debug('### PrepareChallenge3DS2::threeDSServerTransID:: ids do not match');
-                            this.submitAnalytics(`${THREEDS2_CHALLENGE}: threeDSServerTransID: ids do not match`);
+                            this.submitAnalytics({
+                                class: ANALYTICS_ACTION_ERROR,
+                                code: ANALYTICS_ERROR_CODE_MISMATCHING_TRANS_IDS,
+                                errorType: ANALYTICS_IMPLEMENTATION_ERROR,
+                                message: `${THREEDS2_CHALLENGE}: threeDSServerTransID: ids do not match`
+                            });
 
                             this.props.onComplete(null); // Send null so parent will unmount without calling onComplete
                         }

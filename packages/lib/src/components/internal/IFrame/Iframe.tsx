@@ -36,7 +36,6 @@ class Iframe extends Component<IframeProps> {
     }
 
     componentDidMount() {
-        console.log('### Iframe::componentDidMount:: iframe mounted', this.props.name);
         if (this.iframeEl.addEventListener) {
             this.iframeEl.addEventListener('load', this.iframeOnLoad.bind(this), false);
         } else if (this.iframeEl.attachEvent) {
@@ -60,7 +59,6 @@ class Iframe extends Component<IframeProps> {
 
     render({ name, src, width, height, minWidth, minHeight, allow, title, classNameModifiers }: IframeProps) {
         const validClassNameModifiers = classNameModifiers.filter(m => !!m);
-        console.log('### Iframe::componentDidMount:: rendering iframe ', name);
         return (
             <iframe
                 ref={ref => {

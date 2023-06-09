@@ -10,6 +10,7 @@ import { ActionHandledReturnObject } from '../types';
 import { ANALYTICS_API_ERROR, ANALYTICS_ACTION_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
 import { AnalyticsObject } from '../../core/Analytics/types';
 import { createAnalyticsObject } from '../../core/Analytics/utils';
+import { ThreeDS2AnalyticsObject } from './types';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -35,7 +36,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
         type: 'ChallengeShopper'
     };
 
-    submitAnalytics(aObj) {
+    submitAnalytics(aObj: ThreeDS2AnalyticsObject) {
         const analyticsObj: AnalyticsObject = createAnalyticsObject({ ...aObj, component: ThreeDS2Challenge.type });
 
         console.log('### ThreeDS2Challenge::submitAnalytics:: analyticsObj', analyticsObj);

@@ -43,22 +43,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 fingerPrintData: fingerPrintData as FingerPrintData
             };
         } else {
-            // this.state = { status: 'error' };
-            // TODO - confirm that we should do this, or is it possible to proceed to the challenge anyway?
-            //  ...in which case we should console.debug the error object and then call: this.setStatusComplete({ threeDSCompInd: 'N' });
-            // this.props.onError({
-            //     errorCode: this.props.dataKey,
-            //     message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'token' property from threeDS2 action`
-            // });
-
-            // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-            // this.submitAnalytics({
-            //     class: ANALYTICS_ACTION_ERROR,
-            //     code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
-            //     errorType: ANALYTICS_API_ERROR,
-            //     message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'token' property from threeDS2 action`
-            // });
-
             // Will be picked up in componentDidMount and translated into a call to setStatusComplete as threeDSCompInd: 'N'
             this.state = { fingerPrintData: { success: false, error: MISSING_TOKEN_IN_ACTION_MSG } };
 

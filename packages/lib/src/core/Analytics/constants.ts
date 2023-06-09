@@ -2,6 +2,7 @@ export const ANALYTICS_ACTION_LOG = 'log';
 export const ANALYTICS_ACTION_ERROR = 'error';
 export const ANALYTICS_ACTION_EVENT = 'event';
 
+export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';
 
 export const ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA = 'web_700'; // Missing 'paymentData' property from threeDS2 action
@@ -20,3 +21,4 @@ export const ANALYTICS_ERROR_CODE_3DS2_TIMEOUT = 'web_705'; // 3DS2 process has 
 
 export const ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL = 'web_800'; // Decoded token is missing a valid acsURL property
 export const ANALYTICS_ERROR_CODE_NO_TRANSSTATUS = 'web_801'; // Challenge has resulted in an error (no transStatus could be retrieved by the backend)
+export const ANALYTICS_ERROR_CODE_MISMATCHING_TRANS_IDS = 'web_802'; // threeDSServerTransID: ids do not match
