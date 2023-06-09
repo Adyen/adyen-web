@@ -25,7 +25,9 @@ function Select({
     isValid,
     placeholder,
     uniqueId,
-    disabled
+    disabled,
+    disableTextFilter,
+    clearOnSelect
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -43,7 +45,7 @@ function Select({
 
     const selectedOption = active;
 
-    const filteredItems = items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
+    const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
     const setNextActive = () => {
         const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
@@ -114,6 +116,8 @@ function Select({
 
         if (!valueToEmit.disabled) {
             onChange({ target: { value: valueToEmit.id, name: name } });
+
+            if (clearOnSelect) setInputText(null);
 
             closeList();
         }
@@ -211,7 +215,6 @@ function Select({
         if (showList) {
             setInputText(null);
         } else {
-            //setInputText(selectedOption.name);
             setTextFilter(null);
         }
     }, [showList]);

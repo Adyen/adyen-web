@@ -16,7 +16,7 @@ function SelectButton(props: SelectButtonProps) {
     const { active, selected, inputText, readonly, showList } = props;
 
     // display fallback order
-    const displayText = selected.selectedOptionName || selected.name || props.placeholder;
+    const displayText = selected.selectedOptionName || selected.name || props.placeholder || '';
     // displayInputText only used for the text input for the filter
     // display the "typed" filter text when showing the dropdown,
     // hide it and show the "selected" value when collapsed

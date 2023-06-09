@@ -26,6 +26,7 @@ const disclaimerMessage = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount,
+        resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -37,7 +38,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
-                hasHolderName: true
+                hasHolderName: true,
+                holderNameRequired: true
             }
         }
     });
@@ -79,6 +81,30 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 },
                 onBinLookup: obj => {
                     console.log('### Cards::onBinLookup:: obj=', obj);
+                },
+                billingAddressRequired: true,
+                onAddressLookup: async (value, actions) => {
+                    const url = `/mock/addressSearch?search=${encodeURIComponent(value)}`;
+
+                    const formattedData = await fetch(url)
+                        .then(res => res.json())
+                        // This set is necessary to map the response receive from the external provider to our address field
+                        .then(res =>
+                            res.map(({ id, name, city, address, houseNumber, postalCode }) => ({
+                                id,
+                                name,
+                                city,
+                                street: address,
+                                houseNumberOrName: houseNumber,
+                                postalCode,
+                                country: 'GB'
+                            }))
+                        )
+                        .catch(error => {
+                            console.log('ERROR:', error);
+                            actions.reject('Something went wrong, try adding manually.');
+                        });
+                    actions.resolve(formattedData);
                 }
             })
             .mount('.card-field');

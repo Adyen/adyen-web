@@ -22,6 +22,8 @@ export interface SelectProps {
     selected: string;
     uniqueId?: string;
     disabled: boolean;
+    disableTextFilter: boolean;
+    clearOnSelect: boolean;
 }
 
 export interface SelectButtonProps {
