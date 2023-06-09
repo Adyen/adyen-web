@@ -25,5 +25,4 @@ export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintPr
 export interface PrepareFingerprint3DS2State {
     status?: string;
     fingerPrintData?: FingerPrintData | ErrorObject;
-    hasCompleted?: boolean;
 }

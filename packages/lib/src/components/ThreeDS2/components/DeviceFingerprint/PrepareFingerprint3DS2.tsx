@@ -31,8 +31,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             this.state = {
                 status: 'init',
-                fingerPrintData: fingerPrintData as FingerPrintData,
-                hasCompleted: false
+                fingerPrintData: fingerPrintData as FingerPrintData
             };
         } else {
             this.state = { status: 'error' };
@@ -70,9 +69,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         this.submitAnalytics({ class: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
-
-        // Allow unmounting to proceed
-        this.setState({ hasCompleted: true });
     };
 
     public onFormSubmit = (msg: string) => {
@@ -184,8 +180,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                         message: finalResObject.message
                     };
                 }
-
-                this.setState({ hasCompleted: true });
             } else {
                 analyticsObject = {
                     class: ANALYTICS_ACTION_LOG,
@@ -206,15 +200,19 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         });
     }
 
-    render({ showSpinner }, { status, fingerPrintData, hasCompleted }) {
-        // Due to the short-lived nature of the fingerprint iframe - the process can complete, & the component unmount, before the iframe ever gets a chance to say it has loaded.
-        // So we use state.hasCompleted to hold back unmounting until the iframe has either loaded or timed-out
-        // This allows us time to hear from, and process, the iframe onload callback (in onActionHandled) before we unmount
-        if (status === 'retrievingFingerPrint' || !hasCompleted) {
+    render({ showSpinner }, { status, fingerPrintData }) {
+        if (status === 'retrievingFingerPrint') {
             return (
                 <DoFingerprint3DS2
                     onCompleteFingerprint={fingerprint => {
-                        this.setStatusComplete(fingerprint.result);
+                        /**
+                         * Due to the short-lived nature of the fingerprint iframe - the process can complete, & the component unmount, before the iframe ever gets a chance to say it has loaded.
+                         * After various experiments with a new state prop ("hasCompleted") and the existing state.status (all of which had side effects of unnecessary iframe renders &/or form renders &/or form submissions)
+                         * setTimeout seems to be the only way to hold back the completion process to allow us time to hear from, and process, the iframe onload callback (in onActionHandled) before we unmount
+                         */
+                        setTimeout(() => {
+                            this.setStatusComplete(fingerprint.result);
+                        }, 10);
                     }}
                     onErrorFingerprint={fingerprint => {
                         /**
