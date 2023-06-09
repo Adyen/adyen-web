@@ -9,6 +9,8 @@ export const THREEDS2_CHALLENGE_ERROR = '3DS2Challenge_Error';
 export const THREEDS2_FULL = 'threeDS2';
 export const THREEDS2_NUM = '3DS2';
 
+export const MISSING_TOKEN_IN_ACTION_MSG = 'Missing "token" property from threeDS2 action';
+
 export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;

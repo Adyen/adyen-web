@@ -14,11 +14,14 @@ export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
     protected formEl;
 
     componentDidMount() {
+        console.log('### ThreeDS2Form::componentDidMount:: mounted:: submitting form name=', this.props.name);
         this.formEl.submit();
         this.props.onFormSubmit(`${this.props.inputName} sent`);
     }
 
     render({ name, action, target, inputName, inputValue }) {
+        console.log('### ThreeDS2Form::render:: name', name);
+        console.log('### ThreeDS2Form::render:: action', action);
         return (
             <form
                 ref={ref => {
