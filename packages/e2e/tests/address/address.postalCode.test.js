@@ -16,8 +16,10 @@ test('should show error when switching from country that has valid postal code t
     await addressComponent.selectCountry('United States');
     await addressComponent.fillPostalCode('12345');
 
+    await t.expect(addressComponent.postalCodeInputError.exists).ok(); // error fields should always be in DOM
+
     await addressComponent.selectCountry('Brazil');
-    await t.expect(addressComponent.postalCodeInputError.innerText).contains('Invalid format. Expected format: 99999999');
+    await t.expect(addressComponent.postalCodeInputError.innerText).contains('Invalid format. Expected format: 12345678 or 12345-678');
 
     await addressComponent.selectCountry('Netherlands');
     await t.expect(addressComponent.postalCodeInputError.innerText).contains('Invalid format. Expected format: 9999AA');
@@ -37,12 +39,11 @@ test('should show error when remove focus from postal code with invalid value', 
     await addressComponent.fillPostalCode('12345');
     await removeFocusFromElement(addressComponent.postalCodeInput);
 
-    await t.expect(addressComponent.postalCodeInputError.innerText).contains('Invalid format. Expected format: 99999999');
+    await t.expect(addressComponent.postalCodeInputError.innerText).contains('Invalid format. Expected format: 12345678 or 12345-678');
 
     await addressComponent.fillPostalCode('678');
 
     await t.expect(addressComponent.postalCodeInput.value).eql('12345678');
-    await t.expect(addressComponent.postalCodeInputError.exists).notOk();
 
     // US
     await addressComponent.selectCountry('United States');
@@ -62,7 +63,6 @@ test('should show error when remove focus from postal code with invalid value', 
     await addressComponent.fillPostalCode('AB');
 
     await t.expect(addressComponent.postalCodeInput.value).eql('1234AB');
-    await t.expect(addressComponent.postalCodeInputError.exists).notOk();
 });
 
 test('should format input according to the country pattern', async t => {
