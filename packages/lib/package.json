@@ -24,7 +24,7 @@
         "./dist/es/adyen.css": "./dist/es/adyen.css",
         "./package.json": "./package.json"
     },
-    "version": "5.43.0",
+    "version": "5.44.0",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -124,6 +124,6 @@
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": "eslint",
         "*.{scss,css}": "stylelint",
-        "*.{js,jsx,ts,tsx,html}": "prettier --write"
+        "*.{js,jsx,ts,tsx,html,md}": "prettier --write"
     }
 }
