@@ -246,6 +246,7 @@ export interface Order {
 export interface OrderStatus {
     expiresAt: string;
     paymentMethods: {
+        amount?: PaymentAmount;
         lastFour: string;
         type: string;
     }[];
