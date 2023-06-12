@@ -115,8 +115,6 @@ export interface UIElementProps extends BaseElementProps {
 
     isInstantPayment?: boolean;
 
-    environment?: string;
-
     type?: string;
     name?: string;
     icon?: string;
