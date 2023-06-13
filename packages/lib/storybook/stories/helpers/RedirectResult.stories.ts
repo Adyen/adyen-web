@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/preact';
 import { getSearchParameter } from '../../utils/get-query-parameters';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import AdyenCheckout from '../../../src';
+import AdyenCheckout from '../../../src/index';
 //todo: it's broken eg: ideal
 type RedirectResultProps = {
     redirectResult: string;

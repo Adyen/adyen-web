@@ -1,11 +1,11 @@
 import type { StorybookConfig } from '@storybook/preact-vite';
-import { mergeConfig, defineConfig, loadEnv } from 'vite';
+import { mergeConfig, loadEnv } from 'vite';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
+import version = require('../config/version');
+import { getRollupDevConfig } from '../config/rollup.dev.config';
 
-const { parsed: environmentVariables } = dotenv.config({
-    path: path.resolve('../../', '.env')
-});
+const currentVersion = version();
+const rollupDevConfig = getRollupDevConfig();
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -13,7 +13,7 @@ const config: StorybookConfig = {
         {
             name: '@storybook/addon-essentials',
             options: {
-                docs: false
+                docs: true
             }
         }
     ],
@@ -24,27 +24,23 @@ const config: StorybookConfig = {
     async viteFinal(config, options) {
         const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
         return mergeConfig(config, {
-            // TODO: expose all env variables, which is not recommended
-            define: { 'process.env': env },
+            define: {
+                'process.env': env,
+                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+                'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
+                'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),
+                'process.env.COMMIT_BRANCH': JSON.stringify(currentVersion.COMMIT_BRANCH),
+                'process.env.ADYEN_BUILD_ID': JSON.stringify(currentVersion.ADYEN_BUILD_ID),
+                'process.env.__SF_ENV__': JSON.stringify(env.SF_ENV || 'build')
+            },
             server: {
                 watch: {
                     usePolling: true
                 }
-            }
+            },
+            build: { rollupOptions: { ...rollupDevConfig } }
         });
     }
-    /*    env: config => {
-        console.log('process.env.IS_HTTPS', process.env.IS_HTTPS);
-        const viteEnvVariables = {};
-        for (const [key, value] of Object.entries(environmentVariables)) {
-            viteEnvVariables[`VITE_${key}`] = value;
-        }
-
-        return {
-            ...config,
-            ...viteEnvVariables
-        };
-    }*/
 };
 
 export default config;
