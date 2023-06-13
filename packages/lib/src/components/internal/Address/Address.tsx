@@ -41,7 +41,7 @@ export default function Address(props: AddressProps) {
 
     const showAddressFields = props.onAddressLookup ? hasSelectedAddress || useManualAddress : true;
 
-    const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
+    const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData } = useForm<AddressData>({
         schema: requiredFieldsSchema,
         defaultData: props.data,
         // Ensure any passed validation rules are merged with the default ones
@@ -50,14 +50,13 @@ export default function Address(props: AddressProps) {
     });
 
     const setSearchData = selectedAddress => {
-        // TODO get this props from typings
-        const propsKeysToProcess = ['city', 'postalCode', 'street', 'houseNumberOrName', 'country'];
+        const propsKeysToProcess = ADDRESS_SCHEMA;
         propsKeysToProcess.forEach(propKey => {
             // Make sure the data provided by the merchant is always strings
             const providedValue = selectedAddress[propKey];
             if (providedValue === null || providedValue === undefined) return;
             // Cast everything to string
-            data[propKey] = String(providedValue);
+            setData(propKey, String(providedValue));
         });
         setHasSelectedAddress(true);
     };
