@@ -1,14 +1,21 @@
 import { httpPost } from '../http';
-import { AnalyticsProps } from '../../Analytics/Analytics';
+import { PaymentAmount } from '../../../types';
 
-type Config = Pick<AnalyticsProps, 'loadingContext' | 'locale' | 'clientKey' | 'amount'>;
+type LogTelemetryConfig = {
+    loadingContext: string;
+    locale: string;
+    clientKey: string;
+    amount: PaymentAmount;
+};
 
 /**
  * Log event to Adyen
  * @param config -
  */
-const logTelemetry = (config: Config) => (event: any) => {
-    if (!config.clientKey) return Promise.reject();
+const logTelemetry = (config: LogTelemetryConfig) => (event: any) => {
+    if (!config.clientKey) {
+        return Promise.reject();
+    }
 
     const options = {
         errorLevel: 'silent' as const,
@@ -17,8 +24,10 @@ const logTelemetry = (config: Config) => (event: any) => {
     };
 
     const telemetryEvent = {
-        amountValue: config.amount?.value,
-        amountCurrency: config.amount?.currency,
+        amount: {
+            value: config.amount?.value || 0,
+            currency: config.amount?.currency
+        },
         version: process.env.VERSION,
         channel: 'Web',
         locale: config.locale,

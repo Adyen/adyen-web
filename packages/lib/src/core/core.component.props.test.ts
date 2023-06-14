@@ -94,8 +94,9 @@ describe('Core - tests ensuring props reach components', () => {
      * COMPONENTS
      */
     describe('Tests for standalone components', () => {
-        test('Test that expected props are propagated to a standalone storedCard ', () => {
+        test('Test that expected props are propagated to a standalone storedCard ', async () => {
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             const component = checkout.create('card', paymentMethodsResponse.storedPaymentMethods[0]);
 
             // expect props from core.getPropsForComps()
@@ -117,8 +118,9 @@ describe('Core - tests ensuring props reach components', () => {
             expect(component.props.type).toEqual('card');
         });
 
-        test('Test that expected props are propagated to a standalone Card ', () => {
+        test('Test that expected props are propagated to a standalone Card ', async () => {
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             const component = checkout.create('card', { legacyInputMode: true });
 
             // expect props from core.getPropsForComps()
@@ -144,10 +146,11 @@ describe('Core - tests ensuring props reach components', () => {
             expect(component.props.type).toEqual('card');
         });
 
-        test('Test that expected props are propagated to a standalone redirect comp created as "redirect" ', () => {
+        test('Test that expected props are propagated to a standalone redirect comp created as "redirect" ', async () => {
             const pmObj = paymentMethodsResponse.paymentMethods.find(el => el.type === 'unionpay');
 
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             const component = checkout.create('redirect', pmObj);
 
             // expect props from core.getPropsForComps()
@@ -168,8 +171,9 @@ describe('Core - tests ensuring props reach components', () => {
             expect(component.props.type).toEqual('unionpay');
         });
 
-        test('Test that expected props are propagated to a standalone redirect comp created as "unionpay" ', () => {
+        test('Test that expected props are propagated to a standalone redirect comp created as "unionpay" ', async () => {
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             const component = checkout.create('unionpay');
 
             // expect props from core.getPropsForComps()
@@ -190,8 +194,9 @@ describe('Core - tests ensuring props reach components', () => {
             expect(component.props.type).toEqual('unionpay');
         });
 
-        test('Test that expected props are propagated to a standalone google pay com', () => {
+        test('Test that expected props are propagated to a standalone google pay com', async () => {
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             const component = checkout.create('paywithgoogle');
 
             // expect props from core.getPropsForComps()
@@ -218,8 +223,9 @@ describe('Core - tests ensuring props reach components', () => {
      * DROPIN
      */
     describe('Test for dropin component', () => {
-        test('Dropin component receives correct props ', () => {
+        test('Dropin component receives correct props ', async () => {
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             const dropin = checkout.create('dropin', {
                 showStoredPaymentMethods: false,
                 openFirstPaymentMethod: false
@@ -249,13 +255,14 @@ describe('Core - tests ensuring props reach components', () => {
         let dropin;
         let newPmResponsePaymentMethods;
 
-        beforeEach(() => {
+        beforeEach(async () => {
             // @ts-ignore Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
             checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj;
 
             newPmResponsePaymentMethods = checkoutConfig['paymentMethodsResponse'].paymentMethods;
 
             const checkout = new AdyenCheckout(checkoutConfig);
+            await checkout.initialize();
             dropin = checkout.create('dropin');
         });
 
@@ -389,8 +396,9 @@ describe('Core - tests ensuring props reach components', () => {
 });
 
 describe('Props reach standalone card component regardless of how the component is created', () => {
-    test('Card component created as "scheme" receives correct props ', () => {
+    test('Card component created as "scheme" receives correct props ', async () => {
         const checkout = new AdyenCheckout(checkoutConfig);
+        await checkout.initialize();
         const component = checkout.create('scheme', { legacyInputMode: true });
 
         expect(component.props._parentInstance).not.toEqual(null); // core.getPropsForComps

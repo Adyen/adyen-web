@@ -26,7 +26,9 @@ class Session {
 
     constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
+
         if (!clientKey) throw new Error('No clientKey available');
+        if (!loadingContext) throw new Error('No loadingContext available');
 
         this.storage = new Storage('session', 'localStorage');
         this.clientKey = clientKey;
