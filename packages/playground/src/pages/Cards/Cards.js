@@ -6,6 +6,7 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
+import { searchFunctionExample } from '../../utils';
 
 const showComps = {
     clickToPay: true,
@@ -83,29 +84,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     console.log('### Cards::onBinLookup:: obj=', obj);
                 },
                 billingAddressRequired: true,
-                onAddressLookup: async (value, actions) => {
-                    const url = `/mock/addressSearch?search=${encodeURIComponent(value)}`;
-
-                    const formattedData = await fetch(url)
-                        .then(res => res.json())
-                        // This set is necessary to map the response receive from the external provider to our address field
-                        .then(res =>
-                            res.map(({ id, name, city, address, houseNumber, postalCode }) => ({
-                                id,
-                                name,
-                                city,
-                                street: address,
-                                houseNumberOrName: houseNumber,
-                                postalCode,
-                                country: 'GB'
-                            }))
-                        )
-                        .catch(error => {
-                            console.log('ERROR:', error);
-                            actions.reject('Something went wrong, try adding manually.');
-                        });
-                    actions.resolve(formattedData);
-                }
+                onAddressLookup: searchFunctionExample
             })
             .mount('.card-field');
     }

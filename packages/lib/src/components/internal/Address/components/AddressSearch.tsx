@@ -62,6 +62,7 @@ export default function AddressSearch({ onAddressLookup, onSelect, onManualAddre
         }
         const value = originalData.find(item => item.id === event.target.value);
         onSelect(value);
+        setFormattedData([]);
     };
 
     const debounceInputHandler = useMemo(() => debounce(onInput), []);

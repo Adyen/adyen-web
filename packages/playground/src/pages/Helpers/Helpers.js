@@ -4,6 +4,7 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale } from '../../config/commonConfig';
+import { searchFunctionExample } from '../../utils';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -60,29 +61,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Address
     window.address = checkout
         .create('address', {
-            onAddressLookup: async value => {
-                const url = `/mock/addressSearch?search=${encodeURIComponent(value)}`;
-
-                return (
-                    fetch(url)
-                        .then(res => res.json())
-                        // This set is necessary to map the response receive from the external provider to our address field
-                        .then(res =>
-                            res.map(({ id, name, city, address, houseNumber, postalCode }) => ({
-                                id,
-                                name,
-                                city,
-                                street: address,
-                                houseNumberOrName: houseNumber,
-                                postalCode,
-                                country: 'GB'
-                            }))
-                        )
-                        .catch(error => {
-                            console.error('Error:', error);
-                        })
-                );
-            },
+            onAddressLookup: searchFunctionExample,
             onChange: console.log,
             validationRules: {
                 postalCode: {
