@@ -38,7 +38,7 @@ class Core {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(props);
-        this.createPaymentMethodsResponse();
+        this.createPaymentMethodsList();
 
         this.loadingContext = resolveEnvironment(this.options.environment);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
@@ -67,7 +67,7 @@ class Core {
                         locale: this.options.locale || shopperLocale
                     });
 
-                    this.createPaymentMethodsResponse(paymentMethods);
+                    this.createPaymentMethodsList(paymentMethods);
                     this.createCoreModules();
 
                     return this;
@@ -350,13 +350,11 @@ class Core {
         throw new Error(errorMessage);
     }
 
-    private createPaymentMethodsResponse(paymentMethodsResponse?: PaymentMethodsResponse): void {
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
         this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
     private createCoreModules(): void {
-        console.log(this.modules);
-
         if (this.modules) {
             console.warn('Core: Core modules are already created.');
             return;
