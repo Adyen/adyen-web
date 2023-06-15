@@ -10,7 +10,6 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
     public static type = 'bankTransfer_IBAN';
 
     public static defaultProps = {
-        showPayButton: true,
         showEmailAddress: true
     };
 

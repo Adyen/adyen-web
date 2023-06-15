@@ -20,7 +20,7 @@ class BaseElement<P extends BaseElementProps> {
     protected resources: Resources;
 
     protected constructor(props: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
+        this.props = this.formatProps({ showPayButton: true, ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
         this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};

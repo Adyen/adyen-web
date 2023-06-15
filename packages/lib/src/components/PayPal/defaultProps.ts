@@ -3,7 +3,6 @@ import { PayPalElementProps } from './types';
 const defaultProps: PayPalElementProps = {
     environment: 'TEST',
     status: 'loading',
-    showPayButton: true,
 
     // Config
     /**

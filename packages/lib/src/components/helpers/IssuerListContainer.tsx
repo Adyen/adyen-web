@@ -49,11 +49,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         issuers: [],
         highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false,
-        // Previously we didn't check the showPayButton before rendering the RedirectButton.
-        // Now that we are checking it, all the merchants who don't specify showPayButton in the config will not see the RedirectButton anymore.
-        // To prevent the backward compatible issue, we add it as the default prop, but it should be fixed properly on v6.
-        showPayButton: true
+        showPaymentMethodItemImages: false
     };
 
     formatProps(props) {

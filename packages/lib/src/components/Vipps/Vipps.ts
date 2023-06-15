@@ -5,7 +5,6 @@ class VippsElement extends RedirectElement {
 
     public static defaultProps = {
         type: VippsElement.type,
-        showPayButton: true,
         name: 'Vipps'
     };
 }

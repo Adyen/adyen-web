@@ -21,8 +21,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         },
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
-        },
-        showPayButton: true
+        }
     });
 
     // SEPA Bank Transfer
@@ -97,10 +96,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.upi = checkout.create('upi').mount('.upi-field');
 
     // PIX
-    window.pix = checkout.create('pix', { countdownTime: 5 }).mount('.pix-field');
+    window.pix = checkout.create('pix', { countdownTime: 5, showPayButton: true }).mount('.pix-field');
 
     // Oxxo
-    window.oxxo = checkout.create('oxxo').mount('.oxxo-field');
+    window.oxxo = checkout.create('oxxo', { showPayButton: true }).mount('.oxxo-field');
+
+    // Twint
+    window.twint = checkout.create('twint').mount('.twint-field');
 
     // Redirect
     // window.redirect = checkout.create('paypal').mount('.redirect-field');

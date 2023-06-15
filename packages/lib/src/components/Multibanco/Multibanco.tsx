@@ -6,7 +6,6 @@ import RedirectButton from '../internal/RedirectButton';
 
 export class MultibancoElement extends UIElement {
     public static type = 'multibanco';
-    public static defaultProps = { showPayButton: true };
 
     get isValid() {
         return true;

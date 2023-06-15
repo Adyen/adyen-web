@@ -6,12 +6,14 @@ import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
+import { handleSubmit } from '../../handlers';
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        risk: { node: 'body', onError: console.error }
+        risk: { node: 'body', onError: console.error },
+        onSubmit: handleSubmit
     });
 
     // WechatPay QR
@@ -54,79 +56,15 @@ import './QRCodes.scss';
             throw Error(error);
         });
 
-    makePayment({
-        paymentMethod: {
-            type: 'swish'
-        },
-        countryCode: 'SE',
-        amount: {
-            currency: 'SEK',
-            value: 1000
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.swish = checkout.createFromAction(result.action).mount('#swish-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    // Test with: https://localhost:3020/qrcodes/?countryCode=SE
+    checkout.create('swish').mount('#swish-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'promptpay'
-        },
-        countryCode: 'TH',
-        amount: {
-            currency: 'THB',
-            value: 101
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.promptpay = checkout.createFromAction(result.action).mount('#promptpay-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    // Test with: https://localhost:3020/qrcodes/?countryCode=TH
+    checkout.create('promptpay').mount('#promptpay-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'paynow'
-        },
-        countryCode: 'SG',
-        amount: {
-            currency: 'SGD',
-            value: 200
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.paynow = checkout.createFromAction(result.action).mount('#paynow-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    // Test with: https://localhost:3020/qrcodes/?countryCode=SG
+    checkout.create('paynow').mount('#paynow-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'duitnow'
-        },
-        countryCode: 'MY',
-        amount: {
-            currency: 'MYR',
-            value: 101
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.paynow = checkout.createFromAction(result.action).mount('#duitnow-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    // Test with: https://localhost:3020/qrcodes/?countryCode=MY
+    checkout.create('duitnow').mount('#duitnow-container');
 })();
