@@ -68,6 +68,30 @@ const insertHeader = pages => {
     if (container) container.innerHTML = header;
 };
 
+export const searchFunctionExample = async (value, actions) => {
+    const url = `/mock/addressSearch?search=${encodeURIComponent(value)}`;
+
+    const formattedData = await fetch(url)
+        .then(res => res.json())
+        // This set is necessary to map the response receive from the external provider to our address field
+        .then(res =>
+            res.map(({ id, name, city, address, houseNumber, postalCode }) => ({
+                id,
+                name,
+                city,
+                street: address,
+                houseNumberOrName: houseNumber,
+                postalCode,
+                country: 'GB'
+            }))
+        )
+        .catch(error => {
+            console.log('ERROR:', error);
+            actions.reject('Something went wrong, try adding manually.');
+        });
+    actions.resolve(formattedData);
+};
+
 const addEventListeners = () => {
     document.querySelector('.session-switch__button--session').addEventListener('click', () => {
         const params = getSearchParameters(window.location.search);

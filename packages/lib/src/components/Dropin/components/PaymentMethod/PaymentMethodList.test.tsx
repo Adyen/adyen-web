@@ -1,10 +1,12 @@
 import { h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, within } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
 import UIElement from '../../../UIElement';
 import EventEmitter from '../../../EventEmitter';
 import userEvent from '@testing-library/user-event';
+import Giftcard from '../../../Giftcard';
+import { Order, OrderStatus } from '../../../../types';
 
 function createInstantPaymentMethods() {
     return [
@@ -156,4 +158,55 @@ test('should display instant payment methods', () => {
 
     expect(screen.getByTestId('instant-googlepay')).toBeVisible();
     expect(screen.getByTestId('instant-applepay')).toBeVisible();
+});
+
+describe('Gift card', () => {
+    let giftCardPayment;
+
+    beforeEach(() => {
+        const props = {
+            id: '3',
+            type: 'giftcard',
+            brand: 'givex',
+            oneClick: true,
+            brandsConfiguration: {
+                givex: { icon: 'https://example.com' }
+            }
+        };
+        giftCardPayment = new Giftcard(props);
+    });
+
+    test('should display the gift card custom icon in the payment method list', async () => {
+        render(
+            <PaymentMethodList paymentMethods={[giftCardPayment]} cachedPaymentMethods={{}} isLoading={false} openFirstStoredPaymentMethod={true} />
+        );
+        const img = await screen.findByRole('img');
+        // @ts-ignore img element contains src
+        expect(img.src).toContain('https://example.com');
+    });
+
+    test('should display the gift card custom icon in the order payment section', async () => {
+        const order: Order = { orderData: 'dummy', pspReference: 'dummyPsp' };
+        const orderStatus: OrderStatus = {
+            expiresAt: '2023-06-08T13:08:29.00Z',
+            pspReference: 'dummyPsp',
+            reference: 'dummyRef',
+            paymentMethods: [{ lastFour: '0000', type: 'givex', amount: { currency: 'USD', value: 5000 } }],
+            remainingAmount: { currency: 'USD', value: 20940 }
+        };
+        render(
+            <PaymentMethodList
+                order={order}
+                orderStatus={orderStatus}
+                paymentMethods={[giftCardPayment]}
+                cachedPaymentMethods={{}}
+                isLoading={false}
+                openFirstStoredPaymentMethod={true}
+            />
+        );
+        const orderHeader = await screen.findByText(/0000/);
+        const img = await within(orderHeader).findByRole('img');
+        // @ts-ignore img element contains src
+        expect(img.src).toContain('https://example.com');
+    });
 });

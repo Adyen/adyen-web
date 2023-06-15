@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useEffect, useMemo, useRef } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
@@ -13,6 +13,7 @@ import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { ComponentMethodsRef } from '../../types';
+import AddressSearch from './components/AddressSearch';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
@@ -30,7 +31,17 @@ export default function Address(props: AddressProps) {
 
     const requiredFieldsSchema = specifications.getAddressSchemaForCountryFlat(props.countryCode).filter(field => requiredFields.includes(field));
 
-    const { data, errors, valid, isValid, handleChangeFor, triggerValidation } = useForm<AddressData>({
+    const [hasSelectedAddress, setHasSelectedAddress] = useState(false);
+
+    const [useManualAddress, setUseManualAddress] = useState(false);
+
+    const [searchErrorMessage, setSearchErrorMessage] = useState('');
+
+    const showAddressSearch = !!props.onAddressLookup;
+
+    const showAddressFields = props.onAddressLookup ? hasSelectedAddress || useManualAddress : true;
+
+    const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData } = useForm<AddressData>({
         schema: requiredFieldsSchema,
         defaultData: props.data,
         // Ensure any passed validation rules are merged with the default ones
@@ -38,9 +49,31 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
+    const setSearchData = selectedAddress => {
+        const propsKeysToProcess = ADDRESS_SCHEMA;
+        propsKeysToProcess.forEach(propKey => {
+            // Make sure the data provided by the merchant is always strings
+            const providedValue = selectedAddress[propKey];
+            if (providedValue === null || providedValue === undefined) return;
+            // Cast everything to string
+            setData(propKey, String(providedValue));
+            triggerValidation();
+        });
+        setHasSelectedAddress(true);
+    };
+
+    const onManualAddress = () => {
+        setUseManualAddress(true);
+    };
+
     // Expose method expected by (parent) Address.tsx
     addressRef.current.showValidation = () => {
         triggerValidation();
+        if (showAddressSearch && !showAddressFields && !isValid) {
+            setSearchErrorMessage(i18n.get('address.errors.incomplete'));
+        } else {
+            setSearchErrorMessage('');
+        }
     };
 
     /**
@@ -136,7 +169,18 @@ export default function Address(props: AddressProps) {
     return (
         <Fragment>
             <Fieldset classNameModifiers={[label || 'address']} label={label}>
-                {addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}
+                {showAddressSearch && (
+                    <AddressSearch
+                        onAddressLookup={props.onAddressLookup}
+                        onSelect={setSearchData}
+                        onManualAddress={onManualAddress}
+                        externalErrorMessage={searchErrorMessage}
+                        hideManualButton={showAddressFields}
+                    />
+                )}
+                {showAddressFields && (
+                    <Fragment>{addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}</Fragment>
+                )}
             </Fieldset>
             {/* Needed to easily test when showValidation is called */}
             {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}

@@ -490,6 +490,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             billingAddressValidationRules={partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)}
                             partialAddressSchema={partialAddressSchema}
                             handleAddress={handleAddress}
+                            onAddressLookup={props.onAddressLookup}
                             //
                             iOSFocusedField={iOSFocusedField}
                         />

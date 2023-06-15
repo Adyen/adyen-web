@@ -5,6 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 /**
  * 'upi' tx variant is the parent one.
@@ -107,7 +108,7 @@ class UPI extends UIElement<UPIElementProps> {
         const { type } = this.props;
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.renderContent(type)}
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type)}</SRPanelProvider>
             </CoreProvider>
         );
     }
