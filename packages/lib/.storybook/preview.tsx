@@ -31,6 +31,9 @@ const preview: Preview = {
     },
     loaders: [
         async context => {
+            if (context.componentId.includes('redirectresult')) {
+                return {};
+            }
             const checkout = await createCheckout(context);
             return { checkout };
         }

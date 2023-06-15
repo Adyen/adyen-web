@@ -19,7 +19,7 @@ function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
     resultText.style.textAlign = 'center';
     resultText.textContent = resultCode;
 
-    const container = document.getElementById('component-field');
+    const container = document.getElementById('component-root');
     container.appendChild(image);
     container.appendChild(resultText);
 }
@@ -27,8 +27,7 @@ function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
 export function handleFinalState(result: any, component: UIElement): void {
     // why?
     localStorage.removeItem('storedPaymentData');
-
-    const isDropin = component.props?.isDropin;
+    const isDropin = component?.props?.isDropin;
     const isAuthorized = result.resultCode === 'Authorised' || result.resultCode === 'Received';
 
     if (isDropin) {
@@ -40,7 +39,7 @@ export function handleFinalState(result: any, component: UIElement): void {
         return;
     }
 
-    if (component.unmount) {
+    if (component?.unmount) {
         component.unmount();
     }
     displayResultMessage(isAuthorized, result.resultCode);

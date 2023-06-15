@@ -34,9 +34,11 @@
     "scripts": {
         "start": "npm run dev-server",
         "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.dev.config.js",
+        "start:storybook": "storybook dev --port 3020 --disable-telemetry",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && npm run type-check-generate && cross-env NODE_ENV=production rollup --config config/rollup.config.js",
         "build:analyze": "rm -rf dist/ && cross-env NODE_ENV=analyze rollup --config config/rollup.config.js",
+        "build:storybook": "storybook build --disable-telemetry",
         "test": "jest --config config/jest.config.js",
         "test:watch": "npm run test -- --watchAll",
         "test:coverage": "npm run test -- --coverage",
@@ -51,9 +53,7 @@
         "lint:fix": "npm run lint -- --fix",
         "prettier:fix": "prettier \"src/**/*.{js,ts,tsx}\" \"package.json\" --write --loglevel silent",
         "prepublishOnly": "npm run build",
-        "prepare": "cd ../.. && husky install packages/lib/.husky",
-        "start:storybook": "storybook dev --port 3020 --disable-telemetry",
-        "build:storybook": "storybook build --disable-telemetry"
+        "prepare": "cd ../.. && husky install packages/lib/.husky"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
@@ -71,6 +71,7 @@
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-replace": "^5.0.1",
         "@storybook/addon-essentials": "^7.0.20",
+        "@storybook/addon-a11y": "^7.0.20",
         "@storybook/manager-api": "^7.0.20",
         "@storybook/preact": "^7.0.20",
         "@storybook/preact-vite": "^7.0.20",

@@ -13,8 +13,11 @@ const config: StorybookConfig = {
         {
             name: '@storybook/addon-essentials',
             options: {
-                docs: true
+                docs: false
             }
+        },
+        {
+            name: '@storybook/addon-a11y'
         }
     ],
     framework: {

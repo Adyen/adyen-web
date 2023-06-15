@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-ignore ignore
 import { h, Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
@@ -8,7 +8,7 @@ import { UIElementProps } from '../../../src/components/types';
 type IdealStory = StoryObj<PaymentMethodStoryProps<UIElementProps>>;
 
 const meta: Meta<PaymentMethodStoryProps<UIElementProps>> = {
-    title: 'Iss<uerList/IDEAL'
+    title: 'IssuerList/IDEAL'
 };
 export default meta;
 

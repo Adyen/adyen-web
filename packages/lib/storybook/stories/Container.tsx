@@ -11,5 +11,5 @@ export const Container = ({ type, componentConfiguration, checkout }) => {
         checkout.create(type, { ...componentConfiguration }).mount(container.current);
     }, []);
 
-    return <div ref={container} className="component-wrapper" />;
+    return <div ref={container} id="component-root" className="component-wrapper" />;
 };
