@@ -49,6 +49,8 @@ const defaultProps: PayPalElementProps = {
 
     blockPayPalVenmoButton: false,
 
+    isExpress: false,
+
     configuration: {
         /**
          * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
