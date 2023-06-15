@@ -2,7 +2,7 @@ import { h, Fragment } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { useState } from 'preact/hooks';
 
-function RedirectButton({ payButton, onSubmit, amount = null, name, ...props }) {
+function RedirectButton({ label = null, icon = null, payButton, onSubmit, amount = null, name, ...props }) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
 
@@ -21,8 +21,9 @@ function RedirectButton({ payButton, onSubmit, amount = null, name, ...props }) 
             {payButton({
                 ...props,
                 status,
+                icon,
                 classNameModifiers: ['standalone'],
-                label: payButtonLabel(),
+                label: label || payButtonLabel(),
                 onClick: onSubmit
             })}
         </Fragment>

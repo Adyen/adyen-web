@@ -136,8 +136,12 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
         }
 
-        if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-            return Promise.resolve(true);
+        try {
+            if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
+                return Promise.resolve(true);
+            }
+        } catch (error) {
+            console.warn(error);
         }
 
         return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));

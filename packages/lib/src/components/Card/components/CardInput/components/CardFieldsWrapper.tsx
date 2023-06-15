@@ -44,6 +44,7 @@ export const CardFieldsWrapper = ({
     handleAddress,
     setAddressRef,
     partialAddressSchema,
+    onAddressLookup,
     // For this comp (props passed through from CardInput)
     amount,
     billingAddressRequired,
@@ -157,6 +158,7 @@ export const CardFieldsWrapper = ({
                     validationRules={billingAddressValidationRules}
                     specifications={partialAddressSchema}
                     iOSFocusedField={iOSFocusedField}
+                    onAddressLookup={onAddressLookup}
                 />
             )}
 

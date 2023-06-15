@@ -6,6 +6,7 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
+import { searchFunctionExample } from '../../utils';
 
 const showComps = {
     clickToPay: true,
@@ -26,6 +27,7 @@ const disclaimerMessage = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount,
+        resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -37,7 +39,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
-                hasHolderName: true
+                hasHolderName: true,
+                holderNameRequired: true
             }
         }
     });
@@ -79,7 +82,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 },
                 onBinLookup: obj => {
                     console.log('### Cards::onBinLookup:: obj=', obj);
-                }
+                },
+                billingAddressRequired: true,
+                onAddressLookup: searchFunctionExample
             })
             .mount('.card-field');
     }

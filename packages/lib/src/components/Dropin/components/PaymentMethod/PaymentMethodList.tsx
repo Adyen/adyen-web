@@ -8,6 +8,7 @@ import { Order, OrderStatus } from '../../../../types';
 import OrderPaymentMethods from './OrderPaymentMethods';
 import InstantPaymentMethods from './InstantPaymentMethods';
 import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useBrandLogoConfiguration } from './useBrandLogoConfiguration';
 
 interface PaymentMethodListProps {
     paymentMethods: UIElement[];
@@ -66,10 +67,17 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
             'adyen-checkout__payment-methods-list--loading': isLoading
         });
 
+        const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
+
         return (
             <Fragment>
                 {this.props.orderStatus && (
-                    <OrderPaymentMethods order={this.props.order} orderStatus={this.props.orderStatus} onOrderCancel={this.props.onOrderCancel} />
+                    <OrderPaymentMethods
+                        order={this.props.order}
+                        orderStatus={this.props.orderStatus}
+                        onOrderCancel={this.props.onOrderCancel}
+                        brandLogoConfiguration={brandLogoConfiguration}
+                    />
                 )}
 
                 {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}

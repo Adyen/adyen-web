@@ -16,8 +16,21 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         environment: process.env.__CLIENT_ENV__,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: console.error
+        onError(error) {
+            console.log(error);
+        },
+        showPayButton: true
     });
+
+    // Cash App Pay
+    window.cashApp = checkout
+        .create('cashapp', {
+            onClick(actions) {
+                console.log('CashAppApp: onClick');
+                actions.resolve();
+            }
+        })
+        .mount('.cashapp-field');
 
     // CLICK TO PAY
     window.clickToPay = checkout.create('clicktopay', {
