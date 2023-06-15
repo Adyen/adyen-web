@@ -85,7 +85,7 @@ const componentsMap = {
     mc: Card,
     scheme: Card,
     storedCard: Card,
-    securedfields: SecuredFields,
+    customcard: SecuredFields,
     threeDS2Challenge: ThreeDS2Challenge,
     threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
     visa: Card,
