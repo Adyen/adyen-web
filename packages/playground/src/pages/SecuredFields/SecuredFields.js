@@ -92,7 +92,7 @@ const initCheckout = async () => {
 
     // SECURED FIELDS
     window.securedFields = checkout
-        .create('securedfields', {
+        .create('customcard', {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
             styles,
@@ -115,7 +115,7 @@ const initCheckout = async () => {
     window.securedFieldsSi =
         showOtherExamples &&
         checkout
-            .create('securedfields', {
+            .create('customcard', {
                 type: 'card',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 styles: styles_si,
@@ -131,7 +131,7 @@ const initCheckout = async () => {
     window.fancySecuredFields =
         showOtherExamples &&
         checkout
-            .create('securedfields', {
+            .create('customcard', {
                 type: 'card',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 styles: fancyStyles,
@@ -162,7 +162,7 @@ const initCheckout2 = async () => {
     window.materialDesignSecuredFields =
         showOtherExamples &&
         checkout
-            .create('securedfields', {
+            .create('customcard', {
                 type: 'card',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 styles: materialStyles,
@@ -196,7 +196,7 @@ const threeDS2 = (result, component) => {
 };
 
 function handleOnChange(state) {
-    if (!state.data || !state.data.paymentMethod) return;
+    // if (!state.data || !state.data.paymentMethod) return;
     //    const type = state.data.type || state.data.paymentMethod.type;
     //    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
 }
