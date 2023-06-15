@@ -35,8 +35,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
         paymentData: null,
         onError: () => {},
         onComplete: () => {},
-        onActionHandled: () => {},
-        showPayButton: false
+        onActionHandled: () => {}
     };
 
     formatData() {
