@@ -91,7 +91,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const { acsURL } = this.state.challengeData as ChallengeData;
             const hasValidAcsURL = isValidHttpUrl(
                 acsURL,
-                process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__.indexOf('localhost:8080') > -1 // allow http urls if in development and testing against localhost:8080);
+                process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1 // allow http urls if in development and testing against localhost:8080);
             );
 
             // Only render component if we have a acsURL.
