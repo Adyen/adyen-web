@@ -35,7 +35,7 @@ const postalCodePatterns = {
     AU: createPatternByDigits(4),
     BE: { pattern: /(?:(?:[1-9])(?:\d{3}))/ },
     BG: createPatternByDigits(4),
-    BR: createPatternByDigits(8),
+    BR: { pattern: /^\d{5}-?\d{3}$/ },
     CA: { pattern: /(?:[ABCEGHJ-NPRSTVXY]\d[A-Z][ -]?\d[A-Z]\d)/ },
     CH: { pattern: /[1-9]\d{3}/ },
     CY: createPatternByDigits(4),

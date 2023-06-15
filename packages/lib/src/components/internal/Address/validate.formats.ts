@@ -6,7 +6,7 @@ const createFormatByDigits = (digits: number): Formatter => {
     const format = new Array(digits).fill('9').join('');
     return {
         // Formatter - excludes non digits and limits to maxlength
-        formatterFn: val => val.replace(getFormattingRegEx('^\\d', 'g'), '').substr(0, digits),
+        formatterFn: val => val.replace(getFormattingRegEx('^\\d', 'g'), '').substring(0, digits),
         format,
         maxlength: digits
     };
@@ -58,7 +58,16 @@ export const countrySpecificFormatters: CountryFormatRules = {
         postalCode: createFormatByDigits(4)
     },
     BR: {
-        postalCode: createFormatByDigits(8)
+        postalCode: {
+            // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
+            formatterFn: val => {
+                const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
+                const maxlength = nuVal.indexOf('-') > -1 ? 9 : 8;
+                return nuVal.substring(0, maxlength);
+            },
+            format: '12345678 or 12345-678',
+            maxlength: 9
+        }
     },
     CA: {
         postalCode: {
@@ -102,7 +111,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
     GB: {
         postalCode: {
             // Disallow special chars & set to maxlength
-            formatterFn: val => val.replace(getFormattingRegEx(SPECIAL_CHARS), '').substr(0, 8),
+            formatterFn: val => val.replace(getFormattingRegEx(SPECIAL_CHARS), '').substring(0, 8),
             format: 'AA99 9AA or A99 9AA or A9 9AA',
             maxlength: 8
         }
@@ -181,11 +190,11 @@ export const countrySpecificFormatters: CountryFormatRules = {
     },
     PL: {
         postalCode: {
-            // Formatter - excludes non digits & hyphens and limits to a maxlength that varies depending on whether a hyphen is present or not
+            // Formatter - excludes non digits, but allows hyphens, and limits to a maxlength that varies depending on whether a hyphen is present or not
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 const maxlength = nuVal.indexOf('-') > -1 ? 6 : 5;
-                return nuVal.substr(0, maxlength);
+                return nuVal.substring(0, maxlength);
             },
             format: '99999 or 99-999',
             maxlength: 6
@@ -195,7 +204,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
         postalCode: {
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
-                return nuVal.substr(0, 8);
+                return nuVal.substring(0, 8);
             },
             format: '9999-999',
             maxlength: 8
@@ -233,7 +242,7 @@ export const countrySpecificFormatters: CountryFormatRules = {
             formatterFn: val => {
                 const nuVal = val.replace(getFormattingRegEx('^\\d-', 'g'), '');
                 const maxlength = nuVal.indexOf('-') > -1 ? 10 : 5;
-                return nuVal.substr(0, maxlength);
+                return nuVal.substring(0, maxlength);
             },
             format: '99999 or 99999-9999'
         }
