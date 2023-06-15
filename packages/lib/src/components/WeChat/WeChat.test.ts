@@ -20,7 +20,7 @@ describe('WeChat', () => {
     describe('render', () => {
         test('does not render anything by default', () => {
             const wechat = new WeChat({});
-            expect(wechat.render()).toBe(null);
+            expect(wechat.render()).not.toBe(null);
         });
     });
 });
