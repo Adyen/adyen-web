@@ -149,6 +149,12 @@ interface PayPalCommonProps {
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#onshippingchange}
      */
     onShippingChange?: (data, actions) => void;
+
+    /**
+     *  Identifies if the payment is Express.
+     *  @defaultValue false
+     */
+    isExpress?: boolean;
 }
 
 export interface PayPalConfig {
