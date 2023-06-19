@@ -18,7 +18,7 @@ describe('WeChat', () => {
     });
 
     describe('render', () => {
-        test('does not render anything by default', () => {
+        test('does render something by default', () => {
             const wechat = new WeChat({});
             expect(wechat.render()).not.toBe(null);
         });

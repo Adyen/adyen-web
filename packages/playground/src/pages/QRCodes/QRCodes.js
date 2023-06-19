@@ -6,14 +6,29 @@ import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
-import { handleSubmit } from '../../handlers';
+import { handleResponse } from '../../handlers';
+import getCurrency from '../../config/getCurrency';
+
+const makeQRCodePayment = (state, component, countryCode) => {
+    const currency = getCurrency(countryCode);
+    const config = { countryCode, amount: { currency, value: 25940 } };
+
+    return makePayment(state.data, config)
+        .then(response => {
+            component.setStatus('ready');
+            handleResponse(response, component);
+        })
+        .catch(error => {
+            throw Error(error);
+        });
+};
+
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        risk: { node: 'body', onError: console.error },
-        onSubmit: handleSubmit
+        risk: { node: 'body', onError: console.error }
     });
 
     // WechatPay QR
@@ -37,34 +52,43 @@ import { handleSubmit } from '../../handlers';
         });
 
     // BCMC Mobile
-    makePayment({
-        paymentMethod: {
-            type: 'bcmc_mobile_QR'
-        },
-        countryCode: 'BE',
-        amount: {
-            currency: 'EUR',
-            value: 1000
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.bcmcmobileqr = checkout.createFromAction(result.action).mount('#bcmcqr-container');
+    checkout
+        .create('bcmc_mobile_QR', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'BE');
             }
         })
-        .catch(error => {
-            throw Error(error);
-        });
+        .mount('#bcmcqr-container');
 
-    // Test with: https://localhost:3020/qrcodes/?countryCode=SE
-    checkout.create('swish').mount('#swish-container');
+    checkout
+        .create('swish', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'SE');
+            }
+        })
+        .mount('#swish-container');
 
-    // Test with: https://localhost:3020/qrcodes/?countryCode=TH
-    checkout.create('promptpay').mount('#promptpay-container');
+    checkout
+        .create('promptpay', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'TH');
+            }
+        })
+        .mount('#promptpay-container');
 
-    // Test with: https://localhost:3020/qrcodes/?countryCode=SG
-    checkout.create('paynow').mount('#paynow-container');
+    checkout
+        .create('paynow', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'SG');
+            }
+        })
+        .mount('#paynow-container');
 
-    // Test with: https://localhost:3020/qrcodes/?countryCode=MY
-    checkout.create('duitnow').mount('#duitnow-container');
+    checkout
+        .create('duitnow', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'MY');
+            }
+        })
+        .mount('#duitnow-container');
 })();

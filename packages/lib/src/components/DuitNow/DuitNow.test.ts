@@ -16,7 +16,7 @@ describe('DuitNow', () => {
     });
 
     describe('render', () => {
-        test('does not render anything by default', () => {
+        test('does render something by default', () => {
             const duitNow = new DuitNow({});
             expect(duitNow.render()).not.toBe(null);
         });
