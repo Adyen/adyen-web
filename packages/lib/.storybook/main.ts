@@ -2,10 +2,8 @@ import type { StorybookConfig } from '@storybook/preact-vite';
 import { mergeConfig, loadEnv } from 'vite';
 import * as path from 'path';
 import version = require('../config/version');
-import { getRollupDevConfig } from '../config/rollup.dev.config';
-
+import getRollupDevConfig from '../config/rollup.dev.config';
 const currentVersion = version();
-const rollupDevConfig = getRollupDevConfig();
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -26,6 +24,8 @@ const config: StorybookConfig = {
     },
     async viteFinal(config, options) {
         const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
+        const rollupDevConfig = (await getRollupDevConfig())[0];
+
         return mergeConfig(config, {
             define: {
                 'process.env': env,
