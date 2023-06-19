@@ -29,7 +29,6 @@ const makeQRCodePayment = (state, component, countryCode) => {
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
         risk: { node: 'body', onError: console.error }
-        // onSubmit: handleSubmit
     });
 
     // WechatPay QR
