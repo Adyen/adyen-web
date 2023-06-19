@@ -11,6 +11,7 @@ export const getPaymentMethods = configuration =>
         .catch(console.error);
 
 export const makePayment = (data, config = {}) => {
+    console.log('### services::makePayment:: config=', config);
     // NOTE: Merging data object. DO NOT do this in production.
     const paymentRequest = { ...paymentsConfig, ...config, ...data };
     if (paymentRequest.order) {
