@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.46.0
+
+### Minor Changes
+
+-   Added isExpress configuration to PayPal component ([#2220](https://github.com/Adyen/adyen-web/pull/2220))
+
 ## 5.45.0
 
 ### Minor Changes
