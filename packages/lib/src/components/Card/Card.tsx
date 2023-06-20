@@ -17,6 +17,8 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
+    public static txVariants = ['amex', 'card', 'scheme', 'storedCard']; //etc
+
     private readonly clickToPayService: IClickToPayService | null;
 
     /**

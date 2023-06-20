@@ -21,10 +21,10 @@ class Core {
     public modules: any;
     public options: CoreOptions;
     public components = [];
-
     public loadingContext?: string;
-
     public cdnContext?: string;
+
+    public componentsMap: Record<string, typeof UIElement>;
 
     public static readonly version = {
         version: process.env.VERSION,
@@ -34,6 +34,8 @@ class Core {
     };
 
     constructor(props: CoreOptions) {
+        this.registerComponents(props.components);
+
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 
@@ -50,6 +52,23 @@ class Core {
 
         // Expose version number for npm builds
         window['adyenWebVersion'] = Core.version.version;
+    }
+
+    private registerComponents(components: (typeof UIElement)[]) {
+        this.componentsMap = components.reduce((memo, component) => {
+            const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
+
+            supportedTxVariants.forEach(txVariant => {
+                memo = {
+                    ...memo,
+                    [txVariant]: component
+                };
+            });
+
+            return memo;
+        }, {});
+
+        console.log(this.componentsMap);
     }
 
     initialize(): Promise<this> {
@@ -292,14 +311,14 @@ class Core {
          * Usual initial point of entry to this function (PaymentMethod is a String).
          * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
          */
-        if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
+        if (typeof PaymentMethod === 'string' && this.componentsMap[PaymentMethod]) {
             if (PaymentMethod === 'dropin' && hasOwnProperty(options, 'paymentMethodsConfiguration')) {
                 console.warn(
                     "WARNING: You are setting a 'paymentMethodsConfiguration' object in the Dropin configuration options. This object will be ignored."
                 );
             }
 
-            return this.handleCreate(paymentMethods[PaymentMethod], { type: PaymentMethod, ...options });
+            return this.handleCreate(this.componentsMap[PaymentMethod], { type: PaymentMethod, ...options });
         }
 
         /**

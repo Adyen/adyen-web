@@ -14,6 +14,8 @@ type PromiseResolve = typeof Promise.resolve;
 type PromiseReject = typeof Promise.reject;
 
 export interface CoreOptions {
+    components?: (typeof UIElement)[];
+
     session?: any;
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.

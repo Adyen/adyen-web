@@ -12,9 +12,12 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 
-export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
+export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
     public elementRef: UIElement;
+
+    public static type = undefined;
+    public static txVariants = [];
 
     constructor(props: P) {
         super(props);
