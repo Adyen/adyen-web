@@ -7,7 +7,7 @@ import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export class MBWayElement extends UIElement {
-    private static type = 'mbway';
+    public static type = 'mbway';
 
     formatProps(props) {
         const { data = {}, placeholders = {} } = props;

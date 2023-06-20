@@ -1,9 +1,10 @@
 import Language from '../language';
 import UIElement from '../components/UIElement';
 import RiskModule from './RiskModule';
-import paymentMethods, { getComponentConfiguration } from '../components';
+// import paymentMethods, { getComponentConfiguration } from '../components';
+import { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
-import getComponentForAction from './ProcessResponse/PaymentAction';
+// import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
@@ -14,6 +15,7 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
+import Redirect from '../components/Redirect/Redirect';
 
 class Core {
     public session: Session;
@@ -161,17 +163,17 @@ class Core {
             throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        if (action.type) {
-            const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
-
-            const props = {
-                ...processGlobalOptions(this.options),
-                ...actionTypeConfiguration,
-                ...this.getPropsForComponent(options)
-            };
-
-            return getComponentForAction(action, props);
-        }
+        // if (action.type) {
+        //     const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
+        //
+        //     const props = {
+        //         ...processGlobalOptions(this.options),
+        //         ...actionTypeConfiguration,
+        //         ...this.getPropsForComponent(options)
+        //     };
+        //
+        //     return getComponentForAction(action, props);
+        // }
         return this.handleCreateError();
     }
 
@@ -333,7 +335,8 @@ class Core {
              * (Further details: from the paymentMethods response and paymentMethodsConfiguration are added in the next step,
              *  or, in the Dropin case, are already present)
              */
-            return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
+            return this.handleCreate(Redirect, { type: PaymentMethod, ...options });
+            // return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
         }
 
         /**

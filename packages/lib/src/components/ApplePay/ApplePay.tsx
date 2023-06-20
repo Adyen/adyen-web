@@ -14,7 +14,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
-    protected static type = 'applepay';
+    public static type = 'applepay';
     protected static defaultProps = defaultProps;
 
     constructor(props) {
