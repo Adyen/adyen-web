@@ -196,6 +196,10 @@ export interface PaymentAmountExtended extends PaymentAmount {
      * see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#currencydisplay
      */
     currencyDisplay?: string;
+    /**
+     * In case you don't want to show the amount on the pay button, set this prop to true.
+     */
+    hideAmountLabel?: boolean;
 }
 
 export type ShopperDetails = {

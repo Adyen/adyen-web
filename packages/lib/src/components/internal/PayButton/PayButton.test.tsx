@@ -66,4 +66,37 @@ describe('PayButton', () => {
         expect(wrapper.text()).not.toContain(PAY_BTN_DIVIDER);
         expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
     });
+
+    test('Renders a pay button without an amount when amount.hideAmountLabel is true', () => {
+        const wrapper = getWrapper({ amount: { currency: 'USD', value: 1000, hideAmountLabel: true } });
+        expect(wrapper.text()).toBe('Pay');
+        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+    });
+
+    test('Renders a pay button without a secondary amount when secondaryAmount.hideAmountLabel is true', () => {
+        const wrapper = getWrapper({
+            amount: { currency: 'USD', value: 1000 },
+            secondaryAmount: { currency: 'HRK', value: 7534, hideAmountLabel: true }
+        });
+        expect(wrapper.text()).toBe('Pay $10.00');
+        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+    });
+
+    test('Renders a pay button without a any amount when both amount and secondaryAmount hideAmountLabel is true', () => {
+        const wrapper = getWrapper({
+            amount: { currency: 'USD', value: 1000, hideAmountLabel: true },
+            secondaryAmount: { currency: 'HRK', value: 7534, hideAmountLabel: true }
+        });
+        expect(wrapper.text()).toBe('Pay');
+        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+    });
+
+    test('Renders a pay button without a first amount when only amount.hideAmountLabel is true', () => {
+        const wrapper = getWrapper({
+            amount: { currency: 'USD', value: 1000, hideAmountLabel: true },
+            secondaryAmount: { currency: 'HRK', value: 7534 }
+        });
+        expect(wrapper.text().replace('\u00a0', ' ')).toBe('Pay / HRK 75.34');
+        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+    });
 });

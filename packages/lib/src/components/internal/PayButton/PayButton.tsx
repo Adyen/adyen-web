@@ -31,6 +31,7 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
      *  - we don't have a predefined label (i.e. redirect, qrcode, await based comps...), and
      *  - we do have an amount object (merchant might not be passing this in order to not show the amount on the button), and
      *  - we have a secondaryAmount object with some properties
+     *  - secondaryAmount.hideAmountLabel is not true
      */
     const secondaryLabel =
         !isZeroAuth && !label && amount && secondaryAmount && Object.keys(secondaryAmount).length
