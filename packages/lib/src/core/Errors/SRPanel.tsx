@@ -43,10 +43,15 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
             if (document.querySelector(this.props.node)) {
+                const containers = document.getElementsByClassName('sr-panel-holder');
+                if (Array.from(containers).length) {
+                    Array.from(containers).forEach(ele => {
+                        ele.remove();
+                    });
+                }
                 this.srPanelContainer = document.createElement('div');
                 this.srPanelContainer.className = 'sr-panel-holder';
                 this.srPanelContainer.id = this.id;
-
                 document.querySelector(this.props.node).appendChild(this.srPanelContainer);
                 this.mount(this.srPanelContainer);
             } else {
