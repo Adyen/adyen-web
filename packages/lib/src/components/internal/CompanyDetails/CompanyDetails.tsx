@@ -37,8 +37,8 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
     const eventHandler =
-        (mode: string): Function =>
-        (e: Event): void => {
+        (mode: string) =>
+        (e: h.JSX.TargetedEvent<HTMLInputElement>): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
 

@@ -5,9 +5,57 @@ import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 
 export interface InputBaseProps {
     /** Callback used to return the input element reference to parent component (Ex: Used to trigger focus programmatically) */
+    autoCorrect?: string;
+    autocorrect?: string; //TODO: needs fixing, use on or the other
+
+    autocomplete?: string;
+    autoComplete?: boolean; //TODO: simple enough
+
+    classNameModifiers?: Array<string>;
+    isInvalid?: boolean;
+    isValid?: boolean;
+    readonly?: boolean;
+    spellCheck?: boolean;
+    type?: string;
+    uniqueId?: string;
+    disabled?: boolean;
+    className?: string;
+    placeholder?: string;
+    value?: string;
+    required?: boolean;
+    name?: string;
+    spellcheck?: boolean;
+    inputMode?: string;
+
+    maxLength?: number;
+    maxlength?: number; //TODO
+
+    minLength?: number;
+
+    // TODO aria values should be camelCase ie: ariaLabel
+    'aria-label'?: string;
+    'aria-invalid'?: boolean;
+    'aria-required'?: string;
+
+    trimOnBlur?: boolean;
+
+    // TODO: this values should be inferred somehow
+    // Select
+    filterable?: boolean;
+    items?: Array<any>;
+    selected?: number | string; //TODO we should fix this and always type strings
+    disableTextFilter?: boolean;
+
     onCreateRef?(reference: HTMLInputElement): void;
-    // TODO: add missing types
-    [key: string]: any;
+
+    onInput?: (event: h.JSX.TargetedEvent<HTMLInputElement>) => void;
+    onClick?: (event: h.JSX.TargetedEvent<HTMLInputElement>) => void;
+    onChange?: (event: h.JSX.TargetedEvent<HTMLInputElement>) => void;
+    onKeyPress?: (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => void;
+    onKeyUp?: (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => void;
+    onBlur?: (event: h.JSX.TargetedEvent<HTMLInputElement>) => void;
+    onBlurHandler?: (event: h.JSX.TargetedEvent<HTMLInputElement>) => void;
+    onFocusHandler?: (event: h.JSX.TargetedEvent<HTMLInputElement>) => void;
 }
 
 export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
