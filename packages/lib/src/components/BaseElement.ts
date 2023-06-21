@@ -56,7 +56,7 @@ class BaseElement<P extends BaseElementProps> {
      */
     get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const checkoutAttemptId = getProp(this.props, 'modules.analytics.checkoutAttemptId');
+        const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')();
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();

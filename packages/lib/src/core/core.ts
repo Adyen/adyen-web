@@ -4,7 +4,7 @@ import RiskModule from './RiskModule';
 import paymentMethods, { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
+import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
@@ -14,6 +14,10 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
+import { createAnalyticsObject } from './Analytics/utils';
+import { ANALYTICS_ACTION_STR } from './Analytics/constants';
+import { AnalyticsObject } from './Analytics/types';
+import { capitalizeFirstLetter } from '../utils/Formatters/formatters';
 
 class Core {
     public session: Session;
@@ -25,6 +29,7 @@ class Core {
     public loadingContext?: string;
 
     public cdnContext?: string;
+    public analyticsContext?: string;
 
     public static readonly version = {
         version: process.env.VERSION,
@@ -42,6 +47,7 @@ class Core {
 
         this.loadingContext = resolveEnvironment(this.options.environment);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
+        this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
@@ -143,6 +149,18 @@ class Core {
         }
 
         if (action.type) {
+            // Call analytics endpoint
+            const aObj: AnalyticsObject = createAnalyticsObject({
+                class: 'log',
+                component: `${action.type}${action.subtype}`,
+                type: ANALYTICS_ACTION_STR,
+                subtype: capitalizeFirstLetter(action.type),
+                message: `${action.type}${action.subtype} is initiating`
+            });
+
+            this.modules.analytics.addAnalyticsAction('log', aObj);
+
+            // Create a component based on the action
             const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
 
             const props = {
@@ -222,6 +240,7 @@ class Core {
             session: this.session,
             loadingContext: this.loadingContext,
             cdnContext: this.cdnContext,
+            analyticsContext: this.analyticsContext,
             createFromAction: this.createFromAction,
             _parentInstance: this
         };
@@ -362,8 +381,9 @@ class Core {
 
         this.modules = Object.freeze({
             risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext }),
-            analytics: new Analytics({
+            analytics: Analytics({
                 loadingContext: this.loadingContext,
+                analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,

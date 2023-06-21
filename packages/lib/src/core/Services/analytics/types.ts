@@ -1,4 +1,4 @@
-import { Experiment } from '../../Analytics/types';
+import { PaymentAmount } from '../../../types';
 
 type CheckoutAttemptIdSession = {
     id: string;
@@ -7,8 +7,9 @@ type CheckoutAttemptIdSession = {
 
 type CollectIdProps = {
     clientKey: string;
-    loadingContext: string;
-    experiments: Experiment[];
+    analyticsContext: string;
+    locale: string;
+    amount: PaymentAmount;
 };
 
 export { CheckoutAttemptIdSession, CollectIdProps };

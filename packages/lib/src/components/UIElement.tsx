@@ -11,6 +11,9 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
+import { AnalyticsObject } from '../core/Analytics/types';
+import { createAnalyticsObject } from '../core/Analytics/utils';
+import { ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -45,6 +48,25 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     }
 
+    /* eslint-disable-next-line */
+    protected submitAnalytics(obj = null) {
+        // Call analytics endpoint
+        let component = this.elementRef._id.substring(0, this.elementRef._id.indexOf('-'));
+        if (component === 'dropin') {
+            const subCompID = this.elementRef['dropinRef'].state.activePaymentMethod._id;
+            component = `${component}-${subCompID.substring(0, subCompID.indexOf('-'))}`;
+        }
+
+        const aObj: AnalyticsObject = createAnalyticsObject({
+            class: 'log',
+            component,
+            type: ANALYTICS_SUBMIT_STR,
+            target: 'pay_button'
+        });
+
+        this.props.modules.analytics.addAnalyticsAction('log', aObj);
+    }
+
     private onSubmit(): void {
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
@@ -57,10 +79,14 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         if (this.props.onSubmit) {
-            // Classic flow
+            /** Classic flow */
+            // Call analytics endpoint
+            this.submitAnalytics();
+
+            // Call onSubmit handler
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this._parentInstance.session) {
-            // Session flow
+            /** Session flow */
             // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
                 ? new Promise((resolve, reject) =>
@@ -72,7 +98,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 : Promise.resolve(this.data);
 
             beforeSubmitEvent
-                .then(data => this.submitPayment(data))
+                .then(data => {
+                    // Call analytics endpoint
+                    this.submitAnalytics();
+                    // Submit payment
+                    return this.submitPayment(data);
+                })
                 .catch(() => {
                     // set state as ready to submit if the merchant cancels the action
                     this.elementRef.setStatus('ready');

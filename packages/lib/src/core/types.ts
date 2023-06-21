@@ -154,6 +154,11 @@ export interface CoreOptions {
      * @internal
      */
     loadingContext?: string;
+
+    /**
+     * @internal
+     */
+    analyticsContext?: string;
 }
 
 export type PaymentMethodsConfiguration =

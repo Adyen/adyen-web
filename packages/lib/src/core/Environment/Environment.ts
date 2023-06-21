@@ -28,3 +28,18 @@ export const resolveCDNEnvironment = (env: string = FALLBACK_CDN_CONTEXT) => {
 
     return environments[env] || environments[env.toLowerCase()] || env;
 };
+
+export const FALLBACK_ANALYTICS_CONTEXT = 'https://checkoutanalytics-live.adyen.com/checkoutanalytics/';
+
+export const resolveAnalyticsEnvironment = (env: string = FALLBACK_ANALYTICS_CONTEXT) => {
+    const environments = {
+        test: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
+        live: 'https://checkoutanalytics-live.adyen.com/checkoutanalytics/',
+        'live-us': 'https://checkoutanalytics-live-us.adyen.com/checkoutanalytics/',
+        'live-au': 'https://checkoutanalytics-live-au.adyen.com/checkoutanalytics/',
+        'live-apse': 'https://checkoutanalytics-live-apse.adyen.com/checkoutanalytics/',
+        'live-in': 'https://checkoutanalytics-live-in.adyen.com/checkoutanalytics/'
+    };
+
+    return environments[env] || environments[env.toLowerCase()] || env;
+};

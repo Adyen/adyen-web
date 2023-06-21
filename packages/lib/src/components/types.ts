@@ -3,12 +3,12 @@ import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../t
 import Language from '../language/Language';
 import UIElement from './UIElement';
 import Core from '../core';
-import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
+import { AnalyticsConfig, AnalyticsObject } from '../core/Analytics/types';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -63,12 +63,19 @@ export interface RawPaymentResponse extends PaymentResponse {
     [key: string]: any;
 }
 
+export interface AnalyticsModule {
+    send: (a: AnalyticsConfig) => void;
+    addAnalyticsAction: (s: string, o: AnalyticsObject) => void;
+    sendAnalyticsActions: () => Promise<any>;
+    getCheckoutAttemptId: () => string;
+}
+
 export interface BaseElementProps {
     _parentInstance?: Core;
     order?: Order;
     modules?: {
         srPanel?: SRPanel;
-        analytics?: Analytics;
+        analytics?: AnalyticsModule;
         resources?: Resources;
         risk?: RiskElement;
     };

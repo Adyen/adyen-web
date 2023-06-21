@@ -26,7 +26,26 @@ export interface AnalyticsOptions {
     payload?: any;
 
     /**
-     * List of experiments to be sent in the collectId call
+     * List of experiments to be sent in the collectId call // TODO - still used?
      */
     experiments?: Experiment[];
 }
+
+export interface AnalyticsObject {
+    timestamp: string;
+    component: string;
+    code?: string;
+    errorType?: string;
+    message?: string;
+    type?: string;
+    subtype?: string;
+}
+
+export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
+
+export type AnalyticsConfig = {
+    containerWidth: number;
+    component: string;
+    flavor: string;
+    paymentMethods?: any[];
+};
