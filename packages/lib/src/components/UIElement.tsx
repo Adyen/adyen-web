@@ -51,7 +51,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     /* eslint-disable-next-line */
     protected submitAnalytics(obj = null) {
         // Call analytics endpoint
-        let component = this.elementRef._id.substring(0, this.elementRef._id.indexOf('-'));
+        let component = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-'));
         if (component === 'dropin') {
             const subCompID = this.elementRef['dropinRef'].state.activePaymentMethod._id;
             component = `${component}-${subCompID.substring(0, subCompID.indexOf('-'))}`;
@@ -64,7 +64,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             target: 'pay_button'
         });
 
-        this.props.modules.analytics.addAnalyticsAction('log', aObj);
+        this.props.modules?.analytics.addAnalyticsAction('log', aObj);
     }
 
     private onSubmit(): void {

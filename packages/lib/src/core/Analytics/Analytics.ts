@@ -41,7 +41,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                     // fetch a new checkoutAttemptId if none is already available
                     _collectId({ ...config, ...(payload && { ...payload }) })
                         .then(checkoutAttemptId => {
-                            console.log('### Analytics::checkoutAttemptId:: ', checkoutAttemptId);
+                            console.log('### Analytics::setting checkoutAttemptId:: ', checkoutAttemptId);
                             _checkoutAttemptId = checkoutAttemptId;
                         })
                         .catch(e => {
