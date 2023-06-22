@@ -23,6 +23,6 @@ export const createAnalyticsObject = (aObj): AnalyticsObject => ({
     ...((aObj.class === 'error' || (aObj.class === 'log' && aObj.type !== ANALYTICS_SUBMIT_STR)) && { message: aObj.message }), // only added if we have an error, or log object (that's not logging a submit/pay button press)
     ...(aObj.class === 'log' && { type: aObj.type }), // only added if we have a log object
     ...(aObj.class === 'log' && aObj.type === ANALYTICS_ACTION_STR && { subType: aObj.subtype }), // only added if we have a log object of Action type
-    ...(aObj.class === 'log' && aObj.type === ANALYTICS_SUBMIT_STR && { target: aObj.target }), // only added if we have a log object of Submit type
+    // ...(aObj.class === 'log' && aObj.type === ANALYTICS_SUBMIT_STR && { target: aObj.target }), // only added if we have a log object of Submit type // TODO should be allowed but for some reason API won't accept it
     ...(aObj.class === 'event' && { type: aObj.type, target: aObj.target }) // only added if we have an event object
 });
