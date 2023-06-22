@@ -43,6 +43,15 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
             if (document.querySelector(this.props.node)) {
+                /*
+                We want to remove the sr panel container from the DOM after the checkout instance destroyed.
+                SRPanel extends from BaseElement which is not a preact component,
+                there is no way to know when component unmounts.
+                Hence, we remove all sr panel container elements during the initializing phase.
+                A 'side effect' to this approach - if there are multiple adyen checkout instances,
+                there will be only one sr panel which belongs to the last instance.
+                Usually there is only one checkout instance.
+                 */
                 const containers = document.getElementsByClassName('sr-panel-holder');
                 if (Array.from(containers).length) {
                     Array.from(containers).forEach(ele => {
