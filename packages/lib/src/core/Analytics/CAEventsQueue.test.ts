@@ -1,7 +1,7 @@
 import CAEventsQueue from './CAEventsQueue';
 
 describe('CAEventsQueue', () => {
-    const queue = CAEventsQueue({ analyticsContext: 'http://mydomain.com', clientKey: 'fsdjkh' });
+    const queue = CAEventsQueue({ analyticsContext: 'https://mydomain.com', clientKey: 'fsdjkh' });
 
     test('adds log to the queue', () => {
         const task1 = { foo: 'bar' };
