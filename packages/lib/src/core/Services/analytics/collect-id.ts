@@ -19,7 +19,7 @@ function confirmSessionDurationIsMaxFifteenMinutes(checkoutAttemptIdSession: Che
  * @param config - object containing values needed to calculate the url for the request; and also some that need to be serialized and included in the body of request
  * @returns a function returning a promise containing the response of the call (an object containing a checkoutAttemptId property)
  */
-// const collectId = ({ analyticsContext, clientKey, locale, amount }: CollectId2Props) => {
+// const collectId = ({ analyticsContext, clientKey, locale, amount }: CollectId2Props) => { // TODO - amount will be supported in the future
 const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
     let promise;
 
@@ -69,6 +69,7 @@ const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
                 return id;
                 // TODO - end
             });
+        // .catch(() => {});
 
         return promise;
     };
