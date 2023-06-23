@@ -1,15 +1,12 @@
-import { PaymentAmount } from '../../../types';
+import { AnalyticsConfig } from '../../Analytics/types';
 
 type CheckoutAttemptIdSession = {
     id: string;
     timestamp: number;
 };
 
-type CollectIdProps = {
-    clientKey: string;
-    analyticsContext: string;
-    locale: string;
-    amount: PaymentAmount;
-};
+type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'>;
 
-export { CheckoutAttemptIdSession, CollectIdProps };
+type LogEventProps = Pick<AnalyticsConfig, 'loadingContext' | 'locale'>;
+
+export { CheckoutAttemptIdSession, CollectIdProps, LogEventProps };

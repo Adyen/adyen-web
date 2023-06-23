@@ -1,3 +1,5 @@
+import { PaymentAmount } from '../../types';
+
 export interface Experiment {
     controlGroup: boolean;
     experimentId: string;
@@ -43,9 +45,19 @@ export interface AnalyticsObject {
 
 export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
 
-export type AnalyticsConfig = {
+export type AnalyticsInitialEvent = {
     containerWidth: number;
     component: string;
     flavor: string;
     paymentMethods?: any[];
 };
+
+export type AnalyticsConfig = {
+    analyticsContext?: string;
+    clientKey?: string;
+    locale?: string;
+    amount?: PaymentAmount;
+    loadingContext?: string;
+};
+
+export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'>;

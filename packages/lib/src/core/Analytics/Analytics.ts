@@ -2,7 +2,7 @@ import logEvent from '../Services/analytics/log-event';
 import collectId from '../Services/analytics/collect-id';
 import { CoreOptions } from '../types';
 import CAEventsQueue, { EQObject } from './CAEventsQueue';
-import { ANALYTICS_ACTION, AnalyticsConfig, AnalyticsObject } from './types';
+import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject } from './types';
 import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_LOG } from './constants';
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
@@ -33,13 +33,13 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     const _caEventsQueue: EQObject = CAEventsQueue({ analyticsContext, clientKey });
 
     const analyticsObj: AnalyticsModule = {
-        send: (config: AnalyticsConfig) => {
+        send: (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
             if (enabled === true) {
                 if (telemetry === true && !_checkoutAttemptId) {
                     // fetch a new checkoutAttemptId if none is already available
-                    _collectId({ ...config, ...(payload && { ...payload }) })
+                    _collectId({ ...initialEvent, ...(payload && { ...payload }) })
                         .then(checkoutAttemptId => {
                             console.log('### Analytics::setting checkoutAttemptId:: ', checkoutAttemptId);
                             _checkoutAttemptId = checkoutAttemptId;
@@ -49,11 +49,10 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         });
                 }
                 // Log pixel // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options
-                _logEvent(config);
+                _logEvent(initialEvent);
             }
         },
 
-        // used in BaseElement
         getCheckoutAttemptId: (): string => _checkoutAttemptId,
 
         addAnalyticsAction: (type: ANALYTICS_ACTION, obj: AnalyticsObject) => {

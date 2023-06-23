@@ -13,7 +13,7 @@ let amount: PaymentAmountExtended;
 
 describe('Analytics', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve('123456'));
-    const logEventPromiseMock = jest.fn(request => Promise.resolve(request));
+    const logEventPromiseMock = jest.fn(() => Promise.resolve(null));
 
     const event = {
         containerWidth: 100,
@@ -25,6 +25,7 @@ describe('Analytics', () => {
         mockedCollectId.mockReset();
         mockedCollectId.mockImplementation(() => collectIdPromiseMock);
         collectIdPromiseMock.mockClear();
+
         mockedLogEvent.mockReset();
         mockedLogEvent.mockImplementation(() => logEventPromiseMock);
         logEventPromiseMock.mockClear();

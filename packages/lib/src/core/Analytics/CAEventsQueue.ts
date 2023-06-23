@@ -1,5 +1,5 @@
 import { HttpOptions, httpPost } from '../Services/http';
-import { AnalyticsObject } from './types';
+import { AnalyticsObject, EventQueueProps } from './types';
 
 interface CAActions {
     channel: 'Web';
@@ -15,7 +15,7 @@ export interface EQObject {
     _runQueue: (id) => Promise<any>;
 }
 
-const CAEventsQueue = ({ analyticsContext, clientKey }) => {
+const CAEventsQueue = ({ analyticsContext, clientKey }: EventQueueProps) => {
     const caActions: CAActions = {
         channel: 'Web',
         events: [],
@@ -28,7 +28,7 @@ const CAEventsQueue = ({ analyticsContext, clientKey }) => {
             caActions[type].push(actionObj);
         },
 
-        run: checkoutAttemptId => {
+        run: (checkoutAttemptId: string) => {
             const promise = eqObject._runQueue(checkoutAttemptId);
 
             caActions.events = [];
@@ -41,7 +41,7 @@ const CAEventsQueue = ({ analyticsContext, clientKey }) => {
         // Expose getter for testing purposes
         getQueue: () => caActions,
 
-        _runQueue: (checkoutAttemptId): Promise<any> => {
+        _runQueue: (checkoutAttemptId: string): Promise<any> => {
             if (!caActions.events.length && !caActions.logs.length && !caActions.errors.length) {
                 return Promise.resolve(null);
             }
