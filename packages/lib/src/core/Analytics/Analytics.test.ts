@@ -27,7 +27,7 @@ const analyticsEventObj = {
     target: 'PAN input'
 };
 
-describe('Analytics initialisation', () => {
+describe('Analytics initialisation and event queue', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve('123456'));
     const logEventPromiseMock = jest.fn(() => Promise.resolve(null));
 
