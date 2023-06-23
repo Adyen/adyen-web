@@ -70,7 +70,10 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                 return _caEventsQueue.run(_checkoutAttemptId);
             }
             return Promise.resolve(null);
-        }
+        },
+
+        // Expose getter for testing purposes
+        getEventsQueue: () => _caEventsQueue
     };
 
     return analyticsObj;

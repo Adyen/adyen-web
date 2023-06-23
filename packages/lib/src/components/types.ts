@@ -9,6 +9,7 @@ import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
 import { AnalyticsInitialEvent, AnalyticsObject } from '../core/Analytics/types';
+import { EQObject } from '../core/Analytics/CAEventsQueue';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -68,6 +69,7 @@ export interface AnalyticsModule {
     addAnalyticsAction: (s: string, o: AnalyticsObject) => void;
     sendAnalyticsActions: () => Promise<any>;
     getCheckoutAttemptId: () => string;
+    getEventsQueue: () => EQObject;
 }
 
 export interface BaseElementProps {

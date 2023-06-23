@@ -62,7 +62,7 @@ const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
                 return undefined;
             })
             .catch(() => {
-                // TODO - temporarily faking it
+                // TODO - temporarily faking it - so we get a checkoutAttemptId which will allow subsequents request to be made (they'll fail, but at least we see them in the console)
                 console.log('### collect-id2:::: FAILED');
                 const id = '64d673ff-36d3-4b32-999b-49e215f6b9891687261360764E7D99B01E11BF4C4B83CF7C7F49C5E75F23B2381E2ACBEE8E03E221E3BC95998';
                 storage.set({ id: id, timestamp: Date.now() });

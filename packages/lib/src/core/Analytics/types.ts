@@ -41,6 +41,7 @@ export interface AnalyticsObject {
     message?: string;
     type?: string;
     subtype?: string;
+    target?: string;
 }
 
 export type ANALYTICS_ACTION = 'log' | 'error' | 'event';

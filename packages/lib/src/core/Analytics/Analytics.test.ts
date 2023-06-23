@@ -1,7 +1,10 @@
 import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
 import logEvent from '../Services/analytics/log-event';
-import { PaymentAmountExtended } from '../../types';
+import { PaymentAmount } from '../../types';
+import { createAnalyticsObject } from './utils';
+import wait from '../../utils/wait';
+import { DEFAULT_DEBOUNCE_TIME_MS } from '../../components/internal/Address/utils';
 
 jest.mock('../Services/analytics/collect-id');
 jest.mock('../Services/analytics/log-event');
@@ -9,17 +12,24 @@ jest.mock('../Services/analytics/log-event');
 const mockedCollectId = collectId as jest.Mock;
 const mockedLogEvent = logEvent as jest.Mock;
 
-let amount: PaymentAmountExtended;
+const amount: PaymentAmount = { value: 50000, currency: 'USD' };
 
-describe('Analytics', () => {
+const event = {
+    containerWidth: 100,
+    component: 'card',
+    flavor: 'components'
+};
+
+const analyticsEventObj = {
+    class: 'event',
+    component: 'cardComponent',
+    type: 'Focus',
+    target: 'PAN input'
+};
+
+describe('Analytics initialisation', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve('123456'));
     const logEventPromiseMock = jest.fn(() => Promise.resolve(null));
-
-    const event = {
-        containerWidth: 100,
-        component: 'card',
-        flavor: 'components'
-    };
 
     beforeEach(() => {
         mockedCollectId.mockReset();
@@ -29,8 +39,6 @@ describe('Analytics', () => {
         mockedLogEvent.mockReset();
         mockedLogEvent.mockImplementation(() => logEventPromiseMock);
         logEventPromiseMock.mockClear();
-
-        amount = { value: 50000, currency: 'USD' };
     });
 
     test('Creates an Analytics module with defaultProps', () => {
@@ -77,5 +85,74 @@ describe('Analytics', () => {
         analytics.send(event);
 
         expect(collectIdPromiseMock).toHaveLength(0);
+    });
+
+    test('Analytics events queue sends event object', async () => {
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+
+        const aObj = createAnalyticsObject(analyticsEventObj);
+
+        expect(aObj.timestamp).not.toBe(undefined);
+        expect(aObj.target).toEqual('PAN input');
+        expect(aObj.type).toEqual('Focus');
+
+        // no message prop for events
+        expect(aObj.message).toBe(undefined);
+
+        analytics.addAnalyticsAction('event', aObj);
+
+        // event object should not be sent immediately
+        expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
+    });
+
+    test('Analytics events queue sends error object', async () => {
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+
+        const evObj = createAnalyticsObject(analyticsEventObj);
+        analytics.addAnalyticsAction('event', evObj);
+
+        expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
+
+        const aObj = createAnalyticsObject({
+            class: 'error',
+            component: 'threeDS2Fingerprint',
+            code: 'web_704',
+            errorType: 'APIError',
+            message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
+        });
+
+        expect(aObj.timestamp).not.toBe(undefined);
+        expect(aObj.component).toEqual('threeDS2Fingerprint');
+        expect(aObj.errorType).toEqual('APIError');
+        expect(aObj.message).not.toBe(undefined);
+
+        analytics.addAnalyticsAction('error', aObj);
+
+        // error object should be sent immediately, sending any events as well
+        expect(analytics.getEventsQueue().getQueue().errors.length).toBe(0);
+        expect(analytics.getEventsQueue().getQueue().events.length).toBe(0);
+    });
+
+    test('Analytics events queue sends log object', async () => {
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+
+        const aObj = createAnalyticsObject({
+            class: 'log',
+            component: 'scheme',
+            type: 'Submit'
+        });
+
+        expect(aObj.timestamp).not.toBe(undefined);
+        expect(aObj.component).toEqual('scheme');
+        expect(aObj.type).toEqual('Submit');
+
+        // no message prop for a log with type 'Submit'
+        expect(aObj.message).toBe(undefined);
+
+        analytics.addAnalyticsAction('log', aObj);
+
+        // log object should be sent almost immediately (after a debounce interval)
+        await wait(DEFAULT_DEBOUNCE_TIME_MS);
+        expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
     });
 });
