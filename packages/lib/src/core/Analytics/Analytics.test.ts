@@ -14,6 +14,8 @@ const mockedLogEvent = logEvent as jest.Mock;
 
 const amount: PaymentAmount = { value: 50000, currency: 'USD' };
 
+const mockCheckoutAttemptId = '123456';
+
 const event = {
     containerWidth: 100,
     component: 'card',
@@ -28,7 +30,7 @@ const analyticsEventObj = {
 };
 
 describe('Analytics initialisation and event queue', () => {
-    const collectIdPromiseMock = jest.fn(() => Promise.resolve('123456'));
+    const collectIdPromiseMock = jest.fn(() => Promise.resolve(mockCheckoutAttemptId));
     const logEventPromiseMock = jest.fn(() => Promise.resolve(null));
 
     beforeEach(() => {
@@ -74,6 +76,8 @@ describe('Analytics initialisation and event queue', () => {
         expect(collectIdPromiseMock).toHaveBeenCalled();
         await Promise.resolve(); // wait for the next tick
         expect(collectIdPromiseMock).toHaveBeenCalledWith({ ...event });
+
+        expect(analytics.getCheckoutAttemptId()).toEqual(mockCheckoutAttemptId);
     });
 
     test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', async () => {
