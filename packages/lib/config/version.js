@@ -1,5 +1,5 @@
 import * as childProcess from 'child_process';
-import packageJson from '../package.json';
+import packageJson from '../package.json' assert { type: 'json' };
 
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {

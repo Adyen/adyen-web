@@ -1,4 +1,4 @@
-import AdyenCheckout, { Card, GooglePay } from '@adyen/adyen-web';
+import { AdyenCheckout, Card, GooglePay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';

@@ -1,6 +1,6 @@
 import { formatCustomTranslations, formatLocale, getTranslation, loadTranslations, parseLocale } from './utils';
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
-import locales from './locales';
+// import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
@@ -14,7 +14,8 @@ export class Language {
     public loaded: Promise<any>;
 
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
-        const defaultLocales = Object.keys(locales);
+        // const defaultLocales = Object.keys(locales);
+        const defaultLocales = ['en-US'];
         this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
 
         const localesFromCustomTranslations = Object.keys(this.customTranslations);

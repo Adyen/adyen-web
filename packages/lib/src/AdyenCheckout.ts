@@ -1,6 +1,6 @@
-if (process.env.NODE_ENV === 'development') {
-    require('preact/debug');
-}
+// if (process.env.NODE_ENV === 'development') {
+//     require('preact/debug');
+// }
 
 import { CoreOptions } from './core/types';
 import Checkout from './core';
@@ -10,4 +10,4 @@ async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
     return await checkout.initialize();
 }
 
-export default AdyenCheckout;
+export { AdyenCheckout };

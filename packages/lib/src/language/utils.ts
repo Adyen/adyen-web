@@ -1,5 +1,5 @@
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
-import locales from './locales';
+// import locales from './locales';
 import { h } from 'preact';
 
 /**
@@ -120,8 +120,12 @@ export const getTranslation = (translations: object, key: string, options: { [ke
  */
 export const loadTranslations = async (locale: string, customTranslations: object = {}): Promise<Record<string, string>> => {
     // Match locale to one of our available locales (e.g. es-AR => es-ES)
-    const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
-    const loadedLocale = await locales[localeToLoad]();
+    // const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
+    // const loadedLocale = await locales[localeToLoad]();
+
+    const loadedLocale = {
+        default: {}
+    };
 
     return {
         ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)

@@ -16,7 +16,7 @@
 // import Ideal from './Ideal';
 // import PayPal from './PayPal';
 // import QiwiWallet from './QiwiWallet';
-import Redirect from './Redirect';
+// import Redirect from './Redirect';
 // import SecuredFields from './SecuredFields';
 // import Sepa from './Sepa';
 // import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge } from './ThreeDS2';
@@ -255,5 +255,5 @@ export const getComponentConfiguration = (type: string, componentsConfig = {}, i
 
 //
 export default {
-    redirect: Redirect
+    // redirect: Redirect
 };

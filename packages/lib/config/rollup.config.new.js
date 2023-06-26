@@ -16,7 +16,7 @@ export default () => {
         //ES6 build
         {
             input: 'src/index.ts',
-            external: ['preact', 'classnames'],
+            // external: ['preact', 'classnames'],
             plugins: [
                 resolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }),
                 commonjs(),
@@ -70,12 +70,19 @@ export default () => {
             output: [
                 {
                     dir: './dist/es',
-                    chunkFileNames: 'chunks/[name].js',
-                    entryFileNames: '[name].js',
                     format: 'esm',
                     indent: false,
-                    sourcemap: true
-                    // preserveModules: true,
+                    sourcemap: false,
+                    preserveModules: true,
+                    preserveModulesRoot: 'src',
+                    chunkFileNames: 'chunks/[name].js',
+                    entryFileNames: chunkInfo => {
+                        if (chunkInfo.name.includes('node_modules')) {
+                            return chunkInfo.name.replace('node_modules', 'external') + '.js';
+                        }
+
+                        return '[name].js';
+                    }
                 }
             ],
             watch: {

@@ -5,3 +5,4 @@ class IdealElement extends IssuerListContainer {
 }
 
 export default IdealElement;
+export { IdealElement };

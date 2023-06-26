@@ -1,8 +1,8 @@
 import Language from '../language';
 import UIElement from '../components/UIElement';
 import RiskModule from './RiskModule';
-// import paymentMethods, { getComponentConfiguration } from '../components';
-import { getComponentConfiguration } from '../components';
+import paymentMethods, { getComponentConfiguration } from '../components';
+// import { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 // import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
@@ -15,7 +15,7 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
-import Redirect from '../components/Redirect/Redirect';
+// import Redirect from '../components/Redirect/Redirect';
 
 class Core {
     public session: Session;
@@ -152,7 +152,8 @@ class Core {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction(action: PaymentAction, options = {}): UIElement {
+    public createFromAction(action: PaymentAction, options = {}): any {
+        this.options = options;
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
@@ -266,8 +267,9 @@ class Core {
      *
      * @returns new UIElement
      */
-    private handleCreate(PaymentMethod, options: any = {}): UIElement {
-        const isValidClass = PaymentMethod.prototype instanceof UIElement;
+    private handleCreate(PaymentMethod, options: any = {}): any {
+        // const isValidClass = PaymentMethod.prototype instanceof UIElement;
+        const isValidClass = true;
 
         /**
          * Final entry point (PaymentMethod is a Class):
@@ -335,7 +337,7 @@ class Core {
              * (Further details: from the paymentMethods response and paymentMethodsConfiguration are added in the next step,
              *  or, in the Dropin case, are already present)
              */
-            return this.handleCreate(Redirect, { type: PaymentMethod, ...options });
+            // return this.handleCreate(Redirect, { type: PaymentMethod, ...options });
             // return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
         }
 
