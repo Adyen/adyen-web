@@ -145,16 +145,16 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
         const finalState = (image, message) => {
-            const translationString = i18n.get(message);
-            useA11yReporter(translationString);
+            const status = i18n.get(message);
+            useA11yReporter(status);
             return (
                 <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
                     <img
                         className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
                         src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
-                        alt={translationString}
+                        alt={status}
                     />
-                    <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{translationString}</div>
+                    <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{status}</div>
                 </div>
             );
         };

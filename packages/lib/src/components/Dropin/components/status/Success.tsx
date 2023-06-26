@@ -8,8 +8,8 @@ import { useA11yReporter } from '../../../../core/Errors/useA11yReporter';
 const Success = ({ message }) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const statusMsg = i18n.get(message || 'creditCard.success');
-    useA11yReporter(statusMsg);
+    const status = i18n.get(message || 'creditCard.success');
+    useA11yReporter(status);
     return (
         <div className="adyen-checkout__status adyen-checkout__status--success">
             <Img
@@ -18,7 +18,7 @@ const Success = ({ message }) => {
                 src={getImage({ extension: 'gif', imageFolder: 'components/' })('success')}
                 alt={i18n.get(message || 'creditCard.success')}
             />
-            <span className="adyen-checkout__status__text">{statusMsg}</span>
+            <span className="adyen-checkout__status__text">{status}</span>
         </div>
     );
 };
