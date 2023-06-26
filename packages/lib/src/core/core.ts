@@ -268,8 +268,7 @@ class Core {
      * @returns new UIElement
      */
     private handleCreate(PaymentMethod, options: any = {}): any {
-        // const isValidClass = PaymentMethod.prototype instanceof UIElement;
-        const isValidClass = true;
+        const isValidClass = PaymentMethod.prototype instanceof UIElement;
 
         /**
          * Final entry point (PaymentMethod is a Class):

@@ -8,7 +8,7 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-console.log(Card);
+console.log(GooglePay);
 
 const showComps = {
     clickToPay: true,
@@ -64,7 +64,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // // Credit card with installments
     // if (showComps.card) {
     window.card = checkout
-        .create('card', {
+        .create('scheme', {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro']
         })
         .mount('.card-field');

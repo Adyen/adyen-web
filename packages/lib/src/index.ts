@@ -1,6 +1,6 @@
 export * from './tree-shaking-test';
 export * from './tree-shaking-test2';
-// export * from './components/index-new';
+export * from './components/index-new';
 export * from './AdyenCheckout';
 
 // import * as components from './components/index-new';
