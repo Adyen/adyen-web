@@ -34,6 +34,9 @@ class Storage<T> {
     constructor(key: string, storageType: 'sessionStorage' | 'localStorage') {
         try {
             this.storage = storageType ? window[storageType] : window.localStorage;
+            if (!this.storage) {
+                throw new Error('storage does not exist');
+            }
         } catch (e) {
             this.storage = new NonPersistentStorage();
         }
