@@ -2,7 +2,12 @@ import { httpPost } from '../http';
 import collectId from './collect-id';
 
 jest.mock('../http', () => ({
-    httpPost: jest.fn(() => new Promise(() => {}))
+    httpPost: jest.fn(
+        () =>
+            new Promise(resolve => {
+                resolve({ id: 'mockCheckoutAttemptId' });
+            })
+    )
 }));
 
 beforeEach(() => {
@@ -28,7 +33,9 @@ test('should send proper data to http service', () => {
 
     const log = collectId(configuration);
 
-    log(customEvent);
+    log(customEvent).then(val => {
+        expect(val).toEqual('mockCheckoutAttemptId');
+    });
 
     expect(httpPost).toHaveBeenCalledTimes(1);
     expect(httpPost).toHaveBeenCalledWith(
