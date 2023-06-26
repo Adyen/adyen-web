@@ -14,7 +14,25 @@ beforeEach(() => {
     process.env.VERSION = 'x.x.x';
 });
 
-test('should send proper data to http service', () => {
+test('Should lead to a rejected promise since no clientKey is provided', () => {
+    const configuration = {
+        analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
+        locale: 'en-US',
+        amount: {
+            value: 10000,
+            currency: 'USD'
+        }
+    };
+
+    const log = collectId(configuration);
+    log({})
+        .then()
+        .catch(e => {
+            expect(e).toEqual('no-client-key');
+        });
+});
+
+test('Should send expected data to http service', () => {
     const configuration = {
         analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
         locale: 'en-US',
@@ -56,4 +74,11 @@ test('should send proper data to http service', () => {
             component: customEvent.component
         }
     );
+
+    // A second attempt should return the previous promise and not lead to a new http call
+    const log2 = log(customEvent);
+    log2.then(val => {
+        expect(val).toEqual('mockCheckoutAttemptId');
+    });
+    expect(httpPost).toHaveBeenCalledTimes(1);
 });

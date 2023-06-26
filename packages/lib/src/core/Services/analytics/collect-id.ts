@@ -41,7 +41,7 @@ const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
         };
 
         if (promise) return promise;
-        if (!clientKey) return Promise.reject();
+        if (!clientKey) return Promise.reject('no-client-key');
 
         const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
         const checkoutAttemptIdSession = storage.get();
