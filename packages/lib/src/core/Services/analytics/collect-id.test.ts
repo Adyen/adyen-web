@@ -2,17 +2,11 @@ import { httpPost } from '../http';
 import collectId from './collect-id';
 
 jest.mock('../http', () => ({
-    // ...jest.requireActual('../http'),
     httpPost: jest.fn(() => new Promise(() => {}))
 }));
 
-// jest.mock('../http');
-// const mockedHttp = httpPost as jest.Mock;
-// const httpPromiseMock = jest.fn(() => new Promise((resolve, reject) => {}));
-
 beforeEach(() => {
     process.env.VERSION = 'x.x.x';
-    // mockedHttp.mockImplementation(() => httpPromiseMock);
 });
 
 test('should send proper data to http service', () => {

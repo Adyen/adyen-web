@@ -1,6 +1,6 @@
 import { httpPost } from '../http';
 import Storage from '../../../utils/Storage';
-import { CheckoutAttemptIdSession, CollectIdProps } from './types';
+import { CheckoutAttemptIdSession, CollectIdProps, TelemetryEvent } from './types';
 
 /**
  * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
@@ -30,12 +30,11 @@ const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
     };
 
     return (event): Promise<string> => {
-        const telemetryEvent = {
+        const telemetryEvent: TelemetryEvent = {
             // amount,  // TODO will be supported in the future
             version: process.env.VERSION,
             channel: 'Web',
             locale,
-            flavor: 'components',
             referrer: window.location.href,
             screenWidth: window.screen.width,
             ...event
