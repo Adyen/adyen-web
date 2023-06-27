@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Wprowadź rok daty ważności",
     "error.va.sf-cc-yr.02": "Wprowadź pełny rok daty ważności",
     "error.va.sf-cc-cvc.01": "Wprowadź kod zabezpieczający",
+    "error.va.sf-cc-cvc.02": "Wprowadź pełny kod zabezpieczający",
     "error.va.sf-ach-num.01": "Pole Numer rachunku jest puste",
     "error.va.sf-ach-num.02": "Numer rachunku ma nieprawidłową długość",
     "error.va.sf-ach-loc.01": "Pole Numer rozliczeniowy banku jest puste",

@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Adja meg a lejárat évet",
     "error.va.sf-cc-yr.02": "Adja meg a teljes lejárati évet",
     "error.va.sf-cc-cvc.01": "Adja meg a biztonsági kódot",
+    "error.va.sf-cc-cvc.02": "Adja meg a teljes biztonsági kódot",
     "error.va.sf-ach-num.01": "A bankszámlaszám mezője üres",
     "error.va.sf-ach-num.02": "A bankszámlaszám nem megfelelő hosszúságú",
     "error.va.sf-ach-loc.01": "A bankazonosító kód mezője üres",

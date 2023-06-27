@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Ange utgångsåret",
     "error.va.sf-cc-yr.02": "Ange det fullständiga utgångsåret",
     "error.va.sf-cc-cvc.01": "Ange säkerhetskoden",
+    "error.va.sf-cc-cvc.02": "Ange den fullständiga säkerhetskoden",
     "error.va.sf-ach-num.01": "Fältet för bankkontonummer är tomt",
     "error.va.sf-ach-num.02": "Bankkontonumret har fel längd",
     "error.va.sf-ach-loc.01": "Fältet för clearingnummer är tomt",

@@ -179,6 +179,7 @@
     "error.va.sf-cc-yr.01": "Digite o ano de validade",
     "error.va.sf-cc-yr.02": "Digite o ano de validade completo",
     "error.va.sf-cc-cvc.01": "Digite o código de segurança",
+    "error.va.sf-cc-cvc.02": "Digite o código de segurança completo",
     "error.va.sf-ach-num.01": "O campo do número da conta bancária está vazio",
     "error.va.sf-ach-num.02": "O número da conta bancária tem o comprimento errado",
     "error.va.sf-ach-loc.01": "O campo do número de identificação do banco está vazio",

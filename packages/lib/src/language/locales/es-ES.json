@@ -179,6 +179,7 @@
     "error.va.sf-cc-yr.01": "Introduzca el año de caducidad",
     "error.va.sf-cc-yr.02": "Introduzca el año de caducidad completo",
     "error.va.sf-cc-cvc.01": "Introduzca el código de seguridad",
+    "error.va.sf-cc-cvc.02": "Introduzca el código de seguridad completo",
     "error.va.sf-ach-num.01": "El campo del número de cuenta bancaria está vacío",
     "error.va.sf-ach-num.02": "El número de cuenta bancaria no tiene la longitud correcta",
     "error.va.sf-ach-loc.01": "El campo del número de ruta bancaria está vacío",

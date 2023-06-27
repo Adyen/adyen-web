@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Voer het vervaljaar in",
     "error.va.sf-cc-yr.02": "Voer het volledige vervaljaar in",
     "error.va.sf-cc-cvc.01": "Voer de beveiligingscode in",
+    "error.va.sf-cc-cvc.02": "Voer de volledige beveiligingscode in",
     "error.va.sf-ach-num.01": "Leeg veld voor bankrekeningnummer",
     "error.va.sf-ach-num.02": "Bankrekeningnummer heeft de verkeerde lengte",
     "error.va.sf-ach-loc.01": "Leeg veld voor swiftcode van de bank",

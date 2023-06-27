@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Zadejte rok vypršení platnosti",
     "error.va.sf-cc-yr.02": "Zadejte celý rok vypršení platnosti",
     "error.va.sf-cc-cvc.01": "Zadejte bezpečnostní kód",
+    "error.va.sf-cc-cvc.02": "Zadejte celý bezpečnostní kód",
     "error.va.sf-ach-num.01": "Pole čísla bankovního účtu je prázdné",
     "error.va.sf-ach-num.02": "Číslo bankovního účtu má nesprávnou délku",
     "error.va.sf-ach-loc.01": "Pole bankovního směrovacího čísla je prázdné",

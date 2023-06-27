@@ -183,6 +183,7 @@
     "error.va.sf-cc-yr.01": "Enter the expiry year",
     "error.va.sf-cc-yr.02": "Enter the complete expiry year",
     "error.va.sf-cc-cvc.01": "Enter the security code",
+    "error.va.sf-cc-cvc.02": "Enter the complete security code",
     "error.va.sf-ach-num.01": "Bank account number field is empty",
     "error.va.sf-ach-num.02": "Bank account number is the wrong length",
     "error.va.sf-ach-loc.01": "Bank routing number field is empty",

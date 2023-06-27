@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "만료 연도를 입력하세요.",
     "error.va.sf-cc-yr.02": "전체 만료 연도를 입력하세요.",
     "error.va.sf-cc-cvc.01": "보안 코드를 입력하세요.",
+    "error.va.sf-cc-cvc.02": "전체 보안 코드를 입력하세요.",
     "error.va.sf-ach-num.01": "계좌 번호 입력란이 비어 있습니다",
     "error.va.sf-ach-num.02": "계좌 번호 길이가 정확하지 않습니다",
     "error.va.sf-ach-loc.01": "은행 라우팅 번호 입력란이 비어 있습니다",

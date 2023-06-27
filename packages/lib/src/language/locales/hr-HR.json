@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Unesite godinu isteka",
     "error.va.sf-cc-yr.02": "Unesite potpunu godinu isteka",
     "error.va.sf-cc-cvc.01": "Unesite sigurnosni kôd",
+    "error.va.sf-cc-cvc.02": "Unesite potpuni sigurnosni kôd",
     "error.va.sf-ach-num.01": "Polje za broj bankovnog računa je prazno",
     "error.va.sf-ach-num.02": "Broj je bankovnog računa pogrešne duljine",
     "error.va.sf-ach-loc.01": "Polje je broja usmjeravanja prazno",

@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Completați anul de expirare",
     "error.va.sf-cc-yr.02": "Completați anul de expirare complet",
     "error.va.sf-cc-cvc.01": "Completați codul de securitate",
+    "error.va.sf-cc-cvc.02": "Completați codul de securitate complet",
     "error.va.sf-ach-num.01": "Câmpul pentru numărul de cont bancar este necompletat",
     "error.va.sf-ach-num.02": "Numărul contului bancar are lungimea greșită",
     "error.va.sf-ach-loc.01": "Câmpul pentru numărul de rutare al băncii este necompletat",

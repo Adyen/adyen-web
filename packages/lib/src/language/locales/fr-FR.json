@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "Entrez l'année d'expiration",
     "error.va.sf-cc-yr.02": "Entrez l'année d'expiration complète",
     "error.va.sf-cc-cvc.01": "Entrez le code de sécurité",
+    "error.va.sf-cc-cvc.02": "Entrez le code de sécurité complet",
     "error.va.sf-ach-num.01": "Veuillez renseigner un numéro de compte bancaire",
     "error.va.sf-ach-num.02": "Longueur du numéro de compte bancaire incorrecte",
     "error.va.sf-ach-loc.01": "Veuillez renseigner un numéro de routage",

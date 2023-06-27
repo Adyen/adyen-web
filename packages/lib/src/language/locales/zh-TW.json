@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "輸入到期年份",
     "error.va.sf-cc-yr.02": "輸入完整的到期年份",
     "error.va.sf-cc-cvc.01": "輸入安全碼",
+    "error.va.sf-cc-cvc.02": "輸入完整的安全碼",
     "error.va.sf-ach-num.01": "銀行帳戶號碼欄位現為空白",
     "error.va.sf-ach-num.02": "銀行帳戶號碼長度有誤",
     "error.va.sf-ach-loc.01": "銀行匯款路徑編號欄位現為空白",

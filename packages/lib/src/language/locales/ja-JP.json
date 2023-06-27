@@ -182,6 +182,7 @@
     "error.va.sf-cc-yr.01": "有効期限年を入力してください",
     "error.va.sf-cc-yr.02": "完全な有効期限年を入力してください",
     "error.va.sf-cc-cvc.01": "セキュリティコードを入力してください",
+    "error.va.sf-cc-cvc.02": "完全なセキュリティコードを入力してください",
     "error.va.sf-ach-num.01": "銀行口座番号フィールドが空です",
     "error.va.sf-ach-num.02": "銀行口座番号の長さが不正です",
     "error.va.sf-ach-loc.01": "銀行支店番号フィールドが空です",
