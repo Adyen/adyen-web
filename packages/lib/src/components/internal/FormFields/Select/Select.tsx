@@ -18,13 +18,16 @@ function Select({
     filterable = true,
     readonly = false,
     onChange = () => {},
+    onInput,
     selected,
     name,
     isInvalid,
     isValid,
     placeholder,
     uniqueId,
-    disabled
+    disabled,
+    disableTextFilter,
+    clearOnSelect
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -42,9 +45,10 @@ function Select({
 
     const selectedOption = active;
 
-    const filteredItems = items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
+    const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
     const setNextActive = () => {
+        if (!filteredItems || filteredItems.length < 1) return;
         const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
         const nextIndex = possibleNextIndex < filteredItems.length ? possibleNextIndex : 0;
         const nextItem = filteredItems[nextIndex];
@@ -53,6 +57,7 @@ function Select({
     };
 
     const setPreviousActive = () => {
+        if (!filteredItems || filteredItems.length < 1) return;
         const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) - 1;
         const nextIndex = possibleNextIndex < 0 ? filteredItems.length - 1 : possibleNextIndex;
         const nextItem = filteredItems[nextIndex];
@@ -61,6 +66,7 @@ function Select({
     };
 
     const scrollToItem = (item: SelectItem) => {
+        if (!item) return;
         const nextElement = document.getElementById(`listItem-${item.id}`);
         simulateFocusScroll(nextElement);
     };
@@ -95,7 +101,7 @@ function Select({
             // This is the main scenario when clicking and item in the list
             // Item comes from the event
             valueToEmit = extractItemFromEvent(e);
-        } else if (activeOption.id) {
+        } else if (activeOption.id && filteredItems.some(item => item.id === activeOption.id)) {
             // This is the scenario where a user is using the keyboard to navigate
             // In the case item comes from the visually select item
             valueToEmit = activeOption;
@@ -111,8 +117,10 @@ function Select({
             }
         }
 
-        if (!valueToEmit.disabled) {
+        if (valueToEmit && !valueToEmit.disabled) {
             onChange({ target: { value: valueToEmit.id, name: name } });
+
+            if (clearOnSelect) setInputText(null);
 
             closeList();
         }
@@ -186,6 +194,9 @@ function Select({
         const value: string = (e.target as HTMLInputElement).value;
         setInputText(value);
         setTextFilter(value);
+        if (onInput) {
+            onInput(value);
+        }
     };
 
     /**
@@ -207,7 +218,6 @@ function Select({
         if (showList) {
             setInputText(null);
         } else {
-            //setInputText(selectedOption.name);
             setTextFilter(null);
         }
     }, [showList]);

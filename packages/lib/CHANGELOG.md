@@ -1,5 +1,31 @@
 # @adyen/adyen-web
 
+## 5.46.0
+
+### Minor Changes
+
+-   Added isExpress configuration to PayPal component ([#2220](https://github.com/Adyen/adyen-web/pull/2220))
+
+## 5.45.0
+
+### Minor Changes
+
+-   feature: adds address lookup functionality ([#2151](https://github.com/Adyen/adyen-web/pull/2151))
+
+### Patch Changes
+
+-   Change meal voucher label _Pin_ to _Security code_ ([#2210](https://github.com/Adyen/adyen-web/pull/2210))
+
+-   Better regex & error message for validation/formatting of Brazilian post codes. ([#2211](https://github.com/Adyen/adyen-web/pull/2211))
+
+    We now allow a hyphen between the 5th & 6th digits
+
+-   Fix inconsistency displaying custom brand logo for the gift card payment ([#2215](https://github.com/Adyen/adyen-web/pull/2215))
+
+-   Fixes issue which ApplePay crashes Drop-in when initialized within iframe ([#2212](https://github.com/Adyen/adyen-web/pull/2212))
+
+-   Removing tsconfig stripInternals from lib package ([#2213](https://github.com/Adyen/adyen-web/pull/2213))
+
 ## 5.44.0
 
 ### Minor Changes

@@ -3,6 +3,7 @@ import AdyenCheckout from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import DropinElement from './Dropin';
+import { screen, render } from '@testing-library/preact';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
@@ -143,6 +144,35 @@ describe('Dropin', () => {
 
             expect(dropin.props.paymentMethods).toStrictEqual(paymentMethods);
             expect(dropin.props.instantPaymentMethods).toHaveLength(0);
+        });
+    });
+
+    describe('Payment status', () => {
+        let dropin: DropinElement;
+
+        beforeEach(async () => {
+            const paymentMethods = [{ name: 'AliPay', type: 'alipay' }];
+            const checkout = await AdyenCheckout({
+                analytics: { enabled: false },
+                paymentMethodsResponse: {
+                    paymentMethods
+                }
+            });
+            dropin = checkout.create('dropin');
+        });
+
+        test('should show success status', async () => {
+            render(dropin.render());
+            expect(await screen.findByRole('radio')).toBeTruthy();
+            dropin.setStatus('success');
+            expect(await screen.findByText(/Payment Successful/i)).toBeTruthy();
+        });
+
+        test('should show Error status', async () => {
+            render(dropin.render());
+            expect(await screen.findByRole('radio')).toBeTruthy();
+            dropin.setStatus('error');
+            expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
         });
     });
 });
