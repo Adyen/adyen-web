@@ -3,11 +3,11 @@ name: Validate remote assets
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   check-secured-fields-assets:
-    if: contains(github.head_ref, 'release')
+    if: contains(github.head_ref, 'changeset-release')
 
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Requesting securedFields in production
         id: securedFieldsRequest
-        uses: fjogeleit/http-request-action@master
+        uses: fjogeleit/http-request-action@main
         with:
           url: "https://checkoutshopper-live-us.adyen.com/checkoutshopper/securedfields/${{secrets.TEST_CLIENT_KEY}}/${{ env.SF_VERSION }}/securedFields.html?type=card&d=${{env.BTOA_TEST_ORIGIN}}"
           method: "GET"

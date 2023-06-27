@@ -5,6 +5,7 @@ import Await from '../internal/Await';
 import CoreProvider from '../../core/Context/CoreProvider';
 import config from './config';
 import RedirectButton from '../../components/internal/RedirectButton';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 interface BlikElementData {
     paymentMethod: {
@@ -45,25 +46,27 @@ class BlikElement extends UIElement {
         if (this.props.paymentData) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <Await
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                        clientKey={this.props.clientKey}
-                        paymentData={this.props.paymentData}
-                        onError={this.handleError}
-                        onComplete={this.onComplete}
-                        brandLogo={this.icon}
-                        type={config.type}
-                        messageText={this.props.i18n.get(config.messageTextId)}
-                        awaitText={this.props.i18n.get(config.awaitTextId)}
-                        showCountdownTimer={config.showCountdownTimer}
-                        delay={config.STATUS_INTERVAL}
-                        countdownTime={config.COUNTDOWN_MINUTES}
-                        throttleTime={config.THROTTLE_TIME}
-                        throttleInterval={config.THROTTLE_INTERVAL}
-                        onActionHandled={this.props.onActionHandled}
-                    />
+                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                        <Await
+                            ref={ref => {
+                                this.componentRef = ref;
+                            }}
+                            clientKey={this.props.clientKey}
+                            paymentData={this.props.paymentData}
+                            onError={this.handleError}
+                            onComplete={this.onComplete}
+                            brandLogo={this.icon}
+                            type={config.type}
+                            messageText={this.props.i18n.get(config.messageTextId)}
+                            awaitText={this.props.i18n.get(config.awaitTextId)}
+                            showCountdownTimer={config.showCountdownTimer}
+                            delay={config.STATUS_INTERVAL}
+                            countdownTime={config.COUNTDOWN_MINUTES}
+                            throttleTime={config.THROTTLE_TIME}
+                            throttleInterval={config.THROTTLE_INTERVAL}
+                            onActionHandled={this.props.onActionHandled}
+                        />
+                    </SRPanelProvider>
                 </CoreProvider>
             );
         }

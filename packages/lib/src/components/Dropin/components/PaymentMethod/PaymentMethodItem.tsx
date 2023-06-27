@@ -112,7 +112,12 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             aria-hidden="true"
                         />
 
-                        <PaymentMethodIcon altDescription={paymentMethod.props.name} type={paymentMethod.type} src={paymentMethod.icon} />
+                        <PaymentMethodIcon
+                            // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
+                            {...(paymentMethod.props.oneClick && { altDescription: paymentMethod.props.name })}
+                            type={paymentMethod.type}
+                            src={paymentMethod.icon}
+                        />
 
                         <PaymentMethodName
                             displayName={paymentMethod.displayName}
