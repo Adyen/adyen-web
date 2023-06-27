@@ -88,7 +88,7 @@ export default function AddressSearch({ onAddressLookup, onSelect, onManualAddre
                             className="adyen-checkout__button adyen-checkout__button--inline adyen-checkout__button--link adyen-checkout__address-search__manual-add__button"
                             onClick={onManualAddress}
                         >
-                            {i18n.get('address.enterManually')}
+                            {'+ ' + i18n.get('address.enterManually')}
                         </button>
                     </span>
                 )}
