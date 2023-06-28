@@ -45,7 +45,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                             _checkoutAttemptId = checkoutAttemptId;
                         })
                         .catch(e => {
-                            console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                            // Caught at collectId level. We do not expect this catch block to ever fire, but... just in case...
+                            console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                         });
                 }
                 // Log pixel // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options

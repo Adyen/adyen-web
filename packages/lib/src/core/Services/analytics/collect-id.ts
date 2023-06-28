@@ -24,7 +24,7 @@ const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
     let promise;
 
     const options = {
-        errorLevel: 'silent' as const,
+        errorLevel: 'fatal' as const, // ensure our catch block is called
         loadingContext: analyticsContext,
         path: `v2/analytics?clientKey=${clientKey}`
     };
@@ -54,21 +54,23 @@ const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
 
         promise = httpPost(options, telemetryEvent)
             .then(conversion => {
-                if (conversion.id) {
+                if (conversion?.id) {
                     storage.set({ id: conversion.id, timestamp: Date.now() });
                     return conversion.id;
                 }
                 return undefined;
             })
             .catch(() => {
-                // TODO - temporarily faking it - so we get a checkoutAttemptId which will allow subsequents request to be made (they'll fail, but at least we see them in the console)
-                console.log('### collect-id2:::: FAILED');
+                console.debug(
+                    'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.'
+                );
+
+                // TODO - temporarily faking it - generate a checkoutAttemptId which will allow subsequents request to be made (they'll fail, but at least we see them in the console)
                 const id = '64d673ff-36d3-4b32-999b-49e215f6b9891687261360764E7D99B01E11BF4C4B83CF7C7F49C5E75F23B2381E2ACBEE8E03E221E3BC95998';
                 storage.set({ id: id, timestamp: Date.now() });
                 return id;
                 // TODO - end
             });
-        // .catch(() => {});
 
         return promise;
     };

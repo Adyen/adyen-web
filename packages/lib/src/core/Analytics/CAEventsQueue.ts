@@ -57,7 +57,10 @@ const CAEventsQueue = ({ analyticsContext, clientKey }: EventQueueProps) => {
                     console.log('### CAEventsQueue::send:: success');
                     return undefined;
                 })
-                .catch(() => {});
+                .catch(() => {
+                    // Caught, silently, at http level. We do not expect this catch block to ever fire, but... just in case...
+                    console.debug('### CAEventsQueue:::: send has failed');
+                });
 
             return promise;
         }
