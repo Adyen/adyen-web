@@ -58,7 +58,7 @@ test('Should send expected data to http service', () => {
     expect(httpPost).toHaveBeenCalledTimes(1);
     expect(httpPost).toHaveBeenCalledWith(
         {
-            errorLevel: 'silent',
+            errorLevel: 'fatal',
             loadingContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
             path: 'v2/analytics?clientKey=xxxx-yyyy'
         },

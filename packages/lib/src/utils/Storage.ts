@@ -9,8 +9,8 @@ class NonPersistentStorage {
         return Object.keys(this.storage).length;
     }
 
-    key(keyName) {
-        return Object.keys(this.storage).indexOf(keyName);
+    key(index) {
+        return Object.keys(this.storage)[index];
     }
     getItem(keyName) {
         return this.storage[keyName] || null;
@@ -57,6 +57,18 @@ class Storage<T> {
 
     public remove() {
         this.storage.removeItem(this.key);
+    }
+
+    public clear() {
+        this.storage.clear();
+    }
+
+    public keyByIndex(index) {
+        return this.storage.key(index);
+    }
+
+    get length() {
+        return this.storage.length;
     }
 }
 
