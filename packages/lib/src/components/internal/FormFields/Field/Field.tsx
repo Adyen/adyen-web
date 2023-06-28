@@ -30,6 +30,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         onFocusField,
         showValidIcon,
         useLabelElement,
+        addContextualElement,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
@@ -69,7 +70,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         [onBlur, onFieldBlur]
     );
 
-    const renderContent = useCallback(() => {
+    const renderLabelOrDivContents = useCallback(() => {
         return (
             <Fragment>
                 {typeof label === 'string' && (
@@ -84,12 +85,20 @@ const Field: FunctionalComponent<FieldProps> = props => {
                     </span>
                 )}
 
+                {/*TODO - in what scenario is label a function? */}
                 {/*@ts-ignore - function is callable*/}
                 {typeof label === 'function' && label()}
 
                 {labelEndAdornment && <span className="adyen-checkout__label-adornment--end">{labelEndAdornment}</span>}
 
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
+            </Fragment>
+        );
+    }, [label, errorMessage]);
+
+    const renderInputRelatedElements = useCallback(() => {
+        return (
+            <Fragment>
                 <span
                     className={classNames([
                         'adyen-checkout__input-wrapper',
@@ -126,16 +135,18 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         </span>
                     )}
                 </span>
-                <span
-                    className={'adyen-checkout__error-text'}
-                    {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                    aria-hidden={errorVisibleToSR ? null : 'true'}
-                >
-                    {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
-                </span>
+                {addContextualElement && (
+                    <span
+                        className={'adyen-checkout__error-text'}
+                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                        aria-hidden={errorVisibleToSR ? null : 'true'}
+                    >
+                        {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
+                    </span>
+                )}
             </Fragment>
         );
-    }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
+    }, [children, errorMessage, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
     const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children }) => {
         const defaultWrapperProps = {
@@ -147,6 +158,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 'adyen-checkout__label--disabled': disabled
             })
         };
+
+        console.log('### Field::LabelOrDiv:: defaultWrapperProps', defaultWrapperProps);
 
         return useLabelElement ? (
             // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
@@ -185,8 +198,9 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 uniqueId={uniqueId.current}
                 isSecuredField={!errorVisibleToSR}
             >
-                {renderContent()}
+                {renderLabelOrDivContents()}
             </LabelOrDiv>
+            {renderInputRelatedElements()}
         </div>
     );
 };
@@ -195,7 +209,8 @@ Field.defaultProps = {
     className: '',
     classNameModifiers: [],
     inputWrapperModifiers: [],
-    useLabelElement: true
+    useLabelElement: true,
+    addContextualElement: true
 };
 
 export default Field;

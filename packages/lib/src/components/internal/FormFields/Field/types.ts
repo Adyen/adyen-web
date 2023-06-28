@@ -2,6 +2,7 @@ import { h, Component, ComponentChildren } from 'preact';
 import Language from '../../../../language';
 
 export interface FieldProps {
+    name: string;
     className?: string;
     classNameModifiers?: string[];
     children?: ComponentChildren;
@@ -20,9 +21,9 @@ export interface FieldProps {
     onFocusField?;
     onFieldBlur?;
     dir?;
-    name?: string;
     showValidIcon?: boolean;
     useLabelElement?: boolean;
+    addContextualElement?: boolean;
     i18n?: Language;
     errorVisibleToScreenReader?: boolean;
 }
