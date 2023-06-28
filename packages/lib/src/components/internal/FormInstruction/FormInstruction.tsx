@@ -4,7 +4,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 
 const FormInstruction = () => {
     const { i18n } = useCoreContext();
-    return <span className="adyen-checkout-form-instruction">{i18n.get('form.instruction')}</span>;
+    return <p className="adyen-checkout-form-instruction">{i18n.get('form.instruction')}</p>;
 };
 
 export default FormInstruction;
