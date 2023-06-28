@@ -8,6 +8,10 @@ import { AchElementProps } from './types';
 export class AchElement extends UIElement<AchElementProps> {
     public static type = 'ach';
 
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     formatProps(props: AchElementProps) {
         return {
             ...props,

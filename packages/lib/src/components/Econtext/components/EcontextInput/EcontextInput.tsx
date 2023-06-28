@@ -6,6 +6,7 @@ import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types';
 import './EcontextInput.scss';
 import { ComponentMethodsRef } from '../../../types';
+import FormInstruction from '../../../internal/FormInstruction';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
@@ -41,6 +42,7 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
 
     return (
         <div className="adyen-checkout__econtext-input__field">
+            {props.showFormInstruction && <FormInstruction />}
             {!!personalDetailsRequired && (
                 <PersonalDetails
                     data={data}

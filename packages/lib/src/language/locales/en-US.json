@@ -290,5 +290,6 @@
     "paymentMethodsList.aria.label": "Choose a payment method",
     "companyDetails.name.invalid": "Enter the company name",
     "companyDetails.registrationNumber.invalid": "Enter the registration number",
-    "consent.checkbox.invalid": "You must agree with the terms & conditions"
+    "consent.checkbox.invalid": "You must agree with the terms & conditions",
+    "form.instruction": "All fields are required unless marked otherwise."
 }

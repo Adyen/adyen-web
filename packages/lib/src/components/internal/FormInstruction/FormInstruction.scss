@@ -1,0 +1,14 @@
+@import "../../../style/index";
+
+.adyen-checkout-form-instruction {
+    display: block;
+    line-height: 19px;
+    color: $color-gray-darker;
+    font-size: $font-size-small;
+    font-weight: normal;
+    margin-bottom: $spacing-medium;
+
+    [dir="rtl"] & {
+        padding-right: 0;
+    }
+}

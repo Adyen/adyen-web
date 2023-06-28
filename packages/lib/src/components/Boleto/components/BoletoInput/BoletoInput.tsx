@@ -9,6 +9,7 @@ import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { ComponentMethodsRef } from '../../../types';
+import FormInstruction from '../../../internal/FormInstruction';
 
 function BoletoInput(props) {
     const { i18n } = useCoreContext();
@@ -71,6 +72,7 @@ function BoletoInput(props) {
 
     return (
         <div className="adyen-checkout__boleto-input__field">
+            {props.showFormInstruction && <FormInstruction />}
             {props.personalDetailsRequired && (
                 <BrazilPersonalDetail i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} valid={valid} />
             )}

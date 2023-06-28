@@ -15,6 +15,7 @@ import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
 import { ComponentMethodsRef } from '../../../types';
+import FormInstruction from '../../../internal/FormInstruction';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -136,6 +137,7 @@ function AchInput(props: ACHInputProps) {
 
     return (
         <div className="adyen-checkout__ach">
+            {props.showFormInstruction && <FormInstruction />}
             <SecuredFieldsProvider
                 ref={sfp}
                 {...extractPropsForSFP(props)}

@@ -8,6 +8,10 @@ import CoreProvider from '../../core/Context/CoreProvider';
 export class BoletoElement extends UIElement {
     public static type = 'boletobancario';
 
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     get isValid() {
         return !!this.state.isValid;
     }
