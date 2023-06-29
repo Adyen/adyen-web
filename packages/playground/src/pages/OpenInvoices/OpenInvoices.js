@@ -24,7 +24,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         locale: shopperLocale,
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
-        onChange: handleChange,
+        // onChange: handleChange,
         onSubmit: handleSubmit,
         onError: console.error,
         showPayButton: true,
@@ -32,55 +32,55 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     });
 
     // RATEPAY
-    if (showComps.ratepay) {
-        window.ratepay = checkout
-            .create('ratepay', {
-                countryCode: 'DE', // 'DE' / 'AT' / 'CH'
-                visibility: {
-                    personalDetails: 'editable', // editable [default] / readOnly / hidden
-                    billingAddress: 'editable',
-                    deliveryAddress: 'editable'
-                }
-            })
-            .mount('.ratepay-field');
-    }
-
-    // RATEPAY
-    if (showComps.ratepaydd) {
-        window.ratepaydd = checkout
-            .create('ratepay_directdebit', {
-                //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
-                visibility: {
-                    personalDetails: 'editable', // editable [default] / readOnly / hidden
-                    billingAddress: 'editable',
-                    deliveryAddress: 'editable'
-                }
-            })
-            .mount('.ratepay-direct-field');
-    }
-
-    // AFTERPAY
-    if (showComps.afterpay) {
-        window.afterpay = checkout
-            .create('afterpay_default', {
-                countryCode: 'NL', // 'NL' / 'BE'
-                visibility: {
-                    personalDetails: 'editable', // editable [default] / readOnly / hidden
-                    billingAddress: 'readOnly',
-                    deliveryAddress: 'hidden'
-                },
-                data: {
-                    billingAddress: {
-                        city: 'Gravenhage',
-                        country: 'NL',
-                        houseNumberOrName: '1',
-                        postalCode: '2521VA',
-                        street: 'Neherkade'
-                    }
-                }
-            })
-            .mount('.afterpay-field');
-    }
+    // if (showComps.ratepay) {
+    //     window.ratepay = checkout
+    //         .create('ratepay', {
+    //             countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+    //             visibility: {
+    //                 personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //                 billingAddress: 'editable',
+    //                 deliveryAddress: 'editable'
+    //             }
+    //         })
+    //         .mount('.ratepay-field');
+    // }
+    //
+    // // RATEPAY
+    // if (showComps.ratepaydd) {
+    //     window.ratepaydd = checkout
+    //         .create('ratepay_directdebit', {
+    //             //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+    //             visibility: {
+    //                 personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //                 billingAddress: 'editable',
+    //                 deliveryAddress: 'editable'
+    //             }
+    //         })
+    //         .mount('.ratepay-direct-field');
+    // }
+    //
+    // // AFTERPAY
+    // if (showComps.afterpay) {
+    //     window.afterpay = checkout
+    //         .create('afterpay_default', {
+    //             countryCode: 'NL', // 'NL' / 'BE'
+    //             visibility: {
+    //                 personalDetails: 'editable', // editable [default] / readOnly / hidden
+    //                 billingAddress: 'readOnly',
+    //                 deliveryAddress: 'hidden'
+    //             },
+    //             data: {
+    //                 billingAddress: {
+    //                     city: 'Gravenhage',
+    //                     country: 'NL',
+    //                     houseNumberOrName: '1',
+    //                     postalCode: '2521VA',
+    //                     street: 'Neherkade'
+    //                 }
+    //             }
+    //         })
+    //         .mount('.afterpay-field');
+    // }
 
     // AFTERPAY B2B
     if (showComps.afterpayb2b) {
@@ -93,7 +93,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
             })
             .mount('.afterpayb2b-field');
     }
-
+    return;
     // FACILYPAY_3x
     if (showComps.facilypay_3x) {
         window.facilypay_3x = checkout
