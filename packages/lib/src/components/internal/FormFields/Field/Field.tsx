@@ -35,7 +35,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         filled: propsFilled,
         focused: propsFocused,
         i18n,
-        errorVisibleToScreenReader
+        errorVisibleToScreenReader,
+        renderAlternativeToLabel
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
@@ -70,7 +71,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         [onBlur, onFieldBlur]
     );
 
-    const renderLabelOrDivContents = useCallback(() => {
+    const renderLabelOrAlternativeContents = useCallback(() => {
         return (
             <Fragment>
                 {typeof label === 'string' && (
@@ -148,30 +149,39 @@ const Field: FunctionalComponent<FieldProps> = props => {
         );
     }, [children, errorMessage, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
-    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children }) => {
-        const defaultWrapperProps = {
-            onClick: onFocusField,
-            className: classNames({
-                'adyen-checkout__label': true,
-                'adyen-checkout__label--focused': focused,
-                'adyen-checkout__label--filled': filled,
-                'adyen-checkout__label--disabled': disabled
-            })
-        };
+    const LabelOrAlternative = useCallback(
+        ({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children, renderAlternativeToLabel }) => {
+            const defaultWrapperProps = {
+                onClick: onFocusField,
+                className: classNames({
+                    'adyen-checkout__label': true,
+                    'adyen-checkout__label--focused': focused,
+                    'adyen-checkout__label--filled': filled,
+                    'adyen-checkout__label--disabled': disabled
+                })
+            };
 
-        console.log('### Field::LabelOrDiv:: defaultWrapperProps', defaultWrapperProps);
+            return useLabelElement ? (
+                // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
+                <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
+                    {children}
+                </label>
+            ) : (
+                renderAlternativeToLabel(defaultWrapperProps, children, uniqueId) // defaults to null
 
-        return useLabelElement ? (
-            // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
-            <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
-                {children}
-            </label>
-        ) : (
-            <div {...defaultWrapperProps} role={'form'}>
-                {children}
-            </div>
-        );
-    }, []);
+                // Example usage:
+                // const alternativeLabelContent = (defaultWrapperProps, children, uniqueId) => {
+                //     return (
+                //         <div {...defaultWrapperProps} role={'label'} htmlFor={uniqueId}>
+                //             {children}
+                //         </div>
+                //     );
+                // };
+                // <Field name={'myField'} renderAlternativeToLabel={alternativeLabelContent}>
+            );
+        },
+        []
+    );
 
     /**
      * RENDER
@@ -188,7 +198,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 }
             )}
         >
-            <LabelOrDiv
+            <LabelOrAlternative
                 onFocusField={onFocusField}
                 name={name}
                 disabled={disabled}
@@ -197,9 +207,10 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
                 isSecuredField={!errorVisibleToSR}
+                renderAlternativeToLabel={renderAlternativeToLabel}
             >
-                {renderLabelOrDivContents()}
-            </LabelOrDiv>
+                {renderLabelOrAlternativeContents()}
+            </LabelOrAlternative>
             {renderInputRelatedElements()}
         </div>
     );
@@ -210,7 +221,8 @@ Field.defaultProps = {
     classNameModifiers: [],
     inputWrapperModifiers: [],
     useLabelElement: true,
-    addContextualElement: true
+    addContextualElement: true,
+    renderAlternativeToLabel: () => null
 };
 
 export default Field;

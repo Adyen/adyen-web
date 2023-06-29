@@ -26,6 +26,7 @@ export interface FieldProps {
     addContextualElement?: boolean;
     i18n?: Language;
     errorVisibleToScreenReader?: boolean;
+    renderAlternativeToLabel?: (defaultWrapperProps, children, uniqueId) => any;
 }
 
 export interface FieldState {
