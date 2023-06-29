@@ -1,7 +1,6 @@
-import { h } from 'preact';
 import Sepa from './Sepa';
+import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../core/Context/CoreProvider';
 import { Resources } from '../../core/Context/Resources';
 import SepaElement from './Sepa';
 import Language from '../../language';
