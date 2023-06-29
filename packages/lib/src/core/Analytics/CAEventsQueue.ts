@@ -54,7 +54,7 @@ const CAEventsQueue = ({ analyticsContext, clientKey }: EventQueueProps) => {
 
             const promise = httpPost(options, caActions)
                 .then(() => {
-                    console.log('### CAEventsQueue::send:: success');
+                    // Succeed, silently
                     return undefined;
                 })
                 .catch(() => {

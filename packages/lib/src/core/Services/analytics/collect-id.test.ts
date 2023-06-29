@@ -5,7 +5,7 @@ jest.mock('../http', () => ({
     httpPost: jest.fn(
         () =>
             new Promise(resolve => {
-                resolve({ id: 'mockCheckoutAttemptId' });
+                resolve({ checkoutAttemptId: 'mockCheckoutAttemptId' });
             })
     )
 }));
