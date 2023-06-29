@@ -14,17 +14,19 @@ interface CheckboxProps {
     className?: string;
     value?: string;
     uniqueId?: string;
+    addContextualElement?: boolean;
 }
 
 export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, ...props }: CheckboxProps) {
-    // Strip uniqueId from props. We need the value but don't want to set it as an attribute
-    const { uniqueId: uid, ...newProps } = props;
+    // Strip some values from props. We need to reference them but don't want to set them as attributes.
+    const { uniqueId: uid, addContextualElement: hasContextualElement, ...newProps } = props;
+
     return (
         <label className="adyen-checkout__checkbox" htmlFor={uid}>
             <input
                 id={uid}
                 {...newProps}
-                aria-describedby={`${uid}${ARIA_ERROR_SUFFIX}`}
+                {...(hasContextualElement && { 'aria-describedby': `${uid}${ARIA_ERROR_SUFFIX}` })}
                 className={cx([
                     'adyen-checkout__checkbox__input',
                     [props.className],

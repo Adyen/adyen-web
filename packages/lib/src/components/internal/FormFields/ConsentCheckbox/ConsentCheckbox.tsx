@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import Field from '../Field';
-// import Checkbox from '../Checkbox';
-import { renderFormField } from '../../FormFields';
+import Checkbox from '../Checkbox';
 
 export default function ConsentCheckbox({ errorMessage, label, onChange, i18n, ...props }) {
     return (
@@ -13,23 +12,14 @@ export default function ConsentCheckbox({ errorMessage, label, onChange, i18n, .
             useLabelElement={false}
             label={i18n.get('creditCard.holderName')}
         >
-            {/*<Checkbox*/}
-            {/*    name={'consentCheckbox'}*/}
-            {/*    classNameModifiers={[...(props.classNameModifiers ??= []), 'consentCheckbox']}*/}
-            {/*    onInput={onChange}*/}
-            {/*    value={props?.data?.consentCheckbox}*/}
-            {/*    label={label}*/}
-            {/*    checked={props.checked}*/}
-            {/*/>*/}
-
-            {renderFormField('boolean', {
-                name: 'consentCheckbox',
-                classNameModifiers: [...(props.classNameModifiers ??= []), 'consentCheckbox'],
-                onInput: onChange,
-                value: props?.data?.consentCheckbox,
-                label,
-                checked: props.checked
-            })}
+            <Checkbox
+                name={'consentCheckbox'}
+                classNameModifiers={[...(props.classNameModifiers ??= []), 'consentCheckbox']}
+                onInput={onChange}
+                value={props?.data?.consentCheckbox}
+                label={label}
+                checked={props.checked}
+            />
         </Field>
     );
 }

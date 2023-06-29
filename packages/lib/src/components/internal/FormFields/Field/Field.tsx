@@ -113,7 +113,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             onFocusHandler,
                             onBlurHandler,
                             isInvalid: !!errorMessage,
-                            ...(name && { uniqueId: uniqueId.current })
+                            ...(name && { uniqueId: uniqueId.current }),
+                            addContextualElement
                         };
                         return cloneElement(child as VNode, childProps);
                     })}
