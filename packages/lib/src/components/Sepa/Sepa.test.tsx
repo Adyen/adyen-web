@@ -1,4 +1,10 @@
+import { h } from 'preact';
 import Sepa from './Sepa';
+import { render, screen } from '@testing-library/preact';
+import CoreProvider from '../../core/Context/CoreProvider';
+import { Resources } from '../../core/Context/Resources';
+import SepaElement from './Sepa';
+import Language from '../../language';
 
 describe('Sepa', () => {
     const mockStateChange = sepa => {
@@ -47,11 +53,22 @@ describe('Sepa', () => {
             expect(sepa.data.paymentMethod.ownerName).toBe('A. Klaassen');
         });
     });
+});
 
-    // describe('render', () => {
-    //     test('renders an IbanInput', () => {
-    //         const sepa = mockStateChange(new Sepa({}));
-    //         expect(sepa.render().nodeName.name).toBe('IbanInput');
-    //     });
-    // });
+describe('SepaElement render', () => {
+    test('should render IbanInput by default', async () => {
+        render(<SepaElement i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        expect(await screen.findByText('Holder Name')).toBeTruthy();
+        expect(await screen.findByText('Account Number (IBAN)')).toBeTruthy();
+    });
+
+    test('should render FormInstruction by default', async () => {
+        render(<SepaElement i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
+    });
+
+    test('should not render FormInstruction if showFormInstruction sets to false', () => {
+        render(<SepaElement FormInstruction={false} i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
+    });
 });

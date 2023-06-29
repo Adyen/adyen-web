@@ -11,13 +11,16 @@ import FormInstruction from '../internal/FormInstruction';
 class SepaElement extends UIElement {
     public static type = 'sepadirectdebit';
 
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     /**
      * Formats props on construction time
      */
     formatProps(props) {
         return {
             holderName: true,
-            showFormInstruction: true,
             ...props
         };
     }
