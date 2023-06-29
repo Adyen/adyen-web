@@ -36,7 +36,6 @@ export default parent => {
                     requestId: callbackObj.uuid // Pass id of request
                 }
             ).then((data: BinLookupResponseRaw) => {
-                console.log('### triggerBinLookUp:::: window.mockBinCount', window.mockBinCount, 'process.env.NODE_ENV', process.env.NODE_ENV);
                 // If response is the one we were waiting for...
                 if (data?.requestId === currentRequestId) {
                     if (process.env.NODE_ENV === 'development') {

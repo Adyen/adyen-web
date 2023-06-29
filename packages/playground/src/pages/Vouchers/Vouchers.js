@@ -11,50 +11,49 @@ import './Vouchers.scss';
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        // onChange: handleChange,
+        onChange: handleChange,
         showPayButton: true
     });
 
-    // window.bacsdd = checkout
-    //     .create('directdebit_GB', {
-    //         countryCode: 'GB',
-    //         data: {
-    //             holderName: 'Philip Dog',
-    //             bankAccountNumber: '12345678',
-    //             bankLocationId: '123456',
-    //             shopperEmail: 'phil@ddog.co.uk'
-    //         }
-    //     })
-    //     .mount('#bacsdd-input-container');
-    //
-    // window.bacsddResult = checkout
-    //     .createFromAction({
-    //         paymentMethodType: 'directdebit_GB',
-    //         type: 'voucher',
-    //         url:
-    //             'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=3B0HeSD%2FX0K4lKudwtMH%2BWuGfNHsDyzCyCpipuJqy3bbue6XVEIdyg8TDWYMjlr39eWhynIQU7slpqA48izhIkHg%2FI%2Fpy2cd8J0PXvWvpSnFtNG30fIIPL06J1pKQfyL%2FG3wCPXSl6p0a79ajCYKcmV06xJVfJMP0ej6FK45GL7MloD%2Bdrbjo%2FnCbbxooYCiYCgJIZdkNm1iLHoVP2s2eg%3D%3D'
-    //     })
-    //     .mount('#bacsdd-result-container');
-    //
-    // window.multibancoResult = checkout
-    //     .createFromAction({
-    //         expiresAt: '2019-09-28T12:54:17',
-    //         initialAmount: {
-    //             currency: 'EUR',
-    //             value: 1000
-    //         },
-    //         entity: '1234',
-    //         merchantName: 'TestMerchant',
-    //         merchantReference: 'Your order number',
-    //         paymentMethodType: 'multibanco',
-    //         reference: '501 051 808',
-    //         totalAmount: {
-    //             currency: 'EUR',
-    //             value: 1000
-    //         },
-    //         type: 'voucher'
-    //     })
-    //     .mount('#multibanco-result-container');
+    window.bacsdd = checkout
+        .create('directdebit_GB', {
+            countryCode: 'GB',
+            data: {
+                holderName: 'Philip Dog',
+                bankAccountNumber: '12345678',
+                bankLocationId: '123456',
+                shopperEmail: 'phil@ddog.co.uk'
+            }
+        })
+        .mount('#bacsdd-input-container');
+
+    window.bacsddResult = checkout
+        .createFromAction({
+            paymentMethodType: 'directdebit_GB',
+            type: 'voucher',
+            url: 'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=3B0HeSD%2FX0K4lKudwtMH%2BWuGfNHsDyzCyCpipuJqy3bbue6XVEIdyg8TDWYMjlr39eWhynIQU7slpqA48izhIkHg%2FI%2Fpy2cd8J0PXvWvpSnFtNG30fIIPL06J1pKQfyL%2FG3wCPXSl6p0a79ajCYKcmV06xJVfJMP0ej6FK45GL7MloD%2Bdrbjo%2FnCbbxooYCiYCgJIZdkNm1iLHoVP2s2eg%3D%3D'
+        })
+        .mount('#bacsdd-result-container');
+
+    window.multibancoResult = checkout
+        .createFromAction({
+            expiresAt: '2019-09-28T12:54:17',
+            initialAmount: {
+                currency: 'EUR',
+                value: 1000
+            },
+            entity: '1234',
+            merchantName: 'TestMerchant',
+            merchantReference: 'Your order number',
+            paymentMethodType: 'multibanco',
+            reference: '501 051 808',
+            totalAmount: {
+                currency: 'EUR',
+                value: 1000
+            },
+            type: 'voucher'
+        })
+        .mount('#multibanco-result-container');
 
     // Boleto Input
     window.boletoInput = checkout
@@ -77,7 +76,7 @@ import './Vouchers.scss';
             onSubmit: e => console.log('SUBMIT:', e)
         })
         .mount('#boleto-input-container');
-    return;
+
     // Boleto Result
     window.boletoResult = checkout
         .createFromAction({
