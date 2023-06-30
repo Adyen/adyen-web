@@ -3,7 +3,6 @@ import Sepa from './Sepa';
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import { Resources } from '../../core/Context/Resources';
-import SepaElement from './Sepa';
 import Language from '../../language';
 
 describe('Sepa', () => {
@@ -57,18 +56,18 @@ describe('Sepa', () => {
 
 describe('SepaElement render', () => {
     test('should render IbanInput by default', async () => {
-        render(<SepaElement i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        render(<Sepa i18n={new Language()} loadingContext="test" resources={new Resources()} />);
         expect(await screen.findByText('Holder Name')).toBeTruthy();
         expect(await screen.findByText('Account Number (IBAN)')).toBeTruthy();
     });
 
     test('should render FormInstruction by default', async () => {
-        render(<SepaElement i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        render(<Sepa i18n={new Language()} loadingContext="test" resources={new Resources()} />);
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
 
     test('should not render FormInstruction if showFormInstruction sets to false', () => {
-        render(<SepaElement FormInstruction={false} i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        render(<Sepa FormInstruction={false} i18n={new Language()} loadingContext="test" resources={new Resources()} />);
         expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
     });
 });
