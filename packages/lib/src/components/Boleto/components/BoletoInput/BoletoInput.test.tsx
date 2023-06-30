@@ -7,7 +7,7 @@ import { Resources } from '../../../../core/Context/Resources';
 describe('BoletoInput', () => {
     const customRender = ui => {
         return render(
-            <CoreProvider i18n={global.i18n} loadingContext="tesrt" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
                 {ui}
             </CoreProvider>
         );
