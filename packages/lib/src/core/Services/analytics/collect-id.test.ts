@@ -1,5 +1,6 @@
 import { httpPost } from '../http';
 import collectId from './collect-id';
+import { ANALYTICS_PATH } from '../../Analytics/constants';
 
 jest.mock('../http', () => ({
     httpPost: jest.fn(
@@ -21,7 +22,8 @@ test('Should lead to a rejected promise since no clientKey is provided', () => {
         amount: {
             value: 10000,
             currency: 'USD'
-        }
+        },
+        analyticsPath: ANALYTICS_PATH
     };
 
     const log = collectId(configuration);
@@ -40,7 +42,8 @@ test('Should send expected data to http service', () => {
         amount: {
             value: 10000,
             currency: 'USD'
-        }
+        },
+        analyticsPath: ANALYTICS_PATH
     };
 
     const customEvent = {
