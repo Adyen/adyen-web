@@ -3,7 +3,7 @@ import collectId from '../Services/analytics/collect-id';
 import { CoreOptions } from '../types';
 import CAEventsQueue, { EQObject } from './CAEventsQueue';
 import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject } from './types';
-import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_LOG } from './constants';
+import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_LOG, ANALYTICS_PATH } from './constants';
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
 
@@ -29,8 +29,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     }
 
     const _logEvent = logEvent({ loadingContext, locale });
-    const _collectId = collectId({ analyticsContext, clientKey, locale, amount });
-    const _caEventsQueue: EQObject = CAEventsQueue({ analyticsContext, clientKey });
+    const _collectId = collectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
+    const _caEventsQueue: EQObject = CAEventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const analyticsObj: AnalyticsModule = {
         send: (initialEvent: AnalyticsInitialEvent) => {

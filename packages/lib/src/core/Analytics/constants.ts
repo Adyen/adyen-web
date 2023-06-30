@@ -1,3 +1,5 @@
+export const ANALYTICS_PATH = 'v2/analytics';
+
 export const ANALYTICS_ACTION_LOG = 'log';
 export const ANALYTICS_ACTION_ERROR = 'error';
 export const ANALYTICS_ACTION_EVENT = 'event';

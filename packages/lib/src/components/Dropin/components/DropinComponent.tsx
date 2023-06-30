@@ -34,7 +34,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 if (this.props.modules.analytics) {
                     this.props.modules.analytics.send({
                         containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
-                        // paymentMethods: elements.map(e => e.props.type), // TODO not supported in the initial request to checkoutanalytics
+                        // paymentMethods: elements.map(e => e.props.type), // TODO will be supported in the initial request to checkoutanalytics
                         component: 'dropin',
                         flavor: 'dropin'
                     });

@@ -15,7 +15,7 @@ export interface EQObject {
     _runQueue: (id) => Promise<any>;
 }
 
-const CAEventsQueue = ({ analyticsContext, clientKey }: EventQueueProps) => {
+const CAEventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueProps) => {
     const caActions: CAActions = {
         channel: 'Web',
         events: [],
@@ -49,7 +49,7 @@ const CAEventsQueue = ({ analyticsContext, clientKey }: EventQueueProps) => {
             const options: HttpOptions = {
                 errorLevel: 'silent' as const,
                 loadingContext: analyticsContext,
-                path: `v2/analytics/${checkoutAttemptId}?clientKey=${clientKey}`
+                path: `${analyticsPath}/${checkoutAttemptId}?clientKey=${clientKey}`
             };
 
             const promise = httpPost(options, caActions)

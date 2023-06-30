@@ -20,13 +20,13 @@ function confirmSessionDurationIsMaxFifteenMinutes(checkoutAttemptIdSession: Che
  * @returns a function returning a promise containing the response of the call (an object containing a checkoutAttemptId property)
  */
 // const collectId = ({ analyticsContext, clientKey, locale, amount }: CollectIdProps) => { // TODO - amount will be supported in the future
-const collectId = ({ analyticsContext, clientKey, locale }: CollectIdProps) => {
+const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: CollectIdProps) => {
     let promise;
 
     const options = {
         errorLevel: 'fatal' as const, // ensure our catch block is called
         loadingContext: analyticsContext,
-        path: `v2/analytics?clientKey=${clientKey}`
+        path: `${analyticsPath}?clientKey=${clientKey}`
     };
 
     return (event): Promise<string> => {

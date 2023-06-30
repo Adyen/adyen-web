@@ -61,4 +61,4 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'>;
+export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
