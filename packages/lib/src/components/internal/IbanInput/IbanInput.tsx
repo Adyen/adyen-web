@@ -201,8 +201,8 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                             value: data['ownerName'],
                             'aria-invalid': !!this.state.errors.holder,
                             'aria-label': i18n.get('sepa.ownerName'),
-                            onInput: e => this.handleHolderInput(e.target.value),
-                            onBlur: e => this.handleHolderInput(e.target.value)
+                            onInput: e => this.handleHolderInput((e.target as HTMLInputElement).value),
+                            onBlur: e => this.handleHolderInput((e.target as HTMLInputElement).value)
                         })}
                     </Field>
                 )}
@@ -219,7 +219,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                     name={'ibanNumber'}
                 >
                     {renderFormField('text', {
-                        ref: ref => {
+                        setRef: ref => {
                             this.ibanNumber = ref;
                         },
                         name: 'ibanNumber',

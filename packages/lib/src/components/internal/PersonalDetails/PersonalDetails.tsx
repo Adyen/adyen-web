@@ -42,7 +42,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     };
 
     const eventHandler =
-        (mode: string): Function =>
+        (mode: string): h.JSX.GenericEventHandler<EventTarget> =>
         (e: Event): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();

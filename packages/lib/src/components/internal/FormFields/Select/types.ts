@@ -11,16 +11,16 @@ export interface SelectProps {
     className: string;
     classNameModifiers: string[];
     filterable: boolean;
-    isInvalid: boolean;
+    isInvalid?: boolean;
     isValid?: boolean;
     items: SelectItem[];
     name?: string;
     onChange: (e: { target: { value: string | number; name: string } }) => void;
-    placeholder: string;
+    placeholder?: string;
     readonly: boolean;
-    selected: string;
+    selectedValue?: string;
     uniqueId?: string;
-    disabled: boolean;
+    disabled?: boolean;
 }
 
 export interface SelectButtonProps {

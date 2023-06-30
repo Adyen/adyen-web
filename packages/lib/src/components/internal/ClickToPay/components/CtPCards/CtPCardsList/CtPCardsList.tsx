@@ -52,7 +52,7 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
         <Field name="clickToPayCards" errorMessage={errorMessage}>
             {renderFormField('select', {
                 items,
-                selected: data['srcDigitalCardId'],
+                selectedValue: data['srcDigitalCardId'],
                 name: 'cards',
                 filterable: false,
                 className: 'adyen-checkout-ctp__cards-list-dropdown',

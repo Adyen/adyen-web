@@ -34,7 +34,7 @@ export default function KCPAuthentication(props: KCPProps) {
                     placeholder: i18n.get('creditCard.taxNumber.placeholder'),
                     maxLength: 10,
                     minLength: 6,
-                    autoComplete: false,
+                    autoComplete: 'false',
                     value: props.value,
                     required: true,
                     onBlur: props.onBlur,

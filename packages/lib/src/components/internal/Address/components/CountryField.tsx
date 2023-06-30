@@ -45,7 +45,7 @@ export default function CountryField(props: CountryFieldProps) {
                 onChange: onDropdownChange,
                 name: 'country',
                 placeholder: i18n.get('select.country'),
-                selected: value,
+                selectedValue: value,
                 items: countries,
                 readonly: readOnly && !!value
             })}

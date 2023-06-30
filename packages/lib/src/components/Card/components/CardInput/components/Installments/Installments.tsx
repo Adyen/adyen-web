@@ -87,7 +87,6 @@ function Installments(props: InstallmentsProps) {
                             { id: 'installments', name: 'installments.installments' },
                             { id: 'revolving', name: 'installments.revolving' }
                         ]}
-                        i18n={i18n}
                         onChange={onRadioSelect}
                         value={radioBtnValue}
                     />
@@ -103,7 +102,7 @@ function Installments(props: InstallmentsProps) {
                         {renderFormField('select', {
                             filterable: false,
                             items: installmentOptions.values.map(installmentItemsMapper),
-                            selected: installmentAmount,
+                            selectedValue: installmentAmount,
                             onChange: onSelectInstallment,
                             name: 'installments',
                             disabled: radioBtnValue !== 'installments'
@@ -120,7 +119,7 @@ function Installments(props: InstallmentsProps) {
                 {renderFormField('select', {
                     filterable: false,
                     items: installmentOptions.values.map(installmentItemsMapper),
-                    selected: installmentAmount,
+                    selectedValue: installmentAmount,
                     onChange: onSelectInstallment,
                     name: 'installments',
                     readonly: installmentOptions?.values?.length === 1

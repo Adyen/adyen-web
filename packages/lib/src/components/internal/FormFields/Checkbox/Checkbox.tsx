@@ -5,7 +5,7 @@ import './Checkbox.scss';
 interface CheckboxProps {
     checked?: boolean;
     classNameModifiers?: string[];
-    label: string | ComponentChild;
+    label?: string | ComponentChild;
     name?: string;
     isInvalid?: boolean;
     onChange?;

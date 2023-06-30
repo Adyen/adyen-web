@@ -56,7 +56,7 @@ export function PhoneInput(props) {
                                     name: props.prefixName,
                                     onChange: handleChangeFor('phonePrefix'),
                                     placeholder: i18n.get('infix'),
-                                    selected: data.phonePrefix
+                                    selectedValue: data.phonePrefix
                                 })}
 
                                 <div className="adyen-checkout__phoneNumber">

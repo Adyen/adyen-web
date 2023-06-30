@@ -67,7 +67,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                 <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer}>
                     {renderFormField('select', {
                         items,
-                        selected: data.issuer,
+                        selectedValue: data.issuer,
                         placeholder: i18n.get(getIssuerSelectFieldKey(props.type)),
                         name: 'issuer',
                         className: 'adyen-checkout__dropdown--large adyen-checkout__issuer-list__dropdown',

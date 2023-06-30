@@ -48,7 +48,7 @@ export interface FieldContainerProps {
     onDropdownChange: (e: Event) => void;
     readOnly?: boolean;
     specifications: Specifications;
-    maxlength?: number;
+    maxLength?: number;
     trimOnBlur?: boolean;
     disabled?: boolean;
 }

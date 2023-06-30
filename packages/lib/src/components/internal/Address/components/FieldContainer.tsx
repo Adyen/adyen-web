@@ -23,7 +23,7 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
  */
 function FieldContainer(props: FieldContainerProps) {
     const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxlength, disabled } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxLength, disabled } = props;
 
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -73,7 +73,7 @@ function FieldContainer(props: FieldContainerProps) {
                         value,
                         onInput,
                         onBlur,
-                        maxlength,
+                        maxLength,
                         trimOnBlur,
                         disabled,
                         required: isOptional ? false : true

@@ -21,8 +21,7 @@ export default function SendCopyToEmail(props) {
                 {renderFormField('boolean', {
                     onChange: toggleEmailField,
                     label: i18n.get('boleto.sendCopyToEmail'),
-                    name: 'sendCopyToEmail',
-                    value: sendCopyToEmail
+                    name: 'sendCopyToEmail'
                 })}
             </Field>
 

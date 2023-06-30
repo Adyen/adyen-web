@@ -4,7 +4,7 @@ import InputBase from '../InputBase';
 import { checkDateInputSupport, formatDate } from './utils';
 
 interface InputDateProps {
-    onInput: (e) => void;
+    onInput?: (e) => void;
 }
 
 export default function InputDate(props: InputDateProps) {

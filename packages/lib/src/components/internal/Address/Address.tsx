@@ -118,7 +118,7 @@ export default function Address(props: AddressProps) {
                 onBlur={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
-                maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
+                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
             />

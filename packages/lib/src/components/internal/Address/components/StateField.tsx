@@ -47,7 +47,7 @@ export default function StateField(props: StateFieldProps) {
             {renderFormField('select', {
                 name: 'stateOrProvince',
                 onChange: onDropdownChange,
-                selected: value,
+                selectedValue: value,
                 placeholder: i18n.get(placeholderKey),
                 items: states,
                 readonly: readOnly && !!value

@@ -56,7 +56,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
     };
 
     const handleInputChange = useCallback(
-        (type: IssuerListInputTypes) => (event: UIEvent) => {
+        (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             setInputType(type);
             handleChangeFor('issuer')(event);
         },
@@ -101,7 +101,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
             <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']}>
                 {renderFormField('select', {
                     items,
-                    selected: inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null,
+                    selectedValue: inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null,
                     placeholder: i18n.get(placeholder),
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',

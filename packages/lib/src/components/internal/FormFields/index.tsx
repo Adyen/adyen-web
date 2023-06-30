@@ -9,8 +9,28 @@ import Select from './Select';
 import './FormFields.scss';
 import { InputBaseProps } from './InputBase';
 
-export const renderFormField = (type, props: InputBaseProps) => {
-    const formFieldTypes = {
+type RenderFormFieldTypes = {
+    boolean: typeof Checkbox;
+    radio: typeof RadioGroup;
+    select: typeof Select;
+    date: typeof InputDate;
+    emailAddress: typeof InputEmail;
+    tel: typeof InputTelephone;
+    text: typeof InputText;
+    default: typeof InputText;
+};
+
+// for testing purposes
+// type possibleFieldsType =
+//     | typeof Checkbox
+//     | typeof RadioGroup
+//     | typeof Select
+//     | typeof InputDate
+//     | typeof InputEmail
+//     | typeof InputTelephone
+//     | typeof InputText;
+export const renderFormField = (type: keyof RenderFormFieldTypes, props: InputBaseProps) => {
+    const formFieldTypes: RenderFormFieldTypes = {
         boolean: Checkbox,
         radio: RadioGroup,
         select: Select,

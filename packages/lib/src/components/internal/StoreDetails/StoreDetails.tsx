@@ -6,7 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 /**
  * "Store details" generic checkbox
  */
-function StoreDetails({ storeDetails = false, ...props }) {
+function StoreDetails({ storeDetails = true, ...props }) {
     const { i18n } = useCoreContext();
     const [value, setValue] = useState(storeDetails);
 
@@ -23,7 +23,6 @@ function StoreDetails({ storeDetails = false, ...props }) {
             {renderFormField('boolean', {
                 onChange,
                 label: i18n.get('storeDetails'),
-                value,
                 name: 'storeDetails'
             })}
         </div>
