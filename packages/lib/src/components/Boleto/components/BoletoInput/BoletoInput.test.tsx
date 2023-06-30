@@ -1,3 +1,4 @@
+/** @tsx h */
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import BoletoInput from './BoletoInput';

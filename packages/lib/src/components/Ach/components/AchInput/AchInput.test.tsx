@@ -1,4 +1,4 @@
-// @ts-ignore ignore
+/** @tsx h */
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import AchInput from './AchInput';

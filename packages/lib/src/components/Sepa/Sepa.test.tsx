@@ -1,6 +1,6 @@
-import Sepa from './Sepa';
-// @ts-ignore ignore
+/** @tsx h */
 import { h } from 'preact';
+import Sepa from './Sepa';
 import { render, screen } from '@testing-library/preact';
 import { Resources } from '../../core/Context/Resources';
 import Language from '../../language';

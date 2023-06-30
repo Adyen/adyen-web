@@ -1,3 +1,4 @@
+/** @tsx h */
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
