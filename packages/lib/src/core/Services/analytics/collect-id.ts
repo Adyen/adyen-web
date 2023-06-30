@@ -2,6 +2,9 @@ import { httpPost } from '../http';
 import Storage from '../../../utils/Storage';
 import { CheckoutAttemptIdSession, CollectIdProps, TelemetryEvent } from './types';
 
+export const FAILURE_MSG =
+    'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.';
+
 /**
  * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
  * More here: COWEB-1099
@@ -61,9 +64,8 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
                 return undefined;
             })
             .catch(() => {
-                console.debug(
-                    'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.'
-                );
+                console.debug(FAILURE_MSG);
+                return FAILURE_MSG;
             });
 
         return promise;

@@ -1,32 +1,35 @@
 import { httpPost } from '../http';
-import collectId from './collect-id';
+import collectId, { FAILURE_MSG } from './collect-id';
 import { ANALYTICS_PATH } from '../../Analytics/constants';
 
-jest.mock('../http', () => ({
-    httpPost: jest.fn(
-        () =>
-            new Promise(resolve => {
-                resolve({ checkoutAttemptId: 'mockCheckoutAttemptId' });
-            })
-    )
-}));
+jest.mock('../http');
+
+const mockedHttpPost = httpPost as jest.Mock;
+
+const httpPromiseSuccessMock = jest.fn(() => Promise.resolve({ checkoutAttemptId: 'mockCheckoutAttemptId' }));
+
+const httpPromiseFailMock = jest.fn(() => Promise.reject(' url incorrect'));
+
+const BASE_CONFIGURATION = {
+    analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
+    locale: 'en-US',
+    amount: {
+        value: 10000,
+        currency: 'USD'
+    },
+    analyticsPath: ANALYTICS_PATH
+};
 
 beforeEach(() => {
     process.env.VERSION = 'x.x.x';
+
+    mockedHttpPost.mockReset();
+    mockedHttpPost.mockImplementation(httpPromiseSuccessMock);
+    httpPromiseSuccessMock.mockClear();
 });
 
 test('Should lead to a rejected promise since no clientKey is provided', () => {
-    const configuration = {
-        analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
-        locale: 'en-US',
-        amount: {
-            value: 10000,
-            currency: 'USD'
-        },
-        analyticsPath: ANALYTICS_PATH
-    };
-
-    const log = collectId(configuration);
+    const log = collectId(BASE_CONFIGURATION);
     log({})
         .then()
         .catch(e => {
@@ -34,16 +37,31 @@ test('Should lead to a rejected promise since no clientKey is provided', () => {
         });
 });
 
+test('Should fail since path is incorrect', () => {
+    mockedHttpPost.mockReset();
+    mockedHttpPost.mockImplementation(httpPromiseFailMock);
+    httpPromiseFailMock.mockClear();
+
+    const configuration = {
+        ...BASE_CONFIGURATION,
+        clientKey: 'xxxx-yyyy',
+        analyticsPath: 'v99/analytics'
+    };
+
+    const log = collectId(configuration);
+    log({})
+        .then(val => {
+            expect(val).toEqual(FAILURE_MSG);
+        })
+        .catch(() => {});
+
+    expect(httpPost).toHaveBeenCalledTimes(1);
+});
+
 test('Should send expected data to http service', () => {
     const configuration = {
-        analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
-        locale: 'en-US',
-        clientKey: 'xxxx-yyyy',
-        amount: {
-            value: 10000,
-            currency: 'USD'
-        },
-        analyticsPath: ANALYTICS_PATH
+        ...BASE_CONFIGURATION,
+        clientKey: 'xxxx-yyyy'
     };
 
     const customEvent = {
