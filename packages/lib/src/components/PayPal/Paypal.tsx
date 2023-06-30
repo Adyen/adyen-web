@@ -49,10 +49,12 @@ class PaypalElement extends UIElement<PayPalElementProps> {
      * Formats the component data output
      */
     protected formatData() {
+        const { isExpress } = this.props;
+
         return {
             paymentMethod: {
                 type: PaypalElement.type,
-                subtype: PaypalElement.subtype
+                subtype: isExpress ? 'express' : PaypalElement.subtype
             }
         };
     }

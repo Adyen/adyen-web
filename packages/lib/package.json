@@ -24,7 +24,7 @@
         "./dist/es/adyen.css": "./dist/es/adyen.css",
         "./package.json": "./package.json"
     },
-    "version": "5.45.0",
+    "version": "5.46.1",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "repository": "github:Adyen/adyen-web",
@@ -33,7 +33,7 @@
     },
     "scripts": {
         "start": "npm run dev-server",
-        "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.config.js",
+        "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.dev.config.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build": "rm -rf dist/ && npm run type-check-generate && cross-env NODE_ENV=production rollup --config config/rollup.config.js",
         "build:analyze": "rm -rf dist/ && cross-env NODE_ENV=analyze rollup --config config/rollup.config.js",

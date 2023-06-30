@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 5.46.1
+
+### Patch Changes
+
+-   Reverted `threeDSServerTransID` check on challenge completion ([#2231](https://github.com/Adyen/adyen-web/pull/2231)) ([#2238](https://github.com/Adyen/adyen-web/pull/2238))
+
+-   Adjusted amount and currency values in the telemetry event ([#2219](https://github.com/Adyen/adyen-web/pull/2219))
+
+-   Adds new translations strings ([#2239](https://github.com/Adyen/adyen-web/pull/2239))
+
+-   Report to sr panel on payment status for the drop-in and QR code ([#2236](https://github.com/Adyen/adyen-web/pull/2236))
+
+    -   Remove the duplicated sr panel which has the same id
+
+## 5.46.0
+
+### Minor Changes
+
+-   Added isExpress configuration to PayPal component ([#2220](https://github.com/Adyen/adyen-web/pull/2220))
+
 ## 5.45.0
 
 ### Minor Changes
