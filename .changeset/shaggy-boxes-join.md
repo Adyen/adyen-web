@@ -2,6 +2,6 @@
 '@adyen/adyen-web': minor
 ---
 
-A11y improvements to add form instruction.
+A11y improvements: add form instruction to better assist cognitively impaired shoppers.
 
-By default, we always add the instruction on top of the payment form, this can be turned off by setting `showFormInstruction=false`.
+By default, we always show the instruction on top of the payment form, this can be turned off by setting `showFormInstruction=false`.
