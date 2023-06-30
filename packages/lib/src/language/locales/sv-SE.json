@@ -153,7 +153,7 @@
     "select.filter.placeholder": "Sök efter…",
     "telephoneNumber.invalid": "Ogiltigt telefonnummer",
     "qrCodeOrApp": "eller",
-    "paypal.processingPayment": "Behandlar betalning …",
+    "paypal.processingPayment": "Behandlar betalning…",
     "generateQRCode": "Generera QR-kod",
     "await.waitForConfirmation": "Väntar på bekräftelse",
     "mbway.confirmPayment": "Bekräfta din betalning i appen MB WAY",
@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Välj en betalningsmetod",
     "companyDetails.name.invalid": "Ange företagsnamnet",
     "companyDetails.registrationNumber.invalid": "Ange registreringsnumret",
-    "consent.checkbox.invalid": "Du måste godkänna villkoren"
+    "consent.checkbox.invalid": "Du måste godkänna villkoren",
+    "form.instruction": "Alla fält är obligatoriska om inte något annat anges."
 }

@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Choisissez un mode de paiement",
     "companyDetails.name.invalid": "Entrez le nom de l'entreprise",
     "companyDetails.registrationNumber.invalid": "Entrez le numéro d'identification",
-    "consent.checkbox.invalid": "Vous devez accepter les conditions générales"
+    "consent.checkbox.invalid": "Vous devez accepter les conditions générales",
+    "form.instruction": "Tous les champs sont obligatoires, sauf indication contraire."
 }

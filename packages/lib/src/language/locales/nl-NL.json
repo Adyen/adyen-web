@@ -40,7 +40,7 @@
     "idealIssuer.selectField.title": "Bank",
     "idealIssuer.selectField.placeholder": "Selecteer uw bank",
     "creditCard.success": "Betaling geslaagd",
-    "loading": "Laden....",
+    "loading": "Laden...",
     "continue": "Doorgaan",
     "continueTo": "Doorgaan naar",
     "wechatpay.timetopay": "U heeft %@ om te betalen",
@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Kies een betaalmethode",
     "companyDetails.name.invalid": "Voer de bedrijfsnaam in",
     "companyDetails.registrationNumber.invalid": "Voer het registratienummer in",
-    "consent.checkbox.invalid": "Je moet akkoord gaan met de algemene voorwaarden"
+    "consent.checkbox.invalid": "Je moet akkoord gaan met de algemene voorwaarden",
+    "form.instruction": "Alle velden zijn verplicht, tenzij anders aangegeven."
 }

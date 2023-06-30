@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "選擇付款方式",
     "companyDetails.name.invalid": "輸入公司名稱",
     "companyDetails.registrationNumber.invalid": "輸入註冊號碼",
-    "consent.checkbox.invalid": "您必須同意相關條款及細則"
+    "consent.checkbox.invalid": "您必須同意相關條款及細則",
+    "form.instruction": "除非另有標示，否則必須填寫所有欄位。"
 }
