@@ -9,7 +9,8 @@ import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 
 export class SecuredFieldsElement extends UIElement {
-    public static type = 'scheme';
+    public static type = 'customcard';
+
     public static analyticsType = 'custom-scheme';
 
     protected static defaultProps = {
@@ -31,7 +32,7 @@ export class SecuredFieldsElement extends UIElement {
         const sfBrand = this.state.selectedBrandValue || this.props.brand;
         return {
             paymentMethod: {
-                type: SecuredFieldsElement.type,
+                type: 'scheme',
                 ...this.state.data,
                 ...(sfBrand && { brand: sfBrand })
             },

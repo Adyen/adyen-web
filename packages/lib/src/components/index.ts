@@ -73,30 +73,7 @@
 //     personal_details: PersonalDetails,
 //     /** internal */
 //
-//     /** Card */
-//     amex: Card,
-//     bcmc: Bancontact,
-//     card: Card,
-//     diners: Card,
-//     discover: Card,
-//     jcb: Card,
-//     kcp: Card,
-//     maestro: Card,
-//     mc: Card,
-//     scheme: Card,
-//     storedCard: Card,
-//     securedfields: SecuredFields,
-//     threeDS2Challenge: ThreeDS2Challenge,
-//     threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
-//     visa: Card,
-//     /** Card */
-//
-//     /** Direct debit */
-//     ach: Ach,
-//     directdebit_GB: BacsDD,
-//     sepadirectdebit: Sepa,
-//     /** Direct debit */
-//
+
 //     /** Open Invoice */
 //     affirm: Affirm,
 //     afterpay: AfterPay,

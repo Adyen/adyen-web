@@ -15,6 +15,7 @@ interface EcontextElementProps extends UIElementProps {
 
 export class EcontextElement extends UIElement<EcontextElementProps> {
     public static type = 'econtext';
+    public static txVariants = ['econtext', 'econtext_atm', 'econtext_online', 'econtext_seven_eleven', 'econtext_stores'];
 
     protected static defaultProps = {
         personalDetailsRequired: true

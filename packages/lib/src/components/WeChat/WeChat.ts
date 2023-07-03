@@ -3,6 +3,7 @@ import { delay, countdownTime } from './config';
 
 class WeChatPayElement extends QRLoaderContainer {
     public static type = 'wechatpayQR';
+    public static txVariants = ['wechatpayQR', 'wechatpay'];
 
     formatProps(props) {
         return {

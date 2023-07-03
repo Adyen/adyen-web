@@ -3,8 +3,14 @@ export * from './tree-shaking-test2';
 export * from './components/index-new';
 export * from './AdyenCheckout';
 
-import * as components from './components/index-new';
-export { components };
+import * as elements from './components/index-new';
+
+export const components = Object.keys(elements).map(key => elements[key]);
+
+//
+// export { components };
+
+// export const
 
 // import { CoreOptions } from './core/types';
 // import Checkout from './core';

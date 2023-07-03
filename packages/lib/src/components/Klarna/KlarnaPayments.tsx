@@ -8,6 +8,8 @@ import { PaymentAction } from '../../types';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
+    public static txVariants = ['klarna', 'klarna_account', 'klarna_paynow'];
+
     protected static defaultProps = {
         useKlarnaWidget: false
     };

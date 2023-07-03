@@ -8,6 +8,16 @@ import CoreProvider from '../../core/Context/CoreProvider';
 export class BoletoElement extends UIElement {
     public static type = 'boletobancario';
 
+    public static txVariants = [
+        'primeiropay_boleto',
+        'boletobancario_bancodobrasil',
+        'boletobancario_bradesco',
+        'boletobancario_hsbc',
+        'boletobancario_itau',
+        'boletobancario_santander',
+        'primeiropay_boleto'
+    ];
+
     get isValid() {
         return !!this.state.isValid;
     }

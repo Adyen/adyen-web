@@ -17,9 +17,7 @@ import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
-
-    public static txVariants = ['amex', 'card', 'scheme', 'storedCard']; //etc
-
+    public static txVariants = ['amex', 'card', 'diners', 'discover', 'jcb', 'kcp', 'maestro', 'mc', 'scheme', 'storedCard', 'visa'];
     public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge];
 
     private readonly clickToPayService: IClickToPayService | null;

@@ -3,6 +3,7 @@ import { STATUS_INTERVAL, COUNTDOWN_MINUTES } from './config';
 
 class BCMCMobileElement extends QRLoaderContainer {
     public static type = 'bcmc_mobile';
+    public static txVariants = ['bcmc_mobile', 'bcmc_mobile_QR'];
 
     formatProps(props) {
         const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);

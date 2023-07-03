@@ -6,6 +6,7 @@ import { ALLOWED_COUNTRIES } from './config';
 
 export default class AfterPay extends OpenInvoiceContainer {
     public static type = 'afterpay_default';
+    public static txVariants = ['afterpay_default', 'afterpay'];
 
     formatProps(props) {
         return {

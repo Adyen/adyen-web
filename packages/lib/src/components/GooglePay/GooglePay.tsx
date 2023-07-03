@@ -10,7 +10,9 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
+    public static txVariants = ['paywithgoogle', 'googlepay'];
     public static defaultProps = defaultProps;
+
     protected googlePay = new GooglePayService(this.props);
 
     /**

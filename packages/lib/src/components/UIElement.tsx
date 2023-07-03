@@ -17,8 +17,8 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     public elementRef: UIElement;
 
     public static type = undefined;
-    public static txVariants = [];
-    public static dependencies: (typeof this)[] = [];
+    public static txVariants: string[] = [];
+    public static dependencies: any[] = []; // FIX type
 
     constructor(props: P) {
         super(props);

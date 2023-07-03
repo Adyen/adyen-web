@@ -1,4 +1,7 @@
-import { AdyenCheckout, Dropin, Card, GooglePay } from '@adyen/adyen-web';
+// import { AdyenCheckout, Dropin, Card, GooglePay } from '@adyen/adyen-web';
+
+import AdyenCheckout from '@adyen/adyen-web/auto';
+
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
@@ -8,7 +11,7 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-console.log(GooglePay);
+// console.log(GooglePay);
 
 const showComps = {
     clickToPay: true,
@@ -41,7 +44,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         ]
     };
 
-    AdyenCheckout.register(Dropin, Card, GooglePay);
+    // AdyenCheckout.register(Dropin, Card, GooglePay);
 
     window.checkout = await AdyenCheckout({
         amount,
@@ -78,7 +81,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     //
     // // Credit card with installments
     // if (showComps.card) {
-    window.card = checkout.create('dropin').mount('.card-field');
+    window.card = checkout.create('scheme').mount('.card-field');
     // }
     //
     // // Card mounted in a React app

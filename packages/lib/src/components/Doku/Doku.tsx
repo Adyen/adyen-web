@@ -7,6 +7,22 @@ import CoreProvider from '../../core/Context/CoreProvider';
 export class DokuElement extends UIElement {
     public static type = 'doku';
 
+    public static txVariants = [
+        'doku',
+        'doku_alfamart',
+        'doku_permata_lite_atm',
+        'doku_indomaret',
+        'doku_atm_mandiri_va',
+        'doku_sinarmas_va',
+        'doku_mandiri_va',
+        'doku_cimb_va',
+        'doku_danamon_va',
+        'doku_bri_va',
+        'doku_bni_va',
+        'doku_bca_va',
+        'doku_wallet'
+    ];
+
     get isValid() {
         return !!this.state.isValid;
     }

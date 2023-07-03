@@ -3,6 +3,7 @@ import { MealVoucherFields } from './components/MealVoucherFields';
 
 export class MealVoucherFRElement extends GiftcardElement {
     public static type = 'mealVoucher_FR';
+    public static txVariants = ['mealVoucher_FR_natixis', 'mealVoucher_FR_sodexo', 'mealVoucher_FR_groupeup'];
 
     constructor(props) {
         super({
