@@ -1,6 +1,6 @@
 import LogEvent from '../Services/analytics/log-event';
 import CollectId from '../Services/analytics/collect-id';
-import EventsQueue, { EventsQueueObject } from './EventsQueue';
+import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsActionObject } from './types';
 import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_LOG, ANALYTICS_PATH } from './constants';
 import { debounce } from '../../components/internal/Address/utils';
@@ -28,9 +28,9 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
 
     const logEvent = LogEvent({ loadingContext, locale });
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
-    const eventsQueue: EventsQueueObject = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
+    const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
-    const analyticsObj: AnalyticsModule = {
+    const anlModule: AnalyticsModule = {
         send: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
@@ -58,7 +58,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             // errors get sent straight away, logs almost do (with a debounce), events are stored until an error or log comes along
             if (type === ANALYTICS_ACTION_LOG || type === ANALYTICS_ACTION_ERROR) {
                 const debounceFn = type === ANALYTICS_ACTION_ERROR ? fn => fn : debounce;
-                debounceFn(analyticsObj.sendAnalyticsActions)();
+                debounceFn(anlModule.sendAnalyticsActions)();
             }
         },
 
@@ -78,11 +78,11 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                 ...data
             });
 
-            analyticsObj.addAnalyticsAction(action, aObj);
+            anlModule.addAnalyticsAction(action, aObj);
         }
     };
 
-    return analyticsObj;
+    return anlModule;
 };
 
 export default Analytics;
