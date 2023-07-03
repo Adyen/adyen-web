@@ -8,7 +8,7 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
-import { AnalyticsInitialEvent, AnalyticsObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsActionObject } from '../core/Analytics/types';
 import { EQObject } from '../core/Analytics/CAEventsQueue';
 
 export interface PaymentMethodData {
@@ -70,6 +70,7 @@ export interface AnalyticsModule {
     sendAnalyticsActions: () => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EQObject;
+    createAnalyticsAction: (a: CreateAnalyticsActionObject) => void;
 }
 
 export interface BaseElementProps {

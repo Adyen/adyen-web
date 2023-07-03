@@ -14,9 +14,7 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
-import { createAnalyticsObject } from './Analytics/utils';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { AnalyticsObject } from './Analytics/types';
 import { capitalizeFirstLetter } from '../utils/Formatters/formatters';
 
 class Core {
@@ -150,15 +148,15 @@ class Core {
 
         if (action.type) {
             // Call analytics endpoint
-            const aObj: AnalyticsObject = createAnalyticsObject({
-                class: 'log',
-                component: `${action.type}${action.subtype}`,
-                type: ANALYTICS_ACTION_STR,
-                subtype: capitalizeFirstLetter(action.type),
-                message: `${action.type}${action.subtype} is initiating`
+            this.modules.analytics.createAnalyticsAction({
+                action: 'log',
+                data: {
+                    component: `${action.type}${action.subtype}`,
+                    type: ANALYTICS_ACTION_STR,
+                    subtype: capitalizeFirstLetter(action.type),
+                    message: `${action.type}${action.subtype} is initiating`
+                }
             });
-
-            this.modules.analytics.addAnalyticsAction('log', aObj);
 
             // Create a component based on the action
             const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);

@@ -11,8 +11,6 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import { AnalyticsObject } from '../core/Analytics/types';
-import { createAnalyticsObject } from '../core/Analytics/utils';
 import { ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
@@ -57,14 +55,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             component = `${component}-${subCompID.substring(0, subCompID.indexOf('-'))}`;
         }
 
-        const aObj: AnalyticsObject = createAnalyticsObject({
-            class: 'log',
-            component,
-            type: ANALYTICS_SUBMIT_STR,
-            target: 'pay_button'
-        });
-
-        this.props.modules?.analytics.addAnalyticsAction('log', aObj);
+        this.props.modules.analytics.createAnalyticsAction({ action: 'log', data: { component, type: ANALYTICS_SUBMIT_STR, target: 'pay_button' } });
     }
 
     private onSubmit(): void {

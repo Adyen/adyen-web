@@ -1,4 +1,5 @@
 import { PaymentAmount } from '../../types';
+import { CoreOptions } from '../types';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -33,6 +34,8 @@ export interface AnalyticsOptions {
     experiments?: Experiment[];
 }
 
+export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & { analyticsContext?: string };
+
 export interface AnalyticsObject {
     timestamp: string;
     component: string;
@@ -45,6 +48,8 @@ export interface AnalyticsObject {
 }
 
 export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
+
+export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { action: ANALYTICS_ACTION };
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -59,6 +64,19 @@ export type AnalyticsConfig = {
     locale?: string;
     amount?: PaymentAmount;
     loadingContext?: string;
+};
+
+export type CreateAnalyticsActionData = {
+    component: string;
+    type: string;
+    target?: string;
+    subtype?: string;
+    message?: string;
+};
+
+export type CreateAnalyticsActionObject = {
+    action: ANALYTICS_ACTION;
+    data: CreateAnalyticsActionData;
 };
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };

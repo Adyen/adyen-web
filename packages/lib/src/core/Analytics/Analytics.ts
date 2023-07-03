@@ -1,13 +1,11 @@
 import logEvent from '../Services/analytics/log-event';
 import collectId from '../Services/analytics/collect-id';
-import { CoreOptions } from '../types';
 import CAEventsQueue, { EQObject } from './CAEventsQueue';
-import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject } from './types';
+import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsActionObject } from './types';
 import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_LOG, ANALYTICS_PATH } from './constants';
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
-
-export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & { analyticsContext: string };
+import { createAnalyticsObject } from './utils';
 
 let _checkoutAttemptId = null;
 
@@ -72,7 +70,16 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         },
 
         // Expose getter for testing purposes
-        getEventsQueue: () => _caEventsQueue
+        getEventsQueue: () => _caEventsQueue,
+
+        createAnalyticsAction: ({ action, data }: CreateAnalyticsActionObject) => {
+            const aObj: AnalyticsObject = createAnalyticsObject({
+                action,
+                ...data
+            });
+
+            analyticsObj.addAnalyticsAction(action, aObj);
+        }
     };
 
     return analyticsObj;

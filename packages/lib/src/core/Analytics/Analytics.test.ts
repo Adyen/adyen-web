@@ -5,6 +5,7 @@ import { PaymentAmount } from '../../types';
 import { createAnalyticsObject } from './utils';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../components/internal/Address/utils';
+import { ANALYTICS_ACTION } from './types';
 
 jest.mock('../Services/analytics/collect-id');
 jest.mock('../Services/analytics/log-event');
@@ -23,7 +24,7 @@ const event = {
 };
 
 const analyticsEventObj = {
-    class: 'event',
+    action: 'event' as ANALYTICS_ACTION,
     component: 'cardComponent',
     type: 'Focus',
     target: 'PAN input'
@@ -118,7 +119,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
 
         const aObj = createAnalyticsObject({
-            class: 'error',
+            action: 'error',
             component: 'threeDS2Fingerprint',
             code: 'web_704',
             errorType: 'APIError',
@@ -141,7 +142,7 @@ describe('Analytics initialisation and event queue', () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
 
         const aObj = createAnalyticsObject({
-            class: 'log',
+            action: 'log',
             component: 'scheme',
             type: 'Submit'
         });
