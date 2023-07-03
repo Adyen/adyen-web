@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 5.47.0
+
+### Minor Changes
+
+-   A11y improvements: add form instruction to better assist cognitively impaired shoppers. ([#2241](https://github.com/Adyen/adyen-web/pull/2241))
+
+    By default, we always show the instruction on top of the payment form, this can be turned off by setting `showFormInstruction=false`.
+
 ## 5.46.1
 
 ### Patch Changes
