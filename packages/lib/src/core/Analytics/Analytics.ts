@@ -33,20 +33,19 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     const _caEventsQueue: EQObject = CAEventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const analyticsObj: AnalyticsModule = {
-        send: (initialEvent: AnalyticsInitialEvent) => {
+        send: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
             if (enabled === true) {
                 if (telemetry === true && !_checkoutAttemptId) {
-                    // fetch a new checkoutAttemptId if none is already available
-                    _collectId({ ...initialEvent, ...(payload && { ...payload }) })
-                        .then(checkoutAttemptId => {
-                            _checkoutAttemptId = checkoutAttemptId;
-                        })
-                        .catch(e => {
-                            // Caught at collectId level. We do not expect this catch block to ever fire, but... just in case...
-                            console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
-                        });
+                    try {
+                        // fetch a new checkoutAttemptId if none is already available
+                        const checkoutAttemptId = await _collectId({ ...initialEvent, ...(payload && { ...payload }) });
+                        _checkoutAttemptId = checkoutAttemptId;
+                    } catch (e) {
+                        // Caught at collectId level. We do not expect this catch block to ever fire, but... just in case...
+                        console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                    }
                 }
                 // Log pixel // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options
                 _logEvent(initialEvent);
