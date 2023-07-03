@@ -55,7 +55,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             component = `${component}-${subCompID.substring(0, subCompID.indexOf('-'))}`;
         }
 
-        this.props.modules.analytics.createAnalyticsAction({ action: 'log', data: { component, type: ANALYTICS_SUBMIT_STR, target: 'pay_button' } });
+        this.props.modules?.analytics.createAnalyticsAction({ action: 'log', data: { component, type: ANALYTICS_SUBMIT_STR, target: 'pay_button' } });
     }
 
     private onSubmit(): void {

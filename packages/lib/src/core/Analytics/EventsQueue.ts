@@ -8,14 +8,14 @@ interface CAActions {
     logs: AnalyticsObject[];
 }
 
-export interface EQObject {
-    add: (t, a) => void;
-    run: (id) => Promise<any>;
+export interface EventsQueueObject {
+    add: (t: string, o: AnalyticsObject) => void;
+    run: (id: string) => Promise<any>;
     getQueue: () => CAActions;
-    _runQueue: (id) => Promise<any>;
+    runQueue: (id: string) => Promise<any>;
 }
 
-const CAEventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueProps) => {
+const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueProps): EventsQueueObject => {
     const caActions: CAActions = {
         channel: 'Web',
         events: [],
@@ -23,13 +23,13 @@ const CAEventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueu
         logs: []
     };
 
-    const eqObject: EQObject = {
+    const eqObject: EventsQueueObject = {
         add: (type, actionObj) => {
             caActions[type].push(actionObj);
         },
 
         run: (checkoutAttemptId: string) => {
-            const promise = eqObject._runQueue(checkoutAttemptId);
+            const promise = eqObject.runQueue(checkoutAttemptId);
 
             caActions.events = [];
             caActions.errors = [];
@@ -41,7 +41,7 @@ const CAEventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueu
         // Expose getter for testing purposes
         getQueue: () => caActions,
 
-        _runQueue: (checkoutAttemptId: string): Promise<any> => {
+        runQueue: (checkoutAttemptId: string): Promise<any> => {
             if (!caActions.events.length && !caActions.logs.length && !caActions.errors.length) {
                 return Promise.resolve(null);
             }
@@ -59,7 +59,7 @@ const CAEventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueu
                 })
                 .catch(() => {
                     // Caught, silently, at http level. We do not expect this catch block to ever fire, but... just in case...
-                    console.debug('### CAEventsQueue:::: send has failed');
+                    console.debug('### EventsQueue:::: send has failed');
                 });
 
             return promise;
@@ -69,4 +69,4 @@ const CAEventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueu
     return eqObject;
 };
 
-export default CAEventsQueue;
+export default EventsQueue;
