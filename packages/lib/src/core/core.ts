@@ -240,7 +240,6 @@ class Core {
             session: this.session,
             loadingContext: this.loadingContext,
             cdnContext: this.cdnContext,
-            analyticsContext: this.analyticsContext,
             createFromAction: this.createFromAction,
             _parentInstance: this
         };
