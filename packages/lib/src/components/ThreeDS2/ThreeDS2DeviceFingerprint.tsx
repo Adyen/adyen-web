@@ -22,7 +22,8 @@ export interface ThreeDS2DeviceFingerprintProps {
 }
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
-    public static type = 'threeDS2Fingerprint';
+    // TODO: Check this type if it can be threeDS2DeviceFingerprint
+    public static type = 'threeDS2DeviceFingerprint';
 
     public static defaultProps = {
         dataKey: 'fingerprintResult',

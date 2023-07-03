@@ -13,11 +13,14 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
 
     public static txVariants = ['amex', 'card', 'scheme', 'storedCard']; //etc
+
+    public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge];
 
     private readonly clickToPayService: IClickToPayService | null;
 

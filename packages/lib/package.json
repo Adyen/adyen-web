@@ -2,6 +2,7 @@
     "name": "@adyen/adyen-web",
     "type": "module",
     "sideEffects": [
+        "./auto/auto.js",
         "./dist/es/adyen.css"
     ],
     "keywords": [
@@ -22,6 +23,9 @@
         ".": {
             "import": "./dist/es/index.js",
             "require": "./dist/cjs/index.js"
+        },
+        "./auto": {
+            "import": "./auto/auto.js"
         },
         "./modern": "./dist/es.modern/index.js",
         "./dist/adyen.css": "./dist/adyen.css",
@@ -124,7 +128,8 @@
         "preact": "10.13.2"
     },
     "files": [
-        "dist",
+        "auto/**",
+        "dist/**",
         "LICENSE",
         "README"
     ],

@@ -1,10 +1,10 @@
 import Language from '../language';
 import UIElement from '../components/UIElement';
 import RiskModule from './RiskModule';
-import paymentMethods, { getComponentConfiguration } from '../components';
-// import { getComponentConfiguration } from '../components';
+// import paymentMethods, { getComponentConfiguration } from '../components';\
+import { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
-// import getComponentForAction from './ProcessResponse/PaymentAction';
+import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
@@ -15,7 +15,8 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
-// import Redirect from '../components/Redirect/Redirect';
+import registry from './core.registry';
+// import Redirect from '../components/Redirect/
 
 class Core {
     public session: Session;
@@ -26,8 +27,6 @@ class Core {
     public loadingContext?: string;
     public cdnContext?: string;
 
-    public componentsMap: Record<string, typeof UIElement>;
-
     public static readonly version = {
         version: process.env.VERSION,
         revision: process.env.COMMIT_HASH,
@@ -35,8 +34,14 @@ class Core {
         buildId: process.env.ADYEN_BUILD_ID
     };
 
+    public static registry = registry;
+
+    public static register(...items: (typeof UIElement)[]) {
+        registry.add(...items);
+    }
+
     constructor(props: CoreOptions) {
-        this.registerComponents(props.components);
+        // this.registerComponents(props.components);
 
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
@@ -56,22 +61,22 @@ class Core {
         window['adyenWebVersion'] = Core.version.version;
     }
 
-    private registerComponents(components: (typeof UIElement)[]) {
-        this.componentsMap = components.reduce((memo, component) => {
-            const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
-
-            supportedTxVariants.forEach(txVariant => {
-                memo = {
-                    ...memo,
-                    [txVariant]: component
-                };
-            });
-
-            return memo;
-        }, {});
-
-        console.log(this.componentsMap);
-    }
+    // private registerComponents(components: (typeof UIElement)[]) {
+    //     this.componentsMap = components.reduce((memo, component) => {
+    //         const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
+    //
+    //         supportedTxVariants.forEach(txVariant => {
+    //             memo = {
+    //                 ...memo,
+    //                 [txVariant]: component
+    //             };
+    //         });
+    //
+    //         return memo;
+    //     }, {});
+    //
+    //     console.log(this.componentsMap);
+    // }
 
     initialize(): Promise<this> {
         if (this.options.session) {
@@ -164,17 +169,18 @@ class Core {
             throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        // if (action.type) {
-        //     const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
-        //
-        //     const props = {
-        //         ...processGlobalOptions(this.options),
-        //         ...actionTypeConfiguration,
-        //         ...this.getPropsForComponent(options)
-        //     };
-        //
-        //     return getComponentForAction(action, props);
-        // }
+        if (action.type) {
+            const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
+
+            const props = {
+                ...processGlobalOptions(this.options),
+                ...actionTypeConfiguration,
+                ...this.getPropsForComponent(options)
+            };
+
+            return getComponentForAction(registry, action, props);
+        }
+
         return this.handleCreateError();
     }
 
@@ -314,14 +320,14 @@ class Core {
          * Usual initial point of entry to this function (PaymentMethod is a String).
          * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
          */
-        if (typeof PaymentMethod === 'string' && this.componentsMap[PaymentMethod]) {
+        if (typeof PaymentMethod === 'string' && registry.getComponent(PaymentMethod)) {
             if (PaymentMethod === 'dropin' && hasOwnProperty(options, 'paymentMethodsConfiguration')) {
                 console.warn(
                     "WARNING: You are setting a 'paymentMethodsConfiguration' object in the Dropin configuration options. This object will be ignored."
                 );
             }
 
-            return this.handleCreate(this.componentsMap[PaymentMethod], { type: PaymentMethod, ...options });
+            return this.handleCreate(registry.getComponent(PaymentMethod), { type: PaymentMethod, ...options });
         }
 
         /**

@@ -1,4 +1,4 @@
-import { AdyenCheckout, Card, GooglePay } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, GooglePay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
@@ -27,12 +27,27 @@ const disclaimerMessage = {
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
+    const paymentMethodsResponse2 = {
+        paymentMethods: [
+            {
+                name: 'Credit Card',
+                type: 'scheme',
+                brands: ['mc', 'visa']
+            },
+            {
+                name: 'GooglePay',
+                type: 'paywithgoogle'
+            }
+        ]
+    };
+
+    AdyenCheckout.register(Dropin, Card, GooglePay);
+
     window.checkout = await AdyenCheckout({
         amount,
-        components: [Card, GooglePay],
         resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
-        paymentMethodsResponse,
+        paymentMethodsResponse: paymentMethodsResponse2,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
@@ -63,11 +78,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     //
     // // Credit card with installments
     // if (showComps.card) {
-    window.card = checkout
-        .create('scheme', {
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro']
-        })
-        .mount('.card-field');
+    window.card = checkout.create('dropin').mount('.card-field');
     // }
     //
     // // Card mounted in a React app

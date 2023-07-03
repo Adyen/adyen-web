@@ -46,16 +46,16 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'no-debugger': 'warn',
         indent: 'off',
-        'import/extensions': [
-            'error',
-            'ignorePackages',
-            {
-                js: 'never',
-                jsx: 'never',
-                ts: 'never',
-                tsx: 'never'
-            }
-        ],
+        // 'import/extensions': [
+        //     'error',
+        //     'ignorePackages',
+        //     {
+        //         js: 'never',
+        //         jsx: 'never',
+        //         ts: 'never',
+        //         tsx: 'never'
+        //     }
+        // ],
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
         'max-len': [
             'error',
