@@ -13,6 +13,7 @@ export interface BacsInputProps extends UIElementProps {
     onChange: (state) => void;
     onSubmit: () => void;
     onEdit: (e, revertToEnter) => void;
+    showFormInstruction?: boolean;
 }
 
 export interface BacsDataState {

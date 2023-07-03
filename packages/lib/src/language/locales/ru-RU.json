@@ -285,5 +285,6 @@
     "paymentMethodsList.aria.label": "Выберите способ оплаты",
     "companyDetails.name.invalid": "Введите название компании",
     "companyDetails.registrationNumber.invalid": "Введите регистрационный номер",
-    "consent.checkbox.invalid": "Требуется выразить согласие с условиями"
+    "consent.checkbox.invalid": "Требуется выразить согласие с условиями",
+    "form.instruction": "Все поля обязательны для заполнения, если не указано иное."
 }

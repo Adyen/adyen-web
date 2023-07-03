@@ -2,8 +2,13 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
 import CoreProvider from '../../core/Context/CoreProvider';
+import FormInstruction from '../internal/FormInstruction';
 
 export class PersonalDetailsElement extends UIElement {
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     get data() {
         return this.state.data;
     }
@@ -15,6 +20,7 @@ export class PersonalDetailsElement extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                {this.props.showFormInstruction && <FormInstruction />}
                 <PersonalDetails
                     setComponentRef={this.setComponentRef}
                     {...this.props}
