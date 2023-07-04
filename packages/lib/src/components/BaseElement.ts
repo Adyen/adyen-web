@@ -95,7 +95,7 @@ class BaseElement<P extends BaseElementProps> {
             // Set up analytics, once
             if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
                 this.props.modules.analytics.send({
-                    containerWidth: this._node && this._node.offsetWidth,
+                    containerWidth: node && (node as HTMLElement).offsetWidth,
                     component: this.constructor['analyticsType'] ?? this.constructor['type'],
                     flavor: 'components'
                 });

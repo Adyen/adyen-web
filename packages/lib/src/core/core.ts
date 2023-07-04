@@ -151,10 +151,10 @@ class Core {
             this.modules.analytics.createAnalyticsAction({
                 action: 'log',
                 data: {
-                    component: `${action.type}${action.subtype}`,
+                    component: `${action.type}${action.subtype ?? ''}`,
                     type: ANALYTICS_ACTION_STR,
                     subtype: capitalizeFirstLetter(action.type),
-                    message: `${action.type}${action.subtype} is initiating`
+                    message: `${action.type}${action.subtype ?? ''} is initiating`
                 }
             });
 

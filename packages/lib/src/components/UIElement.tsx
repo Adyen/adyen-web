@@ -47,7 +47,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(obj = null) {
+    protected submitAnalytics(obj?) {
         // Call analytics endpoint
         let component = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-'));
         if (component === 'dropin') {
