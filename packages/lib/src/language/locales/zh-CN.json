@@ -287,5 +287,6 @@
     "paymentMethodsList.aria.label": "选择支付方式",
     "companyDetails.name.invalid": "输入公司名称",
     "companyDetails.registrationNumber.invalid": "输入注册号",
-    "consent.checkbox.invalid": "您必须同意条款和细则"
+    "consent.checkbox.invalid": "您必须同意条款和细则",
+    "form.instruction": "除非另有标记，否则所有字段均为必填项。"
 }

@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Valitse maksutapa",
     "companyDetails.name.invalid": "Syötä yrityksen nimi",
     "companyDetails.registrationNumber.invalid": "Syötä rekisterinumero",
-    "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot"
+    "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot",
+    "form.instruction": "Kaikki kentät ovat pakollisia, ellei toisin ole merkitty."
 }

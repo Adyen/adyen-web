@@ -18,6 +18,10 @@ interface BacsElementData {
 class BacsElement extends UIElement {
     public static type = 'directdebit_GB';
 
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     formatData(): BacsElementData {
         return {
             paymentMethod: {

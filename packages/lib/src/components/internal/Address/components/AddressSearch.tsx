@@ -70,7 +70,7 @@ export default function AddressSearch({ onAddressLookup, onSelect, onManualAddre
     return (
         <Fragment>
             <div className={'adyen-checkout__address-search adyen-checkout__field-group'}>
-                <Field label={i18n.get('address')} classNameModifiers={['address-search']} errorMessage={errorMessage}>
+                <Field label={i18n.get('address')} classNameModifiers={['address-search']} errorMessage={errorMessage} name={'address-search'}>
                     {renderFormField('select', {
                         name: 'address-search',
                         className: 'adyen-checkout__address-search__dropdown',

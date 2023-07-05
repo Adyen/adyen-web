@@ -11,6 +11,7 @@ import './BacsInput.scss';
 
 import useForm from '../../../utils/useForm';
 import useImage from '../../../core/Context/useImage';
+import FormInstruction from '../../internal/FormInstruction';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -55,6 +56,7 @@ function BacsInput(props: BacsInputProps) {
                 'adyen-checkout__bacs--confirm': status === CONFIRM_STATE || status === 'loading'
             })}
         >
+            {props.showFormInstruction && <FormInstruction />}
             {status == CONFIRM_STATE && (
                 <div
                     className={classNames({

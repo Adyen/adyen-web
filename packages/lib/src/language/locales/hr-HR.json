@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Odaberi način plaćanja",
     "companyDetails.name.invalid": "Unesite naziv tvrtke",
     "companyDetails.registrationNumber.invalid": "Unesite registracijski broj",
-    "consent.checkbox.invalid": "Morate se složiti s odredbama i uvjetima"
+    "consent.checkbox.invalid": "Morate se složiti s odredbama i uvjetima",
+    "form.instruction": "Sva su polja obavezna, osim ako nije drugačije označeno."
 }

@@ -114,6 +114,7 @@ export interface CardInputProps {
     setComponentRef?: (ref) => void;
     showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
+    showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
     showWarnings?: boolean;

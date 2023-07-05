@@ -64,6 +64,12 @@ export interface CardElementProps extends UIElementProps {
      */
     showBrandIcon?: boolean;
 
+    /**
+     * Show/hide the sentence 'All fields are required unless marked otherwise.' on the top of the form
+     * @defaultValue `true`
+     */
+    showFormInstruction?: boolean;
+
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 

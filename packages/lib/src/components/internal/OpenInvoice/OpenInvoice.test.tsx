@@ -87,4 +87,9 @@ describe('OpenInvoice', () => {
         wrapper.update();
         expect(payButton).toHaveBeenCalledWith(expect.objectContaining({ status }));
     });
+
+    test('should show FormInstruction', () => {
+        const wrapper = getWrapper({ showFormInstruction: true });
+        expect(wrapper.find('FormInstruction')).toHaveLength(1);
+    });
 });
