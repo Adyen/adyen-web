@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Výber spôsobu platby",
     "companyDetails.name.invalid": "Zadajte názov spoločnosti",
     "companyDetails.registrationNumber.invalid": "Zadajte registračné číslo",
-    "consent.checkbox.invalid": "Musíte súhlasiť s obchodnými podmienkami"
+    "consent.checkbox.invalid": "Musíte súhlasiť s obchodnými podmienkami",
+    "form.instruction": "Všetky polia sú povinné, ak nie je označené inak."
 }

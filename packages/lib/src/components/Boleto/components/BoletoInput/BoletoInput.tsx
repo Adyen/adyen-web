@@ -9,6 +9,7 @@ import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { ComponentMethodsRef } from '../../../types';
+import FormInstruction from '../../../internal/FormInstruction';
 
 function BoletoInput(props) {
     const { i18n } = useCoreContext();
@@ -69,8 +70,12 @@ function BoletoInput(props) {
 
     const buttonModifiers = [...(!props.personalDetailsRequired && !props.billingAddressRequired && !props.showEmailAddress ? ['standalone'] : [])];
 
+    const showFormInstruction = props.showFormInstruction && (props.personalDetailsRequired || props.billingAddressRequired);
+
     return (
         <div className="adyen-checkout__boleto-input__field">
+            {showFormInstruction && <FormInstruction />}
+
             {props.personalDetailsRequired && (
                 <BrazilPersonalDetail i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} valid={valid} />
             )}
@@ -110,7 +115,8 @@ BoletoInput.defaultProps = {
     data: {},
     showEmailAddress: true,
     personalDetailsRequired: true,
-    billingAddressRequired: true
+    billingAddressRequired: true,
+    showFormInstruction: true
 };
 
 export default BoletoInput;

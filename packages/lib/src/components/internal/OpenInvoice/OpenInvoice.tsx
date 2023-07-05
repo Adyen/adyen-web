@@ -30,6 +30,7 @@ import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../c
 import { usePrevious } from '../../../utils/hookUtils';
 import { getArrayDifferences } from '../../../utils/arrayUtils';
 import Field from '../FormFields/Field';
+import FormInstruction from '../FormInstruction';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -236,6 +237,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
     return (
         <div className="adyen-checkout__open-invoice">
+            {props.showFormInstruction && <FormInstruction />}
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
                     data={props.data.companyDetails}

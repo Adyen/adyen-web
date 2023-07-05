@@ -246,7 +246,7 @@
     "onlineBanking.termsAndConditions": "Ao continuar, concorda com os %#termos e condições%#",
     "onlineBankingPL.termsAndConditions": "Ao continuar, concorda com o %#regulamento%# e a %#obrigação de informação%# da Przelewy24",
     "ctp.loading.poweredByCtp": "Fornecido pelo Click to Pay",
-    "ctp.loading.intro": "Estamos a verificar se tem algum cartão Click to Pay guardado ...",
+    "ctp.loading.intro": "Estamos a verificar se tem algum cartão Click to Pay guardado...",
     "ctp.login.title": "Continuar para o Click to Pay",
     "ctp.login.subtitle": "Introduza o endereço de e-mail associado ao Click to Pay para continuar.",
     "ctp.login.inputLabel": "E-mail",
@@ -290,5 +290,6 @@
     "paymentMethodsList.aria.label": "Escolha um método de pagamento",
     "companyDetails.name.invalid": "Insira o nome da empresa",
     "companyDetails.registrationNumber.invalid": "Insira o número de registo",
-    "consent.checkbox.invalid": "Tem de aceitar os termos e condições"
+    "consent.checkbox.invalid": "Tem de aceitar os termos e condições",
+    "form.instruction": "Todos os campos são obrigatórios, a menos que assinalados em contrário."
 }

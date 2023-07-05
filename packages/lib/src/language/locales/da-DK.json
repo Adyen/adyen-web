@@ -154,7 +154,7 @@
     "select.filter.placeholder": "Søg...",
     "telephoneNumber.invalid": "Ugyldigt telefonnummer",
     "qrCodeOrApp": "eller",
-    "paypal.processingPayment": "Behandler betaling ...",
+    "paypal.processingPayment": "Behandler betaling...",
     "generateQRCode": "Generér QR-kode",
     "await.waitForConfirmation": "Venter på bekræftelse",
     "mbway.confirmPayment": "Bekræft din betaling på appen MB WAY",
@@ -245,7 +245,7 @@
     "onlineBanking.termsAndConditions": "Ved at fortsætte accepterer du %#vilkår og betingelser%#",
     "onlineBankingPL.termsAndConditions": "Hvis du fortsætter, accepterer du %#regulativer%# og %#informationspligten%# for Przelewy24",
     "ctp.loading.poweredByCtp": "Drevet af Click to Pay",
-    "ctp.loading.intro": "Vi tjekker, om du har gemte kort med Click to Pay ...",
+    "ctp.loading.intro": "Vi tjekker, om du har gemte kort med Click to Pay...",
     "ctp.login.title": "Fortsæt med Click to Pay",
     "ctp.login.subtitle": "Indtast den e-mailadresse, der er knyttet til Click to Pay, for at fortsætte.",
     "ctp.login.inputLabel": "E-mail",
@@ -289,5 +289,6 @@
     "paymentMethodsList.aria.label": "Vælg en betalingsmetode",
     "companyDetails.name.invalid": "Indtast virksomhedsnavnet",
     "companyDetails.registrationNumber.invalid": "Indtast registreringsnummeret",
-    "consent.checkbox.invalid": "Du skal acceptere vilkår og betingelser"
+    "consent.checkbox.invalid": "Du skal acceptere vilkår og betingelser",
+    "form.instruction": "Alle felter er obligatoriske, medmindre andet er markeret."
 }

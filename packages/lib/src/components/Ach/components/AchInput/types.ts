@@ -61,4 +61,5 @@ export interface ACHInputProps {
     type?: string;
     forceCompat?: boolean;
     setComponentRef?: (ref) => void;
+    showFormInstruction?: boolean;
 }

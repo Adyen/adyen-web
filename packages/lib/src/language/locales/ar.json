@@ -289,5 +289,6 @@
     "paymentMethodsList.aria.label": "اختر طريقة دفع",
     "companyDetails.name.invalid": "أدخل اسم الشركة",
     "companyDetails.registrationNumber.invalid": "أدخل رقم التسجيل",
-    "consent.checkbox.invalid": "يجب أن توافق على الشروط والأحكام"
+    "consent.checkbox.invalid": "يجب أن توافق على الشروط والأحكام",
+    "form.instruction": "جميع الحقول مطلوبة ما لم يتم وضع علامة خلاف ذلك."
 }

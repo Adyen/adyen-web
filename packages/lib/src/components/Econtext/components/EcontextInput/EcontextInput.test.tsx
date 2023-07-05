@@ -35,4 +35,41 @@ describe('Econtext: EcontextInput', () => {
         );
         expect(wrapper.contains(<button className="pay-button" />)).toBeFalsy();
     });
+
+    test('hide form instruction if personalDetailsRequired sets to false', () => {
+        const wrapper = shallow(
+            <EcontextInput
+                personalDetailsRequired={false}
+                onChange={jest.fn()}
+                onSubmit={jest.fn()}
+                payButton={() => <button className="pay-button" />}
+            />
+        );
+        expect(wrapper.find('FormInstruction')).toHaveLength(0);
+    });
+
+    test('hide form instruction if showFormInstruction sets to false', () => {
+        const wrapper = shallow(
+            <EcontextInput
+                showFormInstruction={false}
+                onChange={jest.fn()}
+                onSubmit={jest.fn()}
+                payButton={() => <button className="pay-button" />}
+            />
+        );
+        expect(wrapper.find('FormInstruction')).toHaveLength(0);
+    });
+
+    test('show form instruction if personalDetailsRequired and showFormInstruction set to true', () => {
+        const wrapper = shallow(
+            <EcontextInput
+                personalDetailsRequired
+                showFormInstruction
+                onChange={jest.fn()}
+                onSubmit={jest.fn()}
+                payButton={() => <button className="pay-button" />}
+            />
+        );
+        expect(wrapper.find('FormInstruction')).toHaveLength(1);
+    });
 });

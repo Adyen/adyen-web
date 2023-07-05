@@ -11,13 +11,15 @@ interface EcontextElementProps extends UIElementProps {
     reference?: string;
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
+    showFormInstruction?: boolean;
 }
 
 export class EcontextElement extends UIElement<EcontextElementProps> {
     public static type = 'econtext';
 
     protected static defaultProps = {
-        personalDetailsRequired: true
+        personalDetailsRequired: true,
+        showFormInstruction: true
     };
 
     get isValid() {

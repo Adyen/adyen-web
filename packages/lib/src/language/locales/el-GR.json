@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Επιλέξτε έναν τρόπο πληρωμής",
     "companyDetails.name.invalid": "Εισαγάγετε το όνομα της εταιρείας",
     "companyDetails.registrationNumber.invalid": "Εισαγάγετε τον αριθμό μητρώου",
-    "consent.checkbox.invalid": "Πρέπει να συμφωνήσετε με τους όρους και τις προϋποθέσεις"
+    "consent.checkbox.invalid": "Πρέπει να συμφωνήσετε με τους όρους και τις προϋποθέσεις",
+    "form.instruction": "Όλα τα πεδία είναι υποχρεωτικά, εκτός εάν επισημαίνεται διαφορετικά."
 }

@@ -36,6 +36,7 @@ export class CardElement extends UIElement<CardElementProps> {
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
+        showFormInstruction: true,
         _disableClickToPay: false
     };
 
