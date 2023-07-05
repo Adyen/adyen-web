@@ -1,22 +1,30 @@
 import Language from '../language';
 import UIElement from '../components/UIElement';
 import RiskModule from './RiskModule';
-// import paymentMethods, { getComponentConfiguration } from '../components';\
-import { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
-import { PaymentMethods, PaymentMethodOptions } from '../types';
+// import { PaymentMethods, PaymentMethodOptions } from '../types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry from './core.registry';
-// import Redirect from '../components/Redirect/
+
+import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
+
+export const getComponentConfiguration = (type: string, componentsConfig = {}, isStoredCard = false) => {
+    let pmType = type;
+    if (type === 'scheme') {
+        pmType = isStoredCard ? 'storedCard' : 'card';
+    }
+
+    return componentsConfig[pmType] || {};
+};
 
 class Core {
     public session: Session;
@@ -36,13 +44,11 @@ class Core {
 
     public static registry = registry;
 
-    public static register(...items: (typeof UIElement)[]) {
+    public static register<T extends UIElement>(...items: (new (props) => T)[]) {
         registry.add(...items);
     }
 
     constructor(props: CoreOptions) {
-        // this.registerComponents(props.components);
-
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 
@@ -60,23 +66,6 @@ class Core {
         // Expose version number for npm builds
         window['adyenWebVersion'] = Core.version.version;
     }
-
-    // private registerComponents(components: (typeof UIElement)[]) {
-    //     this.componentsMap = components.reduce((memo, component) => {
-    //         const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
-    //
-    //         supportedTxVariants.forEach(txVariant => {
-    //             memo = {
-    //                 ...memo,
-    //                 [txVariant]: component
-    //             };
-    //         });
-    //
-    //         return memo;
-    //     }, {});
-    //
-    //     console.log(this.componentsMap);
-    // }
 
     initialize(): Promise<this> {
         if (this.options.session) {
@@ -143,6 +132,8 @@ class Core {
      *
      * @returns new UIElement
      */
+    // public create<T extends keyof TxVariantConfigurationMap>(paymentMethod: T, options?: PaymentMethodConfiguration<T>);
+
     public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
     public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
     public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;

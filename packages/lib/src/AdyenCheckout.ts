@@ -1,6 +1,6 @@
-// if (process.env.NODE_ENV === 'development') {
-//     require('preact/debug');
-// }
+if (process.env.NODE_ENV === 'development') {
+    require('preact/debug');
+}
 
 import { CoreOptions } from './core/types';
 import Checkout from './core';
@@ -12,7 +12,7 @@ async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
 }
 
 // this might break tree shaking? to be checked
-AdyenCheckout.register = (...items: (typeof UIElement)[]) => {
+AdyenCheckout.register = <T extends UIElement>(...items: (new (props) => T)[]) => {
     Checkout.register(...items);
 };
 

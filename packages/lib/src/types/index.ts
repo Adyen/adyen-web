@@ -1,4 +1,3 @@
-import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
 import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
@@ -269,16 +268,16 @@ export interface BrowserInfo {
     timeZoneOffset: number;
 }
 
-/**
- * Available components
- */
-export type PaymentMethods = typeof paymentMethods;
-
-/**
- * Options for a component
- */
-// @ts-ignore fix later
-export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
+// /**
+//  * Available components
+//  */
+// export type PaymentMethods = typeof paymentMethods;
+//
+// /**
+//  * Options for a component
+//  */
+// // @ts-ignore fix later
+// export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
 
 /**
  * Visibility options for a fieldset

@@ -12,7 +12,7 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 
-export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
+export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
     public elementRef: UIElement;
 

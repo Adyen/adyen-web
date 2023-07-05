@@ -1,5 +1,5 @@
 import { CustomTranslations, Locales } from '../language/types';
-import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
+import { PaymentActionsType, PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -8,6 +8,8 @@ import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
 import { SRPanelProps } from './Errors/types';
+
+import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
 
 type PromiseResolve = typeof Promise.resolve;
 
