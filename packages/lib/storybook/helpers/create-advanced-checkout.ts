@@ -30,13 +30,13 @@ async function createAdvancedFlowCheckout({
         showPayButton,
         paymentMethodsConfiguration,
 
-        onSubmit: async (state, component) => {
+        onSubmit: (state, component) => {
             const paymentData = {
                 amount: paymentAmount,
                 countryCode,
                 shopperLocale
             };
-            await handleSubmit(state, component, checkout, paymentData);
+            handleSubmit(state, component, checkout, paymentData);
         },
 
         onChange: (state, component) => {
@@ -48,14 +48,23 @@ async function createAdvancedFlowCheckout({
         },
 
         onBalanceCheck: async (resolve, reject, data) => {
-            resolve(await checkBalance(data));
+            try {
+                const res = await checkBalance(data);
+                resolve(res);
+            } catch (e) {
+                reject(e);
+            }
         },
 
         onOrderRequest: async (resolve, reject) => {
-            resolve(await createOrder(paymentAmount));
+            try {
+                const order = await createOrder(paymentAmount);
+                resolve(order);
+            } catch (e) {
+                reject(e);
+            }
         },
 
-        // @ts-ignore ignore
         onOrderCancel: async order => {
             await cancelOrder(order);
             await checkout.update({
