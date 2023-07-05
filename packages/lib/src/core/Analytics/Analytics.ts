@@ -30,6 +30,22 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
+    const addAnalyticsAction = (type: ANALYTICS_ACTION, obj: AnalyticsObject) => {
+        eventsQueue.add(`${type}s`, obj);
+
+        /**
+         * The logic is:
+         *  - events are stored until a log or error comes along
+         *  - errors get sent straightaway
+         *  - logs also get sent straightaway... but... tests with the 3DS2 process show that many logs can happen almost at the same time,
+         *  so instead of making (up to 4) sequential api calls we "batch" them using debounce
+         */
+        if (type === ANALYTICS_ACTION_LOG || type === ANALYTICS_ACTION_ERROR) {
+            const debounceFn = type === ANALYTICS_ACTION_ERROR ? fn => fn : debounce;
+            debounceFn(anlModule.sendAnalyticsActions)();
+        }
+    };
+
     const anlModule: AnalyticsModule = {
         send: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
@@ -45,22 +61,14 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                     }
                 }
-                // Log pixel // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options
+                // Log pixel
+                // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
+                //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
                 logEvent(initialEvent);
             }
         },
 
         getCheckoutAttemptId: (): string => capturedCheckoutAttemptId,
-
-        addAnalyticsAction: (type: ANALYTICS_ACTION, obj: AnalyticsObject) => {
-            eventsQueue.add(`${type}s`, obj);
-
-            // errors get sent straight away, logs almost do (with a debounce), events are stored until an error or log comes along
-            if (type === ANALYTICS_ACTION_LOG || type === ANALYTICS_ACTION_ERROR) {
-                const debounceFn = type === ANALYTICS_ACTION_ERROR ? fn => fn : debounce;
-                debounceFn(anlModule.sendAnalyticsActions)();
-            }
-        },
 
         sendAnalyticsActions: () => {
             if (capturedCheckoutAttemptId) {
@@ -78,7 +86,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                 ...data
             });
 
-            anlModule.addAnalyticsAction(action, aObj);
+            addAnalyticsAction(action, aObj);
         }
     };
 

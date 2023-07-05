@@ -48,7 +48,6 @@ describe('Analytics initialisation and event queue', () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
         expect(analytics.send).not.toBe(null);
         expect(analytics.getCheckoutAttemptId).not.toBe(null);
-        expect(analytics.addAnalyticsAction).not.toBe(null);
         expect(analytics.sendAnalyticsActions).not.toBe(null);
         expect(collectIdPromiseMock).toHaveLength(0);
     });
@@ -104,7 +103,7 @@ describe('Analytics initialisation and event queue', () => {
         // no message prop for events
         expect(aObj.message).toBe(undefined);
 
-        analytics.addAnalyticsAction('event', aObj);
+        analytics.createAnalyticsAction({ action: 'event', data: aObj });
 
         // event object should not be sent immediately
         expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
@@ -114,7 +113,7 @@ describe('Analytics initialisation and event queue', () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
 
         const evObj = createAnalyticsObject(analyticsEventObj);
-        analytics.addAnalyticsAction('event', evObj);
+        analytics.createAnalyticsAction({ action: 'event', data: evObj });
 
         expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
 
@@ -131,7 +130,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(aObj.errorType).toEqual('APIError');
         expect(aObj.message).not.toBe(undefined);
 
-        analytics.addAnalyticsAction('error', aObj);
+        analytics.createAnalyticsAction({ action: 'error', data: aObj });
 
         // error object should be sent immediately, sending any events as well
         expect(analytics.getEventsQueue().getQueue().errors.length).toBe(0);
@@ -154,7 +153,7 @@ describe('Analytics initialisation and event queue', () => {
         // no message prop for a log with type 'Submit'
         expect(aObj.message).toBe(undefined);
 
-        analytics.addAnalyticsAction('log', aObj);
+        analytics.createAnalyticsAction({ action: 'log', data: aObj });
 
         // log object should be sent almost immediately (after a debounce interval)
         await wait(DEFAULT_DEBOUNCE_TIME_MS);

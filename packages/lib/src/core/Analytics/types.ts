@@ -45,6 +45,7 @@ export interface AnalyticsObject {
     type?: string;
     subtype?: string;
     target?: string;
+    metadata?: Record<string, any>;
 }
 
 export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
@@ -66,13 +67,7 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type CreateAnalyticsActionData = {
-    component: string;
-    type: string;
-    target?: string;
-    subtype?: string;
-    message?: string;
-};
+export type CreateAnalyticsActionData = Omit<AnalyticsObject, 'timestamp'>;
 
 export type CreateAnalyticsActionObject = {
     action: ANALYTICS_ACTION;

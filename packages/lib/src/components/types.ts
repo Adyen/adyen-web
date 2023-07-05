@@ -8,7 +8,7 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
-import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsActionObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, CreateAnalyticsActionObject } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 
 export interface PaymentMethodData {
@@ -66,7 +66,6 @@ export interface RawPaymentResponse extends PaymentResponse {
 
 export interface AnalyticsModule {
     send: (a: AnalyticsInitialEvent) => Promise<any>;
-    addAnalyticsAction: (s: string, o: AnalyticsObject) => void;
     sendAnalyticsActions: () => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
