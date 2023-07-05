@@ -2,7 +2,8 @@ import type { StorybookConfig } from '@storybook/preact-vite';
 import { mergeConfig, loadEnv } from 'vite';
 import * as path from 'path';
 import version = require('../config/version');
-import getRollupDevConfig from '../config/rollup.dev.config';
+import eslint from '@rollup/plugin-eslint';
+import stylelint from 'vite-plugin-stylelint';
 const currentVersion = version();
 
 const config: StorybookConfig = {
@@ -24,7 +25,6 @@ const config: StorybookConfig = {
     },
     async viteFinal(config, options) {
         const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
-        const rollupDevConfig = (await getRollupDevConfig())[0];
 
         return mergeConfig(config, {
             define: {
@@ -41,7 +41,19 @@ const config: StorybookConfig = {
                     usePolling: true
                 }
             },
-            build: { rollupOptions: { ...rollupDevConfig } }
+            plugins: [
+                // Plugins that are part of Vite. These plugins are unneeded:
+                // resolve, json, scss.
+                stylelint(),
+                {
+                    ...eslint({
+                        include: ['./src/**'],
+                        exclude: ['./src/**/*.json', './src/**/*.scss']
+                    }),
+                    enforce: 'pre',
+                    apply: 'serve'
+                }
+            ]
         });
     }
 };

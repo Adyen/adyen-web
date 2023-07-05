@@ -71,7 +71,7 @@ export async function getPlugins(analyze = isBundleAnalyzer) {
         postcss({
             use: ['sass'],
             config: {
-                path: 'config/postcss.config.js'
+                path: '../postcss.config.js'
             },
             sourceMap: true,
             inject: false,
