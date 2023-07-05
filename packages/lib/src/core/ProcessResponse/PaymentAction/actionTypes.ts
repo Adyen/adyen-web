@@ -1,14 +1,14 @@
-// import { getComponent } from '../../../components';
 import { PaymentAction } from '../../../types';
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
+import type { IRegistry } from '../../core.registry';
 
-const createComponent = (registry, componentType, props) => {
+const createComponent = (registry: IRegistry, componentType, props) => {
     const Element = registry.getComponent(componentType);
     return new Element({ ...props, id: `${componentType}-${uuid()}` });
 };
 
-const getActionHandler = statusType => (registry, action: PaymentAction, props) => {
+const getActionHandler = statusType => (registry: IRegistry, action: PaymentAction, props) => {
     const config = {
         ...props,
         ...action,

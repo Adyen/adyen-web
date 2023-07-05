@@ -1,17 +1,12 @@
 {
     "name": "@adyen/adyen-web",
+    "version": "5.46.0",
+    "license": "MIT",
+    "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
     "sideEffects": [
         "./auto/auto.js",
         "./dist/es/adyen.css"
-    ],
-    "keywords": [
-        "adyen",
-        "adyen-web",
-        "checkout",
-        "payment",
-        "payments",
-        "components"
     ],
     "main": "dist/cjs/index.cjs",
     "module": "dist/es/index.js",
@@ -28,16 +23,26 @@
             "import": "./auto/auto.js",
             "require": "./auto/auto.cjs"
         },
-        "./styles/adyen.css": "./dist/es/adyen.css",
-        "./package.json": "./package.json"
+        "./styles/adyen.css": "./dist/es/adyen.css"
     },
-    "version": "5.46.0",
-    "license": "MIT",
-    "homepage": "https://docs.adyen.com/checkout",
+    "keywords": [
+        "adyen",
+        "adyen-web",
+        "checkout",
+        "payment",
+        "payments",
+        "components"
+    ],
     "repository": "github:Adyen/adyen-web",
     "bugs": {
         "url": "https://support.adyen.com/"
     },
+    "files": [
+        "auto/**",
+        "dist/**",
+        "LICENSE",
+        "README"
+    ],
     "scripts": {
         "start": "npm run dev-server",
         "dev-server": "rollup --watch --config config/rollup.config.new.js",
@@ -75,7 +80,7 @@
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-replace": "^5.0.1",
-        "@rollup/plugin-terser": "^0.4.3",
+        "@rollup/plugin-terser": "0.4.3",
         "@swc/core": "^1.3.66",
         "@testing-library/jest-dom": "5.16.5",
         "@testing-library/preact": "3.2.3",
@@ -110,7 +115,6 @@
         "rollup-plugin-postcss": "4.0.2",
         "rollup-plugin-stylelint": "1.0.0",
         "rollup-plugin-swc3": "^0.8.2",
-        "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-visualizer": "^5.8.3",
         "sass": "1.62.1",
         "stylelint": "15.6.0",
@@ -128,12 +132,6 @@
         "core-js-pure": "^3.25.3",
         "preact": "10.13.2"
     },
-    "files": [
-        "auto/**",
-        "dist/**",
-        "LICENSE",
-        "README"
-    ],
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": "eslint",
         "*.{scss,css}": "stylelint",

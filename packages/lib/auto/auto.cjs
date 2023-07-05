@@ -3,4 +3,5 @@ const { AdyenCheckout, components } = adyenCheckout;
 
 AdyenCheckout.register(...components);
 
-module.exports = Object.assign(AdyenCheckout, adyenCheckout); // Perhaps object assign not needed?
+// TODO: Check if Object.assign is needed
+module.exports = Object.assign(AdyenCheckout, adyenCheckout);

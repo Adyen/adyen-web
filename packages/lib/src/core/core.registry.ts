@@ -4,7 +4,12 @@ function assertIsTypeofUIElement(item: any): item is typeof UIElement {
     return typeof UIElement === typeof item;
 }
 
-class Registry {
+export interface IRegistry {
+    add(...items: (new (props) => UIElement)[]): void;
+    getComponent(type: string): new (props) => UIElement;
+}
+
+class Registry implements IRegistry {
     public components: (new (props) => UIElement)[] = [];
 
     public add<T extends UIElement>(...items: (new (props) => T)[]) {

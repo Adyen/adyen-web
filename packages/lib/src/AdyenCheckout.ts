@@ -11,7 +11,6 @@ async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
     return await checkout.initialize();
 }
 
-// this might break tree shaking? to be checked
 AdyenCheckout.register = <T extends UIElement>(...items: (new (props) => T)[]) => {
     Checkout.register(...items);
 };

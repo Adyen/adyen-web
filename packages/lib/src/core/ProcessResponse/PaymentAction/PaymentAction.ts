@@ -1,8 +1,8 @@
 import actionTypes from './actionTypes';
 import { PaymentAction } from '../../../types';
-import Registry from '../../core.registry';
+import type { IRegistry } from '../../core.registry';
 
-export function getComponentForAction(registry: typeof Registry, action: PaymentAction, props = {}) {
+export function getComponentForAction(registry: IRegistry, action: PaymentAction, props = {}) {
     const nextAction = actionTypes[action.type];
 
     if (nextAction && typeof nextAction === 'function') {

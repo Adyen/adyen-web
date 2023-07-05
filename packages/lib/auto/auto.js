@@ -2,5 +2,6 @@ import { AdyenCheckout, components } from '../dist/es/index.js';
 
 AdyenCheckout.register(...components);
 
-export * from '../dist/es/index.js'; // Perhaps not needed?
+// TODO: Check if exporting all is needed
+export * from '../dist/es/index.js';
 export default AdyenCheckout;

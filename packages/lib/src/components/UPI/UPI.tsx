@@ -18,7 +18,9 @@ enum TX_VARIANT {
 
 class UPI extends UIElement<UPIElementProps> {
     public static type = 'upi';
-    public static txVariants = ['upi', 'upi_qr', 'upi_collect']; // Might not need to map the subtypes
+
+    // TODO: Check if sub-types are needed
+    public static txVariants = ['upi', 'upi_qr', 'upi_collect'];
 
     private useQrCodeVariant: boolean;
 

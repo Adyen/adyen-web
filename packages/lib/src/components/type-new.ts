@@ -232,5 +232,4 @@ export type PaymentMethods = typeof componentsMap;
 /**
  * Options for a component
  */
-// @ts-ignore fix later
 export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];

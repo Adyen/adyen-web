@@ -12,12 +12,21 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 
-export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
+export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
     public elementRef: UIElement;
 
     public static type = undefined;
+
+    /**
+     * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
+     */
     public static txVariants: string[] = [];
+
+    /**
+     * Defines the extra dependencies (Components) that it is needed for the specific UIElement
+     * Ex: Card depends on ThreeDS components
+     */
     public static dependencies: any[] = []; // FIX type
 
     constructor(props: P) {
