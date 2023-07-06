@@ -5,7 +5,7 @@ import CoreProvider from '../../../core/Context/CoreProvider';
 import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
 import { AddressSpecifications } from '../../internal/Address/types';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
-import { Redirect } from '../../index';
+import Redirect from '../../Redirect';
 
 export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
     consentCheckboxLabel?: h.JSX.Element;

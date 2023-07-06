@@ -3,6 +3,7 @@ dist
 coverage
 
 packages/lib/package
+packages/lib/package2
 
 *.log*
 .env

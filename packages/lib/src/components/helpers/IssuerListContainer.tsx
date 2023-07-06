@@ -9,7 +9,7 @@ import Language from '../../language/Language';
 import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import { Redirect } from '../index';
+import Redirect from '../Redirect';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
