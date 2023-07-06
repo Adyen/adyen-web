@@ -28,31 +28,31 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
-    // SEPA Bank Transfer
+    // // SEPA Bank Transfer
     window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
-    window.bankTransferResult = checkout
-        .createFromAction({
-            paymentMethodType: 'bankTransfer_IBAN',
-            totalAmount: {
-                currency: 'EUR',
-                value: 1000
-            },
-            beneficiary: 'Adyen',
-            iban: 'NL13TEST0123456789',
-            bic: 'TESTNL02',
-            reference: '991-6068-3254-7284F',
-            type: 'bankTransfer',
-            shopperEmail: 'shopper@email.com'
-        })
-        .mount('.bankTransfer-result-field');
-
-    // MBWay
+    // window.bankTransferResult = checkout
+    //     .createFromAction({
+    //         paymentMethodType: 'bankTransfer_IBAN',
+    //         totalAmount: {
+    //             currency: 'EUR',
+    //             value: 1000
+    //         },
+    //         beneficiary: 'Adyen',
+    //         iban: 'NL13TEST0123456789',
+    //         bic: 'TESTNL02',
+    //         reference: '991-6068-3254-7284F',
+    //         type: 'bankTransfer',
+    //         shopperEmail: 'shopper@email.com'
+    //     })
+    //     .mount('.bankTransfer-result-field');
+    //
+    // // MBWay
     window.mbway = checkout.create('mbway').mount('.mbway-field');
-
-    // Klarna Widget
+    //
+    // // Klarna Widget
     window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
-
-    // ACH
+    //
+    // // ACH
     window.ach = checkout
         .create('ach', {
             // holderNameRequired: false,
@@ -75,28 +75,28 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             }
         })
         .mount('.ach-field');
-
-    // SEPA Direct Debit
+    //
+    // // SEPA Direct Debit
     window.sepa = checkout
         .create('sepadirectdebit', {
             countryCode: 'NL',
             holderName: true
         })
         .mount('.sepa-field');
-
-    // Qiwi
+    //
+    // // Qiwi
     window.qiwi = checkout.create('qiwiwallet', {}).mount('.qiwi-field');
-
-    // SEPA Direct Debit
+    //
+    // // SEPA Direct Debit
     window.vipps = checkout.create('vipps').mount('.vipps-field');
-
-    // BLIK
+    //
+    // // BLIK
     window.blik = checkout.create('blik', {}).mount('.blik-field');
-
-    // Giropay
+    //
+    // // Giropay
     window.giropay = checkout.create('giropay').mount('.giropay-field');
-
-    // UPI
+    //
+    // // UPI
     window.upi = checkout.create('upi').mount('.upi-field');
 
     // PIX
@@ -104,7 +104,4 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Oxxo
     window.oxxo = checkout.create('oxxo').mount('.oxxo-field');
-
-    // Redirect
-    // window.redirect = checkout.create('paypal').mount('.redirect-field');
 });
