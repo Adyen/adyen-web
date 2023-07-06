@@ -268,17 +268,6 @@ export interface BrowserInfo {
     timeZoneOffset: number;
 }
 
-// /**
-//  * Available components
-//  */
-// export type PaymentMethods = typeof paymentMethods;
-//
-// /**
-//  * Options for a component
-//  */
-// // @ts-ignore fix later
-// export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
-
 /**
  * Visibility options for a fieldset
  */

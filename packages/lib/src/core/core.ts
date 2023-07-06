@@ -7,24 +7,13 @@ import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
-// import { PaymentMethods, PaymentMethodOptions } from '../types';
-import { processGlobalOptions } from './utils';
+import { getComponentConfiguration, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry from './core.registry';
-
 import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
-
-export const getComponentConfiguration = (type: string, componentsConfig = {}, isStoredCard = false) => {
-    let pmType = type;
-    if (type === 'scheme') {
-        pmType = isStoredCard ? 'storedCard' : 'card';
-    }
-
-    return componentsConfig[pmType] || {};
-};
 
 class Core {
     public session: Session;
@@ -132,8 +121,6 @@ class Core {
      *
      * @returns new UIElement
      */
-    // public create<T extends keyof TxVariantConfigurationMap>(paymentMethod: T, options?: PaymentMethodConfiguration<T>);
-
     public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
     public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
     public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
@@ -333,8 +320,7 @@ class Core {
              * (Further details: from the paymentMethods response and paymentMethodsConfiguration are added in the next step,
              *  or, in the Dropin case, are already present)
              */
-            // return this.handleCreate(Redirect, { type: PaymentMethod, ...options });
-            // return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
+            return this.handleCreate(registry.getComponent('redirect'), { type: PaymentMethod, ...options });
         }
 
         /**

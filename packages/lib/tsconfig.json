@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        /** Emit */
         "declaration": true,
         "outDir": "./dist/types",
         "module": "ESNext",

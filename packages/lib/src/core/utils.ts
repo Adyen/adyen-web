@@ -11,3 +11,12 @@ export function processGlobalOptions(globalOptions) {
         return r;
     }, {});
 }
+
+export const getComponentConfiguration = (type: string, componentsConfig = {}, isStoredCard = false) => {
+    let pmType = type;
+    if (type === 'scheme') {
+        pmType = isStoredCard ? 'storedCard' : 'card';
+    }
+
+    return componentsConfig[pmType] || {};
+};
