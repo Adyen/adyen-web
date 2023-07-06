@@ -88,7 +88,7 @@ describe('Analytics initialisation and event queue', () => {
 
         analytics.send(event);
 
-        expect(collectIdPromiseMock).toHaveLength(0);
+        expect(collectIdPromiseMock).not.toHaveBeenCalled();
     });
 
     test('Analytics events queue sends event object', async () => {
