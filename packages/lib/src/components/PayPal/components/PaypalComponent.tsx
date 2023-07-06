@@ -50,7 +50,6 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
 
     return (
         <div className="adyen-checkout__paypal">
-            hi
             <PaypalButtons
                 {...props}
                 onCancel={onCancel}
