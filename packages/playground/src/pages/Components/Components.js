@@ -30,29 +30,29 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // // SEPA Bank Transfer
     window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
-    // window.bankTransferResult = checkout
-    //     .createFromAction({
-    //         paymentMethodType: 'bankTransfer_IBAN',
-    //         totalAmount: {
-    //             currency: 'EUR',
-    //             value: 1000
-    //         },
-    //         beneficiary: 'Adyen',
-    //         iban: 'NL13TEST0123456789',
-    //         bic: 'TESTNL02',
-    //         reference: '991-6068-3254-7284F',
-    //         type: 'bankTransfer',
-    //         shopperEmail: 'shopper@email.com'
-    //     })
-    //     .mount('.bankTransfer-result-field');
+    window.bankTransferResult = checkout
+        .createFromAction({
+            paymentMethodType: 'bankTransfer_IBAN',
+            totalAmount: {
+                currency: 'EUR',
+                value: 1000
+            },
+            beneficiary: 'Adyen',
+            iban: 'NL13TEST0123456789',
+            bic: 'TESTNL02',
+            reference: '991-6068-3254-7284F',
+            type: 'bankTransfer',
+            shopperEmail: 'shopper@email.com'
+        })
+        .mount('.bankTransfer-result-field');
     //
-    // // MBWay
+    // MBWay
     window.mbway = checkout.create('mbway').mount('.mbway-field');
-    //
-    // // Klarna Widget
+
+    // Klarna Widget
     window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
-    //
-    // // ACH
+
+    // ACH
     window.ach = checkout
         .create('ach', {
             // holderNameRequired: false,
@@ -75,8 +75,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             }
         })
         .mount('.ach-field');
-    //
-    // // SEPA Direct Debit
+
+    // SEPA Direct Debit
     window.sepa = checkout
         .create('sepadirectdebit', {
             countryCode: 'NL',

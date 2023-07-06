@@ -136,7 +136,6 @@ class Core {
      * @returns new UIElement
      */
     public createFromAction(action: PaymentAction, options = {}): any {
-        this.options = options;
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
