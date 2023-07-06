@@ -5,6 +5,11 @@ import type { IRegistry } from '../../core.registry';
 
 const createComponent = (registry: IRegistry, componentType, props) => {
     const Element = registry.getComponent(componentType);
+
+    if (!Element) {
+        debugger;
+    }
+
     return new Element({ ...props, id: `${componentType}-${uuid()}` });
 };
 

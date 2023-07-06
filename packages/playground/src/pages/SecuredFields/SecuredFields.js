@@ -1,5 +1,6 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, SecuredFields } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+
 import { makePayment, makeDetailsCall } from '../../services';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
@@ -10,6 +11,8 @@ import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import './securedFields.style.scss';
+
+AdyenCheckout.register(SecuredFields);
 
 const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of SecuredFields
 

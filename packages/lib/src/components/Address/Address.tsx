@@ -4,6 +4,8 @@ import Address from '../internal/Address';
 import CoreProvider from '../../core/Context/CoreProvider';
 
 export class AddressElement extends UIElement {
+    public static type = 'address';
+
     get data() {
         return this.state.data;
     }

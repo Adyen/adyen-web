@@ -9,6 +9,7 @@ import Language from '../../language/Language';
 import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { Redirect } from '../index';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -30,6 +31,8 @@ interface IssuerListData {
 }
 
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
+    public static dependencies = [Redirect];
+
     constructor(props: IssuerListContainerProps) {
         super(props);
 

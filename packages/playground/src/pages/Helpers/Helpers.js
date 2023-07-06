@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Donation, PersonalDetails, Address } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
@@ -7,6 +7,8 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import { searchFunctionExample } from '../../utils';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
+    AdyenCheckout.register(Donation, PersonalDetails, Address);
+
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,

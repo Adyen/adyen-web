@@ -1,5 +1,18 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import {
+    AdyenCheckout,
+    Ideal,
+    BillDeskOnline,
+    BillDeskWallet,
+    PayuCashcard,
+    PayuNetBanking,
+    Dotpay,
+    OnlineBankingPL,
+    Entercash,
+    MolPayEBankingMY,
+    PayByBank
+} from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+
 import { createSession } from '../../services';
 import { shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import '../../../config/polyfills';
@@ -15,6 +28,19 @@ import '../../style.scss';
         returnUrl,
         countryCode
     });
+
+    AdyenCheckout.register(
+        Ideal,
+        BillDeskOnline,
+        BillDeskWallet,
+        PayuCashcard,
+        PayuNetBanking,
+        Dotpay,
+        OnlineBankingPL,
+        Entercash,
+        MolPayEBankingMY,
+        PayByBank
+    );
 
     window.checkout = await AdyenCheckout({
         session,

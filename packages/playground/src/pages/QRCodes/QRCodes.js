@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { makePayment } from '../../services';
 import { shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
@@ -7,6 +7,8 @@ import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
 (async () => {
+    AdyenCheckout.register(WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow);
+
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,

@@ -9,7 +9,7 @@ import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 
 export class SecuredFieldsElement extends UIElement {
-    public static type = 'customcard';
+    public static type = 'securedfields';
 
     public static analyticsType = 'custom-scheme';
 

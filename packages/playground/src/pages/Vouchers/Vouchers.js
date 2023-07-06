@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { shopperLocale } from '../../config/commonConfig';
 import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
@@ -14,6 +14,8 @@ import './Vouchers.scss';
         onChange: handleChange,
         showPayButton: true
     });
+
+    AdyenCheckout.register(BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext);
 
     window.bacsdd = checkout
         .create('directdebit_GB', {
@@ -31,8 +33,7 @@ import './Vouchers.scss';
         .createFromAction({
             paymentMethodType: 'directdebit_GB',
             type: 'voucher',
-            url:
-                'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=3B0HeSD%2FX0K4lKudwtMH%2BWuGfNHsDyzCyCpipuJqy3bbue6XVEIdyg8TDWYMjlr39eWhynIQU7slpqA48izhIkHg%2FI%2Fpy2cd8J0PXvWvpSnFtNG30fIIPL06J1pKQfyL%2FG3wCPXSl6p0a79ajCYKcmV06xJVfJMP0ej6FK45GL7MloD%2Bdrbjo%2FnCbbxooYCiYCgJIZdkNm1iLHoVP2s2eg%3D%3D'
+            url: 'https://test.adyen.com/hpp/generateDdi.shtml?pdfFields=3B0HeSD%2FX0K4lKudwtMH%2BWuGfNHsDyzCyCpipuJqy3bbue6XVEIdyg8TDWYMjlr39eWhynIQU7slpqA48izhIkHg%2FI%2Fpy2cd8J0PXvWvpSnFtNG30fIIPL06J1pKQfyL%2FG3wCPXSl6p0a79ajCYKcmV06xJVfJMP0ej6FK45GL7MloD%2Bdrbjo%2FnCbbxooYCiYCgJIZdkNm1iLHoVP2s2eg%3D%3D'
         })
         .mount('#bacsdd-result-container');
 

@@ -4,6 +4,8 @@ import PersonalDetails from '../internal/PersonalDetails';
 import CoreProvider from '../../core/Context/CoreProvider';
 
 export class PersonalDetailsElement extends UIElement {
+    public static type = 'personal_details';
+
     get data() {
         return this.state.data;
     }

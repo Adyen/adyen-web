@@ -1,5 +1,6 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+
 import { getPaymentMethods } from '../../services';
 import { handleChange, handleSubmit } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
@@ -30,6 +31,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         showPayButton: true,
         amount // Optional. Used to display the amount in the Pay Button.
     });
+
+    AdyenCheckout.register(RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome);
 
     // RATEPAY
     if (showComps.ratepay) {
