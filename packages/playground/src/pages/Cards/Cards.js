@@ -1,4 +1,4 @@
-import { AdyenCheckout, Card } from '@adyen/adyen-web';
+import { AdyenCheckout, Card, Bancontact } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
@@ -26,7 +26,7 @@ const disclaimerMessage = {
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
-    AdyenCheckout.register(Card);
+    AdyenCheckout.register(Card, Bancontact);
 
     window.checkout = await AdyenCheckout({
         amount,
@@ -63,7 +63,33 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Credit card with installments
     if (showComps.card) {
-        window.card = checkout.create('scheme').mount('.card-field');
+        window.card = checkout
+            .create('card', {
+                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+                installmentOptions: {
+                    mc: {
+                        values: [1, 2],
+                        preselectedValue: 2
+                    },
+                    visa: {
+                        values: [1, 2, 3, 4],
+                        plans: ['regular', 'revolving'],
+                        preselectedValue: 4
+                    }
+                },
+                disclaimerMessage,
+                showBrandsUnderCardNumber: true,
+                showInstallmentAmounts: true,
+                onError: obj => {
+                    console.log('### Cards::onError:: obj=', obj);
+                },
+                onBinLookup: obj => {
+                    console.log('### Cards::onBinLookup:: obj=', obj);
+                },
+                billingAddressRequired: true,
+                onAddressLookup: searchFunctionExample
+            })
+            .mount('.card-field');
     }
 
     // Card mounted in a React app

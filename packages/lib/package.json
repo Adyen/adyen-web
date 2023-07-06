@@ -45,7 +45,7 @@
     ],
     "scripts": {
         "start": "npm run dev-server",
-        "dev-server": "rollup --watch --config config/rollup.config.new.js",
+        "dev-server": "rollup --watch --config config/rollup.dev.new.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build-old": "rm -rf dist/ && npm run type-check-generate && cross-env rollup --config config/rollup.config.js",
         "build": "rm -rf dist/ && npm run type-check-generate && rollup --config config/rollup.config.new.js",

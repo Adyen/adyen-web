@@ -4,6 +4,7 @@ import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/c
 
 class BancontactElement extends CardElement {
     public static type = 'bcmc';
+    public static txVariants = ['bcmc'];
 
     constructor(props: CardElementProps) {
         super(props);
