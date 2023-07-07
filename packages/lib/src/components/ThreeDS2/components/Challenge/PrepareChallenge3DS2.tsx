@@ -203,8 +203,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    // eslint-disable-next-line no-empty-pattern
-    render({}, { challengeData }) {
+    render(_, { challengeData }) {
         const getImage = useImage();
         if (this.state.status === 'performingChallenge') {
             return (
