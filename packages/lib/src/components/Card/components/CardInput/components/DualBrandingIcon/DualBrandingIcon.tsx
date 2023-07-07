@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import styles from '../../CardInput.module.scss';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
-import { getCardImageUrl } from '../../utils';
+import { getCardImageUrl, getFullBrandName } from '../../utils';
 import { DualBrandingIconProps } from '../types';
 import './DualBrandingIcon.scss';
 
@@ -19,7 +19,7 @@ const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfig
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
             onError={handleError}
-            alt={brand}
+            alt={getFullBrandName(brand)}
             src={imageUrl}
             onClick={onClick}
             data-value={dataValue}

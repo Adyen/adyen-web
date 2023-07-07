@@ -70,5 +70,6 @@ export const BRAND_READABLE_NAME_MAP = {
     jcb: 'JCB',
     diners: 'Diners Club',
     maestro: 'Maestro',
-    bcmc: 'Bancontact card'
+    bcmc: 'Bancontact card',
+    bijcard: 'de Bijenkorf Card'
 };
