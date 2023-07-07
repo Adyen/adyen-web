@@ -18,6 +18,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
         this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);
         this.submit = this.submit.bind(this);
+        this.onReady = this.onReady.bind(this);
     }
     get isValid() {
         return true;
@@ -41,6 +42,11 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
         this.componentRef.setAction(action);
     }
 
+    onReady() {
+        // When action/widget is loaded, set the 'drop-in' back to ready
+        this.elementRef?.setStatus('ready');
+    }
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -53,6 +59,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
                     onComplete={state => this.handleAdditionalDetails(state)}
                     onError={this.props.onError}
                     payButton={this.payButton}
+                    onReady={this.onReady}
                 />
             </CoreProvider>
         );

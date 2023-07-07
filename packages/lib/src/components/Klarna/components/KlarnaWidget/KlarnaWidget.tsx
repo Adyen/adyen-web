@@ -36,6 +36,8 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 // based on Klarna’s pre-assessment.
                 if (!res.show_form || !!res.error) {
                     handleError();
+                } else {
+                    props.onReady();
                 }
             }
         );
