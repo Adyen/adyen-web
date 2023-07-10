@@ -12,6 +12,7 @@ import {
     ENCRYPTED_SECURITY_CODE
 } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import DataSfSpan from './DataSfSpan';
+import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function CVC(props: CVCProps) {
     const {
@@ -60,6 +61,8 @@ export default function CVC(props: CVCProps) {
             name={ENCRYPTED_SECURITY_CODE}
             i18n={i18n}
             errorVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
