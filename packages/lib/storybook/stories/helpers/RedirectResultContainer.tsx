@@ -18,18 +18,10 @@ export const RedirectResultContainer = ({ redirectResult, sessionId }) => {
             environment: process.env.CLIENT_ENV,
             session: { id: sessionId },
             onPaymentCompleted: (result, component) => {
-                /*                if (!component) {
-                    setIsRedirecting(false);
-                    setResult(result);
-                } else {
-                    handleFinalState(result, component);
-                }*/
                 setIsRedirecting(false);
                 handleFinalState(result, component);
             },
             onError: (error, component) => {
-                //setIsRedirecting(false);
-                //setResult({ resultCode: 'Error', resultMessage: `${error.name}: ${error.message}` });
                 setIsRedirecting(false);
                 handleError(error, component);
             }

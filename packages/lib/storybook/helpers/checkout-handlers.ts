@@ -25,8 +25,6 @@ function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
 }
 
 export function handleFinalState(result: any, component: UIElement): void {
-    // why?
-    localStorage.removeItem('storedPaymentData');
     const isDropin = component?.props?.isDropin;
     const isAuthorized = result.resultCode === 'Authorised' || result.resultCode === 'Received';
 
@@ -50,8 +48,6 @@ export async function handleResponse(response, component, checkout, paymentData?
     console.log('\ntype=', type, 'response=', response);
 
     if (response.action) {
-        // demo only - store paymentData & order -> why?
-        localStorage.setItem('storedPaymentData', response.action.paymentData);
         component.handleAction(response.action);
         return;
     }
