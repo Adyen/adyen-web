@@ -5,7 +5,8 @@ module.exports = {
         'eslint:recommended',
         'plugin:react/recommended',
         'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended' /*'prettier/@typescript-eslint'*/
+        'plugin:@typescript-eslint/recommended',
+        'plugin:storybook/recommended'
     ],
     parserOptions: {
         ecmaVersion: 2018,
@@ -41,8 +42,10 @@ module.exports = {
             }
         ],
         'no-console': 0,
-        'class-methods-use-this': 'off', // TODO
-        'no-underscore-dangle': 'off', // TODO
+        'class-methods-use-this': 'off',
+        // TODO
+        'no-underscore-dangle': 'off',
+        // TODO
         'import/prefer-default-export': 'off',
         'no-debugger': 'warn',
         indent: 'off',
@@ -56,13 +59,19 @@ module.exports = {
                 tsx: 'never'
             }
         ],
-        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+        'import/no-extraneous-dependencies': [
+            'error',
+            {
+                devDependencies: true
+            }
+        ],
         'max-len': [
             'error',
             {
                 code: 150,
                 tabWidth: 2,
-                ignoreComments: true, // Allow long comments in the code
+                ignoreComments: true,
+                // Allow long comments in the code
                 ignoreUrls: true,
                 ignoreStrings: true,
                 ignoreTemplateLiterals: true
@@ -86,20 +95,36 @@ module.exports = {
         radix: 'off',
         // This serves no practical purpose
         'eol-last': 'off',
-
         // the base rule can report incorrect errors
         'no-useless-constructor': 'off',
-
         // Typescript Rules
-        '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, vars: 'local' }],
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+                ignoreRestSiblings: true,
+                vars: 'local'
+            }
+        ],
         '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/indent': 'off',
-        '@typescript-eslint/no-empty-function': ['error', { allow: ['arrowFunctions'] }],
-        '@typescript-eslint/ban-types': 'off', // TODO
-        '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
-        '@typescript-eslint/explicit-module-boundary-types': 'off', // TODO
+        '@typescript-eslint/no-empty-function': [
+            'error',
+            {
+                allow: ['arrowFunctions']
+            }
+        ],
+        '@typescript-eslint/ban-types': 'off',
+        // TODO
+        '@typescript-eslint/ban-ts-comment': [
+            'error',
+            {
+                'ts-ignore': 'allow-with-description'
+            }
+        ],
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        // TODO
 
         // React Rules
         'react/prop-types': 'off',
@@ -107,7 +132,6 @@ module.exports = {
 
         // TSDoc
         'tsdoc/syntax': 'warn',
-
         // a11y
         'jsx-a11y/alt-text': 'error',
         'jsx-a11y/aria-role': 'error',
@@ -128,10 +152,24 @@ module.exports = {
     },
     overrides: [
         {
+            files: ['storybook/**/*.tsx'],
+            rules: {
+                'react/react-in-jsx-scope': 'off'
+            }
+        },
+        {
             // enable the rule specifically for TypeScript files
             files: ['*.ts', '*.tsx'],
             rules: {
-                '@typescript-eslint/explicit-member-accessibility': ['error', { accessibility: 'off', overrides: { properties: 'explicit' } }]
+                '@typescript-eslint/explicit-member-accessibility': [
+                    'error',
+                    {
+                        accessibility: 'off',
+                        overrides: {
+                            properties: 'explicit'
+                        }
+                    }
+                ]
             }
         },
         {
