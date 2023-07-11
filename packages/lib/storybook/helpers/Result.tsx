@@ -1,5 +1,3 @@
-import { h } from 'preact';
-//todo: remove?
 interface IResult {
     resultCode?: string;
     resultMessage?: string;

@@ -44,9 +44,6 @@ export function handleFinalState(result: any, component: UIElement): void {
 }
 
 export async function handleResponse(response, component, checkout, paymentData?) {
-    const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;
-    console.log('\ntype=', type, 'response=', response);
-
     if (response.action) {
         component.handleAction(response.action);
         return;

@@ -129,6 +129,7 @@ module.exports = {
         // React Rules
         'react/prop-types': 'off',
         'react/display-name': 'off',
+
         // TSDoc
         'tsdoc/syntax': 'warn',
         // a11y
@@ -150,6 +151,12 @@ module.exports = {
         'jsx-a11y/mouse-events-have-key-events': 'error'
     },
     overrides: [
+        {
+            files: ['storybook/**/*.tsx'],
+            rules: {
+                'react/react-in-jsx-scope': 'off'
+            }
+        },
         {
             // enable the rule specifically for TypeScript files
             files: ['*.ts', '*.tsx'],

@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import Core from '../../src/core';
 import { PaymentMethodOptions, PaymentMethods } from '../../src/types';

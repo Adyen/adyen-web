@@ -42,8 +42,6 @@ const config: StorybookConfig = {
                 }
             },
             plugins: [
-                // Plugins that are part of Vite. These plugins are unneeded:
-                // resolve, json, scss.
                 stylelint(),
                 {
                     ...eslint({

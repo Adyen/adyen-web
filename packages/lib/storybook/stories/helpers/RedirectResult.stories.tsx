@@ -1,5 +1,4 @@
-// @ts-ignore ignore
-import { h, Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact';
 import { getSearchParameter } from '../../utils/get-query-parameters';
 import { RedirectResultContainer } from './RedirectResultContainer';
 

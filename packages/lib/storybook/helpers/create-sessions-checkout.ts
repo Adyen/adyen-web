@@ -32,7 +32,7 @@ async function createSessionsCheckout({
         session,
         showPayButton,
         paymentMethodsConfiguration,
-        // @ts-ignore ignore
+        // @ts-ignore TODO: Fix beforeSubmit type
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },

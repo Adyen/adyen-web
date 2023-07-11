@@ -3,7 +3,7 @@ const protocol = process.env.IS_HTTPS === 'true' ? 'https' : 'http';
 
 const { origin = `${protocol}://localhost:3020`, search } = window.location;
 const returnUrl = origin + search;
-console.log({ returnUrl });
+
 const paymentsConfig = {
     origin,
     returnUrl,

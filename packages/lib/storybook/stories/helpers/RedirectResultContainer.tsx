@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import AdyenCheckout from '../../../src';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';

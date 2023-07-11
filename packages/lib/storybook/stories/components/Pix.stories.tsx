@@ -1,5 +1,4 @@
-// @ts-ignore
-import { h, Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { PixProps } from '../../../src/components/Pix/types';

@@ -1,5 +1,4 @@
-// @ts-ignore
-import { h, Meta, StoryObj } from '@storybook/preact';
+import { Meta, StoryObj } from '@storybook/preact';
 import { DropinStoryProps } from './types';
 import { getStoryContextCheckout } from '../utils/get-story-context-checkout';
 import { Container } from './Container';
