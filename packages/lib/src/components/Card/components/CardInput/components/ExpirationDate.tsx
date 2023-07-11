@@ -13,6 +13,7 @@ import {
     ENCRYPTED_EXPIRY_DATE
 } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import useImage from '../../../../../core/Context/useImage';
+import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
@@ -41,6 +42,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             name={'encryptedExpiryDate'}
             i18n={i18n}
             errorVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_EXPIRY_DATE}

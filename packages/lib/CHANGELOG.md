@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 5.48.0
+
+### Minor Changes
+
+-   Securefields label now is decorative div element ([#2256](https://github.com/Adyen/adyen-web/pull/2256))
+
+-   Stop implicitly associating labels with the elements they label ([#2243](https://github.com/Adyen/adyen-web/pull/2243))
+
+### Patch Changes
+
+-   Refactor the SRPanel type definition ([#2217](https://github.com/Adyen/adyen-web/pull/2217))
+
+-   Alt tags for card brands now use readable values ([#2256](https://github.com/Adyen/adyen-web/pull/2256))
+
+-   Autofocus on the QR code subtitle on mounted. ([#2246](https://github.com/Adyen/adyen-web/pull/2246))
+
 ## 5.47.0
 
 ### Minor Changes

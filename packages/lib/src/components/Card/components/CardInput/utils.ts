@@ -16,6 +16,7 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
+import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/configuration/constants';
 
 export const getCardImageUrl = (brand: string, loadingContext: string): string => {
     const imageOptions = {
@@ -172,4 +173,8 @@ export const handlePartialAddressMode = (addressMode: AddressModeOptions): Addre
 // Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
 export function lookupBlurBasedErrors(errorCode) {
     return !['error.va.sf-cc-num.03', 'error.va.sf-cc-dat.01', 'error.va.sf-cc-dat.02', 'error.va.sf-cc-dat.03'].includes(errorCode);
+}
+
+export function getFullBrandName(brand) {
+    return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }
