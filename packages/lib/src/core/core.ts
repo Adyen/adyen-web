@@ -40,12 +40,12 @@ class Core {
         this.setOptions(props);
         this.createPaymentMethodsList();
 
-        this.loadingContext = resolveEnvironment(this.options.environment);
+        this.loadingContext = this.options.environmentUrls?.api || resolveEnvironment(this.options.environment);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
 
-        const clientKeyType = this.options.clientKey?.substr(0, 4);
-        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
+        const clientKeyType = this.options.clientKey?.split('_')[0];
+        if (!this.loadingContext.includes(clientKeyType)) {
+            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
         }
 
         // Expose version number for npm builds
