@@ -56,7 +56,6 @@
         "prepare": "cd ../.. && husky install packages/lib/.husky"
     },
     "devDependencies": {
-        "@adyen/adyen-web-server": "1.0.0",
         "@babel/cli": "^7.18.10",
         "@babel/core": "^7.16.0",
         "@babel/plugin-transform-runtime": "^7.19.1",
