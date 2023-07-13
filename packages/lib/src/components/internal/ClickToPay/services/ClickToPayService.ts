@@ -82,9 +82,7 @@ class ClickToPayService implements IClickToPayService {
 
         try {
             this.sdks = await this.sdkLoader.load(this.environment);
-
             await this.initiateSdks();
-
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
 
             if (recognized) {
@@ -99,7 +97,6 @@ class ClickToPayService implements IClickToPayService {
             }
 
             const { isEnrolled } = await this.verifyIfShopperIsEnrolled(this.shopperIdentity);
-
             if (isEnrolled) {
                 this.setState(CtpState.ShopperIdentified);
                 return;

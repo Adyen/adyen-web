@@ -6,7 +6,6 @@ import {
     SrciCompleteIdentityValidationResponse,
     SrcIdentityLookupParams,
     SrciIdentityLookupResponse,
-    SrciIsRecognizedResponse,
     SrcInitParams
 } from './types';
 
@@ -33,16 +32,6 @@ class MastercardSdk extends AbstractSrcInitiator {
         this.schemeSdk = window.SRCSDK_MASTERCARD;
     }
 
-    public async isRecognized(): Promise<SrciIsRecognizedResponse> {
-        try {
-            const isRecognizedResponse = await this.schemeSdk.isRecognized();
-            return isRecognizedResponse;
-        } catch (error) {
-            const srciError = new SrciError(error, 'isRecognized', this.schemeName);
-            throw srciError;
-        }
-    }
-
     public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
         const sdkProps = {
             ...params,
@@ -54,14 +43,12 @@ class MastercardSdk extends AbstractSrcInitiator {
 
     public async identityLookup({ identityValue, type }: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse> {
         try {
-            console.time(`identityLookup ${this.schemeName}`);
             const consumerIdentity = {
                 identityValue,
                 identityType: IdentityTypeMap[type]
             };
 
             const response = await this.schemeSdk.identityLookup({ consumerIdentity });
-            console.timeEnd(`identityLookup ${this.schemeName}`);
             return response;
         } catch (err) {
             const srciError = new SrciError(err, 'identityLookup', this.schemeName);
