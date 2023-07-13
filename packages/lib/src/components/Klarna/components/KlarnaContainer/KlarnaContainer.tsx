@@ -22,7 +22,7 @@ export function KlarnaContainer(props) {
                 payButton={props.payButton}
                 onComplete={props.onComplete}
                 onError={props.onError}
-                onReady={props.onReady}
+                onLoaded={props.onLoaded}
             />
         );
     }

@@ -33,7 +33,7 @@ describe('KlarnaPayments', () => {
         // @ts-ignore to test
         await waitFor(() => KlarnaPaymentsEle.componentRef);
         // @ts-ignore to test
-        KlarnaPaymentsEle.componentRef.props.onReady();
+        KlarnaPaymentsEle.componentRef.props.onLoaded();
         expect(spy).toHaveBeenCalled();
     });
 

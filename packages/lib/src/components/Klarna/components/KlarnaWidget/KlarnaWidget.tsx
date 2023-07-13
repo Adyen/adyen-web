@@ -37,7 +37,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 if (!res.show_form || !!res.error) {
                     handleError();
                 } else {
-                    props.onReady();
+                    props.onLoaded();
                 }
             }
         );
