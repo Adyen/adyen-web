@@ -109,9 +109,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      */
     public async isRecognized(): Promise<SrciIsRecognizedResponse> {
         try {
-            console.time(`Execution time isRecognized ${this.schemeName}`);
             const isRecognizedResponse = await this.schemeSdk.isRecognized();
-            console.timeEnd(`Execution time isRecognized ${this.schemeName}`);
             return isRecognizedResponse;
         } catch (error) {
             const srciError = new SrciError(error, 'isRecognized', this.schemeName);
