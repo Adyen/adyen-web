@@ -44,12 +44,14 @@ class VisaSdk extends AbstractSrcInitiator {
 
     public async identityLookup({ identityValue, type }: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse> {
         try {
+            console.time(`identityLookup ${this.schemeName}`);
             const consumerIdentity = {
                 identityValue,
                 type: IdentityTypeMap[type]
             };
 
             const response = await this.schemeSdk.identityLookup(consumerIdentity);
+            console.timeEnd(`identityLookup ${this.schemeName}`);
             return response;
         } catch (err) {
             const srciError = new SrciError(err, 'identityLookup', this.schemeName);
