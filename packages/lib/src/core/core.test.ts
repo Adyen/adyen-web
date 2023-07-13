@@ -236,5 +236,16 @@ describe('Core', () => {
 
             expect(spy).toHaveBeenCalled();
         });
+
+        test('should update the payment method list for the advanced flow', async () => {
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'xxxx'
+            });
+            const paymentMethodsResponse = { paymentMethods: [{ name: 'Credit Card', type: 'scheme', brands: ['visa'] }] };
+            expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', []);
+            await checkout.update({ paymentMethodsResponse });
+            expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', paymentMethodsResponse.paymentMethods);
+        });
     });
 });
