@@ -80,6 +80,10 @@ class Core {
 
         this.createCoreModules();
 
+        if (!this.paymentMethodsResponse?.paymentMethods?.length) {
+            this.createPaymentMethodsList();
+        }
+
         return Promise.resolve(this);
     }
 
