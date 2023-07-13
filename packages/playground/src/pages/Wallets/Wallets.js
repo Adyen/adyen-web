@@ -34,7 +34,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // CLICK TO PAY
     window.clickToPay = checkout.create('clicktopay', {
-        shopperEmail: 'guilherme.ribeiro-ctp2@adyen.com',
+        shopperEmail: 'shopper@example.com',
         onReady() {
             console.log('ClickToPay is ready');
         },

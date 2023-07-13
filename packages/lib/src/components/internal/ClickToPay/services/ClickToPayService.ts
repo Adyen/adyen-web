@@ -77,7 +77,7 @@ class ClickToPayService implements IClickToPayService {
         return this.sdkLoader.schemes;
     }
 
-    public initialize = async (): Promise<void> => {
+    public async initialize(): Promise<void> {
         this.setState(CtpState.Loading);
 
         try {
@@ -114,7 +114,7 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         }
-    };
+    }
 
     /**
      * Set the callback for notifying when the CtPState changes
@@ -211,7 +211,7 @@ class ClickToPayService implements IClickToPayService {
      * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
      * that responds faster with 'consumerPresent=true'
      */
-    public verifyIfShopperIsEnrolled = async (shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }> => {
+    public async verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }> {
         const { shopperEmail } = shopperIdentity;
 
         return new Promise((resolve, reject) => {
@@ -240,7 +240,7 @@ class ClickToPayService implements IClickToPayService {
                 resolve({ isEnrolled: false });
             });
         });
-    };
+    }
 
     private setState(state: CtpState): void {
         this.state = state;
@@ -280,7 +280,7 @@ class ClickToPayService implements IClickToPayService {
      * recognized on the device. The shopper is recognized if he/she has the Cookies stored
      * on their browser
      */
-    private verifyIfShopperIsRecognized = async (): Promise<SrciIsRecognizedResponse> => {
+    private async verifyIfShopperIsRecognized(): Promise<SrciIsRecognizedResponse> {
         return new Promise((resolve, reject) => {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = executeWithTimeout<SrciIsRecognizedResponse>(
@@ -292,24 +292,24 @@ class ClickToPayService implements IClickToPayService {
                 return isRecognizedPromise;
             });
 
-            // If the resolve didn't happen until this point, then shopper is not recognized
+            // If the 'resolve' didn't happen until this point, then shopper is not recognized
             Promise.allSettled(promises).then(() => resolve({ recognized: false }));
         });
-    };
+    }
 
-    private initiateSdks = async (): Promise<void> => {
+    private async initiateSdks(): Promise<void> {
         const initPromises = this.sdks.map(sdk => {
             const cfg = this.schemesConfig[sdk.schemeName];
 
             return executeWithTimeout<void>(
                 () => sdk.init(cfg, this.srciTransactionId),
-                100,
+                2000,
                 new TimeoutError(`ClickToPayService - Timeout during init() of the scheme '${sdk.schemeName}'`)
             );
         });
 
         await Promise.all(initPromises);
-    };
+    }
 }
 
 export default ClickToPayService;
