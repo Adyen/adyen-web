@@ -38,7 +38,6 @@ class Core {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(props);
-        this.createPaymentMethodsList();
 
         this.loadingContext = resolveEnvironment(this.options.environment);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
@@ -80,9 +79,7 @@ class Core {
 
         this.createCoreModules();
 
-        if (!this.paymentMethodsResponse?.paymentMethods?.length) {
-            this.createPaymentMethodsList();
-        }
+        this.createPaymentMethodsList();
 
         return Promise.resolve(this);
     }
@@ -360,7 +357,9 @@ class Core {
 
     private createCoreModules(): void {
         if (this.modules) {
-            console.warn('Core: Core modules are already created.');
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('Core: Core modules are already created.');
+            }
             return;
         }
 
