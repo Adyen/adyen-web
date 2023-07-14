@@ -26,7 +26,7 @@ export default function createClickToPayService(
         dpaLocale: clickToPayConfiguration?.locale,
         dpaPresentationName: clickToPayConfiguration?.merchantDisplayName
     });
-    return new ClickToPayService(schemesConfig, srcSdkLoader, environment, shopperIdentity);
+    return new ClickToPayService(schemesConfig, srcSdkLoader, environment, shopperIdentity, clickToPayConfiguration?.onTimeout);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
