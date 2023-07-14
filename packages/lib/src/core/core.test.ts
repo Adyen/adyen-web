@@ -262,11 +262,11 @@ describe('Core', () => {
         const checkout = new AdyenCheckout({
             environment: 'test',
             environmentUrls: {
-                api: 'https://checkoutshopper-delta.adyen.com/checkoutshopper/'
+                api: 'https://localhost:8080/checkoutshopper/'
             },
-            clientKey: 'delta_123456'
+            clientKey: 'devl_FX923810'
         });
 
-        expect(checkout.loadingContext).toBe('https://checkoutshopper-delta.adyen.com/checkoutshopper/');
+        expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
     });
 });
