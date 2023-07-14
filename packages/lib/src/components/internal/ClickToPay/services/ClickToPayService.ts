@@ -218,7 +218,7 @@ class ClickToPayService implements IClickToPayService {
             const lookupPromises = this.sdks.map(sdk => {
                 const identityLookupPromise = executeWithTimeout<SrciIdentityLookupResponse>(
                     () => sdk.identityLookup({ identityValue: shopperEmail, type: 'email' }),
-                    2000,
+                    5000,
                     new TimeoutError(`ClickToPayService - Timeout during identityLookup() of the scheme '${sdk.schemeName}'`)
                 );
 
@@ -285,7 +285,7 @@ class ClickToPayService implements IClickToPayService {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = executeWithTimeout<SrciIsRecognizedResponse>(
                     () => sdk.isRecognized(),
-                    2000,
+                    5000,
                     new TimeoutError(`ClickToPayService - Timeout during isRecognized() of the scheme '${sdk.schemeName}'`)
                 );
                 isRecognizedPromise.then(response => response.recognized && resolve(response)).catch(error => reject(error));
@@ -303,7 +303,7 @@ class ClickToPayService implements IClickToPayService {
 
             return executeWithTimeout<void>(
                 () => sdk.init(cfg, this.srciTransactionId),
-                2000,
+                5000,
                 new TimeoutError(`ClickToPayService - Timeout during init() of the scheme '${sdk.schemeName}'`)
             );
         });
