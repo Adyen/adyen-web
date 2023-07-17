@@ -5,7 +5,6 @@ import { KlarnaPaymentsProps } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { PaymentAction } from '../../types';
-import DropinElement from '../Dropin';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
@@ -45,9 +44,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
 
     onLoaded() {
         // When action/widget is loaded, set the 'drop-in' back to ready
-        if (this.elementRef instanceof DropinElement) {
-            this.elementRef.setStatus('ready');
-        }
+        this.setElementStatus('ready');
     }
 
     render() {
