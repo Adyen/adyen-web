@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 5.49.0
+
+### Minor Changes
+
+-   Adding timeout mechanism for Click to Pay to display Card component in case it does not initialize within 5 seconds ([#2265](https://github.com/Adyen/adyen-web/pull/2265))
+
+### Patch Changes
+
+-   Fix Core `update` should also update payment methods list. ([#2266](https://github.com/Adyen/adyen-web/pull/2266))
+
+-   fixes aria-labelledby in paymentMethodItem ([#2261](https://github.com/Adyen/adyen-web/pull/2261))
+
+-   Fix Klarna widget blocks drop-in to be clickable on loaded. ([#2258](https://github.com/Adyen/adyen-web/pull/2258))
+
 ## 5.48.0
 
 ### Minor Changes
