@@ -33,6 +33,8 @@ interface KlarnaPaymentsShared {
 export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     /** @internal */
     payButton: (options) => any;
+    /** @internal */
+    onLoaded: () => void;
 
     onComplete: (detailsData) => void;
     onError: (error) => void;
