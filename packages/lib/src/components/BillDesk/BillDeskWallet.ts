@@ -6,8 +6,7 @@ class BillDeskWalletElement extends IssuerListContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            showImage: false,
-            placeholder: 'issuerList.wallet.placeholder'
+            showImage: false
         };
     }
 }

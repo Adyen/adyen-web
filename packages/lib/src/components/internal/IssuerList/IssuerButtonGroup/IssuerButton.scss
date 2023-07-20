@@ -13,6 +13,7 @@
     font-size: $font-size-small;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
     &:active {
@@ -36,8 +37,8 @@
 
     &--selected {
         background: $color-white;
-        box-shadow: inset 0 0 0 2px $color-blue;
-        color: $color-blue;
+        box-shadow: inset 0 0 0 2px $color-black;
+        color: $color-black;
         font-weight: 500;
         height: 40px;
         transition: none;

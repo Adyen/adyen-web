@@ -31,7 +31,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 {renderFormField('tel', {
                     name: 'kcpTaxNumberOrDOB',
                     className: `adyen-checkout__card__kcp-taxNumber__input ${styles['adyen-checkout__input']}`,
-                    placeholder: i18n.get('creditCard.taxNumber.placeholder'),
+                    // todo: pass context text
                     maxLength: 10,
                     minLength: 6,
                     autoComplete: false,

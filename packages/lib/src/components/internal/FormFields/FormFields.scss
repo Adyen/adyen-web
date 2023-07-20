@@ -88,9 +88,8 @@
 }
 
 .adyen-checkout__input {
-    box-sizing: border-box;
     color: $color-black;
-    caret-color: $color-blue;
+    caret-color: $color-black;
     font-size: $font-size-medium;
     font-family: inherit;
     display: block;
@@ -106,7 +105,7 @@
 }
 
 .adyen-checkout__input:hover {
-    border-color: #99a3ad;
+    border-color: $color-gray-darker;
 }
 
 .adyen-checkout__input:required {
@@ -167,7 +166,11 @@
 .adyen-checkout__input--invalid,
 .adyen-checkout__input--error:hover,
 .adyen-checkout__input--invalid:hover {
-    border-color: $color-alert;
+    &.adyen-checkout__input--focus{
+        border-color: $color-alert;
+        box-shadow: 0 0 0 1px $color-alert;
+    }
+
 }
 
 .adyen-checkout__input::placeholder {
@@ -185,8 +188,8 @@
 .adyen-checkout__input:active:hover,
 .adyen-checkout__input:focus:hover,
 .adyen-checkout__input--focus:hover {
-    border: 1px solid $color-primary;
-    box-shadow: 0 0 0 2px $color-blue-light;
+    border: 1.5px solid $color-primary;
+    box-shadow: 0 0 0 1px $color-primary;
 }
 
 .adyen-checkout__input[readonly],

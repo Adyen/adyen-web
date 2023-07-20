@@ -46,7 +46,7 @@
 
     &:focus + .adyen-checkout__checkbox__label::after {
         border: 1px solid $color-primary;
-        box-shadow: 0 0 0 2px $color-blue-light;
+        box-shadow: 0 0 0 2px $color-gray-light;
     }
 
     &:hover:not(:focus) + .adyen-checkout__checkbox__label::after {

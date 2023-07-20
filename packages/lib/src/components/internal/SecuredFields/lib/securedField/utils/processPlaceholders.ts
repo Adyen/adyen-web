@@ -10,9 +10,9 @@ import {
 /**
  * Create placeholders with a value from the relevant translation file
  */
-export function processPlaceholders(configObj: SFInternalConfig, fieldType, i18n): SFPlaceholdersObject {
+export function processPlaceholders(configObj: SFInternalConfig, fieldType): SFPlaceholdersObject {
     const type: string = configObj.txVariant;
-    const resolvedPlaceholders: SFPlaceholdersObject = resolvePlaceholders(i18n);
+    const resolvedPlaceholders: SFPlaceholdersObject = resolvePlaceholders();
 
     return {
         // Non-SecurityCode fields

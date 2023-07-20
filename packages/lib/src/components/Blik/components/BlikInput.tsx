@@ -63,7 +63,6 @@ function BlikInput(props: BlikInputProps) {
                     autocomplete: 'off',
                     onInput: handleChangeFor('blikCode', 'input'),
                     onBlur: handleChangeFor('blikCode', 'blur'),
-                    placeholder: '123456',
                     inputMode: 'numeric',
                     maxLength: 6
                 })}

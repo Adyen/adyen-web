@@ -160,7 +160,7 @@ function AchInput(props: ACHInputProps) {
                                     >
                                         {renderFormField('text', {
                                             className: `adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`,
-                                            placeholder: props.placeholders.holderName || i18n.get('ach.accountHolderNameField.placeholder'),
+                                            placeholder: props.placeholders.holderName,
                                             value: data.holderName,
                                             required: props.holderNameRequired,
                                             onInput: handleHolderName

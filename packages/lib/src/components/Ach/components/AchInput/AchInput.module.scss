@@ -4,12 +4,6 @@
     &__wrapper {
         position: relative;
     }
-
-    &__wrapper *,
-    &__wrapper *::before,
-    &__wrapper *::after {
-        box-sizing: border-box;
-    }
 }
 
 .adyen-checkout__input {

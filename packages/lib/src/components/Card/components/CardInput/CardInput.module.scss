@@ -5,12 +5,6 @@
         position: relative;
     }
 
-    &__wrapper *,
-    &__wrapper *::before,
-    &__wrapper *::after {
-        box-sizing: border-box;
-    }
-
     &__icon {
         border-radius: $border-radius-small;
         position: absolute;

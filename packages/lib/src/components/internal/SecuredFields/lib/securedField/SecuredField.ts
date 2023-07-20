@@ -1,28 +1,21 @@
 import * as logger from '../utilities/logger';
 import createIframe from './utils/createIframe';
-import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
+import { off, on, removeAllChildren, selectOne } from '../utilities/dom';
 import postMessageToIframe from '../CSF/utils/iframes/postMessageToIframe';
-import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from '../CSF/utils/iframes/postMessageValidation';
+import { isChromeVoxPostMsg, isWebpackPostMsg, originCheckPassed } from '../CSF/utils/iframes/postMessageValidation';
 import {
     CVC_POLICY_HIDDEN,
     CVC_POLICY_OPTIONAL,
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_EXPIRY_DATE,
     DATE_POLICY_HIDDEN,
     DATE_POLICY_OPTIONAL,
+    ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_SECURITY_CODE
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
-import { SFFeedbackObj } from '../types';
-import AbstractSecuredField, {
-    SecuredFieldInitObj,
-    IframeConfigObject,
-    AriaConfig,
-    SFPlaceholdersObject,
-    SFInternalConfig
-} from './AbstractSecuredField';
-import { CVCPolicyType, DatePolicyType, RtnType_noParamVoidFn, RtnType_postMessageListener, RtnType_callbackFn } from '../types';
+import { CVCPolicyType, DatePolicyType, RtnType_callbackFn, RtnType_noParamVoidFn, RtnType_postMessageListener, SFFeedbackObj } from '../types';
+import AbstractSecuredField, { AriaConfig, IframeConfigObject, SecuredFieldInitObj, SFInternalConfig } from './AbstractSecuredField';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
@@ -84,12 +77,8 @@ class SecuredField extends AbstractSecuredField {
         // Set result back onto config object
         this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
-        /**
-         * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
-         */
-        const processedPlaceholders: SFPlaceholdersObject = processPlaceholders(this.sfConfig, this.fieldType, i18n);
         // Set result back onto config object
-        this.sfConfig.iframeUIConfig.placeholders = processedPlaceholders;
+        this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig, this.fieldType);
 
         /**
          * Configure, create & reference iframe and add load listener

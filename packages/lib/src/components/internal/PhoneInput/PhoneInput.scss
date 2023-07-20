@@ -1,3 +1,5 @@
+@import "../../../style/index";
+
 .adyen-checkout__phone-input {
     direction: ltr;
 
@@ -9,8 +11,8 @@
             height: auto;
 
             &:focus {
-                border: 1px solid #0075ff;
-                box-shadow: 0 0 0 2px #99c2ff;
+                border: 1px solid $color-primary;
+                box-shadow: 0 0 0 2px $color-gray-darker;
             }
         }
 
@@ -23,7 +25,6 @@
 
             &::after {
                 left: 40px;
-                box-sizing: revert;
                 height: 10px;
             }
         }
@@ -40,8 +41,8 @@
             align-items: center;
 
             &:focus {
-                border: 1px solid #0075ff;
-                box-shadow: 0 0 0 2px #99c2ff;
+                border: 1px solid $color-primary;
+                box-shadow: 0 0 0 2px $color-gray-darker;
             }
         }
 

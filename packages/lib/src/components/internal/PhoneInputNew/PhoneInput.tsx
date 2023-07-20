@@ -127,7 +127,7 @@ function PhoneInput(props: PhoneInputProps) {
                             items: props.items,
                             onChange: handleChangeFor('phonePrefix'),
                             // readonly: props.phonePrefixIsReadonly,
-                            placeholder: i18n.get('infix'),
+                            //placeholder: i18n.get('infix'),
                             selected: data.phonePrefix,
                             uniqueId: uniqueIDPhonePrefix
                         })}
@@ -141,7 +141,7 @@ function PhoneInput(props: PhoneInputProps) {
                                 onInput={handleChangeFor('phoneNumber', 'input')}
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
                                 // readOnly={props.phoneNumberIsReadonly}
-                                placeholder={props.placeholders.phoneNumber || '123456789'}
+                                placeholder={props.placeholders.phoneNumber}
                                 className="adyen-checkout__input adyen-checkout-input adyen-checkout-input--phone-number"
                                 autoCorrect="off"
                                 aria-required={true}

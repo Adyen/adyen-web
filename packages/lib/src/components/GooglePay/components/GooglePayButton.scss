@@ -1,3 +1,5 @@
+@import "../../../style/index";
+
 .adyen-checkout__paywithgoogle {
     height: 48px;
 }
@@ -8,6 +10,7 @@
     &.short {
         height: 48px;
         transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
+        border-radius: $border-radius-medium;
 
         &:focus {
             box-shadow: 0 0 0 2px #99c2ff;

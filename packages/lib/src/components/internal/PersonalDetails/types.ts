@@ -18,7 +18,7 @@ export interface PersonalDetailsProps {
     payButton?: (obj) => {};
     showPayButton?: boolean;
 }
-
+//todo: remove?
 export interface PersonalDetailsStateError {
     firstName?: boolean;
     lastName?: boolean;

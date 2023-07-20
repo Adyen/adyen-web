@@ -1,6 +1,5 @@
 import { h, Fragment } from 'preact';
 import cx from 'classnames';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectButtonProps } from '../types';
 import styles from '../Select.module.scss';
 import Img from '../../../Img';
@@ -12,7 +11,6 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
 }
 
 function SelectButton(props: SelectButtonProps) {
-    const { i18n } = useCoreContext();
     const { active, selected, inputText, readonly, showList } = props;
 
     // display fallback order
@@ -75,7 +73,6 @@ function SelectButton(props: SelectButtonProps) {
                         className={cx('adyen-checkout__filter-input', [styles['adyen-checkout__filter-input']])}
                         onInput={props.onInput}
                         onFocus={onFocusHandler}
-                        placeholder={i18n.get('select.filter.placeholder')}
                         ref={props.filterInputRef}
                         role="combobox"
                         aria-activedescendant={`listItem-${active.id}`}
