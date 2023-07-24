@@ -24,7 +24,7 @@ type CardsSelectorDataState = {
 const schema = ['srcDigitalCardId'];
 
 const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
@@ -34,7 +34,7 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
 
     const items = useMemo(() => {
         return cards.map(card => ({
-            icon: card.artUri || getImage({ loadingContext })(card.scheme),
+            icon: card.artUri || getImage({})(card.scheme),
             name: `${isMobile() ? '' : card.title} •••• ${card.panLastFour} `,
             secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
             id: card.srcDigitalCardId,

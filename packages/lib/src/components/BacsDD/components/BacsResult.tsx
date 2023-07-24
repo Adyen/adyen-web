@@ -7,7 +7,7 @@ import './BacsResult.scss';
 import useImage from '../../../core/Context/useImage';
 
 const BacsResult = props => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { url, paymentMethodType } = props;
 
@@ -15,7 +15,7 @@ const BacsResult = props => {
         <Voucher
             paymentMethodType={paymentMethodType}
             introduction={i18n.get('bacs.result.introduction')}
-            imageUrl={getImage({ loadingContext })(paymentMethodType)}
+            imageUrl={getImage({})(paymentMethodType)}
             downloadUrl={url}
             downloadButtonText={i18n.get('download.pdf')}
         />

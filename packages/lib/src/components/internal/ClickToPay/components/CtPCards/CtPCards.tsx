@@ -39,7 +39,7 @@ function getPayButtonLabel(i18n: Language, amount: PaymentAmount, checkoutCard?:
 }
 
 const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
-    const { loadingContext, i18n } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { amount, cards, checkout, isCtpPrimaryPaymentMethod, status, onSubmit, onSetStatus, onError } = useClickToPayContext();
     const [checkoutCard, setCheckoutCard] = useState<ShopperCard | undefined>(cards.find(card => !card.isExpired) || cards[0]);
@@ -112,12 +112,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                         label={getPayButtonLabel(i18n, amount, checkoutCard)}
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                        icon={
-                            cards.length !== 0 &&
-                            getImage({ loadingContext: loadingContext, imageFolder: 'components/' })(
-                                isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black'
-                            )
-                        }
+                        icon={cards.length !== 0 && getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
                         onClick={doCheckout}
                     />
                 </Fragment>

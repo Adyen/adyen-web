@@ -39,11 +39,7 @@ export class GiftcardElement extends UIElement {
     }
 
     get icon() {
-        return (
-            this.props.brandsConfiguration[this.props.brand]?.icon ||
-            this.props.icon ||
-            this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.brand)
-        );
+        return this.props.brandsConfiguration[this.props.brand]?.icon || this.props.icon || this.resources.getImage({})(this.props.brand);
     }
 
     get displayName() {
