@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.49.1
+
+### Patch Changes
+
+-   fixes invalid HTML in payment method item and card labels ([#2270](https://github.com/Adyen/adyen-web/pull/2270))
+
 ## 5.49.0
 
 ### Minor Changes
