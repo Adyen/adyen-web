@@ -1,0 +1,42 @@
+import { h } from 'preact';
+import CoreProvider from '../../core/Context/CoreProvider';
+import RedirectElement from '../Redirect';
+import RedirectButton from '../internal/RedirectButton';
+import './Trustly.scss';
+
+class TrustlyElement extends RedirectElement {
+    public static type = 'trustly';
+
+    get displayName() {
+        return this.props.name || this.constructor['type'];
+    }
+
+    render() {
+        if (this.props.showPayButton) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                    <div className="adyen-checkout-trustly">
+                        <p className="adyen-checkout-trustly__descriptor">{this.props.i18n.get('trustly.descriptor')}</p>
+                        <ul className="adyen-checkout-trustly__description-list">
+                            <li>{this.props.i18n.get('trustly.description1')}</li>
+                            <li>{this.props.i18n.get('trustly.description2')}</li>
+                        </ul>
+                    </div>
+
+                    <RedirectButton
+                        {...this.props}
+                        name={this.displayName}
+                        onSubmit={this.submit}
+                        payButton={this.payButton}
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                    />
+                </CoreProvider>
+            );
+        }
+        return null;
+    }
+}
+
+export default TrustlyElement;
