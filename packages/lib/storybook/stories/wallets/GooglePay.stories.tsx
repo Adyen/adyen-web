@@ -121,6 +121,12 @@ function calculateNewTransactionInfo(countryCode: string, selectedShippingOption
     return newTransactionInfo;
 }
 
+/**
+ * TODO:
+ * - disable sessions for this flow
+ * - get shopper details and expose them
+ * - test if we can reject the payment with the google overlay open
+ */
 export const Express: Story = {
     render: createComponent,
     argTypes: {
@@ -138,7 +144,7 @@ export const Express: Story = {
         componentConfiguration: {
             // Fields 'countryCode,currencyCode,totalPriceStatus,totalPrice' are populated on requests.ts
             transactionInfo: getTransactionInfo(),
-            callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
+            callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION', 'PAYMENT_AUTHORIZATION'],
             paymentDataCallbacks: {
                 onPaymentDataChanged(intermediatePaymentData) {
                     return new Promise(resolve => {
@@ -172,11 +178,25 @@ export const Express: Story = {
 
                         resolve(paymentDataRequestUpdate);
                     });
+                },
+                /**
+                 * Shouldn't we be always using this?
+                 * https://developers.google.com/pay/api/web/guides/tutorial#handle-onpaymentauthorized-callbacacks
+                 *
+                 * @param paymentData
+                 */
+                onPaymentAuthorized(paymentData) {
+                    console.log('onPaymentAuthorized', paymentData);
+
+                    return Promise.resolve({
+                        transactionState: 'ERROR',
+                        error: {
+                            intent: 'PAYMENT_AUTHORIZATION',
+                            message: 'Insufficient funds',
+                            reason: 'PAYMENT_DATA_INVALID'
+                        }
+                    });
                 }
-                // onPaymentAuthorized(paymentData) {
-                //     console.log('onPaymentAuthorized', paymentData);
-                //     return Promise.resolve({ transactionState: 'SUCCESS' });
-                // }
             },
             // Shipping Address config
             shippingAddressRequired: true,
