@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Wybierz metodę płatności",
     "companyDetails.name.invalid": "Wpisz nazwę firmy",
     "companyDetails.registrationNumber.invalid": "Wprowadź numer w rejestrze",
-    "consent.checkbox.invalid": "Musisz zaakceptować Warunki i postanowienia"
+    "consent.checkbox.invalid": "Musisz zaakceptować Warunki i postanowienia",
+    "form.instruction": "Wszystkie pola są wymagane, chyba że zaznaczono inaczej."
 }

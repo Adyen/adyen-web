@@ -29,6 +29,7 @@ import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
+import FormInstruction from '../../../internal/FormInstruction';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -452,6 +453,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         })}
                         role={'form'}
                     >
+                        {props.showFormInstruction && <FormInstruction />}
                         <FieldToRender
                             // Extract exact props that we need to pass down
                             {...extractPropsForCardFields(props)}

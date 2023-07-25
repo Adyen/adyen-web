@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "お支払い方法を選択してください",
     "companyDetails.name.invalid": "会社名を入力してください",
     "companyDetails.registrationNumber.invalid": "登録番号を入力してください",
-    "consent.checkbox.invalid": "利用規約に同意する必要があります"
+    "consent.checkbox.invalid": "利用規約に同意する必要があります",
+    "form.instruction": "特に明記されていない限り、すべてのフィールドは必須です。"
 }

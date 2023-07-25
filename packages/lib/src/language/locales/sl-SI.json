@@ -40,7 +40,7 @@
     "idealIssuer.selectField.title": "Banka",
     "idealIssuer.selectField.placeholder": "Izberite svojo banko",
     "creditCard.success": "Plačilo je bilo uspešno",
-    "loading": "Nalaganje …",
+    "loading": "Nalaganje…",
     "continue": "Nadaljuj",
     "continueTo": "Nadaljujte na",
     "wechatpay.timetopay": "Plačati morate %@",
@@ -153,7 +153,7 @@
     "select.filter.placeholder": "Iskanje...",
     "telephoneNumber.invalid": "Neveljavna telefonska številka",
     "qrCodeOrApp": "ali",
-    "paypal.processingPayment": "Obdelava plačila ...",
+    "paypal.processingPayment": "Obdelava plačila...",
     "generateQRCode": "Ustvari kodo QR",
     "await.waitForConfirmation": "Čakanje na potrditev",
     "mbway.confirmPayment": "Potrdite svoje plačilo v aplikaciji MB WAY",
@@ -244,7 +244,7 @@
     "onlineBanking.termsAndConditions": "Z nadaljevanjem se strinjate s %#pogoji%#",
     "onlineBankingPL.termsAndConditions": "Z nadaljevanjem se strinjate s %#predpisi%# in %#obveznostjo obveščanja%# družbe Przelewy24",
     "ctp.loading.poweredByCtp": "Omogoča storitev Click to Pay",
-    "ctp.loading.intro": "Preverjamo, ali imate shranjene kartice v storitvi Click to Pay ...",
+    "ctp.loading.intro": "Preverjamo, ali imate shranjene kartice v storitvi Click to Pay...",
     "ctp.login.title": "Nadaljuj na storitev Click to Pay",
     "ctp.login.subtitle": "Za nadaljevanje vnesite e-poštni naslov, ki je povezan s storitvijo Click to Pay.",
     "ctp.login.inputLabel": "E-pošta",
@@ -288,5 +288,6 @@
     "paymentMethodsList.aria.label": "Izberite način plačila",
     "companyDetails.name.invalid": "Vnesite ime podjetja",
     "companyDetails.registrationNumber.invalid": "Vnesite registracijsko številko",
-    "consent.checkbox.invalid": "Strinjati se morate s pogoji in določili"
+    "consent.checkbox.invalid": "Strinjati se morate s pogoji in določili",
+    "form.instruction": "Vsa polja so obvezna, razen če ni označeno drugače."
 }

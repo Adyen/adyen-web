@@ -29,6 +29,8 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { usePrevious } from '../../../utils/hookUtils';
 import { getArrayDifferences } from '../../../utils/arrayUtils';
+import Field from '../FormFields/Field';
+import FormInstruction from '../FormInstruction';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -235,6 +237,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
     return (
         <div className="adyen-checkout__open-invoice">
+            {props.showFormInstruction && <FormInstruction />}
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
                     data={props.data.companyDetails}
@@ -281,13 +284,15 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             )}
 
             {showSeparateDeliveryAddressCheckbox && (
-                <Checkbox
-                    label={i18n.get('separateDeliveryAddress')}
-                    checked={activeFieldsets.deliveryAddress}
-                    classNameModifiers={['separateDeliveryAddress']}
-                    name="separateDeliveryAddress"
-                    onChange={handleSeparateDeliveryAddress}
-                />
+                <Field name={'separateDeliveryAddress'} useLabelElement={false} addContextualElement={false}>
+                    <Checkbox
+                        label={i18n.get('separateDeliveryAddress')}
+                        checked={activeFieldsets.deliveryAddress}
+                        classNameModifiers={['separateDeliveryAddress']}
+                        name={'separateDeliveryAddress'}
+                        onChange={handleSeparateDeliveryAddress}
+                    />
+                </Field>
             )}
 
             {activeFieldsets.deliveryAddress && (
