@@ -51,6 +51,7 @@ class GooglePay extends UIElement<GooglePayProps> {
             .then(() => this.googlePay.initiatePayment(this.props))
             .then(paymentData => {
                 // setState will trigger an onChange event
+                debugger;
                 this.setState({
                     googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
                     googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
