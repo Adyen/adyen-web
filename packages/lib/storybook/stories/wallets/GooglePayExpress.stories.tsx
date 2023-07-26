@@ -206,6 +206,7 @@ export const Express: Story = {
             // Shipping Address config
             shippingAddressRequired: true,
             shippingAddressParameters: {
+                allowedCountryCodes: [],
                 phoneNumberRequired: true
             },
             // Shipping Options config

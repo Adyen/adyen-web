@@ -110,7 +110,7 @@ export interface GooglePayProps extends UIElementProps {
      *
      * @see https://developers.google.com/pay/api/web/reference/request-objects#ShippingAddressParameters
      */
-    shippingAddressParameters?: Partial<google.payments.api.ShippingAddressParameters>;
+    shippingAddressParameters?: google.payments.api.ShippingAddressParameters;
 
     /**
      * Set to true when the SHIPPING_OPTION callback intent is used. This field is required if you implement support
