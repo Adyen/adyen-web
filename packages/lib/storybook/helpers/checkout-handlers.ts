@@ -43,7 +43,7 @@ export function handleFinalState(result: any, component: UIElement): void {
     displayResultMessage(isAuthorized, result.resultCode);
 }
 
-export async function handleResponse(response, component, checkout, paymentData?) {
+export async function handleResponse(response, component, checkout?, paymentData?) {
     if (response.action) {
         component.handleAction(response.action);
         return;

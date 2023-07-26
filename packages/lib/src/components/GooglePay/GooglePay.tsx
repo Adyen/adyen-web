@@ -50,34 +50,21 @@ class GooglePay extends UIElement<GooglePayProps> {
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => this.googlePay.initiatePayment(this.props))
             .then(paymentData => {
-                // setState will trigger an onChange event
-                // debugger;
-                console.log('GooglePay submit', paymentData);
-
                 this.setState({
                     googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
                     googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
                 });
                 super.submit();
 
-                return Promise.reject({
-                    transactionState: 'ERROR',
-                    error: {
-                        intent: 'PAYMENT_AUTHORIZATION',
-                        message: 'Insufficient funds',
-                        reason: 'PAYMENT_DATA_INVALID'
-                    }
-                });
-
-                // return onAuthorized(paymentData);
+                return onAuthorized(paymentData);
+            })
+            .catch((error: google.payments.api.PaymentsError) => {
+                if (error.statusCode === 'CANCELED') {
+                    this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
+                } else {
+                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
+                }
             });
-        // .catch((error: google.payments.api.PaymentsError) => {
-        //     if (error.statusCode === 'CANCELED') {
-        //         this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
-        //     } else {
-        //         this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
-        //     }
-        // });
     };
 
     /**
