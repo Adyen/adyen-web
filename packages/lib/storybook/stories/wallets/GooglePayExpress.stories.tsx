@@ -145,12 +145,19 @@ export const Express: Story = {
         },
         amount: {
             control: false
+        },
+        shopperLocale: {
+            control: false
+        },
+        showPayButton: {
+            control: false
         }
     },
     args: {
         useSessions: false,
         countryCode: COUNTRY_CODE,
         amount: INITIAL_AMOUNT,
+        shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
             onSubmit: (state, component) => {
                 const paymentData = {
