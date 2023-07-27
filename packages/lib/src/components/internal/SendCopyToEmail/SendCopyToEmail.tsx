@@ -1,9 +1,10 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import { useState } from 'preact/hooks';
-import { renderFormField } from '../FormFields';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../FormFields/Field';
+import Checkbox from '../FormFields/Checkbox';
+import InputEmail from '../FormFields/InputEmail';
 
 export default function SendCopyToEmail(props) {
     const { errors, value, onInput, onBlur } = props;
@@ -18,11 +19,7 @@ export default function SendCopyToEmail(props) {
     return (
         <div className={cx('adyen-checkout__fieldset', 'adyen-checkout__fieldset--sendCopyToEmail', props.classNames)}>
             <Field classNameModifiers={['sendCopyToEmail']}>
-                {renderFormField('boolean', {
-                    onChange: toggleEmailField,
-                    label: i18n.get('boleto.sendCopyToEmail'),
-                    name: 'sendCopyToEmail'
-                })}
+                <Checkbox onChange={toggleEmailField} label={i18n.get('boleto.sendCopyToEmail')} name={'sendCopyToEmail'} />
             </Field>
 
             {sendCopyToEmail && (
@@ -32,14 +29,7 @@ export default function SendCopyToEmail(props) {
                     errorMessage={errors && errors.errorMessage ? i18n.get(errors.errorMessage) : !!errors}
                     name={'shopperEmail'}
                 >
-                    {renderFormField('emailAddress', {
-                        name: 'shopperEmail',
-                        autoCorrect: 'off',
-                        spellCheck: false,
-                        value,
-                        onInput,
-                        onBlur
-                    })}
+                    <InputEmail name={'shopperEmail'} autoCorrect={'off'} spellCheck={false} {...{ value, onInput, onBlur }} />
                 </Field>
             )}
         </div>

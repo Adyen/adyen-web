@@ -48,7 +48,8 @@ describe('Installments', () => {
     test('preselects the passed value', () => {
         installmentOptions.card.preselectedValue = 2;
         const wrapper = getWrapper({ installmentOptions });
-        expect(wrapper.find('Select').prop('selected')).toBe(2);
+        // TODO: This test should be migrated to react test library instead of reading form props
+        expect(wrapper.find('Select').prop('selectedValue')).toBe(2);
     });
 
     test('preselect the first if the preselectedValue is not provided', async () => {

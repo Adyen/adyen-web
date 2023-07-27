@@ -2,10 +2,10 @@ import { h } from 'preact';
 import Field from '../../FormFields/Field';
 import StateField from './StateField';
 import CountryField from './CountryField';
-import { renderFormField } from '../../FormFields';
 import { AddressStateError, FieldContainerProps } from '../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import Language from '../../../../language/Language';
+import InputText from '../../FormFields/InputText';
 
 function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language): string | boolean {
     if (typeof errors[fieldName]?.errorMessage === 'object') {
@@ -67,17 +67,19 @@ function FieldContainer(props: FieldContainerProps) {
                     name={fieldName}
                     i18n={i18n}
                 >
-                    {renderFormField('text', {
-                        classNameModifiers,
-                        name: fieldName,
-                        value,
-                        onInput,
-                        onBlur,
-                        maxLength,
-                        trimOnBlur,
-                        disabled,
-                        required: isOptional ? false : true
-                    })}
+                    <InputText
+                        name={fieldName}
+                        {...{
+                            classNameModifiers,
+                            value,
+                            onInput,
+                            onBlur,
+                            maxLength,
+                            trimOnBlur,
+                            disabled
+                        }}
+                        required={!isOptional}
+                    />
                 </Field>
             );
     }

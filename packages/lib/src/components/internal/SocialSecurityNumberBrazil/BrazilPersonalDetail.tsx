@@ -1,7 +1,7 @@
 import Field from '../FormFields/Field';
-import { renderFormField } from '../FormFields';
 import SocialSecurityNumberBrazil from './SocialSecurityNumberBrazil';
 import { h } from 'preact';
+import InputText from '../FormFields/InputText';
 
 export function BrazilPersonalDetail(props) {
     const { i18n, data, handleChangeFor, errors, valid } = props;
@@ -12,25 +12,25 @@ export function BrazilPersonalDetail(props) {
 
             <div className="adyen-checkout__fieldset__fields">
                 <Field label={i18n.get('firstName')} classNameModifiers={['firstName', 'col-50']} errorMessage={getErrorMessage(errors.firstName)}>
-                    {renderFormField('text', {
-                        name: 'firstName',
-                        autocorrect: 'off',
-                        spellcheck: false,
-                        value: data.firstName,
-                        onInput: handleChangeFor('firstName', 'input'),
-                        onBlur: handleChangeFor('firstName', 'blur')
-                    })}
+                    <InputText
+                        name={'firstName'}
+                        autocorrect={'off'}
+                        spellcheck={false}
+                        value={data.firstName}
+                        onInput={handleChangeFor('firstName', 'input')}
+                        onBlur={handleChangeFor('firstName', 'blur')}
+                    />
                 </Field>
 
                 <Field label={i18n.get('lastName')} classNameModifiers={['lastName', 'col-50']} errorMessage={getErrorMessage(errors.lastName)}>
-                    {renderFormField('text', {
-                        name: 'lastName',
-                        autocorrect: 'off',
-                        spellcheck: false,
-                        value: data.lastName,
-                        onInput: handleChangeFor('lastName', 'input'),
-                        onBlur: handleChangeFor('lastName', 'blur')
-                    })}
+                    <InputText
+                        name={'lastName'}
+                        autocorrect={'off'}
+                        spellcheck={false}
+                        value={data.lastName}
+                        onInput={handleChangeFor('lastName', 'input')}
+                        onBlur={handleChangeFor('lastName', 'blur')}
+                    />
                 </Field>
 
                 <SocialSecurityNumberBrazil

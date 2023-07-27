@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { renderFormField } from '../../../../../internal/FormFields';
 import Field from '../../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import styles from '../../CardInput.module.scss';
+import Select from '../../../../../internal/FormFields/Select';
 
 export interface InstallmentsObj {
     value: number;
@@ -99,14 +99,14 @@ function Installments(props: InstallmentsProps) {
                         }
                         classNameModifiers={['revolving-plan-installments']}
                     >
-                        {renderFormField('select', {
-                            filterable: false,
-                            items: installmentOptions.values.map(installmentItemsMapper),
-                            selectedValue: installmentAmount,
-                            onChange: onSelectInstallment,
-                            name: 'installments',
-                            disabled: radioBtnValue !== 'installments'
-                        })}
+                        <Select
+                            filterable={false}
+                            items={installmentOptions.values.map(installmentItemsMapper)}
+                            selectedValue={installmentAmount}
+                            onChange={onSelectInstallment}
+                            name={'installments'}
+                            disabled={radioBtnValue !== 'installments'}
+                        />
                     </Field>
                 </Fieldset>
             </div>
@@ -116,14 +116,14 @@ function Installments(props: InstallmentsProps) {
     return (
         <div className="adyen-checkout__installments">
             <Field label={i18n.get('installments')} classNameModifiers={['installments']}>
-                {renderFormField('select', {
-                    filterable: false,
-                    items: installmentOptions.values.map(installmentItemsMapper),
-                    selectedValue: installmentAmount,
-                    onChange: onSelectInstallment,
-                    name: 'installments',
-                    readonly: installmentOptions?.values?.length === 1
-                })}
+                <Select
+                    filterable={false}
+                    items={installmentOptions.values.map(installmentItemsMapper)}
+                    selectedValue={installmentAmount}
+                    onChange={onSelectInstallment}
+                    name={'installments'}
+                    readonly={installmentOptions?.values?.length === 1}
+                />
             </Field>
         </div>
     );

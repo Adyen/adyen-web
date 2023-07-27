@@ -1,7 +1,7 @@
 import { h } from 'preact';
-import renderFormField from '../../internal/FormFields';
 import Field from '../../internal/FormFields/Field';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import InputText from '../FormFields/InputText';
 
 export default function ({ onBlur, onInput, valid = false, error = null, data = '', required = false, disabled = false }) {
     const { i18n } = useCoreContext();
@@ -14,17 +14,19 @@ export default function ({ onBlur, onInput, valid = false, error = null, data = 
             isValid={Boolean(valid)}
             name={'socialSecurityNumber'}
         >
-            {renderFormField('text', {
-                name: 'socialSecurityNumber',
-                autocorrect: 'off',
-                spellcheck: false,
-                value: data,
-                maxLength: 18,
-                onInput,
-                onBlur,
-                required,
-                disabled
-            })}
+            <InputText
+                name={'socialSecurityNumber'}
+                autocorrect={'off'}
+                spellcheck={false}
+                value={data}
+                maxLength={18}
+                {...{
+                    onInput,
+                    onBlur,
+                    required,
+                    disabled
+                }}
+            />
         </Field>
     );
 }

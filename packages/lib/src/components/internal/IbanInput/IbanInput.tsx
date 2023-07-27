@@ -1,11 +1,11 @@
 import { Component, h, RefObject } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
 import { electronicFormat, formatIban, getCountryCode, getIbanPlaceHolder, getNextCursorPosition } from './utils';
 import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
+import InputText from '../FormFields/InputText';
 
 interface IbanInputProps {
     holderName?: boolean;
@@ -194,16 +194,16 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         i18n={i18n}
                         name={'ownerName'}
                     >
-                        {renderFormField('text', {
-                            name: 'ownerName',
-                            className: 'adyen-checkout__iban-input__owner-name',
-                            placeholder: 'ownerName' in placeholders ? placeholders.ownerName : i18n.get('sepaDirectDebit.nameField.placeholder'),
-                            value: data['ownerName'],
-                            'aria-invalid': !!this.state.errors.holder,
-                            'aria-label': i18n.get('sepa.ownerName'),
-                            onInput: e => this.handleHolderInput((e.target as HTMLInputElement).value),
-                            onBlur: e => this.handleHolderInput((e.target as HTMLInputElement).value)
-                        })}
+                        <InputText
+                            name={'ownerName'}
+                            className={'adyen-checkout__iban-input__owner-name'}
+                            placeholder={'ownerName' in placeholders ? placeholders.ownerName : i18n.get('sepaDirectDebit.nameField.placeholder')}
+                            value={data['ownerName']}
+                            aria-invalid={!!this.state.errors.holder}
+                            aria-label={i18n.get('sepa.ownerName')}
+                            onInput={e => this.handleHolderInput((e.target as HTMLInputElement).value)}
+                            onBlur={e => this.handleHolderInput((e.target as HTMLInputElement).value)}
+                        />
                     </Field>
                 )}
 
@@ -218,21 +218,21 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                     i18n={i18n}
                     name={'ibanNumber'}
                 >
-                    {renderFormField('text', {
-                        setRef: ref => {
+                    <InputText
+                        setRef={ref => {
                             this.ibanNumber = ref;
-                        },
-                        name: 'ibanNumber',
-                        className: 'adyen-checkout__iban-input__iban-number',
-                        classNameModifiers: ['large'],
-                        placeholder: 'ibanNumber' in placeholders ? placeholders.ibanNumber : getIbanPlaceHolder(countryCode),
-                        value: data['ibanNumber'],
-                        onInput: this.handleIbanInput,
-                        'aria-invalid': !!this.state.errors.iban,
-                        'aria-label': i18n.get('sepa.ibanNumber'),
-                        autocorrect: 'off',
-                        spellcheck: false
-                    })}
+                        }}
+                        name={'ibanNumber'}
+                        className={'adyen-checkout__iban-input__iban-number'}
+                        classNameModifiers={['large']}
+                        placeholder={'ibanNumber' in placeholders ? placeholders.ibanNumber : getIbanPlaceHolder(countryCode)}
+                        value={data['ibanNumber']}
+                        onInput={this.handleIbanInput}
+                        aria-invalid={!!this.state.errors.iban}
+                        aria-label={i18n.get('sepa.ibanNumber')}
+                        autocorrect={'off'}
+                        spellcheck={false}
+                    />
                 </Field>
 
                 {this.props.showPayButton && this.props.payButton({ status: this.state.status })}

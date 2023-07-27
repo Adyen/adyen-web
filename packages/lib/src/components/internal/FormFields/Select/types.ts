@@ -1,3 +1,5 @@
+import { h } from 'preact';
+
 export interface SelectItem {
     disabled?: boolean;
     icon?: string;
@@ -15,10 +17,16 @@ export interface SelectProps {
     isValid?: boolean;
     items: SelectItem[];
     name?: string;
-    onChange: (e: { target: { value: string | number; name: string } }) => void;
+    onChange: (
+        e:
+            | {
+                  target: { value: string | number; name: string };
+              }
+            | Partial<h.JSX.TargetedKeyboardEvent<HTMLInputElement>>
+    ) => void;
     placeholder?: string;
     readonly: boolean;
-    selectedValue?: string;
+    selectedValue?: string | number;
     uniqueId?: string;
     disabled?: boolean;
 }

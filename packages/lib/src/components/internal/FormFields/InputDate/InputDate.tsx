@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
-import InputBase from '../InputBase';
+import InputBase, { InputBaseProps } from '../InputBase';
 import { checkDateInputSupport, formatDate } from './utils';
 
-interface InputDateProps {
+interface InputDateProps extends InputBaseProps {
     onInput?: (e) => void;
 }
 

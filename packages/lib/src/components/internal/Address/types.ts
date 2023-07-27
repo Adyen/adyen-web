@@ -45,7 +45,7 @@ export interface FieldContainerProps {
     valid?: object;
     onInput?: (e: Event) => void;
     onBlur?: (e: Event) => void;
-    onDropdownChange: (e: Event) => void;
+    onDropdownChange: (e: { target: { value: string | number; name: string } }) => void;
     readOnly?: boolean;
     specifications: Specifications;
     maxLength?: number;
@@ -63,7 +63,7 @@ export interface CountryFieldProps {
     classNameModifiers: string[];
     label: string;
     errorMessage: boolean | string;
-    onDropdownChange: (e: Event) => void;
+    onDropdownChange: (e: { target: { value: string | number; name: string } }) => void;
     readOnly?: boolean;
     value: string;
 }
@@ -77,7 +77,7 @@ export interface StateFieldProps {
     classNameModifiers: string[];
     label: string;
     errorMessage: boolean | string;
-    onDropdownChange: (e: Event) => void;
+    onDropdownChange: (e: { target: { value: string | number; name: string } }) => void;
     readOnly?: boolean;
     selectedCountry: string;
     specifications: Specifications;

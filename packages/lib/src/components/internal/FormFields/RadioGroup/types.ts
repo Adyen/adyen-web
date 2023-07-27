@@ -1,9 +1,11 @@
+import { InputBaseProps } from '../InputBase';
+
 interface RadioGroupItem {
     name: string;
     id: string;
 }
 
-export interface RadioGroupProps {
+export interface RadioGroupProps extends InputBaseProps {
     className?: string;
     isInvalid?: boolean;
     items: RadioGroupItem[];

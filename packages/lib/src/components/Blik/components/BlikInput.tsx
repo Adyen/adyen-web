@@ -3,12 +3,12 @@ import { useState, useEffect } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
 
-import { renderFormField } from '../../internal/FormFields';
 import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import useImage from '../../../core/Context/useImage';
+import InputText from '../../internal/FormFields/InputText';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -53,19 +53,19 @@ function BlikInput(props: BlikInputProps) {
                 isValid={valid.blikCode}
                 dir={'ltr'}
             >
-                {renderFormField('text', {
-                    value: data.blikCode,
-                    name: 'blikCode',
-                    spellcheck: false,
-                    required: true,
-                    autocorrect: 'off',
-                    autocomplete: 'off',
-                    onInput: handleChangeFor('blikCode', 'input'),
-                    onBlur: handleChangeFor('blikCode', 'blur'),
-                    placeholder: '123456',
-                    inputMode: 'numeric',
-                    maxLength: 6
-                })}
+                <InputText
+                    value={data.blikCode}
+                    name={'blikCode'}
+                    spellcheck={false}
+                    required={true}
+                    autocorrect={'off'}
+                    autocomplete={'off'}
+                    onInput={handleChangeFor('blikCode', 'input')}
+                    onBlur={handleChangeFor('blikCode', 'blur')}
+                    placeholder={'123456'}
+                    inputMode={'numeric'}
+                    maxLength={6}
+                />
             </Field>
 
             {props.showPayButton &&
