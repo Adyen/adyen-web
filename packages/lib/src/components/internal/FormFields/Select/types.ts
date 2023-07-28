@@ -13,7 +13,7 @@ export interface SelectProps {
     className: string;
     classNameModifiers: string[];
     filterable: boolean;
-    isInvalid: boolean;
+    isInvalid?: boolean;
     isValid?: boolean;
     items: SelectItem[];
     name?: string;
@@ -30,8 +30,8 @@ export interface SelectProps {
     selectedValue?: string | number;
     uniqueId?: string;
     disabled?: boolean;
-    disableTextFilter: boolean;
-    clearOnSelect: boolean;
+    disableTextFilter?: boolean;
+    clearOnSelect?: boolean;
 }
 
 export interface SelectButtonProps {
