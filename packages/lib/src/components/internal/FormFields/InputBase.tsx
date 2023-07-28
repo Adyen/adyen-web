@@ -5,55 +5,22 @@ import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
 
 export interface InputBaseProps extends h.JSX.HTMLAttributes {
-    /** Callback used to return the input element reference to parent component (Ex: Used to trigger focus programmatically) */
-    // autoCorrect?: string;
-    //
-    // autoComplete?: string;
-    //
     classNameModifiers?: string[];
     isInvalid?: boolean;
     isValid?: boolean;
     readonly?: boolean;
-    // spellCheck?: boolean;
-    // type?: string;
     uniqueId?: string;
     disabled?: boolean;
     className?: string;
     placeholder?: string;
     value?: string;
-    // required?: boolean;
     name?: string;
-    // spellcheck?: boolean;
-    // inputMode?: string;
     checked?: boolean;
-    //
-    // maxLength?: number;
-    // maxlength?: number; //TODO
-    //
-    // minLength?: number;
-    //
     setRef?: (ref: MutableRef<EventTarget>) => void;
-
-    // // TODO aria values should be camelCase ie: ariaLabel
-    // 'aria-label'?: string;
-    // 'aria-invalid'?: boolean;
-    // 'aria-required'?: string;
-
     trimOnBlur?: boolean;
-
-    // Boolean
     i18n?: Language;
     label?: string;
-
-    // TODO: this values should be inferred somehow
-    // Select
-    filterable?: boolean;
-    items?: Array<any>;
-    selectedValue?: string | number;
-    disableTextFilter?: boolean;
-
     onCreateRef?(reference: HTMLInputElement): void;
-
     onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
 }

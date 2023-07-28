@@ -54,7 +54,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         <div className="adyen-checkout__dragonpay-input__field">
             <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail} name={'dragonpay-shopperEmail'}>
                 <InputEmail
-                    name={'dragonpay.shopperEmail'}
+                    name={'dragonpay-shopperEmail'}
                     autoCorrect={'off'}
                     value={data.shopperEmail}
                     className={'adyen-checkout__input--large'}
