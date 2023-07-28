@@ -2,3 +2,4 @@ dist/
 server/
 config/
 src/polyfills.ts
+!.storybook

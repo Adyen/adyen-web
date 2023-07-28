@@ -44,6 +44,7 @@
     "continue": "Nastavi",
     "continueTo": "Nastavi na",
     "wechatpay.timetopay": "Imate %@ za plaćanje",
+    "sr.wechatpay.timetopay": "Imate %#minuta%# i %#sekundi%# za plaćanje",
     "wechatpay.scanqrcode": "Skeniraj QR kôd",
     "personalDetails": "Osobni podatci",
     "companyDetails": "Detalji tvrtke",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "Pokrajina ili teritorij",
     "cityTown": "Grad",
     "address": "Adresa",
+    "address.placeholder": "Pronađite adresu",
+    "address.errors.incomplete": "Unesite adresu za nastavak",
+    "address.enterManually": "Ručno unesite adresu",
     "state": "Savezna država",
     "field.title.optional": "(neobavezno)",
     "creditCard.cvcField.title.optional": "Sigurnosni kôd (neobvezno)",
@@ -284,5 +288,6 @@
     "paymentMethodsList.aria.label": "Odaberi način plaćanja",
     "companyDetails.name.invalid": "Unesite naziv tvrtke",
     "companyDetails.registrationNumber.invalid": "Unesite registracijski broj",
-    "consent.checkbox.invalid": "Morate se složiti s odredbama i uvjetima"
+    "consent.checkbox.invalid": "Morate se složiti s odredbama i uvjetima",
+    "form.instruction": "Sva su polja obavezna, osim ako nije drugačije označeno."
 }

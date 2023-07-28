@@ -57,7 +57,7 @@ describe('Installments', () => {
         const props = { amount, installmentOptions, type: 'amount' };
 
         render(<Installments {...props} />);
-        expect(await screen.findByTitle('1x $300.00')).toBeTruthy();
+        expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
     });
 
     describe('On brand change', () => {
@@ -81,9 +81,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
             });
         });
 
@@ -101,9 +101,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByTitle('4x $75.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
             });
 
             test('should preselect the first installments', async () => {
@@ -118,9 +118,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByTitle('4x $75.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByTitle('1x $300.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
             });
         });
     });

@@ -44,14 +44,12 @@
     "continue": "Continue",
     "continueTo": "Continue to",
     "wechatpay.timetopay": "You have %@ to pay",
+    "sr.wechatpay.timetopay": "You have %#minutes%# %#seconds%# to pay",
     "wechatpay.scanqrcode": "Scan QR code",
     "personalDetails": "Personal details",
     "companyDetails": "Company details",
     "companyDetails.name": "Company name",
-    "companyDetails.name.invalid": "Enter the company name",
     "companyDetails.registrationNumber": "Registration number",
-    "companyDetails.registrationNumber.invalid": "Enter the registration number",
-    "consent.checkbox.invalid": "You must agree with the terms & conditions",
     "socialSecurityNumber": "Social security number",
     "firstName": "First name",
     "firstName.invalid": "Enter your first name",
@@ -83,6 +81,9 @@
     "provinceOrTerritory": "Province or Territory",
     "cityTown": "City / Town",
     "address": "Address",
+    "address.placeholder": "Find your address",
+    "address.errors.incomplete": "Enter an address to continue",
+    "address.enterManually": "Enter address manually",
     "state": "State",
     "field.title.optional": "(optional)",
     "creditCard.cvcField.title.optional": "Security code (optional)",
@@ -289,5 +290,6 @@
     "paymentMethodsList.aria.label": "Choose a payment method",
     "companyDetails.name.invalid": "Enter the company name",
     "companyDetails.registrationNumber.invalid": "Enter the registration number",
-    "consent.checkbox.invalid": "You must agree with the terms & conditions"
+    "consent.checkbox.invalid": "You must agree with the terms & conditions",
+    "form.instruction": "All fields are required unless marked otherwise."
 }

@@ -56,9 +56,15 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     return (
         <Fieldset classNameModifiers={[label]} label={label}>
             {requiredFields.includes('name') && (
-                <Field label={i18n.get('companyDetails.name')} classNameModifiers={['name']} errorMessage={!!errors.name} i18n={i18n}>
+                <Field
+                    label={i18n.get('companyDetails.name')}
+                    classNameModifiers={['name']}
+                    errorMessage={!!errors.name}
+                    i18n={i18n}
+                    name={generateFieldName('companyName')}
+                >
                     <InputText
-                        name={generateFieldName('name')}
+                        name={generateFieldName('companyName')}
                         value={data.name}
                         classNameModifiers={['name']}
                         onInput={eventHandler('input')}
@@ -74,6 +80,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                     classNameModifiers={['registrationNumber']}
                     errorMessage={!!errors.registrationNumber}
                     i18n={i18n}
+                    name={generateFieldName('registrationNumber')}
                 >
                     <InputText
                         name={generateFieldName('registrationNumber')}

@@ -4,6 +4,7 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale } from '../../config/commonConfig';
+import { searchFunctionExample } from '../../utils';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -60,6 +61,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Address
     window.address = checkout
         .create('address', {
+            onAddressLookup: searchFunctionExample,
             onChange: console.log,
             validationRules: {
                 postalCode: {

@@ -44,6 +44,7 @@
     "continue": "Συνέχεια",
     "continueTo": "Μετάβαση στην",
     "wechatpay.timetopay": "Έχετε στη διάθεσή σας %@ για την πληρωμή",
+    "sr.wechatpay.timetopay": "Έχετε %#λεπτά%# %#δευτερόλεπτα%# για να πληρώσετε",
     "wechatpay.scanqrcode": "Σάρωση κωδικού QR",
     "personalDetails": "Προσωπικά στοιχεία",
     "companyDetails": "Στοιχεία εταιρείας",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "Επαρχία ή περιφέρεια",
     "cityTown": "Πόλη / Κοινότητα",
     "address": "Διεύθυνση",
+    "address.placeholder": "Βρείτε τη διεύθυνσή σας",
+    "address.errors.incomplete": "Εισαγάγετε μια διεύθυνση για να συνεχίσετε",
+    "address.enterManually": "Εισαγάγετε τη διεύθυνση μη αυτόματα",
     "state": "Πολιτεία",
     "field.title.optional": "(προαιρετικό)",
     "creditCard.cvcField.title.optional": "Κωδικός ασφαλείας (προαιρετικό)",
@@ -284,5 +288,6 @@
     "paymentMethodsList.aria.label": "Επιλέξτε έναν τρόπο πληρωμής",
     "companyDetails.name.invalid": "Εισαγάγετε το όνομα της εταιρείας",
     "companyDetails.registrationNumber.invalid": "Εισαγάγετε τον αριθμό μητρώου",
-    "consent.checkbox.invalid": "Πρέπει να συμφωνήσετε με τους όρους και τις προϋποθέσεις"
+    "consent.checkbox.invalid": "Πρέπει να συμφωνήσετε με τους όρους και τις προϋποθέσεις",
+    "form.instruction": "Όλα τα πεδία είναι υποχρεωτικά, εκτός εάν επισημαίνεται διαφορετικά."
 }

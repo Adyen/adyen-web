@@ -39,6 +39,7 @@ export function PhoneInput(props) {
                     'adyen-checkout__input--phone-number': true
                 })}
                 inputWrapperModifiers={['phoneInput']}
+                name={''}
             >
                 <div className="adyen-checkout__input-wrapper">
                     <div
@@ -48,7 +49,7 @@ export function PhoneInput(props) {
                         })}
                     >
                         {!!showPrefix && (
-                            <Field inputWrapperModifiers={['phoneInput']}>
+                            <Field inputWrapperModifiers={['phoneInput']} name={props.prefixName}>
                                 <Select
                                     className={'adyen-checkout__dropdown--small adyen-checkout__countryFlag'}
                                     filterable={false}

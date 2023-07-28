@@ -6,6 +6,11 @@ describe('Paypal', () => {
         expect(paypal.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { subtype: 'sdk', type: 'paypal' } });
     });
 
+    test('should return subtype express if isExpress flag is set', () => {
+        const paypal = new Paypal({ isExpress: true });
+        expect(paypal.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { subtype: 'express', type: 'paypal' } });
+    });
+
     test('Is always valid', () => {
         const paypal = new Paypal({});
         expect(paypal.isValid).toBe(true);

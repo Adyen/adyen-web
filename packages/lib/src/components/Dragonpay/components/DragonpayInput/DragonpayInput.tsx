@@ -52,7 +52,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">
-            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail}>
+            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail} name={'dragonpay-shopperEmail'}>
                 <InputEmail
                     name={'dragonpay.shopperEmail'}
                     autoCorrect={'off'}
@@ -65,7 +65,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
             </Field>
 
             {isIssuerRequired() && (
-                <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer}>
+                <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer} name={'issuer'}>
                     <Select
                         items={items}
                         selectedValue={data.issuer}

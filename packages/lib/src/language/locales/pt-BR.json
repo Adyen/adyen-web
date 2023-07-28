@@ -42,6 +42,7 @@
     "continue": "Continuar",
     "continueTo": "Continuar para",
     "wechatpay.timetopay": "Você tem %@ para pagar",
+    "sr.wechatpay.timetopay": "Você tem %#minutos%# e %#segundos%# para pagar",
     "wechatpay.scanqrcode": "Escanear código QR",
     "personalDetails": "Informações pessoais",
     "companyDetails": "Dados da empresa",
@@ -78,6 +79,9 @@
     "provinceOrTerritory": "Província ou território",
     "cityTown": "Cidade",
     "address": "Endereço",
+    "address.placeholder": "Encontre seu endereço",
+    "address.errors.incomplete": "Insira um endereço para continuar",
+    "address.enterManually": "Inserir endereço manualmente",
     "state": "Estado",
     "field.title.optional": "(opcional)",
     "creditCard.cvcField.title.optional": "Código de segurança (opcional)",
@@ -282,5 +286,6 @@
     "paymentMethodsList.aria.label": "Escolha um método de pagamento",
     "companyDetails.name.invalid": "Digite o nome da empresa",
     "companyDetails.registrationNumber.invalid": "Digite o número de registro",
-    "consent.checkbox.invalid": "Você precisa concordar com os termos e condições"
+    "consent.checkbox.invalid": "Você precisa concordar com os termos e condições",
+    "form.instruction": "Todos os campos são obrigatórios, a menos que marcados em contrário."
 }

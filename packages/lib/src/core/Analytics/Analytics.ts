@@ -23,6 +23,7 @@ class Analytics {
 
     constructor({ loadingContext, locale, clientKey, analytics, amount }: AnalyticsProps) {
         this.props = { ...Analytics.defaultProps, ...analytics };
+
         this.logEvent = logEvent({ loadingContext, locale });
         this.logTelemetry = postTelemetry({ loadingContext, locale, clientKey, amount });
         this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });

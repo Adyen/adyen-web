@@ -1,10 +1,15 @@
-export function resolveSupportedVersion(latestVersion) {
+export function resolveSupportedVersion(latestVersion: number): number | null {
     const versions = [];
     for (let i = latestVersion; i > 0; i--) {
         versions.push(i);
     }
 
-    return versions.find(v => v && window.ApplePaySession && ApplePaySession.supportsVersion(v));
+    try {
+        return versions.find(v => v && window.ApplePaySession && ApplePaySession.supportsVersion(v));
+    } catch (error) {
+        console.warn(error);
+        return null;
+    }
 }
 
 export function mapBrands(brands) {

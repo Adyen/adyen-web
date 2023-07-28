@@ -44,6 +44,7 @@
     "continue": "متابعة",
     "continueTo": "متابعة إلى",
     "wechatpay.timetopay": "لديك %@ للدفع",
+    "sr.wechatpay.timetopay": "لديك %#دقائق%# %#ثوان%# للدفع",
     "wechatpay.scanqrcode": "مسح رمز الاستجابة السريعة",
     "personalDetails": "البيانات الشخصية",
     "companyDetails": "بيانات الشركة",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "المقاطعة أو الإقليم",
     "cityTown": "المدينة / البلدة",
     "address": "العنوان",
+    "address.placeholder": "ابحث عن عنوانك",
+    "address.errors.incomplete": "أدخل عنوانًا للمتابعة",
+    "address.enterManually": "أدخل العنوان يدويًا",
     "state": "الولاية",
     "field.title.optional": "(اختياري)",
     "creditCard.cvcField.title.optional": "رمز الأمان (اختياري)",
@@ -285,5 +289,6 @@
     "paymentMethodsList.aria.label": "اختر طريقة دفع",
     "companyDetails.name.invalid": "أدخل اسم الشركة",
     "companyDetails.registrationNumber.invalid": "أدخل رقم التسجيل",
-    "consent.checkbox.invalid": "يجب أن توافق على الشروط والأحكام"
+    "consent.checkbox.invalid": "يجب أن توافق على الشروط والأحكام",
+    "form.instruction": "جميع الحقول مطلوبة ما لم يتم وضع علامة خلاف ذلك."
 }

@@ -13,7 +13,7 @@ export interface SelectProps {
     className: string;
     classNameModifiers: string[];
     filterable: boolean;
-    isInvalid?: boolean;
+    isInvalid: boolean;
     isValid?: boolean;
     items: SelectItem[];
     name?: string;
@@ -24,11 +24,14 @@ export interface SelectProps {
               }
             | Partial<h.JSX.TargetedKeyboardEvent<HTMLInputElement>>
     ) => void;
+    onInput?: (value: string) => void;
     placeholder?: string;
     readonly: boolean;
     selectedValue?: string | number;
     uniqueId?: string;
     disabled?: boolean;
+    disableTextFilter: boolean;
+    clearOnSelect: boolean;
 }
 
 export interface SelectButtonProps {

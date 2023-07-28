@@ -6,9 +6,11 @@ import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types';
 import './EcontextInput.scss';
 import { ComponentMethodsRef } from '../../../types';
+import FormInstruction from '../../../internal/FormInstruction';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
+    showFormInstruction?: boolean;
     data?: PersonalDetailsSchema;
     showPayButton?: boolean;
     payButton(config: any): VNode;
@@ -39,9 +41,12 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
 
     econtextRef.current.setStatus = setStatus;
 
+    const showFormInstruction = personalDetailsRequired && props.showFormInstruction;
+
     return (
         <div className="adyen-checkout__econtext-input__field">
-            {!!personalDetailsRequired && (
+            {showFormInstruction && <FormInstruction />}
+            {personalDetailsRequired && (
                 <PersonalDetails
                     data={data}
                     requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}

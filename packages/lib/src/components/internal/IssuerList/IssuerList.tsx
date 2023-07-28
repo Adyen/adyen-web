@@ -98,7 +98,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 </Fragment>
             )}
 
-            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']}>
+            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
                 <Select
                     items={items}
                     selectedValue={inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null}

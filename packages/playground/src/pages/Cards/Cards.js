@@ -6,6 +6,7 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
+import { searchFunctionExample } from '../../utils';
 
 const showComps = {
     clickToPay: true,
@@ -26,6 +27,7 @@ const disclaimerMessage = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount,
+        resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -37,7 +39,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
-                hasHolderName: true
+                hasHolderName: true,
+                holderNameRequired: true
             }
         }
     });
@@ -79,7 +82,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 },
                 onBinLookup: obj => {
                     console.log('### Cards::onBinLookup:: obj=', obj);
-                }
+                },
+                billingAddressRequired: true,
+                onAddressLookup: searchFunctionExample
             })
             .mount('.card-field');
     }
@@ -174,13 +179,20 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 type: 'scheme',
                 brands: ['mc', 'visa'],
                 configuration: {
+                    visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                    visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
                     mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
                     mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
                 },
                 clickToPayConfiguration: {
-                    disableOtpAutoFocus: true,
-                    shopperEmail: 'gui.ctp@adyen.com',
-                    merchantDisplayName: 'Adyen Merchant Name '
+                    shopperEmail: 'shopper@example.com',
+                    merchantDisplayName: 'Adyen Merchant Name',
+                    onReady: () => {
+                        console.log('Component is ready to be used');
+                    },
+                    onTimeout: error => {
+                        console.log(error);
+                    }
                 }
             })
             .mount('.card-ctp-field');

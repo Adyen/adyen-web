@@ -63,7 +63,7 @@ Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the 
 
 ## Contributing
 
-We merge every pull request into the `master` branch. We aim to keep `master` in good shape, which allows us to release a new version whenever we need to.
+We merge every pull request into the `main` branch. We aim to keep `main` in good shape, which allows us to release a new version whenever we need to.
 
 Have a look at our [contributing guidelines](https://github.com/Adyen/.github/blob/master/CONTRIBUTING.md) to find out how to raise a pull request.
 
@@ -79,7 +79,7 @@ Have a look at our [contributing guidelines](https://github.com/Adyen/.github/bl
 
 If you have a feature request, or spotted a bug or a technical problem, [create an issue here](https://github.com/Adyen/adyen-web/issues/new/choose).
 
-For other questions, [contact our support team](https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420).
+For other questions, [contact our support team](https://www.adyen.help/hc/en-us/requests/new).
 
 ## License
 

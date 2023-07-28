@@ -11,7 +11,7 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
 
     /* eslint-disable max-len */
     return (
-        <div className={hintClassnames}>
+        <span className={hintClassnames}>
             <svg
                 className={'adyen-checkout__card__cvc__hint adyen-checkout__card__cvc__hint--front'}
                 width="27"
@@ -60,7 +60,7 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
                 />
                 <rect className={'adyen-checkout__card__cvc__hint__location'} x="16.5" y="9.5" width="7" height="5" rx="2.5" stroke="#C12424" />
             </svg>
-        </div>
+        </span>
     );
     /* eslint-enable max-len */
 }

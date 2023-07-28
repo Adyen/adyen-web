@@ -44,6 +44,7 @@
     "continue": "続ける",
     "continueTo": "次へ進む：",
     "wechatpay.timetopay": "%@をお支払い下さい。",
+    "sr.wechatpay.timetopay": "支払いまで残り%#分%# %#秒%#",
     "wechatpay.scanqrcode": "QR コードをスキャンする",
     "personalDetails": "個人情報",
     "companyDetails": "会社情報",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "州または準州",
     "cityTown": "市区町村",
     "address": "住所",
+    "address.placeholder": "住所を検索してください",
+    "address.errors.incomplete": "続行するには、住所を入力してください",
+    "address.enterManually": "住所を手動で入力してください",
     "state": "都道府県",
     "field.title.optional": "（任意）",
     "creditCard.cvcField.title.optional": "セキュリティコード（任意）",
@@ -284,5 +288,6 @@
     "paymentMethodsList.aria.label": "お支払い方法を選択してください",
     "companyDetails.name.invalid": "会社名を入力してください",
     "companyDetails.registrationNumber.invalid": "登録番号を入力してください",
-    "consent.checkbox.invalid": "利用規約に同意する必要があります"
+    "consent.checkbox.invalid": "利用規約に同意する必要があります",
+    "form.instruction": "特に明記されていない限り、すべてのフィールドは必須です。"
 }

@@ -13,6 +13,8 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
 import useImage from '../../../core/Context/useImage';
+import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
+import useAutoFocus from '../../../utils/useAutoFocus';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -143,16 +145,20 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         const getImage = useImage();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
 
-        const finalState = (image, message) => (
-            <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
-                <img
-                    className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                    src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
-                    alt={i18n.get(message)}
-                />
-                <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{i18n.get(message)}</div>
-            </div>
-        );
+        const finalState = (image, message) => {
+            const status = i18n.get(message);
+            useA11yReporter(status);
+            return (
+                <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
+                    <img
+                        className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
+                        src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
+                        alt={status}
+                    />
+                    <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{status}</div>
+                </div>
+            );
+        };
 
         if (expired) {
             return finalState('error', 'error.subtitle.payment');
@@ -173,6 +179,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
         const timeToPayString = i18n.get('wechatpay.timetopay').split('%@');
 
+        const qrSubtitleRef = useAutoFocus();
+
         return (
             <div
                 className={`
@@ -183,7 +191,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             >
                 {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
 
-                <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.introduction)}</div>
+                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+                <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
+                    {i18n.get(this.props.introduction)}
+                </div>
 
                 <img
                     src={qrCodeImage}

@@ -22,6 +22,10 @@ class Core {
     public options: CoreOptions;
     public components = [];
 
+    public loadingContext?: string;
+
+    public cdnContext?: string;
+
     public static readonly version = {
         version: process.env.VERSION,
         revision: process.env.COMMIT_HASH,
@@ -32,7 +36,16 @@ class Core {
     constructor(props: CoreOptions) {
         this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
+
         this.setOptions(props);
+
+        this.loadingContext = resolveEnvironment(this.options.environment);
+        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
+
+        const clientKeyType = this.options.clientKey?.substr(0, 4);
+        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
+            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
+        }
 
         // Expose version number for npm builds
         window['adyenWebVersion'] = Core.version.version;
@@ -40,7 +53,7 @@ class Core {
 
     initialize(): Promise<this> {
         if (this.options.session) {
-            this.session = new Session(this.options.session, this.options.clientKey, this.options.loadingContext);
+            this.session = new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
             return this.session
                 .setupSession(this.options)
@@ -50,9 +63,11 @@ class Core {
                     this.setOptions({
                         ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
-                        paymentMethodsResponse: this.options.paymentMethodsResponse || paymentMethods,
                         locale: this.options.locale || shopperLocale
                     });
+
+                    this.createPaymentMethodsList(paymentMethods);
+                    this.createCoreModules();
 
                     return this;
                 })
@@ -61,6 +76,10 @@ class Core {
                     return this;
                 });
         }
+
+        this.createCoreModules();
+
+        this.createPaymentMethodsList();
 
         return Promise.resolve(this);
     }
@@ -168,12 +187,9 @@ class Core {
 
     /**
      * @internal
-     * Enhances the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
-     * (Re)Initializes core properties & processes (i18n, paymentMethodsResponse, etc...)
-     * @param options - the config object passed when AdyenCheckout is initialised
-     * @returns this
+     * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreOptions): this => {
+    private setOptions = (options: CoreOptions): void => {
         if (hasOwnProperty(options?.paymentMethodsConfiguration, 'scheme')) {
             console.warn(
                 'WARNING: You cannot define a property "scheme" on the paymentMethodsConfiguration object - it should be defined as "card" otherwise it will be ignored'
@@ -186,28 +202,10 @@ class Core {
             );
         }
 
-        this.options = { ...this.options, ...options };
-        this.options.loadingContext = resolveEnvironment(this.options.environment);
-        this.options.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
-
-        // In a sessions flow setOptions gets called twice, but we only need one set of modules (except for i18n needs to be re-initialised as the options settle)
-        this.modules = {
-            risk: this.modules?.risk ?? new RiskModule(this.options),
-            analytics: this.modules?.analytics ?? new Analytics(this.options),
-            resources: this.modules?.resources ?? new Resources(this.options.cdnContext),
-            i18n: new Language(this.options.locale, this.options.translations),
-            srPanel: this.modules?.srPanel ?? new SRPanel(this.options.srConfig)
+        this.options = {
+            ...this.options,
+            ...options
         };
-
-        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse, this.options);
-
-        // Check for clientKey/environment mismatch
-        const clientKeyType = this.options.clientKey?.substr(0, 4);
-        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.options.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
-        }
-
-        return this;
     };
 
     /**
@@ -223,6 +221,8 @@ class Core {
             i18n: this.modules.i18n,
             modules: this.modules,
             session: this.session,
+            loadingContext: this.loadingContext,
+            cdnContext: this.cdnContext,
             createFromAction: this.createFromAction,
             _parentInstance: this
         };
@@ -349,6 +349,33 @@ class Core {
             : 'No Payment Method component was passed';
 
         throw new Error(errorMessage);
+    }
+
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
+        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
+    }
+
+    private createCoreModules(): void {
+        if (this.modules) {
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('Core: Core modules are already created.');
+            }
+            return;
+        }
+
+        this.modules = Object.freeze({
+            risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext }),
+            analytics: new Analytics({
+                loadingContext: this.loadingContext,
+                clientKey: this.options.clientKey,
+                locale: this.options.locale,
+                analytics: this.options.analytics,
+                amount: this.options.amount
+            }),
+            resources: new Resources(this.cdnContext),
+            i18n: new Language(this.options.locale, this.options.translations),
+            srPanel: new SRPanel(this.options.srConfig)
+        });
     }
 }
 

@@ -1,6 +1,6 @@
 {
     "payButton": "Zaplatiť",
-    "payButton.redirecting": "Prebieha presmerovanie ...",
+    "payButton.redirecting": "Prebieha presmerovanie...",
     "payButton.with": "Zaplatiť %{value} pomocou %{maskedData}",
     "close": "Zavrieť",
     "storeDetails": "Uložiť pre moju ďalšiu platbu",
@@ -44,6 +44,7 @@
     "continue": "Pokračovať",
     "continueTo": "Pokračovať do",
     "wechatpay.timetopay": "Na zaplatenie máte %@",
+    "sr.wechatpay.timetopay": "Na zaplatenie máte %#min. %# %#sek.%#",
     "wechatpay.scanqrcode": "Naskenujte QR kód",
     "personalDetails": "Osobné údaje",
     "companyDetails": "Údaje o spoločnosti",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "Okres alebo územie",
     "cityTown": "Mesto/obec",
     "address": "Adresa",
+    "address.placeholder": "Vyhľadajte svoju adresu",
+    "address.errors.incomplete": "Ak chcete pokračovať, zadajte adresu",
+    "address.enterManually": "Manuálne zadajte adresu",
     "state": "Štát",
     "field.title.optional": "(voliteľné)",
     "creditCard.cvcField.title.optional": "Bezpečnostný kód (voliteľný)",
@@ -284,5 +288,6 @@
     "paymentMethodsList.aria.label": "Výber spôsobu platby",
     "companyDetails.name.invalid": "Zadajte názov spoločnosti",
     "companyDetails.registrationNumber.invalid": "Zadajte registračné číslo",
-    "consent.checkbox.invalid": "Musíte súhlasiť s obchodnými podmienkami"
+    "consent.checkbox.invalid": "Musíte súhlasiť s obchodnými podmienkami",
+    "form.instruction": "Všetky polia sú povinné, ak nie je označené inak."
 }

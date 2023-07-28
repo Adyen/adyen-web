@@ -52,6 +52,7 @@ function BlikInput(props: BlikInputProps) {
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}
                 dir={'ltr'}
+                name={'blikCode'}
             >
                 <InputText
                     value={data.blikCode}
