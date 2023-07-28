@@ -2,27 +2,27 @@
 
 .adyen-checkout__alert-message {
     display: flex;
-    border-radius: $border-radius-medium;
-    margin: 0 0 $spacing-medium;
+    border-radius: $adl-border-radius-8;
+    margin: 0 0 $adl-spacing-16;
     text-align: left;
-    padding: $spacing-medium-small;
+    padding: $adl-spacing-12;
     font-size: $font-size-small;
 }
 
 .adyen-checkout__alert-message--error {
-    background: $color-red-light;
+    background: $adl-color-red-20;
 }
 
 .adyen-checkout__alert-message--warning {
-    background: $color-orange-light;
+    background: $adl-color-orange-20;
 }
 
 .adyen-checkout__alert-message--info {
-    background: $color-gray-lighter;
+    background: $adl-color-grey-10;
 }
 
 .adyen-checkout__alert-message__icon {
     width: 14px;
     height: 14px;
-    margin-right: $spacing-small;
+    margin-right: $adl-spacing-8;
 }

@@ -1,4 +1,8 @@
-@import "../../../style/index";
+@import '../../../style/index';
+
+.adyen-checkout__dropin {
+    @include adl-component-base;
+}
 
 .adyen-checkout__payment-methods-list--loading {
     user-select: none;

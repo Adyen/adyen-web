@@ -2,8 +2,8 @@
 
 .adyen-checkout__payment-method {
     position: relative;
-    background: $color-white;
-    border: 1px solid $color-gray-light;
+    background: $adl-color-white;
+    border: $adl-border-default;
     cursor: pointer;
     margin-top: -1px;
     width: 100%;
@@ -16,16 +16,16 @@
 
 .adyen-checkout__payment-method:first-child,
 .adyen-checkout__payment-method--selected + .adyen-checkout__payment-method {
-    margin-top: 0;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    margin-top: $adl-spacing-0;
+    border-top-left-radius: $adl-border-radius-8;
+    border-top-right-radius: $adl-border-radius-8;
 }
 
 .adyen-checkout__payment-method:last-child,
 .adyen-checkout__payment-method--next-selected {
-    margin-bottom: 0;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+    margin-bottom: $adl-spacing-0;
+    border-bottom-left-radius: $adl-border-radius-8;
+    border-bottom-right-radius: $adl-border-radius-8;
 }
 
 .adyen-checkout__payment-method--loading {
@@ -49,29 +49,29 @@
 
 .adyen-checkout__payment-method__header {
     align-items: center;
-    color: $color-black;
+    color: $color-primary;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    font-weight: 400;
+    font-weight: $adl-text-font-weight-regular;
     font-size: $font-size-medium;
 
-    $payment-button-padding: $spacing-xsmall;
+    $payment-button-padding: $adl-spacing-4;
 
-    padding: $spacing-medium - $payment-button-padding;
-    padding-left: $spacing-xxlarge - $payment-button-padding;
-    padding-right: $spacing-medium;
+    padding: $adl-spacing-16 - $payment-button-padding;
+    padding-left: $adl-spacing-48 - $payment-button-padding;
+    padding-right: $adl-spacing-16;
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
 
     [dir="rtl"] & {
-        padding: $spacing-medium - $payment-button-padding;
-        padding-right: $spacing-xxlarge - $payment-button-padding;
+        padding: $adl-spacing-16 - $payment-button-padding;
+        padding-right: $adl-spacing-48 - $payment-button-padding;
     }
 
     .adyen-checkout__payment-method--standalone & {
-        padding: 16px;
+        padding: $adl-spacing-16;
     }
 }
 
@@ -79,35 +79,35 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    margin-right: 16px;
+    margin-right: $adl-spacing-16;
     max-width: 100%;
 
     // reset button styles
     border: none;
     background: none;
     cursor: pointer;
-    padding: $spacing-xsmall;
-    color: $color-black;
+    padding: $adl-spacing-4;
+    color: $color-primary;
     font-size: 1em;
-    font-weight: 400;
+    font-weight: $adl-text-font-weight-regular;
 
     [dir="rtl"] & {
-        margin-right: 0;
-        margin-left: 16px;
+        margin-right: $adl-spacing-0;
+        margin-left: $adl-spacing-16;
     }
 }
 
 .adyen-checkout__payment-method__surcharge {
-    color: $color-gray-darker;
-    margin-left: 5px;
+    color: $adl-color-grey-50;
+    margin-left: $adl-spacing-4;
 }
 
 .adyen-checkout__payment-method--selected {
     transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, opacity 0.3s ease-out;
-    background: $color-gray-lighter;
-    border: 1px solid $color-gray-light;
-    margin: 8px 0;
-    border-radius: $border-radius-large;
+    background: $adl-color-grey-10;
+    border: $adl-border-default;
+    margin: $adl-spacing-8 $adl-spacing-0;
+    border-radius: $adl-border-radius-8;
     cursor: default;
 }
 
@@ -116,49 +116,49 @@
 }
 
 .adyen-checkout__payment-method__details {
-    padding: 0 16px;
+    padding: $adl-spacing-0 $adl-spacing-16;
     position: relative;
 }
 
 .adyen-checkout__payment-method__details__content {
-    margin: 0 0 16px;
+    margin: $adl-spacing-0 $adl-spacing-0 $adl-spacing-16;
 }
 
 .adyen-checkout__payment-method__image__wrapper {
     height: 26px;
-    width: 40px;
+    width: $adl-spacing-40;
     position: relative;
 }
 
 .adyen-checkout__payment-method__image__wrapper--outline::after {
     content: "";
     position: absolute;
-    top: 0;
+    top: $adl-spacing-0;
     width: 100%;
     height: 100%;
-    left: 0;
-    border-radius: $border-radius-small;
+    left: $adl-spacing-0;
+    border-radius: $adl-border-radius-4;
     border: 1px solid rgb(0 27 43 / 17%);
 }
 
 .adyen-checkout__payment-method__image {
     display: block;
-    border-radius: $border-radius-small;
+    border-radius: $adl-border-radius-4;
 }
 
 .adyen-checkout__payment-method__brands {
     display: flex;
     flex-wrap: wrap;
-    margin: 4px 0;
-    height: 16px;
-    flex-basis: auto;
+    margin: $adl-spacing-4 $adl-spacing-0;
+    height: $adl-spacing-16;
+    flex-basis: $adl-spacing-auto;
     flex-shrink: 1;
     text-align: right;
     overflow: hidden;
 
     & .adyen-checkout__payment-method__brand-number {
-        color: $color-gray-darker;
-        font-size: 13px;
+        color: $adl-color-grey-50;
+        font-size: $adl-text-font-size-small;
     }
 }
 
@@ -170,23 +170,23 @@
 
 .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
     display: inline-block;
-    margin-right: 4px;
-    height: 16px;
-    width: 24px;
+    margin-right: $adl-spacing-4;
+    height: $adl-spacing-16;
+    width: $adl-spacing-24;
     transition: opacity 0.2s ease-out;
 }
 
 .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper:last-child {
-    margin: 0;
+    margin: $adl-spacing-0;
 }
 
 .adyen-checkout__payment-method--selected .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
-    margin-bottom: 4px;
+    margin-bottom: $adl-spacing-4;
 }
 
 .adyen-checkout__payment-method__brands img {
-    width: 24px;
-    height: 16px;
+    width: $adl-spacing-24;
+    height: $adl-spacing-16;
 }
 
 .adyen-checkout__payment-method__image__wrapper--disabled {
@@ -196,16 +196,16 @@
 /*  Payment Method Radio Button */
 .adyen-checkout__payment-method__radio {
     position: absolute;
-    background-color: $color-white;
-    border: 1px solid $color-gray-dark;
+    background-color: $adl-color-white;
+    border: $adl-border-default;
     border-radius: 50%;
-    height: 16px;
-    width: 16px;
-    left: 16px;
+    height: $adl-spacing-16;
+    width: $adl-spacing-16;
+    left: $adl-spacing-16;
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
     [dir="rtl"] & {
-        right: 16px;
+        right: $adl-spacing-16;
         left: auto;
     }
 
@@ -224,7 +224,7 @@
     top: 50%;
     height: 6px;
     width: 6px;
-    background-color: $color-white;
+    background-color: $adl-color-white;
     border-radius: 50%;
     transform: translateY(-50%) scale(0);
     transition: transform 0.3s ease-out;
@@ -232,7 +232,7 @@
 
 .adyen-checkout__payment-method:hover:not(.adyen-checkout__payment-method--selected) .adyen-checkout__payment-method__radio {
     border-color: #99a3ad;
-    box-shadow: 0 0 0 2px $color-gray;
+    box-shadow: 0 0 0 2px $adl-color-grey-30;
     cursor: pointer;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .adyen-checkout__payment-method__radio--selected:hover {
-    box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+    box-shadow: 0 0 0 2px $adl-color-grey-transparent;
 }
 
 .adyen-checkout__payment-method__radio--selected::after {

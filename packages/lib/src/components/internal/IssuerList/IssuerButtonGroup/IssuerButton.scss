@@ -1,11 +1,11 @@
 @import "../../../../style/index";
 
 .adyen-checkout__issuer-button {
-    background-color: $color-white;
+    background-color: $adl-color-white;
     box-shadow: inset 0 0 0 1px $color-border-dark;
     border: none;
-    border-radius: $border-radius-medium;
-    padding: $spacing-none $spacing-medium-small;
+    border-radius: $adl-border-radius-8;
+    padding: $adl-spacing-0 $adl-spacing-12;
     cursor: pointer;
     flex-basis: 47%;
     flex-grow: 2;
@@ -36,9 +36,9 @@
     }
 
     &--selected {
-        background: $color-white;
-        box-shadow: inset 0 0 0 2px $color-black;
-        color: $color-black;
+        background: $adl-color-white;
+        box-shadow: inset 0 0 0 2px $color-primary;
+        color: $color-primary;
         font-weight: 500;
         height: 40px;
         transition: none;

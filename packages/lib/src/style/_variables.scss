@@ -1,0 +1,223 @@
+/* #region Spacing */
+$adl-spacing-auto: auto !default;
+$adl-spacing-0: 0 !default;
+$adl-spacing-2: 2px !default;
+$adl-spacing-4: 4px !default;
+$adl-spacing-8: 8px !default;
+$adl-spacing-12: 12px !default;
+$adl-spacing-16: 16px !default;
+$adl-spacing-18: 18px !default;
+$adl-spacing-24: 24px !default;
+$adl-spacing-32: 32px !default;
+$adl-spacing-40: 40px !default;
+$adl-spacing-48: 48px !default;
+$adl-spacing-56: 56px !default;
+$adl-spacing-64: 64px !default;
+$adl-spacing-72: 72px !default;
+$adl-spacing-80: 80px !default;
+$adl-spacing-88: 88px !default;
+$adl-spacing-96: 96px !default;
+
+/* #endregion */
+
+/* #region Colors */
+$adl-color-white: #fff !default;
+$adl-color-black: #00112c !default;
+$adl-color-grey-transparent: rgb(210 218 225 / 70%) !default;
+$adl-color-grey-10: #f3f6f9 !default;
+$adl-color-grey-20: #dce0e5 !default;
+$adl-color-grey-30: #a5afbd !default;
+$adl-color-grey-40: #8390a3 !default;
+$adl-color-grey-50: #69778c !default;
+$adl-color-grey-60: #394962 !default;
+$adl-color-grey-70: #20304c !default;
+$adl-color-blue-10: #e6f0ff !default;
+$adl-color-blue-20: #cce0ff !default;
+$adl-color-blue-30: #80b2ff !default;
+$adl-color-blue-40: #06f !default;
+$adl-color-blue-50: #0047b2 !default;
+$adl-color-blue-60: #002866 !default;
+$adl-color-blue-70: #001e4c !default;
+$adl-color-red-10: #fce5e5 !default;
+$adl-color-red-20: #facccc !default;
+$adl-color-red-30: #ee5959 !default;
+$adl-color-red-40: #e50000 !default;
+$adl-color-red-50: #a10000 !default;
+$adl-color-red-60: #720000 !default;
+$adl-color-red-70: #500000 !default;
+$adl-color-orange-10: #fff4e5 !default;
+$adl-color-orange-20: #ffeacc !default;
+$adl-color-orange-30: #ffba59 !default;
+$adl-color-orange-40: #ff9500 !default;
+$adl-color-orange-50: #b36900 !default;
+$adl-color-orange-60: #7f4a00 !default;
+$adl-color-orange-70: #593400 !default;
+$adl-color-green-10: #e6f8ed !default;
+$adl-color-green-20: #cef2dd !default;
+$adl-color-green-30: #60d58f !default;
+$adl-color-green-40: #0abf53 !default;
+$adl-color-green-50: #07863a !default;
+$adl-color-green-60: #055f29 !default;
+$adl-color-green-70: #03431d !default;
+$adl-color-info-10: $adl-color-blue-10 !default;
+$adl-color-info-20: $adl-color-blue-20 !default;
+$adl-color-info-30: $adl-color-blue-30 !default;
+$adl-color-info-40: $adl-color-blue-40 !default;
+$adl-color-info-50: $adl-color-blue-50 !default;
+$adl-color-info-60: $adl-color-blue-60 !default;
+$adl-color-info-70: $adl-color-blue-70 !default;
+$adl-color-error-10: $adl-color-red-10 !default;
+$adl-color-error-20: $adl-color-red-20 !default;
+$adl-color-error-30: $adl-color-red-30 !default;
+$adl-color-error-40: $adl-color-red-40 !default;
+$adl-color-error-50: $adl-color-red-50 !default;
+$adl-color-error-60: $adl-color-red-60 !default;
+$adl-color-error-70: $adl-color-red-70 !default;
+$adl-color-warning-10: $adl-color-orange-10 !default;
+$adl-color-warning-20: $adl-color-orange-20 !default;
+$adl-color-warning-30: $adl-color-orange-30 !default;
+$adl-color-warning-40: $adl-color-orange-40 !default;
+$adl-color-warning-50: $adl-color-orange-50 !default;
+$adl-color-warning-60: $adl-color-orange-60 !default;
+$adl-color-warning-70: $adl-color-orange-70 !default;
+$adl-color-success-10: $adl-color-green-10 !default;
+$adl-color-success-20: $adl-color-green-20 !default;
+$adl-color-success-30: $adl-color-green-30 !default;
+$adl-color-success-40: $adl-color-green-40 !default;
+$adl-color-success-50: $adl-color-green-50 !default;
+$adl-color-success-60: $adl-color-green-60 !default;
+$adl-color-success-70: $adl-color-green-70 !default;
+$adl-color-brand: $adl-color-green-40 !default;
+$adl-color-default: $adl-color-blue-40 !default;
+$adl-color-disabled: $adl-color-grey-40 !default;
+$adl-color-disabled-background: $adl-color-grey-10 !default;
+$adl-color-quiet: $adl-color-grey-30 !default;
+$adl-color-box-shadow-grey: #e3e6e8 !default;
+$adl-color-border-grey: #d1d5da !default;
+
+/* #endregion */
+
+/* #region Fonts */
+$adl-text-font-family: fakt, -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, 'Open Sans', 'Helvetica Neue',
+    sans-serif !default;
+
+// Color
+$adl-text-color: $adl-color-black !default;
+$adl-text-color-medium: $adl-color-grey-50 !default;
+$adl-icon-color: inherit !default;
+$adl-icon-before-color: inherit !default;
+
+// Weight
+$adl-text-font-weight-thin: 100 !default;
+$adl-text-font-weight-regular: 400 !default;
+$adl-text-font-weight-medium: 500 !default;
+$adl-text-font-weight-semi-bold: 600 !default;
+$adl-text-line-height: 1.4 !default;
+
+// Size
+$adl-text-font-size-xxlarge: 45px !default;
+$adl-text-font-size-xlarge: 30px !default;
+$adl-text-font-size-large: 21px !default;
+$adl-text-font-size-medium: 15px !default;
+$adl-text-font-size-small: 13px !default;
+$adl-text-font-size-xsmall: 10px !default;
+
+/* #endregion */
+
+/* #region Borders */
+$adl-border-width: 1px !default;
+$adl-border-style: solid !default;
+$adl-border-color: $adl-color-grey-20 !default;
+$adl-border-color-focus: $adl-color-blue-40 !default;
+$adl-border-color-hover: $adl-color-grey-50 !default;
+$adl-border-color-active-hover: $adl-color-blue-50 !default;
+$adl-border-color-form-element: $adl-color-grey-20 !default;
+$adl-border-radius-4: $adl-spacing-4 !default;
+$adl-border-radius-6: 6px !default;
+$adl-border-radius-8: $adl-spacing-8 !default;
+$adl-border-radius-12: $adl-spacing-12 !default;
+$adl-border-radius-24: $adl-spacing-24 !default;
+$adl-border-radius: $adl-border-radius-6 !default;
+$adl-border-default: $adl-border-width $adl-border-style $adl-border-color !default;
+
+/* #endregion */
+
+/* #region Box-shadow */
+$adl-box-shadow: 0 8px 8px rgb(0 17 44 / 4%), 0 2px 4px rgb(0 17 44 / 8%) !default;
+
+/* #endregion */
+
+/* #region Shadows */
+// $adl-shadow-10   - 0 8px 8px rgba($adl-color-black, .02), 0 2px 4px rgba($adl-color-black, .04)
+// $adl-shadow-20   - 0 8px 8px rgba($adl-color-black, .04), 0 2px 4px rgba($adl-color-black, .08)
+
+$adl-shadow-10: 0 8px 8px rgba($adl-color-black, 0.02), 0 2px 4px rgba($adl-color-black, 0.04) !default;
+$adl-shadow-20: 0 8px 8px rgba($adl-color-black, 0.04), 0 2px 4px rgba($adl-color-black, 0.08) !default;
+
+/* #endregion */
+
+/* #region Z-index */
+$adl-z-over-content: 100 !default;
+$adl-z-over-control: 200 !default;
+$adl-z-over-page: 300 !default;
+$adl-z-over-screen: 400 !default;
+$adl-z-over-everything: 500 !default;
+
+/* #endregion */
+
+/* #region Transition */
+$adl-transition-time: 0.2s !default;
+
+/* #endregion */
+
+/* #region Timing functions */
+// $adl-timing-function-ease-in-out - cubic-bezier(0.785, 0.135, 0.15, 0.86)
+// $adl-timing-function-ease-in     - cubic-bezier(0.55, 0.06, 0.68, 0.19)
+// $adl-timing-function-ease-out    - cubic-bezier(0.22, 0.61, 0.36, 1)
+$adl-timing-function-ease-in-out: cubic-bezier(0.785, 0.135, 0.15, 0.86) !default;
+$adl-timing-function-ease-in: cubic-bezier(0.55, 0.06, 0.68, 0.19) !default; // disappear with this one
+$adl-timing-function-ease-out: cubic-bezier(0.22, 0.61, 0.36, 1) !default; // appear with this one
+
+/* #endregion */
+
+/* #region Focus ring */
+$adl-focus-ring-transition-duration: 0.1s !default;
+$adl-focus-ring-color: rgba($adl-color-blue-40, 0.4) !default;
+$adl-focus-ring-distance: 1px !default;
+$adl-focus-ring-width: 3px !default;
+$adl-focus-ring-z-index: 1 !default;
+$adl-focus-ring-background-color: $adl-color-white !default;
+
+/* #endregion */
+
+/* #region Inline components */
+// $adl-inline-components-height-small        - @size 24px
+// $adl-inline-components-height-medium       - @size 40px
+// $adl-inline-components-square-width-medium - $adl-inline-components-height-medium
+// $adl-inline-components-vertical-align      - baseline
+
+$adl-inline-components-height-medium: $adl-spacing-40 !default;
+$adl-inline-components-square-width-medium: $adl-inline-components-height-medium !default;
+$adl-inline-components-height-small: $adl-spacing-24 !default;
+$adl-inline-components-vertical-align: baseline !default;
+
+/* #endregion */
+
+// Screen sizes
+$adyen-checkout-media-query-s-min: 480px;
+$adyen-checkout-media-query-m-min: 768px;
+$adyen-checkout-media-query-l-min: 1024px;
+
+// Application
+$color-primary: $adl-color-black;
+$color-success: $adl-color-green-40;
+$color-warning: $adl-color-orange-40;
+$color-alert: $adl-color-red-40;
+
+// todo: move it to form?
+$color-disabled: $adl-color-grey-10;
+
+// Border colors
+$color-border-dark: $adl-color-grey-30;
+$color-border: $adl-color-grey-20;
+$color-border-light: $adl-color-grey-10;

@@ -3,19 +3,19 @@
 .adyen-checkout__adyen-giving {
     .adyen-checkout__status__icon {
         display: block;
-        margin: $spacing-xxxlarge auto $spacing-xlarge;
+        margin: $adl-spacing-56 auto $adl-spacing-32;
     }
 
     .adyen-checkout__status__text {
-        color: $color-black;
-        margin-bottom: $spacing-xxxlarge;
+        color: $color-primary;
+        margin-bottom: $adl-spacing-56;
         text-align: center;
     }
 }
 
 .adyen-checkout__campaign {
-    border-radius: $border-radius-medium;
-    background: $color-black;
+    border-radius: $adl-border-radius-8;
+    background: $color-primary;
     height: 227px;
     overflow: hidden;
     position: relative;
@@ -31,16 +31,16 @@
 
 .adyen-checkout__campaign-logo {
     border: 2px solid rgb(255 255 255 / 40%);
-    border-radius: $border-radius-small;
+    border-radius: $adl-border-radius-4;
     display: block;
     height: 48px;
-    margin-bottom: $spacing-medium;
+    margin-bottom: $adl-spacing-16;
     overflow: hidden;
     width: 48px;
 }
 
 .adyen-checkout__campaign-background-image {
-    background-color: $color-black;
+    background-color: $color-primary;
     background-position: center;
     background-size: cover;
     height: 100%;
@@ -69,21 +69,21 @@
 
 .adyen-checkout__campaign-content {
     bottom: 0;
-    padding: $spacing-medium;
+    padding: $adl-spacing-16;
     position: absolute;
     z-index: 2;
 }
 
 .adyen-checkout__campaign-title,
 .adyen-checkout__campaign-description {
-    color: $color-white;
+    color: $adl-color-white;
     font-weight: normal;
     margin: 0;
 }
 
 .adyen-checkout__campaign-title {
     font-size: $font-size-medium;
-    margin-bottom: $spacing-small;
+    margin-bottom: $adl-spacing-8;
 }
 
 .adyen-checkout__campaign-description {
@@ -92,13 +92,13 @@
 }
 
 .adyen-checkout__adyen-giving-actions {
-    margin-top: $spacing-medium;
+    margin-top: $adl-spacing-16;
     text-align: center;
 }
 
 .adyen-checkout__button {
     &.adyen-checkout__button--donate {
-        margin: $spacing-medium auto $spacing-small;
+        margin: $adl-spacing-16 auto $adl-spacing-8;
     }
 
     &.adyen-checkout__button--decline {

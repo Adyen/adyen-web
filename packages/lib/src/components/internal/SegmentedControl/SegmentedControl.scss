@@ -5,8 +5,8 @@
     justify-content: space-between;
     gap: 4px;
     padding: 4px 5px;
-    background: $color-white;
-    border: 1px solid $color-gray-dark;
+    background: $adl-color-white;
+    border: 1px solid $adl-color-grey-20;
     border-radius: 6px;
 
     &--disabled {
@@ -30,23 +30,23 @@
     height: 40px;
     flex-grow: 1;
     cursor: pointer;
-    background: $color-white;
+    background: $adl-color-white;
     border-radius: 6px;
     border: 0;
     text-align: center;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: $color-gray-lighter;
+        background-color: $adl-color-grey-10;
     }
 
     &:active {
-        background-color: $color-gray-lighter;
-        border: 1.5px solid $color-gray-darker;
+        background-color: $adl-color-grey-10;
+        border: 1.5px solid $adl-color-grey-50;
     }
 
     &--selected {
-        background: $color-gray-lighter;
+        background: $adl-color-grey-10;
         border: 1.5px solid $color-primary;
         color: $color-primary;
         font-weight: 700;

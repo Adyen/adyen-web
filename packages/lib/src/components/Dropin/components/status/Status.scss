@@ -9,11 +9,11 @@
     height: 350px;
     margin: 0;
     padding: 32px;
-    background-color: $color-white;
-    border-radius: $border-radius-medium;
-    border: 1px solid $color-gray;
+    background-color: $adl-color-white;
+    border-radius: $adl-border-radius-8;
+    border: 1px solid $adl-color-grey-30;
     font-size: $font-size-medium;
-    color: $color-black;
+    color: $color-primary;
 
     &__icon {
         margin-bottom: 24px;

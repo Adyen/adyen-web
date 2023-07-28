@@ -3,7 +3,7 @@
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
     font-size: $font-size-small;
-    color: $color-white;
+    color: $adl-color-white;
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
     overflow: hidden;
@@ -33,8 +33,8 @@
 .adyen-checkout__payment-method__disable-confirmation__button {
     background: $color-alert;
     border: 1px solid transparent;
-    border-radius: $border-radius-medium;
-    color: $color-white;
+    border-radius: $adl-border-radius-8;
+    color: $adl-color-white;
     cursor: pointer;
     display: block;
     height: auto;
@@ -58,7 +58,7 @@
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: $color-white;
+    border-color: $adl-color-white;
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,

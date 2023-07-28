@@ -2,12 +2,12 @@
 
 .adyen-checkout__bankTransfer__introduction {
     font-size: $font-size-small;
-    color: $color-black;
+    color: $color-primary;
     font-weight: 400;
-    margin: 0 0 $spacing-medium;
+    margin: 0 0 $adl-spacing-16;
     padding: 0;
 }
 
 .adyen-checkout__bankTransfer__emailField {
-    margin: 0 0 $spacing-medium;
+    margin: 0 0 $adl-spacing-16;
 }

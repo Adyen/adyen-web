@@ -31,10 +31,10 @@
 }
 
 .adyen-checkout__filter-input {
-  background: $color-white;
+  background: $adl-color-white;
   border: 0;
   caret-color: $color-primary;
-  color: $color-black;
+  color: $color-primary;
   font-family: inherit;
   font-size: $font-size-medium;
   height: 100%;
@@ -42,7 +42,7 @@
   width: 100%;
 
   &::placeholder {
-    color: $color-gray-dark;
+    color: $adl-color-grey-20;
     font-weight: 200;
   }
 
@@ -52,9 +52,9 @@
   }
 
   &[readonly] {
-    background: $color-gray-light;
+    background: $adl-color-grey-20;
     border-color: transparent;
-    color: $color-black;
+    color: $color-primary;
     cursor: not-allowed;
   }
 }
@@ -62,7 +62,7 @@
 .adyen-checkout__dropdown__list {
   position: absolute;
   width: 100%;
-  background: $color-white;
+  background: $adl-color-white;
   list-style: none;
   padding: 0;
   margin: 0;

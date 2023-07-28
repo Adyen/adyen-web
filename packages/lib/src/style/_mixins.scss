@@ -1,0 +1,33 @@
+@import 'variables';
+
+// adl-component-base
+// Set basic styling properties for components.
+// todo? set typography related and include: color, font-size, font-smoothing, font-weight, line-height.
+// A box-sizing border-box reset is also included which is applied to the element and it's children.
+@mixin adl-component-base {
+    box-sizing: border-box;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: inherit;
+    }
+}
+
+@mixin screen-s-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-s-min}) {
+        @content;
+    }
+}
+
+@mixin screen-m-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-m-min}) {
+        @content;
+    }
+}
+
+@mixin screen-l-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-l-min}) {
+        @content;
+    }
+}

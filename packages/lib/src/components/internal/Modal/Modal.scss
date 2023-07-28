@@ -42,8 +42,8 @@
 
 .adyen-checkout__modal {
     box-shadow: 0 8px 24px rgb(0 17 44 / 15%);
-    border-radius: $border-radius-large;
-    background-color: $color-white;
+    border-radius: $adl-border-radius-12;
+    background-color: $adl-color-white;
     margin: auto;
     padding: 16px;
     transition: opacity 0.2s ease, visibility 0.2s ease;

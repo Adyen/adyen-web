@@ -1,12 +1,12 @@
 @import "src/style/index";
 
 .adyen-checkout__content-separator {
-    margin-top: $spacing-medium;
-    margin-bottom: $spacing-medium;
+    margin-top: $adl-spacing-16;
+    margin-bottom: $adl-spacing-16;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $color-gray-darker;
+    color: $adl-color-grey-50;
     white-space: nowrap;
     font-size: 13px;
     line-height: 19px;
@@ -15,7 +15,7 @@
     &::before {
         content: "";
         display: block;
-        background: $color-gray-light;
+        background: $adl-color-grey-20;
         width: 100%;
         height: 1px;
     }

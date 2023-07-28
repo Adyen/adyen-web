@@ -88,15 +88,15 @@
 }
 
 .adyen-checkout__input {
-    color: $color-black;
-    caret-color: $color-black;
+    color: $color-primary;
+    caret-color: $color-primary;
     font-size: $font-size-medium;
     font-family: inherit;
     display: block;
     height: 40px;
-    background: $color-white;
-    border: 1px solid $color-gray-dark;
-    border-radius: $border-radius-medium;
+    background: $adl-color-white;
+    border: 1px solid $adl-color-grey-20;
+    border-radius: $adl-border-radius-8;
     padding: 5px 8px;
     position: relative;
     outline: none;
@@ -105,7 +105,7 @@
 }
 
 .adyen-checkout__input:hover {
-    border-color: $color-gray-darker;
+    border-color: $adl-color-grey-50;
 }
 
 .adyen-checkout__input:required {
@@ -173,10 +173,6 @@
 
 }
 
-.adyen-checkout__input::placeholder {
-    color: $color-new-gray-darker;
-    font-weight: 200;
-}
 
 .adyen-checkout__input--date {
     padding-right: 30px;
@@ -194,8 +190,8 @@
 
 .adyen-checkout__input[readonly],
 .adyen-checkout__input[readonly]:hover {
-    background-color: $color-gray-light;
+    background-color: $adl-color-grey-20;
     border-color: transparent;
-    color: $color-gray-darker;
+    color: $adl-color-grey-50;
     cursor: default;
 }

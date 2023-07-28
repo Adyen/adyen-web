@@ -8,8 +8,8 @@
 
 .adyen-checkout__voucher-result__top,
 .adyen-checkout__voucher-result__bottom {
-    background: $color-white;
-    border: 1px solid $color-gray;
+    background: $adl-color-white;
+    border: 1px solid $adl-color-grey-30;
 }
 
 .adyen-checkout__voucher-result__top {
@@ -24,7 +24,7 @@
 }
 
 .adyen-checkout__voucher-result__separator {
-    background: $color-white;
+    background: $adl-color-white;
     position: relative;
     width: calc(100% - 14px);
     height: 13px;
@@ -63,7 +63,7 @@
 
 .adyen-checkout__voucher-result__separator__inner {
     width: 100%;
-    border-top: 1px solid $color-gray-light;
+    border-top: 1px solid $adl-color-grey-20;
 }
 
 .adyen-checkout__voucher-result__image {
@@ -97,7 +97,7 @@
 }
 
 .adyen-checkout__voucher-result__image__wrapper:nth-child(2)::before {
-    border-left: 1px solid $color-gray;
+    border-left: 1px solid $adl-color-grey-30;
     content: "";
     height: 64px;
     left: -24.5px;
@@ -116,7 +116,7 @@
     line-height: 19px;
     font-size: $font-size-small;
     text-align: center;
-    color: $color-black;
+    color: $color-primary;
     max-width: 400px;
     margin: 0 auto;
 }
@@ -124,7 +124,7 @@
 .adyen-checkout__voucher-result__amount {
     margin: 24px auto 0;
     font-size: $font-size-medium;
-    color: $color-black;
+    color: $color-primary;
     text-align: center;
     font-weight: bold;
 }
@@ -133,7 +133,7 @@
     font-size: $font-size-small;
     line-height: 19px;
     text-align: center;
-    color: $color-gray-darker;
+    color: $adl-color-grey-50;
     display: block;
     font-weight: normal;
 }
@@ -158,8 +158,8 @@
 
 .adyen-checkout__voucher-result__code__label__text {
     font-size: 13px;
-    color: $color-black;
-    background: $color-white;
+    color: $color-primary;
+    background: $adl-color-white;
     padding: 0 8px;
     letter-spacing: normal;
     line-height: 1;
@@ -179,7 +179,7 @@
     font-size: $font-size-large;
     text-align: center;
     letter-spacing: 1px;
-    color: $color-black;
+    color: $color-primary;
     border-width: 1px 0;
     padding: 16px 48px;
     display: inline-block;
@@ -201,9 +201,9 @@
     display: flex;
     justify-content: space-between;
     font-size: $font-size-small;
-    color: $color-black;
+    color: $color-primary;
     padding: 16px 24px;
-    border-top: 1px solid $color-gray-light;
+    border-top: 1px solid $adl-color-grey-20;
     word-break: break-word;
 }
 

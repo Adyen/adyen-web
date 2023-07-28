@@ -9,7 +9,7 @@
         background: transparent;
         border: 0;
         box-shadow: inset 0 0 0 1px #99a3ad;
-        color: $color-black;
+        color: $color-primary;
         font-size: $font-size-small;
         font-weight: normal;
         line-height: 40px;
@@ -28,7 +28,7 @@
         }
 
         &:active {
-            background: $color-gray-lighter;
+            background: $adl-color-grey-10;
             box-shadow: inset 0 0 0 2px #99a3ad;
         }
 
@@ -46,7 +46,7 @@
             &:hover,
             &:active,
             &:active:hover {
-                background: $color-gray-lighter;
+                background: $adl-color-grey-10;
                 box-shadow: inset 0 0 0 1px $color-primary;
                 color: $color-primary;
                 font-weight: 500;

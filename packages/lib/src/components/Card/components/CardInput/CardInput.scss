@@ -24,7 +24,7 @@
 
 .adyen-checkout__field--storedCard .adyen-checkout__input[readonly],
 .adyen-checkout__field--storedCard .adyen-checkout__input[readonly]:hover{
-    color: $color-black;
+    color: $color-primary;
 }
 
 .adyen-checkout__field--storedCard,
@@ -39,7 +39,7 @@
 .adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
-    margin-top: $spacing-medium;
+    margin-top: $adl-spacing-16;
 }
 
 .adyen-checkout__card-input.adyen-checkout__card-input--loading {
@@ -47,7 +47,7 @@
 }
 
 .adyen-checkout__card__holderName:first-child {
-    margin: 0 0 $spacing-medium;
+    margin: 0 0 $adl-spacing-16;
 }
 
 /* Hide card brand icon when cardNumber is in an error state */

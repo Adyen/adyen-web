@@ -28,8 +28,8 @@
 .adyen-checkout__radio_group__label::before {
     content: "";
     position: absolute;
-    background-color: $color-white;
-    border: 1px solid $color-gray-dark;
+    background-color: $adl-color-white;
+    border: 1px solid $adl-color-grey-20;
     border-radius: 50%;
     height: 16px;
     width: 16px;
@@ -40,7 +40,7 @@
 
 .adyen-checkout__radio_group__label:hover::before {
     border-color: #99a3ad;
-    box-shadow: 0 0 0 2px $color-gray;
+    box-shadow: 0 0 0 2px $adl-color-grey-30;
     cursor: pointer;
 }
 
@@ -53,7 +53,7 @@
     top: 5px;
     height: 6px;
     width: 6px;
-    background-color: $color-white;
+    background-color: $adl-color-white;
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.2s ease-out;

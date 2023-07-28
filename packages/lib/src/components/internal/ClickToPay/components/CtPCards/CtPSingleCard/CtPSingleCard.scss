@@ -2,7 +2,7 @@
 
 .adyen-checkout-ctp__card-list-single-card {
     border-radius: 6px;
-    background-color: $color-gray-lighter;
+    background-color: $adl-color-grey-10;
     height: 40px;
     padding: 12px;
     display: flex;
@@ -13,12 +13,12 @@
 
     &-expired {
         text-decoration: line-through;
-        color: $color-gray-darker;
+        color: $adl-color-grey-50;
     }
 }
 
 .adyen-checkout-ctp__expired-label {
-    color: $color-gray-darker;
+    color: $adl-color-grey-50;
     font-weight: 500;
     line-height: 17px;
     margin-left: auto;

@@ -1,10 +1,10 @@
 @import "../../../style/index";
 
 .adyen-checkout__button {
-    background: $color-black;
+    background: $color-primary;
     border: 0;
-    border-radius: $border-radius-medium;
-    color: $color-white;
+    border-radius: $adl-border-radius-8;
+    color: $adl-color-white;
     cursor: pointer;
     font-size: $font-size-medium;
     font-weight: 500;
@@ -16,7 +16,7 @@
     width: 100%;
 
     &:focus {
-        box-shadow: 0 0 0 1px $color-gray-light;
+        box-shadow: 0 0 0 1px $adl-color-grey-20;
         outline: 0;
     }
 
@@ -30,7 +30,7 @@
     }
 
     &:hover:focus {
-        box-shadow: 0 0 0 2px $color-gray-light, 0 3px 4px rgb(0 15 45 / 20%);
+        box-shadow: 0 0 0 2px $adl-color-grey-20, 0 3px 4px rgb(0 15 45 / 20%);
     }
 
     &:disabled {
@@ -44,7 +44,7 @@
     }
 
     &.adyen-checkout__button--loading {
-        background: $color-gray-darker;
+        background: $adl-color-grey-50;
         box-shadow: none;
         pointer-events: none;
         user-select: none;
@@ -76,33 +76,33 @@
     &.adyen-checkout__button--ghost {
         background: none;
         border: 0;
-        color: $color-black;
+        color: $color-primary;
 
         &:hover {
-            background: $color-gray-lighter;
+            background: $adl-color-grey-10;
             box-shadow: none;
         }
 
         &:active {
-            background: $color-gray-light;
+            background: $adl-color-grey-20;
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--secondary {
         padding: 10px 12px;
-        background: $color-white;
-        border: 1px solid $color-black;
-        color: $color-black;
+        background: $adl-color-white;
+        border: 1px solid $color-primary;
+        color: $color-primary;
 
         &:hover {
-            background: $color-gray-lighter;
+            background: $adl-color-grey-10;
             box-shadow: 0 2px 4px rgb(27 42 60 / 20%), 0 4px 5px rgb(27 42 60 / 14%);
         }
 
         &:active,
         &:active:hover {
-            background: $color-gray-lighter;
+            background: $adl-color-grey-10;
             box-shadow: none;
         }
 
@@ -112,14 +112,14 @@
                 box-shadow: none;
                 cursor: not-allowed;
                 border-color: #99a3ad;
-                background-color: $color-gray-lighter;
+                background-color: $adl-color-grey-10;
                 opacity: 0.5;
                 user-select: all;
             }
         }
 
         .adyen-checkout__spinner {
-            border-color: $color-black;
+            border-color: $color-primary;
             border-top-color: transparent;
         }
     }
@@ -145,9 +145,9 @@
     &.adyen-checkout__button--link {
         background: transparent;
         border: 1px solid transparent;
-        color: $color-black;
+        color: $color-primary;
         font-weight: 400;
-        border-radius: $border-radius-small;
+        border-radius: $adl-border-radius-4;
         padding: 2px;
 
         &:hover {
@@ -162,8 +162,8 @@
         &:hover,
         &:active,
         &:active:hover {
-            background: $color-green;
-            color: $color-white;
+            background: $color-success;
+            color: $adl-color-white;
         }
 
         .adyen-checkout__button__icon {
@@ -196,7 +196,7 @@
     }
 
     .adyen-checkout__spinner {
-        border-color: $color-white;
+        border-color: $adl-color-white;
         border-top-color: transparent;
     }
 }

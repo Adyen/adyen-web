@@ -17,7 +17,7 @@
 }
 
 .adyen-checkout__giftcard-result__name {
-    margin-left: $spacing-small;
+    margin-left: $adl-spacing-8;
 }
 
 .adyen-checkout__giftcard-result__balance {
@@ -29,10 +29,10 @@
 .adyen-checkout__giftcard-result__balance__item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: $spacing-small;
+    margin-bottom: $adl-spacing-8;
 
     .adyen-checkout__giftcard-result__balance__title--transactionLimit {
-        color: $color-gray-darker;
+        color: $adl-color-grey-50;
     }
 
     &:last-child {
