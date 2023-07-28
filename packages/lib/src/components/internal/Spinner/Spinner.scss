@@ -19,7 +19,7 @@
 }
 
 .adyen-checkout__spinner {
-    border: 3px solid $color-primary;
+    border: 3px solid var(--b-color-black);
     border-radius: 50%;
     height: 43px;
     width: 43px;

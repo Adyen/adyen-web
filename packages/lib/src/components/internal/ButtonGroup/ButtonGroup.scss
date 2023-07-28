@@ -9,7 +9,7 @@
         background: transparent;
         border: 0;
         box-shadow: inset 0 0 0 1px #99a3ad;
-        color: $color-primary;
+        color: var(--b-color-black);
         font-size: $font-size-small;
         font-weight: normal;
         line-height: 40px;
@@ -28,7 +28,7 @@
         }
 
         &:active {
-            background: $adl-color-grey-10;
+            background: var(--b-color-grey-100);
             box-shadow: inset 0 0 0 2px #99a3ad;
         }
 
@@ -46,9 +46,9 @@
             &:hover,
             &:active,
             &:active:hover {
-                background: $adl-color-grey-10;
-                box-shadow: inset 0 0 0 1px $color-primary;
-                color: $color-primary;
+                background: var(--b-color-grey-100);
+                box-shadow: inset 0 0 0 1px var(--b-color-black);
+                color: var(--b-color-black);
                 font-weight: 500;
                 height: 40px;
                 transition: none;

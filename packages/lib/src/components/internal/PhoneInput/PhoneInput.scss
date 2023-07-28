@@ -11,8 +11,8 @@
             height: auto;
 
             &:focus {
-                border: 1px solid $color-primary;
-                box-shadow: 0 0 0 2px $adl-color-grey-50;
+                border: 1px solid var(--b-color-black);
+                box-shadow: 0 0 0 2px var(--b-color-grey-500);
             }
         }
 
@@ -41,8 +41,8 @@
             align-items: center;
 
             &:focus {
-                border: 1px solid $color-primary;
-                box-shadow: 0 0 0 2px $adl-color-grey-50;
+                border: 1px solid var(--b-color-black);
+                box-shadow: 0 0 0 2px var(--b-color-grey-500);
             }
         }
 

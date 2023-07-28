@@ -3,12 +3,12 @@
 .adyen-checkout__threeds2-challenge-error {
     .adyen-checkout__status__icon {
         display: block;
-        margin: $adl-spacing-56 auto $adl-spacing-32;
+        margin: var(--b-spacer-130) auto var(--b-spacer-100);
     }
 
     .adyen-checkout__status__text {
-        color: $color-alert;
-        margin-bottom: $adl-spacing-56;
+        color: var(--b-color-label-critical);
+        margin-bottom: var(--b-spacer-130);
         text-align: center;
     }
 }

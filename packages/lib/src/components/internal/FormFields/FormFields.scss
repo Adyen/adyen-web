@@ -88,15 +88,15 @@
 }
 
 .adyen-checkout__input {
-    color: $color-primary;
-    caret-color: $color-primary;
+    color: var(--b-color-black);
+    caret-color: var(--b-color-black);
     font-size: $font-size-medium;
     font-family: inherit;
     display: block;
     height: 40px;
-    background: $adl-color-white;
-    border: 1px solid $adl-color-grey-20;
-    border-radius: $adl-border-radius-8;
+    background: var(--b-color-white);
+    border: 1px solid var(--b-color-grey-500);
+    border-radius: var(--b-border-radius-m);
     padding: 5px 8px;
     position: relative;
     outline: none;
@@ -105,7 +105,7 @@
 }
 
 .adyen-checkout__input:hover {
-    border-color: $adl-color-grey-50;
+    border-color: var(--b-color-grey-500);
 }
 
 .adyen-checkout__input:required {
@@ -114,12 +114,12 @@
 
 .adyen-checkout__input[readonly],
 .adyen-checkout__input--disabled {
-    background: $color-disabled;
-    border-color: $color-disabled;
+    background: var(--b-color-surface-tertiary);
+    border-color: var(--b-color-outline-secondary);
 }
 
 .adyen-checkout__input--disabled:hover {
-    border-color: $color-disabled;
+    border-color: var(--b-color-outline-secondary);
 }
 
 .adyen-checkout__input-wrapper {
@@ -151,15 +151,15 @@
 }
 
 .adyen-checkout-input__inline-validation--valid {
-    color: $color-success;
+    color: var(--b-color-label-success);
 }
 
 .adyen-checkout-input__inline-validation--invalid {
-    color: $color-alert;
+    color: var(--b-color-label-critical);
 }
 
 .adyen-checkout__input--valid {
-    border-bottom-color: $color-success;
+    border-bottom-color: var(--b-color-label-success);
 }
 
 .adyen-checkout__input--error,
@@ -167,8 +167,8 @@
 .adyen-checkout__input--error:hover,
 .adyen-checkout__input--invalid:hover {
     &.adyen-checkout__input--focus{
-        border-color: $color-alert;
-        box-shadow: 0 0 0 1px $color-alert;
+        border-color: var(--b-color-label-critical);
+        box-shadow: 0 0 0 1px var(--b-color-label-critical);
     }
 
 }
@@ -184,14 +184,14 @@
 .adyen-checkout__input:active:hover,
 .adyen-checkout__input:focus:hover,
 .adyen-checkout__input--focus:hover {
-    border: 1.5px solid $color-primary;
-    box-shadow: 0 0 0 1px $color-primary;
+    border: 1.5px solid var(--b-color-black);
+    box-shadow: 0 0 0 1px var(--b-color-black);
 }
 
 .adyen-checkout__input[readonly],
 .adyen-checkout__input[readonly]:hover {
-    background-color: $adl-color-grey-20;
+    background: var(--b-color-surface-tertiary);
     border-color: transparent;
-    color: $adl-color-grey-50;
+    color: var(--b-color-surface-quaternary);
     cursor: default;
 }

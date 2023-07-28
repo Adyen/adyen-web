@@ -14,8 +14,8 @@
 
 .adyen-checkout-ctp__empty-cards {
     border-radius: 6px;
-    background-color: $adl-color-grey-10;
-    color: $adl-color-grey-50;
+    background-color: var(--b-color-grey-100);
+    color: var(--b-color-grey-500);
     height: 40px;
     display: flex;
     align-items: center;

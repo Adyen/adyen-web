@@ -10,7 +10,7 @@
     &.short {
         height: 48px;
         transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
-        border-radius: $adl-border-radius-8;
+        border-radius: var(--b-border-radius-m);
 
         &:focus {
             box-shadow: 0 0 0 2px #99c2ff;

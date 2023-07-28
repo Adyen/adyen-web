@@ -8,12 +8,12 @@
     }
 
     &__name--selected {
-        font-weight: $adl-text-font-weight-medium;
+        font-weight:  var(--b-text-body-stronger-font-weight);
     }
 
     &__additional-info {
         font-size: $font-size-small;
-        color: $adl-color-grey-50;
+        color: var(--b-color-grey-500);
     }
 
     &__name_wrapper {

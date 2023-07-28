@@ -6,6 +6,6 @@
 
 .adyen-checkout__amazonpay .adyen-checkout__button--ghost {
     display: block;
-    margin: $adl-spacing-8 auto 0;
+    margin: var(--b-spacer-040) auto 0;
     width: auto;
 }

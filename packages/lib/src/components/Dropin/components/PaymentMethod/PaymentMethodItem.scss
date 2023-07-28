@@ -2,8 +2,8 @@
 
 .adyen-checkout__payment-method {
     position: relative;
-    background: $adl-color-white;
-    border: $adl-border-default;
+    background: var(--b-color-white);
+    border: 1px solid var(--b-color-separator-primary);
     cursor: pointer;
     margin-top: -1px;
     width: 100%;
@@ -16,16 +16,16 @@
 
 .adyen-checkout__payment-method:first-child,
 .adyen-checkout__payment-method--selected + .adyen-checkout__payment-method {
-    margin-top: $adl-spacing-0;
-    border-top-left-radius: $adl-border-radius-8;
-    border-top-right-radius: $adl-border-radius-8;
+    margin-top: var(--b-spacer-000);
+    border-top-left-radius: var(--b-border-radius-m);
+    border-top-right-radius: var(--b-border-radius-m);
 }
 
 .adyen-checkout__payment-method:last-child,
 .adyen-checkout__payment-method--next-selected {
-    margin-bottom: $adl-spacing-0;
-    border-bottom-left-radius: $adl-border-radius-8;
-    border-bottom-right-radius: $adl-border-radius-8;
+    margin-bottom: var(--b-spacer-000);
+    border-bottom-left-radius: var(--b-border-radius-m);
+    border-bottom-right-radius: var(--b-border-radius-m);
 }
 
 .adyen-checkout__payment-method--loading {
@@ -49,29 +49,26 @@
 
 .adyen-checkout__payment-method__header {
     align-items: center;
-    color: $color-primary;
+    color: var(--b-color-black);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    font-weight: $adl-text-font-weight-regular;
+    font-weight:  var(--b-text-body-font-weight);
     font-size: $font-size-medium;
-
-    $payment-button-padding: $adl-spacing-4;
-
-    padding: $adl-spacing-16 - $payment-button-padding;
-    padding-left: $adl-spacing-48 - $payment-button-padding;
-    padding-right: $adl-spacing-16;
+    padding: var(--b-spacer-070) var(--b-spacer-020);
+    padding-left: var(--b-spacer-120) var(--b-spacer-020);
+    padding-right: var(--b-spacer-070);
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
 
     [dir="rtl"] & {
-        padding: $adl-spacing-16 - $payment-button-padding;
-        padding-right: $adl-spacing-48 - $payment-button-padding;
+        padding: var(--b-spacer-070) var(--b-spacer-020);
+        padding-right: var(--b-spacer-120) var(--b-spacer-020);
     }
 
     .adyen-checkout__payment-method--standalone & {
-        padding: $adl-spacing-16;
+        padding: var(--b-spacer-070);
     }
 }
 
@@ -79,35 +76,35 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    margin-right: $adl-spacing-16;
+    margin-right: var(--b-spacer-070);
     max-width: 100%;
 
     // reset button styles
     border: none;
     background: none;
     cursor: pointer;
-    padding: $adl-spacing-4;
-    color: $color-primary;
+    padding: var(--b-spacer-020);
+    color: var(--b-color-black);
     font-size: 1em;
-    font-weight: $adl-text-font-weight-regular;
+    font-weight:  var(--b-text-body-font-weight);
 
     [dir="rtl"] & {
-        margin-right: $adl-spacing-0;
-        margin-left: $adl-spacing-16;
+        margin-right: var(--b-spacer-000);
+        margin-left: var(--b-spacer-070);
     }
 }
 
 .adyen-checkout__payment-method__surcharge {
-    color: $adl-color-grey-50;
-    margin-left: $adl-spacing-4;
+    color: var(--b-color-grey-500);
+    margin-left: var(--b-spacer-020);
 }
 
 .adyen-checkout__payment-method--selected {
     transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, opacity 0.3s ease-out;
-    background: $adl-color-grey-10;
-    border: $adl-border-default;
-    margin: $adl-spacing-8 $adl-spacing-0;
-    border-radius: $adl-border-radius-8;
+    background: var(--b-color-interactive-secondary-hovered);
+    border: 1px solid var(--b-color-outline-secondary);
+    margin: var(--b-spacer-040) var(--b-spacer-000);
+    border-radius: var(--b-border-radius-m);
     cursor: default;
 }
 
@@ -116,49 +113,49 @@
 }
 
 .adyen-checkout__payment-method__details {
-    padding: $adl-spacing-0 $adl-spacing-16;
+    padding: var(--b-spacer-000) var(--b-spacer-070);
     position: relative;
 }
 
 .adyen-checkout__payment-method__details__content {
-    margin: $adl-spacing-0 $adl-spacing-0 $adl-spacing-16;
+    margin: var(--b-spacer-000) var(--b-spacer-000) var(--b-spacer-070);
 }
 
 .adyen-checkout__payment-method__image__wrapper {
     height: 26px;
-    width: $adl-spacing-40;
+    width: var(--b-spacer-110);
     position: relative;
 }
 
 .adyen-checkout__payment-method__image__wrapper--outline::after {
     content: "";
     position: absolute;
-    top: $adl-spacing-0;
+    top: var(--b-spacer-000);
     width: 100%;
     height: 100%;
-    left: $adl-spacing-0;
-    border-radius: $adl-border-radius-4;
+    left: var(--b-spacer-000);
+    border-radius: var(--b-border-radius-s);
     border: 1px solid rgb(0 27 43 / 17%);
 }
 
 .adyen-checkout__payment-method__image {
     display: block;
-    border-radius: $adl-border-radius-4;
+    border-radius: var(--b-border-radius-s);
 }
 
 .adyen-checkout__payment-method__brands {
     display: flex;
     flex-wrap: wrap;
-    margin: $adl-spacing-4 $adl-spacing-0;
-    height: $adl-spacing-16;
-    flex-basis: $adl-spacing-auto;
+    margin: var(--b-spacer-020) var(--b-spacer-000);
+    height: var(--b-spacer-070);
+    flex-basis: auto;
     flex-shrink: 1;
     text-align: right;
     overflow: hidden;
 
     & .adyen-checkout__payment-method__brand-number {
-        color: $adl-color-grey-50;
-        font-size: $adl-text-font-size-small;
+        color: var(--b-color-grey-500);
+        font-size: var(--b-text-body-font-size);
     }
 }
 
@@ -170,23 +167,23 @@
 
 .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
     display: inline-block;
-    margin-right: $adl-spacing-4;
-    height: $adl-spacing-16;
-    width: $adl-spacing-24;
+    margin-right: var(--b-spacer-020);
+    height: var(--b-spacer-070);
+    width: var(--b-spacer-090);
     transition: opacity 0.2s ease-out;
 }
 
 .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper:last-child {
-    margin: $adl-spacing-0;
+    margin: var(--b-spacer-000);
 }
 
 .adyen-checkout__payment-method--selected .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
-    margin-bottom: $adl-spacing-4;
+    margin-bottom: var(--b-spacer-020);
 }
 
 .adyen-checkout__payment-method__brands img {
-    width: $adl-spacing-24;
-    height: $adl-spacing-16;
+    width: var(--b-spacer-090);
+    height: var(--b-spacer-070);
 }
 
 .adyen-checkout__payment-method__image__wrapper--disabled {
@@ -196,16 +193,16 @@
 /*  Payment Method Radio Button */
 .adyen-checkout__payment-method__radio {
     position: absolute;
-    background-color: $adl-color-white;
-    border: $adl-border-default;
+    background-color: var(--b-color-white);
+    border: 1px solid var(--b-color-outline-secondary);
     border-radius: 50%;
-    height: $adl-spacing-16;
-    width: $adl-spacing-16;
-    left: $adl-spacing-16;
+    height: var(--b-spacer-070);
+    width: var(--b-spacer-070);
+    left: var(--b-spacer-070);
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
     [dir="rtl"] & {
-        right: $adl-spacing-16;
+        right: var(--b-spacer-070);
         left: auto;
     }
 
@@ -224,7 +221,7 @@
     top: 50%;
     height: 6px;
     width: 6px;
-    background-color: $adl-color-white;
+    background-color: var(--b-color-white);
     border-radius: 50%;
     transform: translateY(-50%) scale(0);
     transition: transform 0.3s ease-out;
@@ -232,18 +229,18 @@
 
 .adyen-checkout__payment-method:hover:not(.adyen-checkout__payment-method--selected) .adyen-checkout__payment-method__radio {
     border-color: #99a3ad;
-    box-shadow: 0 0 0 2px $adl-color-grey-30;
+    box-shadow: 0 0 0 2px var(--b-color-outline-secondary);
     cursor: pointer;
 }
 
 .adyen-checkout__payment-method__radio--selected {
-    background-color: $color-primary;
+    background-color: var(--b-color-black);
     border: 0;
     transition: all 0.3s ease-out;
 }
 
 .adyen-checkout__payment-method__radio--selected:hover {
-    box-shadow: 0 0 0 2px $adl-color-grey-transparent;
+    box-shadow: 0 0 0 2px var(--b-color-grey-100)-transparent;
 }
 
 .adyen-checkout__payment-method__radio--selected::after {

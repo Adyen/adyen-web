@@ -13,10 +13,10 @@
             height: auto;
 
             &:focus-within {
-                border: 1px solid $color-primary;
+                border: 1px solid var(--b-color-black);
 
                 .adyen-checkout-dropdown--countrycode-selector {
-                    border-right: 1px solid $color-primary;
+                    border-right: 1px solid var(--b-color-black);
                 }
             }
         }
@@ -54,7 +54,7 @@
             padding-left: 15px;
 
             &:focus-within {
-                border: 1px solid $color-primary;
+                border: 1px solid var(--b-color-black);
                 box-shadow: 0 0 0 2px #99c2ff;
             }
         }

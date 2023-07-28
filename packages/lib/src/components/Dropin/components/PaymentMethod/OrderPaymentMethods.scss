@@ -8,26 +8,26 @@
 
 .adyen-checkout__order-payment-method {
     position: relative;
-    background: $adl-color-white;
-    border: 1px solid $adl-color-grey-20;
+    background: var(--b-color-white);
+    border: 1px solid var(--b-color-grey-500);
     margin-top: -1px;
     width: 100%;
 }
 
 .adyen-checkout__order-payment-method:first-child {
-    border-top-left-radius: $adl-border-radius-8;
-    border-top-right-radius: $adl-border-radius-8;
+    border-top-left-radius: var(--b-border-radius-m);
+    border-top-right-radius: var(--b-border-radius-m);
 }
 
 .adyen-checkout__order-payment-method:last-child {
-    border-bottom-left-radius: $adl-border-radius-8;
-    border-bottom-right-radius: $adl-border-radius-8;
+    border-bottom-left-radius: var(--b-border-radius-m);
+    border-bottom-right-radius: var(--b-border-radius-m);
 }
 
 // Order payment method header
 .adyen-checkout__order-payment-method__header {
     align-items: center;
-    color: $color-primary;
+    color: var(--b-color-black);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -39,7 +39,7 @@
     width: 100%;
 
     .adyen-checkout__payment-method__header__title {
-        padding: $adl-spacing-0;
+        padding: var(--b-spacer-000);
     }
 }
 
@@ -68,9 +68,9 @@
     display: block;
     width: 100%;
     padding: 8px 16px;
-    color: $adl-color-orange-60;
-    background: $adl-color-orange-20;
-    border-radius: $adl-border-radius-8;
+    color: var(--b-color-orange-300);
+    background: var(--b-alert-severity-warning-background-color);
+    border-radius: var(--b-border-radius-m);
     margin-bottom: 16px;
     font-size: $font-size-small;
 

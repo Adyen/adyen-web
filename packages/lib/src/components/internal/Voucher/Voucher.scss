@@ -8,8 +8,8 @@
 
 .adyen-checkout__voucher-result__top,
 .adyen-checkout__voucher-result__bottom {
-    background: $adl-color-white;
-    border: 1px solid $adl-color-grey-30;
+    background: var(--b-color-white);
+    border: 1px solid var(--b-color-outline-secondary);
 }
 
 .adyen-checkout__voucher-result__top {
@@ -24,7 +24,7 @@
 }
 
 .adyen-checkout__voucher-result__separator {
-    background: $adl-color-white;
+    background: var(--b-color-white);
     position: relative;
     width: calc(100% - 14px);
     height: 13px;
@@ -63,7 +63,7 @@
 
 .adyen-checkout__voucher-result__separator__inner {
     width: 100%;
-    border-top: 1px solid $adl-color-grey-20;
+    border-top: 1px solid var(--b-color-grey-500);
 }
 
 .adyen-checkout__voucher-result__image {
@@ -97,7 +97,7 @@
 }
 
 .adyen-checkout__voucher-result__image__wrapper:nth-child(2)::before {
-    border-left: 1px solid $adl-color-grey-30;
+    border-left: 1px solid var(--b-color-outline-secondary);
     content: "";
     height: 64px;
     left: -24.5px;
@@ -116,7 +116,7 @@
     line-height: 19px;
     font-size: $font-size-small;
     text-align: center;
-    color: $color-primary;
+    color: var(--b-color-black);
     max-width: 400px;
     margin: 0 auto;
 }
@@ -124,7 +124,7 @@
 .adyen-checkout__voucher-result__amount {
     margin: 24px auto 0;
     font-size: $font-size-medium;
-    color: $color-primary;
+    color: var(--b-color-black);
     text-align: center;
     font-weight: bold;
 }
@@ -133,7 +133,7 @@
     font-size: $font-size-small;
     line-height: 19px;
     text-align: center;
-    color: $adl-color-grey-50;
+    color: var(--b-color-grey-500);
     display: block;
     font-weight: normal;
 }
@@ -158,8 +158,8 @@
 
 .adyen-checkout__voucher-result__code__label__text {
     font-size: 13px;
-    color: $color-primary;
-    background: $adl-color-white;
+    color: var(--b-color-black);
+    background: var(--b-color-white);
     padding: 0 8px;
     letter-spacing: normal;
     line-height: 1;
@@ -179,7 +179,7 @@
     font-size: $font-size-large;
     text-align: center;
     letter-spacing: 1px;
-    color: $color-primary;
+    color: var(--b-color-black);
     border-width: 1px 0;
     padding: 16px 48px;
     display: inline-block;
@@ -201,9 +201,9 @@
     display: flex;
     justify-content: space-between;
     font-size: $font-size-small;
-    color: $color-primary;
+    color: var(--b-color-black);
     padding: 16px 24px;
-    border-top: 1px solid $adl-color-grey-20;
+    border-top: 1px solid var(--b-color-grey-500);
     word-break: break-word;
 }
 

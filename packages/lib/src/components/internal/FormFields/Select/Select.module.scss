@@ -31,10 +31,10 @@
 }
 
 .adyen-checkout__filter-input {
-  background: $adl-color-white;
+  background: var(--b-color-white);
   border: 0;
-  caret-color: $color-primary;
-  color: $color-primary;
+  caret-color: var(--b-color-black);
+  color: var(--b-color-black);
   font-family: inherit;
   font-size: $font-size-medium;
   height: 100%;
@@ -42,7 +42,7 @@
   width: 100%;
 
   &::placeholder {
-    color: $adl-color-grey-20;
+    color: var(--b-color-grey-500);
     font-weight: 200;
   }
 
@@ -52,9 +52,9 @@
   }
 
   &[readonly] {
-    background: $adl-color-grey-20;
+    background: var(--b-color-surface-tertiary);
     border-color: transparent;
-    color: $color-primary;
+    color: var(--b-color-black);
     cursor: not-allowed;
   }
 }
@@ -62,7 +62,7 @@
 .adyen-checkout__dropdown__list {
   position: absolute;
   width: 100%;
-  background: $adl-color-white;
+  background: var(--b-color-white);
   list-style: none;
   padding: 0;
   margin: 0;

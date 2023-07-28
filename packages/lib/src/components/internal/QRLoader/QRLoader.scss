@@ -1,10 +1,10 @@
 @import "../../../style/index";
 
 .adyen-checkout__qr-loader {
-    background: $adl-color-white;
+    background: var(--b-color-white);
     padding: 40px;
-    border: 1px solid $adl-color-grey-30;
-    border-radius: $adl-border-radius-12;
+    border: 1px solid var(--b-color-outline-secondary);
+    border-radius: var(--b-border-radius-m);
     text-align: center;
 }
 
@@ -34,7 +34,7 @@
 
 .adyen-checkout__qr-loader__subtitle,
 .adyen-checkout__qr-loader__payment_amount {
-    color: $color-primary;
+    color: var(--b-color-black);
     font-size: $font-size-medium;
     line-height: 19px;
 }
@@ -50,8 +50,8 @@
 
 .adyen-checkout__qr-loader__progress {
     height: 4px;
-    background: $adl-color-grey-30;
-    border-radius: $adl-border-radius-24;
+    background: var(--b-color-outline-secondary);
+    border-radius: var(--b-border-radius-l);
     margin: 32px auto 12px;
     width: 152px;
     padding-right: 3%;
@@ -65,12 +65,12 @@
 .adyen-checkout__qr-loader__percentage {
     display: block;
     height: 100%;
-    border-radius: $adl-border-radius-24;
-    background: $color-primary;
+    border-radius: var(--b-border-radius-l);
+    background: var(--b-color-black);
 }
 
 .adyen-checkout__qr-loader__countdown {
-    color: $adl-color-grey-50;
+    color: var(--b-color-grey-500);
     font-size: $font-size-small;
 }
 
@@ -89,7 +89,7 @@
 }
 
 .adyen-checkout__qr-loader__instructions {
-    color: $adl-color-grey-50;
+    color: var(--b-color-grey-500);
     font-size: $font-size-medium;
     line-height: 1.5;
     margin-top: 32px;

@@ -1,17 +1,30 @@
 @import 'variables';
 
-// adl-component-base
-// Set basic styling properties for components.
-// todo? set typography related and include: color, font-size, font-smoothing, font-weight, line-height.
-// A box-sizing border-box reset is also included which is applied to the element and it's children.
-@mixin adl-component-base {
-    box-sizing: border-box;
-
-    *,
-    *::before,
-    *::after {
-        box-sizing: inherit;
+// A box-sizing border-box reset
+@mixin adl-box-sizing($include-children: false, $value: border-box) {
+    &,
+    &::before,
+    &::after {
+        box-sizing: $value;
     }
+
+    @if $include-children {
+        *,
+        *::before,
+        *::after {
+            box-sizing: $value;
+        }
+    }
+}
+
+@mixin b-outer-ring-generator($color) {
+    $transition-duration: 0.1s;
+    $timing-function-ease-in-out: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    $box-shadow-initial-width: 1px;
+    $box-shadow-width: 3px;
+
+    box-shadow: 0 0 0 $box-shadow-initial-width #fff, 0 0 0 $box-shadow-width $color;
+    transition: $transition-duration $timing-function-ease-in-out;
 }
 
 @mixin screen-s-and-up {
@@ -30,4 +43,14 @@
     @media (min-width: #{$adyen-checkout-media-query-l-min}) {
         @content;
     }
+}
+
+@mixin b-link-reset() {
+    &:focus-visible {
+        outline: none;
+    }
+}
+
+@mixin b-focus-ring {
+    @include b-outer-ring-generator(var(--b-focus-ring-color));
 }

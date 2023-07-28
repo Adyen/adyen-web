@@ -3,7 +3,7 @@
 .adyen-checkout__blik__helper {
     font-size: $font-size-medium;
     font-weight: normal;
-    color: $color-primary;
-    margin: 0 0 $adl-spacing-16;
+    color: var(--b-color-black);
+    margin: 0 0 var(--b-spacer-070);
     padding: 0;
 }

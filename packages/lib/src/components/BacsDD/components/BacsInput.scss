@@ -29,7 +29,7 @@
         .adyen-checkout__bacs--edit-button {
             border: none;
             background: none;
-            color: $color-primary;
+            color: var(--b-color-black);
             text-decoration: underline;
             text-align: end;
             cursor: pointer;

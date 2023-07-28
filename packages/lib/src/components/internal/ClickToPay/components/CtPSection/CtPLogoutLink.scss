@@ -4,7 +4,7 @@
     font-size: 13px;
     line-height: 19px;
     font-weight: 400;
-    color: $color-primary;
+    color: var(--b-color-black);
     margin-left: auto;
     cursor: pointer;
     text-decoration: underline;
@@ -12,5 +12,5 @@
 
 .adyen-checkout-ctp__section-logout-button--disabled {
     pointer-events: none;
-    color: $adl-color-grey-50;
+    color: var(--b-color-grey-500);
 }

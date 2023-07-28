@@ -5,8 +5,8 @@
     justify-content: space-between;
     gap: 4px;
     padding: 4px 5px;
-    background: $adl-color-white;
-    border: 1px solid $adl-color-grey-20;
+    background: var(--b-color-white);
+    border: 1px solid var(--b-color-grey-500);
     border-radius: 6px;
 
     &--disabled {
@@ -25,30 +25,30 @@
 
 .adyen-checkout__segmented-control-segment {
     font-weight: 500;
-    color: $color-primary;
+    color: var(--b-color-black);
     width: 100%;
     height: 40px;
     flex-grow: 1;
     cursor: pointer;
-    background: $adl-color-white;
+    background: var(--b-color-white);
     border-radius: 6px;
     border: 0;
     text-align: center;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: $adl-color-grey-10;
+        background-color: var(--b-color-grey-100);
     }
 
     &:active {
-        background-color: $adl-color-grey-10;
-        border: 1.5px solid $adl-color-grey-50;
+        background-color: var(--b-color-grey-100);
+        border: 1.5px solid var(--b-color-grey-500);
     }
 
     &--selected {
-        background: $adl-color-grey-10;
-        border: 1.5px solid $color-primary;
-        color: $color-primary;
+        background: var(--b-color-grey-100);
+        border: 1.5px solid var(--b-color-black);
+        color: var(--b-color-black);
         font-weight: 700;
     }
 }

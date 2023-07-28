@@ -13,7 +13,7 @@
 
 .adyen-checkout__label__text,
 .adyen-checkout__helper-text {
-    color: $color-primary;
+    color: var(--b-color-black);
     display: block;
     font-size: $font-size-small;
     font-weight: normal;
@@ -28,7 +28,7 @@
 }
 
 .adyen-checkout__helper-text {
-    color: $adl-color-grey-50;
+    color: var(--b-color-grey-500);
 }
 
 .adyen-checkout__label__text {
@@ -40,16 +40,16 @@
 }
 
 .adyen-checkout__label__text--error {
-    color: $color-alert;
+    color: var(--b-color-label-critical);
 }
 
 .adyen-checkout__label--focused .adyen-checkout__label__text {
-    color: $color-primary;
+    color: var(--b-color-black);
 }
 
 .adyen-checkout__error-text {
     display: flex;
-    color: $color-alert;
+    color: var(--b-color-label-critical);
     font-weight: normal;
     margin-top: 4px;
     font-size: $font-size-xsmall;

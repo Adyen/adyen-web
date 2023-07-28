@@ -23,7 +23,7 @@
 }
 
 .adyen-checkout__fieldset__title {
-    color: $adl-color-grey-50;
+    color: var(--b-color-grey-500);
     display: block;
     font-size: $font-size-xxsmall;
     font-weight: bold;
@@ -56,7 +56,7 @@
 }
 
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {
-    color: $color-primary;
+    color: var(--b-color-black);
     font-size: $font-size-small;
     line-height: 19px;
     margin: 0;

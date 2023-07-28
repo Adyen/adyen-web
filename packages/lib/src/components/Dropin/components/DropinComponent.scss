@@ -1,7 +1,7 @@
 @import '../../../style/index';
 
 .adyen-checkout__dropin {
-    @include adl-component-base;
+    @include adl-box-sizing(true);
 }
 
 .adyen-checkout__payment-methods-list--loading {
@@ -20,12 +20,28 @@
 }
 
 /* Forms */
-
+// todo: move to internal
 .adyen-checkout__link {
-    color: $color-primary;
-    text-decoration: none;
-}
+    $component-root: &;
 
-.adyen-checkout__link:hover {
-    text-decoration: underline;
+    @include adl-box-sizing(true);
+    @include b-link-reset;
+
+    color: var(--b-link-color);
+    text-decoration: var(--b-link-text-decoration);
+
+    &:hover {
+        color: var(--b-link-hover-color);
+        text-decoration: var(--b-link-hover-text-decoration);
+    }
+
+    &:active {
+        color: var(--b-link-active-color);
+    }
+
+    &:focus-visible {
+        @include b-focus-ring;
+
+        border-radius: var(--b-link-border-radius);
+    }
 }
