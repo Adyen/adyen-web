@@ -21,7 +21,7 @@ describe('TrustlyElement', () => {
 
     test('should not render pay button if showPayButton is false', () => {
         // @ts-ignore ignore
-        render(<Trustly showPayButton={false} />);
+        render(<Trustly showPayButton={false} i18n={new Language()} loadingContext="test" modules={{ resources: new Resources() }} />);
         expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 });

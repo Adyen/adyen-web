@@ -12,17 +12,17 @@ class TrustlyElement extends RedirectElement {
     }
 
     render() {
-        if (this.props.showPayButton) {
-            return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <div className="adyen-checkout-trustly">
-                        <p className="adyen-checkout-trustly__descriptor">{this.props.i18n.get('trustly.descriptor')}</p>
-                        <ul className="adyen-checkout-trustly__description-list">
-                            <li>{this.props.i18n.get('trustly.description1')}</li>
-                            <li>{this.props.i18n.get('trustly.description2')}</li>
-                        </ul>
-                    </div>
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                <div className="adyen-checkout-trustly">
+                    <p className="adyen-checkout-trustly__descriptor">{this.props.i18n.get('trustly.descriptor')}</p>
+                    <ul className="adyen-checkout-trustly__description-list">
+                        <li>{this.props.i18n.get('trustly.description1')}</li>
+                        <li>{this.props.i18n.get('trustly.description2')}</li>
+                    </ul>
+                </div>
 
+                {this.props.showPayButton && (
                     <RedirectButton
                         {...this.props}
                         name={this.displayName}
@@ -32,10 +32,9 @@ class TrustlyElement extends RedirectElement {
                             this.componentRef = ref;
                         }}
                     />
-                </CoreProvider>
-            );
-        }
-        return null;
+                )}
+            </CoreProvider>
+        );
     }
 }
 
