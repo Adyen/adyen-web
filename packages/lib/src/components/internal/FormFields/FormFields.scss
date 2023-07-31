@@ -168,7 +168,8 @@
 .adyen-checkout__input--invalid:hover {
     &.adyen-checkout__input--focus{
         border-color: var(--b-color-label-critical);
-        box-shadow: 0 0 0 1px var(--b-color-label-critical);
+
+        /* box-shadow: 0 0 0 1px var(--b-color-label-critical); */
     }
 
 }
@@ -184,8 +185,9 @@
 .adyen-checkout__input:active:hover,
 .adyen-checkout__input:focus:hover,
 .adyen-checkout__input--focus:hover {
-    border: 1.5px solid var(--b-color-black);
-    box-shadow: 0 0 0 1px var(--b-color-black);
+    border: 1.5px solid var(--b-input-field-input-box-focus-border-color);
+
+    /* box-shadow: 0 0 0 1px var(--b-color-black); */
 }
 
 .adyen-checkout__input[readonly],

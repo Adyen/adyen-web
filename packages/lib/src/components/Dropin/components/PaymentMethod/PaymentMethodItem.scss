@@ -55,16 +55,16 @@
     justify-content: space-between;
     font-weight:  var(--b-text-body-font-weight);
     font-size: $font-size-medium;
-    padding: var(--b-spacer-070) var(--b-spacer-020);
-    padding-left: var(--b-spacer-120) var(--b-spacer-020);
+    padding: calc(var(--b-spacer-070) - var(--b-spacer-020));
+    padding-left: calc(var(--b-spacer-120) - var(--b-spacer-020));
     padding-right: var(--b-spacer-070);
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
 
     [dir="rtl"] & {
-        padding: var(--b-spacer-070) var(--b-spacer-020);
-        padding-right: var(--b-spacer-120) var(--b-spacer-020);
+        padding: calc(var(--b-spacer-070) - var(--b-spacer-020));
+        padding-right: calc(var(--b-spacer-120) - var(--b-spacer-020));
     }
 
     .adyen-checkout__payment-method--standalone & {

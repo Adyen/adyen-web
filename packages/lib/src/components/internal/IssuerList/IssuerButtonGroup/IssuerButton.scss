@@ -2,7 +2,7 @@
 
 .adyen-checkout__issuer-button {
     background-color: var(--b-color-white);
-    box-shadow: inset 0 0 0 1px var(--b-color-decorative-grey);
+    box-shadow: inset 0 0 0 1px var(--b-color-outline-primary);
     border: none;
     border-radius: var(--b-border-radius-m);
     padding: var(--b-spacer-000) var(--b-spacer-060);
@@ -22,22 +22,22 @@
 
     &:not(&--selected):focus {
         outline: none;
-        box-shadow: inset 0 0 0 2px #99a3ad;
+        box-shadow: inset 0 0 0 1px #99a3ad;
     }
 
     &:not(&--selected):focus-visible {
         outline: none;
-        box-shadow: inset 0 0 0 2px #99a3ad;
+        box-shadow: inset 0 0 0 1px #99a3ad;
     }
 
     &:not(&--selected):hover {
         outline: none;
-        box-shadow: inset 0 0 0 2px #99a3ad;
+        box-shadow: inset 0 0 0 1px #99a3ad;
     }
 
     &--selected {
         background: var(--b-color-white);
-        box-shadow: inset 0 0 0 2px var(--b-color-black);
+        box-shadow: inset 0 0 0 1px var(--b-color-outline-active);
         color: var(--b-color-black);
         font-weight: 500;
         height: 40px;
