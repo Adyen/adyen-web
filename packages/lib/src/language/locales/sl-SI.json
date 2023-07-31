@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Vnesite ime podjetja",
     "companyDetails.registrationNumber.invalid": "Vnesite registracijsko številko",
     "consent.checkbox.invalid": "Strinjati se morate s pogoji in določili",
-    "form.instruction": "Vsa polja so obvezna, razen če ni označeno drugače."
+    "form.instruction": "Vsa polja so obvezna, razen če ni označeno drugače.",
+    "trustly.descriptor": "Takojšnje bančno nakazilo",
+    "trustly.description1": "Plačajte neposredno s svojega poljubnega bančnega računa, pri čemer je varnost zagotovljena na ravni banke.",
+    "trustly.description2": "Brez kartic, brez prenosa aplikacije, brez registracije"
 }
