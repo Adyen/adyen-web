@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.49.2
+
+### Patch Changes
+
+-   Add description for Trustly. ([#2276](https://github.com/Adyen/adyen-web/pull/2276))
+
 ## 5.49.1
 
 ### Patch Changes
