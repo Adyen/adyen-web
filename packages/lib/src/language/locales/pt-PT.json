@@ -291,5 +291,8 @@
     "companyDetails.name.invalid": "Insira o nome da empresa",
     "companyDetails.registrationNumber.invalid": "Insira o número de registo",
     "consent.checkbox.invalid": "Tem de aceitar os termos e condições",
-    "form.instruction": "Todos os campos são obrigatórios, a menos que assinalados em contrário."
+    "form.instruction": "Todos os campos são obrigatórios, a menos que assinalados em contrário.",
+    "trustly.descriptor": "Pagamento bancário instantâneo",
+    "trustly.description1": "Pague diretamente a partir de qualquer uma das suas contas bancárias, com a segurança de um banco",
+    "trustly.description2": "Sem cartões, sem transferir aplicações, sem registo"
 }

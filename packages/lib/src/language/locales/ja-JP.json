@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "会社名を入力してください",
     "companyDetails.registrationNumber.invalid": "登録番号を入力してください",
     "consent.checkbox.invalid": "利用規約に同意する必要があります",
-    "form.instruction": "特に明記されていない限り、すべてのフィールドは必須です。"
+    "form.instruction": "特に明記されていない限り、すべてのフィールドは必須です。",
+    "trustly.descriptor": "即時銀行支払",
+    "trustly.description1": "ご利用の銀行口座から直接お支払い可能（銀行レベルのセキュリティで保護されています）",
+    "trustly.description2": "カードなし、アプリのダウンロードなし、登録なし"
 }

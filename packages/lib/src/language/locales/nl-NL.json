@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Voer de bedrijfsnaam in",
     "companyDetails.registrationNumber.invalid": "Voer het registratienummer in",
     "consent.checkbox.invalid": "Je moet akkoord gaan met de algemene voorwaarden",
-    "form.instruction": "Alle velden zijn verplicht, tenzij anders aangegeven."
+    "form.instruction": "Alle velden zijn verplicht, tenzij anders aangegeven.",
+    "trustly.descriptor": "Directe bankbetaling",
+    "trustly.description1": "Betaal direct vanaf uw voorkeursbankrekening, ondersteund door beveiliging op het niveau van de bank ",
+    "trustly.description2": "Geen kaarten, geen app-download, geen registratie"
 }
