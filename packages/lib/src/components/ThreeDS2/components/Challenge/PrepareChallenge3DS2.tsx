@@ -21,7 +21,9 @@ import {
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
     ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
     ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-    ANALYTICS_ERROR_CODE_NO_TRANSSTATUS
+    ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
+    ANALYTICS_NETWORK_ERROR,
+    ANALYTICS_INTERNAL_ERROR
 } from '../../../../core/Analytics/constants';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -141,7 +143,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             this.submitAnalytics({
                 action: ANALYTICS_ACTION_ERROR,
                 code: ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
-                errorType: 'token decoding or parsing has failed', // TODO check what values for "errorType" b/e will allow
+                errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${(this.state.challengeData as ErrorObject).error}`
             }); // can be: 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
 
@@ -168,7 +170,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     analyticsObject = {
                         action: ANALYTICS_ACTION_ERROR,
                         code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-                        errorType: finalResObject.errorCode, // TODO check what values for "errorType" b/e will allow
+                        errorType: ANALYTICS_NETWORK_ERROR, // TODO - is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
                         message: finalResObject.message,
                         metadata: resultObj
                     };
@@ -177,7 +179,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     analyticsObject = {
                         action: ANALYTICS_ACTION_ERROR,
                         code: ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
-                        errorType: finalResObject.errorCode,
+                        errorType: ANALYTICS_INTERNAL_ERROR,
                         message: finalResObject.message,
                         metadata: resultObj
                     };

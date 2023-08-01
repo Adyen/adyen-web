@@ -10,8 +10,10 @@ export const ANALYTICS_ACTION_STR = 'Action';
 export const ANALYTICS_SUBMIT_STR = 'Submit';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
-export const ANALYTICS_API_ERROR = 'APIError';
-export const ANALYTICS_SDK_ERROR = 'SDKError';
+export const ANALYTICS_API_ERROR = 'ApiError';
+export const ANALYTICS_SDK_ERROR = 'SdkError';
+export const ANALYTICS_NETWORK_ERROR = 'Network';
+export const ANALYTICS_INTERNAL_ERROR = 'Internal';
 
 export const ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA = 'web_700'; // Missing 'paymentData' property from threeDS2 action
 export const ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN = 'web_701'; // Missing 'token' property from threeDS2 action`

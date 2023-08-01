@@ -15,7 +15,8 @@ import {
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
     ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
-    ANALYTICS_ERROR_CODE_3DS2_TIMEOUT
+    ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
+    ANALYTICS_NETWORK_ERROR
 } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
@@ -170,14 +171,15 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                     analyticsErrorObject = {
                         action: ANALYTICS_ACTION_ERROR,
                         code: ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-                        errorType: finalResObject.errorCode, // = 'timeout' // TODO check what values for "errorType" b/e will allow
+                        errorType: ANALYTICS_NETWORK_ERROR, // TODO - is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
                         message: finalResObject.message,
                         metadata: resultObj // pass on the threeDSCompInd
                     };
                 } else {
-                    // Decoded token is missing a valid threeDSMethodURL property,
-                    // or, missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
-                    // or, token could not be base64 decoded &/or JSON.parsed
+                    // Decoded token is missing a valid threeDSMethodURL property (threeDSCompInd:"U"),
+                    // or, (threeDSCompInd:"N"):
+                    //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
+                    //  - or, token could not be base64 decoded &/or JSON.parsed
                     analyticsErrorObject = {
                         action: ANALYTICS_ACTION_ERROR,
                         code: finalResObject.errorCode,
