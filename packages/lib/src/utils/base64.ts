@@ -50,7 +50,11 @@ const base64 = {
             return false;
         }
 
-        return window.btoa(window.atob(pDataStr)) === pDataStr;
+        try {
+            return window.btoa(window.atob(pDataStr)) === pDataStr;
+        } catch (e) {
+            return false;
+        }
     }
 };
 
