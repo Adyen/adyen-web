@@ -37,6 +37,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         shopperEmail: 'shopper@example.com',
         onReady() {
             console.log('ClickToPay is ready');
+        },
+        onTimeout(error) {
+            console.log(error);
         }
     });
     window.clickToPay

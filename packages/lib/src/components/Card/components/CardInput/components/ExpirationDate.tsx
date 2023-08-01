@@ -13,6 +13,7 @@ import {
     ENCRYPTED_EXPIRY_DATE
 } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import useImage from '../../../../../core/Context/useImage';
+import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
@@ -41,6 +42,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             name={'encryptedExpiryDate'}
             i18n={i18n}
             errorVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_EXPIRY_DATE}
@@ -56,7 +59,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     }
                 )}
             />
-            <div
+            <span
                 className={classNames('adyen-checkout__field__exp-date_hint_wrapper', [styles['checkout__field__exp-date_hint_wrapper']], {
                     'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid
                 })}
@@ -66,7 +69,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     className="adyen-checkout__field__exp-date_hint"
                     alt={fieldLabel}
                 />
-            </div>
+            </span>
         </Field>
     );
 }

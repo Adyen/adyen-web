@@ -1,0 +1,19 @@
+@import '../../style/index';
+
+.adyen-checkout-trustly {
+    margin-bottom: $spacing-medium;
+
+    &__descriptor {
+        margin: $spacing-none $spacing-none $spacing-xsmall;
+        font-size: $font-size-medium;
+        font-weight: 500;
+    }
+
+    &__description-list {
+        list-style-type: disc;
+        margin: 0;
+        font-size: $font-size-small;
+        line-height: 1.5;
+        padding-left: 20px;
+    }
+}

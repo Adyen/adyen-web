@@ -100,7 +100,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
     const renderInputRelatedElements = useCallback(() => {
         return (
             <Fragment>
-                <span
+                <div
                     className={classNames([
                         'adyen-checkout__input-wrapper',
                         ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
@@ -136,7 +136,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             <Icon type="field_error" alt={i18n?.get('error.title')} />
                         </span>
                     )}
-                </span>
+                </div>
                 {addContextualElement && (
                     <span
                         className={'adyen-checkout__error-text'}
