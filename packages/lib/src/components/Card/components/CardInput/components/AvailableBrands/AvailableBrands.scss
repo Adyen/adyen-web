@@ -20,25 +20,20 @@
 }
 
 .adyen-checkout__card__brands img {
-    border-radius: 3px;
-    height: 16px;
-    width: 24px;
+    margin: 0;
+    padding: 0;
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
 .adyen-checkout__card__brands__brand-wrapper {
+    overflow: hidden;
     display: inline-block;
     height: 16px;
     width: 24px;
     position: relative;
+    border-radius: var(--b-border-radius-s);
+    border: 1px solid var(--b-color-outline-secondary);
 }
 
-.adyen-checkout__card__brands__brand-wrapper::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    border-radius: var(--b-border-radius-s);
-    border: 1px solid rgb(0 27 43 / 17%);
-}
