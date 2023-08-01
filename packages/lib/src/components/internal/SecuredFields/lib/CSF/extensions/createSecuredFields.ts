@@ -195,7 +195,7 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
             maskSecurityCode: this.config.maskSecurityCode,
-            disableIOSArrowKeys: this.config.disableIOSArrowKeys
+            disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
@@ -244,7 +244,7 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                if (this.config.disableIOSArrowKeys) {
+                if (this.config.shouldDisableIOSArrowKeys) {
                     this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
                 }
 
