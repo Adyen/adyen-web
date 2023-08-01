@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Skriv inn firmanavnet",
     "companyDetails.registrationNumber.invalid": "Angi registreringsnummeret",
     "consent.checkbox.invalid": "Du må godta vilkårene",
-    "form.instruction": "Alle felt er obligatoriske med mindre annet er angitt."
+    "form.instruction": "Alle felt er obligatoriske med mindre annet er angitt.",
+    "trustly.descriptor": "Direkte bankbetaling",
+    "trustly.description1": "Betal enkelt fra ønsket bankkonto, støttet av sikkerhet på banknivå",
+    "trustly.description2": "Ingen kort, ingen appnedlasting, ingen registrering"
 }

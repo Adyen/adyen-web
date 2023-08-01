@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Zadejte název společnosti",
     "companyDetails.registrationNumber.invalid": "Zadejte registrační číslo",
     "consent.checkbox.invalid": "Musíte souhlasit se smluvními podmínkami",
-    "form.instruction": "Všechna pole jsou povinná, pokud není uvedeno jinak."
+    "form.instruction": "Všechna pole jsou povinná, pokud není uvedeno jinak.",
+    "trustly.descriptor": "Online bankovní platba",
+    "trustly.description1": "Plaťte přímo ze svého online bankovního účtu se zabezpečením na bankovní úrovni",
+    "trustly.description2": "Bez karet, bez stahování aplikací, bez registrace"
 }

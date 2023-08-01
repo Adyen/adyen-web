@@ -1,5 +1,47 @@
 # @adyen/adyen-web
 
+## 5.49.2
+
+### Patch Changes
+
+-   Add description for Trustly. ([#2276](https://github.com/Adyen/adyen-web/pull/2276))
+
+## 5.49.1
+
+### Patch Changes
+
+-   fixes invalid HTML in payment method item and card labels ([#2270](https://github.com/Adyen/adyen-web/pull/2270))
+
+## 5.49.0
+
+### Minor Changes
+
+-   Adding timeout mechanism for Click to Pay to display Card component in case it does not initialize within 5 seconds ([#2265](https://github.com/Adyen/adyen-web/pull/2265))
+
+### Patch Changes
+
+-   Fix Core `update` should also update payment methods list. ([#2266](https://github.com/Adyen/adyen-web/pull/2266))
+
+-   fixes aria-labelledby in paymentMethodItem ([#2261](https://github.com/Adyen/adyen-web/pull/2261))
+
+-   Fix Klarna widget blocks drop-in to be clickable on loaded. ([#2258](https://github.com/Adyen/adyen-web/pull/2258))
+
+## 5.48.0
+
+### Minor Changes
+
+-   Securefields label now is decorative div element ([#2256](https://github.com/Adyen/adyen-web/pull/2256))
+
+-   Stop implicitly associating labels with the elements they label ([#2243](https://github.com/Adyen/adyen-web/pull/2243))
+
+### Patch Changes
+
+-   Refactor the SRPanel type definition ([#2217](https://github.com/Adyen/adyen-web/pull/2217))
+
+-   Alt tags for card brands now use readable values ([#2256](https://github.com/Adyen/adyen-web/pull/2256))
+
+-   Autofocus on the QR code subtitle on mounted. ([#2246](https://github.com/Adyen/adyen-web/pull/2246))
+
 ## 5.47.0
 
 ### Minor Changes
