@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import PhoneInput from '../internal/PhoneInput';
+import PhoneInput from '../internal/PhoneInputNew';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
 import COUNTRIES from './countries';
@@ -14,6 +14,11 @@ class QiwiWalletElement extends UIElement {
         prefixName: 'qiwiwallet.telephoneNumberPrefix' || COUNTRIES[0].id,
         phoneName: 'qiwiwallet.telephoneNumber' || ''
     };
+
+    constructor(props) {
+        super(props);
+        this.componentRef = {};
+    }
 
     get isValid() {
         return !!this.state.isValid;
@@ -41,19 +46,22 @@ class QiwiWalletElement extends UIElement {
     }
 
     render() {
+        const { items, selected } = this.props;
+
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PhoneInput
                     ref={ref => {
-                        this.componentRef = ref;
+                        this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
                     }}
-                    {...this.props}
-                    {...this.state}
-                    phoneLabel={'mobileNumber'}
+                    phoneNumberKey={'mobileNumber'}
+                    phoneNumberErrorKey={'error.va.gen.01'}
+                    items={items}
+                    data={{ phonePrefix: selected }}
                     onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
                 />
+
+                {this.props.showPayButton && this.payButton({})}
             </CoreProvider>
         );
     }

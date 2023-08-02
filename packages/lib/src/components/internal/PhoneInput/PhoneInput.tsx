@@ -7,7 +7,7 @@ import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
 import { PhoneInputSchema } from './types';
-
+// todo: remove?
 export function PhoneInput(props) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
@@ -59,7 +59,6 @@ export function PhoneInput(props) {
                                     placeholder: i18n.get('infix'),
                                     selected: data.phonePrefix
                                 })}
-
                                 <div className="adyen-checkout__phoneNumber">
                                     <div>{data.phonePrefix}</div>
 

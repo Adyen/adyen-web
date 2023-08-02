@@ -27,6 +27,10 @@ function PhoneInput(props: PhoneInputProps) {
         formatters: phoneFormatters
     });
 
+    const uniqueIDPhonePrefix = useMemo(() => {
+        return getUniqueId('adyen-checkout-phonePrefix');
+    }, []);
+
     useEffect(() => {
         setSchema(schema);
     }, [schema.toString()]);
@@ -52,10 +56,9 @@ function PhoneInput(props: PhoneInputProps) {
      *  is the first child of the <Field>.
      * In order to retrieve this uniqueId and assign it to the phoneNumber input (to thus link <label> and <input> - we need this function.
      */
-    const getRelatedUniqueId = () => {
-        const holder = document.querySelector('.adyen-checkout-phone-input--new [uniqueid]');
-        return holder ? holder.getAttribute('uniqueid') : null;
-    };
+    const getPhoneNumberUniqueId = () =>
+        // Query the closest parent, who has child input id = uniqueIDPhonePrefix.
+        document.getElementById(uniqueIDPhonePrefix)?.closest('.adyen-checkout-input-holder--phone-input')?.getAttribute('uniqueid');
 
     const getPhoneFieldError = useCallback(
         field => {
@@ -70,10 +73,6 @@ function PhoneInput(props: PhoneInputProps) {
         [errors]
     );
 
-    const uniqueIDPhonePrefix = useMemo(() => {
-        return getUniqueId('adyen-checkout-phonePrefix');
-    }, []);
-
     // Note we don't pass a string to the errorMessage prop because the phoneInput comp can potentially have 2 errors (one for prefix, one for number)
     // - so we want to handle both those errors here in this comp rather than within the Field comp.
     // However we do want to take advantage of the error icon that Field can provide - so we pass a boolean if errors exist
@@ -81,7 +80,7 @@ function PhoneInput(props: PhoneInputProps) {
 
     return (
         <div className="adyen-checkout-phone-input--new">
-            <label htmlFor={getRelatedUniqueId()}>
+            <label htmlFor={getPhoneNumberUniqueId()}>
                 <span
                     className={classNames({
                         'adyen-checkout__label__text': true,
@@ -91,6 +90,7 @@ function PhoneInput(props: PhoneInputProps) {
                     {props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                 </span>
             </label>
+            {/* todo: using fieldset? It's more semantic */}
             <Field
                 name={'phoneNumber'}
                 className={classNames({
@@ -101,7 +101,7 @@ function PhoneInput(props: PhoneInputProps) {
                 isValid={valid.phoneNumber}
                 errorMessage={hasErrorMessage}
                 // Avoids the situation where the phoneNumber is valid but the phonePrefix is not and we see the valid icon showing underneath the error icon
-                showValidIcon={errors.phonePrefix ? false : true}
+                showValidIcon={!errors.phonePrefix}
             >
                 {/**
                  A special situation exists here - normally the first element inside a Field comp is an <input> element which receives
@@ -135,19 +135,19 @@ function PhoneInput(props: PhoneInputProps) {
                     {showNumber && (
                         <div className="adyen-checkout-phone-number">
                             <input
-                                id={getRelatedUniqueId()}
+                                id={getPhoneNumberUniqueId()}
                                 type="tel"
                                 value={data.phoneNumber}
                                 onInput={handleChangeFor('phoneNumber', 'input')}
                                 onBlur={handleChangeFor('phoneNumber', 'blur')}
                                 // readOnly={props.phoneNumberIsReadonly}
-                                placeholder={props.placeholders.phoneNumber}
+                                placeholder={props?.placeholders?.phoneNumber}
                                 className="adyen-checkout__input adyen-checkout-input adyen-checkout-input--phone-number"
                                 autoCorrect="off"
                                 aria-required={true}
                                 aria-label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                                 aria-invalid={!valid.phoneNumber}
-                                aria-describedby={`${getRelatedUniqueId()}${ARIA_ERROR_SUFFIX}`}
+                                aria-describedby={`${getPhoneNumberUniqueId()}${ARIA_ERROR_SUFFIX}`}
                             />
                         </div>
                     )}
@@ -161,7 +161,7 @@ function PhoneInput(props: PhoneInputProps) {
                         </span>
                     )}
                     {showNumber && getPhoneFieldError('phoneNumber') && (
-                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${getRelatedUniqueId()}${ARIA_ERROR_SUFFIX}`}>
+                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${getPhoneNumberUniqueId()}${ARIA_ERROR_SUFFIX}`}>
                             {getPhoneFieldError('phoneNumber')}
                         </span>
                     )}

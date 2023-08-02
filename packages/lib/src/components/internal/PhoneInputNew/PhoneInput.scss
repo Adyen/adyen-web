@@ -54,8 +54,9 @@
             padding-left: 15px;
 
             &:focus-within {
-                border: 1px solid var(--b-color-black);
-                box-shadow: 0 0 0 2px #99c2ff;
+                border-color: var(--b-color-black);
+
+                 /* box-shadow: 0 0 0 2px var(--b-color-black); */
             }
         }
 
@@ -73,7 +74,7 @@
         .adyen-checkout-phone-number {
             align-items: center;
             display: flex;
-            flex: 3;
+            flex: 1;
         }
     }
 
