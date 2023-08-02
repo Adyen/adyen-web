@@ -86,7 +86,7 @@ export class SecuredFieldsElement extends UIElement {
     }
 
     get icon() {
-        return this.resources.getImage({})(this.props.type);
+        return this.resources.getImage()(this.props.type);
     }
 
     get browserInfo() {

@@ -46,7 +46,7 @@ export class Resources {
             return this.returnImage(imageOptions);
         };
 
-    public getImage(props: ImageOptions) {
+    public getImage(props = {} as ImageOptions) {
         return this.getImageUrl({ ...props, resourceContext: this.resourceContext });
     }
 }

@@ -34,7 +34,7 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
 
     const items = useMemo(() => {
         return cards.map(card => ({
-            icon: card.artUri || getImage({})(card.scheme),
+            icon: card.artUri || getImage()(card.scheme),
             name: `${isMobile() ? '' : card.title} •••• ${card.panLastFour} `,
             secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
             id: card.srcDigitalCardId,

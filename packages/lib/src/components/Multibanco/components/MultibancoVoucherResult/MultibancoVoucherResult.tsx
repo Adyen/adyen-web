@@ -23,7 +23,7 @@ const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
             barcode={null}
             copyBtn
             downloadUrl={downloadUrl}
-            imageUrl={getImage({})(paymentMethodType)}
+            imageUrl={getImage()(paymentMethodType)}
             introduction={i18n.get('voucher.introduction')}
             paymentMethodType={'multibanco'}
             reference={reference}

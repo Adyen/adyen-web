@@ -239,7 +239,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return this.props.icon ?? this.resources.getImage({})(this.constructor['type']);
+        return this.props.icon ?? this.resources.getImage()(this.constructor['type']);
     }
 
     /**
