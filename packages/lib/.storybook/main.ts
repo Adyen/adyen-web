@@ -5,7 +5,6 @@ import version = require('../config/version');
 import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 const currentVersion = version();
-
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
     addons: [
@@ -20,12 +19,11 @@ const config: StorybookConfig = {
         }
     ],
     framework: {
-        name: '@storybook/preact-vite',
+        name: getAbsolutePath('@storybook/preact-vite'),
         options: {}
     },
     async viteFinal(config, options) {
         const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
-
         return mergeConfig(config, {
             define: {
                 'process.env': env,
@@ -55,5 +53,11 @@ const config: StorybookConfig = {
         });
     }
 };
-
 export default config;
+/**
+ * This function is used to resolve the absolute path of a package.
+ * It is needed in projects that use Yarn PnP or are set up within a monorepo.
+ */
+function getAbsolutePath(value: string): any {
+    return path.dirname(require.resolve(path.join(value, 'package.json')));
+}
