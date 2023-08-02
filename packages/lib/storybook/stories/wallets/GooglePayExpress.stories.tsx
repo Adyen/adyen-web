@@ -171,10 +171,13 @@ export const Express: Story = {
                 handleSubmit(state, component, null, paymentData);
             },
             onAuthorized: paymentData => {
+                
                 console.log('Shopper details', paymentData);
             },
             transactionInfo: getTransactionInfo(),
+            
             callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
+            
             paymentDataCallbacks: {
                 onPaymentDataChanged(intermediatePaymentData) {
                     return new Promise(resolve => {
@@ -212,10 +215,12 @@ export const Express: Story = {
             },
             // Shipping Address config
             shippingAddressRequired: true,
+            
             shippingAddressParameters: {
                 allowedCountryCodes: [],
                 phoneNumberRequired: true
             },
+            
             // Shipping Options config
             shippingOptionRequired: true
         }
