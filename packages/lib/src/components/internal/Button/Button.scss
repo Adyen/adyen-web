@@ -124,11 +124,12 @@
         }
     }
 
+/* todo: change it */
     &.adyen-checkout__button--action {
         padding: 10px 12px;
-        background: rgb(0 102 255 / 10%);
+        background: var(--b-color-background-always-dark);
         border: 1px solid transparent;
-        color: var(--b-color-black);
+        color: var(--b-color-white);
 
         &:hover {
             background: rgb(0 102 255 / 20%);
