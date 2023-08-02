@@ -11,7 +11,7 @@ async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
     return await checkout.initialize();
 }
 
-AdyenCheckout.register = <T extends UIElement>(...items: (new (props) => T)[]) => {
+AdyenCheckout.register = (...items: (new (props) => UIElement)[]) => {
     Checkout.register(...items);
 };
 

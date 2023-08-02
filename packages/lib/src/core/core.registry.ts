@@ -40,7 +40,7 @@ class Registry implements IRegistry {
     public components: (new (props) => UIElement)[] = [];
     public componentsMap: Record<string, new (props) => UIElement> = {};
 
-    public add<T extends UIElement>(...items: (new (props) => T)[]) {
+    public add(...items: (new (props) => UIElement)[]) {
         this.components = [...items];
         this.componentsMap = createComponentsMap(this.components);
     }

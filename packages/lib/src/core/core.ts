@@ -33,7 +33,7 @@ class Core {
 
     public static registry = registry;
 
-    public static register<T extends UIElement>(...items: (new (props) => T)[]) {
+    public static register(...items: (new (props) => UIElement)[]) {
         registry.add(...items);
     }
 
