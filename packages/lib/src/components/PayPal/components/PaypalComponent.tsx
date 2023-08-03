@@ -40,7 +40,7 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
 
     if (status === 'pending') {
         return (
-            <div className="adyen-checkout__paypal">
+            <div className="adyen-checkout__paypal" aria-live="polite" aria-busy="true">
                 <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--pending">
                     <Spinner />
                 </div>
