@@ -1,0 +1,24 @@
+.adyen-checkout__link {
+    $component-root: &;
+
+    @include adl-box-sizing(true);
+    @include b-link-reset;
+
+    color: var(--b-link-color);
+    text-decoration: var(--b-link-text-decoration);
+
+    &:hover {
+        color: var(--b-link-hover-color);
+        text-decoration: var(--b-link-hover-text-decoration);
+    }
+
+    &:active {
+        color: var(--b-link-active-color);
+    }
+
+    &:focus-visible {
+        @include b-focus-ring;
+
+        border-radius: var(--b-link-border-radius);
+    }
+}
