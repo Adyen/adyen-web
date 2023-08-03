@@ -13,7 +13,7 @@
             height: auto;
 
             &:focus-within {
-                border: 1px solid var(--b-color-black);
+                border: 1px solid var(--b-input-field-input-box-focus-border-color);
 
                 .adyen-checkout-dropdown--countrycode-selector {
                     border-right: 1px solid var(--b-color-black);

@@ -90,7 +90,6 @@ function PhoneInput(props: PhoneInputProps) {
                     {props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
                 </span>
             </label>
-            {/* todo: using fieldset? It's more semantic */}
             <Field
                 name={'phoneNumber'}
                 className={classNames({

@@ -1,3 +1,5 @@
+import { getFlagEmoji } from '../../utils/getFlagEmoji';
+
 /**
  * Formats and returns the passed items, adds flag string
  * @param item - prefix
@@ -12,7 +14,8 @@ export const formatPrefixName = item => {
         return false;
     }
 
-    const flag = item.code.toUpperCase().replace(/./g, char => (String.fromCodePoint ? String.fromCodePoint(char.charCodeAt(0) + 127397) : ''));
+    const flag = getFlagEmoji(item.code);
+
     return {
         ...item,
         name: `${flag} ${item.id} (${item.code})`,

@@ -1,10 +1,24 @@
 import { h } from 'preact';
-import { useState, useLayoutEffect } from 'preact/hooks';
+import { useLayoutEffect, useState } from 'preact/hooks';
 import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
-import { CountryFieldProps, CountryFieldItem } from '../types';
+import { CountryFieldItem, CountryFieldProps } from '../types';
+import { getFlagEmoji } from '../../../../utils/getFlagEmoji';
+
+const formatCountries = (countries: Array<CountryFieldItem>, allowedCountries: string[]) => {
+    const applyFilter = (country: CountryFieldItem) => allowedCountries.includes(country.id);
+    const applyMapper = (country: CountryFieldItem) => {
+        const flag = getFlagEmoji(country.id);
+        return {
+            ...country,
+            name: `${flag} ${country.name}`,
+            selectedOptionName: `${flag} ${country.name}`
+        };
+    };
+    return (allowedCountries.length ? countries.filter(applyFilter) : countries).map(applyMapper);
+};
 
 export default function CountryField(props: CountryFieldProps) {
     const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
@@ -16,8 +30,7 @@ export default function CountryField(props: CountryFieldProps) {
     useLayoutEffect(() => {
         getDataset('countries', loadingContext, i18n.locale)
             .then(response => {
-                const countriesFilter = country => allowedCountries.includes(country.id);
-                const newCountries = allowedCountries.length ? response.filter(countriesFilter) : response;
+                const newCountries = formatCountries(response, allowedCountries);
                 setCountries(newCountries || []);
                 setReadOnly(newCountries.length === 1 || readOnly);
                 setLoaded(true);

@@ -46,10 +46,10 @@ class QiwiWalletElement extends UIElement {
     }
 
     render() {
-        const { items, selected } = this.props;
+        const { i18n, loadingContext, showPayButton, items, selected } = this.props;
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <CoreProvider i18n={i18n} loadingContext={loadingContext} resources={this.resources}>
                 <PhoneInput
                     ref={ref => {
                         this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
@@ -61,7 +61,7 @@ class QiwiWalletElement extends UIElement {
                     onChange={this.setState}
                 />
 
-                {this.props.showPayButton && this.payButton({})}
+                {showPayButton && this.payButton({})}
             </CoreProvider>
         );
     }
