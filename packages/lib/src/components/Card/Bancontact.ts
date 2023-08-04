@@ -3,6 +3,8 @@ import { CardElementData, CardElementProps } from './types';
 import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
 
 class BancontactElement extends CardElement {
+    public static type = 'bcmc';
+
     constructor(props: CardElementProps) {
         super(props);
     }
@@ -13,15 +15,9 @@ class BancontactElement extends CardElement {
     };
 
     formatData(): CardElementData {
-        const paymentData = super.formatData();
-
-        return {
-            ...paymentData,
-            paymentMethod: {
-                ...paymentData.paymentMethod,
-                type: 'bcmc'
-            }
-        };
+        const data = super.formatData();
+        data.paymentMethod.type = this.constructor['type'];
+        return data;
     }
 
     /**
