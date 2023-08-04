@@ -59,7 +59,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     }
                 )}
             />
-            <div
+            <span
                 className={classNames('adyen-checkout__field__exp-date_hint_wrapper', [styles['checkout__field__exp-date_hint_wrapper']], {
                     'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid
                 })}
@@ -69,7 +69,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     className="adyen-checkout__field__exp-date_hint"
                     alt={fieldLabel}
                 />
-            </div>
+            </span>
         </Field>
     );
 }

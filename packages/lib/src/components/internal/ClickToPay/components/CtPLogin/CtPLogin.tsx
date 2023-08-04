@@ -8,6 +8,7 @@ import CtPSection from '../CtPSection';
 import SrciError from '../../services/sdks/SrciError';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import './CtPLogin.scss';
+import TimeoutError from '../../errors/TimeoutError';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -52,6 +53,7 @@ const CtPLogin = (): h.JSX.Element => {
             }
         } catch (error) {
             if (error instanceof SrciError) console.warn(`CtP - Login error: ${error.toString()}`);
+            if (error instanceof TimeoutError) console.warn(error.toString());
             setErrorCode(error?.reason);
             setIsLoggingIn(false);
         }

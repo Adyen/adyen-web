@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Wpisz nazwę firmy",
     "companyDetails.registrationNumber.invalid": "Wprowadź numer w rejestrze",
     "consent.checkbox.invalid": "Musisz zaakceptować Warunki i postanowienia",
-    "form.instruction": "Wszystkie pola są wymagane, chyba że zaznaczono inaczej."
+    "form.instruction": "Wszystkie pola są wymagane, chyba że zaznaczono inaczej.",
+    "trustly.descriptor": "Błyskawiczna płatność bankowa",
+    "trustly.description1": "Płać bezpośrednio z dowolnego rachunku bankowego, korzystając z zabezpieczeń na poziomie bankowym",
+    "trustly.description2": "Bez kart, bez pobierania aplikacji, bez rejestracji"
 }

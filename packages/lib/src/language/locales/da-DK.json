@@ -290,5 +290,8 @@
     "companyDetails.name.invalid": "Indtast virksomhedsnavnet",
     "companyDetails.registrationNumber.invalid": "Indtast registreringsnummeret",
     "consent.checkbox.invalid": "Du skal acceptere vilkår og betingelser",
-    "form.instruction": "Alle felter er obligatoriske, medmindre andet er markeret."
+    "form.instruction": "Alle felter er obligatoriske, medmindre andet er markeret.",
+    "trustly.descriptor": "Direkte netbanksbetalinger",
+    "trustly.description1": "Betal nemt fra din ønskede bankkonto, med sikker verifikation via dit NemID eller biometrics",
+    "trustly.description2": "Ingen kort, ingen download af apps, og ingen registrering"
 }

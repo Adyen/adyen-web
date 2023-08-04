@@ -1,3 +1,5 @@
+import TimeoutError from './errors/TimeoutError';
+
 export type ClickToPayConfiguration = {
     /**
      * Shopper email used to be recognized with the Network schemes
@@ -28,6 +30,12 @@ export type ClickToPayConfiguration = {
      *  Callback triggered when the Click to Pay component is ready to be used
      */
     onReady?(): void;
+
+    /**
+     * Callback triggered when a timeout happens within Click to Pay service.
+     * Ex: Network schemes took too long to initialize
+     */
+    onTimeout?(error: TimeoutError): void;
 };
 
 export type ClickToPayScheme = 'mc' | 'visa';
