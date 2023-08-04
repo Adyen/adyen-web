@@ -1,3 +1,7 @@
+/* Shared css variables and styles are imported once here at the root level for all UI components. */
+@import "../style/design-tokens";
+@import "../style/link";
+
 [class^='adyen-checkout'],
 [class^='adyen-checkout']::before,
 [class^='adyen-checkout']::after {

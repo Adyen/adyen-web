@@ -1,7 +1,6 @@
-.adyen-checkout__link {
-    $component-root: &;
+@import 'mixins';
 
-    @include adl-box-sizing(true);
+.adyen-checkout__link {
     @include b-link-reset;
 
     color: var(--b-link-color);
