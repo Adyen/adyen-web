@@ -17,6 +17,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         dir,
         disabled,
         errorMessage,
+        contextualText,
         helper,
         inputWrapperModifiers,
         isLoading,
@@ -98,6 +99,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
     }, [label, errorMessage]);
 
     const renderInputRelatedElements = useCallback(() => {
+        const showErrorContextualText = typeof errorMessage === 'string' && errorMessage.length > 0;
+        const showContextualText = !showErrorContextualText && contextualText?.length > 0;
         return (
             <Fragment>
                 <div
@@ -139,16 +142,20 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 </div>
                 {addContextualElement && (
                     <span
-                        className={'adyen-checkout__error-text'}
+                        className={classNames({
+                            'adyen-checkout-contextual-text': true,
+                            'adyen-checkout-contextual-text--error': showErrorContextualText
+                        })}
                         {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
                         aria-hidden={errorVisibleToSR ? null : 'true'}
                     >
-                        {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
+                        {showContextualText && contextualText}
+                        {showErrorContextualText && errorMessage}
                     </span>
                 )}
             </Fragment>
         );
-    }, [children, errorMessage, isLoading, isValid, onFocusHandler, onBlurHandler]);
+    }, [children, errorMessage, contextualText, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
     const LabelOrAlternative = useCallback(
         ({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children, renderAlternativeToLabel }) => {

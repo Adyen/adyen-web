@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@import '../../../../style/font-sizes';
 
 .adyen-checkout__field {
     display: block;
@@ -47,11 +47,15 @@
     color: var(--b-color-black);
 }
 
-.adyen-checkout__error-text {
+.adyen-checkout-contextual-text {
     display: flex;
-    color: var(--b-color-label-critical);
     font-weight: normal;
     margin-top: 4px;
     font-size: $font-size-xsmall;
     align-items: center;
+    color: var(--b-color-label-secondary);
+
+    &--error {
+        color: var(--b-color-label-critical);
+    }
 }

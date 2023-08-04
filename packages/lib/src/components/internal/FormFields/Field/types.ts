@@ -8,6 +8,7 @@ export interface FieldProps {
     children?: ComponentChildren;
     disabled?: boolean;
     errorMessage?: string | boolean;
+    contextualText?: string;
     filled?: boolean;
     focused?: boolean;
     helper?: string;

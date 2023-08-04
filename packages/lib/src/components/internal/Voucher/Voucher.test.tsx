@@ -15,7 +15,7 @@ describe('Voucher', () => {
         const wrapper = mount(<Voucher {...outputDetails} />);
         expect(wrapper.find('.adyen-checkout__voucher-result__introduction').text()).toContain('Introduction Text');
         expect(wrapper.find('.adyen-checkout__voucher-result__amount').text()).toBe('100');
-        expect(wrapper.find('.adyen-checkout__link--voucher-result-instructions').length).toBe(1);
+        expect(wrapper.find('.adyen-checkout-link--voucher-result-instructions').length).toBe(1);
         expect(wrapper.find('.adyen-checkout__voucher-result__code > span').text()).toBe('123456');
     });
 
@@ -26,7 +26,7 @@ describe('Voucher', () => {
         ];
         const wrapper = mount(<Voucher {...outputDetails} voucherDetails={voucherDetails} />);
         expect(wrapper.find('.adyen-checkout__voucher-result__amount').text()).toBe('100');
-        expect(wrapper.find('.adyen-checkout__link--voucher-result-instructions').length).toBe(1);
+        expect(wrapper.find('.adyen-checkout-link--voucher-result-instructions').length).toBe(1);
         expect(wrapper.find('.adyen-checkout__voucher-result__code > span').text()).toBe('123456');
     });
 

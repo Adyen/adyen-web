@@ -1,6 +1,6 @@
 @import 'mixins';
 
-.adyen-checkout__link {
+.adyen-checkout-link {
     @include b-link-reset;
 
     color: var(--b-link-color);
