@@ -38,6 +38,7 @@ abstract class AbstractCSF {
     protected setupSecuredField: (pItem: HTMLElement) => void;
     protected touchendListener: (e: Event) => void;
     protected touchstartListener: () => void;
+    protected hasGenuineTouchEvents: boolean;
     // Set in createSecuredFields
     protected encryptedAttrName: string;
     protected hasRedundantCVCField: boolean;

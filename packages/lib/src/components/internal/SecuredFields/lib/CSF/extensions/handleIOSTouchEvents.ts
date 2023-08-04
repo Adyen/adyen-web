@@ -96,6 +96,7 @@ function touchendListener(e: Event): void {
  * NOTE: Only called when iOS detected & this.config.shouldDisableIOSArrowKeys = true
  */
 function touchstartListener(e: Event): void {
+    this.hasGenuineTouchEvents = true;
     const targetEl: EventTarget = e.target;
     // If other element is Input or Span (i.e. label text) TODO apply to other types of el?
     if (targetEl instanceof HTMLInputElement || targetEl instanceof HTMLSpanElement) {
