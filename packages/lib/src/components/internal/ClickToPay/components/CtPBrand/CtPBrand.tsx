@@ -14,7 +14,7 @@ const CtPBrand = ({ classNameModifiers = [] }: CtPBrandProps) => {
     const getImage = useImage();
     const { schemes } = useClickToPayContext();
 
-    const ctpImageUrl = getImage({})('ctp');
+    const ctpImageUrl = getImage()('ctp');
     const pipeImageUrl = getImage({ imageFolder: 'components/' })('pipe');
 
     return (
@@ -31,7 +31,7 @@ const CtPBrand = ({ classNameModifiers = [] }: CtPBrandProps) => {
                 <Img
                     key={brand}
                     className={classnames('adyen_checkout-ctp__brand-scheme', `adyen_checkout-ctp__brand-scheme-${brand}`)}
-                    src={getImage({})(brand)}
+                    src={getImage()(brand)}
                     alt={`Logo of ${SchemeNames[brand]}`}
                 />
             ))}

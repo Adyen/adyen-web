@@ -114,7 +114,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     }
 
     get icon(): string {
-        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })('googlepay');
+        return this.props.icon ?? this.resources.getImage()('googlepay');
     }
 
     render() {
