@@ -10,9 +10,10 @@ import { UIElementProps } from '../../../types';
 export interface ANCVInputProps extends UIElementProps {
     ref?: any;
     showPayButton: boolean;
+    onSubmit: () => void;
 }
 
-function ANCVInput({ showPayButton, payButton, onChange }: ANCVInputProps) {
+function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputProps) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<ANCVInputDataState>({
@@ -54,7 +55,7 @@ function ANCVInput({ showPayButton, payButton, onChange }: ANCVInputProps) {
                     />
                 </Field>
 
-                {showPayButton && payButton({ status, label: i18n.get('confirmPurchase') })}
+                {showPayButton && payButton({ status, label: i18n.get('confirmPurchase'), onClick: onSubmit })}
             </div>
         </LoadingWrapper>
     );

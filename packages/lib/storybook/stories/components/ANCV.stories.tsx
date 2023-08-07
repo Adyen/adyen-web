@@ -13,9 +13,12 @@ const meta: Meta<PaymentMethodStoryProps<ANCVProps>> = {
 export const ANCV: ANCVStory = {
     render: (args, context) => {
         const checkout = getStoryContextCheckout(context);
-        console.log(args.componentConfiguration);
         return <Container type={'ancv'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
     },
-    args: {}
+    args: {
+        countryCode: 'NL',
+        amount: 2000,
+        useSessions: false
+    }
 };
 export default meta;

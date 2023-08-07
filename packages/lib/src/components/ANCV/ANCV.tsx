@@ -5,11 +5,15 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import { UIElementProps } from '../types';
+import { PaymentResponse, UIElementProps } from '../types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import PayButton from '../internal/PayButton';
 
 export interface ANCVProps extends UIElementProps {
     paymentData?: any; //TODO
     data: ANCVDataState;
+    onOrderRequest?: any;
+    onOrderCreated?: any;
 }
 
 interface ANCVDataState {
@@ -30,6 +34,48 @@ export class ANCVElement extends UIElement<ANCVProps> {
             }
         };
     }
+
+    private onOrderRequest = data => {
+        if (this.props.onOrderRequest)
+            return new Promise((resolve, reject) => {
+                this.props.onOrderRequest(resolve, reject, data);
+            });
+
+        if (this.props.session) {
+            return this.props.session.createOrder();
+        }
+    };
+
+    protected handleOrder = ({ order }: PaymentResponse) => {
+        this.updateParent({ order });
+        if (this.props.session && this.props.onOrderCreated) {
+            return this.props.onOrderCreated(order);
+        }
+    };
+
+    public createOrder = () => {
+        if (!this.isValid) {
+            this.showValidation();
+            return false;
+        }
+
+        this.setStatus('loading');
+
+        return this.onOrderRequest(this.data)
+            .then((order: { orderData: string; pspReference: string }) => {
+                this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
+                this.submit();
+            })
+            .catch(error => {
+                this.setStatus(error?.message || 'error');
+                if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
+            });
+    };
+
+    // Reimplement payButton similar to GiftCard to allow to set onClick
+    public payButton = props => {
+        return <PayButton {...props} />;
+    };
 
     get isValid(): boolean {
         return !!this.state.isValid;
@@ -75,6 +121,7 @@ export class ANCVElement extends UIElement<ANCVProps> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
+                    onSubmit={this.createOrder}
                     onChange={this.setState}
                     payButton={this.payButton}
                     showPayButton={this.props.showPayButton}
