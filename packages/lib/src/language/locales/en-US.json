@@ -290,5 +290,9 @@
     "paymentMethodsList.aria.label": "Choose a payment method",
     "companyDetails.name.invalid": "Enter the company name",
     "companyDetails.registrationNumber.invalid": "Enter the registration number",
-    "consent.checkbox.invalid": "You must agree with the terms & conditions"
+    "consent.checkbox.invalid": "You must agree with the terms & conditions",
+    "form.instruction": "All fields are required unless marked otherwise.",
+    "trustly.descriptor": "Instant Bank Payment",
+    "trustly.description1": "Pay directly from any of your bank accounts, backed by bank-level security",
+    "trustly.description2": "No cards, no app download, no registration"
 }

@@ -60,6 +60,7 @@ import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
+import Trustly from './Trustly';
 
 /**
  * Maps each component with a Component element.
@@ -188,6 +189,7 @@ const componentsMap = {
     redirect: Redirect,
     twint: Twint,
     vipps: Vipps,
+    trustly: Trustly,
     /** Redirect */
 
     /** Klarna */

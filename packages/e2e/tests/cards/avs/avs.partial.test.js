@@ -22,7 +22,7 @@ test('should validate Postal Code if property data.billingAddress.country is pro
     await t.typeText(cardPage.postalCodeInput, INVALID_POSTALCODE);
     await t.click(cardPage.payButton);
 
-    await t.expect(cardPage.postalCodeErrorText.innerText).contains('Invalid format. Expected format: 99999999');
+    await t.expect(cardPage.postalCodeErrorText.innerText).contains('Invalid format. Expected format: 12345678 or 12345-678');
 }).clientScripts({ content: CLIENTSCRIPT_PARTIAL_AVS_WITH_COUNTRY });
 
 test('should not validate Postal Code if property data.billingAddress.country is not provided', async t => {

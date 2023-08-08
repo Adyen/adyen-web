@@ -287,5 +287,9 @@
     "paymentMethodsList.aria.label": "选择支付方式",
     "companyDetails.name.invalid": "输入公司名称",
     "companyDetails.registrationNumber.invalid": "输入注册号",
-    "consent.checkbox.invalid": "您必须同意条款和细则"
+    "consent.checkbox.invalid": "您必须同意条款和细则",
+    "form.instruction": "除非另有标记，否则所有字段均为必填项。",
+    "trustly.descriptor": "即时银行付款",
+    "trustly.description1": "直接从您的任何银行账户付款，并配备银行级安全保障",
+    "trustly.description2": "无需卡片，无需下载应用，无需注册"
 }

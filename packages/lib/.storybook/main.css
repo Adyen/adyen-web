@@ -1,0 +1,14 @@
+html,
+body {
+    font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    background-color: #fbfbfb;
+}
+
+.component-wrapper {
+    background: #fff;
+    border: 1px solid #edf0f3;
+    max-width: 600px;
+    padding: 24px;
+    margin: auto;
+}

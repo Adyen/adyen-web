@@ -40,7 +40,7 @@
     "idealIssuer.selectField.title": "Bank",
     "idealIssuer.selectField.placeholder": "Bank auswählen",
     "creditCard.success": "Zahlung erfolgreich",
-    "loading": "Laden …",
+    "loading": "Laden…",
     "continue": "Weiter",
     "continueTo": "Weiter zu",
     "wechatpay.timetopay": "Sie haben noch %@ um zu zahlen",
@@ -153,7 +153,7 @@
     "select.filter.placeholder": "Suche…",
     "telephoneNumber.invalid": "Ungültige Telefonnummer",
     "qrCodeOrApp": "oder",
-    "paypal.processingPayment": "Zahlung wird verarbeitet …",
+    "paypal.processingPayment": "Zahlung wird verarbeitet…",
     "generateQRCode": "QR-Code generieren",
     "await.waitForConfirmation": "Warten auf Bestätigung",
     "mbway.confirmPayment": "Bestätigen Sie Ihre Zahlung in der MB WAY-App",
@@ -244,7 +244,7 @@
     "onlineBanking.termsAndConditions": "Wenn Sie fortfahren, stimmen Sie den %#Allgemeinen Geschäftsbedingungen%# zu",
     "onlineBankingPL.termsAndConditions": "Indem Sie fortfahren, stimmen Sie den %#Vorschriften%# und der %#Auskunftspflicht%# von Przelewy24 zu",
     "ctp.loading.poweredByCtp": "Unterstützt von Click to Pay",
-    "ctp.loading.intro": "Wir überprüfen gerade, ob Sie bereits gespeicherte Click-to-Pay-Karten haben …",
+    "ctp.loading.intro": "Wir überprüfen gerade, ob Sie bereits gespeicherte Click-to-Pay-Karten haben…",
     "ctp.login.title": "Weiter zu Click to Pay",
     "ctp.login.subtitle": "Geben Sie die mit Click to Pay verbundene E-Mail-Adresse ein, um fortzufahren.",
     "ctp.login.inputLabel": "E-Mail-Adresse",
@@ -288,5 +288,9 @@
     "paymentMethodsList.aria.label": "Wählen Sie eine Zahlungsmethode aus",
     "companyDetails.name.invalid": "Geben Sie den Firmennamen ein",
     "companyDetails.registrationNumber.invalid": "Geben Sie die Registrierungsnummer ein",
-    "consent.checkbox.invalid": "Sie müssen den Geschäftsbedingungen zustimmen"
+    "consent.checkbox.invalid": "Sie müssen den Geschäftsbedingungen zustimmen",
+    "form.instruction": "Alle Felder sind Pflichtfelder, sofern nicht anders gekennzeichnet.",
+    "trustly.descriptor": "Online Direktüberweisung",
+    "trustly.description1": "Sichere Bezahlmethode via Online Banking oder auch Mobile Banking",
+    "trustly.description2": "Ohne Karten, App-Download oder Registrierung"
 }

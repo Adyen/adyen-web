@@ -7,9 +7,11 @@ import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
 import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
+import useImage from '../../../../core/Context/useImage';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
+    const getImage = useImage();
     const isIssuerRequired = () => {
         const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
         return typesRequiringIssuers.indexOf(props.type) > -1;
@@ -26,7 +28,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         }
     });
 
-    const getIssuerIcon = getIssuerImageUrl({}, props.type);
+    const getIssuerIcon = getIssuerImageUrl({}, props.type, getImage);
     const items = props.items.map(
         (item: DragonpayInputIssuerItem): DragonpayInputIssuerItem => ({
             ...item,
@@ -51,9 +53,9 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">
-            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail}>
+            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail} name={'dragonpay-shopperEmail'}>
                 {renderFormField('emailAddress', {
-                    name: 'dragonpay.shopperEmail',
+                    name: 'dragonpay-shopperEmail',
                     autoCorrect: 'off',
                     value: data.shopperEmail,
                     className: 'adyen-checkout__input--large',
@@ -64,7 +66,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
             </Field>
 
             {isIssuerRequired() && (
-                <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer}>
+                <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer} name={'issuer'}>
                     {renderFormField('select', {
                         items,
                         selected: data.issuer,

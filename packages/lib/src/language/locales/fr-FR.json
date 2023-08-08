@@ -288,5 +288,9 @@
     "paymentMethodsList.aria.label": "Choisissez un mode de paiement",
     "companyDetails.name.invalid": "Entrez le nom de l'entreprise",
     "companyDetails.registrationNumber.invalid": "Entrez le numéro d'identification",
-    "consent.checkbox.invalid": "Vous devez accepter les conditions générales"
+    "consent.checkbox.invalid": "Vous devez accepter les conditions générales",
+    "form.instruction": "Tous les champs sont obligatoires, sauf indication contraire.",
+    "trustly.descriptor": "Paiement bancaire instantané",
+    "trustly.description1": "Payez directement à partir de n'importe lequel de vos comptes bancaires, avec une sécurité de niveau bancaire",
+    "trustly.description2": "Aucune carte, aucun téléchargement d'application, aucune inscription"
 }

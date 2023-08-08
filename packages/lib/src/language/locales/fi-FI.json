@@ -288,5 +288,9 @@
     "paymentMethodsList.aria.label": "Valitse maksutapa",
     "companyDetails.name.invalid": "Syötä yrityksen nimi",
     "companyDetails.registrationNumber.invalid": "Syötä rekisterinumero",
-    "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot"
+    "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot",
+    "form.instruction": "Kaikki kentät ovat pakollisia, ellei toisin ole merkitty.",
+    "trustly.descriptor": "Verkkopankki",
+    "trustly.description1": "Maksat haluamaltasi tililtä turvallisest",
+    "trustly.description2": "Ei kortteja, ei sovelluksia, ei rekisteröitymistä"
 }

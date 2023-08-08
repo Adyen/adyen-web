@@ -43,8 +43,8 @@ test('should make an Boleto payment', async t => {
     const stateData = await getComponentData();
 
     await t
-        .expect(stateData.paymentMethod)
-        .eql({ type: 'boletobancario' })
+        .expect(stateData.paymentMethod.type)
+        .eql('boletobancario')
         .expect(stateData.shopperName)
         .eql(mockData.shopperName)
         .expect(stateData.socialSecurityNumber)
@@ -59,7 +59,7 @@ test('should show the "send copy to email" field', async t => {
     await fillBoleto(t);
     await t.expect(getIsValid('boletoInput')).eql(true);
 
-    await t.click(Selector('.boleto-input .adyen-checkout__field--sendCopyToEmail .adyen-checkout__label'));
+    await t.click(Selector('.boleto-input .adyen-checkout__field--sendCopyToEmail .adyen-checkout__checkbox'));
     await t.expect(getIsValid('boletoInput')).eql(false);
 
     await t.typeText('.boleto-input .adyen-checkout__input--email', mockData.shopperEmail);
@@ -68,8 +68,8 @@ test('should show the "send copy to email" field', async t => {
     const stateData = await getComponentData();
 
     await t
-        .expect(stateData.paymentMethod)
-        .eql({ type: 'boletobancario' })
+        .expect(stateData.paymentMethod.type)
+        .eql('boletobancario')
         .expect(stateData.shopperEmail)
         .eql(mockData.shopperEmail)
         .expect(getIsValid('boletoInput'))

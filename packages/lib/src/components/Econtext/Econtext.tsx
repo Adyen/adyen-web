@@ -11,13 +11,15 @@ interface EcontextElementProps extends UIElementProps {
     reference?: string;
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
+    showFormInstruction?: boolean;
 }
 
 export class EcontextElement extends UIElement<EcontextElementProps> {
     public static type = 'econtext';
 
     protected static defaultProps = {
-        personalDetailsRequired: true
+        personalDetailsRequired: true,
+        showFormInstruction: true
     };
 
     get isValid() {
@@ -40,7 +42,7 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
     }
 
     get icon() {
-        return this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return this.resources.getImage()(this.props.type);
     }
 
     render() {

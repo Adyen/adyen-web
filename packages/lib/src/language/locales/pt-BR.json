@@ -286,5 +286,9 @@
     "paymentMethodsList.aria.label": "Escolha um método de pagamento",
     "companyDetails.name.invalid": "Digite o nome da empresa",
     "companyDetails.registrationNumber.invalid": "Digite o número de registro",
-    "consent.checkbox.invalid": "Você precisa concordar com os termos e condições"
+    "consent.checkbox.invalid": "Você precisa concordar com os termos e condições",
+    "form.instruction": "Todos os campos são obrigatórios, a menos que marcados em contrário.",
+    "trustly.descriptor": "Pagamento instantâneo",
+    "trustly.description1": "Pague diretamente de qualquer conta, com a segurança do seu banco",
+    "trustly.description2": "Sem cartão, sem download de aplicativo, sem cadastro"
 }

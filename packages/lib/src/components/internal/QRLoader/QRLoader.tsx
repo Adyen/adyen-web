@@ -14,6 +14,7 @@ import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
 import useImage from '../../../core/Context/useImage';
 import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
+import useAutoFocus from '../../../utils/useAutoFocus';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -151,7 +152,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
                     <img
                         className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                        src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
+                        src={getImage({ imageFolder: 'components/' })(image)}
                         alt={status}
                     />
                     <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{status}</div>
@@ -178,6 +179,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
         const timeToPayString = i18n.get('wechatpay.timetopay').split('%@');
 
+        const qrSubtitleRef = useAutoFocus();
+
         return (
             <div
                 className={`
@@ -188,7 +191,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             >
                 {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
 
-                <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.introduction)}</div>
+                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+                <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
+                    {i18n.get(this.props.introduction)}
+                </div>
 
                 <img
                     src={qrCodeImage}
@@ -223,7 +229,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                                 copyToClipboard(this.props.qrCodeData);
                                 complete();
                             }}
-                            icon={getImage({ loadingContext, imageFolder: 'components/' })('copy')}
+                            icon={getImage({ imageFolder: 'components/' })('copy')}
                             label={i18n.get('button.copy')}
                         />
                     </div>

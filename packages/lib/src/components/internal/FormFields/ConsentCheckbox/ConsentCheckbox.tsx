@@ -4,9 +4,16 @@ import Checkbox from '../Checkbox';
 
 export default function ConsentCheckbox({ errorMessage, label, onChange, i18n, ...props }) {
     return (
-        <Field classNameModifiers={['consentCheckbox']} errorMessage={errorMessage} i18n={i18n}>
+        <Field
+            classNameModifiers={['consentCheckbox']}
+            errorMessage={errorMessage}
+            i18n={i18n}
+            name={'consentCheckbox'}
+            useLabelElement={false}
+            label={i18n.get('creditCard.holderName')}
+        >
             <Checkbox
-                name="consentCheckbox"
+                name={'consentCheckbox'}
                 classNameModifiers={[...(props.classNameModifiers ??= []), 'consentCheckbox']}
                 onInput={onChange}
                 value={props?.data?.consentCheckbox}

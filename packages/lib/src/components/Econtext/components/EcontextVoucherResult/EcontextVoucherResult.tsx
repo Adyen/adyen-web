@@ -15,7 +15,7 @@ const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
             paymentMethodType={paymentMethodType}
             reference={reference}
             introduction={i18n.get('voucher.introduction.econtext')}
-            imageUrl={getImage({})(paymentMethodType)}
+            imageUrl={getImage()(paymentMethodType)}
             instructionsUrl={instructionsUrl}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[

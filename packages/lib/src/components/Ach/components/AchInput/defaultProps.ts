@@ -6,6 +6,7 @@ export default {
     holderNameRequired: true,
     billingAddressRequired: true,
     billingAddressAllowedCountries: ['US', 'PR'],
+    showFormInstruction: true,
 
     // Events
     onLoad: () => {},

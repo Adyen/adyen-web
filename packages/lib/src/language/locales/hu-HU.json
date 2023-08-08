@@ -288,5 +288,9 @@
     "paymentMethodsList.aria.label": "Válasszon fizetési módot",
     "companyDetails.name.invalid": "Adja meg a cég nevét",
     "companyDetails.registrationNumber.invalid": "Adja meg a cégjegyzékszámot",
-    "consent.checkbox.invalid": "El kell fogadnia az általános szerződési feltételeket"
+    "consent.checkbox.invalid": "El kell fogadnia az általános szerződési feltételeket",
+    "form.instruction": "Minden mező kitöltése kötelező, hacsak nincs másképp jelölve.",
+    "trustly.descriptor": "Azonnali banki fizetés",
+    "trustly.description1": "Fizessen közvetlenül bármelyik bankszámlájáról, banki szintű biztonság mellett",
+    "trustly.description2": "Nincs szükség kártyára, alkalmazás letöltésére és regisztrációra"
 }

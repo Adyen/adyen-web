@@ -12,7 +12,7 @@ import useImage from '../../../core/Context/useImage';
 
 export default function DonationComponent(props: DonationComponentProps) {
     const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { currency } = amounts;
     const [status, setStatus] = useState('ready');
@@ -53,7 +53,7 @@ export default function DonationComponent(props: DonationComponentProps) {
             <div className="adyen-checkout__adyen-giving">
                 <Img
                     className="adyen-checkout__status__icon adyen-checkout__status__icon--error"
-                    src={getImage({ loadingContext, imageFolder: 'components/' })('error')}
+                    src={getImage({ imageFolder: 'components/' })('error')}
                     alt={i18n.get('error.message.unknown')}
                 />
                 <div className="adyen-checkout__status__text">{i18n.get('error.message.unknown')}</div>
@@ -66,7 +66,7 @@ export default function DonationComponent(props: DonationComponentProps) {
             <div className="adyen-checkout__adyen-giving">
                 <Img
                     className="adyen-checkout__status__icon adyen-checkout__status__icon--success"
-                    src={getImage({ loadingContext, imageFolder: 'components/' })('heart')}
+                    src={getImage({ imageFolder: 'components/' })('heart')}
                     alt={i18n.get('thanksForYourSupport')}
                 />
 

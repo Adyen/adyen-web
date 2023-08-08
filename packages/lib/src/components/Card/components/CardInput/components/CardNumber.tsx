@@ -8,6 +8,7 @@ import { CardNumberProps } from './types';
 import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
@@ -27,6 +28,8 @@ export default function CardNumber(props: CardNumberProps) {
             showValidIcon={false}
             i18n={i18n}
             errorVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_CARD_NUMBER}
