@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { getCardImageUrl, getFullBrandName } from '../utils';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { BrandIconProps } from './types';
 import styles from '../CardInput.module.scss';
+import useImage from '../../../../../core/Context/useImage';
 
 export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIconProps) {
-    const { loadingContext } = useCoreContext();
+    const getImage = useImage();
     const imageName = brand === 'card' ? 'nocard' : brand;
-    const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, loadingContext);
+    const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
     const handleError = e => {
         e.target.style.cssText = 'display: none';
     };

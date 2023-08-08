@@ -44,7 +44,20 @@ export interface PaymentData extends PaymentMethodData {
     storePaymentMethod?: boolean;
 }
 
-export type ResultCode = 'Authorised' | 'Cancelled' | 'ChallengeShopper' | 'Error' | 'IdentifyShopper' | 'Pending';
+export type ResultCode =
+    | 'AuthenticationFinished'
+    | 'AuthenticationNotRequired'
+    | 'Authorised'
+    | 'Cancelled'
+    | 'ChallengeShopper'
+    | 'Error'
+    | 'IdentifyShopper'
+    | 'PartiallyAuthorised'
+    | 'Pending'
+    | 'PresentToShopper'
+    | 'Received'
+    | 'RedirectShopper'
+    | 'Refused';
 
 export interface OnPaymentCompletedData {
     sessionData: string;

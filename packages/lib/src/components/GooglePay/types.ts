@@ -106,12 +106,16 @@ export interface GooglePayProps extends UIElementProps {
     shippingAddressRequired?: boolean;
 
     /**
-     * @see https://developers.google.com/pay/api/web/reference/request-objects#ShippingOptionParameters
+     * If shippingAddressRequired is set to true, specify shipping address restrictions. This object is used to set shipping restrictions.
+     *
+     * @see https://developers.google.com/pay/api/web/reference/request-objects#ShippingAddressParameters
      */
     shippingAddressParameters?: google.payments.api.ShippingAddressParameters;
 
     /**
-     * Set to true when the SHIPPING_OPTION callback intent is used.
+     * Set to true when the SHIPPING_OPTION callback intent is used. This field is required if you implement support
+     * for Authorize Payments or Dynamic Price Updates.
+     *
      * @see https://developers.google.com/pay/api/web/reference/request-objects#ShippingOptionParameters
      */
     shippingOptionRequired?: boolean;
@@ -121,6 +125,10 @@ export interface GooglePayProps extends UIElementProps {
      */
     shippingOptionParameters?: google.payments.api.ShippingOptionParameters;
 
+    /**
+     * Specifies the following callback intents for PaymentDataCallbacks
+     * @see https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataCallbacks
+     */
     callbackIntents?: google.payments.api.CallbackIntent[];
 
     /**

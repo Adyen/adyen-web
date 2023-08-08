@@ -28,7 +28,7 @@ export class DokuElement extends UIElement {
     }
 
     get icon() {
-        return this.resources.getImage({})(this.props.type);
+        return this.resources.getImage()(this.props.type);
     }
 
     render() {

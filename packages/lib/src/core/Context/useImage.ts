@@ -1,10 +1,11 @@
 import useCoreContext from './useCoreContext';
 import { useCallback } from 'preact/hooks';
-import { ImageOptions } from '../../utils/get-image';
+import { GetImageFnType, ImageOptions } from './Resources';
 
-function useImage() {
+export type UseImageHookType = (props: ImageOptions) => GetImageFnType;
+function useImage(): (props?: ImageOptions) => GetImageFnType {
     const { resources } = useCoreContext();
-    return useCallback((props: ImageOptions) => resources?.getImage(props), []);
+    return useCallback((props?: ImageOptions) => resources?.getImage(props), []);
 }
 
 export default useImage;
