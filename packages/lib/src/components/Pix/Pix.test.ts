@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 test('should return only payment type if personalDetails is not required', async () => {
     const pixElement = new Pix({});
-    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix' } });
+    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: 'do-not-track' } });
 });
 
 test('should show personal details form if enabled', async () => {
