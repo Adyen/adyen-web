@@ -46,7 +46,7 @@ const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
             barcode={barcodeUrl}
             copyBtn
             downloadUrl={downloadUrl}
-            imageUrl={getImage({})(paymentMethodType)}
+            imageUrl={getImage()(paymentMethodType)}
             introduction={i18n.get('voucher.introduction')}
             paymentMethodType={'oxxo'}
             reference={reference}
