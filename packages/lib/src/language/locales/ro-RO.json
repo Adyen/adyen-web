@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Completați numele societății",
     "companyDetails.registrationNumber.invalid": "Completați numărul de înregistrare",
     "consent.checkbox.invalid": "Trebuie să fiți de acord cu termenii și condițiile",
-    "form.instruction": "Toate câmpurile sunt obligatorii, numai dacă nu este marcat altfel."
+    "form.instruction": "Toate câmpurile sunt obligatorii, numai dacă nu este marcat altfel.",
+    "trustly.descriptor": "Plată bancară instantanee",
+    "trustly.description1": "Plătiți direct din oricare dintre conturile dvs. bancare, cu sprijinul unei securități de nivel bancar",
+    "trustly.description2": "Fără carduri, fără descărcări de aplicații, fără înregistrare"
 }

@@ -20,7 +20,7 @@ class OnlineBankingSKElement extends IssuerListContainer {
     }
 
     get icon(): string {
-        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(ICON);
+        return this.props.icon ?? this.resources.getImage()(ICON);
     }
 }
 

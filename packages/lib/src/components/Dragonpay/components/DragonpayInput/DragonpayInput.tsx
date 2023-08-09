@@ -8,9 +8,11 @@ import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } fro
 import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
 import InputEmail from '../../../internal/FormFields/InputEmail';
 import Select from '../../../internal/FormFields/Select';
+import useImage from '../../../../core/Context/useImage';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
+    const getImage = useImage();
     const isIssuerRequired = () => {
         const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
         return typesRequiringIssuers.indexOf(props.type) > -1;
@@ -27,7 +29,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         }
     });
 
-    const getIssuerIcon = getIssuerImageUrl({}, props.type);
+    const getIssuerIcon = getIssuerImageUrl({}, props.type, getImage);
     const items = props.items.map(
         (item: DragonpayInputIssuerItem): DragonpayInputIssuerItem => ({
             ...item,

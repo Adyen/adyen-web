@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 5.49.3
+
+### Patch Changes
+
+-   fixes missing ResultCode typings ([#2287](https://github.com/Adyen/adyen-web/pull/2287))
+
+-   fix issuer list logos not loading from resources url ([#2278](https://github.com/Adyen/adyen-web/pull/2278))
+
+## 5.49.2
+
+### Patch Changes
+
+-   Add description for Trustly. ([#2276](https://github.com/Adyen/adyen-web/pull/2276))
+
 ## 5.49.1
 
 ### Patch Changes

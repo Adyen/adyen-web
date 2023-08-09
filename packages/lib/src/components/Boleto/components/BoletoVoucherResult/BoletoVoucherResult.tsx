@@ -19,7 +19,7 @@ const BoletoVoucherResult = props => {
             paymentMethodType={'boletobancario'}
             barcode={barcodeUrl}
             introduction={i18n.get('voucher.introduction')}
-            imageUrl={getImage({})(paymentMethodType)}
+            imageUrl={getImage()(paymentMethodType)}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[{ label: i18n.get('voucher.expirationDate'), value: i18n.date(expiresAt) }] as VoucherDetail[]}
             downloadUrl={downloadUrl}

@@ -15,8 +15,9 @@ test('should show regulations and information obligation links', async () => {
     i18n.loaded = Promise.resolve();
     const srPanel = mock<SRPanel>();
     srPanel.props.moveFocus = false;
+    const resources = global.resources;
 
-    const onlineBankingPL = new OnlineBankingPL({ issuers: [{ name: 'Issuer 1', id: '1' }], i18n, modules: { srPanel } });
+    const onlineBankingPL = new OnlineBankingPL({ issuers: [{ name: 'Issuer 1', id: '1' }], i18n, modules: { srPanel, resources } });
     render(onlineBankingPL.render());
 
     const regulationLink = await screen.findByRole('link', { name: 'regulations' });

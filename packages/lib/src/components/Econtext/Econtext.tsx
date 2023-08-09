@@ -42,7 +42,7 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
     }
 
     get icon() {
-        return this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.type);
+        return this.resources.getImage()(this.props.type);
     }
 
     render() {

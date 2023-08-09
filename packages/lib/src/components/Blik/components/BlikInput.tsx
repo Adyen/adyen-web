@@ -19,7 +19,7 @@ interface BlikInputDataState {
 }
 
 function BlikInput(props: BlikInputProps) {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({
         schema: ['blikCode'],
@@ -72,7 +72,7 @@ function BlikInput(props: BlikInputProps) {
             {props.showPayButton &&
                 props.payButton({
                     status,
-                    icon: getImage({ loadingContext, imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })('lock')
                 })}
         </div>
     );

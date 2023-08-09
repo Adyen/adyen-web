@@ -1,7 +1,8 @@
-import { getImageUrl, ImageOptions } from './get-image';
+import { ImageOptions } from '../core/Context/Resources';
+import { UseImageHookType } from '../core/Context/useImage';
 
 const getIssuerImageUrl =
-    (options: object, type: string) =>
+    (options: object, type: string, getImage: UseImageHookType) =>
     (issuer: string): string => {
         if (!issuer) return null;
 
@@ -11,7 +12,7 @@ const getIssuerImageUrl =
             ...options
         };
 
-        return getImageUrl(imageOptions)(issuer);
+        return getImage(imageOptions)(issuer);
     };
 
 export default getIssuerImageUrl;
