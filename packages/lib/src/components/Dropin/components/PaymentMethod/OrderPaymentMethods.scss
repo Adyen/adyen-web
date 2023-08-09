@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@import '../../../../style/font-sizes';
 
 .adyen-checkout__order-payment-methods-list {
     list-style: none;
@@ -68,8 +68,7 @@
     display: block;
     width: 100%;
     padding: 8px 16px;
-    color: var(--b-color-orange-300);
-    background: var(--b-alert-severity-warning-background-color);
+    color: var(--b-color-label-secondary);
     border-radius: var(--b-border-radius-m);
     margin-bottom: 16px;
     font-size: $font-size-small;

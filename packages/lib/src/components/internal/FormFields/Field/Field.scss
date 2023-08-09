@@ -6,6 +6,38 @@
     width: 100%;
 }
 
+.adyen-checkout__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--b-color-background-primary);
+    //padding: var(--b-spacer-000) var(--b-spacer-060);
+    border: 1px solid var(--b-color-outline-secondary);
+    border-radius: var(--b-border-radius-m);
+
+    & div,
+    input,
+    span {
+        border-radius: inherit;
+    }
+
+    & div,
+    input,
+    button {
+        border: none;
+        /*background: var(--b-color-background-primary);*/
+        /*border-radius: inherit;*/
+    }
+
+    &:hover {
+        border-color: var(--b-color-grey-500);
+    }
+
+    &:focus-within {
+        border: 1.5px solid var(--b-input-field-input-box-focus-border-color);
+    }
+}
+
 .adyen-checkout__label {
     display: block;
     position: relative;

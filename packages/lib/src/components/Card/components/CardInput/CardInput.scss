@@ -7,7 +7,7 @@
 }
 
 .adyen-checkout__card__cardNumber__input {
-    padding: 5px 8px;
+    padding: 0;
 }
 
 .adyen-checkout__card__exp-date__input--oneclick {
@@ -17,12 +17,11 @@
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
-
 }
 
 .adyen-checkout__field--storedCard .adyen-checkout__input[readonly],
-.adyen-checkout__field--storedCard .adyen-checkout__input[readonly]:hover{
-    color: var(--b-input-field-input-box-color)
+.adyen-checkout__field--storedCard .adyen-checkout__input[readonly]:hover {
+    color: var(--b-input-field-input-box-color);
 }
 
 .adyen-checkout__field--storedCard,
@@ -31,10 +30,10 @@
     margin-bottom: 0;
 }
 
-.adyen-checkout__store-details{
+.adyen-checkout__store-details {
     display: flex;
     align-items: center;
-    gap:var(--b-spacer-060);
+    gap: var(--b-spacer-060);
     padding: var(--b-spacer-060) var(--b-spacer-070);
     margin-top: var(--b-spacer-070);
     border: 1px solid var(--b-color-outline-secondary);
@@ -46,7 +45,7 @@
 .adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
-    margin-top: var(--b-spacer-070)
+    margin-top: var(--b-spacer-070);
 }
 
 .adyen-checkout__card-input.adyen-checkout__card-input--loading {
@@ -58,7 +57,7 @@
 }
 
 /* Hide card brand icon when cardNumber is in an error state */
-.adyen-checkout__field--cardNumber .adyen-checkout__input--error .adyen-checkout__card__cardNumber__brandIcon {
+.adyen-checkout__field--cardNumber .adyen-checkout__input--error + .adyen-checkout__card__cardNumber__brandIcon {
     display: none;
 }
 
@@ -95,14 +94,10 @@
 }
 
 .adyen-checkout__card__cvc__hint__wrapper {
-    position: absolute;
-    right: 0;
-    top: 0;
     height: 100%;
     width: 27px;
     display: flex;
     align-items: center;
-    margin: 0 10px;
 
     // Card Flip animation
     transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -125,23 +120,18 @@
 }
 
 .adyen-checkout__field__exp-date_hint_wrapper {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
     display: flex;
     align-items: center;
     transition: opacity 0.1s linear;
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
-        opacity: 0;
+        display: none;
     }
 }
 
 .adyen-checkout__field__exp-date_hint {
     width: 27px;
     height: 18px;
-    margin: 0 10px 0 0;
 }
 
 // Front of the card is our back

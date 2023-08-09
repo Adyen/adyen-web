@@ -6,6 +6,7 @@ import { renderFormField } from '../../FormFields';
 import { AddressStateError, FieldContainerProps } from '../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import Language from '../../../../language/Language';
+import '../../FormFields/FormFields.scss';
 
 function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language): string | boolean {
     if (typeof errors[fieldName]?.errorMessage === 'object') {

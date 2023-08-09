@@ -4,7 +4,7 @@ import PhoneInput from '../internal/PhoneInputNew';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
 import COUNTRIES from './countries';
-
+// todo: trigger validation failed.
 class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
 

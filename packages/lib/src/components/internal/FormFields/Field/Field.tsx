@@ -17,7 +17,6 @@ const Field: FunctionalComponent<FieldProps> = props => {
         dir,
         disabled,
         errorMessage,
-        contextualText,
         helper,
         inputWrapperModifiers,
         isLoading,
@@ -32,6 +31,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         showValidIcon,
         useLabelElement,
         addContextualElement,
+        contextualText,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
@@ -99,8 +99,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
     }, [label, errorMessage]);
 
     const renderInputRelatedElements = useCallback(() => {
-        const showErrorContextualText = typeof errorMessage === 'string' && errorMessage.length > 0;
-        const showContextualText = !showErrorContextualText && contextualText?.length > 0;
+        const showError = typeof errorMessage === 'string' && errorMessage.length > 0;
+        const showContextualText = !showError && contextualText?.length > 0;
         return (
             <Fragment>
                 <div
@@ -144,13 +144,13 @@ const Field: FunctionalComponent<FieldProps> = props => {
                     <span
                         className={classNames({
                             'adyen-checkout-contextual-text': true,
-                            'adyen-checkout-contextual-text--error': showErrorContextualText
+                            'adyen-checkout-contextual-text--error': showError
                         })}
                         {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
                         aria-hidden={errorVisibleToSR ? null : 'true'}
                     >
                         {showContextualText && contextualText}
-                        {showErrorContextualText && errorMessage}
+                        {showError && errorMessage}
                     </span>
                 )}
             </Fragment>

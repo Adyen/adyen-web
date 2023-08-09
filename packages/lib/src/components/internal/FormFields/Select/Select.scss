@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@import '../../../../style/font-sizes';
 
 .adyen-checkout__dropdown__button-icon--left {
     flex-direction: row-reverse;
@@ -10,6 +10,10 @@
     }
 }
 
+.adyen-checkout__input-wrapper:has(.adyen-checkout__dropdown) {
+    //padding-right: 0;
+}
+
 .adyen-checkout__dropdown {
     max-width: 100%;
     width: 100%;
@@ -17,21 +21,21 @@
 }
 
 .adyen-checkout__dropdown__button {
-    padding: 7px 24px 7px 12px;
-    border: 1px solid var(--b-color-outline-secondary);
-    border-radius: var(--b-border-radius-m);
-    background: var(--b-color-background-primary);
+    /*padding: 7px 24px 7px 12px;
+  border: 1px solid var(--b-color-outline-secondary);
+  border-radius: var(--b-border-radius-m);
+  background: var(--b-color-background-primary);*/
     color: var(--b-color-black);
     text-decoration: none;
     outline: 0;
-    width: 100%;
+    flex: 1;
     font-size: $font-size-medium;
     height: 40px;
     line-height: 20px;
     user-select: none;
     transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         padding: 7px 12px 7px 24px;
     }
 }
@@ -55,8 +59,6 @@
 .adyen-checkout__dropdown__button--active:hover,
 .adyen-checkout__dropdown__button:active,
 .adyen-checkout__dropdown__button:focus {
-    border-color: var(--b-color-black);
-
 }
 
 .adyen-checkout__dropdown__button--readonly {

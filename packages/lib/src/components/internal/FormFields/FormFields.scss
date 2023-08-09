@@ -1,5 +1,5 @@
-@import "../../../style/font-sizes";
-@import "../../../style/mixins";
+@import '../../../style/font-sizes';
+@import '../../../style/mixins';
 
 .adyen-checkout__field-wrapper {
     display: flex;
@@ -69,7 +69,7 @@
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {
     margin-right: 8px;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         margin-right: 0;
         margin-left: 8px;
     }
@@ -78,7 +78,7 @@
 .adyen-checkout__field-wrapper > .adyen-checkout__field:nth-child(2) {
     margin-left: 8px;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         margin-left: 0;
         margin-right: 8px;
     }
@@ -88,7 +88,40 @@
     margin-bottom: 0;
 }
 
+// Move adyen-checkout__input styles to the wrapper
+.adyen-checkout__input-wrapper:has(
+        > .adyen-checkout__input:active,
+        > .adyen-checkout__input:active:hover,
+        > .adyen-checkout__input:focus,
+        > .adyen-checkout__input:focus:hover,
+        > .adyen-checkout__input--focus,
+        > .adyen-checkout__input--focus:hover
+    ) {
+    border: 1.5px solid var(--b-input-field-input-box-focus-border-color);
+}
+
+.adyen-checkout__input-wrapper:has(> .adyen-checkout__input--error, > .adyen-checkout__input--invalid) {
+    border-color: var(--b-color-label-critical);
+}
+
+.adyen-checkout__input-wrapper:has(> .adyen-checkout__input--valid) {
+    border-bottom-color: var(--b-color-label-success);
+}
+
+.adyen-checkout__input-wrapper:has(> .adyen-checkout__input[readonly], > .adyen-checkout__input--disabled) {
+    background: var(--b-color-surface-tertiary);
+    border-color: var(--b-color-outline-secondary);
+}
+
+/* todo: what's the purpose? remove? */
+.adyen-checkout__input-wrapper--block {
+    display: block;
+}
+
 .adyen-checkout__input {
+    flex: 1;
+    // prevent overflow
+    min-width: 0;
     color: var(--b-color-black);
     caret-color: var(--b-color-black);
     font-size: $font-size-medium;
@@ -96,59 +129,32 @@
     display: block;
     height: 40px;
     background: var(--b-color-white);
-    border: 1px solid var(--b-color-outline-secondary);
-    border-radius: var(--b-border-radius-m);
-    padding: 5px 8px;
-    position: relative;
     outline: none;
-    width: 100%;
     transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
-}
-
-.adyen-checkout__input:hover {
-    border-color: var(--b-color-grey-500);
 }
 
 .adyen-checkout__input:required {
     box-shadow: none;
 }
 
-.adyen-checkout__input[readonly],
-.adyen-checkout__input--disabled {
-    background: var(--b-color-surface-tertiary);
-    border-color: var(--b-color-outline-secondary);
-}
-
 .adyen-checkout__input--disabled:hover {
     border-color: var(--b-color-outline-secondary);
 }
 
-.adyen-checkout__input-wrapper {
-    position: relative;
-    display: block;
-}
-
-.adyen-checkout__input-wrapper--block {
-    display: block;
-}
-
 .adyen-checkout-input__inline-validation {
-    position: absolute;
     width: 16px;
     height: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 14px;
 
-    [dir="rtl"] & {
-        right: auto;
-        left: 14px;
-    }
+    // todo: i think we dont need this when using flexbox
+    /*    [dir='rtl'] & {
+          right: auto;
+      //    left: 14px;
+      }
 
-    [dir="ltr"] & {
-        right: 14px;
-        left: auto;
-    }
+      [dir='ltr'] & {
+      //    right: 14px;
+          left: auto;
+      }*/
 }
 
 .adyen-checkout-input__inline-validation--valid {
@@ -157,38 +163,6 @@
 
 .adyen-checkout-input__inline-validation--invalid {
     color: var(--b-color-label-critical);
-}
-
-.adyen-checkout__input--valid {
-    border-bottom-color: var(--b-color-label-success);
-}
-
-.adyen-checkout__input--error,
-.adyen-checkout__input--invalid,
-.adyen-checkout__input--error:hover,
-.adyen-checkout__input--invalid:hover {
-    &.adyen-checkout__input--focus{
-        border-color: var(--b-color-label-critical);
-
-        /* box-shadow: 0 0 0 1px var(--b-color-label-critical); */
-    }
-
-}
-
-
-.adyen-checkout__input--date {
-    padding-right: 30px;
-}
-
-.adyen-checkout__input:active,
-.adyen-checkout__input:focus,
-.adyen-checkout__input--focus,
-.adyen-checkout__input:active:hover,
-.adyen-checkout__input:focus:hover,
-.adyen-checkout__input--focus:hover {
-    border: 1.5px solid var(--b-input-field-input-box-focus-border-color);
-
-    /* box-shadow: 0 0 0 1px var(--b-color-black); */
 }
 
 .adyen-checkout__input[readonly],

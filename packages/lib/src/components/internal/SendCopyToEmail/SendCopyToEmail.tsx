@@ -4,6 +4,7 @@ import { useState } from 'preact/hooks';
 import { renderFormField } from '../FormFields';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../FormFields/Field';
+import './SendCopyToEmail.scss';
 
 export default function SendCopyToEmail(props) {
     const { errors, value, onInput, onBlur } = props;

@@ -1,4 +1,4 @@
-@import "../../../style/font-sizes";
+@import '../../../style/font-sizes';
 
 .adyen-checkout__button {
     background: var(--b-color-black);
@@ -21,12 +21,12 @@
     }
 
     &:hover {
-        background: #1c3045;
+        background: var(--b-color-interactive-primary-hovered);
         box-shadow: 0 0, 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%);
     }
 
     &:active {
-        background: #3a4a5c;
+        background: var(--b-color-interactive-primary-pressed);
     }
 
     &:hover:focus {
@@ -124,7 +124,7 @@
         }
     }
 
-/* todo: change it */
+    /* todo: change it */
     &.adyen-checkout__button--action {
         padding: 10px 12px;
         background: var(--b-color-background-always-dark);
@@ -132,13 +132,13 @@
         color: var(--b-color-white);
 
         &:hover {
-            background: rgb(0 102 255 / 20%);
+            background: var(--b-color-interactive-primary-hovered);
             box-shadow: none;
         }
 
         &:active,
         &:active:hover {
-            background: rgb(0 102 255 / 30%);
+            background: var(--b-color-interactive-primary-pressed);
             box-shadow: none;
         }
     }
@@ -182,7 +182,7 @@
     &__icon {
         margin-right: 12px;
 
-        [dir="rtl"] & {
+        [dir='rtl'] & {
             margin-right: 0;
             margin-left: 12px;
         }
@@ -197,7 +197,12 @@
     }
 
     .adyen-checkout__spinner {
-        border-color: var(--b-color-white);
-        border-top-color: transparent;
+        &::before {
+            border-color: var(--b-color-surface-modal);
+        }
+
+        &::after {
+            border-top-color: var(--b-color-surface-modal);
+        }
     }
 }

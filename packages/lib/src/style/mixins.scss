@@ -34,9 +34,9 @@
   @include b-outer-ring-generator(var(--b-focus-ring-color));
 }
 
-$adyen-checkout-media-query-s-min: var(--b-media-query-s-min);
-$adyen-checkout-media-query-m-min: var(--b-media-query-m-min);
-$adyen-checkout-media-query-l-min: var(--b-media-query-l-min);
+$adyen-checkout-media-query-s-min: 480px;
+$adyen-checkout-media-query-m-min: 768px;
+$adyen-checkout-media-query-l-min: 1024px;
 
 @mixin screen-s-and-up {
   @media (min-width: #{$adyen-checkout-media-query-s-min}) {
