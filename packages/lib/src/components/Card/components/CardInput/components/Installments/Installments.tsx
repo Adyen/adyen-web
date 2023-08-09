@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { renderFormField } from '../../../../../internal/FormFields';
 import Field from '../../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import styles from '../../CardInput.module.scss';
+import Select from '../../../../../internal/FormFields/Select';
 
 export interface InstallmentsObj {
     value: number;
@@ -87,7 +87,6 @@ function Installments(props: InstallmentsProps) {
                             { id: 'installments', name: 'installments.installments' },
                             { id: 'revolving', name: 'installments.revolving' }
                         ]}
-                        i18n={i18n}
                         onChange={onRadioSelect}
                         value={radioBtnValue}
                     />
@@ -103,14 +102,14 @@ function Installments(props: InstallmentsProps) {
                         useLabelElement={false}
                         addContextualElement={false}
                     >
-                        {renderFormField('select', {
-                            filterable: false,
-                            items: installmentOptions.values.map(installmentItemsMapper),
-                            selected: installmentAmount,
-                            onChange: onSelectInstallment,
-                            name: 'installments',
-                            disabled: radioBtnValue !== 'installments'
-                        })}
+                        <Select
+                            filterable={false}
+                            items={installmentOptions.values.map(installmentItemsMapper)}
+                            selectedValue={installmentAmount}
+                            onChange={onSelectInstallment}
+                            name={'installments'}
+                            disabled={radioBtnValue !== 'installments'}
+                        />
                     </Field>
                 </Fieldset>
             </div>
@@ -126,14 +125,14 @@ function Installments(props: InstallmentsProps) {
                 useLabelElement={false}
                 addContextualElement={false}
             >
-                {renderFormField('select', {
-                    filterable: false,
-                    items: installmentOptions.values.map(installmentItemsMapper),
-                    selected: installmentAmount,
-                    onChange: onSelectInstallment,
-                    name: 'installments',
-                    readonly: installmentOptions?.values?.length === 1
-                })}
+                <Select
+                    filterable={false}
+                    items={installmentOptions.values.map(installmentItemsMapper)}
+                    selectedValue={installmentAmount}
+                    onChange={onSelectInstallment}
+                    name={'installments'}
+                    readonly={installmentOptions?.values?.length === 1}
+                />
             </Field>
         </div>
     );

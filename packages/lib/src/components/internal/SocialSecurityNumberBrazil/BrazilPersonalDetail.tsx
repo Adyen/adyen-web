@@ -1,7 +1,7 @@
 import Field from '../FormFields/Field';
-import { renderFormField } from '../FormFields';
 import SocialSecurityNumberBrazil from './SocialSecurityNumberBrazil';
 import { h } from 'preact';
+import InputText from '../FormFields/InputText';
 
 export function BrazilPersonalDetail(props) {
     const { i18n, data, handleChangeFor, errors, valid } = props;
@@ -17,14 +17,14 @@ export function BrazilPersonalDetail(props) {
                     errorMessage={getErrorMessage(errors.firstName)}
                     name={'firstName'}
                 >
-                    {renderFormField('text', {
-                        name: 'firstName',
-                        autocorrect: 'off',
-                        spellcheck: false,
-                        value: data.firstName,
-                        onInput: handleChangeFor('firstName', 'input'),
-                        onBlur: handleChangeFor('firstName', 'blur')
-                    })}
+                    <InputText
+                        name={'firstName'}
+                        autocorrect={'off'}
+                        spellcheck={false}
+                        value={data.firstName}
+                        onInput={handleChangeFor('firstName', 'input')}
+                        onBlur={handleChangeFor('firstName', 'blur')}
+                    />
                 </Field>
 
                 <Field
@@ -33,14 +33,14 @@ export function BrazilPersonalDetail(props) {
                     errorMessage={getErrorMessage(errors.lastName)}
                     name={'lastName'}
                 >
-                    {renderFormField('text', {
-                        name: 'lastName',
-                        autocorrect: 'off',
-                        spellcheck: false,
-                        value: data.lastName,
-                        onInput: handleChangeFor('lastName', 'input'),
-                        onBlur: handleChangeFor('lastName', 'blur')
-                    })}
+                    <InputText
+                        name={'lastName'}
+                        autocorrect={'off'}
+                        spellcheck={false}
+                        value={data.lastName}
+                        onInput={handleChangeFor('lastName', 'input')}
+                        onBlur={handleChangeFor('lastName', 'blur')}
+                    />
                 </Field>
 
                 <SocialSecurityNumberBrazil

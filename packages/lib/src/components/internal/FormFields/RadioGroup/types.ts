@@ -1,15 +1,14 @@
-import Language from '../../../../language/Language';
+import { InputBaseProps } from '../InputBase';
 
 interface RadioGroupItem {
     name: string;
     id: string;
 }
 
-export interface RadioGroupProps {
+export interface RadioGroupProps extends InputBaseProps {
     className?: string;
     isInvalid?: boolean;
     items: RadioGroupItem[];
-    i18n: Language;
     name?: string;
     onChange: (e) => void;
     value?: string;

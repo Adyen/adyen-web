@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import { useState, useLayoutEffect } from 'preact/hooks';
-import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
+import Select from '../../FormFields/Select';
 
 export default function CountryField(props: CountryFieldProps) {
     const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
@@ -41,14 +41,14 @@ export default function CountryField(props: CountryFieldProps) {
             showValidIcon={false}
             i18n={i18n}
         >
-            {renderFormField('select', {
-                onChange: onDropdownChange,
-                name: 'country',
-                placeholder: i18n.get('select.country'),
-                selected: value,
-                items: countries,
-                readonly: readOnly && !!value
-            })}
+            <Select
+                onChange={onDropdownChange}
+                name={'country'}
+                placeholder={i18n.get('select.country')}
+                selectedValue={value}
+                items={countries}
+                readonly={readOnly && !!value}
+            />
         </Field>
     );
 }

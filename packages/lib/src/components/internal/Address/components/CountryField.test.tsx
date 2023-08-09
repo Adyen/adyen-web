@@ -50,7 +50,8 @@ describe('CountryField', () => {
         const value = 'NL';
         const wrapper = await getWrapper({ value });
         wrapper.update(null);
-        expect(wrapper.find('Select').prop('selected')).toBe(value);
+        // TODO: This test should be migrated to react test library instead of reading form props
+        expect(wrapper.find('Select').prop('selectedValue')).toBe(value);
     });
 
     test('should be read only if there is only one item', async () => {

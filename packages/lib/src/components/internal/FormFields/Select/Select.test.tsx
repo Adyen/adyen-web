@@ -1,17 +1,14 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
-import renderFormField from '../index';
 import userEvent from '@testing-library/user-event';
+import Select from './Select';
 
 describe('Select', () => {
     const user = userEvent.setup();
     const getWrapper = (props: any) =>
         render(
             <div>
-                {renderFormField('select', {
-                    ...props,
-                    name: 'mockSelect'
-                })}
+                <Select {...props} name={'mockSelect'} />
             </div>
         );
 
