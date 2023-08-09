@@ -69,7 +69,7 @@ function BacsInput(props: BacsInputProps) {
                         name={'bacsEdit'}
                         className={'adyen-checkout__bacs--edit-button'}
                         value={i18n.get('edit')}
-                        ariaLabel={i18n.get('edit')}
+                        aria-label={i18n.get('edit')}
                         readonly={true}
                         onClick={handleEdit}
                     />

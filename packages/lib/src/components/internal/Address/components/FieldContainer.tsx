@@ -69,15 +69,13 @@ function FieldContainer(props: FieldContainerProps) {
                 >
                     <InputText
                         name={fieldName}
-                        {...{
-                            classNameModifiers,
-                            value,
-                            onInput,
-                            onBlur,
-                            maxLength,
-                            trimOnBlur,
-                            disabled
-                        }}
+                        classNameModifiers={classNameModifiers}
+                        value={value}
+                        onInput={onInput}
+                        onBlur={onBlur}
+                        maxLength={maxLength}
+                        trimOnBlur={trimOnBlur}
+                        disabled={disabled}
                         required={!isOptional}
                     />
                 </Field>

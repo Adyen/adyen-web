@@ -20,12 +20,10 @@ export default function ({ onBlur, onInput, valid = false, error = null, data = 
                 spellcheck={false}
                 value={data}
                 maxLength={18}
-                {...{
-                    onInput,
-                    onBlur,
-                    required,
-                    disabled
-                }}
+                onInput={onInput}
+                onBlur={onBlur}
+                required={required}
+                disabled={disabled}
             />
         </Field>
     );
