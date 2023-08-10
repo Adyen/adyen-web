@@ -14,6 +14,8 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
+import Core from '../../core';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -40,7 +42,9 @@ export class CardElement extends UIElement<CardElementProps> {
     //     }
     // }
     constructor(checkoutRef, props) {
-        // TODO - throw error if checkoutRef not defined
+        if (!(checkoutRef instanceof Core)) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
+        }
 
         // If UIElement does the calculating of props...
         // super(checkoutRef, props, CardElement.type);

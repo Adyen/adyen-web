@@ -10,6 +10,8 @@ import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { PaymentResponse } from '../types';
+import Core from '../../core';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -32,7 +34,9 @@ class DropinElement extends UIElement<DropinElementProps> {
     // }
 
     constructor(checkoutRef, props) {
-        // TODO - throw error if checkoutRef is not instance of AdyenCheckout
+        if (!(checkoutRef instanceof Core)) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
+        }
 
         // If UIElement does the calculating of props...
         // super(checkoutRef, props, DropinElement.type);
