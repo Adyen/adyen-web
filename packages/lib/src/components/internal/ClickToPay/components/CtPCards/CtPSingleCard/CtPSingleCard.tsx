@@ -28,7 +28,7 @@ const CtPSingleCard = ({ card, errorMessage }: CtPSingleCardProps) => {
                 {card.isExpired && <span className="adyen-checkout-ctp__expired-label">{i18n.get('ctp.cards.expiredCard')}</span>}
             </div>
 
-            {errorMessage && <div className="adyen-checkout__error-text">{errorMessage}</div>}
+            {errorMessage && <div className="adyen-checkout-contextual-text--error">{errorMessage}</div>}
         </Fragment>
     );
 };

@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import Field from '../Field';
 import Checkbox from '../Checkbox';
-import './ConsentCheckbox.scss';
 
 export default function ConsentCheckbox({ errorMessage, label, onChange, i18n, ...props }) {
     return (

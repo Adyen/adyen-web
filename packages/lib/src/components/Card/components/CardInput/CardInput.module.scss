@@ -5,13 +5,9 @@
 
     &__icon {
         border-radius: var(--b-input-field-static-value-border-radius);
-        /* position: absolute;
-        right: 10px;
-        margin-left: 7px;
-        transform: translateY(-50%);
-        top: 50%; */
         height: 18px;
         width: 27px;
+        margin-right: var(--b-spacer-060);
     }
 
     &__form {

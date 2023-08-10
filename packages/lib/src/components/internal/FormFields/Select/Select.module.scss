@@ -8,6 +8,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    border-radius: inherit;
 }
 
 .adyen-checkout__dropdown__button::after {
@@ -31,15 +32,14 @@
 }
 
 .adyen-checkout__filter-input {
-    background: var(--b-color-white);
+    background: inherit;
     border: 0;
-    caret-color: var(--b-color-black);
     color: var(--b-color-black);
     font-family: inherit;
     font-size: $font-size-medium;
     height: 100%;
-    padding: 0;
     width: 100%;
+    padding-left: var(--b-spacer-060);
 
     &::placeholder {
         color: var(--b-color-grey-500);
@@ -61,8 +61,7 @@
 
 .adyen-checkout__dropdown__list {
     position: absolute;
-    width: calc(100% + 20px);
-    left: -10px;
+    width: 100%;
     background: var(--b-color-white);
     list-style: none;
     padding: 0;

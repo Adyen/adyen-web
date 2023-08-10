@@ -7,7 +7,7 @@
 }
 
 .adyen-checkout__card__cardNumber__input {
-    padding: 0;
+    padding-left: var(--b-spacer-060);
 }
 
 .adyen-checkout__card__exp-date__input--oneclick {
@@ -98,6 +98,7 @@
     width: 27px;
     display: flex;
     align-items: center;
+    margin-right: var(--b-spacer-060);
 
     // Card Flip animation
     transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -123,6 +124,7 @@
     display: flex;
     align-items: center;
     transition: opacity 0.1s linear;
+    margin-right: var(--b-spacer-060);
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
         display: none;

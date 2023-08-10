@@ -113,22 +113,18 @@
     border-color: var(--b-color-outline-secondary);
 }
 
-/* todo: what's the purpose? remove? */
-.adyen-checkout__input-wrapper--block {
-    display: block;
-}
-
 .adyen-checkout__input {
     flex: 1;
+
     // prevent overflow
     min-width: 0;
     color: var(--b-color-black);
-    caret-color: var(--b-color-black);
     font-size: $font-size-medium;
     font-family: inherit;
     display: block;
     height: 40px;
-    background: var(--b-color-white);
+    padding-left: var(--b-spacer-060);
+    background: inherit;
     outline: none;
     transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
 }
@@ -144,8 +140,10 @@
 .adyen-checkout-input__inline-validation {
     width: 16px;
     height: 16px;
+    margin-right: var(--b-spacer-060);
 
-    // todo: i think we dont need this when using flexbox
+    // todo: test when using flexbox, possibly we need to change the margin left
+
     /*    [dir='rtl'] & {
           right: auto;
       //    left: 14px;
@@ -154,7 +152,7 @@
       [dir='ltr'] & {
       //    right: 14px;
           left: auto;
-      }*/
+      } */
 }
 
 .adyen-checkout-input__inline-validation--valid {

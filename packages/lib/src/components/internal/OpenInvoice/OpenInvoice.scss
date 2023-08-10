@@ -1,10 +1,11 @@
 .adyen-checkout__field--separateDeliveryAddress {
-    .adyen-checkout__input-wrapper{
-        border:none;
+    .adyen-checkout__input-wrapper {
+        border: none;
         padding: 0;
         justify-content: flex-start;
     }
 }
+
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
     padding-bottom: 8px;
 }

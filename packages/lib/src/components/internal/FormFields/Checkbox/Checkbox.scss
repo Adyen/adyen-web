@@ -39,18 +39,18 @@
         }
 
         &:hover + .adyen-checkout__checkbox__label::after {
-            box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+            box-shadow: 0 0 0 2px var(--b-color-outline-tertiary);
             border-color: var(--b-color-black);
         }
     }
 
     &:focus + .adyen-checkout__checkbox__label::after {
         border: 1px solid var(--b-color-black);
-        box-shadow: 0 0 0 2px var(--b-color-grey-500);
+        box-shadow: 0 0 0 2px var(--b-color-outline-tertiary);
     }
 
     &:hover:not(:focus) + .adyen-checkout__checkbox__label::after {
-        border-color: #99a3ad;
+        border-color: var(--b-color-outline-tertiary);
         box-shadow: 0 0 0 2px var(--b-color-outline-secondary);
     }
 

@@ -11,7 +11,6 @@
     display: flex;
     align-items: center;
     background: var(--b-color-background-primary);
-    //padding: var(--b-spacer-000) var(--b-spacer-060);
     border: 1px solid var(--b-color-outline-secondary);
     border-radius: var(--b-border-radius-m);
 
@@ -25,8 +24,6 @@
     input,
     button {
         border: none;
-        /*background: var(--b-color-background-primary);*/
-        /*border-radius: inherit;*/
     }
 
     &:hover {
@@ -79,15 +76,21 @@
     color: var(--b-color-black);
 }
 
-.adyen-checkout-contextual-text {
+%contextual-text {
     display: flex;
     font-weight: normal;
     margin-top: 4px;
     font-size: $font-size-xsmall;
     align-items: center;
     color: var(--b-color-label-secondary);
+}
+
+.adyen-checkout-contextual-text {
+    @extend %contextual-text;
 
     &--error {
+        @extend %contextual-text;
+
         color: var(--b-color-label-critical);
     }
 }

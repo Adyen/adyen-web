@@ -155,12 +155,20 @@ function PhoneInput(props: PhoneInputProps) {
             {
                 <div className="adyen-checkout-phone-input__error-holder">
                     {showPrefix && getPhoneFieldError('phonePrefix') && (
-                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}>
+                        <span
+                            className={'adyen-checkout-contextual-text--error'}
+                            aria-live="polite"
+                            id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}
+                        >
                             {getPhoneFieldError('phonePrefix')}
                         </span>
                     )}
                     {showNumber && getPhoneFieldError('phoneNumber') && (
-                        <span className={'adyen-checkout__error-text'} aria-live="polite" id={`${getPhoneNumberUniqueId()}${ARIA_ERROR_SUFFIX}`}>
+                        <span
+                            className={'adyen-checkout-contextual-text--error'}
+                            aria-live="polite"
+                            id={`${getPhoneNumberUniqueId()}${ARIA_ERROR_SUFFIX}`}
+                        >
                             {getPhoneFieldError('phoneNumber')}
                         </span>
                     )}

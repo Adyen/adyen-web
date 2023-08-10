@@ -78,13 +78,13 @@
 
 .adyen-checkout__radio_group__input:focus + .adyen-checkout__radio_group__label::before {
     border-color: var(--b-color-black);
-    box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+    box-shadow: 0 0 0 2px var(--b-color-outline-tertiary);
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label:hover::before,
 .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__input:checked:active + .adyen-checkout__radio_group__label::before {
-    box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+    box-shadow: 0 0 0 2px var(--b-color-outline-tertiary);
 }
 
 .adyen-checkout__radio_group__label.adyen-checkout__radio_group__label--invalid::before {
