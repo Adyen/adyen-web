@@ -15,7 +15,7 @@ const DokuVoucherResult = (props: DokuVoucherResultProps) => {
             paymentMethodType={paymentMethodType}
             reference={reference}
             introduction={i18n.get('voucher.introduction.doku')}
-            imageUrl={getImage({})(paymentMethodType)}
+            imageUrl={getImage()(paymentMethodType)}
             instructionsUrl={instructionsUrl}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[

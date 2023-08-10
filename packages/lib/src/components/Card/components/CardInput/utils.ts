@@ -1,4 +1,3 @@
-import { getImageUrl } from '../../../../utils/get-image';
 import Language from '../../../../language/Language';
 import { AddressModeOptions, CardInputProps, LayoutObj } from './types';
 import {
@@ -17,15 +16,15 @@ import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { UseImageHookType } from '../../../../core/Context/useImage';
 
-export const getCardImageUrl = (brand: string, loadingContext: string): string => {
+export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
         type: brand === 'card' ? 'nocard' : brand || 'nocard',
-        extension: 'svg',
-        loadingContext
+        extension: 'svg'
     };
 
-    return getImageUrl(imageOptions)(brand);
+    return getImage(imageOptions)(brand);
 };
 
 /**

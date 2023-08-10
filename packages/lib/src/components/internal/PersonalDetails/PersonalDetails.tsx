@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyPersonalDetails from './ReadOnlyPersonalDetails';
-import { renderFormField } from '../FormFields';
 import { personalDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps } from './types';
@@ -13,6 +12,11 @@ import { getFormattedData } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
 import { ComponentMethodsRef } from '../../types';
+import InputText from '../FormFields/InputText';
+import RadioGroup from '../FormFields/RadioGroup';
+import InputDate from '../FormFields/InputDate';
+import InputEmail from '../FormFields/InputEmail';
+import InputTelephone from '../FormFields/InputTelephone';
 
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -42,7 +46,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     };
 
     const eventHandler =
-        (mode: string): Function =>
+        (mode: string): h.JSX.GenericEventHandler<EventTarget> =>
         (e: Event): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
@@ -72,16 +76,16 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         name={'firstName'}
                         i18n={i18n}
                     >
-                        {renderFormField('text', {
-                            name: generateFieldName('firstName'),
-                            value: data.firstName,
-                            classNameModifiers: ['firstName'],
-                            onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
-                            placeholder: placeholders.firstName,
-                            spellCheck: false,
-                            required: true
-                        })}
+                        <InputText
+                            name={generateFieldName('firstName')}
+                            value={data.firstName}
+                            classNameModifiers={['firstName']}
+                            onInput={eventHandler('input')}
+                            onBlur={eventHandler('blur')}
+                            placeholder={placeholders.firstName}
+                            spellCheck={false}
+                            required={true}
+                        />
                     </Field>
                 )}
 
@@ -93,34 +97,33 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         name={'lastName'}
                         i18n={i18n}
                     >
-                        {renderFormField('text', {
-                            name: generateFieldName('lastName'),
-                            value: data.lastName,
-                            classNameModifiers: ['lastName'],
-                            onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
-                            placeholder: placeholders.lastName,
-                            spellCheck: false,
-                            required: true
-                        })}
+                        <InputText
+                            name={generateFieldName('lastName')}
+                            value={data.lastName}
+                            classNameModifiers={['lastName']}
+                            onInput={eventHandler('input')}
+                            onBlur={eventHandler('blur')}
+                            placeholder={placeholders.lastName}
+                            spellCheck={false}
+                            required={true}
+                        />
                     </Field>
                 )}
 
                 {requiredFields.includes('gender') && (
                     <Field errorMessage={getErrorMessage(errors.gender)} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
-                        {renderFormField('radio', {
-                            i18n,
-                            name: generateFieldName('gender'),
-                            value: data.gender,
-                            items: [
+                        <RadioGroup
+                            name={generateFieldName('gender')}
+                            value={data.gender}
+                            items={[
                                 { id: 'MALE', name: 'male' },
                                 { id: 'FEMALE', name: 'female' }
-                            ],
-                            classNameModifiers: ['gender'],
-                            onInput: eventHandler('input'),
-                            onChange: eventHandler('blur'),
-                            required: true
-                        })}
+                            ]}
+                            classNameModifiers={['gender']}
+                            onInput={eventHandler('input')}
+                            onChange={eventHandler('blur')}
+                            required={true}
+                        />
                     </Field>
                 )}
 
@@ -133,15 +136,15 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         name={'dateOfBirth'}
                         i18n={i18n}
                     >
-                        {renderFormField('date', {
-                            name: generateFieldName('dateOfBirth'),
-                            value: data.dateOfBirth,
-                            classNameModifiers: ['dateOfBirth'],
-                            onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
-                            placeholder: placeholders.dateOfBirth,
-                            required: true
-                        })}
+                        <InputDate
+                            name={generateFieldName('dateOfBirth')}
+                            value={data.dateOfBirth}
+                            classNameModifiers={['dateOfBirth']}
+                            onInput={eventHandler('input')}
+                            onBlur={eventHandler('blur')}
+                            placeholder={placeholders.dateOfBirth}
+                            required={true}
+                        />
                     </Field>
                 )}
 
@@ -154,15 +157,15 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         name={'emailAddress'}
                         i18n={i18n}
                     >
-                        {renderFormField('emailAddress', {
-                            name: generateFieldName('shopperEmail'),
-                            value: data.shopperEmail,
-                            classNameModifiers: ['shopperEmail'],
-                            onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
-                            placeholder: placeholders.shopperEmail,
-                            required: true
-                        })}
+                        <InputEmail
+                            name={generateFieldName('shopperEmail')}
+                            value={data.shopperEmail}
+                            classNameModifiers={['shopperEmail']}
+                            onInput={eventHandler('input')}
+                            onBlur={eventHandler('blur')}
+                            placeholder={placeholders.shopperEmail}
+                            required={true}
+                        />
                     </Field>
                 )}
 
@@ -175,15 +178,15 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                         name={'telephoneNumber'}
                         i18n={i18n}
                     >
-                        {renderFormField('tel', {
-                            name: generateFieldName('telephoneNumber'),
-                            value: data.telephoneNumber,
-                            classNameModifiers: ['telephoneNumber'],
-                            onInput: eventHandler('input'),
-                            onBlur: eventHandler('blur'),
-                            placeholder: placeholders.telephoneNumber,
-                            required: true
-                        })}
+                        <InputTelephone
+                            name={generateFieldName('telephoneNumber')}
+                            value={data.telephoneNumber}
+                            classNameModifiers={['telephoneNumber']}
+                            onInput={eventHandler('input')}
+                            onBlur={eventHandler('blur')}
+                            placeholder={placeholders.telephoneNumber}
+                            required={true}
+                        />
                     </Field>
                 )}
             </Fieldset>

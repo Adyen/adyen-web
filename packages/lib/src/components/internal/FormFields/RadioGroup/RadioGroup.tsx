@@ -3,10 +3,12 @@ import cx from 'classnames';
 import './RadioGroup.scss';
 import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
+import useCoreContext from '../../../../core/Context/useCoreContext';
 
 export default function RadioGroup(props: RadioGroupProps) {
-    const { items, i18n, name, onChange, value, isInvalid, uniqueId } = props;
+    const { items, name, onChange, value, isInvalid, uniqueId } = props;
 
+    const { i18n } = useCoreContext();
     const uniqueIdBase = uniqueId?.replace(/[0-9]/g, '').substring(0, uniqueId.lastIndexOf('-'));
 
     return (

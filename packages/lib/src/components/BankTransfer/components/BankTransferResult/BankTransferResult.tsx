@@ -13,7 +13,7 @@ export default function BankTransferResult(props) {
         <Voucher
             paymentMethodType={paymentMethodType}
             introduction={i18n.get('bankTransfer.instructions')}
-            imageUrl={getImage({})(paymentMethodType)}
+            imageUrl={getImage()(paymentMethodType)}
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[
                 { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },
