@@ -29,10 +29,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      */
     public static dependencies: any[] = []; // FIX type
 
-    // constructor(checkoutRef, props: P, type) {
+    // constructor(checkoutRef, props: P) {
     constructor(props: P) {
         // If UIElement does the calculating of props...
-        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: type });
+        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props.type });
         //
         // super(calculatedProps);
         // console.log('### UIElement::constructor:: type', type, 'calculatedProps', calculatedProps);

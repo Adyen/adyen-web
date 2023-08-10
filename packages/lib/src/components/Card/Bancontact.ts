@@ -1,13 +1,18 @@
 import { CardElement } from './Card';
 import { CardElementProps } from './types';
 import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
+import Core from '../../core';
 
 class BancontactElement extends CardElement {
     public static type = 'bcmc';
     public static txVariants = ['bcmc'];
 
-    constructor(props: CardElementProps) {
-        super(props);
+    // constructor(props: CardElementProps) {
+    //     super(props);
+    // }
+
+    constructor(checkout: Core, props: CardElementProps) {
+        super(checkout, { ...props, type: BancontactElement.type });
     }
 
     protected static defaultProps = {

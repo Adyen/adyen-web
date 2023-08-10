@@ -7,14 +7,14 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
-import { searchFunctionExample } from '../../utils';
+// import { searchFunctionExample } from '../../utils';
 
 const showComps = {
     clickToPay: false,
-    storedCard: false,
+    storedCard: true,
     card: true,
     cardInReact: false,
-    bcmcCard: false,
+    bcmcCard: true,
     avsCard: false,
     avsPartialCard: false,
     kcpCard: false
@@ -45,10 +45,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             card: {
                 hasHolderName: true,
                 holderNameRequired: true
-            },
-            storedCard: {
-                hideCVC: true
             }
+            // storedCard: {
+            //     hideCVC: true
+            // },
+            // bcmc: {
+            //     brands: ['bcmc', 'visa']
+            // }
         }
     });
 
@@ -56,13 +59,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
-            // window.card = new Card(checkout, {
-            window.storedCard = checkout
-                .create('card', {
-                    ...storedCardData,
-                    disclaimerMessage
-                })
-                .mount('.storedcard-field');
+            window.card = new Card(checkout, {
+                // window.storedCard = checkout
+                //     .create('card', {
+                ...storedCardData,
+                disclaimerMessage
+            }).mount('.storedcard-field');
         }
     }
 
@@ -105,7 +107,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Bancontact card
     if (showComps.bcmcCard) {
-        window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
+        window.bancontact = new Bancontact(checkout).mount('.bancontact-field');
+        // window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
     }
 
     // Credit card with AVS

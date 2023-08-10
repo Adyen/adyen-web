@@ -42,24 +42,24 @@ export class CardElement extends UIElement<CardElementProps> {
     //         this.clickToPayService?.initialize();
     //     }
     // }
-    constructor(checkoutRef, props) {
+    constructor(checkoutRef: Core, props: CardElementProps) {
         if (!(checkoutRef instanceof Core)) {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
         }
 
         // If UIElement does the calculating of props...
-        // super(checkoutRef, props, CardElement.type);
+        // super(checkoutRef, {...props, type: props?.type ?? CardElement.type } );
 
-        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: CardElement.type });
+        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? CardElement.type });
 
         super(calculatedProps);
         console.log('### Card::constructor:: calculatedProps=', calculatedProps);
 
         checkoutRef.storeComponentRef(this as UIElement);
 
-        // this.checkoutRef = checkoutRef;
+        // this.checkoutRef = checkoutRef;// TODO - Needed?
 
-        if (!props._disableClickToPay) {
+        if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
             this.clickToPayService?.initialize();
         }
