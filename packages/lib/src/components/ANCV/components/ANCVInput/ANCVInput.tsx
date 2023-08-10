@@ -6,6 +6,8 @@ import InputText from '../../../internal/FormFields/InputText';
 import Field from '../../../internal/FormFields/Field';
 import useForm from '../../../../utils/useForm';
 import { UIElementProps } from '../../../types';
+import { ancvValidationRules } from '../../validate';
+import { ANCVDataState } from '../../ANCV';
 
 export interface ANCVInputProps extends UIElementProps {
     ref?: any;
@@ -13,17 +15,14 @@ export interface ANCVInputProps extends UIElementProps {
     onSubmit: () => void;
 }
 
+type ANCVInputDataState = ANCVDataState;
+
 function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputProps) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<ANCVInputDataState>({
         schema: ['beneficiaryId'],
-        rules: {
-            beneficiaryId: {
-                validate: value => !!value && value.length > 0,
-                modes: ['input', 'blur']
-            }
-        }
+        rules: ancvValidationRules
     });
 
     useEffect(() => {
@@ -42,7 +41,6 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputPr
                     errorMessage={!!errors.beneficiaryId && i18n.get(errors.beneficiaryId.errorMessage)}
                     label={i18n.get('ancv.input.label')}
                     isValid={valid.beneficiaryId}
-                    dir={'ltr'}
                     name={'beneficiaryId'}
                 >
                     <InputText

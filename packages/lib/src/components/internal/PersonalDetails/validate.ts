@@ -10,7 +10,7 @@ const isDateOfBirthValid = value => {
     const age = new Date(ageDiff).getFullYear() - 1970;
     return age >= 18;
 };
-const isEmailValid = value => {
+export const isEmailValid = value => {
     if (isEmpty(value)) return null;
     return value.length >= 6 && value.length <= 320 && email.test(value);
 };

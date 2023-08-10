@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import ANCVInput from './components/ANCVInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import config from './components/MBWayAwait/config';
+import config from './components/ANCVAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { PaymentResponse, UIElementProps } from '../types';
@@ -10,13 +10,13 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 
 export interface ANCVProps extends UIElementProps {
-    paymentData?: any; //TODO
+    paymentData?: any;
     data: ANCVDataState;
     onOrderRequest?: any;
     onOrderCreated?: any;
 }
 
-interface ANCVDataState {
+export interface ANCVDataState {
     beneficiaryId: string;
 }
 

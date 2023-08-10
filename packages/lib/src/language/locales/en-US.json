@@ -294,5 +294,7 @@
     "form.instruction": "All fields are required unless marked otherwise.",
     "trustly.descriptor": "Instant Bank Payment",
     "trustly.description1": "Pay directly from any of your bank accounts, backed by bank-level security",
-    "trustly.description2": "No cards, no app download, no registration"
+    "trustly.description2": "No cards, no app download, no registration",
+    "ancv.input.label" : "Your ANCV identification",
+    "ancv.confirmPayment": "Use your ANCV application to confirm the payment."
 }

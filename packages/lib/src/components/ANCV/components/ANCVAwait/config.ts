@@ -8,8 +8,8 @@ export default {
     COUNTDOWN_MINUTES,
     THROTTLE_TIME,
     THROTTLE_INTERVAL,
-    type: 'mbway',
-    messageTextId: 'mbway.confirmPayment', // identifier for a translation string
+    type: 'ancv',
+    messageTextId: 'ancv.confirmPayment', // identifier for a translation string
     awaitTextId: 'await.waitForConfirmation',
     showCountdownTimer: false
 };
