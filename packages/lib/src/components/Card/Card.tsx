@@ -55,7 +55,9 @@ export class CardElement extends UIElement<CardElementProps> {
         super(calculatedProps);
         console.log('### Card::constructor:: calculatedProps=', calculatedProps);
 
-        checkoutRef.storeComponentRef(this as UIElement);
+        if (!props.isDropin) {
+            checkoutRef.storeComponentRef(this as UIElement);
+        }
 
         // this.checkoutRef = checkoutRef;// TODO - Needed?
 

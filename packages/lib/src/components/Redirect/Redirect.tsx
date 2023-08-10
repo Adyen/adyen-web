@@ -4,6 +4,9 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
+import Core from '../../core';
+import { CardElementProps } from '../Card/types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 /**
  * RedirectElement
@@ -15,6 +18,24 @@ class RedirectElement extends UIElement {
         type: RedirectElement.type,
         showPayButton: true
     };
+
+    constructor(checkoutRef: Core, props: CardElementProps) {
+        if (!(checkoutRef instanceof Core)) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
+        }
+
+        // If UIElement does the calculating of props...
+        // super(checkoutRef, {...props, type: props?.type ?? CardElement.type } );
+
+        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? RedirectElement.type });
+
+        super(calculatedProps);
+        console.log('### RedirectElement::constructor:: calculatedProps=', calculatedProps);
+
+        if (!props.isDropin) {
+            checkoutRef.storeComponentRef(this as UIElement);
+        }
+    }
 
     formatProps(props) {
         return {

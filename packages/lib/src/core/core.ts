@@ -385,7 +385,16 @@ class Core {
         const calculatedUIElementProps = { ...PaymentMethodObject, ...options, ...paymentMethodsConfiguration };
 
         // re. OPT A in Dropin/elements/createElements.ts - initialise the PM here
-        const PaymentMethod = registry.getComponent(PaymentMethodObject.type);
+        let PaymentMethod = registry.getComponent(PaymentMethodObject.type);
+
+        /**
+         * If we are trying to create a payment method that is in the paymentMethods response but does not explicitly
+         * implement a component (i.e. no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
+         */
+        if (!PaymentMethod) {
+            PaymentMethod = registry.getComponent('redirect');
+        }
+
         return new PaymentMethod(this, calculatedUIElementProps);
 
         // re. OPT B in Dropin/elements/createElements.ts - createElements will initialise the PM. In which case this fn should be called generateUIElementPropsForDropin

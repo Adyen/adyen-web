@@ -26,7 +26,7 @@ function createComponentsMap(components: (new (props) => UIElement)[]) {
                 [dependency.type]: dependency
             };
         });
-
+        // console.log('### core.registry:::: memo', memo);
         return memo;
     }, {});
 }
