@@ -3,6 +3,7 @@ import { MutableRef, useCallback, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
+import './FormFields.scss';
 
 export interface InputBaseProps extends h.JSX.HTMLAttributes {
     classNameModifiers?: string[];
