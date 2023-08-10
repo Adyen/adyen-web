@@ -11,7 +11,6 @@ import createInstantPaymentElements from './elements/createInstantPaymentElement
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { PaymentResponse } from '../types';
 import Core from '../../core';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -25,7 +24,7 @@ class DropinElement extends UIElement<DropinElementProps> {
      */
     public componentFromAction?: UIElement;
 
-    private checkoutRef;
+    // private checkoutRef;
 
     // constructor(props) {
     //     super(props);
@@ -33,20 +32,15 @@ class DropinElement extends UIElement<DropinElementProps> {
     //     this.handleAction = this.handleAction.bind(this);
     // }
 
-    constructor(checkoutRef, props) {
-        if (!(checkoutRef instanceof Core)) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
-        }
+    constructor(checkoutRef: Core, props) {
+        // UIElement does the calculating of props...
+        super(checkoutRef, { ...props, type: DropinElement.type });
 
-        // If UIElement does the calculating of props...
-        // super(checkoutRef, props, DropinElement.type);
+        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: DropinElement.type });
+        //
+        // super(calculatedProps);
 
-        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: DropinElement.type });
-
-        super(calculatedProps);
-        console.log('### Dropin::constructor:: calculatedProps=', calculatedProps);
-
-        this.checkoutRef = checkoutRef;
+        // this.checkoutRef = checkoutRef;
 
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);

@@ -3,12 +3,12 @@ import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils'
 import uuid from '../../../utils/uuid';
 import type { IRegistry } from '../../core.registry';
 
-const createComponent = (registry: IRegistry, componentType, props) => {
+const createComponent = (checkout, registry: IRegistry, componentType, props) => {
     const Element = registry.getComponent(componentType);
-    return new Element({ ...props, id: `${componentType}-${uuid()}` });
+    return new Element(checkout, { ...props, id: `${componentType}-${uuid()}` });
 };
 
-const getActionHandler = statusType => (registry: IRegistry, action: PaymentAction, props) => {
+const getActionHandler = statusType => (checkout, registry: IRegistry, action: PaymentAction, props) => {
     const config = {
         ...props,
         ...action,
@@ -17,21 +17,21 @@ const getActionHandler = statusType => (registry: IRegistry, action: PaymentActi
         statusType
     };
 
-    return createComponent(registry, action.paymentMethodType, config);
+    return createComponent(checkout, registry, action.paymentMethodType, config);
 };
 
 const actionTypes = {
-    redirect: (registry, action: PaymentAction, props) => {
+    redirect: (checkout, registry, action: PaymentAction, props) => {
         const config = {
             ...props,
             ...action,
             statusType: 'redirect'
         };
 
-        return createComponent(registry, 'redirect', config);
+        return createComponent(checkout, registry, 'redirect', config);
     },
 
-    threeDS2Fingerprint: (registry, action: PaymentAction, props) => {
+    threeDS2Fingerprint: (checkout, registry, action: PaymentAction, props) => {
         const config = {
             createFromAction: props.createFromAction,
             token: action.token,
@@ -46,10 +46,10 @@ const actionTypes = {
             useOriginalFlow: true
         };
 
-        return createComponent(registry, 'threeDS2DeviceFingerprint', config);
+        return createComponent(checkout, registry, 'threeDS2DeviceFingerprint', config);
     },
 
-    threeDS2Challenge: (registry, action: PaymentAction, props) => {
+    threeDS2Challenge: (checkout, registry, action: PaymentAction, props) => {
         const config = {
             ...props,
             token: action.token,
@@ -63,10 +63,10 @@ const actionTypes = {
             useOriginalFlow: true
         };
 
-        return createComponent(registry, 'threeDS2Challenge', config);
+        return createComponent(checkout, registry, 'threeDS2Challenge', config);
     },
 
-    threeDS2: (registry, action: PaymentAction, props) => {
+    threeDS2: (checkout, registry, action: PaymentAction, props) => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
         const paymentData = action.subtype === 'fingerprint' ? action.paymentData : action.authorisationToken;
 
@@ -88,7 +88,7 @@ const actionTypes = {
             ...get3DS2FlowProps(action.subtype, props)
         };
 
-        return createComponent(registry, componentType, config);
+        return createComponent(checkout, registry, componentType, config);
     },
 
     voucher: getActionHandler('custom'),

@@ -155,7 +155,7 @@ class Core {
                 ...this.getPropsForComponent(options)
             };
 
-            return getComponentForAction(registry, action, props);
+            return getComponentForAction(this, registry, action, props);
         }
 
         return this.handleCreateError();

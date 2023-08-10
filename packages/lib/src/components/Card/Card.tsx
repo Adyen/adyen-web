@@ -16,7 +16,6 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
 import Redirect from '../Redirect/Redirect';
 import Core from '../../core';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -43,21 +42,17 @@ export class CardElement extends UIElement<CardElementProps> {
     //     }
     // }
     constructor(checkoutRef: Core, props: CardElementProps) {
-        if (!(checkoutRef instanceof Core)) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
-        }
+        // UIElement does the calculating of props...
+        super(checkoutRef, { ...props, type: props?.type ?? CardElement.type });
 
-        // If UIElement does the calculating of props...
-        // super(checkoutRef, {...props, type: props?.type ?? CardElement.type } );
+        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? CardElement.type });
+        //
+        // super(calculatedProps);
+        // console.log('### Card::constructor:: calculatedProps=', calculatedProps);
 
-        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? CardElement.type });
-
-        super(calculatedProps);
-        console.log('### Card::constructor:: calculatedProps=', calculatedProps);
-
-        if (!props.isDropin) {
-            checkoutRef.storeComponentRef(this as UIElement);
-        }
+        // if (!props.isDropin) {
+        //     checkoutRef.storeComponentRef(this as UIElement);
+        // }
 
         // this.checkoutRef = checkoutRef;// TODO - Needed?
 

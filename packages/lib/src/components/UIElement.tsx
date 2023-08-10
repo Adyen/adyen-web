@@ -29,15 +29,23 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      */
     public static dependencies: any[] = []; // FIX type
 
-    // constructor(checkoutRef, props: P) {
-    constructor(props: P) {
-        // If UIElement does the calculating of props...
-        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props.type });
-        //
-        // super(calculatedProps);
-        // console.log('### UIElement::constructor:: type', type, 'calculatedProps', calculatedProps);
+    constructor(checkoutRef, props: P) {
+        // constructor(props: P) {
 
-        super(props);
+        if (!(checkoutRef instanceof Core)) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
+        }
+
+        // Calculating the props...
+        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props.type });
+        super(calculatedProps);
+        console.log('### UIElement::constructor:: type', props.type, 'calculatedProps', calculatedProps);
+
+        if (!calculatedProps.isDropin) {
+            checkoutRef.storeComponentRef(this as UIElement);
+        }
+
+        // super(props);
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
