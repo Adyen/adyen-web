@@ -7,8 +7,7 @@ import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
-    console.log('### manual::initManual:: AdyenCheckout', AdyenCheckout);
-    console.log('### manual::initManual:: Dropin', Dropin);
+
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
@@ -80,6 +79,9 @@ export async function initManual() {
             paywithgoogle: {
                 buttonType: 'plain'
             }
+            // storedCard: {
+            //     hideCVC: true
+            // }
         }
     });
 
@@ -143,8 +145,8 @@ export async function initManual() {
     const dropin = new Dropin(checkout, {
         // const dropin = checkout
         //     .create('dropin', {
-        instantPaymentTypes: ['googlepay'],
-        showStoredPaymentMethods: false
+        instantPaymentTypes: ['googlepay']
+        // showStoredPaymentMethods: false
     }).mount('#dropin-container');
 
     handleRedirectResult();

@@ -52,6 +52,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // bcmc: {
             //     brands: ['bcmc', 'visa']
             // }
+        },
+        risk: {
+            enabled: false
         }
     });
 
