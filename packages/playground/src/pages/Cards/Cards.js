@@ -2,7 +2,7 @@ import { AdyenCheckout, Card, Bancontact } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -10,14 +10,14 @@ import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
 const showComps = {
-    clickToPay: true,
-    storedCard: true,
+    clickToPay: false,
+    storedCard: false,
     card: true,
-    cardInReact: true,
-    bcmcCard: true,
-    avsCard: true,
-    avsPartialCard: true,
-    kcpCard: true
+    cardInReact: false,
+    bcmcCard: false,
+    avsCard: false,
+    avsPartialCard: false,
+    kcpCard: false
 };
 const disclaimerMessage = {
     message: 'By continuing you accept the %{linkText} of MyStore',
@@ -27,6 +27,8 @@ const disclaimerMessage = {
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     AdyenCheckout.register(Card, Bancontact);
+
+    console.log('### Cards:::: AdyenCheckout=', AdyenCheckout);
 
     window.checkout = await AdyenCheckout({
         amount,
@@ -39,11 +41,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
                 hasHolderName: true,
                 holderNameRequired: true
+            },
+            storedCard: {
+                hideCVC: true
             }
         }
     });
@@ -51,7 +55,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Stored Card
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
+            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
+            // window.card = new Card(checkout, {
             window.storedCard = checkout
                 .create('card', {
                     ...storedCardData,
@@ -63,33 +68,33 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Credit card with installments
     if (showComps.card) {
-        window.card = checkout
-            .create('card', {
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                installmentOptions: {
-                    mc: {
-                        values: [1, 2],
-                        preselectedValue: 2
-                    },
-                    visa: {
-                        values: [1, 2, 3, 4],
-                        plans: ['regular', 'revolving'],
-                        preselectedValue: 4
-                    }
-                },
-                disclaimerMessage,
-                showBrandsUnderCardNumber: true,
-                showInstallmentAmounts: true,
-                onError: obj => {
-                    console.log('### Cards::onError:: obj=', obj);
-                },
-                onBinLookup: obj => {
-                    console.log('### Cards::onBinLookup:: obj=', obj);
-                },
-                billingAddressRequired: true,
-                onAddressLookup: searchFunctionExample
-            })
-            .mount('.card-field');
+        window.card = new Card(checkout, {
+            // window.card = checkout
+            //     .create('card', {
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            // installmentOptions: {
+            //     mc: {
+            //         values: [1, 2],
+            //         preselectedValue: 2
+            //     },
+            //     visa: {
+            //         values: [1, 2, 3, 4],
+            //         plans: ['regular', 'revolving'],
+            //         preselectedValue: 4
+            //     }
+            // },
+            disclaimerMessage,
+            showBrandsUnderCardNumber: true,
+            showInstallmentAmounts: true,
+            onError: obj => {
+                console.log('### Cards::onError:: obj=', obj);
+            },
+            onBinLookup: obj => {
+                console.log('### Cards::onBinLookup:: obj=', obj);
+            },
+            // billingAddressRequired: true,
+            onAddressLookup: null //searchFunctionExample
+        }).mount('.card-field');
     }
 
     // Card mounted in a React app

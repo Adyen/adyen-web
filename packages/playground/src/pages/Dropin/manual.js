@@ -1,4 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web/auto';
+import { Dropin } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
@@ -6,6 +7,8 @@ import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
+    console.log('### manual::initManual:: AdyenCheckout', AdyenCheckout);
+    console.log('### manual::initManual:: Dropin', Dropin);
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
@@ -18,6 +21,7 @@ export async function initManual() {
                 values: [1, 2, 3, 4]
             }
         },
+        allowPaymentMethods: ['scheme'],
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 
@@ -39,9 +43,9 @@ export async function initManual() {
                 handleFinalState(result.resultCode, component);
             }
         },
-        onChange: state => {
-            console.log('onChange', state);
-        },
+        // onChange: state => {
+        //     console.log('onChange', state);
+        // },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
 
@@ -69,7 +73,7 @@ export async function initManual() {
         },
         paymentMethodsConfiguration: {
             card: {
-                enableStoreDetails: false,
+                enableStoreDetails: true,
                 hasHolderName: true,
                 holderNameRequired: true
             },
@@ -136,11 +140,12 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = checkout
-        .create('dropin', {
-            instantPaymentTypes: ['googlepay']
-        })
-        .mount('#dropin-container');
+    const dropin = new Dropin(checkout, {
+        // const dropin = checkout
+        //     .create('dropin', {
+        instantPaymentTypes: ['googlepay'],
+        showStoredPaymentMethods: false
+    }).mount('#dropin-container');
 
     handleRedirectResult();
 

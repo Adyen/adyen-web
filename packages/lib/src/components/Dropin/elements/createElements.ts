@@ -7,9 +7,23 @@ import { PaymentMethod } from '../../../types';
  * @param props - High level props to be passed through to every component (as defined in utils/getCommonProps)
  * @param create - Reference to the main instance `Core#create` method
  */
-const createElements = (components: PaymentMethod[] = [], props, create) => {
+// const createElements = (components: PaymentMethod[] = [], props, create) => {
+const createElements = (components: PaymentMethod[] = [], props, checkout) => {
     const elements = components
-        .map(c => create(c, props))
+        .map(c => {
+            console.log('### createElements:::: c=', c);
+            // const pm = create(c, props);
+
+            // OPT A: core generates props and initialises PM
+            const pm = checkout.generateUIElementForDropin(c, props);
+            console.log('### createElements:::: pm=', pm);
+            return pm;
+
+            // OPT B: core generates props, but we initialise the PM here
+            // const PaymentMethod = checkout.getComponentFromRegistry(c.type);
+            // const generatedProps = checkout.generateUIElementForDropin(c, props);
+            // return new PaymentMethod(checkout, generatedProps);
+        })
         .filter(filterPresent)
         .filter(filterUnsupported);
 

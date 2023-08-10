@@ -232,6 +232,37 @@ class Core {
         };
     }
 
+    public generateUIElementProps(options: any) {
+        const props = this.getPropsForComponent(options);
+
+        /**
+         * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone stored card.
+         */
+        const needsConfigData = props.type !== 'dropin' && !props.isDropin;
+        const needsPMData = needsConfigData && !props.supportedShopperInteractions;
+
+        /**
+         * We only need to populate the objects under certain circumstances.
+         * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
+         * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
+         */
+        const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(props.type) : {};
+        const paymentMethodsConfiguration = needsConfigData
+            ? getComponentConfiguration(props.type, this.options.paymentMethodsConfiguration, !!props.storedPaymentMethodId)
+            : {};
+
+        // Filtered global options
+        const globalOptions = processGlobalOptions(this.options);
+
+        const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
+
+        return calculatedOptions;
+    }
+
+    public storeComponentRef(component: UIElement) {
+        this.components.push(component);
+    }
+
     /**
      * @internal
      * A recursive creation function that finalises by calling itself with a reference to a valid component class which it then initialises
@@ -258,6 +289,7 @@ class Core {
          * Once we receive a valid class for a Component - create a new instance of it
          */
         if (isValidClass) {
+            console.log('### core::handleCreate:: fimal entry point PaymentMethod=', PaymentMethod);
             /**
              * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone stored card.
              */
@@ -303,7 +335,7 @@ class Core {
                     "WARNING: You are setting a 'paymentMethodsConfiguration' object in the Dropin configuration options. This object will be ignored."
                 );
             }
-
+            console.log('### core::handleCreate:: PaymentMethod as string:: type=', PaymentMethod);
             return this.handleCreate(registry.getComponent(PaymentMethod), { type: PaymentMethod, ...options });
         }
 
@@ -323,11 +355,13 @@ class Core {
         }
 
         /**
-         * Entry point for Dropin (PaymentMethod is an Object)
-         * Happens internally on Drop-in when relevant object from paymentMethods response (.paymentMethods or .storedPaymentMethods) has been isolated
-         * and is then use to create an element in the paymentMethods list
+         * Entry point from Dropin, as it creates all its PMs.
+         * Happens when Dropin has isolated a relevant PaymentMethod object from the paymentMethodsResponse.paymentMethods (or, .storedPaymentMethods)
+         *  e.g. PaymentMethod = {"brands": ["mc", "visa", ...etc], "name": "Credit Card", "type": "scheme"}
+         * This object is then used to create a UIElement representing a PM in the paymentMethods list
          */
         if (typeof PaymentMethod === 'object' && typeof PaymentMethod.type === 'string') {
+            console.log('### core::handleCreate:: Dropin entry point:: PaymentMethod=', PaymentMethod);
             // paymentMethodsConfiguration object will take precedence here
             const paymentMethodsConfiguration = getComponentConfiguration(
                 PaymentMethod.type,
@@ -340,6 +374,28 @@ class Core {
 
         return this.handleCreateError(PaymentMethod);
     }
+
+    public generateUIElementForDropin(PaymentMethodObject, options) {
+        const paymentMethodsConfiguration = getComponentConfiguration(
+            PaymentMethodObject.type,
+            this.options.paymentMethodsConfiguration,
+            !!PaymentMethodObject.storedPaymentMethodId
+        );
+
+        const calculatedUIElementProps = { ...PaymentMethodObject, ...options, ...paymentMethodsConfiguration };
+
+        // re. OPT A in Dropin/elements/createElements.ts - initialise the PM here
+        const PaymentMethod = registry.getComponent(PaymentMethodObject.type);
+        return new PaymentMethod(this, calculatedUIElementProps);
+
+        // re. OPT B in Dropin/elements/createElements.ts - createElements will initialise the PM. In which case this fn should be called generateUIElementPropsForDropin
+        // return calculatedUIElementProps;
+    }
+
+    // Needed for OPT B in Dropin/elements/createElements.ts
+    // public getComponentFromRegistry(type: string) {
+    //     return registry.getComponent(type);
+    // }
 
     /**
      * @internal

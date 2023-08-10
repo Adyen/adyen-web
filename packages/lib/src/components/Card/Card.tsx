@@ -27,8 +27,32 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    constructor(props) {
-        super(props);
+    // private checkoutRef;
+
+    // constructor(props) {
+    //     super(props);
+    //
+    //     console.log('### Card::constructor:: props=', props);
+    //
+    //     if (!props._disableClickToPay) {
+    //         this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+    //         this.clickToPayService?.initialize();
+    //     }
+    // }
+    constructor(checkoutRef, props) {
+        // TODO - throw error if checkoutRef not defined
+
+        // If UIElement does the calculating of props...
+        // super(checkoutRef, props, CardElement.type);
+
+        const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: CardElement.type });
+
+        super(calculatedProps);
+        console.log('### Card::constructor:: calculatedProps=', calculatedProps);
+
+        checkoutRef.storeComponentRef(this as UIElement);
+
+        // this.checkoutRef = checkoutRef;
 
         if (!props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
