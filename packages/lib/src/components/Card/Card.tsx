@@ -14,13 +14,14 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
+import Redirect from '../Redirect/Redirect';
 import Core from '../../core';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
     public static txVariants = ['amex', 'card', 'diners', 'discover', 'jcb', 'kcp', 'maestro', 'mc', 'scheme', 'storedCard', 'visa'];
-    public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge];
+    public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge, Redirect];
 
     private readonly clickToPayService: IClickToPayService | null;
 
