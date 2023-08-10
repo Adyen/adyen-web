@@ -29,8 +29,9 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      */
     public static dependencies: any[] = []; // FIX type
 
-    constructor(checkoutRef, props: P) {
+    constructor(checkoutRef: Core, props: P) {
         // constructor(props: P) {
+        // super(props);
 
         if (!(checkoutRef instanceof Core)) {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
@@ -45,7 +46,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             checkoutRef.storeComponentRef(this as UIElement);
         }
 
-        // super(props);
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);

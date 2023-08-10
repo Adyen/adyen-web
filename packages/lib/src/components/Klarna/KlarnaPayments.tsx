@@ -5,6 +5,7 @@ import { KlarnaPaymentsProps } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { PaymentAction } from '../../types';
+import Core from '../../core';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
@@ -14,8 +15,10 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
         useKlarnaWidget: false
     };
 
-    constructor(props: KlarnaPaymentsProps) {
-        super(props);
+    // constructor(props: KlarnaPaymentsProps) {
+    //     super(props);
+    constructor(checkoutRef: Core, props: KlarnaPaymentsProps) {
+        super(checkoutRef, { ...props, type: props?.type ?? KlarnaPayments.type });
 
         this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);

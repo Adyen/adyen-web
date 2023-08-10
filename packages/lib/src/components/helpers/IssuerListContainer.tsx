@@ -10,6 +10,7 @@ import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import Redirect from '../Redirect';
+import Core from '../../core';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -33,8 +34,10 @@ interface IssuerListData {
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     public static dependencies = [Redirect];
 
-    constructor(props: IssuerListContainerProps) {
-        super(props);
+    // constructor(props: IssuerListContainerProps) {
+    //     super(props);
+    constructor(checkoutRef: Core, props: IssuerListContainerProps) {
+        super(checkoutRef, { ...props, type: props?.type ?? 'issuerList' });
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);

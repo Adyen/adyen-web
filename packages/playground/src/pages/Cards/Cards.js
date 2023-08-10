@@ -11,7 +11,7 @@ import { MockReactApp } from './MockReactApp';
 
 const showComps = {
     clickToPay: false,
-    storedCard: false,
+    storedCard: true,
     card: true,
     cardInReact: false,
     bcmcCard: true,

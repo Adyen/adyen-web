@@ -20,7 +20,7 @@ export async function initManual() {
                 values: [1, 2, 3, 4]
             }
         },
-        allowPaymentMethods: ['scheme', 'bcmc', 'googlepay', 'paysafecard'],
+        // allowPaymentMethods: ['scheme', 'bcmc', 'googlepay', 'paysafecard'],
         // allowPaymentMethods: ['paysafecard'],
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
