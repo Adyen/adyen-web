@@ -5,9 +5,14 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+// import Core from '../../core';
 
 export class MBWayElement extends UIElement {
     public static type = 'mbway';
+
+    // constructor(checkoutRef: Core, props?) {
+    //     super(checkoutRef, { ...props, type: props?.type ?? MBWayElement.type });
+    // }
 
     formatProps(props) {
         const { data = {}, placeholders = {} } = props;

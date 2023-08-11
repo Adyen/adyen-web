@@ -1,4 +1,5 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
+import Core from '../../core';
 
 class OnlineBankingPL extends IssuerListContainer {
     public static type = 'onlineBanking_PL';
@@ -13,8 +14,8 @@ class OnlineBankingPL extends IssuerListContainer {
         urls: [OnlineBankingPL.disclaimerUrlsMap.regulation, OnlineBankingPL.disclaimerUrlsMap.obligation]
     };
 
-    constructor(props) {
-        super({ ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
+    constructor(checkoutRef: Core, props) {
+        super(checkoutRef, { ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
     }
 }
 

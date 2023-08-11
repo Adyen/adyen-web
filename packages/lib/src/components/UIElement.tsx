@@ -37,17 +37,16 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
         }
 
-        if (!hasOwnProperty(props, 'type')) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without specifying a type');
-        }
-
-        const type = ['this'].constructor['type'];
-        console.log('### UIElement::constructor:: type=', type);
+        // if (!hasOwnProperty(props, 'type')) {
+        //     throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without specifying a type');
+        // }
 
         // Retrieve props...
         const generatedProps = checkoutRef.generateUIElementProps(props);
+        // const generatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? ['this'].constructor['type'] });
         super(generatedProps);
-        console.log('### UIElement::constructor:: type', props.type, 'generatedProps', generatedProps);
+        // super(checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? ['this'].constructor['type'] }));
+        console.log('### UIElement::constructor:: type', props?.type, 'generatedProps', generatedProps);
 
         if (!generatedProps.isDropin) {
             checkoutRef.storeComponentRef(this as UIElement);

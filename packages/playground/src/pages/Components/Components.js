@@ -29,7 +29,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // // SEPA Bank Transfer
-    window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
+    // window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
+    // window.bankTransfer = new BankTransfer(checkout, { type: 'bankTransfer_IBAN' }).mount('.bankTransfer-field');// BankTransfer doesn't need constructor
+    window.bankTransfer = new BankTransfer(checkout).mount('.bankTransfer-field'); // BankTransfer needs constructor
     window.bankTransferResult = checkout
         .createFromAction({
             paymentMethodType: 'bankTransfer_IBAN',
@@ -47,8 +49,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.bankTransfer-result-field');
     //
     // MBWay
-    window.mbway = checkout.create('mbway').mount('.mbway-field');
-
+    // window.mbway = checkout.create('mbway').mount('.mbway-field');
+    // window.mbway = new MBWay(checkout, { type: 'mbway' }).mount('.mbway-field');
+    window.mbway = new MBWay(checkout).mount('.mbway-field');
+    return;
     // Klarna Widget
     window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
 
