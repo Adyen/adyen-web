@@ -2,6 +2,7 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
+import Core from '../../core';
 
 /**
  * DonationElement
@@ -9,8 +10,13 @@ import DonationComponent from './components/DonationComponent';
 class DonationElement extends UIElement {
     public static type = 'donation';
 
-    constructor(props) {
-        super(props);
+    // constructor(props) {
+    //     super(props);
+    //     this.donate = this.donate.bind(this);
+    // }
+
+    constructor(checkoutRef: Core, props) {
+        super(checkoutRef, { ...props, type: props?.type ?? DonationElement.type });
         this.donate = this.donate.bind(this);
     }
 

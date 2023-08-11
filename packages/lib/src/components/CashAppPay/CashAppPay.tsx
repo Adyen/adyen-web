@@ -9,6 +9,7 @@ import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
 import { payAmountLabel } from '../internal/PayButton';
+import Core from '../../core';
 
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
@@ -17,8 +18,10 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
 
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    // constructor(props) {
+    //     super(props);
+    constructor(checkoutRef: Core, props) {
+        super(checkoutRef, { ...props, type: props?.type ?? CashAppPay.type });
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {
             console.warn(
