@@ -119,71 +119,71 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Credit card with AVS
     if (showComps.avsCard) {
-        window.cardAvs = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                enableStoreDetails: true,
+        // window.cardAvs = checkout
+        //     .create('card', {
+        window.cardAvs = new Card(checkout, {
+            // type: 'scheme',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            enableStoreDetails: true,
 
-                // holderName config:
-                hasHolderName: true,
-                holderNameRequired: true,
+            // holderName config:
+            hasHolderName: true,
+            holderNameRequired: true,
+            holderName: 'J. Smith',
+            positionHolderNameOnTop: true,
+
+            // billingAddress config:
+            billingAddressRequired: true,
+            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
+            // billingAddressRequiredFields: ['postalCode', 'country'],
+
+            // data:
+            data: {
                 holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressAllowedCountries: ['US', 'CA', 'GB'],
-                // billingAddressRequiredFields: ['postalCode', 'country'],
-
-                // data:
-                data: {
-                    holderName: 'J. Smith',
-                    billingAddress: {
-                        street: 'Infinite Loop',
-                        postalCode: '95014',
-                        city: 'Cupertino',
-                        houseNumberOrName: '1',
-                        country: 'US',
-                        stateOrProvince: 'CA'
-                    }
-                },
-                onError: objdobj => {
-                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+                billingAddress: {
+                    street: 'Infinite Loop',
+                    postalCode: '95014',
+                    city: 'Cupertino',
+                    houseNumberOrName: '1',
+                    country: 'US',
+                    stateOrProvince: 'CA'
                 }
-            })
-            .mount('.card-avs-field');
+            },
+            onError: objdobj => {
+                console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+            }
+        }).mount('.card-avs-field');
     }
 
     if (showComps.avsPartialCard) {
-        window.avsPartialCard = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial',
-                onError: objdobj => {
-                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
-                }
-            })
-            .mount('.card-avs-partial-field');
+        // window.avsPartialCard = checkout
+        //     .create('card', {
+        window.avsPartialCard = new Card(checkout, {
+            // type: 'scheme',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            // billingAddress config:
+            billingAddressRequired: true,
+            billingAddressMode: 'partial',
+            onError: objdobj => {
+                console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+            }
+        }).mount('.card-avs-partial-field');
     }
 
     // Credit card with KCP Authentication
     if (showComps.kcpCard) {
-        window.kcpCard = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
-                // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
-                // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
-                configuration: {
-                    koreanAuthenticationRequired: true
-                },
-                countryCode: 'KR'
-            })
-            .mount('.card-kcp-field');
+        // window.kcpCard = checkout
+        //     .create('card', {
+        window.kcpCard = new Card(checkout, {
+            // type: 'scheme',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
+            // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
+            // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
+            configuration: {
+                koreanAuthenticationRequired: true
+            },
+            countryCode: 'KR'
+        }).mount('.card-kcp-field');
     }
 
     if (showComps.clickToPay) {

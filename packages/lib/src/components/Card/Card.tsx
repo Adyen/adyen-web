@@ -20,7 +20,7 @@ import Core from '../../core';
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
     // public static txVariants = ['amex', 'card', 'diners', 'discover', 'jcb', 'kcp', 'maestro', 'mc', 'scheme', 'storedCard', 'visa'];
-    public static txVariants = ['card'];
+    public static txVariants = ['card']; // TODO - don't think we need even this
     public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge, Redirect];
 
     private readonly clickToPayService: IClickToPayService | null;
@@ -43,6 +43,10 @@ export class CardElement extends UIElement<CardElementProps> {
     //     }
     // }
     constructor(checkoutRef: Core, props: CardElementProps) {
+        // console.log('\n### Card::constructor:: props.type=', props.type);
+        // props.type is specified in storedCards, Bancontact and when card is part of dropin
+        // but not for standalone card
+
         // UIElement does the calculating of props...
         super(checkoutRef, { ...props, type: props?.type ?? CardElement.type });
 

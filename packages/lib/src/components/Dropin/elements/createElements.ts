@@ -11,7 +11,7 @@ import { PaymentMethod } from '../../../types';
 const createElements = (components: PaymentMethod[] = [], props, checkout) => {
     const elements = components
         .map(c => {
-            console.log('### createElements:::: c=', c);
+            console.log('\n### createElements:::: c=', c);
             // const pm = create(c, props);
 
             // OPT A: core generates props and initialises PM

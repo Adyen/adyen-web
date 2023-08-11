@@ -13,7 +13,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry from './core.registry';
-import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
+// import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
 
 class Core {
     public session: Session;
@@ -38,7 +38,7 @@ class Core {
     }
 
     constructor(props: CoreOptions) {
-        this.create = this.create.bind(this);
+        // this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(props);
@@ -121,13 +121,13 @@ class Core {
      *
      * @returns new UIElement
      */
-    public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
-    public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
-    public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
-    public create(paymentMethod: any, options?: any): any {
-        const props = this.getPropsForComponent(options);
-        return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
-    }
+    // public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
+    // public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
+    // public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
+    // public create(paymentMethod: any, options?: any): any {
+    //     const props = this.getPropsForComponent(options);
+    //     return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
+    // }
 
     /**
      * Instantiates a new element component ready to be mounted from an action object
@@ -235,26 +235,38 @@ class Core {
     public generateUIElementProps(options: any) {
         const props = this.getPropsForComponent(options);
 
+        const { type, isDropin, supportedShopperInteractions, storedPaymentMethodId } = props;
+
         /**
-         * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone stored card.
+         * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone comp.
          */
-        const needsConfigData = props.type !== 'dropin' && !props.isDropin;
-        const needsPMData = needsConfigData && !props.supportedShopperInteractions;
+        const needsConfigData = type !== 'dropin' && !isDropin;
+        const needsPMData = needsConfigData && !supportedShopperInteractions;
 
         /**
          * We only need to populate the objects under certain circumstances.
          * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
          * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
+         * So:
+         *  - for a standalone component: needsConfigData = true, needsPMData = true
+         *  - for a standalone storedCard component: needsConfigData = true, needsPMData = false
+         *  - for Dropin or PM within dropin: needsConfigData = false, needsPMData = false
          */
-        const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(props.type) : {};
+        const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(type) : {};
         const paymentMethodsConfiguration = needsConfigData
-            ? getComponentConfiguration(props.type, this.options.paymentMethodsConfiguration, !!props.storedPaymentMethodId)
+            ? getComponentConfiguration(type, this.options.paymentMethodsConfiguration, !!storedPaymentMethodId)
             : {};
 
         // Filtered global options
         const globalOptions = processGlobalOptions(this.options);
 
         const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
+
+        console.log('\n### core::generateUIElementProps:: props.type', type);
+        console.log('### core::generateUIElementProps:: props.isDropin', isDropin);
+        console.log('### core::generateUIElementProps:: props.supportedShopperInteractions', supportedShopperInteractions);
+        console.log('### core::generateUIElementProps:: needsConfigData', needsConfigData);
+        console.log('### core::generateUIElementProps:: needsPMData', needsPMData);
 
         return calculatedOptions;
     }
@@ -376,6 +388,7 @@ class Core {
     }
 
     public generateUIElementForDropin(PaymentMethodObject, options) {
+        console.log('\n### core::generateUIElementForDropin:: ');
         const paymentMethodsConfiguration = getComponentConfiguration(
             PaymentMethodObject.type,
             this.options.paymentMethodsConfiguration,

@@ -41,12 +41,15 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without specifying a type');
         }
 
-        // Calculating the props...
-        const calculatedProps = checkoutRef.generateUIElementProps(props);
-        super(calculatedProps);
-        console.log('### UIElement::constructor:: type', props.type, 'calculatedProps', calculatedProps);
+        const type = ['this'].constructor['type'];
+        console.log('### UIElement::constructor:: type=', type);
 
-        if (!calculatedProps.isDropin) {
+        // Retrieve props...
+        const generatedProps = checkoutRef.generateUIElementProps(props);
+        super(generatedProps);
+        console.log('### UIElement::constructor:: type', props.type, 'generatedProps', generatedProps);
+
+        if (!generatedProps.isDropin) {
             checkoutRef.storeComponentRef(this as UIElement);
         }
 

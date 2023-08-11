@@ -37,7 +37,9 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     // constructor(props: IssuerListContainerProps) {
     //     super(props);
     constructor(checkoutRef: Core, props: IssuerListContainerProps) {
-        super(checkoutRef, { ...props, type: props?.type ?? 'issuerList' });
+        console.log('### IssuerListContainer::constructor:: props.type', props.type);
+        // super(checkoutRef, { ...props, type: props?.type ?? 'issuerList' });
+        super(checkoutRef, props); // Not possible to add a default type. It must be specified in props.
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
