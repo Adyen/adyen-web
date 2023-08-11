@@ -24,7 +24,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     //     this.submit = this.submit.bind(this);
     //     this.validateMerchant = this.validateMerchant.bind(this);
     // }
-    constructor(checkoutRef: Core, props) {
+    constructor(checkoutRef: Core, props: ApplePayElementProps) {
         super(checkoutRef, { ...props, type: props?.type ?? ApplePayElement.type });
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);

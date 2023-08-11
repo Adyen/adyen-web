@@ -20,7 +20,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
 
     // constructor(props) {
     //     super(props);
-    constructor(checkoutRef: Core, props) {
+    constructor(checkoutRef: Core, props: CashAppPayElementProps) {
         super(checkoutRef, { ...props, type: props?.type ?? CashAppPay.type });
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {

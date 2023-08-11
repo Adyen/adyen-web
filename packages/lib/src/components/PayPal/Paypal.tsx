@@ -24,7 +24,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     //     super(props);
     //     this.handleSubmit = this.handleSubmit.bind(this);
     // }
-    constructor(checkoutRef: Core, props) {
+    constructor(checkoutRef: Core, props: PayPalElementProps) {
         super(checkoutRef, { ...props, type: props?.type ?? PaypalElement.type });
         this.handleSubmit = this.handleSubmit.bind(this);
     }

@@ -20,7 +20,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
 
     // constructor(props) {
     //     super(props);
-    constructor(checkoutRef: Core, props) {
+    constructor(checkoutRef: Core, props: ClickToPayElementProps) {
         super(checkoutRef, { ...props, type: props?.type ?? ClickToPayElement.type });
 
         this.ctpConfiguration = {

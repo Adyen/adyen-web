@@ -32,7 +32,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     //     this.handleAction = this.handleAction.bind(this);
     // }
 
-    constructor(checkoutRef: Core, props) {
+    constructor(checkoutRef: Core, props: DropinElementProps) {
         // UIElement does the calculating of props...
         super(checkoutRef, { ...props, type: DropinElement.type });
 
