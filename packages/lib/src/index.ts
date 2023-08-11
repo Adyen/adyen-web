@@ -15,3 +15,5 @@ async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
 }
 
 export default AdyenCheckout;
+
+export * from './types';
