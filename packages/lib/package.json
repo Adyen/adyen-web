@@ -85,6 +85,7 @@
         "babel-jest": "29.5.0",
         "cross-env": "^7.0.3",
         "cssnano": "5.1.15",
+        "css-has-pseudo":"6.0.0",
         "dotenv": "^16.0.3",
         "enzyme": "3.11.0",
         "enzyme-adapter-preact-pure": "4.1.0",
