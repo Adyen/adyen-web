@@ -1,19 +1,25 @@
-.adyen-checkout__phone-input {
+.adyen-checkout-phone-input--new {
     direction: ltr;
 
+    // inherited style (FormFields.scss)
     .adyen-checkout__input-wrapper {
         width: 100%;
 
+        // inherited style (FormFields.scss)
         .adyen-checkout__input {
             padding: 0;
             height: auto;
 
-            &:focus {
-                border: 1px solid var(--b-color-black);
-                box-shadow: 0 0 0 2px var(--b-color-grey-500);
-            }
+          /*  &:focus-within {
+                border: 1px solid var(--b-input-field-input-box-focus-border-color);
+
+                .adyen-checkout-dropdown--countrycode-selector {
+                    border-right: 1px solid var(--b-color-black);
+                }
+            } */
         }
 
+        // inherited style (Select.scss)
         .adyen-checkout__dropdown__button {
             width: auto;
             border: 0;
@@ -22,39 +28,11 @@
             border-bottom-right-radius: 0;
 
             &::after {
-                left: 40px;
                 height: 10px;
             }
         }
 
-        .adyen-checkout__input--phoneNumber {
-            margin-left: 8px;
-            height: 35px;
-            padding-left: 15px;
-            border: 1px solid transparent;
-        }
-
-        .adyen-checkout__input-wrapper--phoneInput {
-            display: flex;
-            align-items: center;
-
-            &:focus {
-                border: 1px solid var(--b-color-black);
-                box-shadow: 0 0 0 2px var(--b-color-grey-500);
-            }
-        }
-
-        .adyen-checkout__phoneNumber {
-            display: flex;
-            align-items: center;
-            margin-left: 65px;
-            width: 100%;
-        }
-
-        .adyen-checkout__countryFlag {
-            position: absolute;
-        }
-
+        // inherited style (Select.scss)
         .adyen-checkout__dropdown__button--active {
             box-shadow: none;
 
@@ -62,5 +40,39 @@
                 box-shadow: none;
             }
         }
+
+        // Example of better BEM naming i.e. 'adyen-checkout-input' as the Base
+        .adyen-checkout-input--phone-number {
+            height: 35px;
+            line-height: 35px;
+            min-height: 35px;
+            padding-bottom: 0;
+            padding-top: 0;
+            border: 1px solid transparent;
+            padding-left: 15px;
+        }
+
+        .adyen-checkout-dropdown--countrycode-selector {
+            position:relative;
+            border-radius: 0;
+            border-right: 1px solid #dce0e5;
+            min-width: 144px;
+            width: 144px;
+        }
+
+        .adyen-checkout-input-holder--phone-input {
+            align-items: center;
+            display: flex;
+        }
+
+        .adyen-checkout-phone-number {
+            align-items: center;
+            display: flex;
+            flex: 1;
+        }
+    }
+
+    .adyen-checkout-phone-input__error-holder {
+        margin-top: -10px;
     }
 }

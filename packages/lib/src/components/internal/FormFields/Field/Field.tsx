@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { cloneElement, ComponentChild, Fragment, FunctionalComponent, h, toChildArray, VNode } from 'preact';
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
-import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
@@ -30,7 +30,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         onFocusField,
         showValidIcon,
         useLabelElement,
-        addContextualElement,
+        showErrorElement,
+        showContextualElement,
         contextualText,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
@@ -99,8 +100,23 @@ const Field: FunctionalComponent<FieldProps> = props => {
     }, [label, errorMessage]);
 
     const renderInputRelatedElements = useCallback(() => {
-        const showError = typeof errorMessage === 'string' && errorMessage.length > 0;
-        const showContextualText = !showError && contextualText?.length > 0;
+        const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
+        const errorEle = showError && (
+            <span
+                className={'adyen-checkout-contextual-text--error'}
+                {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                aria-hidden={errorVisibleToSR ? null : 'true'}
+            >
+                {errorMessage}
+            </span>
+        );
+        const showContext = showContextualElement && !showError && contextualText?.length > 0;
+        const contextualEle = showContext && (
+            <span className={'adyen-checkout-contextual-text'} id={`${uniqueId.current}${ARIA_CONTEXT_SUFFIX}`} aria-hidden={'false'}>
+                {contextualText}
+            </span>
+        );
+
         return (
             <Fragment>
                 <div
@@ -117,7 +133,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             onBlurHandler,
                             isInvalid: !!errorMessage,
                             ...(name && { uniqueId: uniqueId.current }),
-                            addContextualElement
+                            showErrorElement: showErrorElement
                         };
                         return cloneElement(child as VNode, childProps);
                     })}
@@ -140,19 +156,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         </span>
                     )}
                 </div>
-                {addContextualElement && (
-                    <span
-                        className={classNames({
-                            'adyen-checkout-contextual-text': true,
-                            'adyen-checkout-contextual-text--error': showError
-                        })}
-                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                        aria-hidden={errorVisibleToSR ? null : 'true'}
-                    >
-                        {showContextualText && contextualText}
-                        {showError && errorMessage}
-                    </span>
-                )}
+                {errorEle}
+                {contextualEle}
             </Fragment>
         );
     }, [children, errorMessage, contextualText, isLoading, isValid, onFocusHandler, onBlurHandler]);
@@ -229,7 +234,8 @@ Field.defaultProps = {
     classNameModifiers: [],
     inputWrapperModifiers: [],
     useLabelElement: true,
-    addContextualElement: true,
+    showErrorElement: true,
+    showContextualElement: true,
     renderAlternativeToLabel: () => null
 };
 

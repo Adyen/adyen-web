@@ -22,7 +22,7 @@
 
   .adyen-checkout__filter-input {
     position: relative;
-    padding-left: calc(2 * var(--b-spacer-060) + var(--magnifier-width));
+    padding-left: calc(var(--b-spacer-040) + var(--magnifier-width));
   }
 }
 

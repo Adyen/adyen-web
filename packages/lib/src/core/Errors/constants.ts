@@ -10,6 +10,7 @@ import {
 } from '../../components/internal/SecuredFields/lib/configuration/constants';
 
 export const ARIA_ERROR_SUFFIX = '-ariaError';
+export const ARIA_CONTEXT_SUFFIX = '-ariaContext';
 
 export const ERROR_MSG_CARD_TOO_OLD = 'Card too old';
 export const ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = 'Date too far in future';

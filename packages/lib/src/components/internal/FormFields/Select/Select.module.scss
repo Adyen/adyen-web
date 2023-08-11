@@ -38,8 +38,8 @@
     font-family: inherit;
     font-size: $font-size-medium;
     height: 100%;
+    padding:0;
     width: 100%;
-    padding-left: var(--b-spacer-060);
 
     &::placeholder {
         color: var(--b-color-grey-500);

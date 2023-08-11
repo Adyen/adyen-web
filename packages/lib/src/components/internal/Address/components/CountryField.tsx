@@ -17,7 +17,7 @@ const formatCountries = (countries: Array<CountryFieldItem>, allowedCountries: s
             selectedOptionName: `${flag} ${country.name}`
         };
     };
-    return (allowedCountries.length ? countries.filter(applyFilter) : countries).map(applyMapper);
+    return allowedCountries.length ? countries.filter(applyFilter).map(applyMapper) : countries.map(applyMapper);
 };
 
 export default function CountryField(props: CountryFieldProps) {

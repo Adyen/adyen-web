@@ -1,37 +1,28 @@
-import Language from '../../../language/Language';
-
-export interface PhoneInputComponentProps {
-    onChange: (state) => void;
-    onValid: () => void;
-    payButton: () => void;
-
-    selected: string;
-    items: [];
-    minLength: number;
-    prefixName: string;
-    phoneName: string;
-    showPayButton: boolean;
-    isValid: boolean;
-    i18n?: Language;
-    data?: {
-        phonePrefix: string;
-        phoneNumber: string;
-    };
-}
-
-export interface PhoneInputState {
-    data?: {
-        phonePrefix: string;
-        phoneNumber: string;
-    };
-    errors?: {
-        phoneNumber?: boolean;
-        phonePrefix?: boolean;
-    };
-    isValid?: boolean;
-}
+import { DataSet, DataSetItem } from '../../../core/Services/data-set';
 
 export interface PhoneInputSchema {
     phoneNumber?: string;
     phonePrefix?: string;
+}
+
+export interface PhoneInputProps {
+    items: DataSet;
+    requiredFields?: string[];
+    data: {
+        phonePrefix?: string;
+        phoneNumber?: string;
+    };
+    onChange: (obj) => void;
+    phoneNumberKey?: string;
+    phonePrefixErrorKey?: string;
+    phoneNumberErrorKey?: string;
+    placeholders?: {
+        phoneNumber?: string;
+    };
+    ref?;
+}
+
+export interface PhonePrefixes {
+    phonePrefixes: DataSetItem[];
+    loadingStatus: string;
 }

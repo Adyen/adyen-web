@@ -288,7 +288,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
                     classNameModifiers={['separateDeliveryAddress']}
                     name={'separateDeliveryAddress'}
                     useLabelElement={false}
-                    addContextualElement={false}
+                    showErrorElement={false}
                 >
                     <Checkbox
                         label={i18n.get('separateDeliveryAddress')}

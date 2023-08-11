@@ -113,10 +113,7 @@
     }
 
     .adyen-checkout__input-wrapper {
-        flex: 1;
         border: none;
-        padding: 0;
-        justify-content: space-between;
 
         &:focus-within {
             border: none;

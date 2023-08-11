@@ -26,6 +26,10 @@ type Placeholders = {
     holderName?: string;
 };
 
+type ContextualTexts = {
+    holderName?: string;
+};
+
 export interface ACHInputProps {
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
@@ -53,6 +57,8 @@ export interface ACHInputProps {
     onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
+    showContextualElement: boolean;
+    contextualTexts?: ContextualTexts;
     ref?: any;
     resources: Resources;
     showPayButton?: boolean;

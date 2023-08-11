@@ -180,7 +180,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         this.setError('holder', holderErr, this.onChange); // add callback param to force propagation of state to parent comp
     }
 
-    render(_, { data, errors, valid }) {
+    render({ placeholders }: IbanInputProps, { data, errors, valid }) {
         const { i18n } = useCoreContext();
         return (
             <Fieldset classNameModifiers={['iban-input']} label={this.props.label}>
@@ -224,6 +224,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         name: 'ibanNumber',
                         className: 'adyen-checkout__iban-input__iban-number',
                         classNameModifiers: ['large'],
+                        placeholder: placeholders?.ibanNumber ?? '',
                         value: data['ibanNumber'],
                         onInput: this.handleIbanInput,
                         'aria-invalid': !!this.state.errors.iban,

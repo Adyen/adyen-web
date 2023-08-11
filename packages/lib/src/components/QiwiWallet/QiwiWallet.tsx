@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import PhoneInput from '../internal/PhoneInputNew';
+import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
 import COUNTRIES from './countries';
-// todo: trigger validation failed.
+
 class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
 
@@ -52,7 +52,9 @@ class QiwiWalletElement extends UIElement {
             <CoreProvider i18n={i18n} loadingContext={loadingContext} resources={this.resources}>
                 <PhoneInput
                     ref={ref => {
-                        this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
+                        if (!this.componentRef.showValidation && ref.triggerValidation) {
+                            this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
+                        }
                     }}
                     phoneNumberKey={'mobileNumber'}
                     phoneNumberErrorKey={'error.va.gen.01'}

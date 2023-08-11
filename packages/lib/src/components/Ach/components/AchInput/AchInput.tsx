@@ -155,12 +155,14 @@ function AchInput(props: ACHInputProps) {
                                         label={i18n.get('ach.accountHolderNameField.title')}
                                         className={'adyen-checkout__pm__holderName'}
                                         errorMessage={!!errors.holderName && i18n.get('ach.accountHolderNameField.invalid')}
+                                        showContextualElement={props.showContextualElement}
+                                        contextualText={props?.contextualTexts?.holderName ?? i18n.get('ach.accountHolderNameField.contextualText')}
                                         isValid={!!valid.holderName}
                                         name={'holderName'}
                                     >
                                         {renderFormField('text', {
                                             className: `adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`,
-                                            placeholder: props.placeholders.holderName,
+                                            placeholder: props?.placeholders?.holderName,
                                             value: data.holderName,
                                             required: props.holderNameRequired,
                                             onInput: handleHolderName

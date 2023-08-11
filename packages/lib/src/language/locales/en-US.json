@@ -140,6 +140,7 @@
     "ach.bankAccount": "Bank account",
     "ach.accountHolderNameField.title": "Account holder name",
     "ach.accountHolderNameField.placeholder": "J. Smith",
+    "ach.accountHolderNameField.contextualText": "Located on the front of your card",
     "ach.accountHolderNameField.invalid": "Invalid account holder name",
     "ach.accountNumberField.title": "Account number",
     "ach.accountNumberField.invalid": "Invalid account number",

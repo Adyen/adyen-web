@@ -18,7 +18,7 @@ export default function SendCopyToEmail(props) {
 
     return (
         <div className={cx('adyen-checkout__fieldset', 'adyen-checkout__fieldset--sendCopyToEmail', props.classNames)}>
-            <Field classNameModifiers={['sendCopyToEmail']} name={'sendCopyToEmail'} useLabelElement={false} addContextualElement={false}>
+            <Field classNameModifiers={['sendCopyToEmail']} name={'sendCopyToEmail'} useLabelElement={false} showErrorElement={false}>
                 {renderFormField('boolean', {
                     onChange: toggleEmailField,
                     label: i18n.get('boleto.sendCopyToEmail'),

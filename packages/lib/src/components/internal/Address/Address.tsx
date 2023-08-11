@@ -14,7 +14,6 @@ import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { ComponentMethodsRef } from '../../types';
 import AddressSearch from './components/AddressSearch';
-import '../FormFields/FormFields.scss';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
