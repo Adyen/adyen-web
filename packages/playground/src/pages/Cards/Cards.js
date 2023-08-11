@@ -68,6 +68,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 ...storedCardData,
                 disclaimerMessage
             }).mount('.storedcard-field');
+            // window.card = new Card(checkout, {
+            //     brands: ['visa']
+            // }).mount('.storedcard-field');
         }
     }
 

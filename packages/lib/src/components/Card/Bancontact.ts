@@ -11,7 +11,7 @@ class BancontactElement extends CardElement {
     //     super(props);
     // }
 
-    constructor(checkout: Core, props: CardElementProps) {
+    constructor(checkout: Core, props?: CardElementProps) {
         super(checkout, { ...props, type: BancontactElement.type });
     }
 

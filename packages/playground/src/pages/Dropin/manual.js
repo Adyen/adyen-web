@@ -21,7 +21,7 @@ export async function initManual() {
             }
         },
         // allowPaymentMethods: ['scheme', 'bcmc', 'googlepay', 'paysafecard'],
-        // allowPaymentMethods: ['paysafecard'],
+        // allowPaymentMethods: ['ideal'],
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 
