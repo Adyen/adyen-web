@@ -5,14 +5,9 @@ import RedirectButton from '../internal/RedirectButton';
 import { BankTransferProps, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
-// import Core from '../../core';
 
 export class BankTransferElement extends UIElement<BankTransferProps> {
     public static type = 'bankTransfer_IBAN';
-
-    // constructor(checkoutRef: Core, props: BankTransferProps) {
-    //     super(checkoutRef, { ...props, type: props?.type ?? BankTransferElement.type });
-    // }
 
     public static defaultProps = {
         showPayButton: true,

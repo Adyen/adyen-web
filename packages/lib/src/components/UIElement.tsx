@@ -29,7 +29,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      */
     public static dependencies: any[] = []; // FIX type
 
-    constructor(checkoutRef: Core, props: P) {
+    constructor(checkoutRef: Core, props?: P) {
         // constructor(props: P) {
         // super(props);
 
@@ -37,15 +37,16 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
         }
 
-        // if (!hasOwnProperty(props, 'type')) {
-        //     throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without specifying a type');
-        // }
+        if (!hasOwnProperty(props, 'type')) {
+            console.warn(
+                'You are trying to initialise a component without specifying a props.type.\nIf this component relies on retrieving data from the /paymentMethodsResponse, or from the top level paymentMethodsConfiguration object, it will not be able to do so.'
+            );
+        } // TODO turn to warning - no "type", no way to retrieve pmResponse objects
 
         // Retrieve props...
         const generatedProps = checkoutRef.generateUIElementProps(props);
-        // const generatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? ['this'].constructor['type'] });
         super(generatedProps);
-        // super(checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? ['this'].constructor['type'] }));
+
         console.log('### UIElement::constructor:: type', props?.type, 'generatedProps', generatedProps);
 
         if (!generatedProps.isDropin) {

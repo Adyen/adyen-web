@@ -1,9 +1,11 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
+import Core from '../../core';
 
 class PayByBank extends IssuerListContainer {
     public static type = 'paybybank';
-    constructor(props) {
-        super({ ...props, showPaymentMethodItemImages: true });
+
+    constructor(checkoutRef: Core, props) {
+        super(checkoutRef, { ...props, showPaymentMethodItemImages: true, type: props?.type ?? PayByBank.type });
     }
 }
 
