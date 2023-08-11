@@ -152,7 +152,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
                     <img
                         className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                        src={getImage({ loadingContext, imageFolder: 'components/' })(image)}
+                        src={getImage({ imageFolder: 'components/' })(image)}
                         alt={status}
                     />
                     <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{status}</div>
@@ -229,7 +229,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                                 copyToClipboard(this.props.qrCodeData);
                                 complete();
                             }}
-                            icon={getImage({ loadingContext, imageFolder: 'components/' })('copy')}
+                            icon={getImage({ imageFolder: 'components/' })('copy')}
                             label={i18n.get('button.copy')}
                         />
                     </div>

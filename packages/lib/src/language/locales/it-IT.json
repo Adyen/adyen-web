@@ -287,5 +287,8 @@
     "companyDetails.name.invalid": "Immetti il nome dell'azienda",
     "companyDetails.registrationNumber.invalid": "Immetti il numero di registrazione",
     "consent.checkbox.invalid": "È necessario accettare i termini e le condizioni",
-    "form.instruction": "Se non diversamente indicato, tutti i campi sono obbligatori."
+    "form.instruction": "Se non diversamente indicato, tutti i campi sono obbligatori.",
+    "trustly.descriptor": "Pagamento bancario istantaneo",
+    "trustly.description1": "Paga direttamente da uno qualsiasi dei tuoi conti bancari, garantito da una sicurezza di livello bancario",
+    "trustly.description2": "Nessuna carta, nessun download di app, nessuna registrazione"
 }

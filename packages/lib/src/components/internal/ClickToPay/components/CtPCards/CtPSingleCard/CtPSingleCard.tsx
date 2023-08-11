@@ -14,7 +14,7 @@ type CtPSingleCardProps = {
 const CtPSingleCard = ({ card, errorMessage }: CtPSingleCardProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const cardImage = card.artUri || getImage({})(card.scheme);
+    const cardImage = card.artUri || getImage()(card.scheme);
 
     return (
         <Fragment>

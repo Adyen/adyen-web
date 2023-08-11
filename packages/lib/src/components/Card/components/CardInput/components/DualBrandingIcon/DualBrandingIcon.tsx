@@ -1,14 +1,14 @@
 import { h } from 'preact';
 import styles from '../../CardInput.module.scss';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { getCardImageUrl, getFullBrandName } from '../../utils';
 import { DualBrandingIconProps } from '../types';
 import './DualBrandingIcon.scss';
+import useImage from '../../../../../../core/Context/useImage';
 
 const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfiguration = {} }: DualBrandingIconProps) => {
-    const { loadingContext } = useCoreContext();
+    const getImage = useImage();
     const imageName = brand === 'card' ? 'nocard' : brand;
-    const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, loadingContext);
+    const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
     const handleError = e => {
         e.target.style.cssText = 'display: none';
     };

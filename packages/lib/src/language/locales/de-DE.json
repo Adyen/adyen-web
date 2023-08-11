@@ -289,5 +289,8 @@
     "companyDetails.name.invalid": "Geben Sie den Firmennamen ein",
     "companyDetails.registrationNumber.invalid": "Geben Sie die Registrierungsnummer ein",
     "consent.checkbox.invalid": "Sie müssen den Geschäftsbedingungen zustimmen",
-    "form.instruction": "Alle Felder sind Pflichtfelder, sofern nicht anders gekennzeichnet."
+    "form.instruction": "Alle Felder sind Pflichtfelder, sofern nicht anders gekennzeichnet.",
+    "trustly.descriptor": "Online Direktüberweisung",
+    "trustly.description1": "Sichere Bezahlmethode via Online Banking oder auch Mobile Banking",
+    "trustly.description2": "Ohne Karten, App-Download oder Registrierung"
 }
