@@ -1,4 +1,5 @@
 import AdyenCheckout from '@adyen/adyen-web/auto';
+import { Dropin } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
@@ -50,10 +51,10 @@ export async function initSession() {
         }
     });
 
-    const dropin = checkout
-        .create('dropin', {
-            instantPaymentTypes: ['googlepay']
-        })
-        .mount('#dropin-container');
+    // const dropin = checkout
+    //     .create('dropin', {
+    const dropin = new Dropin(checkout, {
+        instantPaymentTypes: ['googlepay']
+    }).mount('#dropin-container');
     return [checkout, dropin];
 }

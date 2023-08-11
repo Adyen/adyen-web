@@ -391,7 +391,7 @@ class Core {
          * If we are trying to create a payment method that is in the paymentMethods response but does not explicitly
          * implement a component (i.e. no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
          */
-        if (!PaymentMethod) {
+        if (!PaymentMethod && this.paymentMethodsResponse.has(PaymentMethodObject.type)) {
             PaymentMethod = registry.getComponent('redirect');
         }
 

@@ -8,16 +8,18 @@ const createComponent = (checkout, registry: IRegistry, componentType, props) =>
     return new Element(checkout, { ...props, id: `${componentType}-${uuid()}` });
 };
 
-const getActionHandler = statusType => (checkout, registry: IRegistry, action: PaymentAction, props) => {
-    const config = {
-        ...props,
-        ...action,
-        onComplete: props.onAdditionalDetails,
-        onError: props.onError,
-        statusType
-    };
+const getActionHandler = statusType => {
+    return (checkout, registry: IRegistry, action: PaymentAction, props) => {
+        const config = {
+            ...props,
+            ...action,
+            onComplete: props.onAdditionalDetails,
+            onError: props.onError,
+            statusType
+        };
 
-    return createComponent(checkout, registry, action.paymentMethodType, config);
+        return createComponent(checkout, registry, action.paymentMethodType, config);
+    };
 };
 
 const actionTypes = {
