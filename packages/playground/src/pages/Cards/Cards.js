@@ -28,8 +28,6 @@ const disclaimerMessage = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     AdyenCheckout.register(Card, Bancontact);
 
-    console.log('### Cards:::: AdyenCheckout=', AdyenCheckout);
-
     window.checkout = await AdyenCheckout({
         amount,
         resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
