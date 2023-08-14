@@ -42,13 +42,16 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 hasHolderName: true,
                 holderNameRequired: true
             }
+        },
+        risk: {
+            enabled: false
         }
     });
 
     // Stored Card
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
+            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
             window.storedCard = checkout
                 .create('card', {
                     ...storedCardData,
