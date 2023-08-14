@@ -24,7 +24,7 @@ fixture`Testing Bancontact, with dual branded cards, in Dropin, resetting after 
     .clientScripts('bancontact.clientScripts.js');
 
 test(
-    'Fill in dual branded card then ' +
+    '#1 Fill in dual branded card then ' +
         'check that brands have been sorted to place Bcmc first then ' +
         'ensure only bcmc logo shows after deleting digits',
     async t => {
@@ -37,19 +37,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // TODO delete action fails in Safari - but only if the "Click BCMC brand icon" action takes place!?
@@ -60,12 +50,12 @@ test(
             .notOk()
             // single bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
     }
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#2 Fill in dual branded card then ' +
         'select bcmc, as first item (brand sorting has occurred), then' +
         'ensure only bcmc logo shows after deleting digits and ' +
         'that the brand has been reset on paymentMethod data',
@@ -78,19 +68,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // Click BCMC brand icon
@@ -107,7 +87,7 @@ test(
             .notOk()
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
@@ -115,7 +95,7 @@ test(
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#3 Fill in dual branded card then ' +
         'select maestro then' +
         'ensure cvc field is hidden even though it is maestro (brand sorting has occurred)' +
         'ensure only bcmc logo shows after deleting digits and ' +
@@ -129,19 +109,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // Click Maestro brand icon
@@ -159,7 +129,7 @@ test(
         await t
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
 
         // Should not be a brand property in the PM data
         await t.expect(getPropFromPMData('brand')).eql(undefined);
@@ -167,7 +137,7 @@ test(
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#4 Fill in dual branded card then ' +
         'paste in number not recognised by binLookup (but that internally is recognised as Visa)' +
         'ensure that bcmc logo shows',
     async t => {
@@ -179,19 +149,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
@@ -199,12 +159,12 @@ test(
         await t
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
     }
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#5 Fill in dual branded card then ' +
         'select maestro then' +
         'paste in number not recognised by binLookup (but that internally is recognised as Visa)' +
         'ensure that bcmc logo shows',
@@ -217,19 +177,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // Click Maestro brand icon
@@ -243,7 +193,7 @@ test(
         await t
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
 
         await t.wait(2000);
     }

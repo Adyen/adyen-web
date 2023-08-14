@@ -15,18 +15,6 @@ import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, Da
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 
 /**
- * cvcPolicy - 'required' | 'optional' | 'hidden'
- * - Always 'required' for GiftCards
- * - Usually 'required' for single branded Credit Cards but with exceptions e.g. maestro ('optional'), bcmc ('hidden').
- * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
- * comes from the SF in the brand information (as the shopper inputs the cc number)
- */
-let cvcPolicy: CVCPolicyType;
-
-// Usually 'required' for single branded Credit Cards but with exceptions e.g. ticket ('hidden', *technically* a meal voucher)
-let expiryDatePolicy: DatePolicyType;
-
-/**
  * Bound to the instance of CSF
  * Handles specific functionality related to configuring & creating SecuredFields
  */
@@ -36,8 +24,17 @@ export function createSecuredFields(): number {
     // Detect DOM elements that qualify as securedField holders
     const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
 
-    cvcPolicy = CVC_POLICY_REQUIRED;
-    expiryDatePolicy = DATE_POLICY_REQUIRED;
+    /**
+     * cvcPolicy - 'required' | 'optional' | 'hidden'
+     * - Always 'required' for GiftCards
+     * - Usually 'required' for single branded Credit Cards but with exceptions e.g. maestro ('optional'), bcmc ('hidden').
+     * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
+     * comes from the SF in the brand information (as the shopper inputs the cc number)
+     */
+    const cvcPolicy: CVCPolicyType = CVC_POLICY_REQUIRED;
+
+    /** Usually 'required' for single branded Credit Cards but with exceptions e.g. ticket ('hidden', *technically* a meal voucher) */
+    const expiryDatePolicy: DatePolicyType = DATE_POLICY_REQUIRED;
 
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
@@ -50,7 +47,7 @@ export function createSecuredFields(): number {
 
     this.securityCode = '';
 
-    this.createCardSecuredFields(securedFields);
+    this.createCardSecuredFields(securedFields, cvcPolicy, expiryDatePolicy);
 
     // Return the number of iframes we're going to create
     return securedFields.length;
@@ -70,7 +67,11 @@ export async function createNonCardSecuredFields(securedFields: HTMLElement[]): 
     }
 }
 
-export async function createCardSecuredFields(securedFields: HTMLElement[]): Promise<any> {
+export async function createCardSecuredFields(
+    securedFields: HTMLElement[],
+    cvcPolicy: CVCPolicyType,
+    expiryDatePolicy: DatePolicyType
+): Promise<any> {
     // Declared card type from the initialisation of CSF
     let type: string = this.state.type;
 
@@ -118,7 +119,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
     for (let i = 0; i < securedFields.length; i++) {
         const securedField = securedFields[i];
         if (window._b$dl) console.log('\nAbout to set up securedField:', securedField);
-        await this.setupSecuredField(securedField).catch(e => {
+        await this.setupSecuredField(securedField, cvcPolicy, expiryDatePolicy).catch(e => {
             if (window._b$dl) console.log('Secured fields setup failure. e=', e);
         });
         if (window._b$dl) console.log('Finished setting up securedField:', securedField);
@@ -150,7 +151,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
 }
 
 // Run for each detected holder of a securedField...
-export function setupSecuredField(pItem: HTMLElement): Promise<any> {
+export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType, expiryDatePolicy?: DatePolicyType): Promise<any> {
     return new Promise((resolve, reject) => {
         /**
          *  possible values:

@@ -27,7 +27,7 @@ fixture`Testing Card component, in Dropin, resetting brand after failed binLooku
  * SINGLE BRANDING RESETS
  */
 test(
-    'Fill in regular MC card then ' +
+    '#1 Fill in regular MC card then ' +
         'check that a brand has been set on PM data, then' +
         'paste in a card unrecognised by binLookup, ' +
         'check that the brand has been reset on paymentMethod data and ' +
@@ -50,12 +50,12 @@ test(
         await t
             // visa card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('visa');
+            .contains('VISA');
     }
 );
 
 test(
-    'Fill in regular MC card then ' +
+    '#2 Fill in regular MC card then ' +
         'check that a brand has been set on PM data, then' +
         'delete digits and , ' +
         'check that the brand has been reset on paymentMethod data ',
@@ -85,7 +85,7 @@ test(
  * DUAL BRANDING RESETS (similar to those done in bancontact.dualbranding.reset.test, but applied to the regular card component, in Dropin)
  */
 test(
-    'Fill in dual branded card then ' +
+    '#3 Fill in dual branded card then ' +
         'check no sorting has occurred to place bcmc first, then' +
         'ensure only generic card logo shows after deleting digits',
     async t => {
@@ -98,19 +98,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('maestro')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('bcmc');
 
         await cardUtils.deleteCardNumber(t);
@@ -123,7 +113,7 @@ test(
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#4 Fill in dual branded card then ' +
         'select bcmc then' +
         'ensure cvc field is hidden' +
         'ensure only generic card logo shows after deleting digits and ' +
@@ -138,19 +128,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('maestro')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('bcmc');
 
         // Click BCMC brand icon
@@ -178,7 +158,7 @@ test(
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#5 Fill in dual branded card then ' +
         'paste in number not recognised by binLookup (but that internally is recognised as Visa) ' +
         'ensure that Visa logo shows',
     async t => {
@@ -190,19 +170,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('maestro')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('bcmc');
 
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
@@ -210,12 +180,12 @@ test(
         await t
             // visa card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('visa');
+            .contains('VISA');
     }
 );
 
 test(
-    'Fill in dual branded card then ' +
+    '#6 Fill in dual branded card then ' +
         'select maestro then ' +
         'paste in number not recognised by binLookup (but that internally is recognised as Visa)' +
         'ensure that visa logo shows',
@@ -228,19 +198,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('maestro')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('bcmc');
 
         // Click Maestro brand icon
@@ -254,7 +214,7 @@ test(
         await t
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('visa');
+            .contains('VISA');
 
         // Visible cvc field
         await t.expect(cvcSpan.filterVisible().exists).ok();

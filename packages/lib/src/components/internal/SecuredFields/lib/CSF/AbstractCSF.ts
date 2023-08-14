@@ -1,5 +1,5 @@
 import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject } from './types';
-import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../types';
+import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject, CVCPolicyType, DatePolicyType } from '../types';
 import { createSecuredFields } from './extensions/createSecuredFields';
 import processBrand from './partials/processBrand';
 import handleBrandFromBinLookup from './extensions/handleBrandFromBinLookup';
@@ -14,7 +14,7 @@ abstract class AbstractCSF {
     protected handleBrandFromBinLookup: typeof handleBrandFromBinLookup;
     protected callbacksHandler: (callbacksObj: object) => void;
     protected configHandler: (props: CSFSetupObject) => void;
-    protected createCardSecuredFields: (securedFields: HTMLElement[]) => Promise<any>;
+    protected createCardSecuredFields: (securedFields: HTMLElement[], cvcPolicy: CVCPolicyType, expiryDatePolicy: DatePolicyType) => Promise<any>;
     protected createNonCardSecuredFields: (securedFields: HTMLElement[]) => Promise<any>;
     protected createSecuredFields: typeof createSecuredFields;
     protected destroySecuredFields: () => void;

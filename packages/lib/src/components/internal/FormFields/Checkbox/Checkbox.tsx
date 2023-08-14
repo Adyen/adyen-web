@@ -6,7 +6,7 @@ import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 interface CheckboxProps {
     checked?: boolean;
     classNameModifiers?: string[];
-    label: string | ComponentChild;
+    label?: string | ComponentChild;
     name?: string;
     isInvalid?: boolean;
     onChange?;
