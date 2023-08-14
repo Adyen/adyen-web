@@ -162,7 +162,7 @@ function AchInput(props: ACHInputProps) {
                                     >
                                         {renderFormField('text', {
                                             className: `adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`,
-                                            placeholder: props?.placeholders?.holderName,
+                                            placeholder: props?.placeholders?.holderName, //or i18n.get('ach.placeholder.holderName')
                                             value: data.holderName,
                                             required: props.holderNameRequired,
                                             onInput: handleHolderName
@@ -175,6 +175,8 @@ function AchInput(props: ACHInputProps) {
                                     onFocusField={setFocusOn}
                                     errors={sfpState.errors}
                                     valid={sfpState.valid}
+                                    showContextualElement={props.showContextualElement}
+                                    contextualTexts={props.contextualTexts}
                                 />
                             </div>
 

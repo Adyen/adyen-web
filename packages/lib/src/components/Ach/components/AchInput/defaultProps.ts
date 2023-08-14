@@ -28,5 +28,6 @@ export default {
 
     // Customization
     styles: {},
-    placeholders: {}
+    placeholders: {},
+    contextualTexts: {}
 };

@@ -85,6 +85,8 @@ function BacsInput(props: BacsInputProps) {
                 isValid={valid.holderName}
                 name={'accountHolderName'}
                 i18n={i18n}
+                showContextualElement={props.showContextualElement}
+                contextualText={props?.contextualTexts?.holderName}
             >
                 {renderFormField('text', {
                     name: 'bacs.accountHolderName',
@@ -114,6 +116,8 @@ function BacsInput(props: BacsInputProps) {
                     isValid={valid.bankAccountNumber}
                     name={'bankAccountNumber'}
                     i18n={i18n}
+                    showContextualElement={props.showContextualElement}
+                    contextualText={props?.contextualTexts?.bankAccountNumber}
                 >
                     {renderFormField('text', {
                         value: data.bankAccountNumber,
@@ -141,6 +145,8 @@ function BacsInput(props: BacsInputProps) {
                     isValid={valid.bankLocationId}
                     name={'bankLocationId'}
                     i18n={i18n}
+                    showContextualElement={props.showContextualElement}
+                    contextualText={props?.contextualTexts?.bankLocationId}
                 >
                     {renderFormField('text', {
                         value: data.bankLocationId,
@@ -168,6 +174,8 @@ function BacsInput(props: BacsInputProps) {
                 isValid={valid.shopperEmail}
                 name={'emailAddress'}
                 i18n={i18n}
+                showContextualElement={props.showContextualElement}
+                contextualText={props?.contextualTexts?.shopperEmail}
             >
                 {renderFormField('emailAddress', {
                     value: data.shopperEmail,
@@ -227,7 +235,8 @@ function BacsInput(props: BacsInputProps) {
 
 BacsInput.defaultProps = {
     data: {},
-    placeholders: {}
+    placeholders: {},
+    contextualTexts: {}
 };
 
 export default BacsInput;

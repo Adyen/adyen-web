@@ -28,6 +28,8 @@ type Placeholders = {
 
 type ContextualTexts = {
     holderName?: string;
+    bankAccountNumber?: string;
+    bankLocationId?: string;
 };
 
 export interface ACHInputProps {
@@ -57,7 +59,7 @@ export interface ACHInputProps {
     onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
-    showContextualElement: boolean;
+    showContextualElement?: boolean;
     contextualTexts?: ContextualTexts;
     ref?: any;
     resources: Resources;
