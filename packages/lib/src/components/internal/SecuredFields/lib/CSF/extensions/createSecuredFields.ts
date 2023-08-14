@@ -252,17 +252,15 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
                      *  This results in a click on an securedFields *label* leading to, for example, the holderName field being disabled, but w/o access
                      *  to the touch events that would let it re-enable itself.
                      *
-                     *  So we prevent the "disableIOSArrowKeys" workaround unless we genuinely have touch events available (as determined from within CheckoutWeb
-                     *  - because what we are responding to here is an event that was initiated by a click on a securedField's label).
+                     *  So we prevent the "disableIOSArrowKeys" workaround unless we genuinely have touch events available.
                      */
-                    if (this.hasGenuineTouchEvents) {
+                    if (this.hasGenuineTouchEvents || pFeedbackObj.hasGenuineTouchEvents) {
                         this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
                     }
                 }
 
-                // Only perform this step if we genuinely have touch events available (as determined from within the relevant securedField).
-                // TODO only inspect this property when sf v4.5.1 is live
-                if (pFeedbackObj.hasGenuineTouchEvents) {
+                // Only perform this step if we genuinely have touch events available
+                if (pFeedbackObj.hasGenuineTouchEvents || this.hasGenuineTouchEvents) {
                     // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
                     // - pass information about which field has just been clicked (gained focus) to the other iframes
                     this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
