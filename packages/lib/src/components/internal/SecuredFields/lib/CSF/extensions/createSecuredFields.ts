@@ -196,7 +196,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
             maskSecurityCode: this.config.maskSecurityCode,
-            disableIOSArrowKeys: this.config.disableIOSArrowKeys
+            disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
@@ -245,13 +245,27 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                if (this.config.disableIOSArrowKeys) {
-                    this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                if (this.config.shouldDisableIOSArrowKeys) {
+                    /**
+                     * re. this.hasGenuineTouchEvents...
+                     *  There seems to be an issue with Responsive Design mode in Safari that means it allows setting focus on cross-origin iframes,
+                     *  without enabling the touch events that allow the "disableIOSArrowKeys" workaround to fully function.
+                     *  This results in a click on an securedFields *label* leading to, for example, the holderName field being disabled, but w/o access
+                     *  to the touch events that would let it re-enable itself.
+                     *
+                     *  So we prevent the "disableIOSArrowKeys" workaround unless we genuinely have touch events available.
+                     */
+                    if (this.hasGenuineTouchEvents || pFeedbackObj.hasGenuineTouchEvents) {
+                        this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                    }
                 }
 
-                // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
-                // - pass information about which field has just been clicked (gained focus) to the other iframes
-                this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
+                // Only perform this step if we genuinely have touch events available
+                if (pFeedbackObj.hasGenuineTouchEvents || this.hasGenuineTouchEvents) {
+                    // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
+                    // - pass information about which field has just been clicked (gained focus) to the other iframes
+                    this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
+                }
             })
             .onShiftTab((pFeedbackObj: SFFeedbackObj): void => {
                 // Only happens for Firefox & IE <= 11
