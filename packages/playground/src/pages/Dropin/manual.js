@@ -20,7 +20,7 @@ export async function initManual() {
                 values: [1, 2, 3, 4]
             }
         },
-        allowPaymentMethods: ['scheme', 'bcmc', 'googlepay', 'paysafecard', 'mbway'],
+        // allowPaymentMethods: ['scheme', 'bcmc', 'googlepay', 'paysafecard', 'mbway'],
         // allowPaymentMethods: ['onlineBanking_PL'],
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
@@ -79,10 +79,10 @@ export async function initManual() {
             },
             paywithgoogle: {
                 buttonType: 'plain'
+            },
+            storedCard: {
+                hideCVC: true
             }
-            // storedCard: {
-            //     hideCVC: true
-            // }
         }
     });
 
@@ -144,10 +144,8 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        // const dropin = checkout
-        //     .create('dropin', {
-        instantPaymentTypes: ['googlepay'],
-        showStoredPaymentMethods: false
+        instantPaymentTypes: ['googlepay']
+        // showStoredPaymentMethods: false
     }).mount('#dropin-container');
 
     handleRedirectResult();

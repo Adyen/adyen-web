@@ -36,10 +36,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         }
 
         if (!hasOwnProperty(props, 'type')) {
-            console.warn(
+            console.debug(
                 'You are trying to initialise a component without specifying a props.type.\nIf this component relies on retrieving data from the /paymentMethodsResponse, or from the top level paymentMethodsConfiguration object, it will not be able to do so.'
             );
-        } // TODO turn to warning - no "type", no way to retrieve pmResponse objects
+        }
 
         // Retrieve props...
         const generatedProps = checkoutRef.generateUIElementProps(props);

@@ -61,11 +61,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
             window.card = new Card(checkout, {
-                // window.storedCard = checkout
-                //     .create('card', {
                 ...storedCardData,
                 disclaimerMessage
             }).mount('.storedcard-field');
+
+            // A "single branded" card
             // window.card = new Card(checkout, {
             //     brands: ['visa']
             // }).mount('.storedcard-field');
@@ -75,8 +75,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Credit card with installments
     if (showComps.card) {
         window.card = new Card(checkout, {
-            // window.card = checkout
-            //     .create('card', {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             // installmentOptions: {
             //     mc: {
@@ -105,20 +103,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Card mounted in a React app
     if (showComps.cardInReact) {
-        window.cardReact = checkout.create('card', {});
+        window.cardReact = new Card(checkout, {});
+
         MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 
     // Bancontact card
     if (showComps.bcmcCard) {
         window.bancontact = new Bancontact(checkout).mount('.bancontact-field');
-        // window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
     }
 
     // Credit card with AVS
     if (showComps.avsCard) {
-        // window.cardAvs = checkout
-        //     .create('card', {
         window.cardAvs = new Card(checkout, {
             // type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
@@ -154,8 +150,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     if (showComps.avsPartialCard) {
-        // window.avsPartialCard = checkout
-        //     .create('card', {
         window.avsPartialCard = new Card(checkout, {
             // type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
@@ -170,8 +164,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Credit card with KCP Authentication
     if (showComps.kcpCard) {
-        // window.kcpCard = checkout
-        //     .create('card', {
         window.kcpCard = new Card(checkout, {
             // type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
@@ -189,20 +181,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
          * Make sure that the initialization values are being set in the /paymentMethods response,
          * as part of the 'scheme' configuration object
          */
-        window.ctpCard = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa'],
-                configuration: {
-                    mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                    mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
-                },
-                clickToPayConfiguration: {
-                    disableOtpAutoFocus: true,
-                    shopperEmail: 'gui.ctp@adyen.com',
-                    merchantDisplayName: 'Adyen Merchant Name '
-                }
-            })
-            .mount('.card-ctp-field');
+        window.ctpCard = new Card(checkout, {
+            // type: 'scheme',
+            brands: ['mc', 'visa'],
+            configuration: {
+                mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+            },
+            clickToPayConfiguration: {
+                disableOtpAutoFocus: true,
+                shopperEmail: 'gui.ctp@adyen.com',
+                merchantDisplayName: 'Adyen Merchant Name '
+            }
+        }).mount('.card-ctp-field');
     }
 });
