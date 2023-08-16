@@ -26,12 +26,6 @@ type Placeholders = {
     holderName?: string;
 };
 
-type ContextualTexts = {
-    holderName?: string;
-    bankAccountNumber?: string;
-    bankLocationId?: string;
-};
-
 export interface ACHInputProps {
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
@@ -60,7 +54,6 @@ export interface ACHInputProps {
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     showContextualElement?: boolean;
-    contextualTexts?: ContextualTexts;
     ref?: any;
     resources: Resources;
     showPayButton?: boolean;

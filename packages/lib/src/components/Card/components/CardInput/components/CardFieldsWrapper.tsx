@@ -62,6 +62,7 @@ export const CardFieldsWrapper = ({
     // For CardFields > CardNumber
     showBrandIcon,
     showBrandsUnderCardNumber,
+    showContextualElement = false,
     //
     iOSFocusedField,
     disclaimerMessage
@@ -86,6 +87,7 @@ export const CardFieldsWrapper = ({
             <CardFields
                 showBrandIcon={showBrandIcon}
                 showBrandsUnderCardNumber={showBrandsUnderCardNumber}
+                showContextualElement={showContextualElement}
                 brand={sfpState.brand}
                 brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
@@ -159,6 +161,7 @@ export const CardFieldsWrapper = ({
                     specifications={partialAddressSchema}
                     iOSFocusedField={iOSFocusedField}
                     onAddressLookup={onAddressLookup}
+                    showContextualElement={showContextualElement}
                 />
             )}
 

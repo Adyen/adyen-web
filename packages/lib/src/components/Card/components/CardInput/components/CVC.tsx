@@ -25,7 +25,9 @@ export default function CVC(props: CVCProps) {
         filled,
         isValid,
         frontCVC = false,
-        cvcPolicy = CVC_POLICY_REQUIRED
+        cvcPolicy = CVC_POLICY_REQUIRED,
+        showContextualElement,
+        contextualText
     } = props;
     const { i18n } = useCoreContext();
 
@@ -63,6 +65,8 @@ export default function CVC(props: CVCProps) {
             errorVisibleToScreenReader={false}
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
+            showContextualElement={showContextualElement}
+            contextualText={contextualText}
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 

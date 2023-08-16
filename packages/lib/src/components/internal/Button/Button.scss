@@ -1,4 +1,5 @@
 @import '../../../style/font-sizes';
+@import '../../../style/mixins';
 
 .adyen-checkout__button {
     background: var(--b-color-black);
@@ -144,6 +145,7 @@
     }
 
     &.adyen-checkout__button--link {
+        // todo: reuse or rewrite
         background: transparent;
         border: 1px solid transparent;
         color: var(--b-color-black);

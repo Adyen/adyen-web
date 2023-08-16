@@ -24,6 +24,7 @@ export interface CardFieldsProps {
     showBrandIcon?: boolean;
     showBrandsUnderCardNumber: boolean;
     valid?: any;
+    showContextualElement?: boolean;
 }
 
 export interface CardHolderNameProps {
@@ -63,6 +64,8 @@ export interface CVCProps {
     isValid?: any;
     label?: any;
     onFocusField: (field: string) => void;
+    showContextualElement?: boolean;
+    contextualText?: string;
 }
 
 export interface CVCHintProps {
@@ -88,6 +91,8 @@ export interface ExpirationDateProps {
     label?: string;
     onFocusField: (fieldName: string) => {};
     expiryDatePolicy?: DatePolicyType;
+    showContextualElement?: boolean;
+    contextualText?: string;
 }
 
 export interface InstallmentsProps {
@@ -148,6 +153,7 @@ export interface StoredCardFieldsProps {
     onFocusField: any;
     valid: any;
     status: string;
+    showContextualElement?: boolean;
 }
 
 export interface SfSpanProps {

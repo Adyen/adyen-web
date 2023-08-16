@@ -119,6 +119,7 @@ export interface CardInputProps {
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
     showWarnings?: boolean;
+    showContextualElement?: boolean;
     specifications?: Specifications;
     storedPaymentMethodId?: string;
     styles?: StylesObject;

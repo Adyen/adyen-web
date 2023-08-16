@@ -16,7 +16,8 @@ export default function StoredCardFields({
     focusedElement,
     lastFour,
     expiryMonth,
-    expiryYear
+    expiryYear,
+    showContextualElement
 }: StoredCardFieldsProps) {
     const { i18n } = useCoreContext();
     const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
@@ -59,6 +60,8 @@ export default function StoredCardFields({
                         className={'adyen-checkout__field--50'}
                         classNameModifiers={['storedCard']}
                         frontCVC={brand === 'amex'}
+                        showContextualElement={showContextualElement}
+                        contextualText={i18n.get('creditCard.cvcField.contextualText')}
                     />
                 )}
             </div>

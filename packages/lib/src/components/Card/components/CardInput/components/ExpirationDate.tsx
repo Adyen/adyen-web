@@ -16,7 +16,18 @@ import useImage from '../../../../../core/Context/useImage';
 import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
-    const { label, focused, filled, onFocusField, className = '', error = '', isValid = false, expiryDatePolicy = DATE_POLICY_REQUIRED } = props;
+    const {
+        label,
+        focused,
+        filled,
+        onFocusField,
+        className = '',
+        error = '',
+        isValid = false,
+        expiryDatePolicy = DATE_POLICY_REQUIRED,
+        showContextualElement,
+        contextualText
+    } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -44,6 +55,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             errorVisibleToScreenReader={false}
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
+            showContextualElement={showContextualElement}
+            contextualText={contextualText}
         >
             <DataSfSpan
                 encryptedFieldType={ENCRYPTED_EXPIRY_DATE}

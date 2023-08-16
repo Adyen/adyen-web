@@ -2,7 +2,7 @@ import { h } from 'preact';
 import AchSFInput from './AchSFInput';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 
-const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid, showContextualElement, contextualTexts }) => {
+const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
     const { i18n } = useCoreContext();
 
     return (
@@ -18,8 +18,6 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid, showCon
                 dataInfo='{"length":"4-17"}'
                 className={'adyen-checkout__field--50'}
                 dir={'ltr'}
-                showContextualElement={showContextualElement}
-                contextualText={contextualTexts?.bankAccountNumber}
             />
             <AchSFInput
                 id="bankLocationId"
@@ -32,8 +30,6 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid, showCon
                 dataInfo='{"length":9}'
                 className={'adyen-checkout__field--50'}
                 dir={'ltr'}
-                showContextualElement={showContextualElement}
-                contextualText={contextualTexts?.bankLocationId}
             />
         </div>
     );

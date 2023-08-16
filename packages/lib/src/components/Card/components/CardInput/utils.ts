@@ -126,6 +126,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         // Extract props for CardFields > CardNumber
         showBrandIcon: props.showBrandIcon,
         showBrandsUnderCardNumber: props.showBrandsUnderCardNumber,
+        showContextualElement: props.showContextualElement,
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,

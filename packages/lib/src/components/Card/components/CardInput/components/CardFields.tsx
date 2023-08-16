@@ -30,7 +30,8 @@ export default function CardFields({
     onFocusField,
     showBrandIcon,
     showBrandsUnderCardNumber,
-    valid
+    valid,
+    showContextualElement
 }: CardFieldsProps) {
     const { i18n } = useCoreContext();
 
@@ -75,6 +76,8 @@ export default function CardFields({
                     onFocusField={onFocusField}
                     className={'adyen-checkout__field--50'}
                     expiryDatePolicy={expiryDatePolicy}
+                    showContextualElement={showContextualElement}
+                    contextualText={i18n.get('creditCard.expiryDateField.contextualText')}
                 />
 
                 {hasCVC && (
@@ -88,6 +91,8 @@ export default function CardFields({
                         onFocusField={onFocusField}
                         className={'adyen-checkout__field--50'}
                         frontCVC={brand === 'amex'}
+                        showContextualElement={showContextualElement}
+                        contextualText={i18n.get('creditCard.cvcField.contextualText')}
                     />
                 )}
             </div>

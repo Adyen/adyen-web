@@ -14,8 +14,6 @@ export interface BacsInputProps extends UIElementProps {
     onSubmit: () => void;
     onEdit: (e, revertToEnter) => void;
     showFormInstruction?: boolean;
-    showContextualElement?: boolean;
-    contextualTexts?: BacsInputData;
 }
 
 export interface BacsDataState {

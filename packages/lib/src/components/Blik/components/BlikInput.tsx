@@ -12,8 +12,6 @@ import useImage from '../../../core/Context/useImage';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
-    showContextualElement?: boolean;
-    contextualTexts?: BlikInputDataState;
     placeholders?: BlikInputDataState;
 }
 
@@ -56,8 +54,6 @@ function BlikInput(props: BlikInputProps) {
                 isValid={valid.blikCode}
                 dir={'ltr'}
                 name={'blikCode'}
-                showContextualElement={props.showContextualElement}
-                contextualText={props?.contextualTexts?.blikCode}
             >
                 {renderFormField('text', {
                     value: data.blikCode,
