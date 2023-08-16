@@ -25,7 +25,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
         },
-        showPayButton: true
+        showPayButton: true,
+        klarna: {
+            useKlarnaWidget: true
+        }
     });
 
     // // SEPA Bank Transfer
@@ -49,13 +52,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.bankTransfer-result-field');
     //
     // MBWay
-    // window.mbway = checkout.create('mbway').mount('.mbway-field');
     // window.mbway = new MBWay(checkout, { type: 'mbway' }).mount('.mbway-field');
     window.mbway = new MBWay(checkout).mount('.mbway-field');
-    return;
-    // Klarna Widget
-    window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
 
+    // Klarna Widget
+    // window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
+    window.klarnaButton = new Klarna(checkout).mount('.klarna-field');
+
+    return;
     // ACH
     window.ach = checkout
         .create('ach', {
