@@ -25,14 +25,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
         },
-        showPayButton: true,
-        klarna: {
-            useKlarnaWidget: true
-        }
+        showPayButton: true
     });
 
     // // SEPA Bank Transfer
-    // window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
     // window.bankTransfer = new BankTransfer(checkout, { type: 'bankTransfer_IBAN' }).mount('.bankTransfer-field');// BankTransfer doesn't need constructor
     window.bankTransfer = new BankTransfer(checkout).mount('.bankTransfer-field'); // BankTransfer needs constructor
     window.bankTransferResult = checkout
@@ -52,12 +48,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.bankTransfer-result-field');
     //
     // MBWay
-    // window.mbway = new MBWay(checkout, { type: 'mbway' }).mount('.mbway-field');
     window.mbway = new MBWay(checkout).mount('.mbway-field');
 
     // Klarna Widget
-    // window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
-    window.klarnaButton = new Klarna(checkout).mount('.klarna-field');
+    window.klarnaButton = new Klarna(checkout, { useKlarnaWidget: true }).mount('.klarna-field');
 
     return;
     // ACH
