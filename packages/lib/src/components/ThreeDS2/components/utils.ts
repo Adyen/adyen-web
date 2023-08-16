@@ -19,6 +19,12 @@ export interface ChallengeResolveData {
     };
 }
 
+export interface DelegatedAuthenticationResolveData {
+    data: {
+        details: Record<string, string>;
+    };
+}
+
 export interface ErrorCodeObject {
     errorCode: string;
     message: string;
@@ -72,7 +78,8 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
  */
 export const prepareChallengeData = ({ token, size }): ChallengeData => {
     const decodedChallengeToken = decodeAndParseToken(token);
-    const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken;
+    const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID, delegatedAuthenticationSDKInput } =
+        decodedChallengeToken;
     const notificationURLOrigin = getOrigin(threeDSNotificationURL);
 
     return {
@@ -85,7 +92,8 @@ export const prepareChallengeData = ({ token, size }): ChallengeData => {
             challengeWindowSize: validateChallengeWindowSize(size)
         },
         iframeSizeArr: getChallengeWindowSize(size),
-        postMessageDomain: notificationURLOrigin
+        postMessageDomain: notificationURLOrigin,
+        delegatedAuthenticationSDKInput
     };
 };
 
@@ -131,17 +139,39 @@ export const createOldFingerprintResolveData = (dataKey: string, resultObj: Resu
     }
 });
 
-export const createChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): ChallengeResolveData => ({
+export const createChallengeResolveData = (
+    dataKey: string,
+    transStatus: string,
+    authorisationToken: string,
+    delegatedAuthenticationSDKOutput?: string
+): ChallengeResolveData => ({
     data: {
-        details: { [dataKey]: encodeObject({ transStatus, authorisationToken }) }
+        details: { [dataKey]: encodeObject({ transStatus, authorisationToken, delegatedAuthenticationSDKOutput }) }
     }
 });
 
 // Needed for old 3DS2 flow & threeds2InMDFlow
-export const createOldChallengeResolveData = (dataKey: string, transStatus: string, authorisationToken: string): any => ({
+export const createOldChallengeResolveData = (
+    dataKey: string,
+    transStatus: string,
+    authorisationToken: string,
+    delegatedAuthenticationSDKOutput?: string
+): any => ({
     data: {
-        details: { 'threeds2.challengeResult': encodeObject({ transStatus }) },
+        details: { 'threeds2.challengeResult': encodeObject({ transStatus, delegatedAuthenticationSDKOutput }) },
         paymentData: authorisationToken
+    }
+});
+
+export const createDelegatedAuthenticationResolveData = (
+    paymentData: string,
+    delegatedAuthenticationResult: string
+): DelegatedAuthenticationResolveData => ({
+    data: {
+        details: {
+            delegatedAuthenticationResult,
+            paymentData
+        }
     }
 });
 
@@ -206,4 +236,12 @@ export const get3DS2FlowProps = (actionSubtype, props) => {
         statusType: 'custom',
         i18n: props.i18n
     };
+};
+
+export const isInIframe = () => {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return false;
+    }
 };

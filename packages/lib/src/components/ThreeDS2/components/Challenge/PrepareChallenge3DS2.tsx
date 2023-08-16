@@ -1,5 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
+import DelegatedAuthenticationEnrollment from '../DelegatedAuthentication/DelegatedAuthenticationEnrollment';
 import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
@@ -60,10 +61,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              *  This is different for the 'old',v66, flow triggered by a 'threeDS2Challenge' action (which includes the threeds2InMDFlow)
              *  than for the new, v67, 'threeDS2' action
              */
-            const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
-            const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
+            if (this.state.challengeData.delegatedAuthenticationSDKInput && resultObj.transStatus === 'Y') {
+                this.setState({ status: 'delegatedAuthenticationEnrollment' });
+            } else {
+                const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
+                const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+
+                this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
+            }
         });
     }
 
@@ -133,6 +139,18 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         {this.state.errorInfo ? this.state.errorInfo : this.props.i18n.get('error.message.unknown')}
                     </div>
                 </div>
+            );
+        }
+
+        if (this.state.status === 'delegatedAuthenticationEnrollment') {
+            return (
+                <DelegatedAuthenticationEnrollment
+                    dataKey={this.props.dataKey}
+                    token={this.state.challengeData.delegatedAuthenticationSDKInput}
+                    authorisationToken={this.props.paymentData}
+                    onComplete={this.props.onComplete}
+                    useOriginalFlow={this.props.useOriginalFlow}
+                />
             );
         }
 

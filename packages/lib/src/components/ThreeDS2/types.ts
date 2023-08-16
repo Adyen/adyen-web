@@ -18,6 +18,7 @@ export interface ChallengeData {
     cReqData: CReqData;
     iframeSizeArr: string[];
     postMessageDomain: string;
+    delegatedAuthenticationSDKInput?: string;
 }
 
 export interface ResultObject {
@@ -51,6 +52,7 @@ export interface ThreeDS2Token {
     threeDSServerTransID?: string;
     threeDSMethodNotificationURL?: string;
     threeDSMethodUrl?: string;
+    delegatedAuthenticationSDKInput?: string;
 }
 
 export interface FingerPrintData {
@@ -66,6 +68,12 @@ export type ThreeDS2FingerprintResponse = {
     details?: Record<string, string>;
 };
 
+export type DelegatedAuthenticationResultResponse = {
+    type: 'action' | 'completed';
+    action?: CheckoutThreeDS2Action;
+    details?: Record<string, string>;
+};
+
 type CheckoutRedirectAction = {
     type: 'redirect';
     data: Record<string, string>;
@@ -78,4 +86,5 @@ type CheckoutThreeDS2Action = {
     token: string;
     subtype: string;
     authorisationToken: string;
+    paymentMethodType: string;
 };

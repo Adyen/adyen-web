@@ -18,7 +18,7 @@ import QiwiWallet from './QiwiWallet';
 import Redirect from './Redirect';
 import SecuredFields from './SecuredFields';
 import Sepa from './Sepa';
-import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge } from './ThreeDS2';
+import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge, DelegatedAuthentication } from './ThreeDS2';
 import WeChat from './WeChat';
 import PayNow from './PayNow';
 import BcmcMobile from './BcmcMobile';
@@ -87,6 +87,7 @@ const componentsMap = {
     securedfields: SecuredFields,
     threeDS2Challenge: ThreeDS2Challenge,
     threeDS2DeviceFingerprint: ThreeDS2DeviceFingerprint,
+    delegatedAuthentication: DelegatedAuthentication,
     visa: Card,
     /** Card */
 
