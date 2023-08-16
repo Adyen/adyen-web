@@ -53,30 +53,29 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Klarna Widget
     window.klarnaButton = new Klarna(checkout, { useKlarnaWidget: true }).mount('.klarna-field');
 
-    return;
     // ACH
-    window.ach = checkout
-        .create('ach', {
-            // holderNameRequired: false,
-            // hasHolderName: false,
-            //            onConfigSuccess: obj => {
-            //                console.log('### Components::onConfigSuccess:: obj', obj);
-            //            },
-            // billingAddressRequired: false,
-            // billingAddressAllowedCountries: ['US', 'PR'],
-            data: {
-                // holderName: 'B. Fish',
-                billingAddress: {
-                    street: 'Infinite Loop',
-                    postalCode: '95014',
-                    city: 'Cupertino',
-                    houseNumberOrName: '1',
-                    country: 'US',
-                    stateOrProvince: 'CA'
-                }
+    window.ach = new Ach(checkout, {
+        // holderNameRequired: false,
+        // hasHolderName: false,
+        //            onConfigSuccess: obj => {
+        //                console.log('### Components::onConfigSuccess:: obj', obj);
+        //            },
+        // billingAddressRequired: false,
+        // billingAddressAllowedCountries: ['US', 'PR'],
+        data: {
+            // holderName: 'B. Fish',
+            billingAddress: {
+                street: 'Infinite Loop',
+                postalCode: '95014',
+                city: 'Cupertino',
+                houseNumberOrName: '1',
+                country: 'US',
+                stateOrProvince: 'CA'
             }
-        })
-        .mount('.ach-field');
+        }
+    }).mount('.ach-field');
+
+    return;
 
     // SEPA Direct Debit
     window.sepa = checkout

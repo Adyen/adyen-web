@@ -35,12 +35,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
         }
 
-        if (!hasOwnProperty(props, 'type')) {
-            console.debug(
-                'You are trying to initialise a component without specifying a props.type.\nIf this component relies on retrieving data from the /paymentMethodsResponse, or from the top level paymentMethodsConfiguration object, it will not be able to do so.'
-            );
-        }
-
         // Retrieve props...
         const generatedProps = checkoutRef.generateUIElementProps(props);
         super(generatedProps);
@@ -49,6 +43,24 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
 
         if (!generatedProps.isDropin) {
             checkoutRef.storeComponentRef(this as UIElement);
+
+            /**
+             * TODO - decide what to do...
+             * If a PM can be instantiated as a *standalone* component, it needs a constructor that can pass on it's type if it wants to retrieve
+             *  anything from the paymentMethodsResponse or paymentMethodsConfiguration.
+             * However, not all PMs need to collect anything from the paymentMethodsResponse or paymentMethodsConfiguration e.g. MBWay
+             *
+             * So... do we issue a "warning" like below or do we write constructors for those PMs that extend UIElement but don't have their own constructor
+             *  e.g. Ach, AmazonPay, Bacs, MBWay, etc, etc?
+             *
+             * NOTE: everything that extends UIElement now has a static type (with the exceptions of QRLoader-, OpenInvoice-, and IssuerList-Container)
+             * - so retrieving the type for the constructor is not an issue.
+             */
+            if (!hasOwnProperty(props, 'type')) {
+                console.debug(
+                    'You are trying to initialise a component without specifying a props.type.\nIf this component relies on retrieving data from the /paymentMethodsResponse, or from the top level paymentMethodsConfiguration object, it will not be able to do so.'
+                );
+            }
         }
 
         this.submit = this.submit.bind(this);
