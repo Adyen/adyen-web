@@ -18,8 +18,6 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
 
     protected static defaultProps = defaultProps;
 
-    // constructor(props) {
-    //     super(props);
     constructor(checkoutRef: Core, props: CashAppPayElementProps) {
         super(checkoutRef, { ...props, type: props?.type ?? CashAppPay.type });
 

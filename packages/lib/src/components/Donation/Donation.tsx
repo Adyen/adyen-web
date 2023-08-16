@@ -10,11 +10,6 @@ import Core from '../../core';
 class DonationElement extends UIElement {
     public static type = 'donation';
 
-    // constructor(props) {
-    //     super(props);
-    //     this.donate = this.donate.bind(this);
-    // }
-
     constructor(checkoutRef: Core, props) {
         super(checkoutRef, { ...props, type: props?.type ?? DonationElement.type });
         this.donate = this.donate.bind(this);

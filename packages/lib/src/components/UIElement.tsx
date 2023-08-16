@@ -30,9 +30,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     public static dependencies: any[] = []; // FIX type
 
     constructor(checkoutRef: Core, props?: P) {
-        // constructor(props: P) {
-        // super(props);
-
         // Check for some expected methods on checkoutRef. Would like to use "if(!checkoutRef instanceof Core)" but that creates circular dependencies in the build process
         if (!hasOwnProperty(checkoutRef, 'createFromAction') || !hasOwnProperty(checkoutRef, 'update')) {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');

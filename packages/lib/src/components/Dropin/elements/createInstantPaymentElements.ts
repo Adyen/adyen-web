@@ -8,8 +8,6 @@ import UIElement from '../../UIElement';
  * @param props - Props to be passed through to every paymentMethod
  * @param create - Reference to the main instance `Core#create` method
  */
-// const createInstantPaymentElements = (paymentMethods: PaymentMethod[] = [], props, create): Promise<UIElement[]> | [] =>
-//     paymentMethods.length ? createElements(paymentMethods, { ...props, isInstantPayment: true, showPayButton: true }, create) : [];
 const createInstantPaymentElements = (paymentMethods: PaymentMethod[] = [], props, checkout): Promise<UIElement[]> | [] =>
     paymentMethods.length ? createElements(paymentMethods, { ...props, isInstantPayment: true, showPayButton: true }, checkout) : [];
 

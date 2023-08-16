@@ -18,8 +18,6 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     private readonly clickToPayService: IClickToPayService | null;
     private readonly ctpConfiguration: ClickToPayConfiguration;
 
-    // constructor(props) {
-    //     super(props);
     constructor(checkoutRef: Core, props: ClickToPayElementProps) {
         super(checkoutRef, { ...props, type: props?.type ?? ClickToPayElement.type });
 

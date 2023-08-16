@@ -34,11 +34,7 @@ interface IssuerListData {
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     public static dependencies = [Redirect];
 
-    // constructor(props: IssuerListContainerProps) {
-    //     super(props);
     constructor(checkoutRef: Core, props: IssuerListContainerProps) {
-        console.log('### IssuerListContainer::constructor:: props.type', props.type);
-        // super(checkoutRef, { ...props, type: props?.type ?? 'issuerList' });
         super(checkoutRef, props); // Not possible to add a default type. It must be specified in props.
 
         if (this.props.showImage) {

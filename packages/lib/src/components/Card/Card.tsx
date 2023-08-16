@@ -30,18 +30,6 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    // private checkoutRef;
-
-    // constructor(props) {
-    //     super(props);
-    //
-    //     console.log('### Card::constructor:: props=', props);
-    //
-    //     if (!props._disableClickToPay) {
-    //         this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
-    //         this.clickToPayService?.initialize();
-    //     }
-    // }
     constructor(checkoutRef: Core, props: CardElementProps) {
         // console.log('\n### Card::constructor:: props.type=', props.type);
         // props.type is specified in storedCards, Bancontact and when card is part of dropin
@@ -49,17 +37,6 @@ export class CardElement extends UIElement<CardElementProps> {
 
         // UIElement does the calculating of props...
         super(checkoutRef, { ...props, type: props?.type ?? CardElement.type });
-
-        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? CardElement.type });
-        //
-        // super(calculatedProps);
-        // console.log('### Card::constructor:: calculatedProps=', calculatedProps);
-
-        // if (!props.isDropin) {
-        //     checkoutRef.storeComponentRef(this as UIElement);
-        // }
-
-        // this.checkoutRef = checkoutRef;// TODO - Needed?
 
         if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);

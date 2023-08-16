@@ -7,10 +7,6 @@ class BancontactElement extends CardElement {
     public static type = 'bcmc';
     public static txVariants = ['bcmc'];
 
-    // constructor(props: CardElementProps) {
-    //     super(props);
-    // }
-
     constructor(checkout: Core, props?: CardElementProps) {
         super(checkout, { ...props, type: BancontactElement.type });
     }

@@ -24,23 +24,8 @@ class DropinElement extends UIElement<DropinElementProps> {
      */
     public componentFromAction?: UIElement;
 
-    // private checkoutRef;
-
-    // constructor(props) {
-    //     super(props);
-    //     this.submit = this.submit.bind(this);
-    //     this.handleAction = this.handleAction.bind(this);
-    // }
-
     constructor(checkoutRef: Core, props: DropinElementProps) {
-        // UIElement does the calculating of props...
         super(checkoutRef, { ...props, type: DropinElement.type });
-
-        // const calculatedProps = checkoutRef.generateUIElementProps({ ...props, type: DropinElement.type });
-        //
-        // super(calculatedProps);
-
-        // this.checkoutRef = checkoutRef;
 
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
@@ -119,13 +104,10 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
 
-        // const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance.create) : [];
         const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance) : [];
 
-        // const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance.create) : [];
         const elements = showPaymentMethods ? createElements(paymentMethods, commonProps, this._parentInstance) : [];
 
-        // const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, commonProps, this._parentInstance.create);
         const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, commonProps, this._parentInstance);
 
         return [storedElements, elements, instantPaymentElements];

@@ -397,7 +397,6 @@ class Core {
 
         const calculatedUIElementProps = { ...PaymentMethodObject, ...options, ...paymentMethodsConfiguration };
 
-        // re. OPT A in Dropin/elements/createElements.ts - initialise the PM here
         let PaymentMethod = registry.getComponent(PaymentMethodObject.type);
 
         /**
@@ -409,15 +408,7 @@ class Core {
         }
 
         return new PaymentMethod(this, calculatedUIElementProps);
-
-        // re. OPT B in Dropin/elements/createElements.ts - createElements will initialise the PM. In which case this fn should be called generateUIElementPropsForDropin
-        // return calculatedUIElementProps;
     }
-
-    // Needed for OPT B in Dropin/elements/createElements.ts
-    // public getComponentFromRegistry(type: string) {
-    //     return registry.getComponent(type);
-    // }
 
     /**
      * @internal
