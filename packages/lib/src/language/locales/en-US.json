@@ -91,6 +91,7 @@
     "field.title.optional": "(optional)",
     "creditCard.cvcField.title.optional": "Security code (optional)",
     "issuerList.wallet.placeholder": "Select your wallet",
+    "issuerList.selectField.contextualText": "Select your bank to continue",
     "privacyPolicy": "Privacy policy",
     "afterPay.agreement": "I agree with the %@ of AfterPay",
     "paymentConditions": "payment conditions",

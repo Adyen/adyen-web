@@ -70,6 +70,12 @@ export interface CardElementProps extends UIElementProps {
      */
     showFormInstruction?: boolean;
 
+    /**
+     * Show/hide the contextual text under each form field. The contextual text is to assist shoppers filling in the payment form.
+     * @defaultValue `true`
+     */
+    showContextualElement?: boolean;
+
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 

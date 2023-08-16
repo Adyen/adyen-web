@@ -36,7 +36,7 @@ enum IssuerListInputTypes {
     Dropdown
 }
 
-function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder', issuer, highlightedIds = [], ...props }: IssuerListProps) {
+function IssuerList({ items, placeholder, issuer, highlightedIds = [], showContextualElement, contextualText, ...props }: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -98,11 +98,17 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 </Fragment>
             )}
 
-            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
+            <Field
+                errorMessage={getErrorMessage(errors.issuer)}
+                classNameModifiers={['issuer-list']}
+                name={'issuer'}
+                showContextualElement={showContextualElement}
+                contextualText={contextualText}
+            >
                 {renderFormField('select', {
                     items,
                     selected: inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null,
-                    placeholder: i18n.get(placeholder),
+                    placeholder,
                     name: 'issuer',
                     className: 'adyen-checkout__issuer-list__dropdown',
                     onChange: handleInputChange(IssuerListInputTypes.Dropdown)

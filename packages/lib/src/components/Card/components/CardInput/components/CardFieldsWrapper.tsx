@@ -62,7 +62,7 @@ export const CardFieldsWrapper = ({
     // For CardFields > CardNumber
     showBrandIcon,
     showBrandsUnderCardNumber,
-    showContextualElement = false,
+    showContextualElement,
     //
     iOSFocusedField,
     disclaimerMessage

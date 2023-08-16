@@ -10,6 +10,8 @@ export interface IssuerListProps {
     placeholder?: string;
     issuer?: string;
     termsAndConditions?: TermsAndConditions;
+    showContextualElement?: boolean;
+    contextualText?: string;
 }
 
 export interface IssuerItem {
