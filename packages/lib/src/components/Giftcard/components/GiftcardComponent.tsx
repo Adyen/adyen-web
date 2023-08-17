@@ -6,7 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
-import { GiftcardFieldsProps } from './types';
+import { GiftcardFieldsProps, Placeholders } from './types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -22,6 +22,7 @@ interface GiftcardComponentProps {
     pinRequired: boolean;
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
+    placeholders?: Placeholders;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {

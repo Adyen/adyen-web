@@ -22,10 +22,13 @@ export default function StoredCardFields({
     const { i18n } = useCoreContext();
     const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
     const ariaLabel = `${storedCardDescription} ${i18n.get('creditCard.expiryDateField.title')} ${expiryMonth}/${expiryYear}`;
+    const isAmex = brand === 'amex';
+    const cvcContextualText = isAmex
+        ? i18n.get('creditCard.cvcField.contextualText.4digits')
+        : i18n.get('creditCard.cvcField.contextualText.3digits');
 
     const getError = (errors, fieldType) => {
-        const errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
-        return errorMessage;
+        return errors[fieldType] ? i18n.get(errors[fieldType]) : null;
     };
 
     return (
@@ -59,9 +62,9 @@ export default function StoredCardFields({
                         onFocusField={onFocusField}
                         className={'adyen-checkout__field--50'}
                         classNameModifiers={['storedCard']}
-                        frontCVC={brand === 'amex'}
+                        frontCVC={isAmex}
                         showContextualElement={showContextualElement}
-                        contextualText={i18n.get('creditCard.cvcField.contextualText')}
+                        contextualText={cvcContextualText}
                     />
                 )}
             </div>

@@ -1,48 +1,4 @@
-import {
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_EXPIRY_DATE,
-    ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_PWD_FIELD,
-    ENCRYPTED_SECURITY_CODE_3_DIGITS,
-    ENCRYPTED_SECURITY_CODE_4_DIGITS,
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD
-} from './lib/configuration/constants';
-import { SFPlaceholdersObject } from './lib/securedField/AbstractSecuredField';
 import { Resources } from '../../../core/Context/Resources';
-
-/**
- * Lookup translated values for the placeholders for the SecuredFields
- * and return an object with these mapped to the data-cse value of the SecuredField
- */
-// todo: remove?
-export const resolvePlaceholders = (): SFPlaceholdersObject => {
-    const phObj = {
-        [ENCRYPTED_CARD_NUMBER]: '',
-        [ENCRYPTED_EXPIRY_DATE]: '',
-        [ENCRYPTED_EXPIRY_MONTH]: '',
-        [ENCRYPTED_EXPIRY_YEAR]: '',
-        [ENCRYPTED_SECURITY_CODE]: '', // Used for gift cards
-        [ENCRYPTED_SECURITY_CODE_3_DIGITS]: '',
-        [ENCRYPTED_SECURITY_CODE_4_DIGITS]: '',
-        [ENCRYPTED_PWD_FIELD]: '',
-        [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: '',
-        [ENCRYPTED_BANK_LOCATION_FIELD]: ''
-    };
-
-    // For ach - if the merchant has specified a placeholder (which can only be done through a translations object, it doesn't exist in the translations files)
-    // then use it... else default to nothing
-    if (phObj[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD] === 'ach.accountNumberField.placeholder') {
-        phObj[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD] = '';
-    }
-    if (phObj[ENCRYPTED_BANK_LOCATION_FIELD] === 'ach.accountLocationId.placeholder') {
-        phObj[ENCRYPTED_BANK_LOCATION_FIELD] = '';
-    }
-
-    return phObj;
-};
 
 /**
  * Used by SecuredFieldsProviderHandlers

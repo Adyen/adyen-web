@@ -21,13 +21,14 @@ import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
 import Language from '../../../../../language/Language';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { Placeholders } from '../../SFP/types';
 
 const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
     // --
-    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language) {
+    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language, placeholders: Placeholders) {
         super();
 
         // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
@@ -66,10 +67,10 @@ class SecuredField extends AbstractSecuredField {
             logger.log('\n');
         }
 
-        return this.init(i18n);
+        return this.init(i18n, placeholders);
     }
 
-    init(i18n: Language): SecuredField {
+    init(i18n: Language, placeholders: Placeholders): SecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
@@ -78,8 +79,7 @@ class SecuredField extends AbstractSecuredField {
         this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
         // Set result back onto config object
-        this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig, this.fieldType);
-
+        this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig, placeholders);
         /**
          * Configure, create & reference iframe and add load listener
          */

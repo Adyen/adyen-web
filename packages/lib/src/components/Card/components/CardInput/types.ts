@@ -45,8 +45,7 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-//todo: placeholder for security fields are not working
-type PlaceholderKeys = 'holderName' | 'cardNumber' | 'expirationDate' | 'cvc';
+type PlaceholderKeys = 'holderName' | 'cardNumber' | 'expirationDate' | 'securityCode' | 'password';
 export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 /**

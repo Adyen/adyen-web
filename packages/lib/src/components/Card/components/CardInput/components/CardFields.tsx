@@ -36,12 +36,15 @@ export default function CardFields({
     const { i18n } = useCoreContext();
 
     const getError = (errors, fieldType) => {
-        const errorMessage = errors[fieldType] ? i18n.get(errors[fieldType]) : null;
-        return errorMessage;
+        return errors[fieldType] ? i18n.get(errors[fieldType]) : null;
     };
 
     // A set of brands filtered to exclude those that can never appear in the UI
     const allowedBrands = brandsIcons?.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
+    const isAmex = brand === 'amex';
+    const cvcContextualText = isAmex
+        ? i18n.get('creditCard.cvcField.contextualText.4digits')
+        : i18n.get('creditCard.cvcField.contextualText.3digits');
 
     return (
         <div className="adyen-checkout__card__form">
@@ -90,9 +93,9 @@ export default function CardFields({
                         label={i18n.get('creditCard.cvcField.title')}
                         onFocusField={onFocusField}
                         className={'adyen-checkout__field--50'}
-                        frontCVC={brand === 'amex'}
+                        frontCVC={isAmex}
                         showContextualElement={showContextualElement}
-                        contextualText={i18n.get('creditCard.cvcField.contextualText')}
+                        contextualText={cvcContextualText}
                     />
                 )}
             </div>

@@ -1,5 +1,6 @@
 import Language from '../../../../../language/Language';
 import { BrandStorageObject } from '../types';
+import { Placeholders } from '../../SFP/types';
 
 /**
  * Exposed functions that can be called on the CSF instance
@@ -54,6 +55,7 @@ export interface CSFSetupObject extends CSFCommonProps {
     isKCP?: boolean;
     i18n?: Language;
     forceCompat: boolean;
+    placeholders?: Placeholders;
 }
 
 /**

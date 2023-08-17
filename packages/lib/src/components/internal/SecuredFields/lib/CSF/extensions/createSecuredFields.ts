@@ -198,7 +198,7 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             disableIOSArrowKeys: this.config.disableIOSArrowKeys
         };
 
-        const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
+        const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n, this.props.placeholders)
             .onIframeLoaded((): void => {
                 // Count
                 this.state.iframeCount += 1;
