@@ -53,7 +53,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
              * So... do we issue a "warning" like below or do we write constructors for those PMs that extend UIElement but don't have their own constructor
              *  e.g. Ach, AmazonPay, Bacs, MBWay, etc, etc?
              *
-             * NOTE: everything that extends UIElement now has a static type (with the exceptions of QRLoader-, OpenInvoice-, and IssuerList-Container)
+             * NOTE: everything that extends UIElement now has a static type (with the exceptions of QRLoader-, OpenInvoice-, and IssuerList-Container - which have their own subclasses with a static type)
              * - so retrieving the type for the constructor is not an issue.
              */
             if (!hasOwnProperty(props, 'type')) {
