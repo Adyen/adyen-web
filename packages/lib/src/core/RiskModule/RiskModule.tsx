@@ -33,7 +33,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
     private nodeRiskContainer = null;
 
     constructor(props) {
-        super(props);
+        super(null, props);
 
         // Populate state with null values
         const riskElements = {

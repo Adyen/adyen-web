@@ -25,7 +25,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     public componentFromAction?: UIElement;
 
     constructor(checkoutRef: Core, props: DropinElementProps) {
-        super(checkoutRef, { ...props, type: DropinElement.type });
+        super(checkoutRef, props);
 
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);

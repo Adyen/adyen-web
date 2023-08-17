@@ -36,7 +36,7 @@ export class CardElement extends UIElement<CardElementProps> {
         // but not for standalone card
 
         // UIElement does the calculating of props...
-        super(checkoutRef, { ...props, type: props?.type ?? CardElement.type });
+        super(checkoutRef, props);
 
         if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);

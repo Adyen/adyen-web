@@ -35,33 +35,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
         }
 
-        // Retrieve props...
-        const generatedProps = checkoutRef.generateUIElementProps(props);
-        super(generatedProps);
-
-        console.log('### UIElement::constructor:: type', props?.type, 'generatedProps', generatedProps);
-
-        if (!generatedProps.isDropin) {
-            checkoutRef.storeComponentRef(this as UIElement);
-
-            /**
-             * TODO - decide what to do...
-             * If a PM can be instantiated as a *standalone* component, it needs a constructor that can pass on it's type if it wants to retrieve
-             *  anything from the paymentMethodsResponse or paymentMethodsConfiguration.
-             * However, not all PMs need to collect anything from the paymentMethodsResponse or paymentMethodsConfiguration e.g. MBWay
-             *
-             * So... do we issue a "warning" like below or do we write constructors for those PMs that extend UIElement but don't have their own constructor
-             *  e.g. Ach, AmazonPay, Bacs, MBWay, etc, etc?
-             *
-             * NOTE: everything that extends UIElement now has a static type (with the exceptions of QRLoader-, OpenInvoice-, and IssuerList-Container - which have their own subclasses with a static type)
-             * - so retrieving the type for the constructor is not an issue.
-             */
-            if (!hasOwnProperty(props, 'type')) {
-                console.debug(
-                    'You are trying to initialise a component without specifying a props.type.\nIf this component relies on retrieving data from the /paymentMethodsResponse, or from the top level paymentMethodsConfiguration object, it will not be able to do so.'
-                );
-            }
-        }
+        super(checkoutRef, props);
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
@@ -74,6 +48,20 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         this.setElementStatus = this.setElementStatus.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
+    }
+
+    protected init(checkoutRef, props) {
+        console.log('### UIElement::constructor:: props.type', props?.type);
+
+        // Retrieve props...
+        const generatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? this.constructor['type'] });
+        super.init(checkoutRef, generatedProps);
+
+        console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps);
+
+        if (!generatedProps.isDropin) {
+            checkoutRef.storeComponentRef(this as UIElement);
+        }
     }
 
     public setState(newState: object): void {
@@ -102,6 +90,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         }
 
         if (this.props.onSubmit) {
+            console.log('### UIElement::onSubmit::  this.elementRef', this.elementRef);
             // Classic flow
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this._parentInstance.session) {

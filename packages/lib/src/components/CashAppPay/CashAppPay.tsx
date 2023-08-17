@@ -14,12 +14,16 @@ import Core from '../../core';
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = 'cashapp';
 
-    private readonly cashAppService: ICashAppService | undefined;
+    private cashAppService: ICashAppService | undefined;
 
     protected static defaultProps = defaultProps;
 
     constructor(checkoutRef: Core, props: CashAppPayElementProps) {
-        super(checkoutRef, { ...props, type: props?.type ?? CashAppPay.type });
+        super(checkoutRef, props);
+    }
+
+    protected init(checkoutRef: Core, props: CashAppPayElementProps) {
+        super.init(checkoutRef, props);
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {
             console.warn(

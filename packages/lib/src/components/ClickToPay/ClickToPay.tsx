@@ -15,11 +15,15 @@ import Core from '../../core';
 export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     public static type = 'clicktopay';
 
-    private readonly clickToPayService: IClickToPayService | null;
-    private readonly ctpConfiguration: ClickToPayConfiguration;
+    private clickToPayService: IClickToPayService | null;
+    private ctpConfiguration: ClickToPayConfiguration;
 
     constructor(checkoutRef: Core, props: ClickToPayElementProps) {
-        super(checkoutRef, { ...props, type: props?.type ?? ClickToPayElement.type });
+        super(checkoutRef, props);
+    }
+
+    protected init(checkoutRef, props) {
+        super.init(checkoutRef, props);
 
         this.ctpConfiguration = {
             shopperEmail: this.props.shopperEmail,

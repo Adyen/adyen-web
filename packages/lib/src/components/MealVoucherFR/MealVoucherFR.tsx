@@ -11,8 +11,7 @@ export class MealVoucherFRElement extends GiftcardElement {
             ...props,
             pinRequired: true,
             expiryDateRequired: true,
-            fieldsLayoutComponent: MealVoucherFields,
-            type: props?.type ?? MealVoucherFRElement.type
+            fieldsLayoutComponent: MealVoucherFields
         });
     }
 

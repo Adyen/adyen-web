@@ -15,15 +15,26 @@ class BaseElement<P extends BaseElementProps> {
     public _node;
     public _component;
     public eventEmitter = new EventEmitter();
-    protected readonly _parentInstance: Core;
+    protected _parentInstance: Core;
 
     protected resources: Resources;
 
-    protected constructor(props: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
-        this._parentInstance = this.props._parentInstance;
+    protected constructor(checkoutRef: Core, props: P) {
+        // this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};
+
+        this.init(checkoutRef, props);
+    }
+
+    protected init(checkoutRef, props) {
+        console.log('### BaseElement::init:: checkoutRef=', checkoutRef);
+
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
+        this._parentInstance = this.props._parentInstance;
+
+        console.log('### BaseElement::init:: this._parentInstance=', this._parentInstance);
+
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
     }
 

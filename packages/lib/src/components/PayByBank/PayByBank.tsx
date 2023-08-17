@@ -5,7 +5,7 @@ class PayByBank extends IssuerListContainer {
     public static type = 'paybybank';
 
     constructor(checkoutRef: Core, props) {
-        super(checkoutRef, { ...props, showPaymentMethodItemImages: true, type: props?.type ?? PayByBank.type });
+        super(checkoutRef, { ...props, showPaymentMethodItemImages: true });
     }
 }
 

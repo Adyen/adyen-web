@@ -18,7 +18,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     };
 
     constructor(checkoutRef: Core, props?: KlarnaPaymentsProps) {
-        super(checkoutRef, { ...props, type: props?.type ?? KlarnaPayments.type });
+        super(checkoutRef, props);
 
         this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);

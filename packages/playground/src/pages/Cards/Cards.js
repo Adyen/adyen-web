@@ -11,10 +11,10 @@ import { MockReactApp } from './MockReactApp';
 
 const showComps = {
     clickToPay: false,
-    storedCard: true,
+    storedCard: false,
     card: true,
     cardInReact: false,
-    bcmcCard: true,
+    bcmcCard: false,
     avsCard: false,
     avsPartialCard: false,
     kcpCard: false
@@ -54,6 +54,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         risk: {
             enabled: false
         }
+        // srConfig: {
+        //     enabled: false
+        // }
     });
 
     // Stored Card

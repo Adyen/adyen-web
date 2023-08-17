@@ -11,7 +11,7 @@ class DonationElement extends UIElement {
     public static type = 'donation';
 
     constructor(checkoutRef: Core, props) {
-        super(checkoutRef, { ...props, type: props?.type ?? DonationElement.type });
+        super(checkoutRef, props);
         this.donate = this.donate.bind(this);
     }
 

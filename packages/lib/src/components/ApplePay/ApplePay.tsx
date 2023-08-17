@@ -19,7 +19,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     protected static defaultProps = defaultProps;
 
     constructor(checkoutRef: Core, props: ApplePayElementProps) {
-        super(checkoutRef, { ...props, type: props?.type ?? ApplePayElement.type });
+        super(checkoutRef, props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
