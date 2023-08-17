@@ -57,12 +57,12 @@ import '../../style.scss';
     });
 
     // iDEAL
-    // window.ideal = checkout.create('ideal').mount('.ideal-field');
     window.ideal = new Ideal(checkout).mount('.ideal-field');
     return;
 
     // BillDesk Online
-    window.billdesk_online = checkout.create('billdesk_online').mount('.billdesk_online-field');
+    window.billdesk_online = new BillDeskOnline(checkout).mount('.billdesk_online-field');
+    // return;
 
     //  BillDesk Wallet
     window.billdesk_wallet = checkout.create('billdesk_wallet').mount('.billdesk_wallet-field');
@@ -77,7 +77,7 @@ import '../../style.scss';
     window.dotpay = checkout.create('dotpay').mount('.dotpay-field');
 
     // Online banking PL
-    window.onlineBanking_PL = checkout.create('onlineBanking_PL').mount('.onlinebanking_PL-field');
+    window.onlineBanking_PL = new OnlineBankingPL(checkout).mount('.onlinebanking_PL-field');
 
     // Entercash
     window.entercash = checkout.create('entercash').mount('.entercash-field');

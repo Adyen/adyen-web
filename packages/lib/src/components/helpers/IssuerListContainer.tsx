@@ -34,7 +34,7 @@ interface IssuerListData {
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     public static dependencies = [Redirect];
 
-    constructor(checkoutRef: Core, props: IssuerListContainerProps) {
+    constructor(checkoutRef: Core, props?: IssuerListContainerProps) {
         super(checkoutRef, props);
     }
 

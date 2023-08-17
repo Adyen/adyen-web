@@ -14,7 +14,7 @@ class OnlineBankingPL extends IssuerListContainer {
         urls: [OnlineBankingPL.disclaimerUrlsMap.regulation, OnlineBankingPL.disclaimerUrlsMap.obligation]
     };
 
-    constructor(checkoutRef: Core, props) {
+    constructor(checkoutRef: Core, props?) {
         super(checkoutRef, { ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
     }
 }
