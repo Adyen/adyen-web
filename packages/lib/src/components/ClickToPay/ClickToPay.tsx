@@ -22,8 +22,8 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
         super(checkoutRef, props);
     }
 
-    protected init(checkoutRef, props) {
-        super.init(checkoutRef, props);
+    protected init(props: ClickToPayElementProps) {
+        super.init(props);
 
         this.ctpConfiguration = {
             shopperEmail: this.props.shopperEmail,

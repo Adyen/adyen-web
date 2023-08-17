@@ -22,8 +22,8 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         super(checkoutRef, props);
     }
 
-    protected init(checkoutRef: Core, props: CashAppPayElementProps) {
-        super.init(checkoutRef, props);
+    protected init(props: CashAppPayElementProps) {
+        super.init(props);
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {
             console.warn(

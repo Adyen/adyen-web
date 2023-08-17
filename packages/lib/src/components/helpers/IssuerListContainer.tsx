@@ -35,11 +35,11 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     public static dependencies = [Redirect];
 
     constructor(checkoutRef: Core, props: IssuerListContainerProps) {
-        super(checkoutRef, props); // Not possible to add a default type. It must be specified in props.
+        super(checkoutRef, props);
     }
 
-    protected init(checkoutRef: Core, props: IssuerListContainerProps) {
-        super.init(checkoutRef, props);
+    protected init(props: IssuerListContainerProps) {
+        super.init(props);
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);

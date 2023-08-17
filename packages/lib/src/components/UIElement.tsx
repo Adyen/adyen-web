@@ -50,17 +50,15 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         this.elementRef = (props && props.elementRef) || this;
     }
 
-    protected init(checkoutRef, props) {
-        console.log('### UIElement::constructor:: props.type', props?.type);
-
+    protected init(props: P) {
         // Retrieve props...
-        const generatedProps = checkoutRef.generateUIElementProps({ ...props, type: props?.type ?? this.constructor['type'] });
-        super.init(checkoutRef, generatedProps);
+        const generatedProps = this._parentInstance.generateUIElementProps({ ...props, type: props?.type ?? this.constructor['type'] });
+        super.init(generatedProps);
 
         console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps);
 
         if (!generatedProps.isDropin) {
-            checkoutRef.storeComponentRef(this as UIElement);
+            this._parentInstance.storeComponentRef(this as UIElement);
         }
     }
 
