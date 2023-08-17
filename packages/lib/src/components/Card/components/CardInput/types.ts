@@ -45,9 +45,9 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-type Placeholders = {
-    holderName?: string;
-};
+//todo: placeholder for security fields are not working
+type PlaceholderKeys = 'holderName' | 'cardNumber' | 'expirationDate' | 'cvc';
+export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
