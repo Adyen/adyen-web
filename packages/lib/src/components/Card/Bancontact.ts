@@ -8,7 +8,7 @@ class BancontactElement extends CardElement {
     public static txVariants = ['bcmc'];
 
     constructor(checkout: Core, props?: CardElementProps) {
-        super(checkout, { ...props, type: BancontactElement.type });
+        super(checkout, props);
     }
 
     protected static defaultProps = {

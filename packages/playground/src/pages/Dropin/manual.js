@@ -80,12 +80,12 @@ export async function initManual() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
-            storedCard: {
-                hideCVC: true
-            }
-            // klarna: {
-            //     useKlarnaWidget: true
+            // storedCard: {
+            //     hideCVC: true
             // }
+            klarna: {
+                useKlarnaWidget: true
+            }
         }
     });
 
@@ -147,8 +147,8 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        instantPaymentTypes: ['googlepay'],
-        showStoredPaymentMethods: false
+        instantPaymentTypes: ['googlepay']
+        // showStoredPaymentMethods: false
     }).mount('#dropin-container');
 
     handleRedirectResult();

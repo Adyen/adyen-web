@@ -14,7 +14,7 @@ const showComps = {
     storedCard: false,
     card: true,
     cardInReact: false,
-    bcmcCard: false,
+    bcmcCard: true,
     avsCard: false,
     avsPartialCard: false,
     kcpCard: false
