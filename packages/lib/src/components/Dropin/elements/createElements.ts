@@ -13,7 +13,7 @@ const createElements = (components: PaymentMethod[] = [], props, checkout) => {
             console.log('\n### createElements:::: c=', c);
 
             // OPT A: core generates props and initialises PM
-            const pm = checkout.generateUIElementForDropin(c, props);
+            const pm = checkout.createUIElementForDropin(c, props);
             console.log('### createElements:::: pm=', pm);
             return pm;
         })

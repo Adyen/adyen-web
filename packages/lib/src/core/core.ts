@@ -238,7 +238,7 @@ class Core {
         };
     }
 
-    public generateUIElementProps(options: any) {
+    public generatePropsForUIElement(options: any) {
         const props = this.getPropsForComponent(options);
 
         const { type, isDropin, supportedShopperInteractions, storedPaymentMethodId } = props;
@@ -268,11 +268,11 @@ class Core {
 
         const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
 
-        console.log('\n### core::generateUIElementProps:: props.type', type);
-        console.log('### core::generateUIElementProps:: props.isDropin', isDropin);
-        console.log('### core::generateUIElementProps:: props.supportedShopperInteractions', supportedShopperInteractions);
-        console.log('### core::generateUIElementProps:: needsConfigData', needsConfigData);
-        console.log('### core::generateUIElementProps:: needsPMData', needsPMData);
+        console.log('\n### core::generatePropsForUIElement:: props.type', type);
+        console.log('### core::generatePropsForUIElement:: props.isDropin', isDropin);
+        console.log('### core::generatePropsForUIElement:: props.supportedShopperInteractions', supportedShopperInteractions);
+        console.log('### core::generatePropsForUIElement:: needsConfigData', needsConfigData);
+        console.log('### core::generatePropsForUIElement:: needsPMData', needsPMData);
 
         return calculatedOptions;
     }
@@ -281,8 +281,8 @@ class Core {
         this.components.push(component);
     }
 
-    public generateUIElementForDropin(PaymentMethodObject, options) {
-        console.log('### core::generateUIElementForDropin:: ');
+    public createUIElementForDropin(PaymentMethodObject, options) {
+        console.log('### core::createUIElementForDropin:: ');
         const paymentMethodsConfiguration = getComponentConfiguration(
             PaymentMethodObject.type,
             this.options.paymentMethodsConfiguration,

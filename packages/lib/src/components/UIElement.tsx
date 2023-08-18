@@ -52,7 +52,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
 
     protected init(props: P) {
         // Retrieve props...
-        const generatedProps = this._parentInstance.generateUIElementProps({ ...props, type: props?.type ?? this.constructor['type'] });
+        const generatedProps = this._parentInstance.generatePropsForUIElement({ ...props, type: props?.type ?? this.constructor['type'] });
         super.init(generatedProps);
 
         console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps);
