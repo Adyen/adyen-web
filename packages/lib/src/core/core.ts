@@ -12,7 +12,7 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
-import registry from './core.registry';
+import registry, { NewableComponent } from './core.registry';
 // import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
 
 class Core {
@@ -33,7 +33,7 @@ class Core {
 
     public static registry = registry;
 
-    public static register(...items: (new (checkout, props) => UIElement)[]) {
+    public static register(...items: NewableComponent[]) {
         registry.add(...items);
     }
 
