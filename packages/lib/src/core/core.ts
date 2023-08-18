@@ -227,8 +227,7 @@ class Core {
             session: this.session,
             loadingContext: this.loadingContext,
             cdnContext: this.cdnContext,
-            createFromAction: this.createFromAction,
-            _parentInstance: this
+            createFromAction: this.createFromAction
         };
     }
 
@@ -244,7 +243,7 @@ class Core {
         const needsPMData = needsConfigData && !supportedShopperInteractions;
 
         /**
-         * We only need to populate the objects under certain circumstances.
+         * We only need to populate the paymentMethodsDetails & paymentMethodsConfiguration objects under certain circumstances.
          * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
          * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
          * So:
@@ -388,7 +387,7 @@ class Core {
     }
 
     public generateUIElementForDropin(PaymentMethodObject, options) {
-        console.log('\n### core::generateUIElementForDropin:: ');
+        console.log('### core::generateUIElementForDropin:: ');
         const paymentMethodsConfiguration = getComponentConfiguration(
             PaymentMethodObject.type,
             this.options.paymentMethodsConfiguration,
