@@ -13,7 +13,8 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
-// import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
+// import AdyenCheckoutError from "./Errors/AdyenCheckoutError";
+import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
 
 class Core {
     public session: Session;
@@ -106,6 +107,33 @@ class Core {
                     this.options.onError?.(error);
                 });
         }
+    }
+
+    /**
+     * TODO - check if UMD users can also use the 'new' operator
+     * ONLY NEEDED(??) for UMD users of Checkout i.e. merchants who load adyen.js
+     *
+     * Instantiates a new UIElement component ready to be mounted
+     *
+     * @param paymentMethod - Name of the paymentMethod - a string corresponding to a txVariant
+     * @param options - the merchant defined config object passed when a component is created via checkout.create
+     *
+     * @returns new UIElement
+     */
+    public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): UIElement {
+        /** TODO - Ideally we would have some way to distinguish UMD users from npm users and throw this error if npm users try to call checkout.create */
+        // throw new AdyenCheckoutError(
+        //     'IMPLEMENTATION_ERROR',
+        //     'Since v6 the create method is no longer how you instantiate a Payment Method component. You should now import the component directly and instantiate it with the "new" operator e.g. new Card(checkout, ...)'
+        // );
+
+        const PaymentMethod: NewableComponent = registry.getComponent(paymentMethod);
+
+        if (!PaymentMethod) {
+            return this.handleCreateError(PaymentMethod);
+        }
+
+        return new PaymentMethod(this, options);
     }
 
     /**

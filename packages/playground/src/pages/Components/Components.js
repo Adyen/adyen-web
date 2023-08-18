@@ -75,8 +75,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }).mount('.ach-field');
 
-    return;
-
     // SEPA Direct Debit
     window.sepa = checkout
         .create('sepadirectdebit', {
