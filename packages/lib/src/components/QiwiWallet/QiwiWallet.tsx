@@ -46,7 +46,7 @@ class QiwiWalletElement extends UIElement {
     }
 
     render() {
-        const { i18n, loadingContext, showPayButton, items, selected } = this.props;
+        const { i18n, loadingContext, showPayButton, items, selected, placeholders } = this.props;
 
         return (
             <CoreProvider i18n={i18n} loadingContext={loadingContext} resources={this.resources}>
@@ -58,6 +58,7 @@ class QiwiWalletElement extends UIElement {
                     }}
                     phoneNumberKey={'mobileNumber'}
                     phoneNumberErrorKey={'error.va.gen.01'}
+                    placeholders={placeholders}
                     items={items}
                     data={{ phonePrefix: selected }}
                     onChange={this.setState}

@@ -9,7 +9,7 @@ import { GenericError } from '../../../core/Errors/types';
 
 interface IbanInputProps {
     holderName?: boolean;
-    placeholders?: any;
+    placeholders?: Omit<IbanData, 'countryCode'>;
     countryCode?: string;
     showPayButton?: any;
     payButton?: any;
@@ -200,6 +200,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                             value: data['ownerName'],
                             'aria-invalid': !!this.state.errors.holder,
                             'aria-label': i18n.get('sepa.ownerName'),
+                            placeholder: placeholders?.ownerName,
                             onInput: e => this.handleHolderInput(e.target.value),
                             onBlur: e => this.handleHolderInput(e.target.value)
                         })}
@@ -224,7 +225,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         name: 'ibanNumber',
                         className: 'adyen-checkout__iban-input__iban-number',
                         classNameModifiers: ['large'],
-                        placeholder: placeholders?.ibanNumber ?? '',
+                        placeholder: placeholders?.ibanNumber,
                         value: data['ibanNumber'],
                         onInput: this.handleIbanInput,
                         'aria-invalid': !!this.state.errors.iban,

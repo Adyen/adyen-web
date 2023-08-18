@@ -126,7 +126,7 @@ function PhoneInput(props: PhoneInputProps) {
                             items: props.items,
                             onChange: handleChangeFor('phonePrefix'),
                             // readonly: props.phonePrefixIsReadonly,
-                            //placeholder: i18n.get('infix'),
+                            placeholder: props?.placeholders?.phonePrefix,
                             selected: data.phonePrefix,
                             uniqueId: uniqueIDPhonePrefix
                         })}

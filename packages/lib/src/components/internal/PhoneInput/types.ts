@@ -16,9 +16,7 @@ export interface PhoneInputProps {
     phoneNumberKey?: string;
     phonePrefixErrorKey?: string;
     phoneNumberErrorKey?: string;
-    placeholders?: {
-        phoneNumber?: string;
-    };
+    placeholders?: PhoneInputSchema;
     ref?;
 }
 

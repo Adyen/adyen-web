@@ -113,6 +113,8 @@
     }
 
     .adyen-checkout__input-wrapper {
+        flex:1;
+        justify-content: space-between;
         border: none;
 
         &:focus-within {
@@ -125,7 +127,6 @@
     }
 
     .adyen-checkout-input__inline-validation {
-        right: -5px;
-        top: 10px;
+        margin-right: 0;
     }
 }

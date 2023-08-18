@@ -12,6 +12,7 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { Placeholders } from './components/CardInput/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -98,6 +99,8 @@ export interface CardElementProps extends UIElementProps {
     /** An object sent in the /paymentMethods response */
     configuration?: CardConfiguration;
 
+    /** Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password. */
+    placeholders?: Placeholders;
     /**
      * Called once all the card input fields have been created but are not yet ready to use.
      */
