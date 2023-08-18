@@ -4,7 +4,7 @@ function assertIsTypeofUIElement(item: any): item is typeof UIElement {
     return typeof UIElement === typeof item;
 }
 
-function createComponentsMap(components: (new (props) => UIElement)[]) {
+function createComponentsMap(components: (new (checkout, props) => UIElement)[]) {
     return components.reduce((memo, component) => {
         const isValid = assertIsTypeofUIElement(component);
         if (!isValid) {
@@ -32,15 +32,15 @@ function createComponentsMap(components: (new (props) => UIElement)[]) {
 }
 
 export interface IRegistry {
-    add(...items: (new (props) => UIElement)[]): void;
-    getComponent(type: string): new (props) => UIElement;
+    add(...items: (new (checkout, props) => UIElement)[]): void;
+    getComponent(type: string): new (checkout, props) => UIElement;
 }
 
 class Registry implements IRegistry {
-    public components: (new (props) => UIElement)[] = [];
-    public componentsMap: Record<string, new (props) => UIElement> = {};
+    public components: (new (checkout, props) => UIElement)[] = [];
+    public componentsMap: Record<string, new (checkout, props) => UIElement> = {};
 
-    public add(...items: (new (props) => UIElement)[]) {
+    public add(...items: (new (checkout, props) => UIElement)[]) {
         this.components = [...items];
         this.componentsMap = createComponentsMap(this.components);
     }
