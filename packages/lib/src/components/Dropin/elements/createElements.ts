@@ -10,11 +10,11 @@ import { PaymentMethod } from '../../../types';
 const createElements = (components: PaymentMethod[] = [], props, checkout) => {
     const elements = components
         .map(c => {
-            console.log('\n### createElements:::: c=', c);
+            // console.log('\n### createElements:::: c=', c);// TODO - keep for now, for debugging
 
             // OPT A: core generates props and initialises PM
             const pm = checkout.createUIElementForDropin(c, props);
-            console.log('### createElements:::: pm=', pm);
+            // console.log('### createElements:::: pm=', pm);// TODO - keep for now, for debugging
             return pm;
         })
         .filter(filterPresent)

@@ -121,7 +121,10 @@ class Core {
      * @returns new UIElement
      */
     public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): UIElement {
-        /** Distinguish UMD users from npm users and throw this error if npm users try to call checkout.create */
+        /**
+         * Distinguish UMD users from npm users and throw this error if npm users try to call checkout.create
+         * TODO - decide if this is a reliable check and whether an error is too strong & it should just be a warning
+         */
         if (!window['AdyenCheckout']) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
@@ -270,11 +273,12 @@ class Core {
 
         const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
 
-        console.log('\n### core::generatePropsForUIElement:: props.type', type);
-        console.log('### core::generatePropsForUIElement:: props.isDropin', isDropin);
-        console.log('### core::generatePropsForUIElement:: props.supportedShopperInteractions', supportedShopperInteractions);
-        console.log('### core::generatePropsForUIElement:: needsConfigData', needsConfigData);
-        console.log('### core::generatePropsForUIElement:: needsPMData', needsPMData);
+        // TODO - keep for now, for debugging
+        // console.log('\n### core::generatePropsForUIElement:: props.type', type);
+        // console.log('### core::generatePropsForUIElement:: props.isDropin', isDropin);
+        // console.log('### core::generatePropsForUIElement:: props.supportedShopperInteractions', supportedShopperInteractions);
+        // console.log('### core::generatePropsForUIElement:: needsConfigData', needsConfigData);
+        // console.log('### core::generatePropsForUIElement:: needsPMData', needsPMData);
 
         return calculatedOptions;
     }
@@ -284,7 +288,7 @@ class Core {
     }
 
     public createUIElementForDropin(PaymentMethodObject, options) {
-        console.log('### core::createUIElementForDropin:: ');
+        // console.log('### core::createUIElementForDropin:: ');// TODO - keep for now, for debugging
         const paymentMethodsConfiguration = getComponentConfiguration(
             PaymentMethodObject.type,
             this.options.paymentMethodsConfiguration,

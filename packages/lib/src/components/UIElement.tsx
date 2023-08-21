@@ -55,7 +55,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         const generatedProps = this._parentInstance.generatePropsForUIElement({ ...props, type: props?.type ?? this.constructor['type'] });
         super.init(generatedProps);
 
-        console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps);
+        // console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps); // TODO - keep for now, for debugging
 
         if (!generatedProps.isDropin) {
             this._parentInstance.storeComponentRef(this as UIElement);
