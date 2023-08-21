@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.49.5
+
+### Patch Changes
+
+-   Fixes postalCode having maxlength 0 ([#2305](https://github.com/Adyen/adyen-web/pull/2305))
+
 ## 5.49.4
 
 ### Patch Changes
