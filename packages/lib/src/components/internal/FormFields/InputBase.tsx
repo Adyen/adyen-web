@@ -1,17 +1,34 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useRef } from 'preact/hooks';
+import { MutableRef, useCallback, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
+import Language from '../../../language';
+import './FormFields.scss';
 
-export interface InputBaseProps {
-    /** Callback used to return the input element reference to parent component (Ex: Used to trigger focus programmatically) */
+export interface InputBaseProps extends h.JSX.HTMLAttributes {
+    classNameModifiers?: string[];
+    isInvalid?: boolean;
+    isValid?: boolean;
+    readonly?: boolean;
+    uniqueId?: string;
+    disabled?: boolean;
+    className?: string;
+    placeholder?: string;
+    value?: string;
+    name?: string;
+    checked?: boolean;
+    setRef?: (ref: MutableRef<EventTarget>) => void;
+    trimOnBlur?: boolean;
+    i18n?: Language;
+    label?: string;
     onCreateRef?(reference: HTMLInputElement): void;
-    // TODO: add missing types
-    [key: string]: any;
+    onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
+    onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
 }
 
 export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
+    const className = props.className as string;
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -48,7 +65,7 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
     );
 
     const handleBlur = useCallback(
-        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        (event: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
             props?.onBlurHandler?.(event); // From Field component
 
             if (props.trimOnBlur) {
@@ -70,7 +87,7 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
     const inputClassNames = classNames(
         'adyen-checkout__input',
         [`adyen-checkout__input--${type}`],
-        props.className,
+        className,
         {
             'adyen-checkout__input--invalid': isInvalid,
             'adyen-checkout__input--valid': isValid

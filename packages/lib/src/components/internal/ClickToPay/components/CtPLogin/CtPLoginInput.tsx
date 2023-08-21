@@ -4,7 +4,7 @@ import { loginValidationRules } from './validate';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../utils/useForm';
 import Field from '../../../FormFields/Field';
-import renderFormField from '../../../FormFields';
+import InputText from '../../../FormFields/InputText';
 
 type OnChangeProps = { data: CtPLoginInputDataState; valid; errors; isValid: boolean };
 
@@ -73,17 +73,17 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
             errorMessage={isLoginInputDirty ? props.errorMessage || !!errors.shopperLogin : null}
             classNameModifiers={['shopperLogin']}
         >
-            {renderFormField('text', {
-                name: 'shopperLogin',
-                autocorrect: 'off',
-                spellcheck: false,
-                value: data.shopperLogin,
-                disabled: props.disabled,
-                onInput: handleChangeFor('shopperLogin', 'input'),
-                onBlur: handleChangeFor('shopperLogin', 'blur'),
-                onKeyPress: handleOnKeyPress,
-                onKeyUp: handleOnKeyUp
-            })}
+            <InputText
+                name={'shopperLogin'}
+                autocorrect={'off'}
+                spellcheck={false}
+                value={data.shopperLogin}
+                disabled={props.disabled}
+                onInput={handleChangeFor('shopperLogin', 'input')}
+                onBlur={handleChangeFor('shopperLogin', 'blur')}
+                onKeyPress={handleOnKeyPress}
+                onKeyUp={handleOnKeyUp}
+            />
         </Field>
     );
 };

@@ -6,9 +6,9 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useImage from '../../../../../../core/Context/useImage';
 import useForm from '../../../../../../utils/useForm';
 import isMobile from '../../../../../../utils/isMobile';
-import renderFormField from '../../../../FormFields';
 import Field from '../../../../FormFields/Field';
 import './CtPCardsList.scss';
+import Select from '../../../../FormFields/Select';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -50,15 +50,15 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
 
     return (
         <Field name="clickToPayCards" errorMessage={errorMessage}>
-            {renderFormField('select', {
-                items,
-                selected: data['srcDigitalCardId'],
-                name: 'cards',
-                filterable: false,
-                className: 'adyen-checkout-ctp__cards-list-dropdown',
-                readonly: status === 'loading',
-                onChange: handleChangeFor('srcDigitalCardId')
-            })}
+            <Select
+                items={items}
+                selectedValue={data['srcDigitalCardId']}
+                name={'cards'}
+                filterable={false}
+                className={'adyen-checkout-ctp__cards-list-dropdown'}
+                readonly={status === 'loading'}
+                onChange={handleChangeFor('srcDigitalCardId')}
+            />
         </Field>
     );
 };
