@@ -24,6 +24,7 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     onCreateRef?(reference: HTMLInputElement): void;
     onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
+    maxlength?: number | null;
 }
 
 export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
