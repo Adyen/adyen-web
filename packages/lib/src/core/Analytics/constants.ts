@@ -1,4 +1,4 @@
-export const ANALYTICS_PATH = 'v2/analytics';
+export const ANALYTICS_PATH = 'v3/analytics';
 
 export const ANALYTICS_ACTION_LOG = 'log';
 export const ANALYTICS_ACTION_ERROR = 'error';
