@@ -5,6 +5,7 @@ import { renderFormField } from '../FormFields';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../FormFields/Field';
 import './SendCopyToEmail.scss';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
 
 export default function SendCopyToEmail(props) {
     const { errors, value, onInput, onBlur } = props;
@@ -31,7 +32,7 @@ export default function SendCopyToEmail(props) {
                 <Field
                     label={i18n.get('shopperEmail')}
                     classNameModifiers={['shopperEmail']}
-                    errorMessage={errors && errors.errorMessage ? i18n.get(errors.errorMessage) : !!errors}
+                    errorMessage={getErrorMessage(i18n, errors, i18n.get('shopperEmail'))}
                     name={'shopperEmail'}
                 >
                     {renderFormField('emailAddress', {

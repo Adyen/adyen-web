@@ -80,7 +80,6 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
     const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, ...newProps } = props;
-
     return (
         <input
             id={uniqueId}

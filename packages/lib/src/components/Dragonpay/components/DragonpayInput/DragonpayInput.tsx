@@ -6,8 +6,9 @@ import Field from '../../../internal/FormFields/Field';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
-import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
 import useImage from '../../../../core/Context/useImage';
+import { validationRules } from '../../../../utils/Validator/defaultRules';
+import { getErrorMessage } from '../../../../utils/getErrorMessage';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
@@ -24,7 +25,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                 validate: issuer => isIssuerRequired() && !!issuer,
                 modes: ['input', 'blur']
             },
-            shopperEmail: personalDetailsValidationRules.shopperEmail
+            shopperEmail: validationRules.emailRule
         }
     });
 
@@ -53,7 +54,11 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">
-            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail} name={'dragonpay-shopperEmail'}>
+            <Field
+                label={i18n.get('shopperEmail')}
+                errorMessage={getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
+                name={'dragonpay-shopperEmail'}
+            >
                 {renderFormField('emailAddress', {
                     name: 'dragonpay-shopperEmail',
                     autoCorrect: 'off',

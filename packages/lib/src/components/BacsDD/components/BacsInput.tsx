@@ -12,6 +12,7 @@ import './BacsInput.scss';
 import useForm from '../../../utils/useForm';
 import useImage from '../../../core/Context/useImage';
 import FormInstruction from '../../internal/FormInstruction';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -159,7 +160,7 @@ function BacsInput(props: BacsInputProps) {
             </div>
 
             <Field
-                errorMessage={!!errors.shopperEmail && i18n.get('shopperEmail.invalid')}
+                errorMessage={getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
                 label={i18n.get('shopperEmail')}
                 className={classNames({
                     'adyen-checkout__bacs--shopper-email': true,
