@@ -6,7 +6,7 @@ import Checkbox from '../FormFields/Checkbox';
 /**
  * "Store details" generic checkbox
  */
-function StoreDetails({ storeDetails = true, ...props }) {
+function StoreDetails({ storeDetails = false, ...props }) {
     const { i18n } = useCoreContext();
     const [value, setValue] = useState(storeDetails);
 
