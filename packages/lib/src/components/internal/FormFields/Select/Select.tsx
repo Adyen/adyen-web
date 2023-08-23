@@ -53,7 +53,7 @@ function Select({
         // If the target is not one of the list items, select the first list item
         const target: HTMLInputElement = selectListRef.current.contains(e.currentTarget) ? e.currentTarget : selectListRef.current.firstElementChild;
 
-        if (!target.getAttribute('data-disabled')) {
+        if (!target.getAttribute('data-disabled') || target.getAttribute('data-disabled') === 'false') {
             closeList();
             const value = target.getAttribute('data-value');
             onChange({ target: { value, name: name } });
