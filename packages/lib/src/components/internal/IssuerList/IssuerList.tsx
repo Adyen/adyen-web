@@ -84,15 +84,7 @@ function IssuerList({
         triggerValidation();
     };
 
-    const { highlightedItems } = highlightAllIssuersAndHideDropdown
-        ? { highlightedItems: items }
-        : items.reduce(
-              (memo, item) => {
-                  if (highlightedIds.includes(item.id)) memo.highlightedItems.push({ ...item });
-                  return memo;
-              },
-              { highlightedItems: [] }
-          );
+    const highlightedItems = highlightAllIssuersAndHideDropdown ? items : items.filter(item => highlightedIds.includes(item.id));
 
     return (
         <div className="adyen-checkout__issuer-list">
