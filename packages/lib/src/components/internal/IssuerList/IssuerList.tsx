@@ -36,7 +36,14 @@ enum IssuerListInputTypes {
     Dropdown
 }
 
-function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder', issuer, highlightedIds = [], ...props }: IssuerListProps) {
+function IssuerList({
+    items,
+    placeholder = 'idealIssuer.selectField.placeholder',
+    issuer,
+    highlightedIds = [],
+    highlightAllIssuersAndHideDropdown = false,
+    ...props
+}: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -77,13 +84,15 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
         triggerValidation();
     };
 
-    const { highlightedItems } = items.reduce(
-        (memo, item) => {
-            if (highlightedIds.includes(item.id)) memo.highlightedItems.push({ ...item });
-            return memo;
-        },
-        { highlightedItems: [] }
-    );
+    const { highlightedItems } = highlightAllIssuersAndHideDropdown
+        ? { highlightedItems: items }
+        : items.reduce(
+              (memo, item) => {
+                  if (highlightedIds.includes(item.id)) memo.highlightedItems.push({ ...item });
+                  return memo;
+              },
+              { highlightedItems: [] }
+          );
 
     return (
         <div className="adyen-checkout__issuer-list">
@@ -94,20 +103,25 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                         items={highlightedItems}
                         onChange={handleInputChange(IssuerListInputTypes.ButtonGroup)}
                     />
-                    <ContentSeparator />
                 </Fragment>
             )}
 
-            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
-                <Select
-                    items={items}
-                    selectedValue={inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null}
-                    placeholder={i18n.get(placeholder)}
-                    name={'issuer'}
-                    className={'adyen-checkout__issuer-list__dropdown'}
-                    onChange={handleInputChange(IssuerListInputTypes.Dropdown)}
-                />
-            </Field>
+            {!highlightAllIssuersAndHideDropdown && (
+                <Fragment>
+                    <ContentSeparator />
+
+                    <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
+                        <Select
+                            items={items}
+                            selectedValue={inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null}
+                            placeholder={i18n.get(placeholder)}
+                            name={'issuer'}
+                            className={'adyen-checkout__issuer-list__dropdown'}
+                            onChange={handleInputChange(IssuerListInputTypes.Dropdown)}
+                        />
+                    </Field>
+                </Fragment>
+            )}
 
             {props.termsAndConditions && (
                 <div className="adyen-checkout__issuer-list__termsAndConditions">

@@ -7,6 +7,7 @@ export interface IssuerListProps {
     payButton(props: Partial<PayButtonProps>): ComponentChildren;
     onChange(payload: any): void;
     highlightedIds?: string[];
+    highlightAllIssuersAndHideDropdown?: boolean;
     placeholder?: string;
     issuer?: string;
     termsAndConditions?: TermsAndConditions;

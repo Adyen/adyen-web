@@ -126,4 +126,34 @@ describe('IssuerList', () => {
         expect(highlightedIssuerButton.text()).toBe(highlightedIssuerDropdownItem.text());
         expect(highlightedIssuerButton.prop('value')).toBe(highlightedIssuerDropdownItem.prop('data-value'));
     });
+
+    test('Highlight all issuers removes dropdown and renders all issuers regardless of highlightedIds', () => {
+        const items = [
+            { name: 'Issuer 1', id: '1' },
+            { name: 'Issuer 2', id: '2' },
+            { name: 'Issuer 3', id: '3' },
+            { name: 'Issuer 3', id: '4' },
+            { name: 'Issuer 5', id: '5' }
+        ];
+        const highlightedIds = ['3'];
+
+        const wrapper = mount(
+            <IssuerList
+                items={items}
+                highlightedIds={highlightedIds}
+                showPayButton={false}
+                onChange={jest.fn()}
+                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                highlightAllIssuersAndHideDropdown
+            />
+        );
+
+        const highlightedIssuers = wrapper.find('.adyen-checkout__issuer-button-group button');
+        const highlightedContentSeparator = wrapper.find('.adyen-checkout__content-separator');
+        const dropdownElement = wrapper.find('.adyen-checkout__field--issuer-list');
+
+        expect(highlightedContentSeparator.exists()).toBeFalsy();
+        expect(dropdownElement.exists()).toBeFalsy();
+        expect(highlightedIssuers).toHaveLength(5);
+    });
 });
