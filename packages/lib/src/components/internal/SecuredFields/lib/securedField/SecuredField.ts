@@ -28,7 +28,7 @@ const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
     // --
-    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language, placeholders: Placeholders) {
+    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language, placeholders?: Placeholders) {
         super();
 
         // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
@@ -67,7 +67,7 @@ class SecuredField extends AbstractSecuredField {
             logger.log('\n');
         }
 
-        return this.init(i18n, placeholders);
+        return this.init(i18n, placeholders ?? {});
     }
 
     init(i18n: Language, placeholders: Placeholders): SecuredField {
