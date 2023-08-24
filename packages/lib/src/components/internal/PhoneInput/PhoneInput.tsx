@@ -65,8 +65,7 @@ function PhoneInput(props: PhoneInputProps) {
             if (errors[field]) {
                 const propsField = field === 'phoneNumber' ? 'phoneNumberErrorKey' : 'phonePrefixErrorKey';
                 const key = props[propsField] ? props[propsField] : errors[field].errorMessage;
-                const errMsg = i18n.get(key);
-                return errMsg ? errMsg : null;
+                return i18n.get(key) ?? null;
             }
             return null;
         },

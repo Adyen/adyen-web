@@ -1,10 +1,10 @@
 @use '../../style/index';
 
 .adyen-checkout-trustly {
-    margin-bottom: var(--b-spacer-070);;
+    margin-bottom: var(--b-spacer-070);
 
     &__descriptor {
-        margin: var(--b-spacer-000) var(--b-spacer-000) var(--b-spacer-020);;
+        margin: var(--b-spacer-000) var(--b-spacer-000) var(--b-spacer-020);
         font-size: index.$font-size-medium;
         font-weight: 500;
     }
