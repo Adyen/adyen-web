@@ -2,9 +2,9 @@ import { h } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
 import Field from '../../../internal/FormFields/Field';
 import useForm from '../../../../utils/useForm';
-import renderFormField from '../../../internal/FormFields';
 import { vpaValidationRules } from './validate';
 import './VpaInput.scss';
+import InputText from '../../../internal/FormFields/InputText';
 
 type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
@@ -52,15 +52,15 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
             classNameModifiers={['vpa']}
             name="virtualPaymentAddress"
         >
-            {renderFormField('text', {
-                name: 'virtualPaymentAddress',
-                autocorrect: 'off',
-                spellcheck: false,
-                disabled: props.disabled,
-                value: data.virtualPaymentAddress,
-                onInput: handleChangeFor('virtualPaymentAddress', 'input'),
-                onBlur: handleChangeFor('virtualPaymentAddress', 'blur')
-            })}
+            <InputText
+                name={'virtualPaymentAddress'}
+                autocorrect={'off'}
+                spellcheck={false}
+                disabled={props.disabled}
+                value={data.virtualPaymentAddress}
+                onInput={handleChangeFor('virtualPaymentAddress', 'input')}
+                onBlur={handleChangeFor('virtualPaymentAddress', 'blur')}
+            />
         </Field>
     );
 };

@@ -3,8 +3,8 @@ import Language from '../../language/Language';
 import { UIElementProps } from '../types';
 
 export interface DragonpayInputIssuerItem {
-    id?: string;
-    name?: string;
+    id: string;
+    name: string;
     icon?: string;
 }
 

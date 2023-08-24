@@ -1,5 +1,39 @@
 # @adyen/adyen-web
 
+## 5.49.6
+
+### Patch Changes
+
+-   fixes bug where storedetails had state value of true by default without visually showing it ([#2307](https://github.com/Adyen/adyen-web/pull/2307))
+
+## 5.49.5
+
+### Patch Changes
+
+-   Fixes postalCode having maxlength 0 ([#2305](https://github.com/Adyen/adyen-web/pull/2305))
+
+## 5.49.4
+
+### Patch Changes
+
+-   Fixed e2e tests that were failing due to recent changes in how alt attributes are assigned ([#2289](https://github.com/Adyen/adyen-web/pull/2289))
+
+-   Handling Safari's Responsive Design Mode to prevent undesired behaviour revolving around our "disable arrow keys on the iOS soft keyboard" feature ([#2299](https://github.com/Adyen/adyen-web/pull/2299))
+
+-   Send 'do-not-track' as value for checkoutAttemptId when analytics is disabled ([#2290](https://github.com/Adyen/adyen-web/pull/2290))
+
+-   Removes internal function renderFormField, improving typescript for all form fields ([#2298](https://github.com/Adyen/adyen-web/pull/2298))
+
+-   Fixed bug where initial value for cvcPolicy &/or expiryDatePolicy could be overwritten if multiple card components on the same page ([#2297](https://github.com/Adyen/adyen-web/pull/2297))
+
+## 5.49.3
+
+### Patch Changes
+
+-   fixes missing ResultCode typings ([#2287](https://github.com/Adyen/adyen-web/pull/2287))
+
+-   fix issuer list logos not loading from resources url ([#2278](https://github.com/Adyen/adyen-web/pull/2278))
+
 ## 5.49.2
 
 ### Patch Changes

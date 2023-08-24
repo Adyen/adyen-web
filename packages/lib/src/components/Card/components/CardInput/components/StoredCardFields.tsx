@@ -4,7 +4,7 @@ import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { StoredCardFieldsProps } from './types';
 import { ENCRYPTED_SECURITY_CODE } from '../../../../internal/SecuredFields/lib/configuration/constants';
-import renderFormField from '../../../../internal/FormFields';
+import InputText from '../../../../internal/FormFields/InputText';
 
 export default function StoredCardFields({
     brand,
@@ -37,14 +37,14 @@ export default function StoredCardFields({
                     name={'expiryDateField'}
                     disabled
                 >
-                    {renderFormField('text', {
-                        name: 'expiryDateField',
-                        className: 'adyen-checkout__input adyen-checkout__input--disabled adyen-checkout__card__exp-date__input--oneclick',
-                        value: `${expiryMonth} / ${expiryYear}`,
-                        readonly: true,
-                        disabled: true,
-                        dir: 'ltr'
-                    })}
+                    <InputText
+                        name={'expiryDateField'}
+                        className={'adyen-checkout__input adyen-checkout__input--disabled adyen-checkout__card__exp-date__input--oneclick'}
+                        value={`${expiryMonth} / ${expiryYear}`}
+                        readonly={true}
+                        disabled={true}
+                        dir={'ltr'}
+                    />
                 </Field>
 
                 {hasCVC && (
