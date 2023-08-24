@@ -11,7 +11,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import { ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -49,13 +49,37 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     /* eslint-disable-next-line */
     protected submitAnalytics(obj?) {
         // Call analytics endpoint
-        let component = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-'));
-        if (component === 'dropin') {
-            const subCompID = this.elementRef['dropinRef'].state.activePaymentMethod._id;
-            component = `${component}-${subCompID.substring(0, subCompID.indexOf('-'))}`;
+        const isDropin = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-')) === 'dropin';
+
+        const component = this.props.type === 'card' ? 'scheme' : this.props.type;
+
+        if (isDropin) {
+            // PM selected scenario
+            if (obj === 'select') {
+                let storedCardIndicator;
+                // Check if it's a storedCard
+                if (component === 'scheme') {
+                    if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                        storedCardIndicator = {
+                            isStoredPaymentMethod: true,
+                            brand: this.props.brand
+                        };
+                    }
+                }
+
+                this.props.modules?.analytics.createAnalyticsAction({
+                    action: 'event',
+                    data: { component, type: ANALYTICS_SELECTED_STR, ...storedCardIndicator }
+                });
+                return;
+            }
         }
 
-        this.props.modules?.analytics.createAnalyticsAction({ action: 'log', data: { component, type: ANALYTICS_SUBMIT_STR, target: 'pay_button' } });
+        // PM pay button pressed scenario
+        this.props.modules?.analytics.createAnalyticsAction({
+            action: 'log',
+            data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
+        });
     }
 
     private onSubmit(): void {

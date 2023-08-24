@@ -36,7 +36,10 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
         const telemetryEvent: TelemetryEvent = {
             // amount,  // TODO will be supported in the future
             version: process.env.VERSION,
+            // The data team want both platform & channel properties:
             channel: 'Web',
+            platform: 'Web',
+            buildType: window['AdyenCheckout'] ? 'umd' : 'compiled',
             locale,
             referrer: window.location.href,
             screenWidth: window.screen.width,

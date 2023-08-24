@@ -86,6 +86,7 @@ test('Should send expected data to http service', () => {
         {
             // amount: configuration.amount,// TODO will be supported in the future
             channel: 'Web',
+            platform: 'Web',
             locale: configuration.locale,
             referrer: 'http://localhost/',
             screenWidth: 0,
