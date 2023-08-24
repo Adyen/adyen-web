@@ -1,4 +1,4 @@
-@import '../../../../style/font-sizes';
+@use '../../../../style/index';
 
 .adyen-checkout__order-payment-methods-list {
     list-style: none;
@@ -32,7 +32,7 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     font-weight: 500;
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     padding: 16px;
     position: relative;
     transition: background 0.1s ease-out;
@@ -51,12 +51,12 @@
 .adyen-checkout__order-payment-method__deducted-amount {
     display: flex;
     justify-content: space-between;
-    line-height: $font-size-medium;
-    font-size: $font-size-medium;
+    line-height: index.$font-size-medium;
+    font-size: index.$font-size-medium;
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__label {
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__value {
@@ -71,7 +71,7 @@
     color: var(--b-color-label-secondary);
     border-radius: var(--b-border-radius-m);
     margin-bottom: 16px;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
 
     strong {
         font-weight: bold;

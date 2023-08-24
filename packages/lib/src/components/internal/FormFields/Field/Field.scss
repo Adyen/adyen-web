@@ -1,4 +1,4 @@
-@import '../../../../style/font-sizes';
+@use '../../../../style/index';
 
 .adyen-checkout__field {
     display: block;
@@ -44,7 +44,7 @@
 .adyen-checkout__helper-text {
     color: var(--b-color-black);
     display: block;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     font-weight: normal;
     line-height: 13px;
     padding-bottom: 5px;
@@ -80,7 +80,7 @@
     display: flex;
     font-weight: normal;
     margin-top: 4px;
-    font-size: $font-size-xsmall;
+    font-size: index.$font-size-xsmall;
     align-items: center;
     color: var(--b-color-label-secondary);
 }

@@ -1,4 +1,4 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout-disclaimer__label {
     margin-top: var(--b-spacer-070);
@@ -6,7 +6,7 @@
     display: inline-block;
     line-height: 19px;
     color: var(--b-color-label-secondary);
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     font-weight: normal;
 
 

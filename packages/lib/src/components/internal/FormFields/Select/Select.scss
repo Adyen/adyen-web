@@ -1,4 +1,4 @@
-@import '../../../../style/font-sizes';
+@use '../../../../style/index';
 
 .adyen-checkout__dropdown__button-icon--left {
     flex-direction: row-reverse;
@@ -13,7 +13,7 @@
 .adyen-checkout__dropdown {
     max-width: 100%;
     width: 100%;
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
 }
 
 .adyen-checkout__dropdown__button {
@@ -23,7 +23,7 @@
     outline: 0;
     padding: 7px var(--b-spacer-060);
     flex: 1;
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     height: 40px;
     line-height: 20px;
     user-select: none;
@@ -108,7 +108,7 @@
     word-break: break-word;
     hyphens: auto;
     cursor: pointer;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     outline: 0;
     user-select: none;
     transition: background 0.2s ease-out, border-color 0.2s ease-out;

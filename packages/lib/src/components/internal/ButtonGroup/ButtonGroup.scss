@@ -1,4 +1,4 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout__button-group {
     background: transparent;
@@ -10,7 +10,7 @@
         border: 0;
         box-shadow: inset 0 0 0 1px #99a3ad;
         color: var(--b-color-black);
-        font-size: $font-size-small;
+        font-size: index.$font-size-small;
         font-weight: normal;
         line-height: 40px;
         margin-right: 8px;

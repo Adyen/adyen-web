@@ -1,5 +1,4 @@
-@import '../../../style/font-sizes';
-@import '../../../style/mixins';
+@use '../../../style/index';
 
 .adyen-checkout__field-wrapper {
     display: flex;
@@ -7,61 +6,61 @@
 }
 
 .adyen-checkout__field--20 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 20%;
     }
 }
 
 .adyen-checkout__field--30 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 30%;
     }
 }
 
 .adyen-checkout__field--40 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 40%;
     }
 }
 
 .adyen-checkout__field--50 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 50%;
     }
 }
 
 .adyen-checkout__field--60 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 60%;
     }
 }
 
 .adyen-checkout__field--70 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 70%;
     }
 }
 
 .adyen-checkout__field--80 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 80%;
     }
 }
 
 .adyen-checkout__field--col-70 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: calc(70% - 8px);
     }
 }
 
 .adyen-checkout__field--col-30 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: calc(30% - 8px);
     }
 }
 
 .adyen-checkout__field--col-50 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: calc(50% - 8px);
     }
 }
@@ -119,7 +118,7 @@
     // prevent overflow
     min-width: 0;
     color: var(--b-color-black);
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     font-family: inherit;
     display: block;
     height: 40px;

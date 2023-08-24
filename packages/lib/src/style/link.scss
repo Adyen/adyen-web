@@ -1,5 +1,5 @@
-@import 'mixins';
+@use 'mixins';
 
 .adyen-checkout-link {
-  @include adyen-checkout-link;
+  @include mixins.adyen-checkout-link;
 }

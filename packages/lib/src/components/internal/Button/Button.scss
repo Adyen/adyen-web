@@ -1,5 +1,4 @@
-@import '../../../style/font-sizes';
-@import '../../../style/mixins';
+@use '../../../style/index';
 
 .adyen-checkout__button {
     background: var(--b-color-black);
@@ -7,7 +6,7 @@
     border-radius: var(--b-border-radius-m);
     color: var(--b-color-white);
     cursor: pointer;
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     font-weight: 500;
     height: 48px;
     margin: 0;

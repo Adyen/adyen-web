@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 .adyen-checkout__radio_group + .adyen-checkout-input__inline-validation {
     display: none;
@@ -15,7 +15,7 @@
     position: relative;
     display: block;
     color: inherit;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     font-weight: normal;
     line-height: 16px;
     overflow: visible;

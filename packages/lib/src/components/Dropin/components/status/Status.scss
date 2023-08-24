@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 .adyen-checkout__status {
     display: flex;
@@ -12,7 +12,7 @@
     background-color: var(--b-color-white);
     border-radius: var(--b-border-radius-m);
     border: 1px solid var(--b-color-outline-secondary);
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     color: var(--b-color-black);
 
     &__icon {

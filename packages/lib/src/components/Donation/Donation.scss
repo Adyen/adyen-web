@@ -1,4 +1,4 @@
-@import '../../style/font-sizes';
+@use '../../style/index';
 
 .adyen-checkout__adyen-giving {
     .adyen-checkout__status__icon {
@@ -82,12 +82,12 @@
 }
 
 .adyen-checkout__campaign-title {
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     margin-bottom: var(--b-spacer-040);
 }
 
 .adyen-checkout__campaign-description {
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     line-height: 19px;
 }
 

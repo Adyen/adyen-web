@@ -1,4 +1,4 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout__qr-loader {
     background: var(--b-color-white);
@@ -35,7 +35,7 @@
 .adyen-checkout__qr-loader__subtitle,
 .adyen-checkout__qr-loader__payment_amount {
     color: var(--b-color-black);
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     line-height: 19px;
 }
 
@@ -71,7 +71,7 @@
 
 .adyen-checkout__qr-loader__countdown {
     color: var(--b-color-label-secondary);
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
 }
 
 .adyen-checkout__qr-loader > .adyen-checkout__spinner__wrapper {
@@ -90,7 +90,7 @@
 
 .adyen-checkout__qr-loader__instructions {
     color: var(--b-color-grey-500);
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     line-height: 1.5;
     margin-top: 32px;
 }

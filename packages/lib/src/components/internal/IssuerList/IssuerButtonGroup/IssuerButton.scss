@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 .adyen-checkout__issuer-button {
     background-color: var(--b-color-white);
@@ -10,7 +10,7 @@
     flex-basis: 47%;
     flex-grow: 2;
     height: 40px;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     display: flex;
     align-items: center;
     justify-content: space-between;

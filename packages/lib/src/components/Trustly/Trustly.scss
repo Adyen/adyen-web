@@ -1,18 +1,18 @@
-@import '../../style/font-sizes';
+@use '../../style/index';
 
 .adyen-checkout-trustly {
     margin-bottom: var(--b-spacer-070);;
 
     &__descriptor {
         margin: var(--b-spacer-000) var(--b-spacer-000) var(--b-spacer-020);;
-        font-size: $font-size-medium;
+        font-size: index.$font-size-medium;
         font-weight: 500;
     }
 
     &__description-list {
         list-style-type: disc;
         margin: 0;
-        font-size: $font-size-small;
+        font-size: index.$font-size-small;
         line-height: 1.5;
         padding-left: 20px;
     }

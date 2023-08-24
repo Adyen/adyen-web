@@ -1,5 +1,4 @@
-@import "../../../../style/font-sizes";
-@import "../../../../style/mixins";
+@use "../../../../style/index";
 
 .adyen-checkout__fieldset {
     display: block;
@@ -26,7 +25,7 @@
 .adyen-checkout__fieldset__title {
     color: var(--b-color-grey-500);
     display: block;
-    font-size: $font-size-xxsmall;
+    font-size: index.$font-size-xxsmall;
     font-weight: bold;
     letter-spacing: 1px;
     margin: 0;
@@ -43,7 +42,7 @@
 }
 
 .adyen-checkout__field-group:last-of-type .adyen-checkout__field {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         margin-bottom: 0;
     }
 
@@ -58,7 +57,7 @@
 
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {
     color: var(--b-color-black);
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     line-height: 19px;
     margin: 0;
 }

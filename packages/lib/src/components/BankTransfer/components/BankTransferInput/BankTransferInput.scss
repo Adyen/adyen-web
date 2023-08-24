@@ -1,7 +1,7 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 .adyen-checkout__bankTransfer__introduction {
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     color: var(--b-color-black);
     font-weight: 400;
     margin: 0 0 var(--b-spacer-070);

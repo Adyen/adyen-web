@@ -1,4 +1,4 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout__alert-message {
     display: flex;
@@ -6,7 +6,7 @@
     margin: 0 0 var(--b-spacer-070);
     text-align: left;
     padding: var(--b-spacer-060);
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
 }
 
 .adyen-checkout__alert-message--error {

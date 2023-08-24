@@ -1,4 +1,4 @@
-@import '../../../../style/font-sizes';
+@use '../../../../style/index';
 
 .adyen-checkout__dropdown {
     position: relative;
@@ -36,7 +36,7 @@
     border: 0;
     color: var(--b-color-black);
     font-family: inherit;
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     height: 100%;
     padding:0;
     width: 100%;

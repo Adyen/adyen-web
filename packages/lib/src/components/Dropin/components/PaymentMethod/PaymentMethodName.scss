@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 .adyen-checkout__payment-method {
     &__name {
@@ -12,7 +12,7 @@
     }
 
     &__additional-info {
-        font-size: $font-size-small;
+        font-size: index.$font-size-small;
         color: var(--b-color-label-secondary);
     }
 

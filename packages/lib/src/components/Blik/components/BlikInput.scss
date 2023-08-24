@@ -1,7 +1,7 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout__blik__helper {
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     font-weight: normal;
     color: var(--b-color-black);
     margin: 0 0 var(--b-spacer-070);

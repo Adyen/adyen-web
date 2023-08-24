@@ -1,4 +1,4 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 .adyen-checkout__payment-method {
     position: relative;
@@ -54,7 +54,7 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     font-weight:  var(--b-text-body-font-weight);
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     padding: calc(var(--b-spacer-070) - var(--b-spacer-020));
     padding-left: calc(var(--b-spacer-120) - var(--b-spacer-020));
     padding-right: var(--b-spacer-070);

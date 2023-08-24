@@ -1,6 +1,6 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout__voucher-result__introduction {
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     max-width: 420px;
 }

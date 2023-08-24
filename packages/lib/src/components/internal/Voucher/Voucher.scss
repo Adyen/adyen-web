@@ -1,4 +1,4 @@
-@import "../../../style/font-sizes";
+@use "../../../style/index";
 
 .adyen-checkout__voucher-result {
     border-radius: 12px;
@@ -114,7 +114,7 @@
 
 .adyen-checkout__voucher-result__introduction {
     line-height: 19px;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     text-align: center;
     color: var(--b-color-black);
     max-width: 400px;
@@ -123,14 +123,14 @@
 
 .adyen-checkout__voucher-result__amount {
     margin: 24px auto 0;
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     color: var(--b-color-black);
     text-align: center;
     font-weight: bold;
 }
 
 .adyen-checkout__voucher-result__surcharge {
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     line-height: 19px;
     text-align: center;
     color: var(--b-color-grey-500);
@@ -176,7 +176,7 @@
 
 .adyen-checkout__voucher-result__code {
     position: relative;
-    font-size: $font-size-large;
+    font-size: index.$font-size-large;
     text-align: center;
     letter-spacing: 1px;
     color: var(--b-color-black);
@@ -200,7 +200,7 @@
 .adyen-checkout__voucher-result__details__item {
     display: flex;
     justify-content: space-between;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     color: var(--b-color-black);
     padding: 16px 24px;
     border-top: 1px solid var(--b-color-grey-500);

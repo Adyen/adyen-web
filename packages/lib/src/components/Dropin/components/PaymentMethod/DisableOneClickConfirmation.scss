@@ -1,10 +1,10 @@
-@import "../../../../style/font-sizes";
+@use "../../../../style/index";
 
 $color-alert: #e22d2d;
 
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
     color: var(--b-color-white);
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
