@@ -100,7 +100,7 @@ function IssuerList({
 
             {!highlightAllIssuersAndHideDropdown && (
                 <Fragment>
-                    <ContentSeparator />
+                    {!!highlightedItems.length && <ContentSeparator />}
 
                     <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
                         <Select
