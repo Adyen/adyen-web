@@ -30,14 +30,14 @@ beforeEach(() => {
 
 describe('Core', () => {
     test('should default to the FALLBACK_LOCALE', async () => {
-        const checkout = new AdyenCheckout({});
+        const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
         await checkout.initialize();
 
         expect(checkout.modules.i18n.locale).toBe('en-US');
     });
 
     test('should create the modules when initializing on Advanced Flow', async () => {
-        const checkout = new AdyenCheckout({});
+        const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
         await checkout.initialize();
 
         expect(Object.keys(checkout.modules).length).toBeGreaterThan(1);
@@ -45,9 +45,9 @@ describe('Core', () => {
 
     test('should create the modules when initializing on Sesssions flow', async () => {
         const checkout = new AdyenCheckout({
-            session: { id: 'session-id', sessionData: 'sesssion-data' },
             environment: 'test',
-            clientKey: 'xxxx'
+            clientKey: 'test_123456',
+            session: { id: 'session-id', sessionData: 'sesssion-data' }
         });
 
         await checkout.initialize();
@@ -56,7 +56,7 @@ describe('Core', () => {
     });
 
     test('should set a custom locale', async () => {
-        const checkout = new AdyenCheckout({ locale: 'es-ES' });
+        const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', locale: 'es-ES' });
         await checkout.initialize();
 
         expect(checkout.modules.i18n.locale).toBe('es-ES');
@@ -64,7 +64,7 @@ describe('Core', () => {
 
     describe('create', () => {
         test('should create a component if it exists', async () => {
-            const checkout = new AdyenCheckout({});
+            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
 
             expect(checkout.create('dropin')).toBeTruthy();
@@ -77,7 +77,7 @@ describe('Core', () => {
             const onSubmitMockComponent = jest.fn().mockName('onSubmitMockComponent');
 
             test('component props receive global props if not defined elsewhere', async () => {
-                const checkout = new AdyenCheckout({ onSubmit: onSubmitMockGlobal });
+                const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', onSubmit: onSubmitMockGlobal });
                 await checkout.initialize();
                 const component = checkout.create('card');
 
@@ -85,7 +85,7 @@ describe('Core', () => {
             });
 
             test('component props take precedence over global props', async () => {
-                const checkout = new AdyenCheckout({ onSubmit: onSubmitMockGlobal });
+                const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', onSubmit: onSubmitMockGlobal });
                 await checkout.initialize();
                 const component = checkout.create('card', { onSubmit: onSubmitMockComponent });
 
@@ -94,6 +94,8 @@ describe('Core', () => {
 
             test('paymentMethodsConfiguration props take precedence over global props', async () => {
                 const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
                     onSubmit: onSubmitMockGlobal,
                     paymentMethodsConfiguration: { card: { onSubmit: onSubmitMockPMConfig } }
                 });
@@ -105,6 +107,8 @@ describe('Core', () => {
 
             test('component props take precedence over paymentMethodsConfiguration props', async () => {
                 const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
                     paymentMethodsConfiguration: { card: { onSubmit: onSubmitMockPMConfig } }
                 });
                 await checkout.initialize();
@@ -117,7 +121,10 @@ describe('Core', () => {
 
     describe('createFromAction', () => {
         test('should create a component from an action object', async () => {
-            const checkout = new AdyenCheckout({});
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
             await checkout.initialize();
 
             const paymentAction = checkout.createFromAction({
@@ -131,7 +138,11 @@ describe('Core', () => {
         });
 
         test('should handle new fingerprint action', async () => {
-            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '04' } } });
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '04' } }
+            });
             await checkout.initialize();
 
             const fingerprintAction = {
@@ -155,6 +166,8 @@ describe('Core', () => {
 
         test('should handle new challenge action', async () => {
             const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
                 paymentMethodsConfiguration: {
                     threeDS2: {
                         challengeWindowSize: '03'
@@ -187,6 +200,8 @@ describe('Core', () => {
 
             test('paymentMethodsConfiguration properties take precedence over global configuration', async () => {
                 const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
                     onAdditionalDetails: onAdditionalDetailsGlobal,
                     paymentMethodsConfiguration: { qrCode: { onAdditionalDetails: onAdditionalDetailsBCMC } }
                 });
@@ -203,6 +218,8 @@ describe('Core', () => {
 
             test('createFromAction props take precedence over paymentMethodsConfiguration and global configuration', async () => {
                 const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
                     onAdditionalDetails: onAdditionalDetailsGlobal,
                     paymentMethodsConfiguration: { qrCode: { onAdditionalDetails: onAdditionalDetailsBCMC } }
                 });
@@ -226,7 +243,10 @@ describe('Core', () => {
 
     describe('update', () => {
         test('Should update all components under main instance', async () => {
-            const checkout = new AdyenCheckout({});
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
             await checkout.initialize();
 
             const component = checkout.create('dropin').mount('body');
@@ -248,5 +268,17 @@ describe('Core', () => {
             await checkout.update({ paymentMethodsResponse });
             expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', paymentMethodsResponse.paymentMethods);
         });
+    });
+
+    test('should use custom checkoutshopper URL url if available', () => {
+        const checkout = new AdyenCheckout({
+            environment: 'test',
+            environmentUrls: {
+                api: 'https://localhost:8080/checkoutshopper/'
+            },
+            clientKey: 'devl_FX923810'
+        });
+
+        expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
     });
 });
