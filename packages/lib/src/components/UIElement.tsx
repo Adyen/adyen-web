@@ -12,6 +12,7 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { AnalyticsInitialEvent } from '../core/Analytics/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -44,6 +45,22 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (isValid) this.onValid();
 
         return state;
+    }
+
+    // Only called once, for non Dropin based UIElements, as they are being mounted
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        const sessionId = this.props.session?.id;
+
+        this.props.modules.analytics
+            .send({
+                ...setUpAnalyticsObj,
+                ...(sessionId && { sessionId })
+            })
+            .then(() => {
+                // Once the initial analytics set up call has been made...
+                // ...create an analytics-action "event" declaring that the component has been mounted
+                this.submitAnalytics('mounted');
+            });
     }
 
     /* eslint-disable-next-line */
