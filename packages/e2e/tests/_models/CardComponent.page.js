@@ -38,7 +38,7 @@ export default class CardPage extends BasePage {
         this.numSpan = Selector(`${BASE_EL} .adyen-checkout__card__cardNumber__input`);
 
         // The <span> that holds the error text
-        this.numErrorText = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout__error-text`);
+        this.numErrorText = Selector(`${BASE_EL} .adyen-checkout__field--cardNumber .adyen-checkout-contextual-text--error`);
 
         // The <img> el that holds the card brand logo (actually a child of this.numSpan)
         this.brandingIcon = Selector(`${BASE_EL} .adyen-checkout__card__cardNumber__brandIcon`);
@@ -60,7 +60,7 @@ export default class CardPage extends BasePage {
         this.dateSpan = Selector(`${BASE_EL} .adyen-checkout__card__exp-date__input`);
 
         // The <span> that holds the error text
-        this.dateErrorText = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__error-text`);
+        this.dateErrorText = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout-contextual-text--error`);
 
         /**
          * CVC
@@ -79,7 +79,7 @@ export default class CardPage extends BasePage {
         this.cvcSpan = Selector(`${BASE_EL} .adyen-checkout__card__cvc__input`);
 
         // The <span> that holds the error text
-        this.cvcErrorText = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout__error-text`);
+        this.cvcErrorText = Selector(`${BASE_EL} .adyen-checkout__field__cvc .adyen-checkout-contextual-text--error`);
 
         /**
          * Dual branding
@@ -94,18 +94,20 @@ export default class CardPage extends BasePage {
         this.kcpTaxNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--kcp-taxNumber .adyen-checkout__label--focused`);
         this.kcpTaxNumberInput = Selector(`${BASE_EL} .adyen-checkout__field--kcp-taxNumber .adyen-checkout__card__kcp-taxNumber__input`);
         this.pwdSpan = Selector(`${BASE_EL} [data-cse="encryptedPassword"]`);
-        this.pwdErrorText = Selector(`${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout__error-text`);
+        this.pwdErrorText = Selector(
+            `${BASE_EL} .adyen-checkout__field--koreanAuthentication-encryptedPassword .adyen-checkout-contextual-text--error`
+        );
 
         /**
          * AVS
          */
         this.addressLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label--focused`);
-        this.addressLabelErrorText = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__error-text`);
+        this.addressLabelErrorText = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout-contextual-text--error`);
         this.addressLabel = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__label`);
         this.addressInput = Selector(`${BASE_EL} .adyen-checkout__field--street .adyen-checkout__input--street`);
 
         this.postalCodeInput = Selector(`${BASE_EL} .adyen-checkout__field--postalCode .adyen-checkout__input--postalCode`);
-        this.postalCodeErrorText = Selector(`${BASE_EL} .adyen-checkout__field--postalCode .adyen-checkout__error-text`);
+        this.postalCodeErrorText = Selector(`${BASE_EL} .adyen-checkout__field--postalCode .adyen-checkout-contextual-text--error`);
 
         this.houseNumberLabelWithFocus = Selector(`${BASE_EL} .adyen-checkout__field--houseNumberOrName .adyen-checkout__label--focused`);
 

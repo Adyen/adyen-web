@@ -5,7 +5,7 @@ import { CARDS_URL } from '../../pages';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
 const errorHolder = Selector('.card-field .adyen-checkout__field--error');
-const errorLabel = Selector('.card-field .adyen-checkout__error-text');
+const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');
 
 const CARD_TOO_OLD = LANG['error.va.sf-cc-dat.01'];
 const CARD_TOO_FAR = LANG['error.va.sf-cc-dat.02'];

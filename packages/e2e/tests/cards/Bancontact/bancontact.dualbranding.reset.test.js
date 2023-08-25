@@ -37,19 +37,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // TODO delete action fails in Safari - but only if the "Click BCMC brand icon" action takes place!?
@@ -78,19 +68,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // Click BCMC brand icon
@@ -129,19 +109,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // Click Maestro brand icon
@@ -179,19 +149,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         await cardUtils.fillCardNumber(t, UNKNOWN_VISA_CARD, 'paste'); // number not recognised by binLookup
@@ -217,19 +177,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('maestro');
 
         // Click Maestro brand icon
