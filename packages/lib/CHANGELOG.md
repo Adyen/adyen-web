@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 5.49.6
+
+### Patch Changes
+
+-   fixes bug where storedetails had state value of true by default without visually showing it ([#2307](https://github.com/Adyen/adyen-web/pull/2307))
+
+## 5.49.5
+
+### Patch Changes
+
+-   Fixes postalCode having maxlength 0 ([#2305](https://github.com/Adyen/adyen-web/pull/2305))
+
 ## 5.49.4
 
 ### Patch Changes
