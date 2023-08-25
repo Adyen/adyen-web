@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
-import { renderFormField } from '../../../../internal/FormFields';
 import { CardHolderNameProps } from './types';
 import styles from '../CardInput.module.scss';
+import InputText from '../../../../internal/FormFields/InputText';
 
 export default function CardHolderName({ onBlur, onInput, placeholder, value, required, error = false, isValid, disabled }: CardHolderNameProps) {
     const { i18n } = useCoreContext();
@@ -17,17 +17,13 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
             name={'holderName'}
             i18n={i18n}
         >
-            {renderFormField('text', {
-                name: 'holderName',
-                className: `adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`,
-                placeholder,
-                autocomplete: 'cc-name',
-                value,
-                required,
-                onBlur,
-                onInput,
-                disabled
-            })}
+            <InputText
+                name={'holderName'}
+                className={`adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`}
+                placeholder={placeholder}
+                autocomplete={'cc-name'}
+                {...{ value, required, onBlur, onInput, disabled }}
+            />
         </Field>
     );
 }

@@ -2,10 +2,10 @@ import { h } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import classNames from 'classnames';
 import Field from '../FormFields/Field';
-import renderFormField from '../FormFields';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
+import Select from '../FormFields/Select';
 import { phoneFormatters, phoneValidationRules } from './validate';
 import { PhoneInputProps, PhoneInputSchema } from './types';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
@@ -102,11 +102,11 @@ function PhoneInput(props: PhoneInputProps) {
                 showValidIcon={!errors.phonePrefix}
             >
                 {/**
-                 A special situation exists here - normally the first element inside a Field comp is an <input> element which receives
-                 'adyen-checkout__input' type styling (to set width, borders, valid and invalid styling etc).
-                 Here it is a <div> - however we still need the "input-type" styling on this div for the same reasons (width, borders, showing validity etc)
-                 TODO - should probably have some specific 'adyen-checkout-input-holder' styling selectors
-                 */}
+         A special situation exists here - normally the first element inside a Field comp is an <input> element which receives
+         'adyen-checkout__input' type styling (to set width, borders, valid and invalid styling etc).
+         Here it is a <div> - however we still need the "input-type" styling on this div for the same reasons (width, borders, showing validity etc)
+         TODO - should probably have some specific 'adyen-checkout-input-holder' styling selectors
+         */}
                 <div
                     className={classNames({
                         // Styles from FormFields.scss
@@ -119,16 +119,17 @@ function PhoneInput(props: PhoneInputProps) {
                         'adyen-checkout-input-holder--phone-input': true
                     })}
                 >
-                    {showPrefix &&
-                        renderFormField('select', {
-                            className: 'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector',
-                            items: props.items,
-                            onChange: handleChangeFor('phonePrefix'),
-                            // readonly: props.phonePrefixIsReadonly,
-                            placeholder: props?.placeholders?.phonePrefix,
-                            selected: data.phonePrefix,
-                            uniqueId: uniqueIDPhonePrefix
-                        })}
+                    {showPrefix && (
+                        <Select
+                            className={'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector'}
+                            items={props.items}
+                            onChange={handleChangeFor('phonePrefix')}
+                            // readonly={props.phonePrefixIsReadonly}
+                            placeholder={props?.placeholders?.phonePrefix}
+                            selectedValue={data.phonePrefix}
+                            uniqueId={uniqueIDPhonePrefix}
+                        />
+                    )}
 
                     {showNumber && (
                         <div className="adyen-checkout-phone-number">
@@ -151,28 +152,22 @@ function PhoneInput(props: PhoneInputProps) {
                     )}
                 </div>
             </Field>
-            {
-                <div className="adyen-checkout-phone-input__error-holder">
-                    {showPrefix && getPhoneFieldError('phonePrefix') && (
-                        <span
-                            className={'adyen-checkout-contextual-text--error'}
-                            aria-live="polite"
-                            id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}
-                        >
-                            {getPhoneFieldError('phonePrefix')}
-                        </span>
-                    )}
-                    {showNumber && getPhoneFieldError('phoneNumber') && (
-                        <span
-                            className={'adyen-checkout-contextual-text--error'}
-                            aria-live="polite"
-                            id={`${getPhoneNumberUniqueId()}${ARIA_ERROR_SUFFIX}`}
-                        >
-                            {getPhoneFieldError('phoneNumber')}
-                        </span>
-                    )}
-                </div>
-            }
+            <div className="adyen-checkout-phone-input__error-holder">
+                {showPrefix && getPhoneFieldError('phonePrefix') && (
+                    <span className={'adyen-checkout-contextual-text--error'} aria-live="polite" id={`${uniqueIDPhonePrefix}${ARIA_ERROR_SUFFIX}`}>
+                        {getPhoneFieldError('phonePrefix')}
+                    </span>
+                )}
+                {showNumber && getPhoneFieldError('phoneNumber') && (
+                    <span
+                        className={'adyen-checkout-contextual-text--error'}
+                        aria-live="polite"
+                        id={`${getPhoneNumberUniqueId()}${ARIA_ERROR_SUFFIX}`}
+                    >
+                        {getPhoneFieldError('phoneNumber')}
+                    </span>
+                )}
+            </div>
         </div>
     );
 }

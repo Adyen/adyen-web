@@ -39,7 +39,7 @@ interface CSFCommonProps {
     minimumExpiryDate?: string;
     implementationType?: 'components' | 'custom';
     maskSecurityCode: boolean;
-    disableIOSArrowKeys: boolean;
+    shouldDisableIOSArrowKeys: boolean;
 }
 
 /**

@@ -1,11 +1,11 @@
 import Field from '../../FormFields/Field';
 import { Fragment, h } from 'preact';
-import renderFormField from '../../FormFields';
 import { AddressLookupItem } from '../types';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import './AddressSearch.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { debounce } from '../utils';
+import Select from '../../FormFields/Select';
 
 export type OnAddressLookupType = (
     value: string,
@@ -90,15 +90,15 @@ export default function AddressSearch({
                     showContextualElement={showContextualElement}
                     contextualText={contextualText}
                 >
-                    {renderFormField('select', {
-                        name: 'address-search',
-                        className: 'adyen-checkout__address-search__dropdown',
-                        placeholder,
-                        onInput: debounceInputHandler,
-                        items: formattedData,
-                        onChange: onChange,
-                        disableTextFilter: true
-                    })}
+                    <Select
+                        name={'address-search'}
+                        className={'adyen-checkout__address-search__dropdown'}
+                        placeholder={placeholder}
+                        onInput={debounceInputHandler}
+                        items={formattedData}
+                        onChange={onChange}
+                        disableTextFilter={true}
+                    />
                 </Field>
                 {!hideManualButton && (
                     <span className="adyen-checkout__address-search__manual-add">

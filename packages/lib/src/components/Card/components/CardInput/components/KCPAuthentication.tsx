@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
-import { renderFormField } from '../../../../internal/FormFields';
 import classNames from 'classnames';
 import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { KCPProps } from './types';
 import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
+import InputTelephone from '../../../../internal/FormFields/InputTelephone';
 
 export default function KCPAuthentication(props: KCPProps) {
     const { i18n } = useCoreContext();
@@ -28,18 +28,18 @@ export default function KCPAuthentication(props: KCPProps) {
                 dir={'ltr'}
                 name={'kcpTaxNumberOrDOB'}
             >
-                {renderFormField('tel', {
-                    name: 'kcpTaxNumberOrDOB',
-                    className: `adyen-checkout__card__kcp-taxNumber__input ${styles['adyen-checkout__input']}`,
-                    maxLength: 10,
-                    minLength: 6,
-                    autoComplete: false,
-                    value: props.value,
-                    required: true,
-                    onBlur: props.onBlur,
-                    onInput: props.onInput,
-                    disabled: props.disabled
-                })}
+                <InputTelephone
+                    name={'kcpTaxNumberOrDOB'}
+                    className={`adyen-checkout__card__kcp-taxNumber__input ${styles['adyen-checkout__input']}`}
+                    maxLength={10}
+                    minLength={6}
+                    autoComplete={'false'}
+                    value={props.value}
+                    required={true}
+                    onBlur={props.onBlur}
+                    onInput={props.onInput}
+                    disabled={props.disabled}
+                />
             </Field>
 
             <Field

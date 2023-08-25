@@ -2,10 +2,10 @@ import { h } from 'preact';
 import Field from '../../FormFields/Field';
 import StateField from './StateField';
 import CountryField from './CountryField';
-import { renderFormField } from '../../FormFields';
 import { AddressStateError, FieldContainerProps } from '../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import Language from '../../../../language/Language';
+import InputText from '../../FormFields/InputText';
 
 function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language, label: string): string | boolean {
     if (typeof errors[fieldName]?.errorMessage === 'object') {
@@ -25,7 +25,7 @@ function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Lan
  */
 function FieldContainer(props: FieldContainerProps) {
     const { i18n } = useCoreContext();
-    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxlength, disabled } = props;
+    const { classNameModifiers = [], data, errors, valid, fieldName, onInput, onBlur, trimOnBlur, maxLength, disabled } = props;
 
     const value: string = data[fieldName];
     const selectedCountry: string = data.country;
@@ -69,17 +69,17 @@ function FieldContainer(props: FieldContainerProps) {
                     name={fieldName}
                     i18n={i18n}
                 >
-                    {renderFormField('text', {
-                        classNameModifiers,
-                        name: fieldName,
-                        value,
-                        onInput,
-                        onBlur,
-                        maxlength,
-                        trimOnBlur,
-                        disabled,
-                        required: isOptional ? false : true
-                    })}
+                    <InputText
+                        name={fieldName}
+                        classNameModifiers={classNameModifiers}
+                        value={value}
+                        onInput={onInput}
+                        onBlur={onBlur}
+                        maxlength={maxLength}
+                        trimOnBlur={trimOnBlur}
+                        disabled={disabled}
+                        required={!isOptional}
+                    />
                 </Field>
             );
     }

@@ -15,18 +15,6 @@ import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, Da
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 
 /**
- * cvcPolicy - 'required' | 'optional' | 'hidden'
- * - Always 'required' for GiftCards
- * - Usually 'required' for single branded Credit Cards but with exceptions e.g. maestro ('optional'), bcmc ('hidden').
- * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
- * comes from the SF in the brand information (as the shopper inputs the cc number)
- */
-let cvcPolicy: CVCPolicyType;
-
-// Usually 'required' for single branded Credit Cards but with exceptions e.g. ticket ('hidden', *technically* a meal voucher)
-let expiryDatePolicy: DatePolicyType;
-
-/**
  * Bound to the instance of CSF
  * Handles specific functionality related to configuring & creating SecuredFields
  */
@@ -36,8 +24,17 @@ export function createSecuredFields(): number {
     // Detect DOM elements that qualify as securedField holders
     const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
 
-    cvcPolicy = CVC_POLICY_REQUIRED;
-    expiryDatePolicy = DATE_POLICY_REQUIRED;
+    /**
+     * cvcPolicy - 'required' | 'optional' | 'hidden'
+     * - Always 'required' for GiftCards
+     * - Usually 'required' for single branded Credit Cards but with exceptions e.g. maestro ('optional'), bcmc ('hidden').
+     * - Always 'required' for generic Credit Cards at start up - in this case, subsequent, supporting information about whether cvc stops being required
+     * comes from the SF in the brand information (as the shopper inputs the cc number)
+     */
+    const cvcPolicy: CVCPolicyType = CVC_POLICY_REQUIRED;
+
+    /** Usually 'required' for single branded Credit Cards but with exceptions e.g. ticket ('hidden', *technically* a meal voucher) */
+    const expiryDatePolicy: DatePolicyType = DATE_POLICY_REQUIRED;
 
     // CHECK IF THIS SECURED FIELD IS NOT OF A CREDIT CARD TYPE
     if (!this.config.isCreditCardType) {
@@ -50,7 +47,7 @@ export function createSecuredFields(): number {
 
     this.securityCode = '';
 
-    this.createCardSecuredFields(securedFields);
+    this.createCardSecuredFields(securedFields, cvcPolicy, expiryDatePolicy);
 
     // Return the number of iframes we're going to create
     return securedFields.length;
@@ -70,7 +67,11 @@ export async function createNonCardSecuredFields(securedFields: HTMLElement[]): 
     }
 }
 
-export async function createCardSecuredFields(securedFields: HTMLElement[]): Promise<any> {
+export async function createCardSecuredFields(
+    securedFields: HTMLElement[],
+    cvcPolicy: CVCPolicyType,
+    expiryDatePolicy: DatePolicyType
+): Promise<any> {
     // Declared card type from the initialisation of CSF
     let type: string = this.state.type;
 
@@ -118,7 +119,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
     for (let i = 0; i < securedFields.length; i++) {
         const securedField = securedFields[i];
         if (window._b$dl) console.log('\nAbout to set up securedField:', securedField);
-        await this.setupSecuredField(securedField).catch(e => {
+        await this.setupSecuredField(securedField, cvcPolicy, expiryDatePolicy).catch(e => {
             if (window._b$dl) console.log('Secured fields setup failure. e=', e);
         });
         if (window._b$dl) console.log('Finished setting up securedField:', securedField);
@@ -150,7 +151,7 @@ export async function createCardSecuredFields(securedFields: HTMLElement[]): Pro
 }
 
 // Run for each detected holder of a securedField...
-export function setupSecuredField(pItem: HTMLElement): Promise<any> {
+export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType, expiryDatePolicy?: DatePolicyType): Promise<any> {
     return new Promise((resolve, reject) => {
         /**
          *  possible values:
@@ -195,7 +196,7 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
             maskSecurityCode: this.config.maskSecurityCode,
-            disableIOSArrowKeys: this.config.disableIOSArrowKeys
+            disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n, this.props.placeholders)
@@ -244,13 +245,27 @@ export function setupSecuredField(pItem: HTMLElement): Promise<any> {
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                if (this.config.disableIOSArrowKeys) {
-                    this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                if (this.config.shouldDisableIOSArrowKeys) {
+                    /**
+                     * re. this.hasGenuineTouchEvents...
+                     *  There seems to be an issue with Responsive Design mode in Safari that means it allows setting focus on cross-origin iframes,
+                     *  without enabling the touch events that allow the "disableIOSArrowKeys" workaround to fully function.
+                     *  This results in a click on an securedFields *label* leading to, for example, the holderName field being disabled, but w/o access
+                     *  to the touch events that would let it re-enable itself.
+                     *
+                     *  So we prevent the "disableIOSArrowKeys" workaround unless we genuinely have touch events available.
+                     */
+                    if (this.hasGenuineTouchEvents || pFeedbackObj.hasGenuineTouchEvents) {
+                        this.callbacks.onTouchstartIOS({ fieldType: pFeedbackObj.fieldType });
+                    }
                 }
 
-                // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
-                // - pass information about which field has just been clicked (gained focus) to the other iframes
-                this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
+                // Only perform this step if we genuinely have touch events available
+                if (pFeedbackObj.hasGenuineTouchEvents || this.hasGenuineTouchEvents) {
+                    // iOS ONLY - RE. iOS BUGS AROUND BLUR AND FOCUS EVENTS
+                    // - pass information about which field has just been clicked (gained focus) to the other iframes
+                    this.postMessageToAllIframes({ fieldType: pFeedbackObj.fieldType, fieldClick: true });
+                }
             })
             .onShiftTab((pFeedbackObj: SFFeedbackObj): void => {
                 // Only happens for Firefox & IE <= 11
