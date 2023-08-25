@@ -48,11 +48,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
 
     /* eslint-disable-next-line */
     protected submitAnalytics(type = 'action', obj?) {
-        // Call analytics endpoint
-        // const isDropin = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-')) === 'dropin';
-
-        // let component_orig = this.props.type === 'card' ? 'scheme' : this.props.type;
-
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
@@ -62,9 +57,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
 
-        // if (isDropin) {
-        console.log('### UIElement::submitAnalytics:: component=', component);
-        // console.log('### UIElement::submitAnalytics:: component_orig=', component_orig);
+        // console.log('### UIElement::submitAnalytics:: component=', component);
 
         // Dropin PM selected, or, standalone comp mounted
         if (type === 'selected' || type === 'mounted') {
@@ -80,16 +73,14 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             }
 
             const data = { component, type: this.props.isDropin ? ANALYTICS_SELECTED_STR : ANALYTICS_MOUNTED_STR, ...storedCardIndicator };
-            console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
+            // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
 
-            // TODO - comment in once API is ready
             this.props.modules?.analytics.createAnalyticsAction({
                 action: 'event',
                 data
             });
             return;
         }
-        // }
 
         // PM pay button pressed
         this.props.modules?.analytics.createAnalyticsAction({
