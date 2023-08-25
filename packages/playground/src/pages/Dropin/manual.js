@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web/auto';
-import { Dropin } from '@adyen/adyen-web';
+// import AdyenCheckout from '@adyen/adyen-web/auto';
+import { AdyenCheckout, Dropin, Card } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
@@ -8,7 +8,7 @@ import { getSearchParameters } from '../../utils';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    window.checkout = await AdyenCheckout({
+    const core = await AdyenCheckout({
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
@@ -146,12 +146,12 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = new Dropin(checkout, {
-        instantPaymentTypes: ['googlepay']
-        // showStoredPaymentMethods: false
+    const dropin = new Dropin({
+        core: core,
+        paymentMethods: [Card]
     }).mount('#dropin-container');
 
     handleRedirectResult();
 
-    return [checkout, dropin];
+    return [core, dropin];
 }

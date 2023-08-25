@@ -6,32 +6,36 @@ import Core from '../core';
 import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public props: P;
-    public state;
+    public state: any = {};
     protected static defaultProps = {};
-    public _node;
+    public _node = null;
     public _component;
     public eventEmitter = new EventEmitter();
     protected readonly _parentInstance: Core;
+    protected readonly core: Core;
 
     protected resources: Resources;
 
-    protected constructor(checkoutRef: Core, props: P) {
-        this._parentInstance = checkoutRef;
+    protected constructor(props: P) {
+        this._parentInstance = props.core;
+        this.core = props.core;
 
-        this._node = null;
-        this.state = {};
+        // Check for some expected methods on checkoutRef. Would like to use "if(!checkoutRef instanceof Core)" but that creates circular dependencies in the build process
+        // if (!hasOwnProperty(checkoutRef, 'createFromAction') || !hasOwnProperty(checkoutRef, 'update')) {
+        if (!this.core) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
+        }
 
-        this.init(props);
+        this.buildElementProps(props);
     }
 
-    protected init(props: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
-
-        this.resources = this.props.modules ? this.props.modules.resources : undefined;
+    protected buildElementProps(componentProps: P) {
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...componentProps });
     }
 
     /**

@@ -1,4 +1,6 @@
 export default {
+    paymentMethods: [],
+
     isDropin: true,
     onReady: () => {}, // triggered when the Dropin is fully loaded
     onComplete: () => {}, // triggered when the shopper completes a payment

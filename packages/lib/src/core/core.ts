@@ -38,6 +38,14 @@ class Core {
         registry.add(...items);
     }
 
+    public register(...items: any[]) {
+        registry.add(...items);
+    }
+
+    public getComponent(txVariant: string) {
+        return registry.getComponent(txVariant);
+    }
+
     constructor(props: CoreOptions) {
         // this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
@@ -229,59 +237,63 @@ class Core {
      * @param options - options that will be merged to the global Checkout props
      * @returns props for a new UIElement
      */
-    private getPropsForComponent(options) {
+    public getPropsForComponent(options) {
         return {
-            paymentMethods: this.paymentMethodsResponse.paymentMethods,
-            storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
+            // paymentMethods: this.paymentMethodsResponse.paymentMethods,
+            // storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
             session: this.session,
             loadingContext: this.loadingContext,
             cdnContext: this.cdnContext,
-            createFromAction: this.createFromAction
+            createFromAction: this.createFromAction,
+            // new stuff
+            environment: this.options.environment,
+            clientKey: this.options.clientKey,
+            showPayButton: true
         };
     }
 
-    public generatePropsForUIElement(options: any) {
-        const props = this.getPropsForComponent(options);
-
-        const { type, isDropin, supportedShopperInteractions, storedPaymentMethodId } = props;
-
-        /**
-         * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone comp.
-         */
-        const needsConfigData = type !== 'dropin' && !isDropin;
-        const needsPMData = needsConfigData && !supportedShopperInteractions;
-
-        /**
-         * We only need to populate the paymentMethodsDetails & paymentMethodsConfiguration objects under certain circumstances.
-         * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
-         * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
-         * So:
-         *  - for a standalone component: needsConfigData = true, needsPMData = true
-         *  - for a standalone storedCard component: needsConfigData = true, needsPMData = false
-         *  - for Dropin or PM within dropin: needsConfigData = false, needsPMData = false
-         */
-        const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(type) : {};
-        const paymentMethodsConfiguration = needsConfigData
-            ? getComponentConfiguration(type, this.options.paymentMethodsConfiguration, !!storedPaymentMethodId)
-            : {};
-
-        // Filtered global options
-        const globalOptions = processGlobalOptions(this.options);
-
-        const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
-
-        // TODO - keep for now, for debugging
-        // console.log('\n### core::generatePropsForUIElement:: props.type', type);
-        // console.log('### core::generatePropsForUIElement:: props.isDropin', isDropin);
-        // console.log('### core::generatePropsForUIElement:: props.supportedShopperInteractions', supportedShopperInteractions);
-        // console.log('### core::generatePropsForUIElement:: needsConfigData', needsConfigData);
-        // console.log('### core::generatePropsForUIElement:: needsPMData', needsPMData);
-
-        return calculatedOptions;
-    }
+    // public generatePropsForUIElement(options: any) {
+    //     const props = this.getPropsForComponent(options);
+    //
+    //     const { type, isDropin, supportedShopperInteractions, storedPaymentMethodId } = props;
+    //
+    //     /**
+    //      * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone comp.
+    //      */
+    //     const needsConfigData = type !== 'dropin' && !isDropin;
+    //     const needsPMData = needsConfigData && !supportedShopperInteractions;
+    //
+    //     /**
+    //      * We only need to populate the paymentMethodsDetails & paymentMethodsConfiguration objects under certain circumstances.
+    //      * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
+    //      * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
+    //      * So:
+    //      *  - for a standalone component: needsConfigData = true, needsPMData = true
+    //      *  - for a standalone storedCard component: needsConfigData = true, needsPMData = false
+    //      *  - for Dropin or PM within dropin: needsConfigData = false, needsPMData = false
+    //      */
+    //     const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(type) : {};
+    //     const paymentMethodsConfiguration = needsConfigData
+    //         ? getComponentConfiguration(type, this.options.paymentMethodsConfiguration, !!storedPaymentMethodId)
+    //         : {};
+    //
+    //     // Filtered global options
+    //     const globalOptions = processGlobalOptions(this.options);
+    //
+    //     const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
+    //
+    //     // TODO - keep for now, for debugging
+    //     // console.log('\n### core::generatePropsForUIElement:: props.type', type);
+    //     // console.log('### core::generatePropsForUIElement:: props.isDropin', isDropin);
+    //     // console.log('### core::generatePropsForUIElement:: props.supportedShopperInteractions', supportedShopperInteractions);
+    //     // console.log('### core::generatePropsForUIElement:: needsConfigData', needsConfigData);
+    //     // console.log('### core::generatePropsForUIElement:: needsPMData', needsPMData);
+    //
+    //     return calculatedOptions;
+    // }
 
     public storeComponentRef(component: UIElement) {
         this.components.push(component);
@@ -339,7 +351,7 @@ class Core {
         }
 
         this.modules = Object.freeze({
-            risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext }),
+            risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext, core: this }),
             analytics: new Analytics({
                 loadingContext: this.loadingContext,
                 clientKey: this.options.clientKey,
@@ -349,7 +361,7 @@ class Core {
             }),
             resources: new Resources(this.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations),
-            srPanel: new SRPanel(this.options.srConfig)
+            srPanel: new SRPanel({ core: this, ...this.options.srConfig })
         });
     }
 }

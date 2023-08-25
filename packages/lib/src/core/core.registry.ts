@@ -4,7 +4,7 @@ function assertIsTypeofUIElement(item: any): item is typeof UIElement {
     return typeof UIElement === typeof item;
 }
 
-export type NewableComponent = new (checkout, props) => UIElement;
+export type NewableComponent = new (props) => UIElement;
 
 function createComponentsMap(components: NewableComponent[]) {
     return components.reduce((memo, component) => {
@@ -28,7 +28,7 @@ function createComponentsMap(components: NewableComponent[]) {
                 [dependency.type]: dependency
             };
         });
-        // console.log('### core.registry:::: memo', memo);
+        console.log('### core.registry:::: memo', memo);
         return memo;
     }, {});
 }

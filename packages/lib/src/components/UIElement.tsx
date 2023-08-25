@@ -11,9 +11,13 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
+import { Resources } from '../core/Context/Resources';
 
 export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
+
+    protected resources: Resources;
+
     public elementRef: UIElement;
 
     public static type = undefined;
@@ -29,13 +33,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      */
     public static dependencies: any[] = []; // FIX type
 
-    constructor(checkoutRef: Core, props?: P) {
-        // Check for some expected methods on checkoutRef. Would like to use "if(!checkoutRef instanceof Core)" but that creates circular dependencies in the build process
-        if (!hasOwnProperty(checkoutRef, 'createFromAction') || !hasOwnProperty(checkoutRef, 'update')) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
-        }
+    constructor(props?: P) {
+        super(props);
 
-        super(checkoutRef, props);
+        this.core.register(this.constructor);
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
@@ -48,19 +49,36 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         this.setElementStatus = this.setElementStatus.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
+
+        this.resources = this.props.modules ? this.props.modules.resources : undefined;
     }
 
-    protected init(props: P) {
-        // Retrieve props...
-        const generatedProps = this._parentInstance.generatePropsForUIElement({ ...props, type: props?.type ?? this.constructor['type'] });
-        super.init(generatedProps);
+    protected buildElementProps(componentProps: P) {
+        const globalProps = this.core.getPropsForComponent(componentProps);
+        const paymentMethodsResponseProps = this.core.paymentMethodsResponse.find(this.constructor['type']);
 
-        // console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps); // TODO - keep for now, for debugging
+        const finalProps = {
+            ...globalProps,
+            ...paymentMethodsResponseProps,
+            ...componentProps
+        };
 
-        if (!generatedProps.isDropin) {
-            this._parentInstance.storeComponentRef(this as UIElement);
-        }
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...finalProps });
+
+        console.log(this.props);
     }
+
+    // protected init(props: P) {
+    //     // Retrieve props...
+    //     const generatedProps = this._parentInstance.generatePropsForUIElement({ ...props, type: props?.type ?? this.constructor['type'] });
+    //     super.init(generatedProps);
+    //
+    //     // console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps); // TODO - keep for now, for debugging
+    //
+    //     if (!generatedProps.isDropin) {
+    //         this._parentInstance.storeComponentRef(this as UIElement);
+    //     }
+    // }
 
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };

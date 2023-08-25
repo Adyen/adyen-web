@@ -64,7 +64,7 @@ export interface RawPaymentResponse extends PaymentResponse {
 }
 
 export interface BaseElementProps {
-    _parentInstance?: Core;
+    core: Core;
     order?: Order;
     modules?: {
         srPanel?: SRPanel;

@@ -15,7 +15,7 @@ import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
 import Redirect from '../Redirect/Redirect';
-import Core from '../../core';
+// import Core from '../../core';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -30,13 +30,8 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    constructor(checkoutRef: Core, props: CardElementProps) {
-        // console.log('\n### Card::constructor:: props.type=', props.type);
-        // props.type is specified in storedCards, Bancontact and when card is part of dropin
-        // but not for standalone card
-
-        // UIElement does the calculating of props...
-        super(checkoutRef, props);
+    constructor(props: CardElementProps) {
+        super(props);
 
         if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
