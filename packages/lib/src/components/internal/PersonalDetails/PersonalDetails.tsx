@@ -111,7 +111,12 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 )}
 
                 {requiredFields.includes('gender') && (
-                    <Field errorMessage={getErrorMessage(errors.gender)} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
+                    <Field
+                        errorMessage={getErrorMessage(i18n, errors.gender)}
+                        classNameModifiers={['gender']}
+                        name={'gender'}
+                        useLabelElement={false}
+                    >
                         <RadioGroup
                             name={generateFieldName('gender')}
                             value={data.gender}
