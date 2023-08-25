@@ -31,12 +31,15 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
                 this.setStatus('ready');
 
+                const sessionId = this.props?.session?.id;
+
                 if (this.props.modules.analytics) {
                     this.props.modules.analytics.send({
                         containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
                         // paymentMethods: elements.map(e => e.props.type), // TODO will be supported in the initial request to checkoutanalytics
                         component: 'dropin',
-                        flavor: 'dropin'
+                        flavor: 'dropin',
+                        ...(sessionId && { sessionId })
                     });
                 }
             }
@@ -75,7 +78,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
 
-            paymentMethod.submitAnalytics('select');
+            paymentMethod.submitAnalytics('selected');
         }
     };
 

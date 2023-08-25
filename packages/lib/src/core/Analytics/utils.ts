@@ -17,7 +17,8 @@ export const getUTCTimestamp = () => Date.now();
  *  "type" (e.g. logging during the 3DS2 process)
  *
  * Event objects have, in addition to the base props:
- *   "type" & "target"
+ *   "type" & "target" &
+ *   "isStoredPaymentMethod" & "brand" (when a storedCard is "selected")
  */
 export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
     timestamp: String(getUTCTimestamp()),
@@ -27,5 +28,6 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.action === 'log' && { type: aObj.type }), // only added if we have a log object
     ...(aObj.action === 'log' && aObj.type === ANALYTICS_ACTION_STR && { subType: aObj.subtype }), // only added if we have a log object of Action type
     ...(aObj.action === 'log' && aObj.type === ANALYTICS_SUBMIT_STR && { target: aObj.target }), // only added if we have a log object of Submit type
-    ...(aObj.action === 'event' && { type: aObj.type, target: aObj.target }) // only added if we have an event object
+    ...(aObj.action === 'event' && { type: aObj.type, target: aObj.target }), // only added if we have an event object
+    ...(aObj.action === 'event' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }) // only added when a storedCard is selected/mounted
 });

@@ -3,7 +3,7 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import Core from '../core';
-import { BaseElementProps, PaymentData } from './types';
+import { BaseElementProps, PaymentData, UIElementProps } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
 
@@ -44,6 +44,11 @@ class BaseElement<P extends BaseElementProps> {
      */
     protected formatData(): any {
         return {};
+    }
+
+    /* eslint-disable-next-line */
+    protected submitAnalytics(type: string, obj?) {
+        return null;
     }
 
     protected setState(newState: object): void {
@@ -93,13 +98,20 @@ class BaseElement<P extends BaseElementProps> {
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
         } else {
-            // Set up analytics, once
+            // Set up analytics (once, since this._node is undefined)
             if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
-                this.props.modules.analytics.send({
-                    containerWidth: node && (node as HTMLElement).offsetWidth,
-                    component: this.constructor['analyticsType'] ?? this.constructor['type'],
-                    flavor: 'components'
-                });
+                const sessionId = (this.props as UIElementProps)?.session?.id;
+
+                this.props.modules.analytics
+                    .send({
+                        containerWidth: node && (node as HTMLElement).offsetWidth,
+                        component: this.constructor['analyticsType'] ?? this.constructor['type'],
+                        flavor: 'components',
+                        ...(sessionId && { sessionId })
+                    })
+                    .then(() => {
+                        this.submitAnalytics('mounted');
+                    });
             }
         }
 

@@ -11,7 +11,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import { ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -47,35 +47,51 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(obj?) {
+    protected submitAnalytics(type = 'action', obj?) {
         // Call analytics endpoint
-        const isDropin = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-')) === 'dropin';
+        // const isDropin = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-')) === 'dropin';
 
-        const component = this.props.type === 'card' ? 'scheme' : this.props.type;
+        // let component_orig = this.props.type === 'card' ? 'scheme' : this.props.type;
 
-        if (isDropin) {
-            // PM selected scenario
-            if (obj === 'select') {
-                let storedCardIndicator;
-                // Check if it's a storedCard
-                if (component === 'scheme') {
-                    if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
-                        storedCardIndicator = {
-                            isStoredPaymentMethod: true,
-                            brand: this.props.brand
-                        };
-                    }
-                }
-
-                this.props.modules?.analytics.createAnalyticsAction({
-                    action: 'event',
-                    data: { component, type: ANALYTICS_SELECTED_STR, ...storedCardIndicator }
-                });
-                return;
-            }
+        /** Work out what the component's "type" is:
+         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+         */
+        let component = this.constructor['analyticsType'];
+        if (!component) {
+            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
 
-        // PM pay button pressed scenario
+        // if (isDropin) {
+        console.log('### UIElement::submitAnalytics:: component=', component);
+        // console.log('### UIElement::submitAnalytics:: component_orig=', component_orig);
+
+        // Dropin PM selected, or, standalone comp mounted
+        if (type === 'selected' || type === 'mounted') {
+            let storedCardIndicator;
+            // Check if it's a storedCard
+            if (component === 'scheme') {
+                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                    storedCardIndicator = {
+                        isStoredPaymentMethod: true,
+                        brand: this.props.brand
+                    };
+                }
+            }
+
+            const data = { component, type: this.props.isDropin ? ANALYTICS_SELECTED_STR : ANALYTICS_MOUNTED_STR, ...storedCardIndicator };
+            console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
+
+            // TODO - comment in once API is ready
+            this.props.modules?.analytics.createAnalyticsAction({
+                action: 'event',
+                data
+            });
+            return;
+        }
+        // }
+
+        // PM pay button pressed
         this.props.modules?.analytics.createAnalyticsAction({
             action: 'log',
             data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }

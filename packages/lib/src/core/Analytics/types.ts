@@ -46,6 +46,8 @@ export interface AnalyticsObject {
     subtype?: string;
     target?: string;
     metadata?: Record<string, any>;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
 }
 
 export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
@@ -57,6 +59,7 @@ export type AnalyticsInitialEvent = {
     component: string;
     flavor: string;
     paymentMethods?: any[];
+    sessionId?: string;
 };
 
 export type AnalyticsConfig = {

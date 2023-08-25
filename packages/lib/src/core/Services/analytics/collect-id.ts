@@ -46,7 +46,7 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
             ...event
         };
 
-        if (promise) return promise;
+        if (promise) return promise; // Prevents multiple standalone components on the same page from making multiple calls to collect a checkoutAttemptId
         if (!clientKey) return Promise.reject('no-client-key');
 
         const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');

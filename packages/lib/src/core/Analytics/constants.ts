@@ -7,6 +7,7 @@ export const ANALYTICS_ACTION_EVENT = 'event';
 export const ANALYTICS_ACTION_STR = 'Action';
 export const ANALYTICS_SUBMIT_STR = 'Submit';
 export const ANALYTICS_SELECTED_STR = 'Selected';
+export const ANALYTICS_MOUNTED_STR = 'Mounted';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';
