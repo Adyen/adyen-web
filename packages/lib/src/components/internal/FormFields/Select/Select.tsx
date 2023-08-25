@@ -19,7 +19,7 @@ function Select({
     readonly = false,
     onChange = () => {},
     onInput,
-    selected,
+    selectedValue,
     name,
     isInvalid,
     isValid,
@@ -37,7 +37,7 @@ function Select({
     const [showList, setShowList] = useState<boolean>(false);
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
 
-    const active: SelectItem = items.find(i => i.id === selected) || ({} as SelectItem);
+    const active: SelectItem = items.find(i => i.id === selectedValue) || ({} as SelectItem);
 
     const [inputText, setInputText] = useState<string>();
 
@@ -113,7 +113,7 @@ function Select({
             } else {
                 // This will happen when we want to keep an already chosen option
                 // If no active option we should just emit again with the value that was already selected
-                valueToEmit = { id: selected };
+                valueToEmit = { id: selectedValue };
             }
         }
 

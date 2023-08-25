@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import { useState, useLayoutEffect } from 'preact/hooks';
-import { renderFormField } from '../../FormFields';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
 import { StateFieldItem, StateFieldProps } from '../types';
+import Select from '../../FormFields/Select';
 
 export default function StateField(props: StateFieldProps) {
     const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value } = props;
@@ -44,14 +44,14 @@ export default function StateField(props: StateFieldProps) {
             name={'stateOrProvince'}
             i18n={i18n}
         >
-            {renderFormField('select', {
-                name: 'stateOrProvince',
-                onChange: onDropdownChange,
-                selected: value,
-                placeholder: i18n.get(placeholderKey),
-                items: states,
-                readonly: readOnly && !!value
-            })}
+            <Select
+                name={'stateOrProvince'}
+                onChange={onDropdownChange}
+                selectedValue={value}
+                placeholder={i18n.get(placeholderKey)}
+                items={states}
+                readonly={readOnly && !!value}
+            />
         </Field>
     );
 }
