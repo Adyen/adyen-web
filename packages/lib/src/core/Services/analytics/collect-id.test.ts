@@ -93,7 +93,8 @@ test('Should send expected data to http service', () => {
             version: 'x.x.x',
             flavor: customEvent.flavor,
             containerWidth: customEvent.containerWidth,
-            component: customEvent.component
+            component: customEvent.component,
+            buildType: 'compiled'
         }
     );
 
