@@ -12,6 +12,7 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 import { Resources } from '../core/Context/Resources';
+import { processGlobalOptions } from '../core/utils';
 
 export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -54,11 +55,12 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     }
 
     protected buildElementProps(componentProps: P) {
-        const globalProps = this.core.getPropsForComponent(componentProps);
+        // componentProps Props can be passed here OR in the finalProps, needs to decide where..
+        const globalCoreProps = this.core.getPropsForComponent(componentProps);
         const paymentMethodsResponseProps = this.core.paymentMethodsResponse.find(this.constructor['type']);
 
         const finalProps = {
-            ...globalProps,
+            ...globalCoreProps,
             ...paymentMethodsResponseProps,
             ...componentProps
         };
@@ -146,6 +148,8 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * Submit payment method data. If the form is not valid, it will trigger validation.
      */
     public submit(): void {
+        debugger;
+
         if (!this.isValid) {
             this.showValidation();
             return;

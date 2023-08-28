@@ -51,6 +51,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro']
     }).mount('.card-field');
 
+    console.log(card);
+
     // // Stored Card
     // if (showComps.storedCard) {
     //     if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {

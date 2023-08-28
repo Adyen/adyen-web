@@ -238,9 +238,12 @@ class Core {
      * @returns props for a new UIElement
      */
     public getPropsForComponent(options) {
+        const globalOptions = processGlobalOptions(this.options);
+
         return {
             // paymentMethods: this.paymentMethodsResponse.paymentMethods,
             // storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
+            ...globalOptions,
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,

@@ -131,16 +131,18 @@ class DropinElement extends UIElement<DropinElementProps> {
 
         const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
 
-        // const storedElements = showStoredPaymentMethods ? createStoredElements(storedPaymentMethods, commonProps, this._parentInstance) : [];
-
-        const elements = showPaymentMethods
-            ? createElements(this.core.paymentMethodsResponse.paymentMethods, paymentMethodsConfiguration, commonProps, this.core)
+        const storedElements = showStoredPaymentMethods
+            ? createStoredElements(this.core.paymentMethodsResponse.storedPaymentMethods, paymentMethodsConfiguration, commonProps, this.core)
             : [];
+
+        // const elements = showPaymentMethods
+        //     ? createElements(this.core.paymentMethodsResponse.paymentMethods, paymentMethodsConfiguration, commonProps, this.core)
+        //     : [];
 
         // const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, commonProps, this._parentInstance);
 
         // return [storedElements, elements, instantPaymentElements];
-        return [[], elements, []];
+        return [storedElements, [], []];
         // return [elements];
     };
 

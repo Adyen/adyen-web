@@ -1,8 +1,9 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
-import { PaymentMethod } from '../../../types';
+import { PaymentMethod, StoredPaymentMethod } from '../../../types';
 // import UIElement from '../../UIElement';
 import Core from '../../../core';
 import { PaymentMethodsConfiguration } from '../../../core/types';
+import { getComponentConfiguration } from '../../../core/utils';
 //
 // /**
 //  * Returns a filtered (available) list of component Elements
@@ -10,10 +11,19 @@ import { PaymentMethodsConfiguration } from '../../../core/types';
 //  * @param props - High level props to be passed through to every component (as defined in utils/getCommonProps)
 //  * @param create - Reference to the main instance `Core#create` method
 //  */
-const createElements = (paymentMethods: PaymentMethod[], paymentMethodsConfiguration: PaymentMethodsConfiguration, props, core: Core) => {
+const createElements = (
+    paymentMethods: PaymentMethod[] | StoredPaymentMethod[],
+    paymentMethodsConfiguration: PaymentMethodsConfiguration,
+    commonProps,
+    core: Core
+) => {
     const elements = paymentMethods
         .map(paymentMethod => {
-            const props = paymentMethodsConfiguration[paymentMethod.type] || {};
+            const paymentMethodConfigurationProps = getComponentConfiguration(
+                paymentMethod.type,
+                paymentMethodsConfiguration,
+                paymentMethod.storedPaymentMethodId
+            );
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
             if (!PaymentMethodElement) {
@@ -23,7 +33,10 @@ const createElements = (paymentMethods: PaymentMethod[], paymentMethodsConfigura
                 return null;
             }
 
-            return new PaymentMethodElement({ core, ...props });
+            const elementProps = { core, ...paymentMethod, ...commonProps, ...paymentMethodConfigurationProps };
+            console.log('elementProps', elementProps);
+
+            return new PaymentMethodElement(elementProps);
         })
         .filter(filterPresent)
         .filter(filterUnsupported);

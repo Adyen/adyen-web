@@ -1,4 +1,5 @@
 import { GENERIC_OPTIONS } from './config';
+import { PaymentMethodsConfiguration } from './types';
 
 /**
  * Filter properties in a global configuration object from an allow list (GENERIC_OPTIONS)
@@ -12,11 +13,11 @@ export function processGlobalOptions(globalOptions) {
     }, {});
 }
 
-export const getComponentConfiguration = (type: string, componentsConfig = {}, isStoredCard = false) => {
+export const getComponentConfiguration = (type: string, paymentMethodsConfiguration: PaymentMethodsConfiguration = {}, isStoredCard = false) => {
     let pmType = type;
     if (type === 'scheme') {
         pmType = isStoredCard ? 'storedCard' : 'card';
     }
 
-    return componentsConfig[pmType] || {};
+    return paymentMethodsConfiguration[pmType] || {};
 };
