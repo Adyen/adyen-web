@@ -21,15 +21,15 @@ describe('StoredCard', () => {
     test('Renders a StoredCard field, with readonly expiryDate and cvc field', () => {
         render(<StoredCardFields {...storedCardProps} />);
 
+        // Look for expiryDate elements
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeTruthy(); // presence
-        /* eslint-disable-next-line */
-        expect(screen.queryByLabelText('Expiry date', { exact: true })).toBeTruthy(); // presence
-        /* eslint-disable-next-line */
-        expect(screen.queryByLabelText('Expiry date', { exact: true })).toHaveAttribute('readonly', '');
 
-        /* eslint-disable-next-line */
-        expect(screen.queryAllByText('Security code', { exact: true })).toBeTruthy();
+        expect(screen.getByLabelText('Expiry date', { exact: true })).toBeTruthy(); // presence
+        expect(screen.getByLabelText('Expiry date', { exact: true })).toHaveAttribute('readonly', '');
+
+        // Look for cvc field elements
+        expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
         expect(screen.getByRole('img', { name: 'Security code' })).toBeTruthy();
     });
 
@@ -43,8 +43,7 @@ describe('StoredCard', () => {
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
-        /* eslint-disable-next-line */
-        expect(screen.queryAllByText('Security code', { exact: true })).toBeTruthy();
+        expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
         expect(screen.getByRole('img', { name: 'Security code' })).toBeTruthy();
     });
 
@@ -58,8 +57,7 @@ describe('StoredCard', () => {
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
-        /* eslint-disable-next-line */
-        expect(screen.queryAllByText('Security code', { exact: true })).toBeTruthy();
+        expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
         expect(screen.getByRole('img', { name: 'Security code' })).toBeTruthy();
     });
 
@@ -73,8 +71,7 @@ describe('StoredCard', () => {
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
-        /* eslint-disable-next-line */
-        expect(screen.queryAllByText('Security code', { exact: true })).toBeTruthy();
+        expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
         expect(screen.getByRole('img', { name: 'Security code' })).toBeTruthy();
     });
 });
