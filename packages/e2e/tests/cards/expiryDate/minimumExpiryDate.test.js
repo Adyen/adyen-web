@@ -70,7 +70,7 @@ test('#3 With minimumExpiryDate set - input an expiry date that is matches it & 
     await t.expect(errorHolder.exists).notOk();
 
     // Test UI shows no error
-    await t.expect(errorLabel.withExactText('').exists).ok();
+    await t.expect(errorLabel.exists).notOk();
 });
 
 test('#4 With minimumExpiryDate set - input an expiry date that exceeds it (a bit) & expect no error', async t => {
@@ -84,7 +84,7 @@ test('#4 With minimumExpiryDate set - input an expiry date that exceeds it (a bi
     await t.expect(errorHolder.exists).notOk();
 
     // Test UI shows no error
-    await t.expect(errorLabel.withExactText('').exists).ok();
+    await t.expect(errorLabel.exists).notOk();
 });
 
 test('#5 With minimumExpiryDate set - input an expiry date that is too far in the future, & expect the correct error ', async t => {
@@ -120,7 +120,7 @@ test(
         await t.expect(errorHolder.exists).notOk();
 
         // Test UI shows no error
-        await t.expect(errorLabel.withExactText('').exists).ok();
+        await t.expect(errorLabel.exists).notOk();
 
         // Card out of date
         await cardUtils.fillDate(t, '08/24', 'paste');
@@ -152,7 +152,7 @@ test(
         await t.expect(errorHolder.exists).notOk();
 
         // Test UI shows no error
-        await t.expect(errorLabel.withExactText('').exists).ok();
+        await t.expect(errorLabel.exists).notOk();
 
         // Card out of date
         await cardUtils.fillDate(t, '04/10', 'paste');
