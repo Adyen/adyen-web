@@ -22,6 +22,11 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
 
     public static type = undefined;
 
+    public static defaultProps = {
+        showPayButton: true,
+        setStatusAutomatically: true
+    };
+
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
      */
@@ -55,8 +60,12 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
 
     protected buildElementProps(componentProps: P) {
         // componentProps Props can be passed here OR in the finalProps, needs to decide where..
-        const globalCoreProps = this.core.getPropsForComponent(componentProps);
+        const globalCoreProps = this.core.getCorePropsForComponent();
         const paymentMethodsResponseProps = this.core.paymentMethodsResponse.find(this.constructor['type']);
+
+        console.log('## globalCoreProps', globalCoreProps);
+        console.log('## paymentMethodsResponseProps', paymentMethodsResponseProps);
+        console.log('## componentProps', componentProps);
 
         const finalProps = {
             ...globalCoreProps,

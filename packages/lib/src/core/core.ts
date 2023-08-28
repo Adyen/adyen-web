@@ -199,28 +199,19 @@ class Core {
 
     /**
      * @internal
-     * @param options - options that will be merged to the global Checkout props
      * @returns props for a new UIElement
      */
-    public getPropsForComponent(options) {
+    public getCorePropsForComponent() {
         const globalOptions = processGlobalOptions(this.options);
 
         return {
-            // paymentMethods: this.paymentMethodsResponse.paymentMethods,
-            // storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
             ...globalOptions,
-            ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
             session: this.session,
             loadingContext: this.loadingContext,
             cdnContext: this.cdnContext,
-            createFromAction: this.createFromAction,
-            // new stuff
-            environment: this.options.environment,
-            clientKey: this.options.clientKey,
-            showPayButton: true,
-            setStatusAutomatically: true
+            createFromAction: this.createFromAction
         };
     }
 
