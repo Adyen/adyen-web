@@ -1,4 +1,4 @@
-import AdyenCheckout from '@adyen/adyen-web/auto';
+import { AdyenCheckout } from '@adyen/adyen-web';
 import { Dropin } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';

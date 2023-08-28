@@ -12,7 +12,6 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 import { Resources } from '../core/Context/Resources';
-import { processGlobalOptions } from '../core/utils';
 
 export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -65,22 +64,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             ...componentProps
         };
 
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...finalProps });
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
 
         console.log(this.props);
     }
-
-    // protected init(props: P) {
-    //     // Retrieve props...
-    //     const generatedProps = this._parentInstance.generatePropsForUIElement({ ...props, type: props?.type ?? this.constructor['type'] });
-    //     super.init(generatedProps);
-    //
-    //     // console.log('### UIElement::constructor:: type', props?.type ?? this.constructor['type'], 'generatedProps', generatedProps); // TODO - keep for now, for debugging
-    //
-    //     if (!generatedProps.isDropin) {
-    //         this._parentInstance.storeComponentRef(this as UIElement);
-    //     }
-    // }
 
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
@@ -148,8 +135,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * Submit payment method data. If the form is not valid, it will trigger validation.
      */
     public submit(): void {
-        debugger;
-
         if (!this.isValid) {
             this.showValidation();
             return;

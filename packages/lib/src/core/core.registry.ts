@@ -28,7 +28,6 @@ function createComponentsMap(components: NewableComponent[]) {
                 [dependency.type]: dependency
             };
         });
-        console.log('### core.registry:::: memo', memo);
         return memo;
     }, {});
 }
@@ -43,8 +42,9 @@ class Registry implements IRegistry {
     public componentsMap: Record<string, NewableComponent> = {};
 
     public add(...items: NewableComponent[]) {
-        this.components = [...items];
+        this.components = [...this.components, ...items];
         this.componentsMap = createComponentsMap(this.components);
+        console.log('### core.registry:::: componentsMap', this.componentsMap);
     }
 
     public getComponent(type: string) {

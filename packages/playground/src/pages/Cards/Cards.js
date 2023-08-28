@@ -46,9 +46,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     const card = new Card({
         core: core,
 
-        _disableClickToPay: true,
-
-        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro']
+        _disableClickToPay: true
     }).mount('.card-field');
 
     console.log(card);

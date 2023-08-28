@@ -13,8 +13,6 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
-import AdyenCheckoutError from './Errors/AdyenCheckoutError';
-import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
 
 class Core {
     public session: Session;
@@ -38,7 +36,7 @@ class Core {
         registry.add(...items);
     }
 
-    public register(...items: any[]) {
+    public register(...items: NewableComponent[]) {
         registry.add(...items);
     }
 
@@ -47,7 +45,6 @@ class Core {
     }
 
     constructor(props: CoreOptions) {
-        // this.create = this.create.bind(this);
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(props);
@@ -115,38 +112,6 @@ class Core {
                     this.options.onError?.(error);
                 });
         }
-    }
-
-    /**
-     * TODO - check if UMD users can also use the 'new' operator
-     * ONLY NEEDED(??) for UMD users of Checkout i.e. merchants who load adyen.js
-     *
-     * Instantiates a new UIElement component ready to be mounted
-     *
-     * @param paymentMethod - Name of the paymentMethod - a string corresponding to a txVariant
-     * @param options - the merchant defined config object passed when a component is created via checkout.create
-     *
-     * @returns new UIElement
-     */
-    public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): UIElement {
-        /**
-         * Distinguish UMD users from npm users and throw this error if npm users try to call checkout.create
-         * TODO - decide if this is a reliable check and whether an error is too strong & it should just be a warning
-         */
-        if (!window['AdyenCheckout']) {
-            throw new AdyenCheckoutError(
-                'IMPLEMENTATION_ERROR',
-                'Since v6 the create method is no longer how you instantiate a Payment Method component. You should now import the component directly and instantiate it with the "new" operator e.g. new Card(checkout, props)'
-            );
-        }
-
-        const PaymentMethod: NewableComponent = registry.getComponent(paymentMethod);
-
-        if (!PaymentMethod) {
-            return this.handleCreateError(PaymentMethod);
-        }
-
-        return new PaymentMethod(this, options);
     }
 
     /**
@@ -254,79 +219,13 @@ class Core {
             // new stuff
             environment: this.options.environment,
             clientKey: this.options.clientKey,
-            showPayButton: true
+            showPayButton: true,
+            setStatusAutomatically: true
         };
     }
 
-    // public generatePropsForUIElement(options: any) {
-    //     const props = this.getPropsForComponent(options);
-    //
-    //     const { type, isDropin, supportedShopperInteractions, storedPaymentMethodId } = props;
-    //
-    //     /**
-    //      * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone comp.
-    //      */
-    //     const needsConfigData = type !== 'dropin' && !isDropin;
-    //     const needsPMData = needsConfigData && !supportedShopperInteractions;
-    //
-    //     /**
-    //      * We only need to populate the paymentMethodsDetails & paymentMethodsConfiguration objects under certain circumstances.
-    //      * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
-    //      * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
-    //      * So:
-    //      *  - for a standalone component: needsConfigData = true, needsPMData = true
-    //      *  - for a standalone storedCard component: needsConfigData = true, needsPMData = false
-    //      *  - for Dropin or PM within dropin: needsConfigData = false, needsPMData = false
-    //      */
-    //     const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(type) : {};
-    //     const paymentMethodsConfiguration = needsConfigData
-    //         ? getComponentConfiguration(type, this.options.paymentMethodsConfiguration, !!storedPaymentMethodId)
-    //         : {};
-    //
-    //     // Filtered global options
-    //     const globalOptions = processGlobalOptions(this.options);
-    //
-    //     const calculatedOptions = { ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...props };
-    //
-    //     // TODO - keep for now, for debugging
-    //     // console.log('\n### core::generatePropsForUIElement:: props.type', type);
-    //     // console.log('### core::generatePropsForUIElement:: props.isDropin', isDropin);
-    //     // console.log('### core::generatePropsForUIElement:: props.supportedShopperInteractions', supportedShopperInteractions);
-    //     // console.log('### core::generatePropsForUIElement:: needsConfigData', needsConfigData);
-    //     // console.log('### core::generatePropsForUIElement:: needsPMData', needsPMData);
-    //
-    //     return calculatedOptions;
-    // }
-
     public storeComponentRef(component: UIElement) {
         this.components.push(component);
-    }
-
-    public createUIElementForDropin(PaymentMethodObject, options) {
-        // console.log('### core::createUIElementForDropin:: ');// TODO - keep for now, for debugging
-        const paymentMethodsConfiguration = getComponentConfiguration(
-            PaymentMethodObject.type,
-            this.options.paymentMethodsConfiguration,
-            !!PaymentMethodObject.storedPaymentMethodId
-        );
-
-        const calculatedUIElementProps = { ...PaymentMethodObject, ...options, ...paymentMethodsConfiguration };
-
-        let PaymentMethod = registry.getComponent(PaymentMethodObject.type);
-
-        /**
-         * If we are trying to create a payment method that is in the paymentMethods response but does not explicitly
-         * implement a component (i.e. no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
-         */
-        if (!PaymentMethod && this.paymentMethodsResponse.has(PaymentMethodObject.type)) {
-            PaymentMethod = registry.getComponent('redirect');
-
-            if (!PaymentMethod) {
-                return this.handleCreateError(PaymentMethod);
-            }
-        }
-
-        return new PaymentMethod(this, calculatedUIElementProps);
     }
 
     /**
