@@ -34,7 +34,6 @@ export const StoredCardFieldsWrapper = ({
                 cvcPolicy={cvcPolicy}
                 onFocusField={setFocusOn}
                 focusedElement={focusedElement}
-                status={sfpState.status}
                 valid={sfpState.valid}
                 lastFour={lastFour}
                 expiryMonth={expiryMonth}
