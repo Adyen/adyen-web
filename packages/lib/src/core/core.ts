@@ -116,6 +116,7 @@ class Core {
 
     /**
      * Instantiates a new element component ready to be mounted from an action object
+     *
      * @param action - action defining the component with the component data
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
@@ -135,9 +136,9 @@ class Core {
             const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
 
             const props = {
-                ...processGlobalOptions(this.options),
+                ...this.getCorePropsForComponent(),
                 ...actionTypeConfiguration,
-                ...this.getPropsForComponent(options)
+                ...options
             };
 
             return getComponentForAction(this, registry, action, props);
