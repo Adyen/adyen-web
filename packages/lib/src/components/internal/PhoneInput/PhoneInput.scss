@@ -9,14 +9,6 @@
         .adyen-checkout__input {
             padding: 0;
             height: auto;
-
-          /*  &:focus-within {
-                border: 1px solid var(--b-input-field-input-box-focus-border-color);
-
-                .adyen-checkout-dropdown--countrycode-selector {
-                    border-right: 1px solid var(--b-color-black);
-                }
-            } */
         }
 
         // inherited style (Select.scss)

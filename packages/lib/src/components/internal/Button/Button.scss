@@ -144,10 +144,10 @@
     }
 
     &.adyen-checkout__button--link {
-        // todo: reuse or rewrite
         background: transparent;
         border: 1px solid transparent;
-        color: var(--b-color-black);
+        color: var(--b-color-surface-highlight-strong);
+        text-decoration: none;
         font-weight: 400;
         border-radius: var(--b-border-radius-s);
         padding: 2px;

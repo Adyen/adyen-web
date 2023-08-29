@@ -141,17 +141,10 @@
     height: 16px;
     margin-right: var(--b-spacer-060);
 
-    // todo: test when using flexbox, possibly we need to change the margin left
-
-    /*    [dir='rtl'] & {
-          right: auto;
-      //    left: 14px;
+      [dir='rtl'] & {
+          margin-left: var(--b-spacer-060);
       }
 
-      [dir='ltr'] & {
-      //    right: 14px;
-          left: auto;
-      } */
 }
 
 .adyen-checkout-input__inline-validation--valid {

@@ -63,12 +63,11 @@ $adyen-checkout-media-query-l-min: 1024px;
   text-decoration: none;
 
   &:hover {
-    color: var(--b-link-hover-color);
-    text-decoration: var(--b-link-hover-text-decoration);
+    text-decoration: underline;
   }
 
   &:active {
-    color: var(--b-link-active-color);
+    text-decoration: underline;
   }
 
   &:focus-visible {

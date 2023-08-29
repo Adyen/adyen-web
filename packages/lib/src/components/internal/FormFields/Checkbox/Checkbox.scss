@@ -128,5 +128,9 @@
 
     .adyen-checkout-input__inline-validation {
         margin-right: 0;
+
+        [dir='rtl'] & {
+            margin-left: 0;
+        }
     }
 }

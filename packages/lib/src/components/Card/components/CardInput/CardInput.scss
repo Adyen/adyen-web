@@ -127,7 +127,7 @@
     margin-right: var(--b-spacer-060);
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
-        display: none;
+        opacity: 0;
     }
 }
 
