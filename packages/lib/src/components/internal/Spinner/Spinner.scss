@@ -24,7 +24,7 @@
   &::before,
   &::after {
     animation: bento-progress-circular-rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
-    border: 3px solid transparent;
+    border: var(--b-border-width-l) solid transparent;
     border-radius: 50%;
     box-sizing: border-box;
     content: '';

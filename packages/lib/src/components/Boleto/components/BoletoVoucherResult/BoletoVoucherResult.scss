@@ -2,7 +2,7 @@
 
 .adyen-checkout__voucher-result--boletobancario .adyen-checkout__voucher-result__code {
     font-size: index.$font-size-small;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
     word-break: break-all;
-    padding: 24px;
+    padding: var(--b-spacer-090);
 }

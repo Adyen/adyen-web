@@ -7,7 +7,7 @@
     color: var(--b-color-label-secondary);
     white-space: nowrap;
     font-size: 13px;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
 
     &::after,
     &::before {
@@ -17,10 +17,10 @@
     }
 
     &::after {
-        margin-left: 20px;
+        margin-left: var(--b-spacer-080);
     }
 
     &::before {
-        margin-right: 20px;
+        margin-right: var(--b-spacer-080);
     }
 }

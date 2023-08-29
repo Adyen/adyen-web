@@ -11,7 +11,7 @@
 
         .adyen-checkout__dropdown__element__secondary-text {
             color: var(--b-color-grey-500);
-            font-weight: 500;
+            font-weight: var(--b-text-body-stronger-font-weight);
             line-height: 17px;
         }
     }
@@ -27,7 +27,7 @@
 
         .adyen-checkout__dropdown__button__secondary-text {
             color: var(--b-color-grey-500);
-            font-weight: 500;
+            font-weight: var(--b-text-body-stronger-font-weight);
             opacity: 1;
         }
     }

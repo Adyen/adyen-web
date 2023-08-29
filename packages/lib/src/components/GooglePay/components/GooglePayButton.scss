@@ -1,23 +1,23 @@
 .adyen-checkout__paywithgoogle {
-    height: 48px;
+    height: var(--b-spacer-120);
 }
 
 .adyen-checkout__paywithgoogle > div > button {
     &,
     &.long,
     &.short {
-        height: 48px;
+        height: var(--b-spacer-120);
         transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
         border-radius: var(--b-border-radius-m);
 
         &:focus {
-            box-shadow: 0 0 0 2px #99c2ff;
+            box-shadow: 0 0 0 var(--b-spacer-010) #99c2ff;
             outline: 0;
         }
     }
 
     // Default button
     &.gpay-button {
-        padding: 15px 24px 13px;
+        padding: 15px var(--b-spacer-090) 13px;
     }
 }

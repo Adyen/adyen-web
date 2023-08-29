@@ -14,15 +14,15 @@
 .adyen-checkout__dropdown__button::after {
     position: absolute;
     content: '';
-    height: 6px;
-    right: 16px;
-    width: 8px;
-    background-image: url('data:image/svg+xml,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20id%3D%22Arrow%20%2F%20Down%22%3E%0A%3Cpath%20id%3D%22Down%22%20d%3D%22M7.19471%2010.5646C7.59429%2011.098%208.39396%2011.0986%208.79439%2010.5659L11.7872%206.58424C12.2826%205.92514%2011.8123%204.9834%2010.9878%204.9834H5.01209C4.18829%204.9834%203.71785%205.92367%204.21178%206.58298L7.19471%2010.5646Z%22%20fill%3D%22%2300112C%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E');
+    height: var(--b-spacer-030);
+    right: var(--b-spacer-070);
+    width: var(--b-spacer-040);
+    background-image: url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216%22%20height=%2217%22%20viewBox=%220%200%2016%2017%22%20fill=%22none%22%3E%0A%20%20%3Cpath%20fill-rule=%22evenodd%22%20clip-rule=%22evenodd%22%20d=%22M4.46971%206.46967C4.7626%206.17678%205.23748%206.17678%205.53037%206.46967L8.00004%208.93934L10.4697%206.46967C10.7626%206.17678%2011.2375%206.17678%2011.5304%206.46967C11.8233%206.76256%2011.8233%207.23744%2011.5304%207.53033L8.53037%2010.5303C8.23747%2010.8232%207.7626%2010.8232%207.46971%2010.5303L4.46971%207.53033C4.17681%207.23744%204.17681%206.76256%204.46971%206.46967Z%22%20fill=%22#00112C%22/%3E%0A%3C/svg%3E');
     background-repeat: no-repeat;
     background-position: center;
 
     [dir='rtl'] & {
-        left: 16px;
+        left: var(--b-spacer-070);
         right: auto;
     }
 }
@@ -38,12 +38,12 @@
     font-family: inherit;
     font-size: index.$font-size-medium;
     height: 100%;
-    padding:0;
+    padding: 0;
     width: 100%;
 
     &::placeholder {
         color: var(--b-color-grey-500);
-        font-weight: 200;
+        font-weight: var(--b-font-weight-200);
     }
 
     &:focus,
@@ -66,7 +66,7 @@
     list-style: none;
     padding: 0;
     z-index: 1;
-    margin: 0 0 50px;
+    margin: 0 0 var(--b-spacer-120);
     overflow-y: auto;
     display: none;
 }

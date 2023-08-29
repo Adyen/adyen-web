@@ -1,11 +1,11 @@
 .adyen-checkout_upi-mode-selection-text {
-    font-weight: 400;
+    font-weight: var(--b-text-body-font-weight);
     font-size: 13px;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
     margin-top: 0;
     margin-bottom: 7px;
 }
 
 .adyen-checkout__segmented-control--upi-margin-bottom {
-    margin-bottom: 16px;
+    margin-bottom: var(--b-spacer-070);
 }

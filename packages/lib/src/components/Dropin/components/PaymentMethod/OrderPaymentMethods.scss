@@ -2,14 +2,14 @@
 
 .adyen-checkout__order-payment-methods-list {
     list-style: none;
-    margin: 0 auto 16px;
+    margin: 0 auto var(--b-spacer-070);
     padding: 0;
 }
 
 .adyen-checkout__order-payment-method {
     position: relative;
     background: var(--b-color-white);
-    border: 1px solid var(--b-color-outline-tertiary);
+    border: var(--b-border-width-s) solid var(--b-color-outline-tertiary);
     margin-top: -1px;
     width: 100%;
 }
@@ -31,9 +31,9 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    font-weight: 500;
+    font-weight: var(--b-text-body-stronger-font-weight);
     font-size: index.$font-size-medium;
-    padding: 16px;
+    padding: var(--b-spacer-070);
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
@@ -45,7 +45,7 @@
 
 // Order payment method content
 .adyen-checkout__order-payment-method__details {
-    padding: 0 16px 16px;
+    padding: 0 var(--b-spacer-070) var(--b-spacer-070);
 }
 
 .adyen-checkout__order-payment-method__deducted-amount {
@@ -60,17 +60,17 @@
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__value {
-    font-weight: 500;
+    font-weight: var(--b-text-body-stronger-font-weight);
 }
 
 // Remaining amount warning message
 .adyen-checkout__order-remaining-amount {
     display: block;
     width: 100%;
-    padding: 8px 16px;
+    padding: var(--b-spacer-040) var(--b-spacer-070);
     color: var(--b-color-label-secondary);
     border-radius: var(--b-border-radius-m);
-    margin-bottom: 16px;
+    margin-bottom: var(--b-spacer-070);
     font-size: index.$font-size-small;
 
     strong {

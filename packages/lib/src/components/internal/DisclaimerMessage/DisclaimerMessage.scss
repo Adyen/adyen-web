@@ -4,7 +4,7 @@
     margin-top: var(--b-spacer-070);
     padding-left: 0;
     display: inline-block;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
     color: var(--b-color-label-secondary);
     font-size: index.$font-size-small;
     font-weight: normal;

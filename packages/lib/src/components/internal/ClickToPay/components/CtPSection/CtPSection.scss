@@ -1,9 +1,9 @@
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
-    box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
-    border-radius: 12px;
-    padding: 16px;
+    box-shadow: 0 var(--b-spacer-040) var(--b-spacer-090) rgb(0 0 0 / 15%);
+    border-radius: var(--b-spacer-060);
+    padding: var(--b-spacer-070);
 
     &-brand {
         display: flex;
@@ -17,7 +17,7 @@
     }
 
     .adyen-checkout__fieldset {
-        margin-bottom: 24px;
+        margin-bottom: var(--b-spacer-090);
     }
 }
 
@@ -27,9 +27,9 @@
 
     &-title {
         font-size: 17px;
-        font-weight: 600;
+        font-weight: var(--b-text-title-font-weight);
         line-height: 22px;
-        margin: 0 0 4px;
+        margin: 0 0 var(--b-spacer-020);
         padding: 0;
         width: auto;
 
@@ -45,14 +45,14 @@
 
 .adyen-checkout-ctp__section-text {
     font-size: 13px;
-    font-weight: 400;
-    line-height: 19px;
+    font-weight: var(--b-text-body-font-weight);
+    line-height: var(--b-text-caption-line-height);
     color: var(--b-color-grey-500);
-    margin: 0 0 16px;
+    margin: 0 0 var(--b-spacer-070);
 }
 
 .adyen-checkout-ctp__separator {
     color: var(--b-color-black);
     font-size: 13px;
-    font-weight: 400;
+    font-weight: var(--b-text-body-font-weight);
 }

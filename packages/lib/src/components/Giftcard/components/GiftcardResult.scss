@@ -3,7 +3,7 @@
     display: flex;
     flex-wrap: nowrap;
     font-size: 1em;
-    font-weight: 400;
+    font-weight: var(--b-text-body-font-weight);
     justify-content: space-between;
     position: relative;
     width: 100%;
@@ -21,7 +21,7 @@
 .adyen-checkout__giftcard-result__balance {
     padding: 0;
     list-style: none;
-    margin: 16px 0 0;
+    margin: var(--b-spacer-070) 0 0;
 }
 
 .adyen-checkout__giftcard-result__balance__item {
@@ -46,8 +46,8 @@
 
 .adyen-checkout__giftcard-result__remaining-balance {
     font-size: 13px;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
     text-align: center;
     color: var(--b-color-label-secondary);
-    margin: 8px auto 0;
+    margin: var(--b-spacer-040) auto 0;
 }

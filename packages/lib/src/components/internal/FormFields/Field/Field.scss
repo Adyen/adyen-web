@@ -2,7 +2,7 @@
 
 .adyen-checkout__field {
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: var(--b-spacer-070);
     width: 100%;
 }
 
@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     background: var(--b-color-background-primary);
-    border: 1px solid var(--b-color-outline-secondary);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
     border-radius: var(--b-border-radius-m);
 
     & div,
@@ -79,7 +79,7 @@
 %contextual-text {
     display: flex;
     font-weight: normal;
-    margin-top: 4px;
+    margin-top: var(--b-spacer-020);
     font-size: index.$font-size-xsmall;
     align-items: center;
     color: var(--b-color-label-secondary);

@@ -30,13 +30,13 @@
 }
 
 .adyen-checkout__campaign-logo {
-    border: 2px solid rgb(255 255 255 / 40%);
+    border: var(--b-spacer-010) solid rgb(255 255 255 / 40%);
     border-radius: var(--b-border-radius-s);
     display: block;
-    height: 48px;
+    height: var(--b-spacer-120);
     margin-bottom: var(--b-spacer-070);
     overflow: hidden;
-    width: 48px;
+    width: var(--b-spacer-120);
 }
 
 .adyen-checkout__campaign-background-image {
@@ -88,7 +88,7 @@
 
 .adyen-checkout__campaign-description {
     font-size: index.$font-size-small;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
 }
 
 .adyen-checkout__adyen-giving-actions {

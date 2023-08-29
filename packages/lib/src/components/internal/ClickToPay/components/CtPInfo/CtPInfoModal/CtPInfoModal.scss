@@ -6,25 +6,25 @@
 
     &-title {
         font-weight: 700;
-        font-size: 20px;
-        line-height: 24px;
+        font-size: var(--b-spacer-080);
+        line-height: var(--b-spacer-090);
         padding: 0;
-        margin: 0 0 12px;
+        margin: 0 0 var(--b-spacer-060);
     }
 
     &-text {
-        font-weight: 400;
+        font-weight: var(--b-text-body-font-weight);
         font-size: 13px;
-        line-height: 19px;
-        margin-bottom: 16px;
+        line-height: var(--b-text-caption-line-height);
+        margin-bottom: var(--b-spacer-070);
     }
 
     &-benefits {
         margin-left: 0;
-        padding-left: 20px;
+        padding-left: var(--b-spacer-080);
 
         & li {
-            margin-bottom: 16px;
+            margin-bottom: var(--b-spacer-070);
             list-style: disc;
         }
     }
@@ -38,5 +38,5 @@
 // Classname modifier that align brands inside CTP modal
 .adyen_checkout-ctp__brand-wrapper--popup {
     justify-content: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--b-spacer-090);
 }

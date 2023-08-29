@@ -8,15 +8,15 @@
     justify-content: center;
     height: 350px;
     margin: 0;
-    padding: 32px;
+    padding: var(--b-spacer-100);
     background-color: var(--b-color-white);
     border-radius: var(--b-border-radius-m);
-    border: 1px solid var(--b-color-outline-secondary);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
     font-size: index.$font-size-medium;
     color: var(--b-color-black);
 
     &__icon {
-        margin-bottom: 24px;
+        margin-bottom: var(--b-spacer-090);
     }
 
     .adyen-checkout__spinner__wrapper {

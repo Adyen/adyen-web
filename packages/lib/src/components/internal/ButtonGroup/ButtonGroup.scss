@@ -12,9 +12,9 @@
         color: var(--b-color-black);
         font-size: index.$font-size-small;
         font-weight: normal;
-        line-height: 40px;
-        margin-right: 8px;
-        height: 40px;
+        line-height: var(--b-spacer-110);
+        margin-right: var(--b-spacer-040);
+        height: var(--b-spacer-110);
         padding: 0;
         text-align: center;
 
@@ -24,12 +24,12 @@
 
         &:hover {
             background: transparent;
-            box-shadow: inset 0 0 0 2px #99a3ad;
+            box-shadow: inset 0 0 0 var(--b-spacer-010) #99a3ad;
         }
 
         &:active {
             background: var(--b-color-grey-100);
-            box-shadow: inset 0 0 0 2px #99a3ad;
+            box-shadow: inset 0 0 0 var(--b-spacer-010) #99a3ad;
         }
 
         &--disabled {
@@ -49,8 +49,8 @@
                 background: var(--b-color-grey-100);
                 box-shadow: inset 0 0 0 1px var(--b-color-black);
                 color: var(--b-color-black);
-                font-weight: 500;
-                height: 40px;
+                font-weight: var(--b-text-body-stronger-font-weight);
+                height: var(--b-spacer-110);
                 transition: none;
             }
         }

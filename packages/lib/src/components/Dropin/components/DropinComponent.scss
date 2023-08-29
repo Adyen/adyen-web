@@ -9,6 +9,6 @@
     padding: 0;
 
     li:not(:last-child) {
-        margin-bottom: 8px;
+        margin-bottom: var(--b-spacer-040);
     }
 }

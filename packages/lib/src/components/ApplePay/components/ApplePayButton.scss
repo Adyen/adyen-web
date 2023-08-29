@@ -1,6 +1,6 @@
 .adyen-checkout__applepay__button {
     width: 240px;
-    height: 48px;
+    height: var(--b-spacer-120);
 }
 
 .adyen-checkout__dropin .adyen-checkout__applepay__button {

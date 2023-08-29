@@ -1,7 +1,7 @@
 .adyen-checkout-ctp__section-logout-button {
     font-size: 13px;
-    line-height: 19px;
-    font-weight: 400;
+    line-height: var(--b-text-caption-line-height);
+    font-weight: var(--b-text-body-font-weight);
     color: var(--b-color-black);
     margin-left: auto;
     cursor: pointer;

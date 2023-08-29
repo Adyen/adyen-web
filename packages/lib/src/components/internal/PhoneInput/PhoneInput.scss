@@ -20,7 +20,7 @@
             border-bottom-right-radius: 0;
 
             &::after {
-                height: 10px;
+                height: var(--b-spacer-050);
             }
         }
 
@@ -40,7 +40,7 @@
             min-height: 35px;
             padding-bottom: 0;
             padding-top: 0;
-            border: 1px solid transparent;
+            border: var(--b-border-width-s) solid transparent;
             padding-left: 15px;
         }
 

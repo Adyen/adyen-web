@@ -13,15 +13,15 @@
     }
 
     &__image {
-        width: 40px;
+        width: var(--b-spacer-110);
         height: 26px;
 
         &__wrapper {
-            margin-right: 8px;
+            margin-right: var(--b-spacer-040);
 
             [dir="rtl"] & {
                 margin-right: 0;
-                margin-left: 8px;
+                margin-left: var(--b-spacer-040);
             }
         }
     }

@@ -6,7 +6,7 @@
     &__descriptor {
         margin: var(--b-spacer-000) var(--b-spacer-000) var(--b-spacer-020);
         font-size: index.$font-size-medium;
-        font-weight: 500;
+        font-weight: var(--b-text-body-stronger-font-weight);
     }
 
     &__description-list {
@@ -14,6 +14,6 @@
         margin: 0;
         font-size: index.$font-size-small;
         line-height: 1.5;
-        padding-left: 20px;
+        padding-left: var(--b-spacer-080);
     }
 }

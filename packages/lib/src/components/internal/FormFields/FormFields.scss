@@ -49,37 +49,37 @@
 
 .adyen-checkout__field--col-70 {
     @include index.screen-s-and-up {
-        width: calc(70% - 8px);
+        width: calc(70% - var(--b-spacer-040));
     }
 }
 
 .adyen-checkout__field--col-30 {
     @include index.screen-s-and-up {
-        width: calc(30% - 8px);
+        width: calc(30% - var(--b-spacer-040));
     }
 }
 
 .adyen-checkout__field--col-50 {
     @include index.screen-s-and-up {
-        width: calc(50% - 8px);
+        width: calc(50% - var(--b-spacer-040));
     }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {
-    margin-right: 8px;
+    margin-right: var(--b-spacer-040);
 
     [dir='rtl'] & {
         margin-right: 0;
-        margin-left: 8px;
+        margin-left: var(--b-spacer-040);
     }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:nth-child(2) {
-    margin-left: 8px;
+    margin-left: var(--b-spacer-040);
 
     [dir='rtl'] & {
         margin-left: 0;
-        margin-right: 8px;
+        margin-right: var(--b-spacer-040);
     }
 }
 
@@ -121,7 +121,7 @@
     font-size: index.$font-size-medium;
     font-family: inherit;
     display: block;
-    height: 40px;
+    height: var(--b-spacer-110);
     padding-left: var(--b-spacer-060);
     background: inherit;
     outline: none;
@@ -137,8 +137,8 @@
 }
 
 .adyen-checkout-input__inline-validation {
-    width: 16px;
-    height: 16px;
+    width: var(--b-spacer-070);
+    height: var(--b-spacer-070);
     margin-right: var(--b-spacer-060);
 
       [dir='rtl'] & {

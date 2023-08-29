@@ -11,8 +11,8 @@
 }
 
 .adyen-checkout__card__exp-date__input--oneclick {
-    line-height: 30px;
-    font-weight: 400;
+    line-height: var(--b-text-title-line-height);
+    font-weight: var(--b-text-body-font-weight);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -36,7 +36,7 @@
     gap: var(--b-spacer-060);
     padding: var(--b-spacer-060) var(--b-spacer-070);
     margin-top: var(--b-spacer-070);
-    border: 1px solid var(--b-color-outline-secondary);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
     border-radius: var(--b-border-radius-m);
 }
 
@@ -158,7 +158,7 @@
     }
 
     .adyen-checkout__radio_group__input-wrapper {
-        margin-top: 20px;
+        margin-top: var(--b-spacer-080);
     }
 
     .adyen-checkout__field--revolving-plan-installments {

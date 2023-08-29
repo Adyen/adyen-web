@@ -1,8 +1,8 @@
 .adyen-checkout__address-search {
   position: relative;
 
-  --magnifier-width: 16px;
-  --magnifier-height: 16px;
+  --magnifier-width: var(--b-spacer-070);
+  --magnifier-height: var(--b-spacer-070);
 
   .adyen-checkout__dropdown__button::after {
     position: absolute;

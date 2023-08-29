@@ -2,7 +2,7 @@
 
 .adyen-checkout__fieldset {
     display: block;
-    padding-bottom: 8px;
+    padding-bottom: var(--b-spacer-040);
     width: 100%;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -19,7 +19,7 @@
 }
 
 .adyen-checkout__fieldset + .adyen-checkout__fieldset {
-    margin-top: 16px;
+    margin-top: var(--b-spacer-070);
 }
 
 .adyen-checkout__fieldset__title {
@@ -29,7 +29,7 @@
     font-weight: bold;
     letter-spacing: 1px;
     margin: 0;
-    padding: 0 0 12px;
+    padding: 0 0 var(--b-spacer-060);
     text-transform: uppercase;
 }
 
@@ -58,6 +58,6 @@
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {
     color: var(--b-color-black);
     font-size: index.$font-size-small;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
     margin: 0;
 }

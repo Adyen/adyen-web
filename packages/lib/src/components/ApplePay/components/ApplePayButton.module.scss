@@ -94,8 +94,8 @@
         border-radius: 5px;
         padding: 0;
         min-width: 200px;
-        min-height: 32px;
-        max-height: 64px;
+        min-height: var(--b-spacer-100);
+        max-height: var(--b-spacer-140);
     }
 
     .apple-pay-button-black {
