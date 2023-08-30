@@ -17,17 +17,16 @@ import './Vouchers.scss';
 
     AdyenCheckout.register(BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext);
 
-    window.bacsdd = checkout
-        .create('directdebit_GB', {
-            countryCode: 'GB',
-            data: {
-                holderName: 'Philip Dog',
-                bankAccountNumber: '12345678',
-                bankLocationId: '123456',
-                shopperEmail: 'phil@ddog.co.uk'
-            }
-        })
-        .mount('#bacsdd-input-container');
+    window.bacsdd = new BacsDirectDebit({
+        core: window.checkout,
+        countryCode: 'GB',
+        data: {
+            holderName: 'Philip Dog',
+            bankAccountNumber: '12345678',
+            bankLocationId: '123456',
+            shopperEmail: 'phil@ddog.co.uk'
+        }
+    }).mount('#bacsdd-input-container');
 
     window.bacsddResult = checkout
         .createFromAction({
@@ -58,26 +57,26 @@ import './Vouchers.scss';
         .mount('#multibanco-result-container');
 
     // Boleto Input
-    window.boletoInput = checkout
-        .create('boletobancario', {
-            // personalDetailsRequired: false,
-            // billingAddressRequired: false,
-            showEmailAddress: true,
-            data: {
-                socialSecurityNumber: '32553325916',
-                billingAddress: {
-                    street: 'Fake street',
-                    houseNumberOrName: '123',
-                    city: 'Sao Paulo',
-                    postalCode: '123456',
-                    stateOrProvince: 'SP'
-                },
-                shopperEmail: 'paolo@adyen.nl'
+    window.boletoInput = new Boleto({
+        core: window.checkout,
+        type: 'boletobancario', // -->  HAS MULTIPLE TX VARIANTS.. HOW TO ENFORCE IT?
+        // personalDetailsRequired: false,
+        // billingAddressRequired: false,
+        showEmailAddress: true,
+        data: {
+            socialSecurityNumber: '32553325916',
+            billingAddress: {
+                street: 'Fake street',
+                houseNumberOrName: '123',
+                city: 'Sao Paulo',
+                postalCode: '123456',
+                stateOrProvince: 'SP'
             },
-            // onChange: console.log,
-            onSubmit: e => console.log('SUBMIT:', e)
-        })
-        .mount('#boleto-input-container');
+            shopperEmail: 'paolo@adyen.nl'
+        },
+        // onChange: console.log,
+        onSubmit: e => console.log('SUBMIT:', e)
+    }).mount('#boleto-input-container');
 
     // Boleto Result
     window.boletoResult = checkout
@@ -122,7 +121,10 @@ import './Vouchers.scss';
         .mount('#oxxo-result-container');
 
     // Dragonpay Input
-    window.dragonpayInput = checkout.create('dragonpay_otc_philippines', {}).mount('#dragonpay-input-container');
+    window.dragonpayInput = new Dragonpay({
+        core: window.checkout,
+        type: 'dragonpay_otc_philippines' // --> // HAS MULTIPLE TX VARIANTS.. HOW TO ENFORCE IT?
+    }).mount('#dragonpay-input-container');
 
     // Dragonpay Result
     window.dragonpayResult = checkout
@@ -152,7 +154,10 @@ import './Vouchers.scss';
         .mount('#dragonpay-result-container');
 
     // Doku Input
-    window.dokuInput = checkout.create('doku_alfamart').mount('#doku-input-container');
+    window.dokuInput = new Doku({
+        core: window.checkout,
+        type: 'doku_alfamart'
+    }).mount('#doku-input-container');
 
     // Doku Result
     window.dokuResult = checkout
@@ -177,25 +182,25 @@ import './Vouchers.scss';
         .mount('#doku-result-container');
 
     // Econtext Stores Input without personal details form
-    window.econtextStoresInput = checkout
-        .create('econtext_stores', {
-            personalDetailsRequired: false,
-            onSubmit: e => console.log('SUBMIT:', e)
-        })
-        .mount('#econtext-stores-without-form-input-container');
+    window.econtextStoresInput = new Econtext({
+        core: window.checkout,
+        type: 'econtext_stores', // -->  HAS MULTIPLE TX VARIANTS.. HOW TO ENFORCE IT?
+        personalDetailsRequired: false,
+        onSubmit: e => console.log('SUBMIT:', e)
+    }).mount('#econtext-stores-without-form-input-container');
 
     // Econtext Stores Input
-    window.econtextStoresInput = checkout
-        .create('econtext_stores', {
-            data: {
-                firstName: 'Joe',
-                lastName: 'Smith',
-                shopperEmail: 'test@email.com',
-                telephoneNumber: '0621098765'
-            },
-            onSubmit: e => console.log('SUBMIT:', e)
-        })
-        .mount('#econtext-stores-input-container');
+    window.econtextStoresInput = new Econtext({
+        core: window.checkout,
+        type: 'econtext_stores',
+        data: {
+            firstName: 'Joe',
+            lastName: 'Smith',
+            shopperEmail: 'test@email.com',
+            telephoneNumber: '0621098765'
+        },
+        onSubmit: e => console.log('SUBMIT:', e)
+    }).mount('#econtext-stores-input-container');
 
     // Econtext Stores Result
     window.econtextStoresResult = checkout
@@ -219,16 +224,16 @@ import './Vouchers.scss';
         .mount('#econtext-stores-result-container');
 
     // Econtext ATM Input
-    window.econtextAtmInput = checkout
-        .create('econtext_atm', {
-            data: {
-                firstName: 'Joe',
-                lastName: 'Smith',
-                shopperEmail: 'test@email.com',
-                telephoneNumber: '06210987654321'
-            }
-        })
-        .mount('#econtext-atm-input-container');
+    window.econtextAtmInput = new Econtext({
+        core: window.checkout,
+        type: 'econtext_atm',
+        data: {
+            firstName: 'Joe',
+            lastName: 'Smith',
+            shopperEmail: 'test@email.com',
+            telephoneNumber: '06210987654321'
+        }
+    }).mount('#econtext-atm-input-container');
 
     // Econtext ATM Result
     window.econtextAtmResult = checkout
@@ -253,7 +258,10 @@ import './Vouchers.scss';
         .mount('#econtext-atm-result-container');
 
     // Econtext 7 11 input
-    window.econtext711Input = checkout.create('econtext_seven_eleven').mount('#econtext-seven-eleven-input-container');
+    window.econtext711Input = new Econtext({
+        core: window.checkout,
+        type: 'econtext_seven_eleven'
+    }).mount('#econtext-seven-eleven-input-container');
 
     // Econtext 7 11 result
     window.econtext711Result = checkout

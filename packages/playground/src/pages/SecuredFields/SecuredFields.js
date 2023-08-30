@@ -94,57 +94,54 @@ const initCheckout = async () => {
     window.checkout = await AdyenCheckout(configObj);
 
     // SECURED FIELDS
-    window.securedFields = checkout
-        .create('securedfields', {
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
-            styles,
-            minimumExpiryDate: '09/21',
-            onConfigSuccess,
-            onBrand,
-            onBinValue: cbObj => {
-                if (cbObj.encryptedBin) {
-                    console.log('onBinValue', cbObj);
-                }
-            },
-            onFocus: setFocus,
-            onBinLookup,
-            onChange
-        })
-        .mount('.secured-fields');
+    window.securedFields = new SecuredFields({
+        core: window.checkout,
+        type: 'card',
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
+        styles,
+        minimumExpiryDate: '09/21',
+        onConfigSuccess,
+        onBrand,
+        onBinValue: cbObj => {
+            if (cbObj.encryptedBin) {
+                console.log('onBinValue', cbObj);
+            }
+        },
+        onFocus: setFocus,
+        onBinLookup,
+        onChange
+    }).mount('.secured-fields');
 
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
     window.securedFieldsSi =
         showOtherExamples &&
-        checkout
-            .create('securedfields', {
-                type: 'card',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                styles: styles_si,
-                trimTrailingSeparator: true,
-                onConfigSuccess: onConfigSuccess_si,
-                onFieldValid: onFieldValid_si,
-                onBrand: onBrand_si,
-                onError: onError_si,
-                onFocus: onFocus_si
-            })
-            .mount('.secured-fields-si');
+        new SecuredFields({
+            core: window.checkout,
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            styles: styles_si,
+            trimTrailingSeparator: true,
+            onConfigSuccess: onConfigSuccess_si,
+            onFieldValid: onFieldValid_si,
+            onBrand: onBrand_si,
+            onError: onError_si,
+            onFocus: onFocus_si
+        }).mount('.secured-fields-si');
 
     window.fancySecuredFields =
         showOtherExamples &&
-        checkout
-            .create('securedfields', {
-                type: 'card',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                styles: fancyStyles,
-                autoFocus: false,
-                onFieldValid: fancyFieldValid,
-                onBrand: fancyChangeBrand,
-                onError: fancyErrors,
-                onFocus: fancyFocus
-            })
-            .mount('.fancy-secured-fields');
+        new SecuredFields({
+            core: window.checkout,
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            styles: fancyStyles,
+            autoFocus: false,
+            onFieldValid: fancyFieldValid,
+            onBrand: fancyChangeBrand,
+            onError: fancyErrors,
+            onFocus: fancyFocus
+        }).mount('.fancy-secured-fields');
 };
 
 initCheckout();
@@ -164,17 +161,16 @@ const initCheckout2 = async () => {
 
     window.materialDesignSecuredFields =
         showOtherExamples &&
-        checkout
-            .create('securedfields', {
-                type: 'card',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                styles: materialStyles,
-                onFocus: materialFocus,
-                onError: handleMaterialError,
-                onFieldValid: onMaterialFieldValid,
-                onConfigSuccess: createMaterialLabelListener
-            })
-            .mount('.material-secured-fields-container');
+        new SecuredFields({
+            core: window.checkout,
+            type: 'card',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            styles: materialStyles,
+            onFocus: materialFocus,
+            onError: handleMaterialError,
+            onFieldValid: onMaterialFieldValid,
+            onConfigSuccess: createMaterialLabelListener
+        }).mount('.material-secured-fields-container');
 };
 
 initCheckout2();

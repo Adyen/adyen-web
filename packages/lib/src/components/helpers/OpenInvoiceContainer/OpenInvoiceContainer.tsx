@@ -5,7 +5,6 @@ import CoreProvider from '../../../core/Context/CoreProvider';
 import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
 import { AddressSpecifications } from '../../internal/Address/types';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
-import Redirect from '../../Redirect';
 
 export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
     consentCheckboxLabel?: h.JSX.Element;
@@ -14,8 +13,6 @@ export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
 }
 
 export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainerProps> {
-    public static dependencies = [Redirect];
-
     protected static defaultProps: OpenInvoiceContainerProps = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },

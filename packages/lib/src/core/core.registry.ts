@@ -1,4 +1,5 @@
 import UIElement from '../components/UIElement';
+import Redirect from '../components/Redirect/Redirect';
 
 function assertIsTypeofUIElement(item: any): item is typeof UIElement {
     return typeof UIElement === typeof item;
@@ -6,8 +7,12 @@ function assertIsTypeofUIElement(item: any): item is typeof UIElement {
 
 export type NewableComponent = new (props) => UIElement;
 
+const actionElements = {
+    redirect: Redirect
+};
+
 function createComponentsMap(components: NewableComponent[]) {
-    return components.reduce((memo, component) => {
+    const componentsMap = components.reduce((memo, component) => {
         const isValid = assertIsTypeofUIElement(component);
         if (!isValid) {
             return memo;
@@ -30,6 +35,11 @@ function createComponentsMap(components: NewableComponent[]) {
         });
         return memo;
     }, {});
+
+    return {
+        ...componentsMap,
+        ...actionElements
+    };
 }
 
 export interface IRegistry {
@@ -38,12 +48,10 @@ export interface IRegistry {
 }
 
 class Registry implements IRegistry {
-    public components: NewableComponent[] = [];
     public componentsMap: Record<string, NewableComponent> = {};
 
     public add(...items: NewableComponent[]) {
-        this.components = [...this.components, ...items];
-        this.componentsMap = createComponentsMap(this.components);
+        this.componentsMap = createComponentsMap(items);
         console.log('### core.registry:::: componentsMap', this.componentsMap);
     }
 

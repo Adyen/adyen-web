@@ -26,17 +26,17 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // Cash App Pay
-    window.cashApp = checkout
-        .create('cashapp', {
-            onClick(actions) {
-                console.log('CashAppApp: onClick');
-                actions.resolve();
-            }
-        })
-        .mount('.cashapp-field');
+    window.cashApp = new CashAppPay({
+        core: window.checkout,
+        onClick(actions) {
+            console.log('CashAppApp: onClick');
+            actions.resolve();
+        }
+    }).mount('.cashapp-field');
 
     // CLICK TO PAY
-    window.clickToPay = checkout.create('clicktopay', {
+    window.clickToPay = new ClickToPay({
+        core: window.checkout,
         shopperEmail: 'gui.ctp@adyen.com',
         onReady() {
             console.log('ClickToPay is ready');
@@ -70,91 +70,89 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Initial state
     if (!step) {
-        window.amazonpay = checkout
-            .create('amazonpay', {
-                productType: 'PayOnly',
-                ...chargeOptions,
-                // Regular checkout:
-                // returnUrl: 'http://localhost:3020/wallets?step=result',
-                // checkoutMode: 'ProcessOrder'
+        window.amazonpay = new AmazonPay({
+            core: window.checkout,
+            productType: 'PayOnly',
+            ...chargeOptions,
+            // Regular checkout:
+            // returnUrl: 'http://localhost:3020/wallets?step=result',
+            // checkoutMode: 'ProcessOrder'
 
-                // Express Checkout flow:
-                returnUrl: 'http://localhost:3020/wallets?step=review'
-            })
-            .mount('.amazonpay-field');
+            // Express Checkout flow:
+            returnUrl: 'http://localhost:3020/wallets?step=review'
+        }).mount('.amazonpay-field');
     }
 
     // Review and confirm order
     if (step === 'review') {
-        window.amazonpay = checkout
-            .create('amazonpay', {
-                ...chargeOptions,
-                /**
-                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-                 */
-                amazonCheckoutSessionId,
-                cancelUrl: 'http://localhost:3020/wallets',
-                returnUrl: 'http://localhost:3020/wallets?step=result'
-            })
-            .mount('.amazonpay-field');
+        window.amazonpay = new AmazonPay({
+            core: window.checkout,
+            ...chargeOptions,
+            /**
+             * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+             */
+            amazonCheckoutSessionId,
+            cancelUrl: 'http://localhost:3020/wallets',
+            returnUrl: 'http://localhost:3020/wallets?step=result'
+        }).mount('.amazonpay-field');
     }
 
     // Make payment
     if (step === 'result') {
-        window.amazonpay = checkout
-            .create('amazonpay', {
-                /**
-                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-                 */
-                amazonCheckoutSessionId,
-                showOrderButton: false,
-                onSubmit: (state, component) => {
-                    return makePayment(state.data)
-                        .then(response => {
-                            if (response.action) {
-                                component.handleAction(response.action);
-                            } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
-                                alert(response.resultCode);
-                            } else {
-                                // Try handling the decline flow
-                                // This will redirect the shopper to select another payment method
-                                component.handleDeclineFlow();
-                            }
-                        })
-                        .catch(error => {
-                            throw Error(error);
-                        });
-                },
-                onError: e => {
-                    if (e.resultCode) {
-                        alert(e.resultCode);
-                    } else {
-                        console.error(e);
-                    }
+        window.amazonpay = new AmazonPay({
+            core: window.checkout,
+
+            /**
+             * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+             */
+            amazonCheckoutSessionId,
+            showOrderButton: false,
+            onSubmit: (state, component) => {
+                return makePayment(state.data)
+                    .then(response => {
+                        if (response.action) {
+                            component.handleAction(response.action);
+                        } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
+                            alert(response.resultCode);
+                        } else {
+                            // Try handling the decline flow
+                            // This will redirect the shopper to select another payment method
+                            component.handleDeclineFlow();
+                        }
+                    })
+                    .catch(error => {
+                        throw Error(error);
+                    });
+            },
+            onError: e => {
+                if (e.resultCode) {
+                    alert(e.resultCode);
+                } else {
+                    console.error(e);
                 }
-            })
-            .mount('.amazonpay-field');
+            }
+        }).mount('.amazonpay-field');
 
         window.amazonpay.submit();
     }
 
     // PAYPAL
-    window.paypalButtons = checkout
-        .create('paypal', {
-            onShopperDetails: (shopperDetails, rawData, actions) => {
-                console.log('Shopper details', shopperDetails);
-                console.log('Raw data', rawData);
-                actions.resolve();
-            },
-            onError: (error, component) => {
-                component.setStatus('ready');
-                console.log('paypal onError', error);
-            }
-        })
-        .mount('.paypal-field');
+    window.paypalButtons = new PayPal({
+        core: window.checkout,
+        onShopperDetails: (shopperDetails, rawData, actions) => {
+            console.log('Shopper details', shopperDetails);
+            console.log('Raw data', rawData);
+            actions.resolve();
+        },
+        onError: (error, component) => {
+            component.setStatus('ready');
+            console.log('paypal onError', error);
+        }
+    }).mount('.paypal-field');
 
     // GOOGLE PAY
-    const googlepay = checkout.create('paywithgoogle', {
+    const googlepay = new GooglePay({
+        core: window.checkout,
         // environment: 'PRODUCTION',
         environment: 'TEST',
 
@@ -193,7 +191,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.googlepay = googlepay;
 
     // APPLE PAY
-    const applepay = checkout.create('applepay', {
+    const applepay = new ApplePay({
+        core: window.checkout,
         onClick: (resolve, reject) => {
             console.log('Apple Pay - Button clicked');
             resolve();

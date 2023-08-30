@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
+import AdyenCheckout, { Dropin } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
@@ -6,8 +6,6 @@ import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
-
-    AdyenCheckout.register(Dropin, Card, PayPal, Ach, Affirm, GooglePay, WeChat, Giftcard);
 
     window.checkout = await AdyenCheckout({
         amount,

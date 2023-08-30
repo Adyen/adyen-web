@@ -21,31 +21,29 @@ import '../../style.scss';
         amount
     });
 
-    window.giftcard = checkout
-        .create('giftcard', {
-            type: 'giftcard',
-            brand: 'valuelink',
-            onBalanceCheck: async (resolve, reject, data) => {
-                resolve(await checkBalance(data));
-            },
-            onOrderRequest: async (resolve, reject) => {
-                resolve(await createOrder({ amount }));
-            }
-        })
-        .mount('#genericgiftcard-container');
+    window.giftcard = new Giftcard({
+        core: window.checkout,
+        type: 'giftcard',
+        brand: 'valuelink',
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        }
+    }).mount('#genericgiftcard-container');
 
-    window.giftcard = checkout
-        .create('mealVoucher_FR_natixis', {
-            type: 'mealVoucher_FR_natixis',
-            brand: 'mealVoucher_FR_natixis',
-            onBalanceCheck: async (resolve, reject, data) => {
-                resolve(await checkBalance(data));
-            },
-            onOrderRequest: async (resolve, reject) => {
-                resolve(await createOrder({ amount }));
-            }
-        })
-        .mount('#mealvoucher-fr-container');
+    window.giftcard = new Giftcard({
+        core: window.checkout,
+        type: 'mealVoucher_FR_natixis',
+        brand: 'mealVoucher_FR_natixis',
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        }
+    }).mount('#mealvoucher-fr-container');
 
     const session = await createSession({
         amount,
@@ -88,20 +86,19 @@ import '../../style.scss';
     checkoutConfirmButton.addEventListener('click', giftcardSubmit);
     checkoutCardButton.addEventListener('click', cardSubmit);
 
-    window.giftcard = sessionCheckout
-        .create('giftcard', {
-            type: 'giftcard',
-            brand: 'svs',
-            onOrderCreated: () => {
-                console.log('onOrderCreated');
-            },
-            onRequiringConfirmation: () => {
-                console.log('onRequiringConfirmation');
-                checkoutConfirmButton.style.display = '';
-                checkoutAddButton.style.display = 'none';
-            }
-        })
-        .mount('#giftcard-session-container');
+    window.giftcard = new Giftcard({
+        core: sessionCheckout,
+        type: 'giftcard',
+        brand: 'svs',
+        onOrderCreated: () => {
+            console.log('onOrderCreated');
+        },
+        onRequiringConfirmation: () => {
+            console.log('onRequiringConfirmation');
+            checkoutConfirmButton.style.display = '';
+            checkoutAddButton.style.display = 'none';
+        }
+    }).mount('#giftcard-session-container');
 
-    window.card = sessionCheckout.create('card').mount('#payment-method-container');
+    window.card = new Card({ core: sessionCheckout }).mount('#payment-method-container');
 })();

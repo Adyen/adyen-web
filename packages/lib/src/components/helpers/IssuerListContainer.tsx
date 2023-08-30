@@ -9,8 +9,6 @@ import Language from '../../language/Language';
 import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import Redirect from '../Redirect';
-import Core from '../../core';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -32,14 +30,17 @@ interface IssuerListData {
 }
 
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
-    public static dependencies = [Redirect];
+    protected static defaultProps = {
+        showImage: true,
+        onValid: () => {},
+        issuers: [],
+        highlightedIssuers: [],
+        loadingContext: FALLBACK_CONTEXT,
+        showPaymentMethodItemImages: false
+    };
 
-    constructor(checkoutRef: Core, props?: IssuerListContainerProps) {
-        super(checkoutRef, props);
-    }
-
-    protected init(props: IssuerListContainerProps) {
-        super.init(props);
+    constructor(props?: IssuerListContainerProps) {
+        super(props);
 
         if (this.props.showImage) {
             const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
@@ -50,19 +51,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
             }));
         }
     }
-
-    protected static defaultProps = {
-        showImage: true,
-        onValid: () => {},
-        issuers: [],
-        highlightedIssuers: [],
-        loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false,
-        // Previously we didn't check the showPayButton before rendering the RedirectButton.
-        // Now that we are checking it, all the merchants who don't specify showPayButton in the config will not see the RedirectButton anymore.
-        // To prevent the backward compatible issue, we add it as the default prop, but it should be fixed properly on v6.
-        showPayButton: true
-    };
 
     formatProps(props) {
         const issuers = (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || props.issuers || [];

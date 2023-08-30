@@ -1,12 +1,9 @@
-import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, Affirm, GooglePay } from '@adyen/adyen-web';
+import AdyenCheckout, { Dropin } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 
 export async function initSession() {
-    // Not all txVariants are registered
-    AdyenCheckout.register(Dropin, Card, PayPal, Ach, Affirm, GooglePay, WeChat, Giftcard);
-
     const session = await createSession({
         amount,
         reference: 'ABC123',

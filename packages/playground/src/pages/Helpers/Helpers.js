@@ -26,7 +26,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // Adyen Giving
-    window.donation = new Donation(checkout, {
+    window.donation = new Donation({
+        core: window.checkout,
         onDonate: (state, component) => {
             console.log({ state, component });
             setTimeout(() => component.setStatus('ready'), 1000);
@@ -52,12 +53,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }).mount('.donation-field');
 
     // Personal details
-    window.personalDetails = new PersonalDetails(checkout, {
+    window.personalDetails = new PersonalDetails({
+        core: window.checkout,
         onChange: console.log
     }).mount('.personalDetails-field');
 
     // Address
-    window.address = new Address(checkout, {
+    window.address = new Address({
+        core: window.checkout,
         onAddressLookup: searchFunctionExample,
         onChange: console.log,
         validationRules: {

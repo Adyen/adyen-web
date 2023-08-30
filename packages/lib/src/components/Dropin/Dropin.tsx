@@ -38,7 +38,6 @@ class DropinElement extends UIElement<DropinElementProps> {
 
     constructor(props: DropinElementProps) {
         super(props);
-        this.props.paymentMethods.forEach(PaymentMethod => this.core.register(PaymentMethod));
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
     }
@@ -140,7 +139,7 @@ class DropinElement extends UIElement<DropinElementProps> {
             };
         }
 
-        const paymentAction: UIElement = this._parentInstance.createFromAction(action, {
+        const paymentAction: UIElement = this.core.createFromAction(action, {
             ...props,
             elementRef: this.elementRef, // maintain elementRef for 3DS2 flow
             onAdditionalDetails: this.handleAdditionalDetails,

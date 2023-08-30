@@ -30,7 +30,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // // SEPA Bank Transfer
     // window.bankTransfer = new BankTransfer(checkout, { type: 'bankTransfer_IBAN' }).mount('.bankTransfer-field');// BankTransfer doesn't need constructor
-    window.bankTransfer = new BankTransfer(checkout).mount('.bankTransfer-field'); // BankTransfer needs constructor
+    window.bankTransfer = new BankTransfer({ core: checkout }).mount('.bankTransfer-field'); // BankTransfer needs constructor
     window.bankTransferResult = checkout
         .createFromAction({
             paymentMethodType: 'bankTransfer_IBAN',
@@ -48,13 +48,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.bankTransfer-result-field');
     //
     // MBWay
-    window.mbway = new MBWay(checkout).mount('.mbway-field');
+    window.mbway = new MBWay({ core: checkout }).mount('.mbway-field');
 
     // Klarna Widget
-    window.klarnaButton = new Klarna(checkout, { useKlarnaWidget: true }).mount('.klarna-field');
+    window.klarnaButton = new Klarna({ core: checkout, useKlarnaWidget: true }).mount('.klarna-field');
 
     // ACH
-    window.ach = new Ach(checkout, {
+    window.ach = new Ach({
+        core: checkout,
         // holderNameRequired: false,
         // hasHolderName: false,
         //            onConfigSuccess: obj => {
@@ -75,34 +76,31 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }).mount('.ach-field');
 
-    return;
-
     // SEPA Direct Debit
-    window.sepa = checkout
-        .create('sepadirectdebit', {
-            countryCode: 'NL',
-            holderName: true
-        })
-        .mount('.sepa-field');
+    window.sepa = new SepaDirectDebit({
+        core: checkout,
+        countryCode: 'NL',
+        holderName: true
+    }).mount('.sepa-field');
     //
     // // Qiwi
-    window.qiwi = checkout.create('qiwiwallet', {}).mount('.qiwi-field');
+    window.qiwi = new QiwiWallet({ core: checkout }).mount('.qiwi-field');
     //
     // // SEPA Direct Debit
-    window.vipps = checkout.create('vipps').mount('.vipps-field');
+    window.vipps = new Vipps({ core: checkout }).mount('.vipps-field');
     //
     // // BLIK
-    window.blik = checkout.create('blik', {}).mount('.blik-field');
+    window.blik = new Blik({ core: checkout }).mount('.blik-field');
     //
     // // Giropay
-    window.giropay = checkout.create('giropay').mount('.giropay-field');
+    window.giropay = new Giropay({ core: checkout }).mount('.giropay-field');
     //
     // // UPI
-    window.upi = checkout.create('upi').mount('.upi-field');
+    window.upi = new UPI({ core: checkout }).mount('.upi-field');
 
     // PIX
-    window.pix = checkout.create('pix', { countdownTime: 5 }).mount('.pix-field');
+    window.pix = new Pix({ core: checkout, countdownTime: 5 }).mount('.pix-field');
 
     // Oxxo
-    window.oxxo = checkout.create('oxxo').mount('.oxxo-field');
+    window.oxxo = new Oxxo({ core: checkout }).mount('.oxxo-field');
 });

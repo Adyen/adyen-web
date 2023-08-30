@@ -28,7 +28,10 @@ class BaseElement<P extends BaseElementProps> {
         // Check for some expected methods on checkoutRef. Would like to use "if(!checkoutRef instanceof Core)" but that creates circular dependencies in the build process
         // if (!hasOwnProperty(checkoutRef, 'createFromAction') || !hasOwnProperty(checkoutRef, 'update')) {
         if (!this.core) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to initialise a component without a reference to an instance of Checkout');
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Trying to initialise the component '${this.constructor['type']}' without a reference to an instance of Checkout ('core' prop)`
+            );
         }
 
         this.buildElementProps(props);
@@ -127,7 +130,7 @@ class BaseElement<P extends BaseElementProps> {
      * @returns this - the element instance
      */
     public update(props: P): this {
-        this.props = this.formatProps({ ...this.props, ...props });
+        this.buildElementProps({ ...this.props, ...props });
         this.state = {};
 
         return this.unmount().mount(this._node); // for new mount fny

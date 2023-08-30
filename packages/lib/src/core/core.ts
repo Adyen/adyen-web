@@ -6,7 +6,7 @@ import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
-import { CoreOptions } from './types';
+import { CoreOptions, PaymentMethodsConfiguration } from './types';
 import { getComponentConfiguration, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
@@ -23,6 +23,8 @@ class Core {
     public loadingContext?: string;
     public cdnContext?: string;
 
+    private paymentMethodsConfiguration: PaymentMethodsConfiguration = {};
+
     public static readonly version = {
         version: process.env.VERSION,
         revision: process.env.COMMIT_HASH,
@@ -33,10 +35,6 @@ class Core {
     public static registry = registry;
 
     public static register(...items: NewableComponent[]) {
-        registry.add(...items);
-    }
-
-    public register(...items: NewableComponent[]) {
         registry.add(...items);
     }
 
@@ -133,7 +131,7 @@ class Core {
         }
 
         if (action.type) {
-            const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
+            const actionTypeConfiguration = getComponentConfiguration(action.type, this.paymentMethodsConfiguration);
 
             const props = {
                 ...this.getCorePropsForComponent(),
@@ -149,6 +147,7 @@ class Core {
 
     /**
      * Updates global configurations, resets the internal state and remounts each element.
+     *
      * @param options - props to update
      * @returns this - the element instance
      */
@@ -157,7 +156,7 @@ class Core {
 
         return this.initialize().then(() => {
             // Update each component under this instance
-            this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
+            this.components.forEach(c => c.update(this.getCorePropsForComponent()));
 
             return this;
         });
@@ -216,8 +215,9 @@ class Core {
         };
     }
 
-    public storeComponentRef(component: UIElement) {
-        this.components.push(component);
+    public storeComponentRef({ element, type, paymentMethodConfiguration }: { element: UIElement; type: string; paymentMethodConfiguration: any }) {
+        this.components.push(element);
+        this.paymentMethodsConfiguration[type] = paymentMethodConfiguration;
     }
 
     /**

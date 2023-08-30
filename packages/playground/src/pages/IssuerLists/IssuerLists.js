@@ -29,18 +29,18 @@ import '../../style.scss';
         countryCode
     });
 
-    // AdyenCheckout.register(
-    //     Ideal,
-    //     BillDeskOnline,
-    //     BillDeskWallet,
-    //     PayuCashcard,
-    //     PayuNetBanking,
-    //     Dotpay,
-    //     OnlineBankingPL,
-    //     Entercash,
-    //     MolPayEBankingMY,
-    //     PayByBank
-    // );
+    AdyenCheckout.register(
+        Ideal,
+        BillDeskOnline,
+        BillDeskWallet,
+        PayuCashcard,
+        PayuNetBanking,
+        Dotpay,
+        OnlineBankingPL,
+        Entercash,
+        MolPayEBankingMY,
+        PayByBank
+    );
 
     window.core = await AdyenCheckout({
         session,
@@ -59,31 +59,31 @@ import '../../style.scss';
     // iDEAL
     window.ideal = new Ideal({ core: window.core }).mount('.ideal-field');
 
-    // // BillDesk Online
-    // window.billdesk_online = new BillDeskOnline(checkout).mount('.billdesk_online-field');
-    // // return;
-    //
-    // //  BillDesk Wallet
-    // window.billdesk_wallet = new BillDeskWallet(checkout).mount('.billdesk_wallet-field');
-    //
-    // // PayU CashCard
-    // window.payu_cashcard = new PayuCashcard(checkout).mount('.payu_cc-field');
-    //
-    // //  PayU NetBanking
-    // window.payu_nb = new PayuNetBanking(checkout).mount('.payu_nb-field');
-    //
-    // // Dotpay
-    // window.dotpay = new Dotpay(checkout).mount('.dotpay-field');
-    //
-    // // Online banking PL
-    // window.onlineBanking_PL = new OnlineBankingPL(checkout).mount('.onlinebanking_PL-field');
-    //
-    // // Entercash
-    // window.entercash = new Entercash(checkout).mount('.entercash-field');
-    //
-    // // Molpay MY
-    // window.molpay = new MolPayEBankingMY(checkout).mount('.molpay-field');
-    //
-    // // Pay By Bank
-    // window.paybybank_NL = new PayByBank(checkout).mount('.paybybank_NL-field');
+    // BillDesk Online
+    window.billdesk_online = new BillDeskOnline({ core: window.core }).mount('.billdesk_online-field');
+    // return;
+
+    //  BillDesk Wallet
+    window.billdesk_wallet = new BillDeskWallet({ core: window.core }).mount('.billdesk_wallet-field');
+
+    // PayU CashCard
+    window.payu_cashcard = new PayuCashcard({ core: window.core }).mount('.payu_cc-field');
+
+    //  PayU NetBanking
+    window.payu_nb = new PayuNetBanking({ core: window.core }).mount('.payu_nb-field');
+
+    // Dotpay
+    window.dotpay = new Dotpay({ core: window.core }).mount('.dotpay-field');
+
+    // Online banking PL
+    window.onlineBanking_PL = new OnlineBankingPL({ core: window.core }).mount('.onlinebanking_PL-field');
+
+    // Entercash
+    window.entercash = new Entercash({ core: window.core }).mount('.entercash-field');
+
+    // Molpay MY
+    window.molpay = new MolPayEBankingMY({ core: window.core }).mount('.molpay-field');
+
+    // Pay By Bank
+    window.paybybank_NL = new PayByBank({ core: window.core }).mount('.paybybank_NL-field');
 })();

@@ -5,20 +5,17 @@ import { KlarnaPaymentsProps } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { PaymentAction } from '../../types';
-import Core from '../../core';
-import Redirect from '../Redirect/Redirect';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
     public static type = 'klarna';
     public static txVariants = ['klarna', 'klarna_account', 'klarna_paynow'];
-    public static dependencies = [Redirect];
 
     protected static defaultProps = {
         useKlarnaWidget: false
     };
 
-    constructor(checkoutRef: Core, props?: KlarnaPaymentsProps) {
-        super(checkoutRef, props);
+    constructor(props: KlarnaPaymentsProps) {
+        super(props);
 
         this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);

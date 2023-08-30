@@ -3,13 +3,11 @@ import UIElement from '../UIElement';
 import OxxoVoucherResult from './components/OxxoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { OxxoElementData } from './types';
-import { UIElementProps } from '../types';
 
 export class OxxoElement extends UIElement {
     public static type = 'oxxo';
 
-    protected static defaultProps: UIElementProps = {
-        showPayButton: false,
+    protected static defaultProps = {
         name: 'Oxxo'
     };
 
