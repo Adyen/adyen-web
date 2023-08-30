@@ -1,70 +1,21 @@
-.adyen-checkout-phone-input--new {
+@use '../../../style/index';
+
+.adyen-checkout__fieldset--phone-input {
     direction: ltr;
 
-    // inherited style (FormFields.scss)
-    .adyen-checkout__input-wrapper {
-        width: 100%;
+    .adyen-checkout__fieldset__fields {
+        gap: var(--b-spacer-070);
 
-        // inherited style (FormFields.scss)
-        .adyen-checkout__input {
-            padding: 0;
-            height: auto;
-        }
-
-        // inherited style (Select.scss)
-        .adyen-checkout__dropdown__button {
-            width: auto;
-            border: 0;
-            height: 35px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-
-            &::after {
-                height: var(--b-spacer-050);
-            }
-        }
-
-        // inherited style (Select.scss)
-        .adyen-checkout__dropdown__button--active {
-            box-shadow: none;
-
-            &:hover {
-                box-shadow: none;
-            }
-        }
-
-        // Example of better BEM naming i.e. 'adyen-checkout-input' as the Base
-        .adyen-checkout-input--phone-number {
-            height: 35px;
-            line-height: 35px;
-            min-height: 35px;
-            padding-bottom: 0;
-            padding-top: 0;
-            border: var(--b-border-width-s) solid transparent;
-            padding-left: 15px;
-        }
-
-        .adyen-checkout-dropdown--countrycode-selector {
-            position:relative;
-            border-radius: 0;
-            border-right: 1px solid #dce0e5;
-            min-width: 144px;
-            width: 144px;
-        }
-
-        .adyen-checkout-input-holder--phone-input {
-            align-items: center;
-            display: flex;
-        }
-
-        .adyen-checkout-phone-number {
-            align-items: center;
-            display: flex;
-            flex: 1;
+        > .adyen-checkout__field{
+            margin-bottom: 0;
         }
     }
+}
 
-    .adyen-checkout-phone-input__error-holder {
-        margin-top: -10px;
-    }
+.adyen-checkout-field--phone-prefix {
+    width: 144px;
+}
+
+.adyen-checkout-field--phone-number {
+    flex: 1;
 }

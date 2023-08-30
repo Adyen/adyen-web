@@ -9,6 +9,8 @@ class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
 
     public static defaultProps = {
+        phoneNumberKey: 'mobileNumber',
+        phoneNumberErrorKey: 'error.va.gen.01',
         items: COUNTRIES.map(formatPrefixName).filter(item => item !== false),
         countryCode: COUNTRIES[0].code,
         prefixName: 'qiwiwallet.telephoneNumberPrefix' || COUNTRIES[0].id,
@@ -56,8 +58,8 @@ class QiwiWalletElement extends UIElement {
                             this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
                         }
                     }}
-                    phoneNumberKey={'mobileNumber'}
-                    phoneNumberErrorKey={'error.va.gen.01'}
+                    phoneNumberKey={QiwiWalletElement.defaultProps.phoneNumberKey}
+                    phoneNumberErrorKey={QiwiWalletElement.defaultProps.phoneNumberErrorKey}
                     placeholders={placeholders}
                     items={items}
                     data={{ phonePrefix: selected }}

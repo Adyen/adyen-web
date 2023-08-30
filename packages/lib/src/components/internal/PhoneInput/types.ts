@@ -8,10 +8,7 @@ export interface PhoneInputSchema {
 export interface PhoneInputProps {
     items: DataSet;
     requiredFields?: string[];
-    data: {
-        phonePrefix?: string;
-        phoneNumber?: string;
-    };
+    data: PhoneInputSchema;
     onChange: (obj) => void;
     phoneNumberKey?: string;
     phonePrefixErrorKey?: string;

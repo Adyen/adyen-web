@@ -65,6 +65,7 @@
     "postalCode": "Postal code",
     "postalCode.optional": "Postal code (optional)",
     "countryCode": "Country Code",
+    "telephonePrefix": "Prefix",
     "telephoneNumber": "Telephone number",
     "dateOfBirth": "Date of birth",
     "shopperEmail": "Email address",
