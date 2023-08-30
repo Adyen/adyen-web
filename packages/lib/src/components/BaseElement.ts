@@ -16,13 +16,11 @@ class BaseElement<P extends BaseElementProps> {
     public _node = null;
     public _component;
     public eventEmitter = new EventEmitter();
-    protected readonly _parentInstance: Core;
     protected readonly core: Core;
 
     protected resources: Resources;
 
     protected constructor(props: P) {
-        this._parentInstance = props.core;
         this.core = props.core;
 
         // Check for some expected methods on checkoutRef. Would like to use "if(!checkoutRef instanceof Core)" but that creates circular dependencies in the build process
@@ -38,7 +36,8 @@ class BaseElement<P extends BaseElementProps> {
     }
 
     protected buildElementProps(componentProps: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...componentProps });
+        const { core, ...rest } = componentProps;
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...rest });
     }
 
     /**
@@ -171,8 +170,8 @@ class BaseElement<P extends BaseElementProps> {
     public remove() {
         this.unmount();
 
-        if (this._parentInstance) {
-            this._parentInstance.remove(this);
+        if (this.core) {
+            this.core.remove(this);
         }
     }
 }

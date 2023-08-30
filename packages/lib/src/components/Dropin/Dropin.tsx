@@ -42,6 +42,10 @@ class DropinElement extends UIElement<DropinElementProps> {
         this.handleAction = this.handleAction.bind(this);
     }
 
+    protected updatePaymentMethodsConfiguration(props) {
+        this.core.updatePaymentMethodsConfiguration(props.paymentMethodsConfiguration);
+    }
+
     formatProps(props) {
         return {
             ...super.formatProps(props),

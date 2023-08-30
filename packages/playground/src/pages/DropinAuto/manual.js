@@ -69,22 +69,6 @@ export async function initManual() {
         },
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
-        },
-        paymentMethodsConfiguration: {
-            card: {
-                enableStoreDetails: true,
-                hasHolderName: true,
-                holderNameRequired: true
-            },
-            paywithgoogle: {
-                buttonType: 'plain'
-            },
-            // storedCard: {
-            //     hideCVC: true
-            // }
-            klarna: {
-                useKlarnaWidget: true
-            }
         }
     });
 
@@ -146,7 +130,23 @@ export async function initManual() {
 
     const dropin = new Dropin({
         core: checkout,
-        instantPaymentTypes: ['googlepay']
+        instantPaymentTypes: ['googlepay'],
+        paymentMethodsConfiguration: {
+            card: {
+                enableStoreDetails: true,
+                hasHolderName: true,
+                holderNameRequired: true
+            },
+            paywithgoogle: {
+                buttonType: 'plain'
+            },
+            // storedCard: {
+            //     hideCVC: true
+            // }
+            klarna: {
+                useKlarnaWidget: true
+            }
+        }
     }).mount('#dropin-container');
 
     handleRedirectResult();

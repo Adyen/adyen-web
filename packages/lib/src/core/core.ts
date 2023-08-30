@@ -131,6 +131,7 @@ class Core {
         }
 
         if (action.type) {
+            // If it is threeDS, then it would need to fetch from Card
             const actionTypeConfiguration = getComponentConfiguration(action.type, this.paymentMethodsConfiguration);
 
             const props = {
@@ -215,9 +216,17 @@ class Core {
         };
     }
 
-    public storeComponentRef({ element, type, paymentMethodConfiguration }: { element: UIElement; type: string; paymentMethodConfiguration: any }) {
-        this.components.push(element);
-        this.paymentMethodsConfiguration[type] = paymentMethodConfiguration;
+    public updatePaymentMethodsConfiguration(paymentMethodConfiguration: PaymentMethodsConfiguration = {}) {
+        this.paymentMethodsConfiguration = {
+            ...this.paymentMethodsConfiguration,
+            ...paymentMethodConfiguration
+        };
+    }
+
+    public storeComponentRef(element: UIElement) {
+        if (!element.props.isDropin) {
+            this.components.push(element);
+        }
     }
 
     /**

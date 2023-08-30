@@ -35,7 +35,12 @@ export async function initSession() {
         },
         onChange: (state, component) => {
             console.log('onChange', state);
-        },
+        }
+    });
+
+    const dropin = new Dropin({
+        core: checkout,
+        instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
@@ -51,11 +56,6 @@ export async function initSession() {
                 billingAddressMode: 'partial'
             }
         }
-    });
-
-    const dropin = new Dropin({
-        core: checkout,
-        instantPaymentTypes: ['googlepay']
     }).mount('#dropin-container');
     return [checkout, dropin];
 }

@@ -32,8 +32,8 @@ const createElements = (
             }
 
             const elementProps = { core, ...paymentMethod, ...commonProps, ...paymentMethodConfigurationProps };
-            console.log('elementProps', elementProps);
 
+            // core.updatePaymentMethodsConfiguration({ [paymentMethod.type]: paymentMethodConfigurationProps });
             return new PaymentMethodElement(elementProps);
         })
         .filter(filterPresent)

@@ -52,7 +52,18 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
 
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
-        this.core.storeComponentRef({ element: this, type: this.type, paymentMethodConfiguration: props });
+
+        this.core.storeComponentRef(this);
+        this.updatePaymentMethodsConfiguration(props);
+    }
+
+    protected updatePaymentMethodsConfiguration(props?): void {
+        const { core, ...rest } = props;
+        const hasConfiguration = Object.keys(rest).length !== 0;
+
+        if (!props.isDropin && hasConfiguration) {
+            this.core.updatePaymentMethodsConfiguration({ [this.type]: rest });
+        }
     }
 
     protected buildElementProps(componentProps: P) {
@@ -101,7 +112,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             console.log('### UIElement::onSubmit::  this.elementRef', this.elementRef);
             // Classic flow
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
-        } else if (this._parentInstance.session) {
+        } else if (this.core.session) {
             // Session flow
             // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
@@ -164,14 +175,14 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     }
 
     private submitPayment(data): Promise<void> {
-        return this._parentInstance.session
+        return this.core.session
             .submitPayment(data)
             .then(this.handleResponse)
             .catch(error => this.handleError(error));
     }
 
     private submitAdditionalDetails(data): Promise<void> {
-        return this._parentInstance.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
+        return this.core.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -208,7 +219,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
             throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        const paymentAction = this._parentInstance.createFromAction(action, {
+        const paymentAction = this.core.createFromAction(action, {
             ...this.elementRef.props,
             ...props,
             onAdditionalDetails: this.handleAdditionalDetails
@@ -263,7 +274,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * @param options - CoreOptions
      */
     public updateParent(options: CoreOptions = {}): Promise<Core> {
-        return this.elementRef._parentInstance.update(options);
+        return this.elementRef.core.update(options);
     }
 
     public setComponentRef = ref => {
