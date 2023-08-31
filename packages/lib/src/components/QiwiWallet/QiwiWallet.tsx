@@ -47,6 +47,12 @@ class QiwiWalletElement extends UIElement {
         };
     }
 
+    public setComponentRef = ref => {
+        if (ref?.triggerValidation && !this.componentRef.showValidation) {
+            this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
+        }
+    };
+
     render() {
         const { i18n, loadingContext, showPayButton, items, selected, placeholders } = this.props;
 
@@ -54,9 +60,7 @@ class QiwiWalletElement extends UIElement {
             <CoreProvider i18n={i18n} loadingContext={loadingContext} resources={this.resources}>
                 <PhoneInput
                     ref={ref => {
-                        if (!this.componentRef.showValidation && ref.triggerValidation) {
-                            this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
-                        }
+                        this.setComponentRef(ref);
                     }}
                     phoneNumberKey={QiwiWalletElement.defaultProps.phoneNumberKey}
                     phoneNumberErrorKey={QiwiWalletElement.defaultProps.phoneNumberErrorKey}

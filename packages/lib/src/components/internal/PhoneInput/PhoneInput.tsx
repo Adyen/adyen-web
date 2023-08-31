@@ -70,6 +70,7 @@ function PhoneInput(props: PhoneInputProps) {
                 >
                     <Select
                         className={'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector'}
+                        name={'phonePrefix'}
                         items={props.items}
                         onChange={handleChangeFor('phonePrefix')}
                         placeholder={props?.placeholders?.phonePrefix}
@@ -92,6 +93,7 @@ function PhoneInput(props: PhoneInputProps) {
                     <InputText
                         className="adyen-checkout__input adyen-checkout-input adyen-checkout-input--phone-number"
                         type="tel"
+                        name="phoneNumber"
                         value={data.phoneNumber}
                         onInput={handleChangeFor('phoneNumber', 'input')}
                         onBlur={handleChangeFor('phoneNumber', 'blur')}
