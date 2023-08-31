@@ -15,10 +15,9 @@
 
     .adyen-checkout__bacs--edit {
         position: absolute;
-        top: -25px;
+        top: 0;
         right: 0;
         cursor: pointer;
-        width: 20%;
 
         &-dropin {
             top: -50px;
@@ -31,6 +30,7 @@
             text-decoration: underline;
             text-align: end;
             cursor: pointer;
+            padding: 0;
         }
     }
 }
