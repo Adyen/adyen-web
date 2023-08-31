@@ -39,6 +39,7 @@ export default function KCPAuthentication(props: KCPProps) {
                     onBlur={props.onBlur}
                     onInput={props.onInput}
                     disabled={props.disabled}
+                    placeholder={props.placeholder}
                 />
             </Field>
 

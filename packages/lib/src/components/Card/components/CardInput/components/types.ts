@@ -131,11 +131,11 @@ export interface KCPProps {
     onFocusField: (str: string) => {};
     onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
-    taxNumber?: string;
     error: boolean;
     isValid: boolean;
     value: string;
     disabled?: boolean;
+    placeholder?: string;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;
