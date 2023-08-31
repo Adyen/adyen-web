@@ -11,6 +11,7 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "noImplicitAny": false,
+//        "noImplicitOverride": true, TODO: turn this on
         "strictPropertyInitialization": false,
         "suppressImplicitAnyIndexErrors": true,
         "importHelpers": true,

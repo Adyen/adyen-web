@@ -42,7 +42,11 @@ class DropinElement extends UIElement<DropinElementProps> {
         this.handleAction = this.handleAction.bind(this);
     }
 
-    protected updatePaymentMethodsConfiguration(props) {
+    protected override storeElementRefOnCore() {
+        this.core.storeElementReference(this);
+    }
+
+    protected override updatePaymentMethodsConfiguration(props) {
         this.core.updatePaymentMethodsConfiguration(props.paymentMethodsConfiguration);
     }
 
@@ -91,7 +95,7 @@ class DropinElement extends UIElement<DropinElementProps> {
     /**
      * Calls the onSubmit event with the state of the activePaymentMethod
      */
-    submit(): void {
+    public submit(): void {
         if (!this.activePaymentMethod) {
             throw new Error('No active payment method.');
         }

@@ -19,10 +19,10 @@ class Core {
     public paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
-    public components = [];
     public loadingContext?: string;
     public cdnContext?: string;
 
+    private elements: UIElement[] = [];
     private paymentMethodsConfiguration: PaymentMethodsConfiguration = {};
 
     public static readonly version = {
@@ -157,8 +157,7 @@ class Core {
 
         return this.initialize().then(() => {
             // Update each component under this instance
-            this.components.forEach(c => c.update(this.getCorePropsForComponent()));
-
+            this.elements.forEach(c => c.update(this.getCorePropsForComponent()));
             return this;
         });
     };
@@ -167,9 +166,10 @@ class Core {
      * Remove the reference of a component
      * @param component - reference to the component to be removed
      * @returns this - the element instance
+     * // TODO: Do we need this?
      */
     public remove = (component): this => {
-        this.components = this.components.filter(c => c._id !== component._id);
+        this.elements = this.elements.filter(c => c._id !== component._id);
         component.unmount();
 
         return this;
@@ -223,10 +223,8 @@ class Core {
         };
     }
 
-    public storeComponentRef(element: UIElement) {
-        if (!element.props.isDropin) {
-            this.components.push(element);
-        }
+    public storeElementReference(element: UIElement) {
+        this.elements.push(element);
     }
 
     /**

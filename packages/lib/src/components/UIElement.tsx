@@ -53,20 +53,26 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
-        this.core.storeComponentRef(this);
+        this.storeElementRefOnCore(props);
         this.updatePaymentMethodsConfiguration(props);
     }
 
-    protected updatePaymentMethodsConfiguration(props?): void {
-        const { core, ...rest } = props;
-        const hasConfiguration = Object.keys(rest).length !== 0;
-
-        if (!props.isDropin && hasConfiguration) {
-            this.core.updatePaymentMethodsConfiguration({ [this.type]: rest });
+    protected storeElementRefOnCore(props?: P) {
+        if (!props?.isDropin) {
+            this.core.storeElementReference(this);
         }
     }
 
-    protected buildElementProps(componentProps: P) {
+    protected updatePaymentMethodsConfiguration(props?): void {
+        const { core, ...componentProps } = props;
+        const hasConfiguration = Object.keys(componentProps).length !== 0;
+
+        if (!props.isDropin && hasConfiguration) {
+            this.core.updatePaymentMethodsConfiguration({ [this.type]: componentProps });
+        }
+    }
+
+    protected override buildElementProps(componentProps: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
         const paymentMethodsResponseProps = this.core.paymentMethodsResponse.find(this.constructor['type']);
 
@@ -79,8 +85,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         };
 
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
-
-        console.log(this.props);
     }
 
     public setState(newState: object): void {
@@ -98,6 +102,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     }
 
     private onSubmit(): void {
+        debugger;
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
             const dropinElementRef = this.elementRef as DropinElement;
