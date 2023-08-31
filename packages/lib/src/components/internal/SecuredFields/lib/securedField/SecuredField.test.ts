@@ -196,13 +196,19 @@ describe('SecuredField handling placeholders from the placeholders config', () =
     });
 
     test('should set placeholders for txVariant default (card)', () => {
-        const cardPlaceholders: CardPlaceholders = { cardNumber: '123', expirationDate: '01/01', securityCode: '000', password: '***' };
+        const cardPlaceholders: CardPlaceholders = {
+            cardNumber: '123',
+            expiryDate: '01/01',
+            securityCodeThreeDigits: '000',
+            securityCodeFourDigits: '1234',
+            password: '***'
+        };
         // @ts-ignore ignore
         const card = new SecuredField(setupObj, i18n, cardPlaceholders);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(cardPlaceholders.cardNumber);
-        expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(cardPlaceholders.expirationDate);
-        expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toBe(cardPlaceholders.securityCode);
-        expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toBe(cardPlaceholders.securityCode);
+        expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(cardPlaceholders.expiryDate);
+        expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toBe(cardPlaceholders.securityCodeThreeDigits);
+        expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toBe(cardPlaceholders.securityCodeFourDigits);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_PWD_FIELD]).toBe(cardPlaceholders.password);
     });
 });
