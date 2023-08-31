@@ -33,6 +33,7 @@ export function processPlaceholders(configObj: SFInternalConfig, placeholders: P
         [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: '',
         [ENCRYPTED_BANK_LOCATION_FIELD]: ''
     };
+
     switch (configObj.txVariant) {
         case 'ach':
             return {
@@ -47,14 +48,16 @@ export function processPlaceholders(configObj: SFInternalConfig, placeholders: P
                 [ENCRYPTED_EXPIRY_DATE]: (placeholders as GiftcardPlaceholders).expiryDate ?? '',
                 [ENCRYPTED_SECURITY_CODE]: (placeholders as GiftcardPlaceholders).securityCode ?? ''
             };
-        default:
+        default: {
+            const { [ENCRYPTED_SECURITY_CODE]: sc, ...strippedDefaults } = defaultPlaceholders; // Card placeholders should not have an ENCRYPTED_SECURITY_CODE prop
             return {
-                ...defaultPlaceholders,
+                ...strippedDefaults,
                 [ENCRYPTED_CARD_NUMBER]: (placeholders as CardPlaceholders).cardNumber ?? '',
-                [ENCRYPTED_EXPIRY_DATE]: (placeholders as CardPlaceholders).expirationDate ?? '',
-                [ENCRYPTED_SECURITY_CODE_3_DIGITS]: (placeholders as CardPlaceholders).securityCode ?? '',
-                [ENCRYPTED_SECURITY_CODE_4_DIGITS]: (placeholders as CardPlaceholders).securityCode ?? '',
+                [ENCRYPTED_EXPIRY_DATE]: (placeholders as CardPlaceholders).expiryDate ?? '',
+                [ENCRYPTED_SECURITY_CODE_3_DIGITS]: (placeholders as CardPlaceholders).securityCodeThreeDigits ?? '',
+                [ENCRYPTED_SECURITY_CODE_4_DIGITS]: (placeholders as CardPlaceholders).securityCodeFourDigits ?? '',
                 [ENCRYPTED_PWD_FIELD]: (placeholders as CardPlaceholders).password ?? ''
             };
+        }
     }
 }
