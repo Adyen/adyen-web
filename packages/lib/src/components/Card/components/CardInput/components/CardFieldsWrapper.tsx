@@ -120,6 +120,7 @@ export const CardFieldsWrapper = ({
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
                     disabled={iOSFocusedField && iOSFocusedField !== 'kcpTaxNumberOrDOB'}
+                    placeholder={placeholders.taxNumber}
                 />
             )}
 
