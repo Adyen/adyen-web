@@ -7,41 +7,6 @@ function assertIsTypeofUIElement(item: any): item is typeof UIElement {
 
 export type NewableComponent = new (props) => UIElement;
 
-const actionElements = {
-    redirect: Redirect
-};
-
-function createComponentsMap(components: NewableComponent[]) {
-    const componentsMap = components.reduce((memo, component) => {
-        const isValid = assertIsTypeofUIElement(component);
-        if (!isValid) {
-            return memo;
-        }
-
-        const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
-
-        supportedTxVariants.forEach(txVariant => {
-            memo = {
-                ...memo,
-                [txVariant]: component
-            };
-        });
-
-        component.dependencies.forEach(dependency => {
-            memo = {
-                ...memo,
-                [dependency.type]: dependency
-            };
-        });
-        return memo;
-    }, {});
-
-    return {
-        ...componentsMap,
-        ...actionElements
-    };
-}
-
 export interface IRegistry {
     add(...items: NewableComponent[]): void;
     getComponent(type: string): NewableComponent;
@@ -51,12 +16,42 @@ class Registry implements IRegistry {
     public componentsMap: Record<string, NewableComponent> = {};
 
     public add(...items: NewableComponent[]) {
-        this.componentsMap = createComponentsMap(items);
-        console.log('### core.registry:::: componentsMap', this.componentsMap);
+        this.componentsMap = this.createComponentsMap(items);
     }
 
     public getComponent(type: string) {
         return this.componentsMap[type];
+    }
+
+    public createComponentsMap(components: NewableComponent[]) {
+        const componentsMap = components.reduce((memo, component) => {
+            const isValid = assertIsTypeofUIElement(component);
+            if (!isValid) {
+                return memo;
+            }
+
+            const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
+
+            supportedTxVariants.forEach(txVariant => {
+                memo = {
+                    ...memo,
+                    [txVariant]: component
+                };
+            });
+
+            component.dependencies.forEach(dependency => {
+                memo = {
+                    ...memo,
+                    [dependency.type]: dependency
+                };
+            });
+            return memo;
+        }, {});
+
+        return {
+            ...componentsMap,
+            redirect: Redirect
+        };
     }
 }
 

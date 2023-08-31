@@ -1,4 +1,4 @@
-import { AdyenCheckout, Giftcard, MealVoucherFR } from '@adyen/adyen-web';
+import { AdyenCheckout, Giftcard, MealVoucherFR, Card } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleChange, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';

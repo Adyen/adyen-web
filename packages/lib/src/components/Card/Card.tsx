@@ -87,8 +87,8 @@ export class CardElement extends UIElement<CardElementProps> {
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
-                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
-                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };
