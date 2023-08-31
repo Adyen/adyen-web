@@ -10,7 +10,6 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import Core from '../../core';
 
 const latestSupportedVersion = 14;
 
@@ -18,8 +17,8 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     public static type = 'applepay';
     protected static defaultProps = defaultProps;
 
-    constructor(checkoutRef: Core, props: ApplePayElementProps) {
-        super(checkoutRef, props);
+    constructor(props: ApplePayElementProps) {
+        super(props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);

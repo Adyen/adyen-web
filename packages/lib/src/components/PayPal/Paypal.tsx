@@ -9,7 +9,6 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { createShopperDetails } from './utils/create-shopper-details';
-import Core from '../../core';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -20,8 +19,8 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     protected static defaultProps = defaultProps;
 
-    constructor(checkoutRef: Core, props: PayPalElementProps) {
-        super(checkoutRef, props);
+    constructor(props: PayPalElementProps) {
+        super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 

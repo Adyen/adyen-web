@@ -89,7 +89,7 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
-            _parentInstance: props._parentInstance,
+            core: props.core,
             paymentMethodType: props.paymentMethodType,
             challengeWindowSize: props.challengeWindowSize, // always pass challengeWindowSize in case it's been set directly in the handleAction config object
 

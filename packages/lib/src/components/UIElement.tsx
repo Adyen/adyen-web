@@ -10,8 +10,8 @@ import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
-import Core from '../core';
 import { Resources } from '../core/Context/Resources';
+import { ICore } from '../core/core';
 
 export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -102,7 +102,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     }
 
     private onSubmit(): void {
-        debugger;
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
             const dropinElementRef = this.elementRef as DropinElement;
@@ -278,7 +277,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * This function exist to make safe access to the protect _parentInstance
      * @param options - CoreOptions
      */
-    public updateParent(options: CoreOptions = {}): Promise<Core> {
+    public updateParent(options: CoreOptions = {}): Promise<ICore> {
         return this.elementRef.core.update(options);
     }
 

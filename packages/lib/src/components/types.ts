@@ -2,13 +2,13 @@ import { h } from 'preact';
 import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
-import Core from '../core';
 import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
+import type { ICore } from '../core/core';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -64,7 +64,7 @@ export interface RawPaymentResponse extends PaymentResponse {
 }
 
 export interface BaseElementProps {
-    core: Core;
+    core: ICore;
     order?: Order;
     modules?: {
         srPanel?: SRPanel;

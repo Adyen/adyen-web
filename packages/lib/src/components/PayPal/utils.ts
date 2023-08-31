@@ -1,5 +1,5 @@
 import { ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, INTEGRATION_DATE, PAYPAL_JS_URL, SUPPORTED_LOCALES, SUPPORTED_COLORS_FOR_CREDIT } from './config';
-import { PaypalSettings, SupportedLocale, PayPalElementProps, FundingSource } from './types';
+import { PaypalSettings, SupportedLocale, FundingSource, PayPalComponentProps } from './types';
 
 /**
  * Processes and returns a new style object.
@@ -38,7 +38,7 @@ const getPaypalSettings = ({
     commit,
     vault,
     enableMessages
-}: PayPalElementProps): PaypalSettings => {
+}: Partial<PayPalComponentProps>): PaypalSettings => {
     const shopperLocale: SupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
@@ -66,7 +66,7 @@ const getPaypalSettings = ({
  * Returns the PayPal SDK script URL with query parameters
  * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/}
  */
-const getPaypalUrl = (props: PayPalElementProps): string => {
+const getPaypalUrl = (props: Partial<PayPalComponentProps>): string => {
     const settings = getPaypalSettings(props);
     const params = decodeURIComponent(
         Object.keys(settings)

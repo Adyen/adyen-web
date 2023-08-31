@@ -1,7 +1,7 @@
 import createElements from './createElements';
 import { StoredPaymentMethod } from '../../../types';
 import { PaymentMethodsConfiguration } from '../../../core/types';
-import Core from '../../../core';
+import type { ICore } from '../../../core/core';
 
 // /**
 //  *  Returns a filtered (available) list of oneClick paymentMethod Elements
@@ -13,7 +13,7 @@ const createStoredElements = (
     paymentMethods: StoredPaymentMethod[] = [],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     props,
-    core: Core
+    core: ICore
 ) => createElements(paymentMethods, paymentMethodsConfiguration, { ...props, oneClick: true }, core);
 
 export default createStoredElements;

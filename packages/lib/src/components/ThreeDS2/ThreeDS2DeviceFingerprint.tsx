@@ -5,8 +5,10 @@ import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { ActionHandledReturnObject } from '../types';
+import { ICore } from '../../core/core';
 
 export interface ThreeDS2DeviceFingerprintProps {
+    core: ICore;
     dataKey: string;
     token: string;
     notificationURL: string;

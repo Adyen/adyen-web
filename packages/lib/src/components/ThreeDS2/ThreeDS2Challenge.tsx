@@ -7,8 +7,10 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject } from '../types';
+import { ICore } from '../../core/core';
 
 export interface ThreeDS2ChallengeProps {
+    core: ICore;
     token?: string;
     dataKey?: string;
     notificationURL?: string;

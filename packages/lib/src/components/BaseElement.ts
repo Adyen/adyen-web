@@ -2,11 +2,11 @@ import { ComponentChild, render } from 'preact';
 import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
-import Core from '../core';
 import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { ICore } from '../core/core';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -16,7 +16,7 @@ class BaseElement<P extends BaseElementProps> {
     public _node = null;
     public _component;
     public eventEmitter = new EventEmitter();
-    protected readonly core: Core;
+    protected readonly core: ICore;
 
     protected resources: Resources;
 

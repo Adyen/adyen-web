@@ -5,15 +5,17 @@ import CoreProvider from '../../../core/Context/CoreProvider';
 import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
 import { AddressSpecifications } from '../../internal/Address/types';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import { ICore } from '../../../core/core';
 
 export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
+    core: ICore;
     consentCheckboxLabel?: h.JSX.Element;
     billingAddressRequiredFields?: string[];
     billingAddressSpecification?: AddressSpecifications;
 }
 
 export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainerProps> {
-    protected static defaultProps: OpenInvoiceContainerProps = {
+    protected static defaultProps: Partial<OpenInvoiceContainerProps> = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
         visibility: {

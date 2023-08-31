@@ -7,7 +7,7 @@ export class MealVoucherFRElement extends GiftcardElement {
     public static txVariants = ['mealVoucher_FR_natixis', 'mealVoucher_FR_sodexo', 'mealVoucher_FR_groupeup'];
 
     constructor(checkoutRef: Core, props) {
-        super(checkoutRef, {
+        super({
             ...props,
             pinRequired: true,
             expiryDateRequired: true,

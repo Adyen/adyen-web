@@ -5,7 +5,7 @@ import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { PaymentAction } from '../types';
+import { Order, PaymentAction } from '../types';
 import { CoreOptions, PaymentMethodsConfiguration } from './types';
 import { getComponentConfiguration, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -14,7 +14,22 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 
-class Core {
+export interface ICore {
+    initialize(): Promise<ICore>;
+    update({ order }: { order?: Order }): Promise<ICore>;
+    remove(component): ICore;
+    submitDetails(details: any): void;
+    getCorePropsForComponent(): any;
+    getComponent(txVariant: string): NewableComponent | undefined;
+    createFromAction(action: PaymentAction, options: any): any;
+    updatePaymentMethodsConfiguration(paymentMethodConfiguration: PaymentMethodsConfiguration): void;
+    storeElementReference(element: UIElement): void;
+    options: CoreOptions;
+    paymentMethodsResponse: PaymentMethodsResponse;
+    session?: Session;
+}
+
+class Core implements ICore {
     public session: Session;
     public paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
@@ -22,7 +37,7 @@ class Core {
     public loadingContext?: string;
     public cdnContext?: string;
 
-    private elements: UIElement[] = [];
+    private components: UIElement[] = [];
     private paymentMethodsConfiguration: PaymentMethodsConfiguration = {};
 
     public static readonly version = {
@@ -60,7 +75,7 @@ class Core {
         window['adyenWebVersion'] = Core.version.version;
     }
 
-    initialize(): Promise<this> {
+    public initialize(): Promise<this> {
         if (this.options.session) {
             this.session = new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
@@ -157,7 +172,7 @@ class Core {
 
         return this.initialize().then(() => {
             // Update each component under this instance
-            this.elements.forEach(c => c.update(this.getCorePropsForComponent()));
+            this.components.forEach(c => c.update(this.getCorePropsForComponent()));
             return this;
         });
     };
@@ -169,7 +184,7 @@ class Core {
      * // TODO: Do we need this?
      */
     public remove = (component): this => {
-        this.elements = this.elements.filter(c => c._id !== component._id);
+        this.components = this.components.filter(c => c._id !== component._id);
         component.unmount();
 
         return this;
@@ -224,7 +239,9 @@ class Core {
     }
 
     public storeElementReference(element: UIElement) {
-        this.elements.push(element);
+        if (element) {
+            this.components.push(element);
+        }
     }
 
     /**

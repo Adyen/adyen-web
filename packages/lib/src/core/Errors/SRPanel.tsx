@@ -12,7 +12,7 @@ import { SRMessages, SRMessagesRef } from './SRMessages';
 export class SRPanel extends BaseElement<SRPanelProps> {
     public static type = 'srPanel';
 
-    public static defaultProps: SRPanelProps = {
+    public static defaultProps: Partial<SRPanelProps> = {
         enabled: true,
         node: 'body',
         showPanel: false,

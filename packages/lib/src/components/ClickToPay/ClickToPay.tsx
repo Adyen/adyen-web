@@ -10,7 +10,6 @@ import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import ClickToPayProvider from '../internal/ClickToPay/context/ClickToPayProvider';
 import ClickToPayComponent from '../internal/ClickToPay';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import Core from '../../core';
 
 export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     public static type = 'clicktopay';
@@ -18,12 +17,8 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     private clickToPayService: IClickToPayService | null;
     private ctpConfiguration: ClickToPayConfiguration;
 
-    constructor(checkoutRef: Core, props: ClickToPayElementProps) {
-        super(checkoutRef, props);
-    }
-
-    protected init(props: ClickToPayElementProps) {
-        super.init(props);
+    constructor(props: ClickToPayElementProps) {
+        super(props);
 
         this.ctpConfiguration = {
             shopperEmail: this.props.shopperEmail,
@@ -71,8 +66,8 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
         return {
             ...props,
             disableOtpAutoFocus: props.disableOtpAutoFocus || false,
-            shopperEmail: props.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
-            telephoneNumber: props.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
+            shopperEmail: props.shopperEmail || props?.core?.options?.session?.shopperEmail,
+            telephoneNumber: props.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
             locale: props.locale || props.i18n?.locale?.replace('-', '_')
         };
     }

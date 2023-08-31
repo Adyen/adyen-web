@@ -48,7 +48,7 @@
         "dev-server": "rollup --watch --config config/rollup.dev.new.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "build-old": "rm -rf dist/ && npm run type-check-generate && cross-env rollup --config config/rollup.config.js",
-        "build": "rm -rf dist/ node && rollup --config config/rollup.config.new.js",
+        "build": "rm -rf dist/ && npm run type-check-generate && rollup --config config/rollup.config.new.js",
         "build:analyze": "rm -rf dist/ && cross-env NODE_ENV=analyze rollup --config config/rollup.config.js",
         "test": "jest --config config/jest.config.js",
         "test:watch": "npm run test -- --watchAll",

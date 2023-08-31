@@ -1,7 +1,6 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
 import { PaymentMethod, StoredPaymentMethod } from '../../../types';
-// import UIElement from '../../UIElement';
-import Core from '../../../core';
+import { ICore } from '../../../core/core';
 import { PaymentMethodsConfiguration } from '../../../core/types';
 import { getComponentConfiguration } from '../../../core/utils';
 //
@@ -15,7 +14,7 @@ const createElements = (
     paymentMethods: PaymentMethod[] | StoredPaymentMethod[],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     commonProps,
-    core: Core
+    core: ICore
 ) => {
     const elements = paymentMethods
         .map(paymentMethod => {

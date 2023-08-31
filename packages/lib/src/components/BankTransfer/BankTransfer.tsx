@@ -14,6 +14,7 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
         showEmailAddress: true
     };
 
+    // @ts-ignore Double check why state extends all props
     public state: BankTransferState = {
         isValid: !this.props.showEmailAddress,
         data: {}

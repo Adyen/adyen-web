@@ -1,8 +1,8 @@
 import createElements from './createElements';
 import { PaymentMethod } from '../../../types';
 import UIElement from '../../UIElement';
-import Core from '../../../core';
 import { PaymentMethodsConfiguration } from '../../../core/types';
+import { ICore } from '../../../core/core';
 
 // /**
 //  *  Returns a filtered (available) list of InstantPaymentMethods Elements
@@ -14,7 +14,7 @@ const createInstantPaymentElements = (
     instantPaymentMethods: PaymentMethod[] = [],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     props,
-    core: Core
+    core: ICore
 ): Promise<UIElement[]> | [] => {
     if (instantPaymentMethods.length) {
         return createElements(instantPaymentMethods, paymentMethodsConfiguration, { ...props, isInstantPayment: true, showPayButton: true }, core);
