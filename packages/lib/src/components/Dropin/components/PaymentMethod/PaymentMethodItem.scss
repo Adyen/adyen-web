@@ -222,8 +222,8 @@
     left: 0;
     right: 0;
     top: 50%;
-    height: var(--b-spacer-030);
-    width: var(--b-spacer-030);
+    height: var(--b-spacer-040);
+    width: var(--b-spacer-040);
     background-color: var(--b-color-white);
     border-radius: 50%;
     transform: translateY(-50%) scale(0);
@@ -231,7 +231,7 @@
 }
 
 .adyen-checkout__payment-method:hover:not(.adyen-checkout__payment-method--selected) .adyen-checkout__payment-method__radio {
-    border-color: #99a3ad;
+    border-color: var(--b-color-outline-secondary);
     box-shadow: 0 0 0 var(--b-spacer-010) var(--b-color-outline-secondary);
     cursor: pointer;
 }
