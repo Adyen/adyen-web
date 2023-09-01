@@ -9,8 +9,6 @@ const checkout = {
 };
 
 if (typeof window !== 'undefined') {
-    if (!window.adyen) window.adyen = {};
-    window.adyen.checkout = checkout;
+    if (!window.AdyenWeb) window.AdyenWeb = {};
+    window.AdyenWeb = checkout;
 }
-
-export default checkout;

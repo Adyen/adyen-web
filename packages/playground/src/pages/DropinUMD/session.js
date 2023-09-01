@@ -14,7 +14,7 @@ export async function initSession() {
         countryCode
     });
 
-    const { AdyenCheckout, Dropin } = window.adyen.checkout;
+    const { AdyenCheckout, Dropin } = window.AdyenWeb;
 
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,

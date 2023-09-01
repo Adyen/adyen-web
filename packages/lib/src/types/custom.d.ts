@@ -4,5 +4,5 @@ declare module '*.scss' {
 }
 
 interface Window {
-    adyen: any;
+    AdyenWeb: any;
 }
