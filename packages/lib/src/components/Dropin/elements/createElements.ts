@@ -26,7 +26,6 @@ const createElements = (
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
             if (!PaymentMethodElement) {
-                console.warn(`The component of '${paymentMethod.type}' is unavailable. Make sure to register its Class before creating the Drop-in.`);
                 return null;
             }
 

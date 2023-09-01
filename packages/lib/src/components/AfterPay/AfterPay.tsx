@@ -3,10 +3,11 @@ import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
 import ConsentCheckboxLabel from './components/ConsentCheckboxLabel';
 import { getConsentLinkUrl } from './utils';
 import { ALLOWED_COUNTRIES } from './config';
+import TxVariant from './tx-variant';
 
 export default class AfterPay extends OpenInvoiceContainer {
-    public static type = 'afterpay_default';
-    public static txVariants = ['afterpay_default', 'afterpay'];
+    public static type = TxVariant.defaultTxVariant;
+    public static txVariants = TxVariant.txVariants;
 
     formatProps(props) {
         return {

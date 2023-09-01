@@ -4,9 +4,11 @@ import AchInput from './components/AchInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { AchElementProps } from './types';
+import TxVariant from './tx-variant';
 
 export class AchElement extends UIElement<AchElementProps> {
-    public static type = 'ach';
+    public static type = TxVariant.defaultTxVariant;
+    public static txVariants = TxVariant.txVariants;
 
     formatProps(props: AchElementProps) {
         return {

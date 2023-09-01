@@ -14,6 +14,8 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 
+console.log(registry);
+
 export interface ICore {
     initialize(): Promise<ICore>;
     update({ order }: { order?: Order }): Promise<ICore>;
