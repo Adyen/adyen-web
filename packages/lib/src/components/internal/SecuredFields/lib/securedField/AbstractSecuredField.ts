@@ -93,7 +93,6 @@ export type AriaConfig = {
 export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
-    error?: object;
 }
 
 abstract class AbstractSecuredField {
