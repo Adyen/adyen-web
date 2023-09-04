@@ -1,5 +1,5 @@
 import { GENERIC_OPTIONS } from './config';
-import { PaymentMethodsConfiguration } from './types';
+import { PaymentMethodsConfiguration } from '../components/types';
 
 /**
  * Filter properties in a global configuration object from an allow list (GENERIC_OPTIONS)

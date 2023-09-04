@@ -1,7 +1,6 @@
 import { Order, OrderStatus } from '../../types';
 import UIElement from '../UIElement';
-import { UIElementProps, UIElementStatus } from '../types';
-import { PaymentMethodsConfiguration } from '../../core/types';
+import { PaymentMethodsConfiguration, UIElementProps, UIElementStatus } from '../types';
 
 export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay';
 

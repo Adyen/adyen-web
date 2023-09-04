@@ -1,15 +1,13 @@
 import { CustomTranslations, Locales } from '../language/types';
-import { PaymentActionsType, PaymentAmountExtended, Order } from '../types';
+import { PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, PaymentMethodsConfiguration } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
 import { SRPanelProps } from './Errors/types';
-
-import type { PaymentMethods, PaymentMethodOptions } from '../components/type-new';
 
 type PromiseResolve = typeof Promise.resolve;
 
@@ -157,11 +155,3 @@ export interface CoreOptions {
      */
     loadingContext?: string;
 }
-
-export type PaymentMethodsConfiguration =
-    | {
-          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-      }
-    | {
-          [key in PaymentActionsType]?: any;
-      };

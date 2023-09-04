@@ -1,8 +1,8 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
 import { PaymentMethod, StoredPaymentMethod } from '../../../types';
 import { ICore } from '../../../core/core';
-import { PaymentMethodsConfiguration } from '../../../core/types';
 import { getComponentConfiguration } from '../../../core/utils';
+import { PaymentMethodsConfiguration } from '../../types';
 //
 // /**
 //  * Returns a filtered (available) list of component Elements

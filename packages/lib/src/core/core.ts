@@ -6,13 +6,14 @@ import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { Order, PaymentAction } from '../types';
-import { CoreOptions, PaymentMethodsConfiguration } from './types';
+import { CoreOptions } from './types';
 import { getComponentConfiguration, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
+import { PaymentMethodsConfiguration } from '../components/types';
 
 console.log(registry);
 

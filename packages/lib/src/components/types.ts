@@ -10,6 +10,253 @@ import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
 import type { ICore } from '../core/core';
 
+/** Components */
+import AfterPay from './AfterPay';
+import AfterPayB2B from './AfterPay/AfterPayB2B';
+import AmazonPay from './AmazonPay';
+import ApplePay from './ApplePay';
+import Atome from './Atome';
+import { BillDeskOnline, BillDeskWallet } from './BillDesk';
+import Card from './Card';
+import CashAppPay from './CashAppPay';
+import ClickToPay from './ClickToPay';
+import Bancontact from './Card/Bancontact';
+import Donation from './Donation';
+import Giropay from './Giropay';
+import GooglePay from './GooglePay';
+import Entercash from './Entercash';
+import Econtext from './Econtext';
+import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
+import Ideal from './Ideal';
+import PayPal from './PayPal';
+import QiwiWallet from './QiwiWallet';
+import Redirect from './Redirect';
+import SecuredFields from './SecuredFields';
+import Sepa from './Sepa';
+import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge } from './ThreeDS2';
+import WeChat from './WeChat';
+import PayNow from './PayNow';
+import BcmcMobile from './BcmcMobile';
+import { MolPayEBankingMY, MolPayEBankingTH, MolPayEBankingVN } from './MolPayEBanking';
+import Dragonpay from './Dragonpay';
+import Doku from './Doku';
+import Boleto from './Boleto';
+import Oxxo from './Oxxo';
+import Multibanco from './Multibanco';
+import Dotpay from './Dotpay';
+import Eps from './EPS';
+import Giftcard from './Giftcard';
+import Vipps from './Vipps';
+import { PayuCashcard, PayuNetBanking } from './PayU';
+import RatePay from './RatePay';
+import Swish from './Swish';
+import Dropin from './Dropin';
+import Ach from './Ach';
+import MBWay from './MBWay';
+import Blik from './Blik';
+import BankTransfer from './BankTransfer';
+import Affirm from './Affirm';
+import Pix from './Pix';
+import BacsDD from './BacsDD';
+import Address from './Address';
+import PersonalDetails from './PersonalDetails';
+import Klarna from './Klarna';
+import Twint from './Twint';
+import MealVoucherFR from './MealVoucherFR';
+import OnlineBankingINElement from './OnlineBankingIN';
+import OnlinebankingPL from './OnlinebankingPL';
+import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
+import UPI from './UPI';
+import WalletINElement from './WalletIN';
+import OnlineBankingCZElement from './OnlineBankingCZ';
+import OnlineBankingSKElement from './OnlineBankingSK';
+import PayByBank from './PayByBank';
+import PromptPay from './PromptPay';
+import Duitnow from './DuitNow';
+import { TxVariants } from './tx-variants';
+import { PaymentActionsType } from '../types';
+
+/**
+ * Maps each component with a Component element.
+ */
+const componentsMap = {
+    /** internal */
+    [TxVariants.address]: Address,
+    [TxVariants.bankTransfer_IBAN]: BankTransfer,
+    [TxVariants.donation]: Donation,
+    [TxVariants.dropin]: Dropin,
+    [TxVariants.personal_details]: PersonalDetails,
+    /** internal */
+
+    /** Card */
+    [TxVariants.amex]: Card,
+    [TxVariants.bcmc]: Bancontact,
+    [TxVariants.card]: Card,
+    [TxVariants.diners]: Card,
+    [TxVariants.discover]: Card,
+    [TxVariants.jcb]: Card,
+    [TxVariants.kcp]: Card,
+    [TxVariants.maestro]: Card,
+    [TxVariants.mc]: Card,
+    [TxVariants.scheme]: Card,
+    [TxVariants.storedCard]: Card,
+    [TxVariants.securedfields]: SecuredFields,
+    [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
+    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint,
+    [TxVariants.visa]: Card,
+    /** Card */
+
+    /** Direct debit */
+    [TxVariants.ach]: Ach,
+    [TxVariants.directdebit_GB]: BacsDD,
+    [TxVariants.sepadirectdebit]: Sepa,
+    /** Direct debit */
+
+    /** Open Invoice */
+    [TxVariants.affirm]: Affirm,
+    [TxVariants.afterpay]: AfterPay,
+    [TxVariants.afterpay_default]: AfterPay,
+    [TxVariants.afterpay_b2b]: AfterPayB2B,
+    [TxVariants.atome]: Atome,
+    [TxVariants.facilypay_3x]: FacilyPay3x,
+    [TxVariants.facilypay_4x]: FacilyPay4x,
+    [TxVariants.facilypay_6x]: FacilyPay6x,
+    [TxVariants.facilypay_10x]: FacilyPay10x,
+    [TxVariants.facilypay_12x]: FacilyPay12x,
+    [TxVariants.ratepay]: RatePay,
+    [TxVariants.ratepay_directdebit]: RatePayDirectDebit,
+    /** Open Invoice */
+
+    /** Wallets */
+    [TxVariants.amazonpay]: AmazonPay,
+    [TxVariants.applepay]: ApplePay,
+    [TxVariants.cashapp]: CashAppPay,
+    [TxVariants.clicktopay]: ClickToPay,
+    [TxVariants.googlepay]: GooglePay,
+    [TxVariants.paypal]: PayPal,
+    [TxVariants.paywithgoogle]: GooglePay,
+    [TxVariants.qiwiwallet]: QiwiWallet,
+    /** Wallets */
+
+    /** Voucher */
+    [TxVariants.boletobancario]: Boleto,
+    [TxVariants.boletobancario_bancodobrasil]: Boleto,
+    [TxVariants.boletobancario_bradesco]: Boleto,
+    [TxVariants.boletobancario_hsbc]: Boleto,
+    [TxVariants.boletobancario_itau]: Boleto,
+    [TxVariants.boletobancario_santander]: Boleto,
+    [TxVariants.doku]: Doku,
+    [TxVariants.doku_alfamart]: Doku,
+    [TxVariants.doku_permata_lite_atm]: Doku,
+    [TxVariants.doku_indomaret]: Doku,
+    [TxVariants.doku_atm_mandiri_va]: Doku,
+    [TxVariants.doku_sinarmas_va]: Doku,
+    [TxVariants.doku_mandiri_va]: Doku,
+    [TxVariants.doku_cimb_va]: Doku,
+    [TxVariants.doku_danamon_va]: Doku,
+    [TxVariants.doku_bri_va]: Doku,
+    [TxVariants.doku_bni_va]: Doku,
+    [TxVariants.doku_bca_va]: Doku,
+    [TxVariants.doku_wallet]: Doku,
+    [TxVariants.oxxo]: Oxxo,
+    [TxVariants.primeiropay_boleto]: Boleto,
+    /** Voucher */
+
+    /** issuerList */
+    [TxVariants.billdesk_online]: BillDeskOnline,
+    [TxVariants.billdesk_wallet]: BillDeskWallet,
+    [TxVariants.dotpay]: Dotpay,
+    [TxVariants.entercash]: Entercash,
+    [TxVariants.eps]: Eps,
+    [TxVariants.ideal]: Ideal,
+    [TxVariants.molpay_ebanking_fpx_MY]: MolPayEBankingMY,
+    [TxVariants.molpay_ebanking_TH]: MolPayEBankingTH,
+    [TxVariants.molpay_ebanking_VN]: MolPayEBankingVN,
+    [TxVariants.onlineBanking]: Dotpay,
+    [TxVariants.onlineBanking_CZ]: OnlineBankingCZElement,
+    [TxVariants.onlinebanking_IN]: OnlineBankingINElement, // NOTE ]: the txVariant does have a lowercase "b"
+    [TxVariants.onlineBanking_PL]: OnlinebankingPL,
+    [TxVariants.onlineBanking_SK]: OnlineBankingSKElement,
+    [TxVariants.paybybank]: PayByBank,
+    [TxVariants.payu_IN_cashcard]: PayuCashcard,
+    [TxVariants.payu_IN_nb]: PayuNetBanking,
+    [TxVariants.wallet_IN]: WalletINElement,
+    /** issuerList */
+
+    /** Dragonpay */
+    [TxVariants.dragonpay_ebanking]: Dragonpay,
+    [TxVariants.dragonpay_otc_banking]: Dragonpay,
+    [TxVariants.dragonpay_otc_non_banking]: Dragonpay,
+    [TxVariants.dragonpay_otc_philippines]: Dragonpay,
+    /** Dragonpay */
+
+    /** Econtext */
+    [TxVariants.econtext_atm]: Econtext,
+    [TxVariants.econtext_online]: Econtext,
+    [TxVariants.econtext_seven_eleven]: Econtext,
+    [TxVariants.econtext_stores]: Econtext,
+    /** Econtext */
+
+    /** Redirect */
+    [TxVariants.giropay]: Giropay,
+    [TxVariants.multibanco]: Multibanco,
+    [TxVariants.redirect]: Redirect,
+    [TxVariants.twint]: Twint,
+    [TxVariants.vipps]: Vipps,
+    /** Redirect */
+
+    /** Klarna */
+    [TxVariants.klarna]: Klarna,
+    [TxVariants.klarna_account]: Klarna,
+    [TxVariants.klarna_paynow]: Klarna,
+    /** Klarna */
+
+    /** QRLoader */
+    [TxVariants.bcmc_mobile]: BcmcMobile,
+    [TxVariants.bcmc_mobile_QR]: BcmcMobile,
+    [TxVariants.pix]: Pix,
+    [TxVariants.swish]: Swish,
+    [TxVariants.wechatpay]: WeChat,
+    [TxVariants.wechatpayQR]: WeChat,
+    [TxVariants.promptpay]: PromptPay,
+    [TxVariants.paynow]: PayNow,
+    [TxVariants.duitnow]: Duitnow,
+    /** QRLoader */
+
+    /** Await */
+    [TxVariants.blik]: Blik,
+    [TxVariants.mbway]: MBWay,
+    [TxVariants.upi]: UPI, // also QR
+    [TxVariants.upi_qr]: UPI, // also QR
+    [TxVariants.upi_collect]: UPI, // also QR
+    /** Await */
+
+    /** Giftcard */
+    [TxVariants.giftcard]: Giftcard,
+    [TxVariants.mealVoucher_FR_natixis]: MealVoucherFR,
+    [TxVariants.mealVoucher_FR_sodexo]: MealVoucherFR,
+    [TxVariants.mealVoucher_FR_groupeup]: MealVoucherFR
+    /** Giftcard */
+};
+
+/**
+ * Available components
+ */
+type PaymentMethods = typeof componentsMap;
+
+/**
+ * Options for a component
+ */
+type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
+
+export type PaymentMethodsConfiguration =
+    | {
+          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+      }
+    | {
+          [key in PaymentActionsType]?: any;
+      };
+
 export interface PaymentMethodData {
     paymentMethod: {
         [key: string]: any;
