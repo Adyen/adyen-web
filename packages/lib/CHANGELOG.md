@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.50.1
+
+### Patch Changes
+
+-   Perform extra checks that a valid value has been passed when a dual branding selection is made ([#2321](https://github.com/Adyen/adyen-web/pull/2321))
+
 ## 5.50.0
 
 ### Minor Changes
