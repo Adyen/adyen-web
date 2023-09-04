@@ -3,24 +3,25 @@ import UIElement from '../UIElement';
 import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
 
 export class DokuElement extends UIElement {
-    public static type = 'doku';
+    public static type = TxVariants.doku;
 
     public static txVariants = [
-        'doku',
-        'doku_alfamart',
-        'doku_permata_lite_atm',
-        'doku_indomaret',
-        'doku_atm_mandiri_va',
-        'doku_sinarmas_va',
-        'doku_mandiri_va',
-        'doku_cimb_va',
-        'doku_danamon_va',
-        'doku_bri_va',
-        'doku_bni_va',
-        'doku_bca_va',
-        'doku_wallet'
+        TxVariants.doku_alfamart,
+        TxVariants.doku_permata_lite_atm,
+        TxVariants.doku_indomaret,
+        TxVariants.doku_atm_mandiri_va,
+        TxVariants.doku_sinarmas_va,
+        TxVariants.doku_mandiri_va,
+        TxVariants.doku_cimb_va,
+        TxVariants.doku_danamon_va,
+        TxVariants.doku_bri_va,
+        TxVariants.doku_bni_va,
+        TxVariants.doku_bca_va,
+        TxVariants.doku_wallet,
+        TxVariants.doku
     ];
 
     get isValid() {

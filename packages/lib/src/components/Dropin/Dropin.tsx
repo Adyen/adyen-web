@@ -11,6 +11,7 @@ import createInstantPaymentElements from './elements/createInstantPaymentElement
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { PaymentResponse } from '../types';
 import PaymentMethodsResponse from '../../core/ProcessResponse/PaymentMethodsResponse';
+import { TxVariants } from '../tx-variants';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -25,7 +26,7 @@ function splitPaymentMethods(paymentMethodsResponse: PaymentMethodsResponse, ins
 }
 
 class DropinElement extends UIElement<DropinElementProps> {
-    public static type = 'dropin';
+    public static type = TxVariants.dropin;
 
     protected static defaultProps = defaultProps;
 

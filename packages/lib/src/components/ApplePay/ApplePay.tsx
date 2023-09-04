@@ -10,11 +10,12 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
 
 const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
-    public static type = 'applepay';
+    public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
     constructor(props: ApplePayElementProps) {

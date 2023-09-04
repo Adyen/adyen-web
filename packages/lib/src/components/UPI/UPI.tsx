@@ -6,6 +6,7 @@ import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
 
 /**
  * 'upi' tx variant is the parent one.
@@ -17,9 +18,9 @@ enum TX_VARIANT {
 }
 
 class UPI extends UIElement<UPIElementProps> {
-    public static type = 'upi';
+    public static type = TxVariants.upi;
 
-    public static txVariants = ['upi', 'upi_qr', 'upi_collect'];
+    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect];
 
     private useQrCodeVariant: boolean;
 

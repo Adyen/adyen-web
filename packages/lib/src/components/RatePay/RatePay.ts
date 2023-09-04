@@ -1,8 +1,9 @@
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
 import { ALLOWED_COUNTRIES } from './config';
+import { TxVariants } from '../tx-variants';
 
 export default class RatePay extends OpenInvoiceContainer {
-    public static type = 'ratepay';
+    public static type = TxVariants.ratepay;
 
     formatProps(props) {
         return {

@@ -4,18 +4,18 @@ import BoletoInput from './components/BoletoInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
 
 export class BoletoElement extends UIElement {
-    public static type = 'boletobancario';
+    public static type = TxVariants.boletobancario;
 
     public static txVariants = [
-        'primeiropay_boleto',
-        'boletobancario_bancodobrasil',
-        'boletobancario_bradesco',
-        'boletobancario_hsbc',
-        'boletobancario_itau',
-        'boletobancario_santander',
-        'primeiropay_boleto'
+        TxVariants.primeiropay_boleto,
+        TxVariants.boletobancario_bancodobrasil,
+        TxVariants.boletobancario_bradesco,
+        TxVariants.boletobancario_hsbc,
+        TxVariants.boletobancario_itau,
+        TxVariants.boletobancario_santander
     ];
 
     get isValid() {

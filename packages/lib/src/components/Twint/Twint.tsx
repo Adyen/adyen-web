@@ -1,13 +1,14 @@
 import RedirectElement from '../Redirect';
 import PayButton, { payAmountLabel } from '../internal/PayButton';
 import { h } from 'preact';
+import { TxVariants } from '../tx-variants';
 
 /**
  * TwintElement
  */
 
 class TwintElement extends RedirectElement {
-    public static type = 'twint';
+    public static type = TxVariants.twint;
 
     public static defaultProps = {
         type: TwintElement.type,

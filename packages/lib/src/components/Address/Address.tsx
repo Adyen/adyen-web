@@ -2,9 +2,10 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import Address from '../internal/Address';
 import CoreProvider from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
 
 export class AddressElement extends UIElement {
-    public static type = 'address';
+    public static type = TxVariants.address;
 
     get data() {
         return this.state.data;

@@ -1,9 +1,10 @@
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
 import { STATUS_INTERVAL, COUNTDOWN_MINUTES } from './config';
+import { TxVariants } from '../tx-variants';
 
 class BCMCMobileElement extends QRLoaderContainer {
-    public static type = 'bcmc_mobile';
-    public static txVariants = ['bcmc_mobile', 'bcmc_mobile_QR'];
+    public static type = TxVariants.bcmc_mobile;
+    public static txVariants = [TxVariants.bcmc_mobile, TxVariants.bcmc_mobile_QR];
 
     formatProps(props) {
         const isMobile = window.matchMedia('(max-width: 768px)').matches && /Android|iPhone|iPod/.test(navigator.userAgent);

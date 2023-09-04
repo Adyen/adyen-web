@@ -8,9 +8,10 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types';
 import { PaymentResponse } from '../types';
 import { GiftCardElementData } from './types';
+import { TxVariants } from '../tx-variants';
 
 export class GiftcardElement extends UIElement {
-    public static type = 'giftcard';
+    public static type = TxVariants.giftcard;
 
     protected static defaultProps = {
         brandsConfiguration: {}

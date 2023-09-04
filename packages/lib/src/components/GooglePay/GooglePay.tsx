@@ -7,10 +7,11 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
 
 class GooglePay extends UIElement<GooglePayProps> {
-    public static type = 'googlepay';
-    public static txVariants = ['paywithgoogle', 'googlepay'];
+    public static type = TxVariants.googlepay;
+    public static txVariants = [TxVariants.paywithgoogle, TxVariants.googlepay];
     public static defaultProps = defaultProps;
 
     protected googlePay = new GooglePayService(this.props);

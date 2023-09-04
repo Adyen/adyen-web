@@ -3,12 +3,13 @@ import UIElement from '../UIElement';
 import IbanInput from '../internal/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { SepaElementData } from './types';
+import { TxVariants } from '../tx-variants';
 
 /**
  * SepaElement
  */
 class SepaElement extends UIElement {
-    public static type = 'sepadirectdebit';
+    public static type = TxVariants.sepadirectdebit;
 
     /**
      * Formats props on construction time

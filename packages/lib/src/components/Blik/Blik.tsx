@@ -6,6 +6,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import config from './config';
 import RedirectButton from '../../components/internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
 
 interface BlikElementData {
     paymentMethod: {
@@ -15,7 +16,7 @@ interface BlikElementData {
 }
 
 class BlikElement extends UIElement {
-    public static type = 'blik';
+    public static type = TxVariants.blik;
 
     formatData(): BlikElementData {
         const recurringPayment = !!this.props.storedPaymentMethodId;

@@ -2,12 +2,13 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
+import { TxVariants } from '../tx-variants';
 
 /**
  * DonationElement
  */
 class DonationElement extends UIElement {
-    public static type = 'donation';
+    public static type = TxVariants.donation;
 
     constructor(props) {
         super(props);

@@ -1,8 +1,9 @@
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
 import { ALLOWED_COUNTRIES } from './config';
+import { TxVariants } from '../tx-variants';
 
 export default class FacilyPay3x extends OpenInvoiceContainer {
-    public static type = 'facilypay_3x';
+    public static type = TxVariants.facilypay_3x;
 
     formatProps(props) {
         return {

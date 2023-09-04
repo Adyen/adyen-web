@@ -10,9 +10,10 @@ import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import ClickToPayProvider from '../internal/ClickToPay/context/ClickToPayProvider';
 import ClickToPayComponent from '../internal/ClickToPay';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
 
 export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
-    public static type = 'clicktopay';
+    public static type = TxVariants.clicktopay;
 
     private clickToPayService: IClickToPayService | null;
     private ctpConfiguration: ClickToPayConfiguration;

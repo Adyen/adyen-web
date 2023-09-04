@@ -4,12 +4,13 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
+import { TxVariants } from '../tx-variants';
 
 /**
  * RedirectElement
  */
 class RedirectElement extends UIElement {
-    public static type = 'redirect';
+    public static type = TxVariants.redirect;
 
     public static defaultProps = {
         type: RedirectElement.type

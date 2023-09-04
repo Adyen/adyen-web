@@ -1,10 +1,9 @@
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
 import { ALLOWED_COUNTRIES } from './config';
-import TxVariant from './tx-variant';
+import { TxVariants } from '../tx-variants';
 
 export default class Affirm extends OpenInvoiceContainer {
-    public static type = TxVariant.defaultTxVariant;
-    public static txVariants = TxVariant.txVariants;
+    public static type = TxVariants.affirm;
 
     formatProps(props) {
         return {

@@ -1,6 +1,6 @@
 import UIElement from '../components/UIElement';
 import Redirect from '../components/Redirect/Redirect';
-import availableTxVariants from '../components/available-tx-variants';
+import { TxVariants } from '../components/tx-variants';
 
 function assertIsTypeofUIElement(item: any): item is typeof UIElement {
     return typeof UIElement === typeof item;
@@ -15,7 +15,7 @@ export interface IRegistry {
 
 class Registry implements IRegistry {
     public componentsMap: Record<string, NewableComponent> = {};
-    public supportedTxVariants = new Set(availableTxVariants);
+    public supportedTxVariants: Set<string> = new Set(Object.values(TxVariants));
 
     public add(...items: NewableComponent[]) {
         this.componentsMap = this.createComponentsMap(items);
@@ -28,7 +28,9 @@ class Registry implements IRegistry {
         }
 
         if (this.supportedTxVariants.has(type)) {
-            console.warn(`The component of '${type}' is unavailable. Make sure to register its Class before creating the Drop-in.`);
+            console.warn(
+                `Core Registry: The component of '${type}' is unavailable. Make sure to register its Class before mounting the Payment method.`
+            );
             return;
         }
 

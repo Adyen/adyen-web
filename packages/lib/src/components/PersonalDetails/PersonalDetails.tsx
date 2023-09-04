@@ -2,9 +2,10 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
 import CoreProvider from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
 
 export class PersonalDetailsElement extends UIElement {
-    public static type = 'personal_details';
+    public static type = TxVariants.personal_details;
 
     get data() {
         return this.state.data;

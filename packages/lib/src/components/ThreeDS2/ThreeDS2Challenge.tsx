@@ -8,6 +8,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject } from '../types';
 import { ICore } from '../../core/core';
+import { TxVariants } from '../tx-variants';
 
 export interface ThreeDS2ChallengeProps {
     core: ICore;
@@ -26,7 +27,7 @@ export interface ThreeDS2ChallengeProps {
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
-    public static type = 'threeDS2Challenge';
+    public static type = TxVariants.threeDS2Challenge;
 
     public static defaultProps = {
         dataKey: 'threeDSResult',

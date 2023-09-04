@@ -4,9 +4,10 @@ import PhoneInput from '../internal/PhoneInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { formatPrefixName, selectItem } from './utils';
 import COUNTRIES from './countries';
+import { TxVariants } from '../tx-variants';
 
 class QiwiWalletElement extends UIElement {
-    public static type = 'qiwiwallet';
+    public static type = TxVariants.qiwiwallet;
 
     public static defaultProps = {
         items: COUNTRIES.map(formatPrefixName).filter(item => item !== false),

@@ -4,6 +4,7 @@ import BacsInput from './components/BacsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
 import PayButton from '../internal/PayButton';
+import { TxVariants } from '../tx-variants';
 
 interface BacsElementData {
     paymentMethod: {
@@ -16,7 +17,7 @@ interface BacsElementData {
 }
 
 class BacsElement extends UIElement {
-    public static type = 'directdebit_GB';
+    public static type = TxVariants.directdebit_GB;
 
     formatData(): BacsElementData {
         return {

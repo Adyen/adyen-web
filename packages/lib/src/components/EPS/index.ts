@@ -1,7 +1,8 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
+import { TxVariants } from '../tx-variants';
 
 class EPSElement extends IssuerListContainer {
-    public static type = 'eps';
+    public static type = TxVariants.eps;
 
     formatProps(props) {
         return {

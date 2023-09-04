@@ -6,6 +6,7 @@ import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { ActionHandledReturnObject } from '../types';
 import { ICore } from '../../core/core';
+import { TxVariants } from '../tx-variants';
 
 export interface ThreeDS2DeviceFingerprintProps {
     core: ICore;
@@ -25,7 +26,7 @@ export interface ThreeDS2DeviceFingerprintProps {
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
     // TODO: Check this type if it can be threeDS2DeviceFingerprint
-    public static type = 'threeDS2DeviceFingerprint';
+    public static type = TxVariants.threeDS2DeviceFingerprint;
 
     public static defaultProps = {
         dataKey: 'fingerprintResult',

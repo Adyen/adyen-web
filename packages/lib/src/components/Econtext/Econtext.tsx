@@ -3,9 +3,9 @@ import UIElement from '../UIElement';
 import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
-
 import { UIElementProps } from '../types';
 import { PersonalDetailsSchema } from '../../types';
+import { TxVariants } from '../tx-variants';
 
 interface EcontextElementProps extends UIElementProps {
     reference?: string;
@@ -14,8 +14,8 @@ interface EcontextElementProps extends UIElementProps {
 }
 
 export class EcontextElement extends UIElement<EcontextElementProps> {
-    public static type = 'econtext';
-    public static txVariants = ['econtext', 'econtext_atm', 'econtext_online', 'econtext_seven_eleven', 'econtext_stores'];
+    public static type = TxVariants.econtext;
+    public static txVariants = [TxVariants.econtext_atm, TxVariants.econtext_online, TxVariants.econtext_seven_eleven, TxVariants.econtext_stores];
 
     protected static defaultProps = {
         personalDetailsRequired: true

@@ -7,9 +7,10 @@ import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLook
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
+import { TxVariants } from '../tx-variants';
 
 export class SecuredFieldsElement extends UIElement {
-    public static type = 'securedfields';
+    public static type = TxVariants.securedfields;
 
     public static analyticsType = 'custom-scheme';
 

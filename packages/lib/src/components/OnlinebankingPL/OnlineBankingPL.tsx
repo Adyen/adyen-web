@@ -1,7 +1,8 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
+import { TxVariants } from '../tx-variants';
 
 class OnlineBankingPL extends IssuerListContainer {
-    public static type = 'onlineBanking_PL';
+    public static type = TxVariants.onlineBanking_PL;
 
     private static disclaimerUrlsMap = {
         regulation: 'https://www.przelewy24.pl/regulamin',

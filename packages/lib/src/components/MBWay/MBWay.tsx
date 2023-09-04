@@ -5,9 +5,10 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
 
 export class MBWayElement extends UIElement {
-    public static type = 'mbway';
+    public static type = TxVariants.mbway;
 
     formatProps(props) {
         const { data = {}, placeholders = {} } = props;

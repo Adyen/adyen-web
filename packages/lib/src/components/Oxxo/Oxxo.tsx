@@ -3,9 +3,10 @@ import UIElement from '../UIElement';
 import OxxoVoucherResult from './components/OxxoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { OxxoElementData } from './types';
+import { TxVariants } from '../tx-variants';
 
 export class OxxoElement extends UIElement {
-    public static type = 'oxxo';
+    public static type = TxVariants.oxxo;
 
     protected static defaultProps = {
         name: 'Oxxo'

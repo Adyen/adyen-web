@@ -5,9 +5,10 @@ import RedirectButton from '../internal/RedirectButton';
 import { BankTransferProps, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
+import { TxVariants } from '../tx-variants';
 
 export class BankTransferElement extends UIElement<BankTransferProps> {
-    public static type = 'bankTransfer_IBAN';
+    public static type = TxVariants.bankTransfer_IBAN;
 
     public static defaultProps = {
         showPayButton: true,
