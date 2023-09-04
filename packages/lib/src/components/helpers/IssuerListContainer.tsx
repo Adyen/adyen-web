@@ -5,7 +5,6 @@ import IssuerList from '../internal/IssuerList';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
-import Language from '../../language/Language';
 import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
@@ -14,9 +13,7 @@ interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
-    highlightedIssuers: string[];
-    i18n: Language;
-    loadingContext: string;
+    highlightedIssuers?: string[];
     showPaymentMethodItemImages?: boolean;
     showPayButton?: boolean;
     termsAndConditions?: TermsAndConditions;
