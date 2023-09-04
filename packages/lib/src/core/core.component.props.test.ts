@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import AdyenCheckout from './core';
-import { PaymentMethodsConfiguration } from './types';
+import { PaymentMethodsConfiguration } from '../components/types';
 
 const paymentMethodsResponse = {
     paymentMethods: [

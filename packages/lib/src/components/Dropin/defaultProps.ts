@@ -10,7 +10,6 @@ export default {
     onChange: () => {},
 
     amount: {},
-    installmentOptions: {},
     paymentMethodsConfiguration: {}, // per paymentMethod configuration
     openFirstPaymentMethod: true, // focus the first payment method automatically on load
     openFirstStoredPaymentMethod: true, // focus the first one click payment method automatically on load

@@ -3,7 +3,7 @@ import { PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, PaymentMethodsConfiguration } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
@@ -63,11 +63,6 @@ export interface CoreOptions {
      * The shopper's country code. A valid value is an ISO two-character country code (e.g. 'NL').
      */
     countryCode?: string;
-
-    /**
-     * Optional per payment method configuration
-     */
-    paymentMethodsConfiguration?: PaymentMethodsConfiguration;
 
     /**
      * Display only these payment methods

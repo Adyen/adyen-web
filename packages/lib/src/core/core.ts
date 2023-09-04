@@ -198,16 +198,8 @@ class Core implements ICore {
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
     private setOptions = (options: CoreOptions): void => {
-        if (hasOwnProperty(options?.paymentMethodsConfiguration, 'scheme')) {
-            console.warn(
-                'WARNING: You cannot define a property "scheme" on the paymentMethodsConfiguration object - it should be defined as "card" otherwise it will be ignored'
-            );
-        }
-
-        if (hasOwnProperty(options, 'installmentOptions')) {
-            console.warn(
-                "WARNING: you are setting installmentOptions directly in the top level configuration object. They should be set via the 'paymentMethodsConfiguration' object or directly on the 'card' component."
-            );
+        if (hasOwnProperty(options, 'paymentMethodsConfiguration')) {
+            console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
         }
 
         this.options = {
