@@ -21,7 +21,7 @@ export const GiftcardPinField = ({
             onFocusField={() => setFocusOn('encryptedSecurityCode')}
             dir={'ltr'}
             name={'encryptedSecurityCode'}
-            errorVisibleToScreenReader={false}
+            contextVisibleToScreenReader={false}
         >
             <DataSfSpan
                 encryptedFieldType="encryptedSecurityCode"

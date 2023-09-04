@@ -27,7 +27,7 @@ export interface FieldProps {
     showValidIcon?: boolean;
     useLabelElement?: boolean;
     i18n?: Language;
-    errorVisibleToScreenReader?: boolean;
+    contextVisibleToScreenReader?: boolean;
     renderAlternativeToLabel?: (defaultWrapperProps, children, uniqueId) => any;
 }
 

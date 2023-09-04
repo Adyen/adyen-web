@@ -37,13 +37,13 @@ const Field: FunctionalComponent<FieldProps> = props => {
         filled: propsFilled,
         focused: propsFocused,
         i18n,
-        errorVisibleToScreenReader,
+        contextVisibleToScreenReader,
         renderAlternativeToLabel
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
     // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
-    const errorVisibleToSR = errorVisibleToScreenReader ?? true;
+    const contextVisibleToSR = contextVisibleToScreenReader ?? true;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
 
@@ -101,18 +101,23 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
     const renderInputRelatedElements = useCallback(() => {
         const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
-        const errorEle = showError && (
+        const errorElem = showError && (
             <span
                 className={'adyen-checkout-contextual-text--error'}
-                {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                aria-hidden={errorVisibleToSR ? null : 'true'}
+                {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                aria-hidden={contextVisibleToSR ? null : 'true'}
             >
                 {errorMessage}
             </span>
         );
+
         const showContext = showContextualElement && !showError && contextualText?.length > 0;
-        const contextualEle = showContext && (
-            <span className={'adyen-checkout-contextual-text'} id={`${uniqueId.current}${ARIA_CONTEXT_SUFFIX}`} aria-hidden={'false'}>
+        const contextualElem = showContext && (
+            <span
+                className={'adyen-checkout-contextual-text'}
+                {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_CONTEXT_SUFFIX}` })}
+                aria-hidden={contextVisibleToSR ? null : 'true'}
+            >
                 {contextualText}
             </span>
         );
@@ -156,8 +161,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         </span>
                     )}
                 </div>
-                {errorEle}
-                {contextualEle}
+                {errorElem}
+                {contextualElem}
             </Fragment>
         );
     }, [children, errorMessage, contextualText, isLoading, isValid, onFocusHandler, onBlurHandler]);
@@ -175,7 +180,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
             };
 
             return useLabelElement ? (
-                // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
+                // if contextVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
                 <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
                     {children}
                 </label>
@@ -219,7 +224,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 focused={focused}
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
-                isSecuredField={!errorVisibleToSR}
+                isSecuredField={!contextVisibleToSR}
                 renderAlternativeToLabel={renderAlternativeToLabel}
             >
                 {renderLabelOrAlternativeContents()}

@@ -52,7 +52,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
             dir={'ltr'}
             name={'encryptedExpiryDate'}
             i18n={i18n}
-            errorVisibleToScreenReader={false}
+            contextVisibleToScreenReader={false}
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
             showContextualElement={showContextualElement}

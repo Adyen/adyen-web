@@ -20,7 +20,7 @@ const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, erro
             className={className}
             dir={dir}
             name={id}
-            errorVisibleToScreenReader={false}
+            contextVisibleToScreenReader={false}
         >
             <DataSfSpan
                 encryptedFieldType={encryptedIdStr}

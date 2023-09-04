@@ -15,7 +15,7 @@ export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocu
             onFocusField={() => setFocusOn('encryptedExpiryDate')}
             dir={'ltr'}
             name={'encryptedExpiryDate'}
-            errorVisibleToScreenReader={false}
+            contextVisibleToScreenReader={false}
         >
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}

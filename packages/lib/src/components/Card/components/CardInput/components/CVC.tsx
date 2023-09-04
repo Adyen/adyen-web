@@ -62,7 +62,7 @@ export default function CVC(props: CVCProps) {
             dir={'ltr'}
             name={ENCRYPTED_SECURITY_CODE}
             i18n={i18n}
-            errorVisibleToScreenReader={false}
+            contextVisibleToScreenReader={false}
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
             showContextualElement={showContextualElement}

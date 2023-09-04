@@ -27,7 +27,7 @@ export default function CardNumber(props: CardNumberProps) {
             name={ENCRYPTED_CARD_NUMBER}
             showValidIcon={false}
             i18n={i18n}
-            errorVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
+            contextVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
         >
