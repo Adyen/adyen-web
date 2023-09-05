@@ -34,6 +34,10 @@ export class GiftcardElement extends UIElement {
         };
     }
 
+    formatBalanceCheckData(): GiftCardElementData {
+        return this.formatData();
+    }
+
     get isValid() {
         return !!this.state.isValid;
     }
@@ -92,7 +96,7 @@ export class GiftcardElement extends UIElement {
 
         this.setStatus('loading');
 
-        this.handleBalanceCheck(this.formatData())
+        this.handleBalanceCheck(this.formatBalanceCheckData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');

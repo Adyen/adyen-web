@@ -7,6 +7,8 @@ import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps } from './types';
+import StoreDetails from '../../internal/StoreDetails';
+import RedirectButton from '../../internal/RedirectButton';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -45,10 +47,16 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     public sfp;
 
-    public onChange = sfpState => {
+    public handleSecureFieldsChange = sfpState => {
         this.props.onChange({
             data: sfpState.data,
             isValid: sfpState.isSfpValid
+        });
+    };
+
+    public handleOnStoreDetails = storedDetails => {
+        this.props.onChange({
+            storePaymentMethod: storedDetails
         });
     };
 
@@ -85,6 +93,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
             return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
         }
 
+        if (props.storedPaymentMethodId) {
+            return <RedirectButton name={props.displayName} amount={props.amount} payButton={props.payButton} onSubmit={props.onBalanceCheck} />;
+        }
+
         const getCardErrorMessage = sfpState => {
             if (sfpState.errors.encryptedCardNumber) return i18n.get(sfpState.errors.encryptedCardNumber);
 
@@ -109,7 +121,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     ref={ref => {
                         this.sfp = ref;
                     }}
-                    onChange={this.onChange}
+                    onChange={this.handleSecureFieldsChange}
                     onFocus={this.handleFocus}
                     type={GIFT_CARD}
                     render={({ setRootNode, setFocusOn }, sfpState) =>
@@ -120,10 +132,14 @@ class Giftcard extends Component<GiftcardComponentProps> {
                             getCardErrorMessage: getCardErrorMessage,
                             setRootNode: setRootNode,
                             setFocusOn: setFocusOn,
-                            sfpState: sfpState
+                            sfpState: sfpState,
+                            // TODO maybe remove this?
+                            ...props
                         })
                     }
                 />
+
+                {props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
 
                 {this.props.showPayButton &&
                     this.props.payButton({
