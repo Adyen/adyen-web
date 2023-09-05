@@ -30,6 +30,7 @@
     "error.message.unknown": "Ismeretlen hiba történt",
     "errorPanel.title": "Meglévő hibák",
     "idealIssuer.selectField.title": "Bank",
+    "idealIssuer.selectField.placeholder": "Bank kiválasztása",
     "creditCard.success": "Sikeres fizetés",
     "loading": "Betöltés…",
     "continue": "Folytatás",

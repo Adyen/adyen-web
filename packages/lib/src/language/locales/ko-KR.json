@@ -30,6 +30,7 @@
     "error.message.unknown": "알 수 없는 오류 발생",
     "errorPanel.title": "기존 오류",
     "idealIssuer.selectField.title": "은행",
+    "idealIssuer.selectField.placeholder": "은행 선택",
     "creditCard.success": "결제 성공",
     "loading": "로드 중…",
     "continue": "계속",

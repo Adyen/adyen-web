@@ -30,6 +30,7 @@
     "error.message.unknown": "Προέκυψε άγνωστο σφάλμα",
     "errorPanel.title": "Υπάρχοντα σφάλματα",
     "idealIssuer.selectField.title": "Τράπεζα",
+    "idealIssuer.selectField.placeholder": "Επιλέξτε την τράπεζά σας",
     "creditCard.success": "Η πληρωμή ολοκληρώθηκε επιτυχώς",
     "loading": "Φόρτωση...",
     "continue": "Συνέχεια",

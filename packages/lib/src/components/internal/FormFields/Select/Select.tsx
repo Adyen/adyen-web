@@ -8,7 +8,7 @@ import { keys } from './constants';
 import { SelectItem, SelectProps } from './types';
 import styles from './Select.module.scss';
 import './Select.scss';
-import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
 
 function Select({
@@ -283,7 +283,7 @@ function Select({
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
                 disabled={disabled}
-                ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
+                ariaDescribedBy={uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : null}
             />
             <SelectList
                 active={activeOption}

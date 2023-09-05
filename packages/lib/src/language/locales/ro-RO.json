@@ -30,6 +30,7 @@
     "error.message.unknown": "S-a produs o eroare necunoscută",
     "errorPanel.title": "Erori existente",
     "idealIssuer.selectField.title": "Bancă",
+    "idealIssuer.selectField.placeholder": "Selectați-vă banca",
     "creditCard.success": "Plată reușită",
     "loading": "Se încarcă...",
     "continue": "Continuare",

@@ -30,6 +30,7 @@
     "error.message.unknown": "Der opstod en ukendt fejl",
     "errorPanel.title": "Eksisterende fejl",
     "idealIssuer.selectField.title": "Bank",
+    "idealIssuer.selectField.placeholder": "Vælg din bank",
     "creditCard.success": "Betaling gennemført",
     "loading": "Indlæser…",
     "continue": "Fortsæt",

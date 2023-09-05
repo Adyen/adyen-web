@@ -30,6 +30,7 @@
     "error.message.unknown": "发生未知错误",
     "errorPanel.title": "现有错误",
     "idealIssuer.selectField.title": "银行",
+    "idealIssuer.selectField.placeholder": "选择您的银行",
     "creditCard.success": "支付成功",
     "loading": "正在加载...",
     "continue": "继续",

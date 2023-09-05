@@ -30,6 +30,7 @@
     "error.message.unknown": "Er is een onbekende fout opgetreden",
     "errorPanel.title": "Bestaande fouten",
     "idealIssuer.selectField.title": "Bank",
+    "idealIssuer.selectField.placeholder": "Selecteer uw bank",
     "creditCard.success": "Betaling geslaagd",
     "loading": "Laden...",
     "continue": "Doorgaan",

@@ -30,6 +30,7 @@
     "error.message.unknown": "Došlo k neznámé chybě",
     "errorPanel.title": "Stávající chyby",
     "idealIssuer.selectField.title": "Banka",
+    "idealIssuer.selectField.placeholder": "Vyberte svou banku",
     "creditCard.success": "Platba proběhla úspěšně",
     "loading": "Načítání…",
     "continue": "Pokračovat",

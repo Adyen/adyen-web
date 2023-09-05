@@ -30,6 +30,7 @@
     "error.message.unknown": "حدث خطأ غير معروف",
     "errorPanel.title": "الأخطاء الموجودة",
     "idealIssuer.selectField.title": "البنك",
+    "idealIssuer.selectField.placeholder": "حدد البنك الذي تتعامل معه",
     "creditCard.success": "نجح الدفع",
     "loading": "جارِ التحميل...",
     "continue": "متابعة",

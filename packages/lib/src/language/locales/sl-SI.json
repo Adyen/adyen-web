@@ -30,6 +30,7 @@
     "error.message.unknown": "Prišlo je do neznane napake",
     "errorPanel.title": "Obstoječe napake",
     "idealIssuer.selectField.title": "Banka",
+    "idealIssuer.selectField.placeholder": "Izberite svojo banko",
     "creditCard.success": "Plačilo je bilo uspešno",
     "loading": "Nalaganje…",
     "continue": "Nadaljuj",

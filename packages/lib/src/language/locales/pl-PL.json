@@ -30,6 +30,7 @@
     "error.message.unknown": "Wystąpił nieoczekiwany błąd",
     "errorPanel.title": "Istniejące błędy",
     "idealIssuer.selectField.title": "Bank",
+    "idealIssuer.selectField.placeholder": "Wybierz swój bank",
     "creditCard.success": "Płatność zakończona sukcesem",
     "loading": "Ładowanie...",
     "continue": "Kontynuuj",

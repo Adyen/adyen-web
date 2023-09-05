@@ -30,6 +30,7 @@
     "error.message.unknown": "Возникла неизвестная ошибка",
     "errorPanel.title": "Имеющиеся ошибки",
     "idealIssuer.selectField.title": "Банк",
+    "idealIssuer.selectField.placeholder": "Выберите банк",
     "creditCard.success": "Платеж успешно завершен",
     "loading": "Загрузка…",
     "continue": "Продолжить",

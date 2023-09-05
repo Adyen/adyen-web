@@ -30,6 +30,7 @@
     "error.message.unknown": "Tapahtui tuntematon virhe",
     "errorPanel.title": "Olemassa olevat virheet",
     "idealIssuer.selectField.title": "Pankki",
+    "idealIssuer.selectField.placeholder": "Valitse pankkisi",
     "creditCard.success": "Maksu onnistui",
     "loading": "Ladataan...",
     "continue": "Jatka",

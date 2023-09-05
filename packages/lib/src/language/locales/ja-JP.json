@@ -30,6 +30,7 @@
     "error.message.unknown": "不明なエラーが発生しました",
     "errorPanel.title": "既存のエラー",
     "idealIssuer.selectField.title": "銀行",
+    "idealIssuer.selectField.placeholder": "銀行を選択してください",
     "creditCard.success": "認証が成功しました",
     "loading": "読み込んでいます...",
     "continue": "続ける",

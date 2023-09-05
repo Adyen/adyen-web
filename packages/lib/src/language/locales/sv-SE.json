@@ -30,6 +30,7 @@
     "error.message.unknown": "Ett okänt fel uppstod",
     "errorPanel.title": "Befintliga fel",
     "idealIssuer.selectField.title": "Bank",
+    "idealIssuer.selectField.placeholder": "Välj din bank",
     "creditCard.success": "Betalning lyckades",
     "loading": "Laddar…",
     "continue": "Fortsätt",

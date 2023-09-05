@@ -30,6 +30,7 @@
     "error.message.unknown": "Se ha producido un error desconocido",
     "errorPanel.title": "Errores existentes",
     "idealIssuer.selectField.title": "Banco",
+    "idealIssuer.selectField.placeholder": "Seleccione su banco",
     "creditCard.success": "Pago realizado correctamente",
     "loading": "Cargando...",
     "continue": "Continuar",

@@ -33,6 +33,7 @@
     "error.message.unknown": "An unknown error occurred",
     "errorPanel.title": "Existing errors",
     "idealIssuer.selectField.title": "Bank",
+    "idealIssuer.selectField.placeholder": "Select your bank",
     "creditCard.success": "Payment Successful",
     "loading": "Loading…",
     "continue": "Continue",
