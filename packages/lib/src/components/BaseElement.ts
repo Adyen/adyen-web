@@ -23,8 +23,6 @@ class BaseElement<P extends BaseElementProps> {
     protected constructor(props: P) {
         this.core = props.core;
 
-        // Check for some expected methods on checkoutRef. Would like to use "if(!checkoutRef instanceof Core)" but that creates circular dependencies in the build process
-        // if (!hasOwnProperty(checkoutRef, 'createFromAction') || !hasOwnProperty(checkoutRef, 'update')) {
         if (!this.core) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',

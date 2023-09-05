@@ -21,6 +21,7 @@ export enum TxVariants {
     storedCard = 'storedCard',
     securedfields = 'securedfields',
     threeDS2Challenge = 'threeDS2Challenge',
+    threeDS2Fingerprint = 'threeDS2Fingerprint',
     threeDS2DeviceFingerprint = 'threeDS2DeviceFingerprint',
     visa = 'visa',
     /** Card */

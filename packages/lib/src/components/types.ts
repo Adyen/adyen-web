@@ -102,7 +102,7 @@ const componentsMap = {
     [TxVariants.storedCard]: Card,
     [TxVariants.securedfields]: SecuredFields,
     [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
-    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint,
+    [TxVariants.threeDS2Fingerprint]: ThreeDS2DeviceFingerprint,
     [TxVariants.visa]: Card,
     /** Card */
 

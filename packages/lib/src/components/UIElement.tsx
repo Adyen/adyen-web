@@ -116,7 +116,6 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         }
 
         if (this.props.onSubmit) {
-            console.log('### UIElement::onSubmit::  this.elementRef', this.elementRef);
             // Classic flow
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this.core.session) {
@@ -306,7 +305,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * Get the element's displayable name
      */
     get displayName(): string {
-        const paymentMethodFromResponse = this.core.paymentMethodsResponse.paymentMethods.find(pm => pm.type === this.type);
+        const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(pm => pm.type === this.type);
         return this.props.name || paymentMethodFromResponse?.name || this.type;
     }
 

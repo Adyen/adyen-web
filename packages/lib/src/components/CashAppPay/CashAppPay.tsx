@@ -14,7 +14,7 @@ import { TxVariants } from '../tx-variants';
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
     public static type = TxVariants.cashapp;
 
-    private cashAppService: ICashAppService | undefined;
+    private readonly cashAppService: ICashAppService | undefined;
 
     protected static defaultProps = defaultProps;
 
