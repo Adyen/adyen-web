@@ -15,7 +15,13 @@ interface EcontextElementProps extends UIElementProps {
 
 export class EcontextElement extends UIElement<EcontextElementProps> {
     public static type = TxVariants.econtext;
-    public static txVariants = [TxVariants.econtext_atm, TxVariants.econtext_online, TxVariants.econtext_seven_eleven, TxVariants.econtext_stores];
+    public static txVariants = [
+        TxVariants.econtext,
+        TxVariants.econtext_atm,
+        TxVariants.econtext_online,
+        TxVariants.econtext_seven_eleven,
+        TxVariants.econtext_stores
+    ];
 
     protected static defaultProps = {
         personalDetailsRequired: true
@@ -35,7 +41,7 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
         return {
             ...this.state.data,
             paymentMethod: {
-                type: this.props.type || EcontextElement.type
+                type: this.type
             }
         };
     }

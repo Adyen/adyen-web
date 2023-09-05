@@ -27,7 +27,7 @@ const disclaimerMessage = {
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
-    AdyenCheckout.register(Card);
+    AdyenCheckout.register(Card, Bancontact);
 
     window.checkout = await AdyenCheckout({
         amount,

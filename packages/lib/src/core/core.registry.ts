@@ -34,6 +34,8 @@ class Registry implements IRegistry {
             return;
         }
 
+        console.log(type);
+
         return Redirect;
     }
 

@@ -1,14 +1,10 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 
-/**
- * RedirectElement
- */
 class RedirectElement extends UIElement {
     public static type = TxVariants.redirect;
 
@@ -16,27 +12,14 @@ class RedirectElement extends UIElement {
         type: RedirectElement.type
     };
 
-    formatProps(props) {
-        return {
-            ...props,
-            showButton: !!props.showPayButton
-        };
-    }
-
-    /**
-     * Formats the component data output
-     */
     formatData() {
         return {
             paymentMethod: {
-                type: this.props.type
+                type: this.type
             }
         };
     }
 
-    /**
-     * Returns whether the component state is valid or not
-     */
     get isValid() {
         return true;
     }
@@ -50,11 +33,13 @@ class RedirectElement extends UIElement {
             return <RedirectShopper {...this.props} />;
         }
 
-        if (this.props.showButton) {
+        if (this.props.showPayButton) {
+            console.log(this.props);
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
                         {...this.props}
+                        name={this.displayName}
                         onSubmit={this.submit}
                         payButton={this.payButton}
                         ref={ref => {

@@ -11,7 +11,7 @@ import { TxVariants } from '../tx-variants';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = TxVariants.googlepay;
-    public static txVariants = [TxVariants.paywithgoogle, TxVariants.googlepay];
+    public static txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static defaultProps = defaultProps;
 
     protected googlePay = new GooglePayService(this.props);

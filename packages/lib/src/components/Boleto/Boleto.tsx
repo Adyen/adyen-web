@@ -10,6 +10,7 @@ export class BoletoElement extends UIElement {
     public static type = TxVariants.boletobancario;
 
     public static txVariants = [
+        TxVariants.boletobancario,
         TxVariants.primeiropay_boleto,
         TxVariants.boletobancario_bancodobrasil,
         TxVariants.boletobancario_bradesco,
@@ -31,7 +32,7 @@ export class BoletoElement extends UIElement {
 
         return {
             paymentMethod: {
-                type: this.props.type || BoletoElement.type
+                type: this.type
             },
             ...(billingAddress && { billingAddress }),
             ...(shopperEmail && { shopperEmail }),

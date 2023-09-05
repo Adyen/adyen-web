@@ -18,8 +18,7 @@ import { TxVariants } from '../tx-variants';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = TxVariants.scheme;
-    // public static txVariants = ['amex', 'card', 'diners', 'discover', 'jcb', 'kcp', 'maestro', 'mc', 'scheme', 'storedCard', 'visa'];
-    public static txVariants = [TxVariants.card]; // TODO - don't think we need even this
+    public static txVariants = [TxVariants.scheme, TxVariants.card];
     public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge];
 
     private readonly clickToPayService: IClickToPayService | null;

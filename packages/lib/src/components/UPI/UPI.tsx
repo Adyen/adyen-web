@@ -19,7 +19,6 @@ enum TX_VARIANT {
 
 class UPI extends UIElement<UPIElementProps> {
     public static type = TxVariants.upi;
-
     public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect];
 
     private useQrCodeVariant: boolean;

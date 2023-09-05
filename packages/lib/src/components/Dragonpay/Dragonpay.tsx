@@ -10,6 +10,7 @@ export class DragonpayElement extends UIElement<DragonpayElementProps> {
     public static type = TxVariants.dragonpay;
 
     public static txVariants = [
+        TxVariants.dragonpay,
         TxVariants.dragonpay_ebanking,
         TxVariants.dragonpay_otc_banking,
         TxVariants.dragonpay_otc_non_banking,
@@ -30,7 +31,7 @@ export class DragonpayElement extends UIElement<DragonpayElementProps> {
             ...(shopperEmail && { shopperEmail }),
             paymentMethod: {
                 ...(issuer && { issuer }),
-                type: this.props.type || DragonpayElement.type
+                type: this.type
             }
         };
     }

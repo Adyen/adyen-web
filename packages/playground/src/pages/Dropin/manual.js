@@ -26,6 +26,8 @@ export async function initManual() {
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 
+            const { paymentMethodFormat, adyenFormat } = component.getShopperData();
+
             // handle actions
             if (result.action) {
                 // demo only - store paymentData & order

@@ -7,8 +7,8 @@ import { TxVariants } from '../tx-variants';
 
 export class DokuElement extends UIElement {
     public static type = TxVariants.doku;
-
     public static txVariants = [
+        TxVariants.doku,
         TxVariants.doku_alfamart,
         TxVariants.doku_permata_lite_atm,
         TxVariants.doku_indomaret,
@@ -20,8 +20,7 @@ export class DokuElement extends UIElement {
         TxVariants.doku_bri_va,
         TxVariants.doku_bni_va,
         TxVariants.doku_bca_va,
-        TxVariants.doku_wallet,
-        TxVariants.doku
+        TxVariants.doku_wallet
     ];
 
     get isValid() {
@@ -35,7 +34,7 @@ export class DokuElement extends UIElement {
         return {
             ...this.state.data,
             paymentMethod: {
-                type: this.props.type || DokuElement.type
+                type: this.type
             }
         };
     }

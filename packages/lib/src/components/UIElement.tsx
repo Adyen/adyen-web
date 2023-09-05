@@ -37,7 +37,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         super(props);
 
         if (!this.core.getComponent(this.type)) {
-            console.warn(`UIElement: ${this.type} not registered`);
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `The component of the type '${this.type}' is not registered in the Core. Make sure to register it before instantiating the Component.`
+            );
         }
 
         this.submit = this.submit.bind(this);
@@ -303,7 +306,8 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * Get the element's displayable name
      */
     get displayName(): string {
-        return this.props.name || this.constructor['type'];
+        const paymentMethodFromResponse = this.core.paymentMethodsResponse.paymentMethods.find(pm => pm.type === this.type);
+        return this.props.name || paymentMethodFromResponse?.name || this.type;
     }
 
     /**

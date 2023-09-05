@@ -3,7 +3,7 @@ import { TxVariants } from '../tx-variants';
 
 class DotpayElement extends IssuerListContainer {
     public static type = TxVariants.dotpay;
-    public static txVariants = [TxVariants.onlineBanking];
+    public static txVariants = [TxVariants.dotpay, TxVariants.onlineBanking];
 }
 
 export default DotpayElement;

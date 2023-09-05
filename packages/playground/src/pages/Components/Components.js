@@ -1,4 +1,19 @@
-import { AdyenCheckout, BankTransfer, MBWay, Klarna, Ach, SepaDirectDebit, QiwiWallet, Vipps, Blik, Giropay, UPI, Pix, Oxxo } from '@adyen/adyen-web';
+import {
+    AdyenCheckout,
+    BankTransfer,
+    MBWay,
+    Klarna,
+    Ach,
+    SepaDirectDebit,
+    QiwiWallet,
+    Vipps,
+    Blik,
+    Giropay,
+    UPI,
+    Pix,
+    Oxxo,
+    Redirect
+} from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import '../../../config/polyfills';
@@ -103,4 +118,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Oxxo
     window.oxxo = new Oxxo({ core: checkout }).mount('.oxxo-field');
+
+    // Redirect
+    window.alipay = new Redirect({ core: checkout, type: 'alipay' }).mount('.redirect-field');
 });
