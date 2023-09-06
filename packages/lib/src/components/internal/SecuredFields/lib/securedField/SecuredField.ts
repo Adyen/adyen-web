@@ -74,12 +74,13 @@ class SecuredField extends AbstractSecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
-        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig, this.fieldType, i18n);
+        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig.txVariant, this.fieldType, i18n);
         // Set result back onto config object
         this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
         // Set result back onto config object
-        this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig, placeholders);
+        this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig.txVariant, this.fieldType, placeholders);
+
         /**
          * Configure, create & reference iframe and add load listener
          */

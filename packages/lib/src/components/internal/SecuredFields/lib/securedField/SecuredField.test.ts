@@ -178,37 +178,68 @@ describe('SecuredField handling no placeholders config object - should set defau
 });
 
 describe('SecuredField handling placeholders from the placeholders config', () => {
-    test('should set placeholders for txVariant ach', () => {
-        const achPlaceholders: AchPlaceholders = { accountNumber: '123', accountLocation: 'abc' };
+    const achPlaceholders: AchPlaceholders = { accountNumber: '123', accountLocation: 'abc' };
+    const giftCardPlaceholders: GiftcardPlaceholders = { cardNumber: '123', expiryDate: '01/01', securityCode: '000' };
+    const cardPlaceholders: CardPlaceholders = {
+        cardNumber: '123',
+        expiryDate: '01/01',
+        securityCodeThreeDigits: '000',
+        securityCodeFourDigits: '1234',
+        password: '***'
+    };
+
+    test('should set placeholders for txVariant ach (accountNumber field)', () => {
         // @ts-ignore ignore
-        const ach = new SecuredField({ ...setupObj, txVariant: 'ach' }, i18n, achPlaceholders);
+        const ach = new SecuredField({ ...setupObj, txVariant: 'ach', fieldType: ENCRYPTED_BANK_ACCNT_NUMBER_FIELD }, i18n, achPlaceholders);
         expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]).toBe(achPlaceholders.accountNumber);
+    });
+
+    test('should set placeholders for txVariant ach (accountLocation field)', () => {
+        // @ts-ignore ignore
+        const ach = new SecuredField({ ...setupObj, txVariant: 'ach', fieldType: ENCRYPTED_BANK_LOCATION_FIELD }, i18n, achPlaceholders);
         expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_LOCATION_FIELD]).toBe(achPlaceholders.accountLocation);
     });
 
-    test('should set placeholders for txVariant gift card', () => {
-        const giftCardPlaceholders: GiftcardPlaceholders = { cardNumber: '123', expiryDate: '01/01', securityCode: '000' };
+    test('should set placeholders for txVariant gift card (cardNumber field)', () => {
         // @ts-ignore ignore
         const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD }, i18n, giftCardPlaceholders);
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(giftCardPlaceholders.cardNumber);
+    });
+
+    test('should set placeholders for txVariant gift card (expiryDate field)', () => {
+        // @ts-ignore ignore
+        const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD, fieldType: ENCRYPTED_EXPIRY_DATE }, i18n, giftCardPlaceholders);
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(giftCardPlaceholders.expiryDate);
+    });
+
+    test('should set placeholders for txVariant gift card (securityCode field)', () => {
+        // @ts-ignore ignore
+        const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD, fieldType: ENCRYPTED_SECURITY_CODE }, i18n, giftCardPlaceholders);
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE]).toBe(giftCardPlaceholders.securityCode);
     });
 
-    test('should set placeholders for txVariant default (card)', () => {
-        const cardPlaceholders: CardPlaceholders = {
-            cardNumber: '123',
-            expiryDate: '01/01',
-            securityCodeThreeDigits: '000',
-            securityCodeFourDigits: '1234',
-            password: '***'
-        };
+    test('should set placeholders for cardNumber field for txVariant default (card)', () => {
         // @ts-ignore ignore
         const card = new SecuredField(setupObj, i18n, cardPlaceholders);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(cardPlaceholders.cardNumber);
+    });
+
+    test('should set placeholders for expiryDate field for txVariant default (card)', () => {
+        // @ts-ignore ignore
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_EXPIRY_DATE }, i18n, cardPlaceholders);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_EXPIRY_DATE]).toBe(cardPlaceholders.expiryDate);
+    });
+
+    test('should set placeholders for securityCode field for txVariant default (card)', () => {
+        // @ts-ignore ignore
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_SECURITY_CODE }, i18n, cardPlaceholders);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_3_DIGITS]).toBe(cardPlaceholders.securityCodeThreeDigits);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]).toBe(cardPlaceholders.securityCodeFourDigits);
+    });
+
+    test('should set placeholders for password field for txVariant default (card)', () => {
+        // @ts-ignore ignore
+        const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_PWD_FIELD }, i18n, cardPlaceholders);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_PWD_FIELD]).toBe(cardPlaceholders.password);
     });
 });

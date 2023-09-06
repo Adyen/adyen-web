@@ -84,6 +84,13 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_BANK_LOCATION_FIELD]?: string;
 }
 
+interface ContextualTexts {
+    [ENCRYPTED_EXPIRY_DATE]?: string;
+    [ENCRYPTED_SECURITY_CODE_3_DIGITS]?: string;
+    [ENCRYPTED_SECURITY_CODE_4_DIGITS]?: string;
+    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
+}
+
 export type AriaConfig = {
     lang?: string;
 } & {
@@ -93,6 +100,7 @@ export type AriaConfig = {
 export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
+    contextualTexts?: ContextualTexts;
 }
 
 abstract class AbstractSecuredField {
