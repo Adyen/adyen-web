@@ -96,7 +96,8 @@
         > .adyen-checkout__input--focus,
         > .adyen-checkout__input--focus:hover
     ) {
-    border: 1.5px solid var(--b-input-field-input-box-focus-border-color);
+    outline: 1.5px solid var(--b-color-outline-active);
+    outline-offset: -1px;
 }
 
 .adyen-checkout__input-wrapper:has(> .adyen-checkout__input--error, > .adyen-checkout__input--invalid) {
@@ -141,10 +142,9 @@
     height: var(--b-spacer-070);
     margin-right: var(--b-spacer-060);
 
-      [dir='rtl'] & {
-          margin-left: var(--b-spacer-060);
-      }
-
+    [dir='rtl'] & {
+        margin-left: var(--b-spacer-060);
+    }
 }
 
 .adyen-checkout-input__inline-validation--valid {
@@ -163,6 +163,6 @@
     cursor: default;
 }
 
-.adyen-checkout__input--date{
+.adyen-checkout__input--date {
     padding: 0.5em;
 }

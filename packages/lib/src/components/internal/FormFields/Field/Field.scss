@@ -31,7 +31,8 @@
     }
 
     &:focus-within {
-        border: 1.5px solid var(--b-input-field-input-box-focus-border-color);
+        outline: 1.5px solid var(--b-color-outline-active);
+        outline-offset: -1px;
     }
 }
 
