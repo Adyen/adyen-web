@@ -1,5 +1,4 @@
 import {
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
@@ -14,7 +13,7 @@ export default (originalObj, i18n, txVariant, fieldType) => {
 
     switch (txVariant) {
         case 'ach':
-            contextualTexts[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD] = i18n.get('ach.accountHolderNameField.contextualText');
+            // TODO - when we know the required texts
             break;
         case GIFT_CARD:
             // TODO - when we know the required texts
