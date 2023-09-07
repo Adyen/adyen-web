@@ -28,21 +28,14 @@ const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
     // --
-    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language, placeholders?: Placeholders) {
+    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language) {
         super();
 
-        // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
-        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'expiryDatePolicy', 'loadingContext', 'holderEl'];
-
-        // Copy passed setup object values to this.sfConfig...
-        const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
-
-        // ...breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
-        this.sfConfig = {
-            ...this.sfConfig,
-            ...configVarsFromSetUpObj,
-            iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig }
-        } as SFInternalConfig;
+        /**
+         * List of props from setup object that will be set on 'this'.
+         * These props are all required for internal purposes. They may, or may not, also end up being sent to the iframe
+         */
+        const deltaPropsArr: string[] = ['fieldType', 'cvcPolicy', 'expiryDatePolicy', 'loadingContext', 'holderEl'];
 
         // Copy passed setup object values to this
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
@@ -50,11 +43,27 @@ class SecuredField extends AbstractSecuredField {
         this.fieldType = thisVarsFromSetupObj.fieldType;
         this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
         this.expiryDatePolicy = thisVarsFromSetupObj.expiryDatePolicy;
-        this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
         this.loadingContext = thisVarsFromSetupObj.loadingContext;
         this.holderEl = thisVarsFromSetupObj.holderEl;
 
-        // Initiate values through setters
+        /**
+         * List of props from setup object that will be set on this.sfConfig
+         * These props will all end up being sent to the iframe
+         */
+        const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
+
+        console.log('### SecuredField::constructor:: this.sfConfig', { ...this.sfConfig });
+
+        // Copy passed setup object values to this.sfConfig... breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
+        this.sfConfig = {
+            ...this.sfConfig, // Do we need to do this?
+            ...configVarsFromSetUpObj,
+            iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig }
+        } as SFInternalConfig;
+
+        /**
+         * Initiate values other values on 'this' through setters
+         */
         this.isValid = false;
         this.iframeContentWindow = null;
         this.numKey = generateRandomNumber();
@@ -67,14 +76,17 @@ class SecuredField extends AbstractSecuredField {
             logger.log('\n');
         }
 
-        return this.init(i18n, placeholders ?? {});
+        // Extract values only needed for init
+        const { iframeSrc, placeholders, showContextualElement } = pSetupObj;
+
+        return this.init(i18n, iframeSrc, placeholders, showContextualElement);
     }
 
-    init(i18n: Language, placeholders: Placeholders): SecuredField {
+    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean): SecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
-        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig.txVariant, this.fieldType, i18n);
+        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig.txVariant, this.fieldType, i18n, showContextualElement);
         // Set result back onto config object
         this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
@@ -85,7 +97,7 @@ class SecuredField extends AbstractSecuredField {
          * Configure, create & reference iframe and add load listener
          */
         const iframeConfig = {
-            src: this.iframeSrc,
+            src: iframeSrc,
             title: processedAriaConfig[this.fieldType].iframeTitle,
             policy: 'origin'
         };

@@ -183,7 +183,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             forceCompat: this.props.forceCompat,
             maskSecurityCode: this.props.maskSecurityCode,
             shouldDisableIOSArrowKeys: !!this.props.disableIOSArrowKeys, // convert whether function has been defined into a boolean
-            placeholders: this.props.placeholders ?? {}
+            placeholders: this.props.placeholders ?? {},
+            showContextualElement: this.props.showContextualElement
         };
 
         this.csf = initCSF(csfSetupObj);

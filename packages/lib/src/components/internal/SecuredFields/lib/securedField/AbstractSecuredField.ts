@@ -11,6 +11,7 @@ import {
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
     ENCRYPTED_SECURITY_CODE_4_DIGITS
 } from '../configuration/constants';
+import { Placeholders } from '../../SFP/types';
 
 /**
  * Base interface, props common to both SecuredFieldInitObj & IframeConfigObject
@@ -53,6 +54,8 @@ export interface SecuredFieldInitObj extends SFInternalConfig {
     iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
+    showContextualElement: boolean;
+    placeholders: Placeholders;
 }
 
 /**
@@ -106,7 +109,6 @@ export interface AriaConfigObject {
 abstract class AbstractSecuredField {
     public sfConfig: SFInternalConfig; // could be protected but needs to be public for tests to run
     public fieldType: string;
-    protected iframeSrc: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;
     protected iframeRef: HTMLElement;

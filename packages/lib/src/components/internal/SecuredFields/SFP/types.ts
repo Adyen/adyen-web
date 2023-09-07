@@ -51,6 +51,7 @@ export interface SFPProps {
     maskSecurityCode: boolean;
     disableIOSArrowKeys: (obj: TouchStartEventObj) => void | null;
     placeholders?: Placeholders;
+    showContextualElement?: boolean;
 }
 
 export interface SFPState {

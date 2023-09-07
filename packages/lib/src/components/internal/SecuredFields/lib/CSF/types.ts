@@ -24,6 +24,8 @@ export interface CSFReturnObject {
  *
  * These are the props that are passed from SFP when CSF is initialised but which also end up
  * as props in CSF->this.config: CSFConfigObject
+ *
+ * (this.config mostly contains props that are used to instantiate a new SecuredField.ts, via createSecuredFields.ts)
  */
 interface CSFCommonProps {
     allowedDOMAccess?: boolean | string; // accept boolean or string representation of a boolean i.e. "false"
@@ -37,9 +39,6 @@ interface CSFCommonProps {
     iframeUIConfig?: object;
     legacyInputMode?: boolean;
     minimumExpiryDate?: string;
-    implementationType?: 'components' | 'custom';
-    maskSecurityCode: boolean;
-    shouldDisableIOSArrowKeys: boolean;
 }
 
 /**
@@ -54,8 +53,12 @@ export interface CSFSetupObject extends CSFCommonProps {
     callbacks?: object;
     isKCP?: boolean;
     i18n?: Language;
+    implementationType?: 'components' | 'custom';
     forceCompat: boolean;
     placeholders?: Placeholders;
+    showContextualElement: boolean;
+    maskSecurityCode: boolean;
+    shouldDisableIOSArrowKeys: boolean;
 }
 
 /**
@@ -64,7 +67,7 @@ export interface CSFSetupObject extends CSFCommonProps {
  * The CSFConfigObject provides the source for many of the properties that are written into the
  * SecuredFieldInitObj used by createSecuredFields.ts to initialise a new SecuredField.ts
  *
- * Properties defined directly in *this* interface c.f. CSFCommonProps are ones that are not part of the CSFSetupObject
+ * Properties defined directly in *this* interface c.f. CSFCommonProps are ones that are not part of the CSFSetupObject (sent by SecuredFieldProvider)
  * and which are generated/calculated in handleConfig.ts
  */
 export interface CSFConfigObject extends CSFCommonProps {

@@ -175,7 +175,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
         const extraFieldData: string = getAttribute(pItem, DATA_INFO);
         const uid = getAttribute(pItem, DATA_UID);
 
-        // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
+        // CREATE SecuredField passing config object
         const sfInitObj: SecuredFieldInitObj = {
             fieldType,
             extraFieldData,
@@ -184,8 +184,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             holderEl: pItem,
             expiryDatePolicy,
             txVariant: this.state.type,
+            // from this.config (calculated)
             cardGroupTypes: this.config.cardGroupTypes,
-            iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
+            iframeUIConfig: this.config.iframeUIConfig,
             sfLogAtStart: this.config.sfLogAtStart,
             trimTrailingSeparator: this.config.trimTrailingSeparator,
             isCreditCardType: this.config.isCreditCardType,
@@ -194,12 +195,15 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             showWarnings: this.config.showWarnings,
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
-            implementationType: this.config.implementationType,
-            maskSecurityCode: this.config.maskSecurityCode,
-            disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
+            // from this.props (passed straight thru)
+            maskSecurityCode: this.props.maskSecurityCode,
+            disableIOSArrowKeys: this.props.shouldDisableIOSArrowKeys,
+            implementationType: this.props.implementationType,
+            showContextualElement: this.props.showContextualElement,
+            placeholders: this.props.placeholders
         };
 
-        const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n, this.props.placeholders)
+        const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
             .onIframeLoaded((): void => {
                 // Count
                 this.state.iframeCount += 1;
@@ -245,7 +249,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                if (this.config.shouldDisableIOSArrowKeys) {
+                if (this.props.shouldDisableIOSArrowKeys) {
                     /**
                      * re. this.hasGenuineTouchEvents...
                      *  There seems to be an issue with Responsive Design mode in Safari that means it allows setting focus on cross-origin iframes,

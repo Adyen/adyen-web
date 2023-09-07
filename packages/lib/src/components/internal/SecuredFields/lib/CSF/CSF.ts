@@ -72,6 +72,7 @@ class CSF extends AbstractCSF {
             isKCP: false
         } as CSFStateObject;
 
+        // Create object of references to properties on 'this', that can be used to set up the partials
         const thisObj = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
 
         // Setup 'this' references
@@ -139,7 +140,7 @@ class CSF extends AbstractCSF {
          * Add touchstart listener
          * re. Disabling arrow keys in iOS
          */
-        if (ua.__IS_IOS && this.config.shouldDisableIOSArrowKeys) {
+        if (ua.__IS_IOS && this.props.shouldDisableIOSArrowKeys) {
             this.hasGenuineTouchEvents = false;
             on(document, 'touchstart', this.touchstartListener);
         }
