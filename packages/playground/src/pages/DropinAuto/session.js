@@ -1,4 +1,4 @@
-import AdyenCheckout, { Dropin } from '@adyen/adyen-web/auto';
+import { AdyenCheckout, Dropin, en_US } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
@@ -19,6 +19,8 @@ export async function initSession() {
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
+
+        locale: en_US,
 
         // Events
         beforeSubmit: (data, component, actions) => {

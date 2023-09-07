@@ -1,4 +1,4 @@
-import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
+import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext, en_US } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { shopperLocale } from '../../config/commonConfig';
 import { handleChange } from '../../handlers';
@@ -7,15 +7,15 @@ import '../../style.scss';
 import '../../utils';
 import './Vouchers.scss';
 (async () => {
+    AdyenCheckout.register(BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext);
+
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
-        locale: shopperLocale,
+        locale: en_US,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         showPayButton: true
     });
-
-    AdyenCheckout.register(BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext);
 
     window.bacsdd = new BacsDirectDebit({
         core: window.checkout,

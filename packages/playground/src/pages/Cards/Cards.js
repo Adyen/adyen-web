@@ -1,4 +1,4 @@
-import { AdyenCheckout, Card, Bancontact } from '@adyen/adyen-web';
+import { AdyenCheckout, Card, Bancontact, en_US } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
@@ -34,7 +34,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: shopperLocale,
+        locale: en_US,
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
         onSubmit: handleSubmit,

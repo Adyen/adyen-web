@@ -34,8 +34,6 @@ class Registry implements IRegistry {
             return;
         }
 
-        console.log(type);
-
         return Redirect;
     }
 
@@ -64,6 +62,7 @@ class Registry implements IRegistry {
             return memo;
         }, {});
 
+        // TO CHECK: Should we add the threeDS ones here too as part of the includes ones? Doing so, we can get rid of the Element.dependencies = [] variable
         return {
             ...componentsMap,
             redirect: Redirect

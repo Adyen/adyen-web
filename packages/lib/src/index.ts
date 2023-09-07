@@ -1,4 +1,5 @@
 export * from './components';
+export * from './language/locales';
 export * from './AdyenCheckout';
 
 import * as elements from './components';

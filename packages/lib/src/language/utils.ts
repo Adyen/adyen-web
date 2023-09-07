@@ -1,6 +1,6 @@
-import { FALLBACK_LOCALE, defaultTranslation } from './config';
-// import locales from './locales';
+import { DEFAULT_LOCALE } from './config';
 import { h } from 'preact';
+import { CustomTranslations } from './types';
 
 /**
  * Convert to ISO 639-1
@@ -56,7 +56,7 @@ export function formatLocale(localeParam: string): string {
  * @param supportedLocales -
  */
 export function parseLocale(locale: string, supportedLocales: string[] = []): string {
-    if (!locale || locale.length < 1 || locale.length > 5) return FALLBACK_LOCALE;
+    if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE.countryLanguageCode;
 
     const formattedLocale = formatLocale(locale);
     const hasMatch = supportedLocales.indexOf(formattedLocale) > -1;
@@ -71,7 +71,7 @@ export function parseLocale(locale: string, supportedLocales: string[] = []): st
  * @param customTranslations -
  * @param supportedLocales -
  */
-export function formatCustomTranslations(customTranslations: object = {}, supportedLocales: string[]): object {
+export function formatCustomTranslations(customTranslations: CustomTranslations = {}, supportedLocales: string[]): object {
     return Object.keys(customTranslations).reduce((acc, cur) => {
         const formattedLocale = formatLocale(cur) || parseLocale(cur, supportedLocales);
         if (formattedLocale) {
@@ -110,28 +110,6 @@ export const getTranslation = (translations: object, key: string, options: { [ke
     }
 
     return null;
-};
-
-/**
- * Returns an Object which contains all the key/values of the translation labels
- *
- * @param locale - The locale the user wants to use
- * @param customTranslations - Custom translations provided by the merchant
- */
-export const loadTranslations = async (locale: string, customTranslations: object = {}): Promise<Record<string, string>> => {
-    // Match locale to one of our available locales (e.g. es-AR => es-ES)
-    // const localeToLoad = parseLocale(locale, Object.keys(locales)) || FALLBACK_LOCALE;
-    // const loadedLocale = await locales[localeToLoad]();
-
-    const loadedLocale = {
-        default: {}
-    };
-
-    return {
-        ...defaultTranslation, // Default en-US translations (in case any other translation file is missing any key)
-        ...loadedLocale.default, // Merge with our locale file of the locale they are loading
-        ...(!!customTranslations[locale] && customTranslations[locale]) // Merge with their custom locales if available
-    };
 };
 
 /**

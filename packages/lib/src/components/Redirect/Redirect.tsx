@@ -34,7 +34,6 @@ class RedirectElement extends UIElement {
         }
 
         if (this.props.showPayButton) {
-            console.log(this.props);
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton

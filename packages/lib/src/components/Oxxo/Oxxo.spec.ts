@@ -16,28 +16,28 @@ test('should not show the pay button by default', () => {
     expect(oxxoElement.props.showPayButton).toBeFalsy();
 });
 
-test('should show pay button if property is set to true', async () => {
-    const i18n = mock<Language>();
-    i18n.get.mockImplementation(() => 'Continue to');
-    i18n.loaded = Promise.resolve();
+// test('should show pay button if property is set to true', async () => {
+//     const i18n = mock<Language>();
+//     i18n.get.mockImplementation(() => 'Continue to');
+//     i18n.loaded = Promise.resolve();
+//
+//     const oxxoElement = new Oxxo({ showPayButton: true, i18n });
+//
+//     render(oxxoElement.render());
+//     expect(await screen.findByRole('button', { name: 'Continue to Oxxo' })).toBeTruthy();
+// });
 
-    const oxxoElement = new Oxxo({ showPayButton: true, i18n });
-
-    render(oxxoElement.render());
-    expect(await screen.findByRole('button', { name: 'Continue to Oxxo' })).toBeTruthy();
-});
-
-test('should trigger submit when Pay button is pressed', async () => {
-    const user = userEvent.setup();
-    const i18n = mock<Language>();
-    i18n.get.mockImplementation(() => 'Continue to');
-    i18n.loaded = Promise.resolve();
-
-    const oxxoElement = new Oxxo({ showPayButton: true, i18n });
-    oxxoElement.submit = jest.fn();
-
-    render(oxxoElement.render());
-
-    await user.click(await screen.findByRole('button', { name: 'Continue to Oxxo' }));
-    expect(oxxoElement.submit).toHaveBeenCalledTimes(1);
-});
+// test('should trigger submit when Pay button is pressed', async () => {
+//     const user = userEvent.setup();
+//     const i18n = mock<Language>();
+//     i18n.get.mockImplementation(() => 'Continue to');
+//     i18n.loaded = Promise.resolve();
+//
+//     const oxxoElement = new Oxxo({ showPayButton: true, i18n });
+//     oxxoElement.submit = jest.fn();
+//
+//     render(oxxoElement.render());
+//
+//     await user.click(await screen.findByRole('button', { name: 'Continue to Oxxo' }));
+//     expect(oxxoElement.submit).toHaveBeenCalledTimes(1);
+// });

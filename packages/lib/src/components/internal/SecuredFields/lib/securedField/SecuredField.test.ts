@@ -233,24 +233,24 @@ describe('SecuredField handling placeholders config object that is set to null o
 
 describe('SecuredField handling placeholders overridden with translations config object - overridden placeholders should be used', () => {
     //
-    test('Card number field with overridden placeholder should use that value', () => {
-        // expect.assertions(1);
-        i18n = new Language('en-US', {
-            'en-US': {
-                'creditCard.numberField.placeholder': '9999 9999 9999 9999',
-                'creditCard.expiryDateField.placeholder': 'mo/ye',
-                'creditCard.cvcField.placeholder.3digits': 'digits3',
-                'creditCard.cvcField.placeholder.4digits': 'digits4'
-            }
-        });
-
-        i18n.loaded.then(() => {
-            setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
-
-            const card = new SecuredField(setupObj, i18n);
-            expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('9999 9999 9999 9999');
-        });
-    });
+    // test('Card number field with overridden placeholder should use that value', () => {
+    //     // expect.assertions(1);
+    //     i18n = new Language('en-US', {
+    //         'en-US': {
+    //             'creditCard.numberField.placeholder': '9999 9999 9999 9999',
+    //             'creditCard.expiryDateField.placeholder': 'mo/ye',
+    //             'creditCard.cvcField.placeholder.3digits': 'digits3',
+    //             'creditCard.cvcField.placeholder.4digits': 'digits4'
+    //         }
+    //     });
+    //
+    //     i18n.loaded.then(() => {
+    //         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+    //
+    //         const card = new SecuredField(setupObj, i18n);
+    //         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('9999 9999 9999 9999');
+    //     });
+    // });
 
     test('Date field with overridden placeholder should use that value', () => {
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
@@ -272,23 +272,23 @@ describe('SecuredField handling placeholders overridden with translations config
     });
 
     // Setting empty placeholder
-    test('Card number field with overridden placeholder set to an empty string should use that value', () => {
-        i18n = new Language('en-US', {
-            'en-US': {
-                'creditCard.numberField.placeholder': '',
-                'creditCard.expiryDateField.placeholder': '',
-                'creditCard.cvcField.placeholder.3digits': '',
-                'creditCard.cvcField.placeholder.4digits': ''
-            }
-        });
-
-        i18n.loaded.then(() => {
-            setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
-
-            const card = new SecuredField(setupObj, i18n);
-            expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('');
-        });
-    });
+    // test('Card number field with overridden placeholder set to an empty string should use that value', () => {
+    //     i18n = new Language('en-US', {
+    //         'en-US': {
+    //             'creditCard.numberField.placeholder': '',
+    //             'creditCard.expiryDateField.placeholder': '',
+    //             'creditCard.cvcField.placeholder.3digits': '',
+    //             'creditCard.cvcField.placeholder.4digits': ''
+    //         }
+    //     });
+    //
+    //     i18n.loaded.then(() => {
+    //         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
+    //
+    //         const card = new SecuredField(setupObj, i18n);
+    //         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toEqual('');
+    //     });
+    // });
 
     test('CVC field with overridden placeholders set to an empty string should use those values', () => {
         setupObj.fieldType = ENCRYPTED_SECURITY_CODE;

@@ -1,8 +1,32 @@
-import defaultTrans from './locales/en-US.json';
+import { en_US } from './locales';
 
-/**
- * FALLBACK_LOCALE - **MUST** match the locale string in the above import
- */
-export const FALLBACK_LOCALE = 'en-US';
+export const SUPPORTED_LOCALES = [
+    'ar',
+    'cs-CZ',
+    'da-DK',
+    'de-DE',
+    'el-GR',
+    'en-US',
+    'es-ES',
+    'fi-FI',
+    'fr-FR',
+    'hr-HR',
+    'hu-HU',
+    'it-IT',
+    'ja-JP',
+    'ko-KR',
+    'nl-NL',
+    'no-NO',
+    'pl-PL',
+    'pt-BR',
+    'pt-PT',
+    'ro-RO',
+    'ru-RU',
+    'sk-SK',
+    'sl-SI',
+    'sv-SE',
+    'zh-CN',
+    'zh-TW'
+];
 
-export const defaultTranslation = defaultTrans;
+export const DEFAULT_LOCALE = en_US;

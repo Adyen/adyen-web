@@ -276,6 +276,9 @@ export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
 export type CheckoutSession = {
     id: string;
     sessionData: string;
+    shopperLocale?: string;
+    shopperEmail?: string;
+    telephoneNumber?: string;
 };
 
 export type SessionConfiguration = {

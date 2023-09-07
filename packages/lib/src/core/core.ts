@@ -14,6 +14,7 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { PaymentMethodsConfiguration } from '../components/types';
+import { DEFAULT_LOCALE } from '../language/config';
 
 console.log(registry);
 
@@ -33,7 +34,7 @@ export interface ICore {
 }
 
 class Core implements ICore {
-    public session: Session;
+    public session?: Session;
     public paymentMethodsResponse: PaymentMethodsResponse;
     public modules: any;
     public options: CoreOptions;
@@ -68,6 +69,7 @@ class Core implements ICore {
 
         this.loadingContext = resolveEnvironment(this.options.environment);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
+        this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
@@ -79,9 +81,7 @@ class Core implements ICore {
     }
 
     public initialize(): Promise<this> {
-        if (this.options.session) {
-            this.session = new Session(this.options.session, this.options.clientKey, this.loadingContext);
-
+        if (this.session) {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
@@ -89,8 +89,7 @@ class Core implements ICore {
 
                     this.setOptions({
                         ...rest,
-                        amount: this.options.order ? this.options.order.remainingAmount : amount,
-                        locale: this.options.locale || shopperLocale
+                        amount: this.options.order ? this.options.order.remainingAmount : amount
                     });
 
                     this.createPaymentMethodsList(paymentMethods);
@@ -204,7 +203,8 @@ class Core implements ICore {
 
         this.options = {
             ...this.options,
-            ...options
+            ...options,
+            locale: options?.locale || this.options?.locale || DEFAULT_LOCALE
         };
     };
 
@@ -273,7 +273,7 @@ class Core implements ICore {
                 amount: this.options.amount
             }),
             resources: new Resources(this.cdnContext),
-            i18n: new Language(this.options.locale, this.options.translations),
+            i18n: new Language(this.options.locale, this.options.translations, this.session?.shopperLocale),
             srPanel: new SRPanel({ core: this, ...this.options.srConfig })
         });
     }

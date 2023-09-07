@@ -1,32 +1,44 @@
-import { formatCustomTranslations, formatLocale, getTranslation, loadTranslations, parseLocale } from './utils';
-import { FALLBACK_LOCALE, defaultTranslation } from './config';
+import { formatCustomTranslations, getTranslation } from './utils';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from './config';
 import { getLocalisedAmount } from '../utils/amount-util';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+import { CustomTranslations, Locale } from './types';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 export class Language {
     private readonly supportedLocales: string[];
 
     public readonly locale: string;
     public readonly languageCode: string;
-    public translations: Record<string, string> = defaultTranslation;
+    public translations: Record<string, string>;
     public readonly customTranslations;
-    public loaded: Promise<any>;
 
-    constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
-        // TODO: Fix this when we check for the languages
-        // const defaultLocales = Object.keys(locales);
-        const defaultLocales = ['en-US'];
-        this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
+    constructor(locale: Locale = DEFAULT_LOCALE, customTranslations: CustomTranslations = {}, sessionLocale?: string) {
+        if (typeof locale === 'string') {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                "The 'locale' configuration property must not be a string. Make sure to set it using the proper Locale file."
+            );
+        }
 
+        if (sessionLocale && sessionLocale !== locale.countryLanguageCode) {
+            console.warn(
+                `Language module: shopperLocale mismatch. 'locale' is set to '${locale.countryLanguageCode}', but session was created with '${sessionLocale}'. Make sure to set the correct locale on both properties`
+            );
+        }
+
+        this.customTranslations = formatCustomTranslations(customTranslations, SUPPORTED_LOCALES);
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
-        this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
-        this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
+        this.supportedLocales = [...SUPPORTED_LOCALES, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
+        this.locale = locale.countryLanguageCode;
         const [languageCode] = this.locale.split('-');
         this.languageCode = languageCode;
 
-        this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
-            this.translations = translations;
-        });
+        this.translations = {
+            ...DEFAULT_LOCALE.translations,
+            ...locale.translations,
+            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+        };
     }
 
     /**

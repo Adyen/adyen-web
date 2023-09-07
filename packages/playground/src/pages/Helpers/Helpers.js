@@ -1,4 +1,4 @@
-import { AdyenCheckout, Donation, PersonalDetails, Address } from '@adyen/adyen-web';
+import { AdyenCheckout, Donation, PersonalDetails, Address, en_US } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -13,7 +13,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: shopperLocale,
+        locale: en_US,
         translations: {
             'en-US': {
                 addressTown: 'Address + Town',

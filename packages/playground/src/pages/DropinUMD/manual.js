@@ -6,14 +6,14 @@ import { getSearchParameters } from '../../utils';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    const { AdyenCheckout, Dropin } = window.AdyenWeb;
+    const { AdyenCheckout, Dropin, en_US } = window.AdyenWeb;
 
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: shopperLocale,
+        locale: en_US,
         environment: process.env.__CLIENT_ENV__,
         installmentOptions: {
             mc: {

@@ -7,19 +7,20 @@ export async function initSession() {
         amount,
         reference: 'ABC123',
         returnUrl,
-        shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
         shopperEmail: 'shopper.ctp1@adyen.com',
         countryCode
     });
 
-    const { AdyenCheckout, Dropin } = window.AdyenWeb;
+    const { AdyenCheckout, Dropin, en_US } = window.AdyenWeb;
 
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
+
+        locale: en_US,
 
         // Events
         beforeSubmit: (data, component, actions) => {

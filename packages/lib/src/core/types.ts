@@ -1,4 +1,4 @@
-import { CustomTranslations, Locales } from '../language/types';
+import { CustomTranslations, Locale } from '../language/types';
 import { PaymentAmountExtended, Order } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
@@ -31,12 +31,13 @@ export interface CoreOptions {
     clientKey?: string;
 
     /**
+     * TODO: revise these docs
+     *
      * The shopper's locale. This is used to set the language rendered in the UI.
      * For a list of supported locales, see {@link https://docs.adyen.com/checkout/components-web/localization-components | Localization}.
-     * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.
-     * @defaultValue 'en-US'
+     * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*
      */
-    locale?: Locales | string;
+    locale?: Locale;
 
     /**
      * Custom translations and localizations

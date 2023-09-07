@@ -1,4 +1,4 @@
-import { AdyenCheckout, RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome } from '@adyen/adyen-web';
+import { AdyenCheckout, RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome, en_US } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleChange, handleSubmit } from '../../handlers';
@@ -21,7 +21,7 @@ const showComps = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     window.core = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
-        locale: shopperLocale,
+        locale: en_US,
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,

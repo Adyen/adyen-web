@@ -1,4 +1,4 @@
-import { AdyenCheckout, SecuredFields } from '@adyen/adyen-web';
+import { AdyenCheckout, en_US, SecuredFields } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { makePayment, makeDetailsCall } from '../../services';
@@ -50,7 +50,7 @@ if (showOtherExamples === false) {
 
 const configObj = {
     clientKey: process.env.__CLIENT_KEY__,
-    locale: shopperLocale,
+    locale: en_US,
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
     onChange: handleOnChange,

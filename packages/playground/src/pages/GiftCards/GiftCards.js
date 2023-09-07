@@ -1,4 +1,4 @@
-import { AdyenCheckout, Giftcard, MealVoucherFR, Card } from '@adyen/adyen-web';
+import { AdyenCheckout, Giftcard, MealVoucherFR, Card, en_US } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleChange, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';
@@ -12,7 +12,7 @@ import '../../style.scss';
 
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
-        locale: shopperLocale,
+        locale: en_US,
         countryCode,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
@@ -59,6 +59,7 @@ import '../../style.scss';
         clientKey: process.env.__CLIENT_KEY__,
         session,
         showPayButton: true,
+        locale: en_US,
 
         // Events
         beforeSubmit: (data, component, actions) => {

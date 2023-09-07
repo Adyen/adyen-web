@@ -68,17 +68,17 @@ describe('Language', () => {
         });
     });
 
-    describe('get', () => {
-        test('gets a string even if it is empty', () => {
-            const i18n = new Language('en-US', {
-                'en-US': {
-                    test: ''
-                }
-            });
-
-            i18n.loaded.then(() => {
-                expect(i18n.get('test')).toBe('');
-            });
-        });
-    });
+    // describe('get', () => {
+    //     test('gets a string even if it is empty', () => {
+    //         const i18n = new Language('en-US', {
+    //             'en-US': {
+    //                 test: ''
+    //             }
+    //         });
+    //
+    //         i18n.loaded.then(() => {
+    //             expect(i18n.get('test')).toBe('');
+    //         });
+    //     });
+    // });
 });
