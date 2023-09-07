@@ -116,10 +116,7 @@
         flex:1;
         justify-content: space-between;
         border: none;
-
-        &:focus-within {
-            border: none;
-        }
+        outline: none;
     }
 
     &.adyen-checkout__field--error {

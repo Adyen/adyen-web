@@ -49,10 +49,6 @@
     opacity: 0.4;
 }
 
-.adyen-checkout__input-wrapper:has(> .adyen-checkout__input--valid) {
-    border-bottom-color: var(--b-color-label-success);
-}
-
 .adyen-checkout__dropdown__button--readonly {
     &,
     &--active,

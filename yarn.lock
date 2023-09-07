@@ -6351,15 +6351,6 @@ css-functions-list@^3.1.0:
   resolved "https://registry.yarnpkg.com/css-functions-list/-/css-functions-list-3.1.0.tgz#cf5b09f835ad91a00e5959bcfc627cd498e1321b"
   integrity sha512-/9lCvYZaUbBGvYUgYGFJ4dcYiyqdhSjG7IPVluoV8A1ILjkF7ilmhp1OGUz8n+nmBcu0RNrQAzgD8B6FJbrt2w==
 
-css-has-pseudo@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/css-has-pseudo/-/css-has-pseudo-6.0.0.tgz#b8c8f39a19bc83c5be59fd251510a7e443c47968"
-  integrity sha512-X+r+JBuoO37FBOWVNhVJhxtSBUFHgHbrcc0CjFT28JEdOw1qaDwABv/uunyodUuSy2hMPe9j/HjssxSlvUmKjg==
-  dependencies:
-    "@csstools/selector-specificity" "^3.0.0"
-    postcss-selector-parser "^6.0.13"
-    postcss-value-parser "^4.2.0"
-
 css-loader@^5.2.7:
   version "5.2.7"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-5.2.7.tgz#9b9f111edf6fb2be5dc62525644cbc9c232064ae"

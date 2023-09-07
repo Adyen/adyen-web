@@ -87,32 +87,6 @@
     margin-bottom: 0;
 }
 
-// Move adyen-checkout__input styles to the wrapper
-.adyen-checkout__input-wrapper:has(
-        > .adyen-checkout__input:active,
-        > .adyen-checkout__input:active:hover,
-        > .adyen-checkout__input:focus,
-        > .adyen-checkout__input:focus:hover,
-        > .adyen-checkout__input--focus,
-        > .adyen-checkout__input--focus:hover
-    ) {
-    outline: 1.5px solid var(--b-color-outline-active);
-    outline-offset: -1px;
-}
-
-.adyen-checkout__input-wrapper:has(> .adyen-checkout__input--error, > .adyen-checkout__input--invalid) {
-    border-color: var(--b-color-label-critical);
-}
-
-.adyen-checkout__input-wrapper:has(> .adyen-checkout__input--valid) {
-    border-bottom-color: var(--b-color-label-success);
-}
-
-.adyen-checkout__input-wrapper:has(> .adyen-checkout__input[readonly], > .adyen-checkout__input--disabled) {
-    background: var(--b-color-surface-tertiary);
-    border-color: var(--b-color-outline-secondary);
-}
-
 .adyen-checkout__input {
     flex: 1;
 
