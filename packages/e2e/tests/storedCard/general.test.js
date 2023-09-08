@@ -17,6 +17,9 @@ test('#1 Can fill out the cvc fields in the stored card and make a successful pa
     // handler for alert that's triggered on successful payment
     await t.setNativeDialogHandler(() => true);
 
+    // expiry date field is readonly
+    await t.expect(cardPage.storedCardExpiryDate.withAttribute('readonly').exists).ok();
+
     await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
 
     // click pay
@@ -40,3 +43,23 @@ test('#2 Pressing pay without filling the cvc should generate a translated error
         .expect(cardPage.cvcErrorText.withExactText(EMPTY_FIELD).exists)
         .ok();
 });
+
+test('#3 A storedCard with no expiry date field still can be used for a successful payment', async t => {
+    // Wait for field to appear in DOM
+    await cardPage.cvcHolder();
+
+    // handler for alert that's triggered on successful payment
+    await t.setNativeDialogHandler(() => true);
+
+    // expiry date field is not visible
+    await t.expect(cardPage.storedCardExpiryDate.exists).notOk();
+
+    await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
+
+    // click pay
+    await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(1000);
+
+    // Check the value of the alert text
+    const history = await t.getNativeDialogHistory();
+    await t.expect(history[0].text).eql('Authorised');
+}).clientScripts('./storedCard.noExpiry.clientScripts.js'); // N.B. the clientScript nullifies the expiryMonth & Year fields in the storedCardData

@@ -1,3 +1,4 @@
+/** @tsx h */
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
@@ -60,5 +61,10 @@ describe('BacsInput', () => {
 
         // No consent checkboxes
         expect(wrapper.find('ConsentCheckbox')).toHaveLength(0);
+    });
+
+    test('Should display FormInstruction', () => {
+        const wrapper = getWrapper({ showFormInstruction: true });
+        expect(wrapper.find('FormInstruction')).toHaveLength(1);
     });
 });

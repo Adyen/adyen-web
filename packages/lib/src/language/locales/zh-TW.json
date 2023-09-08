@@ -44,6 +44,7 @@
     "continue": "繼續",
     "continueTo": "繼續前往",
     "wechatpay.timetopay": "您有 %@ 可以支付",
+    "sr.wechatpay.timetopay": "您付款的時間還剩 %#分%# %#秒%#",
     "wechatpay.scanqrcode": "掃描 QR 代碼",
     "personalDetails": "個人詳細資料",
     "companyDetails": "公司詳情",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "省或地區",
     "cityTown": "市／鎮",
     "address": "地址",
+    "address.placeholder": "查找您的地址",
+    "address.errors.incomplete": "輸入地址以繼續",
+    "address.enterManually": "手動輸入地址",
     "state": "州",
     "field.title.optional": "（選用）",
     "creditCard.cvcField.title.optional": "安全碼（選填）",
@@ -284,5 +288,9 @@
     "paymentMethodsList.aria.label": "選擇付款方式",
     "companyDetails.name.invalid": "輸入公司名稱",
     "companyDetails.registrationNumber.invalid": "輸入註冊號碼",
-    "consent.checkbox.invalid": "您必須同意相關條款及細則"
+    "consent.checkbox.invalid": "您必須同意相關條款及細則",
+    "form.instruction": "除非另有標示，否則必須填寫所有欄位。",
+    "trustly.descriptor": "即時銀行付款",
+    "trustly.description1": "直接從任何銀行帳戶付款，並獲得銀行級別安全保障",
+    "trustly.description2": "無需卡，無需下載應用程式，無需註冊"
 }

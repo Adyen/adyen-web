@@ -1,15 +1,18 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
-import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../internal/FormFields/Field';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
 import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
+import InputEmail from '../../../internal/FormFields/InputEmail';
+import Select from '../../../internal/FormFields/Select';
+import useImage from '../../../../core/Context/useImage';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
+    const getImage = useImage();
     const isIssuerRequired = () => {
         const typesRequiringIssuers = ['dragonpay_ebanking', 'dragonpay_otc_banking', 'dragonpay_otc_non_banking'];
         return typesRequiringIssuers.indexOf(props.type) > -1;
@@ -26,7 +29,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         }
     });
 
-    const getIssuerIcon = getIssuerImageUrl({}, props.type);
+    const getIssuerIcon = getIssuerImageUrl({}, props.type, getImage);
     const items = props.items.map(
         (item: DragonpayInputIssuerItem): DragonpayInputIssuerItem => ({
             ...item,
@@ -51,28 +54,28 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">
-            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail}>
-                {renderFormField('emailAddress', {
-                    name: 'dragonpay.shopperEmail',
-                    autoCorrect: 'off',
-                    value: data.shopperEmail,
-                    className: 'adyen-checkout__input--large',
-                    spellCheck: false,
-                    onInput: handleChangeFor('shopperEmail', 'input'),
-                    onBlur: handleChangeFor('shopperEmail', 'blur')
-                })}
+            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail} name={'dragonpay-shopperEmail'}>
+                <InputEmail
+                    name={'dragonpay-shopperEmail'}
+                    autoCorrect={'off'}
+                    value={data.shopperEmail}
+                    className={'adyen-checkout__input--large'}
+                    spellCheck={false}
+                    onInput={handleChangeFor('shopperEmail', 'input')}
+                    onBlur={handleChangeFor('shopperEmail', 'blur')}
+                />
             </Field>
 
             {isIssuerRequired() && (
-                <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer}>
-                    {renderFormField('select', {
-                        items,
-                        selected: data.issuer,
-                        placeholder: i18n.get(getIssuerSelectFieldKey(props.type)),
-                        name: 'issuer',
-                        className: 'adyen-checkout__dropdown--large adyen-checkout__issuer-list__dropdown',
-                        onChange: handleChangeFor('issuer')
-                    })}
+                <Field label={i18n.get(getIssuerSelectFieldKey(props.type))} errorMessage={!!errors.issuer} name={'issuer'}>
+                    <Select
+                        items={items}
+                        selectedValue={data.issuer}
+                        placeholder={i18n.get(getIssuerSelectFieldKey(props.type))}
+                        name={'issuer'}
+                        className={'adyen-checkout__dropdown--large adyen-checkout__issuer-list__dropdown'}
+                        onChange={handleChangeFor('issuer')}
+                    />
                 </Field>
             )}
 

@@ -44,6 +44,7 @@
     "continue": "Kontynuuj",
     "continueTo": "Przejdź do",
     "wechatpay.timetopay": "Masz do zapłacenia %@",
+    "sr.wechatpay.timetopay": "Masz %#min%# %#s%#, aby zapłacić",
     "wechatpay.scanqrcode": "Zeskanuj kod QR",
     "personalDetails": "Dane osobowe",
     "companyDetails": "Dane firmy",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "Region lub terytorium",
     "cityTown": "Miejscowość",
     "address": "Adres",
+    "address.placeholder": "Znajdź swój adres",
+    "address.errors.incomplete": "Wprowadź adres, aby kontynuować",
+    "address.enterManually": "Wprowadź adres ręcznie",
     "state": "Stan",
     "field.title.optional": "(opcjonalnie)",
     "creditCard.cvcField.title.optional": "Kod zabezpieczający (opcjonalnie)",
@@ -284,5 +288,9 @@
     "paymentMethodsList.aria.label": "Wybierz metodę płatności",
     "companyDetails.name.invalid": "Wpisz nazwę firmy",
     "companyDetails.registrationNumber.invalid": "Wprowadź numer w rejestrze",
-    "consent.checkbox.invalid": "Musisz zaakceptować Warunki i postanowienia"
+    "consent.checkbox.invalid": "Musisz zaakceptować Warunki i postanowienia",
+    "form.instruction": "Wszystkie pola są wymagane, chyba że zaznaczono inaczej.",
+    "trustly.descriptor": "Błyskawiczna płatność bankowa",
+    "trustly.description1": "Płać bezpośrednio z dowolnego rachunku bankowego, korzystając z zabezpieczeń na poziomie bankowym",
+    "trustly.description2": "Bez kart, bez pobierania aplikacji, bez rejestracji"
 }

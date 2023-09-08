@@ -1,5 +1,5 @@
 import { CardElement } from './Card';
-import { CardElementProps } from './types';
+import { CardElementData, CardElementProps } from './types';
 import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
 import { TxVariants } from '../tx-variants';
 
@@ -14,6 +14,12 @@ class BancontactElement extends CardElement {
         ...CardElement.defaultProps,
         brands: ['bcmc', 'maestro', 'visa']
     };
+
+    formatData(): CardElementData {
+        const data = super.formatData();
+        data.paymentMethod.type = this.constructor['type'];
+        return data;
+    }
 
     /**
      * Now that the Bancontact (BCMC) Card component can accept a number dual branded with Visa (which requires a CVC) it has to be handled differently

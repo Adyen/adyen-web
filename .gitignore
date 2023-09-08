@@ -1,6 +1,7 @@
 node_modules
 dist
 coverage
+storybook-static
 
 packages/lib/package
 packages/lib/package2

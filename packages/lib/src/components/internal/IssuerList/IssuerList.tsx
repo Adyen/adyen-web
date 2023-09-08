@@ -1,7 +1,6 @@
 import { Fragment, h } from 'preact';
 import { useState, useEffect, useCallback } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
-import { renderFormField } from '../FormFields';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
 import ContentSeparator from '../ContentSeparator';
@@ -15,6 +14,7 @@ import { SetSRMessagesReturnObject } from '../../../core/Errors/types';
 import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
+import Select from '../FormFields/Select';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -56,7 +56,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
     };
 
     const handleInputChange = useCallback(
-        (type: IssuerListInputTypes) => (event: UIEvent) => {
+        (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             setInputType(type);
             handleChangeFor('issuer')(event);
         },
@@ -98,15 +98,15 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 </Fragment>
             )}
 
-            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']}>
-                {renderFormField('select', {
-                    items,
-                    selected: inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null,
-                    placeholder: i18n.get(placeholder),
-                    name: 'issuer',
-                    className: 'adyen-checkout__issuer-list__dropdown',
-                    onChange: handleInputChange(IssuerListInputTypes.Dropdown)
-                })}
+            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
+                <Select
+                    items={items}
+                    selectedValue={inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null}
+                    placeholder={i18n.get(placeholder)}
+                    name={'issuer'}
+                    className={'adyen-checkout__issuer-list__dropdown'}
+                    onChange={handleInputChange(IssuerListInputTypes.Dropdown)}
+                />
             </Field>
 
             {props.termsAndConditions && (

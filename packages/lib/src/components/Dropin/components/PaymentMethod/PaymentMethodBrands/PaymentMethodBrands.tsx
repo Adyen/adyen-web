@@ -2,6 +2,7 @@ import { h } from 'preact';
 import PaymentMethodIcon from '../PaymentMethodIcon';
 import { BrandConfiguration } from '../../../../Card/types';
 import CompactView from './CompactView';
+import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 
 interface PaymentMethodBrandsProps {
     brands: Array<BrandConfiguration>;
@@ -23,7 +24,7 @@ const PaymentMethodBrands = ({ activeBrand, brands, excludedUIBrands, isPaymentM
             {allowedBrands.map(brand => (
                 <PaymentMethodIcon
                     key={brand.name}
-                    altDescription={brand.name}
+                    altDescription={getFullBrandName(brand.name)}
                     type={brand.name}
                     src={brand.icon}
                     disabled={activeBrand && activeBrand !== brand.name}

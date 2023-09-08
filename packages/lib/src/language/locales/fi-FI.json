@@ -1,6 +1,6 @@
 {
     "payButton": "Maksa",
-    "payButton.redirecting": "Uudelleenohjataan ...",
+    "payButton.redirecting": "Uudelleenohjataan...",
     "payButton.with": "Maksa %{value} käyttäen maksutapaa %{maskedData}",
     "close": "Sulje",
     "storeDetails": "Tallenna seuraavaa maksuani varten",
@@ -44,6 +44,7 @@
     "continue": "Jatka",
     "continueTo": "Jatka kohteeseen",
     "wechatpay.timetopay": "Sinulla on %@ maksettavana",
+    "sr.wechatpay.timetopay": "Maksuaikaa on jäljellä %#minuuttia%# %#sekuntia%#",
     "wechatpay.scanqrcode": "Skannaa QR-koodi",
     "personalDetails": "Henkilötiedot",
     "companyDetails": "Yhtiön tiedot",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "Maakunta tai alue",
     "cityTown": "Kaupunki / taajama",
     "address": "Osoite",
+    "address.placeholder": "Löydä osoitteesi",
+    "address.errors.incomplete": "Syötä osoite jatkaaksesi",
+    "address.enterManually": "Syötä osoite manuaalisesti",
     "state": "Osavaltio",
     "field.title.optional": "(valinnainen)",
     "creditCard.cvcField.title.optional": "Turvakoodi (valinnainen)",
@@ -284,5 +288,9 @@
     "paymentMethodsList.aria.label": "Valitse maksutapa",
     "companyDetails.name.invalid": "Syötä yrityksen nimi",
     "companyDetails.registrationNumber.invalid": "Syötä rekisterinumero",
-    "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot"
+    "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot",
+    "form.instruction": "Kaikki kentät ovat pakollisia, ellei toisin ole merkitty.",
+    "trustly.descriptor": "Verkkopankki",
+    "trustly.description1": "Maksat haluamaltasi tililtä turvallisest",
+    "trustly.description2": "Ei kortteja, ei sovelluksia, ei rekisteröitymistä"
 }

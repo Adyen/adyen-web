@@ -23,6 +23,10 @@ export class DokuElement extends UIElement {
         TxVariants.doku_wallet
     ];
 
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     get isValid() {
         return !!this.state.isValid;
     }
@@ -40,7 +44,7 @@ export class DokuElement extends UIElement {
     }
 
     get icon() {
-        return this.resources.getImage({})(this.props.type);
+        return this.resources.getImage()(this.props.type);
     }
 
     render() {

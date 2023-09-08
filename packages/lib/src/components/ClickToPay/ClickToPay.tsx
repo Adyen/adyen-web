@@ -26,7 +26,8 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
             telephoneNumber: this.props.telephoneNumber,
             merchantDisplayName: this.props.merchantDisplayName,
             locale: this.props.locale,
-            onReady: this.props.onReady
+            onReady: this.props.onReady,
+            onTimeout: this.props.onTimeout
         };
 
         this.clickToPayService = createClickToPayService(this.props.configuration, this.ctpConfiguration, this.props.environment);

@@ -11,7 +11,6 @@ export class BankTransferElement extends UIElement<BankTransferProps> {
     public static type = TxVariants.bankTransfer_IBAN;
 
     public static defaultProps = {
-        showPayButton: true,
         showEmailAddress: true
     };
 

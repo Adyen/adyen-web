@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 import classNames from 'classnames';
 import Field from '../FormFields/Field';
-import renderFormField from '../FormFields';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
@@ -10,6 +9,7 @@ import { phoneFormatters, phoneValidationRules } from './validate';
 import { PhoneInputProps, PhoneInputSchema } from './types';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import { getUniqueId } from '../../../utils/idGenerator';
+import Select from '../FormFields/Select';
 
 function PhoneInput(props: PhoneInputProps) {
     const { i18n } = useCoreContext();
@@ -121,16 +121,17 @@ function PhoneInput(props: PhoneInputProps) {
                         'adyen-checkout-input-holder--phone-input': true
                     })}
                 >
-                    {showPrefix &&
-                        renderFormField('select', {
-                            className: 'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector',
-                            items: props.items,
-                            onChange: handleChangeFor('phonePrefix'),
-                            // readonly: props.phonePrefixIsReadonly,
-                            placeholder: i18n.get('infix'),
-                            selected: data.phonePrefix,
-                            uniqueId: uniqueIDPhonePrefix
-                        })}
+                    {showPrefix && (
+                        <Select
+                            className={'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector'}
+                            items={props.items}
+                            onChange={handleChangeFor('phonePrefix')}
+                            // readonly={props.phonePrefixIsReadonly}
+                            placeholder={i18n.get('infix')}
+                            selectedValue={data.phonePrefix}
+                            uniqueId={uniqueIDPhonePrefix}
+                        />
+                    )}
 
                     {showNumber && (
                         <div className="adyen-checkout-phone-number">

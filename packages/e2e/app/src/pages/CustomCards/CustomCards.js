@@ -21,7 +21,7 @@ const initCheckout = async () => {
     });
 
     window.securedFields = checkout
-        .create('securedfields', {
+        .create('customcard', {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,
@@ -36,7 +36,7 @@ const initCheckout = async () => {
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
     window.securedFields2 = checkout
-        .create('securedfields', {
+        .create('customcard', {
             //            type: 'card',// Deliberately exclude to ensure a default value is set
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,

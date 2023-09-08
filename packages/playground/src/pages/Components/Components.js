@@ -13,6 +13,7 @@ import {
     Pix,
     Oxxo,
     Redirect,
+    Twint,
     en_US
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
@@ -40,8 +41,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         },
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
-        },
-        showPayButton: true
+        }
     });
 
     // // SEPA Bank Transfer
@@ -119,6 +119,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Oxxo
     window.oxxo = new Oxxo({ core: checkout }).mount('.oxxo-field');
+
+    // Twint
+    window.twint = new Twint({ core: checkout }).mount('.twint-field');
 
     // Redirect
     window.alipay = new Redirect({ core: checkout, type: 'alipay' }).mount('.redirect-field');

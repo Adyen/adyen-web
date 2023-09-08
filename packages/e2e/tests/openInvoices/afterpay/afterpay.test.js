@@ -39,10 +39,8 @@ test('should make an AfterPay payment', async t => {
     const stateData = await getComponentData();
 
     await t
-        .expect(stateData.paymentMethod)
-        .eql({
-            type: 'afterpay_default'
-        })
+        .expect(stateData.paymentMethod.type)
+        .eql('afterpay_default')
         .expect(stateData.billingAddress)
         .eql(mockAddress)
         .expect(stateData.deliveryAddress)

@@ -48,7 +48,6 @@ import '../../style.scss';
         clientKey: process.env.__CLIENT_KEY__,
         locale: en_US,
         environment: process.env.__CLIENT_ENV__,
-        showPayButton: true,
         onError: console.error,
         paymentMethodsConfiguration: {
             ideal: {

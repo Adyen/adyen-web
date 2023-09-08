@@ -9,7 +9,6 @@ export default {
     buttonColor: 'default' as google.payments.api.ButtonColor, // default/black/white
     buttonType: 'long' as google.payments.api.ButtonType, // long/short
     buttonSizeMode: undefined,
-    showPayButton: true, // show or hide the Google Pay button
 
     // PaymentDataRequest
     configuration: {

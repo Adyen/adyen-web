@@ -39,8 +39,10 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     constructor(props?: IssuerListContainerProps) {
         super(props);
 
+        const getImage = props => this.resources.getImage(props);
+
         if (this.props.showImage) {
-            const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type']);
+            const getIssuerIcon = getIssuerImageUrl({ loadingContext: this.props.loadingContext }, this.constructor['type'], getImage);
 
             this.props.issuers = this.props.issuers.map(item => ({
                 ...item,
@@ -48,6 +50,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
             }));
         }
     }
+
 
     formatProps(props) {
         const issuers = (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || props.issuers || [];
@@ -105,6 +108,8 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                             highlightedIds={this.props.highlightedIssuers}
                             {...this.props}
                             {...this.state}
+                            showImage={this.props.showImage}
+                            type={this.constructor['type']}
                             onChange={this.setState}
                             onSubmit={this.submit}
                             payButton={this.payButton}

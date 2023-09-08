@@ -289,7 +289,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
+        return this.props.icon ?? this.resources.getImage()(this.constructor['type']);
     }
 
     /**

@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import AchSecuredFields from './components/AchSecuredFields';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Address from '../../../internal/Address';
-import { renderFormField } from '../../../internal/FormFields';
 import Field from '../../../internal/FormFields/Field';
 import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import defaultProps from './defaultProps';
@@ -15,6 +14,8 @@ import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
 import { ComponentMethodsRef } from '../../../types';
+import InputText from '../../../internal/FormFields/InputText';
+import FormInstruction from '../../../internal/FormInstruction';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -136,6 +137,7 @@ function AchInput(props: ACHInputProps) {
 
     return (
         <div className="adyen-checkout__ach">
+            {props.showFormInstruction && <FormInstruction />}
             <SecuredFieldsProvider
                 ref={sfp}
                 {...extractPropsForSFP(props)}
@@ -156,13 +158,13 @@ function AchInput(props: ACHInputProps) {
                                         isValid={!!valid.holderName}
                                         name={'holderName'}
                                     >
-                                        {renderFormField('text', {
-                                            className: `adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`,
-                                            placeholder: props.placeholders.holderName || i18n.get('ach.accountHolderNameField.placeholder'),
-                                            value: data.holderName,
-                                            required: props.holderNameRequired,
-                                            onInput: handleHolderName
-                                        })}
+                                        <InputText
+                                            className={`adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`}
+                                            placeholder={props.placeholders.holderName || i18n.get('ach.accountHolderNameField.placeholder')}
+                                            value={data.holderName}
+                                            required={props.holderNameRequired}
+                                            onInput={handleHolderName}
+                                        />
                                     </Field>
                                 )}
 

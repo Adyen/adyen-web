@@ -40,6 +40,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         shopperEmail: 'gui.ctp@adyen.com',
         onReady() {
             console.log('ClickToPay is ready');
+        },
+        onTimeout(error) {
+            console.log(error);
         }
     });
     window.clickToPay

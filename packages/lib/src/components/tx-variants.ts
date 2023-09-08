@@ -125,6 +125,7 @@ export enum TxVariants {
     redirect = 'redirect',
     twint = 'twint',
     vipps = 'vipps',
+    trustly = 'trustly',
     /** Redirect */
 
     /** Klarna */

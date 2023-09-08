@@ -49,7 +49,8 @@ describe('StateField', () => {
         const value = 'CA';
         const wrapper = await getWrapper({ selectedCountry: 'US', value });
         wrapper.update(null);
-        expect(wrapper.find('Select').prop('selected')).toBe(value);
+        // TODO: This test should be migrated to react test library instead of reading form props
+        expect(wrapper.find('Select').prop('selectedValue')).toBe(value);
     });
 
     test('should not load the dropdown if no states were loaded', async () => {

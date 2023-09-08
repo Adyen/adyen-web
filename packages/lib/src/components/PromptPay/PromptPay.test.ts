@@ -16,9 +16,9 @@ describe('PromptPay', () => {
     });
 
     describe('render', () => {
-        test('does not render anything by default', () => {
+        test('does render something by default', () => {
             const promptPay = new PromptPay({});
-            expect(promptPay.render()).toBe(null);
+            expect(promptPay.render()).not.toBe(null);
         });
     });
 });

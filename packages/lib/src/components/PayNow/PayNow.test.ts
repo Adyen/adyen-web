@@ -16,9 +16,9 @@ describe('PayNow', () => {
     });
 
     describe('render', () => {
-        test('does not render anything by default', () => {
+        test('does render something by default', () => {
             const paynow = new PayNow({});
-            expect(paynow.render()).toBe(null);
+            expect(paynow.render()).not.toBe(null);
         });
     });
 });

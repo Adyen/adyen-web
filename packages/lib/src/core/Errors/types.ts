@@ -14,12 +14,14 @@ export interface ValidationRuleErrorObj {
     [key: string]: ValidationRuleResult;
 }
 
+export type FieldTypeMappingFn = (key: string, i18n: Language, countrySpecificLabels: StringObject) => string;
+
 export interface SortErrorsObj {
     errors: ErrorObj;
     layout?: string[];
     i18n: Language;
     countrySpecificLabels?: StringObject;
-    fieldTypeMappingFn?: (key: string, i18n: Language, countrySpecificLabels: StringObject) => string;
+    fieldTypeMappingFn?: FieldTypeMappingFn;
 }
 
 export interface SortedErrorObject {

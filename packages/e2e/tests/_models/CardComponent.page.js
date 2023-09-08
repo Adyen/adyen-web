@@ -62,6 +62,8 @@ export default class CardPage extends BasePage {
         // The <span> that holds the error text
         this.dateErrorText = Selector(`${BASE_EL} .adyen-checkout__field__exp-date .adyen-checkout__error-text`);
 
+        this.storedCardExpiryDate = Selector(`${BASE_EL} .adyen-checkout__field--storedCard .adyen-checkout__card__exp-date__input--oneclick`);
+
         /**
          * CVC
          */

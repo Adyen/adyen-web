@@ -43,6 +43,11 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
             if (document.querySelector(this.props.node)) {
+                const preExistingSRPanel = document.getElementById(this.id);
+                if (preExistingSRPanel) {
+                    document.querySelector(this.props.node).removeChild(preExistingSRPanel);
+                }
+
                 this.srPanelContainer = document.createElement('div');
                 this.srPanelContainer.className = 'sr-panel-holder';
                 this.srPanelContainer.id = this.id;

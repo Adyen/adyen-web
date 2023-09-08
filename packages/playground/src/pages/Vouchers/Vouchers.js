@@ -13,8 +13,7 @@ import './Vouchers.scss';
         clientKey: process.env.__CLIENT_KEY__,
         locale: en_US,
         environment: process.env.__CLIENT_ENV__,
-        onChange: handleChange,
-        showPayButton: true
+        onChange: handleChange
     });
 
     window.bacsdd = new BacsDirectDebit({

@@ -12,6 +12,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { PaymentMethodsConfiguration, PaymentResponse } from '../types';
 import PaymentMethodsResponse from '../../core/ProcessResponse/PaymentMethodsResponse';
 import { TxVariants } from '../tx-variants';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -178,15 +179,17 @@ class DropinElement extends UIElement<DropinElementProps> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <DropinComponent
-                    {...this.props}
-                    onChange={this.setState}
-                    elementRef={this.elementRef}
-                    onCreateElements={this.handleCreate}
-                    ref={dropinRef => {
-                        this.dropinRef = dropinRef;
-                    }}
-                />
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <DropinComponent
+                        {...this.props}
+                        onChange={this.setState}
+                        elementRef={this.elementRef}
+                        onCreateElements={this.handleCreate}
+                        ref={dropinRef => {
+                            this.dropinRef = dropinRef;
+                        }}
+                    />
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

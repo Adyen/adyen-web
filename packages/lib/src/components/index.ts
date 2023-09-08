@@ -65,6 +65,7 @@ export { default as Multibanco } from './Multibanco';
 export { default as Redirect } from './Redirect';
 export { default as Twint } from './Twint';
 export { default as Vipps } from './Vipps';
+export { default as Trustly } from './Trustly';
 
 /** Klarna */
 export { default as Klarna } from './Klarna';

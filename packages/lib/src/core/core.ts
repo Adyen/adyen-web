@@ -62,15 +62,14 @@ class Core implements ICore {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(props);
-        this.createPaymentMethodsList();
 
-        this.loadingContext = resolveEnvironment(this.options.environment);
-        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
+        this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
+        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
+            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
         }
 
         // Expose version number for npm builds
@@ -101,6 +100,8 @@ class Core implements ICore {
         }
 
         this.createCoreModules();
+
+        this.createPaymentMethodsList();
 
         return Promise.resolve(this);
     }
@@ -246,7 +247,9 @@ class Core implements ICore {
 
     private createCoreModules(): void {
         if (this.modules) {
-            console.warn('Core: Core modules are already created.');
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('Core: Core modules are already created.');
+            }
             return;
         }
 

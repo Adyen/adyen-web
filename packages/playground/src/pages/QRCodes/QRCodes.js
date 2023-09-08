@@ -6,6 +6,23 @@ import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
+import { handleResponse } from '../../handlers';
+import getCurrency from '../../config/getCurrency';
+
+const makeQRCodePayment = (state, component, countryCode) => {
+    const currency = getCurrency(countryCode);
+    const config = { countryCode, amount: { currency, value: 25940 } };
+
+    return makePayment(state.data, config)
+        .then(response => {
+            component.setStatus('ready');
+            handleResponse(response, component);
+        })
+        .catch(error => {
+            throw Error(error);
+        });
+};
+
 (async () => {
     AdyenCheckout.register(WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow);
 
@@ -37,98 +54,43 @@ import './QRCodes.scss';
         });
 
     // BCMC Mobile
-    makePayment({
-        paymentMethod: {
-            type: 'bcmc_mobile_QR'
-        },
-        countryCode: 'BE',
-        amount: {
-            currency: 'EUR',
-            value: 1000
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.bcmcmobileqr = checkout.createFromAction(result.action).mount('#bcmcqr-container');
+    checkout
+        .create('bcmc_mobile_QR', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'BE');
             }
         })
-        .catch(error => {
-            throw Error(error);
-        });
+        .mount('#bcmcqr-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'swish'
-        },
-        countryCode: 'SE',
-        amount: {
-            currency: 'SEK',
-            value: 1000
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.swish = checkout.createFromAction(result.action).mount('#swish-container');
+    checkout
+        .create('swish', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'SE');
             }
         })
-        .catch(error => {
-            throw Error(error);
-        });
+        .mount('#swish-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'promptpay'
-        },
-        countryCode: 'TH',
-        amount: {
-            currency: 'THB',
-            value: 101
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.promptpay = checkout.createFromAction(result.action).mount('#promptpay-container');
+    checkout
+        .create('promptpay', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'TH');
             }
         })
-        .catch(error => {
-            throw Error(error);
-        });
+        .mount('#promptpay-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'paynow'
-        },
-        countryCode: 'SG',
-        amount: {
-            currency: 'SGD',
-            value: 200
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.paynow = checkout.createFromAction(result.action).mount('#paynow-container');
+    checkout
+        .create('paynow', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'SG');
             }
         })
-        .catch(error => {
-            throw Error(error);
-        });
+        .mount('#paynow-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'duitnow'
-        },
-        countryCode: 'MY',
-        amount: {
-            currency: 'MYR',
-            value: 101
-        }
-    })
-        .then(result => {
-            if (result.action) {
-                window.paynow = checkout.createFromAction(result.action).mount('#duitnow-container');
+    checkout
+        .create('duitnow', {
+            onSubmit: (state, component) => {
+                return makeQRCodePayment(state, component, 'MY');
             }
         })
-        .catch(error => {
-            throw Error(error);
-        });
+        .mount('#duitnow-container');
 })();

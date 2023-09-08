@@ -3,6 +3,7 @@ import AdyenCheckout from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import DropinElement from './Dropin';
+import { screen, render } from '@testing-library/preact';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
@@ -11,7 +12,7 @@ describe('Dropin', () => {
     let dropin: DropinElement;
 
     beforeEach(async () => {
-        const checkout = await AdyenCheckout({ analytics: { enabled: false } });
+        const checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
         dropin = checkout.create('dropin');
     });
 
@@ -64,7 +65,7 @@ describe('Dropin', () => {
         });
 
         test('should handle new challenge action', async () => {
-            const checkout = await AdyenCheckout({ analytics: { enabled: false } });
+            const checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
 
             const dropin = checkout.create('dropin');
 
@@ -76,7 +77,11 @@ describe('Dropin', () => {
         });
 
         test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', async () => {
-            const checkout = await AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '02' } } });
+            const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '02' } }
+            });
 
             const dropin = checkout.create('dropin');
 
@@ -86,7 +91,12 @@ describe('Dropin', () => {
         });
 
         test('new challenge action gets challengeWindowSize from handleAction config', async () => {
-            const checkout = await AdyenCheckout({ analytics: { enabled: false }, challengeWindowSize: '04' });
+            const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false },
+                challengeWindowSize: '04'
+            });
 
             const dropin = checkout.create('dropin');
             mount(dropin.render());
@@ -102,6 +112,8 @@ describe('Dropin', () => {
     describe('Instant Payments feature', () => {
         test('formatProps formats instantPaymentTypes removing duplicates and invalid values', async () => {
             const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
                 analytics: { enabled: false }
             });
             const dropin = checkout.create('dropin', { instantPaymentTypes: ['alipay', 'paywithgoogle', 'paywithgoogle', 'paypal'] });
@@ -111,6 +123,8 @@ describe('Dropin', () => {
 
         test('formatProps filter out instantPaymentMethods from paymentMethods list ', async () => {
             const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
                 analytics: { enabled: false },
                 paymentMethodsResponse: {
                     paymentMethods: [
@@ -134,6 +148,8 @@ describe('Dropin', () => {
             ];
 
             const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
                 analytics: { enabled: false },
                 paymentMethodsResponse: {
                     paymentMethods
@@ -143,6 +159,37 @@ describe('Dropin', () => {
 
             expect(dropin.props.paymentMethods).toStrictEqual(paymentMethods);
             expect(dropin.props.instantPaymentMethods).toHaveLength(0);
+        });
+    });
+
+    describe('Payment status', () => {
+        let dropin: DropinElement;
+
+        beforeEach(async () => {
+            const paymentMethods = [{ name: 'AliPay', type: 'alipay' }];
+            const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false },
+                paymentMethodsResponse: {
+                    paymentMethods
+                }
+            });
+            dropin = checkout.create('dropin');
+        });
+
+        test('should show success status', async () => {
+            render(dropin.render());
+            expect(await screen.findByRole('radio')).toBeTruthy();
+            dropin.setStatus('success');
+            expect(await screen.findByText(/Payment Successful/i)).toBeTruthy();
+        });
+
+        test('should show Error status', async () => {
+            render(dropin.render());
+            expect(await screen.findByRole('radio')).toBeTruthy();
+            dropin.setStatus('error');
+            expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
         });
     });
 });

@@ -44,6 +44,7 @@
     "continue": "Doorgaan",
     "continueTo": "Doorgaan naar",
     "wechatpay.timetopay": "U heeft %@ om te betalen",
+    "sr.wechatpay.timetopay": "U hebt %#minuten%# %#seconden%# om te betalen",
     "wechatpay.scanqrcode": "QR-code scannen",
     "personalDetails": "Persoonlijke gegevens",
     "companyDetails": "Bedrijfsgegevens",
@@ -80,6 +81,9 @@
     "provinceOrTerritory": "Provincie of territorium",
     "cityTown": "Stad",
     "address": "Adres",
+    "address.placeholder": "Zoek uw adres",
+    "address.errors.incomplete": "Voer een adres in om verder te gaan",
+    "address.enterManually": "Voer het adres handmatig in",
     "state": "Staat",
     "field.title.optional": "(optioneel)",
     "creditCard.cvcField.title.optional": "Beveiligingscode (optioneel)",
@@ -284,5 +288,9 @@
     "paymentMethodsList.aria.label": "Kies een betaalmethode",
     "companyDetails.name.invalid": "Voer de bedrijfsnaam in",
     "companyDetails.registrationNumber.invalid": "Voer het registratienummer in",
-    "consent.checkbox.invalid": "Je moet akkoord gaan met de algemene voorwaarden"
+    "consent.checkbox.invalid": "Je moet akkoord gaan met de algemene voorwaarden",
+    "form.instruction": "Alle velden zijn verplicht, tenzij anders aangegeven.",
+    "trustly.descriptor": "Directe bankbetaling",
+    "trustly.description1": "Betaal direct vanaf uw voorkeursbankrekening, ondersteund door beveiliging op het niveau van de bank ",
+    "trustly.description2": "Geen kaarten, geen app-download, geen registratie"
 }

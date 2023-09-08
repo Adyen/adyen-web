@@ -196,7 +196,7 @@ const threeDS2 = (result, component) => {
 };
 
 function handleOnChange(state) {
-    if (!state.data || !state.data.paymentMethod) return;
+    // if (!state.data || !state.data.paymentMethod) return;
     //    const type = state.data.type || state.data.paymentMethod.type;
     //    console.log(`${type} Component handleOnChange isValid:${state.isValid} state=`, state);
 }

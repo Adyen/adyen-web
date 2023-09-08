@@ -5,9 +5,9 @@ import CtPResendOtpLink from './CtPResendOtpLink';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../utils/useForm';
-import renderFormField from '../../../../FormFields';
 import Field from '../../../../FormFields/Field';
 import './CtPOneTimePasswordInput.scss';
+import InputText from '../../../../FormFields/InputText';
 
 type OnChangeProps = { data: CtPOneTimePasswordInputDataState; valid; errors; isValid: boolean };
 
@@ -116,18 +116,18 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
             errorMessage={isOtpFielDirty ? resendOtpError || props.errorMessage || !!errors.otp : null}
             classNameModifiers={['otp']}
         >
-            {renderFormField('text', {
-                name: 'otp',
-                autocorrect: 'off',
-                spellcheck: false,
-                value: data.otp,
-                disabled: props.disabled,
-                onInput: handleChangeFor('otp', 'input'),
-                onBlur: handleChangeFor('otp', 'blur'),
-                onKeyUp: handleOnKeyUp,
-                onKeyPress: handleOnKeyPress,
-                onCreateRef: setInputRef
-            })}
+            <InputText
+                name={'otp'}
+                autocorrect={'off'}
+                spellcheck={false}
+                value={data.otp}
+                disabled={props.disabled}
+                onInput={handleChangeFor('otp', 'input')}
+                onBlur={handleChangeFor('otp', 'blur')}
+                onKeyUp={handleOnKeyUp}
+                onKeyPress={handleOnKeyPress}
+                onCreateRef={setInputRef}
+            />
         </Field>
     );
 };

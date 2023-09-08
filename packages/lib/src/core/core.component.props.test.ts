@@ -73,8 +73,8 @@ const checkoutConfig = {
         value: 19000
     },
     shopperLocale: 'en-US',
-    clientKey: 'test_F7_FEKJHF',
     environment: 'test',
+    clientKey: 'test_F7_FEKJHF',
     paymentMethodsResponse,
     paymentMethodsConfiguration: paymentMethodsConfiguration as PaymentMethodsConfiguration
 };
@@ -420,7 +420,7 @@ describe('Trying to add a "scheme" property to the paymentMethodsConfiguration t
     };
 
     test('Trying to create a card component with a paymentMethodsConfiguration with a "scheme" property shows a warning in the console ', () => {
-        new AdyenCheckout({ paymentMethodsConfiguration });
+        new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', paymentMethodsConfiguration });
         // expect warning in console
         expect(console.warn).toHaveBeenCalled();
     });

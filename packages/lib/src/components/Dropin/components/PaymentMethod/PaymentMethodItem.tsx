@@ -153,7 +153,6 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}
                     id={containerId}
                     role="region"
-                    aria-labelledby={buttonId}
                 >
                     {showRemovePaymentMethodButton && (
                         <DisableOneClickConfirmation

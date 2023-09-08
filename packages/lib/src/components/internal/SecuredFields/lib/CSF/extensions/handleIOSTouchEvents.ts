@@ -93,9 +93,10 @@ function touchendListener(e: Event): void {
 /**
  * re. Disabling arrow keys in iOS - need to enable all fields in the form and tell SFs to disable
  *
- * NOTE: Only called when iOS detected & this.config.disableIOSArrowKeys = true
+ * NOTE: Only called when iOS detected & this.config.shouldDisableIOSArrowKeys = true
  */
 function touchstartListener(e: Event): void {
+    this.hasGenuineTouchEvents = true;
     const targetEl: EventTarget = e.target;
     // If other element is Input or Span (i.e. label text) TODO apply to other types of el?
     if (targetEl instanceof HTMLInputElement || targetEl instanceof HTMLSpanElement) {

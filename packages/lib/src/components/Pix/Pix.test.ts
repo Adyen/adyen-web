@@ -4,12 +4,12 @@ import userEvent from '@testing-library/user-event';
 
 test('should return only payment type if personalDetails is not required', async () => {
     const pixElement = new Pix({});
-    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix' } });
+    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: 'do-not-track' } });
 });
 
 test('should show personal details form if enabled', async () => {
     const i18n = global.i18n;
-    const pixElement = new Pix({ personalDetailsRequired: true, i18n });
+    const pixElement = new Pix({ personalDetailsRequired: true, i18n, loadingContext: 'ggg', modules: { resources } });
     render(pixElement.render());
 
     expect(await screen.findByLabelText('First name')).toBeTruthy();
@@ -19,7 +19,7 @@ test('should show personal details form if enabled', async () => {
 
 test('should show pay button if property is set to true', async () => {
     const i18n = global.i18n;
-    const pixElement = new Pix({ showPayButton: true, i18n });
+    const pixElement = new Pix({ showPayButton: true, i18n, loadingContext: 'ggg', modules: { resources } });
     render(pixElement.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
@@ -29,7 +29,7 @@ test('should validate Brazil SSN', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
     const resources = global.resources;
-    const pixElement = new Pix({ personalDetailsRequired: true, i18n, modules: { resources } });
+    const pixElement = new Pix({ personalDetailsRequired: true, i18n, loadingContext: 'ggg', modules: { resources } });
     render(pixElement.render());
 
     const firstNameInput = await screen.findByLabelText('First name');
@@ -53,7 +53,7 @@ test('should validate Brazil SSN', async () => {
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix({ showPayButton: true, i18n });
+    const pixElement = new Pix({ showPayButton: true, i18n, loadingContext: 'ggg', modules: { resources } });
     pixElement.submit = jest.fn();
     render(pixElement.render());
 

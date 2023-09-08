@@ -21,6 +21,16 @@ export interface CoreOptions {
     environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
 
     /**
+     * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
+     *
+     * @internal
+     */
+    environmentUrls?: {
+        api?: string;
+        analytics?: string;
+    };
+
+    /**
      * Show or hides a Pay Button for each payment method
      */
     showPayButton?: boolean;

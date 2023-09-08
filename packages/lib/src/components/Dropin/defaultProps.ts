@@ -15,6 +15,5 @@ export default {
     openFirstStoredPaymentMethod: true, // focus the first one click payment method automatically on load
     showStoredPaymentMethods: true, // shows/hides oneclick paymentMethods
     showPaymentMethods: true, // shows/hides regular paymentMethods
-    showRemoveStoredPaymentMethodButton: false,
-    showPayButton: true // show the default pay button
+    showRemoveStoredPaymentMethodButton: false
 };

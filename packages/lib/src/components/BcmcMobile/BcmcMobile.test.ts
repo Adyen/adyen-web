@@ -18,9 +18,9 @@ describe('BcmcMobile', () => {
     });
 
     describe('render', () => {
-        test('does not render anything by default', () => {
+        test('does render something by default', () => {
             const bcmcMobile = new BcmcMobile({});
-            expect(bcmcMobile.render()).toBe(null);
+            expect(bcmcMobile.render()).not.toBe(null);
         });
     });
 });
