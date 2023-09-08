@@ -26,8 +26,6 @@ export async function initManual() {
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 
-            const { paymentMethodFormat, adyenFormat } = component.getShopperData();
-
             // handle actions
             if (result.action) {
                 // demo only - store paymentData & order
@@ -137,6 +135,7 @@ export async function initManual() {
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {
+                challengeWindowSize: '03',
                 enableStoreDetails: true,
                 hasHolderName: true,
                 holderNameRequired: true
@@ -144,9 +143,6 @@ export async function initManual() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
-            // storedCard: {
-            //     hideCVC: true
-            // }
             klarna: {
                 useKlarnaWidget: true
             }

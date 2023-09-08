@@ -9,7 +9,8 @@ import { PaymentMethodsResponse } from './types';
 
 const processStoredPaymentMethod = (pm): StoredPaymentMethod => ({
     ...pm,
-    storedPaymentMethodId: pm.id
+    storedPaymentMethodId: pm.id,
+    isStoredPaymentMethod: true
 });
 
 export const processPaymentMethods = (paymentMethods: PaymentMethod[], { allowPaymentMethods = [], removePaymentMethods = [] }): PaymentMethod[] => {

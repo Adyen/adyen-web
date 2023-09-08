@@ -100,6 +100,7 @@ const initCheckout = async () => {
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
         styles,
         minimumExpiryDate: '09/21',
+        challengeWindowSize: '05',
         onConfigSuccess,
         onBrand,
         onBinValue: cbObj => {

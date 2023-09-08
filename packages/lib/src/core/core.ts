@@ -7,13 +7,12 @@ import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { Order, PaymentAction } from '../types';
 import { CoreOptions } from './types';
-import { getComponentConfiguration, processGlobalOptions } from './utils';
+import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
-import { PaymentMethodsConfiguration } from '../components/types';
 import { DEFAULT_LOCALE } from '../language/config';
 
 console.log(registry);
@@ -26,7 +25,6 @@ export interface ICore {
     getCorePropsForComponent(): any;
     getComponent(txVariant: string): NewableComponent | undefined;
     createFromAction(action: PaymentAction, options: any): any;
-    updatePaymentMethodsConfiguration(paymentMethodConfiguration: PaymentMethodsConfiguration): void;
     storeElementReference(element: UIElement): void;
     options: CoreOptions;
     paymentMethodsResponse: PaymentMethodsResponse;
@@ -42,7 +40,6 @@ class Core implements ICore {
     public cdnContext?: string;
 
     private components: UIElement[] = [];
-    private paymentMethodsConfiguration: PaymentMethodsConfiguration = {};
 
     public static readonly version = {
         version: process.env.VERSION,
@@ -148,12 +145,8 @@ class Core implements ICore {
         }
 
         if (action.type) {
-            // If it is threeDS, then it would need to fetch from Card
-            const actionTypeConfiguration = getComponentConfiguration(action.type, this.paymentMethodsConfiguration);
-
             const props = {
                 ...this.getCorePropsForComponent(),
-                ...actionTypeConfiguration,
                 ...options
             };
 
@@ -212,24 +205,18 @@ class Core implements ICore {
      * @internal
      * @returns props for a new UIElement
      */
-    public getCorePropsForComponent() {
+    public getCorePropsForComponent(): any {
         const globalOptions = processGlobalOptions(this.options);
 
         return {
             ...globalOptions,
+            core: this,
             i18n: this.modules.i18n,
             modules: this.modules,
             session: this.session,
             loadingContext: this.loadingContext,
             cdnContext: this.cdnContext,
             createFromAction: this.createFromAction
-        };
-    }
-
-    public updatePaymentMethodsConfiguration(paymentMethodConfiguration: PaymentMethodsConfiguration = {}) {
-        this.paymentMethodsConfiguration = {
-            ...this.paymentMethodsConfiguration,
-            ...paymentMethodConfiguration
         };
     }
 

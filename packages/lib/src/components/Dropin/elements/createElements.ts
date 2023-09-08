@@ -1,7 +1,7 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
 import { PaymentMethod, StoredPaymentMethod } from '../../../types';
 import { ICore } from '../../../core/core';
-import { getComponentConfiguration } from '../../../core/utils';
+import { getComponentConfiguration } from './getComponentConfiguration';
 import { PaymentMethodsConfiguration } from '../../types';
 //
 // /**
@@ -21,7 +21,7 @@ const createElements = (
             const paymentMethodConfigurationProps = getComponentConfiguration(
                 paymentMethod.type,
                 paymentMethodsConfiguration,
-                paymentMethod.storedPaymentMethodId
+                paymentMethod.isStoredPaymentMethod
             );
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 

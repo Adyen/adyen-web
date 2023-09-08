@@ -14,7 +14,7 @@ import { UIElementProps } from '../types';
 interface SecuredFieldProps extends UIElementProps {
     styles: any;
     brand: string[];
-    // TODO..
+    // TODO: should it extend card?
     [key: string]: any;
 }
 

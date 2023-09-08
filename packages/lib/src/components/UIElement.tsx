@@ -57,27 +57,12 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
         this.storeElementRefOnCore(props);
-        this.updatePaymentMethodsConfiguration(props);
-    }
-
-    protected storeElementRefOnCore(props?: P) {
-        if (!props?.isDropin) {
-            this.core.storeElementReference(this);
-        }
-    }
-
-    protected updatePaymentMethodsConfiguration(props?): void {
-        const { core, ...componentProps } = props;
-        const hasConfiguration = Object.keys(componentProps).length !== 0;
-
-        if (!props.isDropin && hasConfiguration) {
-            this.core.updatePaymentMethodsConfiguration({ [this.type]: componentProps });
-        }
     }
 
     protected override buildElementProps(componentProps: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
-        const paymentMethodsResponseProps = this.core.paymentMethodsResponse.find(this.constructor['type']);
+        const isStoredPaymentMethod = !!componentProps.isStoredPaymentMethod;
+        const paymentMethodsResponseProps = isStoredPaymentMethod ? {} : this.core.paymentMethodsResponse.find(this.constructor['type']);
 
         const finalProps = {
             showPayButton: true,
@@ -88,6 +73,12 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         };
 
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
+    }
+
+    protected storeElementRefOnCore(props?: P) {
+        if (!props?.isDropin) {
+            this.core.storeElementReference(this);
+        }
     }
 
     public setState(newState: object): void {

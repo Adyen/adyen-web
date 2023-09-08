@@ -9,7 +9,7 @@ import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import { PaymentResponse } from '../types';
+import { PaymentMethodsConfiguration, PaymentResponse } from '../types';
 import PaymentMethodsResponse from '../../core/ProcessResponse/PaymentMethodsResponse';
 import { TxVariants } from '../tx-variants';
 
@@ -32,6 +32,7 @@ class DropinElement extends UIElement<DropinElementProps> {
 
     public dropinRef = null;
 
+    private paymentMethodsConfiguration: PaymentMethodsConfiguration = {};
     /**
      * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
      */
@@ -41,14 +42,12 @@ class DropinElement extends UIElement<DropinElementProps> {
         super(props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
+
+        this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
     }
 
     protected override storeElementRefOnCore() {
         this.core.storeElementReference(this);
-    }
-
-    protected override updatePaymentMethodsConfiguration(props) {
-        this.core.updatePaymentMethodsConfiguration(props.paymentMethodsConfiguration);
     }
 
     formatProps(props) {

@@ -47,10 +47,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     const card = new Card({
         core: checkout,
+        challengeWindowSize: '05',
         _disableClickToPay: true
     }).mount('.card-field');
 
-    // // Stored Card
+    // Stored Card
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];

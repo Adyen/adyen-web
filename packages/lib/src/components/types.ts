@@ -361,6 +361,7 @@ export interface UIElementProps extends BaseElementProps {
     beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
     isInstantPayment?: boolean;
+    isStoredPaymentMethod?: boolean;
 
     type?: string;
     name?: string;

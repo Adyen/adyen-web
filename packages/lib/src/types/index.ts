@@ -151,6 +151,8 @@ export interface StoredPaymentMethod extends PaymentMethod {
      * Mapped from 'storedPaymentMethod.id'
      */
     storedPaymentMethodId?: string;
+
+    isStoredPaymentMethod: boolean;
 }
 
 /**

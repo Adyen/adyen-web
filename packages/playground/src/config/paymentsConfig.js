@@ -32,6 +32,7 @@ const paymentsConfig = {
     //     authenticationOnly: false
     // },
     channel: 'Web',
+    recurringProcessingModel: 'CardOnFile',
     browserInfo: {
         acceptHeader: 'http'
     },

@@ -86,6 +86,8 @@ export interface CardElementProps extends UIElementProps {
     /** An object sent in the /paymentMethods response */
     configuration?: CardConfiguration;
 
+    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+
     /**
      * Called once all the card input fields have been created but are not yet ready to use.
      */
