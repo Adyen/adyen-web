@@ -77,7 +77,7 @@
 
 .adyen-checkout__label__text,
 .adyen-checkout__helper-text {
-    color: var(--b-color-black);
+    color: var(--b-color-label-primary);
     display: block;
     font-size: index.$font-size-small;
     font-weight: normal;
@@ -108,7 +108,7 @@
 }
 
 .adyen-checkout__label--focused .adyen-checkout__label__text {
-    color: var(--b-color-black);
+    color: var(--b-color-label-primary);
 }
 
 %contextual-text {

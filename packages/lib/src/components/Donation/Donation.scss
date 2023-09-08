@@ -7,7 +7,7 @@
     }
 
     .adyen-checkout__status__text {
-        color: var(--b-color-black);
+        color: var(--b-color-label-primary);
         margin-bottom: var(--b-spacer-130);
         text-align: center;
     }
@@ -15,7 +15,7 @@
 
 .adyen-checkout__campaign {
     border-radius: var(--b-border-radius-m);
-    background: var(--b-color-black);
+    background: var(--b-color-label-primary);
     height: 227px;
     overflow: hidden;
     position: relative;
@@ -40,7 +40,7 @@
 }
 
 .adyen-checkout__campaign-background-image {
-    background-color: var(--b-color-black);
+    background-color: var(--b-color-label-primary);
     background-position: center;
     background-size: cover;
     height: 100%;
