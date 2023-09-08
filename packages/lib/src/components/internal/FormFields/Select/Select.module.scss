@@ -34,7 +34,7 @@
 .adyen-checkout__filter-input {
     background: inherit;
     border: 0;
-    color: var(--b-color-black);
+    color: var(--b-color-label-primary);
     font-family: inherit;
     font-size: index.$font-size-medium;
     height: 100%;
@@ -52,9 +52,9 @@
     }
 
     &[readonly] {
-        background: var(--b-color-surface-tertiary);
+        background: var(--b-input-field-input-disabled-background-color);
         border-color: transparent;
-        color: var(--b-color-black);
+        color: var(--b-color-label-primary);
         cursor: not-allowed;
     }
 }

@@ -38,7 +38,7 @@
     &--selected {
         background: var(--b-color-white);
         box-shadow: inset 0 0 0 1px var(--b-color-outline-active);
-        color: var(--b-color-black);
+        color: var(--b-color-label-primary);
         font-weight: var(--b-text-body-stronger-font-weight);
         height: var(--b-spacer-110);
         transition: none;

@@ -1,7 +1,7 @@
 @use '../../../style/index';
 
 .adyen-checkout__button {
-    background: var(--b-color-black);
+    background: var(--b-color-label-primary);
     border: 0;
     border-radius: var(--b-border-radius-m);
     color: var(--b-color-white);
@@ -76,7 +76,7 @@
     &.adyen-checkout__button--ghost {
         background: none;
         border: 0;
-        color: var(--b-color-black);
+        color: var(--b-color-label-primary);
 
         &:hover {
             background: var(--b-color-grey-100);
@@ -92,8 +92,8 @@
     &.adyen-checkout__button--secondary {
         padding: var(--b-spacer-050) var(--b-spacer-060);
         background: var(--b-color-white);
-        border: var(--b-border-width-s) solid var(--b-color-black);
-        color: var(--b-color-black);
+        border: var(--b-border-width-s) solid var(--b-color-label-primary);
+        color: var(--b-color-label-primary);
 
         &:hover {
             background: var(--b-color-grey-100);
@@ -119,7 +119,7 @@
         }
 
         .adyen-checkout__spinner {
-            border-color: var(--b-color-black);
+            border-color: var(--b-color-label-primary);
             border-top-color: transparent;
         }
     }

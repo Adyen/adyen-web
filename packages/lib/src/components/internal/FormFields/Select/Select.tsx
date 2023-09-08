@@ -47,6 +47,9 @@ function Select({
 
     const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
 
+    const suffix = isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX;
+    const ariaDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
+
     const setNextActive = () => {
         if (!filteredItems || filteredItems.length < 1) return;
         const possibleNextIndex = filteredItems.findIndex(listItem => listItem === activeOption) + 1;
@@ -283,7 +286,7 @@ function Select({
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
                 disabled={disabled}
-                ariaDescribedBy={uniqueId ? `${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}` : null}
+                ariaDescribedBy={ariaDescribedBy}
             />
             <SelectList
                 active={activeOption}

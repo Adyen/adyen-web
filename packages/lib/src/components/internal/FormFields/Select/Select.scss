@@ -17,7 +17,7 @@
 }
 
 .adyen-checkout__dropdown__button {
-    color: var(--b-color-black);
+    color: var(--b-color-label-primary);
     background: inherit;
     text-decoration: none;
     outline: 0;
@@ -56,7 +56,7 @@
     &:focus {
         background: var(--b-color-surface-tertiary);
         border-color: transparent;
-        color: var(--b-color-black);
+        color: var(--b-color-label-primary);
         cursor: not-allowed;
     }
 }

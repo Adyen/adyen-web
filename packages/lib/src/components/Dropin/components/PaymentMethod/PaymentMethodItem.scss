@@ -49,7 +49,7 @@
 
 .adyen-checkout__payment-method__header {
     align-items: center;
-    color: var(--b-color-black);
+    color: var(--b-color-label-primary);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -84,7 +84,7 @@
     background: none;
     cursor: pointer;
     padding: var(--b-spacer-020);
-    color: var(--b-color-black);
+    color: var(--b-color-label-primary);
     font-size: 1em;
     font-weight:  var(--b-text-body-font-weight);
 
@@ -237,7 +237,7 @@
 }
 
 .adyen-checkout__payment-method__radio--selected {
-    background-color: var(--b-color-black);
+    background-color: var(--b-color-label-primary);
     border: 0;
     transition: all 0.3s ease-out;
 }

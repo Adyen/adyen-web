@@ -61,13 +61,13 @@
 }
 
 .adyen-checkout__radio_group__label:hover {
-    border-color: var(--b-color-black);
+    border-color: var(--b-color-label-primary);
     cursor: pointer;
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__label--selected {
-    background-color: var(--b-color-black);
+    background-color: var(--b-color-label-primary);
     border: 0;
     transition: all 0.2s ease-out;
 }
@@ -77,7 +77,7 @@
 }
 
 .adyen-checkout__radio_group__input:focus + .adyen-checkout__radio_group__label::before {
-    border-color: var(--b-color-black);
+    border-color: var(--b-color-label-primary);
     box-shadow: 0 0 0 var(--b-spacer-010) var(--b-color-outline-tertiary);
 }
 
