@@ -17,6 +17,8 @@ import { Placeholders as CardPlaceholders } from '../../../../../Card/components
 
 /**
  * Create placeholders with a value from merchant's configuration
+ *
+ * Based on txVariant & fieldType, maps the entries in the passed placeholders object to create a field specific placeholder object
  */
 export function processPlaceholders(txVariant: string, fieldType: string, placeholders: Placeholders): SFPlaceholdersObject {
     switch (txVariant) {

@@ -6,6 +6,9 @@ import {
     GIFT_CARD
 } from '../configuration/constants';
 
+/**
+ * Based on txVariant & fieldType, add a field specific contextualTexts object to the passed object
+ */
 export default (originalObj, i18n, txVariant, fieldType) => {
     const nuObj = { ...originalObj };
 
