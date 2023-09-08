@@ -28,7 +28,7 @@ interface CSFCommonProps {
     allowedDOMAccess?: boolean | string; // accept boolean or string representation of a boolean i.e. "false"
     autoFocus?: boolean | string;
     keypadFix?: boolean | string;
-    // Below are config props that also end up set on createSecuredFields->SecuredFieldInitObj
+    // Below are config props that also end up set on createSecuredFields->SecuredFieldSetupObject
     loadingContext: string;
     cardGroupTypes?: string[];
     trimTrailingSeparator?: boolean | string;
@@ -41,14 +41,14 @@ interface CSFCommonProps {
 /**
  * The type for the this.config object created by CSF - properties that just need to be calculated & set once, at startup, and then don't change.
  *
- * (CSF) this.config provides the source for many of the properties that are written into the SecuredFieldInitObj,
+ * (CSF) this.config provides the source for many of the properties that are written into the SecuredFieldSetupObject,
  * used by createSecuredFields.ts to initialise a new SecuredField.ts
  *
  * Properties defined directly in *this* interface c.f. CSFCommonProps are ones that are not part of the CSFSetupObject (sent by SecuredFieldProvider)
  * and which are generated/calculated in handleConfig.ts
  */
 export interface CSFConfigObject extends CSFCommonProps {
-    // These config props also end up set on createSecuredFields->SecuredFieldInitObj
+    // These config props also end up set on createSecuredFields->SecuredFieldSetupObject
     iframeSrc: string;
     isCreditCardType: boolean;
     sfLogAtStart: boolean;

@@ -9,7 +9,7 @@ import {
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
-import { SecuredFieldInitObj } from '../../securedField/AbstractSecuredField';
+import { SecuredFieldSetupObject } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
@@ -176,7 +176,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
         const uid = getAttribute(pItem, DATA_UID);
 
         // CREATE SecuredField passing config object
-        const sfInitObj: SecuredFieldInitObj = {
+        const sfInitObj: SecuredFieldSetupObject = {
             fieldType,
             extraFieldData,
             uid,
@@ -223,7 +223,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
                 /** Create timeout within which time we expect the securedField to configure */
                 // @ts-ignore - timeout 'type' *is* a number
                 sf.loadToConfigTimeout = setTimeout(() => {
-                    reject({ type: sf.fieldType, failReason: 'sf took too long to config' });
+                    reject({ type: sfInitObj.fieldType, failReason: 'sf took too long to config' });
                 }, 6000);
 
                 // If all iframes are loaded - call onLoad callback

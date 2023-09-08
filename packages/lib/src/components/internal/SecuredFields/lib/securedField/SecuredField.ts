@@ -15,7 +15,7 @@ import {
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
 import { CVCPolicyType, DatePolicyType, RtnType_callbackFn, RtnType_noParamVoidFn, RtnType_postMessageListener, SFFeedbackObj } from '../types';
-import AbstractSecuredField, { AriaConfig, IframeConfigObject, SecuredFieldInitObj, SFInternalConfig } from './AbstractSecuredField';
+import AbstractSecuredField, { AriaConfig, IframeConfigObject, SecuredFieldSetupObject, SecuredFieldCommonProps } from './AbstractSecuredField';
 import { reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
@@ -27,7 +27,7 @@ const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
-    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language) {
+    constructor(pSetupObj: SecuredFieldSetupObject, i18n: Language) {
         super();
 
         /**
@@ -48,7 +48,7 @@ class SecuredField extends AbstractSecuredField {
             ...configVarsFromSetUpObj,
             // Break references on iframeUIConfig object so we can overwrite its properties in each securedField instance
             iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig }
-        } as SFInternalConfig;
+        } as SecuredFieldCommonProps;
 
         /**
          * Extract values only needed for init
@@ -70,6 +70,8 @@ class SecuredField extends AbstractSecuredField {
         this.isEncrypted = false;
         this.hasError = false;
         this.errorType = '';
+        this.cvcPolicy = pSetupObj.cvcPolicy;
+        this.expiryDatePolicy = pSetupObj.expiryDatePolicy;
 
         if (process.env.NODE_ENV === 'development' && doLog) {
             logger.log(
@@ -302,7 +304,7 @@ class SecuredField extends AbstractSecuredField {
             this.sfConfig.fieldType === ENCRYPTED_EXPIRY_MONTH ||
             this.sfConfig.fieldType === ENCRYPTED_EXPIRY_YEAR
         ) {
-            switch (this.sfConfig.expiryDatePolicy) {
+            switch (this.expiryDatePolicy) {
                 case DATE_POLICY_HIDDEN:
                     return true;
                 case DATE_POLICY_OPTIONAL:
@@ -313,7 +315,7 @@ class SecuredField extends AbstractSecuredField {
         }
 
         if (this.sfConfig.fieldType === ENCRYPTED_SECURITY_CODE) {
-            switch (this.sfConfig.cvcPolicy) {
+            switch (this.cvcPolicy) {
                 case CVC_POLICY_HIDDEN:
                     return true;
                 case CVC_POLICY_OPTIONAL:
@@ -392,7 +394,7 @@ class SecuredField extends AbstractSecuredField {
 
     get isValid(): boolean {
         if (this.sfConfig.fieldType === ENCRYPTED_SECURITY_CODE) {
-            switch (this.sfConfig.cvcPolicy) {
+            switch (this.cvcPolicy) {
                 case CVC_POLICY_HIDDEN:
                     // If cvc is hidden then the field is always valid
                     return true;
@@ -409,7 +411,7 @@ class SecuredField extends AbstractSecuredField {
             this.sfConfig.fieldType === ENCRYPTED_EXPIRY_MONTH ||
             this.sfConfig.fieldType === ENCRYPTED_EXPIRY_YEAR
         ) {
-            switch (this.sfConfig.expiryDatePolicy) {
+            switch (this.expiryDatePolicy) {
                 case DATE_POLICY_HIDDEN:
                     // If date is hidden then the field is always valid
                     return true;
@@ -436,7 +438,7 @@ class SecuredField extends AbstractSecuredField {
         if (this.sfConfig.fieldType !== ENCRYPTED_SECURITY_CODE) return;
 
         // Only set if value has changed
-        if (value === this.sfConfig.cvcPolicy) return;
+        if (value === this.cvcPolicy) return;
 
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.sfConfig.fieldType, '### SecuredField::cvcPolicy:: value=', value);
 
@@ -464,7 +466,7 @@ class SecuredField extends AbstractSecuredField {
             return;
 
         // Only set if value has changed
-        if (value === this.sfConfig.expiryDatePolicy) return;
+        if (value === this.expiryDatePolicy) return;
 
         if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.sfConfig.fieldType, '### SecuredField:expiryDatePolicy:: value=', value);
 
