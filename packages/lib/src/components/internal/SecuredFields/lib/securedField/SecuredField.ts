@@ -35,7 +35,14 @@ class SecuredField extends AbstractSecuredField {
          * List of props from setup object that will be set on 'this'.
          * These props are all required for internal purposes. They may, or may not, also end up being sent to the iframe
          */
-        const deltaPropsArr: string[] = ['fieldType', 'cvcPolicy', 'expiryDatePolicy', 'loadingContext', 'holderEl'];
+        const deltaPropsArr: string[] = [
+            'fieldType',
+            'cvcPolicy',
+            'expiryDatePolicy',
+            // Not sent to iframe
+            'loadingContext',
+            'holderEl'
+        ];
 
         // Copy passed setup object values to this
         const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
@@ -54,10 +61,11 @@ class SecuredField extends AbstractSecuredField {
 
         console.log('### SecuredField::constructor:: this.sfConfig', { ...this.sfConfig });
 
-        // Copy passed setup object values to this.sfConfig... breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
+        // Copy passed setup object values to this.sfConfig
         this.sfConfig = {
             ...this.sfConfig, // Do we need to do this?
             ...configVarsFromSetUpObj,
+            // Break references on iframeUIConfig object so we can overwrite its properties in each securedField instance
             iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig }
         } as SFInternalConfig;
 
@@ -138,7 +146,6 @@ class SecuredField extends AbstractSecuredField {
             uid: this.sfConfig.uid,
             cvcPolicy: this.cvcPolicy,
             expiryDatePolicy: this.expiryDatePolicy,
-            numKey: this.numKey,
             txVariant: this.sfConfig.txVariant,
             cardGroupTypes: this.sfConfig.cardGroupTypes,
             iframeUIConfig: this.sfConfig.iframeUIConfig,
@@ -150,7 +157,9 @@ class SecuredField extends AbstractSecuredField {
             minimumExpiryDate: this.sfConfig.minimumExpiryDate,
             implementationType: this.sfConfig.implementationType,
             maskSecurityCode: this.sfConfig.maskSecurityCode,
-            disableIOSArrowKeys: this.sfConfig.disableIOSArrowKeys
+            disableIOSArrowKeys: this.sfConfig.disableIOSArrowKeys,
+            //
+            numKey: this.numKey
         };
 
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);

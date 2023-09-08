@@ -14,7 +14,7 @@ import {
 import { Placeholders } from '../../SFP/types';
 
 /**
- * Base interface, props common to both SecuredFieldInitObj & IframeConfigObject
+ * Base interface for SecuredFieldInitObj & IframeConfigObject
  *
  * These are the props that are passed from CSF.createSecuredFields when SecuredField.ts is initialised
  * but which also end up as props in the IframeConfigObject
@@ -39,6 +39,7 @@ export interface SFInternalConfig {
     showWarnings: boolean;
     legacyInputMode: boolean;
     minimumExpiryDate: string;
+    // originally from CSF->this.props
     implementationType: string;
     maskSecurityCode: boolean;
     disableIOSArrowKeys: boolean;
