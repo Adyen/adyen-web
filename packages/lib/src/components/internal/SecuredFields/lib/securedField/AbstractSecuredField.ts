@@ -52,9 +52,9 @@ export interface SFInternalConfig {
  * that are needed by SecuredField.ts but are *not* required in the IframeConfigObject
  */
 export interface SecuredFieldInitObj extends SFInternalConfig {
-    iframeSrc: string;
     loadingContext: string;
     holderEl: HTMLElement;
+    iframeSrc: string;
     showContextualElement: boolean;
     placeholders: Placeholders;
 }
@@ -109,7 +109,6 @@ export interface AriaConfigObject {
 
 abstract class AbstractSecuredField {
     public sfConfig: SFInternalConfig; // could be protected but needs to be public for tests to run
-    public fieldType: string;
     protected loadingContext: string;
     protected holderEl: HTMLElement;
     protected iframeRef: HTMLElement;
