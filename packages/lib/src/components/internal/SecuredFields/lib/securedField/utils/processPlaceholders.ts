@@ -5,6 +5,8 @@ import {
     ENCRYPTED_BANK_LOCATION_FIELD,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
@@ -56,6 +58,12 @@ export function processPlaceholders(txVariant: string, fieldType: string, placeh
 
                 case ENCRYPTED_EXPIRY_DATE:
                     return { [ENCRYPTED_EXPIRY_DATE]: (placeholders as CardPlaceholders).expiryDate ?? '' };
+
+                case ENCRYPTED_EXPIRY_MONTH:
+                    return { [ENCRYPTED_EXPIRY_MONTH]: (placeholders as CardPlaceholders).expiryMonth ?? '' };
+
+                case ENCRYPTED_EXPIRY_YEAR:
+                    return { [ENCRYPTED_EXPIRY_YEAR]: (placeholders as CardPlaceholders).expiryYear ?? '' };
 
                 case ENCRYPTED_SECURITY_CODE:
                     return {

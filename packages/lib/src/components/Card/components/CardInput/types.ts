@@ -45,7 +45,15 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-type PlaceholderKeys = 'holderName' | 'cardNumber' | 'expiryDate' | 'securityCodeThreeDigits' | 'securityCodeFourDigits' | 'password';
+type PlaceholderKeys =
+    | 'holderName'
+    | 'cardNumber'
+    | 'expiryDate'
+    | 'expiryMonth'
+    | 'expiryYear'
+    | 'securityCodeThreeDigits'
+    | 'securityCodeFourDigits'
+    | 'password';
 export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 /**
