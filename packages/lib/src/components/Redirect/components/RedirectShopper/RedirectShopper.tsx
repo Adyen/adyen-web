@@ -6,7 +6,7 @@ interface RedirectShopperProps {
     url: string;
     method: 'GET' | 'POST';
     data?: any;
-    redirectFromTop?: boolean;
+    redirectFromTopWhenInIframe?: boolean;
 }
 
 class RedirectShopper extends Component<RedirectShopperProps> {
@@ -21,7 +21,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
             if (this.postForm) {
                 this.postForm.submit();
             } else {
-                if (this.props.redirectFromTop && detectInIframe()) {
+                if (this.props.redirectFromTopWhenInIframe && detectInIframe()) {
                     // if in an iframe and the config prop allows it - try to redirect from the top level window
                     window.top.location.assign?.(this.props.url);
                 } else {
@@ -51,7 +51,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
                     ref={ref => {
                         this.postForm = ref;
                     }}
-                    {...(this.props.redirectFromTop && detectInIframe() && { target: '_top' })}
+                    {...(this.props.redirectFromTopWhenInIframe && detectInIframe() && { target: '_top' })}
                 >
                     {Object.keys(data).map(key => (
                         <input type="hidden" name={key} key={key} value={data[key]} />
