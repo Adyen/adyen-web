@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { KCPProps } from './types';
-import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
 import InputTelephone from '../../../../internal/FormFields/InputTelephone';
 
@@ -30,7 +29,7 @@ export default function KCPAuthentication(props: KCPProps) {
             >
                 <InputTelephone
                     name={'kcpTaxNumberOrDOB'}
-                    className={`adyen-checkout__card__kcp-taxNumber__input ${styles['adyen-checkout__input']}`}
+                    className="adyen-checkout__card__kcp-taxNumber__input adyen-checkout__input"
                     maxLength={10}
                     minLength={6}
                     autoComplete={'false'}
@@ -59,7 +58,6 @@ export default function KCPAuthentication(props: KCPProps) {
                     className={classNames({
                         'adyen-checkout__input': true,
                         'adyen-checkout__input--large': true,
-                        [styles['adyen-checkout__input']]: true,
                         'adyen-checkout__input--error': props.encryptedPasswordState.errors,
                         'adyen-checkout__input--valid': props.encryptedPasswordState.valid,
                         'adyen-checkout__input--focus': props.focusedElement === 'encryptedPassword'

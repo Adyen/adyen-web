@@ -6,7 +6,6 @@ import SelectList from './components/SelectList';
 import uuid from '../../../../utils/uuid';
 import { keys } from './constants';
 import { SelectItem, SelectProps } from './types';
-import styles from './Select.module.scss';
 import './Select.scss';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
@@ -259,12 +258,7 @@ function Select({
 
     return (
         <div
-            className={cx([
-                'adyen-checkout__dropdown',
-                styles['adyen-checkout__dropdown'],
-                className,
-                ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)
-            ])}
+            className={cx(['adyen-checkout__dropdown', className, ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)])}
             ref={selectContainerRef}
         >
             <SelectButton

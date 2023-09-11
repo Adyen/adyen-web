@@ -18,7 +18,6 @@ import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
-import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstField } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
@@ -447,7 +446,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         ref={setRootNode}
                         className={classNames({
                             'adyen-checkout__card-input': true,
-                            [styles['card-input__wrapper']]: true,
+                            'card-input__wrapper': true,
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}
