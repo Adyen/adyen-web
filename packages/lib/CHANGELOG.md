@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.51.0
+
+### Minor Changes
+
+-   Add 'redirectFromTopWhenInIframe' config prop to allow top level redirect when Checkout loaded in an iframe ([#2325](https://github.com/Adyen/adyen-web/pull/2325))
+
 ## 5.50.1
 
 ### Patch Changes
