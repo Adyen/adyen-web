@@ -15,10 +15,9 @@ import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
 
-console.log(registry);
-
 export interface ICore {
     initialize(): Promise<ICore>;
+    register(...items: NewableComponent[]): void;
     update({ order }: { order?: Order }): Promise<ICore>;
     remove(component): ICore;
     submitDetails(details: any): void;
@@ -51,6 +50,14 @@ class Core implements ICore {
     public static registry = registry;
 
     public static register(...items: NewableComponent[]) {
+        registry.add(...items);
+    }
+
+    /**
+     * Used internally by the PaymentMethod components to auto-register themselves
+     * @internal
+     */
+    public register(...items: NewableComponent[]) {
         registry.add(...items);
     }
 

@@ -9,8 +9,6 @@ import '../../../config/polyfills';
 import '../../style.scss';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
-    AdyenCheckout.register(CashAppPay, ClickToPay, AmazonPay, PayPal, GooglePay, ApplePay);
-
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,

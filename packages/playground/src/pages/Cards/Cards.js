@@ -27,8 +27,6 @@ const disclaimerMessage = {
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
-    AdyenCheckout.register(Card, Bancontact);
-
     window.checkout = await AdyenCheckout({
         amount,
         resourceEnvironment: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
@@ -48,7 +46,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     const card = new Card({
         core: checkout,
-        challengeWindowSize: '05',
+        challengeWindowSize: '01',
         _disableClickToPay: true
     }).mount('.card-field');
 
@@ -69,11 +67,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // }).mount('.storedcard-field');
         }
     }
-
-    // Credit card with installments
+    //
+    // // Credit card with installments
     if (showComps.card) {
         window.card = new Card({
             core: checkout,
+            _disableClickToPay: true,
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             installmentOptions: {
                 mc: {
@@ -97,13 +96,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             },
             // billingAddressRequired: true,
             onAddressLookup: null //searchFunctionExample
-        }).mount('.card-field');
+        }).mount('.card-field-installments');
     }
     //
     // Card mounted in a React app
     if (showComps.cardInReact) {
         window.cardReact = new Card({ core: checkout });
-
         MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 

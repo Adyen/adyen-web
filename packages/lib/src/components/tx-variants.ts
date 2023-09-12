@@ -3,7 +3,6 @@ export enum TxVariants {
     address = 'address',
     bankTransfer_IBAN = 'bankTransfer_IBAN',
     donation = 'donation',
-    dropin = 'dropin',
     personal_details = 'personal_details',
     /** internal */
 
@@ -20,11 +19,14 @@ export enum TxVariants {
     scheme = 'scheme',
     storedCard = 'storedCard',
     securedfields = 'securedfields',
+    visa = 'visa',
+    /** Card */
+
+    /** ThreeDS */
     threeDS2Challenge = 'threeDS2Challenge',
     threeDS2Fingerprint = 'threeDS2Fingerprint',
     threeDS2DeviceFingerprint = 'threeDS2DeviceFingerprint',
-    visa = 'visa',
-    /** Card */
+    /** ThreeDS */
 
     /** Direct debit */
     ach = 'ach',

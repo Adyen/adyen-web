@@ -31,8 +31,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         amount // Optional. Used to display the amount in the Pay Button.
     });
 
-    AdyenCheckout.register(RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome);
-
     // RATEPAY
     if (showComps.ratepay) {
         window.ratepay = new RatePay({

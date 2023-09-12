@@ -24,8 +24,6 @@ const makeQRCodePayment = (state, component, countryCode) => {
 };
 
 (async () => {
-    AdyenCheckout.register(WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow);
-
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: en_US,
@@ -34,63 +32,47 @@ const makeQRCodePayment = (state, component, countryCode) => {
     });
 
     // WechatPay QR
-    makePayment({
-        paymentMethod: {
-            type: 'wechatpayQR'
-        },
-        countryCode: 'CN',
-        amount: {
-            currency: 'CNY',
-            value: 1000
+    new WeChat({
+        core: checkout,
+        type: 'wechatpayQR',
+        onSubmit: (state, component) => {
+            return makeQRCodePayment(state, component, 'CN');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.wechatpayqr = checkout.createFromAction(result.action).mount('#wechatpayqr-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#wechatpayqr-container');
 
     // BCMC Mobile
-    checkout
-        .create('bcmc_mobile_QR', {
-            onSubmit: (state, component) => {
-                return makeQRCodePayment(state, component, 'BE');
-            }
-        })
-        .mount('#bcmcqr-container');
+    new BcmcMobile({
+        core: checkout,
+        onSubmit: (state, component) => {
+            return makeQRCodePayment(state, component, 'BE');
+        }
+    }).mount('#bcmcqr-container');
 
-    checkout
-        .create('swish', {
-            onSubmit: (state, component) => {
-                return makeQRCodePayment(state, component, 'SE');
-            }
-        })
-        .mount('#swish-container');
+    new Swish({
+        core: checkout,
+        onSubmit: (state, component) => {
+            return makeQRCodePayment(state, component, 'SE');
+        }
+    }).mount('#swish-container');
 
-    checkout
-        .create('promptpay', {
-            onSubmit: (state, component) => {
-                return makeQRCodePayment(state, component, 'TH');
-            }
-        })
-        .mount('#promptpay-container');
+    new PromptPay({
+        core: checkout,
+        onSubmit: (state, component) => {
+            return makeQRCodePayment(state, component, 'TH');
+        }
+    }).mount('#promptpay-container');
 
-    checkout
-        .create('paynow', {
-            onSubmit: (state, component) => {
-                return makeQRCodePayment(state, component, 'SG');
-            }
-        })
-        .mount('#paynow-container');
+    new PayNow({
+        core: checkout,
+        onSubmit: (state, component) => {
+            return makeQRCodePayment(state, component, 'SG');
+        }
+    }).mount('#paynow-container');
 
-    checkout
-        .create('duitnow', {
-            onSubmit: (state, component) => {
-                return makeQRCodePayment(state, component, 'MY');
-            }
-        })
-        .mount('#duitnow-container');
+    new DuitNow({
+        core: checkout,
+        onSubmit: (state, component) => {
+            return makeQRCodePayment(state, component, 'MY');
+        }
+    }).mount('#duitnow-container');
 })();

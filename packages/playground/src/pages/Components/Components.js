@@ -25,8 +25,6 @@ import { handleSubmit, handleAdditionalDetails, handleChange } from '../../handl
 import { amount, shopperLocale } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
-    AdyenCheckout.register(BankTransfer, MBWay, Klarna, Ach, SepaDirectDebit, QiwiWallet, Vipps, Blik, Giropay, UPI, Pix, Oxxo);
-
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,

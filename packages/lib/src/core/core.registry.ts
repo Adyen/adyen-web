@@ -1,5 +1,5 @@
 import UIElement from '../components/UIElement';
-import Redirect from '../components/Redirect/Redirect';
+import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint, Redirect } from '../components';
 import { TxVariants } from '../components/tx-variants';
 
 function assertIsTypeofUIElement(item: any): item is typeof UIElement {
@@ -13,12 +13,22 @@ export interface IRegistry {
     getComponent(type: string): NewableComponent | undefined;
 }
 
+const defaultComponents = {
+    [TxVariants.redirect]: Redirect,
+    [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
+    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint
+};
+
 class Registry implements IRegistry {
-    public componentsMap: Record<string, NewableComponent> = {};
+    public componentsMap: Record<string, NewableComponent> = defaultComponents;
+
     public supportedTxVariants: Set<string> = new Set(Object.values(TxVariants));
 
     public add(...items: NewableComponent[]) {
-        this.componentsMap = this.createComponentsMap(items);
+        this.componentsMap = {
+            ...this.componentsMap,
+            ...this.createComponentsMap(items)
+        };
     }
 
     public getComponent(type: string): NewableComponent | undefined {
@@ -28,9 +38,7 @@ class Registry implements IRegistry {
         }
 
         if (this.supportedTxVariants.has(type)) {
-            console.warn(
-                `Core Registry: The component of '${type}' is unavailable. Make sure to register its Class before mounting the Payment method.`
-            );
+            console.warn(`CoreRegistry: The component of '${type}' is supported, but it is not registered internally.`);
             return;
         }
 
@@ -53,20 +61,10 @@ class Registry implements IRegistry {
                 };
             });
 
-            component.dependencies.forEach(dependency => {
-                memo = {
-                    ...memo,
-                    [dependency.type]: dependency
-                };
-            });
             return memo;
         }, {});
 
-        // TO CHECK: Should we add the threeDS ones here too as part of the includes ones? Doing so, we can get rid of the Element.dependencies = [] variable
-        return {
-            ...componentsMap,
-            redirect: Redirect
-        };
+        return componentsMap;
     }
 }
 

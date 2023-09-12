@@ -30,19 +30,6 @@ import '../../style.scss';
         countryCode
     });
 
-    AdyenCheckout.register(
-        Ideal,
-        BillDeskOnline,
-        BillDeskWallet,
-        PayuCashcard,
-        PayuNetBanking,
-        Dotpay,
-        OnlineBankingPL,
-        Entercash,
-        MolPayEBankingMY,
-        PayByBank
-    );
-
     window.core = await AdyenCheckout({
         session,
         clientKey: process.env.__CLIENT_KEY__,

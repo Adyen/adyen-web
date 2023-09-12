@@ -7,8 +7,6 @@ import { getSearchParameters } from '../../utils';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    AdyenCheckout.register(Dropin, Card);
-
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
@@ -132,6 +130,7 @@ export async function initManual() {
 
     const dropin = new Dropin({
         core: checkout,
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {

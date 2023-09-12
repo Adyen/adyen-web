@@ -12,6 +12,7 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import { Resources } from '../core/Context/Resources';
 import { ICore } from '../core/core';
+import { NewableComponent } from '../core/core.registry';
 
 export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -27,21 +28,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
      */
     public static txVariants: string[] = [];
 
-    /**
-     * Defines the extra dependencies (Components) that it is needed for the specific UIElement
-     * Ex: Card depends on ThreeDS components
-     */
-    public static dependencies: any[] = []; // FIX type
-
     constructor(props?: P) {
         super(props);
 
-        if (!this.core.getComponent(this.type)) {
-            throw new AdyenCheckoutError(
-                'IMPLEMENTATION_ERROR',
-                `The component of the type '${this.type}' is not registered in the Core. Make sure to register it before instantiating the Component.`
-            );
-        }
+        this.core.register(this.constructor as NewableComponent);
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
@@ -62,7 +52,9 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     protected override buildElementProps(componentProps: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
         const isStoredPaymentMethod = !!componentProps.isStoredPaymentMethod;
-        const paymentMethodsResponseProps = isStoredPaymentMethod ? {} : this.core.paymentMethodsResponse.find(this.constructor['type']);
+        const paymentMethodsResponseProps = isStoredPaymentMethod
+            ? {}
+            : this.core.paymentMethodsResponse.find(componentProps.type || this.constructor['type']);
 
         const finalProps = {
             showPayButton: true,

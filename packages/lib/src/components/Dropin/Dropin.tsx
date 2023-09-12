@@ -11,7 +11,6 @@ import createInstantPaymentElements from './elements/createInstantPaymentElement
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { PaymentMethodsConfiguration, PaymentResponse } from '../types';
 import PaymentMethodsResponse from '../../core/ProcessResponse/PaymentMethodsResponse';
-import { TxVariants } from '../tx-variants';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
@@ -27,13 +26,11 @@ function splitPaymentMethods(paymentMethodsResponse: PaymentMethodsResponse, ins
 }
 
 class DropinElement extends UIElement<DropinElementProps> {
-    public static type = TxVariants.dropin;
-
     protected static defaultProps = defaultProps;
 
     public dropinRef = null;
 
-    private paymentMethodsConfiguration: PaymentMethodsConfiguration = {};
+    private paymentMethodsConfiguration: PaymentMethodsConfiguration;
     /**
      * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
      */
@@ -44,6 +41,7 @@ class DropinElement extends UIElement<DropinElementProps> {
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
 
+        this.props.paymentMethodComponents.forEach(PaymentMethod => this.core.register(PaymentMethod));
         this.paymentMethodsConfiguration = this.props.paymentMethodsConfiguration || {};
     }
 

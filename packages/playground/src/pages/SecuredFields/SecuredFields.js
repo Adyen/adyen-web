@@ -12,8 +12,6 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import './securedFields.style.scss';
 
-AdyenCheckout.register(SecuredFields);
-
 const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of SecuredFields
 
 window.paymentData = {};

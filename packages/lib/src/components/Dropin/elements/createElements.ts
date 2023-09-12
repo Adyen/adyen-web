@@ -26,6 +26,9 @@ const createElements = (
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
             if (!PaymentMethodElement) {
+                console.warn(
+                    `Dropin: '${paymentMethod.type}' component not found. Make sure to pass its Class to the Dropin 'paymentMethodComponents' parameter`
+                );
                 return null;
             }
 

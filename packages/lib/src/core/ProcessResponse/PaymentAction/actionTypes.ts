@@ -54,7 +54,6 @@ const actionTypes = {
             statusType: 'loading',
             useOriginalFlow: true
         };
-
         return createComponent(core, registry, 'threeDS2DeviceFingerprint', config);
     },
 
@@ -71,7 +70,6 @@ const actionTypes = {
             statusType: 'custom',
             useOriginalFlow: true
         };
-
         return createComponent(core, registry, 'threeDS2Challenge', config);
     },
 

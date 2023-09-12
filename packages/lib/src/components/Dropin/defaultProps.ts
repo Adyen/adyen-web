@@ -1,5 +1,6 @@
 export default {
     instantPaymentTypes: [],
+    paymentMethodComponents: [],
 
     isDropin: true,
     onReady: () => {}, // triggered when the Dropin is fully loaded

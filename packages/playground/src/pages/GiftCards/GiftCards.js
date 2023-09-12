@@ -8,8 +8,6 @@ import '../../utils';
 import '../../style.scss';
 
 (async () => {
-    AdyenCheckout.register(Giftcard, MealVoucherFR);
-
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: en_US,
@@ -33,7 +31,8 @@ import '../../style.scss';
         }
     }).mount('#genericgiftcard-container');
 
-    window.giftcard = new Giftcard({
+    // TODO: Double-check if it is supposed to be like that
+    window.giftcard = new MealVoucherFR({
         core: window.checkout,
         type: 'mealVoucher_FR_natixis',
         brand: 'mealVoucher_FR_natixis',

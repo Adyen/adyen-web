@@ -33,7 +33,6 @@ import QiwiWallet from './QiwiWallet';
 import Redirect from './Redirect';
 import SecuredFields from './SecuredFields';
 import Sepa from './Sepa';
-import { ThreeDS2DeviceFingerprint, ThreeDS2Challenge } from './ThreeDS2';
 import WeChat from './WeChat';
 import PayNow from './PayNow';
 import BcmcMobile from './BcmcMobile';
@@ -50,7 +49,6 @@ import Vipps from './Vipps';
 import { PayuCashcard, PayuNetBanking } from './PayU';
 import RatePay from './RatePay';
 import Swish from './Swish';
-import Dropin from './Dropin';
 import Ach from './Ach';
 import MBWay from './MBWay';
 import Blik from './Blik';
@@ -73,7 +71,7 @@ import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
-import Trustly from "./Trustly";
+import Trustly from './Trustly';
 import { TxVariants } from './tx-variants';
 import { PaymentActionsType } from '../types';
 
@@ -85,7 +83,6 @@ const componentsMap = {
     [TxVariants.address]: Address,
     [TxVariants.bankTransfer_IBAN]: BankTransfer,
     [TxVariants.donation]: Donation,
-    [TxVariants.dropin]: Dropin,
     [TxVariants.personal_details]: PersonalDetails,
     /** internal */
 
@@ -102,8 +99,6 @@ const componentsMap = {
     [TxVariants.scheme]: Card,
     [TxVariants.storedCard]: Card,
     [TxVariants.securedfields]: SecuredFields,
-    [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
-    [TxVariants.threeDS2Fingerprint]: ThreeDS2DeviceFingerprint,
     [TxVariants.visa]: Card,
     /** Card */
 

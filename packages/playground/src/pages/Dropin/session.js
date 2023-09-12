@@ -4,9 +4,6 @@ import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 
 export async function initSession() {
-    // Not all txVariants are registered
-    AdyenCheckout.register(Dropin, Card, PayPal, Ach, GooglePay, WeChat, Giftcard);
-
     const session = await createSession({
         amount,
         reference: 'ABC123',
@@ -50,6 +47,7 @@ export async function initSession() {
     const dropin = new Dropin({
         core: checkout,
         instantPaymentTypes: ['googlepay'],
+        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay],
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'

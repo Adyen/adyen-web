@@ -8,7 +8,6 @@ import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
-import { ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../ThreeDS2';
 import { UIElementProps } from '../types';
 
 interface SecuredFieldProps extends UIElementProps {
@@ -21,7 +20,6 @@ interface SecuredFieldProps extends UIElementProps {
 export class SecuredFieldsElement extends UIElement<SecuredFieldProps> {
     public static type = TxVariants.securedfields;
     public static txVariants = [TxVariants.securedfields, TxVariants.card];
-    public static dependencies = [ThreeDS2DeviceFingerprint, ThreeDS2Challenge];
 
     public static analyticsType = 'custom-scheme';
 
