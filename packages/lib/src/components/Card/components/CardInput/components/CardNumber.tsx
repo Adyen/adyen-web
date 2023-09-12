@@ -5,7 +5,6 @@ import DualBrandingIcon from './DualBrandingIcon/DualBrandingIcon';
 import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardNumberProps } from './types';
-import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import { alternativeLabelContent } from './IframeLabelAlternative';
@@ -37,7 +36,6 @@ export default function CardNumber(props: CardNumberProps) {
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,
                     'adyen-checkout__card__cardNumber__input': true,
-                    [styles['adyen-checkout__input']]: true,
                     'adyen-checkout__input--error': error,
                     'adyen-checkout__input--focus': props.focused,
                     'adyen-checkout__input--valid': isValid,

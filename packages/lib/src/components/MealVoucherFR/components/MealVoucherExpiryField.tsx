@@ -1,6 +1,5 @@
 import DataSfSpan from '../../Card/components/CardInput/components/DataSfSpan';
 import classNames from 'classnames';
-import styles from '../../Card/components/CardInput/CardInput.module.scss';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from '../../Giftcard/components/types';
@@ -19,17 +18,11 @@ export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocu
         >
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}
-                className={classNames(
-                    'adyen-checkout__input',
-                    'adyen-checkout__input--small',
-                    'adyen-checkout__card__exp-date__input',
-                    [styles['adyen-checkout__input']],
-                    {
-                        'adyen-checkout__input--error': sfpState.errors.encryptedExpiryDate,
-                        'adyen-checkout__input--focus': focusedElement === 'encryptedExpiryDate',
-                        'adyen-checkout__input--valid': !!sfpState.valid.encryptedExpiryMonth && !!sfpState.valid.encryptedExpiryYear
-                    }
-                )}
+                className={classNames('adyen-checkout__input', 'adyen-checkout__input--small', 'adyen-checkout__card__exp-date__input', {
+                    'adyen-checkout__input--error': sfpState.errors.encryptedExpiryDate,
+                    'adyen-checkout__input--focus': focusedElement === 'encryptedExpiryDate',
+                    'adyen-checkout__input--valid': !!sfpState.valid.encryptedExpiryMonth && !!sfpState.valid.encryptedExpiryYear
+                })}
             />
         </Field>
     );

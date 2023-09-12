@@ -3,7 +3,6 @@ import cx from 'classnames';
 import SelectListItem from './SelectListItem';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectListProps } from '../types';
-import styles from '../Select.module.scss';
 
 function SelectList({ selected, active, filteredItems, showList, ...props }: SelectListProps) {
     const { i18n } = useCoreContext();
@@ -12,9 +11,7 @@ function SelectList({ selected, active, filteredItems, showList, ...props }: Sel
         <ul
             className={cx({
                 'adyen-checkout__dropdown__list': true,
-                [styles['adyen-checkout__dropdown__list']]: true,
-                'adyen-checkout__dropdown__list--active': showList,
-                [styles['adyen-checkout__dropdown__list--active']]: showList
+                'adyen-checkout__dropdown__list--active': showList
             })}
             id={props.selectListId}
             ref={props.selectListRef}

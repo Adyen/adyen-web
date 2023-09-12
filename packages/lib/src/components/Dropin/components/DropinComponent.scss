@@ -1,6 +1,12 @@
-.adyen-checkout__payment-methods-list--loading {
-    user-select: none;
-    pointer-events: none;
+.adyen-checkout__payment-methods-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &--loading {
+        user-select: none;
+        pointer-events: none;
+    }
 }
 
 .adyen-checkout__instant-payment-methods-list {
@@ -10,5 +16,36 @@
 
     li:not(:last-child) {
         margin-bottom: var(--b-spacer-040);
+    }
+}
+
+.adyen-checkout__payment-method {
+    display: block;
+    max-height: 60px;
+
+    &__details {
+        display: none;
+    }
+
+    &__image {
+        width: var(--b-spacer-110);
+        height: 26px;
+
+        &__wrapper {
+            margin-right: var(--b-spacer-040);
+
+            [dir="rtl"] & {
+                margin-right: 0;
+                margin-left: var(--b-spacer-040);
+            }
+        }
+    }
+
+    &--selected {
+        max-height: 100%;
+
+        .adyen-checkout__payment-method__details {
+            display: block;
+        }
     }
 }

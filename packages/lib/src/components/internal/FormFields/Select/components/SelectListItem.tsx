@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import { SelectItemProps } from '../types';
-import styles from '../Select.module.scss';
 import Img from '../../../Img';
 import Icon from '../../../Icon';
 
@@ -12,7 +11,6 @@ const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) =
             aria-selected={selected}
             className={cx([
                 'adyen-checkout__dropdown__element',
-                styles['adyen-checkout__dropdown__element'],
                 {
                     'adyen-checkout__dropdown__element--active': active,
                     'adyen-checkout__dropdown__element--disabled': !!item.disabled

@@ -5,7 +5,6 @@ import ExpirationDate from './ExpirationDate';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardFieldsProps } from './types';
 import classNames from 'classnames';
-import styles from '../CardInput.module.scss';
 import {
     BRAND_ICON_UI_EXCLUSION_LIST,
     DATE_POLICY_HIDDEN,
@@ -67,7 +66,7 @@ export default function CardFields({
 
             <div
                 className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper', {
-                    [styles['adyen-checkout__card__exp-cvc__exp-date__input--hidden']]: expiryDatePolicy === DATE_POLICY_HIDDEN
+                    'adyen-checkout__card__exp-cvc__exp-date__input--hidden': expiryDatePolicy === DATE_POLICY_HIDDEN
                 })}
             >
                 <ExpirationDate

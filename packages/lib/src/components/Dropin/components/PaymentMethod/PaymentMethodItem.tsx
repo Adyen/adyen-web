@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import PaymentMethodDetails from './PaymentMethodDetails';
 import PaymentMethodIcon from './PaymentMethodIcon';
 import DisableOneClickConfirmation from './DisableOneClickConfirmation';
-import styles from '../DropinComponent.module.scss';
 import './PaymentMethodItem.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import UIElement from '../../../UIElement';
@@ -73,16 +72,13 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
         const paymentMethodClassnames = classNames({
             'adyen-checkout__payment-method': true,
-            [styles['adyen-checkout__payment-method']]: true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
             [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true,
             'adyen-checkout__payment-method--selected': isSelected,
-            [styles['adyen-checkout__payment-method--selected']]: isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
             'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
             'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
             'adyen-checkout__payment-method--standalone': standalone,
-            [styles['adyen-checkout__payment-method--loading']]: isLoading,
             [paymentMethod._id]: true,
             [this.props.className]: true
         });
@@ -149,11 +145,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     )}
                 </div>
 
-                <div
-                    className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}
-                    id={containerId}
-                    role="region"
-                >
+                <div className="adyen-checkout__payment-method__details" id={containerId} role="region">
                     {showRemovePaymentMethodButton && (
                         <DisableOneClickConfirmation
                             id={disableConfirmationId}

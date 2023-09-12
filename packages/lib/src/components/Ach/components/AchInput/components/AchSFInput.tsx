@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import classNames from 'classnames';
-import styles from '../AchInput.module.scss';
 import Field from '../../../../internal/FormFields/Field';
 import DataSfSpan from '../../../../Card/components/CardInput/components/DataSfSpan';
 
@@ -28,7 +27,6 @@ const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, erro
                 className={classNames({
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,
-                    [styles['adyen-checkout__input']]: true,
                     'adyen-checkout__input--error': errorMessage.length,
                     'adyen-checkout__input--focus': focused,
                     'adyen-checkout__input--valid': isValid
