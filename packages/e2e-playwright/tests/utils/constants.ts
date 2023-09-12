@@ -1,6 +1,7 @@
 export const BIN_LOOKUP_VERSION = 'v3';
 
 export const REGULAR_TEST_CARD = '5500000000000004';
+export const AMEX_CARD = '370000000000002';
 
 export const TEST_DATE_VALUE = '03/30';
 export const TEST_CVC_VALUE = '737';
