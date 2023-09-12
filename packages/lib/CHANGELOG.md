@@ -1,5 +1,29 @@
 # @adyen/adyen-web
 
+## 5.51.0
+
+### Minor Changes
+
+-   Add 'redirectFromTopWhenInIframe' config prop to allow top level redirect when Checkout loaded in an iframe ([#2325](https://github.com/Adyen/adyen-web/pull/2325))
+
+## 5.50.1
+
+### Patch Changes
+
+-   Perform extra checks that a valid value has been passed when a dual branding selection is made ([#2321](https://github.com/Adyen/adyen-web/pull/2321))
+
+## 5.50.0
+
+### Minor Changes
+
+-   Bancontact now returns paymentMethod.type 'bcmc' instead of 'scheme' ([#2286](https://github.com/Adyen/adyen-web/pull/2286))
+
+-   Added environmentUrls parameter to Core, which allows PBL to use custom URLs for the API and assets ([#2262](https://github.com/Adyen/adyen-web/pull/2262))
+
+### Patch Changes
+
+-   For some storedCards it is not allowed to store the expiryDate, so when this info is not present in the storedCardData, we hide the readonly expiryDate field ([#2315](https://github.com/Adyen/adyen-web/pull/2315))
+
 ## 5.49.6
 
 ### Patch Changes

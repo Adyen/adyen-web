@@ -131,6 +131,7 @@ export interface KCPProps {
     onFocusField: (str: string) => {};
     onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
+    taxNumber?: string;
     error: boolean;
     isValid: boolean;
     value: string;
