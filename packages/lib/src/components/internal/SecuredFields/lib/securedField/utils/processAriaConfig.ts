@@ -16,10 +16,7 @@ export function processAriaConfig(txVariant: string, fieldType: string, i18n: La
     // Get translation for iframeTitle
     const iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);
 
-    console.log('### processAriaConfig::type & fieldType:: ', type, fieldType);
-
-    // Get translation for aria label using same key used to label the element
-    // const label: string = i18n.get(`${type}.${fieldType}.aria.label`);
+    // Get translation for aria label using *same* key that is used to label the element - important a11y consideration for (securedField) iframe
     const label: string = i18n.get(`${type}.${SF_FIELDS_MAP[fieldType]}.label`);
 
     // Get lang property
