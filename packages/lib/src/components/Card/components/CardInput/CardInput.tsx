@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks'
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
-import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
@@ -433,7 +432,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             <SecuredFieldsProvider
                 ref={sfp}
                 {...extractPropsForSFP(props)}
-                styles={{ ...defaultStyles, ...props.styles }}
+                styles={{ ...props.styles }}
                 koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
                 onChange={handleSecuredFieldsChange}
