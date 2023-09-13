@@ -2,6 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import Field from '../../../../internal/FormFields/Field';
 import DataSfSpan from '../../../../Card/components/CardInput/components/DataSfSpan';
+import { alternativeLabelContent } from '../../../../Card/components/CardInput/components/IframeLabelAlternative';
 
 const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, errorMessage = '', isValid = false, onFocusField, dir }) => {
     const capitalisedId = id.charAt(0).toUpperCase() + id.slice(1);
@@ -20,6 +21,8 @@ const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, erro
             dir={dir}
             name={id}
             contextVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType={encryptedIdStr}
