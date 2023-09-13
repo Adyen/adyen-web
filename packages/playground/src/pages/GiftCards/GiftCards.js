@@ -35,7 +35,7 @@ import '../../style.scss';
             // }
         })
         .mount('#genericgiftcard-container');
-    return;
+
     window.giftcard = checkout
         .create('mealVoucher_FR_natixis', {
             type: 'mealVoucher_FR_natixis',
