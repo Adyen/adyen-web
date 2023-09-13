@@ -92,6 +92,17 @@ export interface CardElementProps extends UIElementProps {
     /** An object sent in the /paymentMethods response */
     configuration?: CardConfiguration;
 
+    /**
+     * Defines the size of the challenge Component
+     *
+     * 01: [250px, 400px]
+     * 02: [390px, 400px]
+     * 03: [500px, 600px]
+     * 04: [600px, 400px]
+     * 05: [100%, 100%]
+     *
+     * @defaultValue '02'
+     */
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
 
     /**

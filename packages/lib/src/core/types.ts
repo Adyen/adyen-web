@@ -1,17 +1,34 @@
-import { CustomTranslations, Locale, Translation } from '../language/types';
-import { PaymentAmountExtended, Order } from '../types';
+import { CustomTranslations, Translation } from '../language/types';
+import { PaymentAmountExtended, Order, PaymentAction } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
-import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
 import { SRPanelProps } from './Errors/types';
+import { NewableComponent } from './core.registry';
+import Session from './CheckoutSession';
+import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 
 type PromiseResolve = typeof Promise.resolve;
 
 type PromiseReject = typeof Promise.reject;
+
+export interface ICore {
+    initialize(): Promise<ICore>;
+    register(...items: NewableComponent[]): void;
+    update({ order }: { order?: Order }): Promise<ICore>;
+    remove(component): ICore;
+    submitDetails(details: any): void;
+    getCorePropsForComponent(): any;
+    getComponent(txVariant: string): NewableComponent | undefined;
+    createFromAction(action: PaymentAction, options: any): any;
+    storeElementReference(element: UIElement): void;
+    options: CoreOptions;
+    paymentMethodsResponse: PaymentMethodsResponse;
+    session?: Session;
+}
 
 export interface CoreOptions {
     session?: any;

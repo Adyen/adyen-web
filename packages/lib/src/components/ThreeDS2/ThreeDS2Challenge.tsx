@@ -7,8 +7,8 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject } from '../types';
-import { ICore } from '../../core/core';
 import { TxVariants } from '../tx-variants';
+import { ICore } from '../../core/types';
 
 export interface ThreeDS2ChallengeProps {
     core: ICore;

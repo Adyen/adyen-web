@@ -9,9 +9,8 @@ import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
-import { CoreOptions } from '../core/types';
+import { CoreOptions, ICore } from '../core/types';
 import { Resources } from '../core/Context/Resources';
-import { ICore } from '../core/core';
 import { NewableComponent } from '../core/core.registry';
 
 export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {

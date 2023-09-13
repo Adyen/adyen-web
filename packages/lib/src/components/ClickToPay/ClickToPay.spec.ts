@@ -4,7 +4,7 @@ import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
-import { ICore } from '../../core/core';
+import { ICore } from '../../core/types';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
 

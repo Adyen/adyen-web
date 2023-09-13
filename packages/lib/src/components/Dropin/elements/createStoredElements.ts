@@ -1,7 +1,7 @@
 import createElements from './createElements';
 import { StoredPaymentMethod } from '../../../types';
-import type { ICore } from '../../../core/core';
 import { PaymentMethodsConfiguration } from '../../types';
+import { ICore } from '../../../core/types';
 
 // /**
 //  *  Returns a filtered (available) list of oneClick paymentMethod Elements

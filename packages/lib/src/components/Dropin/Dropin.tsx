@@ -10,20 +10,10 @@ import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { PaymentMethodsConfiguration, PaymentResponse } from '../types';
-import PaymentMethodsResponse from '../../core/ProcessResponse/PaymentMethodsResponse';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import splitPaymentMethods from './elements/splitPaymentMethods';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
-
-function splitPaymentMethods(paymentMethodsResponse: PaymentMethodsResponse, instantPaymentTypes: InstantPaymentTypes[]) {
-    const { storedPaymentMethods, paymentMethods } = paymentMethodsResponse;
-
-    return {
-        instantPaymentMethods: paymentMethods.filter(({ type }) => instantPaymentTypes.includes(type as InstantPaymentTypes)),
-        paymentMethods: paymentMethods.filter(({ type }) => !instantPaymentTypes.includes(type as InstantPaymentTypes)),
-        storedPaymentMethods
-    };
-}
 
 class DropinElement extends UIElement<DropinElementProps> {
     protected static defaultProps = defaultProps;

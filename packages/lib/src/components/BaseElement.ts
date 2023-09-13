@@ -4,9 +4,8 @@ import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
-import { Resources } from '../core/Context/Resources';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-import { ICore } from '../core/core';
+import { ICore } from '../core/types';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -17,8 +16,6 @@ class BaseElement<P extends BaseElementProps> {
     public _component;
     public eventEmitter = new EventEmitter();
     protected readonly core: ICore;
-
-    protected resources: Resources;
 
     protected constructor(props: P) {
         this.core = props.core;
@@ -31,7 +28,6 @@ class BaseElement<P extends BaseElementProps> {
         }
 
         this.buildElementProps(props);
-        // this.resources = this.props.modules ? this.props.modules.resources : undefined; // ???
     }
 
     protected buildElementProps(componentProps: P) {

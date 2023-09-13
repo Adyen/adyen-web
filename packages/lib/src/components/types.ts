@@ -8,7 +8,6 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
-import type { ICore } from '../core/core';
 
 /** Components */
 import AfterPay from './AfterPay';
@@ -74,6 +73,7 @@ import Duitnow from './DuitNow';
 import Trustly from './Trustly';
 import { TxVariants } from './tx-variants';
 import { PaymentActionsType } from '../types';
+import { ICore } from '../core/types';
 
 /**
  * Maps each component with a Component element.

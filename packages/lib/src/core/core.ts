@@ -5,8 +5,8 @@ import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { Order, PaymentAction } from '../types';
-import { CoreOptions } from './types';
+import { PaymentAction } from '../types';
+import { CoreOptions, ICore } from './types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
@@ -14,21 +14,6 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
-
-export interface ICore {
-    initialize(): Promise<ICore>;
-    register(...items: NewableComponent[]): void;
-    update({ order }: { order?: Order }): Promise<ICore>;
-    remove(component): ICore;
-    submitDetails(details: any): void;
-    getCorePropsForComponent(): any;
-    getComponent(txVariant: string): NewableComponent | undefined;
-    createFromAction(action: PaymentAction, options: any): any;
-    storeElementReference(element: UIElement): void;
-    options: CoreOptions;
-    paymentMethodsResponse: PaymentMethodsResponse;
-    session?: Session;
-}
 
 class Core implements ICore {
     public session?: Session;
